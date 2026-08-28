@@ -7,7 +7,7 @@ input_paths = [
   "run_boundary_spatial_smoke_hpc3.sh", "src/asb_drx/__init__.py", "src/asb_drx/analytical.py",
   "src/asb_drx/boundary.py", "src/asb_drx/boundary_campaign.py", "src/asb_drx/fixtures.py",
   "src/asb_drx/localization.py", "src/asb_drx/mechanism_ladder.py", "src/asb_drx/multi_order.py",
-  "src/asb_drx/spatial_coupled.py", "tests/test_exp_floor.py", "tests/test_ddd_fixture.py",
+  "src/asb_drx/shear_layer.py", "src/asb_drx/spatial_coupled.py", "tests/test_exp_floor.py", "tests/test_ddd_fixture.py",
   "tests/test_analytical_boundary.py", "tests/test_boundary_campaign.py", "tests/test_spatial_coupled.py",
   "tests/test_mechanism_ladder.py", "tools/run_boundary_spatial_smoke.py",
 ]

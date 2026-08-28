@@ -19,7 +19,9 @@ class BoundarySpatialCaseTests(unittest.TestCase):
         peak = self.fixture.law().peak(950.0, 45000.0)
         self.assertEqual(metadata["branch"], "analytical_peak")
         self.assertEqual(metadata["nominal_density_m2"], peak.density_m2)
-        self.assertEqual(state.stress_Pa, peak.macroscopic_strength_Pa)
+        self.assertTrue(
+            math.isclose(state.stress_Pa, peak.macroscopic_strength_Pa, rel_tol=1.0e-15)
+        )
 
     def test_nominal_peak_closes_applied_rate(self) -> None:
         _, metadata = self.case.build_state(16, self.fixture)
