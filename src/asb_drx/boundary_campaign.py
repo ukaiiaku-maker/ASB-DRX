@@ -9,6 +9,7 @@ import numpy as np
 
 from .boundary import AnalyticalPeakBoundary
 from .fixtures import SingleGliderDDDParameterization
+from .local_coupled import LocalCoupledState
 from .multi_order import BinaryCircularLimit, diffuse_binary_circle
 from .spatial_coupled import SpatialCoupledState
 
@@ -102,3 +103,24 @@ class BoundarySpatialCase:
             "density_relief_m2": density_relief_m2,
         }
         return state, metadata
+
+    def build_local_state(
+        self, points: int, fixture: SingleGliderDDDParameterization
+    ) -> tuple[LocalCoupledState, dict[str, float | str]]:
+        common_state, metadata = self.build_state(points, fixture)
+        applied_shear = (
+            common_state.stress_Pa / fixture.spatial_parameters().shear_modulus_Pa
+            + float(np.mean(common_state.plastic_shear))
+        )
+        return (
+            LocalCoupledState(
+                applied_shear,
+                common_state.plastic_shear,
+                common_state.temperature_K,
+                common_state.forest_density_m2,
+                common_state.eta_fields,
+                common_state.time_s,
+                common_state.accepted_steps,
+            ),
+            metadata,
+        )

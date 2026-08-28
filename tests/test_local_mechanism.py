@@ -1,0 +1,65 @@
+from __future__ import annotations
+
+import unittest
+
+from asb_drx.boundary_campaign import BoundarySpatialCase
+from asb_drx.fixtures import SingleGliderDDDParameterization
+from asb_drx.local_mechanism import (
+    classify_local_mechanism_trace,
+    matched_local_isothermal_trace,
+    run_local_mechanism_trace,
+)
+from asb_drx.localization import LocalizationCriteria
+from asb_drx.mechanism_ladder import MechanismCase
+from asb_drx.spatial_coupled import SpatialMechanismControls
+
+
+class LocalMechanismTraceTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.fixture = SingleGliderDDDParameterization()
+        self.initial, self.metadata = BoundarySpatialCase(
+            950.0, 45000.0, 1.0
+        ).build_local_state(16, self.fixture)
+        self.case = MechanismCase(
+            "local_boundary_smoke",
+            45000.0,
+            SpatialMechanismControls(True, True),
+        )
+
+    def test_trace_contains_local_and_mean_stress(self) -> None:
+        trace = run_local_mechanism_trace(
+            self.initial,
+            self.case,
+            self.metadata["dx_m"],
+            2.0e-8,
+            3,
+            self.fixture.law(),
+            self.fixture.spatial_parameters(),
+        )
+        self.assertEqual(trace.local_stress_x_Pa.shape, (3, 16, 16))
+        self.assertEqual(trace.mean_stress_Pa.shape, (3,))
+        self.assertEqual(trace.plastic_rate_s_inv.shape, (3, 16, 16))
+
+    def test_matched_control_and_classifier_execute_without_switching_mechanics(self) -> None:
+        trace = run_local_mechanism_trace(
+            self.initial, self.case, self.metadata["dx_m"], 2.0e-8, 3,
+            self.fixture.law(), self.fixture.spatial_parameters(),
+        )
+        control = matched_local_isothermal_trace(
+            self.initial, self.case, self.metadata["dx_m"], 2.0e-8, 3,
+            self.fixture.law(), self.fixture.spatial_parameters(),
+        )
+        decision = classify_local_mechanism_trace(
+            trace,
+            control,
+            self.metadata["dx_m"],
+            self.metadata["interface_width_m"],
+            LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05),
+        )
+        self.assertFalse(control.case.controls.evolve_temperature)
+        self.assertEqual(trace.case.applied_shear_rate_s_inv, control.case.applied_shear_rate_s_inv)
+        self.assertIsInstance(decision.localized, bool)
+
+
+if __name__ == "__main__":
+    unittest.main()

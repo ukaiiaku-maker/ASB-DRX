@@ -5,6 +5,7 @@ import unittest
 
 import numpy as np
 
+from asb_drx.antiplane import solve_periodic_antiplane
 from asb_drx.boundary_campaign import BoundarySpatialCase
 from asb_drx.fixtures import SingleGliderDDDParameterization
 
@@ -31,6 +32,23 @@ class BoundarySpatialCaseTests(unittest.TestCase):
             self.case.temperature_K,
         )
         self.assertTrue(math.isclose(rate, self.case.shear_rate_s_inv, rel_tol=2.0e-13))
+
+    def test_local_state_recovers_uniform_peak_stress(self) -> None:
+        state, metadata = self.case.build_local_state(16, self.fixture)
+        equilibrium = solve_periodic_antiplane(
+            state.applied_shear,
+            state.plastic_shear,
+            self.fixture.spatial_parameters().shear_modulus_Pa,
+            metadata["dx_m"],
+        )
+        self.assertTrue(
+            np.allclose(
+                equilibrium.stress_x_Pa,
+                metadata["initial_stress_Pa"],
+                rtol=2.0e-16,
+                atol=1.0e-7,
+            )
+        )
 
     def test_state_is_resolved_and_admissible_on_both_smoke_grids(self) -> None:
         for points in (16, 32):
