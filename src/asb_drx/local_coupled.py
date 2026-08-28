@@ -79,6 +79,7 @@ class LocalCoupledStep:
     ledger: LocalCoupledLedger
     accepted_dt_s: float
     halvings: int
+    storage_limited_fraction: float
 
 
 def diffuse_temperature_periodic_exact(
@@ -117,6 +118,7 @@ def local_coupled_step(
     controls: SpatialMechanismControls = SpatialMechanismControls(),
     maximum_halvings: int = 40,
     tolerance_J_m3: float = 1.0e-8,
+    relative_ledger_tolerance: float = 1.0e-9,
 ) -> LocalCoupledStep:
     if not math.isfinite(applied_shear_rate_s_inv):
         raise ValueError("applied_shear_rate_s_inv must be finite")
@@ -124,6 +126,12 @@ def local_coupled_step(
         raise ValueError("dx_m must be finite and positive")
     if not math.isfinite(proposed_dt_s) or proposed_dt_s <= 0.0:
         raise ValueError("proposed_dt_s must be finite and positive")
+    if (
+        not math.isfinite(relative_ledger_tolerance)
+        or relative_ledger_tolerance <= 0.0
+        or relative_ledger_tolerance >= 1.0
+    ):
+        raise ValueError("relative_ledger_tolerance must be finite and in (0,1)")
     fields = np.asarray(state.eta_fields, dtype=float)
     density = np.asarray(state.forest_density_m2, dtype=float)
     temperature = np.asarray(state.temperature_K, dtype=float)
@@ -154,6 +162,7 @@ def local_coupled_step(
     area_m2 = fields.shape[1] * fields.shape[2] * dx_m**2
     diffusivity = parameters.thermal_conductivity_W_m_K / parameters.volumetric_heat_capacity_J_m3_K
     dt_s = proposed_dt_s
+    last_rejection = "none"
     for halvings in range(maximum_halvings + 1):
         grain_increment = rates * dt_s
         plastic_increment = np.sum(weights * grain_increment, axis=0)
@@ -167,9 +176,29 @@ def local_coupled_step(
             old_equilibrium.stress_x_Pa + new_equilibrium.stress_x_Pa
         )
         plastic_work_local = midpoint_stress * plastic_increment
-        density_increment = parameters.forest_storage_per_plastic_strain_m2 * np.abs(
+        requested_density_increment = parameters.forest_storage_per_plastic_strain_m2 * np.abs(
             grain_increment
         )
+        requested_stored_local = parameters.stored_line_energy_J_m * np.sum(
+            weights * requested_density_increment, axis=0
+        )
+        if np.any(plastic_work_local < -tolerance_J_m3):
+            last_rejection = "negative_mechanical_heat"
+            dt_s *= 0.5
+            continue
+        # The nominal Kocks--Mecking storage rate is a requested rate, not an
+        # independent energy source.  At low stress it can ask for more line
+        # energy than the local plastic work supplies.  Limit all grain-wise
+        # storage increments at that point by the same factor, preserving their
+        # partition while enforcing the local dissipation inequality.
+        storage_scale = np.ones_like(plastic_work_local)
+        requesting = requested_stored_local > 0.0
+        storage_scale[requesting] = np.minimum(
+            1.0,
+            np.maximum(plastic_work_local[requesting], 0.0)
+            / requested_stored_local[requesting],
+        )
+        density_increment = requested_density_increment * storage_scale[None, :, :]
         new_density = density + density_increment
         phase_old_total, phase_old_stored, _ = _energies_J_m(
             fields, new_density, dx_m, parameters
@@ -178,9 +207,6 @@ def local_coupled_step(
             weights * density_increment, axis=0
         )
         mechanical_heat_local = plastic_work_local - mechanical_stored_local
-        if np.any(mechanical_heat_local < -tolerance_J_m3):
-            dt_s *= 0.5
-            continue
         mechanical_heat_local = np.maximum(mechanical_heat_local, 0.0)
         if controls.evolve_temperature:
             source_temperature = temperature + mechanical_heat_local / parameters.volumetric_heat_capacity_J_m3_K
@@ -190,6 +216,7 @@ def local_coupled_step(
         else:
             conducted_temperature = temperature
         if np.any(conducted_temperature <= 0.0) or not np.all(np.isfinite(conducted_temperature)):
+            last_rejection = "invalid_conducted_temperature"
             dt_s *= 0.5
             continue
         if controls.evolve_phase:
@@ -201,6 +228,7 @@ def local_coupled_step(
                 or np.any(candidate > 1.0 + 1.0e-14)
                 or not np.all(np.isfinite(candidate))
             ):
+                last_rejection = "phase_bounds"
                 dt_s *= 0.5
                 continue
             candidate = np.clip(candidate, 0.0, 1.0)
@@ -212,6 +240,7 @@ def local_coupled_step(
             candidate, new_density, dx_m, parameters
         )
         if new_total > phase_old_total:
+            last_rejection = "phase_energy_increase"
             dt_s *= 0.5
             continue
         phase_heat_mean = (phase_old_total - new_total) / area_m2
@@ -259,11 +288,27 @@ def local_coupled_step(
             * parameters.volumetric_heat_capacity_J_m3_K
             * float(np.max(final_temperature))
         )
+        mechanical_floor = 64.0 * np.finfo(float).eps * max(
+            abs(old_equilibrium.elastic_energy_J_m3),
+            abs(new_equilibrium.elastic_energy_J_m3),
+            abs(old_stored) / area_m2,
+            abs(old_interface) / area_m2,
+            abs(phase_old_total) / area_m2,
+            abs(new_total) / area_m2,
+            1.0,
+        )
+        ledger_limit = max(relative_ledger_tolerance * scale, mechanical_floor)
         if (
-            abs(global_closure) > 1.0e-9 * scale
-            or abs(plastic_closure) > 1.0e-9 * scale
+            abs(global_closure) > ledger_limit
+            or abs(plastic_closure) > ledger_limit
             or abs(thermal_closure) > max(1.0e-8 * scale, thermal_floor)
         ):
+            last_rejection = (
+                "ledger_closure:"
+                f"global={global_closure:.16g},plastic={plastic_closure:.16g},"
+                f"thermal={thermal_closure:.16g},scale={scale:.16g},"
+                f"ledger_limit={ledger_limit:.16g},thermal_floor={thermal_floor:.16g}"
+            )
             dt_s *= 0.5
             continue
         return LocalCoupledStep(
@@ -284,8 +329,12 @@ def local_coupled_step(
             ),
             dt_s,
             halvings,
+            float(np.mean(storage_scale < 1.0 - 8.0 * np.finfo(float).eps)),
         )
-    raise RuntimeError("no admissible local coupled step found")
+    raise RuntimeError(
+        "no admissible local coupled step found; "
+        f"last_rejection={last_rejection}; final_trial_dt_s={dt_s:.16g}"
+    )
 
 
 def advance_local_coupled(

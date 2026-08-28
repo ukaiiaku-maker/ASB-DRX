@@ -129,6 +129,44 @@ class LocalCoupledTests(unittest.TestCase):
             1.0e-10 * float(np.max(np.abs(accepted.equilibrium.stress_x_Pa))) / dx_m,
         )
 
+    def test_storage_is_limited_by_available_local_plastic_work(self) -> None:
+        points = 8
+        density = np.empty((2, points, points))
+        density[0] = 1.0e14
+        density[1] = 1.0e13
+        state = LocalCoupledState(
+            1.0e8 / self.parameters.shear_modulus_Pa,
+            np.zeros((points, points)),
+            np.full((points, points), 1000.0),
+            density,
+            self._pure(points),
+        )
+        expensive_storage = SpatialCoupledParameters(
+            self.parameters.shear_modulus_Pa,
+            self.parameters.volumetric_heat_capacity_J_m3_K,
+            self.parameters.thermal_conductivity_W_m_K,
+            self.parameters.stored_line_energy_J_m,
+            2.0e17,
+            self.parameters.pair_penalty_J_m3,
+            self.parameters.gradient_coefficient_J_m,
+            self.parameters.phase_mobility_m3_J_s,
+        )
+        accepted = local_coupled_step(
+            state, 10.0, 1.0e-6, 1.0e-5, self.law, expensive_storage,
+            controls=SpatialMechanismControls(evolve_phase=False),
+        )
+        self.assertEqual(accepted.halvings, 0)
+        self.assertEqual(accepted.storage_limited_fraction, 1.0)
+        self.assertGreaterEqual(accepted.ledger.mechanical_heat_J_m3, 0.0)
+        stored_increment = expensive_storage.stored_line_energy_J_m * float(
+            np.mean(accepted.state.forest_density_m2[0] - density[0])
+        )
+        self.assertLessEqual(
+            stored_increment,
+            accepted.ledger.plastic_work_J_m3
+            + 1.0e-10 * max(accepted.ledger.plastic_work_J_m3, 1.0),
+        )
+
     def test_exact_periodic_diffusion_removes_explicit_CFL_restriction(self) -> None:
         points = 32
         dx_m = 5.0e-7
@@ -225,6 +263,19 @@ class LocalCoupledTests(unittest.TestCase):
             dx_m,
         )
         self.assertAlmostEqual(result.mean_stress_Pa, 1.0e8)
+
+    def test_invalid_local_ledger_tolerance_is_rejected(self) -> None:
+        initial, dx_m = self._mixed_state()
+        with self.assertRaises(ValueError):
+            local_coupled_step(
+                initial,
+                10.0,
+                dx_m,
+                1.0e-5,
+                self.law,
+                self.parameters,
+                relative_ledger_tolerance=1.0,
+            )
 
 
 if __name__ == "__main__":

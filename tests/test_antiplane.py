@@ -53,6 +53,24 @@ class AntiplaneEquilibriumTests(unittest.TestCase):
         scale = max(abs(external), abs(plastic), abs(elastic), 1.0)
         self.assertLess(abs(closure), 5.0e-14 * scale)
 
+    def test_broadband_even_grid_preserves_real_projection_and_work_identity(self) -> None:
+        rng = np.random.default_rng(84721)
+        old_plastic = 0.003 * rng.standard_normal((self.points, self.points))
+        increment = 0.001 * rng.standard_normal((self.points, self.points))
+        old = solve_periodic_antiplane(0.01, old_plastic, self.modulus_Pa, self.dx_m)
+        new = solve_periodic_antiplane(
+            0.012, old_plastic + increment, self.modulus_Pa, self.dx_m
+        )
+        external, plastic, elastic, closure = midpoint_work_ledger_J_m3(
+            old, new, 0.002, increment
+        )
+        scale = max(abs(external), abs(plastic), abs(elastic), 1.0)
+        self.assertLess(abs(closure), 5.0e-14 * scale)
+        self.assertLess(
+            new.equilibrium_residual_Pa_m_inv,
+            2.0e-12 * float(np.max(np.abs(new.stress_x_Pa))) / self.dx_m,
+        )
+
     def test_invalid_inputs_are_rejected(self) -> None:
         with self.assertRaises(ValueError):
             solve_periodic_antiplane(0.0, np.zeros(8), self.modulus_Pa, self.dx_m)

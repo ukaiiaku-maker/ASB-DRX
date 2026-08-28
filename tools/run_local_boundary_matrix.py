@@ -10,8 +10,7 @@ from asb_drx.boundary_campaign import BoundarySpatialCase
 from asb_drx.fixtures import SingleGliderDDDParameterization
 from asb_drx.local_mechanism import (
     classify_local_mechanism_trace,
-    matched_local_isothermal_trace,
-    run_local_mechanism_trace,
+    run_matched_local_strain_pair,
 )
 from asb_drx.localization import LocalizationCriteria, localization_history
 from asb_drx.mechanism_ladder import MechanismCase
@@ -35,12 +34,9 @@ def run_condition(
         shear_rate_s_inv,
         SpatialMechanismControls(True, True),
     )
-    trace = run_local_mechanism_trace(
-        initial, mechanism, metadata["dx_m"], proposed_dt_s, steps,
-        fixture.law(), fixture.spatial_parameters(),
-    )
-    control = matched_local_isothermal_trace(
-        initial, mechanism, metadata["dx_m"], proposed_dt_s, steps,
+    trace, control = run_matched_local_strain_pair(
+        initial, mechanism, metadata["dx_m"], proposed_dt_s,
+        target_shear_increment,
         fixture.law(), fixture.spatial_parameters(),
     )
     criteria = LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05)
@@ -54,6 +50,7 @@ def run_condition(
     final = trace.states[-1]
     final_step = trace.steps[-1]
     accepted_dt = np.asarray([item.accepted_dt_s for item in trace.steps])
+    actual_increment = abs(final.applied_shear - initial.applied_shear)
     return {
         "temperature_K": temperature_K,
         "shear_rate_s_inv": shear_rate_s_inv,
@@ -64,8 +61,9 @@ def run_condition(
         "proposed_dt_s": proposed_dt_s,
         "minimum_accepted_dt_s": float(np.min(accepted_dt)),
         "maximum_halvings": max(item.halvings for item in trace.steps),
+        "accepted_steps": len(trace.steps),
         "accepted_duration_s": final.time_s,
-        "applied_shear_increment": target_shear_increment,
+        "applied_shear_increment": actual_increment,
         "final_mean_stress_Pa": final_step.equilibrium.mean_stress_Pa,
         "peak_mean_stress_Pa": float(np.max(np.abs(trace.mean_stress_Pa))),
         "final_local_stress_std_Pa": float(np.std(final_step.equilibrium.stress_x_Pa)),
@@ -76,6 +74,12 @@ def run_condition(
         "initial_child_order_fraction": float(np.mean(initial.eta_fields[1])),
         "final_child_order_fraction": float(np.mean(final.eta_fields[1])),
         "phase_change_l2": float(np.linalg.norm(final.eta_fields - initial.eta_fields)),
+        "maximum_storage_limited_fraction": max(
+            item.storage_limited_fraction for item in trace.steps
+        ),
+        "steps_with_storage_limiting": sum(
+            item.storage_limited_fraction > 0.0 for item in trace.steps
+        ),
         "localized": decision.localized,
         "failed_criteria": list(decision.failed_criteria),
         "maximum_absolute_global_closure_error_J_m3": max(

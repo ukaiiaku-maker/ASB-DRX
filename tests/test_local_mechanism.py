@@ -8,6 +8,7 @@ from asb_drx.local_mechanism import (
     classify_local_mechanism_trace,
     matched_local_isothermal_trace,
     run_local_mechanism_trace,
+    run_matched_local_strain_pair,
 )
 from asb_drx.localization import LocalizationCriteria
 from asb_drx.mechanism_ladder import MechanismCase
@@ -59,6 +60,22 @@ class LocalMechanismTraceTests(unittest.TestCase):
         self.assertFalse(control.case.controls.evolve_temperature)
         self.assertEqual(trace.case.applied_shear_rate_s_inv, control.case.applied_shear_rate_s_inv)
         self.assertIsInstance(decision.localized, bool)
+
+    def test_strain_targeted_pair_has_identical_time_grid(self) -> None:
+        target = 2.0e-3
+        trace, control = run_matched_local_strain_pair(
+            self.initial, self.case, self.metadata["dx_m"], 2.0e-8, target,
+            self.fixture.law(), self.fixture.spatial_parameters(),
+        )
+        self.assertEqual(len(trace.steps), len(control.steps))
+        self.assertEqual(
+            [item.time_s for item in trace.states],
+            [item.time_s for item in control.states],
+        )
+        self.assertAlmostEqual(
+            abs(trace.states[-1].applied_shear - self.initial.applied_shear),
+            target,
+        )
 
 
 if __name__ == "__main__":

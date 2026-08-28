@@ -43,8 +43,17 @@ def solve_periodic_antiplane(
     ny, nx = plastic.shape
     ax = applied_shear - plastic
     ax_hat = np.fft.fft2(ax)
-    kx = 2.0 * math.pi * np.fft.fftfreq(nx, d=dx_m)[None, :]
-    ky = 2.0 * math.pi * np.fft.fftfreq(ny, d=dx_m)[:, None]
+    kx_values = 2.0 * math.pi * np.fft.fftfreq(nx, d=dx_m)
+    ky_values = 2.0 * math.pi * np.fft.fftfreq(ny, d=dx_m)
+    # A real collocated grid has no signed derivative for its self-conjugate
+    # Nyquist coefficient.  Assigning that derivative zero preserves Hermitian
+    # symmetry of the vector projection and therefore the exact work identity.
+    if nx % 2 == 0:
+        kx_values[nx // 2] = 0.0
+    if ny % 2 == 0:
+        ky_values[ny // 2] = 0.0
+    kx = kx_values[None, :]
+    ky = ky_values[:, None]
     k2 = kx**2 + ky**2
     kx_grid = np.broadcast_to(kx, k2.shape)
     ky_grid = np.broadcast_to(ky, k2.shape)
