@@ -73,6 +73,24 @@ Status: passed, completed, fetched, and checksum-verified. This is a dimension/s
 
 This passes the first executable thermodynamic gate. It does not yet verify coupled mechanical/thermal work closure, a diffuse 2-D nucleus, grid/timestep convergence, restart equivalence, orientation/grain invariants, or any material response.
 
+## Diffuse 2-D nucleus, refinement, and limited-state restart
+
+Status: passed, completed, fetched, and checksum-verified. This extends the generic thermodynamic fixture; it remains uncalibrated.
+
+- Git commit: `a4a0bf0`
+- Run ID / Slurm job: `20260828T132810Z-a4a0bf0-5c7bfe` / `55637801`
+- Result: `COMPLETED`, exit `0:0`; application and finalization exit zero
+- Nine tests passed, including diffuse 2-D subcritical shrinkage/supercritical growth, exact segmented restart for the complete current kernel state, and final grid/timestep refinement below 5%
+- The derived diffuse-interface values are `gamma=0.4714045 J m^-2` and `R_c=2.3570226e-6 m`; the 128-grid subcritical radius change is `-3.3636e-9 m` and the supercritical change is `+1.1736e-9 m`
+- Fixed-domain grid changes at 64/96/128 points give a final relative change of `0.003844` (0.384%)
+- Fixed-time timestep changes at `2e-4`, `1e-4`, and `5e-5 s` give a final relative change of `2.0716e-5` (0.0021%)
+- Result archive SHA-256: `6176c7c80e537d96e66f0b078d66c9b21538e29936e9a0ebfca000bc162e9695`
+- Verification JSON SHA-256: `5a5cafc6c0c8c33a43fd4b4b6458bde2a936f2edc722a8765101f88456f47097`
+- Unit-test log SHA-256: `8d3c5d35e4a9d15c393cadc5f04310f806cba65b75542b08377626a4c26166ad`
+- Runner retrieval status: `verified`
+
+The exact restart claim is deliberately limited to the current deterministic state (`eta`, time, accepted-step count). It does not satisfy the production restart gate, which must additionally cover mechanics, temperature, all density reservoirs, orientation, collective/embryo state if enabled, controllers, and RNG streams.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.

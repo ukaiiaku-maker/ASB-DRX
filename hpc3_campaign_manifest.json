@@ -320,6 +320,22 @@
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T132308Z-07d589a-1e7eac",
       "local_path": "hpc3-results/asb-drx-independent/20260828T132308Z-07d589a-1e7eac", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "d4edda846b89713fc754eb630a2e80c2ecbda3621f7f2d77cc6ab50a7a9c992c", "thermodynamic_verification.json": "c390cfbd67f2d35161f6d351aedbf93e73294e97a7ad6d880b47efd3610b1495", "unittest.txt": "6554142b35b394f08a34b9dbd6e8494a8a50487854cabfbf1203d20705e4db85", "results/checksums-single.sha256": "a5ed962fc47e3b13d3de39b3733650580090170969ee232ff4a12dd260df110c", "status/final-single.json": "b205d124956865fd13e4936c479a2fe6debd486172adb02c9ad886a1747f8c10"}
+    },
+    {
+      "run_id": "20260828T132810Z-a4a0bf0-5c7bfe",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "diffuse_2D_nucleus_refinement_and_limited_restart_verification",
+      "git_commit_at_plan": "a4a0bf0",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "source_snapshot_sha256": "22b9a00b17377f25e009b820b1df3a0cd060438f4963fe21ea85f63a902e30a3",
+      "input_sha256": {"run_thermodynamic_hpc3.sh": "d183d2c646f94a2df89f3ef62fe7a5ff91405cfe0216bd450f1de574e27289b5", "src/asb_drx/thermodynamics.py": "d05d9eea65c7ad6d99f8219fac3ce3d96818d2bab32095daa43b2dae335933f7", "tests/test_thermodynamics.py": "93d8e2ba8b328842b6475645de0acc31726a17e13a6cbcfae46670456af6e0c3", "tests/test_phase_field_2d.py": "c2d3912b6efe6ee8cfd4a1d334047bce173eeae5c2119e25a3fcb01a9916451d", "tools/run_thermodynamic_verification.py": "ff396e207e12390497d0557ca4d70a5542e219aa9b7d840515e7cd952663ae9e"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"fixture": "periodic_2D_diffuse_circular_nucleus", "domain_m": 1.6e-5, "grid_points": [64, 96, 128], "timesteps_s": [0.0002, 0.0001, 0.00005], "derived_gb_energy_J_m2": 0.47140452079103173, "derived_critical_radius_m": 2.357022603955159e-6, "scientific_disposition": "generic_numerical_verification_not_material_calibration"},
+      "grid_domain_timestep_stopping": {"boundary": "periodic_square", "domain_m": 1.6e-5, "grid_points": [64, 96, 128], "timestep": "energy_checked_explicit_with_halving", "refinement_target": "less_than_5_percent_final_change", "restart": "bitwise_eta_time_step_for_current_limited_state"},
+      "slurm": {"job_id": "55637801", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9", "numpy": "2.3.5"},
+      "start_utc": "2026-08-28T13:28:51Z", "end_utc": "2026-08-28T13:28:55Z", "exit_status": "0:0", "stop_reason": "completed_all_nine_tests_passed", "wall_clock_seconds": 12, "peak_memory_MB": 38.40,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T132810Z-a4a0bf0-5c7bfe", "local_path": "hpc3-results/asb-drx-independent/20260828T132810Z-a4a0bf0-5c7bfe", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "6176c7c80e537d96e66f0b078d66c9b21538e29936e9a0ebfca000bc162e9695", "thermodynamic_verification.json": "5a5cafc6c0c8c33a43fd4b4b6458bde2a936f2edc722a8765101f88456f47097", "unittest.txt": "8d3c5d35e4a9d15c393cadc5f04310f806cba65b75542b08377626a4c26166ad", "results/checksums-single.sha256": "9dabba7524a04debe501cf393e82d3ed21c966d587797e2b95e2030c776742df", "status/final-single.json": "93fea7d685ee0a04d8f97b828a3b0ff77cbae202e5e23f3babbe5e77582130c0"}
     }
   ]
 }
