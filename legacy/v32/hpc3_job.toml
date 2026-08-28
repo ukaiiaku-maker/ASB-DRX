@@ -1,0 +1,29 @@
+name = "asb-drx-legacy-v32"
+entrypoint = ["bash", "run_control.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = ["drx_var_v32_gb_transmission_processzone_asb_sweep.py", "run_v32_gb_transmission_processzone_asb_v3.sh", "run_control.sh", "source_provenance.json"]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "01:00:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "4G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

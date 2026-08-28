@@ -1,0 +1,15 @@
+{
+  "schema": "asb-drx-legacy-control/v1",
+  "control": "v33_false_grain_negative",
+  "driver": {
+    "original_path": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/drx_var_v32_gb_transmission_processzone_asb_sweep.py",
+    "sha256": "7006428eb3c310703c62305c83c200dde39fd93f36cfb88d43ac3aab4b3826a7"
+  },
+  "launcher": {
+    "original_path": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/run_v33_gbtrans_drx_asb_balanced.sh",
+    "sha256": "0ead79e3aa93016f657754a779813d80de699787594dc83c467797f4eb989b67"
+  },
+  "reference_result": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/results_v33_quick/rate_1000_crystallographic_local_seed42",
+  "reference_observation": "119 allocated hazard-lineage births; not accepted as physical grains",
+  "resolved_case": {"T0_K": 1100.0, "strain_rate_s-1": 1000.0, "nSteps": 5000, "strain_increment": 0.0001, "poly_seed": 42, "nuc_seed": 271870}
+}

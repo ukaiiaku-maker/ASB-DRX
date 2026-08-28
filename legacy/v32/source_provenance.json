@@ -1,0 +1,14 @@
+{
+  "schema": "asb-drx-legacy-control/v1",
+  "control": "v32_asb_like",
+  "driver": {
+    "original_path": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/drx_var_v32_gb_transmission_processzone_asb_sweep.py",
+    "sha256": "7006428eb3c310703c62305c83c200dde39fd93f36cfb88d43ac3aab4b3826a7"
+  },
+  "launcher": {
+    "original_path": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/run_v32_gb_transmission_processzone_asb_v3.sh",
+    "sha256": "de768a56a4ea2d888a23f548028ac4979f1c6603cd4bc190f8ae5d08fa277596"
+  },
+  "reference_result": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/results_v32_rate_sweep_equivstrain_v3_DrxOn_test/rate_30000_crystallographic_local_seed42",
+  "resolved_case": {"T0_K": 1100.0, "strain_rate_s-1": 30000.0, "nSteps": 5000, "strain_increment": 0.0001, "poly_seed": 42, "nuc_seed": 271870}
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "asb-drx-legacy-control/v1",
+  "control": "v34_candidate_bookkeeping",
+  "driver": {
+    "original_path": "/Users/sdillon/DRX-ASB/drx_var_v34_candidate_drx_asb_sweep.py",
+    "sha256": "defa75a5eff8e4f84fb7ec8b875717d1dc6cf6ae7c87fe768a8a07f28ef3479a"
+  },
+  "launcher": {
+    "original_path": "/Users/sdillon/DRX-ASB/run_v34_candidate_drx_asb.sh",
+    "sha256": "7e4d1d4273d553fe1c83c0de82bbb1688a2f2eb35575b6fa25aaa977102a6204"
+  },
+  "reference_result": "/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding/results_v34_rate_sweep_test/coupled_rate_1000_crystallographic_local_seed42",
+  "reference_observation": "stored supplied summary reports zero candidates and zero births; claimed candidate-without-promotion behavior is not reproduced by stored data",
+  "resolved_case": {"branch": "coupled", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "target_strain": 0.5, "strain_increment": 0.0001, "poly_seed": 42, "nuc_seed": 271870}
+}
