@@ -197,6 +197,27 @@ This candidate barrier is the classical interfacial/stored-energy barrier and is
 
 The represented thickness and areal attempt rate in the fixture are uncalibrated. A physical model still requires independently justified values, mesh/time-step invariant eligible-event intensity, spatial site physics, overlap handling, energy accounting through barrier crossing, RNG-complete restart, and held-out DRX-onset validation.
 
+## Shared thermomechanical/phase global ledger
+
+Status: passed, completed, fetched, and checksum-verified. This is a generic binary aggregate with homogeneous mechanics and a periodic 2-D phase domain; it is not spatial mechanics, material, DRX, or ASB validation.
+
+- Git commit: `c9708bb`
+- Run ID / Slurm job: `20260828T141957Z-c9708bb-f4aa93` / `55637907`
+- Twenty-five tests passed: five material-point, seven multi-order, seven stored-energy, and six coupled tests
+- Coupled tests cover exact pure-parent/material-point reduction, exact zero-mechanics/phase reduction at the shared accepted interval, direct global closure, zero-child preservation, one accepted time increment, and exact complete-current-state restart
+- Over 100 steps, external work is `4.578161157e6 J m^-3`; the channels are elastic `4.094594770e6`, stored `526.654694`, interface/order `0.476057`, mechanical heat `483038.626021`, and phase heat `0.630555 J m^-3`
+- Cumulative global closure error is `1.4482e-9 J m^-3`; cumulative thermal roundoff is `-9.5612e-7 J m^-3`, about `2e-12` of total heat
+- Result archive SHA-256: `eb8f125587e65538c11c0fb0060c3307b43e77ceca36614973bd82237cf860e6`
+- Verification JSON SHA-256: `1429171ade780cf5b5626ffd98e9ac87bef7232e91c931a2eb50cc281b563daa`
+- Unit-test log SHA-256: `e4bedcb2818e10e16709d29508fd2b8e6a206b385e84145bcce9696abf2c6cc0`
+- Runner retrieval status: `verified`
+
+The first run `20260828T141817Z-f40c3fd-ee4135` / job `55637902` passed the global mechanical balance and 23 of 25 tests but failed two thermal comparisons. The cause was a tolerance below the representable energy change when adding a tiny `Delta T` to a `1000 K` state; this could also cause unnecessary timestep halving. No scientific result was interpreted from that incomplete run. Commit `c9708bb` added a heat-capacity/temperature-scaled floating-point floor and made the phase-limit comparison use the actual shared accepted interval.
+
+The passing kernel updates grain-wise EXP-floor plastic rates and dislocation storage under common stress, then relaxes the phase fields with the updated stored energies. Direct initial-to-final energy differences prevent storage consumed by boundary motion from being counted twice. Both heat channels update one temperature, and all current coupled state restarts bitwise exactly.
+
+This remains an aggregate verification limit. It has no displacement-resolved stress field, heterogeneous temperature, conduction in the phase domain, recovery/annihilation, multiple slip, physical boundary conditions, calibrated GB kinetics, stochastic allocator, localization convergence, or external data comparison.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
