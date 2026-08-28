@@ -97,7 +97,21 @@ Persist ID, position/support/shape, trial orientation and misorientation, parent
 
 The material-agnostic classifier in `src/asb_drx/grains.py` now enforces a deliberately narrower verified subset of that contract. A label has resolved support only where it is both the dominant order parameter and above a purity threshold, its support exceeds an explicitly supplied area criterion, and the support is one four-connected component on the periodic grid. A root becomes active only after the persistence interval. A descendant becomes a promoted recrystallized grain only after the same persistence interval, valid parent-prefixed lineage, and a minimum misorientation evaluated modulo an explicitly supplied scalar symmetry order. Loss of resolved support removes it immediately from physical counts and retires its immutable provenance after a grace interval. Rejected and retired records cannot silently reactivate.
 
-This classifier is measurement infrastructure, not nucleation physics. Its area, purity, persistence, misorientation, and symmetry settings must ultimately derive from the resolved diffuse-interface scale, temporal convergence, and the selected material/crystal symmetry. The generic verification fixture values cannot be transferred to a production material. Full orientation-manifold dynamics, stochastic trial generation, energetic acceptance, collisions, and multi-order-parameter evolution remain open.
+This classifier is measurement infrastructure, not nucleation physics. Its area, purity, persistence, misorientation, and symmetry settings must ultimately derive from the resolved diffuse-interface scale, temporal convergence, and the selected material/crystal symmetry. The generic verification fixture values cannot be transferred to a production material. Full orientation-manifold dynamics, stochastic trial generation, energetic acceptance, collisions, and production multi-order-parameter evolution remain open.
+
+### Constrained multi-order verification kernel
+
+The next isolated kernel represents `N` allocated grain fields on the pointwise simplex `eta_i >= 0`, `sum_i eta_i = 1` with
+
+`F = integral [ W sum_(i<j) eta_i^2 eta_j^2 + sum_i g_i h(eta_i) + (kappa/2) sum_i |grad eta_i|^2 ] dV`,
+
+where `h(eta)=eta^3(10-15 eta+6 eta^2)`. The endpoint-flat interpolation is essential: a lower bulk energy for an already allocated child must drive an interface but must not spontaneously create that child from an exactly pure parent. The unconstrained chemical potentials are
+
+`mu_i = 2 W eta_i sum_(j != i) eta_j^2 + g_i h'(eta_i) - kappa laplacian(eta_i)`.
+
+The Onsager update uses the tangent projection `mu_i - mean_j(mu_j)`, followed only by roundoff-level simplex normalization and an energy/nonnegativity acceptance gate. For a planar boundary between two equal-bulk phases, reduction to one independent field gives `gamma = sqrt(kappa W)/3`. If phase 1 is lower by `Delta f > 0`, the two-dimensional circular sharp-interface limit is `R_c=gamma/Delta f` and `R_dot=M_eff(Delta f-gamma/R)`. The generic tests must recover the sign on each side of `R_c`, pointwise simplex conservation, energy decrease, label-permutation symmetry, pure-parent invariance, exact restart, and tracker coupling with fixed label count.
+
+This construction still omits crystallographic boundary-energy anisotropy, a full orientation quotient/manifold, triple-junction calibration, elastic coherency, stored-energy-dependent `g_i`, stochastic candidate creation, and collision/coalescence rules. Passing it establishes a constrained variational baseline only.
 
 ## Timescale and stability work before 2-D sweeps
 

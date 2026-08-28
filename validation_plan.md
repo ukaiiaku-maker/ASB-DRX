@@ -35,6 +35,10 @@ If a collective extension is attempted, it must additionally predict relevant tr
 - promotion requires persistent pure support, valid lineage, and symmetry-reduced misorientation;
 - loss of support removes a grain from current counts before provenance-preserving retirement;
 - tracker checkpoint/restart preserves every lifecycle field exactly.
+- constrained multi-order evolution preserves the pointwise simplex and decreases the declared free energy;
+- a pure parent cannot create an allocated child through a nonzero bulk-force derivative;
+- the diffuse binary nucleus recovers the sharp-interface growth sign and label-permutation symmetry;
+- coupling evolved fields to the tracker changes physical support but never allocates a label.
 
 ## Common-equation mechanism ladder
 
