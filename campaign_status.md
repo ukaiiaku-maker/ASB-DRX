@@ -15,6 +15,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - An EXP-floor barrier, independent-node rate law, inverse, and closed-form rate--temperature strength peak have been derived in `analytical_strength_derivation.md`.
 - A material-agnostic analytical kernel and verification tests have been added under `src/asb_drx/` and `tests/`; numerical execution is restricted to HPC3.
 - HPC3 run `20260828T120911Z-9d9e7c4-1bdf8a` (job `55637582`) passed all five analytical tests and was fetched with verified checksums.
+- HPC3 identifiability run `20260828T131741Z-9caa154-ffbe2c` (job `55637767`) passed seven tests with verified retrieval. Strength-only peaks expose the exact scale compensation; independent peak density restores the tested five-parameter local rank.
 - Literature motivates, but does not parameterize, a collective transparent-node hypothesis based on stress-transfer branching and multi-hit shot-noise memory.
 - Complete single-glider Taylor DDD context was located in `/Users/sdillon/Taylor_DDD` and `/Users/sdillon/Taylor_DDD_arrhenius_native`. Commit `fb7610b` contains a passing native ExaDiS persistent-contact gate; later EXP-floor campaigns contain event histories across density and temperature. These are now structural evidence, not parameter sources.
 - HPC3 structural run `20260828T130729Z-1a147e0-710710` (job `55637740`) passed both collective-context tests with verified retrieval. Higher density has substantially more multi-hit clustering, but all sampled native one-step contact operators have zero spectral-radius proxy and only 11 redistribution samples exist. No causal collective law or production parameter is established.
@@ -28,7 +29,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 
 ## Active scientific boundaries
 
-1. The first analytical kernel tests passed on HPC3; further optimizer-identifiability tests must pass before physical fitting.
+1. The analytical kernel and first optimizer-identifiability gate pass on HPC3. Physical fitting must not estimate both stress scale and attempt rate from strength peaks alone; it requires independent peak density or an authoritative fixed scale.
 2. Physical calibration cannot begin until one authoritative target material and strength/rate/temperature dataset are selected.
 3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.

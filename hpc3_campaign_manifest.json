@@ -264,6 +264,42 @@
       "local_path": "hpc3-results/asb-drx-independent/20260828T130729Z-1a147e0-710710",
       "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "66cc05879596513d65dab9a789541eda5d507bc3e090cb7aebe3b9b254f690e7", "collective_context_diagnostics.json": "ff9335351ab57fd3d1e0d62d9f47161d20eaace30d31502c369f117f85866628", "unittest.txt": "0bc3b563ba8ae1be2a1256d6af136dc858546b47a60c1ea19b28bbf2dad456da", "results/checksums-single.sha256": "922046b10f13bcc6bb6f278841dde4e303a4794abcdf0940e097eb9ddb71e07f", "status/final-single.json": "59b877ac3deeb368165fd0d342f6f7263d6e95b02b1ee4851ae27951c96a3f7e"}
+    },
+    {
+      "run_id": "20260828T131623Z-7598a32-e67e73",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "peak_identifiability_launcher_attempt_no_scientific_result",
+      "git_commit_at_plan": "7598a32a8ef9cbf2e08f0300f79f871c6206124e",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean_but_launcher_environment_incomplete",
+      "source_snapshot_sha256": "930ce79ee14363a4f6d2bde4be4b79e5f79f8357a50979351757ac188bd5ca8e",
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"},
+      "material_dataset_version": null,
+      "grid_domain_timestep_stopping": "not_applicable_synthetic_optimizer_tests",
+      "slurm": {"job_id": "55637761", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-04", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T13:16:39Z", "end_utc": "2026-08-28T13:16:39Z", "exit_status": "1:0",
+      "stop_reason": "launcher_failure_PYTHONPATH_omitted_no_tests_executed", "wall_clock_seconds": 1, "peak_memory_MB": 9.05,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T131623Z-7598a32-e67e73",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T131623Z-7598a32-e67e73", "retrieval_status": "fetched_incomplete",
+      "outputs": {"results/results-single.tar.gz": "191fe50d1987733fec1b870455a35d916cfe2b12e3b3095271d4e9511c7d2582", "status/final-single.json": "03ac7ffe029db6cf4a79207729e99c1d364967857bd7851324e6081b3f5bacec"}
+    },
+    {
+      "run_id": "20260828T131741Z-9caa154-ffbe2c",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "analytical_peak_synthetic_identifiability_verification",
+      "git_commit_at_plan": "9caa1541b1fb503e4633c2359f25213361e2e988",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "source_snapshot_sha256": "67c9abd96b228127d5709d33c73c8c974faad884320ca8a04a02290b43270e1d",
+      "input_sha256": {"run_peak_optimization_hpc3.sh": "3cd86fbad8a7aef9cd772a79b6f4c31a3ba6e351625d32ae7c9a9e8ede2d3513", "src/asb_drx/analytical.py": "42002881d38f93e45260ae82e05f523596ba2acfe1a008a5694b2bff8071e031", "src/asb_drx/optimization.py": "3a186617eab00d343e774770e5071401646449fd8eae28fdbf7f588a4ac8eff1", "tests/test_exp_floor.py": "0e90174e748d9f11b5acb2973aef17141bbaadae557801d4e2420d4ee3be982b", "tests/test_peak_optimization.py": "91f220d13905b67b41e85fd9d25b38f9001da47ef14d33c75dcd34124a39e464"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"fixture": "exact_synthetic_EXP_floor_peaks", "temperatures_K": [800.0, 1000.0, 1200.0], "shear_rates_s-1": [10.0, 1000.0, 100000.0], "fitted_parameter_count": 5, "scientific_disposition": "optimizer_information_test_only"},
+      "grid_domain_timestep_stopping": "not_applicable_synthetic_optimizer_tests",
+      "slurm": {"job_id": "55637767", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-01", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9", "scipy": "1.16.3"},
+      "start_utc": "2026-08-28T13:18:05Z", "end_utc": "2026-08-28T13:18:06Z", "exit_status": "0:0",
+      "stop_reason": "completed_all_seven_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 190.47,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T131741Z-9caa154-ffbe2c",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T131741Z-9caa154-ffbe2c", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "070814acca5b69a377421aef13bec665f38af3494129cb3f7e361c76b0a03eb1", "unittest.txt": "f1bbe99fda07d2a5dd2a29247abc9d9faa25ae236a4fae7059c6fe2dc82b02d3", "results/checksums-single.sha256": "3e4e56be5762d2eded4e136ea6570475c2f57d54e81616b02f796024f2fc694a", "status/final-single.json": "43be5d890b0b7a67878a1c0891fbec4713375daae48b482f50c1b03d79f5e8a2"}
     }
   ]
 }

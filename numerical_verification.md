@@ -18,6 +18,23 @@ Status: passed, completed, fetched, and checksum-verified.
 
 This verifies implementation consistency with the declared equations. It does not validate a material parameterization.
 
+## Analytical peak identifiability
+
+Status: passed, completed, fetched, and checksum-verified. This uses exact synthetic fixtures and makes no physical fit.
+
+- Git commit: `9caa154`
+- Run ID / Slurm job: `20260828T131741Z-9caa154-ffbe2c` / `55637767`
+- Result: `COMPLETED`, exit `0:0`; application and finalization exit zero
+- Environment: `anaconda/2025.12`, Python 3.13.9, SciPy 1.16.3; one CPU, 2 GB, no GPU; 1 s wall clock and 190.47 MB peak memory
+- Seven tests passed: the five analytical-law tests plus strength-only rank deficiency and strength-plus-density recovery
+- Result archive SHA-256: `070814acca5b69a377421aef13bec665f38af3494129cb3f7e361c76b0a03eb1`
+- Unit-test log SHA-256: `f1bbe99fda07d2a5dd2a29247abc9d9faa25ae236a4fae7059c6fe2dc82b02d3`
+- Runner retrieval status: `verified`
+
+Peak strength alone correctly fails the five-parameter local-rank gate because `tau_ref` and `eta0` compensate. Adding independently observed peak density restores full local rank and recovers the planted five scale/temperature parameters to the declared tolerance. Therefore a physical campaign must either measure peak density independently or fix one member of the scale pair from authoritative physics; stress peaks alone cannot justify both.
+
+The preceding run `20260828T131623Z-7598a32-e67e73` / job `55637761` failed before numerical tests because its launcher omitted `PYTHONPATH`. It was fetched as incomplete, no scientific output was interpreted, and commit `9caa154` corrected the launcher environment only.
+
 ## Collective-context structural diagnostic
 
 Status: passed, completed, fetched, and checksum-verified. This is a structural diagnostic of old DDD context and is explicitly excluded from production parameterization.

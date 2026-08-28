@@ -98,6 +98,8 @@ The analytical peak provides inexpensive residuals and gradients for optimizatio
 
 The first identifiability gate fits only `G_ref`, `tau_ref`, `eta0`, and the two temperature coefficients while fixing barrier shape, density exponent, Burgers vector, and reference temperature. Synthetic strength-only peaks must reveal the exact `tau_ref`--`eta0` scale compensation rather than report a unique fit. Adding independently observed peak density must restore local rank and recover the planted parameters. This gate tests the optimizer and information structure; it neither chooses a material nor validates physical parameters.
 
+HPC3 run `20260828T131741Z-9caa154-ffbe2c` passed that gate: strength-only observations were rank deficient, while strength plus independently observed peak density restored full local rank and recovered the five planted parameters. Consequently, fitting both `tau_ref` and `eta0` to peak stresses alone is prohibited.
+
 ## 5. Transparent nodes and a possible collective link
 
 “Transparent” is interpreted here as a node that can be crossed/unzipped/sheared and then repins or transfers stress, rather than an indefinitely impenetrable obstacle. Transparency alone does not imply multi-hit behavior.
