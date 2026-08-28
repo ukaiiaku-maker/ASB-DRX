@@ -1,6 +1,6 @@
 # Final scientific report
 
-Status: rebaselined on the analytical EXP-floor law; first analytical verification gate passed.
+Status: rebaselined on the analytical EXP-floor law; analytical, identifiability, collective-context, and first thermodynamic kernel gates executed on HPC3.
 
 The final report will separately identify historical context, analytical consequences, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
 
@@ -11,6 +11,8 @@ The final report will separately identify historical context, analytical consequ
 - DD is not a parameterization route. Missing DD transition data no longer block the campaign.
 - The EXP-floor barrier now has a closed-form inverse and Lambert-W prediction for peak density, local stress, and macroscopic strength as functions of rate and temperature.
 - HPC3 run `20260828T120911Z-9d9e7c4-1bdf8a` / job `55637582` passed all five analytical kernel tests and was fetched with verified checksums.
+- HPC3 run `20260828T131741Z-9caa154-ffbe2c` / job `55637767` shows that strength peaks alone are scale-nonidentifiable, while independent peak density restores the tested five-parameter local rank.
+- HPC3 run `20260828T132308Z-07d589a-1e7eac` / job `55637784` passed the first executable thermodynamic gate: variational consistency, nonincreasing free-energy relaxation, conservative density transfer, exact incremental work closure, and the circular-nucleus sign limit.
 - The target material is unresolved because legacy Fe/BCC descriptions conflict with embedded Cr provenance and mixed-alloy validation data.
 - The thermodynamic document defines candidate state/balance/dissipation structures, rejects flow stress as a free-energy density, and keeps both the closure and DRX representation decisions open pending evidence.
 - HPC3 environment/staging smoke job `55633650` passed and fetched. Exact legacy jobs `55633674`, `55633691`, and `55633694` all completed and fetched with verified checksums.
@@ -27,4 +29,4 @@ v33 and v34 detailed trajectories do not reproduce the stored references from id
 
 ## Current boundary
 
-No physical parameter has been calibrated and no production solver or array has been launched. Analytical implementation and verification proceed now. Physical optimization requires one authoritative material/validation target. A collective transparent-node extension remains optional research until a derived transfer/memory model and discriminating observations justify it.
+No physical parameter has been calibrated and no production solver or array has been launched. The thermodynamic result is a generic verification fixture, not evidence of realistic DRX or ASB. Physical optimization requires one authoritative material/validation target. A collective transparent-node extension remains optional research until a derived transfer/memory model and discriminating observations justify it. Coupled thermomechanics, a diffuse 2-D nucleus, convergence, restart, orientation/grain invariants, the common-equation mechanism ladder, and external validation remain required.

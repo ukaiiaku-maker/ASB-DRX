@@ -300,6 +300,26 @@
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T131741Z-9caa154-ffbe2c",
       "local_path": "hpc3-results/asb-drx-independent/20260828T131741Z-9caa154-ffbe2c", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "070814acca5b69a377421aef13bec665f38af3494129cb3f7e361c76b0a03eb1", "unittest.txt": "f1bbe99fda07d2a5dd2a29247abc9d9faa25ae236a4fae7059c6fe2dc82b02d3", "results/checksums-single.sha256": "3e4e56be5762d2eded4e136ea6570475c2f57d54e81616b02f796024f2fc694a", "status/final-single.json": "43be5d890b0b7a67878a1c0891fbec4713375daae48b482f50c1b03d79f5e8a2"}
+    },
+    {
+      "run_id": "20260828T132308Z-07d589a-1e7eac",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "material_agnostic_thermodynamic_kernel_verification",
+      "git_commit_at_plan": "07d589a",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "source_snapshot_sha256": "afa32ddcba42f34fcc5a8aca6d8a305ff94d545caa1528f2bb81110d15320112",
+      "input_sha256": {"run_thermodynamic_hpc3.sh": "62babb206ea2eede7ec326e965d1f87581beb6941e1c026d882bb4f5348f6f9d", "src/asb_drx/thermodynamics.py": "3c53901b46e68388a3ef2c533dd68fea797cd46f4c6077de6a8fb34593b0686f", "tests/test_thermodynamics.py": "93d8e2ba8b328842b6475645de0acc31726a17e13a6cbcfae46670456af6e0c3", "tools/run_thermodynamic_verification.py": "05998c4515e4cae19f364bf2bc4f346cfab29f849ad2b4cc6d9f07aea8c6717c"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"},
+      "material_dataset_version": null,
+      "resolved_configuration_SI": {"fixture": "two_state_periodic_1D_Allen_Cahn_plus_ledgers_and_sharp_interface_nucleus", "grid_points": 64, "dx_m": 1e-7, "steps": 100, "proposed_dt_s": 1e-4, "scientific_disposition": "dimension_sign_conservation_fixture_not_material_calibration"},
+      "grid_domain_timestep_stopping": {"domain": "periodic_1D_unit_transverse_area", "grid_points": 64, "dx_m": 1e-7, "timestep": "energy_checked_explicit_with_halving", "stopping": "100 accepted steps"},
+      "slurm": {"job_id": "55637784", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9", "numpy": "2.3.5"},
+      "start_utc": "2026-08-28T13:23:52Z", "end_utc": "2026-08-28T13:23:53Z", "exit_status": "0:0",
+      "stop_reason": "completed_all_six_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 36.91,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T132308Z-07d589a-1e7eac",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T132308Z-07d589a-1e7eac", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "d4edda846b89713fc754eb630a2e80c2ecbda3621f7f2d77cc6ab50a7a9c992c", "thermodynamic_verification.json": "c390cfbd67f2d35161f6d351aedbf93e73294e97a7ad6d880b47efd3610b1495", "unittest.txt": "6554142b35b394f08a34b9dbd6e8494a8a50487854cabfbf1203d20705e4db85", "results/checksums-single.sha256": "a5ed962fc47e3b13d3de39b3733650580090170969ee232ff4a12dd260df110c", "status/final-single.json": "b205d124956865fd13e4936c479a2fe6debd486172adb02c9ad886a1747f8c10"}
     }
   ]
 }

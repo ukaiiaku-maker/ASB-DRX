@@ -55,6 +55,24 @@ The count histories show stronger multi-hit clustering at higher density. The na
 
 An earlier packaging attempt, run `20260828T130634Z-810e232-8c908d` / job `55637733` at commit `810e232`, failed before scientific execution because the archive omitted `src/asb_drx/analytical.py`, which package initialization imports. The application exit was 1 and finalization exit 0. The partial archive was fetched and marked incomplete; no diagnostic result was interpreted. Commit `1a147e0` corrected only the source manifest before the successful rerun.
 
+## Thermodynamic verification kernel
+
+Status: passed, completed, fetched, and checksum-verified. This is a dimension/sign/conservation fixture, not a calibrated phase-field simulation.
+
+- Git commit: `07d589a`
+- Run ID / Slurm job: `20260828T132308Z-07d589a-1e7eac` / `55637784`
+- Result: `COMPLETED`, exit `0:0`; application and finalization exit zero
+- Environment: `anaconda/2025.12`, Python 3.13.9, NumPy 2.3.5; one CPU, 2 GB, no GPU; 1 s wall clock and 36.91 MB peak memory
+- Six tests passed: discrete variational derivative, nonincreasing unloaded relaxation, conservative reservoir transfer/overdraw rejection, exact work-ledger closure/excess rejection, circular-nucleus signs/stationarity, and invalid-range rejection
+- The 100-step accepted relaxation decreased free energy from `0.2820377174` to `0.2767598660 J m^-2` (relative change `-0.0187133`) with zero step halvings
+- The fixture critical radius is `2.5e-7 m`; radius rates are negative below, zero at, and positive above the critical value
+- Result archive SHA-256: `d4edda846b89713fc754eb630a2e80c2ecbda3621f7f2d77cc6ab50a7a9c992c`
+- Verification JSON SHA-256: `c390cfbd67f2d35161f6d351aedbf93e73294e97a7ad6d880b47efd3610b1495`
+- Unit-test log SHA-256: `6554142b35b394f08a34b9dbd6e8494a8a50487854cabfbf1203d20705e4db85`
+- Runner retrieval status: `verified`
+
+This passes the first executable thermodynamic gate. It does not yet verify coupled mechanical/thermal work closure, a diffuse 2-D nucleus, grid/timestep convergence, restart equivalence, orientation/grain invariants, or any material response.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.

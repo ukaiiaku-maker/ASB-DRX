@@ -19,6 +19,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - Literature motivates, but does not parameterize, a collective transparent-node hypothesis based on stress-transfer branching and multi-hit shot-noise memory.
 - Complete single-glider Taylor DDD context was located in `/Users/sdillon/Taylor_DDD` and `/Users/sdillon/Taylor_DDD_arrhenius_native`. Commit `fb7610b` contains a passing native ExaDiS persistent-contact gate; later EXP-floor campaigns contain event histories across density and temperature. These are now structural evidence, not parameter sources.
 - HPC3 structural run `20260828T130729Z-1a147e0-710710` (job `55637740`) passed both collective-context tests with verified retrieval. Higher density has substantially more multi-hit clustering, but all sampled native one-step contact operators have zero spectral-radius proxy and only 11 redistribution samples exist. No causal collective law or production parameter is established.
+- HPC3 thermodynamic run `20260828T132308Z-07d589a-1e7eac` (job `55637784`) passed six material-agnostic tests with verified retrieval: discrete variational consistency, monotone relaxation, conservative reservoir transfer, exact work partition, nucleus-limit signs, and range rejection.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
 - Campaign-specific HPC3 smoke job `55633650` completed, fetched, and checksum-verified.
@@ -33,6 +34,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 2. Physical calibration cannot begin until one authoritative target material and strength/rate/temperature dataset are selected.
 3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.
+5. The first thermodynamic kernel gate passes, but coupled thermomechanics, diffuse 2-D nucleus behavior, convergence, exact restart, and grain/orientation invariants remain unverified.
 
 ## Required external resolutions
 
