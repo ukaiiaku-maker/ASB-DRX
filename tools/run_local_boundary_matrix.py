@@ -26,6 +26,7 @@ def run_condition(
     target_shear_increment: float,
     maximum_accepted_steps: int,
     fixture: SingleGliderDDDParameterization,
+    retained_samples: int | None = None,
 ) -> dict:
     case = BoundarySpatialCase(temperature_K, shear_rate_s_inv, density_ratio)
     initial, metadata = case.build_local_state(points, fixture)
@@ -35,12 +36,15 @@ def run_condition(
         shear_rate_s_inv,
         SpatialMechanismControls(True, True),
     )
+    retained_samples = steps if retained_samples is None else retained_samples
+    if retained_samples < 1:
+        raise ValueError("retained_samples must be positive")
     trace, control = run_matched_local_strain_pair(
         initial, mechanism, metadata["dx_m"], proposed_dt_s,
         target_shear_increment,
         fixture.law(), fixture.spatial_parameters(),
         maximum_accepted_steps=maximum_accepted_steps,
-        retention_strain_increment=target_shear_increment / steps,
+        retention_strain_increment=target_shear_increment / retained_samples,
         recovery_law=fixture.recovery_law(),
     )
     criteria = LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05)
@@ -69,6 +73,7 @@ def run_condition(
         "maximum_flow_residual": trace.statistics.maximum_flow_residual,
         "accepted_steps": trace.statistics.accepted_steps,
         "retained_samples": len(trace.steps),
+        "requested_retained_samples": retained_samples,
         "accepted_duration_s": final.time_s,
         "applied_shear_increment": actual_increment,
         "final_mean_stress_Pa": final_step.equilibrium.mean_stress_Pa,
