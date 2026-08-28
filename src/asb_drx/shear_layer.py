@@ -120,6 +120,13 @@ def shear_layer_step(
 
     dt_s = proposed_dt_s
     for halvings in range(maximum_halvings + 1):
+        diffusivity = (
+            parameters.thermal_conductivity_W_m_K
+            / parameters.volumetric_heat_capacity_J_m3_K
+        )
+        if diffusivity > 0.0 and dt_s * diffusivity / dx_m**2 > 0.5:
+            dt_s *= 0.5
+            continue
         applied_increment = applied_shear_rate_s_inv * dt_s
         plastic_increment = plastic_rates * dt_s
         mean_plastic_increment = float(np.mean(plastic_increment))
@@ -143,10 +150,6 @@ def shear_layer_step(
 
         source_temperature = temperatures + (
             local_heat / parameters.volumetric_heat_capacity_J_m3_K
-        )
-        diffusivity = (
-            parameters.thermal_conductivity_W_m_K
-            / parameters.volumetric_heat_capacity_J_m3_K
         )
         laplacian = (
             np.roll(source_temperature, -1)

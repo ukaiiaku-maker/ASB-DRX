@@ -34,7 +34,7 @@ class ShearLayerTests(unittest.TestCase):
             8.0e10, 3.5e6, 25.0, 5.0e-9, 1.0e14
         )
         self.points = 32
-        self.dx_m = 2.0e-6
+        self.dx_m = 2.0e-5
         self.initial = ShearLayerState(
             1.0e8,
             0.0,

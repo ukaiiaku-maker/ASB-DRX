@@ -28,14 +28,14 @@ def main() -> None:
         1.0e8, 0.0, np.zeros(points), temperature, np.full(points, 1.0e14)
     )
     final, ledgers = advance_shear_layer(
-        initial, 10.0, 2.0e-6, 1.0e-5, 100, law, parameters
+        initial, 10.0, 2.0e-5, 1.0e-5, 100, law, parameters
     )
     external = sum(item.external_work_J_m3 for item in ledgers)
     report = {
         "schema": "asb-drx-shear-layer-verification/v1",
         "scientific_disposition": "generic common-stress spatial mechanism fixture; not ASB or material validation",
         "points": points,
-        "dx_m": 2.0e-6,
+        "dx_m": 2.0e-5,
         "steps": 100,
         "initial_temperature_mean_K": float(np.mean(initial.temperature_K)),
         "final_temperature_mean_K": float(np.mean(final.temperature_K)),
