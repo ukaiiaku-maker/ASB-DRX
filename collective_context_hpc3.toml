@@ -6,6 +6,7 @@ environment = {}
 input_paths = [
   "run_collective_context_hpc3.sh",
   "src/asb_drx/__init__.py",
+  "src/asb_drx/analytical.py",
   "src/asb_drx/collective_diagnostics.py",
   "tools/analyze_collective_context.py",
   "tests/test_collective_diagnostics.py",
