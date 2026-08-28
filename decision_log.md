@@ -65,3 +65,9 @@ If target observations require collective transparent-node behavior, derive it f
 Status: accepted, 2026-08-28.
 
 The located `Taylor_DDD` persistent-contact simulations may test whether the proposed contact graph, elastic transfer, branching susceptibility, and multi-hit memory are structurally adequate. They do not set the EXP-floor or collective production parameters. The immutable source landmark is native ExaDiS commit `fb7610b`; result-file hashes and limitations are recorded in `taylor_ddd_context_audit.md`.
+
+## ADR-0012: Do not promote a transparent-node multiplier
+
+Status: accepted, 2026-08-28.
+
+Primary literature supports history-dependent first/repeat forest crossings and shows that glissile or shearable junctions can remain hardening agents. It also shows that obstacle character changes collective-event statistics. These results motivate the existing conditioning/shot-noise ablation but do not identify its transfer kernel, reset time, or target-material parameters. No scalar multi-hit multiplier enters the baseline. Reconsider only with causal event parentage and held-out transient/burst observations that reject the independent EXP-floor law.
