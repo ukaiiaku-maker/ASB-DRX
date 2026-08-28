@@ -261,6 +261,20 @@ The preceding immutable run `20260828T143111Z-d608655-a7aea7` / job `55638861` f
 
 No simulated trajectory has yet passed this classifier. The thresholds are visible generic scaffolding and cannot be presented as material calibration or experimental validation.
 
+## Common-equation mechanism ladder
+
+Status: passed, completed, fetched, and checksum-verified; generic negative controls, not an instability-boundary, DRX, material, or ASB result.
+
+- Run `20260828T144000Z-c9dc4ab-7b33f9`, commit `c9dc4ab`, Slurm job `55640278`; 17 tests passed in the application transcript
+- Cases: unloaded isothermal relaxation; isothermal deformation with phase disabled; isothermal DRX; thermal high-rate with phase disabled; coupled intermediate-rate; coupled high-rate
+- Every thermal case is compared against an automatically generated isothermal twin with identical rate and phase switch
+- Phase-disabled fields remain exact invariants with zero phase heat; fixed-temperature cases route all generated heat to an explicit bath and close `Delta E_thermal + Q_bath = Q_mechanical + Q_phase`
+- All six cases are nonlocalized: minimum active fraction `0.90733-1.0`, maximum matched-control temperature excess `0.12503 K`, maximum softening `0`, and effective width about `15.54-16 micrometers`
+- Wall clock `33 s`; peak batch memory `37.79 MB`
+- Archive / JSON / test transcript SHA-256: `5df65c272d353564e355cea7b615ced97e74c4ae7ba3fa4bc1a21149f01a0f7a`, `f5dfbd2c14dfe946baf70886321446a1fe179e5fbc933c020a3603dc7952f215`, `bd1f0e8804687cf707f7c1bb2309931e2e1ae8ad58bd0af207c70b0db64a5753`
+
+These 16-by-16, 20-step fixtures verify attribution mechanics only. Their `10` and `1000 s^-1` rates, periodic boundaries, perturbation, and generic localization thresholds are not a physical sweep and may not be interpreted as locating an ASB or DRX boundary.
+
 ## Required future records
 
 Future records must extend the passed generic gates to production-complete restart including RNG/allocator state, material-scaled grain and localization criteria, multidimensional equilibrium, matched-control mechanism runs, localization convergence, parameter uncertainty, and external validation, with run IDs, commits, configurations, tolerances, and checksums.

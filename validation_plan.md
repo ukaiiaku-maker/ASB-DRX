@@ -65,6 +65,8 @@ If a collective extension is attempted, it must additionally predict relevant tr
 5. coupled intermediate-rate;
 6. coupled high-rate.
 
+The generic six-case implementation and its automatically generated isothermal twins have passed the software/ledger gate. All six initial fixtures are negative localization controls. The next use of this ladder must select material-scaled rates, duration, boundaries, perturbations, and acceptance thresholds prospectively; it must not tune them until a desired label appears.
+
 ## Production staging
 
 Only after analytical verification, target selection, parameter validation, and thermodynamic/numerical gates, run a sparse matrix selected from actual validity envelopes. Locate boundaries, then use at least three independent seeds near boundaries and representative regimes. Keep microstructure, collective, embryo, and perturbation RNG streams distinguishable.
