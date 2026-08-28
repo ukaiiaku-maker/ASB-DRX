@@ -77,6 +77,21 @@ class LocalMechanismTraceTests(unittest.TestCase):
             target,
         )
 
+    def test_strain_cadence_limits_retention_and_preserves_step_statistics(self) -> None:
+        trace, control = run_matched_local_strain_pair(
+            self.initial, self.case, self.metadata["dx_m"], 2.0e-8, 3.0e-3,
+            self.fixture.law(), self.fixture.spatial_parameters(),
+            retention_strain_increment=1.0e-3,
+        )
+        self.assertLessEqual(len(trace.states), 4)
+        self.assertEqual(len(trace.states), len(control.states))
+        self.assertGreaterEqual(trace.statistics.accepted_steps, len(trace.states))
+        self.assertEqual(trace.statistics, control.statistics)
+        self.assertAlmostEqual(
+            abs(trace.states[-1].applied_shear - self.initial.applied_shear),
+            3.0e-3,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

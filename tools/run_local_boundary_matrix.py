@@ -38,6 +38,7 @@ def run_condition(
         initial, mechanism, metadata["dx_m"], proposed_dt_s,
         target_shear_increment,
         fixture.law(), fixture.spatial_parameters(),
+        retention_strain_increment=target_shear_increment / steps,
     )
     criteria = LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05)
     decision = classify_local_mechanism_trace(
@@ -49,9 +50,9 @@ def run_condition(
     )
     final = trace.states[-1]
     final_step = trace.steps[-1]
-    accepted_dt = np.asarray([item.accepted_dt_s for item in trace.steps])
     actual_increment = abs(final.applied_shear - initial.applied_shear)
     return {
+        "status": "complete",
         "temperature_K": temperature_K,
         "shear_rate_s_inv": shear_rate_s_inv,
         "density_ratio": density_ratio,
@@ -59,9 +60,10 @@ def run_condition(
         "nominal_density_m2": metadata["nominal_density_m2"],
         "initial_mean_stress_Pa": metadata["initial_stress_Pa"],
         "proposed_dt_s": proposed_dt_s,
-        "minimum_accepted_dt_s": float(np.min(accepted_dt)),
-        "maximum_halvings": max(item.halvings for item in trace.steps),
-        "accepted_steps": len(trace.steps),
+        "minimum_accepted_dt_s": trace.statistics.minimum_accepted_dt_s,
+        "maximum_halvings": trace.statistics.maximum_halvings,
+        "accepted_steps": trace.statistics.accepted_steps,
+        "retained_samples": len(trace.steps),
         "accepted_duration_s": final.time_s,
         "applied_shear_increment": actual_increment,
         "final_mean_stress_Pa": final_step.equilibrium.mean_stress_Pa,
@@ -74,19 +76,19 @@ def run_condition(
         "initial_child_order_fraction": float(np.mean(initial.eta_fields[1])),
         "final_child_order_fraction": float(np.mean(final.eta_fields[1])),
         "phase_change_l2": float(np.linalg.norm(final.eta_fields - initial.eta_fields)),
-        "maximum_storage_limited_fraction": max(
-            item.storage_limited_fraction for item in trace.steps
+        "maximum_storage_limited_fraction": (
+            trace.statistics.maximum_storage_limited_fraction
         ),
-        "steps_with_storage_limiting": sum(
-            item.storage_limited_fraction > 0.0 for item in trace.steps
+        "steps_with_storage_limiting": (
+            trace.statistics.steps_with_storage_limiting
         ),
         "localized": decision.localized,
         "failed_criteria": list(decision.failed_criteria),
-        "maximum_absolute_global_closure_error_J_m3": max(
-            abs(item.ledger.global_closure_error_J_m3) for item in trace.steps
+        "maximum_absolute_global_closure_error_J_m3": (
+            trace.statistics.maximum_absolute_global_closure_error_J_m3
         ),
-        "maximum_absolute_thermal_closure_error_J_m3": max(
-            abs(item.ledger.thermal_closure_error_J_m3) for item in trace.steps
+        "maximum_absolute_thermal_closure_error_J_m3": (
+            trace.statistics.maximum_absolute_thermal_closure_error_J_m3
         ),
     }
 
@@ -127,12 +129,20 @@ def main() -> None:
                     f"density_ratio={ratio:g}",
                     flush=True,
                 )
-                records.append(
-                    run_condition(
+                try:
+                    record = run_condition(
                         temperature, rate, ratio, args.points, args.steps,
                         args.target_shear, fixture,
                     )
-                )
+                except RuntimeError as error:
+                    record = {
+                        "status": "numerically_unresolved",
+                        "temperature_K": temperature,
+                        "shear_rate_s_inv": rate,
+                        "density_ratio": ratio,
+                        "error": str(error),
+                    }
+                records.append(record)
                 partial_output.write_text(
                     json.dumps(
                         {
@@ -164,7 +174,10 @@ def main() -> None:
         "target_shear_increment": args.target_shear,
         "localization_criteria": LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05).__dict__,
         "records": records,
-        "localized_count": sum(item["localized"] for item in records),
+        "localized_count": sum(item.get("localized", False) for item in records),
+        "numerically_unresolved_count": sum(
+            item["status"] == "numerically_unresolved" for item in records
+        ),
         "explicit_limitations": [
             "one deterministic perturbation and no seed ensemble",
             "child order fraction is not a physical grain count or DRX classification",
