@@ -5,7 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
+import numpy as np
 from scipy.special import lambertw
+from scipy.optimize import brentq
 
 
 KB_J_PER_K = 1.380649e-23
@@ -24,6 +26,20 @@ class PeakSolution:
     density_m2: float
     local_activation_stress_Pa: float
     macroscopic_strength_Pa: float
+
+
+@dataclass(frozen=True)
+class NetPeakSolution:
+    """Interior strength maximum for forward-minus-reverse continuum flow."""
+
+    temperature_K: float
+    shear_rate_s_inv: float
+    taylor_ratio_q: float
+    density_m2: float
+    local_activation_stress_Pa: float
+    macroscopic_strength_Pa: float
+    forward_rate_s_inv: float
+    reverse_rate_s_inv: float
 
 
 @dataclass(frozen=True)
@@ -127,6 +143,26 @@ class ExpFloorLaw:
         exponent = -self.barrier_J(local_stress_Pa, temperature_K) / (KB_J_PER_K * temperature_K)
         return self.rate_prefactor_s_inv * q**self.density_exponent_p * math.exp(exponent)
 
+    def net_shear_rate_s_inv(
+        self, signed_local_stress_Pa: float, density_m2: float, temperature_K: float
+    ) -> float:
+        """Odd forward-minus-reverse rate used by continuum plastic flow.
+
+        ``shear_rate_s_inv`` remains the positive one-way event rate represented
+        by the source single-glider equations.  Subtracting the unloaded reverse
+        event rate supplies detailed-balance symmetry without a fitted stress
+        regularization and makes the continuum rate exactly zero at zero stress.
+        """
+        if not math.isfinite(signed_local_stress_Pa):
+            raise ValueError("signed_local_stress_Pa must be finite")
+        if signed_local_stress_Pa == 0.0:
+            return 0.0
+        forward = self.shear_rate_s_inv(
+            abs(signed_local_stress_Pa), density_m2, temperature_K
+        )
+        reverse = self.shear_rate_s_inv(0.0, density_m2, temperature_K)
+        return math.copysign(max(forward - reverse, 0.0), signed_local_stress_Pa)
+
     def local_stress_Pa(
         self, density_m2: float, temperature_K: float, shear_rate_s_inv: float
     ) -> float:
@@ -152,6 +188,35 @@ class ExpFloorLaw:
     ) -> float:
         q = self.taylor_ratio(density_m2)
         return q * self.local_stress_Pa(density_m2, temperature_K, shear_rate_s_inv)
+
+    def net_local_stress_Pa(
+        self, density_m2: float, temperature_K: float, shear_rate_s_inv: float
+    ) -> float:
+        """Invert the positive branch of the forward-minus-reverse net rate."""
+        q = self.taylor_ratio(density_m2)
+        self._check_rate(shear_rate_s_inv)
+        reverse = self.shear_rate_s_inv(0.0, density_m2, temperature_K)
+        forward = shear_rate_s_inv + reverse
+        G0 = self.barrier_scale_J(temperature_K)
+        h = -(KB_J_PER_K * temperature_K / G0) * math.log(
+            forward / (self.rate_prefactor_s_inv * q**self.density_exponent_p)
+        )
+        if not self.floor_fraction < h < 1.0:
+            raise ValueError(
+                "requested state is outside the interior net EXP-floor inverse "
+                f"(required barrier fraction h={h:.16g})"
+            )
+        y = (h - self.floor_fraction) / (1.0 - self.floor_fraction)
+        return self.stress_scale_Pa(temperature_K) * (
+            -math.log(y) / self.shape_a
+        ) ** (1.0 / self.shape_n)
+
+    def net_macroscopic_strength_Pa(
+        self, density_m2: float, temperature_K: float, shear_rate_s_inv: float
+    ) -> float:
+        return self.taylor_ratio(density_m2) * self.net_local_stress_Pa(
+            density_m2, temperature_K, shear_rate_s_inv
+        )
 
     def peak(self, temperature_K: float, shear_rate_s_inv: float) -> PeakSolution:
         self._check_temperature(temperature_K)
@@ -190,6 +255,85 @@ class ExpFloorLaw:
             density_m2=density,
             local_activation_stress_Pa=local_stress,
             macroscopic_strength_Pa=q * local_stress,
+        )
+
+    def net_peak(
+        self, temperature_K: float, shear_rate_s_inv: float
+    ) -> NetPeakSolution:
+        """Predict the continuum strength maximum for the net signed rate."""
+        self._check_temperature(temperature_K)
+        self._check_rate(shear_rate_s_inv)
+        G0 = self.barrier_scale_J(temperature_K)
+        thermal = KB_J_PER_K * temperature_K
+        unloaded_factor = math.exp(-G0 / thermal)
+        floor_factor = math.exp(-G0 * self.floor_fraction / thermal)
+        if floor_factor <= unloaded_factor:
+            raise ValueError("no admissible net EXP-floor rate interval")
+        c = G0 / thermal
+
+        def state(barrier_fraction: float) -> tuple[float, float, float]:
+            difference = unloaded_factor * math.expm1(c * (1.0 - barrier_fraction))
+            q = (
+                shear_rate_s_inv / (self.rate_prefactor_s_inv * difference)
+            ) ** (1.0 / self.density_exponent_p)
+            reverse = self.rate_prefactor_s_inv * q**self.density_exponent_p * unloaded_factor
+            y = (barrier_fraction - self.floor_fraction) / (1.0 - self.floor_fraction)
+            stress = self.stress_scale_Pa(temperature_K) * (
+                -math.log(y) / self.shape_a
+            ) ** (1.0 / self.shape_n)
+            return q, stress, reverse
+
+        def log_strength_derivative(barrier_fraction: float) -> float:
+            y = (barrier_fraction - self.floor_fraction) / (1.0 - self.floor_fraction)
+            z_over_difference = 1.0 / (
+                1.0 - math.exp(-c * (1.0 - barrier_fraction))
+            )
+            return (
+                c * z_over_difference / self.density_exponent_p
+                - 1.0
+                / (
+                    self.shape_n
+                    * (barrier_fraction - self.floor_fraction)
+                    * (-math.log(y))
+                )
+            )
+
+        y_values = np.unique(
+            np.concatenate(
+                (
+                    np.geomspace(1.0e-12, 1.0e-2, 160),
+                    np.linspace(1.0e-2, 1.0 - 1.0e-2, 400),
+                    1.0 - np.geomspace(1.0e-12, 1.0e-2, 160),
+                )
+            )
+        )
+        h_values = self.floor_fraction + (1.0 - self.floor_fraction) * y_values
+        roots = []
+        previous_h = float(h_values[0])
+        previous_value = log_strength_derivative(previous_h)
+        for candidate_h in h_values[1:]:
+            candidate_h = float(candidate_h)
+            candidate_value = log_strength_derivative(candidate_h)
+            if previous_value > 0.0 and candidate_value < 0.0:
+                roots.append(
+                    brentq(log_strength_derivative, previous_h, candidate_h, xtol=1.0e-14)
+                )
+            previous_h = candidate_h
+            previous_value = candidate_value
+        if not roots:
+            raise ValueError("no interior maximum of net EXP-floor strength")
+        q, local_stress, reverse = state(roots[-1])
+        density = (q / (self.taylor_geometry_factor * self.burgers_m)) ** 2
+        forward = shear_rate_s_inv + reverse
+        return NetPeakSolution(
+            temperature_K,
+            shear_rate_s_inv,
+            q,
+            density,
+            local_stress,
+            q * local_stress,
+            forward,
+            reverse,
         )
 
     def taylor_ratio(self, density_m2: float) -> float:

@@ -7,7 +7,6 @@ import math
 
 import numpy as np
 
-from .boundary import AnalyticalPeakBoundary
 from .fixtures import SingleGliderDDDParameterization
 from .local_coupled import LocalCoupledState
 from .multi_order import BinaryCircularLimit, diffuse_binary_circle
@@ -43,13 +42,14 @@ class BoundarySpatialCase:
             raise ValueError("points must be at least 8")
         law = fixture.law()
         parameters = fixture.spatial_parameters()
-        boundary = AnalyticalPeakBoundary(law)
-        peak = law.peak(self.temperature_K, self.shear_rate_s_inv)
+        peak = law.net_peak(self.temperature_K, self.shear_rate_s_inv)
         nominal_density = self.density_ratio * peak.density_m2
-        classification = boundary.classify(
-            nominal_density, self.temperature_K, self.shear_rate_s_inv
+        branch = (
+            "pre_peak" if self.density_ratio < 1.0
+            else "net_peak" if self.density_ratio == 1.0
+            else "post_peak"
         )
-        initial_stress = law.macroscopic_strength_Pa(
+        initial_stress = law.net_macroscopic_strength_Pa(
             nominal_density, self.temperature_K, self.shear_rate_s_inv
         )
         dx_m = self.domain_m / points
@@ -94,8 +94,8 @@ class BoundarySpatialCase:
             "dx_m": dx_m,
             "peak_density_m2": peak.density_m2,
             "nominal_density_m2": nominal_density,
-            "density_ratio": classification.density_ratio,
-            "branch": classification.branch,
+            "density_ratio": self.density_ratio,
+            "branch": branch,
             "initial_stress_Pa": initial_stress,
             "interface_width_m": interface_width_m,
             "critical_radius_m": limit.critical_radius_m,

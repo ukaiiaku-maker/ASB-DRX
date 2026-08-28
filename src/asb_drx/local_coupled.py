@@ -10,6 +10,7 @@ import numpy as np
 
 from .analytical import ExpFloorLaw
 from .antiplane import AntiplaneEquilibrium, solve_periodic_antiplane
+from .implicit_flow import backward_euler_antiplane_flow
 from .multi_order import interpolation_h
 from .spatial_coupled import (
     SpatialCoupledParameters,
@@ -80,6 +81,9 @@ class LocalCoupledStep:
     accepted_dt_s: float
     halvings: int
     storage_limited_fraction: float
+    flow_solver: str
+    flow_iterations: int
+    flow_residual: float
 
 
 def diffuse_temperature_periodic_exact(
@@ -119,6 +123,7 @@ def local_coupled_step(
     maximum_halvings: int = 40,
     tolerance_J_m3: float = 1.0e-8,
     relative_ledger_tolerance: float = 1.0e-9,
+    flow_integration: str = "backward_euler",
 ) -> LocalCoupledStep:
     if not math.isfinite(applied_shear_rate_s_inv):
         raise ValueError("applied_shear_rate_s_inv must be finite")
@@ -132,6 +137,8 @@ def local_coupled_step(
         or relative_ledger_tolerance >= 1.0
     ):
         raise ValueError("relative_ledger_tolerance must be finite and in (0,1)")
+    if flow_integration not in ("explicit", "backward_euler"):
+        raise ValueError("flow_integration must be 'explicit' or 'backward_euler'")
     fields = np.asarray(state.eta_fields, dtype=float)
     density = np.asarray(state.forest_density_m2, dtype=float)
     temperature = np.asarray(state.temperature_K, dtype=float)
@@ -142,7 +149,7 @@ def local_coupled_step(
     old_equilibrium = solve_periodic_antiplane(
         state.applied_shear, plastic, parameters.shear_modulus_Pa, dx_m
     )
-    rates = np.zeros_like(density)
+    explicit_rates = np.zeros_like(density)
     for label in range(2):
         for index in np.ndindex(temperature.shape):
             local_stress = float(old_equilibrium.stress_x_Pa[index])
@@ -150,13 +157,10 @@ def local_coupled_step(
                 obstacle_stress = abs(local_stress) / law.taylor_ratio(
                     float(density[(label, *index)])
                 )
-                rates[(label, *index)] = math.copysign(
-                    law.shear_rate_s_inv(
-                        obstacle_stress,
-                        float(density[(label, *index)]),
-                        float(temperature[index]),
-                    ),
-                    local_stress,
+                explicit_rates[(label, *index)] = law.net_shear_rate_s_inv(
+                    math.copysign(obstacle_stress, local_stress),
+                    float(density[(label, *index)]),
+                    float(temperature[index]),
                 )
     _, old_stored, old_interface = _energies_J_m(fields, density, dx_m, parameters)
     area_m2 = fields.shape[1] * fields.shape[2] * dx_m**2
@@ -164,14 +168,43 @@ def local_coupled_step(
     dt_s = proposed_dt_s
     last_rejection = "none"
     for halvings in range(maximum_halvings + 1):
-        grain_increment = rates * dt_s
-        plastic_increment = np.sum(weights * grain_increment, axis=0)
         applied_increment = applied_shear_rate_s_inv * dt_s
-        new_plastic = plastic + plastic_increment
         new_applied = state.applied_shear + applied_increment
-        new_equilibrium = solve_periodic_antiplane(
-            new_applied, new_plastic, parameters.shear_modulus_Pa, dx_m
-        )
+        if flow_integration == "backward_euler":
+            try:
+                implicit = backward_euler_antiplane_flow(
+                    state.applied_shear,
+                    plastic,
+                    applied_increment,
+                    density,
+                    temperature,
+                    weights,
+                    dt_s,
+                    dx_m,
+                    parameters.shear_modulus_Pa,
+                    law,
+                )
+            except RuntimeError as error:
+                last_rejection = f"implicit_flow:{error}"
+                dt_s *= 0.5
+                continue
+            grain_increment = implicit.grain_increment
+            plastic_increment = implicit.plastic_increment
+            new_equilibrium = implicit.equilibrium
+            flow_iterations = implicit.newton_iterations
+            flow_residual = implicit.maximum_residual
+        else:
+            grain_increment = explicit_rates * dt_s
+            plastic_increment = np.sum(weights * grain_increment, axis=0)
+            new_equilibrium = solve_periodic_antiplane(
+                new_applied,
+                plastic + plastic_increment,
+                parameters.shear_modulus_Pa,
+                dx_m,
+            )
+            flow_iterations = 0
+            flow_residual = 0.0
+        new_plastic = plastic + plastic_increment
         midpoint_stress = 0.5 * (
             old_equilibrium.stress_x_Pa + new_equilibrium.stress_x_Pa
         )
@@ -342,6 +375,9 @@ def local_coupled_step(
             dt_s,
             halvings,
             float(np.mean(storage_scale < 1.0 - 8.0 * np.finfo(float).eps)),
+            flow_integration,
+            flow_iterations,
+            flow_residual,
         )
     raise RuntimeError(
         "no admissible local coupled step found; "

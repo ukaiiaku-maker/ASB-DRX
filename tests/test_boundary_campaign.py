@@ -17,8 +17,8 @@ class BoundarySpatialCaseTests(unittest.TestCase):
 
     def test_case_is_anchored_to_exact_analytical_peak(self) -> None:
         state, metadata = self.case.build_state(16, self.fixture)
-        peak = self.fixture.law().peak(950.0, 45000.0)
-        self.assertEqual(metadata["branch"], "analytical_peak")
+        peak = self.fixture.law().net_peak(950.0, 45000.0)
+        self.assertEqual(metadata["branch"], "net_peak")
         self.assertEqual(metadata["nominal_density_m2"], peak.density_m2)
         self.assertTrue(
             math.isclose(state.stress_Pa, peak.macroscopic_strength_Pa, rel_tol=1.0e-15)
@@ -26,7 +26,7 @@ class BoundarySpatialCaseTests(unittest.TestCase):
 
     def test_nominal_peak_closes_applied_rate(self) -> None:
         _, metadata = self.case.build_state(16, self.fixture)
-        rate = self.fixture.law().shear_rate_s_inv(
+        rate = self.fixture.law().net_shear_rate_s_inv(
             metadata["initial_stress_Pa"] / self.fixture.law().taylor_ratio(metadata["nominal_density_m2"]),
             metadata["nominal_density_m2"],
             self.case.temperature_K,

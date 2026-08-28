@@ -64,6 +64,8 @@ def run_condition(
         "proposed_dt_s": proposed_dt_s,
         "minimum_accepted_dt_s": trace.statistics.minimum_accepted_dt_s,
         "maximum_halvings": trace.statistics.maximum_halvings,
+        "maximum_flow_iterations": trace.statistics.maximum_flow_iterations,
+        "maximum_flow_residual": trace.statistics.maximum_flow_residual,
         "accepted_steps": trace.statistics.accepted_steps,
         "retained_samples": len(trace.steps),
         "accepted_duration_s": final.time_s,

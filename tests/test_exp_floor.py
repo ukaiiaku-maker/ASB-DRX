@@ -73,6 +73,32 @@ class ExpFloorAnalyticalTests(unittest.TestCase):
             places=11,
         )
 
+    def test_net_rate_is_odd_zero_at_origin_and_has_its_own_peak(self) -> None:
+        T = 950.0
+        density = 2.0e16
+        stress = 8.0e8
+        positive = self.law.net_shear_rate_s_inv(stress, density, T)
+        self.assertEqual(self.law.net_shear_rate_s_inv(0.0, density, T), 0.0)
+        self.assertEqual(self.law.net_shear_rate_s_inv(-stress, density, T), -positive)
+
+        target = 4.5e4
+        peak = self.law.net_peak(T, target)
+        recovered = self.law.net_shear_rate_s_inv(
+            peak.local_activation_stress_Pa, peak.density_m2, T
+        )
+        self.assertAlmostEqual(recovered / target, 1.0, places=10)
+        self.assertGreater(peak.forward_rate_s_inv, target)
+        delta = 1.0e-3
+        for ratio in (1.0 - delta, 1.0 + delta):
+            q = peak.taylor_ratio_q * ratio
+            perturbed_density = (
+                q / (self.law.taylor_geometry_factor * self.law.burgers_m)
+            ) ** 2
+            strength = self.law.net_macroscopic_strength_Pa(
+                perturbed_density, T, target
+            )
+            self.assertLess(strength, peak.macroscopic_strength_Pa)
+
     def test_peak_existence_condition_is_enforced(self) -> None:
         no_peak = ExpFloorLaw(
             barrier_ref_J=0.05 * EV_J,

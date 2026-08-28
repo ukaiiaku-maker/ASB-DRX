@@ -39,6 +39,8 @@ class LocalTraceStatistics:
     steps_with_storage_limiting: int
     maximum_absolute_global_closure_error_J_m3: float
     maximum_absolute_thermal_closure_error_J_m3: float
+    maximum_flow_iterations: int
+    maximum_flow_residual: float
 
 
 def _trace_statistics(steps: list[LocalCoupledStep]) -> LocalTraceStatistics:
@@ -50,6 +52,8 @@ def _trace_statistics(steps: list[LocalCoupledStep]) -> LocalTraceStatistics:
         sum(item.storage_limited_fraction > 0.0 for item in steps),
         max(abs(item.ledger.global_closure_error_J_m3) for item in steps),
         max(abs(item.ledger.thermal_closure_error_J_m3) for item in steps),
+        max(item.flow_iterations for item in steps),
+        max(item.flow_residual for item in steps),
     )
 
 
@@ -196,6 +200,8 @@ def run_matched_local_strain_pair(
     steps_with_storage_limiting = 0
     maximum_global_closure = 0.0
     maximum_thermal_closure = 0.0
+    maximum_flow_iterations = 0
+    maximum_flow_residual = 0.0
 
     while True:
         accumulated = abs(thermal.applied_shear - initial_applied)
@@ -252,6 +258,16 @@ def run_matched_local_strain_pair(
             abs(thermal_trial.ledger.thermal_closure_error_J_m3),
             abs(control_trial.ledger.thermal_closure_error_J_m3),
         )
+        maximum_flow_iterations = max(
+            maximum_flow_iterations,
+            thermal_trial.flow_iterations,
+            control_trial.flow_iterations,
+        )
+        maximum_flow_residual = max(
+            maximum_flow_residual,
+            thermal_trial.flow_residual,
+            control_trial.flow_residual,
+        )
         accumulated = abs(thermal.applied_shear - initial_applied)
         retain = retention_strain_increment is None or (
             next_retained_increment is not None
@@ -292,6 +308,8 @@ def run_matched_local_strain_pair(
         steps_with_storage_limiting,
         maximum_global_closure,
         maximum_thermal_closure,
+        maximum_flow_iterations,
+        maximum_flow_residual,
     )
 
     return (

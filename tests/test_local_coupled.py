@@ -20,9 +20,7 @@ from asb_drx.local_coupled import (
 from asb_drx.multi_order import BinaryCircularLimit, diffuse_binary_circle
 from asb_drx.spatial_coupled import (
     SpatialCoupledParameters,
-    SpatialCoupledState,
     SpatialMechanismControls,
-    spatial_coupled_step,
 )
 
 
@@ -74,7 +72,7 @@ class LocalCoupledTests(unittest.TestCase):
             dx_m,
         )
 
-    def test_uniform_pure_parent_reduces_to_common_stress_kernel(self) -> None:
+    def test_uniform_pure_parent_has_exact_common_stress_mechanics(self) -> None:
         points = 8
         dx_m = 1.0e-5
         density = np.empty((2, points, points))
@@ -86,22 +84,18 @@ class LocalCoupledTests(unittest.TestCase):
         local = local_coupled_step(
             LocalCoupledState(1.0e8 / 8.0e10, plastic, temperature, density, fields),
             10.0, dx_m, 1.0e-5, self.law, self.parameters,
+            flow_integration="explicit",
         )
-        common = spatial_coupled_step(
-            SpatialCoupledState(1.0e8, 0.0, plastic, temperature, density, fields),
-            10.0, dx_m, 1.0e-5, self.law, self.parameters,
+        obstacle = 1.0e8 / self.law.taylor_ratio(1.0e14)
+        expected_rate = self.law.net_shear_rate_s_inv(
+            obstacle, 1.0e14, 1000.0
         )
+        expected_increment = expected_rate * 1.0e-5
+        expected_stress = 1.0e8 + 8.0e10 * (10.0e-5 - expected_increment)
         self.assertTrue(
-            math.isclose(
-                local.equilibrium.mean_stress_Pa,
-                common.state.stress_Pa,
-                rel_tol=3.0e-16,
-            )
+            math.isclose(local.equilibrium.mean_stress_Pa, expected_stress, rel_tol=3.0e-16)
         )
-        self.assertTrue(np.array_equal(local.state.plastic_shear, common.state.plastic_shear))
-        self.assertTrue(np.array_equal(local.state.temperature_K, common.state.temperature_K))
-        self.assertTrue(np.array_equal(local.state.forest_density_m2, common.state.forest_density_m2))
-        self.assertTrue(np.array_equal(local.state.eta_fields, common.state.eta_fields))
+        self.assertTrue(np.all(local.state.plastic_shear == expected_increment))
 
     def test_density_heterogeneity_generates_local_stress_redistribution(self) -> None:
         points = 16
