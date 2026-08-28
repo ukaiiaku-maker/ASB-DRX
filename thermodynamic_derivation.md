@@ -56,6 +56,8 @@ The Arrhenius--Taylor flow stress `sigma_AT(rho,T,edot)` is excluded from `F`. A
 
 An unloaded, isothermal, closed relaxation discretization must satisfy `F^{n+1} <= F^n + tolerance`. A convex-splitting, discrete-gradient, or accepted-step energy check will be selected before production.
 
+For the homogeneous finite-loading verification, `Delta tau=G(Delta gamma-Delta gamma_p)`. Using the increment-average stress makes external work minus the exact elastic-energy change equal the plastic work. The executable material point partitions that residual into the separately computed line-energy increase and heat; it has no fitted Taylor--Quinney factor. Forest storage is a visible provisional source and a step is rejected if it requests more stored energy than plastic work. Recovery, wall organization, multiple slip, thermoelasticity, conduction, and spatial equilibrium are intentionally absent from this limit and remain later coupled gates.
+
 ## Independent and collective kinetic alternatives
 
 ### A. Independent EXP-floor baseline
