@@ -58,6 +58,8 @@ An unloaded, isothermal, closed relaxation discretization must satisfy `F^{n+1} 
 
 For the homogeneous finite-loading verification, `Delta tau=G(Delta gamma-Delta gamma_p)`. Using the increment-average stress makes external work minus the exact elastic-energy change equal the plastic work. The executable material point partitions that residual into the separately computed line-energy increase and heat; it has no fitted Taylor--Quinney factor. Forest storage is a visible provisional source and a step is rejected if it requests more stored energy than plastic work. Recovery, wall organization, multiple slip, thermoelasticity, conduction, and spatial equilibrium are intentionally absent from this limit and remain later coupled gates.
 
+The next spatial limit is a periodic 1-D shear layer under common shear stress, which is the quasistatic force-balance solution for simple shear without body force. Local EXP-floor rates depend on local temperature and forest density; the volume-average plastic rate drives the finite-loading stress update. Local plastic work is partitioned before a conservative periodic heat-diffusion update. A homogeneous layer must reduce to the material point, and both mechanical and mean thermal ledgers must close. This model can test thermal-feedback structure, but no localization it produces is physical ASB until properties, boundaries, length scales, perturbations, and convergence are independently validated.
+
 ## Independent and collective kinetic alternatives
 
 ### A. Independent EXP-floor baseline

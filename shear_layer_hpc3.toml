@@ -1,0 +1,42 @@
+name = "asb-drx-shear-layer"
+entrypoint = ["bash", "run_shear_layer_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_shear_layer_hpc3.sh",
+  "src/asb_drx/__init__.py",
+  "src/asb_drx/analytical.py",
+  "src/asb_drx/thermodynamics.py",
+  "src/asb_drx/material_point.py",
+  "src/asb_drx/shear_layer.py",
+  "tests/test_exp_floor.py",
+  "tests/test_material_point.py",
+  "tests/test_shear_layer.py",
+  "tools/run_shear_layer_verification.py",
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:10:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
