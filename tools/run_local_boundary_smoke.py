@@ -83,6 +83,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--steps", type=int, default=100)
     parser.add_argument("--output", type=Path, default=Path("output/local_boundary_smoke.json"))
+    parser.add_argument("--source-commit", default="unresolved")
+    parser.add_argument("--execution-site", default="local")
     args = parser.parse_args()
     if args.steps < 1:
         parser.error("--steps must be positive")
@@ -105,6 +107,8 @@ def main() -> None:
             "generic boundary point; not DDD validation, material calibration, ASB, or DRX evidence"
         ),
         "condition": case.__dict__,
+        "source_commit": args.source_commit,
+        "execution_site": args.execution_site,
         "DDD_rate_validity_note": "45000 s^-1 is outside the source DDD campaign rate 4.5 s^-1",
         "grids": grids,
         "final_refinement_relative_change": changes,
