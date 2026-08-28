@@ -1,0 +1,11 @@
+ucinetid = "sdillon1"
+email = "sdillon1@uci.edu"
+project = "asb-drx-independent"
+login_host = "uci-hpc3"
+transfer_host = "uci-hpc3-transfer"
+key_path = "~/.ssh/sdillon1-to-hpc3"
+remote_root = "/pub/sdillon1/codex-runs/asb-drx-independent"
+results_root = "hpc3-results"
+poll_interval = 120
+default_account = "SDILLON1"
+sensitive_data_approved = false

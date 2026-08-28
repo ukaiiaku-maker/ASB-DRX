@@ -1,0 +1,31 @@
+name = "asb-drx-gate0-smoke"
+entrypoint = ["bash", "run.sh"]
+working_directory = "."
+modules = []
+environment = {}
+input_paths = ["run.sh", "smoke.py"]
+output_paths = ["output"]
+result_mode = "files"
+scratch_mode = "none"
+input_mode = "files"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:02:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "1G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

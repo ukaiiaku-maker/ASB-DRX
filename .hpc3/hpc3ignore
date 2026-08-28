@@ -1,0 +1,12 @@
+.git/
+.venv/
+__pycache__/
+hpc3-results/
+.hpc3/runs/
+.hpc3/bundles/
+.hpc3/provenance/
+.DS_Store
+*.key
+*.pem
+*credentials*
+*secret*

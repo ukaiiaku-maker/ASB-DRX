@@ -1,0 +1,92 @@
+{
+  "schema": "asb-drx-hpc3-campaign/v1",
+  "campaign_id": "asb-drx-independent-20260827",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/independent-dd-pf-drx-asb-20260827",
+  "base_commit": "a5dd798096e3896f319d314e8e4c60f5b277e589",
+  "remote_root": "/pub/sdillon1/codex-runs/asb-drx-independent",
+  "local_results_root": "hpc3-results/asb-drx-independent",
+  "runner": "/Users/sdillon/HPC3/hpc3-runner/.venv/bin/hpc3",
+  "ssh_aliases": {
+    "control": "uci-hpc3",
+    "transfer": "uci-hpc3-transfer"
+  },
+  "discovered_environment": {
+    "login_host": "login-i15",
+    "user": "sdillon1",
+    "accounts": ["SDILLON1", "SDILLON1_LAB"],
+    "selected_smoke_account": "SDILLON1",
+    "selected_smoke_partition": "free",
+    "selected_smoke_qos": "low",
+    "modules_on_login_at_discovery": [],
+    "login_python": "3.9.25",
+    "discovered_at": "2026-08-27"
+  },
+  "active_jobs_observed_and_not_touched": [
+    {"job_id": "55622081", "name": "pfgg-phase1-gtc-gb", "state": "RUNNING"},
+    {"job_id": "55622082", "name": "pfgg-phase1-gsc-gbtj-ks025", "state": "RUNNING"}
+  ],
+  "dd_closure": {
+    "version": null,
+    "sha256": null,
+    "status": "blocked_missing_qualifying_raw_DD_data"
+  },
+  "runs": [
+    {
+      "run_id": "20260828T034723Z-a5dd798-f2bdfd",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "environment_and_staging_only_not_physical_model",
+      "git_commit_at_plan": "a5dd798096e3896f319d314e8e4c60f5b277e589",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "dirty_untracked_campaign_files_at_plan",
+      "source_snapshot_sha256": "e564f812a36125ffdbaeefb781d553b30a2642325cf9adde362442c1e87c4458",
+      "input_sha256": {
+        "run.sh": "8d2c11c06f77155f2d18c20f893511294ede24dc6b5912c4f306c8d261027403",
+        "smoke.py": "4e3088e80f1d3f3405018a2607b13fef04305e9b7dba2a22e39ac0f38e2d7fe7"
+      },
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used_gate0_smoke"},
+      "material_dataset_version": null,
+      "initial_state_hash": null,
+      "seeds": {"microstructure": null, "stochastic": null},
+      "resolved_configuration_SI": {
+        "test_function": "exp(-x)",
+        "integration_domain": [0.0, 1.0],
+        "intervals": 100000,
+        "dx": 0.00001,
+        "absolute_tolerance": 1e-10,
+        "units": "dimensionless"
+      },
+      "grid_domain_timestep_stopping": "not_applicable_environment_smoke",
+      "slurm": {
+        "job_id": "55633650",
+        "array_id": null,
+        "account": "SDILLON1",
+        "partition": "free",
+        "qos": "low",
+        "node": "hpc3-l18-05",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory": "1G",
+        "gpu": null,
+        "modules": [],
+        "python": "/usr/bin/python3 3.9.25"
+      },
+      "start_utc": "2026-08-28T03:47:44Z",
+      "end_utc": "2026-08-28T03:47:55Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed",
+      "wall_clock_seconds": 11,
+      "peak_memory_MB": 12.37,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T034723Z-a5dd798-f2bdfd",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T034723Z-a5dd798-f2bdfd",
+      "retrieval_status": "verified",
+      "outputs": {
+        "results/single/output/smoke_result.json": "6e67b128dff1d9bf7b97f13379fc910db30d1fd1818ee95811524eddfcedee13",
+        "results/single/output/output_inventory.sha256": "2d4844f2a9a9a0e243d21a6a937bbe1ae69620c4131cc53db35ec8537265ef2d",
+        "results/checksums-single.sha256": "f293e76bdf1c67b40abf7594e8936aca5da14a1b07ea528e174722d02737c118",
+        "status/final-single.json": "94fca219f054d8c0c129be631a2bd827c3e79e07a4b53dad6521c8a91d050fb5"
+      }
+    }
+  ]
+}
