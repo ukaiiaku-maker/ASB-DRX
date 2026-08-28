@@ -594,6 +594,60 @@
         "status/final-single.json": "086cfaa2bf71acfe35858abb9dd0e4315a32f30a7295c115220da8d4e9495de9",
         "input/source.tar.gz": "8c598bd9f3b02060a0e28617d32e44f6566633d8274d8b524c1d385e7089a98f"
       }
+    },
+    {
+      "run_id": "20260828T152809Z-db81077-68e54d",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "preregistered_generic_EXP_floor_analytical_peak_boundary_surface_verification",
+      "git_commit_at_plan": "db81077b8c322637f4032c1c4dcd42d4f9e8066b",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_sha256": {
+        "run_analytical_boundary_hpc3.sh": "682dd6a74a0e79da4a5d242b71b408c4270fc97f258b7c5a72f9a176f3041230",
+        "src/asb_drx/__init__.py": "dbfc0ecbbfc3f3d2414a3d8fade755f44169510adc34a575b6798c8ad7630517",
+        "src/asb_drx/analytical.py": "f8a676dd754942a8f37d3e16c6c27f63198443e4bd12db9cc24694e9f2ad262d",
+        "src/asb_drx/fixtures.py": "545f259c658cca9e31862029b2567794b8278a94ee7b67bf103f90a34dac968e",
+        "src/asb_drx/boundary.py": "d9a6ab27cade9931e8f2fdbbfcaaaa76222cce8e7c4af373abf11314f1f88aea",
+        "tests/test_analytical_boundary.py": "229dce4e00236b236f202a9b5b2fbf1d29edc00e440d5e4cb3ca164ead3f4be1",
+        "tools/run_analytical_boundary_verification.py": "10af8d8a79fc6070cbca9639066728b0ec862a9ea81e21942a496c70cde108a4"
+      },
+      "ddd_fixture": {
+        "source_sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b",
+        "status": "user_authorized_generic_non_material_fixture"
+      },
+      "material_dataset_version": null,
+      "resolved_configuration_SI": {
+        "temperature_axis_K": [850.0, 900.0, 950.0, 1000.0, 1050.0],
+        "shear_rate_axis_s_inv": [4.5, 450.0, 45000.0],
+        "future_spatial_density_ratios": [0.5, 1.0, 2.0],
+        "DDD_upper_density_ratio_range": [3.5135880352040543, 6.80008775771388],
+        "boundary_definition": "rho_equals_closed_form_independent_EXP_floor_strength_peak",
+        "scientific_disposition": "arbitrary_prospective_boundary_not_transparent_node_ASB_DRX_or_material_classifier"
+      },
+      "grid_domain_timestep_stopping": "not_applicable_analytical_boundary_surface",
+      "slurm": {
+        "job_id": "55641308", "account": "SDILLON1", "partition": "free", "qos": "low",
+        "node": "hpc3-23-18", "cpus_per_task": 1, "memory": "2G",
+        "modules": ["anaconda/2025.12"], "python": "3.13.9"
+      },
+      "start_utc": "2026-08-28T15:28:42Z",
+      "end_utc": "2026-08-28T15:31:45Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed_all_fifteen_tests_passed",
+      "wall_clock_seconds": 183,
+      "peak_memory_MB": 169.89,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T152809Z-db81077-68e54d",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T152809Z-db81077-68e54d",
+      "retrieval_status": "verified",
+      "outputs": {
+        "results/results-single.tar.gz": "35a807237d8cfcdb9f883b0be7f7311207d5669f3f2023b67e59ec9a912b2c09",
+        "analytical_boundary_verification.json": "ceaa8f302e135f8fbdc0ba6688566e452c6361562737f93f80f4c814c78c1ba5",
+        "unittest.txt": "5d9004a01d61f586c460b05fdf4c0e8e5900769a70942eae27952f5e24254b3e",
+        "input_inventory.sha256": "baf7abe2be9771fdeed9c205437c775f677145e28c82deca4301d7d0135edc60",
+        "results/checksums-single.sha256": "adbc399948ab3a75319a90323d226c216f3cc6fcb2242a2b7f2a652ef03699bc",
+        "status/final-single.json": "9dda03e3962f973699d2e882e2bc972c94b939a7df28a3171969e40356c6b5ea",
+        "input/source.tar.gz": "3221ee99a0d9a75a06080d7754672cfe01de861d2fd7b7b0886fab4309d7b393"
+      }
     }
   ]
 }
