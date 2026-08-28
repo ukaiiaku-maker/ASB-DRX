@@ -648,6 +648,63 @@
         "status/final-single.json": "9dda03e3962f973699d2e882e2bc972c94b939a7df28a3171969e40356c6b5ea",
         "input/source.tar.gz": "3221ee99a0d9a75a06080d7754672cfe01de861d2fd7b7b0886fab4309d7b393"
       }
+    },
+    {
+      "run_id": "20260828T153642Z-c48cad2-f5273f",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "analytical_boundary_spatial_single_job_preflight",
+      "git_commit_at_plan": "c48cad2aceee61bde4c29280f0ed4d37d7346a7c",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_source_archive_sha256": "8126a82f29bc4383fe408dcd48727f45e39e212dee38ce8cdbdab31aaabf4e52",
+      "ddd_fixture": {"source_sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b", "status": "user_authorized_generic_non_material_fixture"},
+      "material_dataset_version": null,
+      "resolved_configuration_SI": {"temperature_K": 950.0, "shear_rate_s_inv": 45000.0, "density_ratio_to_analytical_peak": 1.0, "domain_m": 1.6e-5, "grids": [16, 32], "steps": 100, "proposed_dt_s": 2e-8},
+      "grid_domain_timestep_stopping": "simulation_not_executed_preflight_tests_failed",
+      "slurm": {"job_id": "55641810", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-23-17", "cpus_per_task": 1, "memory": "2G", "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T15:40:37Z", "end_utc": "2026-08-28T15:40:38Z", "exit_status": "1:0",
+      "stop_reason": "staged_upstream_dependency_missing_and_overstrict_exact_float_assertion_no_simulation_executed",
+      "wall_clock_seconds": 1,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T153642Z-c48cad2-f5273f",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T153642Z-c48cad2-f5273f",
+      "retrieval_status": "fetched_incomplete",
+      "outputs": {"results/results-single.tar.gz": "0f609e4c44f92d6a7c75218cbab1269ca2531af669e877cf960e5d31d6d20b0e", "unittest.txt": "b47490107a25cd04274ae14864589e84cd962097b8eff722931cfc7ba2df8199", "results/checksums-single.sha256": "5e8e814ac7afed98528dbe4f84b3b0bc0b22060b1b90f4a6aa2465fbbea09964", "status/final-single.json": "d8bbd11bb96379ea30507f6d0c1a44487ff2c8561a2b3150ded58fa2d228443f", "input/source.tar.gz": "8126a82f29bc4383fe408dcd48727f45e39e212dee38ce8cdbdab31aaabf4e52"}
+    },
+    {
+      "run_id": "20260828T154200Z-9d7ed90-e57dd1",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "analytical_boundary_spatial_single_job_smoke_and_refinement",
+      "git_commit_at_plan": "9d7ed906ef3b30112cd3cec3e8fb8b35bec33a5d",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_sha256": {
+        "run_boundary_spatial_smoke_hpc3.sh": "987d17fe271baa81e25934c7d29c451d07a0628372a2b8c37bd5dbf1d572ce21",
+        "src/asb_drx/boundary_campaign.py": "716b212d927ae8a2a25fdf6a004f845d0036426757a6af2d79262e7bdc2f06a5",
+        "tests/test_boundary_campaign.py": "b4e22f01e58b0f8f4a753a60ef904a7cd502fa5d620ee06e832fa94f44dd76f6",
+        "tools/run_boundary_spatial_smoke.py": "595d51032d4a8f39a65167fc217d9364f8ee2ddf659b98bff364188273e5552b"
+      },
+      "input_source_archive_sha256": "73e0926f0a1999696b09d67771bfa6edcd0910b54e13b3bbba5546d396bc1242",
+      "ddd_fixture": {"source_sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b", "status": "user_authorized_generic_non_material_fixture_analytical_rate_extrapolation"},
+      "material_dataset_version": null,
+      "resolved_configuration_SI": {
+        "temperature_K": 950.0, "shear_rate_s_inv": 45000.0, "density_ratio_to_analytical_peak": 1.0,
+        "peak_density_m2": 5.929538110584753e17, "initial_stress_Pa": 1.0483767544041647e9,
+        "domain_m": 1.6e-5, "grids": [16, 32], "steps": 100, "proposed_dt_s": 2e-8,
+        "accepted_duration_s": 2.0000000000000008e-6, "applied_shear": 0.09,
+        "fine_final_stress_Pa": 1.0110918710279311e9, "fine_maximum_temperature_K": 976.7585287810296,
+        "maximum_matched_temperature_excess_K": 26.73990157576145, "minimum_active_fraction": 0.9999988352488206,
+        "maximum_softening_fraction": 0.03556289775780744, "localized": false,
+        "final_refinement_relative_change": {"stress": 5.036464023786999e-9, "maximum_temperature": 1.1043392317119522e-6},
+        "scientific_disposition": "numerical_coupling_smoke_pass_nonlocalizing_no_go_for_array_until_local_stress_redistribution"
+      },
+      "grid_domain_timestep_stopping": {"boundary": "periodic_square", "domain_m": 1.6e-5, "grid_points": [16, 32], "timestep": "fixed_2e-8_s_subject_to_shared_admissibility", "stopping": "100_accepted_steps"},
+      "slurm": {"job_id": "55642217", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-23-17", "cpus_per_task": 1, "memory": "2G", "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T15:43:21Z", "end_utc": "2026-08-28T15:43:24Z", "exit_status": "0:0", "stop_reason": "completed_all_twenty_one_tests_and_two_grid_smoke",
+      "wall_clock_seconds": 3, "peak_memory_MB": 49.80,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T154200Z-9d7ed90-e57dd1",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T154200Z-9d7ed90-e57dd1",
+      "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "04ddcb8376aec3b608d138c97892f09b76602d2ec4d910cde1595f94765afed9", "boundary_spatial_smoke.json": "f71525a95bb3adb4042c05694190d1d892c40fcdee045330eb108af485d7fd8e", "unittest.txt": "bd6cf4a31a4a691703d4ef408e9a2a27239973ed8de304b7673fedddb74b281c", "input_inventory.sha256": "528eeed7ea609245ce259aaa4a40be1580f6b8176e0ffc84931c690a6e92577f", "results/checksums-single.sha256": "d2750b3d992853c8d196f13a2900990c3b99026358a8b30bfb19f96980ea10a5", "status/final-single.json": "db7812602bd97ca115e9fe13aa5cb6da7da2962ebb76df9c891febbde864f16f", "input/source.tar.gz": "73e0926f0a1999696b09d67771bfa6edcd0910b54e13b3bbba5546d396bc1242"}
     }
   ]
 }

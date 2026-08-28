@@ -36,6 +36,8 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - The user authorized reuse of the complete single-glider DDD constants as a generic fixture and an arbitrary analytical boundary, without matching a materials class. HPC3 run `20260828T151810Z-d31c6a4-d3af25` (job `55641106`) passed fourteen exact-mapping and upstream tests with verified retrieval.
 - The arbitrary boundary is preregistered as `rho=rho_peak(T, rate)` from the independent EXP-floor law. At the DDD rate it spans `4.4117e15` to `8.5383e15 m^-2` over 1050 to 850 K. The driver's hard-coded `1e18 m^-2` field is excluded; the observed monotone DDD response through `3e16 m^-2` remains a structural mismatch, not a fitted correction.
 - HPC3 run `20260828T152809Z-db81077-68e54d` (job `55641308`) passed all fifteen boundary and mapping tests with verified retrieval. The frozen surface covers 850--1050 K and `4.5`, `450`, and `45000 s^-1`; future spatial cases are preregistered at density ratios `0.5`, `1`, and `2` relative to the peak.
+- The first boundary-spatial preflight `20260828T153642Z-c48cad2-f5273f` (job `55641810`) failed before simulation because one upstream test dependency was omitted from staging and an exact-equality assertion rejected a `~3e-16` relative roundoff difference. It is retained as failed packaging evidence; no equation or case definition changed.
+- Corrected single-job smoke `20260828T154200Z-9d7ed90-e57dd1` (job `55642217`) passed 21 tests and fetched with verified checksums. At 950 K, `45000 s^-1`, and `rho/rho_peak=1`, 16²/32² final stress and maximum-temperature changes were `5.04e-9` and `1.10e-6`, below the 5% provisional target. The case reached 0.09 shear and `26.74 K` matched-control excess but remained spatially uniform (`f_q~0.999999`) and nonlocalizing.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
 - Campaign-specific HPC3 smoke job `55633650` completed, fetched, and checksum-verified.
@@ -61,6 +63,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 13. A strict localization acceptance rule is verified, but it has not classified a coupled simulation and its thresholds are generic. Matched-control mechanism runs, mesh/timestep convergence, material-scaled criteria, and physical boundaries remain required.
 14. The generic mechanism ladder and matched-control machinery pass, but the cases are deliberately short, uncalibrated negative controls. No instability boundary, DRX onset, or ASB onset has been located.
 15. The frozen-common-stress stability gate passes. Its generic positive mode is attributable to the provisional forest-storage tangent, while conduction damps temperature perturbations. Physical parameters, recovery, stress redistribution, and nonlinear verification are required before interpreting a dispersion relation.
+16. The analytical-boundary single smoke passes numerical coupling and refinement but fails to generate localization because the current common-stress kernel has no local stress-redistribution mechanism. A sparse regime array is not authorized until local mechanics is added and its isolated limits, ledger, restart, and refinement gates pass.
 
 ## Remaining interpretation limits
 
