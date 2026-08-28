@@ -441,6 +441,21 @@
       "start_utc": "2026-08-28T14:06:58Z", "end_utc": "2026-08-28T14:07:03Z", "exit_status": "0:0", "stop_reason": "completed_all_fourteen_tests_passed", "wall_clock_seconds": 5, "peak_memory_MB": 40.27,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T140503Z-8fb6236-7dab82", "local_path": "hpc3-results/asb-drx-independent/20260828T140503Z-8fb6236-7dab82", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "8b01c3259e9fb88c008e69ea8b475d0ced40cbbf0bff301f3135b70ba7cc5437", "stored_energy_drx_verification.json": "baeb9c55e318b47d206633e7fff66eb615a62502d61b124c068cc4c5705fbcdd", "unittest.txt": "2a0f11773dac77605ce2007b06fdd131a82286e1799ac640521dce4178996c7d", "results/checksums-single.sha256": "4dfa26b2bae6b84d8f252163ce497bddb317b3c8a7a040cf8a39ba2d31734dde", "status/final-single.json": "406cdc50388a2bbded39eed8f2b936f13420204dd678a1025cd35051739a13b4"}
+    },
+    {
+      "run_id": "20260828T141129Z-e01a0ce-969f27",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "classical_cylindrical_nucleation_candidate_decision_verification",
+      "git_commit_at_plan": "e01a0ce",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "input_sha256": {"run_nucleation_hpc3.sh": "2658f6d29e5e29e8fe30fa0f4fdc2ea07342732d7d5a77140131e8f0538fb737", "src/asb_drx/grains.py": "21af549993e588d7a4fb8f7f637c18c93cf314711b1c4bcb863eeee04343497f", "src/asb_drx/nucleation.py": "3b2ed2caedcc368fa6e60b2d70d99d9be9f61d3c178ffa3f0eb1154439c12222", "tests/test_nucleation.py": "12b91d41fddacde30e4cd230efeceb83e14f64e2d85a60ee81e8df00aa5d18ad", "tools/run_nucleation_verification.py": "1975ac9dc6dfdae5e15e002f63235b94dd55a3cf13bc7348a905e886e58afa00"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"fixture": "cylindrical_classical_candidate_decision", "boundary_energy_J_m2": 0.1, "stored_energy_driving_J_m3": 1e8, "represented_thickness_m": 1e-9, "areal_attempt_rate_m2_s": 1e20, "temperature_K": 1000.0, "eligible_area_m2": 1e-12, "interval_s": 1e-3, "scientific_disposition": "generic_decision_fixture_prefactor_and_thickness_not_calibrated"},
+      "grid_domain_timestep_stopping": "not_applicable_analytical_candidate_decision_tests",
+      "slurm": {"job_id": "55637888", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T14:11:53Z", "end_utc": "2026-08-28T14:11:54Z", "exit_status": "0:0", "stop_reason": "completed_all_six_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 37.28,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T141129Z-e01a0ce-969f27", "local_path": "hpc3-results/asb-drx-independent/20260828T141129Z-e01a0ce-969f27", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "a0c68aa8102fd527ae67620d0a005672d86add9eda36af402b26f8204a648f1e", "nucleation_verification.json": "de2b4e3dd79caebde091f7644a14e0e7ca7125225fa2f4ba7d646d4e1d4dca3a", "unittest.txt": "abbaeaed03d1d067fe254815a4be9d523a727f7368b7653685f8a283d731e02c", "results/checksums-single.sha256": "b17d2a0a33fb56b1f0e996e9794500f6838b703c90d0577bde71671dfceaa2f7", "status/final-single.json": "09603086f2fc444ca4a13efa673578e390b43a595614b74980cec00f3bd392e3"}
     }
   ]
 }

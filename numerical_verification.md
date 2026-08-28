@@ -180,6 +180,23 @@ The isolated driving energy is no longer an independently prescribed phase offse
 
 The current phase step has no simultaneous external mechanical work, deformation/storage evolution, recovery/annihilation products, conduction, temperature-dependent mobility, stochastic trial rate, or material calibration. Those channels must be coupled with one non-duplicated global ledger.
 
+## Auditable nucleation candidate decision
+
+Status: passed, completed, fetched, and checksum-verified. This verifies analytical identities and decision plumbing with generic fixtures; it is not a calibrated nucleation or DRX result.
+
+- Git commit: `e01a0ce`
+- Run ID / Slurm job: `20260828T141129Z-e01a0ce-969f27` / `55637888`
+- Six tests passed: stationary critical barrier/escape radius, Poisson--Arrhenius expression, temperature/driving monotonicity, deterministic external-draw acceptance, distinct physical/numerical rejection reasons, and invalid-input rejection
+- The generic fixture gives `R_c=1e-9 m`, zero-excess radius `2e-9 m`, `Delta G*=3.1415927e-19 J = 22.75446 k_B T` at `1000 K`, and event probability `1.3117753e-5`
+- Result archive SHA-256: `a0c68aa8102fd527ae67620d0a005672d86add9eda36af402b26f8204a648f1e`
+- Verification JSON SHA-256: `de2b4e3dd79caebde091f7644a14e0e7ca7125225fa2f4ba7d646d4e1d4dca3a`
+- Unit-test log SHA-256: `abbaeaed03d1d067fe254815a4be9d523a727f7368b7653685f8a283d731e02c`
+- Runner retrieval status: `verified`
+
+This candidate barrier is the classical interfacial/stored-energy barrier and is explicitly distinct from the EXP-floor dislocation-slip barrier. The kernel accepts an externally supplied uniform draw so RNG lineage can be owned by a later full-state checkpoint. It reports a decision but cannot allocate a label or assert a physical grain.
+
+The represented thickness and areal attempt rate in the fixture are uncalibrated. A physical model still requires independently justified values, mesh/time-step invariant eligible-event intensity, spatial site physics, overlap handling, energy accounting through barrier crossing, RNG-complete restart, and held-out DRX-onset validation.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
