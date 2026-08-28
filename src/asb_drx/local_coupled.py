@@ -81,6 +81,31 @@ class LocalCoupledStep:
     halvings: int
 
 
+def diffuse_temperature_periodic_exact(
+    temperature_K: np.ndarray,
+    diffusivity_m2_s: float,
+    dt_s: float,
+    dx_m: float,
+) -> np.ndarray:
+    """Exact Fourier propagation of periodic constant-property heat diffusion."""
+    temperature = np.asarray(temperature_K, dtype=float)
+    if temperature.ndim != 2 or not np.all(np.isfinite(temperature)):
+        raise ValueError("temperature_K must be a finite two-dimensional field")
+    if not math.isfinite(diffusivity_m2_s) or diffusivity_m2_s < 0.0:
+        raise ValueError("diffusivity_m2_s must be finite and nonnegative")
+    if not math.isfinite(dt_s) or dt_s < 0.0:
+        raise ValueError("dt_s must be finite and nonnegative")
+    if not math.isfinite(dx_m) or dx_m <= 0.0:
+        raise ValueError("dx_m must be finite and positive")
+    if diffusivity_m2_s == 0.0 or dt_s == 0.0:
+        return np.array(temperature, copy=True)
+    ny, nx = temperature.shape
+    kx = 2.0 * math.pi * np.fft.fftfreq(nx, d=dx_m)[None, :]
+    ky = 2.0 * math.pi * np.fft.fftfreq(ny, d=dx_m)[:, None]
+    decay = np.exp(-diffusivity_m2_s * (kx**2 + ky**2) * dt_s)
+    return np.fft.ifft2(np.fft.fft2(temperature) * decay).real
+
+
 def local_coupled_step(
     state: LocalCoupledState,
     applied_shear_rate_s_inv: float,
@@ -130,9 +155,6 @@ def local_coupled_step(
     diffusivity = parameters.thermal_conductivity_W_m_K / parameters.volumetric_heat_capacity_J_m3_K
     dt_s = proposed_dt_s
     for halvings in range(maximum_halvings + 1):
-        if controls.evolve_temperature and diffusivity > 0.0 and diffusivity * dt_s / dx_m**2 > 0.25:
-            dt_s *= 0.5
-            continue
         grain_increment = rates * dt_s
         plastic_increment = np.sum(weights * grain_increment, axis=0)
         applied_increment = applied_shear_rate_s_inv * dt_s
@@ -162,14 +184,9 @@ def local_coupled_step(
         mechanical_heat_local = np.maximum(mechanical_heat_local, 0.0)
         if controls.evolve_temperature:
             source_temperature = temperature + mechanical_heat_local / parameters.volumetric_heat_capacity_J_m3_K
-            lap_t = (
-                np.roll(source_temperature, -1, axis=0)
-                + np.roll(source_temperature, 1, axis=0)
-                + np.roll(source_temperature, -1, axis=1)
-                + np.roll(source_temperature, 1, axis=1)
-                - 4.0 * source_temperature
-            ) / dx_m**2
-            conducted_temperature = source_temperature + dt_s * diffusivity * lap_t
+            conducted_temperature = diffuse_temperature_periodic_exact(
+                source_temperature, diffusivity, dt_s, dx_m
+            )
         else:
             conducted_temperature = temperature
         if np.any(conducted_temperature <= 0.0) or not np.all(np.isfinite(conducted_temperature)):

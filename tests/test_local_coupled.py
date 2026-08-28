@@ -12,6 +12,7 @@ from asb_drx.antiplane import solve_periodic_antiplane
 from asb_drx.local_coupled import (
     LocalCoupledState,
     advance_local_coupled,
+    diffuse_temperature_periodic_exact,
     load_local_coupled_checkpoint,
     local_coupled_step,
     save_local_coupled_checkpoint,
@@ -127,6 +128,21 @@ class LocalCoupledTests(unittest.TestCase):
             accepted.equilibrium.equilibrium_residual_Pa_m_inv,
             1.0e-10 * float(np.max(np.abs(accepted.equilibrium.stress_x_Pa))) / dx_m,
         )
+
+    def test_exact_periodic_diffusion_removes_explicit_CFL_restriction(self) -> None:
+        points = 32
+        dx_m = 5.0e-7
+        diffusivity = 5.0 / 3.5e6
+        dt_s = 1.0e-6
+        coordinate = np.linspace(0.0, 2.0 * math.pi, points, endpoint=False)
+        initial = 1000.0 + 2.0 * np.sin(coordinate)[None, :]
+        initial = np.broadcast_to(initial, (points, points)).copy()
+        final = diffuse_temperature_periodic_exact(initial, diffusivity, dt_s, dx_m)
+        wave_number = 2.0 * math.pi / (points * dx_m)
+        expected_amplitude = 2.0 * math.exp(-diffusivity * wave_number**2 * dt_s)
+        measured_amplitude = 0.5 * (float(np.max(final)) - float(np.min(final)))
+        self.assertTrue(math.isclose(measured_amplitude, expected_amplitude, rel_tol=2.0e-12, abs_tol=1.0e-13))
+        self.assertAlmostEqual(float(np.mean(final)), float(np.mean(initial)))
 
     def test_global_and_thermal_ledgers_close(self) -> None:
         initial, dx_m = self._mixed_state()
