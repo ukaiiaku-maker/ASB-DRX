@@ -4,6 +4,40 @@ Updated: 2026-08-28 (America/Los_Angeles)
 
 ## Current gate: material-agnostic coupled-mechanism verification
 
+### Active redevelopment update
+
+- Continuum flow now uses forward-minus-unloaded-reverse EXP-floor kinetics and
+  a matrix-free backward-Euler antiplane solve. The two old stiff/unresolved
+  high-rate cases reach 0.9 shear with no timestep halving.
+- The full frozen-time finite-wavenumber operator is a verified 5 by 5 system
+  for plastic shear, temperature, two density reservoirs, and binary order,
+  including antiplane orientation, both storage-cap branches, phase heat, and
+  recovery.
+- Governing-equation analysis proved that storage alone cannot create a
+  temperature/rate post-peak boundary. A single generic Arrhenius recovery law
+  was therefore constrained by two declared arbitrary neutral points without
+  retuning the DDD-derived flow parameters.
+- The nonlinear near-boundary refinement passes the provisional 5% gate:
+  0.873% maximum final timestep change and 0.00124% maximum 24-to-32-grid
+  change. The condition remains nonlocalized, so band onset/width convergence
+  is still not established.
+- Sequential-hit and rearming-contact closures are underdispersed and cannot
+  reproduce the audited high-density event CV above one. Shot-noise
+  self-excitation remains a future ablation, not production physics, because
+  its causal transfer and memory parameters are unidentified.
+- A checkpointed physical embryo/orientation gate is implemented. Phase labels
+  cannot become DRX without a promoted embryo that is distinct, supercritical,
+  beyond the zero-excess radius, persistent, positively driven, and supported
+  by a resolved pure phase field.
+- The complete local suite currently passes 147 tests.
+- Active v2 HPC3 run `20260828T232914Z-f5889ab-7987e9` / job `55646836`
+  completed and fetched with verified checksums. All 27 sparse-matrix conditions
+  reached 0.9 shear in 1,000 steps with no halving or unresolved point; none
+  localized because the minimum active plastic fraction remained 0.999975.
+  Maximum temperature was 1270.40 K and maximum matched-control excess was
+  268.36 K. The preceding 26-second job `55646831` was cancelled before its
+  first record to correct an obsolete output schema and is not used.
+
 The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not parameterize the model, and old programs/data are context only. Their inventory and HPC3 reproductions remain an audit record but are not new-model evidence or gates.
 
 - Repository remote verified as `https://github.com/ukaiiaku-maker/ASB-DRX.git`.
@@ -13,7 +47,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - Legacy v32, v33 controls, and v34 sources/results located under `recrysyallization_PF-2D/shear_banding`.
 - HPC3 aliases and runner verified. Existing unrelated local and Slurm campaigns were observed and left untouched.
 - An EXP-floor barrier, independent-node rate law, inverse, and closed-form rate--temperature strength peak have been derived in `analytical_strength_derivation.md`.
-- A material-agnostic analytical kernel and verification tests have been added under `src/asb_drx/` and `tests/`; numerical execution is restricted to HPC3.
+- A material-agnostic analytical kernel and verification tests have been added under `src/asb_drx/` and `tests/`; small verification runs may execute locally and extended campaigns use HPC3.
 - HPC3 run `20260828T120911Z-9d9e7c4-1bdf8a` (job `55637582`) passed all five analytical tests and was fetched with verified checksums.
 - HPC3 identifiability run `20260828T131741Z-9caa154-ffbe2c` (job `55637767`) passed seven tests with verified retrieval. Strength-only peaks expose the exact scale compensation; independent peak density restores the tested five-parameter local rank.
 - Literature motivates, but does not parameterize, a collective transparent-node hypothesis based on stress-transfer branching and multi-hit shot-noise memory.
@@ -53,19 +87,13 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 1. The analytical kernel and first optimizer-identifiability gate pass on HPC3. Physical fitting must not estimate both stress scale and attempt rate from strength peaks alone; it requires independent peak density or an authoritative fixed scale.
 2. No materials-class calibration is sought in the present generic campaign; the authorized DDD fixture must not be described as a physical calibration.
 3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
-4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.
-5. The isolated thermodynamic/diffuse-nucleus gates and physical-grain classifier invariants pass, including their limited-state restart checks. Crystallographic orientation dynamics, physical nucleation, and production-state restart remain unverified.
-6. The homogeneous thermomechanical ledger and periodic 2-D common-stress spatial ledger pass. Displacement-resolved mechanics, physical boundaries, and localization trajectories remain unverified.
-7. Periodic 1-D heat transport/common-stress mechanics pass generic controls and reduce consistently from the 2-D kernel. Physical boundary conditions, multidimensional equilibrium, and calibrated localization remain unverified.
-8. Constrained isotropic multi-order dynamics and their tracker coupling pass generic controls. Crystallographic orientation-manifold dynamics, material-scaled anisotropic GB properties, energetic candidate generation, collisions, and coupled thermomechanical DRX remain unverified.
-9. Fixed per-grain dislocation stored energy now drives the isolated phase relaxation with a closed heat ledger. Evolving spatial reservoirs under deformation/recovery, simultaneous mechanical work, conduction, temperature-dependent GB mobility, and nucleation rates remain unverified.
-10. The candidate-decision equations and audit path pass, but the represented thickness and areal attempt prefactor are generic fixtures. No physical nucleation rate, RNG-integrated allocator, barrier-crossing energy ledger, or onset prediction is established.
-11. The shared homogeneous thermomechanical/phase ledger passes and is extended by a heterogeneous periodic common-stress control. Spatial stress redistribution beyond common stress, recovery, physical boundaries, localization convergence, and calibrated ASB/DRX interaction remain unverified.
-12. Heterogeneous temperature, conduction, density storage, and phase relaxation now coexist on one periodic grid with a closed global ledger. The fixture damps its perturbation, so it is a control rather than evidence of ASB localization.
-13. A strict localization acceptance rule is verified, but it has not classified a coupled simulation and its thresholds are generic. Matched-control mechanism runs, mesh/timestep convergence, material-scaled criteria, and physical boundaries remain required.
-14. The generic mechanism ladder and matched-control machinery pass, but the cases are deliberately short, uncalibrated negative controls. No instability boundary, DRX onset, or ASB onset has been located.
-15. The frozen-common-stress stability gate passes. Its generic positive mode is attributable to the provisional forest-storage tangent, while conduction damps temperature perturbations. Physical parameters, recovery, stress redistribution, and nonlinear verification are required before interpreting a dispersion relation.
-16. The analytical-boundary single smoke passes numerical coupling and refinement but fails to generate localization because the current common-stress kernel has no local stress-redistribution mechanism. The isolated antiplane operator now passes; constitutive/thermal/phase integration, restart, and refinement remain required before a sparse regime array is authorized.
+4. The periodic antiplane operator is now integrated with net EXP-floor flow, storage, recovery, heat, and phase evolution. The model is generic and isotropic; physical boundaries and material-scaled anisotropic properties are outside the present scope.
+5. The full finite-wavenumber linearization and nonlinear timestep/grid refinement pass, but the v2 matrix supplies no candidate band. Onset and width convergence therefore cannot yet be claimed.
+6. A stateful physical embryo gate and energy-release ledger pass, but automatic stochastic embryo sampling and phase-field allocation are absent because their attempt prefactor and orientation distribution are unconstrained.
+7. The strict ASB classifier has evaluated all 27 coupled v2 trajectories. Every trajectory fails plastic concentration, so the result is a verified no-localization baseline rather than an ASB boundary.
+8. The generic recovery parameters define an arbitrary analytical screen only. They must not be interpreted as material properties or a calibrated DRX/ASB transition.
+9. A collective closure remains an ablation. Existing event histories cannot identify a signed stress-transfer kernel, memory time, or causal parentage.
+10. A predictive campaign would still require a defensible finite-wavelength localization mechanism, physical embryo-rate inputs, uncertainty propagation, and external validation.
 
 ## Remaining interpretation limits
 

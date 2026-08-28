@@ -1,10 +1,37 @@
 # Final scientific report
 
-Status: rebaselined on the analytical EXP-floor law; isolated thermodynamic, grain, coupled spatial, and localization-metric gates executed on HPC3.
+Status: net EXP-floor antiplane/storage/recovery/thermal/phase model integrated, verified, refined, and screened over the 27-condition sparse matrix on HPC3.
 
 The final report will separately identify historical context, analytical consequences, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
 
 ## Current evidence-backed outcome
+
+- The active redevelopment resolves the old signed-one-way stiffness by using
+  a net forward-minus-reverse continuum rate and a matrix-free implicit
+  antiplane flow solve. Zero stress is now an exact equilibrium.
+- A verified full 5 by 5 finite-wavenumber operator separates antiplane
+  mechanical orientation, thermoplastic/storage response, and ordinary binary
+  phase separation; the storage-cap switching surface is explicitly treated as
+  nonsmooth rather than assigned a false Jacobian.
+- Exact governing-equation inversion gives the generic recovery design
+  `Q_rec approximately 1.138 eV`, `tau_rec(950 K) approximately 1.856 s` from
+  two arbitrary declared neutral anchors. These are not material parameters.
+- Nonlinear timestep/grid refinement passes below 1%/0.002% respectively for
+  the selected near-boundary primary observables, but no candidate band exists
+  yet for onset/width convergence.
+- Research comparison rejects sequential-hit and simple rearm closures as
+  explanations of overdispersed clustering. Shot-noise is mathematically viable
+  but remains unidentified and is not coupled to production flow.
+- Stateful embryos now carry physical geometry, orientation, parentage,
+  attempts, histories, energy/heat closure, survival, and phase support. Grain
+  classification rejects label-only support unless the embryo gate passed.
+- The checksum-verified active v2 HPC3 sparse matrix (run
+  `20260828T232914Z-f5889ab-7987e9`, job `55646836`) completed all 27 conditions
+  with zero halving and zero unresolved points. None localized: even the
+  strongest heating (`1270.40 K` maximum; `268.36 K` matched excess) retained a
+  minimum active plastic fraction of 0.999975. Thus the present local
+  antiplane/storage/recovery/thermal/phase equations remain a no-localization
+  baseline, not an ASB or DRX result.
 
 - The isolated campaign is on `exp/independent-dd-pf-drx-asb-20260827`, based on remote `main` commit `a5dd798096e3896f319d314e8e4c60f5b277e589`.
 - The inventory contains 33,358 files (21,536,785,369 bytes) with SHA-256 hashes and no read/hash failures.
@@ -22,13 +49,13 @@ The final report will separately identify historical context, analytical consequ
 - HPC3 run `20260828T141129Z-e01a0ce-969f27` / job `55637888` passed the auditable candidate-decision gate. It verifies the classical cylindrical barrier/critical-radius identities, bounded thermal Poisson probability, expected monotonicities, external-draw determinism, and distinct rejection reasons without allocating a grain label.
 - HPC3 run `20260828T141957Z-c9708bb-f4aa93` / job `55637907` passed the first combined thermomechanical/phase gate and all upstream regressions. External work `4.5781612e6 J m^-3` closes across elastic, total stored, interface/order, mechanical-heat, and phase-heat changes with cumulative global error `1.45e-9 J m^-3`.
 - HPC3 run `20260828T142706Z-3224ef1-bdf10f` / job `55638019` passed the periodic 2-D spatial coupling gate. Its temperature perturbation damps from `0.1767767` to `0.0746919 K` standard deviation while the global ledger closes to `1.07e-11 J m^-3`; this is explicitly a non-localizing control.
-- HPC3 run `20260828T143238Z-ca7ab69-74cc1d` / job `55638898` passed six localization-metric tests. The ASB gate is conjunctive and requires persistent plastic concentration, temperature excess over a matched control, post-peak softening, a band wider than the numerical interface, and converged onset and width. Its thresholds are generic fixtures, and no coupled trajectory has yet been classified as ASB.
+- HPC3 run `20260828T143238Z-ca7ab69-74cc1d` / job `55638898` passed six localization-metric tests. The ASB gate is conjunctive and requires persistent plastic concentration, temperature excess over a matched control, post-peak softening, a band wider than the numerical interface, and converged onset and width. Its thresholds are generic fixtures; the later active v2 matrix applies this classifier and finds no ASB trajectory.
 - HPC3 run `20260828T144000Z-c9dc4ab-7b33f9` / job `55640278` passed the first six-case common-equation mechanism ladder and upstream regressions. Isothermal variants account for generated heat through an explicit bath, phase-disabled variants preserve fields exactly, and thermal cases use same-rate/same-phase isothermal twins. Every generic case is a negative localization control (`f_q >= 0.907`, `Delta T_control <= 0.125 K`, zero softening).
 - HPC3 run `20260828T144457Z-535a0ff-662a0e` / marker job `55640502` passed ten analytical stability tests. The evaluated generic state has conduction-damped thermal response and a positive `4.807 s^-1` forest-storage mode; this separates a provisional structural amplification from thermal ASB. Duplicate job `55640458`, created after a silent staging receipt, is retained in the audit record and makes no independent scientific claim.
 - HPC3 run `20260828T151810Z-d31c6a4-d3af25` / job `55641106` passed fourteen tests for the exact single-glider DDD fixture mapping. The governing equations predict `rho_peak=4.4117e15` to `8.5383e15 m^-2` over 1050 to 850 K at `4.5 s^-1`; the source driver's hard-coded `1e18 m^-2` field is excluded. The explicit DDD response remains monotone beyond the analytical peak, which is retained as evidence against identifying the independent falling branch with actual transparency.
 - HPC3 run `20260828T152809Z-db81077-68e54d` / job `55641308` passed fifteen tests for the preregistered analytical boundary surface. At the source rate, the DDD campaign upper density is 3.514--6.800 times the analytical peak across 850--1050 K, yet its strength remains rising. The post-peak side is therefore a collective-candidate ablation region, not an asserted transparent-node transition.
 - Corrected HPC3 single-job boundary smoke `20260828T154200Z-9d7ed90-e57dd1` / job `55642217` passed 21 tests after a retained packaging-only preflight failure. The 950 K, `45000 s^-1` analytical-peak case converged strongly between 16² and 32² grids and heated `26.74 K` above its matched control, but plastic flow remained essentially uniform and failed the ASB classifier. This is numerical compatibility evidence and a no-go for a regime array until local stress redistribution replaces frozen common stress.
-- HPC3 run `20260828T155312Z-266dda8-d6b092` / job `55642641` passed the isolated periodic-antiplane local-mechanics gate. The equilibrium projection and exact work identity are verified, but this operator is not yet integrated with EXP-floor flow, heat, storage, or phase evolution; it is therefore enabling infrastructure rather than ASB evidence.
+- HPC3 run `20260828T155312Z-266dda8-d6b092` / job `55642641` passed the isolated periodic-antiplane local-mechanics gate. This was enabling infrastructure; the active redevelopment subsequently integrated it with net EXP-floor flow, heat, storage, recovery, and phase evolution.
 - The target material is unresolved because legacy Fe/BCC descriptions conflict with embedded Cr provenance and mixed-alloy validation data.
 - The thermodynamic document defines candidate state/balance/dissipation structures, rejects flow stress as a free-energy density, and keeps both the closure and DRX representation decisions open pending evidence.
 - HPC3 environment/staging smoke job `55633650` passed and fetched. Exact legacy jobs `55633674`, `55633691`, and `55633694` all completed and fetched with verified checksums.
@@ -45,4 +72,13 @@ v33 and v34 detailed trajectories do not reproduce the stored references from id
 
 ## Current boundary
 
-No physical parameter has been calibrated and no production solver or array has been launched. The thermodynamic, grain-classification, coupled-ledger, and localization-metric results are generic verification fixtures, not evidence of realistic DRX or ASB. The arbitrary boundary is the analytical EXP-floor peak surface, not a material phase boundary. A collective transparent-node extension remains optional research until a derived transfer/memory model and discriminating observations justify it. Crystallographic orientation evolution, physical nucleation/field allocation, displacement-resolved spatial mechanics, production-state restart, boundary-map simulations, localization convergence, uncertainty propagation, and external validation remain required.
+No physical parameter has been calibrated. The active sparse matrix is a generic
+mechanism screen, not evidence of realistic DRX or ASB. The arbitrary boundary
+is the net analytical EXP-floor peak surface, not a material phase boundary.
+The full coupled operator, recovery, numerical refinement, and physical embryo
+gate now pass their verification tests, but automatic embryo sampling/field
+allocation is deliberately absent. A collective transparent-node extension
+remains optional until a signed transfer/memory model and discriminating
+observations identify it. A finite-wavelength localization mechanism, band
+onset/width convergence, uncertainty propagation, and external validation
+remain required.

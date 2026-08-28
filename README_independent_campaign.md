@@ -14,6 +14,17 @@ This branch is a scientific redevelopment. Legacy programs, parameters, and outp
 - A grain requires finite order-parameter support, orientation/provenance, persistence, and growth or stable survival.
 - ASB requires converged thermomechanical localization, not a weak scalar OR test.
 
+## Current implemented architecture
+
+- exact periodic antiplane equilibrium with matrix-free backward-Euler flow;
+- net EXP-floor continuum kinetics with an exact zero-stress equilibrium;
+- local storage, thermodynamic cap, analytically constrained dynamic recovery,
+  explicit mechanical/recovery/phase heat channels, and exact Fourier conduction;
+- full frozen-time 5 by 5 finite-wavenumber operator with phase and recovery;
+- constrained binary phase evolution and a separate stateful physical embryo gate;
+- strict localization and physical-grain metrics;
+- continuous collective alternatives retained only as uncalibrated ablations.
+
 ## Gate sequence
 
 0. Derive and independently verify the EXP-floor inverse, activation volume, and analytical peak.
@@ -37,4 +48,4 @@ No later gate is authorized scientifically by a failed earlier gate. Failed cons
 
 ## Reproducibility rule
 
-Every numerical run must resolve SI configuration into a manifest, identify the Git/source/DD hashes and independent RNG streams, record Slurm/environment/resource provenance, inventory outputs, and verify fetched checksums. Numerical simulations and numerical tests run only on UCI HPC3.
+Every numerical run must resolve SI configuration into a manifest, identify the Git/source/DD hashes and independent RNG streams, record environment/resource provenance, inventory outputs, and verify checksums. Small calculations may run locally; extended calculations use UCI HPC3.
