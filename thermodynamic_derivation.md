@@ -1,6 +1,8 @@
 # Candidate thermodynamic and kinetic architecture
 
-Status: first derivation for evidence review; no production solver is authorized yet.
+Status: first derivation plus executable verification kernel; no production solver is authorized yet.
+
+The material-agnostic kernel in `src/asb_drx/thermodynamics.py` implements the two-state grain-energy sign convention, its discrete variational derivative, an energy-checked periodic Allen--Cahn step, distinct conservative dislocation reservoirs, an exact incremental work ledger, and the sharp-interface circular-nucleus limit. Generic fixture values test dimensions and invariants only. They are not production coefficients and cannot be inherited by a later material configuration.
 
 ## State and balances
 
