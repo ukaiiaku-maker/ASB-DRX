@@ -275,6 +275,19 @@ Status: passed, completed, fetched, and checksum-verified; generic negative cont
 
 These 16-by-16, 20-step fixtures verify attribution mechanics only. Their `10` and `1000 s^-1` rates, periodic boundaries, perturbation, and generic localization thresholds are not a physical sweep and may not be interpreted as locating an ASB or DRX boundary.
 
+## Finite-wavenumber thermal/storage stability
+
+Status: passed, completed, fetched, and checksum-verified; generic frozen-state tangent screening, not a material or nonlinear ASB prediction.
+
+- Run `20260828T144457Z-535a0ff-662a0e`, commit `535a0ff`, marker-owning Slurm job `55640502`; ten analytical/stability tests passed
+- Analytical temperature and density rate tangents match centered differences; the 2-by-2 Jacobian matches the nonlinear local right-hand side; conduction shifts only `J_TT` by `-alpha k^2`; impossible storage energy is rejected
+- At `tau=300 MPa`, `rho=5e13 m^-2`, `T=1000 K`, the generic Taylor ratio implies an unphysical `120 GPa` local activation stress, so the numerical spectrum is not material evidence
+- Modes 1, 2, 4, and 8 on a `16 micrometer` periodic domain have maximum real eigenvalues `4.8071479`, `4.8071403`, `4.8071384`, and `4.8071379 s^-1`; the near wavelength-independent positive branch is the forest-storage tangent, while thermal diagonals become increasingly negative with wavenumber
+- Wall clock `1 s`; peak batch memory `36.47 MB`
+- Archive / JSON / test transcript SHA-256: `4193778453024a1c69fe48cc54301d48e4d1e3f81f07cdc9fa681321024635a6`, `2cf9dd1efb0fe49f6c07065e1b92a7d01a055526fe8c640d6d165a07d0aa24af`, `ed550fdce19b249e57ecc2f45dde286a1cc6f9978e5cf0dfbbd2ec4060595430`
+
+The first silent staging attempt scheduled job `55640458` even though the local journal remained `PREPARED`; manual recovery then scheduled `55640502` from the identical immutable source. Both completed, but only `55640502` owns the fetched final marker and result archive. The duplicate is a provenance incident, not an independent replicate.
+
 ## Required future records
 
 Future records must extend the passed generic gates to production-complete restart including RNG/allocator state, material-scaled grain and localization criteria, multidimensional equilibrium, matched-control mechanism runs, localization convergence, parameter uncertainty, and external validation, with run IDs, commits, configurations, tolerances, and checksums.

@@ -180,3 +180,9 @@ The common-equation mechanism ladder changes only declared loading and mechanism
 ## Timescale and stability work before 2-D sweeps
 
 Compute loading, elementary-event, renewal completion/correlation, storage/organization, dynamic/diffusive recovery, embryo nucleation/growth, GB migration, thermal diffusion/bath, localization growth, and elastic-wave times. Compare `L/c_s` with all evolution times to select quasi-static versus inertial mechanics. Linearize homogeneous mechanics/plastic/storage/collective/thermal equations and calculate the finite-wavenumber Jacobian/dispersion relation. Separate structural eigenmodes from thermal localization modes and use them to choose smoke/ladder conditions, not to tune regime labels.
+
+The first executable linearization freezes the common macroscopic stress for a nonzero-wavenumber, zero-mean perturbation and retains temperature and forest density. With `q=q(tau,rho,T)`, storage rate `dot(rho)=K q`, heat per plastic strain `H=tau-e_line K`, heat capacity `C`, diffusivity `alpha`, and wavenumber `k`,
+
+`J(k) = [[H q_T/C-alpha k^2, H q_rho/C], [K q_T, K q_rho]]`.
+
+The EXP-floor tangents are analytical. In particular, `q_rho/q = [p-V tau_local/(k_B T)]/(2 rho)`, where `V=-partial Delta G/partial tau_local`; `q_T` includes the explicit `1/T` activation factor and both declared temperature-dependent barrier and stress scales. This is a frozen-state tangent, not a nonlinear onset prediction. A positive density-storage eigenmode must be distinguished from a thermally dominated mode, and the common-stress approximation excludes displacement/inertial modes.

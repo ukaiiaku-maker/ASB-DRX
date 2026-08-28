@@ -67,6 +67,8 @@ If a collective extension is attempted, it must additionally predict relevant tr
 
 The generic six-case implementation and its automatically generated isothermal twins have passed the software/ledger gate. All six initial fixtures are negative localization controls. The next use of this ladder must select material-scaled rates, duration, boundaries, perturbations, and acceptance thresholds prospectively; it must not tune them until a desired label appears.
 
+Before a spatial sweep, evaluate the finite-wavenumber thermal/storage Jacobian at every candidate homogeneous state. Verify analytical rate tangents against centered differences, the complete Jacobian against the nonlinear local right-hand side, the exact `-alpha k^2` conduction shift, and rejection of impossible storage partitions. Report positive modes by mechanism; a density-storage mode is not an ASB prediction.
+
 ## Production staging
 
 Only after analytical verification, target selection, parameter validation, and thermodynamic/numerical gates, run a sparse matrix selected from actual validity envelopes. Locate boundaries, then use at least three independent seeds near boundaries and representative regimes. Keep microstructure, collective, embryo, and perturbation RNG streams distinguishable.
