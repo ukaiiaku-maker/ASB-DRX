@@ -9,7 +9,7 @@ python -m unittest -v tests.test_antiplane tests.test_local_coupled tests.test_l
 python tools/run_local_boundary_matrix.py \
   --points 16 --steps 1000 --target-shear 0.9 \
   --temperature 850 --rate 4.5 --density-ratio 0.5 \
-  --source-commit 2eee5774433a5b11d5aac300100752deb569b090 \
+  --source-commit 5e349391f9dee9061bf8254dc329b83c305aa7d9 \
   --execution-site hpc3-single-smoke \
   --output output/local_boundary_single_smoke.json
 sha256sum \
