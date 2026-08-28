@@ -4,6 +4,8 @@ Status: unresolved; no production material dataset selected.
 
 ## Direct project evidence
 
+All items in this section are historical context and are not accepted material data.
+
 - Legacy v32/v34 source describes a “BCC iron” model and uses a Burgers vector of 2.48e-10 m, temperature-dependent Fe-like shear-modulus code, a nominal high-angle GB energy of 0.50 J m^-2, and an 1811 K thermal validity ceiling.
 - The manuscript draft explicitly calls a Potts demonstration an “Fe parameterization” at 1300 K and 1 s^-1.
 - Files named `Poliak-Jonas/Fe.json`, `Prasad_map/Fe.json`, and `recrystallization/Fe.json` instead contain the field `"material": "Cr"` and provenance `Cr_NelderMeadDislocationOnlyStressDependent2.m`. File naming therefore contradicts embedded metadata.
@@ -15,7 +17,7 @@ Status: unresolved; no production material dataset selected.
 1. “Fe” cannot be accepted as a versioned material dataset solely from filenames/comments.
 2. Chromium-fit Arrhenius parameters cannot be combined silently with iron thermal/GB properties.
 3. No temperature/rate production matrix or Zener--Hollomon comparison will be chosen until composition, phase/crystal structure, source experiments, and property provenance agree.
-4. Legacy cases remain regression controls only and do not validate realism.
+4. Legacy cases are context only and do not regression-gate or validate the new model.
 
 ## Resolution required
 

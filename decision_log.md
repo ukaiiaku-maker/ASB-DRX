@@ -41,3 +41,21 @@ Stop before DD fitting and production implementation. The exhaustive project inv
 Status: accepted, 2026-08-27.
 
 Retain v32 as an ASB-like numerical regression, v33 as a false-grain structural negative control, and v34 as a zero-candidate bookkeeping failure. Only v32 reproduces its finite diagnostics to numerical precision. v33 reproduces label explosion with unchanged topology but not its exact birth count. v34 again produces no candidates at all and its detailed trajectory diverges. None establishes physical DRX or mesh-converged ASB, and no legacy parameter was tuned.
+
+## ADR-0008: Supersede DD gating and legacy regression status
+
+Status: accepted, 2026-08-28; supersedes ADR-0002, ADR-0003, ADR-0006, and the regression role in ADR-0007.
+
+Dislocation dynamics will not parameterize the model. Legacy programs, values, and outputs are context only and do not gate the new model. The campaign proceeds from governing analytical equations; physical calibration still requires an authoritative target dataset.
+
+## ADR-0009: EXP-floor analytical baseline
+
+Status: accepted, 2026-08-28.
+
+Use `G=G0(T)[f+(1-f)exp(-a(tau/tau_c(T))^n)]` with an independent-node activated rate law as the baseline. Its inverse and Lambert-W strength peak are defined in `analytical_strength_derivation.md`. The strength peak is a kinetic prediction, not a DRX trigger or free-energy instability.
+
+## ADR-0010: Collective response is a derived ablation
+
+Status: proposed, 2026-08-28.
+
+If target observations require collective transparent-node behavior, derive it from a stress-transfer branching matrix and relaxing multi-hit shot-noise state. Do not introduce an arbitrary density threshold, prescribed hit order, or DD-fitted switch. Promote the extension only after it outperforms the independent baseline on held-out discriminating observations.

@@ -9,7 +9,7 @@ All densities below are line length per volume, m^-2. Slip-system resolution is 
 | State | Type and admissible range | Balance/evolution form |
 |---|---|---|
 | displacement `u` or elastic strain `eps_e` | constrained mechanical field | `rho_m u_ddot = div sigma` when inertia matters; otherwise `div sigma=0`, with `eps_e = sym grad u - eps_p - eps_th`. |
-| slip `gamma^a` / plastic strain `eps_p` | accumulated nonconserved kinematic state | `gamma_dot^a = G^a(tau_eff^a,T,rho_m^a,rho_f^a,q_DD,...)`; `eps_p_dot=sum_a gamma_dot^a sym(s^a tensor n^a)`. |
+| slip `gamma^a` / plastic strain `eps_p` | accumulated nonconserved kinematic state | `gamma_dot^a = G^a(tau_eff^a,T,rho_m^a,rho_f^a,z,...)`; the baseline uses the EXP-floor analytical law; `eps_p_dot=sum_a gamma_dot^a sym(s^a tensor n^a)`. |
 | mobile signed densities `rho_m^{a+/-}` | nonnegative, transported/generated/annihilated | conservative transport plus multiplication, immobilization, remobilization, annihilation, and boundary flux; signed difference supplies GND consistency. |
 | forest/immobile `rho_f^a` | nonnegative, generated/annihilated | storage from mobile activity and junctions minus recovery/remobilization. Not a mobile carrier. |
 | organized wall/cell `rho_w` | nonnegative, nonlocally organized/generated/recovered | gradient/nonlocal flux plus organization source and dynamic/diffusive recovery. |
@@ -18,7 +18,7 @@ All densities below are line length per volume, m^-2. Slip-system resolution is 
 | phase fields `eta_i` | nonconserved, `0<=eta_i<=1`, partition/purity constraint | constrained Allen--Cahn gradient flow from the free energy; inactive labels excluded/retired. |
 | crystallographic orientation `R` or minimal coordinates | nonconserved on orientation manifold | grain-interior anchoring plus GB/orientation gradient flow; new orientation requires finite support/provenance. |
 | temperature `T` | positive, energy balance | `rho_mass c_p T_dot = div(k grad T)+q_pl-q_stored-q_other-q_bath` with boundary flux. |
-| collective DD state `z` or phase probabilities `p_j` | normalized internal state, conditionally stochastic | validity-bounded renewal/phase-type master equation or locked event sampler. It produces completion flux/statistics, never a grain Boolean. |
+| collective stress memory `z`, optional | stress-like dissipative internal state | relaxing shot noise driven by event-to-event elastic stress transfer. It is absent from the independent baseline and never creates a grain Boolean. |
 | embryo objects, if Route B | finite set with positive size and enumerated status | interfacial/stored-energy driven growth/shrinkage plus stochastic attempt history; promoted only through persistent `eta` support. |
 
 Reservoir identities remain distinct unless a later derivation and data justify reduction.
@@ -37,7 +37,7 @@ For domain `Omega` and GB/interfacial support represented diffusely,
 6. Orientation energy lives on the crystal-symmetry quotient and reproduces a calibrated misorientation-dependent boundary energy (e.g. low-angle Read--Shockley limit with high-angle saturation). It must not allow density cleanup with zero misorientation to count as a new grain.
 7. Couplings such as lowered dislocation storage inside a recrystallized phase enter through explicit energetic terms and variational derivatives, with the released energy routed to heat/interface work/content ledgers. No instantaneous low-density reset is admissible.
 8. `F_emb`, if explicit embryos are selected, is the same bulk/interface energy evaluated for finite geometry, not a second ad hoc barrier. For an isolated circular 2-D nucleus per unit depth, `Delta F(R)=2 pi R gamma_gb - pi R^2 Delta f`, `R_c=gamma_gb/Delta f`; signs and rates become verification targets.
-9. The locked collective state receives an energetic term only if DD/literature establishes a stored configurational energy and conjugate force. Otherwise it is a dissipative kinetic internal state.
+9. The optional collective stress-memory state receives an energetic term only if an independent derivation establishes stored configurational energy and a conjugate force. Otherwise it is a dissipative kinetic internal state.
 
 The Arrhenius--Taylor flow stress `sigma_AT(rho,T,edot)` is excluded from `F`. A plastic-work integral would require a precise strain-like conjugate variable and path-independent potential; those conditions are not established and plastic flow is dissipative/path dependent.
 
@@ -52,17 +52,17 @@ The Arrhenius--Taylor flow stress `sigma_AT(rho,T,edot)` is excluded from `F`. A
 
 An unloaded, isothermal, closed relaxation discretization must satisfy `F^{n+1} <= F^n + tolerance`. A convex-splitting, discrete-gradient, or accepted-step energy check will be selected before production.
 
-## DD closure alternatives
+## Independent and collective kinetic alternatives
 
-### A. Conditional first-moment surface
+### A. Independent EXP-floor baseline
 
-A table or uncertainty-aware surrogate maps all DD-supported covariates `x=(rho components,T,tau,edot,length,microstructure,...)` to mean completion intensity and amplitude statistics. It is transparent and minimal but cannot reproduce non-exponential waiting times, over/under-dispersion, or serial correlations unless those observables are irrelevant on continuum timescales. Queries outside the convex validity envelope stop or warn explicitly.
+Use the analytical barrier, activated rate, inverse, and Lambert-W peak in `analytical_strength_derivation.md`. Optimize its parameters only against an authoritative material strength/rate/temperature dataset. This is the production default unless discriminating observations reject it.
 
-### B. Stateful renewal/phase-type closure
+### B. Stress-transfer branching and multi-hit memory
 
-A condition-dependent semi-Markov or phase-type state `p_0...p_K` advances through hit/relaxation phases with rates fitted only to DD event histories. The completion flux is a transition out of terminal phases, after which the state resets according to the fitted renewal law. Low-density exponential/Poisson behavior and coordinated multi-hit behavior must emerge from fitted transition structure, not a density switch. This can preserve age, correlation time, dispersion, and restart state.
+Let an event at node `j` transfer a transient stress `Delta tau_ij(t)` to node `i`. The EXP-floor activation volume supplies the linear response in a branching matrix, while a relaxing shot-noise stress `z_i` represents subthreshold increments accumulating into a multi-hit first-passage event. Density acts only through derived spacing, connectivity, threshold distributions, and the transfer kernel.
 
-Selection rule: fit both on common calibration conditions; choose A only if held-out mean, survival/hazard, CV/Fano, amplitude, and correlations relevant to PF are statistically adequate. Otherwise choose the smallest B model supported by likelihood/information criteria and held-out diagnostics. PF results never participate in this selection.
+Selection rule: retain A unless held-out transient, burst, or correlation observables relevant to the continuum reject it and favor B after complexity is penalized. Phase-field outcomes never select the kinetic alternative.
 
 ## Candidate couplings (hypotheses, not gates)
 
@@ -75,7 +75,7 @@ Each coupling must have independent evidence, limiting behavior, and an ablation
 - collective stress redistribution modifies resolved slip/GB loading;
 - finite-amplitude thermal/structural fluctuations alter embryo sampling frequency, without direct birth.
 
-At zero coupling, the locked DD state remains statistically correct and the continuum reduces to its baseline material-point/phase-field limits.
+At zero collective coupling, the model reduces exactly to the analytical independent-node material-point and phase-field limits.
 
 ## DRX routes to compare
 

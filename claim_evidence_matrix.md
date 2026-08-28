@@ -1,5 +1,7 @@
 # Claim--evidence matrix
 
+Status: legacy claims and artifacts are context only. The “supporting project evidence” column records historical provenance, not calibration or validation evidence for the new model.
+
 | Legacy claim | Supporting project evidence | Predates new DD finding? | Assessment | New-model action |
 |---|---|---:|---|---|
 | Arrhenius--Taylor stress peak directly triggers DRX. | Legacy manuscript/model notes; `multihit.m`; pre-v34 drivers. | Yes | Contradicted by campaign constraint; not a thermodynamic derivation. | Reject as trigger; retain stress curve only as a kinetic diagnostic if independently calibrated. |
@@ -12,4 +14,4 @@
 | Temperature-dependent GB mobility is represented in production. | v34 has an implementation but default is false. | Yes | Misleading as a default claim. | Modify: temperature dependence must be active and calibrated in the common model. |
 | Current restart is exact. | v34 checkpoint functions and comments. | Yes | Contradicted for candidate state and some provenance; segmented equivalence not demonstrated. | Replace with versioned complete schema and all RNG/internal states. |
 | Current ASB classifier establishes localization. | v34 summarizer/diagnostics. | Yes | Unsupported: permissive weak-indicator OR and hazard birth persistence. | Replace with multi-criterion, control/convergence-based classifier with uncertainty. |
-| New DD simulations establish a temperature-dependent Poisson-to-multi-hit transition. | No qualifying raw DD dataset found in the supplied tree. | No | Unresolved from available evidence. | Locate exact datasets/metadata; do not fit or encode until verified. |
+| DD simulations should parameterize the new model. | No qualifying raw DD dataset found in the supplied tree. | No | Superseded by clarified scope. | Do not use DD for parameterization; test a collective analytical extension only if independent observations require it. |

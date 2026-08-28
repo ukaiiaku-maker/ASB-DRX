@@ -1,5 +1,7 @@
 # First-pass legacy model audit (v32--v34)
 
+Disposition updated 2026-08-28: context only. No legacy equation, parameter, output, or reproduced trajectory calibrates, validates, or regression-gates the new model.
+
 Scope: static inspection of the supplied top-level v34 files and canonical sources/results under `/Users/sdillon/DRX-ASB/recrysyallization_PF-2D/shear_banding`. This is an evidence audit, not endorsement. Exact hashes are in `evidence_manifest.json`.
 
 ## Represented equations and state

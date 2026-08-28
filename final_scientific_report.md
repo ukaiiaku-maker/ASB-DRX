@@ -1,19 +1,20 @@
 # Final scientific report
 
-Status: Gate 0 no-go; campaign paused before closure fitting and production implementation.
+Status: rebaselined on the analytical EXP-floor law; analytical verification in progress.
 
-The final report will separately identify raw project observations, DD-fit conclusions, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
+The final report will separately identify historical context, analytical consequences, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
 
 ## Current evidence-backed outcome
 
 - The isolated campaign is on `exp/independent-dd-pf-drx-asb-20260827`, based on remote `main` commit `a5dd798096e3896f319d314e8e4c60f5b277e589`.
 - The inventory contains 33,358 files (21,536,785,369 bytes) with SHA-256 hashes and no read/hash failures.
-- No qualifying raw DD transition dataset was found. Consequently there is no DD closure fit, fit conclusion, calibration/validation split, uncertainty model, or validity envelope to report.
+- DD is not a parameterization route. Missing DD transition data no longer block the campaign.
+- The EXP-floor barrier now has a closed-form inverse and Lambert-W prediction for peak density, local stress, and macroscopic strength as functions of rate and temperature.
 - The target material is unresolved because legacy Fe/BCC descriptions conflict with embedded Cr provenance and mixed-alloy validation data.
 - The thermodynamic document defines candidate state/balance/dissipation structures, rejects flow stress as a free-energy density, and keeps both the closure and DRX representation decisions open pending evidence.
 - HPC3 environment/staging smoke job `55633650` passed and fetched. Exact legacy jobs `55633674`, `55633691`, and `55633694` all completed and fetched with verified checksums.
 
-## Legacy observations, not validation claims
+## Legacy observations, retained only as context
 
 | Version | Observation | Interpretation |
 |---|---|---|
@@ -23,6 +24,6 @@ The final report will separately identify raw project observations, DD-fit concl
 
 v33 and v34 detailed trajectories do not reproduce the stored references from identical recorded parameters. Their old output directories lack immutable runtime/source provenance, so this is reported as unresolved legacy nondeterminism rather than tuned away.
 
-## No-go boundary
+## Current boundary
 
-No new model parameter has been calibrated, no DD parameter has been altered, and no production solver or array has been launched. Work may resume when the raw DD event evidence and an authoritative material/validation target are supplied. If exact legacy trajectories matter, the original environment and source snapshot are also required.
+No physical parameter has been calibrated and no production solver or array has been launched. Analytical implementation and verification proceed now. Physical optimization requires one authoritative material/validation target. A collective transparent-node extension remains optional research until a derived transfer/memory model and discriminating observations justify it.

@@ -2,18 +2,21 @@
 
 ## Evidence separation
 
-- DD calibration/validation selects and freezes the collective closure independently.
+- The analytical EXP-floor law is verified first and calibrated only to an authoritative material strength/rate/temperature dataset.
+- A collective extension is tested separately and only if discriminating observations reject the independent baseline; DD is not a parameter source.
 - Material/GB/thermal/mechanical datasets have versioned provenance and are separate from PF calibration targets.
 - PF calibration and validation conditions are disjoint. One resolved equation/parameter set applies everywhere.
 - Material selection is gated by `material_target_audit.md`; no mixed Fe/Cr/alloy parameter set is allowed.
 
-## Gate 0 regressions
+## Context audit already completed
 
-On HPC3, reproduce from exact source/configuration: one v32 ASB-like case, one v33 label-explosion negative control, and one v34 candidate-without-promotion case. Fetch and checksum all data. Build a common post-processor that does not recognize a hazard, candidate, or allocated label as a grain.
+Historical v32--v34 controls were reproduced and archived, but the clarified campaign treats them as context only. They impose no regression requirement on the new model.
 
-## Closure verification
+## Analytical and parameter verification
 
-At material points, held-out conditions must reproduce mean rate plus survival/hazard, CV/Fano or renewal shape, amplitude distribution, temporal/spatial correlations available in DD, seed uncertainty, and censoring. Lock artifact hash before PF calibration. Tests prevent mutation of DD parameters.
+Verify barrier limits, dimensions, activation-volume derivative, forward/inverse closure, Lambert-W branch and stationarity, peak-existence criterion, and exact fixed-temperature rate scalings on HPC3. Then use synthetic recovery to test optimizer identifiability without claiming physical validity. Physical fitting uses condition-grouped held-out strength data and reports parameter correlations and validity limits.
+
+If a collective extension is attempted, it must additionally predict relevant transient/burst/correlation observations on held-out conditions, satisfy the independent limit, and expose the branching spectral radius and memory timescale.
 
 ## Thermodynamic/numerical verification
 
@@ -40,7 +43,7 @@ At material points, held-out conditions must reproduce mean rate plus survival/h
 
 ## Production staging
 
-Only after Gates 0--5, run a sparse matrix selected from actual validity envelopes (provisionally three temperatures, five log rates, one microstructure/stochastic seed). Locate boundaries, then use at least three independent seeds near boundaries and representative regimes. Keep microstructure, closure, embryo, and perturbation RNG streams distinguishable.
+Only after analytical verification, target selection, parameter validation, and thermodynamic/numerical gates, run a sparse matrix selected from actual validity envelopes. Locate boundaries, then use at least three independent seeds near boundaries and representative regimes. Keep microstructure, collective, embryo, and perturbation RNG streams distinguishable.
 
 ## Classification
 

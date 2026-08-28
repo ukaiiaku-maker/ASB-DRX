@@ -1,26 +1,28 @@
-# Independent DD-constrained PF DRX/ASB campaign
+# Analytical EXP-floor PF DRX/ASB campaign
 
 Campaign ID: `asb-drx-independent-20260827`
 
-This branch is a scientific redevelopment. Legacy v32--v34 sources and outputs are evidence and regression references; they are not the production architecture. The new implementation will live under `src/asb_drx/` and will use one equation set and one parameter set across temperature and strain rate.
+This branch is a scientific redevelopment. Legacy programs, parameters, and outputs are context only: they do not calibrate, validate, or regression-gate the new model. The implementation lives under `src/asb_drx/` and will use one equation set and one parameter set across temperature and strain rate.
 
 ## Immutable interpretation
 
 - The Arrhenius--Taylor peak and negative slope are kinetic diagnostics, not a DRX trigger or a free-energy term.
-- The reported DD Poisson-to-coordinated transition is an external constitutive constraint. It cannot be tuned against phase-field outcomes.
+- Dislocation dynamics does not parameterize the model.
+- The independent-node EXP-floor barrier and its closed-form rate--temperature strength peak are the constitutive baseline.
+- A collective transparent-node extension is admitted only if a stress-transfer/memory derivation and discriminating observations justify it.
 - Collective-event state may alter kinetics, storage, correlation, intermittency, and finite-fluctuation sampling, but cannot directly create a grain.
 - A grain requires finite order-parameter support, orientation/provenance, persistence, and growth or stable survival.
 - ASB requires converged thermomechanical localization, not a weak scalar OR test.
 
 ## Gate sequence
 
-0. Repository isolation, evidence inventory, exact DD dataset identification, legacy reproductions.
-1. Standalone DD closure with held-out first- and higher-moment validation; freeze and hash the artifact.
-2. Thermodynamic, dimensional, relaxation, content-ledger, work/energy, and nucleus-limit verification.
-3. Time/grid convergence, restart equivalence, schema tests, and physical-grain invariants.
-4. Common-equation mechanism ladder.
-5. Sparse one-seed temperature/rate map.
-6. Boundary/representative ensembles, uncertainty propagation, and validation.
+0. Derive and independently verify the EXP-floor inverse, activation volume, and analytical peak.
+1. Select an authoritative material and strength/rate/temperature dataset; optimize the analytical parameters with identifiability and held-out tests.
+2. Test whether collective observables reject the independent-node baseline; if so, derive and validate the smallest stress-transfer/memory extension.
+3. Verify thermodynamics, dimensions, content ledgers, work/energy closure, and nucleus limits.
+4. Verify time/grid convergence, restart equivalence, schema, and physical-grain invariants.
+5. Run the common-equation mechanism ladder and sparse temperature/rate map.
+6. Run boundary/representative ensembles, uncertainty propagation, and external validation.
 
 No later gate is authorized scientifically by a failed earlier gate. Failed conservation, thermodynamic, restart, convergence, or validation tests will be corrected rather than tuned around.
 
@@ -28,7 +30,7 @@ No later gate is authorized scientifically by a failed earlier gate. Failed cons
 
 - `docs/`: audit, derivation, validation, and decision records.
 - `evidence/`: machine-generated inventory metadata; raw project evidence remains immutable at its recorded source paths.
-- `src/asb_drx/`: new modular implementation (not yet started at Gate 0).
+- `src/asb_drx/`: new modular analytical and, later, continuum implementation.
 - `tests/`: tests whose numerical execution is submitted to HPC3.
 - `.hpc3/jobs/`: versioned job specifications.
 - `hpc3-results/asb-drx-independent/`: fetched run data, excluded from Git where large.

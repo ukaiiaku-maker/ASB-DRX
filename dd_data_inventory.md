@@ -1,8 +1,8 @@
-# DD data inventory
+# Legacy DD-adjacent inventory (context only)
 
-## Gate result
+## Disposition
 
-The exact DD datasets claimed to establish a Poisson-like low-density process and a coordinated multi-hit process near the prior Taylor-peak range were not found in the current project tree during the first-pass filename/content search. No closure fit is permitted from the material below.
+This inventory is retained only to document what was examined. None of the artifacts below may calibrate or validate the new model, and missing DD data no longer blocks the analytical campaign.
 
 ## Located DD-adjacent artifacts
 
@@ -16,7 +16,7 @@ The exact DD datasets claimed to establish a Poisson-like low-density process an
 
 No `avalanche_summary.json`, campaign event table, waiting-time table, or raw event trajectory was found under `/Users/sdillon/DRX-ASB` by the first-pass search.
 
-## Metadata required before fitting
+## Metadata that would be required for an optional collective comparison
 
 For each condition, obtain without inference:
 
@@ -31,6 +31,6 @@ For each condition, obtain without inference:
 - event time, location, amplitude, slip system/Burgers character where available;
 - uncertainty and dependencies on density, temperature, stress, rate, correlation time, and length.
 
-## Planned characterization once data exist
+## Optional characterization if qualifying observations become available
 
 Use condition/seed-grouped calibration and held-out validation. Estimate waiting/inter-event distributions, survival/hazard, CV, Fano factor versus window, renewal shape/effective hit order, amplitude law, temporal correlation, spatial correlation/domain length, censoring likelihood, and seed uncertainty. Test dependencies jointly before any dimensional reduction. Out-of-envelope queries will warn or stop according to configuration and will never extrapolate silently.
