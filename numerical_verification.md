@@ -125,6 +125,23 @@ The preceding run `20260828T133809Z-b3a2116-395502` / job `55637819` failed its 
 
 The common-stress layer is the 1-D quasistatic simple-shear equilibrium limit. It does not include displacement-resolved multidimensional mechanics, thermoelasticity, physical boundaries, DRX coupling, or a calibrated instability/localization test.
 
+## Physical-grain metric and lifecycle
+
+Status: passed, completed, fetched, and checksum-verified. This verifies generic classification invariants; it is not a nucleation, orientation-evolution, or DRX kinetics model.
+
+- Git commit: `5e8fabc`
+- Run ID / Slurm job: `20260828T134840Z-5e8fabc-192eaf` / `55637844`
+- Ten tests passed: empty allocated labels, sub-resolution support, disconnected islands, periodic component wrapping, persistence and promotion, growth history, symmetry-equivalent rejection, invalid-lineage rejection, provenance-preserving retirement, and exact tracker checkpoint round trip
+- The demonstration has three allocated labels but only two resolved/physical grains; one valid persistent child is promoted, one empty label is not, and the promoted area fraction is `0.1111111`
+- Result archive SHA-256: `ac45dff29a25defd70dc7e81496a40603c4a1e79339ed677f83db2b89498b325`
+- Verification JSON SHA-256: `66e72cf9445ed0e3ff1407ebb2559ede831a72c52627382c81c77af2979d2a85`
+- Unit-test log SHA-256: `9b7aeb431664dc30684fb9ac5710e09aa786098e222789030ae74e9445588b5a`
+- Runner retrieval status: `verified`
+
+The verified distinction is between allocated labels, periodic topology components, currently resolved labels, physical grains, and promoted recrystallized grains. The generic purity, area, persistence, misorientation, and scalar symmetry settings are test fixtures. They must be replaced by interface-resolution studies and the selected crystal/material definition before production use. This gate does not supply stochastic trials, nucleation energetics, an orientation manifold, multi-order-parameter dynamics, collisions, stored-energy relief, or DRX coupling.
+
+The preceding run `20260828T134738Z-39eff44-ef427b` / job `55637837` failed before any grain test because its input manifest omitted `src/asb_drx/analytical.py`, which package initialization imports. It was fetched as incomplete and no scientific result was interpreted. Commit `5e8fabc` corrected only the explicit package dependency before the successful rerun.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
@@ -144,7 +161,7 @@ Purpose: verify staging, the discovered system Python, deterministic arithmetic,
 
 ## Required future records
 
-Closure material-point validation, relaxation/free-energy monotonicity, content/work ledgers, nucleus limits, homogeneous limits, timestep/grid convergence, exact restart, schema tests, and label/grain invariants will be appended with run IDs, commits, configs, tolerances, and checksums.
+Future records must extend the passed isolated gates to coupled multi-order-parameter evolution, full-state restart, material-scaled grain criteria, multidimensional equilibrium, localization convergence, parameter uncertainty, and external validation, with run IDs, commits, configurations, tolerances, and checksums.
 
 ## Legacy computations retained as context only
 

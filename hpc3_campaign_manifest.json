@@ -382,6 +382,35 @@
       "start_utc": "2026-08-28T13:39:59Z", "end_utc": "2026-08-28T13:40:00Z", "exit_status": "0:0", "stop_reason": "completed_all_fourteen_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 37.50,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T133943Z-ae2fdf9-d7f5b0", "local_path": "hpc3-results/asb-drx-independent/20260828T133943Z-ae2fdf9-d7f5b0", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "8f3b762c413171767cd3ce2dbe17e8087ae9a7edffbe3b7403a839c384ce9760", "shear_layer_verification.json": "88f9129aa54d910fbbc256f88f546e50af5b1219d3f0b5af917f34b795bc3ca0", "unittest.txt": "a6d7e0809fafb5091adf560a5a8e22253ebd7ac69cfe1f6a0fc23b568d2605ab", "results/checksums-single.sha256": "06a550329faec36ec1385eaa6486c70c07022947bc4408723d42ba3be9364fa2", "status/final-single.json": "9200ef5742f5f39b7172daf14516e444d80a79150817c19fa53859b59300f760"}
+    },
+    {
+      "run_id": "20260828T134738Z-39eff44-ef427b",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "grain_metric_packaging_attempt_no_scientific_result",
+      "git_commit_at_plan": "39eff44b3282a4f5d3bb2cc3b32f25dbc669ab05",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean_but_incomplete_archive_manifest",
+      "input_sha256": {"run_grain_metric_hpc3.sh": "f66e357fdb4a068a66053cf64e4e8e69cef4d023b3844bd61a39dfc4bf5d36c0", "src/asb_drx/grains.py": "21af549993e588d7a4fb8f7f637c18c93cf314711b1c4bcb863eeee04343497f", "tests/test_grains.py": "ff131ba3b9f03dacedf50562cc08d8a42a2171fdc736806438d216b2190b5822", "tools/run_grain_metric_verification.py": "6f653d93eef05024bbc1e3986f683e7e4e3afea46e5acb5f561533f09a02e0cc"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "grid_domain_timestep_stopping": "not_reached_packaging_failure",
+      "slurm": {"job_id": "55637837", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T13:47:55Z", "end_utc": "2026-08-28T13:47:55Z", "exit_status": "1:0", "stop_reason": "packaging_failure_analytical_module_omitted_no_tests_executed", "wall_clock_seconds": 1, "peak_memory_MB": 21.36,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T134738Z-39eff44-ef427b", "local_path": "hpc3-results/asb-drx-independent/20260828T134738Z-39eff44-ef427b", "retrieval_status": "fetched_incomplete",
+      "outputs": {"results/results-single.tar.gz": "993cc683cb876aeee457ef328f9f26edc5ac53150b35999f7302013e792e5931", "status/final-single.json": "2f0b914b0dd684756e5e6e7a8dfa07ec621a7377c4d0ef1355c90125fb950148"}
+    },
+    {
+      "run_id": "20260828T134840Z-5e8fabc-192eaf",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "physical_grain_metric_and_lifecycle_verification",
+      "git_commit_at_plan": "5e8fabca10de81a560595fb979eb11ba3c090cfa",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "input_sha256": {"run_grain_metric_hpc3.sh": "f66e357fdb4a068a66053cf64e4e8e69cef4d023b3844bd61a39dfc4bf5d36c0", "src/asb_drx/analytical.py": "42002881d38f93e45260ae82e05f523596ba2acfe1a008a5694b2bff8071e031", "src/asb_drx/grains.py": "21af549993e588d7a4fb8f7f637c18c93cf314711b1c4bcb863eeee04343497f", "tests/test_grains.py": "ff131ba3b9f03dacedf50562cc08d8a42a2171fdc736806438d216b2190b5822", "tools/run_grain_metric_verification.py": "6f653d93eef05024bbc1e3986f683e7e4e3afea46e5acb5f561533f09a02e0cc"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"fixture": "periodic_multi_order_parameter_grain_classification", "grid": [12, 12], "dx_m": 1e-6, "purity_threshold": 0.8, "minimum_area_m2": 9e-12, "minimum_persistence_steps": 3, "retirement_grace_steps": 2, "minimum_misorientation_rad": 0.08726646259971647, "symmetry_order": 4, "scientific_disposition": "generic_classification_fixture_not_material_or_DRX_validation"},
+      "grid_domain_timestep_stopping": {"boundary": "doubly_periodic_topology", "grid": [12, 12], "dx_m": 1e-6, "updates": 3, "stopping": "fixed_lifecycle_updates"},
+      "slurm": {"job_id": "55637844", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T13:48:57Z", "end_utc": "2026-08-28T13:48:58Z", "exit_status": "0:0", "stop_reason": "completed_all_ten_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 37.11,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T134840Z-5e8fabc-192eaf", "local_path": "hpc3-results/asb-drx-independent/20260828T134840Z-5e8fabc-192eaf", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "ac45dff29a25defd70dc7e81496a40603c4a1e79339ed677f83db2b89498b325", "grain_metric_verification.json": "66e72cf9445ed0e3ff1407ebb2559ede831a72c52627382c81c77af2979d2a85", "unittest.txt": "9b7aeb431664dc30684fb9ac5710e09aa786098e222789030ae74e9445588b5a", "results/checksums-single.sha256": "4752b698563e65bcac9af022ee85eed82bf8470c3e0cba383e878d8ecfc9fe81", "status/final-single.json": "f09fb63368af77aa363fae81ddc9c8770b9f03c93c3faa4178d29ea7e034b7a3"}
     }
   ]
 }

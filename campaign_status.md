@@ -2,7 +2,7 @@
 
 Updated: 2026-08-28 (America/Los_Angeles)
 
-## Current gate: analytical foundation
+## Current gate: material-agnostic coupled-mechanism verification
 
 The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not parameterize the model, and old programs/data are context only. Their inventory and HPC3 reproductions remain an audit record but are not new-model evidence or gates.
 
@@ -23,6 +23,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - HPC3 spatial run `20260828T132810Z-a4a0bf0-5c7bfe` (job `55637801`) passed nine tests with verified retrieval. The diffuse 2-D nucleus shrinks/grows on the correct sides of the derived critical radius, final grid/timestep changes are 0.384%/0.0021%, and the complete current limited state restarts bitwise exactly.
 - HPC3 material-point run `20260828T133324Z-6920914-866ee2` (job `55637814`) passed ten tests with verified retrieval. Finite elastic loading, EXP-floor plastic flow, stored line energy, and residual heat close the incremental work ledger exactly without a tuned heat fraction.
 - HPC3 shear-layer run `20260828T133943Z-ae2fdf9-d7f5b0` (job `55637821`) passed fourteen tests with verified retrieval. The common-stress layer reduces to the material point, conserves/damps heat correctly, closes both ledgers, and restarts exactly. An earlier unstable explicit-diffusion run was rejected and corrected by enforcing the Fourier bound.
+- HPC3 grain-metric run `20260828T134840Z-5e8fabc-192eaf` (job `55637844`) passed ten tests with verified retrieval. Allocated labels, periodic topology components, resolved support, physical grains, and promoted recrystallized grains are distinct metrics; promotion requires resolved persistent support, lineage, and symmetry-reduced misorientation, while retirement preserves provenance. The preceding packaging-only failure omitted an imported module and executed no grain test.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
 - Campaign-specific HPC3 smoke job `55633650` completed, fetched, and checksum-verified.
@@ -37,7 +38,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 2. Physical calibration cannot begin until one authoritative target material and strength/rate/temperature dataset are selected.
 3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.
-5. The isolated thermodynamic and diffuse 2-D nucleus gates pass, including limited-state convergence/restart. Coupled thermomechanics, production-state restart, and grain/orientation invariants remain unverified.
+5. The isolated thermodynamic/diffuse-nucleus gates and physical-grain classifier invariants pass, including their limited-state restart checks. Multi-order-parameter orientation dynamics, energetic nucleation, coupling, and production-state restart remain unverified.
 6. The homogeneous thermomechanical ledger passes, but spatial mechanics/heat transport and localization remain unimplemented and unverified.
 7. Periodic 1-D heat transport/common-stress mechanics now pass generic controls. Physical boundary conditions, multidimensional equilibrium, calibrated localization, and DRX coupling remain unverified.
 
