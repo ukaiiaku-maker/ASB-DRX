@@ -115,15 +115,39 @@ def main() -> None:
     ratios = (args.density_ratio,) if args.density_ratio is not None else (0.5, 1.0, 2.0)
     fixture = SingleGliderDDDParameterization()
     records = []
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    partial_output = args.output.with_name(
+        f"{args.output.stem}.partial{args.output.suffix}"
+    )
     for temperature in temperatures:
         for rate in rates:
             for ratio in ratios:
+                print(
+                    f"starting T={temperature:g} K rate={rate:g} s^-1 "
+                    f"density_ratio={ratio:g}",
+                    flush=True,
+                )
                 records.append(
                     run_condition(
                         temperature, rate, ratio, args.points, args.steps,
                         args.target_shear, fixture,
                     )
                 )
+                partial_output.write_text(
+                    json.dumps(
+                        {
+                            "schema": "asb-drx-local-antiplane-boundary-matrix/partial-v1",
+                            "source_commit": args.source_commit,
+                            "execution_site": args.execution_site,
+                            "completed_records": records,
+                        },
+                        indent=2,
+                        sort_keys=True,
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                print(f"completed records={len(records)}", flush=True)
     report = {
         "schema": "asb-drx-local-antiplane-boundary-matrix/v1",
         "source_commit": args.source_commit,
@@ -148,7 +172,6 @@ def main() -> None:
             "DDD source campaign rate is 4.5 s^-1; higher rates are analytical extrapolations",
         ],
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 

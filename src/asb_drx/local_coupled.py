@@ -200,7 +200,7 @@ def local_coupled_step(
         )
         density_increment = requested_density_increment * storage_scale[None, :, :]
         new_density = density + density_increment
-        phase_old_total, phase_old_stored, _ = _energies_J_m(
+        phase_old_total, phase_old_stored, phase_old_interface = _energies_J_m(
             fields, new_density, dx_m, parameters
         )
         mechanical_stored_local = parameters.stored_line_energy_J_m * np.sum(
@@ -239,10 +239,22 @@ def local_coupled_step(
         new_total, new_stored, new_interface = _energies_J_m(
             candidate, new_density, dx_m, parameters
         )
-        if new_total > phase_old_total:
+        phase_energy_floor = 128.0 * np.finfo(float).eps * max(
+            abs(phase_old_total), abs(new_total), np.finfo(float).tiny
+        )
+        if new_total - phase_old_total > phase_energy_floor:
             last_rejection = "phase_energy_increase"
             dt_s *= 0.5
             continue
+        if new_total > phase_old_total:
+            # At a numerically stationary phase state, simplex normalization
+            # can perturb the last bits even when dt is too small to change a
+            # field.  Preserve the old phase state instead of halving forever.
+            candidate = fields
+            projected = np.zeros_like(fields)
+            new_total = phase_old_total
+            new_stored = phase_old_stored
+            new_interface = phase_old_interface
         phase_heat_mean = (phase_old_total - new_total) / area_m2
         dissipation_weight = np.sum(projected**2, axis=0)
         if float(np.mean(dissipation_weight)) > 0.0:

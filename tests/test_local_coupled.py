@@ -167,6 +167,19 @@ class LocalCoupledTests(unittest.TestCase):
             + 1.0e-10 * max(accepted.ledger.plastic_work_J_m3, 1.0),
         )
 
+    def test_roundoff_stationary_phase_does_not_trigger_endless_halving(self) -> None:
+        initial, dx_m = self._mixed_state()
+        accepted = local_coupled_step(
+            initial, 10.0, dx_m, 1.0e-27, self.law, self.parameters,
+            maximum_halvings=0,
+        )
+        self.assertEqual(accepted.halvings, 0)
+        self.assertLessEqual(
+            accepted.ledger.interface_order_change_J_m3
+            + accepted.ledger.stored_change_J_m3,
+            1.0e-10,
+        )
+
     def test_exact_periodic_diffusion_removes_explicit_CFL_restriction(self) -> None:
         points = 32
         dx_m = 5.0e-7
