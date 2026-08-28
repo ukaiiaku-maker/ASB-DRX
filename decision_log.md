@@ -59,3 +59,9 @@ Use `G=G0(T)[f+(1-f)exp(-a(tau/tau_c(T))^n)]` with an independent-node activated
 Status: proposed, 2026-08-28.
 
 If target observations require collective transparent-node behavior, derive it from a stress-transfer branching matrix and relaxing multi-hit shot-noise state. Do not introduce an arbitrary density threshold, prescribed hit order, or DD-fitted switch. Promote the extension only after it outperforms the independent baseline on held-out discriminating observations.
+
+## ADR-0011: Use complete single-glider DDD for structural falsification only
+
+Status: accepted, 2026-08-28.
+
+The located `Taylor_DDD` persistent-contact simulations may test whether the proposed contact graph, elastic transfer, branching susceptibility, and multi-hit memory are structurally adequate. They do not set the EXP-floor or collective production parameters. The immutable source landmark is native ExaDiS commit `fb7610b`; result-file hashes and limitations are recorded in `taylor_ddd_context_audit.md`.

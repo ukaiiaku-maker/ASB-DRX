@@ -132,6 +132,8 @@ The collective hypothesis is plausible but not yet established for the intended 
 
 These works motivate the branching/shot-noise research route, but none identifies its parameters for this campaign. The route must be compared against the independent baseline using macroscopic transients, burst statistics if available, and held-out conditions. If no target data discriminate it, the collective extension remains an uncertainty/ablation rather than production physics.
 
+Complete single-glider DDD context was subsequently located in `/Users/sdillon/Taylor_DDD` and `/Users/sdillon/Taylor_DDD_arrhenius_native`; see `taylor_ddd_context_audit.md`. The persistent-contact event histories provide the missing structural objects needed to test the branching/shot-noise reduction: contact identity and residence, neighboring load-bearing lengths, signed force work, hazard accumulation, release/reset, and swept strain. They can falsify the reduction and determine whether scalar `R` is adequate, but they do not supply production parameters.
+
 ## 7. Immediate verification gates
 
 1. Symbolic identities and dimensions of the barrier, inverse, activation volume, and peak.

@@ -4,6 +4,8 @@
 
 This inventory is retained only to document what was examined. None of the artifacts below may calibrate or validate the new model, and missing DD data no longer blocks the analytical campaign.
 
+Update 2026-08-28: complete single-glider Taylor DDD and native ExaDiS simulations were subsequently located through prior Codex attachments. They are catalogued in `taylor_ddd_context_audit.md`. They provide mechanism and structural-validation evidence, but remain excluded from parameter optimization.
+
 ## Located DD-adjacent artifacts
 
 | Artifact | What it contains | Evidence status |
@@ -13,8 +15,10 @@ This inventory is retained only to document what was examined. None of the artif
 | `.../README_arrhenius_avalanche_ddd_v6.md` | Notes removal of stress ceilings/caps and recommends checking first-event/cascade summaries. | Prior interpretation and code provenance. |
 | `.../summarize_first_avalanche_campaign.py` | Summarizes avalanche size and realized branching ratio; produces a CCDF. | Derived-analysis code. |
 | `DRX_and _ASB/multihit.m` and `results/.../strength_vs_density_multihit.csv` | Prescribed multi-hit/Taylor calculations and derived strength table. | Hypothesis/derived data; not DD transition evidence. |
+| `/Users/sdillon/Taylor_DDD_arrhenius_native`, commit `fb7610b`, and `results/exadis_native_single_glider_*` | Completed native ExaDiS controlled one-glider/fixed-forest gate with persistent contacts, native force work, release histories, and a passing Taylor-density exponent. | Mechanism/structural evidence; declared barriers are test fixtures, not material parameters. |
+| `/Users/sdillon/Taylor_DDD/results/full_glider_*_20260817` | Complete continuous-contact single-glider EXP-floor density/temperature campaigns with history, crossing-event, depin-count, and aggregate files. | Contextual simulated observations suitable for falsifying a mathematical reduction, not parameter calibration. |
 
-No `avalanche_summary.json`, campaign event table, waiting-time table, or raw event trajectory was found under `/Users/sdillon/DRX-ASB` by the first-pass search.
+No qualifying trajectory was found under `/Users/sdillon/DRX-ASB` by the first-pass search. The later discovery is in the separate `Taylor_DDD` repositories named above.
 
 ## Metadata that would be required for an optional collective comparison
 
