@@ -39,6 +39,10 @@ If a collective extension is attempted, it must additionally predict relevant tr
 - a pure parent cannot create an allocated child through a nonzero bulk-force derivative;
 - the diffuse binary nucleus recovers the sharp-interface growth sign and label-permutation symmetry;
 - coupling evolved fields to the tracker changes physical support but never allocates a label.
+- grain-growth driving energy equals the explicit stored-line-energy difference, not an independently fitted bulk offset;
+- a common dislocation-density offset changes only the binary energy reference, not the phase dynamics;
+- each accepted stored-energy/phase step closes `Delta E_stored + Delta E_interface + Q = 0` and routes `Q` to temperature;
+- a pure parent undergoes no instantaneous density reset, heating, or child creation.
 
 ## Common-equation mechanism ladder
 

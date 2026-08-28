@@ -93,11 +93,11 @@ def binary_boundary_energy_J_m2(parameters: MultiOrderParameters) -> float:
     ) / 3.0
 
 
-def _interpolation_h(fields: np.ndarray) -> np.ndarray:
+def interpolation_h(fields: np.ndarray) -> np.ndarray:
     return fields**3 * (10.0 - 15.0 * fields + 6.0 * fields**2)
 
 
-def _interpolation_h_prime(fields: np.ndarray) -> np.ndarray:
+def interpolation_h_prime(fields: np.ndarray) -> np.ndarray:
     return 30.0 * fields**2 * (1.0 - fields) ** 2
 
 
@@ -110,7 +110,7 @@ def multi_order_free_energy_J_m(
     pair_sum = 0.5 * ((np.sum(squared, axis=0)) ** 2 - np.sum(squared**2, axis=0))
     density = parameters.pair_penalty_J_m3 * pair_sum
     density += np.tensordot(
-        np.asarray(parameters.bulk_energy_J_m3), _interpolation_h(fields), axes=(0, 0)
+        np.asarray(parameters.bulk_energy_J_m3), interpolation_h(fields), axes=(0, 0)
     )
     gradient_x = (np.roll(fields, -1, axis=2) - fields) / dx_m
     gradient_y = (np.roll(fields, -1, axis=1) - fields) / dx_m
@@ -131,7 +131,7 @@ def multi_order_chemical_potential_J_m3(
     local = 2.0 * parameters.pair_penalty_J_m3 * fields * (squared_sum - fields**2)
     local += (
         np.asarray(parameters.bulk_energy_J_m3)[:, None, None]
-        * _interpolation_h_prime(fields)
+        * interpolation_h_prime(fields)
     )
     laplacian = (
         np.roll(fields, -1, axis=1)

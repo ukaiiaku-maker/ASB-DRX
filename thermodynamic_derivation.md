@@ -111,7 +111,21 @@ where `h(eta)=eta^3(10-15 eta+6 eta^2)`. The endpoint-flat interpolation is esse
 
 The Onsager update uses the tangent projection `mu_i - mean_j(mu_j)`, followed only by roundoff-level simplex normalization and an energy/nonnegativity acceptance gate. For a planar boundary between two equal-bulk phases, reduction to one independent field gives `gamma = sqrt(kappa W)/3`. If phase 1 is lower by `Delta f > 0`, the two-dimensional circular sharp-interface limit is `R_c=gamma/Delta f` and `R_dot=M_eff(Delta f-gamma/R)`. The generic tests must recover the sign on each side of `R_c`, pointwise simplex conservation, energy decrease, label-permutation symmetry, pure-parent invariance, exact restart, and tracker coupling with fixed label count.
 
-This construction still omits crystallographic boundary-energy anisotropy, a full orientation quotient/manifold, triple-junction calibration, elastic coherency, stored-energy-dependent `g_i`, stochastic candidate creation, and collision/coalescence rules. Passing it establishes a constrained variational baseline only.
+This construction still omits crystallographic boundary-energy anisotropy, a full orientation quotient/manifold, triple-junction calibration, elastic coherency, evolving stored-energy coupling, stochastic candidate creation, and collision/coalescence rules. Passing it establishes a constrained variational baseline only.
+
+### Explicit dislocation stored-energy coupling
+
+The next coupling removes the arbitrary binary bulk offset by assigning each allocated grain a fixed, explicit dislocation density `rho_i` and stored line energy `e_line`, so `g_i=e_line rho_i`. The child driving energy is therefore
+
+`Delta f_(parent->child) = e_line (rho_parent-rho_child)`.
+
+For the binary simplex, `h(eta_parent)+h(eta_child)=1`, so adding the same density to both grains changes the energy reference but not the projected dynamics. This common-offset invariance is a required test. The densities remain provenance/configuration entries during a phase step: boundary motion continuously changes the volume-weighted stored energy rather than applying an instantaneous density reset.
+
+For each accepted phase step, split the total free energy per out-of-plane depth as `F=E_stored+E_interface/order`. With `Delta F<=0`, the isolated isochoric ledger is
+
+`Delta E_stored + Delta E_interface/order + Q = 0`, `Q=-Delta F >= 0`.
+
+The dissipated free energy is routed to temperature through `Delta T=(Q/A)/(rho_m c_p)`, where the supplied volumetric heat capacity is written directly as `rho_m c_p`. This is a closed relaxation ledger only. It does not yet include external mechanical work during the same step, evolving intragranular reservoirs, recovery/annihilation products, latent heat, conduction, or temperature-dependent mobility. Those channels must be combined without double counting in the coupled solver.
 
 ## Timescale and stability work before 2-D sweeps
 

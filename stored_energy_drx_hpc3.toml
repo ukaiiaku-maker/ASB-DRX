@@ -1,0 +1,41 @@
+name = "asb-drx-stored-energy-coupling"
+entrypoint = ["bash", "run_stored_energy_drx_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_stored_energy_drx_hpc3.sh",
+  "src/asb_drx/__init__.py",
+  "src/asb_drx/analytical.py",
+  "src/asb_drx/grains.py",
+  "src/asb_drx/multi_order.py",
+  "src/asb_drx/stored_energy_drx.py",
+  "tests/test_multi_order.py",
+  "tests/test_stored_energy_drx.py",
+  "tools/run_stored_energy_drx_verification.py",
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:10:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
