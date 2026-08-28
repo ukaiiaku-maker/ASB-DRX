@@ -18,6 +18,7 @@ from asb_drx.local_coupled import (
     save_local_coupled_checkpoint,
 )
 from asb_drx.multi_order import BinaryCircularLimit, diffuse_binary_circle
+from asb_drx.recovery import RecoveryLaw
 from asb_drx.spatial_coupled import (
     SpatialCoupledParameters,
     SpatialMechanismControls,
@@ -205,6 +206,35 @@ class LocalCoupledTests(unittest.TestCase):
         )
         self.assertLess(abs(external - accounted), 1.0e-8 * max(abs(external), 1.0))
         self.assertTrue(np.all(np.isfinite(final.temperature_K)))
+
+    def test_unloaded_recovery_releases_exact_stored_energy_to_bath(self) -> None:
+        points = 8
+        density = np.full((2, points, points), 5.0e13)
+        state = LocalCoupledState(
+            0.0,
+            np.zeros((points, points)),
+            np.full((points, points), 1000.0),
+            density,
+            self._pure(points),
+        )
+        recovery = RecoveryLaw(1000.0, 0.5, 0.0)
+        accepted = local_coupled_step(
+            state, 0.0, 1.0e-6, 0.1, self.law, self.parameters,
+            controls=SpatialMechanismControls(False, False),
+            recovery_law=recovery,
+        )
+        expected_density = density[0, 0, 0] * math.exp(-0.1 / 0.5)
+        self.assertAlmostEqual(accepted.state.forest_density_m2[0, 0, 0], expected_density)
+        self.assertGreater(accepted.ledger.recovery_heat_J_m3, 0.0)
+        self.assertEqual(accepted.ledger.mechanical_heat_J_m3, 0.0)
+        self.assertAlmostEqual(
+            accepted.ledger.bath_heat_J_m3,
+            accepted.ledger.recovery_heat_J_m3,
+        )
+        self.assertLess(
+            abs(accepted.ledger.global_closure_error_J_m3),
+            1.0e-10 * accepted.ledger.recovery_heat_J_m3,
+        )
 
     def test_phase_disabled_and_isothermal_controls_are_exact(self) -> None:
         initial, dx_m = self._mixed_state()

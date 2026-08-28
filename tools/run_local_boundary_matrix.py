@@ -41,6 +41,7 @@ def run_condition(
         fixture.law(), fixture.spatial_parameters(),
         maximum_accepted_steps=maximum_accepted_steps,
         retention_strain_increment=target_shear_increment / steps,
+        recovery_law=fixture.recovery_law(),
     )
     criteria = LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05)
     decision = classify_local_mechanism_trace(
@@ -80,6 +81,10 @@ def run_condition(
         "initial_child_order_fraction": float(np.mean(initial.eta_fields[1])),
         "final_child_order_fraction": float(np.mean(final.eta_fields[1])),
         "phase_change_l2": float(np.linalg.norm(final.eta_fields - initial.eta_fields)),
+        "mean_density_change_m2": float(np.mean(
+            final.forest_density_m2 - initial.forest_density_m2
+        )),
+        "final_step_recovery_heat_J_m3": final_step.ledger.recovery_heat_J_m3,
         "maximum_storage_limited_fraction": (
             trace.statistics.maximum_storage_limited_fraction
         ),

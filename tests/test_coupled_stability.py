@@ -12,6 +12,7 @@ from asb_drx.coupled_stability import (
 )
 from asb_drx.fixtures import SingleGliderDDDParameterization
 from asb_drx.spatial_coupled import SpatialCoupledParameters
+from asb_drx.recovery import RecoveryLaw
 
 
 class FullCoupledStabilityTests(unittest.TestCase):
@@ -121,6 +122,30 @@ class FullCoupledStabilityTests(unittest.TestCase):
             full_coupled_stability_mode(
                 self.law, self.state, self.kx, self.ky, kink_parameters
             )
+
+    def test_recovery_operator_matches_finite_difference_rhs(self) -> None:
+        recovery = RecoveryLaw(950.0, 1.7, 1.0e-19)
+        mode = full_coupled_stability_mode(
+            self.law, self.state, self.kx, self.ky, self.parameters,
+            recovery_law=recovery,
+        )
+        scales = np.asarray((1.0e-8, 1.0e-3,
+                             self.state.parent_density_m2 * 1.0e-7,
+                             self.state.child_density_m2 * 1.0e-7, 1.0e-7))
+        numerical = np.empty((5, 5))
+        for column, step in enumerate(scales):
+            delta = np.zeros(5)
+            delta[column] = step
+            plus = coupled_mode_rhs(
+                delta, self.law, self.state, self.kx, self.ky, self.parameters,
+                recovery_law=recovery,
+            )
+            minus = coupled_mode_rhs(
+                -delta, self.law, self.state, self.kx, self.ky, self.parameters,
+                recovery_law=recovery,
+            )
+            numerical[:, column] = (plus - minus) / (2.0 * step)
+        self.assertTrue(np.allclose(mode.jacobian, numerical, rtol=2.0e-5, atol=1.0e-10))
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from .analytical import ExpFloorLaw
 from .antiplane import AntiplaneEquilibrium, solve_periodic_antiplane
 from .implicit_flow import backward_euler_antiplane_flow
 from .multi_order import interpolation_h
+from .recovery import RecoveryLaw
 from .spatial_coupled import (
     SpatialCoupledParameters,
     SpatialMechanismControls,
@@ -71,6 +72,7 @@ class LocalCoupledLedger:
     thermal_closure_error_J_m3: float
     bath_heat_J_m3: float
     plastic_work_J_m3: float
+    recovery_heat_J_m3: float
 
 
 @dataclass(frozen=True)
@@ -124,6 +126,7 @@ def local_coupled_step(
     tolerance_J_m3: float = 1.0e-8,
     relative_ledger_tolerance: float = 1.0e-9,
     flow_integration: str = "backward_euler",
+    recovery_law: RecoveryLaw | None = None,
 ) -> LocalCoupledStep:
     if not math.isfinite(applied_shear_rate_s_inv):
         raise ValueError("applied_shear_rate_s_inv must be finite")
@@ -232,7 +235,27 @@ def local_coupled_step(
             / requested_stored_local[requesting],
         )
         density_increment = requested_density_increment * storage_scale[None, :, :]
-        new_density = density + density_increment
+        density_after_storage = density + density_increment
+        if recovery_law is None:
+            new_density = density_after_storage
+        else:
+            inverse_times = np.empty_like(temperature)
+            for index in np.ndindex(temperature.shape):
+                inverse_times[index] = recovery_law.inverse_time_s_inv(
+                    float(temperature[index])
+                )
+            equilibrium_density = recovery_law.equilibrium_density_m2
+            if np.any(density_after_storage < equilibrium_density):
+                last_rejection = "density_below_recovery_equilibrium"
+                dt_s *= 0.5
+                continue
+            decay = np.exp(-dt_s * inverse_times)
+            new_density = equilibrium_density + (
+                density_after_storage - equilibrium_density
+            ) * decay[None, :, :]
+        recovery_heat_local = parameters.stored_line_energy_J_m * np.sum(
+            weights * (density_after_storage - new_density), axis=0
+        )
         phase_old_total, phase_old_stored, phase_old_interface = _energies_J_m(
             fields, new_density, dx_m, parameters
         )
@@ -242,7 +265,9 @@ def local_coupled_step(
         mechanical_heat_local = plastic_work_local - mechanical_stored_local
         mechanical_heat_local = np.maximum(mechanical_heat_local, 0.0)
         if controls.evolve_temperature:
-            source_temperature = temperature + mechanical_heat_local / parameters.volumetric_heat_capacity_J_m3_K
+            source_temperature = temperature + (
+                mechanical_heat_local + recovery_heat_local
+            ) / parameters.volumetric_heat_capacity_J_m3_K
             conducted_temperature = diffuse_temperature_periodic_exact(
                 source_temperature, diffusivity, dt_s, dx_m
             )
@@ -301,7 +326,11 @@ def local_coupled_step(
             bath_heat = 0.0
         else:
             final_temperature = temperature
-            bath_heat = float(np.mean(mechanical_heat_local)) + phase_heat_mean
+            bath_heat = (
+                float(np.mean(mechanical_heat_local))
+                + float(np.mean(recovery_heat_local))
+                + phase_heat_mean
+            )
         external = 0.5 * (
             old_equilibrium.mean_stress_Pa + new_equilibrium.mean_stress_Pa
         ) * applied_increment
@@ -310,6 +339,7 @@ def local_coupled_step(
         stored_change = (new_stored - old_stored) / area_m2
         interface_change = (new_interface - old_interface) / area_m2
         mechanical_heat = float(np.mean(mechanical_heat_local))
+        recovery_heat = float(np.mean(recovery_heat_local))
         thermal_change = parameters.volumetric_heat_capacity_J_m3_K * float(
             np.mean(final_temperature - temperature)
         )
@@ -319,13 +349,19 @@ def local_coupled_step(
             - stored_change
             - interface_change
             - mechanical_heat
+            - recovery_heat
             - phase_heat_mean
         )
-        thermal_closure = thermal_change + bath_heat - mechanical_heat - phase_heat_mean
-        plastic_closure = plastic_work - (phase_old_stored - old_stored) / area_m2 - mechanical_heat
+        thermal_closure = (
+            thermal_change + bath_heat - mechanical_heat - recovery_heat - phase_heat_mean
+        )
+        plastic_closure = (
+            plastic_work - (phase_old_stored - old_stored) / area_m2
+            - mechanical_heat - recovery_heat
+        )
         scale = max(
             abs(external), abs(elastic), abs(stored_change), abs(interface_change),
-            abs(plastic_work), mechanical_heat, phase_heat_mean, 1.0,
+            abs(plastic_work), mechanical_heat, recovery_heat, phase_heat_mean, 1.0,
         )
         thermal_floor = (
             16.0
@@ -371,6 +407,7 @@ def local_coupled_step(
                 external, elastic, stored_change, interface_change,
                 mechanical_heat, phase_heat_mean, thermal_change,
                 global_closure, thermal_closure, bath_heat, plastic_work,
+                recovery_heat,
             ),
             dt_s,
             halvings,
@@ -395,6 +432,7 @@ def advance_local_coupled(
     parameters: SpatialCoupledParameters,
     *,
     controls: SpatialMechanismControls = SpatialMechanismControls(),
+    recovery_law: RecoveryLaw | None = None,
 ) -> tuple[LocalCoupledState, tuple[LocalCoupledStep, ...]]:
     if steps < 0:
         raise ValueError("steps must be nonnegative")
@@ -403,7 +441,7 @@ def advance_local_coupled(
     for _ in range(steps):
         step = local_coupled_step(
             current, applied_shear_rate_s_inv, dx_m, proposed_dt_s,
-            law, parameters, controls=controls,
+            law, parameters, controls=controls, recovery_law=recovery_law,
         )
         current = step.state
         accepted.append(step)

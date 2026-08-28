@@ -16,6 +16,7 @@ from .localization import (
 )
 from .mechanism_ladder import MechanismCase, matched_isothermal_case
 from .spatial_coupled import SpatialCoupledParameters
+from .recovery import RecoveryLaw
 
 
 @dataclass(frozen=True)
@@ -65,6 +66,8 @@ def run_local_mechanism_trace(
     steps: int,
     law: ExpFloorLaw,
     parameters: SpatialCoupledParameters,
+    *,
+    recovery_law: RecoveryLaw | None = None,
 ) -> LocalMechanismTrace:
     if steps < 1:
         raise ValueError("steps must be positive")
@@ -92,6 +95,7 @@ def run_local_mechanism_trace(
             law,
             parameters,
             controls=case.controls,
+            recovery_law=recovery_law,
         )
         current = step.state
         states.append(current)
@@ -117,6 +121,8 @@ def matched_local_isothermal_trace(
     steps: int,
     law: ExpFloorLaw,
     parameters: SpatialCoupledParameters,
+    *,
+    recovery_law: RecoveryLaw | None = None,
 ) -> LocalMechanismTrace:
     return run_local_mechanism_trace(
         initial,
@@ -126,6 +132,7 @@ def matched_local_isothermal_trace(
         steps,
         law,
         parameters,
+        recovery_law=recovery_law,
     )
 
 
@@ -159,6 +166,7 @@ def run_matched_local_strain_pair(
     *,
     maximum_accepted_steps: int = 100_000,
     retention_strain_increment: float | None = None,
+    recovery_law: RecoveryLaw | None = None,
 ) -> tuple[LocalMechanismTrace, LocalMechanismTrace]:
     """Advance thermal and isothermal cases on one strain/time grid.
 
@@ -215,10 +223,12 @@ def run_matched_local_strain_pair(
             thermal_trial = local_coupled_step(
                 thermal, case.applied_shear_rate_s_inv, dx_m, trial_dt,
                 law, parameters, controls=case.controls,
+                recovery_law=recovery_law,
             )
             control_trial = local_coupled_step(
                 control, control_case.applied_shear_rate_s_inv, dx_m, trial_dt,
                 law, parameters, controls=control_case.controls,
+                recovery_law=recovery_law,
             )
             common_dt = min(
                 thermal_trial.accepted_dt_s, control_trial.accepted_dt_s

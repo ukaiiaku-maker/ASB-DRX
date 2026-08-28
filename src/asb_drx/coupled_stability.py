@@ -11,12 +11,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from .analytical import ExpFloorLaw, KB_J_PER_K
 from .multi_order import interpolation_h, interpolation_h_prime
 from .spatial_coupled import SpatialCoupledParameters
+
+if TYPE_CHECKING:
+    from .recovery import RecoveryLaw
 
 
 STATE_NAMES = ("plastic_shear", "temperature_K", "parent_density_m2",
@@ -163,6 +167,7 @@ def coupled_mode_rhs(
     parameters: SpatialCoupledParameters,
     *,
     storage_branch: str = "auto",
+    recovery_law: "RecoveryLaw | None" = None,
 ) -> np.ndarray:
     """Nonlinear frozen-mode RHS used to verify the analytical Jacobian."""
     x = np.asarray(perturbation, dtype=float)
@@ -188,6 +193,14 @@ def coupled_mode_rhs(
     nominal_K = parameters.forest_storage_per_plastic_strain_m2
     K = nominal_K if branch == "uncapped" else sigma / E
     mechanical_heat = (sigma - E * K) * rate
+    recovery_heat = 0.0
+    recovery0 = 0.0
+    recovery1 = 0.0
+    if recovery_law is not None:
+        inverse_time = recovery_law.inverse_time_s_inv(temperature)
+        recovery0 = (rho0 - recovery_law.equilibrium_density_m2) * inverse_time
+        recovery1 = (rho1 - recovery_law.equilibrium_density_m2) * inverse_time
+        recovery_heat = E * (h0 * recovery0 + h1 * recovery1)
     hp0, hp1 = interpolation_h_prime(np.asarray((1.0 - phi, phi)))
     local_difference = (
         2.0 * parameters.pair_penalty_J_m3 * phi * (1.0 - phi) * (1.0 - 2.0 * phi)
@@ -200,9 +213,9 @@ def coupled_mode_rhs(
     alpha = parameters.thermal_conductivity_W_m_K / C
     return np.asarray((
         rate,
-        (mechanical_heat + phase_heat) / C - alpha * k2 * x[1],
-        K * r0,
-        K * r1,
+        (mechanical_heat + recovery_heat + phase_heat) / C - alpha * k2 * x[1],
+        K * r0 - recovery0,
+        K * r1 - recovery1,
         -0.5 * mobility * difference,
     ))
 
@@ -215,6 +228,7 @@ def full_coupled_stability_mode(
     parameters: SpatialCoupledParameters,
     *,
     storage_branch: str = "auto",
+    recovery_law: "RecoveryLaw | None" = None,
 ) -> CoupledStabilityMode:
     """Return the analytical frozen-time 5x5 Fourier-mode operator."""
     k2 = kx_m_inv**2 + ky_m_inv**2
@@ -267,6 +281,26 @@ def full_coupled_stability_mode(
         + 2.0 * parameters.gradient_coefficient_J_m * k2,
     ))
     phase_heat_gradient = mobility * D0 * D_gradient
+    recovery_heat_gradient = np.zeros(5)
+    recovery_inverse_time = 0.0
+    recovery_temperature_tangent = 0.0
+    recovery_equilibrium = 0.0
+    if recovery_law is not None:
+        recovery_inverse_time = recovery_law.inverse_time_s_inv(temperature)
+        recovery_temperature_tangent = recovery_law.temperature_tangent_s_inv_K(
+            temperature
+        )
+        recovery_equilibrium = recovery_law.equilibrium_density_m2
+        recovered = (
+            weights[0] * (rho[0] - recovery_equilibrium)
+            + weights[1] * (rho[1] - recovery_equilibrium)
+        )
+        recovery_heat_gradient[1] = E * recovered * recovery_temperature_tangent
+        recovery_heat_gradient[2] = E * weights[0] * recovery_inverse_time
+        recovery_heat_gradient[3] = E * weights[1] * recovery_inverse_time
+        recovery_heat_gradient[4] = E * float(hp1) * recovery_inverse_time * (
+            rho[1] - rho[0]
+        )
 
     J = np.zeros((5, 5), dtype=float)
     J[0] = rate_gradient
@@ -295,8 +329,16 @@ def full_coupled_stability_mode(
                 0.0,
             ))
             J[2 + grain, 0] += tangent[grain].net_rate_s_inv * stress_from_gamma / E
+    if recovery_law is not None:
+        for grain in range(2):
+            J[2 + grain, 1] -= (
+                rho[grain] - recovery_equilibrium
+            ) * recovery_temperature_tangent
+            J[2 + grain, 2 + grain] -= recovery_inverse_time
     C = parameters.volumetric_heat_capacity_J_m3_K
-    J[1] = (mechanical_heat_gradient + phase_heat_gradient) / C
+    J[1] = (
+        mechanical_heat_gradient + recovery_heat_gradient + phase_heat_gradient
+    ) / C
     J[1, 1] -= parameters.thermal_conductivity_W_m_K * k2 / C
     J[4] = -0.5 * mobility * D_gradient
 

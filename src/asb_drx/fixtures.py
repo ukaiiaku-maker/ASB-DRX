@@ -6,6 +6,11 @@ from dataclasses import dataclass
 
 from .analytical import ExpFloorLaw, KB_J_PER_K
 from .spatial_coupled import SpatialCoupledParameters
+from .recovery import (
+    RecoveryBoundaryPoint,
+    RecoveryLaw,
+    fit_recovery_law_to_boundary,
+)
 
 EV_J = 1.602176634e-19
 
@@ -63,3 +68,13 @@ class SingleGliderDDDParameterization:
             gradient_coefficient_J_m=1.0e-6,
             phase_mobility_m3_J_s=5.0e-7,
         )
+
+    def recovery_law(self) -> RecoveryLaw:
+        """Generic two-anchor recovery design; not a material calibration."""
+        return fit_recovery_law_to_boundary(
+            self.law(),
+            self.spatial_parameters().forest_storage_per_plastic_strain_m2,
+            RecoveryBoundaryPoint(850.0, 450.0, 2.0),
+            RecoveryBoundaryPoint(1050.0, 45000.0, 2.0),
+            reference_temperature_K=950.0,
+        ).law
