@@ -21,6 +21,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - HPC3 structural run `20260828T130729Z-1a147e0-710710` (job `55637740`) passed both collective-context tests with verified retrieval. Higher density has substantially more multi-hit clustering, but all sampled native one-step contact operators have zero spectral-radius proxy and only 11 redistribution samples exist. No causal collective law or production parameter is established.
 - HPC3 thermodynamic run `20260828T132308Z-07d589a-1e7eac` (job `55637784`) passed six material-agnostic tests with verified retrieval: discrete variational consistency, monotone relaxation, conservative reservoir transfer, exact work partition, nucleus-limit signs, and range rejection.
 - HPC3 spatial run `20260828T132810Z-a4a0bf0-5c7bfe` (job `55637801`) passed nine tests with verified retrieval. The diffuse 2-D nucleus shrinks/grows on the correct sides of the derived critical radius, final grid/timestep changes are 0.384%/0.0021%, and the complete current limited state restarts bitwise exactly.
+- HPC3 material-point run `20260828T133324Z-6920914-866ee2` (job `55637814`) passed ten tests with verified retrieval. Finite elastic loading, EXP-floor plastic flow, stored line energy, and residual heat close the incremental work ledger exactly without a tuned heat fraction.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
 - Campaign-specific HPC3 smoke job `55633650` completed, fetched, and checksum-verified.
@@ -36,6 +37,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.
 5. The isolated thermodynamic and diffuse 2-D nucleus gates pass, including limited-state convergence/restart. Coupled thermomechanics, production-state restart, and grain/orientation invariants remain unverified.
+6. The homogeneous thermomechanical ledger passes, but spatial mechanics/heat transport and localization remain unimplemented and unverified.
 
 ## Required external resolutions
 

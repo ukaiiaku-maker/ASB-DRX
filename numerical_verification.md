@@ -91,6 +91,22 @@ Status: passed, completed, fetched, and checksum-verified. This extends the gene
 
 The exact restart claim is deliberately limited to the current deterministic state (`eta`, time, accepted-step count). It does not satisfy the production restart gate, which must additionally cover mechanics, temperature, all density reservoirs, orientation, collective/embryo state if enabled, controllers, and RNG streams.
 
+## Finite-loading thermomechanical material point
+
+Status: passed, completed, fetched, and checksum-verified. The parameters are generic verification fixtures, not a material fit.
+
+- Git commit: `6920914`
+- Run ID / Slurm job: `20260828T133324Z-6920914-866ee2` / `55637814`
+- Ten tests passed: the five analytical-law tests plus homogeneous-rate/finite-loading closure, exact incremental work partition, zero-storage heat limit, impossible-storage rejection, and exact restart of the complete current material-point state
+- Over 100 steps, cumulative external work `3.0704347e6 J m^-3` equals elastic increase `1.5846880e6`, stored line energy `2.4164294e3`, and heat `1.4833302e6 J m^-3`; recorded closure error is exactly zero
+- The fixture temperature rises from `1000` to `1000.4238086 K`; this is a bookkeeping response, not a prediction
+- Result archive SHA-256: `bceff3420550918a82a604d2d058a716b08b5591a40cf6692c5b0328f2765c08`
+- Verification JSON SHA-256: `d33ac83d33149cbc220cb1f6331416491bc0077d975e9fdf4ec8e059c955d219`
+- Unit-test log SHA-256: `263fab5d67fb43c30d721e7dce6c98df48d1724cc561810b6f8e13ad39e29621`
+- Runner retrieval status: `verified`
+
+This proves the homogeneous discrete ledger and finite elastic-loading limit. It does not yet prove spatial equilibrium, conduction, thermoelasticity, multiple slip, recovery/annihilation heat, DRX coupling, localization, or ASB.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.

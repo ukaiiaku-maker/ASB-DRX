@@ -336,6 +336,22 @@
       "start_utc": "2026-08-28T13:28:51Z", "end_utc": "2026-08-28T13:28:55Z", "exit_status": "0:0", "stop_reason": "completed_all_nine_tests_passed", "wall_clock_seconds": 12, "peak_memory_MB": 38.40,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T132810Z-a4a0bf0-5c7bfe", "local_path": "hpc3-results/asb-drx-independent/20260828T132810Z-a4a0bf0-5c7bfe", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "6176c7c80e537d96e66f0b078d66c9b21538e29936e9a0ebfca000bc162e9695", "thermodynamic_verification.json": "5a5cafc6c0c8c33a43fd4b4b6458bde2a936f2edc722a8765101f88456f47097", "unittest.txt": "8d3c5d35e4a9d15c393cadc5f04310f806cba65b75542b08377626a4c26166ad", "results/checksums-single.sha256": "9dabba7524a04debe501cf393e82d3ed21c966d587797e2b95e2030c776742df", "status/final-single.json": "93fea7d685ee0a04d8f97b828a3b0ff77cbae202e5e23f3babbe5e77582130c0"}
+    },
+    {
+      "run_id": "20260828T133324Z-6920914-866ee2",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "finite_loading_EXP_floor_material_point_work_ledger_verification",
+      "git_commit_at_plan": "6920914",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "source_snapshot_sha256": "799786cbf278dd8c2388049cd97a931556123685ad4cbafbacf407765caf37b4",
+      "input_sha256": {"run_material_point_hpc3.sh": "a8c3e49bf2b5b9cc65a3f0da36b16decb46132b6cac1173d0cb903aa1a009b0c", "src/asb_drx/analytical.py": "42002881d38f93e45260ae82e05f523596ba2acfe1a008a5694b2bff8071e031", "src/asb_drx/thermodynamics.py": "d05d9eea65c7ad6d99f8219fac3ce3d96818d2bab32095daa43b2dae335933f7", "src/asb_drx/material_point.py": "84e0a0a1e728ec7ab453e6368017298b53c43a02d96ee7e9a14a1b275ae791b4", "tests/test_material_point.py": "70280d151de18eb7c2c3a9b59ae4e26a529a5f152ce8f763ba3735720dddef4c", "tools/run_material_point_verification.py": "5f8a3e35397c6cad73451b9ee2b9ff20edf03f43124f8ad2c7647a6e74dd29c6"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"fixture": "homogeneous_finite_loading_EXP_floor", "applied_shear_rate_s-1": 10.0, "proposed_dt_s": 1e-5, "steps": 100, "initial_temperature_K": 1000.0, "initial_stress_Pa": 1e8, "scientific_disposition": "generic_work_ledger_fixture_not_material_calibration"},
+      "grid_domain_timestep_stopping": {"domain": "zero_dimensional_homogeneous_material_point", "timestep": "energy_admissible_with_halving", "stopping": "100 accepted steps"},
+      "slurm": {"job_id": "55637814", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T13:33:43Z", "end_utc": "2026-08-28T13:33:44Z", "exit_status": "0:0", "stop_reason": "completed_all_ten_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 37.52,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T133324Z-6920914-866ee2", "local_path": "hpc3-results/asb-drx-independent/20260828T133324Z-6920914-866ee2", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "bceff3420550918a82a604d2d058a716b08b5591a40cf6692c5b0328f2765c08", "material_point_verification.json": "d33ac83d33149cbc220cb1f6331416491bc0077d975e9fdf4ec8e059c955d219", "unittest.txt": "263fab5d67fb43c30d721e7dce6c98df48d1724cc561810b6f8e13ad39e29621", "results/checksums-single.sha256": "9ade0cc4a9d9a993fca32a09b43ef138d8e420fdafae0cc5e3f21b6f4f6e6716", "status/final-single.json": "60e68ecddf6f3febeeb25d7255e1cda1dec6ac00ee83ac29bea71854e0f7fcdd"}
     }
   ]
 }
