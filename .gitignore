@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Simulation outputs
+results*/
+*v*_smoke*/
+*.npz
+*.png
+*.csv
+*.log
+*.zip
+*.tar.gz
+*.tar.xz
+*.b64
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
