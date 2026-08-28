@@ -31,6 +31,10 @@ If a collective extension is attempted, it must additionally predict relevant tr
 - output/checkpoint schema and provenance tests;
 - label-only events never alter physical-grain count;
 - no-nucleation controls keep physical-grain count fixed.
+- sub-resolution or disconnected support never becomes one physical grain;
+- promotion requires persistent pure support, valid lineage, and symmetry-reduced misorientation;
+- loss of support removes a grain from current counts before provenance-preserving retirement;
+- tracker checkpoint/restart preserves every lifecycle field exactly.
 
 ## Common-equation mechanism ladder
 
