@@ -159,6 +159,16 @@ This direct initial-to-final ledger prevents the density-storage increment and t
 
 The binary aggregate is not spatial ASB mechanics: it has no displacement field, local stress redistribution, conduction, heterogeneous temperature, recovery, multiple slip, or physical boundary conditions. It verifies coupling algebra before those mechanisms are introduced.
 
+### Periodic 2-D common-stress thermo-phase limit
+
+The next spatial limit places temperature `T(x)`, two forest-density fields `rho_i(x)`, effective plastic shear, and the two order parameters on the same periodic 2-D grid while retaining the quasistatic simple-shear result that shear stress is spatially uniform. Each cell's effective plastic increment is `sum_i h(eta_i) Delta gamma_p_i(tau,rho_i,T)`, and the domain mean closes the finite-loading stress update. Mechanical heat is local; periodic conduction uses the explicit two-dimensional Fourier bound `alpha Delta t/Delta x^2 <= 1/4`.
+
+The phase chemical potentials use spatial stored energies `e_line rho_i(x) h(eta_i)`. After the mechanical density update, the projected phase step must lower the updated free energy. Its exact global free-energy decrement is routed to heat; the spatial heat shape is assigned in proportion to the local Onsager dissipation proxy `sum_i |P mu_i|^2` and normalized to preserve that exact total. This distribution is a declared numerical closure, not a calibrated microscopic heat-source law.
+
+The same global work identity as the aggregate applies, and periodic conduction must conserve mean thermal energy. Required tests are reduction to the established common-stress shear layer for a uniform pure parent, conductive damping with mean conservation, global closure, zero-child invariance, and exact restart of every current spatial field.
+
+This remains quasistatic common-stress mechanics. A physical ASB gate additionally requires boundary/loading realism, perturbation-spectrum controls, sustained localization relative to homogeneous/isothermal/phase-disabled controls, mesh-converged band width and onset, and displacement-resolved or otherwise justified mechanical equilibrium.
+
 ## Timescale and stability work before 2-D sweeps
 
 Compute loading, elementary-event, renewal completion/correlation, storage/organization, dynamic/diffusive recovery, embryo nucleation/growth, GB migration, thermal diffusion/bath, localization growth, and elastic-wave times. Compare `L/c_s` with all evolution times to select quasi-static versus inertial mechanics. Linearize homogeneous mechanics/plastic/storage/collective/thermal equations and calculate the finite-wavenumber Jacobian/dispersion relation. Separate structural eigenmodes from thermal localization modes and use them to choose smoke/ladder conditions, not to tune regime labels.

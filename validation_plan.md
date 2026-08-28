@@ -51,6 +51,10 @@ If a collective extension is attempted, it must additionally predict relevant tr
 - external work closes against elastic, total stored, interface/order, and both heat changes without double counting;
 - mechanical and phase substeps share one accepted interval and a zero child field remains identically zero;
 - coupled checkpoint/restart preserves stress, strain, grain plastic strains/densities, phase fields, temperature, time, and step count exactly.
+- the spatial thermo-phase kernel reduces to the common-stress shear layer for a uniform pure parent;
+- 2-D periodic conduction damps perturbations while conserving mean temperature in the zero-source limit;
+- local density/storage/heat/phase updates close the same global ledger and preserve a zero child field;
+- spatial checkpoint/restart preserves stress, shear, temperature, both density/order fields, time, and step count exactly.
 
 ## Common-equation mechanism ladder
 
