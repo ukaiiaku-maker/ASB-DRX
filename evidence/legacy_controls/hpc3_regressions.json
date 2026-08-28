@@ -1,0 +1,63 @@
+{
+  "schema": "asb-drx-legacy-hpc3-regressions/v1",
+  "campaign_id": "asb-drx-independent-20260827",
+  "generated_at_utc": "2026-08-28T04:48:00Z",
+  "comparison_policy": {
+    "absolute_tolerance": 1e-10,
+    "relative_tolerance": 1e-9,
+    "scope": "diagnostic CSV numerical reproducibility only",
+    "physical_interpretation": "Hazard events, candidates, and allocated labels are not counted as physical grains. ASB is not assigned without sustained localization and mesh-converged width."
+  },
+  "controls": [
+    {
+      "control": "v32_asb_like",
+      "run_id": "20260828T035427Z-de0cbdb-e55043",
+      "slurm_job_id": "55633674",
+      "git_commit": "de0cbdb5b64d08e6423aaa24eb43d84cfcb8c702",
+      "source_clean": true,
+      "input_bundle_sha256": "80c24b7c5afefb6c42c02902f005e503c76203ba45de738cad50b642d7e94424",
+      "result_archive_sha256": "4ac4e190ccc21858d2e7b03a814ac6beb4dc89f6c350ae5a85d86e0e559e8d0c",
+      "diagnostics_sha256": "50d2383487f5c5e5eac837c56f43c0c126d45a39fb32ea34bd24656b5b578125",
+      "reference_diagnostics_sha256": "b6acdf7bd9fffcea6afabe2034af7a437cbc6cba92a283b9dbdde964ec53e2dc",
+      "configuration": {"T0_K": 1100.0, "strain_rate_s-1": 30000.0, "steps": 5000, "strain_increment": 0.0001, "poly_seed": 42, "nuc_seed": 271870},
+      "execution": {"node": "hpc3-l18-05", "start_utc": "2026-08-28T03:57:15Z", "end_utc": "2026-08-28T04:26:27Z", "wall_seconds": 1752, "peak_memory_MB": 429.95, "exit": "0:0"},
+      "comparison": {"rows": 201, "columns": 245, "numeric_tolerance_mismatches": 0, "nonfinite_or_text_mismatches": 18, "note": "All 18 are corr_mu_gb at a degenerate zero-variance state: NaN versus roundoff of magnitude at most 1.29e-16."},
+      "observations": {"final_Tmax_K": 1245.5048904110918, "max_T_std_K": 29.573831198316203, "allocated_labels_final": 12, "topology_components_final": 12, "hazard_births_final": 0},
+      "scientific_status": "ASB-like numerical reference reproduced; physical ASB remains unvalidated without persistence and mesh-converged band width."
+    },
+    {
+      "control": "v33_false_grain_negative",
+      "run_id": "20260828T040152Z-c988539-feadb5",
+      "slurm_job_id": "55633691",
+      "git_commit": "c988539da070e6659261e937b4e2d0e5ea2284f5",
+      "source_clean": true,
+      "input_bundle_sha256": "c7496148b090f1fa6770165a777f0b295d7b7e91bf138e74f3a68d40f8712195",
+      "result_archive_sha256": "9a3bfd15212fc7d85afbc5277600b31b3fbc0c4183f7e96e801cbac7f3567184",
+      "diagnostics_sha256": "69b28bf00505f274e2f8e8da3fcfe65619efaa3d2d7068aebcebb039a52a97a4",
+      "reference_diagnostics_sha256": "9703211d2a03787c7a784a14cd33604e2fba040cc0fd5a9085ecb4315570ab69",
+      "configuration": {"T0_K": 1100.0, "strain_rate_s-1": 1000.0, "steps": 5000, "strain_increment": 0.0001, "poly_seed": 42, "nuc_seed": 271870},
+      "execution": {"node": "hpc3-l18-04", "start_utc": "2026-08-28T04:02:08Z", "end_utc": "2026-08-28T04:47:55Z", "wall_seconds": 2747, "peak_memory_MB": 613.20, "exit": "0:0"},
+      "comparison": {"rows": 201, "columns": 245, "numeric_tolerance_mismatches": 39553, "nonfinite_or_text_mismatches": 156, "reference_hazard_births": 119, "reproduction_hazard_births": 165},
+      "observations": {"allocated_labels_initial": 12, "allocated_labels_final": 177, "topology_components_initial": 12, "topology_components_final": 12, "hazard_births_final": 165, "topology_births_final": 0},
+      "scientific_status": "False-grain pathology reproduced structurally but not trajectory-wise; 165 new labels with no new topology are rejected as physical DRX."
+    },
+    {
+      "control": "v34_candidate_bookkeeping",
+      "run_id": "20260828T040212Z-c988539-ee4dad",
+      "slurm_job_id": "55633694",
+      "git_commit": "c988539da070e6659261e937b4e2d0e5ea2284f5",
+      "source_clean": true,
+      "input_bundle_sha256": "b724fbfaac1dba8e9802a8691efb1c7fa10d33e11b40a64d40fbee218aff2995",
+      "result_archive_sha256": "f07b66e8d963bcc23946d70ec80af9314e3d91f347408d8ef45c30f95b6f537e",
+      "diagnostics_sha256": "16a20ede33397bf25b23adc632482508d863a5868db544ea6b1c224537df4bcb",
+      "reference_diagnostics_sha256": "1dc36a395f1ee5b02e01e233f2d5e65a82f602de868267388478805c888712cb",
+      "configuration": {"branch": "coupled", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "target_strain": 0.5, "strain_increment": 0.0001, "poly_seed": 42, "nuc_seed": 271870},
+      "execution": {"node": "hpc3-l18-01", "start_utc": "2026-08-28T04:02:28Z", "end_utc": "2026-08-28T04:25:23Z", "wall_seconds": 1375, "peak_memory_MB": 495.43, "exit": "0:0"},
+      "comparison": {"rows": 201, "columns": 250, "numeric_tolerance_mismatches": 38428, "nonfinite_or_text_mismatches": 0},
+      "observations": {"candidate_active_max": 0, "candidate_new_max": 0, "candidate_promotable_max": 0, "candidate_age_max": 0, "allocated_labels_final": 12, "topology_components_final": 12, "hazard_births_final": 0},
+      "scientific_status": "Zero-candidate failure reproduced exactly at the bookkeeping level; the requested candidate-without-promotion premise is contradicted because no candidate ever activates. Detailed trajectory is not reproducible."
+    }
+  ],
+  "environment": {"module": "anaconda/2025.12", "python": "3.13.9", "account": "SDILLON1", "partition": "free", "qos": "low", "nodes": 1, "tasks": 1, "cpus_per_task": 1, "memory": "4G", "gpu": null},
+  "retrieval": "all three local copies checksum-verified; remote copies retained"
+}

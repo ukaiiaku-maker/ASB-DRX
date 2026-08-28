@@ -29,3 +29,15 @@ Route A asks whether stochastic finite-amplitude perturbations in a fixed orient
 Status: accepted, 2026-08-27.
 
 Use `/pub/sdillon1/codex-runs/asb-drx-independent` remotely and `hpc3-results/asb-drx-independent` locally. A worktree-local runner configuration overrides the unrelated parent campaign configuration without modifying it.
+
+## ADR-0006: Gate 0 no-go; do not manufacture missing evidence
+
+Status: accepted, 2026-08-27.
+
+Stop before DD fitting and production implementation. The exhaustive project inventory, adjacent DDD repository search, and campaign remote-storage search did not locate raw DD event trajectories supporting the asserted Poisson-to-multi-hit transition. The material target is also ambiguous: Fe/BCC prose conflicts with Cr metadata, and the validation folders mix multiple alloys. Substituting synthetic avalanche outputs, choosing a material by filename majority, or tuning v34 candidate parameters would violate the immutable constraints.
+
+## ADR-0007: Legacy controls are mechanism controls, not physical validators
+
+Status: accepted, 2026-08-27.
+
+Retain v32 as an ASB-like numerical regression, v33 as a false-grain structural negative control, and v34 as a zero-candidate bookkeeping failure. Only v32 reproduces its finite diagnostics to numerical precision. v33 reproduces label explosion with unchanged topology but not its exact birth count. v34 again produces no candidates at all and its detailed trajectory diverges. None establishes physical DRX or mesh-converged ASB, and no legacy parameter was tuned.

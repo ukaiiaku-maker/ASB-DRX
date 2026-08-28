@@ -22,3 +22,17 @@ Purpose: verify staging, the discovered system Python, deterministic arithmetic,
 ## Required future records
 
 Closure material-point validation, relaxation/free-energy monotonicity, content/work ledgers, nucleus limits, homogeneous limits, timestep/grid convergence, exact restart, schema tests, and label/grain invariants will be appended with run IDs, commits, configs, tolerances, and checksums.
+
+## Immutable legacy controls
+
+All controls used exact versioned source snapshots, `anaconda/2025.12` (Python 3.13.9), one CPU, 4 GB, account `SDILLON1`, partition `free`, QoS `low`, and no GPU. All completed with exit `0:0`; local retrieval is checksum-verified and remote copies remain intact. The machine-readable record is `evidence/legacy_controls/hpc3_regressions.json`.
+
+| Control | Run / job | Wall / peak memory | Numerical reproduction | Conservative scientific result |
+|---|---|---:|---|---|
+| v32, 30,000 s^-1 | `20260828T035427Z-de0cbdb-e55043` / `55633674` | 29:12 / 429.95 MB | All finite values pass `atol=1e-10`, `rtol=1e-9`; 18 zero-variance correlations are `NaN` versus roundoff near zero | ASB-like regression retained, but physical ASB is not established without sustained localization and mesh-converged width |
+| v33, 1,000 s^-1 | `20260828T040152Z-c988539-feadb5` / `55633691` | 45:47 / 613.20 MB | Structural, not trajectory-level: 165 hazard births versus reference 119 | Labels rise 12 to 177 while topology remains 12; all 165 label births are rejected as physical DRX |
+| v34 coupled, 1,000 s^-1 | `20260828T040212Z-c988539-ee4dad` / `55633694` | 22:55 / 495.43 MB | Bookkeeping failure reproduced; detailed trajectory diverges | Candidate active/new/promotable/age maxima are all zero, as are births; therefore this is not a candidate-without-promotion case |
+
+The v33/v34 stored reference folders lack an immutable source/environment record. Identical recorded parameters are insufficient for trajectory reproduction. This is a provenance failure in the legacy evidence, not a basis for parameter tuning.
+
+No production-model numerical verification was attempted because Gate 0 remains a no-go: qualifying raw DD transition data and an authoritative material target are absent.
