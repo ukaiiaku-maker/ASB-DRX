@@ -166,7 +166,7 @@ def main() -> None:
                 partial_output.write_text(
                     json.dumps(
                         {
-                            "schema": "asb-drx-local-antiplane-boundary-matrix/partial-v1",
+                            "schema": "asb-drx-local-antiplane-boundary-matrix/partial-v2",
                             "source_commit": args.source_commit,
                             "execution_site": args.execution_site,
                             "maximum_accepted_steps_per_condition": (
@@ -182,13 +182,26 @@ def main() -> None:
                 )
                 print(f"completed records={len(records)}", flush=True)
     report = {
-        "schema": "asb-drx-local-antiplane-boundary-matrix/v1",
+        "schema": "asb-drx-local-antiplane-boundary-matrix/v2",
         "source_commit": args.source_commit,
         "execution_site": args.execution_site,
         "scientific_disposition": (
-            "single deterministic generic screening matrix; analytical extrapolation outside the "
-            "source DDD rate; not material validation or a converged production regime map"
+            "single deterministic generic net-EXP-floor/recovery screening matrix; analytical "
+            "extrapolation outside the source DDD rate; not material validation or a converged "
+            "production regime map"
         ),
+        "flow_integration": "matrix-free backward Euler antiplane equilibrium",
+        "continuum_rate": "forward activated rate minus unloaded reverse rate",
+        "recovery_design": {
+            "reference_temperature_K": fixture.recovery_law().reference_temperature_K,
+            "relaxation_time_ref_s": fixture.recovery_law().relaxation_time_ref_s,
+            "activation_energy_J": fixture.recovery_law().activation_energy_J,
+            "equilibrium_density_m2": fixture.recovery_law().equilibrium_density_m2,
+            "neutral_boundary_anchors": [
+                {"temperature_K": 850.0, "shear_rate_s_inv": 450.0, "density_ratio": 2.0},
+                {"temperature_K": 1050.0, "shear_rate_s_inv": 45000.0, "density_ratio": 2.0},
+            ],
+        },
         "temperature_axis_K": temperatures,
         "shear_rate_axis_s_inv": rates,
         "density_ratio_axis": ratios,
@@ -213,6 +226,8 @@ def main() -> None:
             "child order fraction is not a physical grain count or DRX classification",
             "periodic antiplane scalar mechanics is not full crystallographic elasticity",
             "DDD source campaign rate is 4.5 s^-1; higher rates are analytical extrapolations",
+            "recovery anchors are an arbitrary generic boundary design, not material calibration",
+            "the verified physical embryo gate is not connected to stochastic embryo sampling",
         ],
     }
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
