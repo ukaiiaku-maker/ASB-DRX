@@ -99,12 +99,20 @@ def main() -> None:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--execution-site", default="local")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--temperature", type=float)
+    parser.add_argument("--rate", type=float)
+    parser.add_argument("--density-ratio", type=float)
     args = parser.parse_args()
     if args.points < 8 or args.steps < 1 or args.target_shear <= 0.0:
         parser.error("invalid grid, step count, or target shear")
-    temperatures = (850.0, 950.0, 1050.0)
-    rates = (4.5, 450.0, 45000.0)
-    ratios = (0.5, 1.0, 2.0)
+    selectors = (args.temperature, args.rate, args.density_ratio)
+    if any(item is not None for item in selectors) and not all(
+        item is not None for item in selectors
+    ):
+        parser.error("temperature, rate, and density-ratio must be supplied together")
+    temperatures = (args.temperature,) if args.temperature is not None else (850.0, 950.0, 1050.0)
+    rates = (args.rate,) if args.rate is not None else (4.5, 450.0, 45000.0)
+    ratios = (args.density_ratio,) if args.density_ratio is not None else (0.5, 1.0, 2.0)
     fixture = SingleGliderDDDParameterization()
     records = []
     for temperature in temperatures:
