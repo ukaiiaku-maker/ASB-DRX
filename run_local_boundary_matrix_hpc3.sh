@@ -7,7 +7,7 @@ export PYTHONPATH="${PWD}/src"
 python --version > output/python_version.txt 2>&1
 python tools/run_local_boundary_matrix.py \
   --points 16 --steps 1000 --target-shear 0.9 \
-  --source-commit 5e349391f9dee9061bf8254dc329b83c305aa7d9 \
+  --source-commit 8f820117f64e56d8147115435669fbd78d3ddd01 \
   --execution-site hpc3 \
   --output output/local_boundary_matrix.json
 sha256sum \
