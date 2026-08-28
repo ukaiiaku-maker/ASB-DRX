@@ -247,9 +247,23 @@ Purpose: verify staging, the discovered system Python, deterministic arithmetic,
 - Exact inputs: `run.sh` `8d2c11c0...`, `smoke.py` `4e3088e8...`
 - Runner retrieval status: `verified`
 
+## Conjunctive localization metric gate
+
+Status: passed, completed, fetched, and checksum-verified; generic acceptance-rule verification, not a localized simulation or ASB validation.
+
+- Run `20260828T143238Z-ca7ab69-74cc1d`, commit `ca7ab69`, Slurm job `55638898`, Python `3.13.9`
+- Six tests passed: homogeneous and band geometry, conjunctive criteria with persistent restart, matched-control temperature and running-peak softening, under-resolved rejection, and joint onset/width refinement
+- Fixture criteria: active fraction `<= 0.4`, temperature excess over control `>= 20 K`, softening `>= 0.1`, width/interface ratio `>= 3`, persistence `3` accepted states, refinement tolerance `5%`
+- Wall clock `0 s`; peak batch memory `36.74 MB`
+- Archive SHA-256 `9590bf4de693359725d90d55bb680723b7a9a6bdb991108ac1c1a73a5cc96c9a`; test transcript `61294b45f6d2908c7aaeb9d7335132cf85d34cbd1b294dacea6aa76684699b47`; final marker `b3c3fd348a971bf7ef8e94d83f04bf01e6818b28fe0f68ecb87bdc63543590c8`
+
+The preceding immutable run `20260828T143111Z-d608655-a7aea7` / job `55638861` failed one assertion because the supposed negative history contained three consecutive qualifying snapshots after an interruption. That is exactly the declared persistence condition. The failed run was fetched incomplete and retained; commit `ca7ab69` corrected the fixture to only two post-interruption snapshots while preserving an explicit positive restart case.
+
+No simulated trajectory has yet passed this classifier. The thresholds are visible generic scaffolding and cannot be presented as material calibration or experimental validation.
+
 ## Required future records
 
-Future records must extend the passed isolated gates to coupled multi-order-parameter evolution, full-state restart, material-scaled grain criteria, multidimensional equilibrium, localization convergence, parameter uncertainty, and external validation, with run IDs, commits, configurations, tolerances, and checksums.
+Future records must extend the passed generic gates to production-complete restart including RNG/allocator state, material-scaled grain and localization criteria, multidimensional equilibrium, matched-control mechanism runs, localization convergence, parameter uncertainty, and external validation, with run IDs, commits, configurations, tolerances, and checksums.
 
 ## Legacy computations retained as context only
 

@@ -493,6 +493,28 @@
       "start_utc": "2026-08-28T14:27:26Z", "end_utc": "2026-08-28T14:27:29Z", "exit_status": "0:0", "stop_reason": "completed_all_fifteen_tests_passed", "wall_clock_seconds": 3, "peak_memory_MB": 38.47,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T142706Z-3224ef1-bdf10f", "local_path": "hpc3-results/asb-drx-independent/20260828T142706Z-3224ef1-bdf10f", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "6790e8d5b8bfaeee8170ff18b3cf9c283543d2a76bd2f7b34ee4317f659b2410", "spatial_coupled_verification.json": "8283528107ea74f099c6b2e8fe610b76a9fbd67289df147741ea14fe8d1b3cf1", "unittest.txt": "b8d775b1c90eb3e90f0475dc5c9def8cd2f9691c8715f129d102169eb88aa5e0", "results/checksums-single.sha256": "c428e5d9da4bd72e5d8aa9b7c97892b6119b84bcad55535b5c613ed99a619a6d", "status/final-single.json": "de14449481b0b6812b7fcfff9be4eb123f9df0f30e3c0a3389282e41ca05ea1f"}
+    },
+    {
+      "run_id": "20260828T143111Z-d608655-a7aea7", "parent_campaign_id": "asb-drx-independent-20260827", "purpose": "localization_persistence_fixture_failure_no_scientific_result", "git_commit_at_plan": "d6086556471473a8a0c3caf0d931025f328b054a", "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean_but_negative_test_contained_three_qualifying_states",
+      "input_sha256": {"run_localization_hpc3.sh": "052f6cfebb062ccce94eb919cd21aca1d38de3ab9472d918406d399e6c53a2d6", "src/asb_drx/localization.py": "e219a263157242a5f2005b5f08d5e1fc76c0db942cdaf58026816eb795be6749", "tests/test_localization.py": "e2097704efc63518ed93d39582f69e7fa1ca73d993e6cbf1dec6d427c42823d3"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"scientific_disposition": "failed_contradictory_test_fixture_classifier_behavior_consistent_with_declared_persistence"},
+      "grid_domain_timestep_stopping": "not_applicable_metric_unit_tests",
+      "slurm": {"job_id": "55638861", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T14:31:43Z", "end_utc": "2026-08-28T14:31:43Z", "exit_status": "1:0", "stop_reason": "one_persistence_assertion_failed_fixture_corrected_no_scientific_result", "wall_clock_seconds": 1, "peak_memory_MB": 36.64,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T143111Z-d608655-a7aea7", "local_path": "hpc3-results/asb-drx-independent/20260828T143111Z-d608655-a7aea7", "retrieval_status": "fetched_incomplete",
+      "outputs": {"results/results-single.tar.gz": "6d430de5dfa666bfb2eb68a3ded3ef0ca5f17a5ef1d6525bb4ff7d2287ca5c00", "unittest.txt": "532f7bce71faa9889c0f09aca4414cb909f86d33af635cab17d8120bf751e28f", "results/checksums-single.sha256": "89eeedecf32ae2d1af1f13fe0b3172402c5c98a2babfce8f455b63e1a4ab4926", "status/final-single.json": "ae683c12f5484a4e42cd64514b981c20b3d2a9acd2a96168522a447f8d52ffc1"}
+    },
+    {
+      "run_id": "20260828T143238Z-ca7ab69-74cc1d", "parent_campaign_id": "asb-drx-independent-20260827", "purpose": "conjunctive_localization_observable_and_acceptance_rule_verification", "git_commit_at_plan": "ca7ab69dee3f8841bfff7a19c0605571b51ba74b", "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "input_sha256": {"run_localization_hpc3.sh": "052f6cfebb062ccce94eb919cd21aca1d38de3ab9472d918406d399e6c53a2d6", "src/asb_drx/localization.py": "e219a263157242a5f2005b5f08d5e1fc76c0db942cdaf58026816eb795be6749", "tests/test_localization.py": "671a3ff27bb0476240ad641ab3e0615c3b6a5e5f2290b2adfb245a5baedf0cd8"},
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"maximum_active_fraction": 0.4, "minimum_temperature_excess_K": 20.0, "minimum_softening_fraction": 0.1, "minimum_width_to_interface": 3.0, "persistence_steps": 3, "refinement_tolerance": 0.05, "scientific_disposition": "generic_acceptance_rule_fixture_not_localized_simulation_material_or_ASB_validation"},
+      "grid_domain_timestep_stopping": "not_applicable_metric_unit_tests",
+      "slurm": {"job_id": "55638898", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T14:33:01Z", "end_utc": "2026-08-28T14:33:01Z", "exit_status": "0:0", "stop_reason": "completed_all_six_tests_passed", "wall_clock_seconds": 0, "peak_memory_MB": 36.74,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T143238Z-ca7ab69-74cc1d", "local_path": "hpc3-results/asb-drx-independent/20260828T143238Z-ca7ab69-74cc1d", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "9590bf4de693359725d90d55bb680723b7a9a6bdb991108ac1c1a73a5cc96c9a", "unittest.txt": "61294b45f6d2908c7aaeb9d7335132cf85d34cbd1b294dacea6aa76684699b47", "input_inventory.sha256": "3dad208063e4e943ffdd2bac7c3d574938978d138aa55b0b4c2bad790d02128b", "results/checksums-single.sha256": "d600de7d2e248a6bc0fbc93c9d11042835b63d115f2efa2bc060d3c9dbfcb028", "status/final-single.json": "b3c3fd348a971bf7ef8e94d83f04bf01e6818b28fe0f68ecb87bdc63543590c8"}
     }
   ]
 }

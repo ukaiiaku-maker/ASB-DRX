@@ -77,3 +77,5 @@ Only after analytical verification, target selection, parameter validation, and 
 - Coupled: both criteria, with temporal/spatial ordering reported rather than forced exclusivity.
 
 Raw observables and uncertainty are retained; no single OR condition assigns a regime.
+
+The executable localization gate is conjunctive. Unit verification covers homogeneous flow, a finite synthetic band, interruption and restart of persistence, matched-control temperature excess, prior-peak softening, rejection below three interface widths, and joint onset/width refinement. Its generic thresholds (`f_q <= 0.4`, `Delta T_control >= 20 K`, softening `>= 0.1`, width/interface `>= 3`, three consecutive steps, 5% refinement agreement) are not transferable to a physical material without justification. Mechanism-ladder runs must supply matched controls and may not classify ASB from peak temperature alone.

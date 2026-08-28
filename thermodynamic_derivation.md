@@ -169,6 +169,12 @@ The same global work identity as the aggregate applies, and periodic conduction 
 
 This remains quasistatic common-stress mechanics. A physical ASB gate additionally requires boundary/loading realism, perturbation-spectrum controls, sustained localization relative to homogeneous/isothermal/phase-disabled controls, mesh-converged band width and onset, and displacement-resolved or otherwise justified mechanical equilibrium.
 
+## Localization observables and acceptance rule
+
+Let `q_ij = |dot(gamma_p,ij)|` on an `N`-cell 2-D grid. The plastic participation fraction is `f_q = (sum q_ij)^2/(N sum q_ij^2)`. It is one for homogeneous flow and decreases as plastic activity concentrates. Effective widths are inverse-participation widths of the two coordinate marginals, `w_x = dx (sum q_x)^2/sum(q_x^2)` and analogously for `w_y`; the reported band width is `min(w_x,w_y)`. Thermal evidence is the maximum local temperature excess relative to a matched nonlocalizing control, not relative to the initial temperature. Mechanical softening is measured against the running absolute stress peak.
+
+An ASB candidate is accepted only when all four conditions hold for a declared number of consecutive accepted steps: concentrated plastic flow, positive temperature excess over the matched control, post-peak stress softening, and a finite width exceeding a declared multiple of the phase-field interface width. A refinement gate separately requires both onset and width to agree within a declared relative tolerance. The executable generic fixture uses `f_q <= 0.4`, temperature excess `>= 20 K`, softening `>= 0.1`, width `>= 3` interface widths, persistence of three steps, and 5% refinement agreement. These are explicit test thresholds, not calibrated material criteria.
+
 ## Timescale and stability work before 2-D sweeps
 
 Compute loading, elementary-event, renewal completion/correlation, storage/organization, dynamic/diffusive recovery, embryo nucleation/growth, GB migration, thermal diffusion/bath, localization growth, and elastic-wave times. Compare `L/c_s` with all evolution times to select quasi-static versus inertial mechanics. Linearize homogeneous mechanics/plastic/storage/collective/thermal equations and calculate the finite-wavenumber Jacobian/dispersion relation. Separate structural eigenmodes from thermal localization modes and use them to choose smoke/ladder conditions, not to tune regime labels.
