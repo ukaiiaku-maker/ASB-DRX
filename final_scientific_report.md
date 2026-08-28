@@ -15,6 +15,7 @@ The final report will separately identify historical context, analytical consequ
 - HPC3 run `20260828T132308Z-07d589a-1e7eac` / job `55637784` passed the first executable thermodynamic gate: variational consistency, nonincreasing free-energy relaxation, conservative density transfer, exact incremental work closure, and the circular-nucleus sign limit.
 - HPC3 run `20260828T132810Z-a4a0bf0-5c7bfe` / job `55637801` passed the diffuse 2-D nucleus gate, final grid/timestep refinement targets, and bitwise restart for the kernel's complete limited state.
 - HPC3 run `20260828T133324Z-6920914-866ee2` / job `55637814` passed the homogeneous finite-loading thermomechanical ledger, impossible-partition rejection, and complete current material-point restart.
+- HPC3 run `20260828T133943Z-ae2fdf9-d7f5b0` / job `55637821` passed the periodic common-stress shear-layer controls after an earlier failed run exposed and corrected a missing explicit-diffusion stability bound.
 - The target material is unresolved because legacy Fe/BCC descriptions conflict with embedded Cr provenance and mixed-alloy validation data.
 - The thermodynamic document defines candidate state/balance/dissipation structures, rejects flow stress as a free-energy density, and keeps both the closure and DRX representation decisions open pending evidence.
 - HPC3 environment/staging smoke job `55633650` passed and fetched. Exact legacy jobs `55633674`, `55633691`, and `55633694` all completed and fetched with verified checksums.

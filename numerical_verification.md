@@ -107,6 +107,24 @@ Status: passed, completed, fetched, and checksum-verified. The parameters are ge
 
 This proves the homogeneous discrete ledger and finite elastic-loading limit. It does not yet prove spatial equilibrium, conduction, thermoelasticity, multiple slip, recovery/annihilation heat, DRX coupling, localization, or ASB.
 
+## Periodic common-stress thermomechanical shear layer
+
+Status: passed, completed, fetched, and checksum-verified. This is a generic spatial mechanism/control fixture, not ASB or material validation.
+
+- Git commit: `ae2fdf9`
+- Run ID / Slurm job: `20260828T133943Z-ae2fdf9-d7f5b0` / `55637821`
+- Fourteen tests passed: analytical and material-point regressions plus homogeneous reduction, global mechanical/thermal ledger closure, conductive damping/mean conservation, and exact current-state restart
+- A 0.25 K sinusoidal perturbation decreases from `0.1767767` to `0.0889227 K` standard deviation while mean temperature rises from `1000` to `1000.4238086 K` through plastic heating
+- Cumulative mechanical and thermal closure errors are `-8.27e-10` and `-2.86e-7 J m^-3`, respectively, against `3.0704346e6 J m^-3` external work
+- Result archive SHA-256: `8f3b762c413171767cd3ce2dbe17e8087ae9a7edffbe3b7403a839c384ce9760`
+- Verification JSON SHA-256: `88f9129aa54d910fbbc256f88f546e50af5b1219d3f0b5af917f34b795bc3ca0`
+- Unit-test log SHA-256: `a6d7e0809fafb5091adf560a5a8e22253ebd7ac69cfe1f6a0fc23b568d2605ab`
+- Runner retrieval status: `verified`
+
+The preceding run `20260828T133809Z-b3a2116-395502` / job `55637819` failed its conduction control because the explicit diffusion Fourier number was about 17.9, above the 1-D stability bound of 0.5. Positivity had failed to detect the oscillatory instability. The failed archive was fetched and no spatial scientific result was interpreted. Commit `ae2fdf9` added the explicit CFL acceptance rule and used a stable fixture spacing before rerun.
+
+The common-stress layer is the 1-D quasistatic simple-shear equilibrium limit. It does not include displacement-resolved multidimensional mechanics, thermoelasticity, physical boundaries, DRX coupling, or a calibrated instability/localization test.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
