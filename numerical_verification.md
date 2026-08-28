@@ -161,6 +161,25 @@ The endpoint-flat bulk interpolation is essential to the passed pure-parent inva
 
 This gate does not cover a crystallographic orientation manifold, anisotropic/misorientation-dependent GB energy or mobility, triple junctions, elastic and stored-density driving, stochastic trial allocation, energetic candidate acceptance, collision/coalescence, thermomechanical coupling, material-scale convergence, or external validation.
 
+## Explicit stored-dislocation-energy grain-growth coupling
+
+Status: passed, completed, fetched, and checksum-verified. This is a generic isolated relaxation ledger, not material, nucleation, DRX, or ASB validation.
+
+- Git commit: `8fb6236`
+- Run ID / Slurm job: `20260828T140503Z-8fb6236-7dab82` / `55637879`
+- Fourteen tests passed: seven multi-order regressions plus explicit line-energy driving, pure-parent/no-reset behavior, lower-density child growth, exact free-energy/heat closure, common-density-offset invariance, continuous support-weighted stored energy, and exact complete-current-state restart
+- The fixture uses `e_line=5e-9 J m^-1` and grain densities `(5e13, 1e13) m^-2`, yielding the explicit `Delta f=2e5 J m^-3`; these are generic values, not a fit
+- Over 200 accepted steps, stored energy changes by `-5.5970269e-9 J m^-1`, interface/order energy by `+2.4351482e-9 J m^-1`, and heat by `+3.1618787e-9 J m^-1`; recorded closure error is zero
+- The resulting fixture temperature changes from `1000` to `1000.0000035289 K`
+- Result archive SHA-256: `8b01c3259e9fb88c008e69ea8b475d0ced40cbbf0bff301f3135b70ba7cc5437`
+- Verification JSON SHA-256: `baeb9c55e318b47d206633e7fff66eb615a62502d61b124c068cc4c5705fbcdd`
+- Unit-test log SHA-256: `2a0f11773dac77605ce2007b06fdd131a82286e1799ac640521dce4178996c7d`
+- Runner retrieval status: `verified`
+
+The isolated driving energy is no longer an independently prescribed phase offset: it is `e_line(rho_parent-rho_child)`. Adding a common density offset leaves the binary dynamics unchanged. The per-grain densities do not reset during phase motion; only their continuously interpolated volume support changes. The exact restart includes all current fields, temperature, time, and accepted-step count.
+
+The current phase step has no simultaneous external mechanical work, deformation/storage evolution, recovery/annihilation products, conduction, temperature-dependent mobility, stochastic trial rate, or material calibration. Those channels must be coupled with one non-duplicated global ledger.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
