@@ -141,6 +141,24 @@ The decision kernel receives, rather than generates, a uniform random draw. It r
 
 Neither `I0` nor the represented thickness may be fitted opportunistically to a desired DRX onset. Both require a material/geometry interpretation and independent evidence. A production stochastic formulation must also demonstrate mesh/time-step invariant event intensity, spatial eligibility, overlap handling, detailed energy accounting across barrier crossing, exact RNG restart, and held-out onset statistics.
 
+### Shared thermomechanical/phase ledger
+
+The first combined verification limit is a binary aggregate: mechanics and temperature are homogeneous, while the two order parameters occupy a periodic 2-D domain. At the beginning of a step, the phase fractions are `phi_i=<h(eta_i)>`; the binary identity `h(eta_0)+h(eta_1)=1` makes `sum_i phi_i=1`. Each grain uses the same common stress but its own forest density in the independent EXP-floor law. The mean plastic increment is `Delta gamma_p=sum_i phi_i Delta gamma_p_i`, giving the exact finite-loading update
+
+`Delta tau=G(Delta gamma_applied-Delta gamma_p)`.
+
+The mechanical substep raises each grain density by its explicit storage law, partitions the corresponding grain-weighted plastic work into stored line energy and mechanical heat, and updates the shared temperature. The phase substep then uses those updated densities as `g_i=e_line rho_i`; its free-energy loss supplies phase heat. If phase-energy acceptance reduces the timestep, the mechanical substep is discarded and recomputed at that same smaller interval.
+
+Let `E_s` and `E_I` denote domain-averaged stored-dislocation and interface/order energies. The combined accepted step must satisfy
+
+`W_ext = Delta E_elastic + Delta E_s + Delta E_I + Q_mechanical + Q_phase`,
+
+`rho_m c_p Delta T = Q_mechanical + Q_phase`.
+
+This direct initial-to-final ledger prevents the density-storage increment and the phase-consumed stored energy from being counted twice. Required limiting tests are exact reduction to the existing material point for a pure parent, exact reduction to stored-energy phase relaxation at zero stress/loading, preservation of a zero child field, one shared accepted time increment, and bitwise restart of all current coupled state.
+
+The binary aggregate is not spatial ASB mechanics: it has no displacement field, local stress redistribution, conduction, heterogeneous temperature, recovery, multiple slip, or physical boundary conditions. It verifies coupling algebra before those mechanisms are introduced.
+
 ## Timescale and stability work before 2-D sweeps
 
 Compute loading, elementary-event, renewal completion/correlation, storage/organization, dynamic/diffusive recovery, embryo nucleation/growth, GB migration, thermal diffusion/bath, localization growth, and elastic-wave times. Compare `L/c_s` with all evolution times to select quasi-static versus inertial mechanics. Linearize homogeneous mechanics/plastic/storage/collective/thermal equations and calculate the finite-wavenumber Jacobian/dispersion relation. Separate structural eigenmodes from thermal localization modes and use them to choose smoke/ladder conditions, not to tune regime labels.

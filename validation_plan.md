@@ -47,6 +47,10 @@ If a collective extension is attempted, it must additionally predict relevant tr
 - nucleation probability is a bounded Poisson probability with the expected temperature/driving monotonicity;
 - candidate rejection reasons distinguish resolution, subcriticality, misorientation, and the supplied RNG draw;
 - candidate evaluation never allocates a phase-field label and never conflates the nucleation barrier with EXP-floor slip.
+- the combined binary aggregate reduces exactly to the existing material point for a pure parent and to stored-energy phase relaxation at zero loading;
+- external work closes against elastic, total stored, interface/order, and both heat changes without double counting;
+- mechanical and phase substeps share one accepted interval and a zero child field remains identically zero;
+- coupled checkpoint/restart preserves stress, strain, grain plastic strains/densities, phase fields, temperature, time, and step count exactly.
 
 ## Common-equation mechanism ladder
 
