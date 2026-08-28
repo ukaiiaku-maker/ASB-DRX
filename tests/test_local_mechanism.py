@@ -92,6 +92,14 @@ class LocalMechanismTraceTests(unittest.TestCase):
             3.0e-3,
         )
 
+    def test_strain_pair_reports_numerically_unresolved_step_limit(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "maximum_accepted_steps"):
+            run_matched_local_strain_pair(
+                self.initial, self.case, self.metadata["dx_m"], 2.0e-8, 3.0e-3,
+                self.fixture.law(), self.fixture.spatial_parameters(),
+                maximum_accepted_steps=1,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

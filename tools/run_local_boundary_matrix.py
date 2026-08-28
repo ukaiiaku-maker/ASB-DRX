@@ -24,6 +24,7 @@ def run_condition(
     points: int,
     steps: int,
     target_shear_increment: float,
+    maximum_accepted_steps: int,
     fixture: SingleGliderDDDParameterization,
 ) -> dict:
     case = BoundarySpatialCase(temperature_K, shear_rate_s_inv, density_ratio)
@@ -38,6 +39,7 @@ def run_condition(
         initial, mechanism, metadata["dx_m"], proposed_dt_s,
         target_shear_increment,
         fixture.law(), fixture.spatial_parameters(),
+        maximum_accepted_steps=maximum_accepted_steps,
         retention_strain_increment=target_shear_increment / steps,
     )
     criteria = LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05)
@@ -98,6 +100,7 @@ def main() -> None:
     parser.add_argument("--points", type=int, default=16)
     parser.add_argument("--steps", type=int, default=1000)
     parser.add_argument("--target-shear", type=float, default=0.9)
+    parser.add_argument("--maximum-accepted-steps", type=int, default=20_000)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--execution-site", default="local")
     parser.add_argument("--output", type=Path, required=True)
@@ -105,7 +108,12 @@ def main() -> None:
     parser.add_argument("--rate", type=float)
     parser.add_argument("--density-ratio", type=float)
     args = parser.parse_args()
-    if args.points < 8 or args.steps < 1 or args.target_shear <= 0.0:
+    if (
+        args.points < 8
+        or args.steps < 1
+        or args.target_shear <= 0.0
+        or args.maximum_accepted_steps < args.steps
+    ):
         parser.error("invalid grid, step count, or target shear")
     selectors = (args.temperature, args.rate, args.density_ratio)
     if any(item is not None for item in selectors) and not all(
@@ -132,7 +140,7 @@ def main() -> None:
                 try:
                     record = run_condition(
                         temperature, rate, ratio, args.points, args.steps,
-                        args.target_shear, fixture,
+                        args.target_shear, args.maximum_accepted_steps, fixture,
                     )
                 except RuntimeError as error:
                     record = {
@@ -149,6 +157,9 @@ def main() -> None:
                             "schema": "asb-drx-local-antiplane-boundary-matrix/partial-v1",
                             "source_commit": args.source_commit,
                             "execution_site": args.execution_site,
+                            "maximum_accepted_steps_per_condition": (
+                                args.maximum_accepted_steps
+                            ),
                             "completed_records": records,
                         },
                         indent=2,
@@ -172,6 +183,7 @@ def main() -> None:
         "grid_points": args.points,
         "steps": args.steps,
         "target_shear_increment": args.target_shear,
+        "maximum_accepted_steps_per_condition": args.maximum_accepted_steps,
         "localization_criteria": LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05).__dict__,
         "records": records,
         "localized_count": sum(item.get("localized", False) for item in records),
