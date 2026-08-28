@@ -183,6 +183,12 @@ def main() -> None:
         "grid_points": args.points,
         "steps": args.steps,
         "target_shear_increment": args.target_shear,
+        "retention_applied_shear_increment": args.target_shear / args.steps,
+        "localization_persistence_applied_shear": (
+            LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05).persistence_steps
+            * args.target_shear
+            / args.steps
+        ),
         "maximum_accepted_steps_per_condition": args.maximum_accepted_steps,
         "localization_criteria": LocalizationCriteria(0.4, 20.0, 0.1, 3.0, 3, 0.05).__dict__,
         "records": records,

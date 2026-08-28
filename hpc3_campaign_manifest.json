@@ -733,6 +733,45 @@
       "start_utc": "2026-08-28T15:53:37Z", "end_utc": "2026-08-28T15:53:38Z", "exit_status": "0:0", "stop_reason": "completed_all_six_tests_passed", "wall_clock_seconds": 1, "peak_memory_MB": 21.32,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T155312Z-266dda8-d6b092", "local_path": "hpc3-results/asb-drx-independent/20260828T155312Z-266dda8-d6b092", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "4f87e4044e11973baafb23d4fdf64e4e4b83d7829363a74768d73fa475f7760e", "antiplane_verification.json": "121ce8aa887cc9c5f35492d3765ef395a6fadb86d1b2fda1fddb24ee6a4e92a8", "unittest.txt": "8f1045096ffc36a34e7b1da13a617e9a60ce31c42153bc7e4e8de9aefba5da51", "input_inventory.sha256": "cb1702a7389b91d3004cf7f0be8628a1906e921646ae4f2f12c8346c6bcb0f73", "results/checksums-single.sha256": "cee60f6f3c8da5f0760775899c149a5fee93163ac1e093a7ccd37c0ad140ab3b", "status/final-single.json": "ea2f02755627ae3ca71e56e5de2be0067f3e12b50947c4e9dbabd1c0926918a3", "input/source.tar.gz": "1f9f3bfbbc2ae9e3f9c919039f47c939df329bb67f5cc4737eb0347572c9fc59"}
+    },
+    {
+      "run_id": "20260828T175315Z-c70b816-2b0175",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "local_antiplane_coupled_single_condition_gate",
+      "git_commit_at_plan": "c70b816",
+      "scientific_source_commit": "9b8f62de0e7b5f00f6d1040a756baa7fb9ac3de7",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_source_archive_sha256": "c348e5f73f2b36876f770f1075f0ad503c21c4a7b0e430e0920cb0d55038f3cd",
+      "ddd_fixture": {"source_sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b", "status": "user_authorized_generic_non_material_fixture"},
+      "material_dataset_version": null,
+      "seeds": {"microstructure": null, "stochastic": null, "initialization": "deterministic"},
+      "resolved_configuration_SI": {"temperature_K": 850.0, "shear_rate_s_inv": 4.5, "density_ratio_to_analytical_peak": 0.5, "grid_points": 16, "domain_m": 1.6e-5, "target_applied_shear": 0.9, "nominal_output_steps": 1000, "accepted_steps": 3070, "maximum_halvings": 8, "maximum_temperature_K": 878.79435874547, "localized": false},
+      "grid_domain_timestep_stopping": {"boundary": "periodic_antiplane_square", "timestep": "adaptive_halving_with_shared_thermal_control_intervals", "stopping": "target_applied_shear_0.9"},
+      "slurm": {"job_id": "55643489", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-22-05", "nodes": 1, "tasks": 1, "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T17:53:37Z", "end_utc": "2026-08-28T17:54:18Z", "exit_status": "0:0", "stop_reason": "completed_twenty_tests_and_target_strain_single_condition", "wall_clock_seconds": 41, "peak_memory_MB": 359.32,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T175315Z-c70b816-2b0175", "local_path": "hpc3-results/asb-drx-independent/20260828T175315Z-c70b816-2b0175", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "e7351f29830b13952313e8dce4d5ec20b37ff33e5c328120e2a234151df5c759", "local_boundary_single_smoke.json": "7f692752cd40ba77762dadf5471935f3a040af8122daf0dfaccea12fef780bc6", "unittest.txt": "157d52c39afa8b2c26958208f4c114bad76cb11008d4b9ce4c4ce62207959e0b", "results/checksums-single.sha256": "3a1e61faa3a040e07ba793216d3e4a82e9c3199e15c3512a6b3839df625a948a", "status/final-single.json": "f762b71f886d0cede1dbc59a83cf322d05104a4324d9094364cecff22f634ff3"}
+    },
+    {
+      "run_id": "20260828T183409Z-a8ee6af-ffbc1a",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "local_antiplane_EXP_floor_storage_heat_phase_sparse_boundary_matrix",
+      "git_commit_at_plan": "a8ee6af",
+      "scientific_source_commit": "8f820117f64e56d8147115435669fbd78d3ddd01",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_source_archive_sha256": "93b30cddd0f07f175a5046225f630e3338886bde54978739a387d19759645b1b",
+      "initial_state_sha256": "7111cc050c1ae41a1bb93f8999003aa2825bcf74d83fa814fc215843a6922f6b",
+      "ddd_fixture": {"source_sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b", "status": "user_authorized_generic_non_material_fixture_with_analytical_rate_extrapolation"},
+      "material_dataset_version": null,
+      "seeds": {"microstructure": null, "stochastic": null, "initialization": "deterministic"},
+      "resolved_configuration_SI": {"temperature_axis_K": [850.0, 950.0, 1050.0], "shear_rate_axis_s_inv": [4.5, 450.0, 45000.0], "density_ratio_axis": [0.5, 1.0, 2.0], "grid_points": 16, "domain_m": 1.6e-5, "target_applied_shear": 0.9, "retention_applied_shear": 0.0009, "localization_persistence_applied_shear": 0.0027, "maximum_accepted_steps_per_condition": 20000, "conditions": 27, "completed_conditions": 25, "numerically_unresolved_conditions": 2, "localized_conditions": 0},
+      "grid_domain_timestep_stopping": {"boundary": "periodic_antiplane_square", "timestep": "adaptive_halving_with_shared_thermal_control_intervals", "stopping": "target_applied_shear_0.9_or_20000_accepted_substeps", "retention": "1000_fixed_applied_shear_samples_plus_online_extrema"},
+      "slurm": {"job_id": "55644087", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-20-24", "nodes": 1, "tasks": 1, "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T18:34:27Z", "end_utc": "2026-08-28T18:52:01Z", "exit_status": "0:0", "stop_reason": "completed_25_conditions_and_recorded_2_numerically_unresolved", "wall_clock_seconds": 1054, "peak_memory_MB": 260.08,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T183409Z-a8ee6af-ffbc1a", "local_path": "hpc3-results/asb-drx-independent/20260828T183409Z-a8ee6af-ffbc1a", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "331ccc9ded665073d419d712188bdb696aa5d7406177a979e047d9e2b254897c", "local_boundary_matrix.json": "d280d7cb84dbc7f370eafb17a951b2e45a9a5edf6d7d4efe99cbc9cb04de0b9d", "local_boundary_matrix.partial.json": "52ad717a9e6be2abb95751d16c1f2787e225b5fed25eeafe02b4a885b1b031fb", "input_inventory.sha256": "a7279b07d4e264bce5b1f7a9cd2afeb70f0b256afc96f8675a90c5694999d6aa", "results/checksums-single.sha256": "d897dc08c4b7624e67ddb45f1a3b7685f11eb769f08a678815d759653d45b762", "status/final-single.json": "f6dbb4c6ff616f386ee2aa8ecb167701985122a87e186d6a917d690d3f13b046"}
     }
   ]
 }

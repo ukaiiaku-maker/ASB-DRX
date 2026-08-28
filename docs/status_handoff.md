@@ -1,5 +1,12 @@
 # ASB-DRX technical status handoff
 
+> Historical legacy note: the v32-v34 discussion below is retained only as
+> context and is not the active scientific architecture or valid calibration
+> data. The current independent implementation and its first sparse boundary
+> result are documented in
+> [local_antiplane_boundary_campaign.md](local_antiplane_boundary_campaign.md).
+> DDD does not parameterize the present model.
+
 ## Active baseline
 
 The active local baseline is `drx_var_v34_candidate_drx_asb_sweep.py`. It builds on the v32 GB-transmission/process-zone ASB model and adds candidate-nucleus bookkeeping for DRX.
