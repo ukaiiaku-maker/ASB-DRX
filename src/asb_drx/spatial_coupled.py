@@ -39,6 +39,16 @@ class SpatialCoupledParameters:
 
 
 @dataclass(frozen=True)
+class SpatialMechanismControls:
+    evolve_temperature: bool = True
+    evolve_phase: bool = True
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.evolve_temperature, bool) or not isinstance(self.evolve_phase, bool):
+            raise TypeError("mechanism controls must be booleans")
+
+
+@dataclass(frozen=True)
 class SpatialCoupledState:
     stress_Pa: float
     applied_shear: float
@@ -86,6 +96,7 @@ class SpatialCoupledLedger:
     thermal_change_J_m3: float
     global_closure_error_J_m3: float
     thermal_closure_error_J_m3: float
+    bath_heat_J_m3: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -131,7 +142,8 @@ def _chemical_potential_J_m3(
 def spatial_coupled_step(
     state: SpatialCoupledState, applied_shear_rate_s_inv: float, dx_m: float,
     proposed_dt_s: float, law: ExpFloorLaw, parameters: SpatialCoupledParameters,
-    *, maximum_halvings: int = 40, tolerance_J_m3: float = 1.0e-8,
+    *, controls: SpatialMechanismControls = SpatialMechanismControls(),
+    maximum_halvings: int = 40, tolerance_J_m3: float = 1.0e-8,
 ) -> SpatialCoupledStep:
     if not math.isfinite(applied_shear_rate_s_inv):
         raise ValueError("applied_shear_rate_s_inv must be finite")
@@ -159,7 +171,7 @@ def spatial_coupled_step(
     diffusivity = parameters.thermal_conductivity_W_m_K / parameters.volumetric_heat_capacity_J_m3_K
     dt_s = proposed_dt_s
     for halvings in range(maximum_halvings + 1):
-        if diffusivity > 0.0 and diffusivity * dt_s / dx_m**2 > 0.25:
+        if controls.evolve_temperature and diffusivity > 0.0 and diffusivity * dt_s / dx_m**2 > 0.25:
             dt_s *= 0.5
             continue
         grain_increment = rates * dt_s
@@ -181,26 +193,33 @@ def spatial_coupled_step(
             continue
         mechanical_heat_local = np.maximum(mechanical_heat_local, 0.0)
         new_density = density + density_increment
-        source_temperature = temperature + mechanical_heat_local / parameters.volumetric_heat_capacity_J_m3_K
-        lap_t = (
-            np.roll(source_temperature, -1, axis=0) + np.roll(source_temperature, 1, axis=0)
-            + np.roll(source_temperature, -1, axis=1) + np.roll(source_temperature, 1, axis=1)
-            - 4.0 * source_temperature
-        ) / dx_m**2
-        conducted_temperature = source_temperature + dt_s * diffusivity * lap_t
+        if controls.evolve_temperature:
+            source_temperature = temperature + mechanical_heat_local / parameters.volumetric_heat_capacity_J_m3_K
+            lap_t = (
+                np.roll(source_temperature, -1, axis=0) + np.roll(source_temperature, 1, axis=0)
+                + np.roll(source_temperature, -1, axis=1) + np.roll(source_temperature, 1, axis=1)
+                - 4.0 * source_temperature
+            ) / dx_m**2
+            conducted_temperature = source_temperature + dt_s * diffusivity * lap_t
+        else:
+            conducted_temperature = temperature
         if np.any(conducted_temperature <= 0.0) or not np.all(np.isfinite(conducted_temperature)):
             dt_s *= 0.5
             continue
 
         phase_old_total, _, _ = _energies_J_m(fields, new_density, dx_m, parameters)
-        chemical = _chemical_potential_J_m3(fields, new_density, dx_m, parameters)
-        projected = chemical - np.mean(chemical, axis=0, keepdims=True)
-        candidate = fields - dt_s * parameters.phase_mobility_m3_J_s * projected
-        if np.any(candidate < -1.0e-14) or np.any(candidate > 1.0 + 1.0e-14) or not np.all(np.isfinite(candidate)):
-            dt_s *= 0.5
-            continue
-        candidate = np.clip(candidate, 0.0, 1.0)
-        candidate /= np.sum(candidate, axis=0, keepdims=True)
+        if controls.evolve_phase:
+            chemical = _chemical_potential_J_m3(fields, new_density, dx_m, parameters)
+            projected = chemical - np.mean(chemical, axis=0, keepdims=True)
+            candidate = fields - dt_s * parameters.phase_mobility_m3_J_s * projected
+            if np.any(candidate < -1.0e-14) or np.any(candidate > 1.0 + 1.0e-14) or not np.all(np.isfinite(candidate)):
+                dt_s *= 0.5
+                continue
+            candidate = np.clip(candidate, 0.0, 1.0)
+            candidate /= np.sum(candidate, axis=0, keepdims=True)
+        else:
+            projected = np.zeros_like(fields)
+            candidate = fields
         new_total, new_stored, new_interface = _energies_J_m(candidate, new_density, dx_m, parameters)
         if new_total > phase_old_total:
             dt_s *= 0.5
@@ -211,7 +230,12 @@ def spatial_coupled_step(
             phase_heat_local = phase_heat_mean * dissipation_weight / float(np.mean(dissipation_weight))
         else:
             phase_heat_local = np.full_like(temperature, phase_heat_mean)
-        final_temperature = conducted_temperature + phase_heat_local / parameters.volumetric_heat_capacity_J_m3_K
+        if controls.evolve_temperature:
+            final_temperature = conducted_temperature + phase_heat_local / parameters.volumetric_heat_capacity_J_m3_K
+            bath_heat = 0.0
+        else:
+            final_temperature = temperature
+            bath_heat = float(np.mean(mechanical_heat_local)) + phase_heat_mean
 
         external = mean_stress * applied_increment
         elastic = (new_stress**2 - state.stress_Pa**2) / (2.0 * parameters.shear_modulus_Pa)
@@ -220,7 +244,7 @@ def spatial_coupled_step(
         mechanical_heat = float(np.mean(mechanical_heat_local))
         thermal_change = parameters.volumetric_heat_capacity_J_m3_K * float(np.mean(final_temperature - temperature))
         global_closure = external - elastic - stored_change - interface_change - mechanical_heat - phase_heat_mean
-        thermal_closure = thermal_change - mechanical_heat - phase_heat_mean
+        thermal_closure = thermal_change + bath_heat - mechanical_heat - phase_heat_mean
         scale = max(abs(external), abs(elastic), abs(stored_change), abs(interface_change), mechanical_heat, phase_heat_mean, 1.0)
         thermal_floor = 16.0 * np.finfo(float).eps * parameters.volumetric_heat_capacity_J_m3_K * float(np.max(final_temperature))
         if abs(global_closure) > 1.0e-9 * scale or abs(thermal_closure) > max(1.0e-8 * scale, thermal_floor):
@@ -234,7 +258,7 @@ def spatial_coupled_step(
                 state.time_s + dt_s, state.accepted_steps + 1,
             ),
             SpatialCoupledLedger(external, elastic, stored_change, interface_change,
-                mechanical_heat, phase_heat_mean, thermal_change, global_closure, thermal_closure),
+                mechanical_heat, phase_heat_mean, thermal_change, global_closure, thermal_closure, bath_heat),
             dt_s, halvings,
         )
     raise RuntimeError("no admissible spatial coupled step found")
@@ -243,14 +267,18 @@ def spatial_coupled_step(
 def advance_spatial_coupled(
     state: SpatialCoupledState, applied_shear_rate_s_inv: float, dx_m: float,
     proposed_dt_s: float, steps: int, law: ExpFloorLaw,
-    parameters: SpatialCoupledParameters,
+    parameters: SpatialCoupledParameters, *,
+    controls: SpatialMechanismControls = SpatialMechanismControls(),
 ) -> tuple[SpatialCoupledState, tuple[SpatialCoupledLedger, ...]]:
     if steps < 0:
         raise ValueError("steps must be nonnegative")
     current = state
     ledgers = []
     for _ in range(steps):
-        accepted = spatial_coupled_step(current, applied_shear_rate_s_inv, dx_m, proposed_dt_s, law, parameters)
+        accepted = spatial_coupled_step(
+            current, applied_shear_rate_s_inv, dx_m, proposed_dt_s, law, parameters,
+            controls=controls,
+        )
         current = accepted.state
         ledgers.append(accepted.ledger)
     return current, tuple(ledgers)

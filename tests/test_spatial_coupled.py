@@ -11,7 +11,8 @@ from asb_drx.analytical import ExpFloorLaw
 from asb_drx.multi_order import BinaryCircularLimit, binary_boundary_energy_J_m2, diffuse_binary_circle
 from asb_drx.shear_layer import ShearLayerParameters, ShearLayerState, shear_layer_step
 from asb_drx.spatial_coupled import (
-    SpatialCoupledParameters, SpatialCoupledState, advance_spatial_coupled,
+    SpatialCoupledParameters, SpatialCoupledState, SpatialMechanismControls,
+    advance_spatial_coupled,
     load_spatial_coupled_checkpoint, save_spatial_coupled_checkpoint,
     spatial_coupled_step,
 )
@@ -97,6 +98,43 @@ class SpatialCoupledTests(unittest.TestCase):
         initial = SpatialCoupledState(1.0e8, 0.0, np.zeros((points, points)), np.full((points, points), 1000.0), density, self._pure(points))
         final, _ = advance_spatial_coupled(initial, 10.0, 1.0e-5, 1.0e-5, 20, self.law, self.parameters)
         self.assertTrue(np.array_equal(final.eta_fields[1], np.zeros((points, points))))
+
+    def test_phase_disabled_preserves_fields_and_has_no_phase_heat(self) -> None:
+        initial, dx_m = self._mixed_state()
+        final, ledgers = advance_spatial_coupled(
+            initial, 10.0, dx_m, 1.0e-5, 10, self.law, self.parameters,
+            controls=SpatialMechanismControls(evolve_phase=False),
+        )
+        self.assertTrue(np.array_equal(final.eta_fields, initial.eta_fields))
+        self.assertTrue(all(item.phase_heat_J_m3 == 0.0 for item in ledgers))
+
+    def test_isothermal_control_routes_generated_heat_to_bath(self) -> None:
+        initial, dx_m = self._mixed_state()
+        final, ledgers = advance_spatial_coupled(
+            initial, 10.0, dx_m, 1.0e-5, 10, self.law, self.parameters,
+            controls=SpatialMechanismControls(evolve_temperature=False),
+        )
+        self.assertTrue(np.array_equal(final.temperature_K, initial.temperature_K))
+        for item in ledgers:
+            self.assertAlmostEqual(item.bath_heat_J_m3, item.mechanical_heat_J_m3 + item.phase_heat_J_m3)
+            self.assertLess(abs(item.thermal_closure_error_J_m3), 1.0e-6)
+
+    def test_unloaded_isothermal_relaxation_changes_only_phase_reservoirs(self) -> None:
+        initial, dx_m = self._mixed_state()
+        initial = SpatialCoupledState(
+            0.0, 0.0, initial.plastic_shear, initial.temperature_K,
+            initial.forest_density_m2, initial.eta_fields,
+        )
+        final, ledgers = advance_spatial_coupled(
+            initial, 0.0, dx_m, 1.0e-5, 10, self.law, self.parameters,
+            controls=SpatialMechanismControls(evolve_temperature=False),
+        )
+        self.assertEqual(final.stress_Pa, 0.0)
+        self.assertTrue(np.array_equal(final.plastic_shear, initial.plastic_shear))
+        self.assertTrue(np.array_equal(final.forest_density_m2, initial.forest_density_m2))
+        self.assertTrue(np.array_equal(final.temperature_K, initial.temperature_K))
+        self.assertFalse(np.array_equal(final.eta_fields, initial.eta_fields))
+        self.assertGreater(sum(item.phase_heat_J_m3 for item in ledgers), 0.0)
 
     def test_complete_current_state_restarts_exactly(self) -> None:
         initial, dx_m = self._mixed_state()
