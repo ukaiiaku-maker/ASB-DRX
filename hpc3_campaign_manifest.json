@@ -484,6 +484,15 @@
       "start_utc": "2026-08-28T14:20:25Z", "end_utc": "2026-08-28T14:20:30Z", "exit_status": "0:0", "stop_reason": "completed_all_twenty_five_tests_passed", "wall_clock_seconds": 6, "peak_memory_MB": 40.84,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T141957Z-c9708bb-f4aa93", "local_path": "hpc3-results/asb-drx-independent/20260828T141957Z-c9708bb-f4aa93", "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "eb8f125587e65538c11c0fb0060c3307b43e77ceca36614973bd82237cf860e6", "coupled_verification.json": "1429171ade780cf5b5626ffd98e9ac87bef7232e91c931a2eb50cc281b563daa", "unittest.txt": "e4bedcb2818e10e16709d29508fd2b8e6a206b385e84145bcce9696abf2c6cc0", "results/checksums-single.sha256": "51cb759e4e55797c7094c2e8634326e722a2e2c2b5266dc11a798cfb274d8789", "status/final-single.json": "c891cd2c8cd78d8484d367d5d281f823e6c2f189f50261a2aa40bbc940a186bd"}
+    },
+    {
+      "run_id": "20260828T142706Z-3224ef1-bdf10f", "parent_campaign_id": "asb-drx-independent-20260827", "purpose": "periodic_2D_spatial_common_stress_thermomechanical_phase_verification", "git_commit_at_plan": "3224ef1", "branch": "exp/independent-dd-pf-drx-asb-20260827", "source_status": "clean",
+      "dd_closure": {"version": null, "sha256": null, "status": "not_used"}, "material_dataset_version": null,
+      "resolved_configuration_SI": {"points": 32, "dx_m": 5e-7, "steps": 100, "applied_shear_rate_s-1": 10.0, "scientific_disposition": "generic_nonlocalizing_control"},
+      "slurm": {"job_id": "55638019", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G", "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T14:27:26Z", "end_utc": "2026-08-28T14:27:29Z", "exit_status": "0:0", "stop_reason": "completed_all_fifteen_tests_passed", "wall_clock_seconds": 3, "peak_memory_MB": 38.47,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T142706Z-3224ef1-bdf10f", "local_path": "hpc3-results/asb-drx-independent/20260828T142706Z-3224ef1-bdf10f", "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "6790e8d5b8bfaeee8170ff18b3cf9c283543d2a76bd2f7b34ee4317f659b2410", "spatial_coupled_verification.json": "8283528107ea74f099c6b2e8fe610b76a9fbd67289df147741ea14fe8d1b3cf1", "unittest.txt": "b8d775b1c90eb3e90f0475dc5c9def8cd2f9691c8715f129d102169eb88aa5e0", "results/checksums-single.sha256": "c428e5d9da4bd72e5d8aa9b7c97892b6119b84bcad55535b5c613ed99a619a6d", "status/final-single.json": "de14449481b0b6812b7fcfff9be4eb123f9df0f30e3c0a3389282e41ca05ea1f"}
     }
   ]
 }

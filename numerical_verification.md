@@ -218,6 +218,18 @@ The passing kernel updates grain-wise EXP-floor plastic rates and dislocation st
 
 This remains an aggregate verification limit. It has no displacement-resolved stress field, heterogeneous temperature, conduction in the phase domain, recovery/annihilation, multiple slip, physical boundary conditions, calibrated GB kinetics, stochastic allocator, localization convergence, or external data comparison.
 
+## Periodic 2-D spatial thermomechanical/phase control
+
+Status: passed, completed, fetched, and checksum-verified; generic common-stress control, not localization, material, DRX, or ASB validation.
+
+- Git commit/run/job: `3224ef1` / `20260828T142706Z-3224ef1-bdf10f` / `55638019`
+- Fifteen tests passed: shear-layer and aggregate regressions plus homogeneous reduction, 2-D conduction, global spatial closure, zero-child invariance, and exact spatial restart
+- Temperature standard deviation decreases from `0.1767767` to `0.0746919 K`; mean rises from `1000` to `1000.00011856 K`
+- External work is `3960.8591 J m^-3`; cumulative global/thermal closure errors are `1.0718e-11` and `-3.8496e-8 J m^-3`
+- Archive / JSON / test-log SHA-256: `6790e8d5b8bfaeee8170ff18b3cf9c283543d2a76bd2f7b34ee4317f659b2410`, `8283528107ea74f099c6b2e8fe610b76a9fbd67289df147741ea14fe8d1b3cf1`, `b8d775b1c90eb3e90f0475dc5c9def8cd2f9691c8715f129d102169eb88aa5e0`
+
+The phase heat distribution uses a normalized local Onsager-dissipation proxy while preserving the exact global free-energy decrement. This is declared numerical closure. Physical ASB still requires sustained growth against controls, mesh/timestep-converged onset and band width, realistic boundaries, and justified mechanical equilibrium.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
