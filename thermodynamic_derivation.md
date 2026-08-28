@@ -4,6 +4,8 @@ Status: first derivation plus executable verification kernel; no production solv
 
 The material-agnostic kernel in `src/asb_drx/thermodynamics.py` implements the two-state grain-energy sign convention, its discrete variational derivative, an energy-checked periodic Allen--Cahn step, distinct conservative dislocation reservoirs, an exact incremental work ledger, and the sharp-interface circular-nucleus limit. Generic fixture values test dimensions and invariants only. They are not production coefficients and cannot be inherited by a later material configuration.
 
+For the symmetric local barrier `W eta^2(1-eta)^2` and gradient penalty `kappa |grad eta|^2/2`, the planar diffuse-interface energy is `gamma=sqrt(2 kappa W)/6`. The 2-D verification uses this derived `gamma` in `R_c=gamma/Delta f`, initializes diffuse circular support on a periodic square grid, and preregisters shrink/grow signs plus final grid/timestep changes below 5%. Checkpoint/restart covers every variable in this deliberately limited deterministic kernel (`eta`, time, and accepted-step count); it does not satisfy the later full coupled restart requirement.
+
 ## State and balances
 
 All densities below are line length per volume, m^-2. Slip-system resolution is retained where mechanics/evidence requires it.

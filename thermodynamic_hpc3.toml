@@ -9,6 +9,7 @@ input_paths = [
   "src/asb_drx/analytical.py",
   "src/asb_drx/thermodynamics.py",
   "tests/test_thermodynamics.py",
+  "tests/test_phase_field_2d.py",
   "tools/run_thermodynamic_verification.py",
 ]
 output_paths = ["output"]

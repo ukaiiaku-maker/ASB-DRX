@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 import math
+from pathlib import Path
 from typing import Literal
 
 import numpy as np
@@ -45,6 +46,22 @@ class AcceptedStep:
     free_energy_J_m2: float
     accepted_dt_s: float
     halvings: int
+
+
+@dataclass(frozen=True)
+class PhaseFieldState2D:
+    """Complete state of the current deterministic 2-D verification kernel."""
+
+    eta: np.ndarray
+    time_s: float
+    accepted_steps: int
+
+    def __post_init__(self) -> None:
+        _check_eta_field_2d(self.eta)
+        if not math.isfinite(self.time_s) or self.time_s < 0.0:
+            raise ValueError("time_s must be finite and nonnegative")
+        if self.accepted_steps < 0:
+            raise ValueError("accepted_steps must be nonnegative")
 
 
 def interpolation_h(eta: np.ndarray) -> np.ndarray:
@@ -97,6 +114,45 @@ def chemical_potential_J_m3(
     return local_derivative - parameters.gradient_coefficient_J_m * laplacian
 
 
+def free_energy_2d_J_m(
+    eta: np.ndarray, dx_m: float, parameters: GrainEnergyParameters
+) -> float:
+    """Periodic square-grid free energy per unit out-of-plane depth."""
+
+    eta = _check_eta_field_2d(eta)
+    _check_dx(dx_m)
+    gradient_x = (np.roll(eta, -1, axis=1) - eta) / dx_m
+    gradient_y = (np.roll(eta, -1, axis=0) - eta) / dx_m
+    density = local_free_energy_J_m3(eta, parameters)
+    density += 0.5 * parameters.gradient_coefficient_J_m * (
+        gradient_x**2 + gradient_y**2
+    )
+    return float(dx_m**2 * np.sum(density))
+
+
+def chemical_potential_2d_J_m3(
+    eta: np.ndarray, dx_m: float, parameters: GrainEnergyParameters
+) -> np.ndarray:
+    eta = _check_eta_field_2d(eta)
+    _check_dx(dx_m)
+    local_derivative = (
+        2.0
+        * parameters.well_height_J_m3
+        * eta
+        * (1.0 - eta)
+        * (1.0 - 2.0 * eta)
+        - parameters.bulk_driving_J_m3 * interpolation_h_prime(eta)
+    )
+    laplacian = (
+        np.roll(eta, -1, axis=0)
+        + np.roll(eta, 1, axis=0)
+        + np.roll(eta, -1, axis=1)
+        + np.roll(eta, 1, axis=1)
+        - 4.0 * eta
+    ) / dx_m**2
+    return local_derivative - parameters.gradient_coefficient_J_m * laplacian
+
+
 def energy_checked_allen_cahn_step(
     eta: np.ndarray,
     dx_m: float,
@@ -128,6 +184,114 @@ def energy_checked_allen_cahn_step(
                 return AcceptedStep(candidate, candidate_energy, dt_s, halvings)
         dt_s *= 0.5
     raise RuntimeError("no energy-nonincreasing admissible Allen--Cahn step found")
+
+
+def energy_checked_allen_cahn_step_2d(
+    eta: np.ndarray,
+    dx_m: float,
+    proposed_dt_s: float,
+    parameters: GrainEnergyParameters,
+    *,
+    maximum_halvings: int = 40,
+    energy_tolerance_J_m: float = 0.0,
+) -> AcceptedStep:
+    eta = _check_eta_field_2d(eta)
+    _check_dx(dx_m)
+    if not math.isfinite(proposed_dt_s) or proposed_dt_s <= 0.0:
+        raise ValueError("proposed_dt_s must be finite and positive")
+    if maximum_halvings < 0:
+        raise ValueError("maximum_halvings must be nonnegative")
+    if not math.isfinite(energy_tolerance_J_m) or energy_tolerance_J_m < 0.0:
+        raise ValueError("energy_tolerance_J_m must be finite and nonnegative")
+    old_energy = free_energy_2d_J_m(eta, dx_m, parameters)
+    chemical_potential = chemical_potential_2d_J_m3(eta, dx_m, parameters)
+    dt_s = proposed_dt_s
+    for halvings in range(maximum_halvings + 1):
+        candidate = eta - dt_s * parameters.mobility_m3_J_s * chemical_potential
+        if np.all(np.isfinite(candidate)) and np.all((candidate >= 0.0) & (candidate <= 1.0)):
+            candidate_energy = free_energy_2d_J_m(candidate, dx_m, parameters)
+            if candidate_energy <= old_energy + energy_tolerance_J_m:
+                return AcceptedStep(candidate, candidate_energy, dt_s, halvings)
+        dt_s *= 0.5
+    raise RuntimeError("no energy-nonincreasing admissible 2-D Allen--Cahn step found")
+
+
+def diffuse_circle_2d(
+    grid_points: int,
+    dx_m: float,
+    radius_m: float,
+    interface_length_m: float,
+) -> np.ndarray:
+    """Centered periodic diffuse circle with eta approximately one inside."""
+
+    if grid_points < 8:
+        raise ValueError("grid_points must be at least eight")
+    _check_dx(dx_m)
+    for name, value in (("radius_m", radius_m), ("interface_length_m", interface_length_m)):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be finite and positive")
+    coordinate = (np.arange(grid_points, dtype=float) + 0.5 - grid_points / 2.0) * dx_m
+    x, y = np.meshgrid(coordinate, coordinate, indexing="xy")
+    radial = np.sqrt(x**2 + y**2)
+    return 0.5 * (1.0 - np.tanh((radial - radius_m) / interface_length_m))
+
+
+def equivalent_support_radius_m(eta: np.ndarray, dx_m: float) -> float:
+    """Radius of a circle with the same quintic-interpolated support area."""
+
+    eta = _check_eta_field_2d(eta)
+    _check_dx(dx_m)
+    area_m2 = float(dx_m**2 * np.sum(interpolation_h(eta)))
+    return math.sqrt(area_m2 / math.pi)
+
+
+def advance_phase_field_2d(
+    state: PhaseFieldState2D,
+    dx_m: float,
+    proposed_dt_s: float,
+    steps: int,
+    parameters: GrainEnergyParameters,
+) -> PhaseFieldState2D:
+    """Advance a fixed number of accepted steps with deterministic state updates."""
+
+    if steps < 0:
+        raise ValueError("steps must be nonnegative")
+    eta = np.array(state.eta, copy=True)
+    time_s = state.time_s
+    accepted_steps = state.accepted_steps
+    for _ in range(steps):
+        accepted = energy_checked_allen_cahn_step_2d(
+            eta, dx_m, proposed_dt_s, parameters
+        )
+        eta = accepted.eta
+        time_s += accepted.accepted_dt_s
+        accepted_steps += 1
+    return PhaseFieldState2D(eta, time_s, accepted_steps)
+
+
+def save_phase_field_checkpoint(path: str | Path, state: PhaseFieldState2D) -> None:
+    """Write every state variable in the current 2-D kernel."""
+
+    target = Path(path)
+    np.savez(
+        target,
+        schema=np.array("asb-drx-phase-field-checkpoint/v1"),
+        eta=np.asarray(state.eta, dtype=float),
+        time_s=np.array(state.time_s, dtype=float),
+        accepted_steps=np.array(state.accepted_steps, dtype=np.int64),
+    )
+
+
+def load_phase_field_checkpoint(path: str | Path) -> PhaseFieldState2D:
+    with np.load(Path(path), allow_pickle=False) as archive:
+        schema = str(archive["schema"])
+        if schema != "asb-drx-phase-field-checkpoint/v1":
+            raise ValueError(f"unsupported checkpoint schema: {schema}")
+        return PhaseFieldState2D(
+            eta=np.array(archive["eta"], copy=True),
+            time_s=float(archive["time_s"]),
+            accepted_steps=int(archive["accepted_steps"]),
+        )
 
 
 @dataclass(frozen=True)
@@ -268,6 +432,15 @@ def _check_eta_field(eta: np.ndarray) -> np.ndarray:
     array = np.asarray(eta, dtype=float)
     if array.ndim != 1 or array.size < 3:
         raise ValueError("eta must be a one-dimensional field with at least three points")
+    if not np.all(np.isfinite(array)) or np.any((array < 0.0) | (array > 1.0)):
+        raise ValueError("eta must be finite and satisfy 0 <= eta <= 1")
+    return array
+
+
+def _check_eta_field_2d(eta: np.ndarray) -> np.ndarray:
+    array = np.asarray(eta, dtype=float)
+    if array.ndim != 2 or min(array.shape) < 8:
+        raise ValueError("eta must be a two-dimensional field with at least 8x8 points")
     if not np.all(np.isfinite(array)) or np.any((array < 0.0) | (array > 1.0)):
         raise ValueError("eta must be finite and satisfy 0 <= eta <= 1")
     return array
