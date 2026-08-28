@@ -66,6 +66,8 @@ class GrainRecord:
     maximum_area_m2: float = 0.0
     ever_grew: bool = False
     promoted_time_s: float | None = None
+    source_embryo_id: str | None = None
+    embryo_gate_passed: bool = False
 
     def __post_init__(self) -> None:
         if self.label < 0:
@@ -90,6 +92,8 @@ class GrainRecord:
             not math.isfinite(self.promoted_time_s) or self.promoted_time_s < self.birth_time_s
         ):
             raise ValueError("promoted_time_s must be finite and no earlier than birth")
+        if self.source_embryo_id is not None and not self.source_embryo_id:
+            raise ValueError("source_embryo_id must be nonempty when present")
 
 
 @dataclass(frozen=True)
@@ -221,7 +225,14 @@ def update_grain_tracker(
                     old.orientation_rad, parent.orientation_rad, criteria.symmetry_order
                 )
                 valid_lineage = old.lineage_id.startswith(parent.lineage_id + "/")
-                if valid_lineage and misorientation >= criteria.minimum_misorientation_rad:
+                physical_embryo = (
+                    old.source_embryo_id is not None and old.embryo_gate_passed
+                )
+                if (
+                    valid_lineage
+                    and physical_embryo
+                    and misorientation >= criteria.minimum_misorientation_rad
+                ):
                     status = "promoted"
                     promoted_time = time_s
                 else:

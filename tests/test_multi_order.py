@@ -141,7 +141,11 @@ class MultiOrderTests(unittest.TestCase):
         tracker = GrainTrackerState(
             (
                 GrainRecord(0, 0.0, None, "root-0", 0.0),
-                GrainRecord(1, math.radians(12.0), 0, "root-0/child-1", 0.0),
+                GrainRecord(
+                    1, math.radians(12.0), 0, "root-0/child-1", 0.0,
+                    source_embryo_id="verified-fixture-embryo",
+                    embryo_gate_passed=True,
+                ),
             )
         )
         criteria = GrainCriteria(

@@ -35,7 +35,10 @@ class GrainTrackerTests(unittest.TestCase):
     def _records(child_orientation_rad: float = math.radians(12.0)) -> tuple[GrainRecord, ...]:
         return (
             GrainRecord(0, 0.0, None, "root-0", 0.0),
-            GrainRecord(1, child_orientation_rad, 0, "root-0/child-1", 1.0),
+            GrainRecord(
+                1, child_orientation_rad, 0, "root-0/child-1", 1.0,
+                source_embryo_id="embryo-1", embryo_gate_passed=True,
+            ),
         )
 
     @staticmethod
@@ -124,6 +127,18 @@ class GrainTrackerTests(unittest.TestCase):
         records[1] = GrainRecord(1, math.radians(12.0), 0, "unrelated", 1.0)
         state, metrics = self._update_three(
             self._fields((slice(3, 7), slice(4, 8))), GrainTrackerState(tuple(records))
+        )
+        self.assertEqual(state.records[1].status, "rejected")
+        self.assertEqual(metrics.recrystallized_grains, 0)
+
+    def test_phase_label_without_promoted_embryo_never_becomes_drx(self) -> None:
+        records = list(self._records())
+        records[1] = GrainRecord(
+            1, math.radians(12.0), 0, "root-0/child-1", 1.0
+        )
+        state, metrics = self._update_three(
+            self._fields((slice(3, 7), slice(4, 8))),
+            GrainTrackerState(tuple(records)),
         )
         self.assertEqual(state.records[1].status, "rejected")
         self.assertEqual(metrics.recrystallized_grains, 0)
