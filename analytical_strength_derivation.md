@@ -134,6 +134,8 @@ These works motivate the branching/shot-noise research route, but none identifie
 
 Complete single-glider DDD context was subsequently located in `/Users/sdillon/Taylor_DDD` and `/Users/sdillon/Taylor_DDD_arrhenius_native`; see `taylor_ddd_context_audit.md`. The persistent-contact event histories provide the missing structural objects needed to test the branching/shot-noise reduction: contact identity and residence, neighboring load-bearing lengths, signed force work, hazard accumulation, release/reset, and swept strain. They can falsify the reduction and determine whether scalar `R` is adequate, but they do not supply production parameters.
 
+The first HPC3 structural test (`20260828T130729Z-1a147e0-710710`) found much stronger multi-hit clustering in the higher-density reduced history, but zero spectral-radius proxy for every sampled native one-step contact operator. Only 11 next-audit-step redistribution samples were available, all in the densest native case. Thus the available histories do not establish the causal feedback assumed by `R`; the independent EXP-floor law remains the baseline and the collective construction remains an unparameterized ablation.
+
 ## 7. Immediate verification gates
 
 1. Symbolic identities and dimensions of the barrier, inverse, activation volume, and peak.

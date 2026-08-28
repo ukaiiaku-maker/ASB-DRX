@@ -17,6 +17,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - HPC3 run `20260828T120911Z-9d9e7c4-1bdf8a` (job `55637582`) passed all five analytical tests and was fetched with verified checksums.
 - Literature motivates, but does not parameterize, a collective transparent-node hypothesis based on stress-transfer branching and multi-hit shot-noise memory.
 - Complete single-glider Taylor DDD context was located in `/Users/sdillon/Taylor_DDD` and `/Users/sdillon/Taylor_DDD_arrhenius_native`. Commit `fb7610b` contains a passing native ExaDiS persistent-contact gate; later EXP-floor campaigns contain event histories across density and temperature. These are now structural evidence, not parameter sources.
+- HPC3 structural run `20260828T130729Z-1a147e0-710710` (job `55637740`) passed both collective-context tests with verified retrieval. Higher density has substantially more multi-hit clustering, but all sampled native one-step contact operators have zero spectral-radius proxy and only 11 redistribution samples exist. No causal collective law or production parameter is established.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
 - Campaign-specific HPC3 smoke job `55633650` completed, fetched, and checksum-verified.
@@ -29,7 +30,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 
 1. The first analytical kernel tests passed on HPC3; further optimizer-identifiability tests must pass before physical fitting.
 2. Physical calibration cannot begin until one authoritative target material and strength/rate/temperature dataset are selected.
-3. The collective extension is an ablation, not baseline physics, until observations discriminate it from independent nodes.
+3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.
 
 ## Required external resolutions

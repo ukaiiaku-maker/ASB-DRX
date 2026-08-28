@@ -18,6 +18,26 @@ Status: passed, completed, fetched, and checksum-verified.
 
 This verifies implementation consistency with the declared equations. It does not validate a material parameterization.
 
+## Collective-context structural diagnostic
+
+Status: passed, completed, fetched, and checksum-verified. This is a structural diagnostic of old DDD context and is explicitly excluded from production parameterization.
+
+- Git commit: `1a147e0`
+- Run ID / Slurm job: `20260828T130729Z-1a147e0-710710` / `55637740`
+- Result: `COMPLETED`, exit `0:0`; application and finalization exit zero
+- Environment: `anaconda/2025.12`, Python 3.13.9; one CPU, 2 GB, no GPU; 2 s wall clock and 103.27 MB peak memory
+- Two tests passed: depinning-count clustering and native branching-response/hazard-crossing diagnostics
+- All six staged DDD-context files match their audited SHA-256 hashes
+- Fetched result: `hpc3-results/asb-drx-independent/20260828T130729Z-1a147e0-710710`
+- Result archive SHA-256: `66cc05879596513d65dab9a789541eda5d507bc3e090cb7aebe3b9b254f690e7`
+- Diagnostic JSON SHA-256: `ff9335351ab57fd3d1e0d62d9f47161d20eaace30d31502c369f117f85866628`
+- Unit-test log SHA-256: `0bc3b563ba8ae1be2a1256d6af136dc858546b47a60c1ea19b28bbf2dad456da`
+- Runner retrieval status: `verified`
+
+The count histories show stronger multi-hit clustering at higher density. The native one-step contact operators have zero spectral-radius proxy, with only 11 survivor-redistribution samples at the densest condition. This does not identify a causal branching law; it leaves the collective extension as an ablation and the independent EXP-floor law as baseline physics.
+
+An earlier packaging attempt, run `20260828T130634Z-810e232-8c908d` / job `55637733` at commit `810e232`, failed before scientific execution because the archive omitted `src/asb_drx/analytical.py`, which package initialization imports. The application exit was 1 and finalization exit 0. The partial archive was fetched and marked incomplete; no diagnostic result was interpreted. Commit `1a147e0` corrected only the source manifest before the successful rerun.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.

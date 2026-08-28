@@ -202,6 +202,68 @@
         "results/checksums-single.sha256": "662ca0d1d106cfe40427ab7adadc0c28f4633df0033963087dd1c549bc5982af",
         "status/final-single.json": "129dcee5d09b4fda77af101a26e498a9aab0b4eb7cb1be36d4d4a967cb2c68db"
       }
+    },
+    {
+      "run_id": "20260828T130634Z-810e232-8c908d",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "collective_context_packaging_attempt_no_scientific_result",
+      "git_commit_at_plan": "810e232",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean_but_incomplete_archive_manifest",
+      "source_snapshot_sha256": "fece332ed0b0a209bdc2c59143525648a5cb24e839bb734e5d27be5b365e97b9",
+      "dd_closure": {"version": null, "sha256": null, "status": "context_only_not_parameterization"},
+      "material_dataset_version": null,
+      "grid_domain_timestep_stopping": "not_applicable_structural_postprocessing",
+      "slurm": {"job_id": "55637733", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-04", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T13:06:55Z",
+      "end_utc": "2026-08-28T13:06:55Z",
+      "exit_status": "1:0",
+      "stop_reason": "packaging_failure_analytical_module_omitted_no_scientific_execution",
+      "wall_clock_seconds": 0,
+      "peak_memory_MB": 9.91,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T130634Z-810e232-8c908d",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T130634Z-810e232-8c908d",
+      "retrieval_status": "fetched_incomplete",
+      "outputs": {"results/results-single.tar.gz": "6c14026a8f831101ceb5bc724c7e72a186d57f579fb6d64fb132ea30575827e4", "status/final-single.json": "e4bb53a432bd4a8405d0d5451748725739508ce6d2560a0f213e325db91e4be2"}
+    },
+    {
+      "run_id": "20260828T130729Z-1a147e0-710710",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "DDD_collective_context_structural_falsification_not_parameterization",
+      "git_commit_at_plan": "1a147e0e672d3db730ff27ae898f6cc60ffc4856",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "source_snapshot_sha256": "dbcb36bc1a22f1f7d511dd431f412674991a350293ccb9e37934a949aca4c374",
+      "input_sha256": {
+        "run_collective_context_hpc3.sh": "dc0b30369239adaf184d0bb4883e9a07bb8b16e2e4092714d953b265a243ced8",
+        "src/asb_drx/collective_diagnostics.py": "a10c2dc46808c3610f5fe9e68a1d953bb9405413b80f8d73e0d9a5b7e871018a",
+        "src/asb_drx/analytical.py": "42002881d38f93e45260ae82e05f523596ba2acfe1a008a5694b2bff8071e031",
+        "tests/test_collective_diagnostics.py": "37dcdec2fe813080f1cb4f5a7d30183b0ec59281f4dcccfe688d7d7e7d4f9258",
+        "tools/analyze_collective_context.py": "a6dc5fb071b9059947f4c8146a44b9978b2a3d521b1761059de0a9cd70618328"
+      },
+      "context_input_sha256": {
+        "native_n2_audit.jsonl": "6f0d27d3241d0da69daf65a8ab397a614f7eff1819a82c0d00c8de374c1c268d",
+        "native_n4_audit.jsonl": "a47a01b127f2effdbcf31eaa5cf740347de82b8bcce9ac17119b1ebdac6ca2eb",
+        "native_n8_audit.jsonl": "fbbabdfb2d014b867d4620f1f3114b9b9a67bd9a1877a9dcf903f426c12339cf",
+        "native_n16_audit.jsonl": "330f556cb15a48442f0efddd1ef7c81d57525ab894a57cb4b73ecc0e32e7d702",
+        "v24_T1000_rho1e15_seed86_depin_counts.csv": "17d01903b317555ffe1f1921e57cc9afaa2d1148ceb2c9318b80a9b6ad8c5758",
+        "v24_T1000_rho1p5e16_seed86_depin_counts.csv": "3b4e71c58dfdf2321b35e94c64d27e93edbba3ad3f226639f4d282b65462480c"
+      },
+      "dd_closure": {"version": null, "sha256": null, "status": "context_only_not_parameterization"},
+      "material_dataset_version": null,
+      "resolved_configuration_SI": {"analysis": "count_clustering_and_one_step_contact_response", "cluster_windows_steps": [0, 1, 10, 100], "scientific_disposition": "structural_falsification_only"},
+      "grid_domain_timestep_stopping": "not_applicable_structural_postprocessing",
+      "slurm": {"job_id": "55637740", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-l18-04", "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-28T13:08:43Z",
+      "end_utc": "2026-08-28T13:08:45Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed_both_tests_passed",
+      "wall_clock_seconds": 2,
+      "peak_memory_MB": 103.27,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T130729Z-1a147e0-710710",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T130729Z-1a147e0-710710",
+      "retrieval_status": "verified",
+      "outputs": {"results/results-single.tar.gz": "66cc05879596513d65dab9a789541eda5d507bc3e090cb7aebe3b9b254f690e7", "collective_context_diagnostics.json": "ff9335351ab57fd3d1e0d62d9f47161d20eaace30d31502c369f117f85866628", "unittest.txt": "0bc3b563ba8ae1be2a1256d6af136dc858546b47a60c1ea19b28bbf2dad456da", "results/checksums-single.sha256": "922046b10f13bcc6bb6f278841dde4e303a4794abcdf0940e097eb9ddb71e07f", "status/final-single.json": "59b877ac3deeb368165fd0d342f6f7263d6e95b02b1ee4851ae27951c96a3f7e"}
     }
   ]
 }
