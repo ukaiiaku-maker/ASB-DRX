@@ -14,6 +14,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - HPC3 aliases and runner verified. Existing unrelated local and Slurm campaigns were observed and left untouched.
 - An EXP-floor barrier, independent-node rate law, inverse, and closed-form rate--temperature strength peak have been derived in `analytical_strength_derivation.md`.
 - A material-agnostic analytical kernel and verification tests have been added under `src/asb_drx/` and `tests/`; numerical execution is restricted to HPC3.
+- HPC3 run `20260828T120911Z-9d9e7c4-1bdf8a` (job `55637582`) passed all five analytical tests and was fetched with verified checksums.
 - Literature motivates, but does not parameterize, a collective transparent-node hypothesis based on stress-transfer branching and multi-hit shot-noise memory.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
@@ -25,7 +26,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 
 ## Active scientific boundaries
 
-1. Numerical analytical tests must pass on HPC3 before parameter fitting.
+1. The first analytical kernel tests passed on HPC3; further optimizer-identifiability tests must pass before physical fitting.
 2. Physical calibration cannot begin until one authoritative target material and strength/rate/temperature dataset are selected.
 3. The collective extension is an ablation, not baseline physics, until observations discriminate it from independent nodes.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.

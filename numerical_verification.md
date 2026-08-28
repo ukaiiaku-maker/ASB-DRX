@@ -1,6 +1,22 @@
 # Numerical verification record
 
-No production-model numerical verification has been run. Numerical work is restricted to HPC3.
+Numerical work is restricted to HPC3. The material-agnostic analytical kernel has passed its first verification gate; no calibrated physical simulation has been run.
+
+## EXP-floor analytical kernel
+
+Status: passed, completed, fetched, and checksum-verified.
+
+- Git commit: `9d9e7c4`
+- Run ID / Slurm job: `20260828T120911Z-9d9e7c4-1bdf8a` / `55637582`
+- Result: `COMPLETED`, exit `0:0`; application and finalization exit zero
+- Environment: `anaconda/2025.12`, Python 3.13.9, SciPy 1.16.3; one CPU, 1 GB, no GPU
+- Five tests passed: barrier endpoints and activation-volume derivative, forward-rate closure, local maximum, fixed-temperature strength/density rate scalings, peak-existence condition, and invalid-parameter rejection
+- Fetched result: `hpc3-results/asb-drx-independent/20260828T120911Z-9d9e7c4-1bdf8a`
+- Unit-test log SHA-256: `4b636918125f8f280b0e61ba6c7fda55df0a28c9360990fd2e47e8b3a74d5746`
+- Input-inventory SHA-256: `6a11472cb7222b684cf5c83b8db2fdc89d0bf2a0c1eaa1ff3f2f0372321b10ef`
+- Runner retrieval status: `verified`
+
+This verifies implementation consistency with the declared equations. It does not validate a material parameterization.
 
 ## Environment smoke
 
@@ -23,7 +39,7 @@ Purpose: verify staging, the discovered system Python, deterministic arithmetic,
 
 Closure material-point validation, relaxation/free-energy monotonicity, content/work ledgers, nucleus limits, homogeneous limits, timestep/grid convergence, exact restart, schema tests, and label/grain invariants will be appended with run IDs, commits, configs, tolerances, and checksums.
 
-## Immutable legacy controls
+## Legacy computations retained as context only
 
 All controls used exact versioned source snapshots, `anaconda/2025.12` (Python 3.13.9), one CPU, 4 GB, account `SDILLON1`, partition `free`, QoS `low`, and no GPU. All completed with exit `0:0`; local retrieval is checksum-verified and remote copies remain intact. The machine-readable record is `evidence/legacy_controls/hpc3_regressions.json`.
 
@@ -35,4 +51,4 @@ All controls used exact versioned source snapshots, `anaconda/2025.12` (Python 3
 
 The v33/v34 stored reference folders lack an immutable source/environment record. Identical recorded parameters are insufficient for trajectory reproduction. This is a provenance failure in the legacy evidence, not a basis for parameter tuning.
 
-No production-model numerical verification was attempted because Gate 0 remains a no-go: qualifying raw DD transition data and an authoritative material target are absent.
+These legacy computations do not calibrate, validate, or regression-gate the new model. Physical parameter optimization remains pending one authoritative target material and strength/rate/temperature dataset.
