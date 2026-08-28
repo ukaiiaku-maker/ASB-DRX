@@ -10,6 +10,7 @@ __pycache__/
 .hpc3/provenance/
 .hpc3/submission.lock
 hpc3-results/
+/context-inputs/
 
 # Simulation outputs
 results*/

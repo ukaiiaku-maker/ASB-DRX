@@ -1,0 +1,43 @@
+name = "asb-drx-collective-context"
+entrypoint = ["bash", "run_collective_context_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_collective_context_hpc3.sh",
+  "src/asb_drx/__init__.py",
+  "src/asb_drx/collective_diagnostics.py",
+  "tools/analyze_collective_context.py",
+  "tests/test_collective_diagnostics.py",
+  "context-inputs/native_n2_audit.jsonl",
+  "context-inputs/native_n4_audit.jsonl",
+  "context-inputs/native_n8_audit.jsonl",
+  "context-inputs/native_n16_audit.jsonl",
+  "context-inputs/v24_T1000_rho1e15_seed86_depin_counts.csv",
+  "context-inputs/v24_T1000_rho1p5e16_seed86_depin_counts.csv",
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:10:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
