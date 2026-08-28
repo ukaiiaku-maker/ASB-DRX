@@ -5,6 +5,7 @@
 - DD calibration/validation selects and freezes the collective closure independently.
 - Material/GB/thermal/mechanical datasets have versioned provenance and are separate from PF calibration targets.
 - PF calibration and validation conditions are disjoint. One resolved equation/parameter set applies everywhere.
+- Material selection is gated by `material_target_audit.md`; no mixed Fe/Cr/alloy parameter set is allowed.
 
 ## Gate 0 regressions
 

@@ -21,6 +21,7 @@ Updated: 2026-08-27 (America/Los_Angeles)
 1. Gate 0 cannot pass until the exact DD evidence is located or its absence is formally resolved.
 2. Gate 1 fitting cannot begin without observables, units, condition axes, seed/cell-size metadata, event definitions, censoring, uncertainty, and a calibration/validation split.
 3. Production solver implementation cannot begin before the free-energy/dissipation review and closure choice.
+4. The production material target is unresolved: legacy “Fe” naming conflicts with embedded chromium metadata and the validation folder mixes several alloys.
 
 ## Next executable actions
 
