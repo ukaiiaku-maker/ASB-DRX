@@ -133,7 +133,7 @@ class CoupledTests(unittest.TestCase):
         phase = stored_energy_drx_step(
             StoredEnergyDRXState(MultiOrderState(self.mixed_fields, 0.0, 0), 1000.0),
             self.dx_m,
-            1.0e-4,
+            coupled.accepted_dt_s,
             self.parameters.phase_parameters(density),
         )
         self.assertTrue(np.array_equal(coupled.state.eta_fields, phase.state.phase.eta_fields))
@@ -171,12 +171,12 @@ class CoupledTests(unittest.TestCase):
         total_heat = sum(
             item.mechanical_heat_J_m3 + item.phase_heat_J_m3 for item in ledgers
         )
-        self.assertAlmostEqual(
+        thermal_difference = abs(
             self.parameters.volumetric_heat_capacity_J_m3_K
-            * (final.temperature_K - initial.temperature_K),
-            total_heat,
-            places=6,
+            * (final.temperature_K - initial.temperature_K)
+            - total_heat
         )
+        self.assertLess(thermal_difference, 1.0e-8 * total_heat)
 
     def test_pure_parent_loading_never_creates_allocated_child_support(self) -> None:
         fields = self._pure_parent_fields()

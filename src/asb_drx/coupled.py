@@ -254,7 +254,15 @@ def coupled_step(
             phase_heat_J_m3,
             1.0,
         )
-        if abs(global_closure) > 1.0e-9 * scale or abs(thermal_closure) > 1.0e-8 * scale:
+        thermal_roundoff_J_m3 = (
+            16.0
+            * np.finfo(float).eps
+            * parameters.volumetric_heat_capacity_J_m3_K
+            * max(state.temperature_K, final_temperature)
+        )
+        if abs(global_closure) > 1.0e-9 * scale or abs(thermal_closure) > max(
+            1.0e-8 * scale, thermal_roundoff_J_m3
+        ):
             dt_s *= 0.5
             continue
 
