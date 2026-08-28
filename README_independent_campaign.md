@@ -7,7 +7,7 @@ This branch is a scientific redevelopment. Legacy programs, parameters, and outp
 ## Immutable interpretation
 
 - The Arrhenius--Taylor peak and negative slope are kinetic diagnostics, not a DRX trigger or a free-energy term.
-- Dislocation dynamics does not parameterize the model.
+- The single-glider DDD constants are a user-authorized generic fixture only; DDD trajectories do not calibrate a material model.
 - The independent-node EXP-floor barrier and its closed-form rate--temperature strength peak are the constitutive baseline.
 - A collective transparent-node extension is admitted only if a stress-transfer/memory derivation and discriminating observations justify it.
 - Collective-event state may alter kinetics, storage, correlation, intermittency, and finite-fluctuation sampling, but cannot directly create a grain.
@@ -24,7 +24,7 @@ This branch is a scientific redevelopment. Legacy programs, parameters, and outp
 5. Run the common-equation mechanism ladder and sparse temperature/rate map.
 6. Run boundary/representative ensembles, uncertainty propagation, and external validation.
 
-No later gate is authorized scientifically by a failed earlier gate. Failed conservation, thermodynamic, restart, convergence, or validation tests will be corrected rather than tuned around.
+No later gate is authorized scientifically by a failed earlier gate. Failed conservation, thermodynamic, restart, convergence, or validation tests will be corrected rather than tuned around. The prospective arbitrary regime boundary is the analytical EXP-floor strength-peak surface; its post-peak side is only a collective-candidate region.
 
 ## Repository layout
 

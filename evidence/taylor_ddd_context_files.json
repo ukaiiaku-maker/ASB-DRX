@@ -1,8 +1,10 @@
 {
   "schema": "asb-drx-taylor-ddd-context/v1",
   "recorded_at": "2026-08-28",
-  "parameterization_allowed": false,
+  "parameterization_allowed": "generic_fixture_only_by_explicit_user_authorization_2026-08-28",
   "permitted_use": [
+    "generic non-material EXP-floor and mechanics fixture",
+    "arbitrary analytical boundary definition",
     "mechanism interpretation",
     "structural falsification of collective reductions"
   ],
@@ -29,6 +31,12 @@
     "validator_sha256": "22a96dc95c7b469b0d54ca46978af5257759f265d1c3bbc35c1c6a57ac493163"
   },
   "artifacts": [
+    {
+      "path": "/Users/sdillon/Taylor_DDD/results/full_glider_expfloor_HT050_F020_overnight_peakmap_20260817/T1050/rho_3e16/seed86/clean_arrhenius_params.json",
+      "sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b",
+      "campaign_jobs_sha256": "d9d2d119fa9ffbb50c47024ad87ace0357284559e32ce3521d92c0c73dfce63d",
+      "classification": "user-authorized generic parameter fixture; not material calibration"
+    },
     {
       "path": "/Users/sdillon/Taylor_DDD_arrhenius_native/docs/EXADIS_SINGLE_GLIDER_TAYLOR_GATE_REPORT.md",
       "sha256": "8b5611d0cd0211b5f2b7bf1d08b904fac6ab28e4f46bb0d6d34e72ae16c22d5f",

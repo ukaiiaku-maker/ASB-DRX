@@ -305,3 +305,8 @@ All controls used exact versioned source snapshots, `anaconda/2025.12` (Python 3
 The v33/v34 stored reference folders lack an immutable source/environment record. Identical recorded parameters are insufficient for trajectory reproduction. This is a provenance failure in the legacy evidence, not a basis for parameter tuning.
 
 These legacy computations do not calibrate, validate, or regression-gate the new model. Physical parameter optimization remains pending one authoritative target material and strength/rate/temperature dataset.
+# Single-glider DDD generic-fixture gate
+
+HPC3 run `20260828T151810Z-d31c6a4-d3af25` / job `55641106` passed all fourteen EXP-floor, stability, and fixture tests and was fetched with verified checksums. It verifies the exact entropy-bearing `H-k_B T S` barrier mapping, the DDD `q=2 b sqrt(rho)` and `q^4=16 b^4 rho^2` prefactor, forward/peak rate closure, and equality of the stored line energy to the DDD line tension `0.5 G b^2=2.46016e-9 J m^-1`.
+
+The fixture predicts peak densities `[8.5383e15, 7.0442e15, 5.9295e15, 5.0773e15, 4.4117e15] m^-2` and strengths `[122.536, 112.835, 104.838, 98.150, 92.488] MPa` at `[850, 900, 950, 1000, 1050] K` and `4.5 s^-1`. These are generic governing-equation results, not material calibration. The run used Python 3.13.9, 62 s wall time, 1 s CPU, and 37.51 MB peak memory. Archive, report, and unit-test hashes are `b12365cd222825bbe9f91493c280c8f364999613cbf42ef19db4111cb65a1eb4`, `59e059d3c2a709155078a52c6b6d06d0f8ba57fe47d5b819d68113dc77796f53`, and `3f0561561b51f8af92fad8ded9f57b82ab91a37be4c106bb9fe09be61cd78702`.

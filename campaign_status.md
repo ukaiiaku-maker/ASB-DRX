@@ -33,6 +33,8 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 - HPC3 localization-metric run `20260828T143238Z-ca7ab69-74cc1d` (job `55638898`) passed all six tests with verified retrieval. Classification now requires simultaneous plastic concentration, matched-control temperature excess, post-peak softening, resolved finite width, persistence, and joint onset/width refinement. The preceding run `20260828T143111Z-d608655-a7aea7` (job `55638861`) is retained as failed evidence: its negative fixture accidentally contained the required three consecutive qualifying states; the classifier behaved correctly and the fixture was corrected.
 - HPC3 mechanism-ladder run `20260828T144000Z-c9dc4ab-7b33f9` (job `55640278`) passed seventeen tests with verified retrieval. Six declared common-equation variants plus thermal cases' isothermal twins preserve phase-disabled fields, route isothermal heat to an explicit bath, and close their ledgers. All six are nonlocalizing controls: minimum active fraction is about `0.907`, maximum matched-control temperature excess is `0.125 K`, and maximum softening is zero.
 - HPC3 stability run `20260828T144457Z-535a0ff-662a0e` passed ten tests with verified retrieval. The marker-owning job is `55640502`; job `55640458` is an explicitly retained duplicate caused by a silent staging receipt during a `/pub` metadata stall. Analytical EXP-floor tangents, the finite-wavenumber thermal/storage Jacobian, conduction shift, nonlinear finite-difference closure, and impossible-storage rejection pass. The generic state has a positive `~4.807 s^-1` density-storage mode but strongly damped thermal diagonals; it is not thermal-ASB evidence.
+- The user authorized reuse of the complete single-glider DDD constants as a generic fixture and an arbitrary analytical boundary, without matching a materials class. HPC3 run `20260828T151810Z-d31c6a4-d3af25` (job `55641106`) passed fourteen exact-mapping and upstream tests with verified retrieval.
+- The arbitrary boundary is preregistered as `rho=rho_peak(T, rate)` from the independent EXP-floor law. At the DDD rate it spans `4.4117e15` to `8.5383e15 m^-2` over 1050 to 850 K. The driver's hard-coded `1e18 m^-2` field is excluded; the observed monotone DDD response through `3e16 m^-2` remains a structural mismatch, not a fitted correction.
 - First-pass legacy audit and candidate thermodynamic architecture drafted.
 - Full evidence inventory completed: 33,358 files, 21,536,785,369 bytes, no hash errors.
 - Campaign-specific HPC3 smoke job `55633650` completed, fetched, and checksum-verified.
@@ -44,7 +46,7 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 ## Active scientific boundaries
 
 1. The analytical kernel and first optimizer-identifiability gate pass on HPC3. Physical fitting must not estimate both stress scale and attempt rate from strength peaks alone; it requires independent peak density or an authoritative fixed scale.
-2. Physical calibration cannot begin until one authoritative target material and strength/rate/temperature dataset are selected.
+2. No materials-class calibration is sought in the present generic campaign; the authorized DDD fixture must not be described as a physical calibration.
 3. The collective extension is an ablation, not baseline physics. Existing DDD histories show density-dependent clustering but do not resolve causal parentage or a nonzero feedback operator; higher-cadence evidence is required before reconsideration.
 4. Phase-field production work remains gated by free-energy/dissipation review and separately sourced material/GB/thermal data.
 5. The isolated thermodynamic/diffuse-nucleus gates and physical-grain classifier invariants pass, including their limited-state restart checks. Crystallographic orientation dynamics, physical nucleation, and production-state restart remain unverified.
@@ -59,9 +61,6 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 14. The generic mechanism ladder and matched-control machinery pass, but the cases are deliberately short, uncalibrated negative controls. No instability boundary, DRX onset, or ASB onset has been located.
 15. The frozen-common-stress stability gate passes. Its generic positive mode is attributable to the provisional forest-storage tangent, while conduction damps temperature perturbations. Physical parameters, recovery, stress redistribution, and nonlinear verification are required before interpreting a dispersion relation.
 
-## Required external resolutions
+## Remaining interpretation limits
 
-1. Resolve whether the production target is Fe, Cr, or a named alloy and identify the authoritative strength/rate/temperature dataset.
-2. Clarify whether “transparent Taylor pinning nodes” means shearable forest junctions, solute/precipitate obstacles, or another obstacle class; this changes the transfer kernel and reset law.
-
-Symbolic and software work may proceed. Physical parameter optimization and predictive claims may not proceed without the target dataset.
+The generic campaign may proceed without selecting Fe, Cr, or another materials class. A predictive materials claim would still require an authoritative dataset. “Post-peak collective candidate” is deliberately broader than a particular transparent-junction mechanism; a specific transfer kernel and reset law remain research questions rather than boundary inputs.

@@ -537,6 +537,63 @@
       "start_utc": "2026-08-28T14:52:42Z", "end_utc": "2026-08-28T14:52:43Z", "exit_status": "0:0", "stop_reason": "completed_all_ten_tests_passed_marker_job", "wall_clock_seconds": 1, "peak_memory_MB": 36.47,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T144457Z-535a0ff-662a0e", "local_path": "hpc3-results/asb-drx-independent/20260828T144457Z-535a0ff-662a0e", "retrieval_status": "verified_marker_job_duplicate_disclosed",
       "outputs": {"results/results-single.tar.gz": "4193778453024a1c69fe48cc54301d48e4d1e3f81f07cdc9fa681321024635a6", "stability_verification.json": "2cf9dd1efb0fe49f6c07065e1b92a7d01a055526fe8c640d6d165a07d0aa24af", "unittest.txt": "ed550fdce19b249e57ecc2f45dde286a1cc6f9978e5cf0dfbbd2ec4060595430", "input_inventory.sha256": "b3c9904d52fa7f9c863b892acd1736117f18e7c723558c66fa0c94b0ecd1dbdb", "results/checksums-single.sha256": "7aadc68a641bcf75a3c73905f4a45c9974121258011268cf639cd57479b79637", "status/final-single.json": "58e24db8e5be24c04987c4fa18a741187feca193d7c3dee64b60bd20d8f39978"}
+    },
+    {
+      "run_id": "20260828T151810Z-d31c6a4-d3af25",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "user_authorized_single_glider_DDD_generic_fixture_mapping_verification",
+      "git_commit_at_plan": "d31c6a48f915b91406c2b6aa1565df3dc1600aaa",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_sha256": {
+        "run_ddd_fixture_hpc3.sh": "ab0ce3968560d602ddaade82daada9c51042aa845e726b733c1f8f5bb641b285",
+        "src/asb_drx/analytical.py": "f8a676dd754942a8f37d3e16c6c27f63198443e4bd12db9cc24694e9f2ad262d",
+        "src/asb_drx/stability.py": "fd1a4fde8572f24a05c32a0d8c42c8f9a66141c4f421a4ecf75487724c665230",
+        "src/asb_drx/fixtures.py": "545f259c658cca9e31862029b2567794b8278a94ee7b67bf103f90a34dac968e",
+        "src/asb_drx/spatial_coupled.py": "88db1a46aae3c974aa50a4166663c37ffe54911567f8ab1f9aec696cc0373142",
+        "tests/test_ddd_fixture.py": "44f8e595041b9fd46833b3624655d55df3d3ac1f039eb965b1b7c49a258f26e1",
+        "tests/test_exp_floor.py": "cf8ea0120ba9a6e50302e7fb04515db010075cae203b9c90fc8b2d5dc34af39f",
+        "tests/test_stability.py": "4555c1c14f086c5d5ea2f1c8afd5fe817183143b4df32eadabd7e3af037e4579",
+        "tools/run_ddd_fixture_verification.py": "0c9904b8d866033f44b6dc3512af1ce2d84c77db8fea963a16308c603548e16c"
+      },
+      "ddd_fixture": {
+        "source_path": "/Users/sdillon/Taylor_DDD/results/full_glider_expfloor_HT050_F020_overnight_peakmap_20260817/T1050/rho_3e16/seed86/clean_arrhenius_params.json",
+        "source_sha256": "14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b",
+        "campaign_jobs_sha256": "d9d2d119fa9ffbb50c47024ad87ace0357284559e32ce3521d92c0c73dfce63d",
+        "status": "user_authorized_generic_non_material_fixture"
+      },
+      "material_dataset_version": null,
+      "resolved_configuration_SI": {
+        "temperature_axis_K": [850.0, 900.0, 950.0, 1000.0, 1050.0],
+        "shear_rate_s_inv": 4.5,
+        "peak_density_m2": [8.538280441365895e15, 7.044212945181015e15, 5.929538110584760e15, 5.077279707435126e15, 4.411707770384083e15],
+        "peak_strength_Pa": [1.2253579776258595e8, 1.1283455658181642e8, 1.0483767544041656e8, 9.815031995622797e7, 9.248759896289654e7],
+        "scientific_disposition": "generic_governing_equation_fixture_not_material_calibration_or_DDD_trajectory_fit"
+      },
+      "grid_domain_timestep_stopping": "not_applicable_analytical_fixture_verification",
+      "slurm": {
+        "job_id": "55641106", "account": "SDILLON1", "partition": "free", "qos": "low",
+        "node": "hpc3-l18-05", "cpus_per_task": 1, "memory": "2G",
+        "modules": ["anaconda/2025.12"], "python": "3.13.9"
+      },
+      "start_utc": "2026-08-28T15:18:11Z",
+      "end_utc": "2026-08-28T15:19:13Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed_all_fourteen_tests_passed",
+      "wall_clock_seconds": 62,
+      "peak_memory_MB": 37.51,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260828T151810Z-d31c6a4-d3af25",
+      "local_path": "hpc3-results/asb-drx-independent/20260828T151810Z-d31c6a4-d3af25",
+      "retrieval_status": "verified",
+      "outputs": {
+        "results/results-single.tar.gz": "b12365cd222825bbe9f91493c280c8f364999613cbf42ef19db4111cb65a1eb4",
+        "ddd_fixture_verification.json": "59e059d3c2a709155078a52c6b6d06d0f8ba57fe47d5b819d68113dc77796f53",
+        "unittest.txt": "3f0561561b51f8af92fad8ded9f57b82ab91a37be4c106bb9fe09be61cd78702",
+        "input_inventory.sha256": "0412c9b1bde4eb904d28e597a581d78257dd6fbfc13c2ff7439e017bc9527f2a",
+        "results/checksums-single.sha256": "f8d5a341083fab2b8884d66b894d09addfe424f67a485f47fe1b8535a7469ba1",
+        "status/final-single.json": "086cfaa2bf71acfe35858abb9dd0e4315a32f30a7295c115220da8d4e9495de9",
+        "input/source.tar.gz": "8c598bd9f3b02060a0e28617d32e44f6566633d8274d8b524c1d385e7089a98f"
+      }
     }
   ]
 }

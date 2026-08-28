@@ -71,3 +71,11 @@ The located `Taylor_DDD` persistent-contact simulations may test whether the pro
 Status: accepted, 2026-08-28.
 
 Primary literature supports history-dependent first/repeat forest crossings and shows that glissile or shearable junctions can remain hardening agents. It also shows that obstacle character changes collective-event statistics. These results motivate the existing conditioning/shot-noise ablation but do not identify its transfer kernel, reset time, or target-material parameters. No scalar multi-hit multiplier enters the baseline. Reconsider only with causal event parentage and held-out transient/burst observations that reject the independent EXP-floor law.
+
+## ADR-0013: Reuse the single-glider DDD parameter set as a generic fixture
+
+Status: accepted, 2026-08-28; narrows ADR-0008 and ADR-0011 by explicit user authorization.
+
+Use the complete EXP-floor single-glider campaign's declared constants as one internally consistent, non-material parameter fixture. This does not make the DDD trajectory a calibration target or establish applicability to a materials class. The exact mapping retains `H=0.50 eV`, `S=-9 k_B`, `tau_c=14.5 GPa`, `f=0.20`, `a=6.65607`, `n=2.15276`, `eta0=1e12 s^-1`, `p=4`, `b=2.48e-10 m`, `G=80 GPa`, and the DDD geometry `q=2 b sqrt(rho)`. The PF and thermal constants remain declared generic fixtures.
+
+The arbitrary regime boundary is the closed-form independent-law strength maximum `rho=rho_peak(T, rate)`. Densities above it are labeled only `post_peak_collective_candidate`; this is not a transparent-node, ASB, DRX, or material boundary. The DDD driver's `analytical_peak_density_m2=1e18` is excluded because inspection shows it is a hard-coded assignment, not an evaluation of the governing equations.

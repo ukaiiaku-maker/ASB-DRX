@@ -1,6 +1,6 @@
 # Taylor DDD single-glider context audit
 
-Status: located and reviewed 2026-08-28. These simulations constrain mechanism interpretation and test mathematical reductions; they do not parameterize the new model.
+Status: located and reviewed 2026-08-28. By explicit user authorization, the declared single-glider constants may be reused as a generic, non-material fixture and arbitrary-boundary source. The trajectories otherwise constrain mechanism interpretation and test mathematical reductions; they are not calibration data.
 
 ## Source discovery
 
@@ -65,3 +65,11 @@ The two reduced EXP-floor histories show a pronounced density dependence. At `1e
 The native persistent-contact audit is more restrictive. All recorded releases satisfy their declared hazard crossing, but only the `n16` case supplies next-audit-step survivor comparisons: 11 redistribution samples from 192 accepted releases. Its raw and common-mode-centered one-step contact operators both have spectral-radius proxy zero; the lower-density cases have no redistribution samples. The zero is evidence that this sampled one-step directed operator does not demonstrate a feedback loop, not evidence that all collective coupling is absent. Common loading, sparse audit cadence, contact removal/reset, and unresolved longer-lag parentage prevent a causal branching estimate.
 
 Accordingly, the independent EXP-floor law remains the production baseline. A collective extension remains an ablation until higher-cadence event/force histories or independent observations resolve causal parentage and demonstrate predictive value beyond the independent law. The next structural study, if pursued, should record every release and force redistribution at sub-relaxation cadence, preserve the changing contact graph, compare multi-lag operator spectra and cluster distributions, and preregister the parentage rule. Physical parameters must still come from governing equations and the selected material dataset.
+
+## Generic fixture mapping and stale-field exclusion
+
+The immutable parameter artifact is `T1050/rho_3e16/seed86/clean_arrhenius_params.json`, SHA-256 `14a7a3c7341da5f7d991c229af5efe7d2a4e1cb2ada4597b2cdad44efd8b2b2b`; the associated campaign-jobs hash is `d9d2d119fa9ffbb50c47024ad87ace0357284559e32ce3521d92c0c73dfce63d`. The fixture uses its EXP-floor constants and exact `q=2 b sqrt(rho)` prefactor. It is deliberately not attached to Fe, Cr, or another material class.
+
+One source field is rejected. The v24 driver assigns `analytical_peak_density_m2 = 1e18` literally before serializing parameters. It is not computed from the barrier, rate, or temperature. The governing analytical equations instead give `rho_peak=4.4117e15` to `8.5383e15 m^-2` over 1050 to 850 K at `4.5 s^-1`. The DDD curves nevertheless remain increasing through `3e16 m^-2`. The analytical peak surface is therefore the prospective arbitrary boundary, and DDD behavior beyond it is a contextual falsification of the independent falling branch rather than a replacement boundary fitted after inspection.
+
+HPC3 run `20260828T151810Z-d31c6a4-d3af25` (job `55641106`) passed all fourteen mapping and upstream tests. It used Python 3.13.9, 62 s wall time, and 37.51 MB peak memory; the fetched archive SHA-256 is `b12365cd222825bbe9f91493c280c8f364999613cbf42ef19db4111cb65a1eb4`.

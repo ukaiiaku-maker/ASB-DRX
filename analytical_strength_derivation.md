@@ -149,3 +149,11 @@ The first HPC3 structural test (`20260828T130729Z-1a147e0-710710`) found much st
 3. Identifiability study on synthetic observations generated from declared parameters; this tests the optimizer, not physical validity.
 4. Selection and provenance of the real material/strength dataset.
 5. Baseline fit and held-out validation before any collective or phase-field coupling.
+
+## 8. User-authorized generic DDD fixture
+
+For the material-agnostic campaign, the user authorized reuse of the complete single-glider DDD parameterization as a generic fixture. The mapping is exact: the DDD free-energy form `H-k_B T S` is represented by setting the reference barrier at 1000 K to `H-k_B T_ref S` and retaining the exact entropy derivative. The DDD prefactor `(2 b sqrt(rho))^4=16 b^4 rho^2` is retained through Taylor geometry factor 2 and density exponent 4.
+
+HPC3 run `20260828T151810Z-d31c6a4-d3af25` (job `55641106`) passed fourteen analytical, stability, and fixture tests with verified retrieval. At `4.5 s^-1`, the closed-form peak densities decrease from `8.5383e15 m^-2` at 850 K to `4.4117e15 m^-2` at 1050 K; corresponding peak strengths decrease from `122.536 MPa` to `92.488 MPa`. These values define a generic analytical fixture, not a fit or materials-class prediction.
+
+The DDD result file also contains `analytical_peak_density_m2=1e18`. Source inspection found the literal assignment `analytical_peak_density_m2 = 1e18` in the v24 driver, with no governing-equation calculation, so that field is excluded. The separately generated analytical comparison and the equations both place the independent-law peak inside the simulated density range, whereas the explicit DDD strength remains monotone through `3e16 m^-2`. That mismatch is preserved as structural evidence that contact capacity or collective mechanics can preempt the independent analytical falling branch; it is not tuned away.
