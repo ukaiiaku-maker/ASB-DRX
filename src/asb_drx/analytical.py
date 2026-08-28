@@ -45,6 +45,8 @@ class ExpFloorLaw:
     burgers_m: float
     barrier_temperature_coefficient: float = 0.0
     stress_temperature_coefficient: float = 0.0
+    barrier_entropy_kB: float = 0.0
+    taylor_geometry_factor: float = math.sqrt(2.0)
 
     def __post_init__(self) -> None:
         positive = {
@@ -60,13 +62,32 @@ class ExpFloorLaw:
         for name, value in positive.items():
             if not math.isfinite(value) or value <= 0.0:
                 raise ValueError(f"{name} must be finite and positive")
+        if not math.isfinite(self.barrier_entropy_kB):
+            raise ValueError("barrier_entropy_kB must be finite")
+        if not math.isfinite(self.taylor_geometry_factor) or self.taylor_geometry_factor <= 0.0:
+            raise ValueError("taylor_geometry_factor must be finite and positive")
         if not math.isfinite(self.floor_fraction) or not 0.0 <= self.floor_fraction < 1.0:
             raise ValueError("floor_fraction must satisfy 0 <= f < 1")
 
     def barrier_scale_J(self, temperature_K: float) -> float:
         self._check_temperature(temperature_K)
         reduced = (temperature_K - self.reference_temperature_K) / self.reference_temperature_K
-        return self.barrier_ref_J * math.exp(-self.barrier_temperature_coefficient * reduced)
+        scale = self.barrier_ref_J * math.exp(-self.barrier_temperature_coefficient * reduced)
+        scale -= KB_J_PER_K * self.barrier_entropy_kB * (
+            temperature_K - self.reference_temperature_K
+        )
+        if scale <= 0.0:
+            raise ValueError("barrier scale is nonpositive at requested temperature")
+        return scale
+
+    def barrier_scale_temperature_derivative_J_K(self, temperature_K: float) -> float:
+        self._check_temperature(temperature_K)
+        reduced = (temperature_K - self.reference_temperature_K) / self.reference_temperature_K
+        exponential = self.barrier_ref_J * math.exp(-self.barrier_temperature_coefficient * reduced)
+        return (
+            -self.barrier_temperature_coefficient * exponential / self.reference_temperature_K
+            - KB_J_PER_K * self.barrier_entropy_kB
+        )
 
     def stress_scale_Pa(self, temperature_K: float) -> float:
         self._check_temperature(temperature_K)
@@ -155,7 +176,7 @@ class ExpFloorLaw:
             + G0 * h / (KB_J_PER_K * temperature_K)
         ) / self.density_exponent_p
         q = math.exp(log_q)
-        density = q * q / (2.0 * self.burgers_m**2)
+        density = (q / (self.taylor_geometry_factor * self.burgers_m)) ** 2
         local_stress = self.stress_scale_Pa(temperature_K) * (
             -math.log(y) / self.shape_a
         ) ** (1.0 / self.shape_n)
@@ -174,7 +195,7 @@ class ExpFloorLaw:
     def taylor_ratio(self, density_m2: float) -> float:
         if not math.isfinite(density_m2) or density_m2 <= 0.0:
             raise ValueError("density_m2 must be finite and positive")
-        return self.burgers_m * math.sqrt(2.0 * density_m2)
+        return self.taylor_geometry_factor * self.burgers_m * math.sqrt(density_m2)
 
     @staticmethod
     def _check_temperature(temperature_K: float) -> None:

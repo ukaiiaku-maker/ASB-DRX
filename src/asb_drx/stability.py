@@ -61,7 +61,7 @@ def common_stress_rate_tangents(
     reduced_stress = local_stress / tau_c
     exponential = math.exp(-law.shape_a * reduced_stress**law.shape_n)
     barrier_fraction = law.floor_fraction + (1.0-law.floor_fraction)*exponential
-    dG0_dT = -law.barrier_temperature_coefficient * G0 / law.reference_temperature_K
+    dG0_dT = law.barrier_scale_temperature_derivative_J_K(temperature_K)
     dr_dT = law.stress_temperature_coefficient * reduced_stress / law.reference_temperature_K
     dF_dr = -(1.0-law.floor_fraction)*exponential*law.shape_a*law.shape_n*reduced_stress**(law.shape_n-1.0)
     dbarrier_dT = dG0_dT*barrier_fraction + G0*dF_dr*dr_dT

@@ -50,7 +50,7 @@ class ExpFloorAnalyticalTests(unittest.TestCase):
         delta = 1.0e-3
         for ratio in (1.0 - delta, 1.0 + delta):
             q = peak.taylor_ratio_q * ratio
-            density = q * q / (2.0 * self.law.burgers_m**2)
+            density = (q / (self.law.taylor_geometry_factor * self.law.burgers_m)) ** 2
             strength = self.law.macroscopic_strength_Pa(density, T, rate)
             self.assertLess(strength, peak.macroscopic_strength_Pa)
 
