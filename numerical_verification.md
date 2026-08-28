@@ -142,6 +142,25 @@ The verified distinction is between allocated labels, periodic topology componen
 
 The preceding run `20260828T134738Z-39eff44-ef427b` / job `55637837` failed before any grain test because its input manifest omitted `src/asb_drx/analytical.py`, which package initialization imports. It was fetched as incomplete and no scientific result was interpreted. Commit `5e8fabc` corrected only the explicit package dependency before the successful rerun.
 
+## Constrained multi-order phase-field dynamics
+
+Status: passed, completed, fetched, and checksum-verified. This is an isotropic variational baseline with generic fixtures, not a physical nucleation, DRX, material, or ASB result.
+
+- Git commit: `d1de48a`
+- Run ID / Slurm job: `20260828T135602Z-d1de48a-eb7ef1` / `55637866`
+- Seventeen tests passed: all ten grain lifecycle regressions plus projected variational consistency, energy/simplex acceptance, pure-parent invariance, circular-nucleus growth signs, label-permutation symmetry, exact complete-current-state restart, and fixed-label tracker coupling
+- The analytical binary boundary energy is `0.4714045208 J m^-2`, giving `R_c=2.357022604e-6 m` for the generic `Delta f=2e5 J m^-3` fixture
+- After 200 accepted steps, the subcritical equivalent radius changes by `-1.4843269e-9 m` and the supercritical radius by `+4.2256725e-10 m`; both declared free energies decrease
+- Maximum final pointwise simplex error is `1.1102230e-16`
+- Result archive SHA-256: `9314bcf5424fe5a1c36e788f7479fbe4e4238d8db55992cf537c29803fcda584`
+- Verification JSON SHA-256: `9546c97a9887d95584822edd819ab7b71bc0d6daa81d3face1b10b41c635e4a2`
+- Unit-test log SHA-256: `75d4454d251d951a65de585c24b1b160e8448a103c3888063207dda1ca205e94`
+- Runner retrieval status: `verified`
+
+The endpoint-flat bulk interpolation is essential to the passed pure-parent invariant: a pre-existing lower-energy child can drive boundary motion, but its allocated zero field is not generated everywhere by a constant chemical force. The tracker sees only evolved physical support and never changes the two-label allocation. The exact restart claim covers the kernel's current fields, time, and accepted-step count.
+
+This gate does not cover a crystallographic orientation manifold, anisotropic/misorientation-dependent GB energy or mobility, triple junctions, elastic and stored-density driving, stochastic trial allocation, energetic candidate acceptance, collision/coalescence, thermomechanical coupling, material-scale convergence, or external validation.
+
 ## Environment smoke
 
 Status: passed, completed, fetched, and checksum-verified.
