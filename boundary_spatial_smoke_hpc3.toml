@@ -1,0 +1,36 @@
+name = "asb-drx-boundary-spatial-smoke"
+entrypoint = ["bash", "run_boundary_spatial_smoke_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_boundary_spatial_smoke_hpc3.sh", "src/asb_drx/__init__.py", "src/asb_drx/analytical.py",
+  "src/asb_drx/boundary.py", "src/asb_drx/boundary_campaign.py", "src/asb_drx/fixtures.py",
+  "src/asb_drx/localization.py", "src/asb_drx/mechanism_ladder.py", "src/asb_drx/multi_order.py",
+  "src/asb_drx/spatial_coupled.py", "tests/test_exp_floor.py", "tests/test_ddd_fixture.py",
+  "tests/test_analytical_boundary.py", "tests/test_boundary_campaign.py", "tests/test_spatial_coupled.py",
+  "tests/test_mechanism_ladder.py", "tools/run_boundary_spatial_smoke.py",
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:15:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
