@@ -127,6 +127,20 @@ For each accepted phase step, split the total free energy per out-of-plane depth
 
 The dissipated free energy is routed to temperature through `Delta T=(Q/A)/(rho_m c_p)`, where the supplied volumetric heat capacity is written directly as `rho_m c_p`. This is a closed relaxation ledger only. It does not yet include external mechanical work during the same step, evolving intragranular reservoirs, recovery/annihilation products, latent heat, conduction, or temperature-dependent mobility. Those channels must be combined without double counting in the coupled solver.
 
+### Candidate-admission barrier (distinct from EXP-floor slip)
+
+Candidate admission uses the classical interfacial/stored-energy competition only as an auditable baseline. It is not the EXP-floor barrier governing dislocation escape. For a cylindrical embryo of represented thickness `t`, boundary energy `gamma`, and stored-energy driving `Delta f>0`,
+
+`Delta G(R)=t(2 pi R gamma - pi R^2 Delta f)`,
+
+`R_c=gamma/Delta f`, `Delta G*=pi t gamma^2/Delta f`, and the excess energy returns to zero at `2 R_c`. Given an independently supplied areal attempt rate `I0`, the Poisson probability over eligible area `A` and interval `Delta t` is
+
+`p=1-exp[-I0 A Delta t exp(-Delta G*/(k_B T))]`.
+
+The decision kernel receives, rather than generates, a uniform random draw. It reports distinct rejection reasons for sub-resolution support, subcritical radius, insufficient symmetry-reduced misorientation, and the thermal draw. It does not allocate an order-parameter field. This separation preserves RNG provenance and prevents a candidate bookkeeping event from becoming a physical grain by definition.
+
+Neither `I0` nor the represented thickness may be fitted opportunistically to a desired DRX onset. Both require a material/geometry interpretation and independent evidence. A production stochastic formulation must also demonstrate mesh/time-step invariant event intensity, spatial eligibility, overlap handling, detailed energy accounting across barrier crossing, exact RNG restart, and held-out onset statistics.
+
 ## Timescale and stability work before 2-D sweeps
 
 Compute loading, elementary-event, renewal completion/correlation, storage/organization, dynamic/diffusive recovery, embryo nucleation/growth, GB migration, thermal diffusion/bath, localization growth, and elastic-wave times. Compare `L/c_s` with all evolution times to select quasi-static versus inertial mechanics. Linearize homogeneous mechanics/plastic/storage/collective/thermal equations and calculate the finite-wavenumber Jacobian/dispersion relation. Separate structural eigenmodes from thermal localization modes and use them to choose smoke/ladder conditions, not to tune regime labels.

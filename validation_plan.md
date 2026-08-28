@@ -43,6 +43,10 @@ If a collective extension is attempted, it must additionally predict relevant tr
 - a common dislocation-density offset changes only the binary energy reference, not the phase dynamics;
 - each accepted stored-energy/phase step closes `Delta E_stored + Delta E_interface + Q = 0` and routes `Q` to temperature;
 - a pure parent undergoes no instantaneous density reset, heating, or child creation.
+- the cylindrical candidate energy is stationary at `R_c`, reaches the analytical barrier there, and crosses zero at `2 R_c`;
+- nucleation probability is a bounded Poisson probability with the expected temperature/driving monotonicity;
+- candidate rejection reasons distinguish resolution, subcriticality, misorientation, and the supplied RNG draw;
+- candidate evaluation never allocates a phase-field label and never conflates the nucleation barrier with EXP-floor slip.
 
 ## Common-equation mechanism ladder
 
