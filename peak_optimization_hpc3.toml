@@ -1,0 +1,22 @@
+campaign_id = "asb-drx-independent"
+job_name = "asb-drx-peak-identifiability"
+account = "SDILLON1"
+partition = "free"
+qos = "low"
+time = "00:10:00"
+cpus = 1
+memory = "2G"
+modules = ["anaconda/2025.12"]
+command = "bash run_peak_optimization_hpc3.sh"
+files = [
+  "run_peak_optimization_hpc3.sh",
+  "src/asb_drx/__init__.py",
+  "src/asb_drx/analytical.py",
+  "src/asb_drx/optimization.py",
+  "tests/test_exp_floor.py",
+  "tests/test_peak_optimization.py",
+]
+outputs = ["output"]
+result_mode = "archive"
+local_results_root = "hpc3-results/asb-drx-independent"
+remote_root = "/pub/sdillon1/codex-runs/asb-drx-independent"

@@ -96,6 +96,8 @@ Fit raw stress observations, not pre-extracted peak labels alone where full curv
 
 The analytical peak provides inexpensive residuals and gradients for optimization. Numerical root finding is reserved for extensions that break the closed form.
 
+The first identifiability gate fits only `G_ref`, `tau_ref`, `eta0`, and the two temperature coefficients while fixing barrier shape, density exponent, Burgers vector, and reference temperature. Synthetic strength-only peaks must reveal the exact `tau_ref`--`eta0` scale compensation rather than report a unique fit. Adding independently observed peak density must restore local rank and recover the planted parameters. This gate tests the optimizer and information structure; it neither chooses a material nor validates physical parameters.
+
 ## 5. Transparent nodes and a possible collective link
 
 “Transparent” is interpreted here as a node that can be crossed/unzipped/sheared and then repins or transfers stress, rather than an indefinitely impenetrable obstacle. Transparency alone does not imply multi-hit behavior.
