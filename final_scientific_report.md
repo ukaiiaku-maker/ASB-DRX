@@ -6,6 +6,20 @@ The final report will separately identify historical context, analytical consequ
 
 ## Current evidence-backed outcome
 
+- The 2026-08-29 v2 physics addendum supersedes the scalar model as a proposed
+  production architecture. The integrated scalar antiplane campaign remains a
+  verified no-localization baseline only; it cannot establish physical walls,
+  lattice rotation, or crystallographic DRX.
+- A read-only organization audit finds that completed DD archives lack the
+  Burgers/sign-resolved reactions, Nye/GND evolution, wall structure, and
+  lattice rotation needed to identify a DD-to-wall law. Gates G/H therefore
+  remain no-go rather than being filled by a hit-order surrogate.
+- Required mechanism, rotation, Burgers-balance, DD-observable, and
+  thermodynamic design documents now define the successor architecture. HPC3
+  run `20260829T115858Z-3a619e1-0b0f90`, job `55649903`, passes all four A--D
+  analytical/kinematic fixtures while correctly leaving every scientific gate
+  false pending its named calibration or benchmark.
+
 - The active redevelopment resolves the old signed-one-way stiffness by using
   a net forward-minus-reverse continuum rate and a matrix-free implicit
   antiplane flow solve. Zero stress is now an exact equilibrium.

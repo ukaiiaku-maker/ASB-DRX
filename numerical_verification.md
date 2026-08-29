@@ -332,3 +332,12 @@ HPC3 run `20260828T155312Z-266dda8-d6b092` / job `55642641` passed all six tests
 The run used one CPU, 1 s wall time, and 21.32 MB peak memory. Archive, report, tests, inventory, checksum, marker, and source hashes are `4f87e4044e11973baafb23d4fdf64e4e4b83d7829363a74768d73fa475f7760e`, `121ce8aa887cc9c5f35492d3765ef395a6fadb86d1b2fda1fddb24ee6a4e92a8`, `8f1045096ffc36a34e7b1da13a617e9a60ce31c42153bc7e4e8de9aefba5da51`, `cb1702a7389b91d3004cf7f0be8628a1906e921646ae4f2f12c8346c6bcb0f73`, `cee60f6f3c8da5f0760775899c149a5fee93163ac1e093a7ccd37c0ad140ab3b`, `ea2f02755627ae3ca71e56e5de2be0067f3e12b50947c4e9dbabd1c0926918a3`, and `1f9f3bfbbc2ae9e3f9c919039f47c939df329bb67f5cc4737eb0347572c9fc59`.
 
 The preceding run ID `20260828T154906Z-266dda8-f8fc4a` produced duplicate jobs `55642418` and `55642419` after a delayed submission receipt. Both ran concurrently against one remote directory; the six tests passed, but archive finalization collided and both jobs exited 1. It is rejected as scientific evidence and retained as an orchestration failure.
+# V2 addendum preflight (2026-08-29)
+
+Run `20260829T115858Z-3a619e1-0b0f90`, Slurm `55649903`, executes the four
+quarantined addendum fixtures on HPC3. Four of four tests pass under Python
+3.13.9; retrieval and output checksums are verified. This verifies fixture
+implementation and output schema only. Machine-readable results deliberately
+report `scientific_gate_passed=false` for A--D because the required empirical
+or dynamic benchmarks are absent. No broad calculation is authorized by this
+preflight.

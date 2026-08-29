@@ -831,6 +831,56 @@
       "local_path": "hpc3-results/asb-drx-independent/20260828T232914Z-f5889ab-7987e9",
       "retrieval_status": "verified",
       "outputs": {"results/results-single.tar.gz": "74ed17e8570f0e514224a6533e48bd37b92d110ccf6e59a7e4604cfddef3b83b", "local_boundary_matrix.json": "db354365994c6badcff40c5290020053d7b506af83934a760fc1bfbb77e558d9", "local_boundary_matrix.partial.json": "f8b78eabe8b31c54b5de73d154b4692e78f98f93c61acb377842ed256c34ab3a", "input_inventory.sha256": "27b634c247937116e9412798108ceea2efe8c632276a9dce8839828888afe42c", "status/final-single.json": "3cefdf38f91369b8f055f8d4eb0ba2a177c0af239bf39e2f2b69e495302f9943"}
+    },
+    {
+      "run_id": "20260829T115858Z-3a619e1-0b0f90",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "v2_addendum_analytical_and_kinematic_fixtures_A_through_D",
+      "git_commit_at_plan": "3a619e1e32c72033927eafee2c8d6079b80cbaa9",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_source_archive_sha256": "80aeac0c162b73c42e515224b2264635460c85a7c47702ec840ac1d06e82ac2c",
+      "mission_v2_sha256": "37142ee8029b4f461cbdbfa326c58632a7d4fd2988ff951af3ccef5e0d9dc2da",
+      "ddd_closure_artifact": null,
+      "material_dataset_version": null,
+      "initial_state_sha256": null,
+      "seeds": {"microstructure": null, "dd_statistical": null, "embryo": null, "numerical": null, "reason": "deterministic analytical fixtures"},
+      "resolved_configuration_SI": {
+        "gate_A": "four_BCC_Burgers_families_MRSSP_plastic_spin_and_inactive_density_invariants",
+        "gate_B": "linear_signed_mode_finite_wavelength_and_same_total_density_falsification_fixture",
+        "gate_C": "conservative_three_reservoir_transfer_and_separate_Arrhenius_recovery_channels",
+        "gate_D": "static_Frank_Bilby_Read_Shockley_and_exact_shear_coupling_ablation",
+        "fixture_tests": 4,
+        "fixture_tests_passed": 4,
+        "scientific_gates_passed": 0
+      },
+      "gate_interpretation": {
+        "A": "fixture_passed_scientific_no_go_missing_Bertin_trajectories_and_transferable_parameters",
+        "B": "fixture_passed_scientific_no_go_missing_nonlinear_transport_coefficients_and_wall_validation",
+        "C": "fixture_passed_scientific_no_go_missing_mechanism_parameters_and_spatial_polygonization_benchmark",
+        "D": "fixture_passed_scientific_no_go_missing_dynamic_disconnection_benchmark_mobility_and_reaction_law"
+      },
+      "slurm": {"job_id": "55649903", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-22-05", "nodes": 1, "tasks": 1, "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-08-29T11:59:16Z",
+      "end_utc": "2026-08-29T11:59:17Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed_four_fixture_tests_without_promoting_scientific_gates",
+      "wall_clock_seconds": 1,
+      "total_cpu_seconds": 0.611,
+      "peak_memory_MB": 25.57,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260829T115858Z-3a619e1-0b0f90",
+      "local_path": "hpc3-results/asb-drx-independent/20260829T115858Z-3a619e1-0b0f90",
+      "retrieval_status": "verified",
+      "outputs": {
+        "results/results-single.tar.gz": "8c7e17be06b175ff5177d5503836579c5ea55cac2578df220c052f21f0c80035",
+        "gate_A_kinematic_fixture.json": "a39eebde0e90df2fbe51d3842ce4bd93e1a5bb04f715b0ff3d4f144a5edb0be5",
+        "gate_B_linear_fixture.json": "d9bea3403b1437999eaf1a55e726a445d46f76f23bff87a8c0fc909ba6ac35d3",
+        "gate_C_mechanism_fixture.json": "b4e0250aa456e6bf3c008980f31aeefa7d9d67204a4094f28205bf2330867a46",
+        "gate_D_static_fixture.json": "2f466e01528f33436ecf34ea52412265b6310debc9f41c1ec95f6040211c7c61",
+        "input_inventory.sha256": "60b947b66ae2500c16d87a88e1edb5633044cf610c043cf3ed5b4cd8e09715ba",
+        "results/checksums-single.sha256": "aef51357eb656914bda69234930d3739b3774d1ce2faeffabfcce953ea5130c8",
+        "status/final-single.json": "9402f3a35bde50117a364ef359db4549feff83ee492868ea85b917e8a01f486f"
+      }
     }
   ]
 }

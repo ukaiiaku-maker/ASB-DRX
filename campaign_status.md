@@ -20,6 +20,11 @@ Updated: 2026-08-28 (America/Los_Angeles)
   without claiming the scientific gates: each deliberately reports
   `scientific_gate_passed=false` until its missing calibration/benchmark exists.
 - The full local regression suite passes 151 tests after adding these fixtures.
+- HPC3 preflight `20260829T115858Z-3a619e1-0b0f90`, Slurm `55649903`,
+  completed four addendum fixture tests in one second on `hpc3-22-05` and was
+  fetched with verified checksums. All fixtures pass their declared invariants;
+  all four scientific gates remain correctly false. No array or production
+  sweep was launched.
 
 - Continuum flow now uses forward-minus-unloaded-reverse EXP-floor kinetics and
   a matrix-free backward-Euler antiplane solve. The two old stiff/unresolved
