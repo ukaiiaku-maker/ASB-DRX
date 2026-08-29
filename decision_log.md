@@ -85,3 +85,24 @@ The arbitrary regime boundary is the closed-form independent-law strength maximu
 Status: accepted, 2026-08-28.
 
 The preregistered single-job smoke at 950 K, `45000 s^-1`, and `rho/rho_peak=1` passes the coupled ledger and 16²/32² refinement check but remains essentially homogeneous despite `26.74 K` temperature excess over its matched control. This is expected from the current common-stress verification kernel, which lacks local elastic redistribution. Do not spend an array on a model structurally unable to establish the required localization mechanism. Add and verify local mechanics, including isolated limits, energy closure, restart, and refinement, before the sparse boundary campaign.
+## ADR-0015: Adopt v2 Burgers-resolved physics addendum
+
+Status: accepted, 2026-08-29; reclassifies the scalar implementation without
+changing its verified baseline results.
+
+- **Input:** `/Users/sdillon/DRX-ASB/CODEX_INDEPENDENT_DD_PF_DRX_ASB_CAMPAIGN_v2.md`,
+  SHA-256 `37142ee8029b4f461cbdbfa326c58632a7d4fd2988ff951af3ccef5e0d9dc2da`.
+- **Decision:** retain the integrated scalar antiplane model as a numerical and
+  thermodynamic baseline only. Do not call its density bands walls or its phase
+  labels crystallographic DRX.
+- **Required successor:** Burgers/sign-resolved transported populations,
+  plastic distortion and spin, physical orientation, Nye/GND content,
+  boundary Burgers content, and Frank--Bilby-constrained recognition/dynamics.
+- **DD decision:** existing completed single-glider outputs cannot identify a
+  wall source or rotation law. Hit order and clustering alone cannot be used as
+  surrogates. Gates G/H remain no-go.
+- **Execution rule:** the user's later direct instruction permits small local
+  verification; extended calculations continue on HPC3. Existing unrelated
+  local and HPC3 jobs remain untouched.
+- **Gate semantics:** passing an analytical fixture is not passing its
+  scientific gate. Machine-readable outputs carry both fields separately.

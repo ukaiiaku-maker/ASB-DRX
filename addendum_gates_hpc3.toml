@@ -1,0 +1,38 @@
+name = "asb-drx-v2-addendum-gates-a-d"
+entrypoint = ["bash", "run_addendum_gates_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_addendum_gates_hpc3.sh",
+  "verification/gate_A_bertin_rotation.py",
+  "verification/gate_B_signed_patterning.py",
+  "verification/gate_C_polygonization.py",
+  "verification/gate_D_frank_bilby_rotation.py",
+  "tests/test_addendum_verification.py"
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:10:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

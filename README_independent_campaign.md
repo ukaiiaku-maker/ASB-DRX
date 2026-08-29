@@ -25,6 +25,12 @@ This branch is a scientific redevelopment. Legacy programs, parameters, and outp
 - strict localization and physical-grain metrics;
 - continuous collective alternatives retained only as uncalibrated ablations.
 
+The v2 physics addendum now places this architecture in baseline/regression
+status. A Burgers-resolved transport, plastic-spin orientation, Nye/GND, and
+Frank--Bilby-compatible boundary architecture must pass addendum Gates A--D
+before it can replace the baseline. The scalar model is not evidence of a
+physical dislocation wall or crystallographic DRX pathway.
+
 ## Gate sequence
 
 0. Derive and independently verify the EXP-floor inverse, activation volume, and analytical peak.

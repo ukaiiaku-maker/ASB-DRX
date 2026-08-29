@@ -6,6 +6,21 @@ Updated: 2026-08-28 (America/Los_Angeles)
 
 ### Active redevelopment update
 
+- The v2 mission/physics addendum was adopted on 2026-08-29 from
+  `CODEX_INDEPENDENT_DD_PF_DRX_ASB_CAMPAIGN_v2.md`, SHA-256
+  `37142ee8029b4f461cbdbfa326c58632a7d4fd2988ff951af3ccef5e0d9dc2da`.
+  It reclassifies the scalar/two-reservoir implementation below as a verified
+  baseline rather than the production DRX architecture.
+- Read-only DD organization audit finds event timing, contact, force, barrier,
+  and clustering information, but no complete Burgers-sign/family, reaction,
+  Nye/GND, wall-structure, or lattice-rotation observables. No DD-to-wall law
+  or locked collective closure is scientifically identifiable.
+- The five required addendum design documents and four quarantined A--D
+  analytical/kinematic fixtures are now present. The fixtures test invariants
+  without claiming the scientific gates: each deliberately reports
+  `scientific_gate_passed=false` until its missing calibration/benchmark exists.
+- The full local regression suite passes 151 tests after adding these fixtures.
+
 - Continuum flow now uses forward-minus-unloaded-reverse EXP-floor kinetics and
   a matrix-free backward-Euler antiplane solve. The two old stiff/unresolved
   high-rate cases reach 0.9 shear with no timestep halving.
