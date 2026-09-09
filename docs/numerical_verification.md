@@ -1,5 +1,20 @@
 # Numerical verification
 
+## Gate A BCC rotation material point
+
+Substantive Gate A passed locally and on HPC3 using the published Bertin BCC
+constitutive architecture. HPC3 run `20260909T044301Z-9ed6550-896a31`, job
+`55843151`, passed all nine targeted tests in 31 seconds and was fetched with
+verified checksums. The `1e-3` to `5e-4` true-strain-step comparison changes
+final stress by 0.1243%, total density by 0.1621%, and attractor angle by
+0.1723%, all below the declared 5% threshold.
+
+All pass/fail checks are identical on macOS and HPC3. Seven of eight paths
+agree to about `1e-12` in primary observables. The near-symmetric `[101]`
+tension path has bounded transient sensitivity (0.592% stress, 0.791% total
+density, 0.00143 degree angle) and reconverges below `5e-8` relative in final
+stress/density. Full-precision platform outputs are retained separately.
+
 ## Net-flow and recovery integration
 
 The active continuum flow uses the odd forward-minus-unloaded-reverse EXP-floor

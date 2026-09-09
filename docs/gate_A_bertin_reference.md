@@ -84,6 +84,25 @@ The local verification passes all nine targeted tests and the complete suite
 passes 160 tests. The final refinement changes are 0.1243% in stress, 0.1621%
 in total density, and 0.1723% in attractor angle.
 
+## HPC3 verification and reproducibility
+
+HPC3 run `20260909T044301Z-9ed6550-896a31` (Slurm job `55843151`) completed
+all nine targeted tests on one CPU in 31 seconds and was fetched with verified
+checksums. The machine-readable HPC result has SHA-256
+`8b06558bcbbb98f4ff5c4b8359e11fed9040e7c2e19e642be630770a77b69036`.
+It reports `scientific_gate_passed=true` and the same eight boolean acceptance
+decisions as the local run.
+
+The full-precision JSON is intentionally not rounded to manufacture bytewise
+cross-platform equality. Seven trajectories agree in primary fields to about
+`1e-12` relative. In near-symmetric `[101]` tension, platform linear algebra
+selects slightly different transient symmetry-breaking paths: maximum stress
+and total-density differences are 0.592% and 0.791%, and the maximum attractor
+angle difference is 0.00143 degree. The paths reconverge; final stress and
+density differ by less than `5e-8` relative. These values are below the
+preregistered 5% tolerance and do not alter any acceptance decision. Bitwise
+restart remains required and passes within each execution environment.
+
 ## Interpretation boundary
 
 This passes the material-point rotation gate qualitatively against published

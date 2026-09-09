@@ -1,6 +1,25 @@
 # Numerical verification record
 
-Numerical work is restricted to HPC3. The material-agnostic analytical kernel has passed its first verification gate; no calibrated physical simulation has been run.
+## Substantive Gate A: BCC rotation and Burgers-family density
+
+Status: passed locally and on HPC3, fetched, and checksum-verified.
+
+- Git commit: `9ed6550`
+- Run ID / Slurm job: `20260909T044301Z-9ed6550-896a31` / `55843151`
+- Nine targeted tests passed in 31 seconds; the complete local suite passes 160
+- Final timestep refinement changes are 0.1243% stress, 0.1621% total density,
+  and 0.1723% attractor angle, below the declared 5% threshold
+- HPC result SHA-256: `8b06558bcbbb98f4ff5c4b8359e11fed9040e7c2e19e642be630770a77b69036`
+- Result archive SHA-256: `761856fc8ddcc375896401e00d4a0817097abc4b31887267e40e5dcd70580309`
+- Runner retrieval status: `verified`
+
+Every acceptance decision is identical locally and on HPC3. A documented
+near-symmetry transient remains below 0.8% in primary observables and
+reconverges; all other paths agree to about `1e-12`. This passes lattice
+rotation and density-mechanism verification, not material calibration or DRX.
+
+Short verification calculations run locally; extended calculations run on
+HPC3. No calibrated physical simulation has been run.
 
 ## EXP-floor analytical kernel
 

@@ -2,7 +2,7 @@
 
 Updated: 2026-09-08 (America/Los_Angeles)
 
-## Current gate: material-agnostic coupled-mechanism verification
+## Current gate: Gate A passed; Gate B signed spatial transport is next
 
 ### Active redevelopment update
 
@@ -16,7 +16,18 @@ Updated: 2026-09-08 (America/Los_Angeles)
   attractor direction, Burgers-family redistribution, inactive-family loss,
   exact no-spin/no-relaxation ablations, separate stress effects, bitwise
   restart, validity stops, and final timestep refinement. The complete local
-  suite passes 160 tests. HPC3 verification is the next execution step.
+  suite passes 160 tests.
+- Substantive Gate A is passed on HPC3: run
+  `20260909T044301Z-9ed6550-896a31`, Slurm job `55843151`, completed all nine
+  targeted tests in 31 seconds and was fetched with verified checksums. The
+  reference response uses the published BCC-Ta parameterization only inside
+  its quarantine; it does not calibrate the production DRX/ASB model.
+- Cross-platform comparison preserves every scientific decision. Seven of
+  eight trajectories agree to about `1e-12`; near-symmetric `[101]` tension
+  transiently differs by 0.592% in stress, 0.791% in density, and 0.00143
+  degree in attractor angle, then reconverges below `5e-8` relative in final
+  stress/density. This is within the declared 5% tolerance and is recorded,
+  not hidden by output rounding.
 
 - The v2 mission/physics addendum was adopted on 2026-08-29 from
   `CODEX_INDEPENDENT_DD_PF_DRX_ASB_CAMPAIGN_v2.md`, SHA-256
@@ -35,8 +46,9 @@ Updated: 2026-09-08 (America/Los_Angeles)
 - HPC3 preflight `20260829T115858Z-3a619e1-0b0f90`, Slurm `55649903`,
   completed four addendum fixture tests in one second on `hpc3-22-05` and was
   fetched with verified checksums. All fixtures pass their declared invariants;
-  all four scientific gates remain correctly false. No array or production
-  sweep was launched.
+  all four scientific gates were correctly false at that preflight stage. Gate
+  A was subsequently developed and passed by the substantive Bertin model and
+  HPC3 run above. No array or production sweep was launched for the preflight.
 
 - Continuum flow now uses forward-minus-unloaded-reverse EXP-floor kinetics and
   a matrix-free backward-Euler antiplane solve. The two old stiff/unresolved

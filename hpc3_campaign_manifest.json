@@ -881,6 +881,70 @@
         "results/checksums-single.sha256": "aef51357eb656914bda69234930d3739b3774d1ce2faeffabfcce953ea5130c8",
         "status/final-single.json": "9402f3a35bde50117a364ef359db4549feff83ee492868ea85b917e8a01f486f"
       }
+    },
+    {
+      "run_id": "20260909T044301Z-9ed6550-896a31",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "substantive_gate_A_Bertin_BCC_rotation_density_and_ablation_verification",
+      "git_commit_at_plan": "9ed6550da6b49bda636c5ac6996e984c58bcbd16",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_source_archive_sha256": "e08d20ab7da8de704fa182034912b58f11d6ba042156bc714c36ab0fdaaaa6cb",
+      "literature_source": {
+        "citation": "Bertin et al., Acta Materialia 260 (2023) 119336",
+        "doi": "10.1016/j.actamat.2023.119336",
+        "open_manuscript_sha256": "7e8190b6c929e81ff39e4ca6577c3c587ebc8945b7ac43947daee2f5b8aba44d"
+      },
+      "ddd_closure_artifact": null,
+      "material_dataset_version": "published_BCC_Ta_reference_quarantined_from_production_calibration",
+      "seeds": {"microstructure": null, "stochastic": null, "initialization": "deterministic_declared_family_and_orientation_perturbations"},
+      "resolved_configuration_SI": {
+        "temperature_K": 300.0,
+        "axial_rate_s-1": 200000000.0,
+        "target_true_strain_magnitude": 1.0,
+        "production_strain_increment": 0.001,
+        "refined_strain_increment": 0.0005,
+        "Burgers_families": 4,
+        "targeted_tests": 9,
+        "targeted_tests_passed": 9,
+        "scientific_gate_A_passed": true,
+        "final_refinement_relative_change": {"stress": 0.0012425396713237463, "total_density": 0.0016210668124610843, "attractor_angle": 0.001722713554233928}
+      },
+      "grid_domain_timestep_stopping": {
+        "domain": "finite_strain_homogeneous_material_point",
+        "kinematics": "multiplicative_F_equals_Fe_Fp_with_matrix_exponential_Fp_update",
+        "timestep": "fixed_true_strain_increment_with_frozen_coefficient_positive_sqrt_density_update",
+        "stopping": "unit_true_strain_or_validity_envelope_violation"
+      },
+      "cross_platform_reproducibility": {
+        "all_boolean_checks_identical": true,
+        "seven_of_eight_trajectories_max_primary_relative_difference": "approximately_1e-12",
+        "near_symmetric_101_tension_max_transient_stress_relative_difference": 0.00591655,
+        "near_symmetric_101_tension_max_transient_density_relative_difference": 0.00791317,
+        "near_symmetric_101_tension_max_attractor_angle_absolute_difference_deg": 0.00142459,
+        "near_symmetric_101_tension_final_stress_relative_difference": 2.9205e-8,
+        "near_symmetric_101_tension_final_density_relative_difference": 4.56576e-8,
+        "interpretation": "platform_linear_algebra_perturbs_a_transient_symmetry_branch_but_all_primary_differences_remain_below_the_preregistered_5_percent_tolerance_and_the_branch_reconverges"
+      },
+      "slurm": {"job_id": "55843151", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-20-21", "nodes": 1, "tasks": 1, "cpus_per_task": 1, "memory": "2G", "gpu": null, "modules": ["anaconda/2025.12"], "python": "3.13.9"},
+      "start_utc": "2026-09-09T04:45:08Z",
+      "end_utc": "2026-09-09T04:45:39Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed_all_nine_targeted_tests_and_passed_scientific_gate_A",
+      "wall_clock_seconds": 31,
+      "total_cpu_seconds": 30,
+      "peak_memory_MB": 322.74,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260909T044301Z-9ed6550-896a31",
+      "local_path": "hpc3-results/asb-drx-independent/20260909T044301Z-9ed6550-896a31",
+      "retrieval_status": "verified",
+      "outputs": {
+        "results/results-single.tar.gz": "761856fc8ddcc375896401e00d4a0817097abc4b31887267e40e5dcd70580309",
+        "gate_A_bertin_bcc.json": "8b06558bcbbb98f4ff5c4b8359e11fed9040e7c2e19e642be630770a77b69036",
+        "input_inventory.sha256": "f50689acf3e7dc1985e155d15acf46b09aa1c23ab6856d5b27fdf50282a310ce",
+        "unittest.txt": "4f24af5d63b87fa223f777cbd66959f3f6fa3d4c5d56190a056824f62116dc13",
+        "results/checksums-single.sha256": "95c4acf2598332fdec5420dd04f645a8058c98625c43b291ee3b87e8f6207cd4",
+        "status/final-single.json": "8c19dde639a6e984d38a92d051d838a6970007281c533885934e5cd15e0807fb"
+      }
     }
   ]
 }

@@ -1,10 +1,22 @@
 # Final scientific report
 
-Status: net EXP-floor antiplane/storage/recovery/thermal/phase model integrated, verified, refined, and screened over the 27-condition sparse matrix on HPC3.
+Status: Gate A passed; the net EXP-floor antiplane/storage/recovery/thermal/phase
+baseline is integrated and screened, and Gate B signed spatial transport is
+the next production-architecture gate.
 
 The final report will separately identify historical context, analytical consequences, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
 
 ## Current evidence-backed outcome
+
+- Gate A is now substantively passed. The new quarantined BCC material point
+  implements multiplicative finite-strain kinematics, four `<111>` Burgers
+  families with MRSSP pencil glide, published Orowan/drag flow, augmented
+  Kocks--Mecking storage, lattice rotation by plastic spin, and independent
+  inactive-family relaxation. HPC3 run
+  `20260909T044301Z-9ed6550-896a31` / job `55843151` passed all nine targeted
+  stable/unstable-orientation, redistribution, ablation, restart, envelope, and
+  timestep-refinement tests. This is a rotation-mechanism verification using a
+  quarantined Ta reference, not a DRX/ASB material calibration.
 
 - The 2026-08-29 v2 physics addendum supersedes the scalar model as a proposed
   production architecture. The integrated scalar antiplane campaign remains a
