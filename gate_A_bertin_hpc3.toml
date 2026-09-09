@@ -1,0 +1,36 @@
+name = "asb-drx-gate-A-bertin-bcc"
+entrypoint = ["bash", "run_gate_A_bertin_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_gate_A_bertin_hpc3.sh",
+  "src/asb_drx/bertin_bcc.py",
+  "tests/test_bertin_bcc.py",
+  "tools/run_gate_A_bertin.py"
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:10:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

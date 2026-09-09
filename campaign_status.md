@@ -1,10 +1,22 @@
 # Campaign status
 
-Updated: 2026-08-28 (America/Los_Angeles)
+Updated: 2026-09-08 (America/Los_Angeles)
 
 ## Current gate: material-agnostic coupled-mechanism verification
 
 ### Active redevelopment update
+
+- Campaign execution resumed on 2026-09-08 from clean commit `111278e`.
+  The substantive Gate A model now implements the published Bertin BCC-Ta
+  multiplicative kinematics, four MRSSP pencil-glide modes, Orowan/drag-limited
+  flow, augmented Kocks--Mecking density evolution, plastic spin, and distinct
+  inactive-family relaxation. Its parameters are quarantined reference values,
+  not production calibration.
+- Nine Gate A tests pass: published stable/unstable orientation behavior,
+  attractor direction, Burgers-family redistribution, inactive-family loss,
+  exact no-spin/no-relaxation ablations, separate stress effects, bitwise
+  restart, validity stops, and final timestep refinement. The complete local
+  suite passes 160 tests. HPC3 verification is the next execution step.
 
 - The v2 mission/physics addendum was adopted on 2026-08-29 from
   `CODEX_INDEPENDENT_DD_PF_DRX_ASB_CAMPAIGN_v2.md`, SHA-256

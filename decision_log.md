@@ -106,3 +106,16 @@ changing its verified baseline results.
   local and HPC3 jobs remain untouched.
 - **Gate semantics:** passing an analytical fixture is not passing its
   scientific gate. Machine-readable outputs carry both fields separately.
+
+## ADR-0016: Implement Gate A as a quarantined published Ta reference
+
+Status: accepted, 2026-09-08.
+
+Implement Bertin et al.'s four-Burgers-vector BCC pencil-glide material point
+with its published Ta parameters solely to verify plastic-spin rotation,
+attractor selection, family-density redistribution, and inactive-family
+relaxation. Enforce the paper's temperature/rate envelope. Do not combine this
+fit with the generic EXP-floor model or describe it as production calibration.
+Gate A may pass on qualitative published orientation outcomes, exact restart,
+mechanism ablations, and timestep refinement; lack of tabulated MD trajectories
+must remain an explicit quantitative-validation limitation.

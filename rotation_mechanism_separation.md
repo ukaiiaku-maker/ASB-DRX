@@ -36,6 +36,13 @@ Inactive-family density relaxation is a separate kinetic term. It may respond
 to loss of relative slip activity, but it is not climb and it requires an
 atomistic/DD calibration or a declared sensitivity bound.
 
+Implementation update 2026-09-08: `src/asb_drx/bertin_bcc.py` now implements
+the published finite-strain BCC-Ta material-point reference, including the
+four MRSSP pencil-glide modes, plastic spin, and the distinct logistic
+inactive-family relaxation. The no-spin and no-relaxation ablations act on
+separate coefficients and pass the Gate A falsification tests. This reference
+does not transfer its Ta constants to the production model.
+
 ## 2. Progressive CDRX rotation
 
 This is not an extra local spin law. It is the spatial consequence of
