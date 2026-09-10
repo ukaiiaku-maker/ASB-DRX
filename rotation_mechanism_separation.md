@@ -60,6 +60,13 @@ wall capture may localize that excess. A persistent LAGB is recognized only
 after its interface, orientation jump, boundary Burgers inventory, and
 Frank--Bilby residual are resolved.
 
+Implementation update 2026-09-10: Gate B now obtains family slip from signed
+flux, reconstructs compatible `beta^p`, evaluates `alpha=-Curl(beta^p)`, and
+forms lattice orientation from the plastic spin. A nonlinear signed-GND mode
+produces a grid-convergent orientation-gradient wall while a balanced scalar
+density band produces neither Nye content nor a wall classification. No LAGB
+or boundary-mediated rotation is enabled.
+
 **Ablation proof.** Uniform slip activity gives spatially uniform `R` and hence
 no orientation-gradient wall. If `W^p` is disabled, the progressive
 orientation gradient disappears even if a scalar density pattern survives. If

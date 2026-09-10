@@ -1,12 +1,24 @@
 # Final scientific report
 
-Status: Gate A passed; the net EXP-floor antiplane/storage/recovery/thermal/phase
-baseline is integrated and screened, and Gate B signed spatial transport is
-the next production-architecture gate.
+Status: Gates A and B passed; a signed-GND orientation-gradient wall precursor
+is verified, while polygonization/LAGB maturation has not begun.
 
 The final report will separately identify historical context, analytical consequences, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
 
 ## Current evidence-backed outcome
+
+- Gate B is substantively passed. Four BCC families each carry nonnegative
+  positive/negative mobile and locked populations. Signed conservative flux
+  defines slip and compatible plastic distortion; its curl gives a verified
+  Nye tensor. Internal and backstress arise from signed GND content, its
+  gradient, and a reduced long-range elastic term, never from a scalar
+  total-density double well or negative Taylor slope.
+- HPC3 run `20260910T203608Z-a4ac913-1fd2e3` / job `55923138` passed all 16
+  targeted tests and produced a finite `2 micrometer` nonlinear wall pattern
+  with zero total-density contrast, nonzero Nye content, orientation gradient,
+  and converged structure factor. Balanced high-density bands are rejected;
+  the state cannot allocate a label or increment its single physical crystal.
+  These generic coefficients verify mechanism structure only.
 
 - Gate A is now substantively passed. The new quarantined BCC material point
   implements multiplicative finite-strain kinematics, four `<111>` Burgers

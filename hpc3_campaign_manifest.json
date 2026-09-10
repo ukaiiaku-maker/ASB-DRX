@@ -945,6 +945,107 @@
         "results/checksums-single.sha256": "95c4acf2598332fdec5420dd04f645a8058c98625c43b291ee3b87e8f6207cd4",
         "status/final-single.json": "8c19dde639a6e984d38a92d051d838a6970007281c533885934e5cd15e0807fb"
       }
+    },
+    {
+      "run_id": "20260910T203608Z-a4ac913-1fd2e3",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "substantive_gate_B_signed_BCC_transport_Nye_orientation_gradient_and_nonlinear_wall_patterning",
+      "git_commit_at_plan": "a4ac913cafb2537e2cc0aaaf835b3736998e1171",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_source_archive_sha256": "e9ebb3201fd88f494c9d1d33bc74835a380150ecbfad13f139073a655278c4f9",
+      "literature_sources": [
+        {"citation": "Groma, Zaiser and Ispanovity, Physical Review B 93, 214110 (2016)", "doi": "10.1103/PhysRevB.93.214110"},
+        {"citation": "Wu et al., Physical Review B 98, 054110 (2018)", "doi": "10.1103/PhysRevB.98.054110"}
+      ],
+      "ddd_closure_artifact": null,
+      "material_dataset_version": "generic_signed_transport_verification_fixture_not_material_calibration",
+      "seeds": {"microstructure": null, "stochastic": null, "initialization": "deterministic_broadband_family_phase_seed"},
+      "resolved_configuration_SI": {
+        "domain_m": 1.6e-5,
+        "periodic_dimension": 1,
+        "Burgers_families": 4,
+        "signed_mobile_populations": 8,
+        "signed_junction_populations": 8,
+        "burgers_m": 2.86e-10,
+        "reference_density_per_family_m2": 4.8e14,
+        "mobility_m2_s": 2.0e-12,
+        "local_signed_drive": 1.0,
+        "nonlinear_saturation": 4.0,
+        "gradient_length2_m2": 5.0660591821168883e-14,
+        "long_range_m_inv2": 986960440108.936,
+        "internal_stress_scale_Pa": 8.0e7,
+        "declared_selected_wavelength_m": 2.0e-6,
+        "collective_DD_memory_scale": 0.0,
+        "targeted_tests": 16,
+        "targeted_tests_passed": 16,
+        "fixture_passed": true,
+        "scientific_gate_B_passed": true
+      },
+      "grid_domain_timestep_stopping": {
+        "boundary": "one_dimensional_periodic",
+        "grids": [64, 128, 256],
+        "primary_grid": 128,
+        "duration_s": 1.0,
+        "primary_timestep_s": 0.002,
+        "coarse_timestep_s": 0.004,
+        "integrator": "spectral_ETD_Euler_exact_linear_dispersion_explicit_cubic_saturation",
+        "stopping": "fixed_one_second_nonlinear_pattern_duration"
+      },
+      "scientific_results": {
+        "wall_classification": "gnd_bearing_wall",
+        "wall_spacing_m": 2.0e-6,
+        "gnd_rms_m2": 7.599693017787161e13,
+        "gnd_to_total_ratio": 0.03958173446764146,
+        "orientation_gradient_rms_m_inv": 12930.584565296824,
+        "structure_factor_peak_fraction": 0.5196588268014107,
+        "scalar_total_density_contrast": 0.0,
+        "maximum_timestep_relative_change": 0.001520894069211498,
+        "maximum_grid_relative_change": 3.421595043788153e-9,
+        "balanced_total_density_band_control": "rejected_zero_Nye_content",
+        "physical_grain_count": 1
+      },
+      "cross_platform_reproducibility": {
+        "all_boolean_checks_identical": true,
+        "maximum_globally_normalized_primary_field_difference": 1.4811357075770005e-13,
+        "maximum_signed_density_absolute_difference_m2": 28.4375,
+        "interpretation": "full_precision_FFT_roundoff_only; near_zero_pointwise_relative_ratios_are_not_used"
+      },
+      "slurm": {
+        "job_id": "55923138",
+        "account": "SDILLON1",
+        "partition": "free",
+        "qos": "low",
+        "node": "hpc3-14-02",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory": "2G",
+        "gpu": null,
+        "modules": ["anaconda/2025.12"],
+        "python": "3.13.9"
+      },
+      "start_utc": "2026-09-10T20:36:25Z",
+      "end_utc": "2026-09-10T20:36:35Z",
+      "exit_status": "0:0",
+      "stop_reason": "completed_all_sixteen_targeted_tests_and_passed_scientific_gate_B",
+      "wall_clock_seconds": 10,
+      "total_cpu_seconds": 8.909,
+      "peak_memory_MB": 171.61,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260910T203608Z-a4ac913-1fd2e3",
+      "local_path": "hpc3-results/asb-drx-independent/20260910T203608Z-a4ac913-1fd2e3",
+      "retrieval_status": "verified",
+      "outputs": {
+        "results/results-single.tar.gz": "f74373de1b2deaba9070691e9f9e7b60dbd50a29d4191fbfa18bca4d6739c8a8",
+        "gate_B_signed_transport.json": "61af6547beba2c9c9a7a069f3ee8e260fa43870fe4aa151c69e36561d5ad4cb0",
+        "gate_B_fields.png": "487e71ba0c877c0b688edeb51b9b4a222fdcbdb4241580dcc424c8b422060147",
+        "gate_B_structure_factor.png": "53310e06b253be7d17a44cb031a87fa3fb15a37f8cf76c4658556702f61448c1",
+        "gate_B_convergence.png": "3b0113b9ddedef54e61e651ecb49a0758a424ae28055696710460de4c69a8ac2",
+        "input_inventory.sha256": "96ac9236f6ac14d45dff845432ae8ea5a442fc537e2a4e5df49f2b74e0330c62",
+        "unittest.txt": "7a26c0bc2701e2722451c30f201117ae3ebdcec360588d630531b862c095ad3a",
+        "results/checksums-single.sha256": "802ff38ac497239b3873a40e7192ac5300620b2e9e891ce4ba514b58dd6c44c4",
+        "status/final-single.json": "e8b7b4823d634e36862d9ea171e67f1437bdbc230095864622ebbe03ed045fdc"
+      }
     }
   ]
 }

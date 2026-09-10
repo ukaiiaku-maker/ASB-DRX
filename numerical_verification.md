@@ -1,5 +1,25 @@
 # Numerical verification record
 
+## Substantive Gate B: signed transport and nonlinear wall patterning
+
+Status: passed locally and on HPC3, fetched, and checksum-verified.
+
+- Git commit: `a4ac913`
+- Run ID / Slurm job: `20260910T203608Z-a4ac913-1fd2e3` / `55923138`
+- Sixteen targeted tests passed in 3.171 seconds on HPC3; the complete local
+  suite passes 176 tests
+- The selected wall spacing is `2.000e-6 m`, GND RMS is
+  `7.599693e13 m^-2`, and GND/total density is 0.0395817
+- Maximum timestep/grid changes are 0.0015209 and `3.4216e-9`, respectively
+- HPC result SHA-256: `61af6547beba2c9c9a7a069f3ee8e260fa43870fe4aa151c69e36561d5ad4cb0`
+- Result archive SHA-256: `f74373de1b2deaba9070691e9f9e7b60dbd50a29d4191fbfa18bca4d6739c8a8`
+- Runner retrieval status: `verified`
+
+All local/HPC scientific decisions agree. Maximum globally normalized field
+difference is `1.4812e-13`; full-precision results are retained rather than
+rounded. This passes a generic signed-GND wall-precursor gate. It does not
+identify a material wavelength, establish a LAGB, or authorize grain labels.
+
 ## Substantive Gate A: BCC rotation and Burgers-family density
 
 Status: passed locally and on HPC3, fetched, and checksum-verified.

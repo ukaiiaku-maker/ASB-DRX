@@ -1,10 +1,31 @@
 # Campaign status
 
-Updated: 2026-09-08 (America/Los_Angeles)
+Updated: 2026-09-10 (America/Los_Angeles)
 
-## Current gate: Gate A passed; Gate B signed spatial transport is next
+## Current gate: Gate B passed; polygonization has not begun
 
 ### Active redevelopment update
+
+- Substantive Gate B is passed. The new modular signed-transport state carries
+  positive and negative mobile and locked populations for all four BCC
+  Burgers families, signed Orowan flux, compatible plastic distortion and
+  lattice rotation, a verified Nye tensor, and separately ledgered
+  multiplication, annihilation, and locking. The DD collective scale is fixed
+  to zero and nonzero baseline values are rejected.
+- Gate B locally passes 16 targeted tests and the complete regression suite
+  passes 176 tests. HPC3 run `20260910T203608Z-a4ac913-1fd2e3`, Slurm job
+  `55923138`, passed the 16 tests in 3.171 seconds, completed in 10 seconds on
+  `hpc3-14-02`, and was fetched with verified checksums.
+- The nonlinear signed-GND instability selects a `2.000 micrometer` wall
+  spacing in a `16 micrometer` periodic fixture. The wall has zero scalar
+  total-density contrast, GND RMS `7.5997e13 m^-2`, GND/total ratio 0.03958,
+  and a nonzero orientation gradient. A strong balanced total-density band has
+  zero Nye content and is correctly rejected as a wall.
+- Maximum accepted changes are 0.1521% for timestep refinement and
+  `3.422e-7%` for 128-to-256 grid refinement. Local/HPC primary fields agree
+  to `1.5e-13` or better on global scale; every boolean decision is identical.
+  The result is a generic physical wall precursor, not a calibrated material,
+  LAGB, grain, DRX event, or ASB result.
 
 - Campaign execution resumed on 2026-09-08 from clean commit `111278e`.
   The substantive Gate A model now implements the published Bertin BCC-Ta

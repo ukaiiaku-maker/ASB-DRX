@@ -119,3 +119,21 @@ fit with the generic EXP-floor model or describe it as production calibration.
 Gate A may pass on qualitative published orientation outcomes, exact restart,
 mechanism ablations, and timestep refinement; lack of tabulated MD trajectories
 must remain an explicit quantitative-validation limitation.
+
+## ADR-0017: Use signed GND transport for the Gate B wall precursor
+
+Status: accepted, 2026-09-10.
+
+Use four positive/negative BCC Burgers-family population pairs and obtain
+plastic slip from signed line flux. Define the Nye tensor only as the declared
+curl of compatible plastic distortion. Adopt a reduced Groma-type conserved
+signed-GND transport with local dry-friction drive, GND-gradient backstress,
+long-range elastic penalty, and cubic finite-amplitude saturation. This gives
+a documented finite-wavenumber dispersion relation without assigning a double
+well to scalar total density or a negative Taylor slope.
+
+The `2 micrometer` wavelength and all transport coefficients are generic
+verification fixtures, not material calibration. The DD collective scale is
+exactly zero. A passed Gate B state remains one crystal with no phase or label
+allocation; polygonization and Frank--Bilby boundary recognition require later
+gates.

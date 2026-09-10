@@ -153,3 +153,23 @@ The provisional numerical gate compares 128/256 grids and time steps
 gradient RMS, and structure-factor peak fraction must each change by less than
 5%. Continuous and checkpointed trajectories must be bitwise identical within
 one execution environment.
+
+## Completed verification
+
+Local execution passes all 16 targeted Gate B tests and the complete 176-test
+regression suite. HPC3 run `20260910T203608Z-a4ac913-1fd2e3` (Slurm job
+`55923138`) passed the 16 targeted tests in 3.171 seconds and completed in 10
+seconds on one CPU. It was fetched with verified checksums.
+
+The HPC machine result has SHA-256
+`61af6547beba2c9c9a7a069f3ee8e260fa43870fe4aa151c69e36561d5ad4cb0`
+and reports both `fixture_passed=true` and `scientific_gate_passed=true`.
+The selected spacing is `2.000e-6 m`; GND RMS is `7.599693e13 m^-2`, the
+GND/total ratio is 0.0395817, and the structure-factor peak fraction is
+0.519659. The scalar total-density contrast is exactly zero.
+
+The largest timestep-refinement change is 0.1521%; the largest 128-to-256
+grid change is `3.422e-7%`. Every local/HPC boolean agrees and the largest
+globally normalized primary-field difference is `1.4812e-13`. Plot pixel
+hashes differ because the platforms render fonts independently; plotted data
+and classifications agree at the stated numerical tolerance.

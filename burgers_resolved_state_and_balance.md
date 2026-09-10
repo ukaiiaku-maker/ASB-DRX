@@ -3,6 +3,14 @@
 Status: convention and conservation contract for the reduced plane-strain
 research architecture. Reaction rates are not yet calibrated.
 
+Implementation update 2026-09-10: `src/asb_drx/signed_transport.py` now
+implements the Gate B subset of this contract: four positive/negative mobile
+families, separate signed junction reservoirs, conservative periodic
+transport, pair multiplication/annihilation, sign-preserving locking transfer,
+compatible plastic distortion, and its derived Nye tensor. Every reaction is
+ledgered by family and vector Burgers residual. Boundary content, a full BCC
+junction topology, and calibrated reaction rates remain outside Gate B.
+
 ## State
 
 The proposed state is
