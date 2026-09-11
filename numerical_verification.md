@@ -1,8 +1,9 @@
 # Numerical verification record
 
-## Substantive Gate B: signed transport and nonlinear wall patterning
+## Gate B0: signed-polarization finite-mode fixture
 
-Status: passed locally and on HPC3, fetched, and checksum-verified.
+Status: numerical/kinematic fixture passed; scientific physical-wall gate
+unresolved. HPC output fetched and checksum-verified.
 
 - Git commit: `a4ac913`
 - Run ID / Slurm job: `20260910T203608Z-a4ac913-1fd2e3` / `55923138`
@@ -17,8 +18,10 @@ Status: passed locally and on HPC3, fetched, and checksum-verified.
 
 All local/HPC scientific decisions agree. Maximum globally normalized field
 difference is `1.4812e-13`; full-precision results are retained rather than
-rounded. This passes a generic signed-GND wall-precursor gate. It does not
-identify a material wavelength, establish a LAGB, or authorize grain labels.
+rounded. Review on 2026-09-11 identified the negative quadratic as a
+signed-density spinodal, its wavelength as an input, flat total density as
+enforced, and Gate A coupling as an adapter only. The original machine claim
+`scientific_gate_passed=true` is superseded. Gate B1 remains unresolved.
 
 ## Substantive Gate A: BCC rotation and Burgers-family density
 

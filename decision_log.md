@@ -122,7 +122,8 @@ must remain an explicit quantitative-validation limitation.
 
 ## ADR-0017: Use signed GND transport for the Gate B wall precursor
 
-Status: accepted, 2026-09-10.
+Status: superseded, 2026-09-11, by ADR-0018. Retained as the Gate B0 fixture
+decision and not accepted as physical wall formation.
 
 Use four positive/negative BCC Burgers-family population pairs and obtain
 plastic slip from signed line flux. Define the Nye tensor only as the declared
@@ -137,3 +138,22 @@ verification fixtures, not material calibration. The DD collective scale is
 exactly zero. A passed Gate B state remains one crystal with no phase or label
 allocation; polygonization and Frank--Bilby boundary recognition require later
 gates.
+
+## ADR-0018: Reclassify the prescribed signed-polarization mode as Gate B0
+
+Status: accepted, 2026-09-11; supersedes the scientific interpretation of
+ADR-0017 without altering commit `dbc45cb` or HPC3 job `55923138`.
+
+The conserved potential contains a negative quadratic in signed polarization,
+prescribes its fastest wavelength through `selected_wavelength_m`, fixes total
+density by reconstruction, and evolves without applied stress, temperature,
+MRSSP geometry, or Gate A feedback. It therefore verifies signed kinematics,
+Nye compatibility, conservation, ETD finite-mode evolution, controls, restart,
+and reproducibility only. Record `numerical_fixture_passed=true`,
+`kinematic_and_balance_fixture_passed=true`, and
+`scientific_gate_passed=false`.
+
+Gate B1 must use separately transported density-weighted positive/negative
+fluxes in a driven Gate-A-coupled state, have no unloaded instability, allow
+independent total/signed density evolution, and predict rather than prescribe
+spacing scaling. Polygonization remains blocked.

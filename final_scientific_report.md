@@ -1,24 +1,27 @@
 # Final scientific report
 
-Status: Gates A and B passed; a signed-GND orientation-gradient wall precursor
-is verified, while polygonization/LAGB maturation has not begun.
+Status: Gate A and Gate B0 passed. Driven physical CDD wall formation (Gate
+B1) is unresolved; polygonization/LAGB maturation is blocked.
 
 The final report will separately identify historical context, analytical consequences, new-model assumptions, numerical regularizations, calibrated quantities, validation results, failed/contradictory results, validity envelopes, and unresolved questions. No predictive-realism claim is currently made.
 
 ## Current evidence-backed outcome
 
-- Gate B is substantively passed. Four BCC families each carry nonnegative
+- Gate B0 is a passed numerical/kinematic fixture. Four BCC families each carry nonnegative
   positive/negative mobile and locked populations. Signed conservative flux
   defines slip and compatible plastic distortion; its curl gives a verified
   Nye tensor. Internal and backstress arise from signed GND content, its
   gradient, and a reduced long-range elastic term, never from a scalar
   total-density double well or negative Taylor slope.
 - HPC3 run `20260910T203608Z-a4ac913-1fd2e3` / job `55923138` passed all 16
-  targeted tests and produced a finite `2 micrometer` nonlinear wall pattern
+  targeted tests and produced a finite `2 micrometer` signed-polarization mode
   with zero total-density contrast, nonzero Nye content, orientation gradient,
   and converged structure factor. Balanced high-density bands are rejected;
   the state cannot allocate a label or increment its single physical crystal.
-  These generic coefficients verify mechanism structure only.
+  Review subsequently established that the negative signed-density quadratic,
+  fixed total density, and prescribed wavelength make this a microphase
+  fixture rather than driven CDD wall formation. Its scientific pass claim is
+  superseded; the immutable run remains evidence for B0 only.
 
 - Gate A is now substantively passed. The new quarantined BCC material point
   implements multiplicative finite-strain kinematics, four `<111>` Burgers

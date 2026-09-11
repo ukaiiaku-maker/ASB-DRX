@@ -16,6 +16,7 @@
     "vector_Burgers_reaction_residual_closes": true,
     "wall_spacing_matches_declared_finite_mode": true
   },
+  "classification": "SIGNED_GND_FINITE_MODE_FIXTURE_VALIDATED__DRIVEN_CDD_WALL_FORMATION_UNRESOLVED",
   "controls": {
     "balanced_zero_GND": {
       "classification": "homogeneous_or_balanced_ssd",
@@ -6297,6 +6298,9 @@
     ]
   },
   "fixture_passed": true,
+  "kinematic_and_balance_fixture_passed": true,
+  "next_gate": "Gate B1: Gate-A-coupled driven signed transport and physical wall formation",
+  "numerical_fixture_passed": true,
   "parameters_SI": {
     "burgers_m": 2.86e-10,
     "collective_scale": 0.0,
@@ -6310,6 +6314,7 @@
     "nonlinear_saturation": 4.0,
     "reference_density_per_family_m2": 480000000000000.0
   },
+  "physical_CDD_wall_gate_passed": false,
   "plots": [
     "gate_B_fields.png",
     "gate_B_structure_factor.png",
@@ -6340,9 +6345,9 @@
     "multiplication_added_m_inv": 256000000.0,
     "net_burgers_change_m_inv": 2.8808593749999995e-08
   },
-  "schema": "asb-drx-gate-B-signed-transport/v1",
-  "scientific_gate_passed": true,
-  "scope": "generic signed-dislocation wall precursor; not material calibration, LAGB, DRX, or ASB",
+  "schema": "asb-drx-gate-B0-signed-polarization-fixture/v2",
+  "scientific_gate_passed": false,
+  "scope": "prescribed signed-polarization finite-mode fixture; not driven CDD wall formation, material calibration, LAGB, DRX, or ASB",
   "sources": [
     {
       "citation": "Groma, Zaiser & Ispanovity, Phys. Rev. B 93, 214110 (2016)",

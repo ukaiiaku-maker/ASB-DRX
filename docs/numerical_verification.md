@@ -1,8 +1,8 @@
 # Numerical verification
 
-## Gate B signed transport and wall patterning
+## Gate B0 signed-polarization fixture
 
-Gate B passes locally and in checksum-verified HPC3 run
+The B0 numerical and kinematic fixture passes locally and in checksum-verified HPC3 run
 `20260910T203608Z-a4ac913-1fd2e3` / job `55923138`. Sixteen targeted tests
 verify exact homogeneous Gate A reduction, signed/family/crystal symmetries,
 frame covariance, manufactured Nye content, packet transport, reaction
@@ -13,7 +13,10 @@ The generic fixture selects a `2.000 micrometer` GND-bearing wall with zero
 scalar total-density contrast. Maximum timestep and grid changes are 0.1521%
 and `3.422e-7%`. All local/HPC decisions agree and primary fields agree to
 `1.5e-13` on global scale. This does not calibrate a material wavelength or
-promote the precursor to a LAGB.
+promote the modulation to a physical wall or LAGB. Its original scientific
+pass interpretation was superseded on 2026-09-11 because patterning is an
+unloaded prescribed signed-density spinodal with fixed total density and no
+dynamic Gate A coupling.
 
 ## Gate A BCC rotation material point
 

@@ -158,8 +158,8 @@ def main(output: Path, plot_directory: Path) -> None:
         "vector_Burgers_reaction_residual_closes",
         "collective_DD_memory_disabled", "grain_count_fixed_and_no_phase_state",
     ))
-    scientific_gate_passed = fixture_passed and all(checks.values())
-    if not scientific_gate_passed:
+    numerical_fixture_passed = fixture_passed and all(checks.values())
+    if not numerical_fixture_passed:
         raise RuntimeError(f"Gate B checks failed: {checks}")
 
     plot_directory.mkdir(parents=True, exist_ok=True)
@@ -169,10 +169,15 @@ def main(output: Path, plot_directory: Path) -> None:
     plot_convergence(plot_directory / "gate_B_convergence.png", convergence)
 
     result = {
-        "schema": "asb-drx-gate-B-signed-transport/v1",
+        "schema": "asb-drx-gate-B0-signed-polarization-fixture/v2",
+        "numerical_fixture_passed": numerical_fixture_passed,
+        "kinematic_and_balance_fixture_passed": fixture_passed,
         "fixture_passed": fixture_passed,
-        "scientific_gate_passed": scientific_gate_passed,
-        "scope": "generic signed-dislocation wall precursor; not material calibration, LAGB, DRX, or ASB",
+        "scientific_gate_passed": False,
+        "physical_CDD_wall_gate_passed": False,
+        "classification": "SIGNED_GND_FINITE_MODE_FIXTURE_VALIDATED__DRIVEN_CDD_WALL_FORMATION_UNRESOLVED",
+        "next_gate": "Gate B1: Gate-A-coupled driven signed transport and physical wall formation",
+        "scope": "prescribed signed-polarization finite-mode fixture; not driven CDD wall formation, material calibration, LAGB, DRX, or ASB",
         "sources": [
             {"citation": "Groma, Zaiser & Ispanovity, Phys. Rev. B 93, 214110 (2016)", "doi": "10.1103/PhysRevB.93.214110"},
             {"citation": "Wu et al., Phys. Rev. B 98, 054110 (2018)", "doi": "10.1103/PhysRevB.98.054110"},

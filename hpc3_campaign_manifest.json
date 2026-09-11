@@ -949,7 +949,7 @@
     {
       "run_id": "20260910T203608Z-a4ac913-1fd2e3",
       "parent_campaign_id": "asb-drx-independent-20260827",
-      "purpose": "substantive_gate_B_signed_BCC_transport_Nye_orientation_gradient_and_nonlinear_wall_patterning",
+      "purpose": "gate_B0_signed_BCC_kinematic_balance_and_prescribed_finite_mode_fixture",
       "git_commit_at_plan": "a4ac913cafb2537e2cc0aaaf835b3736998e1171",
       "branch": "exp/independent-dd-pf-drx-asb-20260827",
       "source_status": "clean",
@@ -980,7 +980,10 @@
         "targeted_tests": 16,
         "targeted_tests_passed": 16,
         "fixture_passed": true,
-        "scientific_gate_B_passed": true
+        "scientific_gate_B_passed_as_reported_at_execution": true,
+        "scientific_gate_B_passed_after_2026_09_11_review": false,
+        "physical_CDD_wall_gate_passed": false,
+        "classification": "SIGNED_GND_FINITE_MODE_FIXTURE_VALIDATED__DRIVEN_CDD_WALL_FORMATION_UNRESOLVED"
       },
       "grid_domain_timestep_stopping": {
         "boundary": "one_dimensional_periodic",
@@ -992,8 +995,9 @@
         "integrator": "spectral_ETD_Euler_exact_linear_dispersion_explicit_cubic_saturation",
         "stopping": "fixed_one_second_nonlinear_pattern_duration"
       },
-      "scientific_results": {
-        "wall_classification": "gnd_bearing_wall",
+      "fixture_results": {
+        "original_classifier_output": "gnd_bearing_wall",
+        "accepted_interpretation": "prescribed_signed_GND_polarization_wave_not_physical_wall",
         "wall_spacing_m": 2.0e-6,
         "gnd_rms_m2": 7.599693017787161e13,
         "gnd_to_total_ratio": 0.03958173446764146,
@@ -1028,7 +1032,7 @@
       "start_utc": "2026-09-10T20:36:25Z",
       "end_utc": "2026-09-10T20:36:35Z",
       "exit_status": "0:0",
-      "stop_reason": "completed_all_sixteen_targeted_tests_and_passed_scientific_gate_B",
+      "stop_reason": "completed_all_sixteen_targeted_B0_fixture_tests; original_scientific_pass_interpretation_superseded_2026_09_11",
       "wall_clock_seconds": 10,
       "total_cpu_seconds": 8.909,
       "peak_memory_MB": 171.61,
@@ -1045,6 +1049,17 @@
         "unittest.txt": "7a26c0bc2701e2722451c30f201117ae3ebdcec360588d630531b862c095ad3a",
         "results/checksums-single.sha256": "802ff38ac497239b3873a40e7192ac5300620b2e9e891ce4ba514b58dd6c44c4",
         "status/final-single.json": "e8b7b4823d634e36862d9ea171e67f1437bdbc230095864622ebbe03ed045fdc"
+      },
+      "post_run_scientific_review": {
+        "date": "2026-09-11",
+        "original_artifacts_modified": false,
+        "disposition": "Gate_B0_numerical_and_kinematic_fixture_passed__Gate_B1_physical_driven_CDD_wall_unresolved",
+        "reasons": [
+          "negative_quadratic_in_signed_polarization_is_an_imposed_spinodal",
+          "selected_two_micrometer_wavelength_is_an_input",
+          "total_density_is_fixed_uniform_by_reconstruction",
+          "pattern_dynamics_are_not_dynamically_coupled_to_Gate_A_loading_or_MRSSP_state"
+        ]
       }
     }
   ]

@@ -1,8 +1,8 @@
-# Gate B signed spatial transport and wall patterning
+# Gate B0 signed-polarization numerical fixture
 
 ## Status and scientific boundary
 
-This gate implements a reduced one-dimensional periodic continuum-dislocation
+This fixture implements a reduced one-dimensional periodic continuum-dislocation
 model with four BCC `1/2<111>` Burgers families and explicit positive/negative
 populations. It is coupled to the Gate A kinematics by the same Burgers-family
 basis, signed Orowan flux, plastic distortion, plastic spin, and an exact
@@ -20,9 +20,16 @@ fixtures; they are not transferred material parameters.
 
 The model contains no phase fields, embryos, grain labels, boundary mobility,
 or DD multi-hit memory. `collective_scale` is fixed to zero and a nonzero value
-is rejected. Passing this gate establishes a physical GND-bearing
-orientation-gradient precursor, not a grain boundary, DRX, polygonization, or
-ASB.
+is rejected. Passing B0 establishes signed-density kinematics, balances, and a
+prescribed finite-mode numerical reference. It does not establish physical
+driven wall formation, a grain boundary, DRX, polygonization, or ASB.
+
+Scientific review on 2026-09-11 corrected the original interpretation. The
+negative quadratic in signed polarization is an imposed spinodal, the `2
+micrometer` mode is prescribed through its gradient coefficient, total density
+is fixed by reconstruction, and the pattern step is not dynamically coupled to
+Gate A loading. Accordingly B0 passes its numerical and kinematic fixtures but
+`scientific_gate_passed=false`; physical Gate B1 remains unresolved.
 
 ## State, geometry, and units
 
@@ -161,9 +168,12 @@ regression suite. HPC3 run `20260910T203608Z-a4ac913-1fd2e3` (Slurm job
 `55923138`) passed the 16 targeted tests in 3.171 seconds and completed in 10
 seconds on one CPU. It was fetched with verified checksums.
 
-The HPC machine result has SHA-256
+The immutable original HPC machine result has SHA-256
 `61af6547beba2c9c9a7a069f3ee8e260fa43870fe4aa151c69e36561d5ad4cb0`
-and reports both `fixture_passed=true` and `scientific_gate_passed=true`.
+and reported both `fixture_passed=true` and `scientific_gate_passed=true` at
+execution time. The latter interpretation is superseded, not silently changed
+in the fetched artifact. Regenerated B0 results now report the two fixture
+fields true and the scientific/physical CDD wall fields false.
 The selected spacing is `2.000e-6 m`; GND RMS is `7.599693e13 m^-2`, the
 GND/total ratio is 0.0395817, and the structure-factor peak fraction is
 0.519659. The scalar total-density contrast is exactly zero.

@@ -1,12 +1,12 @@
 # Campaign status
 
-Updated: 2026-09-10 (America/Los_Angeles)
+Updated: 2026-09-11 (America/Los_Angeles)
 
-## Current gate: Gate B passed; polygonization has not begun
+## Current gate: Gate B0 passed; physical Gate B1 unresolved
 
 ### Active redevelopment update
 
-- Substantive Gate B is passed. The new modular signed-transport state carries
+- Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
   Burgers families, signed Orowan flux, compatible plastic distortion and
   lattice rotation, a verified Nye tensor, and separately ledgered
@@ -16,16 +16,19 @@ Updated: 2026-09-10 (America/Los_Angeles)
   passes 176 tests. HPC3 run `20260910T203608Z-a4ac913-1fd2e3`, Slurm job
   `55923138`, passed the 16 tests in 3.171 seconds, completed in 10 seconds on
   `hpc3-14-02`, and was fetched with verified checksums.
-- The nonlinear signed-GND instability selects a `2.000 micrometer` wall
-  spacing in a `16 micrometer` periodic fixture. The wall has zero scalar
+- The imposed signed-polarization spinodal selects its prescribed `2.000 micrometer` mode
+  in a `16 micrometer` periodic fixture. The wave has zero scalar
   total-density contrast, GND RMS `7.5997e13 m^-2`, GND/total ratio 0.03958,
   and a nonzero orientation gradient. A strong balanced total-density band has
-  zero Nye content and is correctly rejected as a wall.
+  zero Nye content and is correctly rejected.
 - Maximum accepted changes are 0.1521% for timestep refinement and
   `3.422e-7%` for 128-to-256 grid refinement. Local/HPC primary fields agree
   to `1.5e-13` or better on global scale; every boolean decision is identical.
-  The result is a generic physical wall precursor, not a calibrated material,
-  LAGB, grain, DRX event, or ASB result.
+  Scientific review on 2026-09-11 rejected the original physical-wall claim:
+  the negative signed-density quadratic prescribes spontaneous instability,
+  total density is fixed, the wavelength is an input, and the dynamics are not
+  coupled to Gate A loading. Gate B1 must replace these features with driven
+  positive/negative transport before polygonization can begin.
 
 - Campaign execution resumed on 2026-09-08 from clean commit `111278e`.
   The substantive Gate A model now implements the published Bertin BCC-Ta
