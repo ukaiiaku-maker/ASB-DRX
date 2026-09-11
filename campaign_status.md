@@ -6,6 +6,21 @@ Updated: 2026-09-11 (America/Los_Angeles)
 
 ### Active redevelopment update
 
+- Gate B1 driven CDD development now has a modular spatial implementation and
+  ten passing core tests. Every cell is dynamically coupled to Gate A stress,
+  `F^p`, lattice orientation, MRSSP geometry, family slip/density evolution,
+  and temperature. Positive/negative densities move through separate
+  density-weighted fluxes; pair sources and locked transfers close signed and
+  total-content ledgers. No wavelength, phase field, or grain-label state is
+  present.
+- The Groma--Zaiser flowing-state linear diagnostic predicts an emergent
+  finite mode (25--28 in the 16 micrometer onset snapshot) and zero unloaded
+  instability. The first nonlinear fields are rejected: mode and GND amplitude
+  fail strain-increment refinement and total-density power reaches the grid
+  Nyquist range. `physical_CDD_wall_gate_passed=false`; no Gate B1 HPC3 job has
+  been submitted. The next task is a convergent, internally refreshed coupled
+  transport integrator, followed by the seed/domain/density/temperature matrix.
+
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
   Burgers families, signed Orowan flux, compatible plastic distortion and

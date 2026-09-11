@@ -210,6 +210,7 @@ class BertinBCCResponse:
     activity_fraction: np.ndarray
     inactive_weight: np.ndarray
     density_rates_m2_s: np.ndarray
+    slip_dyads_intermediate: np.ndarray
     plastic_velocity_gradient_s_inv: np.ndarray
     plastic_spin_s_inv: np.ndarray
 
@@ -347,6 +348,7 @@ def evaluate_bertin_bcc(
 
     density_rates = np.zeros(4)
     lp_raw = np.zeros((3, 3))
+    slip_dyads = np.zeros((4, 3, 3))
     for index, (rate, density, chi) in enumerate(zip(rates, state.densities_m2, angles)):
         k1 = parameters.generation_coefficient_m_inv * (
             1.0 + parameters.generation_AT_slope / math.cos(chi - alpha_p)
@@ -359,7 +361,8 @@ def evaluate_bertin_bcc(
             * density
         )
         slip_direction_intermediate = state.initial_orientation @ BURGERS_FAMILIES_CRYSTAL[index]
-        lp_raw += rate * np.outer(slip_direction_intermediate, normals_intermediate[index])
+        slip_dyads[index] = np.outer(slip_direction_intermediate, normals_intermediate[index])
+        lp_raw += rate * slip_dyads[index]
 
     symmetric = 0.5 * (lp_raw + lp_raw.T)
     spin = 0.5 * (lp_raw - lp_raw.T)
@@ -375,6 +378,7 @@ def evaluate_bertin_bcc(
         activity_fraction=activity,
         inactive_weight=inactive,
         density_rates_m2_s=density_rates,
+        slip_dyads_intermediate=slip_dyads,
         plastic_velocity_gradient_s_inv=lp,
         plastic_spin_s_inv=parameters.plastic_spin_scale * spin,
     )

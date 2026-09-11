@@ -157,3 +157,22 @@ Gate B1 must use separately transported density-weighted positive/negative
 fluxes in a driven Gate-A-coupled state, have no unloaded instability, allow
 independent total/signed density evolution, and predict rather than prescribe
 spacing scaling. Polygonization remains blocked.
+
+## ADR-0019: Reject the first Gate B1 nonlinear pattern as unconverged
+
+Status: accepted, 2026-09-11.
+
+Implement the Groma--Zaiser positive/negative flux sign structure with actual
+Gate A stress, temperature, MRSSP geometry, orientation, density source, and
+plastic-distortion feedback. Use Gate A's finite differential mobility above
+the Taylor threshold; reject the singular secant-mobility trial. Keep pair
+generation/removal and locked transfers separately ledgered and preserve net
+Burgers content when a scalar Gate A sink exceeds the available minority sign.
+
+The analytical flowing-state operator predicts an emergent finite mode and no
+wavelength parameter exists. Nevertheless, the first nonlinear mode and GND
+amplitude fail strain-increment refinement and show high-wave-number grid
+contamination. Record the core implementation as a development checkpoint,
+leave `physical_CDD_wall_gate_passed=false`, do not submit HPC3, and replace the
+frozen-velocity operator splitting before running the required robustness
+matrix. Gate C remains blocked.
