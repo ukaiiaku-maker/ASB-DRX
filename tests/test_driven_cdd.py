@@ -44,6 +44,21 @@ class DrivenCDDUnitTests(unittest.TestCase):
         )
         self.assertFalse(any(item["unstable"] for item in dispersion["families"]))
 
+    def test_exhausted_family_uses_declared_gate_a_floor(self):
+        state = initialize_driven_cdd(16, self.parameters, self.gate_a)
+        plus = state.mobile_plus_m2.copy()
+        minus = state.mobile_minus_m2.copy()
+        plus[3] = 0.0
+        minus[3] = 0.0
+        exhausted = DrivenCDDState(
+            state.plastic_deformation_gradient, state.initial_orientation,
+            plus, minus, state.locked_plus_m2, state.locked_minus_m2,
+            state.temperature_K,
+        )
+        response = evaluate_driven_cdd(exhausted, self.parameters, self.gate_a)
+        self.assertTrue(np.all(np.isfinite(response.gate_a_shear_rates_s_inv)))
+        self.assertEqual(float(np.max(np.abs(response.gate_a_shear_rates_s_inv[3]))), 0.0)
+
     def test_homogeneous_reduction_is_exact_gate_a(self):
         state = initialize_driven_cdd(16, self.parameters, self.gate_a)
         local = BertinBCCState(

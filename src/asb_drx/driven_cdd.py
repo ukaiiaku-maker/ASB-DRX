@@ -374,10 +374,11 @@ def evaluate_driven_cdd(
     orientations = np.zeros((n, 3, 3))
     dyads = np.zeros((4, n, 3, 3))
     total_family = state.mobile_plus_m2 + state.mobile_minus_m2 + state.locked_plus_m2 + state.locked_minus_m2
+    gate_a_total_family = np.maximum(total_family, parameters.density_floor_m2)
     for cell in range(n):
         local = BertinBCCState(
             state.plastic_deformation_gradient[cell], state.initial_orientation[cell],
-            total_family[:, cell], state.axial_true_strain, state.time_s, state.accepted_steps,
+            gate_a_total_family[:, cell], state.axial_true_strain, state.time_s, state.accepted_steps,
         )
         response = evaluate_bertin_bcc(local, float(state.temperature_K[cell]), gate_a_parameters)
         resolved[:, cell] = response.resolved_shear_Pa
@@ -386,7 +387,7 @@ def evaluate_driven_cdd(
         base_rates[:, cell] = response.shear_rates_s_inv
         orientations[cell] = response.orientation
         dyads[:, cell] = response.slip_dyads_intermediate
-        forest = float(np.sum(total_family[:, cell]))
+        forest = float(np.sum(gate_a_total_family[:, cell]))
         _, _, mu = gate_a_parameters.elastic_constants_Pa(
             float(state.temperature_K[cell])
         )
@@ -416,7 +417,7 @@ def evaluate_driven_cdd(
         # still controls activation, speed, and rotation.
         common_resolved = np.mean(resolved, axis=1)
         for cell in range(n):
-            forest = float(np.sum(total_family[:, cell]))
+            forest = float(np.sum(gate_a_total_family[:, cell]))
             _, _, mu = gate_a_parameters.elastic_constants_Pa(
                 float(state.temperature_K[cell])
             )
@@ -444,7 +445,7 @@ def evaluate_driven_cdd(
                 resolved[family, cell] = common_resolved[family]
                 effective[family, cell] = tau_eff
                 base_rates[family, cell] = (
-                    total_family[family, cell] * gate_a_parameters.burgers_m
+                    gate_a_total_family[family, cell] * gate_a_parameters.burgers_m
                     * speed * np.sign(common_resolved[family])
                 )
                 mobile = (

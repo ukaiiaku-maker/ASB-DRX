@@ -103,14 +103,21 @@ def main(output: Path, plot_directory: Path) -> None:
     seed_wavelengths = np.asarray([item["signed_dominant_wavelength_m"] for item in seeds])
     domain_wavelengths = np.asarray([item["signed_dominant_wavelength_m"] for item in domains])
     similitude = np.asarray([item["similitude_product_m_inv_sqrt"] for item in densities])
-    unloaded, unload_ledgers = advance_driven_cdd(
-        primary, -1.0e6, 0.0, 5.0e-4, baseline, gate_a
-    )
-    unload_diag = driven_structure_diagnostics(unloaded, baseline, gate_a)
-    unload_behavior = (
-        "persistent" if unload_diag["gnd_to_total_ratio"] >= 0.2 * primary_diag["gnd_to_total_ratio"]
-        else "relaxed"
-    )
+    unload_error = None
+    try:
+        unloaded, unload_ledgers = advance_driven_cdd(
+            primary, -1.0e6, 0.0, 5.0e-4, baseline, gate_a
+        )
+        unload_diag = driven_structure_diagnostics(unloaded, baseline, gate_a)
+        unload_behavior = (
+            "persistent" if unload_diag["gnd_to_total_ratio"] >= 0.2 * primary_diag["gnd_to_total_ratio"]
+            else "relaxed"
+        )
+    except (RuntimeError, ValueError, FloatingPointError) as error:
+        unload_ledgers = ()
+        unload_diag = None
+        unload_behavior = "domain_stop"
+        unload_error = f"{type(error).__name__}: {error}"
     all_ledgers = primary_ledgers + fine_ledgers + unload_ledgers
     reference_content = max(item.mobile_before_m_inv for item in all_ledgers)
     maximum_balance = max(abs(item.total_balance_residual_m_inv) for item in all_ledgers)
@@ -158,7 +165,7 @@ def main(output: Path, plot_directory: Path) -> None:
         "incommensurate_domains": domains,
         "density_similitude": densities,
         "thermomechanical_variation": thermomechanical,
-        "unload": {"behavior": unload_behavior, "loaded": primary_diag, "unloaded": unload_diag},
+        "unload": {"behavior": unload_behavior, "error": unload_error, "loaded": primary_diag, "unloaded": unload_diag},
         "balance": {"maximum_residual_m_inv": maximum_balance, "reference_content_m_inv": reference_content},
         "parameters": baseline.__dict__,
         "fields": {

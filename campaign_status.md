@@ -41,6 +41,14 @@ Updated: 2026-09-11 (America/Los_Angeles)
   convergence still needs the 128/256 check. The extended single-job bundle is
   staged to test seeds, 13/16/19 micrometer domains, three densities,
   temperature/rate variation, wall width, unload behavior, and convergence.
+- First extended attempt `20260912T004703Z-38c9807-77d57a`, Slurm `55949623`,
+  passed all 37 staged tests and completed the expensive matrix, then failed
+  during reverse unloading because a physically exhausted family reached
+  exactly zero while the Gate A adapter required strictly positive density.
+  Its partial archive checksum is verified and it contains no scientific
+  result JSON. The adapter now evaluates an exhausted family at the already
+  declared numerical density floor without altering the nonnegative physical
+  populations; unload domain stops are also serialized rather than fatal.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
