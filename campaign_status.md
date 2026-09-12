@@ -1,10 +1,27 @@
 # Campaign status
 
-Updated: 2026-09-11 (America/Los_Angeles)
+Updated: 2026-09-12 (America/Los_Angeles)
 
 ## Current gate: Gate B0 passed; physical Gate B1 unresolved
 
 ### Active redevelopment update
+
+- Mission v3 was adopted on 2026-09-12. Gates now classify claims and branch
+  scientific work; they stop only use of results that fail hard invariants.
+  The preserved Gate B1 no-go remains authoritative while isolated Arrhenius,
+  CDD-flux, polygonization, phase, and ASB workstreams may continue.
+- A versioned v3 Arrhenius kernel now separates positive EXP-floor activation
+  enthalpy from independent signed activation entropy, detects negative free
+  barriers, preserves forward-minus-reverse symmetry and nonnegative
+  dissipation, and explicitly exposes the constant-entropy/attempt-frequency
+  degeneracy. Five entropy/enthalpy families are staged for comparison.
+- Two conservative staggered correlation-flux candidates are implemented:
+  arithmetic face density and a logarithmic-mean discrete-chain-rule form.
+  Both close periodic population balances, damp the Nyquist mode, and converge
+  to the continuum low-mode symbol. A physical-spectrum perturbation generator
+  replaces fixed box-mode seeding and is exactly restriction-consistent across
+  same-domain grid refinements. These are isolated fixtures; full Gate B1
+  kinematic integration remains unqualified.
 
 - Gate B1 driven CDD development now has a modular spatial implementation and
   thirteen passing core tests. Every cell is dynamically coupled to Gate A stress,
