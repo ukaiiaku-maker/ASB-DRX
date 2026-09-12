@@ -21,6 +21,7 @@ from asb_drx.driven_cdd import (
     driven_cdd_step,
     driven_structure_diagnostics,
     evaluate_driven_cdd,
+    full_linearized_amplification_spectrum,
     homogeneous_dispersion_snapshot,
     initialize_driven_cdd,
     load_driven_checkpoint,
@@ -248,6 +249,16 @@ class DrivenCDDUnitTests(unittest.TestCase):
         self.assertFalse(hasattr(state, "grain_labels"))
         self.assertFalse(hasattr(state, "phase_fields"))
         self.assertEqual(state.physical_grain_count, 1)
+        selected = full_linearized_amplification_spectrum(
+            state, 1.0e6, self.parameters.max_coupled_strain_increment,
+            self.parameters, self.gate_a, modes=(1, 3),
+        )
+        self.assertEqual([item["mode"] for item in selected["records"]], [1, 3])
+        with self.assertRaises(ValueError):
+            full_linearized_amplification_spectrum(
+                state, 1.0e6, self.parameters.max_coupled_strain_increment,
+                self.parameters, self.gate_a, modes=(0,),
+            )
 
 
 if __name__ == "__main__":

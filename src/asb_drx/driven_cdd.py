@@ -976,6 +976,7 @@ def full_linearized_amplification_spectrum(
     gate_a_parameters: BertinBCCParameters,
     *,
     relative_perturbation: float = 2.0e-6,
+    modes: tuple[int, ...] | None = None,
 ) -> dict[str, object]:
     """Finite-difference the full Nye-compatible signed-population map.
 
@@ -993,6 +994,9 @@ def full_linearized_amplification_spectrum(
     if not 0.0 < relative_perturbation < 1.0e-3:
         raise ValueError("relative perturbation is outside the linear probe range")
     n = homogeneous_state.grid_points
+    mode_numbers = tuple(range(1, n // 2)) if modes is None else tuple(modes)
+    if not mode_numbers or any(mode < 1 or mode >= n // 2 for mode in mode_numbers):
+        raise ValueError("linear probe modes must lie strictly below Nyquist")
     base, _, _ = _driven_cdd_single_step(
         homogeneous_state, axial_rate_s_inv, strain_increment,
         parameters, gate_a_parameters,
@@ -1014,7 +1018,7 @@ def full_linearized_amplification_spectrum(
     coordinate = np.arange(n)
     records: list[dict[str, object]] = []
     dt_s = strain_increment / axial_rate_s_inv
-    for mode in range(1, n // 2):
+    for mode in mode_numbers:
         cosine = np.cos(2.0 * np.pi * mode * coordinate / n)
         matrix = np.zeros((len(active_indices), len(active_indices)), dtype=complex)
         physical_k = 2.0 * math.pi * mode / parameters.domain_m

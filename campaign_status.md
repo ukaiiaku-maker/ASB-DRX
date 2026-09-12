@@ -65,6 +65,16 @@ Updated: 2026-09-11 (America/Los_Angeles)
   apparent wavelength proportional to box length and failing the domain CV
   check. Gate C remains blocked; no polygonization or grain-label mechanism
   has been enabled.
+- Postmortem linearization at 256 points finds modes 32--127 strongly damped at
+  strains 0.005, 0.010, and 0.015, so the fine-grid mode-127 peak is not a
+  predicted ultraviolet instability of the homogeneous continuum equations.
+  The domain fixture also seeds identical Fourier mode numbers rather than an
+  identical physical random field, biasing it toward box-scaled wavelengths.
+  A trial two-state Rusanov face flux removed the algebraic odd/even null but
+  became severely CFL-stiff by strain 0.011 and was rejected/reverted. The next
+  Gate B1 revision must jointly define a continuum-consistent staggered
+  correlation flux and a physical-domain-consistent perturbation ensemble;
+  neither a numerical filter nor a fitted wavelength is accepted.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC

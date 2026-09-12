@@ -180,5 +180,26 @@ machine-readable result therefore reports `fixture_passed=true`,
 is the authoritative Gate B1 checkpoint; no coefficient or tolerance was
 retuned after inspection.
 
+## Failure diagnosis and next admissible revision
+
+A selected-mode full-operator audit on a homogeneous 256-point state shows
+that modes 32, 64, 96, 120, and 127 are strongly damped throughout the sampled
+loading path. The mode-127 nonlinear peak is therefore not supported by the
+homogeneous dispersion relation. The present finite-volume implementation
+computes correlation stresses at cell centers and then averages the resulting
+velocities to faces; this has an odd/even null at Nyquist after nonlinear
+harmonics form. A local Lax--Friedrichs trial removed that null but generated
+thousands of CFL substeps near strain 0.011, demonstrating that numerical
+dissipation alone is not a valid repair; the trial was reverted.
+
+The incommensurate-domain setup has a second defect: `spectral_noise_modes=12`
+uses the same random Fourier mode numbers in every box, so the initial physical
+wavelengths scale with domain length. The persistent mode-10 outcome therefore
+cannot distinguish intrinsic selection from memory of the seed. A replacement
+verification must use one declared physical random-field spectrum across box
+sizes and a conservative staggered discretization of the back/diffusion fluxes,
+then repeat local refinement before any HPC3 submission. Filtering the
+mode-127 result or adding a fitted wavelength is prohibited.
+
 Gate B1 has no phase field, grain label, boundary object, or physical grain
 increment. Polygonization, LAGB recognition, DRX, and ASB are out of scope.

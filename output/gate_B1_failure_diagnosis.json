@@ -1,0 +1,22 @@
+{
+  "schema": "asb-drx-gate-B1-failure-diagnosis/v1",
+  "source_gate_result_sha256": "7ac12f12b87e1a5b63ed3208a0f4fb584fda31164b40ce90c6b210c573dd075a",
+  "scientific_gate_passed": false,
+  "diagnosis": {
+    "fine_grid_peak_is_homogeneous_ultraviolet_instability": false,
+    "cell_velocity_face_average_has_odd_even_null": true,
+    "fixed_mode_noise_is_box_independent_physical_noise": false,
+    "rusanov_trial_accepted": false
+  },
+  "selected_mode_growth_rates_s_inv": {
+    "strain_0.005": {"1": 14791286.454182597, "6": 49851632.43177371, "10": 33677104.71569366, "32": -613142926.4481572, "64": -2394408085.8975387, "96": -2756246187.221115, "120": -952694622.8816595, "127": -228390068.1625472},
+    "strain_0.010": {"1": -561598.8771010819, "6": -19325768.871428076, "10": -54782237.86638148, "32": -620887168.184844, "64": -2279049761.4825263, "96": -2744912741.200052, "120": -2339009827.6256437, "127": -2187674380.0187716},
+    "strain_0.015": {"1": 14812046.200996323, "6": 42166749.56625868, "10": 16540956.683346353, "32": -599585893.2332126, "64": -2143259700.7237375, "96": -2471082568.110832, "120": -936422993.2311213, "127": -304437816.47306}
+  },
+  "next_required_work": [
+    "derive conservative staggered correlation-stress face fluxes",
+    "verify the discrete full-operator spectrum through the finest-grid Nyquist",
+    "replace fixed-mode noise with a common physical random-field ensemble",
+    "repeat local grid and incommensurate-domain tests before HPC3"
+  ]
+}

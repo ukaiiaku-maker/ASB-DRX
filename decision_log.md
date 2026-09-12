@@ -208,3 +208,21 @@ Record `fixture_passed=true`, `scientific_gate_passed=false`, and
 driven GND-rich precursor and diffuse-polarization response, not a converged
 wall. Gate C remains blocked pending a constitutive mechanism that produces a
 grid- and domain-independent length without fitting the phase-field outcome.
+
+## ADR-0021: Reject a face-dissipation patch and redesign the Gate B1 flux fixture
+
+Status: accepted, 2026-09-11.
+
+The failed 256-point response has a near-Nyquist total-density peak, but
+selected-mode linearizations at strains 0.005, 0.010, and 0.015 strongly damp
+modes 32 through 127. Replacing averaged face velocities with a Rusanov flux
+removes the odd/even algebraic null but becomes severely CFL-stiff and is not a
+scientific correction; revert it. Separately, the domain test's fixed Fourier
+mode count reproduces the same mode number in different boxes and therefore
+does not supply a common physical perturbation spectrum.
+
+Before another gate run, formulate backstress and diffusion contributions as
+conservative staggered face fluxes, verify their discrete dispersion against
+the continuum relation through Nyquist, and construct a box-independent
+physical random-field ensemble. Do not add filtering, artificial viscosity, a
+preferred wavelength, or a coefficient fitted to these PF/CDD outcomes.
