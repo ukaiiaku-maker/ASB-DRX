@@ -44,6 +44,12 @@ Updated: 2026-09-12 (America/Los_Angeles)
   remain false. One compact cross-platform verification of this no-growth
   decision is staged but not yet submitted. Archived job `55965192` was not
   rerun.
+- First cross-platform attempt `20260912T231157Z-790035d-d2bb94`, Slurm
+  `55972269`, is retained as a one-second packaging failure. The staged
+  Arrhenius regression imported `asb_drx.analytical`, which was absent from the
+  input manifest; no scientific calculation failed. Partial diagnostics were
+  fetched, and the missing preserved dependency was added without changing
+  equations or parameters.
 - Mission v3 was adopted on 2026-09-12. Gates now classify claims and branch
   scientific work; they stop only use of results that fail hard invariants.
   The preserved Gate B1 no-go remains authoritative while isolated Arrhenius,

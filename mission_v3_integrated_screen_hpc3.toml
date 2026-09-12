@@ -5,6 +5,7 @@ modules = ["anaconda/2025.12"]
 environment = {}
 input_paths = [
   "run_mission_v3_integrated_screen_hpc3.sh",
+  "src/asb_drx/analytical.py",
   "src/asb_drx/arrhenius_v3.py",
   "src/asb_drx/cdd_flux_v3.py",
   "src/asb_drx/staggered_cdd.py",
