@@ -22,6 +22,14 @@ Updated: 2026-09-11 (America/Los_Angeles)
   to `1.38e-6`. `physical_CDD_wall_gate_passed=false`; no Gate B1 HPC3 job has
   been submitted. Mechanically equilibrated spatial stress is the next model
   task before the deferred robustness matrix.
+- Local Gate B1 audit from pushed source `9f9ef09` records
+  `fixture_passed=true`, `scientific_gate_passed=false`, and
+  `physical_CDD_wall_gate_passed=false` in
+  `output/gate_B1_driven_cdd.json` (SHA-256
+  `55f571b2c4d99212b1905c540094bcaccf499b0ef48d99b435a3477e31e25b06`).
+  The complete repository suite passes 187 tests. The result deliberately
+  defers the domain/density/temperature robustness matrix after the full
+  operator failure, and records no HPC3 submission.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
