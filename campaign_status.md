@@ -22,6 +22,12 @@ Updated: 2026-09-12 (America/Los_Angeles)
   replaces fixed box-mode seeding and is exactly restriction-consistent across
   same-domain grid refinements. These are isolated fixtures; full Gate B1
   kinematic integration remains unqualified.
+- The isolated v3 polygonization fixture now carries mobile and wall-resolved
+  signed content, distinct Arrhenius capture/climb/order channels, conservative
+  sign-preserving capture, pairwise climb annihilation, explicit released line
+  energy, and a simple-tilt Frank--Bilby angle derived from wall excess. It has
+  no label-allocation surface and cannot yet claim an integrated LAGB or DRX
+  event.
 - Mission-v3 comparison run `20260912T180135Z-556e986-552929`, Slurm
   `55965192`, completed 25 targeted tests and the comparison in 7 seconds on
   `hpc3-14-06`. The fetched archive SHA-256 is

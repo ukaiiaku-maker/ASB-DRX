@@ -198,6 +198,26 @@ class ArrheniusMechanism:
             return loaded, unloaded
         return unloaded, loaded
 
+    def one_way_rate_s_inv(
+        self, driving_stress_Pa: float, temperature_K: float,
+        density_m2: float | None = None,
+    ) -> float:
+        """Rate of one declared dissipative event channel.
+
+        Recovery, capture, and ordering are not signed glide pairs. Their
+        reverse processes require separately declared mechanisms and must not
+        be created by subtracting the unloaded event rate.
+        """
+
+        self._check_envelope(driving_stress_Pa, temperature_K)
+        return (
+            self.attempt_frequency_s_inv * self._density_factor(density_m2)
+            * math.exp(
+                -self.activation_free_energy_J(driving_stress_Pa, temperature_K)
+                / (KB_J_PER_K * temperature_K)
+            )
+        )
+
     def net_rate_s_inv(
         self, signed_stress_Pa: float, temperature_K: float,
         density_m2: float | None = None,

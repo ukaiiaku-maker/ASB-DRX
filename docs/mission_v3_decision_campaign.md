@@ -68,6 +68,22 @@ signed Orowan compatibility, positivity, stiffness treatment, and nonlinear
 Gate B1 convergence remain required before it can replace the preserved
 cell-centered no-go model.
 
+## Isolated polygonization fixture
+
+The v3 polygonization state separates mobile and wall-captured positive and
+negative populations by Burgers family. Distinct Arrhenius mechanisms govern
+capture, climb annihilation, and wall ordering. Capture is sign-preserving;
+climb removes equal opposite-sign pairs; both retain total signed Burgers
+content. Removed line energy is reported explicitly as released energy.
+
+For the declared simple-tilt fixture, wall excess over resolved width `w`
+defines the angle through `2 sin(theta/2)=b w |rho_w+ - rho_w-|`. Thus a
+balanced high-density wall has zero angle, and an orientation cannot be
+created by maturity or a label. This fixture has one physical grain and no
+allocation surface. It tests the downstream mechanism independently but
+cannot support an integrated LAGB or DRX claim until driven CDD supplies a
+qualified wall inventory.
+
 The subsequent kinematic fixture stores signed densities at cells and plastic
 slip at faces. For signed line flux `J=F+-F-`, it advances
 `kappa_dot=-div(J)` and `gamma_dot_face=b J`. Therefore
