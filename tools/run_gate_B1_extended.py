@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 from pathlib import Path
 import subprocess
@@ -46,6 +47,20 @@ def simulate(
 
 def relative_change(a: float, b: float) -> float:
     return abs(a - b) / max(abs(b), 1.0e-300)
+
+
+def source_provenance() -> str:
+    run_id = os.environ.get("HPC3_RUN_ID", "")
+    fields = run_id.split("-")
+    if len(fields) >= 3 and len(fields[1]) == 7:
+        return fields[1]
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "unavailable__use_input_bundle_checksums"
 
 
 def main(output: Path, plot_directory: Path) -> None:
@@ -178,7 +193,7 @@ def main(output: Path, plot_directory: Path) -> None:
             "internal_stress_by_family_Pa": (sc + back + diffusion).tolist(),
         },
         "provenance": {
-            "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+            "source_commit": source_provenance(),
             "platform": platform.platform(), "python": platform.python_version(),
         },
     }

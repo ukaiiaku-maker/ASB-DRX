@@ -49,6 +49,13 @@ Updated: 2026-09-11 (America/Los_Angeles)
   result JSON. The adapter now evaluates an exhausted family at the already
   declared numerical density floor without altering the nonnegative physical
   populations; unload domain stops are also serialized rather than fatal.
+- Corrected extended attempt `20260912T010453Z-9614a4e-d7ffb9`, Slurm
+  `55949776`, passed 38 tests and completed the full numerical and unload
+  matrix, but failed after plotting when its final provenance code called
+  `git rev-parse` inside the intentionally git-free source archive. Its partial
+  result archive and plots are checksum-verified; no JSON decision was emitted.
+  Provenance now uses the source SHA embedded by the runner in `HPC3_RUN_ID`
+  and cannot abort result serialization.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
