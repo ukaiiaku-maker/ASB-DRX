@@ -301,3 +301,21 @@ search or make a wall claim. Verify the negative decision once on HPC3, then
 advance to state-dependent friction and cross-family internal/reaction
 coupling. Preserve positive free energy and do not introduce a fitted
 wavelength or negative signed-density quadratic.
+
+## ADR-0025: Require topology-preserving junction state for cross-family CDD
+
+Status: accepted architecture, implementation pending, 2026-09-12.
+
+Do not promote a scalar density-product locking rate to the production
+cross-family mechanism. Primary vector-CDD formulations preserve line
+continuity and Frank's rule by introducing junction-point/endpoint density and
+explicit reaction topology. Add a signed vector density per slip family and a
+junction incidence state whose reaction stoichiometry conserves the total Nye
+tensor and Burgers content. Carry sessile and glissile products separately.
+
+State-dependent friction remains an admissible coupled hypothesis, and the
+existing scalar locked reservoirs remain useful balance fixtures, but neither
+may stand in for junction topology. Build this extension in a 2-D-capable
+module and first verify topology, objectivity, energy, and homogeneous
+reduction before nonlinear wall searches. Old DD multi-hit histories remain
+structural context only and do not set reaction rates or memory.

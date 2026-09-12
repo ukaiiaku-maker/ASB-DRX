@@ -58,6 +58,12 @@ Updated: 2026-09-12 (America/Los_Angeles)
   numeric difference is `1.075e-14`. Both platforms reject the positive-energy
   constant-mobility 1-D family as a wall mechanism while preserving it as a
   verified transport/relaxation operator.
+- Primary vector-CDD literature rules out promoting the scalar locked-density
+  fixture as the cross-family production law. The next implementation will
+  carry signed vector density plus explicit junction-point/topology incidence
+  so Frank's rule, line continuity, and total Nye content survive glissile and
+  sessile reactions. State-dependent friction is a companion hypothesis; old
+  DD multi-hit histories do not calibrate either closure.
 - Mission v3 was adopted on 2026-09-12. Gates now classify claims and branch
   scientific work; they stop only use of results that fail hard invariants.
   The preserved Gate B1 no-go remains authoritative while isolated Arrhenius,

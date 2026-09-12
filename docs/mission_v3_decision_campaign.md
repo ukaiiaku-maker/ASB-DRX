@@ -181,3 +181,24 @@ reactions cannot select a finite wavelength. Therefore this baseline cannot
 produce a spontaneous wall over the screened positive-energy parameter class.
 The next justified branch is state-dependent friction plus cross-family
 internal/reaction coupling, not a broader search of the same damped equations.
+
+## Cross-family escalation architecture
+
+A primary-literature audit rejects a purely scalar cross-family locking-rate
+patch as the production escalation. Starkey, Hochrainer, and El-Azab introduce
+junction-point density and graph connectivity so open slip-system lines remain
+collectively closed and continue to satisfy `alpha=curl(beta_p)`,
+`div(alpha)=0`, and Frank's junction rule
+([JMPS 2022, 104685](https://doi.org/10.1016/j.jmps.2021.104685)). The related
+vector-density reaction implementation treats annihilation, glissile and
+sessile junctions, and cross slip while explicitly enforcing line continuity
+([JMPS 2021, 104327](https://doi.org/10.1016/j.jmps.2020.104327)). Multiple-slip
+CDD studies also identify junction formation as central to predicted wall
+orientation rather than merely a scalar hardening increment
+([IJP 2018](https://doi.org/10.1016/j.ijplas.2017.09.015)).
+
+Accordingly, the next production candidate will add signed vector density and
+an explicit junction-point/topology reservoir with stoichiometric Burgers
+incidence. State-dependent friction may be screened alongside it, but scalar
+locked density alone remains a kinetic ablation. This is a 2-D-capable state
+extension; it is not calibrated from the old DD multi-hit histories.
