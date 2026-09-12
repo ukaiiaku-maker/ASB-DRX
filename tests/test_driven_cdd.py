@@ -104,6 +104,24 @@ class DrivenCDDUnitTests(unittest.TestCase):
         np.testing.assert_allclose(back_s, -back, rtol=2.0e-14, atol=1.0e-6)
         np.testing.assert_allclose(diff_s, diff, rtol=2.0e-14, atol=1.0e-6)
 
+    def test_periodic_one_dimensional_drive_is_common_resolved_stress(self):
+        state = initialize_driven_cdd(
+            32, self.parameters, self.gate_a,
+            total_noise_amplitude=0.01, signed_noise_amplitude=0.01, seed=17,
+        )
+        loaded = DrivenCDDState(
+            state.plastic_deformation_gradient, state.initial_orientation,
+            state.mobile_plus_m2, state.mobile_minus_m2,
+            state.locked_plus_m2, state.locked_minus_m2,
+            state.temperature_K, 0.005,
+        )
+        response = evaluate_driven_cdd(loaded, self.parameters, self.gate_a)
+        np.testing.assert_allclose(
+            response.resolved_shear_Pa,
+            np.repeat(response.resolved_shear_Pa[:, :1], 32, axis=1),
+            rtol=2.0e-15, atol=1.0e-5,
+        )
+
     def test_pair_sources_and_locking_close_line_and_burgers_ledgers(self):
         parameters = replace(
             self.parameters, same_family_lock_rate_s_inv=2.0e8,

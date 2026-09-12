@@ -18,7 +18,6 @@ from scipy.linalg import expm
 from .bertin_bcc import (
     BertinBCCParameters,
     BertinBCCState,
-    bertin_bcc_step,
     evaluate_bertin_bcc,
     initial_orientation,
 )
@@ -38,6 +37,8 @@ class DrivenCDDParameters:
     same_family_lock_rate_s_inv: float = 0.0
     unlock_rate_s_inv: float = 0.0
     cross_family_lock_rate_s_inv: float = 0.0
+    enforce_common_resolved_stress: bool = True
+    homogenize_gate_a_pair_sources: bool = True
 
     def __post_init__(self) -> None:
         for name in ("domain_m", "backstress_coefficient", "diffusion_coefficient", "cfl_limit", "max_coupled_strain_increment", "density_floor_m2"):
@@ -121,6 +122,8 @@ class DrivenCDDResponse:
     effective_shear_Pa: np.ndarray
     taylor_friction_Pa: np.ndarray
     patterning_active: np.ndarray
+    mrssp_angles_rad: np.ndarray
+    inactive_weight: np.ndarray
     gate_a_shear_rates_s_inv: np.ndarray
     actual_shear_rates_s_inv: np.ndarray
     velocity_plus_m_s: np.ndarray
@@ -271,6 +274,23 @@ def _gate_a_differential_mobility_m_Pa_s(
     )
 
 
+def _inactive_weights(rates: np.ndarray, parameters: BertinBCCParameters) -> np.ndarray:
+    total = float(np.sum(np.abs(rates)))
+    activity = np.abs(rates) / max(total, np.finfo(float).tiny)
+    argument = parameters.activity_sharpness * (
+        activity - parameters.activity_threshold
+    )
+    result = np.empty_like(argument)
+    for index, value in enumerate(argument):
+        if value >= 40.0:
+            result[index] = math.exp(-float(value))
+        elif value <= -40.0:
+            result[index] = 1.0
+        else:
+            result[index] = 1.0 / (1.0 + math.exp(float(value)))
+    return result
+
+
 def _gate_a_source_channels(
     density_m2: float,
     shear_rate_s_inv: float,
@@ -330,6 +350,8 @@ def evaluate_driven_cdd(
     effective = np.zeros((4, n))
     friction = np.zeros((4, n))
     patterning_active = np.zeros((4, n), dtype=bool)
+    angles = np.zeros((4, n))
+    inactive = np.zeros((4, n))
     base_rates = np.zeros((4, n))
     base_velocity = np.zeros((4, n))
     mobility_b = np.zeros((4, n))
@@ -344,6 +366,7 @@ def evaluate_driven_cdd(
         response = evaluate_bertin_bcc(local, float(state.temperature_K[cell]), gate_a_parameters)
         resolved[:, cell] = response.resolved_shear_Pa
         effective[:, cell] = response.effective_shear_Pa
+        angles[:, cell] = response.mrssp_angles_rad
         base_rates[:, cell] = response.shear_rates_s_inv
         orientations[cell] = response.orientation
         dyads[:, cell] = response.slip_dyads_intermediate
@@ -369,6 +392,71 @@ def evaluate_driven_cdd(
                     response, family, forest, float(state.temperature_K[cell]),
                     gate_a_parameters,
                 )
+        inactive[:, cell] = response.inactive_weight
+
+    if parameters.enforce_common_resolved_stress:
+        # One-dimensional periodic equilibrium has a spatially common driving
+        # traction. Gate A supplies that traction and every local MRSSP/density
+        # still controls activation, speed, and rotation.
+        common_resolved = np.mean(resolved, axis=1)
+        for cell in range(n):
+            forest = float(np.sum(total_family[:, cell]))
+            _, _, mu = gate_a_parameters.elastic_constants_Pa(
+                float(state.temperature_K[cell])
+            )
+            local_friction = (
+                gate_a_parameters.taylor_alpha * mu
+                * gate_a_parameters.burgers_m * math.sqrt(forest)
+            )
+            for family in range(4):
+                chi = angles[family, cell]
+                activation = gate_a_parameters.activation_stress_Pa / math.cos(
+                    chi - math.radians(gate_a_parameters.activation_angle_deg)
+                )
+                tau_eff = max(abs(common_resolved[family]) - activation, 0.0)
+                v0 = gate_a_parameters.velocity_T_m_s + (3.0 / math.pi) * (
+                    math.pi / 6.0 - chi
+                ) * (
+                    gate_a_parameters.velocity_AT_m_s
+                    - gate_a_parameters.velocity_T_m_s
+                )
+                power = v0 * (tau_eff / local_friction) ** gate_a_parameters.velocity_exponent
+                drag = gate_a_parameters.drag_velocity_m_s * (
+                    1.0 - math.exp(-tau_eff / gate_a_parameters.drag_stress_Pa)
+                )
+                speed = min(power, drag)
+                resolved[family, cell] = common_resolved[family]
+                effective[family, cell] = tau_eff
+                base_rates[family, cell] = (
+                    total_family[family, cell] * gate_a_parameters.burgers_m
+                    * speed * np.sign(common_resolved[family])
+                )
+                mobile = (
+                    state.mobile_plus_m2[family, cell]
+                    + state.mobile_minus_m2[family, cell]
+                )
+                base_velocity[family, cell] = (
+                    base_rates[family, cell]
+                    / (gate_a_parameters.burgers_m * mobile)
+                    if mobile > parameters.density_floor_m2 else 0.0
+                )
+                friction[family, cell] = local_friction
+                overdrive = tau_eff - local_friction
+                patterning_active[family, cell] = overdrive > 0.0
+                if overdrive > 0.0 and tau_eff > 0.0:
+                    if power <= drag:
+                        mobility_b[family, cell] = (
+                            gate_a_parameters.velocity_exponent * power / tau_eff
+                        )
+                    else:
+                        mobility_b[family, cell] = (
+                            gate_a_parameters.drag_velocity_m_s
+                            * math.exp(-tau_eff / gate_a_parameters.drag_stress_Pa)
+                            / gate_a_parameters.drag_stress_Pa
+                        )
+                else:
+                    mobility_b[family, cell] = 0.0
+            inactive[:, cell] = _inactive_weights(base_rates[:, cell], gate_a_parameters)
     self_consistent, back, diffusion = correlation_stresses_Pa(state, parameters, gate_a_parameters)
     mobile_total = state.mobile_plus_m2 + state.mobile_minus_m2
     kappa = state.mobile_plus_m2 - state.mobile_minus_m2
@@ -389,7 +477,7 @@ def evaluate_driven_cdd(
         state.mobile_plus_m2 * velocity_plus - state.mobile_minus_m2 * velocity_minus
     )
     return DrivenCDDResponse(
-        resolved, effective, friction, patterning_active,
+        resolved, effective, friction, patterning_active, angles, inactive,
         base_rates, actual_rates, velocity_plus, velocity_minus,
         self_consistent, back, diffusion, orientations, dyads, 1,
     )
@@ -431,34 +519,33 @@ def _driven_cdd_single_step(
         plus = _upwind_step(plus, response.velocity_plus_m_s, subdt, dx)
         minus = _upwind_step(minus, response.velocity_minus_m_s, subdt, dx)
 
-    target_states = []
     generated_total = np.zeros_like(plus)
     removed_requested = np.zeros_like(plus)
-    transported_total_family = (
-        plus + minus + state.locked_plus_m2 + state.locked_minus_m2
+    source_density = (
+        state.mobile_plus_m2 + state.mobile_minus_m2
+        + state.locked_plus_m2 + state.locked_minus_m2
     )
     for cell in range(state.grid_points):
-        local = BertinBCCState(
-            state.plastic_deformation_gradient[cell], state.initial_orientation[cell],
-            transported_total_family[:, cell], state.axial_true_strain,
-            state.time_s, state.accepted_steps,
-        )
-        target, local_response = bertin_bcc_step(
-            local, axial_rate_s_inv, strain_increment,
-            float(state.temperature_K[cell]), gate_a_parameters,
-        )
-        target_states.append(target)
-        total_rate = float(np.sum(np.abs(local_response.shear_rates_s_inv)))
+        total_rate = float(np.sum(np.abs(response.gate_a_shear_rates_s_inv[:, cell])))
         for family in range(4):
             generated_total[family, cell], removed_requested[family, cell] = (
                 _gate_a_source_channels(
-                    transported_total_family[family, cell],
-                    local_response.shear_rates_s_inv[family],
-                    local_response.mrssp_angles_rad[family], total_rate,
-                    local_response.inactive_weight[family],
+                    source_density[family, cell],
+                    response.gate_a_shear_rates_s_inv[family, cell],
+                    response.mrssp_angles_rad[family, cell], total_rate,
+                    response.inactive_weight[family, cell],
                     float(state.temperature_K[cell]), dt_s, gate_a_parameters,
                 )
             )
+    if parameters.homogenize_gate_a_pair_sources:
+        # Gate A supplies the macroscopic family-reservoir evolution.  The
+        # transport-scale stability derivation conserves the nonzero-k line
+        # inventory, so distribute each family source uniformly while
+        # preserving its exact spatial integral and homogeneous reduction.
+        generated_total[:] = np.mean(generated_total, axis=1, keepdims=True)
+        removed_requested[:] = np.mean(
+            removed_requested, axis=1, keepdims=True
+        )
     # Pair creation adds equal signs; annihilation is bounded by the minority
     # population and therefore cannot erase net Burgers content.
     plus += 0.5 * generated_total
@@ -490,14 +577,23 @@ def _driven_cdd_single_step(
     locked_plus += cross_plus; locked_minus += cross_minus
 
     fp = np.empty_like(state.plastic_deformation_gradient)
-    for cell, target in enumerate(target_states):
-        correction = np.zeros((3, 3))
+    for cell in range(state.grid_points):
+        plastic_velocity_gradient = np.zeros((3, 3))
         for family in range(4):
-            correction += (
+            plastic_velocity_gradient += (
                 response.actual_shear_rates_s_inv[family, cell]
-                - response.gate_a_shear_rates_s_inv[family, cell]
-            ) * response.slip_dyads[family, cell]
-        fp[cell] = expm(correction * dt_s) @ target.plastic_deformation_gradient
+                * response.slip_dyads[family, cell]
+            )
+        symmetric = 0.5 * (
+            plastic_velocity_gradient + plastic_velocity_gradient.T
+        )
+        spin = 0.5 * (
+            plastic_velocity_gradient - plastic_velocity_gradient.T
+        )
+        plastic_velocity_gradient = (
+            symmetric + gate_a_parameters.plastic_spin_scale * spin
+        )
+        fp[cell] = expm(plastic_velocity_gradient * dt_s) @ state.plastic_deformation_gradient[cell]
     next_state = DrivenCDDState(
         fp, state.initial_orientation, plus, minus, locked_plus, locked_minus,
         state.temperature_K, state.axial_true_strain + strain_increment,
@@ -532,6 +628,7 @@ def _driven_cdd_single_step(
     return next_state, DrivenCDDResponse(
         response.resolved_shear_Pa, response.effective_shear_Pa,
         response.taylor_friction_Pa, response.patterning_active,
+        response.mrssp_angles_rad, response.inactive_weight,
         response.gate_a_shear_rates_s_inv,
         response.actual_shear_rates_s_inv, response.velocity_plus_m_s,
         response.velocity_minus_m_s, response.self_consistent_stress_Pa,
@@ -631,6 +728,7 @@ def driven_cdd_step(
     final_response = DrivenCDDResponse(
         final_response.resolved_shear_Pa, final_response.effective_shear_Pa,
         final_response.taylor_friction_Pa, final_response.patterning_active,
+        final_response.mrssp_angles_rad, final_response.inactive_weight,
         final_response.gate_a_shear_rates_s_inv,
         final_response.actual_shear_rates_s_inv,
         final_response.velocity_plus_m_s, final_response.velocity_minus_m_s,
@@ -849,12 +947,15 @@ def full_linearized_amplification_spectrum(
     *,
     relative_perturbation: float = 2.0e-6,
 ) -> dict[str, object]:
-    """Finite-difference the physical `(rho+,rho-,gamma_a)` map.
+    """Finite-difference the full Nye-compatible signed-population map.
 
     Unlike :func:`homogeneous_dispersion_snapshot`, this operator includes the
     implemented Gate-A source, MRSSP/orientation feedback, finite-volume flux,
-    and multiplicative plastic update.  Similarity scaling of density rows and
-    columns keeps its eigenvalues independent of SI field magnitudes.
+    and multiplicative plastic update. Every signed-density perturbation also
+    carries the quadrature slip perturbation required by
+    ``partial_x gamma_a=-b*kappa_a``; independent incompatible `Fp` waves are
+    not admissible state variables. Similarity scaling keeps eigenvalues
+    independent of SI density magnitudes.
     """
 
     if not _is_spatially_homogeneous(homogeneous_state):
@@ -866,37 +967,45 @@ def full_linearized_amplification_spectrum(
         homogeneous_state, axial_rate_s_inv, strain_increment,
         parameters, gate_a_parameters,
     )
-    input_density = np.concatenate((
+    all_input_density = np.concatenate((
         homogeneous_state.mobile_plus_m2[:, 0],
         homogeneous_state.mobile_minus_m2[:, 0],
     ))
-    scales = np.concatenate((input_density, np.ones(4)))
     reference_response = evaluate_driven_cdd(
         homogeneous_state, parameters, gate_a_parameters
     )
+    active_families = [
+        family for family in range(4)
+        if bool(np.any(reference_response.patterning_active[family]))
+    ]
+    active_indices = active_families + [family + 4 for family in active_families]
+    scales = all_input_density[active_indices]
     reference_dyads = reference_response.slip_dyads[:, 0]
-    dyad_design = reference_dyads.reshape(4, 9).T
-    dyad_projector = np.linalg.pinv(dyad_design)
     coordinate = np.arange(n)
     records: list[dict[str, object]] = []
     dt_s = strain_increment / axial_rate_s_inv
     for mode in range(1, n // 2):
         cosine = np.cos(2.0 * np.pi * mode * coordinate / n)
-        matrix = np.zeros((12, 12), dtype=complex)
-        for column in range(12):
+        matrix = np.zeros((len(active_indices), len(active_indices)), dtype=complex)
+        physical_k = 2.0 * math.pi * mode / parameters.domain_m
+        sine = np.sin(2.0 * np.pi * mode * coordinate / n)
+        for column, population_index in enumerate(active_indices):
             plus = homogeneous_state.mobile_plus_m2.copy()
             minus = homogeneous_state.mobile_minus_m2.copy()
             fp = homogeneous_state.plastic_deformation_gradient.copy()
             amplitude = relative_perturbation * scales[column]
-            if column < 8:
-                population = plus if column < 4 else minus
-                population[column % 4] += amplitude * cosine
-            else:
-                family = column - 8
-                for cell in range(n):
-                    fp[cell] = expm(
-                        amplitude * cosine[cell] * reference_dyads[family]
-                    ) @ fp[cell]
+            population = plus if population_index < 4 else minus
+            family = population_index % 4
+            population[family] += amplitude * cosine
+            kappa_sign = 1.0 if population_index < 4 else -1.0
+            slip_amplitude = (
+                -gate_a_parameters.burgers_m * kappa_sign
+                * amplitude / physical_k
+            )
+            for cell in range(n):
+                fp[cell] = expm(
+                    slip_amplitude * sine[cell] * reference_dyads[family]
+                ) @ fp[cell]
             perturbed = DrivenCDDState(
                 fp, homogeneous_state.initial_orientation, plus, minus,
                 homogeneous_state.locked_plus_m2,
@@ -914,15 +1023,7 @@ def full_linearized_amplification_spectrum(
                 advanced.mobile_plus_m2 - base.mobile_plus_m2,
                 advanced.mobile_minus_m2 - base.mobile_minus_m2,
             ))
-            relative_fp = np.empty((n, 9))
-            for cell in range(n):
-                relative_fp[cell] = (
-                    (advanced.plastic_deformation_gradient[cell]
-                     - base.plastic_deformation_gradient[cell])
-                    @ np.linalg.inv(base.plastic_deformation_gradient[cell])
-                ).reshape(9)
-            slip_difference = (dyad_projector @ relative_fp.T)
-            output = np.concatenate((density_difference, slip_difference))
+            output = density_difference[active_indices]
             coefficient = np.fft.fft(output, axis=1)[:, mode] / n
             matrix[:, column] = coefficient / (
                 0.5 * relative_perturbation * scales
@@ -938,7 +1039,9 @@ def full_linearized_amplification_spectrum(
         })
     fastest = max(records, key=lambda item: item["growth_rate_s_inv"])
     return {
-        "state_dimension": 12,
+        "state_dimension": len(active_indices),
+        "active_families": active_families,
+        "constraint": "partial_x gamma_a = -b kappa_a",
         "relative_perturbation": relative_perturbation,
         "records": records,
         "fastest_mode": fastest["mode"],

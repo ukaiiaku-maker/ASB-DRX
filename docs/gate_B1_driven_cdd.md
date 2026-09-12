@@ -3,11 +3,11 @@
 ## Current disposition
 
 Gate B1 is implemented as a new, dynamically Gate-A-coupled development model,
-but the physical wall gate is **not passed**. Eleven compact core tests pass.
+but the physical wall gate is **not passed**. Twelve compact core tests pass.
 The first nonlinear signal failed timestep refinement and was rejected. A
 coupled internal refresh limit now makes requested-step refinement agree to
 `1.6e-14` on global field scale. The converged trajectory does not form a wall,
-and the full implemented operator selects the domain mode. No HPC3 verification
+and the full implemented active-family operator is stable. No HPC3 verification
 has been submitted and Gate C remains blocked.
 
 The Bertin BCC-Ta constants remain a quarantined reference fixture. The CDD
@@ -76,6 +76,9 @@ with the corresponding resolved-stress sign for reverse loading. Mean/back
 stress reverses with line sign; polarization-friction and diffusion do not.
 The unloaded state has zero flux. A secant mobility trial was rejected because
 division by vanishing overdrive produced a nonphysical threshold singularity.
+The periodic one-dimensional mechanical reduction uses the spatially common
+resolved traction supplied by Gate A; local density, temperature, MRSSP, `F^p`,
+and orientation still control each cell's response.
 
 ## Source and transfer ledger
 
@@ -85,6 +88,11 @@ gross removal follows from `Delta rho = generation-removal`. Multiplication
 adds equal opposite-sign pairs. Annihilation removes equal pairs and is capped
 by the minority population, so it cannot erase signed Burgers content. Any
 unavailable removal is explicitly recorded as `annihilation_limited_m_inv`.
+Gate A controls the exact spatially averaged family-reservoir source. Each
+family's gross pair source is distributed uniformly, as in the conservative
+nonzero-wave-number stability derivation, while preserving its exact integral
+and exact homogeneous reduction. Thus the very fast material-point relaxation
+cannot masquerade as a spatial wall instability.
 
 Same-family locking, unlocking, and cross-family association are separate
 sign-preserving mobile/locked transfers. Cross-family association does not
@@ -110,12 +118,15 @@ the fastest discrete mode. No `selected_wavelength_m` exists in Gate B1, and
 the formula directly gives `Lambda proportional to 1/sqrt(rho)`.
 
 The acceptance diagnostic separately finite-differences the complete
-semi-discrete state map in the physical 12-dimensional subspace: eight signed
-populations and four Gate-A MRSSP slip amplitudes. It includes density sources,
-finite-volume flux, `F^p`/orientation feedback, and the multiplicative plastic
-update. At the onset snapshot this full operator has positive growth but its
-fastest mode is mode 1. The reduced finite mode is therefore not a prediction
-of the implemented coupled model.
+semi-discrete map on the Nye-compatible manifold. Every active signed-density
+Fourier perturbation carries the quadrature slip/`F^p` perturbation required by
+`partial_x gamma_a=-b kappa_a`; independent incompatible `F^p` waves are
+excluded. It includes finite-volume flux, averaged Gate-A reservoir sources,
+MRSSP/orientation feedback, and the multiplicative plastic update. At the
+onset snapshot families 0 and 1 are active, so the physical operator is four
+dimensional. On a 64-point grid every tested mode is damped; mode 1 decays at
+`1.67e6 s^-1` and the strongest damping is about `3.11e8 s^-1`. The reduced
+finite mode is therefore not a prediction of the implemented coupled model.
 
 ## Evidence and unresolved convergence
 
@@ -144,9 +155,10 @@ follow the same internal trajectory. At strain 0.015, three converged seeds
 remain homogeneous/balanced, with GND/total ratios only `0.82e-6` to `1.38e-6`.
 A fixed-total-strain hold relaxes the perturbation.
 
-The next task is to resolve the long-wave physical-slip/Gate-A coupling, most
-likely by supplying mechanically equilibrated spatial stress. Only after the
-full operator has a finite growing mode may the incommensurate-domain,
+The next task is to reconcile the stable Gate-A differential-mobility operator
+with the unstable ideal dry-friction CDD reduction. This is a constitutive
+compatibility question, not a wavelength-tuning problem. Only after the full
+operator has a finite growing mode may the incommensurate-domain,
 density-similitude, temperature/rate, wall-width, and persistence matrix run.
 
 Gate B1 has no phase field, grain label, boundary object, or physical grain

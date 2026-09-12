@@ -173,7 +173,10 @@ The reduced flowing-state density operator predicts an emergent finite mode and
 no wavelength parameter exists. The original nonlinear signal failed
 strain-increment refinement and was rejected. A declared coupled internal
 refresh limit corrects that splitting artifact, but the converged trajectory
-remains homogeneous and the finite-differenced full physical population/slip
-operator selects mode 1. Leave `physical_CDD_wall_gate_passed=false`, do not
-submit HPC3, and add mechanically equilibrated spatial stress coupling before
-running the required robustness matrix. Gate C remains blocked.
+remains homogeneous. After imposing common periodic resolved traction,
+homogenizing only the exact Gate-A reservoir source, and restricting the
+linearization to the Nye-compatible active-family manifold, every resolved
+mode is damped. Leave `physical_CDD_wall_gate_passed=false`, do not submit HPC3,
+and resolve the constitutive mismatch between Gate-A differential mobility and
+the ideal dry-friction CDD instability before running the robustness matrix.
+Gate C remains blocked.

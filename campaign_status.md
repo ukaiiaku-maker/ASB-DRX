@@ -15,13 +15,15 @@ Updated: 2026-09-11 (America/Los_Angeles)
   present.
 - The density-only Groma--Zaiser reference predicts a finite driven mode and
   zero unloaded instability, but the finite-differenced full 12-state
-  population/slip/Gate-A operator selects mode 1. A coupled internal refresh
+  Nye-compatible active-family/Gate-A operator damps every resolved mode. A
+  coupled internal refresh
   limit corrects the earlier split-step artifact: requested increments from
   `5e-4` to `1.25e-4` agree to `1.6e-14` on global field scale. Three converged
   seeds remain homogeneous through strain 0.015, with GND/total only `0.82e-6`
   to `1.38e-6`. `physical_CDD_wall_gate_passed=false`; no Gate B1 HPC3 job has
-  been submitted. Mechanically equilibrated spatial stress is the next model
-  task before the deferred robustness matrix.
+  been submitted. Reconciling Gate A's stable differential mobility with the
+  ideal dry-friction CDD instability is the next constitutive task before the
+  deferred robustness matrix.
 - Local Gate B1 audit from pushed source `9f9ef09` records
   `fixture_passed=true`, `scientific_gate_passed=false`, and
   `physical_CDD_wall_gate_passed=false` in

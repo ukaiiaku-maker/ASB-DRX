@@ -123,7 +123,7 @@ def main(output: Path, plot_directory: Path) -> None:
         _, state, ledgers, diagnostic = run_case(16, 5.0e-4, seed)
         seed_records.append({"seed": seed, **diagnostic, "maximum_balance_residual_m_inv": max(abs(x.total_balance_residual_m_inv) for x in ledgers)})
 
-    homogeneous = initialize_driven_cdd(16, parameters, gate_a)
+    homogeneous = initialize_driven_cdd(64, parameters, gate_a)
     homogeneous, _ = advance_driven_cdd(
         homogeneous, 1.0e6, 0.005, 5.0e-4, parameters, gate_a
     )
@@ -185,7 +185,7 @@ def main(output: Path, plot_directory: Path) -> None:
         "fixture_passed": fixture_passed,
         "scientific_gate_passed": scientific_gate_passed,
         "physical_CDD_wall_gate_passed": scientific_gate_passed,
-        "classification": "DRIVEN_CDD_CORE_VALIDATED__FULL_OPERATOR_DOMAIN_MODE__NONLINEAR_WALL_UNRESOLVED",
+        "classification": "DRIVEN_CDD_CORE_VALIDATED__FULL_ACTIVE_OPERATOR_STABLE__NONLINEAR_WALL_UNRESOLVED",
         "scope": "Gate-A-coupled driven CDD development; not LAGB, polygonization, DRX, ASB, or material calibration",
         "checks": checks,
         "parameters_SI": {
@@ -199,7 +199,7 @@ def main(output: Path, plot_directory: Path) -> None:
         "linear_stability": {
             "reduced_Groma_reference": reduced_dispersion,
             "full_implemented_operator": full_operator,
-            "interpretation": "The reduced density operator predicts finite modes, but the full physical-slip/Gate-A map is dominated by mode 1 and therefore fails Gate B1.",
+            "interpretation": "The reduced dry-friction density operator predicts finite modes, but every mode of the full active-family, Nye-compatible Gate-A map is damped; Gate B1 fails without changing coefficients.",
         },
         "primary": primary_diag,
         "timestep_refinement": {"records": convergence, "maximum_normalized_field_difference": normalized_difference},
