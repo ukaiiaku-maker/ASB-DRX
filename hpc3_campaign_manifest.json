@@ -1135,6 +1135,64 @@
       "outputs": {
         "results/results-single.tar.gz": "943382993e70b528517b617dabaa803b837f880478d0a745c017412b8645806b"
       }
+    },
+    {
+      "run_id": "20260912T011600Z-2c0bf13-edff97",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "Gate_B1_extended_single_job_scientific_verification",
+      "git_commit_at_plan": "2c0bf134a79bb032699ae5db0d228f49b06624ab",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_bundle_sha256": "2da8981fac6691f938fd87a858ff4a7eecaebd427e749d6bfd7288c79f6cfee4",
+      "targeted_tests": 38,
+      "targeted_tests_passed": 38,
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "physical_CDD_wall_gate_passed": false,
+      "classification": "DRIVEN_CDD_PRECURSOR_PRESENT__SCIENTIFIC_MATRIX_FAILED",
+      "failed_scientific_checks": [
+        "grid_refinement_below_five_percent",
+        "incommensurate_domain_wavelength_cv_below_ten_percent"
+      ],
+      "slurm": {
+        "job_id": "55949943",
+        "account": "SDILLON1",
+        "partition": "free",
+        "qos": "low",
+        "node": "hpc3-14-03",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory": "4G",
+        "modules": ["anaconda/2025.12"]
+      },
+      "start_utc": "2026-09-12T01:16:16Z",
+      "end_utc": "2026-09-12T01:25:30Z",
+      "exit_status": "0:0",
+      "wall_clock_seconds": 554,
+      "total_cpu_seconds": 519,
+      "peak_memory_MB": 109.80,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260912T011600Z-2c0bf13-edff97",
+      "local_path": "hpc3-results/asb-drx-independent/20260912T011600Z-2c0bf13-edff97",
+      "retrieval_status": "complete_archive_and_outputs_checksum_verified",
+      "result_provenance": {
+        "source_commit": "2c0bf13",
+        "python": "3.13.9",
+        "platform": "Linux-5.14.0-611.55.1.el9_7.x86_64-x86_64-with-glibc2.34"
+      },
+      "input_checksums": {
+        "src/asb_drx/bertin_bcc.py": "bb768e3352dd9c227329ae3d9bb1cb15573933d0cf153da183afb8bc88e71e19",
+        "src/asb_drx/driven_cdd.py": "1d2bbf85ba23607c5e5fdd96031215629058f35459b8074faf1f23dfc5ed3ec2",
+        "src/asb_drx/signed_transport.py": "ad2793b7bed8b0faf60c99a19d6c2047b244af605137c475ece6bfddbd1393b8",
+        "tools/run_gate_B1_extended.py": "3fc6997196a56966903241f9473cdcd585c4a8d844f3c3d0cd34b715dc531d5e"
+      },
+      "outputs": {
+        "results/results-single.tar.gz": "8d13be16d5b9f20cd78db0b9492d62efef502988cad0cda668555dc33a14b2ef",
+        "output/gate_B1_driven_cdd_extended.json": "7ac12f12b87e1a5b63ed3208a0f4fb584fda31164b40ce90c6b210c573dd075a",
+        "output/gate_B1_extended_plots/gate_B1_convergence.png": "a7f92fd173dca31d6858036126682716fed2d811bbc3675abb2fe6a596558b4f",
+        "output/gate_B1_extended_plots/gate_B1_fields.png": "b3df79e94eaa9f15634b0c9cd4946faf1d2680befdf62493d89426b7d856729e",
+        "output/gate_B1_extended_plots/gate_B1_structure_factor.png": "93329941ea8cbbd127e70fe9f0b5eec2eec827981151a8fe4768aef8a555ab95"
+      }
     }
   ]
 }

@@ -3,14 +3,14 @@
 ## Current disposition
 
 Gate B1 is implemented as a new, dynamically Gate-A-coupled development model,
-but the physical wall gate is **not passed**. Twelve compact core tests pass.
+but the physical wall gate is **not passed**. Thirteen compact core tests pass.
 The first nonlinear signal failed timestep refinement and was rejected. A
 coupled internal refresh limit now makes requested-step refinement agree to
 `1.6e-14` on global field scale. A provisional nonzero one-dimensional
 long-range kernel made the full operator stable. Enforcing the derived
 `k_y=0`, `T(k)=0` reduction restores a finite growing mode without fitting a
-wavelength. Nonlinear wavelength convergence is promising, but the full
-scientific matrix is pending and Gate C remains blocked.
+wavelength. The completed HPC3 scientific matrix rejects grid convergence and
+intrinsic domain-independent spacing. Gate C remains blocked.
 
 The Bertin BCC-Ta constants remain a quarantined reference fixture. The CDD
 coefficients `A=D=1` are generic
@@ -133,7 +133,7 @@ was damped. In the strictly derived `T=0` baseline, the full compatible operator
 selects finite mode 6 with growth `4.45e7 s^-1` on the 64-point audit grid.
 This change follows the declared reduction and is not a wavelength fit.
 
-## Evidence and unresolved convergence
+## Evidence and extended-matrix decision
 
 The core suite verifies zero-load stability, exact homogeneous Gate A
 reduction, independent total/signed perturbations, removal of a Fourier mode,
@@ -161,11 +161,24 @@ remain homogeneous/balanced, with GND/total ratios only `0.82e-6` to `1.38e-6`.
 A fixed-total-strain hold relaxes the perturbation.
 
 Resolution-invariant Fourier noise with mode 6 deleted produces mode 10 at both
-64 and 128 points (1.6 micrometers). GND and orientation amplitudes are not yet
-within 5% between those grids; the second-order trend requires the planned
-128/256 extended comparison. The single-job bundle therefore includes the
-incommensurate-domain, density-similitude, temperature/rate, wall-width, seed,
-convergence, and unload matrix. Gate B1 remains false until those checks pass.
+64 and 128 points (1.6 micrometers), but the completed 128/256 comparison does
+not converge. The selected wavelength changes by 10%; GND/total, total-density
+contrast, orientation-gradient RMS, and mean wall FWHM change by 95%, 84%, 96%,
+and 620%, respectively. The 256-point result is diffuse GND polarization rather
+than the coarse-grid GND-rich precursor. Across 13, 16, and 19 micrometer boxes,
+the selected mode remains 10 and the wavelengths are 1.3, 1.6, and 1.9
+micrometers. This is box locking, not a demonstrated intrinsic length scale.
+
+HPC3 run `20260912T011600Z-2c0bf13-edff97` / Slurm `55949943` completed all 38
+staged tests and the full matrix. It passed timestep refinement, three-seed
+formation, density similitude, temperature/rate execution through Gate A,
+unload characterization, line balance, and exclusion of labels/phases. It
+failed only the scientific grid and incommensurate-domain criteria. The
+machine-readable result therefore reports `fixture_passed=true`,
+`scientific_gate_passed=false`, and classification
+`DRIVEN_CDD_PRECURSOR_PRESENT__SCIENTIFIC_MATRIX_FAILED`. This negative result
+is the authoritative Gate B1 checkpoint; no coefficient or tolerance was
+retuned after inspection.
 
 Gate B1 has no phase field, grain label, boundary object, or physical grain
 increment. Polygonization, LAGB recognition, DRX, and ASB are out of scope.

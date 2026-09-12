@@ -183,7 +183,8 @@ Gate C remains blocked.
 
 ## ADR-0020: Use the strict one-dimensional long-range projection for Gate B1
 
-Status: proposed for extended verification, 2026-09-11.
+Status: accepted as the one-dimensional baseline; Gate B1 rejected by extended
+verification, 2026-09-11.
 
 For the declared `k_y=0` CDD wave vector, use the published `T(k)=0`
 long-range factor. Retain the provisional cross-family `-i/k` kernel only as an
@@ -197,3 +198,13 @@ finite mode 6, while nonlinear 64/128 calculations independently select mode
 10. Do not pass Gate B1 from these local results: require the single extended
 128/256 job plus seed, domain, density-similitude, temperature/rate, wall-width,
 balance, and unload controls. Gate C stays blocked until the machine result.
+
+The single extended run `20260912T011600Z-2c0bf13-edff97` completed those
+controls without retuning. The fixture and precursor checks pass, but the
+128/256 observables are far outside the 5% limit and the selected mode remains
+10 in all three incommensurate boxes, so wavelength scales with box length.
+Record `fixture_passed=true`, `scientific_gate_passed=false`, and
+`physical_CDD_wall_gate_passed=false`. Treat the observed structures as a
+driven GND-rich precursor and diffuse-polarization response, not a converged
+wall. Gate C remains blocked pending a constitutive mechanism that produces a
+grid- and domain-independent length without fitting the phase-field outcome.

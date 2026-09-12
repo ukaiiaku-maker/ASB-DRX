@@ -7,23 +7,18 @@ Updated: 2026-09-11 (America/Los_Angeles)
 ### Active redevelopment update
 
 - Gate B1 driven CDD development now has a modular spatial implementation and
-  ten passing core tests. Every cell is dynamically coupled to Gate A stress,
+  thirteen passing core tests. Every cell is dynamically coupled to Gate A stress,
   `F^p`, lattice orientation, MRSSP geometry, family slip/density evolution,
   and temperature. Positive/negative densities move through separate
   density-weighted fluxes; pair sources and locked transfers close signed and
   total-content ledgers. No wavelength, phase field, or grain-label state is
   present.
-- The density-only Groma--Zaiser reference predicts a finite driven mode and
-  zero unloaded instability, but the finite-differenced full 12-state
-  Nye-compatible active-family/Gate-A operator damps every resolved mode. A
-  coupled internal refresh
-  limit corrects the earlier split-step artifact: requested increments from
-  `5e-4` to `1.25e-4` agree to `1.6e-14` on global field scale. Three converged
-  seeds remain homogeneous through strain 0.015, with GND/total only `0.82e-6`
-  to `1.38e-6`. `physical_CDD_wall_gate_passed=false`; no Gate B1 HPC3 job has
-  been submitted. Reconciling Gate A's stable differential mobility with the
-  ideal dry-friction CDD instability is the next constitutive task before the
-  deferred robustness matrix.
+- The published strict one-dimensional `k_y=0` long-range projection has
+  `T(k)=0`. Under that projection the full finite-differenced active-family,
+  Nye-compatible Gate-A operator has a finite fastest mode 6 and the nonlinear
+  128-point reference forms a GND-rich mode-10 precursor. The result does not
+  establish a physical wall: the predeclared extended convergence and domain
+  tests fail, so `physical_CDD_wall_gate_passed=false`.
 - Local Gate B1 audit from pushed source `1df2973` records
   `fixture_passed=true`, `scientific_gate_passed=false`, and
   `physical_CDD_wall_gate_passed=false` in
@@ -56,6 +51,20 @@ Updated: 2026-09-11 (America/Los_Angeles)
   result archive and plots are checksum-verified; no JSON decision was emitted.
   Provenance now uses the source SHA embedded by the runner in `HPC3_RUN_ID`
   and cannot abort result serialization.
+- Final single-job verification `20260912T011600Z-2c0bf13-edff97`, Slurm
+  `55949943`, completed in 9 minutes 14 seconds on `hpc3-14-03`; all 38 staged
+  tests passed and the fetched archive SHA-256 is
+  `8d13be16d5b9f20cd78db0b9492d62efef502988cad0cda668555dc33a14b2ef`.
+  Its machine result records `fixture_passed=true` and
+  `scientific_gate_passed=false`. Timestep, three-seed, density-similitude,
+  thermomechanical, unload, line-balance, and no-label checks pass. The
+  128-to-256 grid check fails: wavelength changes 10%, GND/total changes 95%,
+  total-density contrast changes 84%, orientation-gradient RMS changes 96%,
+  and wall FWHM changes 620%; the 256-point field is classified as diffuse GND
+  polarization. The 13/16/19 micrometer domains retain mode 10, making the
+  apparent wavelength proportional to box length and failing the domain CV
+  check. Gate C remains blocked; no polygonization or grain-label mechanism
+  has been enabled.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
