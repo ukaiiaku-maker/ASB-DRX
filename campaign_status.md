@@ -24,12 +24,12 @@ Updated: 2026-09-11 (America/Los_Angeles)
   been submitted. Reconciling Gate A's stable differential mobility with the
   ideal dry-friction CDD instability is the next constitutive task before the
   deferred robustness matrix.
-- Local Gate B1 audit from pushed source `9f9ef09` records
+- Local Gate B1 audit from pushed source `1df2973` records
   `fixture_passed=true`, `scientific_gate_passed=false`, and
   `physical_CDD_wall_gate_passed=false` in
   `output/gate_B1_driven_cdd.json` (SHA-256
-  `55f571b2c4d99212b1905c540094bcaccf499b0ef48d99b435a3477e31e25b06`).
-  The complete repository suite passes 187 tests. The result deliberately
+  `dac88171a1d422c5c17d183d9fa3b2ab8147d67ae3846ff79c350f5b9a1f05ca`).
+  The complete repository suite passes 188 tests. The result deliberately
   defers the domain/density/temperature robustness matrix after the full
   operator failure, and records no HPC3 submission.
 
