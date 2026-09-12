@@ -226,3 +226,22 @@ conservative staggered face fluxes, verify their discrete dispersion against
 the continuum relation through Nyquist, and construct a box-independent
 physical random-field ensemble. Do not add filtering, artificial viscosity, a
 preferred wavelength, or a coefficient fitted to these PF/CDD outcomes.
+
+## ADR-0022: Advance logarithmic staggered flux and face-slip kinematics
+
+Status: accepted for integration development, 2026-09-12.
+
+Mission-v3 comparison run `20260912T180135Z-556e986-552929` verifies two
+conservative face-stress formulations through the 256-point Nyquist mode. Both
+remove the old odd/even null and converge to the continuum low-mode symbol.
+Advance the logarithmic-mean form because its exact discrete chain rule is the
+stronger basis for a free-energy/dissipation proof; do not interpret this as a
+wall-mechanism selection.
+
+Store authoritative signed populations at cells and accumulated plastic slip
+at faces. Updating `kappa_dot=-div(F+-F-)` and
+`gamma_dot_face=b(F+-F-)` preserves the discrete Nye compatibility relation
+under the identical flux. A second-order face average may supply cell slip to
+Gate A, but may not replace the staggered state in compatibility diagnostics.
+The next integration must restore Gate A homogeneous reduction and all source,
+lock, and energy ledgers before any nonlinear wall comparison.
