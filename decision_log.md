@@ -276,3 +276,28 @@ Replace polygonization's irreversible maturity increase by relaxation toward
 the minimum of an explicit convex disordered/ordered wall free energy, and add
 an independent Frank--Bilby residual whose orientation jump is not derived
 from the tested wall inventory. No grain allocation is authorized.
+
+## ADR-0024: Reject the positive-energy constant-mobility 1-D wall mechanism
+
+Status: accepted locally; cross-platform verification pending, 2026-09-12.
+
+Treat the exact logarithmic-density diffusion implicitly and retain the
+nonlinear polarization potential explicitly. The returned conservative flux
+must update density and staggered slip identically. Integrate bounded
+Arrhenius pair multiplication, annihilation, locking, unlocking, and wall
+capture with separate line and signed-content ledgers.
+
+The complete frozen eight-population symbol shows that physical Arrhenius flux
+is advective under fixed resolved stress, while the positive variational
+correlation energy damps every nonzero mode. Mode-independent local reactions
+do not introduce finite-wavenumber selection. The factorized local screen is
+damped through Nyquist for all tested entropy signs, positive coefficient
+ratios, densities, grids, domains, and load controls; physical-noise nonlinear
+steps likewise reduce contrast.
+
+Reject this model family as a spontaneous wall mechanism without rejecting it
+as a verified transport/relaxation operator. Do not broaden the same parameter
+search or make a wall claim. Verify the negative decision once on HPC3, then
+advance to state-dependent friction and cross-family internal/reaction
+coupling. Preserve positive free energy and do not introduce a fitted
+wavelength or negative signed-density quadratic.

@@ -1,0 +1,45 @@
+name = "asb-drx-mission-v3-integrated-screen"
+entrypoint = ["bash", "run_mission_v3_integrated_screen_hpc3.sh"]
+working_directory = "."
+modules = ["anaconda/2025.12"]
+environment = {}
+input_paths = [
+  "run_mission_v3_integrated_screen_hpc3.sh",
+  "src/asb_drx/arrhenius_v3.py",
+  "src/asb_drx/cdd_flux_v3.py",
+  "src/asb_drx/staggered_cdd.py",
+  "src/asb_drx/integrated_cdd_v3.py",
+  "src/asb_drx/polygonization_v3.py",
+  "src/asb_drx/physical_noise.py",
+  "tests/test_arrhenius_v3.py",
+  "tests/test_cdd_flux_v3.py",
+  "tests/test_staggered_cdd.py",
+  "tests/test_integrated_cdd_v3.py",
+  "tests/test_polygonization_v3.py",
+  "tools/run_v3_integrated_screen.py"
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "00:10:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "2G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

@@ -356,3 +356,101 @@ def variational_dissipation_J_m2_s(
         ) / dx_m
     ))
     return chain_rate, square_rate
+
+
+def variational_correlation_imex_fluxes(
+    mobile_plus_m2: np.ndarray,
+    mobile_minus_m2: np.ndarray,
+    mobility_m_Pa_s: float,
+    shear_modulus_Pa: float,
+    burgers_m: float,
+    dx_m: float,
+    dt_s: float,
+    *,
+    backstress_coefficient: float,
+    diffusion_coefficient: float,
+    reference_density_m2: float,
+    density_floor_m2: float = 1.0e8,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Conservative IMEX effective flux for one accepted interval.
+
+    The logarithmic-density potential is backward Euler. Because
+    ``L*Delta(log rho)=Delta rho``, that term is a periodic linear diffusion
+    solve. The nonlinear forest-normalized polarization potential is explicit.
+    Returned face fluxes exactly reconstruct the density increment and can also
+    advance authoritative staggered slip.
+    """
+
+    plus = np.asarray(mobile_plus_m2, dtype=float)
+    minus = np.asarray(mobile_minus_m2, dtype=float)
+    if plus.ndim != 2 or minus.shape != plus.shape:
+        raise ValueError("IMEX populations must share shape (families,cells)")
+    if np.any(plus < 0.0) or np.any(minus < 0.0):
+        raise ValueError("IMEX populations must be nonnegative")
+    for name, value in (
+        ("mobility_m_Pa_s", mobility_m_Pa_s),
+        ("shear_modulus_Pa", shear_modulus_Pa), ("burgers_m", burgers_m),
+        ("dx_m", dx_m), ("dt_s", dt_s),
+    ):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be finite and positive")
+    chemical_plus, chemical_minus = variational_chemical_potentials_J_m(
+        plus, minus, np.full(plus.shape[1], shear_modulus_Pa), burgers_m,
+        backstress_coefficient=backstress_coefficient,
+        diffusion_coefficient=diffusion_coefficient,
+        reference_density_m2=reference_density_m2,
+        density_floor_m2=density_floor_m2,
+    )
+    rho = plus + minus + 2.0 * density_floor_m2
+    entropic = (
+        shear_modulus_Pa * burgers_m**2 * diffusion_coefficient
+        * np.log(rho / reference_density_m2)
+    )
+    polarization_plus = chemical_plus - entropic
+    polarization_minus = chemical_minus - entropic
+
+    def explicit_flux(population: np.ndarray, potential: np.ndarray) -> np.ndarray:
+        face_population = np.maximum(
+            logarithmic_mean(
+                population + density_floor_m2,
+                np.roll(population, -1, axis=1) + density_floor_m2,
+            ) - density_floor_m2,
+            0.0,
+        )
+        return (
+            -(mobility_m_Pa_s / burgers_m) * face_population
+            * (np.roll(potential, -1, axis=1) - potential) / dx_m
+        )
+
+    flux_pol_plus = explicit_flux(plus, polarization_plus)
+    flux_pol_minus = explicit_flux(minus, polarization_minus)
+    rhs_plus = plus + dt_s * periodic_flux_divergence(flux_pol_plus, dx_m)
+    rhs_minus = minus + dt_s * periodic_flux_divergence(flux_pol_minus, dx_m)
+    coefficient_m2_s = (
+        mobility_m_Pa_s * shear_modulus_Pa * burgers_m
+        * diffusion_coefficient
+    )
+    modes = np.arange(plus.shape[1])
+    denominator = 1.0 + (
+        4.0 * dt_s * coefficient_m2_s / dx_m**2
+        * np.sin(np.pi * modes / plus.shape[1]) ** 2
+    )
+    population_scale = max(float(np.max(plus)), float(np.max(minus)), 1.0)
+
+    def implicit_population(rhs: np.ndarray) -> np.ndarray:
+        updated = np.fft.ifft(
+            np.fft.fft(rhs, axis=1) / denominator[None, :], axis=1
+        ).real
+        if np.min(updated) < -2.0e-13 * population_scale:
+            raise RuntimeError("explicit polarization part violated IMEX positivity")
+        return np.maximum(updated, 0.0)
+
+    updated_plus = implicit_population(rhs_plus)
+    updated_minus = implicit_population(rhs_minus)
+    diffusion_plus = -coefficient_m2_s * (
+        np.roll(updated_plus, -1, axis=1) - updated_plus
+    ) / dx_m
+    diffusion_minus = -coefficient_m2_s * (
+        np.roll(updated_minus, -1, axis=1) - updated_minus
+    ) / dx_m
+    return flux_pol_plus + diffusion_plus, flux_pol_minus + diffusion_minus

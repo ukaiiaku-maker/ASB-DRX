@@ -3,7 +3,7 @@
   "date": "2026-09-12",
   "source_parent": "6a8156a5a768ca376365f6ac9e8dca399da1c1f5",
   "local_test_scope": "PYTHONPATH=src pytest -q tests",
-  "local_tests_passed": 222,
+  "local_tests_passed": 226,
   "hpc3_submitted": false,
   "preserved_hpc3_job": "55965192",
   "hard_invariants": {
@@ -36,9 +36,8 @@
     "predictive_validation_supported": false
   },
   "next_required": [
-    "integrate bounded source/annihilation/locking/unlocking/wall-capture reactions",
-    "compare explicit and IMEX variational correlation updates",
-    "run local bounded four-family nonlinear discriminating search",
-    "submit one compact HPC3 matrix only after those local invariants pass"
+    "verify the factorized integrated no-growth screen once on HPC3",
+    "add state-dependent friction and cross-family coupling as the next discriminating closure",
+    "retain a positive-semidefinite internal energy and repeat the convergence screen"
   ]
 }

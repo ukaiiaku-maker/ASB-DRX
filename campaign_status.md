@@ -17,22 +17,33 @@ Updated: 2026-09-12 (America/Los_Angeles)
   positivity correction is ledgered, and accepted integrated steps require
   zero clipping. The face-slip reconstruction and adjoint traction projection
   close plastic work to roundoff.
-- A first four-family integrated Arrhenius--CDD state now owns mobile/locked/
+- A four-family integrated Arrhenius--CDD state now owns mobile/locked/
   wall signed populations, authoritative face slip, cellwise `Fp`, rotation,
   and temperature. Physical and variational fluxes share one density/slip
   update; multiplicative kinematics and external/elastic/plastic/correlation/
   line/heat ledgers share the same accepted interval. Homogeneous reduction,
   unloaded correlation-energy release, exact restart, no-label behavior, and
-  energy closure pass. The canonical local suite passes 222 tests.
+  energy closure pass. Bounded Arrhenius pair multiplication, annihilation,
+  locking, unlocking, and wall capture now execute in the same interval and
+  close separate line/Burgers ledgers. The canonical local suite passes 226
+  tests.
 - Polygonization ordering is now reversible and selected by an explicit convex
   disordered/ordered wall free energy. Its energy decrease is ledgered, and an
   independent Frank--Bilby check now compares externally supplied kinematic
   rotation with wall Burgers content. This remains an isolated fixture.
+- The IMEX logarithmic-diffusion step removes the demonstrated explicit CFL
+  restriction without clipping or filtering. A factorized local screen over
+  entropy sign, positive backstress/diffusion ratio, density, grid, domain,
+  load state, physical-noise seed, and noise correlation length finds every
+  eight-population mode damped through Nyquist and every nonlinear perturbation
+  reduced. This rejects the present positive-energy, constant-mobility 1-D
+  family as a spontaneous wall mechanism and selects state-dependent friction
+  plus cross-family coupling as the next branch.
 - Classification remains conservative: numerical integration is supported,
   but wall-mechanism, integrated scientific, DRX, ASB, and predictive claims
-  remain false. No new HPC3 job has been submitted: local reaction coupling
-  and the explicit-versus-IMEX comparison remain prerequisites for the bounded
-  matrix. Archived job `55965192` was not rerun.
+  remain false. One compact cross-platform verification of this no-growth
+  decision is staged but not yet submitted. Archived job `55965192` was not
+  rerun.
 - Mission v3 was adopted on 2026-09-12. Gates now classify claims and branch
   scientific work; they stop only use of results that fail hard invariants.
   The preserved Gate B1 no-go remains authoritative while isolated Arrhenius,

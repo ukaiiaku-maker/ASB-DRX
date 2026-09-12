@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from dataclasses import replace
 from pathlib import Path
 import tempfile
 
@@ -14,6 +15,8 @@ from asb_drx.arrhenius_v3 import (
 from asb_drx.integrated_cdd_v3 import (
     IntegratedCDDParameters,
     IntegratedCDDState,
+    apply_integrated_reactions,
+    frozen_mode_eigenvalues_s_inv,
     integrated_cdd_step,
     load_integrated_cdd_checkpoint,
     save_integrated_cdd_checkpoint,
@@ -195,6 +198,84 @@ class IntegratedCDDV3Tests(unittest.TestCase):
         self.assertEqual(continuous.applied_shear, restarted.applied_shear)
         self.assertEqual(continuous.time_s, restarted.time_s)
         self.assertEqual(continuous.accepted_steps, restarted.accepted_steps)
+
+    def test_imex_removes_log_diffusion_cfl_without_filtering(self) -> None:
+        x = np.arange(self.n)
+        wave = 1.0 + 0.2 * np.cos(2.0 * np.pi * 11.0 * x / self.n)
+        plus = self.state.signed.mobile_plus_m2 * wave[None, :]
+        minus = self.state.signed.mobile_minus_m2 * wave[None, :]
+        state = IntegratedCDDState(
+            StaggeredSignedState(
+                plus, minus, self.state.signed.face_slip, self.b, self.dx
+            ),
+            self.state.plastic_deformation_gradient, self.state.orientation,
+            self.state.temperature_K,
+        )
+        explicit = integrated_cdd_step(
+            state, 0.0, 0.1,
+            replace(self.parameters, correlation_integration="explicit"),
+        )
+        imex = integrated_cdd_step(
+            state, 0.0, 0.1,
+            replace(self.parameters, correlation_integration="imex"),
+        )
+        self.assertGreater(explicit.halvings, 0)
+        self.assertEqual(imex.halvings, 0)
+        self.assertEqual(imex.ledger.flux.clipping_added_m2, 0.0)
+        self.assertLess(imex.ledger.correlation_energy_change_J_m3, 0.0)
+
+    def test_local_reactions_are_bounded_and_close_line_and_burgers_ledgers(self) -> None:
+        reaction = ArrheniusMechanism(
+            ExpFloorEnthalpy(
+                0.05 * 1.602176634e-19, 1.0e9, 900.0, 0.5, 1.0, 2.0
+            ),
+            BoundedActivationEntropy(), 1.0e5,
+            validity_temperature_K=(500.0, 1400.0),
+            validity_stress_Pa=(0.0, 2.0e9),
+        )
+        parameters = replace(
+            self.parameters, multiplication_per_slip_m2=2.0e13,
+            annihilation=reaction, locking=reaction,
+            unlocking=reaction, wall_capture=reaction,
+        )
+        seeded = StaggeredSignedState(
+            self.state.signed.mobile_plus_m2,
+            self.state.signed.mobile_minus_m2,
+            self.state.signed.face_slip, self.b, self.dx,
+            np.full((4, self.n), 2.0e13),
+            np.full((4, self.n), 1.0e13),
+        )
+        advanced, ledger = apply_integrated_reactions(
+            seeded, np.full((4, self.n), 0.002),
+            self.state.temperature_K, 1.0e-5, parameters,
+        )
+        self.assertGreater(ledger.pair_generated_m2, 0.0)
+        self.assertGreater(ledger.pair_annihilated_m2, 0.0)
+        self.assertGreater(ledger.locked_transfer_m2, 0.0)
+        self.assertGreater(ledger.unlocked_transfer_m2, 0.0)
+        self.assertGreater(ledger.wall_capture_m2, 0.0)
+        self.assertLess(
+            abs(ledger.line_balance_residual_m2),
+            3.0e-15 * ledger.line_content_before_m2,
+        )
+        self.assertLess(
+            ledger.maximum_signed_burgers_residual_m2,
+            3.0e-15 * ledger.line_content_before_m2,
+        )
+        self.assertGreaterEqual(float(np.min(advanced.mobile_plus_m2)), 0.0)
+
+    def test_frozen_full_symbol_is_damped_through_nyquist(self) -> None:
+        weights = self.parameters.slip_dyads_crystal[:, 0, 2]
+        spectra = frozen_mode_eigenvalues_s_inv(
+            32, 16.0e-6, 2.5e14, 0.45e9 * weights, 900.0,
+            self.b, self.parameters,
+        )
+        maximum_real = max(
+            float(np.max(values.real)) for values in spectra.values()
+        )
+        self.assertLessEqual(maximum_real, 1.0e-7)
+        nyquist = spectra[16]
+        self.assertLess(float(np.max(nyquist.real)), -1.0e-3)
 
 
 if __name__ == "__main__":

@@ -145,12 +145,9 @@ plastic, correlation, line, and heat terms. Its complete checkpoint restarts
 bitwise. A homogeneous state reduces exactly to the corresponding local
 forward-minus-reverse Arrhenius/Orowan increment.
 
-This is a numerical-integration checkpoint, not a wall result. Local source,
-annihilation, locking/unlocking, and capture must next enter the same accepted
-interval; the explicit correlation update must then be compared with an IMEX
-form before a bounded nonlinear search. Grain and phase allocation remain
-absent, the collective DD law remains disabled, and the failed Gate B1 matrix
-remains authoritative.
+This is a numerical-integration checkpoint, not a wall result. Grain and phase
+allocation remain absent, the collective DD law remains disabled, and the
+failed Gate B1 matrix remains authoritative.
 
 The polygonization fixture now has a convex disordered/ordered wall free
 energy with configurational mixing. Its Arrhenius mobility relaxes toward the
@@ -158,3 +155,29 @@ thermodynamic minimum in either direction. A new independent Frank--Bilby
 residual accepts a kinematic orientation jump supplied separately from wall
 content; the earlier self-substitution residual remains only an implementation
 identity.
+
+## Integrated one-dimensional mechanism decision
+
+The stiff logarithmic-density part now uses a backward-Euler Fourier solve,
+while the nonlinear polarization potential and physical Arrhenius flux remain
+explicit. The resulting effective face flux reconstructs the complete density
+increment, so it also advances authoritative slip without breaking Nye
+compatibility. In a stiff fixture the explicit method halves its interval and
+the IMEX method accepts it whole; both remain filter-free and dissipative.
+
+The same accepted interval now includes bounded pair multiplication,
+equal-sign-pair annihilation, locking, unlocking, and wall capture. Each
+process has a separate ledger; only multiplication and annihilation change
+total line content, and none changes total signed Burgers content.
+
+A factorized local screen spans signed entropy, three positive backstress/
+diffusion ratios, three densities, 64/128/256 grids, 13/16/19 micrometer boxes,
+zero/below/driven/unload stresses, three physical-noise seeds, and two noise
+correlation lengths. All complete frozen eight-population spectra are damped
+through Nyquist; every nonlinear noise case reduces total-density contrast.
+This is a structural result: constant-stress Arrhenius flux supplies advection,
+and the positive variational energy supplies diffusion. Local mode-independent
+reactions cannot select a finite wavelength. Therefore this baseline cannot
+produce a spontaneous wall over the screened positive-energy parameter class.
+The next justified branch is state-dependent friction plus cross-family
+internal/reaction coupling, not a broader search of the same damped equations.

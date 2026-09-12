@@ -18,8 +18,10 @@ from scipy.linalg import expm
 from .arrhenius_v3 import ArrheniusMechanism
 from .cdd_flux_v3 import (
     logarithmic_mean,
+    variational_chemical_potentials_J_m,
     variational_correlation_energy_J_m3,
     variational_correlation_fluxes,
+    variational_correlation_imex_fluxes,
 )
 from .staggered_cdd import (
     StaggeredFluxLedger,
@@ -52,6 +54,12 @@ class IntegratedCDDParameters:
     diffusion_coefficient: float
     reference_density_m2: float
     density_floor_m2: float = 1.0e8
+    correlation_integration: str = "imex"
+    multiplication_per_slip_m2: float = 0.0
+    annihilation: ArrheniusMechanism | None = None
+    locking: ArrheniusMechanism | None = None
+    unlocking: ArrheniusMechanism | None = None
+    wall_capture: ArrheniusMechanism | None = None
 
     def __post_init__(self) -> None:
         for name in (
@@ -71,6 +79,13 @@ class IntegratedCDDParameters:
             raise ValueError("slip_dyads_crystal must have shape (4,3,3)")
         if np.max(np.abs(np.trace(dyads, axis1=1, axis2=2))) > 1.0e-12:
             raise ValueError("slip dyads must be isochoric")
+        if self.correlation_integration not in ("explicit", "imex"):
+            raise ValueError("correlation_integration must be 'explicit' or 'imex'")
+        if (
+            not math.isfinite(self.multiplication_per_slip_m2)
+            or self.multiplication_per_slip_m2 < 0.0
+        ):
+            raise ValueError("multiplication_per_slip_m2 must be nonnegative")
         object.__setattr__(self, "slip_dyads_crystal", dyads.copy())
 
 
@@ -133,6 +148,123 @@ class IntegratedCDDLedger:
     total_energy_residual_J_m3: float
     work_projection_residual_J_m3: float
     flux: StaggeredFluxLedger
+    reaction: "IntegratedReactionLedger"
+
+
+@dataclass(frozen=True)
+class IntegratedReactionLedger:
+    line_content_before_m2: float
+    pair_generated_m2: float
+    pair_annihilated_m2: float
+    locked_transfer_m2: float
+    unlocked_transfer_m2: float
+    wall_capture_m2: float
+    line_content_after_m2: float
+    line_balance_residual_m2: float
+    maximum_signed_burgers_residual_m2: float
+
+
+def apply_integrated_reactions(
+    state: StaggeredSignedState,
+    slip_increment_cell: np.ndarray,
+    temperature_K: np.ndarray,
+    dt_s: float,
+    parameters: IntegratedCDDParameters,
+) -> tuple[StaggeredSignedState, IntegratedReactionLedger]:
+    """Bounded pair/source and stationary-reservoir reaction substep."""
+
+    slip = np.asarray(slip_increment_cell, dtype=float)
+    temperature = np.asarray(temperature_K, dtype=float)
+    if slip.shape != state.mobile_plus_m2.shape:
+        raise ValueError("slip increment must match signed populations")
+    if temperature.shape != (slip.shape[1],):
+        raise ValueError("reaction temperature must be cellwise")
+    before_arrays = (
+        state.mobile_plus_m2, state.mobile_minus_m2,
+        state.locked_plus_m2, state.locked_minus_m2,
+        state.wall_plus_m2, state.wall_minus_m2,
+    )
+    before = float(sum(np.sum(x) for x in before_arrays))
+    signed_before = state.total_signed_density_m2
+    pair_each = 0.5 * parameters.multiplication_per_slip_m2 * np.abs(slip)
+    mobile_plus = state.mobile_plus_m2 + pair_each
+    mobile_minus = state.mobile_minus_m2 + pair_each
+    locked_plus = state.locked_plus_m2.copy()
+    locked_minus = state.locked_minus_m2.copy()
+    wall_plus = state.wall_plus_m2.copy()
+    wall_minus = state.wall_minus_m2.copy()
+    generated = float(2.0 * np.sum(pair_each))
+    annihilated = 0.0
+    locked_amount = 0.0
+    unlocked_amount = 0.0
+    wall_amount = 0.0
+
+    def rate(mechanism: ArrheniusMechanism | None, family: int, cell: int) -> float:
+        if mechanism is None:
+            return 0.0
+        density = max(
+            float(mobile_plus[family, cell] + mobile_minus[family, cell]),
+            parameters.density_floor_m2,
+        )
+        return mechanism.one_way_rate_s_inv(
+            0.0, float(temperature[cell]), density
+        )
+
+    for family, cell in np.ndindex(slip.shape):
+        annihilation_fraction = -math.expm1(
+            -rate(parameters.annihilation, family, cell) * dt_s
+        )
+        removed_each = annihilation_fraction * min(
+            mobile_plus[family, cell], mobile_minus[family, cell]
+        )
+        mobile_plus[family, cell] -= removed_each
+        mobile_minus[family, cell] -= removed_each
+        annihilated += 2.0 * removed_each
+
+        unlock_fraction = -math.expm1(
+            -rate(parameters.unlocking, family, cell) * dt_s
+        )
+        unlock_plus = unlock_fraction * locked_plus[family, cell]
+        unlock_minus = unlock_fraction * locked_minus[family, cell]
+        locked_plus[family, cell] -= unlock_plus
+        locked_minus[family, cell] -= unlock_minus
+        mobile_plus[family, cell] += unlock_plus
+        mobile_minus[family, cell] += unlock_minus
+        unlocked_amount += unlock_plus + unlock_minus
+
+        lock_rate = rate(parameters.locking, family, cell)
+        wall_rate = rate(parameters.wall_capture, family, cell)
+        total_rate = lock_rate + wall_rate
+        if total_rate > 0.0:
+            transfer_fraction = -math.expm1(-total_rate * dt_s)
+            lock_fraction = transfer_fraction * lock_rate / total_rate
+            wall_fraction = transfer_fraction * wall_rate / total_rate
+            lock_plus = lock_fraction * mobile_plus[family, cell]
+            lock_minus = lock_fraction * mobile_minus[family, cell]
+            capture_plus = wall_fraction * mobile_plus[family, cell]
+            capture_minus = wall_fraction * mobile_minus[family, cell]
+            mobile_plus[family, cell] -= lock_plus + capture_plus
+            mobile_minus[family, cell] -= lock_minus + capture_minus
+            locked_plus[family, cell] += lock_plus
+            locked_minus[family, cell] += lock_minus
+            wall_plus[family, cell] += capture_plus
+            wall_minus[family, cell] += capture_minus
+            locked_amount += lock_plus + lock_minus
+            wall_amount += capture_plus + capture_minus
+
+    advanced = StaggeredSignedState(
+        mobile_plus, mobile_minus, state.face_slip, state.burgers_m, state.dx_m,
+        locked_plus, locked_minus, wall_plus, wall_minus,
+    )
+    after = float(sum(np.sum(x) for x in (
+        mobile_plus, mobile_minus, locked_plus, locked_minus,
+        wall_plus, wall_minus,
+    )))
+    return advanced, IntegratedReactionLedger(
+        before, generated, annihilated, locked_amount, unlocked_amount,
+        wall_amount, after, after - (before + generated - annihilated),
+        float(np.max(np.abs(advanced.total_signed_density_m2 - signed_before))),
+    )
 
 
 @dataclass(frozen=True)
@@ -158,6 +290,128 @@ def _common_stress_Pa(state: IntegratedCDDState, parameters: IntegratedCDDParame
     )
 
 
+def frozen_mobile_rhs_m2_s(
+    mobile_plus_m2: np.ndarray,
+    mobile_minus_m2: np.ndarray,
+    resolved_shear_Pa: np.ndarray,
+    temperature_K: np.ndarray,
+    burgers_m: float,
+    dx_m: float,
+    parameters: IntegratedCDDParameters,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Semidiscrete explicit flux RHS used for the frozen-state spectrum."""
+
+    plus = np.asarray(mobile_plus_m2, dtype=float)
+    minus = np.asarray(mobile_minus_m2, dtype=float)
+    stress = np.asarray(resolved_shear_Pa, dtype=float)
+    temperature = np.asarray(temperature_K, dtype=float)
+    if plus.shape != minus.shape or plus.shape != stress.shape or plus.shape[0] != 4:
+        raise ValueError("frozen fields must share a four-family grid")
+    if temperature.shape != (plus.shape[1],):
+        raise ValueError("temperature must be cellwise")
+    stress_face = 0.5 * (stress + np.roll(stress, -1, axis=1))
+    temperature_face = 0.5 * (temperature + np.roll(temperature, -1))
+
+    def physical_flux(population: np.ndarray, stress_sign: float) -> np.ndarray:
+        face_population = np.maximum(
+            logarithmic_mean(
+                population + parameters.density_floor_m2,
+                np.roll(population, -1, axis=1) + parameters.density_floor_m2,
+            ) - parameters.density_floor_m2,
+            0.0,
+        )
+        velocity = np.empty_like(population)
+        for family, cell in np.ndindex(population.shape):
+            velocity[family, cell] = parameters.glide.net_rate_s_inv(
+                stress_sign * float(stress_face[family, cell]),
+                float(temperature_face[cell]),
+            )
+        return face_population * velocity
+
+    flux_plus = physical_flux(plus, 1.0)
+    flux_minus = physical_flux(minus, -1.0)
+    corr_plus, corr_minus = variational_correlation_fluxes(
+        plus, minus,
+        np.full_like(plus, parameters.correlation_mobility_m_Pa_s),
+        np.full(plus.shape[1], parameters.shear_modulus_Pa),
+        burgers_m, dx_m,
+        backstress_coefficient=parameters.backstress_coefficient,
+        diffusion_coefficient=parameters.diffusion_coefficient,
+        reference_density_m2=parameters.reference_density_m2,
+        density_floor_m2=parameters.density_floor_m2,
+    )
+    return (
+        -(flux_plus + corr_plus - np.roll(flux_plus + corr_plus, 1, axis=1)) / dx_m,
+        -(flux_minus + corr_minus - np.roll(flux_minus + corr_minus, 1, axis=1)) / dx_m,
+    )
+
+
+def frozen_mode_eigenvalues_s_inv(
+    grid_points: int,
+    domain_m: float,
+    density_per_population_m2: float,
+    resolved_shear_by_family_Pa: np.ndarray,
+    temperature_K: float,
+    burgers_m: float,
+    parameters: IntegratedCDDParameters,
+    *,
+    relative_increment: float = 1.0e-6,
+) -> dict[int, np.ndarray]:
+    """Numerical 8-population Fourier symbol through the Nyquist mode."""
+
+    if grid_points < 4 or grid_points % 2:
+        raise ValueError("an even grid with at least four points is required")
+    if domain_m <= 0.0 or density_per_population_m2 <= 0.0:
+        raise ValueError("domain and density must be positive")
+    stresses = np.asarray(resolved_shear_by_family_Pa, dtype=float)
+    if stresses.shape != (4,):
+        raise ValueError("exactly four resolved family stresses are required")
+    dx_m = domain_m / grid_points
+    base_plus = np.full((4, 1), density_per_population_m2)
+    base_minus = base_plus.copy()
+    amplitude = relative_increment * density_per_population_m2
+    base_chemical = np.concatenate(variational_chemical_potentials_J_m(
+        base_plus, base_minus, np.asarray([parameters.shear_modulus_Pa]),
+        burgers_m,
+        backstress_coefficient=parameters.backstress_coefficient,
+        diffusion_coefficient=parameters.diffusion_coefficient,
+        reference_density_m2=parameters.reference_density_m2,
+        density_floor_m2=parameters.density_floor_m2,
+    ), axis=0)[:, 0]
+    hessian = np.zeros((8, 8))
+    for column in range(8):
+        plus = base_plus.copy()
+        minus = base_minus.copy()
+        (plus if column < 4 else minus)[column % 4, 0] += amplitude
+        shifted = np.concatenate(variational_chemical_potentials_J_m(
+            plus, minus, np.asarray([parameters.shear_modulus_Pa]), burgers_m,
+            backstress_coefficient=parameters.backstress_coefficient,
+            diffusion_coefficient=parameters.diffusion_coefficient,
+            reference_density_m2=parameters.reference_density_m2,
+            density_floor_m2=parameters.density_floor_m2,
+        ), axis=0)[:, 0]
+        hessian[:, column] = (shifted - base_chemical) / amplitude
+    velocities = np.asarray([
+        parameters.glide.net_rate_s_inv(float(stress), temperature_K)
+        for stress in stresses
+    ])
+    advection_velocity = np.concatenate((velocities, -velocities))
+    population_mobility = (
+        parameters.correlation_mobility_m_Pa_s
+        * density_per_population_m2 / burgers_m
+    )
+    spectra: dict[int, np.ndarray] = {}
+    for mode in range(1, grid_points // 2 + 1):
+        angle = 2.0 * np.pi * mode / grid_points
+        laplacian_symbol = -4.0 * math.sin(0.5 * angle) ** 2 / dx_m**2
+        symbol = population_mobility * laplacian_symbol * hessian
+        symbol = symbol.astype(complex) - 1j * np.diag(
+            advection_velocity * math.sin(angle) / dx_m
+        )
+        spectra[mode] = np.linalg.eigvals(symbol)
+    return spectra
+
+
 def integrated_cdd_step(
     state: IntegratedCDDState,
     applied_shear_rate_s_inv: float,
@@ -166,11 +420,11 @@ def integrated_cdd_step(
     *,
     maximum_halvings: int = 40,
 ) -> IntegratedCDDStep:
-    """Advance one energy-checked explicit coupled interval.
+    """Advance one energy-checked coupled explicit/IMEX interval.
 
-    The correlation subsystem is variational but currently explicit.  Step
-    rejection, rather than clipping, handles its stiffness until the IMEX
-    implementation is qualified.
+    The stiff logarithmic diffusion is implicit by default; the nonlinear
+    polarization and physical Arrhenius fluxes remain explicit. Step rejection,
+    rather than clipping or filtering, controls the remaining explicit terms.
     """
 
     if not math.isfinite(applied_shear_rate_s_inv):
@@ -211,17 +465,6 @@ def integrated_cdd_step(
         physical_minus[family, cell] = minus_face[family, cell] * parameters.glide.net_rate_s_inv(
             float(-resolved_face[family, cell]), float(temperature_face[cell])
         )
-    correlation_plus, correlation_minus = variational_correlation_fluxes(
-        signed.mobile_plus_m2, signed.mobile_minus_m2,
-        np.full_like(signed.mobile_plus_m2, parameters.correlation_mobility_m_Pa_s),
-        np.full(cells, parameters.shear_modulus_Pa), signed.burgers_m, signed.dx_m,
-        backstress_coefficient=parameters.backstress_coefficient,
-        diffusion_coefficient=parameters.diffusion_coefficient,
-        reference_density_m2=parameters.reference_density_m2,
-        density_floor_m2=parameters.density_floor_m2,
-    )
-    flux_plus = physical_plus + correlation_plus
-    flux_minus = physical_minus + correlation_minus
     old_corr = float(np.mean(variational_correlation_energy_J_m3(
         signed.mobile_plus_m2, signed.mobile_minus_m2,
         np.full(cells, parameters.shear_modulus_Pa), signed.burgers_m,
@@ -238,6 +481,35 @@ def integrated_cdd_step(
     weights = parameters.slip_dyads_crystal[:, 0, 2]
     dt_s = proposed_dt_s
     for halvings in range(maximum_halvings + 1):
+        correlation_kwargs = dict(
+            backstress_coefficient=parameters.backstress_coefficient,
+            diffusion_coefficient=parameters.diffusion_coefficient,
+            reference_density_m2=parameters.reference_density_m2,
+            density_floor_m2=parameters.density_floor_m2,
+        )
+        if parameters.correlation_integration == "imex":
+            try:
+                correlation_plus, correlation_minus = variational_correlation_imex_fluxes(
+                    signed.mobile_plus_m2, signed.mobile_minus_m2,
+                    parameters.correlation_mobility_m_Pa_s,
+                    parameters.shear_modulus_Pa, signed.burgers_m,
+                    signed.dx_m, dt_s, **correlation_kwargs,
+                )
+            except RuntimeError:
+                dt_s *= 0.5
+                continue
+        else:
+            correlation_plus, correlation_minus = variational_correlation_fluxes(
+                signed.mobile_plus_m2, signed.mobile_minus_m2,
+                np.full_like(
+                    signed.mobile_plus_m2,
+                    parameters.correlation_mobility_m_Pa_s,
+                ),
+                np.full(cells, parameters.shear_modulus_Pa),
+                signed.burgers_m, signed.dx_m, **correlation_kwargs,
+            )
+        flux_plus = physical_plus + correlation_plus
+        flux_minus = physical_minus + correlation_minus
         try:
             advanced_signed, flux_ledger = advance_staggered_flux_with_ledger(
                 signed, flux_plus, flux_minus, dt_s
@@ -250,6 +522,10 @@ def integrated_cdd_step(
             continue
         slip_increment_face = advanced_signed.face_slip - signed.face_slip
         slip_increment_cell = cell_centered_slip(slip_increment_face)
+        advanced_signed, reaction_ledger = apply_integrated_reactions(
+            advanced_signed, slip_increment_cell, state.temperature_K,
+            dt_s, parameters,
+        )
         macro_increment = np.sum(weights[:, None] * slip_increment_cell, axis=0)
         applied_increment = applied_shear_rate_s_inv * dt_s
         new_applied = state.applied_shear + applied_increment
@@ -324,7 +600,7 @@ def integrated_cdd_step(
             IntegratedCDDLedger(
                 external, elastic_change, plastic_work, correlation_change,
                 line_change, heat, thermal_change, residual,
-                projection_residual, flux_ledger,
+                projection_residual, flux_ledger, reaction_ledger,
             ),
             resolved, flux_plus, flux_minus, dt_s, halvings,
         )
@@ -338,6 +614,9 @@ INTEGRATED_PARAMETER_CLASSIFICATION = {
     "backstress_coefficient": "generic_development_parameter",
     "diffusion_coefficient": "generic_development_parameter",
     "density_floor_m2": "numerical_regularization",
+    "correlation_integration": "numerical_regularization",
+    "multiplication_per_slip_m2": "generic_development_parameter",
+    "reaction_Arrhenius_mechanisms": "generic_development_parameter",
     "collective_DD_closure": "disabled_ablation_only",
 }
 

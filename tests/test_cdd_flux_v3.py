@@ -11,6 +11,7 @@ from asb_drx.cdd_flux_v3 import (
     variational_chemical_potentials_J_m,
     variational_correlation_energy_J_m3,
     variational_correlation_fluxes,
+    variational_correlation_imex_fluxes,
     variational_dissipation_J_m2_s,
 )
 from asb_drx.physical_noise import periodic_physical_noise
@@ -149,6 +150,41 @@ class CDDFluxV3Tests(unittest.TestCase):
             self.assertEqual(float(np.max(np.abs(flux_plus[1]))), 0.0)
             records.append(float(np.max(np.abs(flux_minus))))
         self.assertLess(abs(records[-1] - records[-2]), abs(records[1] - records[0]))
+
+    def test_imex_flux_reconstructs_conservative_positive_energy_decay(self) -> None:
+        x = np.arange(self.n)
+        plus = np.full((2, self.n), 0.5 * self.rho)
+        minus = plus.copy()
+        plus[0] *= 1.0 + 0.2 * np.cos(2.0 * np.pi * 11.0 * x / self.n)
+        minus[0] *= 1.0 - 0.1 * np.cos(2.0 * np.pi * 11.0 * x / self.n)
+        kwargs = dict(
+            backstress_coefficient=0.7, diffusion_coefficient=1.1,
+            reference_density_m2=self.rho, density_floor_m2=1.0e8,
+        )
+        dt = 2.0e-5
+        flux_plus, flux_minus = variational_correlation_imex_fluxes(
+            plus, minus, float(self.mobility[0, 0]), float(self.mu[0]),
+            self.burgers, self.dx, dt, **kwargs,
+        )
+        updated_plus = plus + dt * (
+            -(flux_plus - np.roll(flux_plus, 1, axis=1)) / self.dx
+        )
+        updated_minus = minus + dt * (
+            -(flux_minus - np.roll(flux_minus, 1, axis=1)) / self.dx
+        )
+        self.assertGreaterEqual(float(np.min(updated_plus)), 0.0)
+        self.assertGreaterEqual(float(np.min(updated_minus)), 0.0)
+        np.testing.assert_allclose(
+            np.sum(updated_plus, axis=1), np.sum(plus, axis=1),
+            rtol=2.0e-16, atol=2.0,
+        )
+        old_energy = float(np.mean(variational_correlation_energy_J_m3(
+            plus, minus, self.mu, self.burgers, **kwargs
+        )))
+        new_energy = float(np.mean(variational_correlation_energy_J_m3(
+            updated_plus, updated_minus, self.mu, self.burgers, **kwargs
+        )))
+        self.assertLess(new_energy, old_energy)
 
 
 if __name__ == "__main__":
