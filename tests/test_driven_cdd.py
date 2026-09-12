@@ -25,6 +25,7 @@ from asb_drx.driven_cdd import (
     initialize_driven_cdd,
     load_driven_checkpoint,
     save_driven_checkpoint,
+    advance_driven_cdd,
 )
 
 
@@ -169,10 +170,35 @@ class DrivenCDDUnitTests(unittest.TestCase):
             "plastic_deformation_gradient", "initial_orientation",
             "mobile_plus_m2", "mobile_minus_m2", "locked_plus_m2",
             "locked_minus_m2", "temperature_K",
+            "accumulated_slip",
         ):
             np.testing.assert_array_equal(getattr(restored, name), getattr(state, name))
         self.assertEqual(restored.axial_true_strain, state.axial_true_strain)
         self.assertEqual(restored.time_s, state.time_s)
+
+    def test_coupled_refresh_makes_requested_step_partition_invariant(self):
+        initial = initialize_driven_cdd(
+            16, self.parameters, self.gate_a,
+            total_noise_amplitude=0.002, signed_noise_amplitude=0.001, seed=13,
+        )
+        coarse, _ = advance_driven_cdd(
+            initial, 2.0e8, 5.0e-4, 5.0e-4,
+            self.parameters, self.gate_a,
+        )
+        fine, _ = advance_driven_cdd(
+            initial, 2.0e8, 5.0e-4, 1.25e-4,
+            self.parameters, self.gate_a,
+        )
+        np.testing.assert_allclose(
+            coarse.mobile_plus_m2, fine.mobile_plus_m2, rtol=2.0e-13
+        )
+        np.testing.assert_allclose(
+            coarse.mobile_minus_m2, fine.mobile_minus_m2, rtol=2.0e-13
+        )
+        np.testing.assert_allclose(
+            coarse.plastic_deformation_gradient,
+            fine.plastic_deformation_gradient, rtol=2.0e-13, atol=2.0e-15,
+        )
 
     def test_driven_dispersion_has_emergent_finite_mode_and_no_label_surface(self):
         state = initialize_driven_cdd(64, self.parameters, self.gate_a)

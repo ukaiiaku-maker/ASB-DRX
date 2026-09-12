@@ -13,13 +13,15 @@ Updated: 2026-09-11 (America/Los_Angeles)
   density-weighted fluxes; pair sources and locked transfers close signed and
   total-content ledgers. No wavelength, phase field, or grain-label state is
   present.
-- The Groma--Zaiser flowing-state linear diagnostic predicts an emergent
-  finite mode (25--28 in the 16 micrometer onset snapshot) and zero unloaded
-  instability. The first nonlinear fields are rejected: mode and GND amplitude
-  fail strain-increment refinement and total-density power reaches the grid
-  Nyquist range. `physical_CDD_wall_gate_passed=false`; no Gate B1 HPC3 job has
-  been submitted. The next task is a convergent, internally refreshed coupled
-  transport integrator, followed by the seed/domain/density/temperature matrix.
+- The density-only Groma--Zaiser reference predicts a finite driven mode and
+  zero unloaded instability, but the finite-differenced full 12-state
+  population/slip/Gate-A operator selects mode 1. A coupled internal refresh
+  limit corrects the earlier split-step artifact: requested increments from
+  `5e-4` to `1.25e-4` agree to `1.6e-14` on global field scale. Three converged
+  seeds remain homogeneous through strain 0.015, with GND/total only `0.82e-6`
+  to `1.38e-6`. `physical_CDD_wall_gate_passed=false`; no Gate B1 HPC3 job has
+  been submitted. Mechanically equilibrated spatial stress is the next model
+  task before the deferred robustness matrix.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC

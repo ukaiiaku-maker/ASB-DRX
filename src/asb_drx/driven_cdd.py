@@ -32,6 +32,7 @@ class DrivenCDDParameters:
     diffusion_coefficient: float = 1.0
     elastic_kernel_scale: float = 0.25
     cfl_limit: float = 0.35
+    max_coupled_strain_increment: float = 1.25e-4
     density_floor_m2: float = 1.0e8
     collective_scale: float = 0.0
     same_family_lock_rate_s_inv: float = 0.0
@@ -39,7 +40,7 @@ class DrivenCDDParameters:
     cross_family_lock_rate_s_inv: float = 0.0
 
     def __post_init__(self) -> None:
-        for name in ("domain_m", "backstress_coefficient", "diffusion_coefficient", "cfl_limit", "density_floor_m2"):
+        for name in ("domain_m", "backstress_coefficient", "diffusion_coefficient", "cfl_limit", "max_coupled_strain_increment", "density_floor_m2"):
             value = getattr(self, name)
             if not math.isfinite(value) or value <= 0.0:
                 raise ValueError(f"{name} must be finite and positive")
@@ -65,6 +66,7 @@ class DrivenCDDState:
     axial_true_strain: float = 0.0
     time_s: float = 0.0
     accepted_steps: int = 0
+    accumulated_slip: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         fp = np.asarray(self.plastic_deformation_gradient, dtype=float)
@@ -74,6 +76,10 @@ class DrivenCDDState:
         locked_plus = np.asarray(self.locked_plus_m2, dtype=float)
         locked_minus = np.asarray(self.locked_minus_m2, dtype=float)
         temperature = np.asarray(self.temperature_K, dtype=float)
+        slip = (
+            np.zeros_like(plus) if self.accumulated_slip is None
+            else np.asarray(self.accumulated_slip, dtype=float)
+        )
         if plus.ndim != 2 or plus.shape[0] != 4:
             raise ValueError("signed populations must have shape (4, n)")
         n = plus.shape[1]
@@ -81,7 +87,9 @@ class DrivenCDDState:
             raise ValueError("all population arrays must have shape (4, n)")
         if fp.shape != (n, 3, 3) or orientation.shape != (n, 3, 3) or temperature.shape != (n,):
             raise ValueError("spatial Gate A fields have inconsistent shapes")
-        if any(np.any(~np.isfinite(item)) for item in (fp, orientation, plus, minus, locked_plus, locked_minus, temperature)):
+        if slip.shape != plus.shape:
+            raise ValueError("accumulated slip must have shape (4, n)")
+        if any(np.any(~np.isfinite(item)) for item in (fp, orientation, plus, minus, locked_plus, locked_minus, temperature, slip)):
             raise ValueError("state fields must be finite")
         if any(np.any(item < 0.0) for item in (plus, minus, locked_plus, locked_minus)):
             raise ValueError("all line populations must be nonnegative")
@@ -94,6 +102,7 @@ class DrivenCDDState:
             ("mobile_plus_m2", plus), ("mobile_minus_m2", minus),
             ("locked_plus_m2", locked_plus), ("locked_minus_m2", locked_minus),
             ("temperature_K", temperature),
+            ("accumulated_slip", slip),
         ):
             object.__setattr__(self, name, value.copy())
 
@@ -397,7 +406,7 @@ def _upwind_step(density: np.ndarray, velocity: np.ndarray, dt_s: float, dx_m: f
     return np.maximum(updated, 0.0)
 
 
-def driven_cdd_step(
+def _driven_cdd_single_step(
     state: DrivenCDDState,
     axial_rate_s_inv: float,
     strain_increment: float,
@@ -493,6 +502,7 @@ def driven_cdd_step(
         fp, state.initial_orientation, plus, minus, locked_plus, locked_minus,
         state.temperature_K, state.axial_true_strain + strain_increment,
         state.time_s + dt_s, state.accepted_steps + 1,
+        state.accumulated_slip + response.actual_shear_rates_s_inv * dt_s,
     )
 
     mobile_after = float(np.sum(plus + minus) * dx)
@@ -530,6 +540,108 @@ def driven_cdd_step(
     ), ledger
 
 
+def _is_spatially_homogeneous(state: DrivenCDDState) -> bool:
+    fields = (
+        state.mobile_plus_m2, state.mobile_minus_m2,
+        state.locked_plus_m2, state.locked_minus_m2,
+    )
+    populations_uniform = all(
+        np.allclose(field, field[:, :1], rtol=2.0e-14, atol=1.0)
+        for field in fields
+    )
+    fp_uniform = np.allclose(
+        state.plastic_deformation_gradient,
+        state.plastic_deformation_gradient[:1], rtol=2.0e-14, atol=2.0e-15,
+    )
+    temperature_uniform = np.allclose(
+        state.temperature_K, state.temperature_K[0], rtol=0.0, atol=1.0e-12
+    )
+    return bool(populations_uniform and fp_uniform and temperature_uniform)
+
+
+def driven_cdd_step(
+    state: DrivenCDDState,
+    axial_rate_s_inv: float,
+    strain_increment: float,
+    parameters: DrivenCDDParameters,
+    gate_a_parameters: BertinBCCParameters,
+) -> tuple[DrivenCDDState, DrivenCDDResponse, CDDLedger]:
+    """Advance one requested step with coupled internal accuracy control.
+
+    A homogeneous state takes exactly one Gate-A step, preserving the exact
+    reduction. A spatially nonuniform state is refreshed at a declared maximum
+    load increment in addition to its density-flux CFL subcycling.
+    """
+
+    subdivisions = 1
+    if not _is_spatially_homogeneous(state):
+        subdivisions = max(
+            1, int(math.ceil(
+                abs(strain_increment) / parameters.max_coupled_strain_increment
+            )),
+        )
+    if subdivisions == 1:
+        return _driven_cdd_single_step(
+            state, axial_rate_s_inv, strain_increment,
+            parameters, gate_a_parameters,
+        )
+    current = state
+    responses: list[DrivenCDDResponse] = []
+    ledgers: list[CDDLedger] = []
+    increment = strain_increment / subdivisions
+    for _ in range(subdivisions):
+        current, response, ledger = _driven_cdd_single_step(
+            current, axial_rate_s_inv, increment,
+            parameters, gate_a_parameters,
+        )
+        responses.append(response)
+        ledgers.append(ledger)
+    dx = parameters.domain_m / state.grid_points
+    signed_before = np.sum(
+        state.mobile_plus_m2 - state.mobile_minus_m2
+        + state.locked_plus_m2 - state.locked_minus_m2, axis=1
+    ) * dx
+    signed_after = np.sum(
+        current.mobile_plus_m2 - current.mobile_minus_m2
+        + current.locked_plus_m2 - current.locked_minus_m2, axis=1
+    ) * dx
+    signed_residual = signed_after - signed_before
+    directions, _ = default_slip_geometry()
+    vector_residual = gate_a_parameters.burgers_m * np.sum(
+        signed_residual[:, None] * directions, axis=0
+    )
+    first, last = ledgers[0], ledgers[-1]
+    generated = sum(item.pair_multiplication_m_inv for item in ledgers)
+    removed = sum(item.pair_annihilation_m_inv for item in ledgers)
+    combined = CDDLedger(
+        first.mobile_before_m_inv, 0.0, generated, removed,
+        sum(item.annihilation_limited_m_inv for item in ledgers),
+        sum(item.same_family_lock_transfer_m_inv for item in ledgers),
+        sum(item.cross_family_lock_transfer_m_inv for item in ledgers),
+        sum(item.unlock_transfer_m_inv for item in ledgers),
+        last.mobile_after_m_inv, first.locked_before_m_inv,
+        last.locked_after_m_inv,
+        (last.mobile_after_m_inv + last.locked_after_m_inv)
+        - (first.mobile_before_m_inv + first.locked_before_m_inv
+           + generated - removed),
+        float(np.max(np.abs(signed_residual))),
+        float(np.linalg.norm(vector_residual)),
+    )
+    final_response = responses[-1]
+    final_response = DrivenCDDResponse(
+        final_response.resolved_shear_Pa, final_response.effective_shear_Pa,
+        final_response.taylor_friction_Pa, final_response.patterning_active,
+        final_response.gate_a_shear_rates_s_inv,
+        final_response.actual_shear_rates_s_inv,
+        final_response.velocity_plus_m_s, final_response.velocity_minus_m_s,
+        final_response.self_consistent_stress_Pa,
+        final_response.backstress_Pa, final_response.diffusion_stress_Pa,
+        final_response.orientations, final_response.slip_dyads,
+        sum(item.transport_substeps for item in responses),
+    )
+    return current, final_response, combined
+
+
 def advance_driven_cdd(
     state: DrivenCDDState,
     axial_rate_s_inv: float,
@@ -562,21 +674,66 @@ def advance_driven_cdd(
     return current, tuple(ledgers)
 
 
+def hold_driven_cdd(
+    state: DrivenCDDState,
+    duration_s: float,
+    time_increment_s: float,
+    parameters: DrivenCDDParameters,
+    gate_a_parameters: BertinBCCParameters,
+) -> tuple[DrivenCDDState, tuple[CDDLedger, ...]]:
+    """Relax at fixed total axial strain while retaining full CDD feedback.
+
+    The Gate-A step uses its lower-envelope reference rate only to express the
+    requested physical time as a strain increment.  Resetting total strain
+    after every accepted substep makes the deformation clamp explicit; `Fp`,
+    density sources, signed transport, orientation, and time all evolve.
+    """
+
+    if duration_s < 0.0 or time_increment_s <= 0.0:
+        raise ValueError("hold duration must be nonnegative and increment positive")
+    if duration_s == 0.0:
+        return state, ()
+    reference_rate = gate_a_parameters.reference_axial_rate_min_s_inv
+    maximum_dt = parameters.max_coupled_strain_increment / reference_rate
+    dt_nominal = min(time_increment_s, maximum_dt)
+    fixed_strain = state.axial_true_strain
+    current = state
+    ledgers: list[CDDLedger] = []
+    elapsed = 0.0
+    while elapsed < duration_s - 1.0e-24:
+        dt = min(dt_nominal, duration_s - elapsed)
+        advanced, _, ledger = _driven_cdd_single_step(
+            current, reference_rate, reference_rate * dt,
+            parameters, gate_a_parameters,
+        )
+        current = DrivenCDDState(
+            advanced.plastic_deformation_gradient, advanced.initial_orientation,
+            advanced.mobile_plus_m2, advanced.mobile_minus_m2,
+            advanced.locked_plus_m2, advanced.locked_minus_m2,
+            advanced.temperature_K, fixed_strain, advanced.time_s,
+            advanced.accepted_steps, advanced.accumulated_slip,
+        )
+        ledgers.append(ledger)
+        elapsed += dt
+    return current, tuple(ledgers)
+
+
 def save_driven_checkpoint(path: str | Path, state: DrivenCDDState) -> None:
     np.savez(
-        Path(path), schema=np.asarray("asb-drx-driven-cdd/v1"),
+        Path(path), schema=np.asarray("asb-drx-driven-cdd/v2"),
         plastic_deformation_gradient=state.plastic_deformation_gradient,
         initial_orientation=state.initial_orientation,
         mobile_plus_m2=state.mobile_plus_m2, mobile_minus_m2=state.mobile_minus_m2,
         locked_plus_m2=state.locked_plus_m2, locked_minus_m2=state.locked_minus_m2,
         temperature_K=state.temperature_K, axial_true_strain=np.asarray(state.axial_true_strain),
         time_s=np.asarray(state.time_s), accepted_steps=np.asarray(state.accepted_steps, dtype=np.int64),
+        accumulated_slip=state.accumulated_slip,
     )
 
 
 def load_driven_checkpoint(path: str | Path) -> DrivenCDDState:
     with np.load(Path(path), allow_pickle=False) as archive:
-        if str(archive["schema"]) != "asb-drx-driven-cdd/v1":
+        if str(archive["schema"]) != "asb-drx-driven-cdd/v2":
             raise ValueError("unsupported driven CDD checkpoint schema")
         return DrivenCDDState(
             archive["plastic_deformation_gradient"], archive["initial_orientation"],
@@ -584,6 +741,7 @@ def load_driven_checkpoint(path: str | Path) -> DrivenCDDState:
             archive["locked_plus_m2"], archive["locked_minus_m2"],
             archive["temperature_K"], float(archive["axial_true_strain"]),
             float(archive["time_s"]), int(archive["accepted_steps"]),
+            archive["accumulated_slip"],
         )
 
 
@@ -675,11 +833,121 @@ def homogeneous_dispersion_snapshot(
             "unstable": bool(np.max(growth) > 0.0),
             "fastest_discrete_mode": mode,
             "fastest_wavelength_m": (
-                parameters.domain_m / mode if mode > 0 else math.inf
+                parameters.domain_m / mode if mode > 0 else None
             ),
             "maximum_dimensionless_growth": float(np.max(growth)),
         })
     return {"families": family_records, "no_prescribed_wavelength": True}
+
+
+def full_linearized_amplification_spectrum(
+    homogeneous_state: DrivenCDDState,
+    axial_rate_s_inv: float,
+    strain_increment: float,
+    parameters: DrivenCDDParameters,
+    gate_a_parameters: BertinBCCParameters,
+    *,
+    relative_perturbation: float = 2.0e-6,
+) -> dict[str, object]:
+    """Finite-difference the physical `(rho+,rho-,gamma_a)` map.
+
+    Unlike :func:`homogeneous_dispersion_snapshot`, this operator includes the
+    implemented Gate-A source, MRSSP/orientation feedback, finite-volume flux,
+    and multiplicative plastic update.  Similarity scaling of density rows and
+    columns keeps its eigenvalues independent of SI field magnitudes.
+    """
+
+    if not _is_spatially_homogeneous(homogeneous_state):
+        raise ValueError("linearized spectrum requires a homogeneous state")
+    if not 0.0 < relative_perturbation < 1.0e-3:
+        raise ValueError("relative perturbation is outside the linear probe range")
+    n = homogeneous_state.grid_points
+    base, _, _ = _driven_cdd_single_step(
+        homogeneous_state, axial_rate_s_inv, strain_increment,
+        parameters, gate_a_parameters,
+    )
+    input_density = np.concatenate((
+        homogeneous_state.mobile_plus_m2[:, 0],
+        homogeneous_state.mobile_minus_m2[:, 0],
+    ))
+    scales = np.concatenate((input_density, np.ones(4)))
+    reference_response = evaluate_driven_cdd(
+        homogeneous_state, parameters, gate_a_parameters
+    )
+    reference_dyads = reference_response.slip_dyads[:, 0]
+    dyad_design = reference_dyads.reshape(4, 9).T
+    dyad_projector = np.linalg.pinv(dyad_design)
+    coordinate = np.arange(n)
+    records: list[dict[str, object]] = []
+    dt_s = strain_increment / axial_rate_s_inv
+    for mode in range(1, n // 2):
+        cosine = np.cos(2.0 * np.pi * mode * coordinate / n)
+        matrix = np.zeros((12, 12), dtype=complex)
+        for column in range(12):
+            plus = homogeneous_state.mobile_plus_m2.copy()
+            minus = homogeneous_state.mobile_minus_m2.copy()
+            fp = homogeneous_state.plastic_deformation_gradient.copy()
+            amplitude = relative_perturbation * scales[column]
+            if column < 8:
+                population = plus if column < 4 else minus
+                population[column % 4] += amplitude * cosine
+            else:
+                family = column - 8
+                for cell in range(n):
+                    fp[cell] = expm(
+                        amplitude * cosine[cell] * reference_dyads[family]
+                    ) @ fp[cell]
+            perturbed = DrivenCDDState(
+                fp, homogeneous_state.initial_orientation, plus, minus,
+                homogeneous_state.locked_plus_m2,
+                homogeneous_state.locked_minus_m2,
+                homogeneous_state.temperature_K,
+                homogeneous_state.axial_true_strain,
+                homogeneous_state.time_s,
+                homogeneous_state.accepted_steps,
+            )
+            advanced, _, _ = _driven_cdd_single_step(
+                perturbed, axial_rate_s_inv, strain_increment,
+                parameters, gate_a_parameters,
+            )
+            density_difference = np.concatenate((
+                advanced.mobile_plus_m2 - base.mobile_plus_m2,
+                advanced.mobile_minus_m2 - base.mobile_minus_m2,
+            ))
+            relative_fp = np.empty((n, 9))
+            for cell in range(n):
+                relative_fp[cell] = (
+                    (advanced.plastic_deformation_gradient[cell]
+                     - base.plastic_deformation_gradient[cell])
+                    @ np.linalg.inv(base.plastic_deformation_gradient[cell])
+                ).reshape(9)
+            slip_difference = (dyad_projector @ relative_fp.T)
+            output = np.concatenate((density_difference, slip_difference))
+            coefficient = np.fft.fft(output, axis=1)[:, mode] / n
+            matrix[:, column] = coefficient / (
+                0.5 * relative_perturbation * scales
+            )
+        eigenvalues = np.linalg.eigvals(matrix)
+        dominant = eigenvalues[int(np.argmax(np.abs(eigenvalues)))]
+        records.append({
+            "mode": mode,
+            "wavelength_m": parameters.domain_m / mode,
+            "amplification_magnitude": float(abs(dominant)),
+            "growth_rate_s_inv": float(math.log(max(abs(dominant), 1.0e-300)) / dt_s),
+            "oscillation_rate_rad_s": float(np.angle(dominant) / dt_s),
+        })
+    fastest = max(records, key=lambda item: item["growth_rate_s_inv"])
+    return {
+        "state_dimension": 12,
+        "relative_perturbation": relative_perturbation,
+        "records": records,
+        "fastest_mode": fastest["mode"],
+        "fastest_wavelength_m": fastest["wavelength_m"],
+        "maximum_growth_rate_s_inv": fastest["growth_rate_s_inv"],
+        "finite_mode_unstable": bool(
+            fastest["mode"] > 1 and fastest["growth_rate_s_inv"] > 0.0
+        ),
+    }
 
 
 def driven_structure_diagnostics(
@@ -711,7 +979,7 @@ def driven_structure_diagnostics(
         signed_power[signed_mode] / np.sum(signed_power)
     ) if signed_mode else 0.0
     low_gradient_fraction = float(np.mean(gradient < 0.25 * max(np.max(gradient), 1.0)))
-    if gnd_ratio < 1.0e-5:
+    if gnd_ratio < 1.0e-3:
         classification = (
             "total-density modulation" if total_contrast >= 0.02
             else "homogeneous/balanced SSD"
@@ -730,7 +998,7 @@ def driven_structure_diagnostics(
         "signed_structure_factor_peak_fraction": signed_fraction,
         "signed_dominant_mode": signed_mode,
         "signed_dominant_wavelength_m": (
-            parameters.domain_m / signed_mode if signed_mode else math.inf
+            parameters.domain_m / signed_mode if signed_mode else None
         ),
         "total_dominant_mode": total_mode,
         "orientation_gradient_rms_m_inv": float(np.sqrt(np.mean(gradient * gradient))),

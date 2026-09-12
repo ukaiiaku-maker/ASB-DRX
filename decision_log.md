@@ -169,10 +169,11 @@ the Taylor threshold; reject the singular secant-mobility trial. Keep pair
 generation/removal and locked transfers separately ledgered and preserve net
 Burgers content when a scalar Gate A sink exceeds the available minority sign.
 
-The analytical flowing-state operator predicts an emergent finite mode and no
-wavelength parameter exists. Nevertheless, the first nonlinear mode and GND
-amplitude fail strain-increment refinement and show high-wave-number grid
-contamination. Record the core implementation as a development checkpoint,
-leave `physical_CDD_wall_gate_passed=false`, do not submit HPC3, and replace the
-frozen-velocity operator splitting before running the required robustness
-matrix. Gate C remains blocked.
+The reduced flowing-state density operator predicts an emergent finite mode and
+no wavelength parameter exists. The original nonlinear signal failed
+strain-increment refinement and was rejected. A declared coupled internal
+refresh limit corrects that splitting artifact, but the converged trajectory
+remains homogeneous and the finite-differenced full physical population/slip
+operator selects mode 1. Leave `physical_CDD_wall_gate_passed=false`, do not
+submit HPC3, and add mechanically equilibrated spatial stress coupling before
+running the required robustness matrix. Gate C remains blocked.

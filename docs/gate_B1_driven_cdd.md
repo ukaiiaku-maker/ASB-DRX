@@ -3,10 +3,12 @@
 ## Current disposition
 
 Gate B1 is implemented as a new, dynamically Gate-A-coupled development model,
-but the physical wall gate is **not passed**. Ten compact core tests pass. The
-first nonlinear study found finite intermediate signed modes only at a load
-increment that fails timestep refinement; those fields are rejected as wall
-evidence. No HPC3 verification has been submitted and Gate C remains blocked.
+but the physical wall gate is **not passed**. Eleven compact core tests pass.
+The first nonlinear signal failed timestep refinement and was rejected. A
+coupled internal refresh limit now makes requested-step refinement agree to
+`1.6e-14` on global field scale. The converged trajectory does not form a wall,
+and the full implemented operator selects the domain mode. No HPC3 verification
+has been submitted and Gate C remains blocked.
 
 The Bertin BCC-Ta constants remain a quarantined reference fixture. The CDD
 coefficients `A=D=1` and the cross-family elastic scale are generic
@@ -58,7 +60,7 @@ correlation stresses use
 An anisotropic one-dimensional cross-family elastic reduction applies a
 positive interaction matrix to `kappa` with Fourier kernel `-i/k`; it introduces
 no selected length. Gate A provides the homogeneous signed speed. Above its
-Taylor threshold, the derivative of the selected EXP/power/drag branch gives
+Taylor threshold, the derivative of the selected power/drag branch gives
 the finite differential mobility. For positive drive the sign structure is
 
 \[
@@ -92,7 +94,7 @@ periodic boundary flux is zero.
 
 ## Linear stability and emergent scale
 
-For a homogeneous flowing state, the implemented diagnostic evaluates the
+For a homogeneous flowing state, the reduced reference diagnostic evaluates the
 positive branch of the published one-dimensional (`k_y=0`) operator:
 
 \[
@@ -104,10 +106,16 @@ positive branch of the published one-dimensional (`k_y=0`) operator:
 Here physical wave number is `sqrt(rho_f) k`. Growth is disabled outside the
 flowing regime. The instantaneous Gate A state supplies the overdrive,
 temperature-dependent modulus, forest density, and therefore `dot gamma'` and
-the fastest discrete mode. No `selected_wavelength_m` exists in Gate B1. The
-onset snapshot in the 16 micrometer development domain predicts modes 25--28,
-or approximately 0.57--0.64 micrometer, and the formula directly gives the
-similitude scaling `Lambda proportional to 1/sqrt(rho)`.
+the fastest discrete mode. No `selected_wavelength_m` exists in Gate B1, and
+the formula directly gives `Lambda proportional to 1/sqrt(rho)`.
+
+The acceptance diagnostic separately finite-differences the complete
+semi-discrete state map in the physical 12-dimensional subspace: eight signed
+populations and four Gate-A MRSSP slip amplitudes. It includes density sources,
+finite-volume flux, `F^p`/orientation feedback, and the multiplicative plastic
+update. At the onset snapshot this full operator has positive growth but its
+fastest mode is mode 1. The reduced finite mode is therefore not a prediction
+of the implemented coupled model.
 
 ## Evidence and unresolved convergence
 
@@ -115,8 +123,9 @@ The core suite verifies zero-load stability, exact homogeneous Gate A
 reduction, independent total/signed perturbations, removal of a Fourier mode,
 positive conservative packet transport, sign parity of correlation stresses,
 line/Burgers ledgers, nonzero Nye response to differential signed content, a
-balanced high-density false-wall control, exact checkpoint/restart, finite-mode
-driven dispersion, and absence of phase/grain-label state.
+balanced high-density false-wall control, exact checkpoint/restart, reduced
+finite-mode dispersion, requested-step partition invariance, and absence of
+phase/grain-label state.
 
 The nonlinear probes are deliberately not accepted:
 
@@ -128,11 +137,17 @@ The nonlinear probes are deliberately not accepted:
   predicted mode, but total-density power contaminated the Nyquist range and
   the signed peak remained diffuse.
 
-This is a failed timestep/grid convergence gate, not a parameter target. The
-next implementation task is a convergent coupled integrator that refreshes
-gradient velocities and Gate A feedback within transport substeps. Only then
-may the seed/domain/density/temperature matrix and one HPC3 bundle run.
+The splitting failure is corrected by refreshing the coupled update at a
+maximum strain interval of `1.25e-4`, while an exactly homogeneous state remains
+one exact Gate-A step. Requested increments from `5e-4` through `1.25e-4` now
+follow the same internal trajectory. At strain 0.015, three converged seeds
+remain homogeneous/balanced, with GND/total ratios only `0.82e-6` to `1.38e-6`.
+A fixed-total-strain hold relaxes the perturbation.
+
+The next task is to resolve the long-wave physical-slip/Gate-A coupling, most
+likely by supplying mechanically equilibrated spatial stress. Only after the
+full operator has a finite growing mode may the incommensurate-domain,
+density-similitude, temperature/rate, wall-width, and persistence matrix run.
 
 Gate B1 has no phase field, grain label, boundary object, or physical grain
 increment. Polygonization, LAGB recognition, DRX, and ASB are out of scope.
-
