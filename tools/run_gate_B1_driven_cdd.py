@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import platform
+import subprocess
 
 import matplotlib
 matplotlib.use("Agg")
@@ -220,6 +222,14 @@ def main(output: Path, plot_directory: Path) -> None:
         },
         "plots": ["gate_B1_fields.png", "gate_B1_structure_factor.png", "gate_B1_convergence.png"],
         "hpc3_submission": None,
+        "provenance": {
+            "source_commit": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], text=True
+            ).strip(),
+            "platform": platform.platform(),
+            "python": platform.python_version(),
+            "execution": "local compact development audit",
+        },
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n")
