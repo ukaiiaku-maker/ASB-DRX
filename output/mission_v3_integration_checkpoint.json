@@ -4,7 +4,10 @@
   "source_parent": "6a8156a5a768ca376365f6ac9e8dca399da1c1f5",
   "local_test_scope": "PYTHONPATH=src pytest -q tests",
   "local_tests_passed": 226,
-  "hpc3_submitted": false,
+  "hpc3_submitted": true,
+  "hpc3_verified_run": "20260912T231254Z-a445735-14ca34",
+  "hpc3_slurm_job": "55972295",
+  "hpc3_archive_sha256": "ccf8833252c84c31ca08feeff02837571ddeb949a019688872f55259754f4161",
   "preserved_hpc3_job": "55965192",
   "hard_invariants": {
     "production_exp_floor_n_ge_1": true,

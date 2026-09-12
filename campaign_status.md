@@ -50,6 +50,14 @@ Updated: 2026-09-12 (America/Los_Angeles)
   input manifest; no scientific calculation failed. Partial diagnostics were
   fetched, and the missing preserved dependency was added without changing
   equations or parameters.
+- Corrected run `20260912T231254Z-a445735-14ca34`, Slurm `55972295`, passed
+  all 37 targeted tests and the factorized screen in two seconds on
+  `hpc3-14-07`. The verified result archive SHA-256 is
+  `ccf8833252c84c31ca08feeff02837571ddeb949a019688872f55259754f4161`.
+  Local and HPC classifications are identical and the maximum relative
+  numeric difference is `1.075e-14`. Both platforms reject the positive-energy
+  constant-mobility 1-D family as a wall mechanism while preserving it as a
+  verified transport/relaxation operator.
 - Mission v3 was adopted on 2026-09-12. Gates now classify claims and branch
   scientific work; they stop only use of results that fail hard invariants.
   The preserved Gate B1 no-go remains authoritative while isolated Arrhenius,
