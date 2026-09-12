@@ -92,3 +92,69 @@ including the Nyquist mode. Cell-centered slip for Gate-A calls is a
 second-order average of adjacent face values; the staggered quantity remains
 the authoritative Nye-compatible state. This resolves the placement question
 without yet changing the preserved Gate B1 implementation.
+
+## Pre-integration thermodynamic repair
+
+The selected logarithmic stress discretization has **not** been promoted from
+the logarithmic-mean identity alone. A separate integrable candidate uses
+
+\[
+ \psi_c=\mu b^2\left[A\sum_a\rho_a
+ (\ln(\rho_a/\rho_*)-1)+{D\over2}{\sum_a\kappa_a^2\over\rho_F}\right],
+\]
+
+where `rho_a=rho_a+ + rho_a- + 2 rho_floor`,
+`kappa_a=rho_a+ - rho_a-`, and `rho_F=sum_a rho_a`. Thus `psi_c` has units
+`J m^-3` and its population derivative has units `J m^-1`. With right-face
+flux
+
+\[
+ F_{a,f}^{\pm}=-{M_{a,f}\mathcal L_{a,f}^{\pm}\over b}
+ {\mu_{a,i+1}^{\pm}-\mu_{a,i}^{\pm}\over\Delta x},
+\]
+
+the periodic finite-volume update gives exactly
+
+\[
+ {d\mathcal F_h\over dt}=-\sum_{a,f}{M_{a,f}\mathcal L_{a,f}^{\pm}\over b}
+ {\left(\Delta\mu_{a,f}^{\pm}\right)^2\over\Delta x}\le0.
+\]
+
+Finite-difference differentiation of the energy, the algebraic dissipation
+identity, exhausted-family zero flux, and floor refinement are unit tested.
+The floor remains numerical regularization and must converge away. The prior
+face-stress logarithmic form remains an ablation; only the integrable form
+enters the new coupled candidate.
+
+The authoritative signed density is now mobile plus locked plus wall content.
+Sign-preserving transfer among those reservoirs leaves Nye content and face
+slip unchanged. Flux-step clipping is explicitly ledgered, and the accepted
+integrated regime requires exactly zero correction. Face-to-cell slip and the
+adjoint cell-to-face traction projection satisfy an exact plastic-work
+identity. Production EXP-floor configurations now require `shape_n >= 1`, so
+the zero-stress activation volume is finite.
+
+## First integrated Arrhenius--CDD increment
+
+`integrated_cdd_v3.py` owns four-family mobile, locked, and wall signed
+populations, authoritative face slip, cellwise `Fp`, rotation, and temperature.
+It combines physical positive/negative Arrhenius line flux with the variational
+correlation flux, advances density and slip with the identical face flux, maps
+slip to a multiplicative `Fp` increment, and closes external, elastic,
+plastic, correlation, line, and heat terms. Its complete checkpoint restarts
+bitwise. A homogeneous state reduces exactly to the corresponding local
+forward-minus-reverse Arrhenius/Orowan increment.
+
+This is a numerical-integration checkpoint, not a wall result. Local source,
+annihilation, locking/unlocking, and capture must next enter the same accepted
+interval; the explicit correlation update must then be compared with an IMEX
+form before a bounded nonlinear search. Grain and phase allocation remain
+absent, the collective DD law remains disabled, and the failed Gate B1 matrix
+remains authoritative.
+
+The polygonization fixture now has a convex disordered/ordered wall free
+energy with configurational mixing. Its Arrhenius mobility relaxes toward the
+thermodynamic minimum in either direction. A new independent Frank--Bilby
+residual accepts a kinematic orientation jump supplied separately from wall
+content; the earlier self-substitution residual remains only an implementation
+identity.

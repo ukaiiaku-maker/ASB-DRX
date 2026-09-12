@@ -1,0 +1,44 @@
+{
+  "schema": "asb-drx-mission-v3-integration-checkpoint/v1",
+  "date": "2026-09-12",
+  "source_parent": "6a8156a5a768ca376365f6ac9e8dca399da1c1f5",
+  "local_test_scope": "PYTHONPATH=src pytest -q tests",
+  "local_tests_passed": 222,
+  "hpc3_submitted": false,
+  "preserved_hpc3_job": "55965192",
+  "hard_invariants": {
+    "production_exp_floor_n_ge_1": true,
+    "variational_correlation_energy_derivative": true,
+    "correlation_dissipation_nonpositive": true,
+    "total_signed_nye_inventory": true,
+    "reservoir_transfer_preserves_nye": true,
+    "positivity_correction_ledgered": true,
+    "accepted_integrated_clipping_zero": true,
+    "face_cell_work_conjugacy": true,
+    "integrated_energy_ledger_closed": true,
+    "complete_restart_bitwise": true,
+    "grain_allocation_absent": true
+  },
+  "polygonization_fixture": {
+    "explicit_ordering_free_energy": true,
+    "reversible_unfavorable_ordering": true,
+    "independent_frank_bilby_input": true,
+    "integrated_with_cdd": false
+  },
+  "classification": {
+    "fixture_passed": true,
+    "numerical_verification_passed": true,
+    "mechanism_supported": false,
+    "physical_CDD_wall_gate_passed": false,
+    "integrated_scientific_claim_supported": false,
+    "DRX_supported": false,
+    "ASB_supported": false,
+    "predictive_validation_supported": false
+  },
+  "next_required": [
+    "integrate bounded source/annihilation/locking/unlocking/wall-capture reactions",
+    "compare explicit and IMEX variational correlation updates",
+    "run local bounded four-family nonlinear discriminating search",
+    "submit one compact HPC3 matrix only after those local invariants pass"
+  ]
+}

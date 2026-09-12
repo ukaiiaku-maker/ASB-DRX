@@ -245,3 +245,34 @@ under the identical flux. A second-order face average may supply cell slip to
 Gate A, but may not replace the staggered state in compatibility diagnostics.
 The next integration must restore Gate A homogeneous reduction and all source,
 lock, and energy ledgers before any nonlinear wall comparison.
+
+## ADR-0023: Replace the logarithmic stress heuristic with an integrable flux
+
+Status: accepted for integrated numerical development, 2026-09-12.
+
+The logarithmic mean alone did not prove entropy stability for ADR-0022's
+separately normalized backstress/diffusion stresses. Introduce a distinct
+correlation free energy containing signed-family logarithmic density and a
+forest-normalized polarization penalty, differentiate it analytically, and
+drive each signed population by its chemical-potential difference. This gives
+an exact nonpositive discrete dissipation identity on the periodic grid. Keep
+the former arithmetic and logarithmic stress forms as numerical ablations.
+
+Make total mobile+locked+wall signed content authoritative for Nye
+compatibility, ledger all positivity corrections, and reject rather than use
+any integrated interval with active clipping. Use mutually adjoint face/cell
+projections for slip and traction. Restrict the production EXP-floor exponent
+to `n >= 1` at zero stress.
+
+Advance a new four-family integrated state containing every signed reservoir,
+face slip, `Fp`, rotation, and temperature. The first implementation qualifies
+homogeneous Arrhenius/Orowan reduction, multiplicative kinematics, energy/work
+closure, unloaded correlation relaxation, and exact restart. It does not yet
+qualify nonlinear wall formation: local reaction integration and an IMEX
+stiffness comparison precede the HPC bounded matrix. Keep all mechanism and
+integrated-claim booleans false.
+
+Replace polygonization's irreversible maturity increase by relaxation toward
+the minimum of an explicit convex disordered/ordered wall free energy, and add
+an independent Frank--Bilby residual whose orientation jump is not derived
+from the tested wall inventory. No grain allocation is authorized.

@@ -8,9 +8,13 @@ from asb_drx.cdd_flux_v3 import staggered_correlation_fluxes
 from asb_drx.staggered_cdd import (
     StaggeredSignedState,
     advance_staggered_flux,
+    advance_staggered_flux_with_ledger,
     cell_centered_slip,
+    face_traction_from_cells,
     nye_compatibility_residual_m_inv,
     signed_face_orowan_rate_s_inv,
+    transfer_mobile_to_stationary,
+    work_conjugacy_residual_J_m3,
 )
 
 
@@ -92,6 +96,46 @@ class StaggeredCDDTests(unittest.TestCase):
         np.testing.assert_array_equal(
             signed_face_orowan_rate_s_inv(zero, zero, self.b), zero
         )
+
+    def test_locked_and_wall_transfer_preserves_total_nye_inventory(self) -> None:
+        x = np.arange(self.n)
+        plus = self.state.mobile_plus_m2 * (
+            1.0 + 0.02 * np.sin(2.0 * np.pi * x / self.n)
+        )[None, :]
+        initial = StaggeredSignedState(
+            plus, self.state.mobile_minus_m2, self.state.face_slip, self.b, self.dx
+        )
+        transferred = transfer_mobile_to_stationary(initial, 0.2, 0.35)
+        np.testing.assert_allclose(
+            transferred.total_signed_density_m2,
+            initial.total_signed_density_m2, rtol=0.0, atol=0.0625,
+        )
+        np.testing.assert_allclose(
+            nye_compatibility_residual_m_inv(transferred),
+            nye_compatibility_residual_m_inv(initial), rtol=0.0, atol=2.0e-11,
+        )
+
+    def test_flux_ledger_reports_zero_clipping_in_accepted_step(self) -> None:
+        zero = np.zeros_like(self.state.mobile_plus_m2)
+        advanced, ledger = advance_staggered_flux_with_ledger(
+            self.state, zero, zero, 1.0
+        )
+        self.assertEqual(ledger.clipping_added_m2, 0.0)
+        self.assertEqual(ledger.signed_clipping_added_m2, 0.0)
+        self.assertEqual(ledger.balance_residual_m2, 0.0)
+        np.testing.assert_array_equal(
+            advanced.total_signed_density_m2, self.state.total_signed_density_m2
+        )
+
+    def test_cell_face_projection_is_exactly_work_conjugate(self) -> None:
+        rng = np.random.default_rng(92)
+        traction = rng.normal(size=(2, self.n)) * 200.0e6
+        increment = rng.normal(size=(2, self.n)) * 1.0e-4
+        residual = work_conjugacy_residual_J_m3(traction, increment)
+        scale = float(np.sum(np.abs(
+            face_traction_from_cells(traction) * increment
+        )))
+        self.assertLessEqual(abs(residual), 3.0e-16 * scale)
 
 
 if __name__ == "__main__":

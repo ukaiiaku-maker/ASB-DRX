@@ -49,6 +49,9 @@ class PolygonizationParameters:
     wall_width_m: float
     line_energy_J_m: float
     capture_driving_stress_Pa: float = 0.0
+    ordered_line_energy_fraction: float = 0.7
+    configurational_energy_fraction: float = 0.1
+    balanced_wall_penalty_fraction: float = 1.0
 
     def __post_init__(self) -> None:
         for name in ("burgers_m", "wall_width_m", "line_energy_J_m"):
@@ -57,6 +60,15 @@ class PolygonizationParameters:
                 raise ValueError(f"{name} must be finite and positive")
         if not math.isfinite(self.capture_driving_stress_Pa) or self.capture_driving_stress_Pa < 0.0:
             raise ValueError("capture_driving_stress_Pa must be finite and nonnegative")
+        for name in (
+            "ordered_line_energy_fraction", "configurational_energy_fraction",
+            "balanced_wall_penalty_fraction",
+        ):
+            value = getattr(self, name)
+            if not math.isfinite(value) or value < 0.0:
+                raise ValueError(f"{name} must be finite and nonnegative")
+        if self.configurational_energy_fraction <= 0.0:
+            raise ValueError("configurational_energy_fraction must be positive")
 
 
 @dataclass(frozen=True)
@@ -68,6 +80,56 @@ class PolygonizationLedger:
     line_balance_residual_m2: float
     maximum_signed_burgers_residual_m2: float
     released_line_energy_J_m3: float
+    ordering_energy_change_J_m3: float = 0.0
+    ordering_heat_J_m3: float = 0.0
+
+
+def _ordering_landscape(
+    wall_plus_m2: np.ndarray,
+    wall_minus_m2: np.ndarray,
+    parameters: PolygonizationParameters,
+) -> tuple[float, float, float]:
+    total = float(np.sum(wall_plus_m2 + wall_minus_m2))
+    if total <= 0.0:
+        return 0.0, 0.0, 0.0
+    redundant = float(np.sum(2.0 * np.minimum(wall_plus_m2, wall_minus_m2))) / total
+    ordered_fraction = (
+        parameters.ordered_line_energy_fraction
+        + parameters.balanced_wall_penalty_fraction * redundant
+    )
+    exponent = (ordered_fraction - 1.0) / parameters.configurational_energy_fraction
+    if exponent >= 40.0:
+        equilibrium = math.exp(-exponent)
+    elif exponent <= -40.0:
+        equilibrium = 1.0 - math.exp(exponent)
+    else:
+        equilibrium = 1.0 / (1.0 + math.exp(exponent))
+    return total, ordered_fraction, equilibrium
+
+
+def wall_ordering_free_energy_J_m3(
+    wall_maturity: float,
+    wall_plus_m2: np.ndarray,
+    wall_minus_m2: np.ndarray,
+    parameters: PolygonizationParameters,
+) -> float:
+    """Convex disordered/ordered wall free energy with configurational mixing."""
+
+    if not math.isfinite(wall_maturity) or not 0.0 <= wall_maturity <= 1.0:
+        raise ValueError("wall_maturity must lie in [0,1]")
+    total, ordered_fraction, _ = _ordering_landscape(
+        wall_plus_m2, wall_minus_m2, parameters
+    )
+    if total == 0.0:
+        return 0.0
+    epsilon = np.finfo(float).tiny
+    q = min(max(wall_maturity, epsilon), 1.0 - np.finfo(float).eps)
+    mixing = q * math.log(q) + (1.0 - q) * math.log(1.0 - q)
+    dimensionless = (
+        (1.0 - q) + ordered_fraction * q
+        + parameters.configurational_energy_fraction * mixing
+    )
+    return parameters.line_energy_J_m * total * dimensionless
 
 
 def polygonization_step(
@@ -110,11 +172,25 @@ def polygonization_step(
     mobile_minus -= removed_each_sign
     annihilated = float(2.0 * np.sum(removed_each_sign))
 
-    wall_excess = float(np.sum(np.abs(wall_plus - wall_minus)))
     order_rate = parameters.wall_ordering.one_way_rate_s_inv(0.0, temperature_K)
     maturity = state.wall_maturity
-    if wall_excess > 0.0:
-        maturity = 1.0 - (1.0 - maturity) * math.exp(-order_rate * dt_s)
+    wall_total, _, equilibrium_maturity = _ordering_landscape(
+        wall_plus, wall_minus, parameters
+    )
+    ordering_before = wall_ordering_free_energy_J_m3(
+        maturity, wall_plus, wall_minus, parameters
+    )
+    if wall_total > 0.0:
+        maturity = equilibrium_maturity + (
+            maturity - equilibrium_maturity
+        ) * math.exp(-order_rate * dt_s)
+    ordering_after = wall_ordering_free_energy_J_m3(
+        maturity, wall_plus, wall_minus, parameters
+    )
+    ordering_change = ordering_after - ordering_before
+    ordering_tolerance = 4.0e-14 * max(abs(ordering_before), 1.0)
+    if ordering_change > ordering_tolerance:
+        raise RuntimeError("wall ordering increased its declared free energy")
     advanced = PolygonizationState(
         mobile_plus, mobile_minus, wall_plus, wall_minus, maturity
     )
@@ -128,6 +204,8 @@ def polygonization_step(
         after_total - (before_total - annihilated),
         float(np.max(np.abs(after_signed - before_signed))),
         annihilated * parameters.line_energy_J_m,
+        ordering_change,
+        max(-ordering_change, 0.0),
     )
 
 
@@ -155,3 +233,27 @@ def frank_bilby_residual(
         state.wall_plus_m2 - state.wall_minus_m2
     ) * parameters.wall_width_m
     return 2.0 * np.sin(0.5 * theta) - parameters.burgers_m * net_line_m_inv
+
+
+def independent_frank_bilby_residual(
+    kinematic_orientation_jump_rad: np.ndarray,
+    state: PolygonizationState,
+    parameters: PolygonizationParameters,
+) -> np.ndarray:
+    """Compare an independently measured orientation jump to wall content.
+
+    Unlike :func:`frank_bilby_residual`, the angle is not reconstructed from
+    the same wall inventory.  In an integrated calculation it must come from
+    the plastic/elastic rotation field on opposite sides of the wall.
+    """
+
+    theta = np.asarray(kinematic_orientation_jump_rad, dtype=float)
+    if theta.shape != state.wall_plus_m2.shape or np.any(~np.isfinite(theta)):
+        raise ValueError("kinematic orientation jump must match Burgers families")
+    net_line_m_inv = (
+        state.wall_plus_m2 - state.wall_minus_m2
+    ) * parameters.wall_width_m
+    return (
+        2.0 * np.sin(0.5 * theta)
+        - parameters.burgers_m * net_line_m_inv
+    )

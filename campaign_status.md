@@ -6,6 +6,33 @@ Updated: 2026-09-12 (America/Los_Angeles)
 
 ### Active redevelopment update
 
+- The Mission-v3 pre-integration hard-invariant repair is locally complete.
+  The production EXP-floor exponent is restricted to `n >= 1`; the new
+  correlation flux is the exact discrete gradient flow of a declared
+  logarithmic/correlation energy; its random-field energy derivative,
+  nonpositive dissipation, exhausted-family floor behavior, and periodic
+  balances pass.
+- Nye compatibility now uses total signed mobile, locked, and wall content.
+  Sign-preserving reservoir transfer leaves incompatibility unchanged, every
+  positivity correction is ledgered, and accepted integrated steps require
+  zero clipping. The face-slip reconstruction and adjoint traction projection
+  close plastic work to roundoff.
+- A first four-family integrated Arrhenius--CDD state now owns mobile/locked/
+  wall signed populations, authoritative face slip, cellwise `Fp`, rotation,
+  and temperature. Physical and variational fluxes share one density/slip
+  update; multiplicative kinematics and external/elastic/plastic/correlation/
+  line/heat ledgers share the same accepted interval. Homogeneous reduction,
+  unloaded correlation-energy release, exact restart, no-label behavior, and
+  energy closure pass. The canonical local suite passes 222 tests.
+- Polygonization ordering is now reversible and selected by an explicit convex
+  disordered/ordered wall free energy. Its energy decrease is ledgered, and an
+  independent Frank--Bilby check now compares externally supplied kinematic
+  rotation with wall Burgers content. This remains an isolated fixture.
+- Classification remains conservative: numerical integration is supported,
+  but wall-mechanism, integrated scientific, DRX, ASB, and predictive claims
+  remain false. No new HPC3 job has been submitted: local reaction coupling
+  and the explicit-versus-IMEX comparison remain prerequisites for the bounded
+  matrix. Archived job `55965192` was not rerun.
 - Mission v3 was adopted on 2026-09-12. Gates now classify claims and branch
   scientific work; they stop only use of results that fail hard invariants.
   The preserved Gate B1 no-go remains authoritative while isolated Arrhenius,

@@ -188,3 +188,171 @@ FLUX_PARAMETER_CLASSIFICATION = {
     "backstress_coefficient": "generic_development_parameter",
     "diffusion_coefficient": "generic_development_parameter",
 }
+
+
+def variational_correlation_energy_J_m3(
+    mobile_plus_m2: np.ndarray,
+    mobile_minus_m2: np.ndarray,
+    shear_modulus_Pa: np.ndarray,
+    burgers_m: float,
+    *,
+    backstress_coefficient: float,
+    diffusion_coefficient: float,
+    reference_density_m2: float,
+    density_floor_m2: float = 1.0e8,
+) -> np.ndarray:
+    """Cellwise integrable correlation energy for the v3 candidate.
+
+    ``rho_a`` and the forest include a fixed positive numerical background in
+    this isolated candidate.  Its contribution is reported through the floor
+    parameter and must converge away before production use.
+    """
+
+    plus = np.asarray(mobile_plus_m2, dtype=float)
+    minus = np.asarray(mobile_minus_m2, dtype=float)
+    mu = np.asarray(shear_modulus_Pa, dtype=float)
+    if plus.ndim != 2 or minus.shape != plus.shape or mu.shape != (plus.shape[1],):
+        raise ValueError("energy fields have inconsistent shapes")
+    if np.any(plus < 0.0) or np.any(minus < 0.0):
+        raise ValueError("energy requires nonnegative populations")
+    if reference_density_m2 <= 0.0 or density_floor_m2 <= 0.0:
+        raise ValueError("energy density scales must be positive")
+    rho = plus + minus + 2.0 * density_floor_m2
+    kappa = plus - minus
+    forest = np.sum(rho, axis=0)
+    entropy_like = np.sum(
+        rho * (np.log(rho / reference_density_m2) - 1.0), axis=0
+    )
+    polarization = 0.5 * np.sum(kappa * kappa, axis=0) / forest
+    return mu * burgers_m**2 * (
+        diffusion_coefficient * entropy_like
+        + backstress_coefficient * polarization
+    )
+
+
+def variational_chemical_potentials_J_m(
+    mobile_plus_m2: np.ndarray,
+    mobile_minus_m2: np.ndarray,
+    shear_modulus_Pa: np.ndarray,
+    burgers_m: float,
+    *,
+    backstress_coefficient: float,
+    diffusion_coefficient: float,
+    reference_density_m2: float,
+    density_floor_m2: float = 1.0e8,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Analytical derivatives of :func:`variational_correlation_energy_J_m3`."""
+
+    plus = np.asarray(mobile_plus_m2, dtype=float)
+    minus = np.asarray(mobile_minus_m2, dtype=float)
+    mu = np.asarray(shear_modulus_Pa, dtype=float)
+    # Reuse validation and keep the energy/derivative regularization identical.
+    variational_correlation_energy_J_m3(
+        plus, minus, mu, burgers_m,
+        backstress_coefficient=backstress_coefficient,
+        diffusion_coefficient=diffusion_coefficient,
+        reference_density_m2=reference_density_m2,
+        density_floor_m2=density_floor_m2,
+    )
+    rho = plus + minus + 2.0 * density_floor_m2
+    kappa = plus - minus
+    forest = np.sum(rho, axis=0)
+    kappa_squared = np.sum(kappa * kappa, axis=0)
+    common = (
+        diffusion_coefficient * np.log(rho / reference_density_m2)
+        - 0.5 * backstress_coefficient
+        * kappa_squared[None, :] / forest[None, :] ** 2
+    )
+    signed = backstress_coefficient * kappa / forest[None, :]
+    factor = mu[None, :] * burgers_m**2
+    return factor * (common + signed), factor * (common - signed)
+
+
+def variational_correlation_fluxes(
+    mobile_plus_m2: np.ndarray,
+    mobile_minus_m2: np.ndarray,
+    mobility_m_Pa_s: np.ndarray,
+    shear_modulus_Pa: np.ndarray,
+    burgers_m: float,
+    dx_m: float,
+    *,
+    backstress_coefficient: float,
+    diffusion_coefficient: float,
+    reference_density_m2: float,
+    density_floor_m2: float = 1.0e8,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Discrete-gradient face flux with a provable unloaded energy inequality."""
+
+    plus = np.asarray(mobile_plus_m2, dtype=float)
+    minus = np.asarray(mobile_minus_m2, dtype=float)
+    mobility = np.asarray(mobility_m_Pa_s, dtype=float)
+    if mobility.shape != plus.shape or np.any(mobility < 0.0):
+        raise ValueError("mobility must be nonnegative and match populations")
+    chemical_plus, chemical_minus = variational_chemical_potentials_J_m(
+        plus, minus, shear_modulus_Pa, burgers_m,
+        backstress_coefficient=backstress_coefficient,
+        diffusion_coefficient=diffusion_coefficient,
+        reference_density_m2=reference_density_m2,
+        density_floor_m2=density_floor_m2,
+    )
+    mobility_face = 0.5 * (mobility + np.roll(mobility, -1, axis=1))
+
+    def population_mobility(field: np.ndarray) -> np.ndarray:
+        effective = field + density_floor_m2
+        face = logarithmic_mean(effective, np.roll(effective, -1, axis=1))
+        return np.maximum(face - density_floor_m2, 0.0)
+
+    plus_flux = (
+        -mobility_face / burgers_m * population_mobility(plus)
+        * (np.roll(chemical_plus, -1, axis=1) - chemical_plus) / dx_m
+    )
+    minus_flux = (
+        -mobility_face / burgers_m * population_mobility(minus)
+        * (np.roll(chemical_minus, -1, axis=1) - chemical_minus) / dx_m
+    )
+    return plus_flux, minus_flux
+
+
+def variational_dissipation_J_m2_s(
+    mobile_plus_m2: np.ndarray,
+    mobile_minus_m2: np.ndarray,
+    mobility_m_Pa_s: np.ndarray,
+    shear_modulus_Pa: np.ndarray,
+    burgers_m: float,
+    dx_m: float,
+    **kwargs,
+) -> tuple[float, float]:
+    """Return chain-rule energy rate and negative face-square dissipation."""
+
+    chemical_plus, chemical_minus = variational_chemical_potentials_J_m(
+        mobile_plus_m2, mobile_minus_m2, shear_modulus_Pa, burgers_m, **kwargs
+    )
+    flux_plus, flux_minus = variational_correlation_fluxes(
+        mobile_plus_m2, mobile_minus_m2, mobility_m_Pa_s,
+        shear_modulus_Pa, burgers_m, dx_m, **kwargs
+    )
+    rhs_plus = periodic_flux_divergence(flux_plus, dx_m)
+    rhs_minus = periodic_flux_divergence(flux_minus, dx_m)
+    chain_rate = float(np.sum(
+        chemical_plus * rhs_plus + chemical_minus * rhs_minus
+    ) * dx_m)
+    delta_plus = np.roll(chemical_plus, -1, axis=1) - chemical_plus
+    delta_minus = np.roll(chemical_minus, -1, axis=1) - chemical_minus
+    mobility_face = 0.5 * (
+        mobility_m_Pa_s + np.roll(mobility_m_Pa_s, -1, axis=1)
+    )
+
+    def population_mobility(field: np.ndarray) -> np.ndarray:
+        effective = field + kwargs.get("density_floor_m2", 1.0e8)
+        return np.maximum(
+            logarithmic_mean(effective, np.roll(effective, -1, axis=1))
+            - kwargs.get("density_floor_m2", 1.0e8), 0.0,
+        )
+
+    square_rate = -float(np.sum(
+        mobility_face / burgers_m * (
+            population_mobility(mobile_plus_m2) * delta_plus**2
+            + population_mobility(mobile_minus_m2) * delta_minus**2
+        ) / dx_m
+    ))
+    return chain_rate, square_rate

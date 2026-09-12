@@ -31,11 +31,16 @@ class ExpFloorEnthalpy:
     def __post_init__(self) -> None:
         for name in (
             "reference_enthalpy_J", "reference_stress_Pa",
-            "reference_temperature_K", "shape_a", "shape_n",
+            "reference_temperature_K", "shape_a",
         ):
             value = getattr(self, name)
             if not math.isfinite(value) or value <= 0.0:
                 raise ValueError(f"{name} must be finite and positive")
+        if not math.isfinite(self.shape_n) or self.shape_n < 1.0:
+            raise ValueError(
+                "production shape_n must be finite and at least one to avoid "
+                "a zero-stress activation-volume singularity"
+            )
         if not math.isfinite(self.floor_fraction) or not 0.0 < self.floor_fraction <= 1.0:
             raise ValueError("floor_fraction must satisfy 0 < f <= 1")
         for name in (

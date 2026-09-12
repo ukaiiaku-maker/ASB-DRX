@@ -8,6 +8,10 @@ from asb_drx.cdd_flux_v3 import (
     correlation_rhs,
     discrete_mode_growth_rates_s_inv,
     logarithmic_mean,
+    variational_chemical_potentials_J_m,
+    variational_correlation_energy_J_m3,
+    variational_correlation_fluxes,
+    variational_dissipation_J_m2_s,
 )
 from asb_drx.physical_noise import periodic_physical_noise
 
@@ -84,6 +88,67 @@ class CDDFluxV3Tests(unittest.TestCase):
         short_modes = np.count_nonzero(np.abs(np.fft.rfft(short)) > 1.0e-9)
         long_modes = np.count_nonzero(np.abs(np.fft.rfft(long)) > 1.0e-9)
         self.assertGreater(long_modes, short_modes)
+
+    def test_variational_chemical_potential_is_energy_derivative(self) -> None:
+        rng = np.random.default_rng(21)
+        plus = self.rho * (0.5 + 0.03 * rng.normal(size=(2, self.n)))
+        minus = self.rho * (0.5 + 0.03 * rng.normal(size=(2, self.n)))
+        kwargs = dict(
+            backstress_coefficient=1.0, diffusion_coefficient=1.0,
+            reference_density_m2=self.rho, density_floor_m2=1.0e8,
+        )
+        chemical_plus, _ = variational_chemical_potentials_J_m(
+            plus, minus, self.mu, self.burgers, **kwargs
+        )
+        family, cell = 1, 7
+        increment = 1.0e7
+        shifted_plus = plus.copy(); shifted_plus[family, cell] += increment
+        shifted_minus = plus.copy(); shifted_minus[family, cell] -= increment
+        energy0 = variational_correlation_energy_J_m3(
+            plus, minus, self.mu, self.burgers, **kwargs
+        )
+        energy1 = variational_correlation_energy_J_m3(
+            shifted_plus, minus, self.mu, self.burgers, **kwargs
+        )
+        energy_minus = variational_correlation_energy_J_m3(
+            shifted_minus, minus, self.mu, self.burgers, **kwargs
+        )
+        numerical = (energy1[cell] - energy_minus[cell]) / (2.0 * increment)
+        self.assertAlmostEqual(
+            numerical / chemical_plus[family, cell], 1.0, places=6
+        )
+
+    def test_variational_flux_has_exact_nonpositive_dissipation(self) -> None:
+        rng = np.random.default_rng(31)
+        plus = self.rho * (0.5 + 0.08 * rng.normal(size=(2, self.n)))
+        minus = self.rho * (0.5 + 0.08 * rng.normal(size=(2, self.n)))
+        kwargs = dict(
+            backstress_coefficient=1.0, diffusion_coefficient=1.0,
+            reference_density_m2=self.rho, density_floor_m2=1.0e8,
+        )
+        chain, squares = variational_dissipation_J_m2_s(
+            plus, minus, self.mobility, self.mu, self.burgers,
+            self.dx, **kwargs
+        )
+        self.assertLess(chain, 0.0)
+        self.assertAlmostEqual(chain / squares, 1.0, places=13)
+
+    def test_variational_floor_refinement_and_zero_population_flux(self) -> None:
+        plus = np.full((2, self.n), 0.5 * self.rho)
+        minus = plus.copy()
+        plus[1] = 0.0
+        x = np.arange(self.n)
+        minus[0] *= 1.0 + 0.02 * np.cos(2.0 * np.pi * x / self.n)
+        records = []
+        for floor in (1.0e10, 1.0e8, 1.0e6):
+            flux_plus, flux_minus = variational_correlation_fluxes(
+                plus, minus, self.mobility, self.mu, self.burgers, self.dx,
+                backstress_coefficient=1.0, diffusion_coefficient=1.0,
+                reference_density_m2=self.rho, density_floor_m2=floor,
+            )
+            self.assertEqual(float(np.max(np.abs(flux_plus[1]))), 0.0)
+            records.append(float(np.max(np.abs(flux_minus))))
+        self.assertLess(abs(records[-1] - records[-2]), abs(records[1] - records[0]))
 
 
 if __name__ == "__main__":

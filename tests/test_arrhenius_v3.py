@@ -143,6 +143,8 @@ class ArrheniusV3Tests(unittest.TestCase):
             PARAMETER_CLASSIFICATION["activation_entropy_kB"],
             "generic_development_parameter",
         )
+        with self.assertRaisesRegex(ValueError, "zero-stress"):
+            replace(self.enthalpy, shape_n=0.8)
 
 
 if __name__ == "__main__":
