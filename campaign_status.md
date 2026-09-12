@@ -22,6 +22,22 @@ Updated: 2026-09-12 (America/Los_Angeles)
   replaces fixed box-mode seeding and is exactly restriction-consistent across
   same-domain grid refinements. These are isolated fixtures; full Gate B1
   kinematic integration remains unqualified.
+- Mission-v3 comparison run `20260912T180135Z-556e986-552929`, Slurm
+  `55965192`, completed 25 targeted tests and the comparison in 7 seconds on
+  `hpc3-14-06`. The fetched archive SHA-256 is
+  `0b6f5ed2c9f8945d70e626aef69e93c691f655308711e375c8c42dbcaf3ed4d1`.
+  Local and HPC decisions are identical; floating diagnostics agree to
+  roundoff. The result reports `fixture_passed=true`,
+  `numerical_verification_passed=true`, and correctly keeps
+  `mechanism_supported=false`, `integrated_scientific_claim_supported=false`,
+  and `predictive_validation_supported=false`.
+- A follow-on staggered kinematics fixture now updates cell-centered signed
+  populations and face-centered plastic slip from the identical signed line
+  flux. It preserves `div(gamma_face)+b*kappa=0` algebraically, closes each
+  periodic population balance, retains positivity under its declared step,
+  and supplies a second-order face-to-cell slip reconstruction for future
+  Gate-A calls. This establishes the coupling layout but does not yet replace
+  the failed integrated Gate B1 solver.
 
 - Gate B1 driven CDD development now has a modular spatial implementation and
   thirteen passing core tests. Every cell is dynamically coupled to Gate A stress,

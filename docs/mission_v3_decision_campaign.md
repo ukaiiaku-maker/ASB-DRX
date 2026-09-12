@@ -67,3 +67,12 @@ the leading integration candidate because of its discrete chain rule, but full
 signed Orowan compatibility, positivity, stiffness treatment, and nonlinear
 Gate B1 convergence remain required before it can replace the preserved
 cell-centered no-go model.
+
+The subsequent kinematic fixture stores signed densities at cells and plastic
+slip at faces. For signed line flux `J=F+-F-`, it advances
+`kappa_dot=-div(J)` and `gamma_dot_face=b J`. Therefore
+`div(gamma_face)+b kappa=0` is preserved algebraically under the same flux,
+including the Nyquist mode. Cell-centered slip for Gate-A calls is a
+second-order average of adjacent face values; the staggered quantity remains
+the authoritative Nye-compatible state. This resolves the placement question
+without yet changing the preserved Gate B1 implementation.
