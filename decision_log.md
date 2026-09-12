@@ -180,3 +180,20 @@ mode is damped. Leave `physical_CDD_wall_gate_passed=false`, do not submit HPC3,
 and resolve the constitutive mismatch between Gate-A differential mobility and
 the ideal dry-friction CDD instability before running the robustness matrix.
 Gate C remains blocked.
+
+## ADR-0020: Use the strict one-dimensional long-range projection for Gate B1
+
+Status: proposed for extended verification, 2026-09-11.
+
+For the declared `k_y=0` CDD wave vector, use the published `T(k)=0`
+long-range factor. Retain the provisional cross-family `-i/k` kernel only as an
+ablation: amplitudes from 0.05 through 0.25 suppress the full instability and
+are not a derived one-dimensional baseline. This is a geometric reduction, not
+coefficient tuning.
+
+Use resolution-invariant random Fourier initial fields and delete the predicted
+fastest mode. The full Nye-compatible active-family operator then selects
+finite mode 6, while nonlinear 64/128 calculations independently select mode
+10. Do not pass Gate B1 from these local results: require the single extended
+128/256 job plus seed, domain, density-similitude, temperature/rate, wall-width,
+balance, and unload controls. Gate C stays blocked until the machine result.

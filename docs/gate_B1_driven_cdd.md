@@ -6,12 +6,14 @@ Gate B1 is implemented as a new, dynamically Gate-A-coupled development model,
 but the physical wall gate is **not passed**. Twelve compact core tests pass.
 The first nonlinear signal failed timestep refinement and was rejected. A
 coupled internal refresh limit now makes requested-step refinement agree to
-`1.6e-14` on global field scale. The converged trajectory does not form a wall,
-and the full implemented active-family operator is stable. No HPC3 verification
-has been submitted and Gate C remains blocked.
+`1.6e-14` on global field scale. A provisional nonzero one-dimensional
+long-range kernel made the full operator stable. Enforcing the derived
+`k_y=0`, `T(k)=0` reduction restores a finite growing mode without fitting a
+wavelength. Nonlinear wavelength convergence is promising, but the full
+scientific matrix is pending and Gate C remains blocked.
 
 The Bertin BCC-Ta constants remain a quarantined reference fixture. The CDD
-coefficients `A=D=1` and the cross-family elastic scale are generic
+coefficients `A=D=1` are generic
 dimensionless closure choices, not a material calibration. The DD collective
 closure is exactly disabled.
 
@@ -57,9 +59,11 @@ correlation stresses use
 \tau_a^{diff}=-A\mu b\,\frac{\partial_x\rho_a}{\rho_a}.
 \]
 
-An anisotropic one-dimensional cross-family elastic reduction applies a
-positive interaction matrix to `kappa` with Fourier kernel `-i/k`; it introduces
-no selected length. Gate A provides the homogeneous signed speed. Above its
+For the declared one-dimensional wave vector, the published anisotropic
+long-range factor `T(k)` is exactly zero. A nonzero cross-family `-i/k` kernel
+is retained only as an ablation; any tested nonzero amplitude suppresses the
+instability and is not the baseline. Cross-family forest resistance remains.
+Gate A provides the homogeneous signed speed. Above its
 Taylor threshold, the derivative of the selected power/drag branch gives
 the finite differential mobility. For positive drive the sign structure is
 
@@ -124,9 +128,10 @@ Fourier perturbation carries the quadrature slip/`F^p` perturbation required by
 excluded. It includes finite-volume flux, averaged Gate-A reservoir sources,
 MRSSP/orientation feedback, and the multiplicative plastic update. At the
 onset snapshot families 0 and 1 are active, so the physical operator is four
-dimensional. On a 64-point grid every tested mode is damped; mode 1 decays at
-`1.67e6 s^-1` and the strongest damping is about `3.11e8 s^-1`. The reduced
-finite mode is therefore not a prediction of the implemented coupled model.
+dimensional. With the superseded long-range amplitude `0.25`, every tested mode
+was damped. In the strictly derived `T=0` baseline, the full compatible operator
+selects finite mode 6 with growth `4.45e7 s^-1` on the 64-point audit grid.
+This change follows the declared reduction and is not a wavelength fit.
 
 ## Evidence and unresolved convergence
 
@@ -155,11 +160,12 @@ follow the same internal trajectory. At strain 0.015, three converged seeds
 remain homogeneous/balanced, with GND/total ratios only `0.82e-6` to `1.38e-6`.
 A fixed-total-strain hold relaxes the perturbation.
 
-The next task is to reconcile the stable Gate-A differential-mobility operator
-with the unstable ideal dry-friction CDD reduction. This is a constitutive
-compatibility question, not a wavelength-tuning problem. Only after the full
-operator has a finite growing mode may the incommensurate-domain,
-density-similitude, temperature/rate, wall-width, and persistence matrix run.
+Resolution-invariant Fourier noise with mode 6 deleted produces mode 10 at both
+64 and 128 points (1.6 micrometers). GND and orientation amplitudes are not yet
+within 5% between those grids; the second-order trend requires the planned
+128/256 extended comparison. The single-job bundle therefore includes the
+incommensurate-domain, density-similitude, temperature/rate, wall-width, seed,
+convergence, and unload matrix. Gate B1 remains false until those checks pass.
 
 Gate B1 has no phase field, grain label, boundary object, or physical grain
 increment. Polygonization, LAGB recognition, DRX, and ASB are out of scope.

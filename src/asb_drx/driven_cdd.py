@@ -29,7 +29,7 @@ class DrivenCDDParameters:
     domain_m: float = 16.0e-6
     backstress_coefficient: float = 1.0
     diffusion_coefficient: float = 1.0
-    elastic_kernel_scale: float = 0.25
+    elastic_kernel_scale: float = 0.0
     cfl_limit: float = 0.35
     max_coupled_strain_increment: float = 1.25e-4
     density_floor_m2: float = 1.0e8
@@ -167,6 +167,7 @@ def initialize_driven_cdd(
     signed_noise_amplitude: float | None = None,
     seed: int = 0,
     remove_mode: int | None = None,
+    spectral_noise_modes: int | None = None,
 ) -> DrivenCDDState:
     if grid_points < 16 or grid_points % 2:
         raise ValueError("an even grid with at least 16 points is required")
@@ -176,8 +177,23 @@ def initialize_driven_cdd(
         raise ValueError("invalid density scale or noise amplitude")
     base = np.asarray([4.8, 4.7, 4.9, 4.75])[:, None] * 1.0e14 * density_scale
     rng = np.random.default_rng(seed)
-    total_noise = rng.normal(size=(4, grid_points))
-    signed_noise = rng.normal(size=(4, grid_points))
+    if spectral_noise_modes is not None:
+        if spectral_noise_modes < 1 or spectral_noise_modes >= grid_points // 2:
+            raise ValueError("spectral noise band must lie below grid Nyquist")
+        coordinate = 2.0 * np.pi * np.arange(grid_points) / grid_points
+        total_noise = np.zeros((4, grid_points))
+        signed_noise = np.zeros((4, grid_points))
+        for field in (total_noise, signed_noise):
+            cosine_coefficients = rng.normal(size=(4, spectral_noise_modes))
+            sine_coefficients = rng.normal(size=(4, spectral_noise_modes))
+            for mode in range(1, spectral_noise_modes + 1):
+                if mode == remove_mode:
+                    continue
+                field += cosine_coefficients[:, mode - 1, None] * np.cos(mode * coordinate)[None, :]
+                field += sine_coefficients[:, mode - 1, None] * np.sin(mode * coordinate)[None, :]
+    else:
+        total_noise = rng.normal(size=(4, grid_points))
+        signed_noise = rng.normal(size=(4, grid_points))
     for field in (total_noise, signed_noise):
         field -= np.mean(field, axis=1, keepdims=True)
         if remove_mode is not None:
@@ -484,10 +500,23 @@ def evaluate_driven_cdd(
 
 
 def _upwind_step(density: np.ndarray, velocity: np.ndarray, dt_s: float, dx_m: float) -> np.ndarray:
+    """Positive conservative MUSCL/SSP-RK2 density-weighted transport."""
+
     face_velocity = 0.5 * (velocity + np.roll(velocity, -1, axis=1))
-    upstream = np.where(face_velocity >= 0.0, density, np.roll(density, -1, axis=1))
-    flux = face_velocity * upstream
-    updated = density - (dt_s / dx_m) * (flux - np.roll(flux, 1, axis=1))
+
+    def minmod(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+        return np.where(a * b > 0.0, np.sign(a) * np.minimum(np.abs(a), np.abs(b)), 0.0)
+
+    def rhs(field: np.ndarray) -> np.ndarray:
+        slope = minmod(field - np.roll(field, 1, axis=1), np.roll(field, -1, axis=1) - field)
+        left = field + 0.5 * slope
+        right = np.roll(field, -1, axis=1) - 0.5 * np.roll(slope, -1, axis=1)
+        upstream = np.where(face_velocity >= 0.0, left, right)
+        flux = face_velocity * upstream
+        return -(flux - np.roll(flux, 1, axis=1)) / dx_m
+
+    first = density + dt_s * rhs(density)
+    updated = 0.5 * density + 0.5 * (first + dt_s * rhs(first))
     tolerance = 2.0e-13 * max(float(np.max(density)), 1.0)
     if np.min(updated) < -tolerance:
         raise RuntimeError("density-weighted upwind flux violated nonnegativity")
@@ -1082,12 +1111,21 @@ def driven_structure_diagnostics(
         signed_power[signed_mode] / np.sum(signed_power)
     ) if signed_mode else 0.0
     low_gradient_fraction = float(np.mean(gradient < 0.25 * max(np.max(gradient), 1.0)))
+    wall_mask = gnd >= 0.5 * max(float(np.max(gnd)), 1.0)
+    wall_count = int(np.sum(wall_mask & ~np.roll(wall_mask, 1)))
+    wall_width = (
+        float(np.sum(wall_mask) * parameters.domain_m / state.grid_points / wall_count)
+        if wall_count > 0 else None
+    )
     if gnd_ratio < 1.0e-3:
         classification = (
             "total-density modulation" if total_contrast >= 0.02
             else "homogeneous/balanced SSD"
         )
-    elif signed_fraction < 0.08 or low_gradient_fraction < 0.35:
+    elif (
+        signed_fraction < 0.08 or low_gradient_fraction < 0.35
+        or total_contrast < 0.005 or wall_count == 0
+    ):
         classification = "diffuse GND polarization"
     else:
         classification = "GND-rich wall precursor"
@@ -1105,6 +1143,9 @@ def driven_structure_diagnostics(
         ),
         "total_dominant_mode": total_mode,
         "orientation_gradient_rms_m_inv": float(np.sqrt(np.mean(gradient * gradient))),
+        "localized_orientation_jump_deg": float(np.degrees(np.max(jumps))),
         "low_orientation_gradient_interior_fraction": low_gradient_fraction,
+        "wall_count": wall_count,
+        "mean_wall_FWHM_m": wall_width,
         "physical_grain_count": state.physical_grain_count,
     }

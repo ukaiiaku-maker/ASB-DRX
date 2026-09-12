@@ -32,6 +32,15 @@ Updated: 2026-09-11 (America/Los_Angeles)
   The complete repository suite passes 188 tests. The result deliberately
   defers the domain/density/temperature robustness matrix after the full
   operator failure, and records no HPC3 submission.
+- Subsequent derivation identified that the provisional nonzero `-i/k`
+  long-range kernel contradicted the declared one-dimensional `k_y=0` reduction,
+  for which the published `T(k)` is zero. Setting that term to zero—not fitting
+  a wavelength—restores a full-compatible finite fastest mode 6 with growth
+  `4.45e7 s^-1`. With resolution-invariant Fourier noise and mode 6 removed,
+  both 64 and 128 points select nonlinear mode 10 (1.6 micrometers). Amplitude
+  convergence still needs the 128/256 check. The extended single-job bundle is
+  staged to test seeds, 13/16/19 micrometer domains, three densities,
+  temperature/rate variation, wall width, unload behavior, and convergence.
 
 - Gate B0, not physical Gate B, is passed. The modular signed-transport state carries
   positive and negative mobile and locked populations for all four BCC
