@@ -15,7 +15,7 @@ input_paths = [
   "full_model/production/stateful_embryos.py",
   "full_model/hpc3/run_full_v34_case.sh",
 ]
-output_paths = ["full_model/production/output"]
+output_paths = ["output"]
 result_mode = "archive"
 scratch_mode = "none"
 input_mode = "archive"
