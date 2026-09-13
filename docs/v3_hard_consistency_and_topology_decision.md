@@ -183,7 +183,11 @@ compact nonlinear falsification with common physical noise, grid/domain
 refinement, and full balance checks, alongside replacement of the shared
 tangent by a second line-orientation moment.
 
-Local evidence: 237 canonical tests pass; machine result
+The memory result `output/v3_memory_dispersion.json` was regenerated against
+source `6260a4b`; SHA-256
+`273696218d058455852466df189be6fa38162a1210b9ac902674aad099957942`.
+
+Local evidence: 237 canonical tests pass. The instantaneous machine result
 `output/v3_topology_dispersion.json` records separate fixture and scientific
 fields against source `3f4712c`. Its SHA-256 is
 `cbb4103631d291eae783e5bf0a303a27d6b1098205585c7c82d9ec76a3a931e0`.

@@ -37,6 +37,9 @@ Updated: 2026-09-12 (America/Los_Angeles)
   appears only at the largest screened forest strength, so it is a candidate
   for nonlinear falsification rather than a supported wall mechanism. The
   current suite passes 237 tests; no grain/phase allocation is enabled.
+- Memory dispersion result `output/v3_memory_dispersion.json` is tied to source
+  `6260a4b`; SHA-256
+  `273696218d058455852466df189be6fa38162a1210b9ac902674aad099957942`.
 
 ### Preserved campaign chronology
 
