@@ -58,6 +58,11 @@ Updated: 2026-09-12 (America/Los_Angeles)
   triggers by step 1 and 32 by step 2; continuous and exact-restart trajectories
   match bitwise across 48 authoritative checkpoint fields (only `P_json`, which
   records restart/run-length controls, differs).
+- No-retuning raw-trigger audit job `55978313` is running from clean commit
+  `86d7e96` on the same DRX-isothermal condition for 6,000 steps. The only
+  production-driver delta is the two cumulative diagnostic counters; this run
+  will both cross strain 0.5 and identify whether failure precedes or follows a
+  raw stochastic trigger.
 - Every scientific output checksum in both fetched runs passed. Their generated
   inventories contain one invalid self-entry because the old runner hashed the
   inventory while writing it; this provenance-only defect is recorded and fixed

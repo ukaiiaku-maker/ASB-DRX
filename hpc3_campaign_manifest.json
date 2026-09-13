@@ -1523,6 +1523,23 @@
         "status_json": "edfdc03023eb391949dbbfd5e3e9d2888dfb1f4a2b83cf7098a2caaef091b168"
       },
       "interpretation": "required strain horizon was crossed with zero recorded candidates, but the source did not separately count raw H>=E triggers and GB/swept-cell hazard resets make a final H/E<1 insufficient proof; one diagnostic-only rerun is required"
+    },
+    {
+      "run_id": "20260913T041947Z-86d7e96-rawaudit",
+      "parent_campaign_id": "asb-drx-full-v34-recovery",
+      "purpose": "no_retuning_drx_isothermal_raw_trigger_provenance_audit",
+      "architecture": "full_2d_phase_field",
+      "git_commit_at_plan": "86d7e96e76baeb326e6e9f3682391e9df953323a",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean",
+      "input_bundle_sha256": "540f4fd19d8b2f29d7d8e83408b530adb37964f67a4a96422ab0eac7ff0ec79c",
+      "production_driver_sha256": "b6570b1fa7eab692bd5bacc9e5a563e704f469fd64800e63aca01a683c864a50",
+      "physics_delta_from_baseline": "none_diagnostic_cumulative_raw_and_viable_trigger_counters_only",
+      "configuration": {"model_branch": "drx_isothermal", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "steps": 6000, "minimum_required_strain": 0.5, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero"},
+      "slurm": {"job_id": "55978313", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-07", "cpus_per_task": 1, "memory": "4G"},
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T041947Z-86d7e96-rawaudit",
+      "retrieval_status": "running",
+      "classification": "PENDING_REQUIRED_PHYSICAL_AND_DIAGNOSTIC_HORIZON"
     }
   ]
 }
