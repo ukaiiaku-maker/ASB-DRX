@@ -319,3 +319,38 @@ may stand in for junction topology. Build this extension in a 2-D-capable
 module and first verify topology, objectivity, energy, and homogeneous
 reduction before nonlinear wall searches. Old DD multi-hit histories remain
 structural context only and do not set reaction rates or memory.
+
+## ADR-0026: Repair units, reduced kinematics, work projection, and energy state
+
+Status: accepted locally, 2026-09-12.
+
+Separate Arrhenius event frequency from physical glide velocity and require an
+explicit event length for every CDD flux. Report spatially integrated 1-D line
+content in `m^-1`. Reclassify the integrated solver as small-strain antiplane:
+accumulate additive plastic distortion and evolve lattice rotation from total
+spin minus plastic spin. Use the same cellwise rotated dyads for resolved
+stress, plastic distortion, macroscopic plastic shear, and work projection.
+
+Include stationary signed content in long-range energy and its mobile chemical
+derivative. Ledger mobile correlation, long-range, mobile-line, junction, wall,
+transport, and reaction free-energy changes separately. The scalar reservoir
+reactions remain fixtures. The repaired canonical suite passes 236 tests.
+
+## ADR-0027: Reject the minimal instantaneous junction-friction closure
+
+Status: accepted locally, 2026-09-12.
+
+Implement the smallest aligned vector/topology state with eight signed mobile
+species, explicit junction products, a stoichiometric incidence matrix,
+pointwise Frank-rule/Nye conservation, detailed-balance release, and
+junction-dependent forest resistance inside the EXP-floor stress scale.
+Linearize the complete isothermal reaction--transport model before nonlinear
+simulation.
+
+Across the bounded screen, fifteen of sixteen cases are damped. The only
+positive case maximizes at the declared shortest continuum wavelength, and
+the extended symbol peaks below continuum validity. This is boundary-seeking,
+not an intrinsic continuum wall spacing. Reject the instantaneous aligned
+closure, do not run it nonlinearly or on HPC3, and advance to delayed junction
+memory plus a higher-order line-orientation state. All wall/DRX/ASB and
+predictive flags remain false.

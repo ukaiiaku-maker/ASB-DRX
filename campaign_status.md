@@ -2,9 +2,31 @@
 
 Updated: 2026-09-12 (America/Los_Angeles)
 
-## Current gate: Gate B0 passed; physical Gate B1 unresolved
+## Current decision: instantaneous junction-friction closure rejected
 
-### Active redevelopment update
+### Current decision-grade checkpoint
+
+- The hard consistency repair is locally complete: physical glide velocity is
+  separated from event frequency; all 1-D content ledgers have physical units;
+  the integrated control is now explicitly small-strain antiplane; lattice
+  rotation follows total minus plastic spin; rotated slip tensors are used
+  consistently for stress, kinematics, and work; and stored energy separately
+  exposes mobile, junction, wall, and total-signed long-range contributions.
+- The smallest signed-vector/topology model now has eight signed mobile
+  species, explicit glissile/sessile junction products, a reaction incidence
+  matrix, exact Frank-rule conservation, detailed-balance forward/reverse
+  rates, junction-dependent forest friction inside the EXP-floor stress scale,
+  and a complete isothermal reaction--transport Fourier symbol.
+- Its bounded local screen finds no robust interior finite-wavenumber branch.
+  Fifteen of sixteen cases are damped; the only positive case selects the
+  shortest admitted continuum wavelength and peaks below continuum validity
+  when extended. The closure is rejected without a nonlinear or HPC run.
+- The canonical local suite passes 236 tests. Gate B0 remains the only passed
+  physical-development classification. Wall mechanism, Gate B1, DRX, ASB,
+  integrated scientific, and predictive claims remain false. The next branch
+  is delayed junction memory plus a higher-order line-orientation state.
+
+### Preserved campaign chronology
 
 - The Mission-v3 pre-integration hard-invariant repair is locally complete.
   The production EXP-floor exponent is restricted to `n >= 1`; the new
@@ -18,15 +40,15 @@ Updated: 2026-09-12 (America/Los_Angeles)
   zero clipping. The face-slip reconstruction and adjoint traction projection
   close plastic work to roundoff.
 - A four-family integrated Arrhenius--CDD state now owns mobile/locked/
-  wall signed populations, authoritative face slip, cellwise `Fp`, rotation,
-  and temperature. Physical and variational fluxes share one density/slip
-  update; multiplicative kinematics and external/elastic/plastic/correlation/
+  wall signed populations, authoritative face slip, cellwise plastic
+  distortion, lattice rotation, and temperature. Physical and variational
+  fluxes share one density/slip update; small-strain kinematics and external/elastic/plastic/correlation/
   line/heat ledgers share the same accepted interval. Homogeneous reduction,
   unloaded correlation-energy release, exact restart, no-label behavior, and
   energy closure pass. Bounded Arrhenius pair multiplication, annihilation,
   locking, unlocking, and wall capture now execute in the same interval and
-  close separate line/Burgers ledgers. The canonical local suite passes 226
-  tests.
+  close separate line/Burgers ledgers. This historical checkpoint passed 226
+  tests; the current repaired suite passes 236.
 - Polygonization ordering is now reversible and selected by an explicit convex
   disordered/ordered wall free energy. Its energy decrease is ledgered, and an
   independent Frank--Bilby check now compares externally supplied kinematic
@@ -41,9 +63,9 @@ Updated: 2026-09-12 (America/Los_Angeles)
   plus cross-family coupling as the next branch.
 - Classification remains conservative: numerical integration is supported,
   but wall-mechanism, integrated scientific, DRX, ASB, and predictive claims
-  remain false. One compact cross-platform verification of this no-growth
-  decision is staged but not yet submitted. Archived job `55965192` was not
-  rerun.
+  remain false. The compact cross-platform verification of the earlier
+  no-growth decision completed as job `55972295`. Archived job `55965192` was
+  not rerun.
 - First cross-platform attempt `20260912T231157Z-790035d-d2bb94`, Slurm
   `55972269`, is retained as a one-second packaging failure. The staged
   Arrhenius regression imported `asb_drx.analytical`, which was absent from the

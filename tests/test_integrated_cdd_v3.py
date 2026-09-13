@@ -34,7 +34,7 @@ class IntegratedCDDV3Tests(unittest.TestCase):
         )
         glide = ArrheniusMechanism(
             enthalpy, BoundedActivationEntropy(reference_kB=0.25),
-            attempt_frequency_s_inv=2.0e7, event_increment=1.0e-9,
+            attempt_frequency_s_inv=2.0e7,
             validity_temperature_K=(500.0, 1400.0),
             validity_stress_Pa=(0.0, 2.0e9),
         )
@@ -50,15 +50,17 @@ class IntegratedCDDV3Tests(unittest.TestCase):
             backstress_coefficient=0.7,
             diffusion_coefficient=1.1,
             reference_density_m2=5.0e14,
+            glide_event_length_m=1.0e-9,
         )
         population = np.full((4, self.n), 2.5e14)
         signed = StaggeredSignedState(
             population, population.copy(), np.zeros_like(population),
             self.b, self.dx,
         )
-        fp = np.broadcast_to(np.eye(3), (self.n, 3, 3)).copy()
+        beta_p = np.zeros((self.n, 3, 3))
+        orientation = np.broadcast_to(np.eye(3), (self.n, 3, 3)).copy()
         self.state = IntegratedCDDState(
-            signed, fp, fp.copy(), np.full(self.n, 900.0)
+            signed, beta_p, orientation, np.full(self.n, 900.0)
         )
 
     def test_homogeneous_increment_matches_arrhenius_material_point_exactly(self) -> None:
@@ -82,7 +84,7 @@ class IntegratedCDDV3Tests(unittest.TestCase):
 
     def test_loaded_homogeneous_step_couples_flux_slip_fp_rotation_and_heat(self) -> None:
         loaded = IntegratedCDDState(
-            self.state.signed, self.state.plastic_deformation_gradient,
+            self.state.signed, self.state.plastic_distortion,
             self.state.orientation, self.state.temperature_K,
             applied_shear=0.012,
         )
@@ -91,8 +93,9 @@ class IntegratedCDDV3Tests(unittest.TestCase):
         weights = self.parameters.slip_dyads_crystal[:, 0, 2]
         expected_slip = np.empty(4)
         for family in range(4):
-            velocity = self.parameters.glide.net_rate_s_inv(
-                old_stress * weights[family], 900.0
+            velocity = self.parameters.glide.glide_velocity_m_s(
+                old_stress * weights[family], 900.0,
+                self.parameters.glide_event_length_m,
             )
             expected_slip[family] = (
                 self.b * 5.0e14 * velocity * advanced.accepted_dt_s
@@ -106,8 +109,8 @@ class IntegratedCDDV3Tests(unittest.TestCase):
             advanced.state.signed.face_slip - loaded.signed.face_slip
         ))), 0.0)
         self.assertGreater(float(np.max(np.abs(
-            advanced.state.plastic_deformation_gradient
-            - loaded.plastic_deformation_gradient
+            advanced.state.plastic_distortion
+            - loaded.plastic_distortion
         ))), 0.0)
         self.assertGreaterEqual(advanced.ledger.heat_J_m3, 0.0)
         self.assertLess(
@@ -116,6 +119,57 @@ class IntegratedCDDV3Tests(unittest.TestCase):
         )
         self.assertEqual(advanced.state.physical_grain_count, 1)
         self.assertFalse(hasattr(advanced.state, "grain_labels"))
+
+    def test_elastic_lattice_rotation_uses_total_spin_not_plastic_polar_factor(self) -> None:
+        zero = np.zeros_like(self.state.signed.mobile_plus_m2)
+        signed = StaggeredSignedState(
+            zero, zero.copy(), zero.copy(), self.b, self.dx,
+        )
+        state = IntegratedCDDState(
+            signed, self.state.plastic_distortion, self.state.orientation,
+            self.state.temperature_K,
+        )
+        rate = 2.0e4
+        dt = 2.0e-9
+        advanced = integrated_cdd_step(state, rate, dt, self.parameters).state
+        angle = 0.5 * rate * dt
+        expected = np.asarray([
+            [np.cos(angle), 0.0, np.sin(angle)],
+            [0.0, 1.0, 0.0],
+            [-np.sin(angle), 0.0, np.cos(angle)],
+        ])
+        np.testing.assert_allclose(advanced.orientation[0], expected, atol=2.0e-15)
+        np.testing.assert_array_equal(
+            advanced.plastic_distortion, state.plastic_distortion
+        )
+
+    def test_nonuniform_rotating_crystal_uses_one_work_conjugate_projection(self) -> None:
+        angles = 0.12 * np.sin(2.0 * np.pi * np.arange(self.n) / self.n)
+        rotations = np.zeros((self.n, 3, 3))
+        for cell, angle in enumerate(angles):
+            rotations[cell] = np.asarray([
+                [np.cos(angle), 0.0, np.sin(angle)],
+                [0.0, 1.0, 0.0],
+                [-np.sin(angle), 0.0, np.cos(angle)],
+            ])
+        loaded = IntegratedCDDState(
+            self.state.signed, self.state.plastic_distortion, rotations,
+            self.state.temperature_K, applied_shear=0.012,
+        )
+        step = integrated_cdd_step(loaded, 0.0, 1.0e-9, self.parameters)
+        old_stress = self.parameters.shear_modulus_Pa * loaded.applied_shear
+        expected_weights = np.empty((4, self.n))
+        for family, cell in np.ndindex((4, self.n)):
+            dyad = (
+                rotations[cell] @ self.parameters.slip_dyads_crystal[family]
+                @ rotations[cell].T
+            )
+            expected_weights[family, cell] = dyad[0, 2]
+        np.testing.assert_allclose(step.resolved_shear_Pa, old_stress * expected_weights)
+        self.assertLess(
+            abs(step.ledger.work_projection_residual_J_m3),
+            2.0e-13 * max(abs(step.ledger.plastic_work_J_m3), 1.0),
+        )
 
     def test_unloaded_compatible_gradient_releases_correlation_energy(self) -> None:
         x = np.arange(self.n)
@@ -136,7 +190,7 @@ class IntegratedCDDV3Tests(unittest.TestCase):
             slip[family] -= np.mean(slip[family])
         signed = StaggeredSignedState(plus, minus, slip, self.b, self.dx)
         state = IntegratedCDDState(
-            signed, self.state.plastic_deformation_gradient,
+            signed, self.state.plastic_distortion,
             self.state.orientation, self.state.temperature_K,
         )
         self.assertLess(
@@ -149,7 +203,7 @@ class IntegratedCDDV3Tests(unittest.TestCase):
 
     def test_work_energy_and_population_ledgers_close_without_clipping(self) -> None:
         loaded = IntegratedCDDState(
-            self.state.signed, self.state.plastic_deformation_gradient,
+            self.state.signed, self.state.plastic_distortion,
             self.state.orientation, self.state.temperature_K,
             applied_shear=0.01,
         )
@@ -166,12 +220,27 @@ class IntegratedCDDV3Tests(unittest.TestCase):
             max(2.0e-11 * scale, thermal_roundoff),
         )
         self.assertLess(abs(ledger.work_projection_residual_J_m3), 2.0e-13 * scale)
-        self.assertEqual(ledger.flux.clipping_added_m2, 0.0)
-        self.assertLess(abs(ledger.flux.balance_residual_m2), 1.0)
+        self.assertAlmostEqual(
+            ledger.correlation_energy_change_J_m3,
+            ledger.mobile_correlation_energy_change_J_m3
+            + ledger.long_range_energy_change_J_m3,
+        )
+        self.assertAlmostEqual(
+            ledger.stored_line_energy_change_J_m3,
+            ledger.mobile_line_energy_change_J_m3
+            + ledger.junction_energy_change_J_m3
+            + ledger.wall_energy_change_J_m3,
+        )
+        self.assertAlmostEqual(
+            ledger.heat_J_m3,
+            ledger.transport_heat_J_m3 + ledger.reaction_heat_J_m3,
+        )
+        self.assertEqual(ledger.flux.clipping_added_m_inv, 0.0)
+        self.assertLess(abs(ledger.flux.balance_residual_m_inv), self.dx)
 
     def test_complete_integrated_state_restarts_bitwise(self) -> None:
         loaded = IntegratedCDDState(
-            self.state.signed, self.state.plastic_deformation_gradient,
+            self.state.signed, self.state.plastic_distortion,
             self.state.orientation, self.state.temperature_K,
             applied_shear=0.01,
         )
@@ -190,8 +259,8 @@ class IntegratedCDDV3Tests(unittest.TestCase):
                 getattr(continuous.signed, name), getattr(restarted.signed, name)
             ))
         self.assertTrue(np.array_equal(
-            continuous.plastic_deformation_gradient,
-            restarted.plastic_deformation_gradient,
+            continuous.plastic_distortion,
+            restarted.plastic_distortion,
         ))
         self.assertTrue(np.array_equal(continuous.orientation, restarted.orientation))
         self.assertTrue(np.array_equal(continuous.temperature_K, restarted.temperature_K))
@@ -208,7 +277,7 @@ class IntegratedCDDV3Tests(unittest.TestCase):
             StaggeredSignedState(
                 plus, minus, self.state.signed.face_slip, self.b, self.dx
             ),
-            self.state.plastic_deformation_gradient, self.state.orientation,
+            self.state.plastic_distortion, self.state.orientation,
             self.state.temperature_K,
         )
         explicit = integrated_cdd_step(
@@ -221,7 +290,7 @@ class IntegratedCDDV3Tests(unittest.TestCase):
         )
         self.assertGreater(explicit.halvings, 0)
         self.assertEqual(imex.halvings, 0)
-        self.assertEqual(imex.ledger.flux.clipping_added_m2, 0.0)
+        self.assertEqual(imex.ledger.flux.clipping_added_m_inv, 0.0)
         self.assertLess(imex.ledger.correlation_energy_change_J_m3, 0.0)
 
     def test_local_reactions_are_bounded_and_close_line_and_burgers_ledgers(self) -> None:
@@ -249,18 +318,18 @@ class IntegratedCDDV3Tests(unittest.TestCase):
             seeded, np.full((4, self.n), 0.002),
             self.state.temperature_K, 1.0e-5, parameters,
         )
-        self.assertGreater(ledger.pair_generated_m2, 0.0)
-        self.assertGreater(ledger.pair_annihilated_m2, 0.0)
-        self.assertGreater(ledger.locked_transfer_m2, 0.0)
-        self.assertGreater(ledger.unlocked_transfer_m2, 0.0)
-        self.assertGreater(ledger.wall_capture_m2, 0.0)
+        self.assertGreater(ledger.pair_generated_m_inv, 0.0)
+        self.assertGreater(ledger.pair_annihilated_m_inv, 0.0)
+        self.assertGreater(ledger.locked_transfer_m_inv, 0.0)
+        self.assertGreater(ledger.unlocked_transfer_m_inv, 0.0)
+        self.assertGreater(ledger.wall_capture_m_inv, 0.0)
         self.assertLess(
-            abs(ledger.line_balance_residual_m2),
-            3.0e-15 * ledger.line_content_before_m2,
+            abs(ledger.line_balance_residual_m_inv),
+            3.0e-15 * ledger.line_content_before_m_inv,
         )
         self.assertLess(
             ledger.maximum_signed_burgers_residual_m2,
-            3.0e-15 * ledger.line_content_before_m2,
+            3.0e-15 * ledger.line_content_before_m_inv / self.dx,
         )
         self.assertGreaterEqual(float(np.min(advanced.mobile_plus_m2)), 0.0)
 

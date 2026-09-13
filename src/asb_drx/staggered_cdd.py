@@ -70,13 +70,13 @@ class StaggeredSignedState:
 
 @dataclass(frozen=True)
 class StaggeredFluxLedger:
-    """Content balance, including any roundoff-scale positivity correction."""
+    """Spatially integrated 1-D content in ``m^-1`` and its balance."""
 
-    mobile_content_before_m2: float
-    mobile_content_after_m2: float
-    clipping_added_m2: float
-    balance_residual_m2: float
-    signed_clipping_added_m2: float
+    mobile_content_before_m_inv: float
+    mobile_content_after_m_inv: float
+    clipping_added_m_inv: float
+    balance_residual_m_inv: float
+    signed_clipping_added_m_inv: float
 
 
 def signed_face_orowan_rate_s_inv(
@@ -149,12 +149,18 @@ def advance_staggered_flux_with_ledger(
         state.locked_plus_m2, state.locked_minus_m2,
         state.wall_plus_m2, state.wall_minus_m2,
     )
-    before = float(np.sum(state.mobile_plus_m2) + np.sum(state.mobile_minus_m2))
-    after = float(np.sum(plus) + np.sum(minus))
-    clipping = float(np.sum(correction_plus) + np.sum(correction_minus))
+    before = state.dx_m * float(
+        np.sum(state.mobile_plus_m2) + np.sum(state.mobile_minus_m2)
+    )
+    after = state.dx_m * float(np.sum(plus) + np.sum(minus))
+    clipping = state.dx_m * float(
+        np.sum(correction_plus) + np.sum(correction_minus)
+    )
     return advanced, StaggeredFluxLedger(
         before, after, clipping, after - before - clipping,
-        float(np.sum(correction_plus) - np.sum(correction_minus)),
+        state.dx_m * float(
+            np.sum(correction_plus) - np.sum(correction_minus)
+        ),
     )
 
 

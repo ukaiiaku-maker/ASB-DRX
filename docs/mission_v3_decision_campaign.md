@@ -137,10 +137,13 @@ the zero-stress activation volume is finite.
 ## First integrated Arrhenius--CDD increment
 
 `integrated_cdd_v3.py` owns four-family mobile, locked, and wall signed
-populations, authoritative face slip, cellwise `Fp`, rotation, and temperature.
+populations, authoritative face slip, cellwise additive plastic distortion,
+lattice rotation, and temperature. It is a declared small-strain antiplane
+control rather than a multiplicative finite-strain model.
 It combines physical positive/negative Arrhenius line flux with the variational
 correlation flux, advances density and slip with the identical face flux, maps
-slip to a multiplicative `Fp` increment, and closes external, elastic,
+slip to a work-conjugate plastic-distortion increment, evolves lattice
+rotation from total minus plastic spin, and closes external, elastic,
 plastic, correlation, line, and heat terms. Its complete checkpoint restarts
 bitwise. A homogeneous state reduces exactly to the corresponding local
 forward-minus-reverse Arrhenius/Orowan increment.

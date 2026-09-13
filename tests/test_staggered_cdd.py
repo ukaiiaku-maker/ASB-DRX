@@ -120,9 +120,9 @@ class StaggeredCDDTests(unittest.TestCase):
         advanced, ledger = advance_staggered_flux_with_ledger(
             self.state, zero, zero, 1.0
         )
-        self.assertEqual(ledger.clipping_added_m2, 0.0)
-        self.assertEqual(ledger.signed_clipping_added_m2, 0.0)
-        self.assertEqual(ledger.balance_residual_m2, 0.0)
+        self.assertEqual(ledger.clipping_added_m_inv, 0.0)
+        self.assertEqual(ledger.signed_clipping_added_m_inv, 0.0)
+        self.assertEqual(ledger.balance_residual_m_inv, 0.0)
         np.testing.assert_array_equal(
             advanced.total_signed_density_m2, self.state.total_signed_density_m2
         )

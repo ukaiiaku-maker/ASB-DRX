@@ -200,6 +200,8 @@ def variational_correlation_energy_J_m3(
     diffusion_coefficient: float,
     reference_density_m2: float,
     density_floor_m2: float = 1.0e8,
+    stationary_plus_m2: np.ndarray | None = None,
+    stationary_minus_m2: np.ndarray | None = None,
 ) -> np.ndarray:
     """Cellwise integrable correlation energy for the v3 candidate.
 
@@ -217,9 +219,22 @@ def variational_correlation_energy_J_m3(
         raise ValueError("energy requires nonnegative populations")
     if reference_density_m2 <= 0.0 or density_floor_m2 <= 0.0:
         raise ValueError("energy density scales must be positive")
+    stationary_plus = (
+        np.zeros_like(plus) if stationary_plus_m2 is None
+        else np.asarray(stationary_plus_m2, dtype=float)
+    )
+    stationary_minus = (
+        np.zeros_like(minus) if stationary_minus_m2 is None
+        else np.asarray(stationary_minus_m2, dtype=float)
+    )
+    if stationary_plus.shape != plus.shape or stationary_minus.shape != plus.shape:
+        raise ValueError("stationary signed populations must match mobile populations")
+    if np.any(stationary_plus < 0.0) or np.any(stationary_minus < 0.0):
+        raise ValueError("stationary populations must be nonnegative")
     rho = plus + minus + 2.0 * density_floor_m2
-    kappa = plus - minus
-    forest = np.sum(rho, axis=0)
+    total_rho = rho + stationary_plus + stationary_minus
+    kappa = plus - minus + stationary_plus - stationary_minus
+    forest = np.sum(total_rho, axis=0)
     entropy_like = np.sum(
         rho * (np.log(rho / reference_density_m2) - 1.0), axis=0
     )
@@ -240,6 +255,8 @@ def variational_chemical_potentials_J_m(
     diffusion_coefficient: float,
     reference_density_m2: float,
     density_floor_m2: float = 1.0e8,
+    stationary_plus_m2: np.ndarray | None = None,
+    stationary_minus_m2: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Analytical derivatives of :func:`variational_correlation_energy_J_m3`."""
 
@@ -253,10 +270,21 @@ def variational_chemical_potentials_J_m(
         diffusion_coefficient=diffusion_coefficient,
         reference_density_m2=reference_density_m2,
         density_floor_m2=density_floor_m2,
+        stationary_plus_m2=stationary_plus_m2,
+        stationary_minus_m2=stationary_minus_m2,
     )
     rho = plus + minus + 2.0 * density_floor_m2
-    kappa = plus - minus
-    forest = np.sum(rho, axis=0)
+    stationary_plus = (
+        np.zeros_like(plus) if stationary_plus_m2 is None
+        else np.asarray(stationary_plus_m2, dtype=float)
+    )
+    stationary_minus = (
+        np.zeros_like(minus) if stationary_minus_m2 is None
+        else np.asarray(stationary_minus_m2, dtype=float)
+    )
+    total_rho = rho + stationary_plus + stationary_minus
+    kappa = plus - minus + stationary_plus - stationary_minus
+    forest = np.sum(total_rho, axis=0)
     kappa_squared = np.sum(kappa * kappa, axis=0)
     common = (
         diffusion_coefficient * np.log(rho / reference_density_m2)
@@ -280,6 +308,8 @@ def variational_correlation_fluxes(
     diffusion_coefficient: float,
     reference_density_m2: float,
     density_floor_m2: float = 1.0e8,
+    stationary_plus_m2: np.ndarray | None = None,
+    stationary_minus_m2: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Discrete-gradient face flux with a provable unloaded energy inequality."""
 
@@ -294,6 +324,8 @@ def variational_correlation_fluxes(
         diffusion_coefficient=diffusion_coefficient,
         reference_density_m2=reference_density_m2,
         density_floor_m2=density_floor_m2,
+        stationary_plus_m2=stationary_plus_m2,
+        stationary_minus_m2=stationary_minus_m2,
     )
     mobility_face = 0.5 * (mobility + np.roll(mobility, -1, axis=1))
 
@@ -371,6 +403,8 @@ def variational_correlation_imex_fluxes(
     diffusion_coefficient: float,
     reference_density_m2: float,
     density_floor_m2: float = 1.0e8,
+    stationary_plus_m2: np.ndarray | None = None,
+    stationary_minus_m2: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Conservative IMEX effective flux for one accepted interval.
 
@@ -400,6 +434,8 @@ def variational_correlation_imex_fluxes(
         diffusion_coefficient=diffusion_coefficient,
         reference_density_m2=reference_density_m2,
         density_floor_m2=density_floor_m2,
+        stationary_plus_m2=stationary_plus_m2,
+        stationary_minus_m2=stationary_minus_m2,
     )
     rho = plus + minus + 2.0 * density_floor_m2
     entropic = (

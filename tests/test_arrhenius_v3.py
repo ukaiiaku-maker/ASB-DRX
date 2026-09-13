@@ -146,6 +146,21 @@ class ArrheniusV3Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "zero-stress"):
             replace(self.enthalpy, shape_n=0.8)
 
+    def test_event_frequency_and_glide_velocity_have_separate_scales(self) -> None:
+        stress = 0.4e9
+        event_frequency = self.mechanism.net_event_frequency_s_inv(
+            stress, 900.0, 2.0e16
+        )
+        event_length_m = 3.0e-10
+        velocity = self.mechanism.glide_velocity_m_s(
+            stress, 900.0, event_length_m, 2.0e16
+        )
+        self.assertAlmostEqual(velocity / event_frequency, event_length_m)
+        with self.assertRaisesRegex(ValueError, "event_length_m"):
+            self.mechanism.glide_velocity_m_s(
+                stress, 900.0, 0.0, 2.0e16
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

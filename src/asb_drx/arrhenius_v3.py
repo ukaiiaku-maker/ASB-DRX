@@ -227,10 +227,40 @@ class ArrheniusMechanism:
         self, signed_stress_Pa: float, temperature_K: float,
         density_m2: float | None = None,
     ) -> float:
+        """Return a generalized dimensionless event increment per second.
+
+        This legacy-compatible constitutive rate is appropriate for slip or
+        order parameters whose ``event_increment`` is dimensionless. Spatial
+        CDD must instead call :meth:`glide_velocity_m_s` with an explicitly
+        dimensioned event distance.
+        """
+
+        return self.event_increment * self.net_event_frequency_s_inv(
+            signed_stress_Pa, temperature_K, density_m2
+        )
+
+    def net_event_frequency_s_inv(
+        self, signed_stress_Pa: float, temperature_K: float,
+        density_m2: float | None = None,
+    ) -> float:
+        """Return forward-minus-reverse event frequency in ``s^-1``."""
+
         forward, reverse = self.directional_event_rates_s_inv(
             signed_stress_Pa, temperature_K, density_m2
         )
-        return self.event_increment * (forward - reverse)
+        return forward - reverse
+
+    def glide_velocity_m_s(
+        self, signed_stress_Pa: float, temperature_K: float,
+        event_length_m: float, density_m2: float | None = None,
+    ) -> float:
+        """Convert signed event frequency to a physical glide velocity."""
+
+        if not math.isfinite(event_length_m) or event_length_m <= 0.0:
+            raise ValueError("event_length_m must be finite and positive")
+        return event_length_m * self.net_event_frequency_s_inv(
+            signed_stress_Pa, temperature_K, density_m2
+        )
 
     def _density_factor(self, density_m2: float | None) -> float:
         if density_m2 is None:

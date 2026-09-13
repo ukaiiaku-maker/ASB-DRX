@@ -119,6 +119,40 @@ class CDDFluxV3Tests(unittest.TestCase):
             numerical / chemical_plus[family, cell], 1.0, places=6
         )
 
+    def test_stationary_signed_content_enters_energy_and_mobile_driving_force(self) -> None:
+        rng = np.random.default_rng(22)
+        plus = self.rho * (0.5 + 0.02 * rng.normal(size=(2, self.n)))
+        minus = self.rho * (0.5 + 0.02 * rng.normal(size=(2, self.n)))
+        stationary_plus = self.rho * (
+            0.12 + 0.01 * rng.normal(size=(2, self.n))
+        )
+        stationary_minus = self.rho * (
+            0.08 + 0.01 * rng.normal(size=(2, self.n))
+        )
+        kwargs = dict(
+            backstress_coefficient=0.8, diffusion_coefficient=1.1,
+            reference_density_m2=self.rho, density_floor_m2=1.0e8,
+            stationary_plus_m2=stationary_plus,
+            stationary_minus_m2=stationary_minus,
+        )
+        chemical_plus, _ = variational_chemical_potentials_J_m(
+            plus, minus, self.mu, self.burgers, **kwargs
+        )
+        family, cell = 0, 11
+        increment = 1.0e7
+        upper = plus.copy(); upper[family, cell] += increment
+        lower = plus.copy(); lower[family, cell] -= increment
+        upper_energy = variational_correlation_energy_J_m3(
+            upper, minus, self.mu, self.burgers, **kwargs
+        )
+        lower_energy = variational_correlation_energy_J_m3(
+            lower, minus, self.mu, self.burgers, **kwargs
+        )
+        numerical = (upper_energy[cell] - lower_energy[cell]) / (2.0 * increment)
+        self.assertAlmostEqual(
+            numerical / chemical_plus[family, cell], 1.0, places=6
+        )
+
     def test_variational_flux_has_exact_nonpositive_dissipation(self) -> None:
         rng = np.random.default_rng(31)
         plus = self.rho * (0.5 + 0.08 * rng.normal(size=(2, self.n)))

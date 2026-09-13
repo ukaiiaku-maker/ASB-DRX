@@ -29,7 +29,7 @@ def parameters(entropy_kB: float = 0.0, ratio: float = 1.0) -> IntegratedCDDPara
     mechanism = ArrheniusMechanism(
         ExpFloorEnthalpy(0.55 * EV_J, 0.7e9, 900.0, 0.2, 1.3, 2.0),
         BoundedActivationEntropy(reference_kB=entropy_kB),
-        2.0e7, event_increment=1.0e-9,
+        2.0e7,
         validity_temperature_K=(500.0, 1400.0),
         validity_stress_Pa=(0.0, 2.0e9),
     )
@@ -39,6 +39,7 @@ def parameters(entropy_kB: float = 0.0, ratio: float = 1.0) -> IntegratedCDDPara
         mechanism, 45.0e9, 2.5e6, 2.0e-9, dyads, 2.0e-13,
         backstress_coefficient=ratio, diffusion_coefficient=1.0,
         reference_density_m2=5.0e14,
+        glide_event_length_m=1.0e-9,
     )
 
 
@@ -78,9 +79,10 @@ def nonlinear_noise_record(seed: int, correlation_um: float) -> dict[str, object
     signed = StaggeredSignedState(
         plus, minus, np.zeros_like(plus), 2.86e-10, domain / n,
     )
+    beta_p = np.zeros((n, 3, 3))
     identity = np.broadcast_to(np.eye(3), (n, 3, 3)).copy()
     state = IntegratedCDDState(
-        signed, identity, identity.copy(), np.full(n, 900.0),
+        signed, beta_p, identity, np.full(n, 900.0),
         applied_shear=0.01,
     )
     before = plus + minus
@@ -92,7 +94,7 @@ def nonlinear_noise_record(seed: int, correlation_um: float) -> dict[str, object
         "total_density_cv_before": float(np.std(before) / np.mean(before)),
         "total_density_cv_after": float(np.std(after) / np.mean(after)),
         "correlation_energy_change_J_m3": step.ledger.correlation_energy_change_J_m3,
-        "clipping_added_m2": step.ledger.flux.clipping_added_m2,
+        "clipping_added_m_inv": step.ledger.flux.clipping_added_m_inv,
     }
 
 
@@ -131,7 +133,7 @@ def main(output: Path) -> None:
             record["all_resolved_modes_nonpositive"] for record in spectra
         ),
         "all_nonlinear_steps_clip_free": all(
-            record["clipping_added_m2"] == 0.0 for record in noise
+            record["clipping_added_m_inv"] == 0.0 for record in noise
         ),
         "all_nonlinear_steps_release_correlation_energy": all(
             record["correlation_energy_change_J_m3"] <= 0.0 for record in noise
