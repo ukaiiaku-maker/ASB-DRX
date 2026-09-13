@@ -1438,9 +1438,24 @@
       "configuration": {"model_branch": "asb_only", "T0_K": 1100.0, "strain_rate_s-1": 30000.0, "target_strain": 0.5, "strain_increment": 0.0001, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero"},
       "matched_control": "immutable_v32_job_55633674",
       "slurm": {"job_id": "55977649", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1, "memory": "4G"},
+      "start_utc": "2026-09-13T03:38:40Z",
+      "end_utc": "2026-09-13T04:01:02Z",
+      "exit_status": "0:0",
+      "wall_clock_seconds": 1343,
+      "peak_memory_MB": 357.68,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T033826Z-44076d2-asb",
-      "retrieval_status": "running",
-      "classification": "PENDING_SUFFICIENT_PHYSICAL_HORIZON"
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T033826Z-44076d2-asb",
+      "retrieval_status": "verified_all_scientific_outputs_inventory_self_entry_excluded",
+      "classification": "ASB_REFERENCE_RESPONSE_PRESERVED_STRICT_ASB_PENDING_MATCHED_ISOTHERMAL_AND_WIDTH_REFINEMENT",
+      "claim_level": "integrated_regression",
+      "outputs": {
+        "diagnostics_csv": "3f6c1fd9959dec8e33d0014a789ddd44c1d699a1a1d67c5d88e37b524332c165",
+        "final_checkpoint": "5dd7c86a4af936052c5833dd9d02f57e2ea48af629f78c167f88db177e17412e",
+        "output_inventory": "f579ea5a8b795abb90f8ed2f1ef446964db7771fa1034bbb7d666c4b1a4bf85d",
+        "result_summary": "98a8b001198632c92a1f0d544128cb06709e8b7dec3d2a0d68edda50be788e48",
+        "status_json": "7634d8d604f74c21bff6a6450ccb01b93bc5ade72fd8cc8c1330866a85d13481"
+      },
+      "checksum_note": "runner inventory self-entry is invalid by construction; all 85 non-inventory scientific entries passed and future runner commit 09d20cb fixes this"
     },
     {
       "run_id": "20260913T033826Z-44076d2-drxiso",
@@ -1455,9 +1470,25 @@
       "configuration": {"model_branch": "drx_isothermal", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "target_strain": 0.5, "strain_increment": 0.0001, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero"},
       "matched_control": "immutable_v34_zero_event_baseline_job_55633694",
       "slurm": {"job_id": "55977650", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1, "memory": "4G"},
+      "start_utc": "2026-09-13T03:38:40Z",
+      "end_utc": "2026-09-13T04:01:00Z",
+      "exit_status": "0:0",
+      "wall_clock_seconds": 1341,
+      "peak_memory_MB": 344.76,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T033826Z-44076d2-drxiso",
-      "retrieval_status": "running",
-      "classification": "PENDING_SUFFICIENT_PHYSICAL_HORIZON"
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T033826Z-44076d2-drxiso",
+      "retrieval_status": "verified_all_scientific_outputs_inventory_self_entry_excluded",
+      "classification": "INCONCLUSIVE_INSUFFICIENT_HORIZON_CONTINUATION_REQUIRED",
+      "claim_level": "integrated_regression",
+      "outputs": {
+        "diagnostics_csv": "45ac07e067327cb0465a22febee490a216d1869730f2bc3774d88291729e541b",
+        "final_checkpoint": "3fc4977bcf16acceea7ce59706cbce9039c19b2feff86e733b0388c7373bc5e5",
+        "output_inventory": "ff1c51a9a8dc7c72e5efdccbcd92fcef4455e24962dce3fadd0e6e21d50e177b",
+        "result_summary": "01a95f0126e81f82cbdc5424df12c7c407738e20898034b1217dae4dddafb292",
+        "status_json": "69f4c9d020c81c30810dc86d352cac32150b17391e318c49b20ad9194a488060"
+      },
+      "checksum_note": "runner inventory self-entry is invalid by construction; all 85 non-inventory scientific entries passed and future runner commit 09d20cb fixes this",
+      "horizon_note": "nominal 5000-step completion reached strain 0.4368682533 rather than target 0.5 because of adaptive accepted timesteps; exact continuation is required before mechanism classification"
     }
   ]
 }

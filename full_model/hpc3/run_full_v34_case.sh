@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-case_name="${CASE_NAME:?CASE_NAME must be asb_rate30000_seed42 or drx_iso_rate1000_seed42}"
+case_name="${CASE_NAME:?CASE_NAME must name a declared full-v34 case}"
 export MPLBACKEND=Agg
 export PYTHON=python
 export DRIVER=drx_full_v34_recovery.py
@@ -23,6 +23,13 @@ case "$case_name" in
   drx_iso_rate1000_seed42)
     export BRANCH=drx_isothermal RATE=1000 TARGET_STRAIN=0.5 DT_STRAIN_STEP=1.0e-4
     export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
+    ;;
+  drx_iso_rate1000_seed42_continue)
+    export BRANCH=drx_isothermal RATE=1000 NSTEPS="${NSTEPS:-1000}"
+    unset TARGET_STRAIN
+    export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
+    export RESTART_FILE="${RESTART_FILE:?continuation requires RESTART_FILE}"
+    export RESTART_RESET_CLOCK=false
     ;;
   *)
     echo "unknown CASE_NAME=$case_name" >&2

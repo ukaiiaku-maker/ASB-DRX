@@ -27,14 +27,33 @@ Updated: 2026-09-12 (America/Los_Angeles)
   densities.  A 1+1 segmented trajectory now matches the continuous two-step
   trajectory bit-for-bit across all 27 compared authoritative fields.
 - Checkpoints are now atomically published and are triggered by both physical
-  progress and wall-clock interval.  These are fixture results; matched HPC3
-  ASB and DRX-isothermal regressions remain pending.
-- The complete inherited-plus-full-model suite passes 250 tests locally.
-- Matched HPC3 full-model jobs are active from clean source `44076d2`:
-  `55977649` is the v34 zero-entropy `asb_only`, 30,000/s, seed-42
-  regression against immutable v32; `55977650` is the zero-entropy
-  `drx_isothermal`, 1,000/s, seed-42 baseline.  Both are single jobs with
-  target strain 0.5, atomic restart, and no parameter sweep.
+  progress and wall-clock interval.  The complete inherited-plus-full-model
+  suite passes 255 tests locally.
+- Matched HPC3 full-model regressions from clean source `44076d2` completed and
+  were fetched. Job `55977649` (`asb_only`, 30,000/s, seed 42) completed in
+  1,343 s and reproduces the immutable v32 peak stress, maximum temperature,
+  and top-5% plastic-rate fraction to `3.74e-16`, `6.75e-15`, and `9.41e-15`,
+  respectively. The full ASB-like reference response is therefore preserved;
+  strict ASB classification remains pending a matched isothermal control and
+  width refinement.
+- Job `55977650` (`drx_isothermal`, 1,000/s, seed 42) completed in 1,341 s but
+  reached strain 0.4369 rather than the required 0.5 because adaptive accepted
+  timesteps were smaller than the nominal strain increment. It contains 352
+  eligible sites and a peak hazard rate of `3.40e-2/s`, but only
+  `max(H/E)=1.54e-6`: zero raw triggers, candidates, promotions, or births.
+  The provisional diagnosis is hazard exposure/integration, not candidate
+  persistence or label promotion. Per the physical-horizon rule, the current
+  classification is `INCONCLUSIVE_INSUFFICIENT_HORIZON` until an exact
+  checkpoint continuation crosses strain 0.5.
+- Every scientific output checksum in both fetched runs passed. Their generated
+  inventories contain one invalid self-entry because the old runner hashed the
+  inventory while writing it; this provenance-only defect is recorded and fixed
+  for future jobs by commit `09d20cb`.
+- A selectively back-ported, full-model-only Patch B/C component now carries
+  persistent embryo identity, lineage, RNG state, radius/free-energy history,
+  signed-entropy EXP-floor mobility, continuous growth/shrinkage, contact and
+  phase-support observables, and an exact serialization ledger. It cannot
+  allocate a grain label and is not yet coupled into the production trajectory.
 
 ## Current decision: instantaneous junction-friction closure rejected
 

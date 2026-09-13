@@ -1,0 +1,51 @@
+{
+  "architecture": "full_2d_phase_field",
+  "asb_classification": "NOT_EVALUATED_REQUIRES_MATCHED_ISOTHERMAL_CONTROL_AND_FIELD_WIDTH_REFINEMENT",
+  "branch": "drx_isothermal",
+  "candidate_to_grain_chain": {
+    "active_candidates_max": 0,
+    "allocated_hazard_births_max": 0,
+    "allocated_labels_max": 12,
+    "candidate_creations": 0,
+    "cumulative_hazard_max": 1.0536530827500335e-07,
+    "eligible_sites_max": 352,
+    "first_failing_stage": "hazard_integration_did_not_reach_stochastic_threshold",
+    "hazard_rate_max_s-1": 0.03399690644359082,
+    "physical_grains": null,
+    "promotable_candidates_max": 0,
+    "raw_stochastic_attempts": 0,
+    "raw_stochastic_attempts_provenance": "inferred_zero_from_max_H_over_E_below_one"
+  },
+  "checkpoint": {
+    "checkpoint_active_candidates": 0,
+    "checkpoint_max_candidate_age": 0,
+    "global_step": 4999,
+    "max_hazard_threshold_ratio": 1.535670060403749e-06,
+    "minimum_stochastic_threshold": 0.00021425967734864485,
+    "path": "drx_v25_restart_004999.npz",
+    "physical_time_s": 0.000436868253307935,
+    "sha256": "3fc4977bcf16acceea7ce59706cbce9039c19b2feff86e733b0388c7373bc5e5"
+  },
+  "claim_level": "integrated_regression",
+  "localization_observables": {
+    "maximum_temperature_anisotropy": 0.9810307766546625,
+    "maximum_top5_plastic_power_fraction": 0.25829017791474246,
+    "maximum_top5_plastic_rate_fraction": 0.323712166162586,
+    "minimum_hot_cold_density_ratio": 0.0017514876049787367
+  },
+  "physical_grain_classification": "NOT_AVAILABLE_UNTIL_PATCH_E",
+  "physical_horizon": {
+    "diagnostic_rows": 201,
+    "final_step": 4999,
+    "final_strain": 0.4368682533078948,
+    "final_time_s": 0.00043676825330793493
+  },
+  "schema": "asb-drx-full-v34-case-summary/v1",
+  "stress_temperature": {
+    "final_stress_MPa": 498.9475037084997,
+    "maximum_temperature_K": 1125.5380004513297,
+    "maximum_temperature_range_K": 10.940806613015866,
+    "peak_stress_MPa": 909.3489282664464,
+    "post_peak_softening_fraction": 0.45131347473001676
+  }
+}
