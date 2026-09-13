@@ -3,6 +3,7 @@
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -42,13 +43,26 @@ def _finite_last(rows, name, default=math.nan):
     return values[-1] if values else default
 
 
+def _finite_sum(rows, name, default=0.0):
+    values = [value for value in _values(rows, name) if math.isfinite(value)]
+    return sum(values) if values else default
+
+
+def _sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def _checkpoint(case_dir):
     paths = sorted(Path(case_dir).glob("drx_v25_restart_*.npz"))
     if not paths:
         return None, {}
     path = paths[-1]
     with np.load(path, allow_pickle=True) as state:
-        result = {"path": path.name, "sha256_pending": True}
+        result = {"path": path.name, "sha256": _sha256(path)}
         if "H_nuc" in state.files and "E_nuc" in state.files:
             ratio = np.asarray(state["H_nuc"]) / np.maximum(np.asarray(state["E_nuc"]), 1e-300)
             result["max_hazard_threshold_ratio"] = float(np.nanmax(ratio))
@@ -89,7 +103,7 @@ def summarize(case_dir, branch, matched_csv=None):
         "eligible_sites_max": int(_finite_max(rows, "nuc_candidates", 0.0)),
         "hazard_rate_max_s-1": _finite_max(rows, "nuc_hazard_max", 0.0),
         "cumulative_hazard_max": _finite_max(rows, "nuc_Hmax", 0.0),
-        "candidate_creations": int(sum(_values(rows, "nuc_candidate_new"))) if "nuc_candidate_new" in rows[0] else 0,
+        "candidate_creations": int(_finite_sum(rows, "nuc_candidate_new")) if "nuc_candidate_new" in rows[0] else 0,
         "active_candidates_max": int(_finite_max(rows, "nuc_candidate_active", 0.0)),
         "promotable_candidates_max": int(_finite_max(rows, "nuc_candidate_promotable", 0.0)),
         "allocated_hazard_births_max": int(_finite_max(rows, "grain_hazard_births", 0.0)),
@@ -114,6 +128,12 @@ def summarize(case_dir, branch, matched_csv=None):
     else:
         first_failure = "physical_grain_recognition_not_yet_implemented"
     chain["first_failing_stage"] = first_failure
+    chain["raw_stochastic_attempts"] = (
+        0 if math.isfinite(ratio) and ratio < 1.0 else None)
+    chain["raw_stochastic_attempts_provenance"] = (
+        "inferred_zero_from_max_H_over_E_below_one"
+        if math.isfinite(ratio) and ratio < 1.0
+        else "not_recorded_separately_by_this_source")
 
     summary = {
         "schema": "asb-drx-full-v34-case-summary/v1",
