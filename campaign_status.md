@@ -47,6 +47,12 @@ Updated: 2026-09-12 (America/Los_Angeles)
   projecting about `108 s` to ten e-folds before nonlinear slowdown. This is an
   initial-slope and cost verification only and is explicitly classified
   `INSUFFICIENT_PHYSICAL_AMPLIFICATION_HORIZON`. The suite passes 239 tests.
+- Corrected HPC3 pilot `20260913T021834Z-70d91f5-nlmem2e`, Slurm `55976150`,
+  passed 17 targeted tests and completed two e-folds in 16 allocation seconds
+  on `hpc3-14-06`. Measured log amplification was `2.0184975`; the projected
+  solver cost to ten e-folds is 62.3 seconds. Local/HPC scientific outputs
+  agree within `2.11e-9` relative. Packaging-only job `55976135` ran no
+  equations and is retained as a failed provenance record.
 
 ### Preserved campaign chronology
 

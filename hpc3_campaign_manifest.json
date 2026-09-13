@@ -1304,6 +1304,67 @@
         "results/results-single.tar.gz": "ccf8833252c84c31ca08feeff02837571ddeb949a019688872f55259754f4161",
         "output/mission_v3_integrated_screen.json": "05d023af1e2fbc5df664f642a3c9972072d0dba3181ab600dae1b356fad1a818"
       }
+    },
+    {
+      "run_id": "20260913T021542Z-3bda5d8-nlmem2e",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "nonlinear_delayed_memory_two_efold_packaging_attempt",
+      "git_commit_at_plan": "3bda5d8",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean_but_incomplete_archive_manifest",
+      "input_bundle_sha256": "915b59222925efc8472b4ab81086b6602ec5893b823141312e757c4f20e00565",
+      "scientific_result": false,
+      "failure_class": "packaging_missing_package_dependencies",
+      "slurm": {
+        "job_id": "55976135", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G", "peak_memory_KB": 48820,
+        "modules": ["anaconda/2025.12"]
+      },
+      "start_utc": "2026-09-13T02:17:40Z",
+      "end_utc": "2026-09-13T02:17:42Z",
+      "exit_status": "2:0", "wall_clock_seconds": 2,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260913T021542Z-3bda5d8-nlmem2e",
+      "retrieval_status": "diagnostics_inspected_remote_no_scientific_output"
+    },
+    {
+      "run_id": "20260913T021834Z-70d91f5-nlmem2e",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "nonlinear_delayed_memory_fast_eigenvector_two_efold_cost_and_slope_pilot",
+      "git_commit_at_plan": "70d91f5",
+      "scientific_source_commit": "28d931e",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_bundle_sha256": "e4647281a212a0b55c7ff1341f3b1c6beeb11db7a48b738c59d159ba7bad6f72",
+      "targeted_tests": 17,
+      "targeted_tests_passed": 17,
+      "cumulative_efolds": 2.0,
+      "predicted_growth_s_inv": 101.34840551677486,
+      "measured_log_amplification": 2.0184975046268456,
+      "classification": "INSUFFICIENT_PHYSICAL_AMPLIFICATION_HORIZON",
+      "scientific_gate_passed": false,
+      "physical_CDD_wall_gate_passed": false,
+      "slurm": {
+        "job_id": "55976150", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G", "peak_memory_KB": 839600,
+        "modules": ["anaconda/2025.12"]
+      },
+      "start_utc": "2026-09-13T02:19:03Z",
+      "end_utc": "2026-09-13T02:19:19Z",
+      "exit_status": "0:0", "wall_clock_seconds": 16,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260913T021834Z-70d91f5-nlmem2e",
+      "local_path": "hpc3-results/asb-drx-independent/20260913T021834Z-70d91f5-nlmem2e",
+      "retrieval_status": "live_checkpoint_and_outputs_checksum_verified",
+      "cross_platform": {
+        "classification_identical": true,
+        "maximum_relative_scientific_difference": 2.1078136783733942e-9
+      },
+      "outputs": {
+        "output/nonlinear_memory_fast_pilot.json": "9f4e0b951ba9ffa8d7c40b71ec9cd7cb7850ea9dcd4b82154158209030d9800d",
+        "output/nonlinear_memory_fast_pilot_checkpoint.npz": "cd500e7c530126de77556008e60c172c1779000f97f0e087ed387f77980a0855",
+        "output/nonlinear_memory_pilot_tests.txt": "eff129a3e305a3bca34a0aef0d283e2688865384f3c3f59f16ae9775d1eb39a1"
+      }
     }
   ]
 }

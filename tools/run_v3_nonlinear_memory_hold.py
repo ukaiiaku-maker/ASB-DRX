@@ -16,6 +16,7 @@ from asb_drx.nonlinear_memory_cdd_v3 import (
     FrozenMemoryParameters, FrozenMemoryState, advance_frozen_memory,
     homogeneous_equilibrium_state,
 )
+from asb_drx.physical_noise import periodic_physical_noise
 from asb_drx.vector_topology_cdd_v3 import (
     JunctionReaction, VectorTopologyNetwork, arrhenius_forest_linearization,
     reaction_transport_memory_symbol_s_inv,
@@ -109,9 +110,28 @@ def main(args: argparse.Namespace) -> None:
             history = json.loads(str(archive["history"]))
             initial_amplitude = float(archive["initial_amplitude_m2"])
     else:
-        right = right / np.max(np.abs(right))
-        phase = np.exp(2j * np.pi * mode * np.arange(args.cells) / args.cells)
-        perturbation = args.amplitude * 2.5e14 * np.real(right[:, None] * phase[None, :])
+        if args.seed_type == "eigenvector":
+            right = right / np.max(np.abs(right))
+            phase = np.exp(2j * np.pi * mode * np.arange(args.cells) / args.cells)
+            perturbation = (
+                args.amplitude * 2.5e14
+                * np.real(right[:, None] * phase[None, :])
+            )
+        else:
+            base_fields = np.concatenate((
+                equilibrium.mobile_m2, equilibrium.junction_m2,
+                equilibrium.memory_m2,
+            ), axis=0)
+            perturbation = np.empty_like(base_fields)
+            correlation_m = 0.35 * CASES[args.case]["wavelength"]
+            for species in range(base_fields.shape[0]):
+                noise = periodic_physical_noise(
+                    args.cells, parameters.domain_m, correlation_m,
+                    args.seed + 104729 * species,
+                )
+                perturbation[species] = (
+                    args.amplitude * base_fields[species] * noise
+                )
         state = FrozenMemoryState(
             equilibrium.mobile_m2 + perturbation[:8],
             equilibrium.junction_m2 + perturbation[8:9],
@@ -144,6 +164,8 @@ def main(args: argparse.Namespace) -> None:
         "cells": args.cells,
         "domain_m": parameters.domain_m,
         "selected_mode": mode,
+        "seed_type": args.seed_type,
+        "seed": args.seed,
         "predicted_growth_s_inv": float(eigenvalue.real),
         "predicted_wavelength_m": parameters.domain_m / mode,
         "simulated_time_s": state.time_s,
@@ -173,6 +195,9 @@ if __name__ == "__main__":
     parser.add_argument("--target-efolds", type=float, default=2.0)
     parser.add_argument("--chunk-s", type=float, default=1.0e-3)
     parser.add_argument("--amplitude", type=float, default=1.0e-6)
+    parser.add_argument("--seed-type", choices=("eigenvector", "broadband"),
+                        default="eigenvector")
+    parser.add_argument("--seed", type=int, default=1701)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     main(parser.parse_args())

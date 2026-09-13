@@ -204,6 +204,12 @@ must use broadband physical noise, persist to `G>=10` or saturation/validity
 stop, and test drive removal. The restart checkpoint contains all population,
 junction, memory, physical-time, initial-amplitude, and history fields.
 
+HPC3 job `55976150` independently completed the same two-e-fold pilot from
+source package `70d91f5`: 17 targeted tests passed, measured amplification was
+`2.0184975`, and projected solver time to ten e-folds was 62.3 seconds.
+Scientific local/HPC values agree within `2.11e-9` relative. Earlier job
+`55976135` failed during package import and executed no model equations.
+
 Local evidence: 237 canonical tests pass. The instantaneous machine result
 `output/v3_topology_dispersion.json` records separate fixture and scientific
 fields against source `3f4712c`. Its SHA-256 is
