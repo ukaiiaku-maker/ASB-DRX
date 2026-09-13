@@ -4,6 +4,32 @@ Updated: 2026-09-12 (America/Los_Angeles)
 
 ## Directive v5 transition: full v34 production model restored
 
+### Directive v6 hazard-measure checkpoint
+
+- The production candidate path now has an opt-in area-integrated physical
+  hazard measure. Local creation rate has units `s^-1` per physical site; a
+  declared areal site density converts it to `m^-2 s^-1`, and physical area and
+  time integration give dimensionless expected event count. Grid cells are not
+  treated as independent sites.
+- Its single global Poisson clock carries exposure through GB translation,
+  swept support, and Eulerian cell changes. Thresholds redraw only after a
+  completed event; discarded/newly initialized/transferred exposure and every
+  redraw cause are explicit. A bounded multi-event loop processes all crossings
+  up to its declared work limit and refuses further physical advancement while
+  an event is deferred.
+- Uniform 16/32/64 grids give the same total exposure; translated support loses
+  none. A forced full-driver fixture reached `Lambda_tot=1.686451534478067`,
+  `P(N>=1)=0.814824551763979`, realized three events, created three embryo
+  records, and retained exactly three grain labels. It had three event redraws,
+  zero other redraws, and zero discarded exposure.
+- Continuous four-step and exact 2+2 trajectories agree bitwise across 120
+  authoritative checkpoint fields, including the independent hazard RNG.
+  With the new path disabled, the production driver remains bitwise identical
+  to commit `3aef225` across all 108 common authoritative fields.
+- These are forced invariant fixtures, not a selected site density or creation
+  parameterization. Atomic phase promotion and offline baseline reweighting
+  remain prerequisites to the first v6 HPC3 scientific job.
+
 - Production development has moved to isolated branch
   `exp/full-v34-recovery-v1`; the reduced endpoint is preserved at `fb464e1`
   and tag `reduced-v3-final-validity-stop-20260912`.

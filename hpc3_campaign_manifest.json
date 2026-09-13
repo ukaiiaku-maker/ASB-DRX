@@ -32,6 +32,24 @@
     "status": "not_applicable_DD_does_not_parameterize_model"
   },
   "local_full_model_fixtures": {
+    "area_hazard_restart": {
+      "classification": "forced_mesh_invariant_area_hazard_restart_fixture",
+      "architecture": "full_v34_two_dimensional_phase_field",
+      "base_commit": "3aef225192c688da7531af92a4acab3aa634893c",
+      "production_driver_sha256": "7ad0a86b5c1a935515820281d0fa48115b6eadc2ac9dcd29721151cea31726d3",
+      "hazard_measure_sha256": "c4b71bb9ee44ece5906e027ac94cb32efc044cb06c2ef9a7a49b24428bccf61d",
+      "result_path": "full_model/verification/area_hazard_restart_local.json",
+      "result_sha256": "ca1590d5a3533966cdad0517a466397c64604ceea4207b052ec097cef5f5b058",
+      "hazard_exposure_total": 1.686451534478067,
+      "probability_at_least_one": 0.814824551763979,
+      "realized_events": 3,
+      "threshold_redraws_after_event": 3,
+      "threshold_redraws_other": 0,
+      "discarded_exposure": 0.0,
+      "authoritative_fields_bitwise_exact": 120,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    },
     "stateful_embryo_restart": {
       "classification": "forced_integration_exact_restart_not_scientific_parameter_evidence",
       "architecture": "full_v34_two_dimensional_phase_field",

@@ -64,6 +64,10 @@ from physical_grains import (
     GrainCriteria, GrainMetrics, GrainRecord, GrainTracker,
     tracker_from_json, tracker_to_json, update_tracker,
 )
+from hazard_measure import (
+    AreaHazardState, advance_area_hazard, exposure_statistics,
+    initialize_area_hazard,
+)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -625,6 +629,9 @@ P = dict(
     nuc_min_strain=0.05,             # v27c: require some organization before discrete nuclei              # keep for optional startup suppression only
     nuc_attempt_freq=1.0e2,         # v27c: conservative patch-scale attempt rate          # v16 default: conservative hazard attempt rate per local patch
     nuc_hazard_rate_cap=1.0e7,       # 1/s, numerical cap only
+    hazard_measure_mode='legacy_cell_thresholds',
+    nuc_site_density_m2=3.52e12,
+    hazard_maximum_events_per_evaluation=64,
     nuc_hazard_site_floor=0.0,      # v27c: no bulk floor; organization supplies sites      # weak floor: interiors can nucleate, GB/walls faster
     nuc_site_gb_weight=0.35,
     nuc_site_kappa_weight=0.30,
@@ -3071,8 +3078,10 @@ E_tot = np.zeros((2,2))
 # next event in each patch.  These fields are reset locally after nucleation or
 # GB sweep, but otherwise retain exposure history.
 _rng_nuc = np.random.default_rng(int(P.get('nuc_rng_seed', 271828)))
+_rng_hazard_measure = np.random.default_rng(int(P.get('nuc_rng_seed', 271828)) + 104729)
 H_nuc = np.zeros((Nx, Ny), dtype=float)
 E_nuc = -np.log(np.maximum(_rng_nuc.random((Nx, Ny)), 1e-300))
+area_hazard_state = initialize_area_hazard((Nx, Ny), _rng_hazard_measure)
 
 # v34 candidate-nucleus state.  Candidate states are deliberately separate from
 # eta/grain labels so the grain count represents persistent nuclei only.
@@ -3141,6 +3150,31 @@ if _restart_loaded and not P.get('restart_reset_clock', True):
             if 'embryo_population_json' not in _restart_npz.files:
                 raise ValueError('exact stateful-embryo restart requires embryo_population_json')
             embryo_population = population_from_json(str(_restart_npz['embryo_population_json']))
+        if str(P.get('hazard_measure_mode', '')).lower() == 'area_integrated':
+            _area_names = (
+                'area_hazard_exposure_field', 'area_hazard_residual_exposure',
+                'area_hazard_total_exposure', 'area_hazard_expected_raw_trigger_count',
+                'area_hazard_next_threshold', 'area_hazard_completed_events',
+                'area_hazard_threshold_redraws_after_event',
+                'area_hazard_threshold_redraws_other', 'area_hazard_discarded_exposure',
+                'area_hazard_transferred_exposure', 'area_hazard_newly_initialized_exposure')
+            if not all(name in _restart_npz.files for name in _area_names):
+                raise ValueError('exact area-integrated hazard restart requires complete hazard state')
+            area_hazard_state = AreaHazardState(
+                np.asarray(_restart_npz['area_hazard_exposure_field'], dtype=float),
+                float(_restart_npz['area_hazard_residual_exposure']),
+                float(_restart_npz['area_hazard_total_exposure']),
+                float(_restart_npz['area_hazard_expected_raw_trigger_count']),
+                float(_restart_npz['area_hazard_next_threshold']),
+                int(_restart_npz['area_hazard_completed_events']),
+                int(_restart_npz['area_hazard_threshold_redraws_after_event']),
+                int(_restart_npz['area_hazard_threshold_redraws_other']),
+                float(_restart_npz['area_hazard_discarded_exposure']),
+                float(_restart_npz['area_hazard_transferred_exposure']),
+                float(_restart_npz['area_hazard_newly_initialized_exposure']))
+            if 'rng_hazard_measure_state_json' not in _restart_npz.files:
+                raise ValueError('exact area-integrated hazard restart requires hazard RNG state')
+            _rng_state_from_json(_rng_hazard_measure, _restart_npz['rng_hazard_measure_state_json'])
 gb_mask = diffuse_gb_support(eta, lab, Ng)
 psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 grain_tracker = GrainTracker(tuple(
@@ -3757,7 +3791,7 @@ def apply_gb_comoving_gnd_projection(rp, rm, rho, gb_mask_old, gb_mask_new, H_nu
 
     # The local metastable object has changed because the boundary left.  Do not
     # let old GB-bound exposure carry over as a nucleation clock in the lattice.
-    if H_nuc is not None:
+    if H_nuc is not None and str(P.get('hazard_measure_mode', '')).lower() != 'area_integrated':
         reset_strength = float(P.get('gb_comoving_hazard_reset_strength', 4.0))
         H_nuc = H_nuc * np.exp(-reset_strength*depart)
         if E_nuc is not None:
@@ -4273,7 +4307,7 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                             H_nuc, E_nuc, activity_factor=None):
     global rho_forest, rho_wall, nuc_cand_active, nuc_cand_age, nuc_cand_best_barrier, nuc_cand_birth_step
     global nuc_raw_trigger_total, nuc_raw_viable_trigger_total
-    global embryo_population
+    global embryo_population, area_hazard_state
     """Advance cumulative nucleation hazard and insert at most one embryo.
 
     The hazard is evaluated for every local patch.  No rho/kappa/gradpsi candidate
@@ -4286,12 +4320,28 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
         return eta, psi_gv, Ng, lab, psi_lat, psi_plastic, rp, rm, rho, rho_GB, gb_mask, H_nuc, E_nuc, dict(cand=0, best_dF=np.nan, best_score=np.nan, event=0)
 
     fields = _nuc_barrier_fields(rho, kappa_tot, rho_GB, gb_mask, psi_lat, T_field, activity_factor=activity_factor)
-    dt_h = P['dt']*max(int(P.get('nuc_interval', 20)), 1)
-    H_nuc = H_nuc + fields['rate']*dt_h
-    excess = H_nuc - E_nuc
     possible = np.isfinite(fields['barrier']) & (fields['rate'] > 0.0)
-    triggered = possible & (excess >= 0.0)
-    raw_triggered = int(np.sum(triggered))
+    dt_h = P['dt']*max(int(P.get('nuc_interval', 20)), 1)
+    area_event_indices = ()
+    if str(P.get('hazard_measure_mode', '')).lower() == 'area_integrated':
+        area_step = advance_area_hazard(
+            area_hazard_state, np.where(possible, fields['rate'], 0.0),
+            site_density_m2=float(P.get('nuc_site_density_m2', 3.52e12)),
+            cell_area_m2=dx*dy, dt_s=dt_h, rng=_rng_hazard_measure,
+            maximum_events=int(P.get('hazard_maximum_events_per_evaluation', 64)))
+        area_hazard_state = area_step.state
+        H_nuc = np.asarray(area_hazard_state.exposure_field).copy()
+        triggered = np.zeros_like(possible)
+        for _event_ix in area_step.event_indices:
+            triggered[_event_ix] = True
+        area_event_indices = area_step.event_indices
+        raw_triggered = len(area_event_indices)
+        excess = np.zeros_like(H_nuc)
+    else:
+        H_nuc = H_nuc + fields['rate']*dt_h
+        excess = H_nuc - E_nuc
+        triggered = possible & (excess >= 0.0)
+        raw_triggered = int(np.sum(triggered))
     nuc_raw_trigger_total += raw_triggered
 
     finite_barriers = fields['barrier'][possible]
@@ -4306,6 +4356,9 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                 activity_factor_max=float(np.nanmax(fields.get('activity_factor', 1.0))),
                 raw_triggered=raw_triggered,
                 raw_trigger_total=int(nuc_raw_trigger_total))
+    if str(P.get('hazard_measure_mode', '')).lower() == 'area_integrated':
+        diag.update(exposure_statistics(area_hazard_state))
+        diag['deferred_event_present'] = int(area_step.deferred_event_present)
 
     # v34: cumulative-hazard trigger starts/ages a candidate nucleus.  The
     # candidate must survive several hazard evaluations before it is promoted to
@@ -4319,15 +4372,18 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                   (fields['barrier']/eV_J <= max_bar_eV) &
                   (fields['rate'] >= min_rate) &
                   (fields.get('dF_density', np.zeros_like(rho)) >= min_dF))
-        raw_viable_triggered = int(np.sum(triggered & viable))
+        raw_viable_triggered = (sum(bool(viable[ix]) for ix in area_event_indices)
+                                if area_event_indices else int(np.sum(triggered & viable)))
         nuc_raw_viable_trigger_total += raw_viable_triggered
         diag.update(raw_viable_triggered=raw_viable_triggered,
-                    raw_viable_trigger_total=int(nuc_raw_viable_trigger_total))
+                    raw_viable_trigger_total=int(nuc_raw_viable_trigger_total),
+                    raw_rejected_not_viable=int(raw_triggered-raw_viable_triggered))
         if P.get('use_stateful_embryos', False):
             accepted = triggered & viable
-            if np.any(accepted):
-                select_field = np.where(accepted, excess, -np.inf)
-                ix = np.unravel_index(int(np.nanargmax(select_field)), select_field.shape)
+            accepted_indices = ([ix for ix in area_event_indices if viable[ix]]
+                                if area_event_indices else list(zip(*np.nonzero(accepted))))
+            created_ids = []
+            for ix in accepted_indices:
                 parent_gid = int(lab[ix])
                 event = EmbryoEvent(
                     int(globals().get('current_step_for_provenance', 0)),
@@ -4347,18 +4403,21 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                     rng_state_json=_rng_state_to_json(_rng_nuc),
                     cumulative_hazard=float(H_nuc[ix]), event=event,
                     parameters=_stateful_embryo_parameters())
-                radius_cells = max(int(np.ceil(created.radius_m/dx)), 1)
-                ii, jj = np.indices(H_nuc.shape)
-                distance2 = (np.minimum(np.abs(ii-ix[0]), Nx-np.abs(ii-ix[0]))**2
-                             + np.minimum(np.abs(jj-ix[1]), Ny-np.abs(jj-ix[1]))**2)
-                reset = distance2 <= radius_cells**2
-                H_nuc = np.where(reset, 0.0, H_nuc)
-                E_nuc = np.where(reset, _draw_exp_threshold(H_nuc.shape), E_nuc)
-                diag.update(candidate_new=1,
+                created_ids.append(int(created.embryo_id))
+                if str(P.get('hazard_measure_mode', '')).lower() != 'area_integrated':
+                    radius_cells = max(int(np.ceil(created.radius_m/dx)), 1)
+                    ii, jj = np.indices(H_nuc.shape)
+                    distance2 = (np.minimum(np.abs(ii-ix[0]), Nx-np.abs(ii-ix[0]))**2
+                                 + np.minimum(np.abs(jj-ix[1]), Ny-np.abs(jj-ix[1]))**2)
+                    reset = distance2 <= radius_cells**2
+                    H_nuc = np.where(reset, 0.0, H_nuc)
+                    E_nuc = np.where(reset, _draw_exp_threshold(H_nuc.shape), E_nuc)
+            if created_ids:
+                diag.update(candidate_new=len(created_ids),
                             candidate_active=sum(r.status == 'active' for r in embryo_population.records),
                             candidate_promotable=sum(r.status == 'promotable' for r in embryo_population.records),
                             candidate_age_max=0,
-                            stateful_embryo_created_id=int(created.embryo_id))
+                            stateful_embryo_created_ids=tuple(created_ids))
             else:
                 diag.update(candidate_new=0,
                             candidate_active=sum(r.status == 'active' for r in embryo_population.records),
@@ -4796,8 +4855,21 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         nuc_candidate_barrier_min_eV=float(nuc_diag.get('candidate_barrier_min_eV', np.nan)),
         nuc_raw_triggered=int(nuc_diag.get('raw_triggered', 0)),
         nuc_raw_viable_triggered=int(nuc_diag.get('raw_viable_triggered', 0)),
+        nuc_raw_rejected_not_viable=int(nuc_diag.get('raw_rejected_not_viable', 0)),
         nuc_raw_trigger_total=int(globals().get('nuc_raw_trigger_total', 0)),
         nuc_raw_viable_trigger_total=int(globals().get('nuc_raw_viable_trigger_total', 0)),
+        hazard_exposure_site_max=float(nuc_diag.get('hazard_exposure_site_max', np.nan)),
+        hazard_exposure_site_mean=float(nuc_diag.get('hazard_exposure_site_mean', np.nan)),
+        hazard_exposure_site_quantiles=str(nuc_diag.get('hazard_exposure_site_quantiles', '')),
+        hazard_exposure_total=float(nuc_diag.get('hazard_exposure_total', np.nan)),
+        expected_raw_trigger_count=float(nuc_diag.get('expected_raw_trigger_count', np.nan)),
+        probability_at_least_one_raw_trigger=float(nuc_diag.get('probability_at_least_one_raw_trigger', np.nan)),
+        hazard_exposure_discarded=float(nuc_diag.get('exposure_discarded', 0.0)),
+        hazard_exposure_transferred=float(nuc_diag.get('exposure_transferred', 0.0)),
+        hazard_exposure_newly_initialized=float(nuc_diag.get('exposure_newly_initialized', 0.0)),
+        hazard_threshold_redraws_after_event=int(nuc_diag.get('threshold_redraws_after_event', 0)),
+        hazard_threshold_redraws_other=int(nuc_diag.get('threshold_redraws_other', 0)),
+        hazard_deferred_event_present=int(nuc_diag.get('deferred_event_present', 0)),
         embryo_records_total=len(globals().get('embryo_population', EmbryoPopulation(0)).records),
         embryo_active_total=sum(r.status == 'active' for r in globals().get('embryo_population', EmbryoPopulation(0)).records),
         embryo_promotable_total=sum(r.status == 'promotable' for r in globals().get('embryo_population', EmbryoPopulation(0)).records),
@@ -5151,6 +5223,18 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             nuc_raw_viable_trigger_total=np.array(nuc_raw_viable_trigger_total, dtype=np.int64),
             embryo_population_json=np.array(population_to_json(embryo_population)),
             physical_grain_tracker_json=np.array(tracker_to_json(grain_tracker)),
+            area_hazard_exposure_field=area_hazard_state.exposure_field,
+            area_hazard_residual_exposure=np.array(area_hazard_state.residual_exposure),
+            area_hazard_total_exposure=np.array(area_hazard_state.total_exposure),
+            area_hazard_expected_raw_trigger_count=np.array(area_hazard_state.expected_raw_trigger_count),
+            area_hazard_next_threshold=np.array(area_hazard_state.next_threshold),
+            area_hazard_completed_events=np.array(area_hazard_state.completed_events, dtype=np.int64),
+            area_hazard_threshold_redraws_after_event=np.array(area_hazard_state.threshold_redraws_after_event, dtype=np.int64),
+            area_hazard_threshold_redraws_other=np.array(area_hazard_state.threshold_redraws_other, dtype=np.int64),
+            area_hazard_discarded_exposure=np.array(area_hazard_state.discarded_exposure),
+            area_hazard_transferred_exposure=np.array(area_hazard_state.transferred_exposure),
+            area_hazard_newly_initialized_exposure=np.array(area_hazard_state.newly_initialized_exposure),
+            rng_hazard_measure_state_json=np.array(_rng_state_to_json(_rng_hazard_measure)),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
             sim_time=np.array(sim_time + P['dt'] if sim_time_value is None else sim_time_value),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),
@@ -5820,7 +5904,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
         # A GB sweep changes the local metastable object, so reset cumulative
         # nucleation exposure in swept cells while preserving exposure elsewhere.
-        if P.get('use_hazard_nucleation', True):
+        if (P.get('use_hazard_nucleation', True)
+                and str(P.get('hazard_measure_mode', '')).lower() != 'area_integrated'):
             H_nuc = np.where(flip, 0.0, H_nuc)
             E_nuc = np.where(flip, _draw_exp_threshold(H_nuc.shape), E_nuc)
         lab = new_lab
