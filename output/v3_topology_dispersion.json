@@ -1,0 +1,161 @@
+{
+  "schema": "asb-drx-vector-topology-dispersion/v1",
+  "source_commit": "3f4712c",
+  "fixture_passed": true,
+  "numerical_verification_passed": true,
+  "frank_rule_passed": true,
+  "minimum_continuum_wavelength_m": 2.1839547795525967e-07,
+  "screen": [
+    {
+      "diffusivity_m2_s": 1e-13,
+      "forest_coefficient_Pa_m2": 1e-08,
+      "continuum_maximum_growth_s_inv": -9.999399364080119e-08,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -9.999399364080119e-08,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-13,
+      "forest_coefficient_Pa_m2": 1e-07,
+      "continuum_maximum_growth_s_inv": -9.999644157154819e-08,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -9.999644157154819e-08,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-13,
+      "forest_coefficient_Pa_m2": 3e-07,
+      "continuum_maximum_growth_s_inv": -1.0000000000000001e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1.0000000000000001e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-13,
+      "forest_coefficient_Pa_m2": 1e-06,
+      "continuum_maximum_growth_s_inv": 32.61601142021942,
+      "continuum_peak_wavelength_m": 2.1839547795525967e-07,
+      "continuum_peak_at_short_wavelength_boundary": true,
+      "extended_maximum_growth_s_inv": 1731.3165625463023,
+      "extended_peak_wavelength_m": 1.3391165146526284e-08
+    },
+    {
+      "diffusivity_m2_s": 2e-13,
+      "forest_coefficient_Pa_m2": 1e-08,
+      "continuum_maximum_growth_s_inv": -1.9998717504243757e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1.9998717504243757e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 2e-13,
+      "forest_coefficient_Pa_m2": 1e-07,
+      "continuum_maximum_growth_s_inv": -1.9997647993097445e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1.9997647993097445e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 2e-13,
+      "forest_coefficient_Pa_m2": 3e-07,
+      "continuum_maximum_growth_s_inv": -1.9999842149065472e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1.9999842149065472e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 2e-13,
+      "forest_coefficient_Pa_m2": 1e-06,
+      "continuum_maximum_growth_s_inv": -1.6495394294483173e-08,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1.6495394294483173e-08,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 5e-13,
+      "forest_coefficient_Pa_m2": 1e-08,
+      "continuum_maximum_growth_s_inv": -5e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -5e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 5e-13,
+      "forest_coefficient_Pa_m2": 1e-07,
+      "continuum_maximum_growth_s_inv": -4.999946519035348e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -4.999946519035348e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 5e-13,
+      "forest_coefficient_Pa_m2": 3e-07,
+      "continuum_maximum_growth_s_inv": -5e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -5e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 5e-13,
+      "forest_coefficient_Pa_m2": 1e-06,
+      "continuum_maximum_growth_s_inv": -1.8572671253608918e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1.8572671253608918e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-12,
+      "forest_coefficient_Pa_m2": 1e-08,
+      "continuum_maximum_growth_s_inv": -1e-06,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1e-06,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-12,
+      "forest_coefficient_Pa_m2": 1e-07,
+      "continuum_maximum_growth_s_inv": -1e-06,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1e-06,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-12,
+      "forest_coefficient_Pa_m2": 3e-07,
+      "continuum_maximum_growth_s_inv": -1e-06,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -1e-06,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    },
+    {
+      "diffusivity_m2_s": 1e-12,
+      "forest_coefficient_Pa_m2": 1e-06,
+      "continuum_maximum_growth_s_inv": -4.677951090975694e-07,
+      "continuum_peak_wavelength_m": 0.006283185307179587,
+      "continuum_peak_at_short_wavelength_boundary": false,
+      "extended_maximum_growth_s_inv": -4.677951090975694e-07,
+      "extended_peak_wavelength_m": 0.006283185307179587
+    }
+  ],
+  "positive_continuum_cases": 1,
+  "robust_interior_finite_mode_cases": 0,
+  "mechanism_supported": false,
+  "physical_CDD_wall_gate_passed": false,
+  "integrated_scientific_claim_supported": false,
+  "decision": "reject_minimal_instantaneous_junction_friction_closure",
+  "reason": "damped cases or positive growth driven to the declared shortest continuum wavelength; no robust interior finite-k selection"
+}

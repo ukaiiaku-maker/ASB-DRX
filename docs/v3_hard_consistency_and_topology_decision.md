@@ -161,4 +161,5 @@ mechanism, and predictive-validation flags remain false.
 
 Local evidence: 236 canonical tests pass; machine result
 `output/v3_topology_dispersion.json` records separate fixture and scientific
-fields.
+fields against source `3f4712c`. Its SHA-256 is
+`cbb4103631d291eae783e5bf0a303a27d6b1098205585c7c82d9ec76a3a931e0`.

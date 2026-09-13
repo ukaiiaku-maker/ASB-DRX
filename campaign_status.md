@@ -25,6 +25,11 @@ Updated: 2026-09-12 (America/Los_Angeles)
   physical-development classification. Wall mechanism, Gate B1, DRX, ASB,
   integrated scientific, and predictive claims remain false. The next branch
   is delayed junction memory plus a higher-order line-orientation state.
+- Local topology result `output/v3_topology_dispersion.json` was regenerated
+  from source `3f4712c`; SHA-256
+  `cbb4103631d291eae783e5bf0a303a27d6b1098205585c7c82d9ec76a3a931e0`.
+  No HPC job was submitted because this inexpensive local dispersion analysis
+  rejects the closure before a nonlinear campaign is scientifically allowed.
 
 ### Preserved campaign chronology
 
