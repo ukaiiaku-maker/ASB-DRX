@@ -54,6 +54,15 @@ NUC_CANDIDATE_HOLD_EVALS="${NUC_CANDIDATE_HOLD_EVALS:-8}"
 NUC_CANDIDATE_MAX_BARRIER_EV="${NUC_CANDIDATE_MAX_BARRIER_EV:-1.20}"
 NUC_CANDIDATE_DECAY_EVALS="${NUC_CANDIDATE_DECAY_EVALS:-2}"
 NUC_CANDIDATE_DIAGNOSTIC_ONLY="${NUC_CANDIDATE_DIAGNOSTIC_ONLY:-false}"
+USE_STATEFUL_EMBRYOS="${USE_STATEFUL_EMBRYOS:-false}"
+USE_ATOMIC_STATEFUL_PROMOTION="${USE_ATOMIC_STATEFUL_PROMOTION:-false}"
+USE_EXPF_EMBRYO_CREATION="${USE_EXPF_EMBRYO_CREATION:-false}"
+EMBRYO_CREATION_ROUTE="${EMBRYO_CREATION_ROUTE:-precursor}"
+EMBRYO_CREATION_H0_EV="${EMBRYO_CREATION_H0_EV:-1.20}"
+EMBRYO_CREATION_CRITICAL_DRIVE_PA="${EMBRYO_CREATION_CRITICAL_DRIVE_PA:-2.0e8}"
+HAZARD_MEASURE_MODE="${HAZARD_MEASURE_MODE:-legacy_cell_thresholds}"
+NUC_SITE_DENSITY_M2="${NUC_SITE_DENSITY_M2:-3.52e12}"
+USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR="${USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR:-true}"
 
 # Keep topology relabel off by default; physical grain births are candidate-promoted hazard events.
 USE_COMPONENT_RELABEL="${USE_COMPONENT_RELABEL:-false}"
@@ -171,6 +180,15 @@ params=dict(
     nuc_candidate_max_barrier_eV=float('$NUC_CANDIDATE_MAX_BARRIER_EV'),
     nuc_candidate_min_rate=0.0, nuc_candidate_min_dF_Jm3=0.0,
     nuc_candidate_promote_select='oldest', nuc_candidate_diagnostic_only=b('$NUC_CANDIDATE_DIAGNOSTIC_ONLY'),
+    use_stateful_embryos=b('$USE_STATEFUL_EMBRYOS'),
+    use_atomic_stateful_promotion=b('$USE_ATOMIC_STATEFUL_PROMOTION'),
+    use_expf_embryo_creation=b('$USE_EXPF_EMBRYO_CREATION'),
+    embryo_creation_route='$EMBRYO_CREATION_ROUTE',
+    embryo_creation_H0_eV=float('$EMBRYO_CREATION_H0_EV'),
+    embryo_creation_critical_drive_Pa=float('$EMBRYO_CREATION_CRITICAL_DRIVE_PA'),
+    hazard_measure_mode='$HAZARD_MEASURE_MODE',
+    nuc_site_density_m2=float('$NUC_SITE_DENSITY_M2'),
+    use_plastic_activity_hazard_prefactor=b('$USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR'),
     use_component_relabel=b('$USE_COMPONENT_RELABEL'), component_relabel_interval=100,
     component_relabel_min_px=64, component_relabel_max_splits_per_step=int(float('$COMPONENT_RELABEL_MAX_SPLITS')),
     component_relabel_require_pure=True, track_grain_provenance=True,

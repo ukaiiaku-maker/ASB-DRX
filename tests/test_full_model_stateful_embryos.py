@@ -116,6 +116,16 @@ class StatefulEmbryoTest(unittest.TestCase):
         self.assertGreaterEqual(purity, 0.8)
         self.assertLess(abs(area - math.pi*embryo.radius_m**2)/(math.pi*embryo.radius_m**2), 0.35)
 
+    def test_diffuse_support_uses_resolved_core_not_impossible_sharp_area(self):
+        embryo = record(radius=2e-7)
+        p = parameters()
+        support = circular_phase_support(embryo, (128, 128), (2e-6, 2e-6), 2e-8)
+        area, purity = phase_support_metrics(support, 2e-6/128, 2e-6/128, 0.8)
+        env = environment(support=area)
+        env = type(env)(**{**env.__dict__, "phase_purity": purity})
+        result = evolve_embryo(embryo, 11, 1e-6, 1e-7, env, p)
+        self.assertEqual(result.record.status, "promotable")
+
 
 if __name__ == "__main__":
     unittest.main()

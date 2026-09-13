@@ -29,6 +29,16 @@ case "$case_name" in
     unset TARGET_STRAIN
     export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
     ;;
+  drx_iso_rate1000_seed42_stateful_central)
+    export BRANCH=drx_isothermal RATE=1000 NSTEPS=6000
+    unset TARGET_STRAIN
+    export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
+    export USE_STATEFUL_EMBRYOS=true USE_ATOMIC_STATEFUL_PROMOTION=true
+    export USE_EXPF_EMBRYO_CREATION=true EMBRYO_CREATION_ROUTE=precursor
+    export EMBRYO_CREATION_H0_EV=1.20 EMBRYO_CREATION_CRITICAL_DRIVE_PA=2.0e8
+    export HAZARD_MEASURE_MODE=area_integrated NUC_SITE_DENSITY_M2=2.0e11
+    export NUC_ATTEMPT_FREQ=1.0e6 USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR=false
+    ;;
   drx_iso_rate1000_seed42_continue)
     export BRANCH=drx_isothermal RATE=1000 NSTEPS="${NSTEPS:-1000}"
     unset TARGET_STRAIN

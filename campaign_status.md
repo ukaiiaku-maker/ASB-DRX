@@ -27,8 +27,33 @@ Updated: 2026-09-12 (America/Los_Angeles)
   With the new path disabled, the production driver remains bitwise identical
   to commit `3aef225` across all 108 common authoritative fields.
 - These are forced invariant fixtures, not a selected site density or creation
-  parameterization. Atomic phase promotion and offline baseline reweighting
-  remain prerequisites to the first v6 HPC3 scientific job.
+  parameterization. Atomic promotion and offline reweighting were subsequently
+  completed below before staging the first v6 HPC3 scientific job.
+- Route B precursor creation is now explicit: the stochastic event pays one
+  EXP-floor kinetic free barrier and creates the minimum resolved precursor;
+  the classical circular free energy supplies feasibility, critical-radius,
+  and subsequent growth/shrinkage only. Candidate viability uses the kinetic
+  free barrier, so the classical barrier is not paid a second time.
+- Atomic phase promotion is connected to the production trajectory. A trial is
+  built on copied fields and commits phase simplex, conservative line transfer,
+  heat, provenance, embryo status, and grain lineage together only when total
+  event free energy is nonincreasing. Capacity, slot, phase, growth, or energy
+  failures leave every caller-owned field unchanged.
+- The forced Route-B fixture promotes at step 3, preserves signed Burgers
+  density exactly, closes physical line length to `2.17e-19 m`, closes event
+  energy exactly, and does not call the newly allocated label a physical DRX
+  grain. Restarts immediately before, at, and after promotion are bitwise exact
+  across 123 authoritative checkpoint fields.
+- Offline reweighting used 25 saved no-trigger full-field states through strain
+  0.5368. With fixed `H0=1.2 eV`, attempt frequency `1e6/s`, zero entropy,
+  unity activity prefactor, and no mechanics rerun, site densities `2e10`,
+  `2e11`, and `6e11 m^-2` give total exposures `0.10294`, `1.02942`, and
+  `3.08826`. The preregistered central row has event probability `0.64279`;
+  dominant exposure ends near strain 0.437.
+- The complete local suite passes 281 tests. The central HPC3 case is staged
+  with baseline growth/phase energetics; none of the extreme forced-fixture
+  mobility, interface, compatibility, or orientation parameters are carried
+  into it.
 
 - Production development has moved to isolated branch
   `exp/full-v34-recovery-v1`; the reduced endpoint is preserved at `fb464e1`

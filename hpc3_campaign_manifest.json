@@ -32,6 +32,37 @@
     "status": "not_applicable_DD_does_not_parameterize_model"
   },
   "local_full_model_fixtures": {
+    "atomic_promotion_restart": {
+      "classification": "forced_route_B_atomic_promotion_exact_restart_fixture",
+      "architecture": "full_v34_two_dimensional_phase_field",
+      "base_commit": "c0083c9",
+      "production_driver_sha256": "37c062ef3b11b8a66bee43f94fa354bbd296c017869feca8438304bf6ec8fdcf",
+      "phase_promotion_sha256": "c819c20ab906f86e1d58c2b3ff0adc3b839b43847f03f7a4f0e9023ce7b43f9c",
+      "result_path": "full_model/verification/atomic_promotion_restart_local.json",
+      "result_sha256": "6ace6e6e52cb32ac845d071cc784c0f98ead7fea786ef1e68d2851f7dff0c850",
+      "first_promotion_step": 3,
+      "energy_closure_J": 0.0,
+      "line_closure_m_abs_max": 2.168404344971009e-19,
+      "signed_burgers_density_change_m-2": 0.0,
+      "restart_boundaries_bitwise_exact": ["before", "at", "after"],
+      "authoritative_fields_bitwise_exact": 123,
+      "physical_drx_grains_at_allocation": 0,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    },
+    "hazard_exposure_bracket": {
+      "classification": "offline_saved_baseline_route_B_mechanism_excitation_bracket",
+      "analysis_sha256": "c39b79c0c53e424b359e7a1ac5a3e03d32eed88656e0f920815721eaf132819f",
+      "result_path": "full_model/verification/hazard_exposure_bracket.json",
+      "result_sha256": "1ab2083f4c35e6b6ec704ee2b9af4974c0229ee1966606e60b26da481bab7149",
+      "fixed_attempt_frequency_s-1": 1000000.0,
+      "fixed_activation_entropy_kB": 0.0,
+      "central_site_density_m-2": 200000000000.0,
+      "central_hazard_exposure_total": 1.0294211591888214,
+      "central_probability_at_least_one": 0.6427863294118745,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    },
     "area_hazard_restart": {
       "classification": "forced_mesh_invariant_area_hazard_restart_fixture",
       "architecture": "full_v34_two_dimensional_phase_field",

@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 import math
+import numpy as np
 
 
 KB_J_K = 1.380649e-23
@@ -35,17 +36,21 @@ class ActivatedProcess:
 
 
 def exp_floor_enthalpy_j(stress_pa, h0_j, critical_stress_pa, a, n, floor):
-    """EXP-floor activation enthalpy for scalar inputs [J]."""
-    values = (stress_pa, h0_j, critical_stress_pa, a, n, floor)
-    if not all(math.isfinite(float(value)) for value in values):
+    """EXP-floor activation enthalpy [J] for scalar or array stress input."""
+    stress = np.asarray(stress_pa, dtype=float)
+    values = (h0_j, critical_stress_pa, a, n, floor)
+    if not np.all(np.isfinite(stress)) or not all(math.isfinite(float(value)) for value in values):
         raise ValueError("EXP-floor inputs must be finite")
     if n < 1.0:
         raise ValueError("production EXP-floor exponent n must be >= 1")
     if critical_stress_pa <= 0.0 or h0_j < 0.0 or a < 0.0:
         raise ValueError("invalid EXP-floor parameter")
     ff = min(max(float(floor), 0.0), 1.0)
-    ratio = max(float(stress_pa), 0.0) / float(critical_stress_pa)
-    return float(h0_j) * (ff + (1.0 - ff) * math.exp(-float(a) * ratio**float(n)))
+    if stress.ndim == 0:
+        ratio = max(float(stress), 0.0) / float(critical_stress_pa)
+        return float(h0_j) * (ff + (1.0 - ff) * math.exp(-float(a) * ratio**float(n)))
+    ratio = np.maximum(stress, 0.0) / float(critical_stress_pa)
+    return float(h0_j) * (ff + (1.0 - ff) * np.exp(-float(a) * ratio**float(n)))
 
 
 def free_barrier_j(enthalpy_j, temperature_k, entropy_over_kB):

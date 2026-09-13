@@ -57,7 +57,7 @@ from arrhenius_kinetics import (
 )
 from stateful_embryos import (
     EmbryoEvent, EmbryoParameters, EmbryoPopulation, create_embryo,
-    population_from_json, population_to_json,
+    circular_phase_support, population_from_json, population_to_json,
 )
 from embryo_coupling import FullFieldEnvironment, advance_population
 from physical_grains import (
@@ -68,6 +68,7 @@ from hazard_measure import (
     AreaHazardState, advance_area_hazard, exposure_statistics,
     initialize_area_hazard,
 )
+from phase_promotion import atomic_phase_promotion
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -671,6 +672,7 @@ P = dict(
     # Directive-v5 stateful embryo path. Disabled for immutable v34 regression.
     use_stateful_embryos=False,
     use_expf_embryo_creation=False,
+    embryo_creation_route='precursor',
     embryo_creation_H0_eV=1.20,
     embryo_creation_critical_drive_Pa=2.0e8,
     embryo_creation_exp_a=1.0,
@@ -693,6 +695,8 @@ P = dict(
     physical_grain_stable_support_s=2.0e-6,
     physical_grain_retirement_grace_s=1.0e-6,
     physical_grain_min_energy_drop_Jm3=1.0e6,
+    use_atomic_stateful_promotion=False,
+    atomic_promotion_purity_threshold=0.80,
 
     # Legacy knobs retained only for compatibility with old parameter files; they
     # are not used by the v11 hazard-nucleation path unless use_hazard_nucleation=False.
@@ -790,6 +794,7 @@ P = dict(
     restart_temperature_perturb_scale=1.0,
     restart_temperature_offset_K=0.0,
     restart_E11=None,
+    hazard_reweight_audit_only=False,
     allow_legacy_candidate_restart_without_state=False,
     allow_legacy_potential_restart_without_state=False,
 
@@ -3191,6 +3196,15 @@ _physical_grain_metrics = GrainMetrics(
     allocated_labels=Ng, topology_components=Ng, resolved_labels=0,
     physical_matrix_grains=0, physical_drx_grains=0,
     recrystallized_area_fraction=0.0, rejected_labels=0, retired_labels=0)
+atomic_promotion_attempt_total = 0
+atomic_promotion_commit_total = 0
+atomic_promotion_rollback_total = 0
+_last_promotion_diag = dict(attempted=0, committed=0, rollback_reason='')
+if _restart_loaded and not P.get('restart_reset_clock', True):
+    with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
+        atomic_promotion_attempt_total = int(_restart_npz['atomic_promotion_attempt_total']) if 'atomic_promotion_attempt_total' in _restart_npz.files else 0
+        atomic_promotion_commit_total = int(_restart_npz['atomic_promotion_commit_total']) if 'atomic_promotion_commit_total' in _restart_npz.files else 0
+        atomic_promotion_rollback_total = int(_restart_npz['atomic_promotion_rollback_total']) if 'atomic_promotion_rollback_total' in _restart_npz.files else 0
 
 # v27 dislocation-state partition.  Existing rp/rm are interpreted as the
 # glissile/mobile signed population.  If no v27 restart fields are present, split
@@ -4189,6 +4203,8 @@ def _nuc_barrier_fields(rho, kappa_tot, rho_GB, gb_mask, psi_lat, T_field, activ
         activity_factor = np.ones_like(rho, dtype=float)
     activity_factor = np.asarray(activity_factor, dtype=float)
     if P.get('use_expf_embryo_creation', False):
+        if str(P.get('embryo_creation_route', 'precursor')).lower() != 'precursor':
+            raise ValueError('EXP-floor embryo creation is declared only for the precursor route')
         # The classical circular-nucleus balance above establishes finite-size
         # thermodynamic feasibility and the resolved trial radius.  The event
         # kinetics are a distinct EXP-floor activated process driven by the
@@ -4203,6 +4219,8 @@ def _nuc_barrier_fields(rho, kappa_tot, rho_GB, gb_mask, psi_lat, T_field, activ
     else:
         # Immutable-v34 regression branch.
         creation_enthalpy = best_barrier
+    event_radius = (np.full_like(best_R, Rmin)
+                    if P.get('use_expf_embryo_creation', False) else best_R)
     nuc_free_barrier = (creation_enthalpy
                         - kB_J*np.maximum(T_field, 1.0)
                         * float(P.get('embryo_activation_entropy_kB', 0.0)))
@@ -4213,7 +4231,8 @@ def _nuc_barrier_fields(rho, kappa_tot, rho_GB, gb_mask, psi_lat, T_field, activ
     rate = np.minimum(rate, float(P.get('nuc_hazard_rate_cap', 1.0e7)))
 
     return dict(rate=rate, barrier=best_barrier, dG_depth=best_dG_depth, dF_density=best_dFdens,
-                theta=best_theta, theta_max=theta_max, R=best_R, gamma=best_gamma,
+                theta=best_theta, theta_max=theta_max, R=event_radius,
+                classical_critical_R=best_R, gamma=best_gamma,
                 rho_low=rho_low, spinodal=spinodal, site=site, rho_res=rho_res,
                 gate_AT=gate_AT, activity_factor=activity_factor,
                 creation_enthalpy=creation_enthalpy,
@@ -4368,8 +4387,11 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
         max_bar_eV = float(P.get('nuc_candidate_max_barrier_eV', np.inf))
         min_rate = float(P.get('nuc_candidate_min_rate', 0.0))
         min_dF = float(P.get('nuc_candidate_min_dF_Jm3', 0.0))
-        viable = (possible & np.isfinite(fields['barrier']) &
-                  (fields['barrier']/eV_J <= max_bar_eV) &
+        candidate_kinetic_barrier = (fields['creation_free_barrier']
+                                     if P.get('use_expf_embryo_creation', False)
+                                     else fields['barrier'])
+        viable = (possible & np.isfinite(candidate_kinetic_barrier) &
+                  (candidate_kinetic_barrier/eV_J <= max_bar_eV) &
                   (fields['rate'] >= min_rate) &
                   (fields.get('dF_density', np.zeros_like(rho)) >= min_dF))
         raw_viable_triggered = (sum(bool(viable[ix]) for ix in area_event_indices)
@@ -4388,7 +4410,7 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                 event = EmbryoEvent(
                     int(globals().get('current_step_for_provenance', 0)),
                     float(globals().get('sim_time', 0.0)), 'hazard_trigger',
-                    float(H_nuc[ix]), float(E_nuc[ix]), float(fields['barrier'][ix]),
+                    float(H_nuc[ix]), float(E_nuc[ix]), float(candidate_kinetic_barrier[ix]),
                     float(fields['rate'][ix]))
                 embryo_population, created = create_embryo(
                     embryo_population, parent_grain=parent_gid,
@@ -4717,6 +4739,85 @@ def _energy_audit(r_f, rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng):
     )
 
 
+def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
+                                rho_wall, rho_gb):
+    """Atomic-event free-energy terms [J per unit out-of-plane depth]."""
+    rho_trial = _rho_total_state(rp, rm, rho_forest, rho_wall)
+    lab_trial = np.argmax(eta[:, :, :Ng], axis=2)
+    psi_trial = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
+    gb_trial = diffuse_gb_support(eta, lab_trial, Ng)
+    kappa_trial = np.sum(rp-rm, axis=2)
+    audit = _energy_audit(
+        rho_trial/max(_rho_ch_scale(), P['rho_min']), rho_trial, eta,
+        psi_trial, kappa_trial, rho_gb, gb_trial, Ng)
+    return dict(
+        elastic=0.0,
+        bulk_stored=audit['F_bulk'] + audit['F_r_grad'],
+        # Total line length is conserved by this first production route, so a
+        # constant line energy per length has zero event increment. Nonlinear
+        # density storage remains in the declared bulk/stored term above.
+        line=0.0,
+        interface_order=audit['F_eta_grad'] + audit['F_eta_barrier'],
+        compatibility=audit['F_comp_alpha'] + audit['F_comp_GB'])
+
+
+def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
+                                       rho_forest, rho_wall, rho_GB, T):
+    global embryo_population, grain_tracker
+    global atomic_promotion_attempt_total, atomic_promotion_commit_total
+    global atomic_promotion_rollback_total
+    ready = [record for record in embryo_population.records
+             if record.status == 'promotable']
+    if not P.get('use_atomic_stateful_promotion', False) or not ready:
+        return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
+                dict(attempted=0, committed=0, rollback_reason=''))
+    embryo = min(ready, key=lambda record: (record.birth_time_s, record.embryo_id))
+    atomic_promotion_attempt_total += 1
+    interface_width = _physical_grain_criteria().interface_width_m
+    support = circular_phase_support(
+        embryo, (Nx, Ny), (Nx*dx, Ny*dy), interface_width)
+    try:
+        result = atomic_phase_promotion(
+            eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB,
+            embryos=embryo_population, embryo_id=embryo.embryo_id,
+            tracker=grain_tracker, phase_support=support,
+            purity_threshold=float(P.get('atomic_promotion_purity_threshold', 0.8)),
+            target_core_density_m2=float(_nuc_low_rho_from_potential()),
+            cell_area_m2=dx*dx,
+            represented_thickness_m=max(float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+            maximum_density_m2=float(P['rho_max']),
+            step=int(step), time_s=float(time_s),
+            energy_evaluator=_promotion_energy_evaluator)
+    except (ValueError, RuntimeError) as exc:
+        atomic_promotion_rollback_total += 1
+        return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
+                dict(attempted=1, committed=0, rollback_reason=str(exc),
+                     embryo_id=int(embryo.embryo_id)))
+    embryo_population = result.embryos
+    grain_tracker = result.tracker
+    T1 = np.asarray(T, dtype=float) + (
+        result.ledger.heat_released_J*result.heat_support
+        / max(dx*dx*float(P['cp_rho_vol']), 1e-300))
+    _record_grain_birth(
+        result.ledger.child_label, ORIGIN_HAZARD, MECH_HAZARD,
+        parent=embryo.parent_grain, step=int(step),
+        x=float(embryo.position_m[0]/dx), y=float(embryo.position_m[1]/dx),
+        area_px=int(np.count_nonzero(support >= float(P.get('atomic_promotion_purity_threshold', 0.8)))),
+        theta_deg=float(np.rad2deg(embryo.orientation_rad-embryo.parent_orientation_rad)),
+        theta_max_deg=np.nan, R_um=float(embryo.radius_m*1e6),
+        barrier_eV=float(embryo.events[0].barrier_J/eV_J if embryo.events else np.nan))
+    atomic_promotion_commit_total += 1
+    ledger = result.ledger
+    return (result.eta, result.psi_gv, result.Ng, result.rp, result.rm,
+            result.rho_forest, result.rho_wall, result.rho_gb, T1,
+            dict(attempted=1, committed=1, rollback_reason='',
+                 embryo_id=int(embryo.embryo_id), child_label=int(ledger.child_label),
+                 heat_released_J=float(ledger.heat_released_J),
+                 energy_closure_J=float(ledger.energy_closure_J),
+                 line_closure_m=float(ledger.transfer.line_content_closure_m),
+                 signed_burgers_change_m2=float(ledger.transfer.maximum_signed_burgers_density_change_m2)))
+
+
 def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_tot,
                     rp, rm, rho_GB, gb_mask, mu_ch, sigma_bar, T, E_tot, nflip,
                     km_store_mean, km_anni_mean, ch_delta_abs_mean,
@@ -4885,6 +4986,16 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         physical_recrystallized_area_fraction=float(globals().get('_physical_grain_metrics').recrystallized_area_fraction),
         physical_rejected_labels=int(globals().get('_physical_grain_metrics').rejected_labels),
         physical_retired_labels=int(globals().get('_physical_grain_metrics').retired_labels),
+        atomic_promotion_attempted=int(globals().get('_last_promotion_diag', {}).get('attempted', 0)),
+        atomic_promotion_committed=int(globals().get('_last_promotion_diag', {}).get('committed', 0)),
+        atomic_promotion_rollback_reason=str(globals().get('_last_promotion_diag', {}).get('rollback_reason', '')),
+        atomic_promotion_attempt_total=int(globals().get('atomic_promotion_attempt_total', 0)),
+        atomic_promotion_commit_total=int(globals().get('atomic_promotion_commit_total', 0)),
+        atomic_promotion_rollback_total=int(globals().get('atomic_promotion_rollback_total', 0)),
+        atomic_promotion_heat_released_J=float(globals().get('_last_promotion_diag', {}).get('heat_released_J', 0.0)),
+        atomic_promotion_energy_closure_J=float(globals().get('_last_promotion_diag', {}).get('energy_closure_J', 0.0)),
+        atomic_promotion_line_closure_m=float(globals().get('_last_promotion_diag', {}).get('line_closure_m', 0.0)),
+        atomic_promotion_signed_burgers_change_m2=float(globals().get('_last_promotion_diag', {}).get('signed_burgers_change_m2', 0.0)),
         heat_qdot_MWm3=float(qdot_mech/1e6),
         heat_qdot_local_max_MWm3=float(heat_diag.get('qdot_max', np.nan)/1e6),
         heat_qdot_local_std_MWm3=float(heat_diag.get('qdot_std', np.nan)/1e6),
@@ -5235,6 +5346,9 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             area_hazard_transferred_exposure=np.array(area_hazard_state.transferred_exposure),
             area_hazard_newly_initialized_exposure=np.array(area_hazard_state.newly_initialized_exposure),
             rng_hazard_measure_state_json=np.array(_rng_state_to_json(_rng_hazard_measure)),
+            atomic_promotion_attempt_total=np.array(atomic_promotion_attempt_total, dtype=np.int64),
+            atomic_promotion_commit_total=np.array(atomic_promotion_commit_total, dtype=np.int64),
+            atomic_promotion_rollback_total=np.array(atomic_promotion_rollback_total, dtype=np.int64),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
             sim_time=np.array(sim_time + P['dt'] if sim_time_value is None else sim_time_value),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),
@@ -5291,6 +5405,23 @@ if P.get('restart_initialization_audit_only', False):
     audit_step = max(_restart_step_offset - 1, 0)
     audit_path = _save_restart_checkpoint(audit_step, sim_time_value=sim_time)
     print(f"Restart initialization audit: {audit_path}")
+    raise SystemExit(0)
+
+if P.get('hazard_reweight_audit_only', False):
+    kappa_audit = np.sum(rp-rm, axis=2)
+    fields_audit = _nuc_barrier_fields(
+        rho, kappa_audit, rho_GB, gb_mask, psi_lat, T,
+        activity_factor=np.ones((Nx, Ny), dtype=float))
+    audit_path = out / 'hazard_reweight_state.npz'
+    _atomic_savez_compressed(
+        audit_path, step=np.array(max(_restart_step_offset-1, 0), dtype=np.int64),
+        sim_time=np.array(sim_time), strain=np.array(E_tot[0, 0]), T=T,
+        dF_density=fields_audit['dF_density'], site_factor=fields_audit['site'],
+        gate_AT=fields_audit['gate_AT'], classical_barrier_J=fields_audit['barrier'],
+        classical_critical_R_m=fields_audit['classical_critical_R'],
+        rho_res=fields_audit['rho_res'], cell_area_m2=np.array(dx*dy),
+        source_checkpoint=np.array(str(P.get('restart_file', ''))))
+    print(f'Hazard reweight audit: {audit_path}')
     raise SystemExit(0)
 
 _restart_end_step = _restart_step_offset + int(P['nSteps'])
@@ -6258,6 +6389,19 @@ for n in range(_restart_step_offset, _restart_end_step):
     _last_embryo_diag = _advance_stateful_embryos(
         n, sim_time, rho, kappa_tot, rho_GB, gb_mask, psi_lat, T)
     if P.get('use_stateful_embryos', False):
+        grain_tracker, _physical_grain_metrics = update_tracker(
+            eta[:, :, :Ng], np.maximum(ATpot._Phi(np.maximum(rho, P['rho_min'])), 0.0),
+            grain_tracker, sim_time + P['dt'], dx, dx, _physical_grain_criteria())
+    (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
+     _last_promotion_diag) = _attempt_atomic_stateful_promotion(
+        n, sim_time + P['dt'], eta, psi_gv, Ng, rp, rm, rho_forest,
+        rho_wall, rho_GB, T)
+    if _last_promotion_diag.get('committed', 0):
+        rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+        lab = np.argmax(eta[:, :, :Ng], axis=2)
+        gb_mask = diffuse_gb_support(eta, lab, Ng)
+        psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
+        kappa_tot = np.sum(rp-rm, axis=2)
         grain_tracker, _physical_grain_metrics = update_tracker(
             eta[:, :, :Ng], np.maximum(ATpot._Phi(np.maximum(rho, P['rho_min'])), 0.0),
             grain_tracker, sim_time + P['dt'], dx, dx, _physical_grain_criteria())

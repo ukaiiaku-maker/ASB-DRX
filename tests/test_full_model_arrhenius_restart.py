@@ -2,6 +2,7 @@ import importlib.util
 import math
 from pathlib import Path
 import unittest
+import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,6 +48,12 @@ class FullModelArrheniusTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             KIN.exp_floor_enthalpy_j(1.0, 1.0, 1.0, 1.0, 0.5, 0.0)
 
+    def test_exp_floor_accepts_spatial_driving_field(self):
+        stress = np.array([0.0, 1e8, 2e8])
+        value = KIN.exp_floor_enthalpy_j(stress, KIN.EV_J, 1e8, 1.0, 1.0, 0.05)
+        self.assertEqual(value.shape, stress.shape)
+        self.assertTrue(np.all(np.diff(value) < 0.0))
+
     def test_invalid_process_units_and_modes_are_rejected(self):
         with self.assertRaises(ValueError):
             KIN.ActivatedProcess("x", 0.0)
@@ -83,6 +90,9 @@ class CandidateRestartSourceTest(unittest.TestCase):
         self.assertIn("hazard_exposure_total", source)
         self.assertIn("use_expf_embryo_creation", source)
         self.assertIn("creation_enthalpy = exp_floor_enthalpy_j", source)
+        self.assertIn("embryo_creation_route='precursor'", source)
+        self.assertIn("classical_critical_R=best_R", source)
+        self.assertIn("candidate_kinetic_barrier = (fields['creation_free_barrier']", source)
 
     def test_local_trajectory_fixture_is_exact(self):
         result = __import__("json").loads(

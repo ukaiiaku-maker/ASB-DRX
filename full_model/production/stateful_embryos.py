@@ -322,8 +322,13 @@ def evolve_embryo(record, step, time_s, proposed_dt_s, environment, parameters,
         raise RuntimeError("no energy-dissipating embryo step exists")
 
     age_s = record.age_s + dt_s
+    # A diffuse tanh support's high-purity core is necessarily smaller than the
+    # collective-coordinate circle. Requiring the pure area to equal pi*R^2
+    # would make promotion impossible at any finite interface width. Resolution
+    # is instead tied to the independently declared minimum resolved radius.
     supported = (environment.phase_purity >= parameters.minimum_phase_purity
-                 and environment.phase_support_area_m2 >= math.pi * new_radius**2)
+                 and environment.phase_support_area_m2
+                 >= math.pi * parameters.minimum_resolved_radius_m**2)
     support_time_s = record.support_time_s + dt_s if supported else 0.0
     net_bulk_drive = (environment.stored_relief_J_m3
                       - environment.orientation_penalty_J_m3

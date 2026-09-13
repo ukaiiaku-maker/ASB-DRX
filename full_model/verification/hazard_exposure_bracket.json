@@ -1,0 +1,54 @@
+{
+  "schema": "full-v34-offline-area-hazard-reweight/v1-summary",
+  "architecture": "full-v34 two-dimensional PF saved no-trigger trajectory",
+  "classification": "offline mechanism-excitation bracket; not fitted grain counts",
+  "creation_route": "Route B precursor creation",
+  "saved_states": 25,
+  "saved_state_sha256_ledger_aggregate": "05fcb7a8dd3b8a56aff5aaee1c81170226cb1a9152b5e6a8b46bce9c0cc71a37",
+  "physical_horizon": {
+    "initial_strain": 0.0000616039175366457,
+    "final_strain": 0.5367961465191489,
+    "initial_time_s": 6.16039175366457e-8,
+    "final_time_s": 0.000536796146519176
+  },
+  "fixed_kinetics": {
+    "attempt_frequency_s-1": 1000000.0,
+    "activation_entropy_kB": 0.0,
+    "H0_eV": 1.2,
+    "critical_drive_Pa": 200000000.0,
+    "exp_a": 1.0,
+    "exp_n": 1.0,
+    "enthalpy_floor": 0.05,
+    "activity_prefactor": "unity"
+  },
+  "rows": [
+    {
+      "bracket": "low",
+      "site_density_m-2": 20000000000.0,
+      "hazard_exposure_total": 0.10294211591888214,
+      "expected_raw_trigger_count": 0.10294211591888214,
+      "probability_at_least_one_raw_trigger": 0.0978208062162244,
+      "dominant_interval_end_strain": 0.4369682533078948
+    },
+    {
+      "bracket": "central",
+      "site_density_m-2": 200000000000.0,
+      "hazard_exposure_total": 1.0294211591888214,
+      "expected_raw_trigger_count": 1.0294211591888214,
+      "probability_at_least_one_raw_trigger": 0.6427863294118745,
+      "dominant_interval_end_strain": 0.4369682533078948
+    },
+    {
+      "bracket": "high",
+      "site_density_m-2": 600000000000.0,
+      "hazard_exposure_total": 3.088263477566465,
+      "expected_raw_trigger_count": 3.088263477566465,
+      "probability_at_least_one_raw_trigger": 0.9544189617852531,
+      "dominant_interval_end_strain": 0.4369682533078948
+    }
+  ],
+  "selected_central_site_density_m-2": 200000000000.0,
+  "potential_state_limit": "Exact saved fields; historical checkpoints predate potential-table checkpointing, so the potential was rebuilt for offline evaluation.",
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

@@ -1,0 +1,21 @@
+{
+  "architecture": "full-v34 two-dimensional production driver",
+  "classification": "forced atomic-promotion and exact-restart fixture; not physical DRX evidence",
+  "creation_route": "Route B precursor creation",
+  "grid": [16, 16],
+  "promotion_first_step": 3,
+  "committed_promotions_by_step_4": 2,
+  "grain_labels_before_first_promotion": 3,
+  "grain_labels_after_first_promotion": 4,
+  "physical_drx_grains_at_promotion": 0,
+  "energy_closure_J": 0.0,
+  "line_content_closure_m_abs_max": 2.168404344971009e-19,
+  "signed_burgers_density_change_m-2": 0.0,
+  "restart_immediately_before_promotion_bitwise_exact": true,
+  "restart_at_promotion_checkpoint_bitwise_exact": true,
+  "restart_immediately_after_promotion_bitwise_exact": true,
+  "authoritative_checkpoint_fields_compared": 123,
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "notes": "Extreme fixture mobility and hazard parameters force promotion. Physical-grain recognition correctly withholds DRX classification at allocation."
+}
