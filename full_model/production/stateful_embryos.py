@@ -12,7 +12,10 @@ import json
 import math
 from typing import Literal
 
-from .arrhenius_kinetics import ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j
+try:  # package import in tests; sibling import when the production driver is a script
+    from .arrhenius_kinetics import ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j
+except ImportError:  # pragma: no cover - exercised by driver compile/import smoke tests
+    from arrhenius_kinetics import ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j
 
 
 EmbryoStatus = Literal["active", "promotable", "promoted", "retired", "rejected"]
