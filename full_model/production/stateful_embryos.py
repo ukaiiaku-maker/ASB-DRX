@@ -129,6 +129,8 @@ class EmbryoParameters:
             raise ValueError("mobility enthalpy floor must be in [0,1]")
         if self.minimum_survival_time_s < 0.0 or self.minimum_support_time_s < 0.0:
             raise ValueError("minimum times must be nonnegative")
+        if not math.isfinite(self.minimum_misorientation_rad) or self.minimum_misorientation_rad < 0.0:
+            raise ValueError("minimum misorientation must be finite and nonnegative")
         if not 0.0 < self.minimum_phase_purity <= 1.0:
             raise ValueError("phase purity threshold must be in (0,1]")
         if self.orientation_symmetry_order < 1:

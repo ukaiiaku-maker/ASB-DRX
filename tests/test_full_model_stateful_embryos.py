@@ -101,6 +101,12 @@ class StatefulEmbryoTest(unittest.TestCase):
         self.assertEqual(evolved.status, "promotable")
         self.assertEqual(mark_promoted(evolved, 20, 2e-6).status, "promoted")
 
+    def test_negative_misorientation_threshold_is_rejected(self):
+        raw = parameters().__dict__.copy()
+        raw["minimum_misorientation_rad"] = -1e-3
+        with self.assertRaises(ValueError):
+            EmbryoParameters(**raw)
+
     def test_periodic_diffuse_phase_support_is_resolved_but_not_a_label(self):
         embryo = record(radius=2e-7)
         support = circular_phase_support(embryo, (128, 128), (2e-6, 2e-6), 2e-8)

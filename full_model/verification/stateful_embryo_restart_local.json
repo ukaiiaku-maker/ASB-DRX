@@ -1,0 +1,22 @@
+{
+  "architecture": "full-v34 two-dimensional production driver",
+  "classification": "forced integration and exact-restart fixture; not scientific parameter evidence",
+  "continuous_steps": 4,
+  "segmented_steps": [2, 2],
+  "grid": [16, 16],
+  "physical_time_s": 4e-7,
+  "raw_trigger_total": 436,
+  "raw_viable_trigger_total": 436,
+  "accepted_embryo_records": 3,
+  "initial_grain_labels": 3,
+  "final_grain_labels": 3,
+  "hazard_grain_births": 0,
+  "authoritative_checkpoint_fields_compared": 107,
+  "bitwise_exact": true,
+  "embryo_population_json_exact": true,
+  "rng_state_exact": true,
+  "potential_state_exact": true,
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "notes": "Extreme bounded activation entropy and an exaggerated residual-feed weight force the stochastic path. All accepted records shrink below resolved radius and retire; this fixture proves integration, persistence serialization, no direct label allocation, and exact continuation only."
+}

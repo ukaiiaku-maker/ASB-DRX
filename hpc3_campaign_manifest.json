@@ -31,6 +31,26 @@
     "sha256": null,
     "status": "not_applicable_DD_does_not_parameterize_model"
   },
+  "local_full_model_fixtures": {
+    "stateful_embryo_restart": {
+      "classification": "forced_integration_exact_restart_not_scientific_parameter_evidence",
+      "architecture": "full_v34_two_dimensional_phase_field",
+      "base_commit": "d63fffcc5faa8ac9c7e581325f9e07b829021e3d",
+      "production_driver_sha256": "a1f3fe5e919c8905dfd71589cf47dfdf6190015ca80fc674ca8f04b2c51cfb8c",
+      "stateful_embryos_sha256": "35069b2b92da240b7b8a3f98622803e44cb87ad26e0efcbdee4c528ac312fc5c",
+      "embryo_coupling_sha256": "6d083d3ccd9b2efbe57402e7c36de70719c6f695e1fea0fc49e3fa8bef96ce77",
+      "result_path": "full_model/verification/stateful_embryo_restart_local.json",
+      "result_sha256": "b660755bbca2e15c9d2346721661985d16c1ddf6cfe5287edf68069917f2d408",
+      "continuous_steps": 4,
+      "segmented_steps": [2, 2],
+      "authoritative_fields_bitwise_exact": 107,
+      "raw_viable_triggers": 436,
+      "accepted_embryos": 3,
+      "grain_labels_before_after": [3, 3],
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    }
+  },
   "runs": [
     {
       "run_id": "20260828T034723Z-a5dd798-f2bdfd",

@@ -52,7 +52,14 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pathlib import Path
 import os, json, time as _wtime, csv, tempfile
-from arrhenius_kinetics import KB_J_K as ARRHENIUS_KB_J_K
+from arrhenius_kinetics import (
+    ActivatedProcess, KB_J_K as ARRHENIUS_KB_J_K, exp_floor_enthalpy_j,
+)
+from stateful_embryos import (
+    EmbryoEvent, EmbryoParameters, EmbryoPopulation, create_embryo,
+    population_from_json, population_to_json,
+)
+from embryo_coupling import FullFieldEnvironment, advance_population
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -650,6 +657,25 @@ P = dict(
     nuc_candidate_min_dF_Jm3=0.0,
     nuc_candidate_promote_select='oldest',      # oldest, max_excess, min_barrier
     nuc_candidate_diagnostic_only=False,
+    # Directive-v5 stateful embryo path. Disabled for immutable v34 regression.
+    use_stateful_embryos=False,
+    use_expf_embryo_creation=False,
+    embryo_creation_H0_eV=1.20,
+    embryo_creation_critical_drive_Pa=2.0e8,
+    embryo_creation_exp_a=1.0,
+    embryo_creation_exp_n=1.0,
+    embryo_creation_enthalpy_floor=0.05,
+    embryo_growth_mobility_prefactor_m4_J_s=1.0e-18,
+    embryo_growth_H0_eV=0.80,
+    embryo_growth_critical_pressure_Pa=2.0e8,
+    embryo_growth_exp_a=1.0,
+    embryo_growth_exp_n=1.0,
+    embryo_growth_enthalpy_floor=0.05,
+    embryo_growth_activation_entropy_kB=0.0,
+    embryo_growth_min_survival_s=1.0e-7,
+    embryo_growth_min_support_s=1.0e-7,
+    embryo_phase_purity_min=0.80,
+    embryo_orientation_symmetry_order=4,
 
     # Legacy knobs retained only for compatibility with old parameter files; they
     # are not used by the v11 hazard-nucleation path unless use_hazard_nucleation=False.
@@ -2651,6 +2677,65 @@ def _component_centroid(mask):
     return float(np.mean(ii)), float(np.mean(jj))
 
 
+def _stateful_embryo_parameters():
+    process = ActivatedProcess(
+        'embryo_growth', 1.0,
+        entropy_over_kB=float(P.get('embryo_growth_activation_entropy_kB', 0.0)),
+        drag_rate_s=1.0,
+        negative_barrier_mode=str(P.get('activation_negative_barrier_mode', 'drag')))
+    return EmbryoParameters(
+        represented_thickness_m=max(float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+        interface_energy_J_m2=float(P.get('nuc_gamma_GB', 0.5)),
+        mobility_prefactor_m4_J_s=float(P.get('embryo_growth_mobility_prefactor_m4_J_s', 1e-18)),
+        mobility_process=process,
+        mobility_enthalpy_0_J=float(P.get('embryo_growth_H0_eV', 0.8))*eV_J,
+        mobility_critical_pressure_Pa=float(P.get('embryo_growth_critical_pressure_Pa', 2e8)),
+        mobility_exp_a=float(P.get('embryo_growth_exp_a', 1.0)),
+        mobility_exp_n=float(P.get('embryo_growth_exp_n', 1.0)),
+        mobility_enthalpy_floor=float(P.get('embryo_growth_enthalpy_floor', 0.05)),
+        minimum_resolved_radius_m=max(int(P.get('nuc_min_radius_cells', 2))*dx, dx),
+        minimum_survival_time_s=float(P.get('embryo_growth_min_survival_s', 1e-7)),
+        minimum_support_time_s=float(P.get('embryo_growth_min_support_s', 1e-7)),
+        minimum_phase_purity=float(P.get('embryo_phase_purity_min', 0.8)),
+        minimum_misorientation_rad=np.deg2rad(float(P.get('nuc_min_field_mis_deg', 3.0))),
+        orientation_symmetry_order=int(P.get('embryo_orientation_symmetry_order', 4)))
+
+
+def _advance_stateful_embryos(step, time_s, rho, kappa_tot, rho_GB, gb_mask,
+                              psi_lat, T_field):
+    global embryo_population
+    if not P.get('use_stateful_embryos', False) or not embryo_population.records:
+        return dict(embryo_count=len(embryo_population.records), active_count=0,
+                    promotable_count=0, retired_count=0,
+                    free_energy_change_J=0.0, dissipated_energy_J=0.0,
+                    closure_error_J=0.0, maximum_halvings=0)
+    rho_low = _nuc_low_rho_from_potential()
+    stored_relief = np.maximum(
+        ATpot._Phi(np.maximum(rho, P['rho_min'])) - ATpot._Phi(rho_low), 0.0)
+    gp = grad_mag(psi_lat)
+    ra = np.abs(kappa_tot) - P['c_alpha']*gp/P['b']
+    rg = rho_GB - P['c_GB']*gp/P['b']
+    compatibility = 0.5*(P['A_alpha']*ra**2 + P['A_GB']*rg**2)
+    wall_fraction = np.clip(
+        np.maximum(globals().get('rho_wall', np.zeros_like(rho)), 0.0)
+        / np.maximum(rho, P['rho_min']), 0.0, 1.0)
+    gnd_fraction = np.clip(np.abs(kappa_tot)/np.maximum(rho, P['rho_min']), 0.0, 1.0)
+    fields = FullFieldEnvironment(
+        temperature_K=np.maximum(T_field, 1.0), stored_relief_J_m3=stored_relief,
+        orientation_penalty_J_m3=np.zeros_like(rho),
+        compatibility_penalty_J_m3=np.maximum(compatibility, 0.0),
+        gb_contact=np.clip(gb_mask, 0.0, 1.0), wall_contact=wall_fraction,
+        gnd_contact=gnd_fraction)
+    interface_width = max(np.sqrt(max(P['kappa_eta'], 0.0)/max(P['W_eta'], 1e-300)), dx)
+    embryo_population, ledger = advance_population(
+        embryo_population, fields=fields, step=int(step), time_s=float(time_s),
+        proposed_dt_s=float(P['dt']), domain_lengths_m=(Nx*dx, Ny*dy),
+        interface_width_m=interface_width,
+        purity_threshold=float(P.get('embryo_phase_purity_min', 0.8)),
+        parameters=_stateful_embryo_parameters())
+    return vars(ledger)
+
+
 
 # ================================================================
 # 9d. v25 restart/checkpoint helpers
@@ -2972,6 +3057,7 @@ nuc_cand_best_barrier = np.full((Nx, Ny), np.inf, dtype=float)
 nuc_cand_birth_step = np.full((Nx, Ny), -1, dtype=np.int32)
 nuc_raw_trigger_total = 0
 nuc_raw_viable_trigger_total = 0
+embryo_population = EmbryoPopulation(0)
 
 # v15 grain provenance arrays.  These are diagnostics only; field evolution
 # still follows CH/AC/hazard/topology kinetics.
@@ -3026,6 +3112,10 @@ if _restart_loaded and not P.get('restart_reset_clock', True):
                 _restart_scalars[_runtime_name] = float(_restart_npz[_runtime_name])
         nuc_raw_trigger_total = int(_restart_npz['nuc_raw_trigger_total']) if 'nuc_raw_trigger_total' in _restart_npz.files else 0
         nuc_raw_viable_trigger_total = int(_restart_npz['nuc_raw_viable_trigger_total']) if 'nuc_raw_viable_trigger_total' in _restart_npz.files else 0
+        if P.get('use_stateful_embryos', False):
+            if 'embryo_population_json' not in _restart_npz.files:
+                raise ValueError('exact stateful-embryo restart requires embryo_population_json')
+            embryo_population = population_from_json(str(_restart_npz['embryo_population_json']))
 gb_mask = diffuse_gb_support(eta, lab, Ng)
 psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 
@@ -4025,7 +4115,22 @@ def _nuc_barrier_fields(rho, kappa_tot, rho_GB, gb_mask, psi_lat, T_field, activ
     if activity_factor is None:
         activity_factor = np.ones_like(rho, dtype=float)
     activity_factor = np.asarray(activity_factor, dtype=float)
-    nuc_free_barrier = (best_barrier
+    if P.get('use_expf_embryo_creation', False):
+        # The classical circular-nucleus balance above establishes finite-size
+        # thermodynamic feasibility and the resolved trial radius.  The event
+        # kinetics are a distinct EXP-floor activated process driven by the
+        # favorable bulk pressure dF_density [J/m^3 == Pa].
+        creation_enthalpy = exp_floor_enthalpy_j(
+            np.maximum(best_dFdens, 0.0),
+            float(P.get('embryo_creation_H0_eV', 1.2))*eV_J,
+            float(P.get('embryo_creation_critical_drive_Pa', 2.0e8)),
+            float(P.get('embryo_creation_exp_a', 1.0)),
+            float(P.get('embryo_creation_exp_n', 1.0)),
+            float(P.get('embryo_creation_enthalpy_floor', 0.05)))
+    else:
+        # Immutable-v34 regression branch.
+        creation_enthalpy = best_barrier
+    nuc_free_barrier = (creation_enthalpy
                         - kB_J*np.maximum(T_field, 1.0)
                         * float(P.get('embryo_activation_entropy_kB', 0.0)))
     rate = (float(P.get('nuc_attempt_freq', 1.0e6))*site*patch_weight*activity_factor*gate_AT*
@@ -4037,7 +4142,9 @@ def _nuc_barrier_fields(rho, kappa_tot, rho_GB, gb_mask, psi_lat, T_field, activ
     return dict(rate=rate, barrier=best_barrier, dG_depth=best_dG_depth, dF_density=best_dFdens,
                 theta=best_theta, theta_max=theta_max, R=best_R, gamma=best_gamma,
                 rho_low=rho_low, spinodal=spinodal, site=site, rho_res=rho_res,
-                gate_AT=gate_AT, activity_factor=activity_factor)
+                gate_AT=gate_AT, activity_factor=activity_factor,
+                creation_enthalpy=creation_enthalpy,
+                creation_free_barrier=nuc_free_barrier)
 
 
 def _draw_exp_threshold(shape):
@@ -4127,6 +4234,7 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                             H_nuc, E_nuc, activity_factor=None):
     global rho_forest, rho_wall, nuc_cand_active, nuc_cand_age, nuc_cand_best_barrier, nuc_cand_birth_step
     global nuc_raw_trigger_total, nuc_raw_viable_trigger_total
+    global embryo_population
     """Advance cumulative nucleation hazard and insert at most one embryo.
 
     The hazard is evaluated for every local patch.  No rho/kappa/gradpsi candidate
@@ -4176,6 +4284,47 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
         nuc_raw_viable_trigger_total += raw_viable_triggered
         diag.update(raw_viable_triggered=raw_viable_triggered,
                     raw_viable_trigger_total=int(nuc_raw_viable_trigger_total))
+        if P.get('use_stateful_embryos', False):
+            accepted = triggered & viable
+            if np.any(accepted):
+                select_field = np.where(accepted, excess, -np.inf)
+                ix = np.unravel_index(int(np.nanargmax(select_field)), select_field.shape)
+                parent_gid = int(lab[ix])
+                event = EmbryoEvent(
+                    int(globals().get('current_step_for_provenance', 0)),
+                    float(globals().get('sim_time', 0.0)), 'hazard_trigger',
+                    float(H_nuc[ix]), float(E_nuc[ix]), float(fields['barrier'][ix]),
+                    float(fields['rate'][ix]))
+                embryo_population, created = create_embryo(
+                    embryo_population, parent_grain=parent_gid,
+                    parent_lineage=f'grain-{parent_gid}',
+                    position_m=(float(ix[0]*dx), float(ix[1]*dy)),
+                    orientation_rad=float(angle_wrap(psi_lat[ix] + fields['theta'][ix])),
+                    parent_orientation_rad=float(psi_lat[ix]),
+                    radius_m=float(fields['R'][ix]),
+                    birth_step=int(globals().get('current_step_for_provenance', 0)),
+                    birth_time_s=float(globals().get('sim_time', 0.0)),
+                    birth_strain=float(E_tot[0, 0]), rng_stream='nucleation',
+                    rng_state_json=_rng_state_to_json(_rng_nuc),
+                    cumulative_hazard=float(H_nuc[ix]), event=event,
+                    parameters=_stateful_embryo_parameters())
+                radius_cells = max(int(np.ceil(created.radius_m/dx)), 1)
+                ii, jj = np.indices(H_nuc.shape)
+                distance2 = (np.minimum(np.abs(ii-ix[0]), Nx-np.abs(ii-ix[0]))**2
+                             + np.minimum(np.abs(jj-ix[1]), Ny-np.abs(jj-ix[1]))**2)
+                reset = distance2 <= radius_cells**2
+                H_nuc = np.where(reset, 0.0, H_nuc)
+                E_nuc = np.where(reset, _draw_exp_threshold(H_nuc.shape), E_nuc)
+                diag.update(candidate_new=1,
+                            candidate_active=sum(r.status == 'active' for r in embryo_population.records),
+                            candidate_promotable=sum(r.status == 'promotable' for r in embryo_population.records),
+                            candidate_age_max=0,
+                            stateful_embryo_created_id=int(created.embryo_id))
+            else:
+                diag.update(candidate_new=0,
+                            candidate_active=sum(r.status == 'active' for r in embryo_population.records),
+                            candidate_promotable=sum(r.status == 'promotable' for r in embryo_population.records))
+            return eta, psi_gv, Ng, lab, psi_lat, psi_plastic, rp, rm, rho, rho_GB, gb_mask, H_nuc, E_nuc, diag
         new_cand = triggered & viable & (~nuc_cand_active)
         decay_evals = max(int(P.get('nuc_candidate_decay_evals', 2)), 0)
         keep_active = nuc_cand_active & viable
@@ -4610,6 +4759,15 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         nuc_raw_viable_triggered=int(nuc_diag.get('raw_viable_triggered', 0)),
         nuc_raw_trigger_total=int(globals().get('nuc_raw_trigger_total', 0)),
         nuc_raw_viable_trigger_total=int(globals().get('nuc_raw_viable_trigger_total', 0)),
+        embryo_records_total=len(globals().get('embryo_population', EmbryoPopulation(0)).records),
+        embryo_active_total=sum(r.status == 'active' for r in globals().get('embryo_population', EmbryoPopulation(0)).records),
+        embryo_promotable_total=sum(r.status == 'promotable' for r in globals().get('embryo_population', EmbryoPopulation(0)).records),
+        embryo_retired_total=sum(r.status == 'retired' for r in globals().get('embryo_population', EmbryoPopulation(0)).records),
+        embryo_radius_max_um=max([r.radius_m*1e6 for r in globals().get('embryo_population', EmbryoPopulation(0)).records] or [0.0]),
+        embryo_free_energy_change_J=float(globals().get('_last_embryo_diag', {}).get('free_energy_change_J', 0.0)),
+        embryo_dissipated_energy_J=float(globals().get('_last_embryo_diag', {}).get('dissipated_energy_J', 0.0)),
+        embryo_energy_closure_error_J=float(globals().get('_last_embryo_diag', {}).get('closure_error_J', 0.0)),
+        embryo_maximum_dt_halvings=int(globals().get('_last_embryo_diag', {}).get('maximum_halvings', 0)),
         heat_qdot_MWm3=float(qdot_mech/1e6),
         heat_qdot_local_max_MWm3=float(heat_diag.get('qdot_max', np.nan)/1e6),
         heat_qdot_local_std_MWm3=float(heat_diag.get('qdot_std', np.nan)/1e6),
@@ -4946,6 +5104,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             nuc_cand_birth_step=nuc_cand_birth_step,
             nuc_raw_trigger_total=np.array(nuc_raw_trigger_total, dtype=np.int64),
             nuc_raw_viable_trigger_total=np.array(nuc_raw_viable_trigger_total, dtype=np.int64),
+            embryo_population_json=np.array(population_to_json(embryo_population)),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
             sim_time=np.array(sim_time + P['dt'] if sim_time_value is None else sim_time_value),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),
@@ -5964,6 +6123,9 @@ for n in range(_restart_step_offset, _restart_end_step):
                           'barrier_best_eV': np.nan, 'theta_best_deg': np.nan,
                           'theta_max_deg': np.nan, 'R_best_um': np.nan,
                           'activity_factor_mean': np.nan, 'activity_factor_max': np.nan}
+
+    _last_embryo_diag = _advance_stateful_embryos(
+        n, sim_time, rho, kappa_tot, rho_GB, gb_mask, psi_lat, T)
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:

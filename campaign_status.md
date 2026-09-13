@@ -84,8 +84,25 @@ Updated: 2026-09-12 (America/Los_Angeles)
 - A selectively back-ported, full-model-only Patch B/C component now carries
   persistent embryo identity, lineage, RNG state, radius/free-energy history,
   signed-entropy EXP-floor mobility, continuous growth/shrinkage, contact and
-  phase-support observables, and an exact serialization ledger. It cannot
-  allocate a grain label and is not yet coupled into the production trajectory.
+  phase-support observables, and an exact serialization ledger. It is now
+  coupled to the authoritative v34 temperature, stored-energy, compatibility,
+  GB, wall, and GND fields. The immutable-v34 path remains disabled by default.
+- A forced 16x16 integration fixture generated 436 raw viable triggers and
+  accepted three persistent embryo records while leaving the allocated grain
+  count exactly unchanged at three. Continuous four-step evolution and exact
+  2+2 restart agree bitwise across all 107 authoritative checkpoint fields,
+  including embryo histories, RNG, and all 58 Arrhenius-potential members. The
+  fixture is deliberately nonphysical: its embryos shrink below the resolved
+  radius and retire, so it establishes coupling/restart/no-label invariants,
+  not DRX.
+- Embryo creation now has a separate opt-in EXP-floor kinetic enthalpy driven
+  by favorable bulk pressure, with activation entropy entering once. The
+  classical circular-nucleus balance remains the thermodynamic feasibility and
+  resolved-radius calculation. This option is off for immutable-v34 regression.
+- The complete local suite passes 269 tests. No new HPC3 calculation was
+  submitted because the next scientific run must first include the Patch-E
+  promotion/physical-grain contract; jobs `55932457` and `55950433` are
+  unrelated and remain untouched.
 
 ## Current decision: instantaneous junction-friction closure rejected
 

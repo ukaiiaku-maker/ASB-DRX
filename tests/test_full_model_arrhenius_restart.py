@@ -74,6 +74,10 @@ class CandidateRestartSourceTest(unittest.TestCase):
         for name in ("nuc_raw_trigger_total", "nuc_raw_viable_trigger_total"):
             self.assertIn(f"{name}=np.array({name}", source)
             self.assertIn(f"'{name}'", source)
+        self.assertIn("embryo_population_json=np.array(population_to_json(embryo_population))", source)
+        self.assertIn("exact stateful-embryo restart requires embryo_population_json", source)
+        self.assertIn("use_expf_embryo_creation", source)
+        self.assertIn("creation_enthalpy = exp_floor_enthalpy_j", source)
 
     def test_local_trajectory_fixture_is_exact(self):
         result = __import__("json").loads(
