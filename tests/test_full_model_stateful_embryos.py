@@ -4,7 +4,8 @@ import unittest
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.stateful_embryos import (
     EmbryoEnvironment, EmbryoEvent, EmbryoParameters, EmbryoPopulation,
-    EmbryoRecord, evolve_embryo, population_from_json, population_to_json,
+    EmbryoRecord, create_embryo, evolve_embryo, mark_promoted,
+    population_from_json, population_to_json,
 )
 
 
@@ -77,6 +78,27 @@ class StatefulEmbryoTest(unittest.TestCase):
         restored = population_from_json(encoded)
         self.assertEqual(restored, population)
         self.assertEqual(population_to_json(restored), encoded)
+
+    def test_creation_allocates_unique_embryo_not_grain_identity(self):
+        initial = EmbryoPopulation(0)
+        event = EmbryoEvent(10, 1e-6, "hazard_trigger", 1.2, 1.0, 0.5*EV_J, 2e3)
+        population, embryo = create_embryo(
+            initial, parent_grain=2, parent_lineage="initial/2",
+            position_m=(2e-6, 3e-6), orientation_rad=math.radians(5),
+            parent_orientation_rad=0.0, radius_m=5e-9, birth_step=10,
+            birth_time_s=1e-6, birth_strain=0.02, rng_stream="nucleation",
+            rng_state_json='{"state":1}', cumulative_hazard=1.2, event=event,
+            parameters=parameters())
+        self.assertEqual(population.next_id, 1)
+        self.assertEqual(embryo.embryo_id, 0)
+        self.assertFalse(hasattr(embryo, "grain_label"))
+
+    def test_only_promotable_embryo_can_be_finalized(self):
+        with self.assertRaises(ValueError):
+            mark_promoted(record(), 20, 2e-6)
+        evolved = evolve_embryo(record(), 11, 1e-6, 1e-7, environment(), parameters()).record
+        self.assertEqual(evolved.status, "promotable")
+        self.assertEqual(mark_promoted(evolved, 20, 2e-6).status, "promoted")
 
 
 if __name__ == "__main__":

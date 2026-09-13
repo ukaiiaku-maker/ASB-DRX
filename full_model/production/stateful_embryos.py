@@ -206,6 +206,39 @@ def _misorientation(record, symmetry_order):
     return abs(delta - 0.5 * period)
 
 
+def create_embryo(population, *, parent_grain, parent_lineage, position_m,
+                   orientation_rad, parent_orientation_rad, radius_m, birth_step,
+                   birth_time_s, birth_strain, rng_stream, rng_state_json,
+                   cumulative_hazard, event, parameters):
+    """Allocate a persistent embryo ID without allocating a PF grain label."""
+    embryo_id = population.next_id
+    record = EmbryoRecord(
+        embryo_id=embryo_id, parent_grain=parent_grain,
+        parent_lineage=parent_lineage, position_m=position_m,
+        orientation_rad=orientation_rad,
+        parent_orientation_rad=parent_orientation_rad, radius_m=radius_m,
+        birth_step=birth_step, birth_time_s=birth_time_s,
+        birth_strain=birth_strain, rng_stream=rng_stream,
+        rng_state_json=rng_state_json, cumulative_hazard=cumulative_hazard,
+        maximum_radius_m=radius_m, events=(event,))
+    if _misorientation(record, parameters.orientation_symmetry_order) \
+            < parameters.minimum_misorientation_rad:
+        record = replace(record, status="rejected")
+    return EmbryoPopulation(embryo_id + 1, population.records + (record,)), record
+
+
+def mark_promoted(record, step, time_s):
+    """Finalize an already promotable embryo after the driver resolves PF support."""
+    if record.status != "promotable":
+        raise ValueError("only a promotable embryo may be marked promoted")
+    if not math.isfinite(time_s) or time_s < record.birth_time_s:
+        raise ValueError("promotion time must be finite and no earlier than birth")
+    event = EmbryoEvent(
+        int(step), float(time_s), "phase_field_promotion", record.cumulative_hazard,
+        record.cumulative_hazard, 0.0, 0.0)
+    return replace(record, status="promoted", events=record.events + (event,))
+
+
 def evolve_embryo(record, step, time_s, proposed_dt_s, environment, parameters,
                    maximum_halvings=40):
     """Advance one full-model embryo without allocating a phase/grain label."""
