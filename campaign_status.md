@@ -15,9 +15,21 @@ Updated: 2026-09-12 (America/Los_Angeles)
   events, candidates, promotions, or physical grain births.
 - The baseline checkpoint omits all candidate arrays.  Exact candidate restart
   is therefore a confirmed implementation defect, not an untested concern.
-- No full-model physics has yet been modified.  Patch A and exact candidate
-  restart are the next production changes; matched long runs will execute on
-  HPC3 after local invariant and restart smoke tests pass.
+- The reference-restoration commit changed no full-model physics.  Subsequent
+  work is confined to the separate production copy.
+- Patch A is now locally staged in the separate production copy.  All-zero
+  mechanism entropies reproduce 38 common immutable-v34 checkpoint fields
+  bit-for-bit on a two-step 16x16 calculation.  Unit fixtures verify positive
+  and negative entropy, prefactor identifiability, the EXP-floor exponent
+  restriction, and explicit negative-barrier drag/rejection.
+- Exact continuation exposed and repaired omissions in candidate arrays,
+  `sigma_bar`, physical/global time, activity memory, and structural reference
+  densities.  A 1+1 segmented trajectory now matches the continuous two-step
+  trajectory bit-for-bit across all 27 compared authoritative fields.
+- Checkpoints are now atomically published and are triggered by both physical
+  progress and wall-clock interval.  These are fixture results; matched HPC3
+  ASB and DRX-isothermal regressions remain pending.
+- The complete inherited-plus-full-model suite passes 250 tests locally.
 
 ## Current decision: instantaneous junction-friction closure rejected
 

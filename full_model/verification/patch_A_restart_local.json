@@ -1,0 +1,28 @@
+{
+  "schema": "asb-drx-full-model-local-verification/v1",
+  "architecture": "full_2d_phase_field",
+  "grid": [16, 16],
+  "continuous_steps": 2,
+  "segmented_steps": [1, 1],
+  "zero_entropy_reference_comparison": {
+    "reference": "immutable_v34",
+    "common_checkpoint_fields_compared": 38,
+    "bitwise_exact": true
+  },
+  "restart_comparison": {
+    "fields_compared": [
+      "rho", "rp", "rm", "rho_forest", "rho_wall",
+      "collective_activity_memory", "eta", "psi_gv", "lab", "psi_lat",
+      "psi_plastic", "T", "rho_GB", "gamma_slip", "eps_p", "E_tot",
+      "H_nuc", "E_nuc", "nuc_cand_active", "nuc_cand_age",
+      "nuc_cand_best_barrier", "nuc_cand_birth_step", "sigma_bar",
+      "sim_time", "rho_state_ref_runtime", "rho_state_total_ref_runtime",
+      "rho_state_struct_ref_runtime"
+    ],
+    "bitwise_exact": true,
+    "atomic_checkpoint_publish": true
+  },
+  "claim": "fixture",
+  "patch_A_status": "LOCAL_ZERO_ENTROPY_AND_KERNEL_FIXTURES_PASS__FULL_HPC_REGRESSION_PENDING",
+  "candidate_restart_status": "LOCAL_EXACT_RESTART_PASS__ACTIVE_EMBRYO_RESTART_PENDING_PATCH_B"
+}

@@ -23,3 +23,9 @@ Current reference interpretation:
   stochastic threshold.  Consequently no raw event, candidate, promotion, or
   physical grain occurs.  The first observed failure is hazard exposure, not
   candidate persistence or promotion.
+
+`production/` is the independently evolving v34 trunk.  Its first patch
+separates mechanism-specific signed activation entropy from enthalpy, retains
+zero entropy as an exact reference option, and declares a barrierless/drag
+branch.  The same patch repairs checkpoint publication and exact continuation
+of stress, clock, structural references, activity memory, and candidate state.

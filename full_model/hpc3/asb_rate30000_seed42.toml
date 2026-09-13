@@ -1,0 +1,12 @@
+name = "full-v34-asb-rate30000-seed42"
+architecture = "full_2d_phase_field"
+branch = "asb_only"
+temperature_K = 1100.0
+strain_rate_s_1 = 30000.0
+target_strain = 0.5
+strain_increment = 0.0001
+microstructure_seed = 42
+nucleation_seed = 271870
+activation_entropy_kB = "all_zero_exact_v34_regression"
+matched_control = "immutable_v32_rate30000_seed42"
+walltime = "02:00:00"

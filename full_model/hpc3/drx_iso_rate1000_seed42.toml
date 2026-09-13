@@ -1,0 +1,12 @@
+name = "full-v34-drx-iso-rate1000-seed42"
+architecture = "full_2d_phase_field"
+branch = "drx_isothermal"
+temperature_K = 1100.0
+strain_rate_s_1 = 1000.0
+target_strain = 0.5
+strain_increment = 0.0001
+microstructure_seed = 42
+nucleation_seed = 271870
+activation_entropy_kB = "all_zero_exact_v34_regression"
+matched_control = "immutable_v34_zero_candidate_baseline"
+walltime = "02:00:00"

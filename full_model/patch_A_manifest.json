@@ -1,0 +1,12 @@
+{
+  "schema": "asb-drx-full-model-patch/v1",
+  "patch": "A_entropy_separated_arrhenius_plus_exact_candidate_restart",
+  "base_reference_sha256": "defa75a5eff8e4f84fb7ec8b875717d1dc6cf6ae7c87fe768a8a07f28ef3479a",
+  "production_driver_sha256": "d12a39b06099a37e23b83182db3248ecdb88b9f3dff9bd1f25c1ab44571d94e1",
+  "arrhenius_kernel_sha256": "af0d75e794e999deb612ee52ceac2872720ab8239a65726ccedd3e5d703e05bc",
+  "runner_sha256": "906b795b6fd5ade2df1d49647faf0914b8b5a1ba809aec93f6d52761eef23714",
+  "zero_entropy_regression": "bitwise_exact_38_common_checkpoint_fields",
+  "restart_regression": "bitwise_exact_27_authoritative_fields",
+  "test_suite": {"tests": 250, "passed": true},
+  "scientific_status": "HPC3_MATCHED_ASB_AND_DRX_ISOTHERMAL_REGRESSIONS_PENDING"
+}
