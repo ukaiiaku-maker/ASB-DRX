@@ -186,7 +186,7 @@ def update_tracker(eta, stored_energy_J_m3, tracker, time_s, dx_m, dy_m, criteri
               and lower_time >= criteria.minimum_persistence_s
               and valid_lineage and distinct
               and old.source_embryo_id is not None and old.embryo_promoted
-              and (grew or support >= criteria.stable_support_s)):
+              and grew and support >= criteria.stable_support_s):
             status = "recrystallized"
             recognition = recognition if recognition is not None else time_s
         elif (old.parent_label is not None and support >= criteria.minimum_persistence_s

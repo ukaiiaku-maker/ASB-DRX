@@ -41,7 +41,9 @@ class PhasePromotionTransferTest(unittest.TestCase):
             ledger.line_content_shell_transfer_m
             + ledger.line_content_pair_annihilation_m
             + ledger.line_content_declared_sink_m)
-        self.assertTrue(np.all(forest[state[-2]] == 0.0))
+        core_total = (np.sum(rp+rm+forest, axis=2) + wall)[state[-2]]
+        self.assertTrue(np.all(core_total <= 5e14))
+        self.assertTrue(np.all(forest[state[-2]] > 0.0))
         self.assertTrue(np.all(wall[state[-2]] == 0.0))
         self.assertGreater(np.mean(gb[state[-1]]), 1e13)
         self.assertTrue(np.array_equal(rp-rm, state[0]-state[1]))
@@ -81,6 +83,17 @@ class PhasePromotionTransferTest(unittest.TestCase):
             + ledger.line_content_declared_sink_m)
         self.assertLessEqual(abs(ledger.line_content_closure_m), 1e-15)
         self.assertTrue(np.array_equal(rp-rm, state[0]-state[1]))
+
+    def test_roundoff_tolerance_scales_with_total_removed_content(self):
+        state = self.state()
+        target = np.full((8, 8), 1.000000000001e13)
+        result = conservative_neutral_density_relief(
+            *state, target_core_density_m2=5e14, cell_area_m2=1e-14,
+            represented_thickness_m=1e-6, maximum_density_m2=1e18,
+            target_shell_density_m2=target)
+        ledger = result[-1]
+        scale = ledger.line_content_removed_from_core_m
+        self.assertLessEqual(abs(ledger.line_content_closure_m), 512*np.spacing(scale))
 
     def test_overlapping_or_empty_masks_are_rejected(self):
         state = list(self.state())

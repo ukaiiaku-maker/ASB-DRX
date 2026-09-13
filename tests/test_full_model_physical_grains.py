@@ -45,11 +45,27 @@ class PhysicalGrainTest(unittest.TestCase):
         )
         eta, energy = self.fields()
         tracker = GrainTracker(records)
-        tracker, _ = update_tracker(eta, energy, tracker, 1e-6, 1e-7, 1e-7, self.criteria)
+        smaller = eta.copy()
+        smaller[4, 4:8, 0] = 1.0
+        smaller[4, 4:8, 1] = 0.0
+        tracker, _ = update_tracker(smaller, energy, tracker, 1e-6, 1e-7, 1e-7, self.criteria)
         tracker, metrics = update_tracker(eta, energy, tracker, 2e-6, 1e-7, 1e-7, self.criteria)
         self.assertEqual(tracker.records[1].status, "recrystallized")
         self.assertEqual(metrics.physical_drx_grains, 1)
         self.assertGreater(metrics.recrystallized_area_fraction, 0.0)
+
+    def test_persistent_but_nongrowing_child_is_not_physical(self):
+        records = (
+            GrainRecord(0, 0.0, None, "initial/0", 0.0, None, False),
+            GrainRecord(1, math.radians(5), 0, "initial/0/embryo-7", 0.0, 7, True),
+        )
+        eta, energy = self.fields()
+        tracker = GrainTracker(records)
+        tracker, _ = update_tracker(eta, energy, tracker, 1e-6, 1e-7, 1e-7, self.criteria)
+        tracker, metrics = update_tracker(eta, energy, tracker, 3e-6, 1e-7, 1e-7, self.criteria)
+        self.assertFalse(tracker.records[1].ever_grew)
+        self.assertEqual(tracker.records[1].status, "allocated")
+        self.assertEqual(metrics.physical_drx_grains, 0)
 
     def test_high_purity_fragment_below_interface_scaled_area_is_not_resolved(self):
         eta, energy = self.fields()

@@ -71,6 +71,9 @@ from hazard_measure import (
 from phase_promotion import (
     atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
 )
+from stored_energy_coupling import (
+    common_variational_stored_energy, phase_mean_stored_energy_states,
+)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -699,6 +702,12 @@ P = dict(
     physical_grain_min_energy_drop_Jm3=1.0e6,
     use_atomic_stateful_promotion=False,
     atomic_promotion_purity_threshold=0.80,
+    # The verified b9afe1f trajectory used ``lineage_scoped``.  Directive-v8
+    # qualification compares it with a common functional, no stored-energy
+    # drive, and a deliberately reversed-sign negative control.
+    stored_energy_coupling_mode='lineage_scoped',
+    stored_energy_phase_purity=0.80,
+    disable_new_stochastic_creation_after_restart=False,
 
     # Legacy knobs retained only for compatibility with old parameter files; they
     # are not used by the v11 hazard-nucleation path unless use_hazard_nucleation=False.
@@ -927,6 +936,12 @@ for _entropy_name in _entropy_names:
     _entropy_value = float(P.get(_entropy_name, 0.0))
     if not np.isfinite(_entropy_value) or abs(_entropy_value) > _entropy_bound:
         raise SystemExit(f"{_entropy_name}={_entropy_value} exceeds bounded validity envelope ±{_entropy_bound}")
+_stored_energy_coupling_modes = {
+    'lineage_scoped', 'common_variational', 'disabled', 'sign_reversed'}
+if str(P.get('stored_energy_coupling_mode', 'lineage_scoped')).lower() not in _stored_energy_coupling_modes:
+    raise SystemExit(
+        "stored_energy_coupling_mode must be one of "
+        + ", ".join(sorted(_stored_energy_coupling_modes)))
 if float(P.get('expf_n', 0.0)) < 1.0:
     raise SystemExit('production EXP-floor exponent expf_n must be >= 1')
 
@@ -6096,6 +6111,28 @@ for n in range(_restart_step_offset, _restart_end_step):
     kappa_for_ac = np.sum(rp-rm, axis=2)
     gb_for_ac = diffuse_gb_support(eta, lab, Ng)
     Hr_ac, dHdr_ac, rho_eta_precursor_ac, rho_eta_drive_ac = _rho_eta_fields(r_ac, rho, kappa_for_ac, gb_for_ac)
+    stored_energy_mode = str(P.get(
+        'stored_energy_coupling_mode', 'lineage_scoped')).lower()
+    common_stored_derivative = None
+    phase_stored_energy_values = np.full(Ng, np.nan)
+    if stored_energy_mode in ('common_variational', 'sign_reversed'):
+        _, phase_stored_energy_values = phase_mean_stored_energy_states(
+            eta[:, :, :Ng], Estar,
+            float(P.get('stored_energy_phase_purity', 0.80)))
+        # All unrecrystallized phases are alternative orientations of the same
+        # current local deformed matrix and therefore share Estar(x).  A
+        # promoted phase carries its own recovered material state, evaluated
+        # from its current pure core so continued deformation can re-harden it.
+        # Lineage selects that state; it does not select a different equation.
+        phase_energy_fields = np.broadcast_to(
+            Estar[:, :, None], eta[:, :, :Ng].shape).copy()
+        for phase_index, phase_record in enumerate(grain_tracker.records[:Ng]):
+            if phase_record.embryo_promoted:
+                phase_energy_fields[:, :, phase_index] = phase_stored_energy_values[phase_index]
+        _, common_stored_derivative = common_variational_stored_energy(
+            eta[:, :, :Ng], phase_energy_fields)
+        if stored_energy_mode == 'sign_reversed':
+            common_stored_derivative = -common_stored_derivative
     if not P.get('freeze_kwc_eta', False):
         L_ac_eff = P['L_ac'] * _gb_mobility_factor_from_T(T)
         for i in range(Ng):
@@ -6109,7 +6146,11 @@ for n in range(_restart_step_offset, _restart_end_step):
             is_promoted_child = (
                 i < len(grain_tracker.records)
                 and grain_tracker.records[i].embryo_promoted)
-            if is_promoted_child:
+            if stored_energy_mode in ('common_variational', 'sign_reversed'):
+                dFdei += common_stored_derivative[:, :, i]
+            elif stored_energy_mode == 'disabled':
+                pass
+            elif is_promoted_child:
                 # The promoted phase carries the declared low-density DRX
                 # state.  Its interface must advance down the parent-to-child
                 # stored-energy difference.  Reusing the legacy per-label
@@ -6492,6 +6533,8 @@ for n in range(_restart_step_offset, _restart_end_step):
 
     # --- v11 GND-bounded cumulative-hazard nucleation ---
     if ((not P.get('disable_nucleation', False)) and P.get('use_hazard_nucleation', True)
+            and not (P.get('disable_new_stochastic_creation_after_restart', False)
+                     and _restart_loaded)
             and n > 0 and n % max(int(P.get('nuc_interval', 20)), 1) == 0
             and E_tot[0,0] >= P.get('nuc_min_strain', 0.0)):
         hazard_activity_factor = _hazard_activity_prefactor(gdot, rp, rm)

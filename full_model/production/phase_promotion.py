@@ -159,12 +159,19 @@ def conservative_neutral_density_relief(
         pair_total, np.maximum(float(target_core_density_m2) - signed_floor, 0.0))
     pair_scale = np.zeros_like(pair_total)
     np.divide(pair_keep_total, pair_total, out=pair_scale, where=pair_total > 0.0)
-    pair_kept = pair_density * pair_scale[:, :, None]
-    rp_core = np.maximum(signed0, 0.0) + 0.5*pair_kept
-    rm_core = np.maximum(-signed0, 0.0) + 0.5*pair_kept
+    # Preserve the signed populations exactly by putting the retained
+    # sign-neutral content into the unsigned forest reservoir.  Reconstructing
+    # two O(1e14) mobile populations around a much smaller signed difference
+    # can change that difference by an ulp even though the algebra is exact.
+    # A recovered core need not retain equal positive/negative mobile carriers;
+    # the declared residual line content is represented as forest instead.
+    rp_core = np.maximum(signed0, 0.0)
+    rm_core = np.maximum(-signed0, 0.0)
+    forest_core = np.broadcast_to(
+        pair_keep_total[:, :, None]/rp0.shape[2], forest0.shape)
     rp1[core] = rp_core[core]
     rm1[core] = rm_core[core]
-    forest1[core] = 0.0
+    forest1[core] = forest_core[core]
     wall1[core] = 0.0
 
     old_bulk = np.sum(rp0 + rm0, axis=2) + np.sum(forest0, axis=2) + wall0
@@ -218,9 +225,15 @@ def conservative_neutral_density_relief(
     closure = (transferred + pair_annihilation + declared_sink
                - removed_density_integral*volume_factor)
     signed_change = float(np.max(np.abs((rp1-rm1) - signed0)))
-    tolerance = 512.0*math.ulp(max(abs(transferred), 1e-300))
+    tolerance_scale = max(
+        abs(removed_density_integral*volume_factor), abs(transferred),
+        abs(pair_annihilation), abs(declared_sink), 1e-300)
+    tolerance = 512.0*math.ulp(tolerance_scale)
     if abs(closure) > tolerance or signed_change != 0.0:
-        raise RuntimeError("promotion transfer failed line/Burgers-content closure")
+        raise RuntimeError(
+            "promotion transfer failed line/Burgers-content closure: "
+            f"closure={closure:.17g} m, tolerance={tolerance:.17g} m, "
+            f"signed_change={signed_change:.17g} m^-2")
     return rp1, rm1, forest1, wall1, gb1, PromotionTransferLedger(
         line_before, line_after, removed_density_integral*volume_factor,
         transferred, pair_annihilation, declared_sink,

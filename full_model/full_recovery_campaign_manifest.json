@@ -1,0 +1,61 @@
+{
+  "schema": "asb-drx-full-recovery-campaign/v1",
+  "campaign_id": "asb-drx-full-v34-recovery",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v34-recovery-v1",
+  "local_worktree_root": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery",
+  "local_results_root": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/hpc3-results/asb-drx-full-v34-recovery",
+  "remote_results_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery",
+  "architecture": "full_2d_phase_field_v34_recovery",
+  "archived_mixed_manifest": {
+    "path": "hpc3_campaign_manifest.json",
+    "status": "read_only_historical_archive",
+    "note": "The historical manifest began under the independent reduced-model campaign and contains both architectures. New full-recovery records belong here."
+  },
+  "frozen_lifecycle_reference": {
+    "validated_source_commit": "b9afe1f83ba2f2cb36ed1819fd3f38cb067e79f4",
+    "validated_hpc3_run": "20260913T194443Z-b9afe1f-69c00f",
+    "slurm_job_id": "55994881",
+    "result_recording_commit": "9a6f5b5314b47d64b629e59069fb141521fb6eea",
+    "production_source_changed_between_validated_and_recording_commits": false,
+    "diff_command": "git diff --name-status b9afe1f..9a6f5b -- full_model/production full_model/tests full_model/verification",
+    "diff_result": [
+      "A full_model/verification/hpc3_drx_iso_rate1000_seed42_stateful_central_v3_restart.json",
+      "A full_model/verification/hpc3_drx_iso_rate1000_seed42_stateful_central_v3_summary.json"
+    ],
+    "classification": "SINGLE_FULL_MODEL_DRX_LIFECYCLE_PATH_VERIFIED",
+    "source_bundle_sha256": "bf5e5c6ed3e1a2599d4a9e45053b0694f5183ca9a4302d47463a5c03061bcf31",
+    "result_archive_sha256": "d90872dbe0652f3c7f085bee2a4589dbbfbee866b9091140b2b96b110534e252",
+    "final_checkpoint_sha256": "126f7ebe88bd1cf65ce470b185e46fb2e2e0682b26eaea2cad23940cdafd3b03",
+    "output_inventory_sha256": "384df7d169c9163418eb1537f5f49be5f9e47c095ee90978a393338f8cb51622",
+    "all_internal_output_checksums_verified": 95
+  },
+  "accepted_claim": "SINGLE_FULL_MODEL_DRX_LIFECYCLE_PATH_VERIFIED",
+  "unsupported_claims": [
+    "material_calibration",
+    "calibrated_nucleation_rate",
+    "calibrated_grain_boundary_mobility",
+    "mesh_converged_DRX_kinetics",
+    "domain_independent_grain_growth",
+    "seed_robust_DRX_statistics",
+    "validated_steady_state_grain_size",
+    "strict_ASB_qualification",
+    "predictive_coupled_DRX_ASB_regime_map"
+  ],
+  "hazard_excitation_parameterization": {
+    "H0_eV": 1.2,
+    "attempt_frequency_s-1": 1000000.0,
+    "activation_entropy_kB": 0.0,
+    "site_density_m-2": 2056129055805.289,
+    "identifiable_areal_prefactor_m-2_s-1": 2.056129055805289e18,
+    "interpretation": "mechanism_excitation_bracket_not_material_calibration"
+  },
+  "untouched_external_jobs": [
+    {
+      "job_id": "55950433",
+      "relationship": "unrelated",
+      "action": "observed_only"
+    }
+  ],
+  "qualification_runs": []
+}
