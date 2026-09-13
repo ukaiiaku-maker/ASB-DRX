@@ -45,6 +45,10 @@ Updated: 2026-09-12 (America/Los_Angeles)
   persistence or label promotion. Per the physical-horizon rule, the current
   classification is `INCONCLUSIVE_INSUFFICIENT_HORIZON` until an exact
   checkpoint continuation crosses strain 0.5.
+- Exact continuation job `55978063` is running from the verified step-4999
+  checkpoint (`3fc4977b...`) with the same production-driver hash, all-zero
+  entropies, and 1,000 additional steps. It is a single no-retuning horizon
+  extension, not a new parameter experiment.
 - Every scientific output checksum in both fetched runs passed. Their generated
   inventories contain one invalid self-entry because the old runner hashed the
   inventory while writing it; this provenance-only defect is recorded and fixed
