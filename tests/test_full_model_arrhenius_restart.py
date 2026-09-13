@@ -47,6 +47,14 @@ class FullModelArrheniusTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             KIN.exp_floor_enthalpy_j(1.0, 1.0, 1.0, 1.0, 0.5, 0.0)
 
+    def test_invalid_process_units_and_modes_are_rejected(self):
+        with self.assertRaises(ValueError):
+            KIN.ActivatedProcess("x", 0.0)
+        with self.assertRaises(ValueError):
+            KIN.ActivatedProcess("x", 1.0, negative_barrier_mode="clip")
+        with self.assertRaises(ValueError):
+            KIN.free_barrier_j(-1.0, 1000.0, 0.0)
+
 
 class CandidateRestartSourceTest(unittest.TestCase):
     def test_checkpoint_writes_and_loads_every_candidate_array(self):

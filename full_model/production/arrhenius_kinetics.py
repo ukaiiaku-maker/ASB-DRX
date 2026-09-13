@@ -16,6 +16,18 @@ class ActivatedProcess:
     drag_rate_s: float = math.inf
     negative_barrier_mode: str = "drag"
 
+    def __post_init__(self):
+        if not self.name:
+            raise ValueError("activated process name must be nonempty")
+        if not math.isfinite(self.attempt_frequency_s) or self.attempt_frequency_s <= 0.0:
+            raise ValueError("attempt frequency must be finite and positive")
+        if not math.isfinite(self.entropy_over_kB):
+            raise ValueError("activation entropy must be finite")
+        if self.drag_rate_s < 0.0 or math.isnan(self.drag_rate_s):
+            raise ValueError("drag rate must be nonnegative or infinite")
+        if self.negative_barrier_mode not in ("drag", "reject"):
+            raise ValueError("negative barrier mode must be drag or reject")
+
     @property
     def identifiable_prefactor_s(self):
         """Constant entropy and attempt frequency are identifiable as a product."""
@@ -24,6 +36,9 @@ class ActivatedProcess:
 
 def exp_floor_enthalpy_j(stress_pa, h0_j, critical_stress_pa, a, n, floor):
     """EXP-floor activation enthalpy for scalar inputs [J]."""
+    values = (stress_pa, h0_j, critical_stress_pa, a, n, floor)
+    if not all(math.isfinite(float(value)) for value in values):
+        raise ValueError("EXP-floor inputs must be finite")
     if n < 1.0:
         raise ValueError("production EXP-floor exponent n must be >= 1")
     if critical_stress_pa <= 0.0 or h0_j < 0.0 or a < 0.0:
@@ -35,6 +50,11 @@ def exp_floor_enthalpy_j(stress_pa, h0_j, critical_stress_pa, a, n, floor):
 
 def free_barrier_j(enthalpy_j, temperature_k, entropy_over_kB):
     """Return ΔG*=ΔH*-TΔS* [J], with ΔS*/kB dimensionless."""
+    values = (enthalpy_j, temperature_k, entropy_over_kB)
+    if not all(math.isfinite(float(value)) for value in values):
+        raise ValueError("free-barrier inputs must be finite")
+    if float(enthalpy_j) < 0.0 or float(temperature_k) <= 0.0:
+        raise ValueError("enthalpy must be nonnegative and temperature positive")
     return float(enthalpy_j) - KB_J_K * float(temperature_k) * float(entropy_over_kB)
 
 
