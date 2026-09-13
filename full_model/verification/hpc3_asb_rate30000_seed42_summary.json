@@ -13,8 +13,8 @@
     "hazard_rate_max_s-1": 0.0,
     "physical_grains": null,
     "promotable_candidates_max": 0,
-    "raw_stochastic_attempts": 0,
-    "raw_stochastic_attempts_provenance": "inferred_zero_from_max_H_over_E_below_one"
+    "raw_stochastic_attempts": null,
+    "raw_stochastic_attempts_provenance": "not_recorded_separately_by_this_source; final_H_over_E_below_one_does_not_exclude_a_prior_trigger_followed_by_a_comoving_GB_or_swept-cell_reset"
   },
   "checkpoint": {
     "checkpoint_active_candidates": 0,

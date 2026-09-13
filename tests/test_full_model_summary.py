@@ -37,10 +37,10 @@ class FullModelSummaryTest(unittest.TestCase):
                 sim_time=np.array(1e-5),
             )
             result = summarize(root, "drx_isothermal")
-        self.assertEqual(
-            result["candidate_to_grain_chain"]["first_failing_stage"],
-            "hazard_integration_did_not_reach_stochastic_threshold",
-        )
+            self.assertEqual(
+                result["candidate_to_grain_chain"]["first_failing_stage"],
+                "hazard_exposure_or_unrecorded_raw_trigger_requires_explicit_counter",
+            )
         self.assertAlmostEqual(result["physical_horizon"]["final_strain"], 0.5)
         self.assertTrue(result["asb_classification"].startswith("NOT_EVALUATED"))
 

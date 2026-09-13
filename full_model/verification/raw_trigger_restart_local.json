@@ -1,0 +1,19 @@
+{
+  "schema": "asb-drx-full-v34-raw-trigger-restart/v1",
+  "architecture": "full_2d_phase_field_component_fixture",
+  "production_driver_sha256": "b6570b1fa7eab692bd5bacc9e5a563e704f469fd64800e63aca01a683c864a50",
+  "grid": [16, 16],
+  "continuous_steps": 3,
+  "segmented_steps": [2, 1],
+  "forced_trigger_fixture": true,
+  "continuous_raw_trigger_total": 32,
+  "segmented_raw_trigger_total": 32,
+  "continuous_raw_viable_trigger_total": 32,
+  "segmented_raw_viable_trigger_total": 32,
+  "common_checkpoint_fields": 49,
+  "authoritative_checkpoint_fields": 48,
+  "authoritative_fields_bitwise_exact": true,
+  "excluded_configuration_field": "P_json",
+  "exclusion_reason": "the segmented trajectory necessarily records restart_file and a different local nSteps control",
+  "claim_level": "fixture"
+}

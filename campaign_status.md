@@ -45,10 +45,19 @@ Updated: 2026-09-12 (America/Los_Angeles)
   persistence or label promotion. Per the physical-horizon rule, the current
   classification is `INCONCLUSIVE_INSUFFICIENT_HORIZON` until an exact
   checkpoint continuation crosses strain 0.5.
-- Exact continuation job `55978063` is running from the verified step-4999
-  checkpoint (`3fc4977b...`) with the same production-driver hash, all-zero
-  entropies, and 1,000 additional steps. It is a single no-retuning horizon
-  extension, not a new parameter experiment.
+- Exact continuation job `55978063` completed from the verified step-4999
+  checkpoint (`3fc4977b...`) and crossed the required horizon at strain 0.5368.
+  All output and source checksums pass. It still has zero candidates, but the
+  v34 diagnostic did not separately count raw `H>=E` triggers. Since comoving
+  GB and swept-cell updates can redraw thresholds and reset hazard, a final
+  `H/E<1` cannot prove that no earlier raw trigger occurred. The horizon is now
+  sufficient, but the first-failure-stage claim remains unqualified pending a
+  counter-instrumented no-retuning rerun.
+- The production copy now checkpoints cumulative raw and viable-trigger counts
+  and writes both to diagnostics. A forced-trigger 16x16 fixture produced four
+  triggers by step 1 and 32 by step 2; continuous and exact-restart trajectories
+  match bitwise across 48 authoritative checkpoint fields (only `P_json`, which
+  records restart/run-length controls, differs).
 - Every scientific output checksum in both fetched runs passed. Their generated
   inventories contain one invalid self-entry because the old runner hashed the
   inventory while writing it; this provenance-only defect is recorded and fixed

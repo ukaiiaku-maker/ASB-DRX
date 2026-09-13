@@ -1452,7 +1452,7 @@
         "diagnostics_csv": "3f6c1fd9959dec8e33d0014a789ddd44c1d699a1a1d67c5d88e37b524332c165",
         "final_checkpoint": "5dd7c86a4af936052c5833dd9d02f57e2ea48af629f78c167f88db177e17412e",
         "output_inventory": "f579ea5a8b795abb90f8ed2f1ef446964db7771fa1034bbb7d666c4b1a4bf85d",
-        "result_summary": "98a8b001198632c92a1f0d544128cb06709e8b7dec3d2a0d68edda50be788e48",
+        "result_summary": "0c546e0cbccb7d5a0c090e2f3af8587ce015aa69af7f04b70261df0e3609aa5a",
         "status_json": "7634d8d604f74c21bff6a6450ccb01b93bc5ade72fd8cc8c1330866a85d13481"
       },
       "checksum_note": "runner inventory self-entry is invalid by construction; all 85 non-inventory scientific entries passed and future runner commit 09d20cb fixes this"
@@ -1484,7 +1484,7 @@
         "diagnostics_csv": "45ac07e067327cb0465a22febee490a216d1869730f2bc3774d88291729e541b",
         "final_checkpoint": "3fc4977bcf16acceea7ce59706cbce9039c19b2feff86e733b0388c7373bc5e5",
         "output_inventory": "ff1c51a9a8dc7c72e5efdccbcd92fcef4455e24962dce3fadd0e6e21d50e177b",
-        "result_summary": "01a95f0126e81f82cbdc5424df12c7c407738e20898034b1217dae4dddafb292",
+        "result_summary": "ad4f4ead32e1561ae42e16340a8a020293df5fde119596fd5bbf0a8938104085",
         "status_json": "69f4c9d020c81c30810dc86d352cac32150b17391e318c49b20ad9194a488060"
       },
       "checksum_note": "runner inventory self-entry is invalid by construction; all 85 non-inventory scientific entries passed and future runner commit 09d20cb fixes this",
@@ -1504,9 +1504,25 @@
       "restart_checkpoint_sha256": "3fc4977bcf16acceea7ce59706cbce9039c19b2feff86e733b0388c7373bc5e5",
       "configuration": {"model_branch": "drx_isothermal", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "continuation_steps": 1000, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero", "restart_reset_clock": false},
       "slurm": {"job_id": "55978063", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1, "memory": "4G"},
+      "start_utc": "2026-09-13T04:06:48Z",
+      "end_utc": "2026-09-13T04:11:54Z",
+      "exit_status": "0:0",
+      "wall_clock_seconds": 346,
+      "scientific_runner_seconds": 306,
+      "peak_memory_MB": 325.07,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T040516Z-92918fa-drxcont",
-      "retrieval_status": "running",
-      "classification": "PENDING_REQUIRED_PHYSICAL_HORIZON"
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T040516Z-92918fa-drxcont",
+      "retrieval_status": "verified",
+      "classification": "HORIZON_REACHED_DIAGNOSTIC_PROVENANCE_FAILURE_RAW_TRIGGER_COUNTER_MISSING",
+      "physical_horizon": {"final_step": 5999, "final_strain": 0.5367965852934793, "final_time_s": 0.0005366965852935066},
+      "outputs": {
+        "diagnostics_csv": "5574bf8fd4239a6e66a01e5e1420c53ab5cc062989ea92809fccab72222a0e27",
+        "final_checkpoint": "3fe72c42d91d23eeadfb1cef8ccd1e46c748181d2d3695653ba1afefd4105ba9",
+        "output_inventory": "ced67cb98be80f6edf35a8cb0807881d4bc8d52387c5a4464598b0df19e3fe05",
+        "result_summary": "ad0787e58a32b1115d7bdefad69336d1276ff33b7f68b0817d016c2988716003",
+        "status_json": "edfdc03023eb391949dbbfd5e3e9d2888dfb1f4a2b83cf7098a2caaef091b168"
+      },
+      "interpretation": "required strain horizon was crossed with zero recorded candidates, but the source did not separately count raw H>=E triggers and GB/swept-cell hazard resets make a final H/E<1 insufficient proof; one diagnostic-only rerun is required"
     }
   ]
 }

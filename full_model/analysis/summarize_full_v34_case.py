@@ -128,12 +128,24 @@ def summarize(case_dir, branch, matched_csv=None):
     else:
         first_failure = "physical_grain_recognition_not_yet_implemented"
     chain["first_failing_stage"] = first_failure
-    chain["raw_stochastic_attempts"] = (
-        0 if math.isfinite(ratio) and ratio < 1.0 else None)
-    chain["raw_stochastic_attempts_provenance"] = (
-        "inferred_zero_from_max_H_over_E_below_one"
-        if math.isfinite(ratio) and ratio < 1.0
-        else "not_recorded_separately_by_this_source")
+    if "nuc_raw_trigger_total" in rows[0]:
+        chain["raw_stochastic_attempts"] = int(
+            _finite_last(rows, "nuc_raw_trigger_total", 0.0))
+        chain["raw_stochastic_attempts_provenance"] = "explicit_cumulative_counter"
+    else:
+        chain["raw_stochastic_attempts"] = None
+        chain["raw_stochastic_attempts_provenance"] = (
+            "not_recorded_separately_by_this_source; final_H_over_E_below_one_does_not_"
+            "exclude_a_prior_trigger_followed_by_a_comoving_GB_or_swept-cell_reset")
+    if (chain["raw_stochastic_attempts"] is None
+            and chain["first_failing_stage"]
+            == "hazard_integration_did_not_reach_stochastic_threshold"):
+        chain["first_failing_stage"] = (
+            "hazard_exposure_or_unrecorded_raw_trigger_requires_explicit_counter")
+    elif (chain["raw_stochastic_attempts"] is not None
+          and chain["raw_stochastic_attempts"] > 0
+          and chain["candidate_creations"] == 0):
+        chain["first_failing_stage"] = "candidate_creation_or_viability"
 
     summary = {
         "schema": "asb-drx-full-v34-case-summary/v1",

@@ -2969,6 +2969,8 @@ nuc_cand_active = np.zeros((Nx, Ny), dtype=bool)
 nuc_cand_age = np.zeros((Nx, Ny), dtype=np.int16)
 nuc_cand_best_barrier = np.full((Nx, Ny), np.inf, dtype=float)
 nuc_cand_birth_step = np.full((Nx, Ny), -1, dtype=np.int32)
+nuc_raw_trigger_total = 0
+nuc_raw_viable_trigger_total = 0
 
 # v15 grain provenance arrays.  These are diagnostics only; field evolution
 # still follows CH/AC/hazard/topology kinetics.
@@ -3021,6 +3023,8 @@ if _restart_loaded and not P.get('restart_reset_clock', True):
                               'rho_state_struct_ref_runtime'):
             if _runtime_name in _restart_npz.files:
                 _restart_scalars[_runtime_name] = float(_restart_npz[_runtime_name])
+        nuc_raw_trigger_total = int(_restart_npz['nuc_raw_trigger_total']) if 'nuc_raw_trigger_total' in _restart_npz.files else 0
+        nuc_raw_viable_trigger_total = int(_restart_npz['nuc_raw_viable_trigger_total']) if 'nuc_raw_viable_trigger_total' in _restart_npz.files else 0
 gb_mask = diffuse_gb_support(eta, lab, Ng)
 psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 
@@ -4104,6 +4108,7 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                             rp, rm, rho, rho_GB, gb_mask, kappa_tot, T_field,
                             H_nuc, E_nuc, activity_factor=None):
     global rho_forest, rho_wall, nuc_cand_active, nuc_cand_age, nuc_cand_best_barrier, nuc_cand_birth_step
+    global nuc_raw_trigger_total, nuc_raw_viable_trigger_total
     """Advance cumulative nucleation hazard and insert at most one embryo.
 
     The hazard is evaluated for every local patch.  No rho/kappa/gradpsi candidate
@@ -4121,6 +4126,8 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
     excess = H_nuc - E_nuc
     possible = np.isfinite(fields['barrier']) & (fields['rate'] > 0.0)
     triggered = possible & (excess >= 0.0)
+    raw_triggered = int(np.sum(triggered))
+    nuc_raw_trigger_total += raw_triggered
 
     finite_barriers = fields['barrier'][possible]
     best_barrier = float(np.nanmin(finite_barriers)) if finite_barriers.size else np.nan
@@ -4131,7 +4138,9 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                 R_best_um=np.nan, barrier_best_eV=(best_barrier/eV_J if np.isfinite(best_barrier) else np.nan),
                 rho_low=float(fields['rho_low']), spinodal_frac=float(np.mean(fields['spinodal'])),
                 activity_factor_mean=float(np.nanmean(fields.get('activity_factor', 1.0))),
-                activity_factor_max=float(np.nanmax(fields.get('activity_factor', 1.0))))
+                activity_factor_max=float(np.nanmax(fields.get('activity_factor', 1.0))),
+                raw_triggered=raw_triggered,
+                raw_trigger_total=int(nuc_raw_trigger_total))
 
     # v34: cumulative-hazard trigger starts/ages a candidate nucleus.  The
     # candidate must survive several hazard evaluations before it is promoted to
@@ -4145,6 +4154,10 @@ def apply_hazard_nucleation(eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
                   (fields['barrier']/eV_J <= max_bar_eV) &
                   (fields['rate'] >= min_rate) &
                   (fields.get('dF_density', np.zeros_like(rho)) >= min_dF))
+        raw_viable_triggered = int(np.sum(triggered & viable))
+        nuc_raw_viable_trigger_total += raw_viable_triggered
+        diag.update(raw_viable_triggered=raw_viable_triggered,
+                    raw_viable_trigger_total=int(nuc_raw_viable_trigger_total))
         new_cand = triggered & viable & (~nuc_cand_active)
         decay_evals = max(int(P.get('nuc_candidate_decay_evals', 2)), 0)
         keep_active = nuc_cand_active & viable
@@ -4575,6 +4588,10 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         nuc_candidate_promotable=int(nuc_diag.get('candidate_promotable', 0)),
         nuc_candidate_age_max=int(nuc_diag.get('candidate_age_max', 0)),
         nuc_candidate_barrier_min_eV=float(nuc_diag.get('candidate_barrier_min_eV', np.nan)),
+        nuc_raw_triggered=int(nuc_diag.get('raw_triggered', 0)),
+        nuc_raw_viable_triggered=int(nuc_diag.get('raw_viable_triggered', 0)),
+        nuc_raw_trigger_total=int(globals().get('nuc_raw_trigger_total', 0)),
+        nuc_raw_viable_trigger_total=int(globals().get('nuc_raw_viable_trigger_total', 0)),
         heat_qdot_MWm3=float(qdot_mech/1e6),
         heat_qdot_local_max_MWm3=float(heat_diag.get('qdot_max', np.nan)/1e6),
         heat_qdot_local_std_MWm3=float(heat_diag.get('qdot_std', np.nan)/1e6),
@@ -4898,6 +4915,8 @@ def _save_restart_checkpoint(step_local):
             nuc_cand_age=nuc_cand_age,
             nuc_cand_best_barrier=nuc_cand_best_barrier,
             nuc_cand_birth_step=nuc_cand_birth_step,
+            nuc_raw_trigger_total=np.array(nuc_raw_trigger_total, dtype=np.int64),
+            nuc_raw_viable_trigger_total=np.array(nuc_raw_viable_trigger_total, dtype=np.int64),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
             sim_time=np.array(sim_time + P['dt']),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),

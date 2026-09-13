@@ -61,6 +61,9 @@ class CandidateRestartSourceTest(unittest.TestCase):
         self.assertIn("_atomic_savez_compressed", source)
         self.assertIn("checkpoint collective activity memory shape mismatch", source)
         self.assertIn("_restart_step_offset", source)
+        for name in ("nuc_raw_trigger_total", "nuc_raw_viable_trigger_total"):
+            self.assertIn(f"{name}=np.array({name}", source)
+            self.assertIn(f"'{name}'", source)
 
     def test_local_trajectory_fixture_is_exact(self):
         result = __import__("json").loads(

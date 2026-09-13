@@ -7,10 +7,10 @@
     "allocated_hazard_births_max": 0,
     "allocated_labels_max": 12,
     "candidate_creations": 0,
-    "cumulative_hazard_max": 1.0536530827500335e-07,
-    "eligible_sites_max": 352,
+    "cumulative_hazard_max": 1.0502308706417049e-07,
+    "eligible_sites_max": 304,
     "first_failing_stage": "hazard_exposure_or_unrecorded_raw_trigger_requires_explicit_counter",
-    "hazard_rate_max_s-1": 0.03399690644359082,
+    "hazard_rate_max_s-1": 0.007876725295317773,
     "physical_grains": null,
     "promotable_candidates_max": 0,
     "raw_stochastic_attempts": null,
@@ -19,33 +19,33 @@
   "checkpoint": {
     "checkpoint_active_candidates": 0,
     "checkpoint_max_candidate_age": 0,
-    "global_step": 4999,
-    "max_hazard_threshold_ratio": 1.535670060403749e-06,
+    "global_step": 5999,
+    "max_hazard_threshold_ratio": 1.3286481516572117e-06,
     "minimum_stochastic_threshold": 0.00021425967734864485,
-    "path": "drx_v25_restart_004999.npz",
-    "physical_time_s": 0.000436868253307935,
-    "sha256": "3fc4977bcf16acceea7ce59706cbce9039c19b2feff86e733b0388c7373bc5e5"
+    "path": "drx_v25_restart_005999.npz",
+    "physical_time_s": 0.0005367965852935066,
+    "sha256": "3fe72c42d91d23eeadfb1cef8ccd1e46c748181d2d3695653ba1afefd4105ba9"
   },
   "claim_level": "integrated_regression",
   "localization_observables": {
-    "maximum_temperature_anisotropy": 0.9810307766546625,
-    "maximum_top5_plastic_power_fraction": 0.25829017791474246,
-    "maximum_top5_plastic_rate_fraction": 0.323712166162586,
-    "minimum_hot_cold_density_ratio": 0.0017514876049787367
+    "maximum_temperature_anisotropy": 0.6714613017116355,
+    "maximum_top5_plastic_power_fraction": 0.12449644211231344,
+    "maximum_top5_plastic_rate_fraction": 0.1444714914915206,
+    "minimum_hot_cold_density_ratio": 0.022945535402560457
   },
   "physical_grain_classification": "NOT_AVAILABLE_UNTIL_PATCH_E",
   "physical_horizon": {
-    "diagnostic_rows": 201,
-    "final_step": 4999,
-    "final_strain": 0.4368682533078948,
-    "final_time_s": 0.00043676825330793493
+    "diagnostic_rows": 41,
+    "final_step": 5999,
+    "final_strain": 0.5367965852934793,
+    "final_time_s": 0.0005366965852935066
   },
   "schema": "asb-drx-full-v34-case-summary/v1",
   "stress_temperature": {
-    "final_stress_MPa": 498.9475037084997,
-    "maximum_temperature_K": 1125.5380004513297,
-    "maximum_temperature_range_K": 10.940806613015866,
-    "peak_stress_MPa": 909.3489282664464,
-    "post_peak_softening_fraction": 0.45131347473001676
+    "final_stress_MPa": 439.43770989173794,
+    "maximum_temperature_K": 1122.5726409868582,
+    "maximum_temperature_range_K": 6.947424294302891,
+    "peak_stress_MPa": 523.3772683138477,
+    "post_peak_softening_fraction": 0.16038059637656002
   }
 }
