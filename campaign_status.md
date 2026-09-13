@@ -30,6 +30,11 @@ Updated: 2026-09-12 (America/Los_Angeles)
   progress and wall-clock interval.  These are fixture results; matched HPC3
   ASB and DRX-isothermal regressions remain pending.
 - The complete inherited-plus-full-model suite passes 250 tests locally.
+- Matched HPC3 full-model jobs are active from clean source `44076d2`:
+  `55977649` is the v34 zero-entropy `asb_only`, 30,000/s, seed-42
+  regression against immutable v32; `55977650` is the zero-entropy
+  `drx_isothermal`, 1,000/s, seed-42 baseline.  Both are single jobs with
+  target strain 0.5, atomic restart, and no parameter sweep.
 
 ## Current decision: instantaneous junction-friction closure rejected
 

@@ -1424,6 +1424,40 @@
         "last_valid_checkpoint": "a6433014e3ff86425ef38dc472bc7029dadb7fbc11b2e4a99849dc3568e77840",
         "failure_log": "138427b8fb5bc41b02243351e0e16a507fb163f7454638404ed682401afb4f20"
       }
+    },
+    {
+      "run_id": "20260913T033826Z-44076d2-asb",
+      "parent_campaign_id": "asb-drx-full-v34-recovery",
+      "purpose": "full_v34_zero_entropy_matched_asb_regression",
+      "architecture": "full_2d_phase_field",
+      "git_commit_at_plan": "44076d2",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean",
+      "input_bundle_sha256": "64a430029c88099565ae03be050b4aa2841e80bbc913a29428eb9c5188586ca2",
+      "production_driver_sha256": "d12a39b06099a37e23b83182db3248ecdb88b9f3dff9bd1f25c1ab44571d94e1",
+      "configuration": {"model_branch": "asb_only", "T0_K": 1100.0, "strain_rate_s-1": 30000.0, "target_strain": 0.5, "strain_increment": 0.0001, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero"},
+      "matched_control": "immutable_v32_job_55633674",
+      "slurm": {"job_id": "55977649", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1, "memory": "4G"},
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T033826Z-44076d2-asb",
+      "retrieval_status": "running",
+      "classification": "PENDING_SUFFICIENT_PHYSICAL_HORIZON"
+    },
+    {
+      "run_id": "20260913T033826Z-44076d2-drxiso",
+      "parent_campaign_id": "asb-drx-full-v34-recovery",
+      "purpose": "full_v34_zero_entropy_drx_isothermal_baseline",
+      "architecture": "full_2d_phase_field",
+      "git_commit_at_plan": "44076d2",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean",
+      "input_bundle_sha256": "64a430029c88099565ae03be050b4aa2841e80bbc913a29428eb9c5188586ca2",
+      "production_driver_sha256": "d12a39b06099a37e23b83182db3248ecdb88b9f3dff9bd1f25c1ab44571d94e1",
+      "configuration": {"model_branch": "drx_isothermal", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "target_strain": 0.5, "strain_increment": 0.0001, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero"},
+      "matched_control": "immutable_v34_zero_event_baseline_job_55633694",
+      "slurm": {"job_id": "55977650", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1, "memory": "4G"},
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T033826Z-44076d2-drxiso",
+      "retrieval_status": "running",
+      "classification": "PENDING_SUFFICIENT_PHYSICAL_HORIZON"
     }
   ]
 }
