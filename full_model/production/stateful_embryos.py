@@ -12,6 +12,8 @@ import json
 import math
 from typing import Literal
 
+import numpy as np
+
 try:  # package import in tests; sibling import when the production driver is a script
     from .arrhenius_kinetics import ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j
 except ImportError:  # pragma: no cover - exercised by driver compile/import smoke tests
@@ -237,6 +239,46 @@ def mark_promoted(record, step, time_s):
         int(step), float(time_s), "phase_field_promotion", record.cumulative_hazard,
         record.cumulative_hazard, 0.0, 0.0)
     return replace(record, status="promoted", events=record.events + (event,))
+
+
+def circular_phase_support(record, shape, domain_lengths_m, interface_width_m):
+    """Return a periodic diffuse embryo-support field without a grain label.
+
+    Radius is the collective coordinate of this phase support, so the field is
+    deterministic restart state rather than a second independently fitted
+    growth law.
+    """
+    if len(shape) != 2 or min(shape) < 2:
+        raise ValueError("support grid must have two dimensions of size >=2")
+    if len(domain_lengths_m) != 2 or min(domain_lengths_m) <= 0.0:
+        raise ValueError("domain lengths must be positive")
+    if not math.isfinite(interface_width_m) or interface_width_m <= 0.0:
+        raise ValueError("interface width must be finite and positive")
+    nx, ny = map(int, shape)
+    lx, ly = map(float, domain_lengths_m)
+    x = np.arange(nx, dtype=float) * lx / nx
+    y = np.arange(ny, dtype=float) * ly / ny
+    dx = np.minimum(np.abs(x[:, None] - record.position_m[0]),
+                    lx - np.abs(x[:, None] - record.position_m[0]))
+    dy = np.minimum(np.abs(y[None, :] - record.position_m[1]),
+                    ly - np.abs(y[None, :] - record.position_m[1]))
+    distance = np.sqrt(dx*dx + dy*dy)
+    return 0.5 * (1.0 - np.tanh(
+        (distance - record.radius_m)/(math.sqrt(2.0)*interface_width_m)))
+
+
+def phase_support_metrics(field, dx_m, dy_m, purity_threshold):
+    support = np.asarray(field, dtype=float)
+    if support.ndim != 2 or not np.all(np.isfinite(support)):
+        raise ValueError("phase support must be a finite two-dimensional field")
+    if np.any(support < 0.0) or np.any(support > 1.0):
+        raise ValueError("phase support must lie in [0,1]")
+    if dx_m <= 0.0 or dy_m <= 0.0 or not 0.0 < purity_threshold <= 1.0:
+        raise ValueError("cell dimensions and purity threshold are invalid")
+    pure = support >= purity_threshold
+    area = float(np.count_nonzero(pure) * dx_m * dy_m)
+    purity = float(np.mean(support[pure])) if np.any(pure) else 0.0
+    return area, purity
 
 
 def evolve_embryo(record, step, time_s, proposed_dt_s, environment, parameters,

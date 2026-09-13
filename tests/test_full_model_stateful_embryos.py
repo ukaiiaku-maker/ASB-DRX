@@ -4,7 +4,8 @@ import unittest
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.stateful_embryos import (
     EmbryoEnvironment, EmbryoEvent, EmbryoParameters, EmbryoPopulation,
-    EmbryoRecord, create_embryo, evolve_embryo, mark_promoted,
+    EmbryoRecord, circular_phase_support, create_embryo, evolve_embryo,
+    mark_promoted, phase_support_metrics,
     population_from_json, population_to_json,
 )
 
@@ -99,6 +100,15 @@ class StatefulEmbryoTest(unittest.TestCase):
         evolved = evolve_embryo(record(), 11, 1e-6, 1e-7, environment(), parameters()).record
         self.assertEqual(evolved.status, "promotable")
         self.assertEqual(mark_promoted(evolved, 20, 2e-6).status, "promoted")
+
+    def test_periodic_diffuse_phase_support_is_resolved_but_not_a_label(self):
+        embryo = record(radius=2e-7)
+        support = circular_phase_support(embryo, (128, 128), (2e-6, 2e-6), 2e-8)
+        area, purity = phase_support_metrics(support, 2e-6/128, 2e-6/128, 0.8)
+        self.assertEqual(support.shape, (128, 128))
+        self.assertGreater(area, 0.0)
+        self.assertGreaterEqual(purity, 0.8)
+        self.assertLess(abs(area - math.pi*embryo.radius_m**2)/(math.pi*embryo.radius_m**2), 0.35)
 
 
 if __name__ == "__main__":
