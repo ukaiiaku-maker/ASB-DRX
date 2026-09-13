@@ -372,3 +372,19 @@ exists only at the highest screened forest coefficient. Record
 `finite_mode_region_identified=true`, while keeping mechanism, wall, DRX, ASB,
 and predictive flags false. Advance to a compact nonlinear falsification and
 a higher-order line-orientation state; do not run a broad HPC campaign.
+
+## ADR-0029: Measure nonlinear amplification horizon rather than nominal steps
+
+Status: local two-e-fold pilot passed; HPC cost replication pending,
+2026-09-12.
+
+Implement the nonlinear frozen-state system whose exact small-perturbation
+Jacobian is ADR-0028's memory symbol. Track cumulative amplification
+`G=lambda_max*t` under a frozen hold and preserve it in restart checkpoints.
+Classify every termination below eight e-folds as
+`INSUFFICIENT_PHYSICAL_AMPLIFICATION_HORIZON`.
+
+The 128-cell fast eigenvector pilot reaches two predicted e-folds in 0.019734 s
+physical time and measures 2.01850 log amplification, validating the initial
+slope. It is only a cost pilot. Submit this single case to HPC3 before the
+broadband ten-e-fold run; do not submit the 324-case matrix.

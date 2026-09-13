@@ -187,6 +187,23 @@ The memory result `output/v3_memory_dispersion.json` was regenerated against
 source `6260a4b`; SHA-256
 `273696218d058455852466df189be6fa38162a1210b9ac902674aad099957942`.
 
+## First nonlinear cost and slope pilot
+
+The nonlinear frozen-state equations now directly generate the delayed-memory
+Jacobian: spectral conservative flux divergence, positive diffusion,
+reversible junction mass action, and `m_dot=(p-m)/tau`. A separate
+eigenvector-seeded fast-case diagnostic at 128 cells reached two predicted
+e-folds (`0.019734 s`). Its measured log amplification was `2.01850`, within
+0.93% of the linear prediction. It required 21.7 local wall seconds and
+projects approximately 108 wall seconds to ten e-folds before allowing for
+nonlinear slowdown.
+
+This pilot is not a wall calculation. Its classification is
+`INSUFFICIENT_PHYSICAL_AMPLIFICATION_HORIZON`. The production frozen holds
+must use broadband physical noise, persist to `G>=10` or saturation/validity
+stop, and test drive removal. The restart checkpoint contains all population,
+junction, memory, physical-time, initial-amplitude, and history fields.
+
 Local evidence: 237 canonical tests pass. The instantaneous machine result
 `output/v3_topology_dispersion.json` records separate fixture and scientific
 fields against source `3f4712c`. Its SHA-256 is

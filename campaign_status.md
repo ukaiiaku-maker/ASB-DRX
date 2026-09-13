@@ -40,6 +40,13 @@ Updated: 2026-09-12 (America/Los_Angeles)
 - Memory dispersion result `output/v3_memory_dispersion.json` is tied to source
   `6260a4b`; SHA-256
   `273696218d058455852466df189be6fa38162a1210b9ac902674aad099957942`.
+- A nonlinear frozen-state implementation now evolves the same delayed-memory
+  equations used by the Fourier Jacobian. An eigenvector-seeded 128-cell fast
+  pilot reached exactly two predicted e-folds in `0.019734 s` of physical time;
+  measured log amplification was `2.01850`. Local wall time was `21.7 s`,
+  projecting about `108 s` to ten e-folds before nonlinear slowdown. This is an
+  initial-slope and cost verification only and is explicitly classified
+  `INSUFFICIENT_PHYSICAL_AMPLIFICATION_HORIZON`. The suite passes 239 tests.
 
 ### Preserved campaign chronology
 
