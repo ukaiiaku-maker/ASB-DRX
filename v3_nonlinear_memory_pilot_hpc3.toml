@@ -4,11 +4,7 @@ modules = ["anaconda/2025.12"]
 input_mode = "archive"
 input_paths = [
   "run_v3_nonlinear_memory_pilot_hpc3.sh",
-  "src/asb_drx/__init__.py",
-  "src/asb_drx/arrhenius_v3.py",
-  "src/asb_drx/bertin_bcc.py",
-  "src/asb_drx/vector_topology_cdd_v3.py",
-  "src/asb_drx/nonlinear_memory_cdd_v3.py",
+  "src/asb_drx",
   "tests/test_arrhenius_v3.py",
   "tests/test_vector_topology_cdd_v3.py",
   "tests/test_nonlinear_memory_cdd_v3.py",
