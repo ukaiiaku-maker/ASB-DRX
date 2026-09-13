@@ -1365,6 +1365,65 @@
         "output/nonlinear_memory_fast_pilot_checkpoint.npz": "cd500e7c530126de77556008e60c172c1779000f97f0e087ed387f77980a0855",
         "output/nonlinear_memory_pilot_tests.txt": "eff129a3e305a3bca34a0aef0d283e2688865384f3c3f59f16ae9775d1eb39a1"
       }
+    },
+    {
+      "run_id": "20260913T022148Z-bc2ecd7-nlmem12e",
+      "parent_campaign_id": "asb-drx-independent-20260827",
+      "purpose": "nonlinear_delayed_memory_fast_broadband_twelve_efold_hold",
+      "git_commit_at_plan": "bc2ecd7",
+      "branch": "exp/independent-dd-pf-drx-asb-20260827",
+      "source_status": "clean",
+      "input_bundle_sha256": "fbbff0f3e4a468657c740319a0aadef4fe1f1a6a7f5f04032e06bec576aae2cb",
+      "targeted_tests": 17,
+      "targeted_tests_passed": 17,
+      "seed_type": "physical_broadband",
+      "cumulative_efolds": 12.0,
+      "predicted_growth_s_inv": 101.34840551677486,
+      "measured_log_amplification": 12.186954735496165,
+      "classification": "AMPLIFICATION_HORIZON_REACHED_NOT_WALL_SATURATION",
+      "scientific_gate_passed": false,
+      "physical_CDD_wall_gate_passed": false,
+      "slurm": {
+        "job_id": "55976198", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G", "peak_memory_KB": 3294412,
+        "modules": ["anaconda/2025.12"]
+      },
+      "start_utc": "2026-09-13T02:22:11Z",
+      "end_utc": "2026-09-13T02:23:37Z",
+      "exit_status": "0:0", "wall_clock_seconds": 86,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-independent/20260913T022148Z-bc2ecd7-nlmem12e",
+      "local_path": "hpc3-results/asb-drx-independent/20260913T022148Z-bc2ecd7-nlmem12e",
+      "retrieval_status": "live_checkpoint_and_outputs_checksum_verified",
+      "outputs": {
+        "output/nonlinear_memory_fast_pilot.json": "3d2702814c3a8c5f866a19466651a1952cc2b3ca6b0c2a1254a130de01de1962"
+      }
+    },
+    {
+      "run_id": "20260913T022148Z-bc2ecd7-nlmem12e-resume16",
+      "parent_run_id": "20260913T022148Z-bc2ecd7-nlmem12e",
+      "purpose": "continue_fast_broadband_hold_toward_saturation",
+      "git_commit_at_plan": "bc2ecd7",
+      "scientific_result": true,
+      "slurm": {
+        "job_id": "55976255", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G", "peak_memory_KB": 369528
+      },
+      "start_utc": "2026-09-13T02:25:05Z",
+      "end_utc": "2026-09-13T02:25:24Z",
+      "exit_status": "1:0", "wall_clock_seconds": 19,
+      "last_valid_cumulative_efolds": 12.912135649650974,
+      "last_valid_measured_log_amplification": 13.71082292413417,
+      "classification": "HARD_NONNEGATIVITY_VALIDITY_STOP_AFTER_HORIZON",
+      "scientific_gate_passed": false,
+      "physical_CDD_wall_gate_passed": false,
+      "interpretation": "nonlinear_concentration_without_saturation_followed_by_nonnegativity_failure_no_clipping_applied",
+      "retrieval_status": "last_valid_checkpoint_and_failure_log_checksum_verified",
+      "outputs": {
+        "last_valid_checkpoint": "a6433014e3ff86425ef38dc472bc7029dadb7fbc11b2e4a99849dc3568e77840",
+        "failure_log": "138427b8fb5bc41b02243351e0e16a507fb163f7454638404ed682401afb4f20"
+      }
     }
   ]
 }

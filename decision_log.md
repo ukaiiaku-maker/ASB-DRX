@@ -388,3 +388,22 @@ The 128-cell fast eigenvector pilot reaches two predicted e-folds in 0.019734 s
 physical time and measures 2.01850 log amplification, validating the initial
 slope. It is only a cost pilot. Submit this single case to HPC3 before the
 broadband ten-e-fold run; do not submit the 324-case matrix.
+
+## ADR-0030: Reject finite-amplitude promotion of the aligned memory closure
+
+Status: hard validity stop after sufficient horizon, 2026-09-12.
+
+HPC3 fast-case job `55976198` reaches `G=12` from physical broadband noise and
+measures 12.187 log amplification, verifying that the linear instability does
+enter the nonlinear equations. It does not saturate. Exact-checkpoint restart
+`55976255` reaches a last valid `G=12.912`, after which the implicit solution
+would violate a mobile-population nonnegativity invariant. No clipping or
+coefficient retuning is permitted.
+
+Classify the trajectory
+`HARD_NONNEGATIVITY_VALIDITY_STOP_AFTER_HORIZON`. Do not identify the strong
+concentration or its harmonics as a dislocation wall: the aligned state has no
+qualified finite width, orientation jump, persistence result, or convergence
+evidence. Do not spend HPC resources repeating slow/intermediate cases until a
+physical saturation mechanism and higher-order line-orientation state replace
+the invalid finite-amplitude closure.

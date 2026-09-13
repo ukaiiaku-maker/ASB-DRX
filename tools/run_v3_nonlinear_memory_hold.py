@@ -141,10 +141,15 @@ def main(args: argparse.Namespace) -> None:
     start_time = state.time_s
     wall_start = time.perf_counter()
     target_time = args.target_efolds / eigenvalue.real
+    validity_stop = None
     while state.time_s < target_time - 1.0e-15:
         duration = min(args.chunk_s, target_time - state.time_s)
         before = time.perf_counter()
-        state, diagnostics = advance_frozen_memory(state, parameters, duration)
+        try:
+            state, diagnostics = advance_frozen_memory(state, parameters, duration)
+        except RuntimeError as error:
+            validity_stop = str(error)
+            break
         amplitude = modal_amplitude(state, mode, left)
         history.append({
             "time_s": state.time_s,
@@ -170,13 +175,20 @@ def main(args: argparse.Namespace) -> None:
         "predicted_wavelength_m": parameters.domain_m / mode,
         "simulated_time_s": state.time_s,
         "cumulative_efolds": achieved,
-        "measured_log_amplification": history[-1]["measured_log_amplification"],
+        "measured_log_amplification": (
+            history[-1]["measured_log_amplification"] if history else 0.0
+        ),
         "wall_seconds_this_invocation": elapsed,
         "simulated_seconds_this_invocation": state.time_s - start_time,
         "projected_wall_seconds_to_10_efolds": elapsed / max(achieved - eigenvalue.real * start_time, 1e-30) * 10.0,
         "minimum_mobile_density_m2": float(np.min(state.mobile_m2)),
+        "validity_stop": validity_stop,
         "classification": (
-            "AMPLIFICATION_HORIZON_REACHED" if achieved >= 10.0
+            "HARD_NONNEGATIVITY_VALIDITY_STOP_AFTER_HORIZON"
+            if validity_stop is not None and achieved >= 10.0
+            else "HARD_NONNEGATIVITY_VALIDITY_STOP_BEFORE_HORIZON"
+            if validity_stop is not None
+            else "AMPLIFICATION_HORIZON_REACHED" if achieved >= 10.0
             else "INSUFFICIENT_PHYSICAL_AMPLIFICATION_HORIZON"
         ),
         "scientific_gate_passed": False,

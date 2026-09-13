@@ -210,6 +210,21 @@ source package `70d91f5`: 17 targeted tests passed, measured amplification was
 Scientific local/HPC values agree within `2.11e-9` relative. Earlier job
 `55976135` failed during package import and executed no model equations.
 
+The subsequent physical-broadband fast hold, job `55976198`, reached `G=12`
+in `0.1184 s`. Its selected modal log amplification was `12.187`, confirming
+finite-amplitude growth from broadband noise. It had not saturated. A restart
+from the exact persistent checkpoint continued to a last valid `G=12.912`,
+where total-density CV was 0.562, junction CV was 1.519, and the maximum mobile
+population was 7.47 times the mean. The following implicit interval left the
+nonnegative cone; job `55976255` therefore stopped without clipping.
+
+This is a hard validity stop after an adequate amplification horizon. It is
+evidence for nonlinear concentration but not for a finite-width persistent
+wall. The fixed-alignment delayed-memory closure lacks a qualified saturation
+mechanism and cannot advance to wall refinement or coupled loading. Slow and
+intermediate repetitions are deferred because repeating a closure already
+invalid at finite amplitude would not repair that missing physics.
+
 Local evidence: 237 canonical tests pass. The instantaneous machine result
 `output/v3_topology_dispersion.json` records separate fixture and scientific
 fields against source `3f4712c`. Its SHA-256 is

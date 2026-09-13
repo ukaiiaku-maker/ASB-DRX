@@ -53,6 +53,17 @@ Updated: 2026-09-12 (America/Los_Angeles)
   solver cost to ten e-folds is 62.3 seconds. Local/HPC scientific outputs
   agree within `2.11e-9` relative. Packaging-only job `55976135` ran no
   equations and is retained as a failed provenance record.
+- Fast physical-broadband hold `20260913T022148Z-bc2ecd7-nlmem12e`, Slurm
+  `55976198`, reached `G=12` in `0.1184 s` physical time. The selected modal
+  log amplification was `12.187`, closely following the frozen prediction.
+  This establishes finite-amplitude growth from broadband noise, not a wall:
+  no saturation, persistence, orientation jump, or refinement claim is made.
+- Exact-checkpoint continuation `55976255` reached a last valid `G=12.912`.
+  Total-density CV was 0.562, junction CV 1.519, and one mobile population
+  peaked at 7.47 times its mean. The next implicit interval violated
+  nonnegativity, so the run stopped without clipping. Classification is
+  `HARD_NONNEGATIVITY_VALIDITY_STOP_AFTER_HORIZON`; physical Gate B remains
+  false and the current closure is not eligible for grid/domain wall tests.
 
 ### Preserved campaign chronology
 
