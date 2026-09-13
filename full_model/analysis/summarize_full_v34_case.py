@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""Decision-grade summary of one full-v34 output directory."""
+
+import argparse
+import csv
+import json
+import math
+from pathlib import Path
+
+import numpy as np
+
+
+def _number(value):
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return math.nan
+    return out
+
+
+def _rows(path):
+    with Path(path).open(newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def _values(rows, name):
+    return [_number(row.get(name)) for row in rows]
+
+
+def _finite_max(rows, name, default=math.nan):
+    values = [value for value in _values(rows, name) if math.isfinite(value)]
+    return max(values) if values else default
+
+
+def _finite_min(rows, name, default=math.nan):
+    values = [value for value in _values(rows, name) if math.isfinite(value)]
+    return min(values) if values else default
+
+
+def _finite_last(rows, name, default=math.nan):
+    values = [value for value in _values(rows, name) if math.isfinite(value)]
+    return values[-1] if values else default
+
+
+def _checkpoint(case_dir):
+    paths = sorted(Path(case_dir).glob("drx_v25_restart_*.npz"))
+    if not paths:
+        return None, {}
+    path = paths[-1]
+    with np.load(path, allow_pickle=True) as state:
+        result = {"path": path.name, "sha256_pending": True}
+        if "H_nuc" in state.files and "E_nuc" in state.files:
+            ratio = np.asarray(state["H_nuc"]) / np.maximum(np.asarray(state["E_nuc"]), 1e-300)
+            result["max_hazard_threshold_ratio"] = float(np.nanmax(ratio))
+            result["minimum_stochastic_threshold"] = float(np.nanmin(state["E_nuc"]))
+        for name in ("nuc_cand_active", "nuc_cand_age", "nuc_cand_best_barrier"):
+            if name in state.files:
+                array = np.asarray(state[name])
+                if name.endswith("active"):
+                    result["checkpoint_active_candidates"] = int(np.sum(array))
+                elif name.endswith("age"):
+                    result["checkpoint_max_candidate_age"] = int(np.max(array))
+        if "step" in state.files:
+            result["global_step"] = int(state["step"])
+        if "sim_time" in state.files:
+            result["physical_time_s"] = float(state["sim_time"])
+    return path, result
+
+
+def _relative(value, reference):
+    if not math.isfinite(value) or not math.isfinite(reference):
+        return math.nan
+    return abs(value - reference) / max(abs(reference), 1e-300)
+
+
+def summarize(case_dir, branch, matched_csv=None):
+    case_dir = Path(case_dir)
+    csv_path = case_dir / "drx_v25_restart_asb_diagnostics.csv"
+    rows = _rows(csv_path)
+    checkpoint_path, checkpoint = _checkpoint(case_dir)
+    stress = _values(rows, "sigma_MPa")
+    finite_stress = [value for value in stress if math.isfinite(value)]
+    peak_stress = max(finite_stress) if finite_stress else math.nan
+    final_stress = finite_stress[-1] if finite_stress else math.nan
+    softening = ((peak_stress - final_stress) / peak_stress
+                 if math.isfinite(peak_stress) and peak_stress > 0.0 else math.nan)
+
+    chain = {
+        "eligible_sites_max": int(_finite_max(rows, "nuc_candidates", 0.0)),
+        "hazard_rate_max_s-1": _finite_max(rows, "nuc_hazard_max", 0.0),
+        "cumulative_hazard_max": _finite_max(rows, "nuc_Hmax", 0.0),
+        "candidate_creations": int(sum(_values(rows, "nuc_candidate_new"))) if "nuc_candidate_new" in rows[0] else 0,
+        "active_candidates_max": int(_finite_max(rows, "nuc_candidate_active", 0.0)),
+        "promotable_candidates_max": int(_finite_max(rows, "nuc_candidate_promotable", 0.0)),
+        "allocated_hazard_births_max": int(_finite_max(rows, "grain_hazard_births", 0.0)),
+        "allocated_labels_max": int(_finite_max(rows, "n_grains", 0.0)),
+        "physical_grains": None,
+    }
+    ratio = checkpoint.get("max_hazard_threshold_ratio", math.nan)
+    if chain["eligible_sites_max"] == 0:
+        first_failure = "site_activation"
+    elif chain["hazard_rate_max_s-1"] <= 0.0:
+        first_failure = "hazard_rate"
+    elif math.isfinite(ratio) and ratio < 1.0 and chain["candidate_creations"] == 0:
+        first_failure = "hazard_integration_did_not_reach_stochastic_threshold"
+    elif chain["candidate_creations"] == 0:
+        first_failure = "candidate_creation_or_unrecorded_raw_trigger"
+    elif chain["active_candidates_max"] == 0:
+        first_failure = "candidate_persistence"
+    elif chain["promotable_candidates_max"] == 0:
+        first_failure = "promotion_eligibility"
+    elif chain["allocated_hazard_births_max"] == 0:
+        first_failure = "phase_support_or_label_allocation"
+    else:
+        first_failure = "physical_grain_recognition_not_yet_implemented"
+    chain["first_failing_stage"] = first_failure
+
+    summary = {
+        "schema": "asb-drx-full-v34-case-summary/v1",
+        "architecture": "full_2d_phase_field",
+        "branch": branch,
+        "physical_horizon": {
+            "diagnostic_rows": len(rows),
+            "final_step": int(_finite_last(rows, "step", -1)),
+            "final_strain": _finite_last(rows, "eps_pct") / 100.0,
+            "final_time_s": _finite_last(rows, "t_us") * 1e-6,
+        },
+        "stress_temperature": {
+            "peak_stress_MPa": peak_stress,
+            "final_stress_MPa": final_stress,
+            "post_peak_softening_fraction": softening,
+            "maximum_temperature_K": _finite_max(rows, "T_max"),
+            "maximum_temperature_range_K": _finite_max(rows, "asb_T_range"),
+        },
+        "localization_observables": {
+            "maximum_top5_plastic_rate_fraction": _finite_max(rows, "asb_gdot_top5_frac"),
+            "maximum_top5_plastic_power_fraction": _finite_max(rows, "asb_qdot_top5_frac"),
+            "maximum_temperature_anisotropy": _finite_max(rows, "asb_band_anisotropy_T"),
+            "minimum_hot_cold_density_ratio": _finite_min(rows, "asb_rho_hot_over_cold"),
+        },
+        "candidate_to_grain_chain": chain,
+        "checkpoint": checkpoint,
+        "asb_classification": "NOT_EVALUATED_REQUIRES_MATCHED_ISOTHERMAL_CONTROL_AND_FIELD_WIDTH_REFINEMENT",
+        "physical_grain_classification": "NOT_AVAILABLE_UNTIL_PATCH_E",
+        "claim_level": "integrated_regression",
+    }
+    if matched_csv is not None:
+        control = _rows(matched_csv)
+        control_peak = _finite_max(control, "sigma_MPa")
+        control_tmax = _finite_max(control, "T_max")
+        summary["matched_control"] = {
+            "diagnostics": str(Path(matched_csv).resolve()),
+            "peak_stress_relative_difference": _relative(peak_stress, control_peak),
+            "maximum_temperature_relative_difference": _relative(
+                summary["stress_temperature"]["maximum_temperature_K"], control_tmax),
+            "top5_plastic_rate_fraction_absolute_difference": abs(
+                summary["localization_observables"]["maximum_top5_plastic_rate_fraction"]
+                - _finite_max(control, "asb_gdot_top5_frac")),
+        }
+    return summary
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("case_dir", type=Path)
+    parser.add_argument("--branch", required=True)
+    parser.add_argument("--matched-csv", type=Path)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    result = summarize(args.case_dir, args.branch, args.matched_csv)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+
+
+if __name__ == "__main__":
+    main()
