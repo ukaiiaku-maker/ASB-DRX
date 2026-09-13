@@ -30,6 +30,13 @@ Updated: 2026-09-12 (America/Los_Angeles)
   `cbb4103631d291eae783e5bf0a303a27d6b1098205585c7c82d9ec76a3a931e0`.
   No HPC job was submitted because this inexpensive local dispersion analysis
   rejects the closure before a nonlinear campaign is scientifically allowed.
+- The immediate delayed-memory escalation adds `m_dot=(p-m)/tau` without a
+  spatial length. Its 324-case dispersion screen finds 27 positive interior
+  modes across 800--1000 K, two stresses, multiple diffusivities, and multiple
+  relaxation times, with wavelengths `0.275--1.02 micrometers`. The region
+  appears only at the largest screened forest strength, so it is a candidate
+  for nonlinear falsification rather than a supported wall mechanism. The
+  current suite passes 237 tests; no grain/phase allocation is enabled.
 
 ### Preserved campaign chronology
 

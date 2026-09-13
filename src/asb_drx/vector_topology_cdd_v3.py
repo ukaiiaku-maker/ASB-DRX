@@ -337,6 +337,58 @@ def reaction_transport_symbol_s_inv(
     return operator
 
 
+def reaction_transport_memory_symbol_s_inv(
+    wavevector_m_inv: np.ndarray,
+    base_mobile_m2: np.ndarray,
+    base_junction_m2: np.ndarray,
+    network: VectorTopologyNetwork,
+    temperature_K: float,
+    line_tangent_2d: np.ndarray,
+    mobile_velocity_m_s: np.ndarray,
+    memory_velocity_derivative_m3_s: np.ndarray,
+    mobile_diffusivity_m2_s: np.ndarray,
+    memory_relaxation_s: np.ndarray,
+) -> np.ndarray:
+    """Reaction--transport symbol with a finite-lived junction memory.
+
+    One additional state ``m_r`` per reaction obeys
+    ``m_dot=(p_r-m_r)/tau_r``. Forest friction responds to ``m`` rather than
+    instantaneously to junction density. The added time is kinetic memory, not
+    a spatial length or fitted wavelength.
+    """
+
+    relaxation = np.asarray(memory_relaxation_s, dtype=float)
+    reactions = len(network.reactions)
+    if relaxation.shape != (reactions,) or np.any(~np.isfinite(relaxation)):
+        raise ValueError("memory relaxation must have one finite value per reaction")
+    if np.any(relaxation <= 0.0):
+        raise ValueError("memory relaxation times must be positive")
+    derivative = np.asarray(memory_velocity_derivative_m3_s, dtype=float)
+    if derivative.shape != (8, reactions):
+        raise ValueError("memory velocity derivative must have shape (8,reactions)")
+    base = reaction_transport_symbol_s_inv(
+        wavevector_m_inv, base_mobile_m2, base_junction_m2, network,
+        temperature_K, line_tangent_2d, mobile_velocity_m_s,
+        np.zeros_like(derivative), mobile_diffusivity_m2_s,
+    )
+    physical_species = 8 + reactions
+    operator = np.zeros((physical_species + reactions,) * 2, dtype=complex)
+    operator[:physical_species, :physical_species] = base
+    k_parallel = float(
+        np.asarray(wavevector_m_inv, dtype=float)
+        @ np.asarray(line_tangent_2d, dtype=float)
+    )
+    operator[:8, physical_species:] = (
+        -1j * k_parallel
+        * np.asarray(base_mobile_m2, dtype=float)[:, None] * derivative
+    )
+    for reaction in range(reactions):
+        memory = physical_species + reaction
+        operator[memory, 8 + reaction] = 1.0 / relaxation[reaction]
+        operator[memory, memory] = -1.0 / relaxation[reaction]
+    return operator
+
+
 VECTOR_TOPOLOGY_PARAMETER_CLASSIFICATION = {
     "BCC_Burgers_families": "immutable_framework",
     "reaction_incidence": "declared_topology_hypothesis",
@@ -345,4 +397,5 @@ VECTOR_TOPOLOGY_PARAMETER_CLASSIFICATION = {
     "forest_coefficients_Pa_m2": "physical_closure_hypothesis",
     "diffusivity_m2_s": "physical_literature_bound",
     "collective_DD_memory": "disabled_ablation_only",
+    "junction_memory_relaxation_s": "physical_closure_hypothesis",
 }

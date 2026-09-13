@@ -159,7 +159,31 @@ least a second line-orientation moment. No nonlinear wall simulation and no
 HPC submission are justified from this closure. Wall, DRX, ASB, integrated
 mechanism, and predictive-validation flags remain false.
 
-Local evidence: 236 canonical tests pass; machine result
+## Delayed-memory escalation
+
+The next linear operator adds one memory state per junction,
+
+\[
+\dot m_r=(p_r-m_r)/\tau_r,
+\]
+
+and makes the same physical forest resistance respond to `m_r`. No spatial
+length is introduced. A 324-case screen spans three temperatures, three
+stresses, three positive forest strengths, three positive diffusivities, and
+four memory times. Twenty-seven cases have a positive interior continuum mode,
+with wavelengths from `2.75e-7` to `1.02e-6 m` and growth rates from about
+`4` to `101 s^-1`. They span all three temperatures, two stresses, multiple
+diffusivities, and multiple relaxation times, but occur only at the largest
+screened forest coefficient, `1e-6 Pa m2`.
+
+This identifies a bounded finite-mode region; it does not yet establish a
+robust mechanism. The forest-strength threshold and the fixed-alignment
+restriction are now the main vulnerabilities. The justified next action is a
+compact nonlinear falsification with common physical noise, grid/domain
+refinement, and full balance checks, alongside replacement of the shared
+tangent by a second line-orientation moment.
+
+Local evidence: 237 canonical tests pass; machine result
 `output/v3_topology_dispersion.json` records separate fixture and scientific
 fields against source `3f4712c`. Its SHA-256 is
 `cbb4103631d291eae783e5bf0a303a27d6b1098205585c7c82d9ec76a3a931e0`.

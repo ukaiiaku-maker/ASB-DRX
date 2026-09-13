@@ -354,3 +354,21 @@ not an intrinsic continuum wall spacing. Reject the instantaneous aligned
 closure, do not run it nonlinearly or on HPC3, and advance to delayed junction
 memory plus a higher-order line-orientation state. All wall/DRX/ASB and
 predictive flags remain false.
+
+## ADR-0028: Advance delayed junction memory to nonlinear falsification
+
+Status: finite-mode region identified locally, 2026-09-12.
+
+Add one kinetic memory state per junction, `m_dot=(p-m)/tau`, and let the
+already declared junction forest resistance respond to memory instead of the
+instantaneous product density. This adds a timescale but no wavelength. The
+complete reaction--transport--memory symbol preserves the zero-mode Frank
+invariant.
+
+A 324-case bounded screen produces 27 positive interior continuum modes with
+wavelengths from 0.275 to 1.02 micrometers over three temperatures, two load
+levels, multiple diffusivities, and multiple relaxation times. The region
+exists only at the highest screened forest coefficient. Record
+`finite_mode_region_identified=true`, while keeping mechanism, wall, DRX, ASB,
+and predictive flags false. Advance to a compact nonlinear falsification and
+a higher-order line-orientation state; do not run a broad HPC campaign.

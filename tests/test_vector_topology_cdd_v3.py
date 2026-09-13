@@ -18,6 +18,7 @@ from asb_drx.vector_topology_cdd_v3 import (
     arrhenius_forest_linearization,
     reaction_rates_m2_s,
     reaction_transport_symbol_s_inv,
+    reaction_transport_memory_symbol_s_inv,
 )
 
 
@@ -141,6 +142,22 @@ class VectorTopologyCDDV3Tests(unittest.TestCase):
             )
             maximum = max(maximum, float(np.max(np.linalg.eigvals(operator).real)))
         self.assertLess(maximum, 0.0)
+
+    def test_memory_symbol_preserves_zero_mode_burgers_and_has_finite_decay(self) -> None:
+        base_mobile = self.state.mobile_m2[:, 0, 0]
+        base_junction = self.state.junction_m2[:, 0, 0]
+        operator = reaction_transport_memory_symbol_s_inv(
+            np.zeros(2), base_mobile, base_junction, self.network,
+            self.temperature, self.state.line_tangent_2d,
+            np.zeros(8), np.zeros((8, 2)), np.full(8, 1.0e-12),
+            np.asarray([1.0e-3, 2.0e-3]),
+        )
+        burgers = np.zeros((3, 12))
+        burgers[:, :10] = self.network.species_burgers_vectors_m.T
+        np.testing.assert_allclose(burgers @ operator, 0.0, atol=2.0e-14)
+        eigenvalues = np.linalg.eigvals(operator)
+        self.assertLessEqual(float(np.max(eigenvalues.real)), 2.0e-9)
+        self.assertTrue(np.any(np.isclose(eigenvalues.real, -500.0)))
 
 
 if __name__ == "__main__":
