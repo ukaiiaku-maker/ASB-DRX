@@ -1,10 +1,10 @@
 ucinetid = "sdillon1"
 email = "sdillon1@uci.edu"
-project = "asb-drx-independent"
+project = "asb-drx-full-v34-recovery"
 login_host = "uci-hpc3"
 transfer_host = "uci-hpc3-transfer"
 key_path = "~/.ssh/sdillon1-to-hpc3"
-remote_root = "/pub/sdillon1/codex-runs/asb-drx-independent"
+remote_root = "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery"
 results_root = "hpc3-results"
 poll_interval = 120
 default_account = "SDILLON1"
