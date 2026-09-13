@@ -98,6 +98,21 @@
       "grain_labels_before_after": [3, 3],
       "fixture_passed": true,
       "scientific_gate_passed": false
+    },
+    "atomic_physical_drx_local": {
+      "classification": "PHYSICAL_DRX_GRAIN_LOCAL_LIFECYCLE_REPLAY",
+      "architecture": "full_v34_two_dimensional_phase_field",
+      "base_commit": "deb31ab94e892bc8f8707f4b5fd22fffd40944e2_plus_documented_worktree_patch",
+      "result_path": "full_model/verification/full_v34_atomic_physical_drx_local.json",
+      "result_sha256": "38815242aec6a69df5afa04e5bef714187dd65e8dd804fe7ad8f32b78aabed31",
+      "promotion_step": 6889,
+      "physical_recognition_step": 7008,
+      "energy_closure_J": 0.0,
+      "line_closure_m_abs": 1.3552527156068805e-20,
+      "signed_burgers_density_change_m-2": 0.0,
+      "authoritative_fields_bitwise_exact": 124,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
     }
   },
   "runs": [
@@ -1687,6 +1702,67 @@
         "status_json": "5fddf94074bd9dad83798935fd235b2c3223d35acc7ff74698a328f78424281c"
       },
       "follow_up": "offline patch-weight omission corrected; rerun one corrected central density before any ensemble"
+    },
+    {
+      "run_id": "20260913T182244Z-deb31ab-d62d3c",
+      "parent_campaign_id": "asb-drx-full-v34-recovery",
+      "purpose": "v6_corrected_central_exposure_stateful_lifecycle_run",
+      "architecture": "full_2d_phase_field_v34_recovery",
+      "git_commit_at_plan": "deb31ab94e892bc8f8707f4b5fd22fffd40944e2",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean_and_pushed",
+      "input_bundle_sha256": "6c45f78334794f409596bca7f5cd925236885377a6c279de4078e9ef5d07dd69",
+      "runner_archive_sha256": "4a8ad02d1a059b88fef9985177987fbc7748036e1a29e660e1e2750e74b1b4d6",
+      "configuration": {
+        "model_branch": "drx_isothermal", "T0_K": 1100.0,
+        "strain_rate_s-1": 1000.0, "steps": 6000,
+        "microstructure_seed": 42, "nucleation_seed": 271870,
+        "creation_route": "Route_B_precursor", "H0_eV": 1.2,
+        "attempt_frequency_s-1": 1000000.0, "activation_entropy_kB": 0.0,
+        "site_density_m-2": 2056129055805.289,
+        "hazard_measure": "area_integrated", "atomic_promotion": true
+      },
+      "slurm": {
+        "job_id": "55993372", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G"
+      },
+      "start_utc": "2026-09-13T18:22:56Z",
+      "end_utc": "2026-09-13T18:51:59Z",
+      "exit_status": "0:0", "wall_clock_seconds": 1743,
+      "cpu_seconds": 1643, "peak_memory_MB": 340.51,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T182244Z-deb31ab-d62d3c",
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T182244Z-deb31ab-d62d3c",
+      "retrieval_status": "verified_runner_archive_and_80_model_outputs",
+      "classification": "TRIGGERED_NO_PERSISTENT_EMBRYO",
+      "claim_level": "scientific_run_lifecycle_failure",
+      "physical_horizon": {
+        "final_step": 5999, "final_strain": 0.5367961465191489,
+        "final_time_s": 0.000536696146519176
+      },
+      "hazard": {
+        "total_exposure": 1.000000000000001,
+        "probability_at_least_one": 0.6321205588285581,
+        "raw_triggers": 1, "viable_triggers": 1,
+        "discarded_exposure": 0.0, "threshold_redraws_after_event": 1,
+        "threshold_redraws_other": 0
+      },
+      "lifecycle": {
+        "birth_step": 5100, "birth_strain": 0.44689614651915877,
+        "birth_time_s": 0.00044679614651920016,
+        "embryos": 1, "retired_embryos": 1,
+        "promotion_attempts": 0, "promotion_commits": 0,
+        "promotion_rollbacks": 0, "physical_drx_grains": 0,
+        "recrystallized_area_fraction": 0.0
+      },
+      "outputs": {
+        "diagnostics_csv": "d70a57b24f4473a5d6cc41b409745ac5c68f43977f01f848ff78af70e9f442a3",
+        "final_checkpoint": "2b371f7d4f909594e436e6358de40566b19ec68595ad2c9a3bb73972c1c26d52",
+        "output_inventory": "eae6b714de5149827b08b817e6419e1b2e5bfdcd4e1216bd3e0e7c6fd41a5df1",
+        "result_summary": "8648c84165378bf5dc6c0daa16415a46320ff0af0d2ac0e55ac91a6c68f18c52",
+        "status_json": "05b85cf083cb31ad39020c803231a54d39438833d9c74a6c67a2aacac5bf3ce2"
+      },
+      "follow_up": "absolute parent compatibility was incorrectly charged to unresolved precursor growth; diagnose and repair growth, atomic transfer, and phase maturation before another HPC3 job"
     }
   ]
 }

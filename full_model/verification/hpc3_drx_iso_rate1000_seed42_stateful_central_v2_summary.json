@@ -1,0 +1,91 @@
+{
+  "architecture": "full_2d_phase_field",
+  "asb_classification": "NOT_EVALUATED_REQUIRES_MATCHED_ISOTHERMAL_CONTROL_AND_FIELD_WIDTH_REFINEMENT",
+  "branch": "drx_isothermal",
+  "candidate_to_grain_chain": {
+    "active_candidates_max": 1,
+    "allocated_hazard_births_max": 0,
+    "allocated_labels_max": 12,
+    "candidate_creations": 1,
+    "cumulative_hazard_max": 0.016839912683073707,
+    "eligible_sites_max": 352,
+    "first_failing_stage": "promotion_eligibility",
+    "hazard_rate_max_s-1": 9692.671468488516,
+    "physical_grains": 0,
+    "promotable_candidates_max": 0,
+    "raw_stochastic_attempts": 1,
+    "raw_stochastic_attempts_provenance": "explicit_cumulative_counter"
+  },
+  "checkpoint": {
+    "area_hazard_completed_events": 1,
+    "area_hazard_expected_raw_trigger_count": 1.000000000000001,
+    "area_hazard_next_threshold": 0.48828779305281245,
+    "area_hazard_residual_exposure": 0.25895505386356243,
+    "area_hazard_total_exposure": 1.000000000000001,
+    "atomic_promotion_attempt_total": 0,
+    "atomic_promotion_commit_total": 0,
+    "atomic_promotion_rollback_total": 0,
+    "checkpoint_active_candidates": 0,
+    "checkpoint_max_candidate_age": 0,
+    "global_step": 5999,
+    "max_hazard_threshold_ratio": 12.459153706145699,
+    "minimum_stochastic_threshold": 4.737165222420396e-05,
+    "path": "drx_v25_restart_005999.npz",
+    "physical_time_s": 0.000536796146519176,
+    "sha256": "2b371f7d4f909594e436e6358de40566b19ec68595ad2c9a3bb73972c1c26d52"
+  },
+  "claim_level": "integrated_regression",
+  "embryo_and_atomic_promotion": {
+    "active_embryos": 0,
+    "attempts": 0,
+    "commits": 0,
+    "embryo_records": 1,
+    "energy_closure_J": 0.0,
+    "heat_released_J": 0.0,
+    "line_closure_m": 0.0,
+    "physical_drx_grains": 0,
+    "promotable_embryos": 0,
+    "raw_triggers": 1,
+    "recrystallized_area_fraction": 0.0,
+    "rejected_not_viable": 0,
+    "retired_embryos": 1,
+    "rollbacks": 0,
+    "signed_burgers_change_m2": 0.0,
+    "viable_triggers": 1
+  },
+  "hazard_exposure": {
+    "deferred_event_present": false,
+    "discarded": 0.0,
+    "expected_raw_trigger_count": 1.000000000000001,
+    "newly_initialized": 0.0,
+    "probability_at_least_one_raw_trigger": 0.6321205588285581,
+    "site_max": 0.016839912683073707,
+    "site_mean": 6.103515625000004e-05,
+    "site_quantiles": "(0.0, 0.0, 0.0, 0.0, 1.1158777643403167e-07, 0.001493871789235574, 0.016839912683073707)",
+    "threshold_redraws_after_event": 1,
+    "threshold_redraws_other": 0,
+    "total": 1.000000000000001,
+    "transferred": 0.0
+  },
+  "localization_observables": {
+    "maximum_temperature_anisotropy": 0.9810307766546625,
+    "maximum_top5_plastic_power_fraction": 0.25829017791474246,
+    "maximum_top5_plastic_rate_fraction": 0.323712166162586,
+    "minimum_hot_cold_density_ratio": 0.0017514876049787367
+  },
+  "physical_grain_classification": "TRIGGERED_NO_PERSISTENT_EMBRYO",
+  "physical_horizon": {
+    "diagnostic_rows": 241,
+    "final_step": 5999,
+    "final_strain": 0.5367961465191489,
+    "final_time_s": 0.000536696146519176
+  },
+  "schema": "asb-drx-full-v34-case-summary/v1",
+  "stress_temperature": {
+    "final_stress_MPa": 439.84882810863974,
+    "maximum_temperature_K": 1125.5380004513297,
+    "maximum_temperature_range_K": 10.940806613015866,
+    "peak_stress_MPa": 909.3489282664464,
+    "post_peak_softening_fraction": 0.516303572329322
+  }
+}

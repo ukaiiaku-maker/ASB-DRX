@@ -66,10 +66,57 @@ class AtomicPromotionResult:
     ledger: AtomicPromotionLedger
 
 
+def recrystallized_child_stored_energy_derivative(
+        eta_child, parent_stored_energy_J_m3,
+        line_energy_coefficient_J_m, target_density_m2):
+    """Return dF/deta [J/m3] for a low-energy DRX child in its parent.
+
+    With h(eta)=eta^2(3-2 eta), h'=6 eta(1-eta), and the child
+    carrying the declared recrystallized density, the phase derivative is
+    -h'(eta) max(E_parent-E_child, 0).
+    """
+    eta_value = np.asarray(eta_child, dtype=float)
+    parent_energy = np.asarray(parent_stored_energy_J_m3, dtype=float)
+    coefficient = np.asarray(line_energy_coefficient_J_m, dtype=float)
+    if (not np.all(np.isfinite(eta_value)) or np.any(eta_value < 0.0)
+            or np.any(eta_value > 1.0)):
+        raise ValueError("child phase support must be finite and bounded")
+    if (not np.all(np.isfinite(parent_energy)) or np.any(parent_energy < 0.0)
+            or not np.all(np.isfinite(coefficient)) or np.any(coefficient < 0.0)
+            or not math.isfinite(target_density_m2) or target_density_m2 < 0.0):
+        raise ValueError("stored-energy driving inputs must be finite and nonnegative")
+    relief = np.maximum(
+        parent_energy-coefficient*float(target_density_m2), 0.0)
+    return -6.0*eta_value*(1.0-eta_value)*relief
+
+
+class PromotionEnergyIncreaseError(ValueError):
+    """Rejected atomic trial carrying the complete free-energy diagnostic."""
+
+    def __init__(self, delta, free_energy_change_J, tolerance_J,
+                 diagnostic_delta=None):
+        self.delta = {str(key): float(value) for key, value in delta.items()}
+        self.diagnostic_delta = {
+            str(key): float(value)
+            for key, value in (diagnostic_delta or {}).items()}
+        self.free_energy_change_J = float(free_energy_change_J)
+        self.tolerance_J = float(tolerance_J)
+        terms = ", ".join(
+            f"{key}={self.delta[key]:.17g} J" for key in sorted(self.delta))
+        super().__init__(
+            "atomic promotion would increase total free energy: "
+            f"{terms}, total={self.free_energy_change_J:.17g} J, "
+            f"tolerance={self.tolerance_J:.17g} J"
+            + (", diagnostic_delta=" + ", ".join(
+                f"{key}={self.diagnostic_delta[key]:.17g} J"
+                for key in sorted(self.diagnostic_delta))
+               if self.diagnostic_delta else ""))
+
+
 def conservative_neutral_density_relief(
         rp, rm, rho_forest, rho_wall, rho_gb, core_mask, shell_mask, *,
         target_core_density_m2, cell_area_m2, represented_thickness_m,
-        maximum_density_m2):
+        maximum_density_m2, target_shell_density_m2=None):
     """Return relieved copies plus an exact line/Burgers-content ledger.
 
     ``rp`` and ``rm`` have shape ``(nx, ny, nslip)`` and units m^-2. Forest
@@ -122,25 +169,61 @@ def conservative_neutral_density_relief(
 
     old_bulk = np.sum(rp0 + rm0, axis=2) + np.sum(forest0, axis=2) + wall0
     new_bulk = np.sum(rp1 + rm1, axis=2) + np.sum(forest1, axis=2) + wall1
-    removed_density_integral = float(np.sum((old_bulk - new_bulk)[core]))
+    removed_density_integral = float(np.sum(
+        (old_bulk - new_bulk)[core], dtype=np.longdouble))
     if removed_density_integral < -1e-8:
         raise RuntimeError("promotion relief attempted to create core line content")
-    add_density = removed_density_integral / float(np.count_nonzero(shell))
-    if np.any(gb1[shell] + add_density > maximum_density_m2):
-        raise ValueError("insufficient boundary-shell capacity for conservative promotion")
-    gb1[shell] += add_density
+    pair_removed_density_integral = float(np.sum(
+        (np.sum(rp0+rm0, axis=2)-np.sum(rp1+rm1, axis=2))[core],
+        dtype=np.longdouble))
+    if target_shell_density_m2 is None:
+        # Strict no-loss route retained as the conservative transfer fixture.
+        add_density = removed_density_integral / float(np.count_nonzero(shell))
+        if np.any(gb1[shell] + add_density > maximum_density_m2):
+            raise ValueError("insufficient boundary-shell capacity for conservative promotion")
+        gb1[shell] += add_density
+    else:
+        target_shell = np.asarray(target_shell_density_m2, dtype=float)
+        if target_shell.shape != gb0.shape or not np.all(np.isfinite(target_shell)) \
+                or np.any(target_shell < 0.0):
+            raise ValueError("target shell density must be finite, nonnegative, and grid matched")
+        if np.any(target_shell[shell] > maximum_density_m2):
+            raise ValueError("required boundary-shell density exceeds constitutive capacity")
+        deficit = np.zeros_like(gb0)
+        deficit[shell] = np.maximum(target_shell[shell]-gb0[shell], 0.0)
+        needed = float(np.sum(deficit[shell], dtype=np.longdouble))
+        if needed > 0.0:
+            fraction = min(removed_density_integral/needed, 1.0)
+            gb1[shell] += fraction*deficit[shell]
 
     volume_factor = cell_area_m2*represented_thickness_m
-    line_before = float((np.sum(old_bulk) + np.sum(gb0))*volume_factor)
-    line_after = float((np.sum(new_bulk) + np.sum(gb1))*volume_factor)
-    transferred = removed_density_integral*volume_factor
-    closure = line_after - line_before
+    line_before = float((np.sum(old_bulk, dtype=np.longdouble)
+                         + np.sum(gb0, dtype=np.longdouble))*volume_factor)
+    line_after = float((np.sum(new_bulk, dtype=np.longdouble)
+                        + np.sum(gb1, dtype=np.longdouble))*volume_factor)
+    shell_added_density_integral = float(np.sum(
+        (gb1-gb0)[shell], dtype=np.longdouble))
+    transferred = shell_added_density_integral*volume_factor
+    remaining_density_integral = max(
+        removed_density_integral-shell_added_density_integral, 0.0)
+    pair_fraction = (pair_removed_density_integral/removed_density_integral
+                     if removed_density_integral > 0.0 else 0.0)
+    pair_annihilation = remaining_density_integral*pair_fraction*volume_factor
+    declared_sink = (remaining_density_integral*volume_factor
+                     - pair_annihilation)
+    # Close the event balance from the directly changed core and shell content.
+    # Subtracting two O(domain-total) line lengths loses the much smaller event
+    # increment to cancellation on realistic grids and can falsely reject an
+    # otherwise conservative transfer.
+    closure = (transferred + pair_annihilation + declared_sink
+               - removed_density_integral*volume_factor)
     signed_change = float(np.max(np.abs((rp1-rm1) - signed0)))
-    tolerance = 512.0*math.ulp(max(abs(line_before), abs(line_after), 1e-300))
+    tolerance = 512.0*math.ulp(max(abs(transferred), 1e-300))
     if abs(closure) > tolerance or signed_change != 0.0:
         raise RuntimeError("promotion transfer failed line/Burgers-content closure")
     return rp1, rm1, forest1, wall1, gb1, PromotionTransferLedger(
-        line_before, line_after, transferred, transferred, 0.0, 0.0,
+        line_before, line_after, removed_density_integral*volume_factor,
+        transferred, pair_annihilation, declared_sink,
         closure, signed_change)
 
 
@@ -148,7 +231,8 @@ def atomic_phase_promotion(
         eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_gb, *,
         embryos, embryo_id, tracker, phase_support, purity_threshold,
         target_core_density_m2, cell_area_m2, maximum_density_m2,
-        represented_thickness_m,
+        represented_thickness_m, boundary_density_target_m2=None,
+        minimum_core_area_m2=0.0,
         step, time_s, energy_evaluator: Callable):
     """Construct and validate one all-or-nothing embryo-to-phase transaction.
 
@@ -177,6 +261,10 @@ def atomic_phase_promotion(
     shell = (support > 1.0-purity_threshold) & (~core)
     if not np.any(core) or not np.any(shell):
         raise ValueError("embryo lacks resolved core or interface shell")
+    if (not math.isfinite(minimum_core_area_m2) or minimum_core_area_m2 < 0.0):
+        raise ValueError("minimum core area must be finite and nonnegative")
+    if np.count_nonzero(core)*cell_area_m2 < minimum_core_area_m2:
+        raise ValueError("embryo pure core is below the declared resolved area")
     if embryo.history and embryo.history[-1].radial_velocity_m_s <= 0.0:
         raise ValueError("embryo is not positively growing")
 
@@ -206,17 +294,24 @@ def atomic_phase_promotion(
         target_core_density_m2=target_core_density_m2,
         cell_area_m2=cell_area_m2,
         represented_thickness_m=represented_thickness_m,
-        maximum_density_m2=maximum_density_m2)
+        maximum_density_m2=maximum_density_m2,
+        target_shell_density_m2=boundary_density_target_m2)
     trial = dict(eta=eta1, psi_gv=psi1, Ng=Ng+1, rp=rp1, rm=rm1,
                  rho_forest=forest1, rho_wall=wall1, rho_gb=gb1)
     new_energy = energy_evaluator(**trial)
     if any(key not in new_energy or not math.isfinite(float(new_energy[key])) for key in required):
         raise ValueError("trial energy evaluator omitted a finite required term")
     delta = {key: float(new_energy[key])-float(old_energy[key]) for key in required}
+    diagnostic_delta = {
+        key: float(new_energy[key])-float(old_energy[key])
+        for key in sorted(set(old_energy) & set(new_energy) - set(required))
+        if math.isfinite(float(old_energy[key])) and math.isfinite(float(new_energy[key]))
+    }
     free_change = sum(delta.values())
     tolerance = 512.0*math.ulp(max(*(abs(float(old_energy[k])) for k in required), 1e-300))
     if free_change > tolerance:
-        raise ValueError("atomic promotion would increase total free energy")
+        raise PromotionEnergyIncreaseError(
+            delta, free_change, tolerance, diagnostic_delta)
     heat = max(-free_change, 0.0)
     closure = -(sum(delta.values()) + heat)
     if abs(closure) > tolerance:

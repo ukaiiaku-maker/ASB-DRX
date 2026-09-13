@@ -63,6 +63,7 @@ EMBRYO_CREATION_CRITICAL_DRIVE_PA="${EMBRYO_CREATION_CRITICAL_DRIVE_PA:-2.0e8}"
 HAZARD_MEASURE_MODE="${HAZARD_MEASURE_MODE:-legacy_cell_thresholds}"
 NUC_SITE_DENSITY_M2="${NUC_SITE_DENSITY_M2:-3.52e12}"
 USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR="${USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR:-true}"
+EMBRYO_GROWTH_MOBILITY_PREFACTOR_M4_J_S="${EMBRYO_GROWTH_MOBILITY_PREFACTOR_M4_J_S:-1.0e-18}"
 
 # Keep topology relabel off by default; physical grain births are candidate-promoted hazard events.
 USE_COMPONENT_RELABEL="${USE_COMPONENT_RELABEL:-false}"
@@ -189,6 +190,7 @@ params=dict(
     hazard_measure_mode='$HAZARD_MEASURE_MODE',
     nuc_site_density_m2=float('$NUC_SITE_DENSITY_M2'),
     use_plastic_activity_hazard_prefactor=b('$USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR'),
+    embryo_growth_mobility_prefactor_m4_J_s=float('$EMBRYO_GROWTH_MOBILITY_PREFACTOR_M4_J_S'),
     use_component_relabel=b('$USE_COMPONENT_RELABEL'), component_relabel_interval=100,
     component_relabel_min_px=64, component_relabel_max_splits_per_step=int(float('$COMPONENT_RELABEL_MAX_SPLITS')),
     component_relabel_require_pure=True, track_grain_provenance=True,

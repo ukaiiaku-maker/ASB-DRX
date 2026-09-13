@@ -68,7 +68,9 @@ from hazard_measure import (
     AreaHazardState, advance_area_hazard, exposure_statistics,
     initialize_area_hazard,
 )
-from phase_promotion import atomic_phase_promotion
+from phase_promotion import (
+    atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
+)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -2737,7 +2739,7 @@ def _advance_stateful_embryos(step, time_s, rho, kappa_tot, rho_GB, gb_mask,
     gp = grad_mag(psi_lat)
     ra = np.abs(kappa_tot) - P['c_alpha']*gp/P['b']
     rg = rho_GB - P['c_GB']*gp/P['b']
-    compatibility = 0.5*(P['A_alpha']*ra**2 + P['A_GB']*rg**2)
+    parent_compatibility = 0.5*(P['A_alpha']*ra**2 + P['A_GB']*rg**2)
     wall_fraction = np.clip(
         np.maximum(globals().get('rho_wall', np.zeros_like(rho)), 0.0)
         / np.maximum(rho, P['rho_min']), 0.0, 1.0)
@@ -2745,7 +2747,13 @@ def _advance_stateful_embryos(step, time_s, rho, kappa_tot, rho_GB, gb_mask,
     fields = FullFieldEnvironment(
         temperature_K=np.maximum(T_field, 1.0), stored_relief_J_m3=stored_relief,
         orientation_penalty_J_m3=np.zeros_like(rho),
-        compatibility_penalty_J_m3=np.maximum(compatibility, 0.0),
+        # This is the parent's already-stored compatibility energy, not an
+        # energy increment created by an unresolved precursor.  Charging its
+        # absolute value to the child gives the wrong sign and an unphysical
+        # O(1e4 m/s) collapse.  Before phase allocation we conservatively grant
+        # neither compatibility relief nor a compatibility charge; the atomic
+        # promotion transaction evaluates the actual parent-to-child change.
+        compatibility_penalty_J_m3=np.zeros_like(parent_compatibility),
         gb_contact=np.clip(gb_mask, 0.0, 1.0), wall_contact=wall_fraction,
         gnd_contact=gnd_fraction)
     interface_width = max(np.sqrt(max(P['kappa_eta'], 0.0)/max(P['W_eta'], 1e-300)), dx)
@@ -2864,8 +2872,19 @@ def _load_restart_state(path, eta, psi_gv, Ng, lab, psi_plastic, rp, rm, rho, T,
         rm_load = np.asarray(z['rm'], dtype=float)
         if rp_load.shape[2] != nSlip:
             raise ValueError(f"restart nSlip={rp_load.shape[2]} but current nSlip={nSlip}")
-        rp = np.clip(rp_load, P['rho_min'], P['rho_max'])
-        rm = np.clip(rm_load, P['rho_min'], P['rho_max'])
+        if exact:
+            if (not np.all(np.isfinite(rp_load)) or not np.all(np.isfinite(rm_load))
+                    or np.any(rp_load < 0.0) or np.any(rm_load < 0.0)
+                    or np.any(rp_load > P['rho_max']) or np.any(rm_load > P['rho_max'])):
+                raise ValueError("exact restart has invalid signed mobile populations")
+            # Zero is a valid population after conservative promotion.  A
+            # rho_min clip here changes signed Burgers content and breaks exact
+            # continuation across the atomic event.
+            rp = rp_load.copy()
+            rm = rm_load.copy()
+        else:
+            rp = np.clip(rp_load, P['rho_min'], P['rho_max'])
+            rm = np.clip(rm_load, P['rho_min'], P['rho_max'])
         rho = np.maximum(np.sum(rp+rm, axis=2), P['rho_min'])
     elif 'rho' in files:
         rho = np.clip(np.asarray(z['rho'], dtype=float), P['rho_min'], P['rho_max'])
@@ -3199,12 +3218,18 @@ _physical_grain_metrics = GrainMetrics(
 atomic_promotion_attempt_total = 0
 atomic_promotion_commit_total = 0
 atomic_promotion_rollback_total = 0
+atomic_promotion_event_records = []
 _last_promotion_diag = dict(attempted=0, committed=0, rollback_reason='')
 if _restart_loaded and not P.get('restart_reset_clock', True):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
         atomic_promotion_attempt_total = int(_restart_npz['atomic_promotion_attempt_total']) if 'atomic_promotion_attempt_total' in _restart_npz.files else 0
         atomic_promotion_commit_total = int(_restart_npz['atomic_promotion_commit_total']) if 'atomic_promotion_commit_total' in _restart_npz.files else 0
         atomic_promotion_rollback_total = int(_restart_npz['atomic_promotion_rollback_total']) if 'atomic_promotion_rollback_total' in _restart_npz.files else 0
+        if 'atomic_promotion_events_json' in _restart_npz.files:
+            atomic_promotion_event_records = json.loads(
+                str(_restart_npz['atomic_promotion_events_json'].item()))
+        elif atomic_promotion_commit_total:
+            raise ValueError('exact promoted-state restart requires atomic promotion event ledger')
 
 # v27 dislocation-state partition.  Existing rp/rm are interpreted as the
 # glissile/mobile signed population.  If no v27 restart fields are present, split
@@ -4740,8 +4765,8 @@ def _energy_audit(r_f, rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng):
 
 
 def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
-                                rho_wall, rho_gb):
-    """Atomic-event free-energy terms [J per unit out-of-plane depth]."""
+                                rho_wall, rho_gb, temperature_K):
+    """Atomic-event free-energy terms [J] for the represented 3-D patch."""
     rho_trial = _rho_total_state(rp, rm, rho_forest, rho_wall)
     lab_trial = np.argmax(eta[:, :, :Ng], axis=2)
     psi_trial = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
@@ -4750,32 +4775,76 @@ def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
     audit = _energy_audit(
         rho_trial/max(_rho_ch_scale(), P['rho_min']), rho_trial, eta,
         psi_trial, kappa_trial, rho_gb, gb_trial, Ng)
+    # A_alpha/A_GB are stiff quadratic constraint penalties used by the PF
+    # evolution.  Their absolute scale is numerical (the established parent
+    # state carries O(1e12 J/m) in that diagnostic) and is not releasable heat.
+    # For an atomic physical ledger, price unmatched Nye/Frank--Bilby density
+    # at the dislocation line-tension scale 1/2 mu b^2 [J/m].
+    gp_trial = grad_mag(psi_trial)
+    residual_alpha = np.abs(kappa_trial)-P['c_alpha']*gp_trial/P['b']
+    residual_gb = rho_gb-P['c_GB']*gp_trial/P['b']
+    line_tension = (0.5*ATpot.mu_shear(
+        np.maximum(np.asarray(temperature_K, dtype=float), 1.0))*P['b']**2)
+    represented_thickness = max(
+        float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30)
+    physical_compatibility = float(np.nansum(
+        line_tension*(np.abs(residual_alpha)+np.abs(residual_gb)))
+        * dx*dy*represented_thickness)
     return dict(
         elastic=0.0,
-        bulk_stored=audit['F_bulk'] + audit['F_r_grad'],
+        bulk_stored=(audit['F_bulk'] + audit['F_r_grad'])*represented_thickness,
+        diagnostic_bulk_local=audit['F_bulk']*represented_thickness,
+        diagnostic_bulk_gradient=audit['F_r_grad']*represented_thickness,
         # Total line length is conserved by this first production route, so a
         # constant line energy per length has zero event increment. Nonlinear
         # density storage remains in the declared bulk/stored term above.
         line=0.0,
-        interface_order=audit['F_eta_grad'] + audit['F_eta_barrier'],
-        compatibility=audit['F_comp_alpha'] + audit['F_comp_GB'])
+        interface_order=(audit['F_eta_grad'] + audit['F_eta_barrier'])*represented_thickness,
+        diagnostic_interface_gradient=audit['F_eta_grad']*represented_thickness,
+        diagnostic_interface_barrier=audit['F_eta_barrier']*represented_thickness,
+        compatibility=physical_compatibility,
+        diagnostic_compatibility_alpha=audit['F_comp_alpha']*represented_thickness,
+        diagnostic_compatibility_gb=audit['F_comp_GB']*represented_thickness)
 
 
 def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
                                        rho_forest, rho_wall, rho_GB, T):
     global embryo_population, grain_tracker
     global atomic_promotion_attempt_total, atomic_promotion_commit_total
-    global atomic_promotion_rollback_total
+    global atomic_promotion_rollback_total, atomic_promotion_event_records
     ready = [record for record in embryo_population.records
              if record.status == 'promotable']
     if not P.get('use_atomic_stateful_promotion', False) or not ready:
         return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
                 dict(attempted=0, committed=0, rollback_reason=''))
     embryo = min(ready, key=lambda record: (record.birth_time_s, record.embryo_id))
-    atomic_promotion_attempt_total += 1
-    interface_width = _physical_grain_criteria().interface_width_m
+    grain_criteria = _physical_grain_criteria()
+    interface_width = grain_criteria.interface_width_m
     support = circular_phase_support(
         embryo, (Nx, Ny), (Nx*dx, Ny*dy), interface_width)
+    pure_core_area = (float(np.count_nonzero(
+        support >= float(P.get('atomic_promotion_purity_threshold', 0.8))))
+        * dx*dx)
+    if pure_core_area < grain_criteria.minimum_area_m2:
+        return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
+                dict(attempted=0, committed=0,
+                     rollback_reason='promotion eligibility: pure core below resolved area',
+                     embryo_id=int(embryo.embryo_id)))
+    atomic_promotion_attempt_total += 1
+    # A newly resolved orientation boundary requires a matching boundary-line
+    # population.  Supply the Frank--Bilby-compatible target to the atomic
+    # transaction; line content beyond that target is explicitly assigned to
+    # pair annihilation or the moving-boundary sink instead of being forced
+    # into an over-dense shell.
+    eta_preview = np.asarray(eta, dtype=float).copy()
+    eta_preview[:, :, :Ng] *= 1.0-support[:, :, None]
+    eta_preview[:, :, Ng] = support
+    psi_preview_values = np.asarray(psi_gv, dtype=float).copy()
+    psi_preview_values[Ng] = embryo.orientation_rad
+    psi_preview = reconstruct_psi_lat(
+        eta_preview, psi_preview_values, psi_plastic, Ng+1)
+    boundary_density_target = np.clip(
+        P['c_GB']*grad_mag(psi_preview)/P['b'], 0.0, P['rho_max'])
     try:
         result = atomic_phase_promotion(
             eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB,
@@ -4786,8 +4855,11 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
             cell_area_m2=dx*dx,
             represented_thickness_m=max(float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
             maximum_density_m2=float(P['rho_max']),
+            boundary_density_target_m2=boundary_density_target,
+            minimum_core_area_m2=grain_criteria.minimum_area_m2,
             step=int(step), time_s=float(time_s),
-            energy_evaluator=_promotion_energy_evaluator)
+            energy_evaluator=lambda **trial: _promotion_energy_evaluator(
+                **trial, temperature_K=T))
     except (ValueError, RuntimeError) as exc:
         atomic_promotion_rollback_total += 1
         return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
@@ -4797,7 +4869,9 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
     grain_tracker = result.tracker
     T1 = np.asarray(T, dtype=float) + (
         result.ledger.heat_released_J*result.heat_support
-        / max(dx*dx*float(P['cp_rho_vol']), 1e-300))
+        / max(dx*dx
+              * max(float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30)
+              * float(P['cp_rho_vol']), 1e-300))
     _record_grain_birth(
         result.ledger.child_label, ORIGIN_HAZARD, MECH_HAZARD,
         parent=embryo.parent_grain, step=int(step),
@@ -4808,11 +4882,36 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
         barrier_eV=float(embryo.events[0].barrier_J/eV_J if embryo.events else np.nan))
     atomic_promotion_commit_total += 1
     ledger = result.ledger
+    atomic_promotion_event_records.append(dict(
+        step=int(step), time_s=float(time_s), embryo_id=int(embryo.embryo_id),
+        child_label=int(ledger.child_label), external_work_J=float(ledger.external_work_J),
+        elastic_energy_change_J=float(ledger.elastic_energy_change_J),
+        bulk_stored_energy_change_J=float(ledger.bulk_stored_energy_change_J),
+        line_energy_change_J=float(ledger.line_energy_change_J),
+        interface_order_energy_change_J=float(ledger.interface_order_energy_change_J),
+        compatibility_energy_change_J=float(ledger.compatibility_energy_change_J),
+        heat_released_J=float(ledger.heat_released_J),
+        other_dissipation_J=float(ledger.other_dissipation_J),
+        energy_closure_J=float(ledger.energy_closure_J),
+        line_content_before_m=float(ledger.transfer.line_content_before_m),
+        line_content_after_m=float(ledger.transfer.line_content_after_m),
+        line_content_removed_from_core_m=float(ledger.transfer.line_content_removed_from_core_m),
+        line_content_shell_transfer_m=float(ledger.transfer.line_content_shell_transfer_m),
+        line_content_pair_annihilation_m=float(ledger.transfer.line_content_pair_annihilation_m),
+        line_content_declared_sink_m=float(ledger.transfer.line_content_declared_sink_m),
+        line_content_closure_m=float(ledger.transfer.line_content_closure_m),
+        maximum_signed_burgers_density_change_m2=float(
+            ledger.transfer.maximum_signed_burgers_density_change_m2)))
     return (result.eta, result.psi_gv, result.Ng, result.rp, result.rm,
             result.rho_forest, result.rho_wall, result.rho_gb, T1,
             dict(attempted=1, committed=1, rollback_reason='',
                  embryo_id=int(embryo.embryo_id), child_label=int(ledger.child_label),
                  heat_released_J=float(ledger.heat_released_J),
+                 elastic_energy_change_J=float(ledger.elastic_energy_change_J),
+                 bulk_stored_energy_change_J=float(ledger.bulk_stored_energy_change_J),
+                 line_energy_change_J=float(ledger.line_energy_change_J),
+                 interface_order_energy_change_J=float(ledger.interface_order_energy_change_J),
+                 compatibility_energy_change_J=float(ledger.compatibility_energy_change_J),
                  energy_closure_J=float(ledger.energy_closure_J),
                  line_closure_m=float(ledger.transfer.line_content_closure_m),
                  signed_burgers_change_m2=float(ledger.transfer.maximum_signed_burgers_density_change_m2)))
@@ -4993,6 +5092,11 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         atomic_promotion_commit_total=int(globals().get('atomic_promotion_commit_total', 0)),
         atomic_promotion_rollback_total=int(globals().get('atomic_promotion_rollback_total', 0)),
         atomic_promotion_heat_released_J=float(globals().get('_last_promotion_diag', {}).get('heat_released_J', 0.0)),
+        atomic_promotion_elastic_energy_change_J=float(globals().get('_last_promotion_diag', {}).get('elastic_energy_change_J', 0.0)),
+        atomic_promotion_bulk_stored_energy_change_J=float(globals().get('_last_promotion_diag', {}).get('bulk_stored_energy_change_J', 0.0)),
+        atomic_promotion_line_energy_change_J=float(globals().get('_last_promotion_diag', {}).get('line_energy_change_J', 0.0)),
+        atomic_promotion_interface_order_energy_change_J=float(globals().get('_last_promotion_diag', {}).get('interface_order_energy_change_J', 0.0)),
+        atomic_promotion_compatibility_energy_change_J=float(globals().get('_last_promotion_diag', {}).get('compatibility_energy_change_J', 0.0)),
         atomic_promotion_energy_closure_J=float(globals().get('_last_promotion_diag', {}).get('energy_closure_J', 0.0)),
         atomic_promotion_line_closure_m=float(globals().get('_last_promotion_diag', {}).get('line_closure_m', 0.0)),
         atomic_promotion_signed_burgers_change_m2=float(globals().get('_last_promotion_diag', {}).get('signed_burgers_change_m2', 0.0)),
@@ -5349,6 +5453,8 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             atomic_promotion_attempt_total=np.array(atomic_promotion_attempt_total, dtype=np.int64),
             atomic_promotion_commit_total=np.array(atomic_promotion_commit_total, dtype=np.int64),
             atomic_promotion_rollback_total=np.array(atomic_promotion_rollback_total, dtype=np.int64),
+            atomic_promotion_events_json=np.array(json.dumps(
+                atomic_promotion_event_records, sort_keys=True, separators=(',', ':'))),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
             sim_time=np.array(sim_time + P['dt'] if sim_time_value is None else sim_time_value),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),
@@ -5999,7 +6105,21 @@ for n in range(_restart_step_offset, _restart_end_step):
             other_sq = sum_eta_sq - eta[:,:,i]**2
             Ei = Estar  # no copy needed; read-only in this loop
             E_ref = np.mean(Ei[eta[:,:,i]>0.3]) if np.any(eta[:,:,i]>0.3) else Estar.mean()
-            dFdei = -P['kappa_eta']*lap_ei + P['W_eta']*2*eta[:,:,i]*other_sq + 2*eta[:,:,i]*(Ei-E_ref)
+            dFdei = -P['kappa_eta']*lap_ei + P['W_eta']*2*eta[:,:,i]*other_sq
+            is_promoted_child = (
+                i < len(grain_tracker.records)
+                and grain_tracker.records[i].embryo_promoted)
+            if is_promoted_child:
+                # The promoted phase carries the declared low-density DRX
+                # state.  Its interface must advance down the parent-to-child
+                # stored-energy difference.  Reusing the legacy per-label
+                # mean subtraction gives this term the opposite sign and
+                # deterministically collapses every physically resolved child.
+                dFdei += recrystallized_child_stored_energy_derivative(
+                    eta[:, :, i], Ei, A_E_field,
+                    float(_nuc_low_rho_from_potential()))
+            else:
+                dFdei += 2*eta[:,:,i]*(Ei-E_ref)
             if P.get('use_rho_eta_coupling', True):
                 # f_re,AC = -A * D(r,kappa,grad r,GB) * sum_i eta_i(1-eta_i).
                 # This is a variational precursor term: it promotes diffuse KWC

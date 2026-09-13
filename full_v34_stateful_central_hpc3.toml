@@ -2,7 +2,7 @@ name = "full-v34-stateful-central"
 entrypoint = ["bash", "../hpc3/run_full_v34_case.sh"]
 working_directory = "full_model/production"
 modules = ["anaconda/2025.12"]
-environment = { CASE_NAME = "drx_iso_rate1000_seed42_stateful_central_v2", OMP_NUM_THREADS = "1" }
+environment = { CASE_NAME = "drx_iso_rate1000_seed42_stateful_central_v3_growthrepair", OMP_NUM_THREADS = "1" }
 input_paths = [
   "full_model/production/arrhenius_kinetics.py",
   "full_model/production/asb_classifier.py",

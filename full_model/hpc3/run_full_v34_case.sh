@@ -49,6 +49,20 @@ case "$case_name" in
     export HAZARD_MEASURE_MODE=area_integrated NUC_SITE_DENSITY_M2=2.056129055805289e12
     export NUC_ATTEMPT_FREQ=1.0e6 USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR=false
     ;;
+  drx_iso_rate1000_seed42_stateful_central_v3_growthrepair)
+    # Extended from the original 6000-step horizon so the analytically grown
+    # Route-B precursor can reach the declared resolved-core area and accrue
+    # physical-grain persistence after atomic promotion.
+    export BRANCH=drx_isothermal RATE=1000 NSTEPS=7100
+    unset TARGET_STRAIN
+    export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
+    export USE_STATEFUL_EMBRYOS=true USE_ATOMIC_STATEFUL_PROMOTION=true
+    export USE_EXPF_EMBRYO_CREATION=true EMBRYO_CREATION_ROUTE=precursor
+    export EMBRYO_CREATION_H0_EV=1.20 EMBRYO_CREATION_CRITICAL_DRIVE_PA=2.0e8
+    export HAZARD_MEASURE_MODE=area_integrated NUC_SITE_DENSITY_M2=2.056129055805289e12
+    export NUC_ATTEMPT_FREQ=1.0e6 USE_PLASTIC_ACTIVITY_HAZARD_PREFACTOR=false
+    export EMBRYO_GROWTH_MOBILITY_PREFACTOR_M4_J_S=1.0e-10
+    ;;
   drx_iso_rate1000_seed42_continue)
     export BRANCH=drx_isothermal RATE=1000 NSTEPS="${NSTEPS:-1000}"
     unset TARGET_STRAIN

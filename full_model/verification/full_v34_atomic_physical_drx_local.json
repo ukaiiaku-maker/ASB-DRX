@@ -1,0 +1,67 @@
+{
+  "architecture": "full_v34_two_dimensional_phase_field",
+  "claim_level": "local_scientific_lifecycle_replay_from_verified_hpc3_trajectory",
+  "classification": "PHYSICAL_DRX_GRAIN",
+  "configuration": {
+    "creation_route": "Route_B_precursor",
+    "embryo_growth_mobility_prefactor_m4_J_s": 1e-10,
+    "physical_site_density_m-2": 2056129055805.289,
+    "strain_rate_s-1": 1000.0,
+    "temperature_K": 1100.0
+  },
+  "event": {
+    "birth_step": 5100,
+    "promotion_step": 6889,
+    "promotion_time_s": 0.0006257961465191299,
+    "promotion_radius_um": 0.8112627571738817,
+    "child_label": 12,
+    "physical_recognition_step": 7008,
+    "physical_recognition_time_s": 0.0006376961465191238
+  },
+  "hazard_at_final_checkpoint": {
+    "expected_raw_trigger_count": 1.2649123041929442,
+    "raw_triggers": 2,
+    "viable_triggers": 2
+  },
+  "promotion_energy_ledger_J": {
+    "external_work": 0.0,
+    "elastic_change": 0.0,
+    "bulk_stored_change": -1.721792232915018e-13,
+    "line_change": 0.0,
+    "interface_order_change": -2.7309897691089136e-15,
+    "compatibility_change": 7.620005503968689e-16,
+    "heat_released": 1.7414821251021384e-13,
+    "other_dissipation": 0.0,
+    "closure": 0.0
+  },
+  "promotion_line_ledger_m": {
+    "before": 0.006293650971532684,
+    "after": 0.006188757204414731,
+    "removed_from_core": 0.00010786996089638506,
+    "shell_transfer": 2.9761937784326315e-06,
+    "pair_annihilation": 0.00010293690006727355,
+    "declared_boundary_sink": 1.956867050678887e-06,
+    "closure": 1.3552527156068805e-20,
+    "maximum_signed_burgers_density_change_m-2": 0.0
+  },
+  "physical_grain_at_step_7050": {
+    "status": "recrystallized",
+    "lineage": "grain-3/embryo-0",
+    "support_time_s": 5.299999999997256e-06,
+    "lower_energy_time_s": 1.3799999999992854e-05,
+    "area_m2": 4.0942382812500006e-11,
+    "recrystallized_area_fraction": 0.409423828125,
+    "temperature_mean_K": 1119.9441992413635,
+    "temperature_max_K": 1127.5477430642634
+  },
+  "restart_verification": {
+    "boundaries": ["at_promotion", "immediately_after_promotion"],
+    "comparison_endpoint_step": 6909,
+    "authoritative_fields_compared": 124,
+    "mismatches": [],
+    "bitwise_exact": true
+  },
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "scientific_gate_note": "Local lifecycle path is complete; one clean pushed-source HPC3 verification remains required."
+}

@@ -2,6 +2,46 @@
 
 Updated: 2026-09-13 (America/Los_Angeles)
 
+## Full-model atomic promotion recovery and physical DRX local checkpoint
+
+- Corrected-central HPC3 job `55993372`
+  (`20260913T182244Z-deb31ab-d62d3c`) completed 6,000 steps at strain
+  `0.536796` in `29m03s`; its archive and all 80 model outputs verify. The
+  exact physical hazard clock reached `Lambda=1.0` and produced one raw and
+  viable Route-B event at step 5100, but the precursor immediately collapsed
+  and retired. Classification: `TRIGGERED_NO_PERSISTENT_EMBRYO`.
+- The collapse was traced to charging the unresolved precursor the absolute
+  pre-existing parent compatibility penalty (`5.45e22 J/m3`) instead of an
+  event increment. With that sign error removed, the analytical radius law
+  gives stable growth. A mobility prefactor of `1e-10 m4/(J s)` follows from
+  the required resolved-radius transit time over the remaining horizon; it is
+  not fitted to a grain count or PF outcome.
+- Atomic promotion now fills only the Frank--Bilby-compatible shell demand.
+  Excess redundant line is explicitly split between neutral-pair annihilation
+  and a declared moving-boundary sink. The stiff quadratic compatibility
+  functional remains a PF constraint diagnostic; the physical atomic ledger
+  uses the dimensionally consistent line-tension energy
+  `0.5*mu*b^2*|rho-rho_FB|` and converts actual joules to heat using the
+  represented thickness.
+- Promotion eligibility now requires the same resolved pure-core area used by
+  physical-grain recognition. The first precursor therefore promotes once at
+  step 6889 and radius `0.811263 um`, rather than allocating an unresolved
+  label. The event closes energy exactly, line content to `1.36e-20 m`, and
+  signed Burgers density exactly.
+- The inherited Allen--Cahn stored-energy term had the wrong sign for a
+  low-density child advancing into its high-energy parent. A lineage-scoped
+  variational derivative now uses `-h'(eta)*(E_parent-E_rex)` for promoted
+  children only. Initial grains and the preserved ASB branch are unchanged.
+- The child satisfies purity, resolved area, persistence, lineage,
+  misorientation, lower stored energy, and growth at step 7008, giving the
+  local classification `PHYSICAL_DRX_GRAIN`. At step 7050 its recrystallized
+  area fraction is `0.409424`; mean/max temperature remain bounded at
+  `1119.94/1127.55 K`.
+- Continuous and segmented executions across promotion agree bitwise over all
+  124 authoritative fields. Successful atomic event ledgers are now persistent
+  checkpoint state. The local result remains `scientific_gate_passed=false`
+  until one clean, pushed-source HPC3 run verifies the complete path.
+
 ## Directive v6 first scientific trajectory and corrected exposure bracket
 
 - Central job `55992701` (`20260913T174209Z-ba88fae-583a35`) completed the
