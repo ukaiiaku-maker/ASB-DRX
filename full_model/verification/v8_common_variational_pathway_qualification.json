@@ -1,0 +1,107 @@
+{
+  "schema": "asb-drx-full-v34-deterministic-qualification/v1",
+  "classification": "LINEAGE_SCOPED_DRX_GROWTH_MECHANISM_REJECTED_BY_COMMON_VARIATIONAL_CONTROL",
+  "architecture": "full_v34_two_dimensional_phase_field",
+  "qualification_source_commit": "80d6cff11f3ab81c11121a77b79f168da2ff3448",
+  "validated_reference_source_commit": "b9afe1f83ba2f2cb36ed1819fd3f38cb067e79f4",
+  "validated_reference_run": "20260913T194443Z-b9afe1f-69c00f",
+  "source_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260913T194443Z-b9afe1f-69c00f/work/full_model/production/output/drx_iso_rate1000_seed42_stateful_central_v3_growthrepair/drx_v25_restart_006750.npz",
+  "source_checkpoint_sha256": "b160c3b2ff0ef3456a2761d9d154c6f5dee95cc0ea70b2bacf86af66e2886a93",
+  "deterministic_protocol": {
+    "restart_step": 6750,
+    "final_step": 7199,
+    "additional_steps": 449,
+    "new_stochastic_creation_disabled": true,
+    "reference_precursor_preserved": true,
+    "hazard_retuned": false,
+    "interface_energy_retuned": false,
+    "growth_mobility_retuned": false,
+    "growth_mobility_prefactor_m4_J_s": 1e-10,
+    "grid": [128, 128],
+    "domain_size_m": 1e-5,
+    "claim_scope": "thermodynamic pathway discrimination before mobility_grid_domain_sweeps"
+  },
+  "common_functional": {
+    "stored_energy": "sum_i h(eta_i)*psi_i / sum_i h(eta_i)",
+    "interpolation": "h(eta)=eta^2*(3-2*eta)",
+    "derivative": "h'(eta_i)*(psi_i-f_stored)/sum_j h(eta_j)",
+    "unrecrystallized_material_state": "current local matrix stored energy",
+    "promoted_material_state": "current mean stored energy in the child's dominant pure core",
+    "lineage_changes_equation": false,
+    "child_rehardening_updates_drive": true,
+    "finite_difference_derivative_test": true,
+    "label_permutation_test": true,
+    "pure_phase_stationarity_test": true
+  },
+  "variants": {
+    "lineage_scoped": {
+      "promotion_step": 6885,
+      "promotion_commits": 1,
+      "promotion_rollbacks": 0,
+      "physical_recognition_step": 7015,
+      "final_status": "recrystallized",
+      "ever_grew": true,
+      "maximum_child_area_m2": 4.1027832031250006e-11,
+      "final_child_area_m2": 4.1027832031250006e-11,
+      "final_equivalent_radius_um": 3.6138019514404593,
+      "maximum_sampled_equivalent_radius_velocity_m_s": 5.393741896251362,
+      "final_stress_MPa": 872.3109452644155,
+      "final_maximum_temperature_K": 1124.6307837654256
+    },
+    "common_variational": {
+      "promotion_step": 6904,
+      "promotion_commits": 1,
+      "promotion_rollbacks": 0,
+      "physical_recognition_step": null,
+      "final_status": "allocated",
+      "ever_grew": true,
+      "maximum_child_area_m2": 9.33837890625e-13,
+      "maximum_equivalent_radius_um": 0.5344089973938188,
+      "final_child_area_m2": 0.0,
+      "final_equivalent_radius_um": 0.0,
+      "minimum_sampled_equivalent_radius_velocity_m_s": -0.22846707733944882,
+      "observed_rehardening": {
+        "first_resolved_core_mean_density_m-2": 2.8068991147899056e16,
+        "core_mean_density_after_5_steps_m-2": 1.6695994979672976e17,
+        "core_mean_density_near_loss_of_resolution_m-2": 3.292651411400445e17
+      },
+      "final_stress_MPa": 453.8306661247152,
+      "final_maximum_temperature_K": 1122.2807153882027
+    },
+    "stored_energy_disabled": {
+      "promotion_step": 6904,
+      "promotion_commits": 1,
+      "physical_recognition_step": null,
+      "final_status": "allocated",
+      "ever_grew": false,
+      "maximum_child_area_m2": 8.361816406250001e-13,
+      "final_child_area_m2": 5.67626953125e-13,
+      "final_equivalent_radius_um": 0.4250661958378608,
+      "final_stress_MPa": 451.55767687352267,
+      "final_maximum_temperature_K": 1122.4553041831848
+    },
+    "sign_reversed": {
+      "promotion_step": 6904,
+      "promotion_commits": 1,
+      "physical_recognition_step": null,
+      "final_status": "allocated",
+      "ever_grew": false,
+      "maximum_child_area_m2": 8.361816406250001e-13,
+      "final_child_area_m2": 0.0,
+      "final_equivalent_radius_um": 0.0,
+      "final_stress_MPa": 451.13593197630644,
+      "final_maximum_temperature_K": 1122.5077382092786
+    }
+  },
+  "decision": {
+    "present_route_survives_deterministic_qualification": false,
+    "reason": "Only the lineage-scoped equation produces a tracker-qualified, domain-scale child. The common variational child rehardens rapidly and loses all resolved support; disabled and reversed controls do not become physical grains.",
+    "mobility_grid_domain_sweeps_launched": false,
+    "hpc3_job_launched": false,
+    "next_required_physics": "derive a common thermodynamic state evolution and continuous moving-front dislocation processing before reconsidering mobility or convergence sweeps",
+    "accepted_claim_unchanged": "SINGLE_FULL_MODEL_DRX_LIFECYCLE_PATH_VERIFIED",
+    "stronger_claim_rejected": "FULL_MODEL_DRX_GROWTH_MECHANISM_SUPPORTED"
+  },
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

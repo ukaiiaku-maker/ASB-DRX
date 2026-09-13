@@ -2,6 +2,54 @@
 
 Updated: 2026-09-13 (America/Los_Angeles)
 
+## Directive v8 decision: lineage-scoped growth mechanism rejected
+
+- Provenance is frozen explicitly: validated source `b9afe1f`, validated HPC3
+  run `20260913T194443Z-b9afe1f-69c00f`, and result-recording commit
+  `9a6f5b5`. Their scoped diff contains only the two verification records and
+  no production or test source. A dedicated full-recovery manifest now owns
+  new records; the mixed historical manifest is retained as a read-only
+  archive.
+- A common stored-energy functional was derived as
+  `sum(h(eta_i)*psi_i)/sum(h(eta_i))`. Its exact derivative is used for every
+  phase; lineage selects a recovered material state but never a governing
+  sign. Unrecrystallized phases share the current local matrix energy, while a
+  promoted child's current pure-core energy evolves under deformation and
+  therefore captures rehardening. Finite-difference, pure-phase, equal-energy,
+  and label-permutation tests pass.
+- Four deterministic 449-step continuations used the same verified step-6750
+  checkpoint and precursor. New stochastic creation was disabled, and hazard,
+  mobility, interface energy, and mechanics were not retuned. The comparison
+  source is pushed commit `80d6cff`.
+- The lineage-scoped branch again became a physical grain and reached
+  `4.10278e-11 m2` (`R_eq=3.614 um`). Its maximum checkpoint-sampled radial
+  increment corresponds to `5.39 m/s`, strengthening the domain-consumption
+  concern.
+- The common variational branch promoted once but peaked at only
+  `9.33838e-13 m2` (`R_eq=0.534 um`) and then lost all resolved support. Mean
+  core density rose from `2.81e16` to `1.67e17 m^-2` in five steps and to
+  about `3.29e17 m^-2` near loss of the core: current-state rehardening removes
+  the driving advantage that the lineage-scoped term holds fixed.
+- With stored-energy coupling disabled, the child did not grow and remained
+  allocated; the sign-reversed control also vanished. The recognizer now
+  requires observed growth as well as stable support, preventing a persistent
+  but nongrowing label from being called DRX.
+- Classification:
+  `LINEAGE_SCOPED_DRX_GROWTH_MECHANISM_REJECTED_BY_COMMON_VARIATIONAL_CONTROL`.
+  The frozen historical claim remains
+  `SINGLE_FULL_MODEL_DRX_LIFECYCLE_PATH_VERIFIED`, but
+  `FULL_MODEL_DRX_GROWTH_MECHANISM_SUPPORTED` is false. Mobility, mesh, domain,
+  ensemble, and pathway sweeps were not launched because the thermodynamic
+  prerequisite failed.
+- The old zero `line_energy_change_J` is clarified: physical Taylor line
+  energy was embedded in `bulk_stored`, not omitted. New-source ledgers split
+  the same term into the explicit `line` channel and subtract it from
+  `bulk_stored`, preserving total energy and avoiding double counting.
+  Numerical compatibility penalties remain diagnostic and are not heat.
+- The next admissible development is a common thermodynamic state evolution
+  coupled to continuous moving-front line processing. It must be developed
+  before mobility or convergence qualification; no HPC3 job was submitted.
+
 ## Directive v6 central scientific trajectory: physical DRX lifecycle completed
 
 - The single preregistered central HPC3 job `55994881`

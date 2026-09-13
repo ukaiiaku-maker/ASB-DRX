@@ -4805,15 +4805,21 @@ def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
     physical_compatibility = float(np.nansum(
         line_tension*(np.abs(residual_alpha)+np.abs(residual_gb)))
         * dx*dy*represented_thickness)
+    physical_line = float(np.nansum(
+        ATpot.Estar_coeff(np.maximum(np.asarray(temperature_K, dtype=float), 1.0))
+        * rho_trial) * dx*dy*represented_thickness)
+    total_bulk_stored = (
+        audit['F_bulk'] + audit['F_r_grad'])*represented_thickness
     return dict(
         elastic=0.0,
-        bulk_stored=(audit['F_bulk'] + audit['F_r_grad'])*represented_thickness,
+        # ATpot._Phi contains the physical Taylor line-energy branch.  Split
+        # that branch out explicitly; subtracting it here and adding it as
+        # ``line`` preserves the prior total exactly and prevents omission or
+        # double counting when annihilated line content is released as heat.
+        bulk_stored=total_bulk_stored-physical_line,
         diagnostic_bulk_local=audit['F_bulk']*represented_thickness,
         diagnostic_bulk_gradient=audit['F_r_grad']*represented_thickness,
-        # Total line length is conserved by this first production route, so a
-        # constant line energy per length has zero event increment. Nonlinear
-        # density storage remains in the declared bulk/stored term above.
-        line=0.0,
+        line=physical_line,
         interface_order=(audit['F_eta_grad'] + audit['F_eta_barrier'])*represented_thickness,
         diagnostic_interface_gradient=audit['F_eta_grad']*represented_thickness,
         diagnostic_interface_barrier=audit['F_eta_barrier']*represented_thickness,

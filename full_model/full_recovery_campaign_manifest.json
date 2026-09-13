@@ -57,5 +57,25 @@
       "action": "observed_only"
     }
   ],
-  "qualification_runs": []
+  "qualification_runs": [
+    {
+      "qualification_id": "v8-common-variational-step6750-deterministic",
+      "source_commit": "80d6cff11f3ab81c11121a77b79f168da2ff3448",
+      "execution": "local_same_host_four_variant_replay",
+      "source_checkpoint_step": 6750,
+      "source_checkpoint_sha256": "b160c3b2ff0ef3456a2761d9d154c6f5dee95cc0ea70b2bacf86af66e2886a93",
+      "variants": [
+        "lineage_scoped",
+        "common_variational",
+        "stored_energy_disabled",
+        "sign_reversed"
+      ],
+      "classification": "LINEAGE_SCOPED_DRX_GROWTH_MECHANISM_REJECTED_BY_COMMON_VARIATIONAL_CONTROL",
+      "result_path": "full_model/verification/v8_common_variational_pathway_qualification.json",
+      "result_sha256": "5c4f38ac0bfd5e44255a73b3d08884be8a4f5293de5e5995a20a1e4080b7de0d",
+      "hpc3_job_launched": false,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    }
+  ]
 }
