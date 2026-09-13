@@ -109,6 +109,14 @@ Updated: 2026-09-12 (America/Los_Angeles)
   rejected/retired labels, and recrystallized area separately and checkpoints
   the tracker exactly. It cannot allocate a label; promotion remains disabled
   until its line-content/Burgers-content transfer can be closed explicitly.
+- The promotion transfer prerequisite is now implemented as a full-model-only
+  operator. It lowers core density by removing only sign-neutral mobile pairs
+  plus unsigned forest/wall content, transfers every removed line increment to
+  a resolved boundary shell, preserves each signed mobile population exactly,
+  and rejects insufficient shell capacity rather than clipping. Three focused
+  tests close line and Burgers content and exercise the capacity failure. The
+  operator is not yet called by the production trajectory, so label allocation
+  remains disabled on the stateful path.
 
 ## Current decision: instantaneous junction-friction closure rejected
 

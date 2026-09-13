@@ -44,7 +44,7 @@ esac
 
 python -m py_compile \
   drx_full_v34_recovery.py arrhenius_kinetics.py stateful_embryos.py \
-  embryo_coupling.py physical_grains.py asb_classifier.py
+  embryo_coupling.py physical_grains.py phase_promotion.py asb_classifier.py
 bash run_full_v34_recovery.sh
 inventory_tmp=$(mktemp "${TMPDIR:-/tmp}/full-v34-output-inventory.XXXXXX")
 trap 'rm -f "$inventory_tmp"' EXIT
