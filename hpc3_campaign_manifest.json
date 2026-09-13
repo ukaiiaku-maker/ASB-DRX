@@ -1763,6 +1763,93 @@
         "status_json": "05b85cf083cb31ad39020c803231a54d39438833d9c74a6c67a2aacac5bf3ce2"
       },
       "follow_up": "absolute parent compatibility was incorrectly charged to unresolved precursor growth; diagnose and repair growth, atomic transfer, and phase maturation before another HPC3 job"
+    },
+    {
+      "run_id": "20260913T194443Z-b9afe1f-69c00f",
+      "parent_campaign_id": "asb-drx-full-v34-recovery",
+      "purpose": "v6_central_exposure_complete_atomic_promotion_and_physical_grain_verification",
+      "architecture": "full_2d_phase_field_v34_recovery",
+      "git_commit_at_plan": "b9afe1f83ba2f2cb36ed1819fd3f38cb067e79f4",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean_and_pushed",
+      "input_bundle_sha256": "bf5e5c6ed3e1a2599d4a9e45053b0694f5183ca9a4302d47463a5c03061bcf31",
+      "runner_archive_sha256": "d90872dbe0652f3c7f085bee2a4589dbbfbee866b9091140b2b96b110534e252",
+      "production_driver_sha256": "56eee08779e4fac1538b1d05792e0cd19492ad6f5860fc38d640534efda086ce",
+      "phase_promotion_sha256": "7a5c6b84714b85f79eafecd6fab9d94ed3c0846e7bae8866a9bf68af555bfb3b",
+      "hazard_measure_sha256": "c4b71bb9ee44ece5906e027ac94cb32efc044cb06c2ef9a7a49b24428bccf61d",
+      "configuration": {
+        "model_branch": "drx_isothermal", "T0_K": 1100.0,
+        "strain_rate_s-1": 1000.0, "steps": 7100,
+        "microstructure_seed": 42, "nucleation_seed": 271870,
+        "creation_route": "Route_B_precursor", "H0_eV": 1.2,
+        "attempt_frequency_s-1": 1000000.0, "activation_entropy_kB": 0.0,
+        "site_density_m-2": 2056129055805.289,
+        "hazard_measure": "area_integrated", "atomic_promotion": true,
+        "embryo_growth_mobility_prefactor_m4_J_s": 1e-10
+      },
+      "slurm": {
+        "job_id": "55994881", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G"
+      },
+      "start_utc": "2026-09-13T19:50:10Z",
+      "end_utc": "2026-09-13T20:29:13Z",
+      "exit_status": "0:0", "wall_clock_seconds": 2343,
+      "cpu_seconds": 1952, "peak_memory_MB": 417.57,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T194443Z-b9afe1f-69c00f",
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T194443Z-b9afe1f-69c00f",
+      "retrieval_status": "verified_runner_archive_and_95_model_outputs",
+      "classification": "PHYSICAL_DRX_GRAIN",
+      "claim_level": "single_scientific_lifecycle_path_not_material_calibration_or_ensemble_validation",
+      "physical_horizon": {
+        "final_step": 7099, "final_strain": 0.6467961465191369,
+        "final_time_s": 0.0006466961465191191
+      },
+      "hazard": {
+        "total_exposure": 1.2629283261310777,
+        "probability_at_least_one": 0.7171753900045093,
+        "raw_triggers": 2, "viable_triggers": 2,
+        "discarded_exposure": 0.0, "transferred_exposure": 0.0,
+        "threshold_redraws_after_event": 2,
+        "threshold_redraws_other": 0
+      },
+      "lifecycle": {
+        "embryo_records": 2, "promotion_attempts": 1,
+        "promotion_commits": 1, "promotion_rollbacks": 0,
+        "promotion_step": 6885, "child_label": 12,
+        "child_lineage": "grain-3/embryo-0",
+        "physical_drx_grains": 1,
+        "recrystallized_area_fraction": 0.40972900390625,
+        "child_area_m2": 4.097290039062501e-11,
+        "child_support_time_s": 1.0499999999994563e-05,
+        "child_lower_energy_time_s": 1.909999999999011e-05
+      },
+      "atomic_ledger": {
+        "heat_released_J": 1.742362590957648e-13,
+        "energy_closure_J": -0.0,
+        "line_content_closure_m": 1.3552527156068805e-20,
+        "maximum_signed_burgers_density_change_m-2": 0.0,
+        "line_content_removed_from_core_m": 0.00010796772350380651,
+        "line_content_shell_transfer_m": 2.960775309240892e-06,
+        "line_content_pair_annihilation_m": 0.00010300914958500907,
+        "line_content_declared_sink_m": 1.997798609556565e-06
+      },
+      "restart_verification": {
+        "source_checkpoint_step": 6750,
+        "boundaries": ["immediately_before_promotion", "at_promotion_checkpoint", "immediately_after_promotion"],
+        "authoritative_fields_compared": 124,
+        "all_boundaries_bitwise_exact": true,
+        "result_path": "full_model/verification/hpc3_drx_iso_rate1000_seed42_stateful_central_v3_restart.json",
+        "result_sha256": "25bea50ceb862cb3e3e0eb6fc25940947f55e6d62e73ae1ba62a9cf1975f5100"
+      },
+      "outputs": {
+        "diagnostics_csv": "9aa17494d3b79d89b061e70956d95d63b32acd932cba2f12a16241a1987aca91",
+        "final_checkpoint": "126f7ebe88bd1cf65ce470b185e46fb2e2e0682b26eaea2cad23940cdafd3b03",
+        "output_inventory": "384df7d169c9163418eb1537f5f49be5f9e47c095ee90978a393338f8cb51622",
+        "result_summary": "50834c691a9fb6f89f315d1c996599ad910995acd8330f1272d3c0945308a7fa",
+        "status_json": "01a961e2c942d13c153b1bb54c12b2a09a3fe0ecf7828e40e15967a719acb27a"
+      },
+      "follow_up": "one physical lifecycle path is established; seed statistics, DRX mesh convergence, and strict matched-control ASB qualification remain separate future decisions"
     }
   ]
 }

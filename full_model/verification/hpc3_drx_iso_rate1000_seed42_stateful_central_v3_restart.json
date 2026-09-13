@@ -1,0 +1,79 @@
+{
+  "schema": "asb-drx-full-v34-hpc-checkpoint-restart/v1",
+  "architecture": "full_v34_two_dimensional_phase_field",
+  "claim_level": "same_host_exact_restart_verification_from_fetched_hpc3_checkpoint",
+  "hpc3_run_id": "20260913T194443Z-b9afe1f-69c00f",
+  "hpc3_job_id": "55994881",
+  "source_commit": "b9afe1f83ba2f2cb36ed1819fd3f38cb067e79f4",
+  "source_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260913T194443Z-b9afe1f-69c00f/work/full_model/production/output/drx_iso_rate1000_seed42_stateful_central_v3_growthrepair/drx_v25_restart_006750.npz",
+  "source_checkpoint_sha256": "b160c3b2ff0ef3456a2761d9d154c6f5dee95cc0ea70b2bacf86af66e2886a93",
+  "local_replay_note": "The fetched HPC3 checkpoint seeds all branches. Endpoints are compared only within the same local host; cross-host floating-point trajectories are not required to be bitwise identical.",
+  "promotion_event_in_local_replay": {
+    "bulk_stored_energy_change_J": -1.7228669820755089e-13,
+    "child_label": 12,
+    "compatibility_energy_change_J": 7.858777431941448e-16,
+    "elastic_energy_change_J": 0.0,
+    "embryo_id": 0,
+    "energy_closure_J": -0.0,
+    "external_work_J": 0.0,
+    "heat_released_J": 1.7424026375057836e-13,
+    "interface_order_energy_change_J": -2.7394432862216186e-15,
+    "line_content_after_m": 0.006187464060847599,
+    "line_content_before_m": 0.006292312252198722,
+    "line_content_closure_m": 0.0,
+    "line_content_declared_sink_m": 1.9764796966429044e-06,
+    "line_content_pair_annihilation_m": 0.00010287171165448099,
+    "line_content_removed_from_core_m": 0.00010782890509987557,
+    "line_content_shell_transfer_m": 2.980713748751666e-06,
+    "line_energy_change_J": 0.0,
+    "maximum_signed_burgers_density_change_m2": 0.0,
+    "other_dissipation_J": 0.0,
+    "step": 6896,
+    "time_s": 0.0006264961465191296
+  },
+  "restart_boundaries": [
+    {
+      "boundary": "immediately_before_promotion",
+      "step": 6895,
+      "promotion_commits": 0,
+      "checkpoint_sha256": "a1f542656214a99d362c9c2e0206494b6a19b399f7ed2e3889480c673070e5b7"
+    },
+    {
+      "boundary": "at_promotion_checkpoint",
+      "step": 6896,
+      "promotion_commits": 1,
+      "checkpoint_sha256": "60e828a5f610561d82374dae61d6161e44a34b0320145fa7d55a9bcd0a2600af"
+    },
+    {
+      "boundary": "immediately_after_promotion",
+      "step": 6897,
+      "promotion_commits": 1,
+      "checkpoint_sha256": "13b50ec898c4ecb5675cbb34eb0194cc20f11707c3f344f6aa76addff1146587"
+    }
+  ],
+  "comparison_endpoint_step": 6909,
+  "excluded_configuration_fields": [
+    "P_json",
+    "source_checkpoint"
+  ],
+  "comparisons": {
+    "before": {
+      "authoritative_fields_compared": 124,
+      "mismatches": [],
+      "bitwise_exact": true
+    },
+    "at": {
+      "authoritative_fields_compared": 124,
+      "mismatches": [],
+      "bitwise_exact": true
+    },
+    "after": {
+      "authoritative_fields_compared": 124,
+      "mismatches": [],
+      "bitwise_exact": true
+    }
+  },
+  "all_boundaries_bitwise_exact": true,
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

@@ -85,6 +85,15 @@ def _checkpoint(case_dir):
                 "atomic_promotion_commit_total", "atomic_promotion_rollback_total"):
             if name in state.files:
                 result[name] = np.asarray(state[name]).item()
+        if "atomic_promotion_events_json" in state.files:
+            events = json.loads(str(state["atomic_promotion_events_json"].item()))
+            result["atomic_promotion_events"] = events
+        if "physical_grain_tracker_json" in state.files:
+            tracker = json.loads(str(state["physical_grain_tracker_json"].item()))
+            result["physical_grain_records"] = [
+                record for record in tracker.get("records", [])
+                if record.get("embryo_promoted", False)
+            ]
     return path, result
 
 
@@ -133,8 +142,10 @@ def summarize(case_dir, branch, matched_csv=None):
         first_failure = "promotion_eligibility"
     elif chain["allocated_hazard_births_max"] == 0:
         first_failure = "phase_support_or_label_allocation"
+    elif chain["physical_grains"] and chain["physical_grains"] > 0:
+        first_failure = None
     else:
-        first_failure = "physical_grain_recognition_not_yet_implemented"
+        first_failure = "physical_grain_recognition"
     chain["first_failing_stage"] = first_failure
     if "nuc_raw_trigger_total" in rows[0]:
         chain["raw_stochastic_attempts"] = int(
@@ -168,6 +179,7 @@ def summarize(case_dir, branch, matched_csv=None):
         physical = int(_finite_last(rows, "physical_drx_grains", 0.0))
         if physical > 0:
             lifecycle = "PHYSICAL_DRX_GRAIN"
+            chain["first_failing_stage"] = None
         elif commits > 0:
             lifecycle = "PROMOTED_LABEL_NOT_PHYSICAL_GRAIN"
         elif promotable > 0 or int(_finite_last(rows, "atomic_promotion_attempt_total", 0.0)) > 0:
@@ -209,6 +221,12 @@ def summarize(case_dir, branch, matched_csv=None):
             "physical_drx_grains": physical,
             "recrystallized_area_fraction": _finite_last(rows, "physical_recrystallized_area_fraction", 0.0),
         }
+        events = checkpoint.get("atomic_promotion_events", [])
+        if events:
+            promotion["committed_event_ledgers"] = events
+        grain_records = checkpoint.get("physical_grain_records", [])
+        if grain_records:
+            promotion["promoted_grain_records"] = grain_records
 
     summary = {
         "schema": "asb-drx-full-v34-case-summary/v1",

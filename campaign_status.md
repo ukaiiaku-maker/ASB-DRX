@@ -2,6 +2,42 @@
 
 Updated: 2026-09-13 (America/Los_Angeles)
 
+## Directive v6 central scientific trajectory: physical DRX lifecycle completed
+
+- The single preregistered central HPC3 job `55994881`
+  (`20260913T194443Z-b9afe1f-69c00f`) ran clean pushed source `b9afe1f` on
+  `hpc3-14-06` and completed 7,100 steps in `39m03s` with exit `0:0`. The
+  outer archive and all 95 internal scientific-output checksums verify. No
+  array or seed sweep was launched, and unrelated job `55950433` was not
+  touched.
+- At the final horizon, strain is `0.646796`, physical time is
+  `646.696 us`, total hazard exposure is `1.262928`, and
+  `P(N_raw>=1)=0.717175`. Two raw events were both viable and created two
+  persistent records; one Route-B precursor promoted atomically at step 6885.
+- The committed event released `1.742363e-13 J` as heat, with zero energy
+  closure error. Removed line content `1.079677e-4 m` is partitioned into
+  `2.960775e-6 m` shell transfer, `1.030091e-4 m` neutral-pair annihilation,
+  and `1.997799e-6 m` declared boundary sink. Line closure is
+  `1.36e-20 m`, and signed Burgers density changes by exactly zero.
+- Child label 12 has lineage `grain-3/embryo-0`, is classified
+  `recrystallized`, grew to `4.09729e-11 m2`, and accrued `10.5 us` phase
+  support plus `19.1 us` lower-stored-energy persistence. The scientific-run
+  lifecycle classification is therefore `PHYSICAL_DRX_GRAIN`, not merely an
+  allocated label; final recrystallized area fraction is `0.409729`.
+- Exact restart was rechecked from the fetched HPC3 step-6750 checkpoint on a
+  single local host. Restarts immediately before, at, and immediately after
+  the locally replayed atomic event agree bitwise with the continuous endpoint
+  across all 124 authoritative fields. Configuration/provenance strings are
+  excluded by declaration; scientific state and persistent event ledgers are
+  included.
+- This establishes one physically interpretable full-model promotion path and
+  completes Directive v6's first central DRX experiment. It does not establish
+  a material calibration, seed statistics, mesh-converged DRX kinetics, or
+  strict ASB qualification. The matched ASB response remains preserved; its
+  isothermal control and width refinement remain pending. A seed ensemble or
+  matrix is now scientifically permissible but has not been launched at this
+  single-path decision checkpoint.
+
 ## Full-model atomic promotion recovery and physical DRX local checkpoint
 
 - Corrected-central HPC3 job `55993372`
