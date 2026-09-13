@@ -32,4 +32,9 @@ esac
 
 python -m py_compile drx_full_v34_recovery.py arrhenius_kinetics.py
 bash run_full_v34_recovery.sh
-find "$DRX_OUTDIR" -type f -print0 | sort -z | xargs -0 sha256sum > "$DRX_OUTDIR/output_inventory.sha256"
+inventory_tmp=$(mktemp "${TMPDIR:-/tmp}/full-v34-output-inventory.XXXXXX")
+trap 'rm -f "$inventory_tmp"' EXIT
+find "$DRX_OUTDIR" -type f ! -name output_inventory.sha256 -print0 \
+  | sort -z | xargs -0 sha256sum > "$inventory_tmp"
+mv "$inventory_tmp" "$DRX_OUTDIR/output_inventory.sha256"
+trap - EXIT
