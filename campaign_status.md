@@ -1,6 +1,32 @@
 # Campaign status
 
-Updated: 2026-09-12 (America/Los_Angeles)
+Updated: 2026-09-13 (America/Los_Angeles)
+
+## Directive v6 first scientific trajectory and corrected exposure bracket
+
+- Central job `55992701` (`20260913T174209Z-ba88fae-583a35`) completed the
+  full 6,000-step `drx_isothermal` horizon at strain `0.536796` in `30m54s`.
+  The runner archive and all 80 in-model output hashes verify. It accumulated
+  `Lambda=0.0972702` (`P(N>=1)=0.0926891`) with zero raw/viable triggers,
+  embryos, promotion attempts, labels, or physical DRX grains. Exposure loss,
+  transfer, renewal, non-event threshold redraws, and deferred events were all
+  zero. Classification: `ZERO_TRIGGER_AFTER_BOUNDED_EXPOSURE`; the mechanism
+  was not exercised.
+- This exposed a bounded offline-analysis defect, not a production hazard
+  failure: `reweight_hazard_exposure.py` omitted the production finite-patch
+  factor `A_cell/(pi R_*^2)`. The old `2e11 m^-2` “central” row was therefore
+  actually the low-exposure row. The reweighter now uses the exact production
+  patch measure and has focused regression tests.
+- The corrected screen is anchored to the exact no-event production integral,
+  for which exposure is linear in physical site density. Densities
+  `2.056129e11`, `2.056129e12`, and `6.168387e12 m^-2` give the requested
+  `Lambda=0.1,1,3` bracket. Sparse-checkpoint quadrature is explicitly recorded
+  and corrected by the measured factor `1.187398`; it is no longer silently
+  treated as the authoritative event-time integral.
+- A single corrected-central follow-up is staged with the same microstructure,
+  common random stream, Route-B kinetics, full growth/phase energetics, and
+  horizon. No array or seed ensemble is authorized until its actual embryo
+  lifecycle is classified.
 
 ## Directive v5 transition: full v34 production model restored
 

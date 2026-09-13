@@ -5419,6 +5419,9 @@ if P.get('hazard_reweight_audit_only', False):
         dF_density=fields_audit['dF_density'], site_factor=fields_audit['site'],
         gate_AT=fields_audit['gate_AT'], classical_barrier_J=fields_audit['barrier'],
         classical_critical_R_m=fields_audit['classical_critical_R'],
+        patch_weight=np.clip(
+            (dx*dy)/(np.pi*np.maximum(fields_audit['classical_critical_R'], dx)**2),
+            1.0e-6, 1.0),
         rho_res=fields_audit['rho_res'], cell_area_m2=np.array(dx*dy),
         source_checkpoint=np.array(str(P.get('restart_file', ''))))
     print(f'Hazard reweight audit: {audit_path}')

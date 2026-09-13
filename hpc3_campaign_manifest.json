@@ -1626,6 +1626,67 @@
         "result_summary": "4c3725ea79b5202723d89e58a995222588c9957719f60ce60040ec27bcf7fa9e",
         "status_json": "45666811f152fad8c65e97a942bd836d8127ea47961b30eafbcf3adc8ee63dfb"
       }
+    },
+    {
+      "run_id": "20260913T174209Z-ba88fae-583a35",
+      "parent_campaign_id": "asb-drx-full-v34-recovery",
+      "purpose": "v6_first_scientific_stateful_atomic_promotion_central_exposure_attempt",
+      "architecture": "full_2d_phase_field_v34_recovery",
+      "git_commit_at_plan": "ba88faec377e5a298d2481b3ff168df55a73c47b",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean_and_pushed",
+      "input_bundle_sha256": "c4f47086a22f7ee8bcb1de51b1da966c892add4068090fad5edcca61edbe2bc0",
+      "production_driver_sha256": "37c062ef3b11b8a66bee43f94fa354bbd296c017869feca8438304bf6ec8fdcf",
+      "hazard_measure_sha256": "c4b71bb9ee44ece5906e027ac94cb32efc044cb06c2ef9a7a49b24428bccf61d",
+      "phase_promotion_sha256": "c819c20ab906f86e1d58c2b3ff0adc3b839b43847f03f7a4f0e9023ce7b43f9c",
+      "configuration": {
+        "model_branch": "drx_isothermal", "T0_K": 1100.0,
+        "strain_rate_s-1": 1000.0, "steps": 6000,
+        "microstructure_seed": 42, "nucleation_seed": 271870,
+        "creation_route": "Route_B_precursor", "H0_eV": 1.2,
+        "attempt_frequency_s-1": 1000000.0, "activation_entropy_kB": 0.0,
+        "site_density_m-2": 200000000000.0,
+        "hazard_measure": "area_integrated", "atomic_promotion": true
+      },
+      "slurm": {
+        "job_id": "55992701", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-06", "cpus_per_task": 1,
+        "memory": "4G"
+      },
+      "start_utc": "2026-09-13T17:42:25Z",
+      "end_utc": "2026-09-13T18:13:19Z",
+      "exit_status": "0:0", "wall_clock_seconds": 1854,
+      "cpu_seconds": 1641, "peak_memory_MB": 347.71,
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T174209Z-ba88fae-583a35",
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T174209Z-ba88fae-583a35",
+      "retrieval_status": "verified_runner_archive_and_80_model_outputs",
+      "classification": "ZERO_TRIGGER_AFTER_BOUNDED_EXPOSURE",
+      "claim_level": "scientific_run_mechanism_not_exercised",
+      "physical_horizon": {
+        "final_step": 5999, "final_strain": 0.5367961465191489,
+        "final_time_s": 0.000536696146519176
+      },
+      "hazard": {
+        "total_exposure": 0.09727015891114356,
+        "probability_at_least_one": 0.09268914509276091,
+        "raw_triggers": 0, "viable_triggers": 0,
+        "discarded_exposure": 0.0, "threshold_redraws": 0,
+        "next_threshold": 0.7410449461364387
+      },
+      "lifecycle": {
+        "embryos": 0, "promotion_attempts": 0, "promotion_commits": 0,
+        "promotion_rollbacks": 0, "physical_drx_grains": 0,
+        "recrystallized_area_fraction": 0.0
+      },
+      "outputs": {
+        "runner_archive": "a04931bc0b9f0100c9cad7cb49079dfdb6ed6966832e000ab98cd9da4d040d7b",
+        "diagnostics_csv": "98b5f0bc813ac9cd369bae52bded0555dbb5ac65b6cb8498defdbdd991983b18",
+        "final_checkpoint": "510ae8cb21438babd716900a1c24fbc7991a2f85368fe846c9760e951e8663ae",
+        "output_inventory": "18f857d6a3b703fed5fe4531e6eca5dcaf3bd37c43dd14a6bbd817451d43e00c",
+        "result_summary": "1f3b23280736ce9ab6780307e4d7c05d96493710e9f47645f303f2c193471c71",
+        "status_json": "5fddf94074bd9dad83798935fd235b2c3223d35acc7ff74698a328f78424281c"
+      },
+      "follow_up": "offline patch-weight omission corrected; rerun one corrected central density before any ensemble"
     }
   ]
 }

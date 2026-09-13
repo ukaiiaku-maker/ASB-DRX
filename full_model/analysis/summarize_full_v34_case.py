@@ -78,6 +78,13 @@ def _checkpoint(case_dir):
             result["global_step"] = int(state["step"])
         if "sim_time" in state.files:
             result["physical_time_s"] = float(state["sim_time"])
+        for name in (
+                "area_hazard_total_exposure", "area_hazard_residual_exposure",
+                "area_hazard_expected_raw_trigger_count", "area_hazard_next_threshold",
+                "area_hazard_completed_events", "atomic_promotion_attempt_total",
+                "atomic_promotion_commit_total", "atomic_promotion_rollback_total"):
+            if name in state.files:
+                result[name] = np.asarray(state[name]).item()
     return path, result
 
 
@@ -108,7 +115,8 @@ def summarize(case_dir, branch, matched_csv=None):
         "promotable_candidates_max": int(_finite_max(rows, "nuc_candidate_promotable", 0.0)),
         "allocated_hazard_births_max": int(_finite_max(rows, "grain_hazard_births", 0.0)),
         "allocated_labels_max": int(_finite_max(rows, "n_grains", 0.0)),
-        "physical_grains": None,
+        "physical_grains": (int(_finite_last(rows, "physical_drx_grains", 0.0))
+                            if "physical_drx_grains" in rows[0] else None),
     }
     ratio = checkpoint.get("max_hazard_threshold_ratio", math.nan)
     if chain["eligible_sites_max"] == 0:
@@ -147,6 +155,61 @@ def summarize(case_dir, branch, matched_csv=None):
           and chain["candidate_creations"] == 0):
         chain["first_failing_stage"] = "candidate_creation_or_viability"
 
+    lifecycle = None
+    hazard_exposure = None
+    promotion = None
+    if "hazard_exposure_total" in rows[0]:
+        raw = int(_finite_last(rows, "nuc_raw_trigger_total", 0.0))
+        viable = int(_finite_last(rows, "nuc_raw_viable_trigger_total", 0.0))
+        records = int(_finite_last(rows, "embryo_records_total", 0.0))
+        active = int(_finite_last(rows, "embryo_active_total", 0.0))
+        promotable = int(_finite_last(rows, "embryo_promotable_total", 0.0))
+        commits = int(_finite_last(rows, "atomic_promotion_commit_total", 0.0))
+        physical = int(_finite_last(rows, "physical_drx_grains", 0.0))
+        if physical > 0:
+            lifecycle = "PHYSICAL_DRX_GRAIN"
+        elif commits > 0:
+            lifecycle = "PROMOTED_LABEL_NOT_PHYSICAL_GRAIN"
+        elif promotable > 0 or int(_finite_last(rows, "atomic_promotion_attempt_total", 0.0)) > 0:
+            lifecycle = "SUPERCRITICAL_EMBRYO_NO_PROMOTION"
+        elif records > 0 and active > 0:
+            lifecycle = "PERSISTENT_SUBCRITICAL_EMBRYO"
+        elif raw > 0:
+            lifecycle = "TRIGGERED_NO_PERSISTENT_EMBRYO"
+        else:
+            lifecycle = "ZERO_TRIGGER_AFTER_BOUNDED_EXPOSURE"
+            chain["first_failing_stage"] = "hazard_exposure_below_global_event_clock"
+        hazard_exposure = {
+            "site_max": _finite_last(rows, "hazard_exposure_site_max"),
+            "site_mean": _finite_last(rows, "hazard_exposure_site_mean"),
+            "site_quantiles": rows[-1].get("hazard_exposure_site_quantiles"),
+            "total": _finite_last(rows, "hazard_exposure_total"),
+            "expected_raw_trigger_count": _finite_last(rows, "expected_raw_trigger_count"),
+            "probability_at_least_one_raw_trigger": _finite_last(rows, "probability_at_least_one_raw_trigger"),
+            "discarded": _finite_last(rows, "hazard_exposure_discarded", 0.0),
+            "transferred": _finite_last(rows, "hazard_exposure_transferred", 0.0),
+            "newly_initialized": _finite_last(rows, "hazard_exposure_newly_initialized", 0.0),
+            "threshold_redraws_after_event": int(_finite_last(rows, "hazard_threshold_redraws_after_event", 0.0)),
+            "threshold_redraws_other": int(_finite_last(rows, "hazard_threshold_redraws_other", 0.0)),
+            "deferred_event_present": bool(_finite_last(rows, "hazard_deferred_event_present", 0.0)),
+        }
+        promotion = {
+            "raw_triggers": raw, "viable_triggers": viable,
+            "rejected_not_viable": int(_finite_sum(rows, "nuc_raw_rejected_not_viable", 0.0)),
+            "embryo_records": records, "active_embryos": active,
+            "promotable_embryos": promotable,
+            "retired_embryos": int(_finite_last(rows, "embryo_retired_total", 0.0)),
+            "attempts": int(_finite_last(rows, "atomic_promotion_attempt_total", 0.0)),
+            "commits": commits,
+            "rollbacks": int(_finite_last(rows, "atomic_promotion_rollback_total", 0.0)),
+            "heat_released_J": _finite_last(rows, "atomic_promotion_heat_released_J", 0.0),
+            "energy_closure_J": _finite_last(rows, "atomic_promotion_energy_closure_J", 0.0),
+            "line_closure_m": _finite_last(rows, "atomic_promotion_line_closure_m", 0.0),
+            "signed_burgers_change_m2": _finite_last(rows, "atomic_promotion_signed_burgers_change_m2", 0.0),
+            "physical_drx_grains": physical,
+            "recrystallized_area_fraction": _finite_last(rows, "physical_recrystallized_area_fraction", 0.0),
+        }
+
     summary = {
         "schema": "asb-drx-full-v34-case-summary/v1",
         "architecture": "full_2d_phase_field",
@@ -173,9 +236,12 @@ def summarize(case_dir, branch, matched_csv=None):
         "candidate_to_grain_chain": chain,
         "checkpoint": checkpoint,
         "asb_classification": "NOT_EVALUATED_REQUIRES_MATCHED_ISOTHERMAL_CONTROL_AND_FIELD_WIDTH_REFINEMENT",
-        "physical_grain_classification": "NOT_AVAILABLE_UNTIL_PATCH_E",
+        "physical_grain_classification": lifecycle or "NOT_AVAILABLE_UNTIL_PATCH_E",
         "claim_level": "integrated_regression",
     }
+    if hazard_exposure is not None:
+        summary["hazard_exposure"] = hazard_exposure
+        summary["embryo_and_atomic_promotion"] = promotion
     if matched_csv is not None:
         control = _rows(matched_csv)
         control_peak = _finite_max(control, "sigma_MPa")

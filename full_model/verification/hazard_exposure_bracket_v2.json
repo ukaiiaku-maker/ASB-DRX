@@ -1,0 +1,196 @@
+{
+  "activity_prefactor": "fixed unity; plastic-activity hazard prefactor disabled for selected experiment",
+  "architecture": "full-v34 two-dimensional phase-field saved no-trigger trajectory",
+  "classification": "offline mechanism-excitation bracket; not fitted grain counts",
+  "creation_route": "Route B precursor creation",
+  "final_strain": 0.5367961465191489,
+  "final_time_s": 0.000536796146519176,
+  "finite_patch_measure": "A_cell/(pi*max(R_critical,cell_length)^2), clipped to [1e-6,1]",
+  "fixed_identifiability_choice": "attempt frequency fixed and activation entropy fixed; neither fitted",
+  "fixture_passed": true,
+  "initial_strain": 6.16039175366457e-05,
+  "initial_time_s": 6.16039175366457e-08,
+  "kinetics": {
+    "attempt_s": 1000000.0,
+    "critical_pa": 200000000.0,
+    "entropy_kB": 0.0,
+    "exp_a": 1.0,
+    "exp_n": 1.0,
+    "floor": 0.05,
+    "h0_eV": 1.2,
+    "rate_cap_s": 10000000.0
+  },
+  "number_of_saved_states": 25,
+  "potential_state_note": "Authoritative saved fields are exact; the numerical potential was rebuilt because the historical checkpoint predates potential-table checkpointing.",
+  "rows": [
+    {
+      "dominant_interval_end_strain": 0.4369682533078948,
+      "dominant_interval_end_time_s": 0.000436968253307935,
+      "dominant_interval_exposure": 0.012603785130297791,
+      "expected_raw_trigger_count": 0.1,
+      "hazard_exposure_total": 0.1,
+      "probability_at_least_one_raw_trigger": 0.09516258196404043,
+      "site_density_m-2": 205612905580.52887,
+      "spatial_exposure_max": 0.0015934451093878854,
+      "spatial_exposure_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0001581755531772708,
+        0.0015934451093878854
+      ]
+    },
+    {
+      "dominant_interval_end_strain": 0.4369682533078948,
+      "dominant_interval_end_time_s": 0.000436968253307935,
+      "dominant_interval_exposure": 0.12603785130297793,
+      "expected_raw_trigger_count": 1.0000000000000002,
+      "hazard_exposure_total": 1.0000000000000002,
+      "probability_at_least_one_raw_trigger": 0.6321205588285578,
+      "site_density_m-2": 2056129055805.2888,
+      "spatial_exposure_max": 0.01593445109387886,
+      "spatial_exposure_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0015817555317727083,
+        0.01593445109387886
+      ]
+    },
+    {
+      "dominant_interval_end_strain": 0.4369682533078948,
+      "dominant_interval_end_time_s": 0.000436968253307935,
+      "dominant_interval_exposure": 0.3781135539089338,
+      "expected_raw_trigger_count": 3.0,
+      "hazard_exposure_total": 3.0,
+      "probability_at_least_one_raw_trigger": 0.950212931632136,
+      "site_density_m-2": 6168387167415.866,
+      "spatial_exposure_max": 0.04780335328163656,
+      "spatial_exposure_quantiles": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0047452665953181235,
+        0.04780335328163656
+      ]
+    }
+  ],
+  "schema": "full-v34-offline-area-hazard-reweight/v1",
+  "scientific_gate_passed": false,
+  "selected_central_site_density_m-2": 2056129055805.2888,
+  "source_states": [
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/000000/hazard_reweight_state.npz",
+      "sha256": "e9a88ee9eb6dfc6710e8f754947b26a4bcc3f867a6fe9f1c10bd187cef0a1f06"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/000250/hazard_reweight_state.npz",
+      "sha256": "5b277549997aecfb37dad813d9c804db816d0913eea9d5eb96297c0208467311"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/000500/hazard_reweight_state.npz",
+      "sha256": "7b320ff028ac6eded447ed7bf687c197797d0eb68e8f131c4c2a215a6cd69748"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/000750/hazard_reweight_state.npz",
+      "sha256": "d7b1b8a53c574fb043a88c8e4b0a495b5299da4a9312a11ce0e031f7457e1355"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/001000/hazard_reweight_state.npz",
+      "sha256": "3dbfffd7981dab02ef4628c70a3b0e3f8371508ec5a4765261758db7198f480f"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/001250/hazard_reweight_state.npz",
+      "sha256": "3edeadfd8f5bfe57a4c174738c51414614428ca857f3a509f296571b35444859"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/001500/hazard_reweight_state.npz",
+      "sha256": "db49e4565027db0c3a8f1e028669d529eb9c2a1d57ac8abab0255c56e1213962"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/001750/hazard_reweight_state.npz",
+      "sha256": "3c87d40f18c581eb217105aa269d31ffc718bbd5c7e835a63bcf20aaf20af8ed"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/002000/hazard_reweight_state.npz",
+      "sha256": "0b36be70cbaf4756a1fd32ae305551e5314e564b432ead9adc705b26a4d10396"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/002250/hazard_reweight_state.npz",
+      "sha256": "de16b44bec41ce90836c3b5bf364eec2cc2c2149b75a94eedf1dec18d1b886b0"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/002500/hazard_reweight_state.npz",
+      "sha256": "464d846355f092438739467dc41787c5d683b41eb8deb0a3f68a2fcc06d7aa34"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/002750/hazard_reweight_state.npz",
+      "sha256": "563336ddd82b32cd845ead7be9a503538a3db9e8f6599f2d0bfff28812a88a96"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/003000/hazard_reweight_state.npz",
+      "sha256": "5b432c9f02c35a17882702fd449604ca551b4e5b779ecc7b9f545e5546bf4e97"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/003250/hazard_reweight_state.npz",
+      "sha256": "1a140cddd9858ca98c7eb58ff92c68b86867f2a46591fde9e972a4fb3e508d2b"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/003500/hazard_reweight_state.npz",
+      "sha256": "cd59446801fcabb46761d8c70c3073129bc18fb816154373c706a3779973b68e"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/003750/hazard_reweight_state.npz",
+      "sha256": "522e4fcfb3a636d9cbc971dcdc78190d14cf426421435aa2e43a1678ce102963"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/004000/hazard_reweight_state.npz",
+      "sha256": "5973b09ea6ee7f08e05b552b7a44ac6fdace84a0bc3bce7a12e757aa0b91a310"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/004250/hazard_reweight_state.npz",
+      "sha256": "8efdddb7a1f2f8547254d5796622b86a341c863aacfd9b8a8adbb9f8c125187e"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/004500/hazard_reweight_state.npz",
+      "sha256": "53aadc9d3fbf3d714ddc2856f4988eda6bbe6fa545ebac5f76a07736fe022b46"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/004750/hazard_reweight_state.npz",
+      "sha256": "693d372fbb3d75094a6df16f5aeeb1d1d409b87536797b327d6488556d68c324"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/005000/hazard_reweight_state.npz",
+      "sha256": "4efd03c0bc234f423fb6c4deae7a3868fa4a0f328f8a510f251fbfd5b7124027"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/005250/hazard_reweight_state.npz",
+      "sha256": "4645d9dc32d45f3d51e1b8ee0fb057c4040919eecaac88a9f104fe50ce09bd4a"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/005500/hazard_reweight_state.npz",
+      "sha256": "d53ccf33b801b6c81c7339164f167d7d3a9f2cb8e6a53e528480802cf4df5bc3"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/005750/hazard_reweight_state.npz",
+      "sha256": "6d39b257494b8749c3ab17aca1010dae93d28e2d7eff54e38f380af834f068f4"
+    },
+    {
+      "path": "/tmp/full-v34-reweight-v2.Dc5r8f/005999/hazard_reweight_state.npz",
+      "sha256": "c86aa400f84ef0bb65c32b9bd917fc4dce3afa42b021342338aeabf286493939"
+    }
+  ],
+  "temporal_quadrature": {
+    "interpretation": "calibrated to the exact production 20-step hazard integral on the same no-event trajectory",
+    "online_anchor_density_m-2": 200000000000.0,
+    "online_anchor_exposure": 0.09727015891114356,
+    "online_to_sparse_quadrature_scale": 1.1873982341282294,
+    "saved_state_interpolation": "trapezoidal"
+  }
+}
