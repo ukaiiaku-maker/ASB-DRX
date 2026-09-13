@@ -24,6 +24,11 @@ case "$case_name" in
     export BRANCH=drx_isothermal RATE=1000 TARGET_STRAIN=0.5 DT_STRAIN_STEP=1.0e-4
     export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
     ;;
+  drx_iso_rate1000_seed42_rawaudit)
+    export BRANCH=drx_isothermal RATE=1000 NSTEPS=6000
+    unset TARGET_STRAIN
+    export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
+    ;;
   drx_iso_rate1000_seed42_continue)
     export BRANCH=drx_isothermal RATE=1000 NSTEPS="${NSTEPS:-1000}"
     unset TARGET_STRAIN
