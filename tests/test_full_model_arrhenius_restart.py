@@ -76,6 +76,8 @@ class CandidateRestartSourceTest(unittest.TestCase):
             self.assertIn(f"'{name}'", source)
         self.assertIn("embryo_population_json=np.array(population_to_json(embryo_population))", source)
         self.assertIn("exact stateful-embryo restart requires embryo_population_json", source)
+        self.assertIn("physical_grain_tracker_json=np.array(tracker_to_json(grain_tracker))", source)
+        self.assertIn("exact stateful-embryo restart requires physical_grain_tracker_json", source)
         self.assertIn("use_expf_embryo_creation", source)
         self.assertIn("creation_enthalpy = exp_floor_enthalpy_j", source)
 

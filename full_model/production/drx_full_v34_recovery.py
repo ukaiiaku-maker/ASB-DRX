@@ -60,6 +60,10 @@ from stateful_embryos import (
     population_from_json, population_to_json,
 )
 from embryo_coupling import FullFieldEnvironment, advance_population
+from physical_grains import (
+    GrainCriteria, GrainMetrics, GrainRecord, GrainTracker,
+    tracker_from_json, tracker_to_json, update_tracker,
+)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -676,6 +680,12 @@ P = dict(
     embryo_growth_min_support_s=1.0e-7,
     embryo_phase_purity_min=0.80,
     embryo_orientation_symmetry_order=4,
+    physical_grain_min_area_width_factor=8.0,
+    physical_grain_purity_min=0.80,
+    physical_grain_min_persistence_s=1.0e-6,
+    physical_grain_stable_support_s=2.0e-6,
+    physical_grain_retirement_grace_s=1.0e-6,
+    physical_grain_min_energy_drop_Jm3=1.0e6,
 
     # Legacy knobs retained only for compatibility with old parameter files; they
     # are not used by the v11 hazard-nucleation path unless use_hazard_nucleation=False.
@@ -2997,6 +3007,21 @@ psi_plastic = np.zeros((Nx, Ny))
 gb_mask = diffuse_gb_support(eta, lab, Ng)
 psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 
+
+def _physical_grain_criteria():
+    interface_width = max(np.sqrt(max(P['kappa_eta'], 0.0)/max(P['W_eta'], 1e-300)), dx)
+    return GrainCriteria(
+        interface_width_m=interface_width,
+        minimum_area_width_factor=float(P.get('physical_grain_min_area_width_factor', 8.0)),
+        purity_threshold=float(P.get('physical_grain_purity_min', 0.8)),
+        minimum_persistence_s=float(P.get('physical_grain_min_persistence_s', 1e-6)),
+        stable_support_s=float(P.get('physical_grain_stable_support_s', 2e-6)),
+        retirement_grace_s=float(P.get('physical_grain_retirement_grace_s', 1e-6)),
+        minimum_misorientation_rad=np.deg2rad(float(P.get('nuc_min_field_mis_deg', 3.0))),
+        orientation_symmetry_order=int(P.get('embryo_orientation_symmetry_order', 4)),
+        minimum_stored_energy_drop_J_m3=float(P.get('physical_grain_min_energy_drop_Jm3', 1e6)))
+
+
 # initial rho: default remains relative to rho_c for calibrated DRX runs,
 # but high-rate/low-T ASB tests can make rho_c exceed any physical density.
 r0 = float(P.get('rho0_rhoc_frac', 0.90))
@@ -3118,6 +3143,20 @@ if _restart_loaded and not P.get('restart_reset_clock', True):
             embryo_population = population_from_json(str(_restart_npz['embryo_population_json']))
 gb_mask = diffuse_gb_support(eta, lab, Ng)
 psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
+grain_tracker = GrainTracker(tuple(
+    GrainRecord(g, float(psi_gv[g]), None, f'grain-{g}', 0.0, None, False)
+    for g in range(Ng)))
+if _restart_loaded and not P.get('restart_reset_clock', True) and P.get('use_stateful_embryos', False):
+    with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
+        if 'physical_grain_tracker_json' not in _restart_npz.files:
+            raise ValueError('exact stateful-embryo restart requires physical_grain_tracker_json')
+        grain_tracker = tracker_from_json(str(_restart_npz['physical_grain_tracker_json']))
+        if len(grain_tracker.records) != Ng:
+            raise ValueError('physical grain tracker label count does not match checkpoint Ng')
+_physical_grain_metrics = GrainMetrics(
+    allocated_labels=Ng, topology_components=Ng, resolved_labels=0,
+    physical_matrix_grains=0, physical_drx_grains=0,
+    recrystallized_area_fraction=0.0, rejected_labels=0, retired_labels=0)
 
 # v27 dislocation-state partition.  Existing rp/rm are interpreted as the
 # glissile/mobile signed population.  If no v27 restart fields are present, split
@@ -4768,6 +4807,12 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         embryo_dissipated_energy_J=float(globals().get('_last_embryo_diag', {}).get('dissipated_energy_J', 0.0)),
         embryo_energy_closure_error_J=float(globals().get('_last_embryo_diag', {}).get('closure_error_J', 0.0)),
         embryo_maximum_dt_halvings=int(globals().get('_last_embryo_diag', {}).get('maximum_halvings', 0)),
+        physical_resolved_labels=int(globals().get('_physical_grain_metrics').resolved_labels),
+        physical_matrix_grains=int(globals().get('_physical_grain_metrics').physical_matrix_grains),
+        physical_drx_grains=int(globals().get('_physical_grain_metrics').physical_drx_grains),
+        physical_recrystallized_area_fraction=float(globals().get('_physical_grain_metrics').recrystallized_area_fraction),
+        physical_rejected_labels=int(globals().get('_physical_grain_metrics').rejected_labels),
+        physical_retired_labels=int(globals().get('_physical_grain_metrics').retired_labels),
         heat_qdot_MWm3=float(qdot_mech/1e6),
         heat_qdot_local_max_MWm3=float(heat_diag.get('qdot_max', np.nan)/1e6),
         heat_qdot_local_std_MWm3=float(heat_diag.get('qdot_std', np.nan)/1e6),
@@ -5105,6 +5150,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             nuc_raw_trigger_total=np.array(nuc_raw_trigger_total, dtype=np.int64),
             nuc_raw_viable_trigger_total=np.array(nuc_raw_viable_trigger_total, dtype=np.int64),
             embryo_population_json=np.array(population_to_json(embryo_population)),
+            physical_grain_tracker_json=np.array(tracker_to_json(grain_tracker)),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
             sim_time=np.array(sim_time + P['dt'] if sim_time_value is None else sim_time_value),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),
@@ -6126,6 +6172,10 @@ for n in range(_restart_step_offset, _restart_end_step):
 
     _last_embryo_diag = _advance_stateful_embryos(
         n, sim_time, rho, kappa_tot, rho_GB, gb_mask, psi_lat, T)
+    if P.get('use_stateful_embryos', False):
+        grain_tracker, _physical_grain_metrics = update_tracker(
+            eta[:, :, :Ng], np.maximum(ATpot._Phi(np.maximum(rho, P['rho_min'])), 0.0),
+            grain_tracker, sim_time + P['dt'], dx, dx, _physical_grain_criteria())
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:

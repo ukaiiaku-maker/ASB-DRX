@@ -90,8 +90,9 @@ Updated: 2026-09-12 (America/Los_Angeles)
 - A forced 16x16 integration fixture generated 436 raw viable triggers and
   accepted three persistent embryo records while leaving the allocated grain
   count exactly unchanged at three. Continuous four-step evolution and exact
-  2+2 restart agree bitwise across all 107 authoritative checkpoint fields,
-  including embryo histories, RNG, and all 58 Arrhenius-potential members. The
+  2+2 restart agree bitwise across all 108 authoritative checkpoint fields,
+  including embryo histories, the physical-grain tracker, RNG, and all 58
+  Arrhenius-potential members. The
   fixture is deliberately nonphysical: its embryos shrink below the resolved
   radius and retire, so it establishes coupling/restart/no-label invariants,
   not DRX.
@@ -103,6 +104,11 @@ Updated: 2026-09-12 (America/Los_Angeles)
   submitted because the next scientific run must first include the Patch-E
   promotion/physical-grain contract; jobs `55932457` and `55950433` are
   unrelated and remain untouched.
+- Patch E recognition is now connected diagnostically to the full trajectory.
+  It reports resolved labels, persistent matrix grains, physical DRX grains,
+  rejected/retired labels, and recrystallized area separately and checkpoints
+  the tracker exactly. It cannot allocate a label; promotion remains disabled
+  until its line-content/Burgers-content transfer can be closed explicitly.
 
 ## Current decision: instantaneous junction-friction closure rejected
 
