@@ -1,0 +1,38 @@
+{
+  "schema": "asb-drx-full-reference-audit/v1",
+  "architecture": "full_2d_phase_field",
+  "claim_level": "fixture",
+  "v32": {
+    "branch": "legacy_coupled_with_DrxOn_control",
+    "condition": {"T0_K": 1100.0, "strain_rate_s-1": 30000.0, "strain": 0.5, "microstructure_seed": 42, "nucleation_seed": 271870},
+    "diagnostic_rows": 201,
+    "initial_grains": 12,
+    "hazard_births": 0,
+    "max_possible_sites": 255,
+    "max_hazard_rate_s-1": 1.6145653080182805e-7,
+    "max_cumulative_hazard": 7.249122746898726e-14,
+    "max_hazard_threshold_ratio": 4.685898654706658e-13,
+    "classification": "IMMUTABLE_ASB_LIKE_REFERENCE__STRICT_V5_CLASSIFIER_PENDING"
+  },
+  "v34": {
+    "branch": "coupled",
+    "condition": {"T0_K": 1100.0, "strain_rate_s-1": 1000.0, "strain": 0.5, "microstructure_seed": 42, "nucleation_seed": 271870},
+    "diagnostic_rows": 201,
+    "initial_grains": 12,
+    "max_possible_sites": 528,
+    "max_hazard_rate_s-1": 0.01928281409667694,
+    "max_cumulative_hazard": 2.2826723882857126e-7,
+    "final_max_cumulative_hazard": 1.554730332348344e-7,
+    "minimum_stochastic_threshold": 6.142480600080675e-5,
+    "max_hazard_threshold_ratio": 8.979664081473988e-6,
+    "raw_stochastic_event_attempts": 0,
+    "candidate_creations": 0,
+    "max_active_candidates": 0,
+    "max_promotable_candidates": 0,
+    "hazard_births": 0,
+    "physical_grains_created": 0,
+    "first_failing_stage": "hazard_integration_did_not_reach_stochastic_threshold",
+    "restart_defect": "candidate arrays are neither saved nor loaded by the v34 checkpoint implementation",
+    "classification": "ZERO_EVENT_ZERO_CANDIDATE_BASELINE_RESTORED"
+  }
+}

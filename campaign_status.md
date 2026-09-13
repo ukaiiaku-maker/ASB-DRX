@@ -2,6 +2,23 @@
 
 Updated: 2026-09-12 (America/Los_Angeles)
 
+## Directive v5 transition: full v34 production model restored
+
+- Production development has moved to isolated branch
+  `exp/full-v34-recovery-v1`; the reduced endpoint is preserved at `fb464e1`
+  and tag `reduced-v3-final-validity-stop-20260912`.
+- Exact v32--v34 drivers, runners, analysis scripts, archived configurations,
+  evidence roots, representative results, and prior verified HPC3 archives are
+  recorded in `full_model/provenance_manifest.json`.
+- The supplied v34 baseline first fails at hazard exposure: it has nonzero
+  eligible sites and rates, but `max(H/E)=8.98e-6`, hence zero raw stochastic
+  events, candidates, promotions, or physical grain births.
+- The baseline checkpoint omits all candidate arrays.  Exact candidate restart
+  is therefore a confirmed implementation defect, not an untested concern.
+- No full-model physics has yet been modified.  Patch A and exact candidate
+  restart are the next production changes; matched long runs will execute on
+  HPC3 after local invariant and restart smoke tests pass.
+
 ## Current decision: instantaneous junction-friction closure rejected
 
 ### Current decision-grade checkpoint
