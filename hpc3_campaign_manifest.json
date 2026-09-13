@@ -1537,9 +1537,26 @@
       "physics_delta_from_baseline": "none_diagnostic_cumulative_raw_and_viable_trigger_counters_only",
       "configuration": {"model_branch": "drx_isothermal", "T0_K": 1100.0, "strain_rate_s-1": 1000.0, "steps": 6000, "minimum_required_strain": 0.5, "microstructure_seed": 42, "nucleation_seed": 271870, "activation_entropy": "all_zero"},
       "slurm": {"job_id": "55978313", "account": "SDILLON1", "partition": "free", "qos": "low", "node": "hpc3-14-07", "cpus_per_task": 1, "memory": "4G"},
+      "start_utc": "2026-09-13T04:20:16Z",
+      "end_utc": "2026-09-13T04:46:20Z",
+      "exit_status": "0:0",
+      "wall_clock_seconds": 1568,
+      "scientific_runner_seconds": 1564,
+      "peak_memory_MB": 343.69,
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260913T041947Z-86d7e96-rawaudit",
-      "retrieval_status": "running",
-      "classification": "PENDING_REQUIRED_PHYSICAL_AND_DIAGNOSTIC_HORIZON"
+      "local_path": "hpc3-results/asb-drx-full-v34-recovery/20260913T041947Z-86d7e96-rawaudit",
+      "retrieval_status": "verified",
+      "classification": "BASELINE_FIRST_FAILURE_HAZARD_INTEGRATION_BEFORE_RAW_TRIGGER",
+      "claim_level": "integrated_regression",
+      "physical_horizon": {"final_step": 5999, "final_strain": 0.5367961465191489, "final_time_s": 0.000536696146519176},
+      "candidate_chain": {"eligible_sites_max": 352, "hazard_rate_max_s-1": 0.03399690644359082, "raw_trigger_total": 0, "raw_viable_trigger_total": 0, "candidate_creations": 0, "active_candidates": 0, "promotions": 0, "hazard_births": 0, "physical_grains": null},
+      "outputs": {
+        "diagnostics_csv": "6df35d14804c4d7c6c3cd2ae3fab99b10f613a46a3de84b6fc124c952766b2b6",
+        "final_checkpoint": "c2f26cd82b7e3a3161bc9ae900316a64b7686d9302754cf8b0937dfbc91c2f3e",
+        "output_inventory": "f32168f52746d278d6ec18ae0c239e77023bf1d30cfefc1dffc80037436e90d5",
+        "result_summary": "4c3725ea79b5202723d89e58a995222588c9957719f60ce60040ec27bcf7fa9e",
+        "status_json": "45666811f152fad8c65e97a942bd836d8127ea47961b30eafbcf3adc8ee63dfb"
+      }
     }
   ]
 }

@@ -748,6 +748,7 @@ P = dict(
     restart_temperature_offset_K=0.0,
     restart_E11=None,
     allow_legacy_candidate_restart_without_state=False,
+    allow_legacy_potential_restart_without_state=False,
 
     # Hot-band / ASB diagnostics.  These do not affect evolution; they only
     # quantify whether a hot/plastic-power band is also becoming a low-rho band.
@@ -3098,6 +3099,23 @@ else:
     rho = np.maximum(np.sum(rp+rm, axis=2), P['rho_min'])
     P['_rho_state_ref_runtime'] = float(rho_c)
 
+if _restart_loaded and not P.get('restart_reset_clock', True):
+    with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
+        _potential_keys = [name for name in _restart_npz.files if name.startswith('ATpot__')]
+        if not _potential_keys:
+            if not P.get('allow_legacy_potential_restart_without_state', False):
+                raise ValueError('legacy checkpoint omits numerical Arrhenius-potential state; exact restart is impossible')
+        else:
+            for _potential_key in _potential_keys:
+                _potential_name = _potential_key.split('__', 1)[1]
+                _potential_value = np.asarray(_restart_npz[_potential_key])
+                if _potential_value.ndim == 0:
+                    _potential_value = _potential_value.item()
+                else:
+                    _potential_value = _potential_value.copy()
+                setattr(ATpot, _potential_name, _potential_value)
+            rho_c = float(ATpot.rho_c)
+
 # KM equilibrium diagnostic
 kB_eV = 8.617333262145e-5
 k2T = float(_km_k2_from_T(P['T0']))
@@ -4893,7 +4911,18 @@ def _atomic_savez_compressed(path, **arrays):
         raise
 
 
-def _save_restart_checkpoint(step_local):
+def _potential_checkpoint_state():
+    """Serialize every numerical Arrhenius-potential cache member exactly."""
+    state = {}
+    for name, value in vars(ATpot).items():
+        if isinstance(value, np.ndarray):
+            state[f'ATpot__{name}'] = value
+        elif isinstance(value, (bool, int, float, np.bool_, np.integer, np.floating)):
+            state[f'ATpot__{name}'] = np.array(value)
+    return state
+
+
+def _save_restart_checkpoint(step_local, sim_time_value=None):
     """Save exact continuation checkpoint for branch/sweep workflows."""
     if not P.get('write_restart_npz', True):
         return None
@@ -4918,7 +4947,7 @@ def _save_restart_checkpoint(step_local):
             nuc_raw_trigger_total=np.array(nuc_raw_trigger_total, dtype=np.int64),
             nuc_raw_viable_trigger_total=np.array(nuc_raw_viable_trigger_total, dtype=np.int64),
             rho_c=np.array(rho_c), rho_peak_ind=np.array(getattr(ATpot, 'rho_peak_ind', rho_c)), rho_ch_ref=np.array(_rho_ch_scale()), sigma_bar=np.array(sigma_bar), step=np.array(step_local, dtype=np.int32),
-            sim_time=np.array(sim_time + P['dt']),
+            sim_time=np.array(sim_time + P['dt'] if sim_time_value is None else sim_time_value),
             rho_state_ref_runtime=np.array(P.get('_rho_state_ref_runtime', np.nan)),
             rho_state_total_ref_runtime=np.array(P.get('_rho_state_total_ref_runtime', np.nan)),
             rho_state_struct_ref_runtime=np.array(P.get('_rho_state_struct_ref_runtime', np.nan)),
@@ -4935,6 +4964,7 @@ def _save_restart_checkpoint(step_local):
             grain_birth_barrier_eV=grain_birth_barrier_eV[:Ng],
             rng_nuc_state_json=np.array(_rng_state_to_json(_rng_nuc)),
             P_json=np.array(json.dumps(P, default=str)),
+            **_potential_checkpoint_state(),
         )
         return fname
     except OSError as exc:
@@ -4967,6 +4997,12 @@ if _restart_loaded and not P.get('restart_reset_clock', True):
         if _memory_load.shape != collective_activity_memory.shape:
             raise ValueError('checkpoint collective activity memory shape mismatch')
         collective_activity_memory = _memory_load.copy()
+
+if P.get('restart_initialization_audit_only', False):
+    audit_step = max(_restart_step_offset - 1, 0)
+    audit_path = _save_restart_checkpoint(audit_step, sim_time_value=sim_time)
+    print(f"Restart initialization audit: {audit_path}")
+    raise SystemExit(0)
 
 _restart_end_step = _restart_step_offset + int(P['nSteps'])
 for n in range(_restart_step_offset, _restart_end_step):

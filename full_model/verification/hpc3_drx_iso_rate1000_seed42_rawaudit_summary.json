@@ -1,0 +1,51 @@
+{
+  "architecture": "full_2d_phase_field",
+  "asb_classification": "NOT_EVALUATED_REQUIRES_MATCHED_ISOTHERMAL_CONTROL_AND_FIELD_WIDTH_REFINEMENT",
+  "branch": "drx_isothermal",
+  "candidate_to_grain_chain": {
+    "active_candidates_max": 0,
+    "allocated_hazard_births_max": 0,
+    "allocated_labels_max": 12,
+    "candidate_creations": 0,
+    "cumulative_hazard_max": 1.0536530827500335e-07,
+    "eligible_sites_max": 352,
+    "first_failing_stage": "hazard_integration_did_not_reach_stochastic_threshold",
+    "hazard_rate_max_s-1": 0.03399690644359082,
+    "physical_grains": null,
+    "promotable_candidates_max": 0,
+    "raw_stochastic_attempts": 0,
+    "raw_stochastic_attempts_provenance": "explicit_cumulative_counter"
+  },
+  "checkpoint": {
+    "checkpoint_active_candidates": 0,
+    "checkpoint_max_candidate_age": 0,
+    "global_step": 5999,
+    "max_hazard_threshold_ratio": 2.5179086767458483e-06,
+    "minimum_stochastic_threshold": 0.00021425967734864485,
+    "path": "drx_v25_restart_005999.npz",
+    "physical_time_s": 0.000536796146519176,
+    "sha256": "c2f26cd82b7e3a3161bc9ae900316a64b7686d9302754cf8b0937dfbc91c2f3e"
+  },
+  "claim_level": "integrated_regression",
+  "localization_observables": {
+    "maximum_temperature_anisotropy": 0.9810307766546625,
+    "maximum_top5_plastic_power_fraction": 0.25829017791474246,
+    "maximum_top5_plastic_rate_fraction": 0.323712166162586,
+    "minimum_hot_cold_density_ratio": 0.0017514876049787367
+  },
+  "physical_grain_classification": "NOT_AVAILABLE_UNTIL_PATCH_E",
+  "physical_horizon": {
+    "diagnostic_rows": 241,
+    "final_step": 5999,
+    "final_strain": 0.5367961465191489,
+    "final_time_s": 0.000536696146519176
+  },
+  "schema": "asb-drx-full-v34-case-summary/v1",
+  "stress_temperature": {
+    "final_stress_MPa": 439.84882810863974,
+    "maximum_temperature_K": 1125.5380004513297,
+    "maximum_temperature_range_K": 10.940806613015866,
+    "peak_stress_MPa": 909.3489282664464,
+    "post_peak_softening_fraction": 0.516303572329322
+  }
+}

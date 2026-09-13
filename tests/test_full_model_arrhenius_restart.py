@@ -69,6 +69,8 @@ class CandidateRestartSourceTest(unittest.TestCase):
         self.assertIn("_atomic_savez_compressed", source)
         self.assertIn("checkpoint collective activity memory shape mismatch", source)
         self.assertIn("_restart_step_offset", source)
+        self.assertIn("_potential_checkpoint_state", source)
+        self.assertIn("legacy checkpoint omits numerical Arrhenius-potential state", source)
         for name in ("nuc_raw_trigger_total", "nuc_raw_viable_trigger_total"):
             self.assertIn(f"{name}=np.array({name}", source)
             self.assertIn(f"'{name}'", source)

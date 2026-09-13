@@ -1,0 +1,18 @@
+{
+  "schema": "asb-drx-full-v34-potential-restart/v1",
+  "architecture": "full_2d_phase_field_component_fixture",
+  "production_driver_sha256": "ec0c2071cdf509ac60f1ea0ce5d43dccfb3644dd8156da1219c2b3d574293962",
+  "grid": [16, 16],
+  "continuous_steps": 20,
+  "segmented_steps": [10, 10],
+  "potential_update_interval": 1,
+  "checkpoint_fields_compared": 107,
+  "potential_numeric_fields_compared": 58,
+  "authoritative_fields_compared": 106,
+  "authoritative_fields_bitwise_exact": true,
+  "excluded_configuration_field": "P_json",
+  "exclusion_reason": "the segmented trajectory necessarily records restart_file and a different local nSteps control",
+  "root_cause": "ATPotential numerical tables and cache state were not checkpointed; rebuilding at restart changed the discrete trajectory",
+  "legacy_checkpoint_policy": "reject unless allow_legacy_potential_restart_without_state is explicitly true",
+  "claim_level": "fixture"
+}

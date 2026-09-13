@@ -58,11 +58,25 @@ Updated: 2026-09-12 (America/Los_Angeles)
   triggers by step 1 and 32 by step 2; continuous and exact-restart trajectories
   match bitwise across 48 authoritative checkpoint fields (only `P_json`, which
   records restart/run-length controls, differs).
-- No-retuning raw-trigger audit job `55978313` is running from clean commit
-  `86d7e96` on the same DRX-isothermal condition for 6,000 steps. The only
-  production-driver delta is the two cumulative diagnostic counters; this run
-  will both cross strain 0.5 and identify whether failure precedes or follows a
-  raw stochastic trigger.
+- No-retuning raw-trigger audit job `55978313` completed from clean commit
+  `86d7e96` in 1,568 s and was fetched with all checksums verified. At strain
+  0.5368 it records exactly zero raw triggers, viable triggers, candidates,
+  promotions, and births despite 352 eligible sites and a peak hazard rate of
+  `3.40e-2/s`. The baseline first failing stage is now definitively hazard
+  integration before stochastic triggering. It is an integrated regression,
+  not a DRX mechanism result or predictive validation.
+- A long-segment comparison exposed another exact-restart defect hidden by the
+  earlier 1+1-step smoke test: numerical Arrhenius-potential tables and their
+  temperature cache were not checkpointed. Rebuilding them at restart changed
+  potential-update hysteresis and eventually the full fields. The production
+  copy now serializes/restores all 58 numerical potential members and rejects
+  legacy checkpoints missing them by default. A 20-step continuous versus
+  10+10 segmented fixture is bitwise exact across all 106 authoritative fields.
+- The current complete suite passes 268 tests. Staged Patch B--F components are
+  isolated from the production trajectory: stateful embryo identity/dynamics,
+  deterministic diffuse embryo support, full-field environment coupling,
+  strict physical-grain recognition, and conjunctive matched-control ASB
+  classification. None is yet promoted to an integrated scientific claim.
 - Every scientific output checksum in both fetched runs passed. Their generated
   inventories contain one invalid self-entry because the old runner hashed the
   inventory while writing it; this provenance-only defect is recorded and fixed
