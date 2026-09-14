@@ -1773,7 +1773,7 @@
     "the subcritical/supercritical fixture does not produce the required sign split",
     "mobility response is not physically ordered"
   ],
-  "full_model_sibm_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED",
+  "full_model_sibm_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED",
   "grid192_tip_relative_to_control_at_common_time": {
     "D1_grid192_bulge": 9.138680202934987e-08,
     "D2_grid192_control": 7.895469313858751e-07,
@@ -1832,6 +1832,7 @@
     "window_trajectory_agreement_observed_but_pair_invalid": true
   },
   "scientific_source_commit": "873c3b03d7019807ce71b70755b4475a8ab58a01",
+  "source_geometry_decision": "V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION",
   "temperature_comparison": {
     "B3_temperature_1000K": 9.068609383372573e-08,
     "B4_temperature_1200K": 8.756854223183635e-08,

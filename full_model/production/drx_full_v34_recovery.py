@@ -70,6 +70,7 @@ from hazard_measure import (
 )
 from sibm_boundary import select_resolved_hagb
 from sibm_contour import measure_pair_contour
+from sibm_geometry import displace_pair_boundary, validate_post_seed_pair
 from phase_promotion import (
     atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
 )
@@ -737,6 +738,10 @@ P = dict(
     # ~=0.316 um at the frozen v34 settings); this is a representation
     # resolution condition, not mobility or critical-radius tuning.
     sibm_initial_bulge_radius_um=0.75,
+    sibm_seed_half_chord_um=1.50,
+    sibm_seed_profile='pinned_cap',
+    sibm_pin_endpoints=False,
+    sibm_pin_radius_um=0.65,
     sibm_active_window_radius_um=3.0,
     sibm_activation_h0_eV=0.35,
     sibm_activation_critical_pressure_Pa=1.0e9,
@@ -3376,6 +3381,7 @@ sibm_reference_child_fraction = None
 sibm_initial_child_fraction = None
 sibm_active_mask = None
 sibm_reference_eta = None
+sibm_pin_mask = None
 if (P.get('use_sparse_common_front_state', False) and _restart_loaded
         and not P.get('restart_reset_clock', True)):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
@@ -3472,14 +3478,55 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     sibm_active_mask = _pair_domain_mask & (np.sqrt(di*di+dj*dj) <= _active_radius)
     sibm_reference_parent_mask = (
         eta[:, :, parent_label] >= eta[:, :, child_label]) & sibm_active_mask
-    bulge = (np.zeros((Nx, Ny)) if radius <= 0.0 else
-             0.5*(1.0-np.tanh((np.sqrt(di*di+dj*dj)-radius)
-                              /(np.sqrt(2.0)*max(np.sqrt(P['kappa_eta']/P['W_eta']), dx)))))
-    bulge *= sibm_reference_parent_mask
-    transfer = bulge*eta[:, :, parent_label]
-    eta[:, :, parent_label] -= transfer
-    eta[:, :, child_label] += transfer
-    eta[:, :, :Ng] /= np.maximum(np.sum(eta[:, :, :Ng], axis=2, keepdims=True), 1e-300)
+    _interface_width = max(np.sqrt(P['kappa_eta']/P['W_eta']), dx)
+    _seed_half_chord = float(P.get('sibm_seed_half_chord_um', 1.50))*1e-6
+    _pre_seed_pair_report = validate_post_seed_pair(
+        eta[:, :, :Ng], parent=parent_label, child=child_label,
+        spacing_m=dx, interface_width_m=_interface_width,
+        centre_index=tuple(centre_index),
+        advance_direction_index=tuple(_advance_direction),
+        seed_amplitude_m=0.0, half_chord_m=_seed_half_chord,
+        active_window_radius_m=_active_radius, purity_threshold=_pure_threshold)
+    _seed = displace_pair_boundary(
+        eta[:, :, :Ng], parent=parent_label, child=child_label,
+        spacing_m=dx, interface_width_m=_interface_width,
+        centre_index=tuple(centre_index),
+        advance_direction_index=tuple(_advance_direction),
+        amplitude_m=radius, half_chord_m=_seed_half_chord,
+        active_window_radius_m=_active_radius,
+        profile=str(P.get('sibm_seed_profile', 'pinned_cap')))
+    eta[:, :, :Ng] = _seed.eta
+    _post_seed_pair_report = validate_post_seed_pair(
+        eta[:, :, :Ng], parent=parent_label, child=child_label,
+        spacing_m=dx, interface_width_m=_interface_width,
+        centre_index=tuple(centre_index),
+        advance_direction_index=tuple(_advance_direction),
+        seed_amplitude_m=radius, half_chord_m=_seed_half_chord,
+        active_window_radius_m=_active_radius, purity_threshold=_pure_threshold)
+    if not _post_seed_pair_report.valid:
+        _invalid_record = {
+            'classification': 'SIBM_INVALID_POST_INITIALIZATION_PAIR',
+            'pre_seed': _pre_seed_pair_report.to_dict(),
+            'post_seed': _post_seed_pair_report.to_dict(),
+            'seed': {
+                'method': 'signed_distance_boundary_displacement',
+                'profile': str(P.get('sibm_seed_profile', 'pinned_cap')),
+                'amplitude_m': radius, 'half_chord_m': _seed_half_chord,
+                'chord_length_m': _seed.chord_length_m,
+                'arc_length_m': _seed.arc_length_m,
+                'swept_area_m2': _seed.swept_area_m2,
+                'tip_curvature_m-1': _seed.tip_curvature_m_1,
+                'maximum_simplex_error': _seed.maximum_simplex_error,
+                'maximum_nonpair_change': _seed.maximum_nonpair_change,
+            },
+        }
+        _invalid_path = Path(os.environ.get('DRX_OUTDIR', './output'))
+        _invalid_path.mkdir(exist_ok=True, parents=True)
+        (_invalid_path/'sibm_invalid_post_initialization_pair.json').write_text(
+            json.dumps(_invalid_record, indent=2, sort_keys=True)+'\n')
+        raise ValueError(
+            'SIBM_INVALID_POST_INITIALIZATION_PAIR: '
+            +', '.join(_post_seed_pair_report.reasons))
     lab = np.argmax(eta[:, :, :Ng], axis=2)
     psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
     hphase = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
@@ -3498,11 +3545,22 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
         child_mean_density_m2=_selection.child_mean_density_m2,
         parent_pure_core_cells=_selection.parent_pure_core_cells,
         child_pure_core_cells=_selection.child_pure_core_cells,
-        selection_basis='resolved pure cores plus shared diffuse HAGB support',
+        selection_basis='post-seed physically validated connected cores and HAGB',
         initial_bulge_radius_m=radius,
         active_window_radius_m=_active_radius,
         centre_index=[int(centre_index[0]), int(centre_index[1])],
         advance_direction_index=_advance_direction,
+        seed_method='signed_distance_boundary_displacement',
+        seed_profile=str(P.get('sibm_seed_profile', 'pinned_cap')),
+        seed_half_chord_m=_seed_half_chord,
+        seed_chord_length_m=_seed.chord_length_m,
+        seed_arc_length_m=_seed.arc_length_m,
+        seed_swept_area_m2=_seed.swept_area_m2,
+        seed_tip_curvature_m_1=_seed.tip_curvature_m_1,
+        pre_seed_pair_geometry=_pre_seed_pair_report.to_dict(),
+        post_seed_pair_geometry=_post_seed_pair_report.to_dict(),
+        pin_endpoints=bool(P.get('sibm_pin_endpoints', False)),
+        pin_radius_m=float(P.get('sibm_pin_radius_um', 0.65))*1e-6,
         metric_definition=(
             'excess child support relative to the pre-bulge field, restricted '
             'to cells belonging to the selected parent at initialization'),
@@ -3510,6 +3568,20 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
         initial_excess_bulge_area_m2=float(np.sum(
             (child_fraction-sibm_reference_child_fraction)
             * sibm_reference_parent_mask)*dx*dy))
+
+if sibm_experiment_state and sibm_experiment_state.get('pin_endpoints', False):
+    _pci, _pcj = sibm_experiment_state['centre_index']
+    _pai, _paj = sibm_experiment_state['advance_direction_index']
+    _pti, _ptj = -_paj, _pai
+    _half_chord_cells = float(sibm_experiment_state['seed_half_chord_m'])/dx
+    _pin_radius = float(sibm_experiment_state['pin_radius_m'])
+    _pi = ((np.arange(Nx)-_pci+Nx//2) % Nx-Nx//2)[:, None]*dx
+    _pj = ((np.arange(Ny)-_pcj+Ny//2) % Ny-Ny//2)[None, :]*dy
+    _tangent_coordinate = _pti*_pi+_ptj*_pj
+    _normal_coordinate = _pai*_pi+_paj*_pj
+    sibm_pin_mask = (
+        (np.abs(np.abs(_tangent_coordinate)-_half_chord_cells*dx) <= _pin_radius)
+        & (np.abs(_normal_coordinate) <= _pin_radius))
 
 
 def _update_sibm_geometry_metrics(child_fraction_now, dt_metric):
@@ -6629,6 +6701,15 @@ for n in range(_restart_step_offset, _restart_end_step):
                 lim = float(P.get('ac_max_abs_step', 0.02))
                 deta_i = np.clip(deta_i, -lim, lim)
             eta[:,:,i] = np.clip(eta[:,:,i] + deta_i, 0, 1)
+        if sibm_pin_mask is not None:
+            _pin_parent = int(sibm_experiment_state['parent_label'])
+            _pin_child = int(sibm_experiment_state['child_label'])
+            eta[:, :, _pin_parent] = np.where(
+                sibm_pin_mask, sibm_reference_eta[:, :, _pin_parent],
+                eta[:, :, _pin_parent])
+            eta[:, :, _pin_child] = np.where(
+                sibm_pin_mask, sibm_reference_eta[:, :, _pin_child],
+                eta[:, :, _pin_child])
         # Remove numerical tails only; this is a roundoff cleanup, not phase selection.
         tail_zero = float(P.get('eta_tail_zero', 0.0))
         if tail_zero > 0.0:

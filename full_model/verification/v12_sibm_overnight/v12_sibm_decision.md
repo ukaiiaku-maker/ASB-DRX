@@ -2,7 +2,9 @@
 
 ## Decision
 
-`FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED`
+`V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION`
+
+`FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED`
 
 The negative decision is validity-led, not a fitted or tuned outcome. Every seeded trajectory already lacks an independently resolved parent pure core in its step-0 campaign checkpoint. The two unseeded controls begin with a resolved pair but lose the parent pure core by step 250. A diffuse pair zero contour can persist after this loss and therefore cannot by itself establish SIBM of two physical grains.
 
@@ -25,4 +27,4 @@ All phase-simplex, population nonnegativity, line, signed-Burgers, energy/heat, 
 
 ## Required next scientific action
 
-Construct or select a source state whose parent and child retain resolved pure cores after seeding, make loss of either core a clean per-case stop, and rerun only a compact bulge/control/criticality qualification before any new range campaign. The present matrix must remain implementation-falsification and negative-mechanism evidence.
+Construct or select a source state whose parent and child retain resolved pure cores after seeding, make loss of either core a clean per-case stop, and rerun only a compact bulge/control/criticality qualification before any new range campaign. The present matrix must remain source-geometry and seed-initialization falsification evidence; it is not a falsification of the SIBM mechanism.

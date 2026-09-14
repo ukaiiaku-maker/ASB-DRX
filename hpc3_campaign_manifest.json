@@ -1897,7 +1897,12 @@
         "summed_case_wallclock_seconds": 44112
       },
       "postprocessing": {
-        "classification": "FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED",
+        "classification_original_v12": "FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED",
+        "classification_amended_v13": [
+          "V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION",
+          "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED"
+        ],
+        "amendment_reason": "v12 invalidated the selected pair and post-seed geometry before the SIBM mechanism was cleanly exercised",
         "all_conservation_invariants_passed": true,
         "all_no_allocation_checks_passed": true,
         "all_hard_invariants_passed": false,
@@ -1911,6 +1916,50 @@
         "configured_regression_tests_passed": 325
       },
       "unrelated_job_preserved": "55950433"
+    },
+    {
+      "run_id": "local-v13-valid-pair-requalification-20260914",
+      "purpose": "directive_v13_post_seed_pair_contract_and_canonical_pinned_cap_preflight",
+      "branch": "exp/full-v34-recovery-v1",
+      "restart_commit": "6737e869a2509549bc34c128556e1db7edc0fec1",
+      "execution": "local_static_and_compact_full_driver_checks_only",
+      "hpc3_submission": null,
+      "v12_amended_classification": [
+        "V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION",
+        "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED"
+      ],
+      "canonical_source": {
+        "grid128_sha256": "730cfe2ae04e47cfcf3164b179d2b820453ce1320ec095edc0ad01258c4c0119",
+        "grid192_sha256": "90c48b93c2287a62555c5f500de177ec8837cbbc4df13b1f3bf10ebd97b4f221",
+        "misorientation_deg": 30.0,
+        "parent_density_m-2": 4e17,
+        "child_density_m-2": 1e17,
+        "claim": "controlled numerical fixture_not_material_calibration"
+      },
+      "geometry_preflight": {
+        "classification": "CANONICAL_PINNED_CAP_PREFLIGHT_PASSED",
+        "post_seed_pair_valid_128_and_192": true,
+        "critical_pressure_Pa": 229885.05747126436,
+        "result": "full_model/verification/v13_valid_pair_preflight.json"
+      },
+      "full_driver": {
+        "retired_source_rejected_before_step_1": true,
+        "canonical_two_step_run_passed": true,
+        "flat_favorable_reverse_and_mobility_off_controls_passed": true,
+        "pinned_criticality_accepted": false,
+        "hard_failure": "signed boundary residual exceeds removable line content",
+        "classification": "CANONICAL_FULL_MODEL_SIBM_REQUALIFICATION_BLOCKED_BY_HARD_LEDGER_FAILURE",
+        "retuning_performed": false,
+        "matched_v32_full_v34_asb_source_regression": true,
+        "configured_regression_tests_passed": 330
+      },
+      "scientific_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED",
+      "result": "full_model/verification/v13_full_model_requalification.json",
+      "artifact_checksums": "full_model/verification/v13_checksums.sha256",
+      "queue_audit_2026-09-14": {
+        "v13_jobs_present": false,
+        "unrelated_job_preserved": "55950433"
+      }
     }
   ]
 }

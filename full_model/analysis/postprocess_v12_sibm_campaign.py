@@ -300,7 +300,8 @@ def build_decision(records: list[dict[str, Any]],
         "criticality_fixture_passed": bool(criticality),
         "additional_pair_cases": 0,
         "additional_pair_reason": "no second pair met the preregistered pure-core criterion",
-        "full_model_sibm_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED",
+        "source_geometry_decision": "V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION",
+        "full_model_sibm_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED",
         "decision_reasons": [
             "the seeded pair fails the independent-pure-core identity requirement at step 0",
             "baseline normal tip advance does not exceed its rapidly migrating no-bulge control",
@@ -439,7 +440,8 @@ def write_decision_note(decision: dict[str, Any], path: Path) -> None:
     lines = [
         "# Directive v12 SIBM post-processing decision", "",
         "## Decision", "",
-        "`FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED`", "",
+        "`V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION`", "",
+        "`FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED`", "",
         "The negative decision is validity-led, not a fitted or tuned outcome. Every seeded "
         "trajectory already lacks an independently resolved parent pure core in its step-0 "
         "campaign checkpoint. The two unseeded controls begin with a resolved pair but lose "
@@ -469,7 +471,8 @@ def write_decision_note(decision: dict[str, Any], path: Path) -> None:
         "Construct or select a source state whose parent and child retain resolved pure cores "
         "after seeding, make loss of either core a clean per-case stop, and rerun only a compact "
         "bulge/control/criticality qualification before any new range campaign. The present "
-        "matrix must remain implementation-falsification and negative-mechanism evidence.", "",
+        "matrix must remain source-geometry and seed-initialization falsification evidence; "
+        "it is not a falsification of the SIBM mechanism.", "",
     ]
     path.write_text("\n".join(lines))
 

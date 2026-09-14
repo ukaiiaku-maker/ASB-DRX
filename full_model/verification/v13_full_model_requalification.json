@@ -1,0 +1,46 @@
+{
+  "schema": "full-v34-v13-requalification-checkpoint/v1",
+  "v12_amended_decisions": [
+    "V12_SOURCE_PAIR_AND_POST_SEED_GEOMETRY_INVALID_FOR_SIBM_QUALIFICATION",
+    "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED"
+  ],
+  "geometry_preflight": {
+    "classification": "CANONICAL_PINNED_CAP_PREFLIGHT_PASSED",
+    "result": "full_model/verification/v13_valid_pair_preflight.json",
+    "post_seed_pair_valid_at_grids": [128, 192],
+    "zero_amplitude_bitwise_exact": true,
+    "pinned_cap_derivative_finite_difference_verified": true,
+    "critical_stored_pressure_Pa_at_amplitude_0p6um_half_chord_1p5um": 229885.05747126436
+  },
+  "production_driver_precondition": {
+    "retired_v12_source_classification": "SIBM_INVALID_POST_INITIALIZATION_PAIR",
+    "advanced_scientific_timesteps": 0,
+    "canonical_bicrystal_post_seed_pair_valid": true,
+    "canonical_bicrystal_two_step_full_driver_completed": true,
+    "line_closure_m": 0.0,
+    "signed_burgers_change_m2": 0.0,
+    "line_energy_equals_heat": true,
+    "label_or_orientation_allocated": false
+  },
+  "compact_matrix_preliminary": {
+    "flat_favorable_motion_sign_correct": true,
+    "flat_reversed_motion_sign_correct": true,
+    "mobility_off_stationary": true,
+    "unpinned_and_pinned_seeded_cases": "initial diffuse-profile relaxation dominates short horizon",
+    "pinned_subcritical_final_pressure_Pa": -30484733.185258716,
+    "pinned_subcritical_area_change_m2_over_300_steps": 2.38037109375e-13,
+    "pinned_supercritical_final_pressure_Pa": 10820013.015081137,
+    "pinned_supercritical_area_change_m2_over_300_steps": 4.882812500000001e-13,
+    "interpretation": "not accepted as a criticality sign split"
+  },
+  "hard_failure": {
+    "classification": "CANONICAL_FULL_MODEL_SIBM_REQUALIFICATION_BLOCKED_BY_HARD_LEDGER_FAILURE",
+    "context": "near-static common-state equilibration intended to remove seed reconstruction transient",
+    "exception": "signed boundary residual exceeds removable line content",
+    "component": "moving_front.advance_front",
+    "retuning_performed": false,
+    "hpc_submission_authorized_by_local_gate": false
+  },
+  "scientific_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED",
+  "next_action": "repair the full-model phase/moving-front common-state handoff and demonstrate restart-exact pinned criticality locally before the compact HPC bundle"
+}

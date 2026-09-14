@@ -1,0 +1,28 @@
+{
+  "active_pair": [
+    0,
+    1
+  ],
+  "child_density_m-2": 2.5e+17,
+  "domain_m": [
+    1e-05,
+    1e-05
+  ],
+  "grid": [
+    128,
+    128
+  ],
+  "interface_width_m": 3.16e-07,
+  "orientations_deg": [
+    0.0,
+    30.0
+  ],
+  "output_checkpoint": ".hpc3/inputs/v13_canonical_bicrystal_equal_128.npz",
+  "output_sha256": "a3ce37df5e56f435e9470b9cc9aac7e26fb753e5f73dce3bf88c337f2a1efcc3",
+  "parent_density_m-2": 2.5e+17,
+  "phase_count_preserved": 12,
+  "purpose": "controlled full-state numerical fixture, not material calibration",
+  "schema": "full-v34-v13-canonical-bicrystal-source/v1",
+  "source_checkpoint": ".hpc3/inputs/v9_event_restart_006900.npz",
+  "source_sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b"
+}
