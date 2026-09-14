@@ -37,6 +37,7 @@ run_case() {
 }
 
 cd "$root/production" || exit 2
+python3 -c 'import sibm_geometry' >"$out/import_preflight.log" 2>&1 || overall=$?
 PYTHONPATH="$root/.." python3 -m unittest discover -s "$root/../tests" \
   -p 'test_full_model_moving_front.py' >"$out/local_invariants.log" 2>&1 || overall=$?
 PYTHONPATH="$root/.." python3 "$root/analysis/run_v10_sibm_fixtures.py" \

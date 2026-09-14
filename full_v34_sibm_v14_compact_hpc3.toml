@@ -16,6 +16,7 @@ input_paths = [
   "full_model/production/run_full_v34_recovery.sh",
   "full_model/production/sibm_boundary.py",
   "full_model/production/sibm_contour.py",
+  "full_model/production/sibm_geometry.py",
   "full_model/production/stateful_embryos.py",
   "full_model/production/stored_energy_coupling.py",
   "full_model/analysis/run_v10_sibm_fixtures.py",
