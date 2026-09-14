@@ -79,9 +79,10 @@ from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
 )
 from moving_front import (
-    DefectState, activated_front_fraction, advance_front,
+    DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
     initialize_existing_boundary_front,
+    front_feasibility_fields,
     reconstruct_mixture, state_arrays as sparse_front_arrays,
     state_from_checkpoint as sparse_front_from_checkpoint,
     state_metadata_json as sparse_front_metadata_json,
@@ -3382,6 +3383,7 @@ sibm_initial_child_fraction = None
 sibm_active_mask = None
 sibm_reference_eta = None
 sibm_pin_mask = None
+_sibm_initial_feasibility_margin = None
 if (P.get('use_sparse_common_front_state', False) and _restart_loaded
         and not P.get('restart_reset_clock', True)):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
@@ -3536,6 +3538,8 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     sparse_front_state = initialize_existing_boundary_front(
         DefectState(rp.copy(), rm.copy(), rho_forest.copy(), rho_wall.copy()),
         child_fraction, target_density, parent_label, child_label)
+    _sibm_initial_feasibility_margin = front_feasibility_fields(
+        sparse_front_state)['feasibility_margin_m2'].copy()
     sibm_experiment_state = dict(
         schema='full-v34-sibm-existing-HAGB/v2', parent_label=parent_label,
         child_label=child_label, parent_orientation_rad=float(psi_gv[parent_label]),
@@ -6749,15 +6753,66 @@ for n in range(_restart_step_offset, _restart_end_step):
             _contour1 = _subcell_contour_fraction(_phi1)
             _newly_swept_geometry = np.where(
                 sibm_active_mask, np.maximum(_contour1-_contour0, 0.0), 0.0)
-        sparse_front_state, _front_mixture = advance_front(
-            sparse_front_state, _chi_new, cell_area_m2=dx*dx,
-            represented_thickness_m=max(
-                float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
-            line_energy_J_m=float(np.nanmean(A_E_field)),
-            boundary_storage_fraction=float(P.get(
-                'moving_front_boundary_storage_fraction', 0.05)),
-            sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)),
-            newly_swept_fraction=_newly_swept_geometry)
+        try:
+            sparse_front_state, _front_mixture = advance_front(
+                sparse_front_state, _chi_new, cell_area_m2=dx*dx,
+                represented_thickness_m=max(
+                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+                line_energy_J_m=float(np.nanmean(A_E_field)),
+                boundary_storage_fraction=float(P.get(
+                    'moving_front_boundary_storage_fraction', 0.05)),
+                sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)),
+                newly_swept_fraction=_newly_swept_geometry)
+        except FrontAdmissibilityError as exc:
+            _record = dict(exc.record)
+            _record.update({
+                'step': int(n), 'time_s': float(sim_time),
+                'cell_spacing_m': float(dx),
+                'represented_thickness_m': max(
+                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+                'operator_split': 'after_common_constitutive_and_phase_profile_update',
+                'initial_domain_minimum_feasibility_margin_m2': (
+                    None if _sibm_initial_feasibility_margin is None else
+                    float(np.min(_sibm_initial_feasibility_margin))),
+                'before_phase_domain_minimum_feasibility_margin_m2': float(np.min(
+                    front_feasibility_fields(
+                        sparse_front_state)['feasibility_margin_m2'])),
+            })
+            for _cell in _record['failing_cells']:
+                _i, _j = _cell['grid_index']
+                _chi_delta = float(_chi_new[_i, _j]-sparse_front_state.chi[_i, _j])
+                _normal_sweep = (0.0 if _newly_swept_geometry is None else
+                                 float(_newly_swept_geometry[_i, _j]))
+                _initial_margin = (None if _sibm_initial_feasibility_margin is None
+                                   else float(_sibm_initial_feasibility_margin[_i, _j]))
+                _cell.update({
+                    'physical_position_m': [float(_i*dx), float(_j*dy)],
+                    'parent_phase_fraction_before': float(
+                        eta_before_ac[_i, _j, sparse_front_state.parent_label]),
+                    'child_phase_fraction_before': float(
+                        eta_before_ac[_i, _j, sparse_front_state.child_label]),
+                    'parent_phase_fraction_after': float(
+                        eta[_i, _j, sparse_front_state.parent_label]),
+                    'child_phase_fraction_after': float(
+                        eta[_i, _j, sparse_front_state.child_label]),
+                    'child_mixture_fraction_before': float(
+                        sparse_front_state.chi[_i, _j]),
+                    'child_mixture_fraction_after': float(_chi_new[_i, _j]),
+                    'contour_normal_displacement_m': float(_normal_sweep*max(dx, dy)),
+                    'phase_fraction_change': _chi_delta,
+                    'normal_sweep_fraction': _normal_sweep,
+                    'diffuse_profile_relaxation_fraction': _chi_delta-_normal_sweep,
+                    'initialization_feasibility_margin_m2': _initial_margin,
+                    'mismatch_after_initialization': (
+                        None if _initial_margin is None else _initial_margin < 0.0),
+                    'mismatch_after_common_constitutive_increment': (
+                        _cell['feasibility_margin_m2'] < 0.0),
+                    'activated_only_by_phase_profile_equilibration': (
+                        _cell['feasibility_margin_m2'] < 0.0 and _normal_sweep > 0.0),
+                })
+            _failure_path = out/'moving_front_admissibility_failure.json'
+            _failure_path.write_text(json.dumps(_record, indent=2, sort_keys=True)+'\n')
+            raise
         if _newly_swept_geometry is not None:
             _front_heat_increment_J = (
                 sparse_front_state.ledger.heat_released_J-_front_heat0_J)

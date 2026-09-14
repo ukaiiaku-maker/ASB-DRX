@@ -145,6 +145,32 @@
       "fixture_passed": false,
       "scientific_gate_passed": false,
       "second_hpc3_job_launched": false
+    },
+    {
+      "qualification_id": "v13-valid-pair-sibm-requalification",
+      "source_commit": "5f5d05385e012fc8a7c8ffe9882e2ef623472538",
+      "execution": "local_geometry_preflight_and_full_driver",
+      "classification": "CANONICAL_FULL_MODEL_SIBM_REQUALIFICATION_BLOCKED_BY_HARD_LEDGER_FAILURE",
+      "scientific_decision": "FULL_MODEL_SIBM_GROWTH_MECHANISM_UNRESOLVED",
+      "result_path": "full_model/verification/v13_full_model_requalification.json",
+      "geometry_result_path": "full_model/verification/v13_valid_pair_preflight.json",
+      "hpc3_job_launched": false,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v14-pre-repair-moving-front-admissibility-audit",
+      "source_commit": "5f5d05385e012fc8a7c8ffe9882e2ef623472538",
+      "execution": "local_canonical_post-common_checkpoint_one-cell_normal-sweep_probe",
+      "classification": "MOVING_FRONT_PHASE_STATE_ADMISSIBILITY_FAILED",
+      "result_path": "full_model/verification/v14_first_failure_audit.json",
+      "result_sha256": "56156334313df986452d093a7cccd71d78f144bbbbdb0b61d5be33f50833f64e",
+      "initial_existing_boundary_map_infeasible": true,
+      "latent_child_update_amplifies_infeasibility": true,
+      "profile_relaxation_responsible_in_probe": false,
+      "intrinsic_hagb_content_charged_as_excess": false,
+      "hpc3_job_launched": false,
+      "scientific_gate_passed": false
     }
   ]
 }

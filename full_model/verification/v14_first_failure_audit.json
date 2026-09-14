@@ -1,0 +1,101 @@
+{
+  "classification": "MOVING_FRONT_PHASE_STATE_ADMISSIBILITY_FAILED",
+  "failure": {
+    "active_sweep_minimum_feasibility_margin_m2": -339119737144103.0,
+    "classification": "MOVING_FRONT_PHASE_STATE_ADMISSIBILITY_FAILED",
+    "density_tolerance_m2": 10707.016571702134,
+    "domain_minimum_feasibility_margin_m2": -5.110512712810072e+16,
+    "failing_cell_count": 1,
+    "failing_cells": [
+      {
+        "boundary_excess_line_density_m2": 4609605214917235.0,
+        "boundary_excess_signed_density_by_family_m2": [
+          -1046966570329466.4,
+          997644024767220.4
+        ],
+        "child_phase_fraction": 0.6034576633785006,
+        "child_total_line_density_m2": 3.462874051475887e+17,
+        "child_wall_m2": 43252.83957510529,
+        "cleanup_max": 0.6512970064123477,
+        "contour_normal_displacement_m": 7.812500000000001e-14,
+        "diffuse_profile_relaxation_fraction": 0.0,
+        "families": [
+          {
+            "child_forest_m2": 7.3128624512773e+16,
+            "child_rho_minus_m2": 7173928215228757.0,
+            "child_rho_plus_m2": 6897242086983126.0,
+            "child_signed_m2": -276686128245631.0,
+            "family": 0,
+            "parent_forest_m2": 3.2222392341455264e+16,
+            "parent_rho_minus_m2": 8301979545080212.0,
+            "parent_rho_plus_m2": 7972740792366174.0,
+            "parent_signed_m2": -329238752714038.0,
+            "signed_mismatch_m2": -52552624468407.0
+          },
+          {
+            "child_forest_m2": 5.5205669454308136e+16,
+            "child_rho_minus_m2": 1.0454523433116555e+17,
+            "child_rho_plus_m2": 9.933670654708688e+16,
+            "child_signed_m2": -5208527784078672.0,
+            "family": 1,
+            "parent_forest_m2": 7818640597346246.0,
+            "parent_rho_minus_m2": 1.4744680627131786e+17,
+            "parent_rho_plus_m2": 1.4377048388702477e+17,
+            "parent_signed_m2": -3676322384293088.0,
+            "signed_mismatch_m2": 1532205399785584.0
+          }
+        ],
+        "feasibility_margin_m2": -339119737144103.0,
+        "geometric_newly_swept_fraction": 1e-06,
+        "grid_index": [
+          47,
+          16
+        ],
+        "initialization_feasibility_margin_m2": 2.956546717951089e+17,
+        "mismatch_after_common_constitutive_increment": true,
+        "mismatch_after_existing_boundary_initialization": false,
+        "mismatch_created_only_by_profile_equilibration": false,
+        "normal_sweep_fraction": 1e-06,
+        "parent_phase_fraction": 0.3965423366214994,
+        "parent_total_line_density_m2": 3.4753304343469856e+17,
+        "parent_wall_m2": 108055.962511818,
+        "physical_position_m": [
+          3.6718750000000003e-06,
+          1.25e-06
+        ],
+        "post_common_feasibility_margin_m2": -339119737144103.0,
+        "processed_max": 0.6529717793276707,
+        "removable_line_density_m2": 1245638287109888.0,
+        "requested_newly_swept_fraction": 1e-06,
+        "signed_minimum_line_density_m2": 1584758024253991.0
+      }
+    ],
+    "integrated_removable_line_m": 4.348786012126806e-15,
+    "integrated_signed_minimum_line_m": 5.5327245475664245e-15,
+    "intrinsic_hagb_content_in_bulk_ledger": false,
+    "schema": "full-v34-moving-front-admissibility-failure/v1",
+    "signed_sink_enabled": false
+  },
+  "initial_domain_minimum_feasibility_margin_m2": -536106939413229.6,
+  "initial_infeasible_cell_count": 3039,
+  "initial_sweep_eligible_infeasible_cell_count": 346,
+  "maximum_latent_child_state_change_m2": 4.4781308563689574e+17,
+  "post_common_checkpoint": "/tmp/v14-original-failure.vST1s2/drx_v25_restart_000599.npz",
+  "post_common_checkpoint_sha256": "a90e59405937022d3513df898ac36eadd2f680e28c9f6c00fa654bf5eb91fba9",
+  "post_common_domain_minimum_feasibility_margin_m2": -5.110512712810072e+16,
+  "post_common_infeasible_cell_count": 3054,
+  "probe": "one-cell normal-sweep continuation from canonical post-common state",
+  "requested_sweep_fraction": 1e-06,
+  "schema": "full-v34-v14-first-failure-audit/v1",
+  "source_checkpoint": ".hpc3/inputs/v13_canonical_bicrystal_128.npz",
+  "source_sha256": "730cfe2ae04e47cfcf3164b179d2b820453ce1320ec095edc0ad01258c4c0119",
+  "stage_diagnosis": {
+    "diffuse_profile_relaxation_counted_as_sweep": false,
+    "front_map_infeasible_because_of_independent_child_target": true,
+    "genuine_missing_signed_channel_identified": false,
+    "initial_existing_boundary_map_infeasible": true,
+    "intrinsic_hagb_charged_as_excess": false,
+    "unphysical_latent_child_update": true
+  },
+  "sweep_eligible_infeasible_cell_count": 347
+}

@@ -58,6 +58,14 @@ class SparseFrontState:
     child_label: int
 
 
+class FrontAdmissibilityError(RuntimeError):
+    """A requested sweep lies outside the conservative transfer cone."""
+
+    def __init__(self, message, record):
+        super().__init__(message)
+        self.record = record
+
+
 def _validate_defect(state):
     arrays = tuple(np.asarray(x, dtype=float) for x in (
         state.rp, state.rm, state.forest, state.wall))
@@ -78,6 +86,94 @@ def total_line_density(state):
 def signed_density(state):
     rp, rm, _, _ = _validate_defect(state)
     return np.sum(rp-rm, axis=2)
+
+
+def front_feasibility_fields(state):
+    """Return the pointwise no-signed-source front admissibility fields.
+
+    The existing HAGB structure is intrinsic interface state.  Only the
+    parent/child *excess* lattice-line mismatch enters this calculation.
+    """
+    parent_total = total_line_density(state.parent)
+    child_total = total_line_density(state.child)
+    signed_difference = ((np.asarray(state.parent.rp)-np.asarray(state.parent.rm))
+                         -(np.asarray(state.child.rp)-np.asarray(state.child.rm)))
+    signed_minimum = np.sum(np.abs(signed_difference), axis=2)
+    removable = parent_total-child_total
+    return {
+        "parent_total_line_density_m2": parent_total,
+        "child_total_line_density_m2": child_total,
+        "removable_line_density_m2": removable,
+        "signed_difference_by_family_m2": signed_difference,
+        "signed_minimum_line_density_m2": signed_minimum,
+        "feasibility_margin_m2": removable-signed_minimum,
+    }
+
+
+def _cellwise_failure_record(state, newly, geometric, feasibility):
+    scale = max(float(np.max(feasibility["parent_total_line_density_m2"])),
+                float(np.max(feasibility["child_total_line_density_m2"])), 1.0)
+    tolerance = 64.0*np.finfo(float).eps*scale
+    failing = ((newly > 0.0)
+               & (feasibility["feasibility_margin_m2"] < -tolerance))
+    cells = []
+    for i, j in np.argwhere(failing):
+        families = []
+        for family in range(state.parent.rp.shape[2]):
+            parent_signed = float(state.parent.rp[i, j, family]
+                                  -state.parent.rm[i, j, family])
+            child_signed = float(state.child.rp[i, j, family]
+                                 -state.child.rm[i, j, family])
+            families.append({
+                "family": int(family),
+                "parent_rho_plus_m2": float(state.parent.rp[i, j, family]),
+                "parent_rho_minus_m2": float(state.parent.rm[i, j, family]),
+                "parent_forest_m2": float(state.parent.forest[i, j, family]),
+                "child_rho_plus_m2": float(state.child.rp[i, j, family]),
+                "child_rho_minus_m2": float(state.child.rm[i, j, family]),
+                "child_forest_m2": float(state.child.forest[i, j, family]),
+                "parent_signed_m2": parent_signed,
+                "child_signed_m2": child_signed,
+                "signed_mismatch_m2": parent_signed-child_signed,
+            })
+        cells.append({
+            "grid_index": [int(i), int(j)],
+            "processed_max": float(state.processed_max[i, j]),
+            "cleanup_max": float(state.cleanup_max[i, j]),
+            "requested_newly_swept_fraction": float(newly[i, j]),
+            "geometric_newly_swept_fraction": (
+                None if geometric is None else float(geometric[i, j])),
+            "parent_wall_m2": float(state.parent.wall[i, j]),
+            "child_wall_m2": float(state.child.wall[i, j]),
+            "parent_total_line_density_m2": float(
+                feasibility["parent_total_line_density_m2"][i, j]),
+            "child_total_line_density_m2": float(
+                feasibility["child_total_line_density_m2"][i, j]),
+            "removable_line_density_m2": float(
+                feasibility["removable_line_density_m2"][i, j]),
+            "signed_minimum_line_density_m2": float(
+                feasibility["signed_minimum_line_density_m2"][i, j]),
+            "feasibility_margin_m2": float(
+                feasibility["feasibility_margin_m2"][i, j]),
+            "boundary_excess_line_density_m2": float(
+                state.boundary_line_density_m2[i, j]),
+            "boundary_excess_signed_density_by_family_m2": [
+                float(x) for x in state.boundary_signed_density_m2[i, j]],
+            "families": families,
+        })
+    return {
+        "schema": "full-v34-moving-front-admissibility-failure/v1",
+        "classification": "MOVING_FRONT_PHASE_STATE_ADMISSIBILITY_FAILED",
+        "intrinsic_hagb_content_in_bulk_ledger": False,
+        "signed_sink_enabled": False,
+        "domain_minimum_feasibility_margin_m2": float(np.min(
+            feasibility["feasibility_margin_m2"])),
+        "active_sweep_minimum_feasibility_margin_m2": float(np.min(
+            feasibility["feasibility_margin_m2"][newly > 0.0])),
+        "density_tolerance_m2": tolerance,
+        "failing_cell_count": int(np.count_nonzero(failing)),
+        "failing_cells": cells,
+    }
 
 
 def recovered_child_state(parent, target_total_density_m2):
@@ -381,8 +477,9 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
         # normal contour sweep.
         newly = np.minimum(newly, geometric)
     volume = float(cell_area_m2)*float(represented_thickness_m)
-    parent_line = total_line_density(state.parent)
-    child_line = total_line_density(state.child)
+    feasibility = front_feasibility_fields(state)
+    parent_line = feasibility["parent_total_line_density_m2"]
+    child_line = feasibility["child_total_line_density_m2"]
     # Continued common deformation can re-harden a latent child state above
     # the material it is about to sweep.  A boundary may transmit the parent
     # state but cannot create the excess line.  Replace only those newly swept
@@ -400,8 +497,9 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
              state.recovered_wake.forest, state.recovered_wake.wall),
             (state.parent.rp, state.parent.rm, state.parent.forest, state.parent.wall))))
         state = replace(state, child=child, recovered_wake=wake)
-        child_line = total_line_density(state.child)
-    line_difference = parent_line-child_line
+        feasibility = front_feasibility_fields(state)
+        child_line = feasibility["child_total_line_density_m2"]
+    line_difference = feasibility["removable_line_density_m2"]
     density_tolerance = 64.0*np.finfo(float).eps*max(
         float(np.max(parent_line)), float(np.max(child_line)), 1.0)
     if np.any(newly > 0.0) and np.min(line_difference[newly > 0.0]) < -density_tolerance:
@@ -413,14 +511,21 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
     # summing two O(parent) fields and subtracting their much smaller difference
     # loses the front increment to cancellation on physical grids.
     child_m = parent_m-removed_m
-    signed_residual_density = np.sum(np.abs(
-        (state.parent.rp-state.parent.rm)
-        -(state.child.rp-state.child.rm)), axis=2)
+    signed_residual_density = feasibility["signed_minimum_line_density_m2"]
     signed_required_density = newly*signed_residual_density
     signed_required_m = float(np.sum(
         signed_required_density, dtype=np.longdouble)*volume)
     if signed_required_m > removed_m+1024.0*math.ulp(max(removed_m, 1e-300)):
-        raise RuntimeError("signed boundary residual exceeds removable line content")
+        record = _cellwise_failure_record(
+            state, newly,
+            None if newly_swept_fraction is None else geometric,
+            feasibility)
+        record.update({
+            "integrated_removable_line_m": removed_m,
+            "integrated_signed_minimum_line_m": signed_required_m,
+        })
+        raise FrontAdmissibilityError(
+            "signed boundary residual exceeds removable line content", record)
     neutral_removed_m = max(removed_m-signed_required_m, 0.0)
     boundary_m = signed_required_m+fb*neutral_removed_m
     sink_m = fs*neutral_removed_m

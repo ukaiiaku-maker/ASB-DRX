@@ -820,3 +820,11 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Preliminary full-driver controls distinguish correct favorable/reversed flat motion and zero mobility. Seeded caps show a common early diffuse-profile relaxation, so their short-horizon area changes are not accepted as criticality evidence.
 - Near-static common-state equilibration exposes a hard moving-front failure: `signed boundary residual exceeds removable line content`. Per Directive v13 no parameter was tuned around it and no HPC bundle was launched. Full-model SIBM remains unresolved pending repair of the phase/moving-front handoff and restart-exact valid-pair criticality.
 - The matched v32/full-v34 ASB source regression remains true, the v10 infrastructure fixture remains passed, and the complete configured suite passes `330` tests after the v13 additions.
+
+## Directive v14 pre-repair admissibility audit (2026-09-14)
+
+- V13 evidence is frozen. Non-mutating instrumentation reproduces the moving-front guard using a one-cell normal-sweep continuation from the canonical 128-grid post-common state.
+- The existing-boundary fixed-target representation is already outside the admissible cone in 346 sweep-eligible cells. Continued common constitutive evolution increases this to 347 eligible cells and drives the domain minimum feasibility margin from `-5.361069e14` to `-5.110513e16 m^-2`.
+- In the explicit failing cell, removable line is `1.245638e15 m^-2` while the signed minimum is `1.584758e15 m^-2`, giving `Phi=-3.391197e14 m^-2`. The guard correctly rejects the requested conversion without weakening its tolerance.
+- The same cell is feasible immediately after initialization (`Phi=2.956547e17 m^-2`) and infeasible after common evolution. Across the domain, however, the fixed-target initialization itself also creates eligible infeasible cells. The evidence therefore implicates both independent latent-child state ownership and the fixed-target front map.
+- The audit probe contains pure normal sweep and zero diffuse-profile relaxation. Intrinsic 30-degree HAGB content is not charged to the excess ledger, and no missing physical signed channel is inferred.
