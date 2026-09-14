@@ -93,6 +93,38 @@
       "hpc3_job_launched": false,
       "fixture_passed": true,
       "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v10-embryo-phase-handoff-and-route-b-final-decision",
+      "scientific_source_commit": "bc8cf59",
+      "execution": "local_same_host_static_refinement_and_deterministic_replay",
+      "decision_replay_checkpoint_step": 6900,
+      "decision_replay_checkpoint_sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b",
+      "classification": "BULK_ROUTE_B_PRECURSOR_REJECTED_AFTER_ENERGY_HANDOFF_AND_COMPATIBILITY_AUDIT",
+      "result_path": "full_model/verification/v10_embryo_phase_handoff_audit.json",
+      "result_sha256": "03a256a777760af3ea2746ed08e13e34f8c23241ffce973a9d10ca5c43306309",
+      "hpc3_job_launched": false,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v10-existing-hagb-sibm-local",
+      "scientific_source_commit": "bc8cf59",
+      "execution": "local_full_2d_20_step_and_4_vs_2_plus_2_restart",
+      "decision_replay_checkpoint_step": 6900,
+      "decision_replay_checkpoint_sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b",
+      "classification": "SIBM_SUPERCRITICAL_GROWTH",
+      "fixture_result_path": "full_model/verification/v10_sibm_local_fixtures.json",
+      "fixture_result_sha256": "1e84282fd4f1eb2fb6630e02d1edd71820c29a77b1df792a592f75bf727980cd",
+      "full_model_result_path": "full_model/verification/v10_sibm_full_model_local.json",
+      "full_model_result_sha256": "ead108d43db14f583816d6224ffa2a9b5bdedc96d58bdd83f8619b045ab4d5e3",
+      "matched_asb_regression_path": "full_model/verification/v10_matched_asb_smoke.json",
+      "matched_asb_regression_sha256": "a84190b7533eb43bc56036467af268e3c84cb3e4c426b00ac02a74a8c64fde30",
+      "restart_authoritative_fields": 145,
+      "hpc3_job_launched": false,
+      "fixture_passed": true,
+      "scientific_gate_passed": true,
+      "hpc3_extended_qualification_pending": true
     }
   ]
 }
