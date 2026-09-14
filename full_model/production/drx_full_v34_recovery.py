@@ -731,6 +731,9 @@ P = dict(
     moving_front_exp_floor=0.10,
     moving_front_boundary_storage_fraction=0.05,
     moving_front_sink_fraction=0.02,
+    moving_front_fixture_transmission_fraction=0.50,
+    moving_front_signed_sink_fraction=0.0,
+    sibm_front_processing_enabled=True,
     # v10 deterministic existing-HAGB SIBM pathway.  It perturbs only two
     # existing labels and never allocates an orientation or grain identity.
     use_sibm_existing_boundary=False,
@@ -751,6 +754,7 @@ P = dict(
     sibm_activation_exp_floor=0.10,
     sibm_mobility_multiplier=1.0,
     sibm_physical_drag_pressure_Pa=0.0,
+    sibm_applied_pressure_Pa=0.0,
     atomic_promotion_purity_threshold=0.80,
     # The verified b9afe1f trajectory used ``lineage_scoped``.  Directive-v8
     # qualification compares it with a common functional, no stored-energy
@@ -6612,8 +6616,16 @@ for n in range(_restart_step_offset, _restart_end_step):
                     * gb_for_ac)
                 _physical_drag_pressure = max(float(P.get(
                     'sibm_physical_drag_pressure_Pa', 0.0)), 0.0)*gb_for_ac
+                _applied_pressure = float(P.get(
+                    'sibm_applied_pressure_Pa', 0.0))*gb_for_ac
+                # A common positive shift leaves the variational derivative
+                # unchanged while keeping every phase energy nonnegative. The
+                # child then omits that shift, which is exactly a favorable
+                # parent-to-child continuation pressure.
+                phase_energy_fields += _applied_pressure[:, :, None]
                 phase_energy_fields[:, :, sparse_front_state.child_label] += (
-                    _physical_compat_pressure+_physical_drag_pressure)
+                    _physical_compat_pressure+_physical_drag_pressure
+                    -_applied_pressure)
                 _interface_weight = gb_for_ac/np.maximum(
                     np.sum(gb_for_ac), 1e-300)
                 _stored_drive = A_E_field*(_nonchild_rho-_child_rho)
@@ -6622,13 +6634,17 @@ for n in range(_restart_step_offset, _restart_end_step):
                                      / np.maximum(np.sum(gb_for_ac), 1e-300))
                 _drag_mean = float(np.sum(_physical_drag_pressure)
                                    / np.maximum(np.sum(gb_for_ac), 1e-300))
-                _net_drive = _drive_mean-_compat_mean-_drag_mean
+                _applied_mean = float(np.sum(_applied_pressure)
+                                      / np.maximum(np.sum(gb_for_ac), 1e-300))
+                _net_drive = (_drive_mean-_compat_mean-_drag_mean
+                              +_applied_mean)
                 sibm_experiment_state.update(
                     stored_energy_drive_Pa=_drive_mean,
                     physical_compatibility_pressure_Pa=_compat_mean,
                     physical_compatibility_pressure_max_Pa=float(
                         np.max(_physical_compat_pressure)),
                     physical_drag_pressure_Pa=_drag_mean,
+                    applied_continuation_pressure_Pa=_applied_mean,
                     numerical_penalty_in_migration_decision_J=0.0,
                     net_flat_boundary_drive_Pa=_net_drive,
                     analytical_critical_radius_m=(
@@ -6752,7 +6768,10 @@ for n in range(_restart_step_offset, _restart_end_step):
             _contour0 = _subcell_contour_fraction(_phi0)
             _contour1 = _subcell_contour_fraction(_phi1)
             _newly_swept_geometry = np.where(
-                sibm_active_mask, np.maximum(_contour1-_contour0, 0.0), 0.0)
+                sibm_active_mask, _contour1-_contour0, 0.0)
+            if (not P.get('sibm_front_processing_enabled', True)
+                    or float(P.get('sibm_mobility_multiplier', 1.0)) <= 0.0):
+                _newly_swept_geometry = np.zeros_like(_newly_swept_geometry)
         try:
             sparse_front_state, _front_mixture = advance_front(
                 sparse_front_state, _chi_new, cell_area_m2=dx*dx,
@@ -6762,7 +6781,11 @@ for n in range(_restart_step_offset, _restart_end_step):
                 boundary_storage_fraction=float(P.get(
                     'moving_front_boundary_storage_fraction', 0.05)),
                 sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)),
-                newly_swept_fraction=_newly_swept_geometry)
+                newly_swept_fraction=_newly_swept_geometry,
+                transmission_fraction=float(P.get(
+                    'moving_front_fixture_transmission_fraction', 0.50)),
+                signed_sink_fraction=float(P.get(
+                    'moving_front_signed_sink_fraction', 0.0)))
         except FrontAdmissibilityError as exc:
             _record = dict(exc.record)
             _record.update({
@@ -6816,7 +6839,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         if _newly_swept_geometry is not None:
             _front_heat_increment_J = (
                 sparse_front_state.ledger.heat_released_J-_front_heat0_J)
-            _heat_weight = (_newly_swept_geometry
+            _heat_weight = (np.maximum(_newly_swept_geometry, 0.0)
                             * np.maximum(_parent_line0-_child_line0, 0.0))
             _heat_weight_volume = float(np.sum(_heat_weight)*dx*dx*max(
                 float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30))

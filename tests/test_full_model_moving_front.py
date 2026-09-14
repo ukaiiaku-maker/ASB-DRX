@@ -7,6 +7,7 @@ from full_model.production.moving_front import (
     DefectState, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
     initialize_existing_boundary_front,
+    conservative_front_transfer, front_feasibility_fields,
     reconstruct_mixture, signed_density, state_arrays, state_from_checkpoint,
     state_metadata_json,
 )
@@ -27,7 +28,8 @@ class MovingFrontTest(unittest.TestCase):
         return advance_front(
             state, chi, cell_area_m2=1e-14,
             represented_thickness_m=1e-6, line_energy_J_m=2e-9,
-            boundary_storage_fraction=0.1, sink_fraction=0.05)
+            boundary_storage_fraction=0.1, sink_fraction=0.05,
+            transmission_fraction=0.5)
 
     def test_stationary_interface_has_zero_processing(self):
         state = self.state()
@@ -42,8 +44,10 @@ class MovingFrontTest(unittest.TestCase):
         self.assertLessEqual(abs(ledger.line_closure_m), 1e-20)
         self.assertEqual(ledger.signed_burgers_change_m2, 0.0)
         self.assertEqual(ledger.line_energy_released_J, ledger.heat_released_J)
-        self.assertTrue(np.array_equal(
-            signed_density(mixture), signed_density(state.parent)))
+        np.testing.assert_allclose(
+            signed_density(mixture)
+            +np.sum(updated.boundary_signed_density_m2, axis=2),
+            signed_density(state.parent), rtol=0.0, atol=0.25)
         self.assertTrue(np.all(mixture.rp[:, 2:] == state.parent.rp[:, 2:]))
 
     def test_equal_retreat_and_readvance_does_not_double_process(self):
@@ -173,6 +177,118 @@ class MovingFrontTest(unittest.TestCase):
         grown = chi.copy(); grown[:, 2] = 1.0
         state, _ = self.advance(state, grown)
         self.assertGreater(state.ledger.parent_line_processed_m, 0.0)
+
+    def test_existing_boundary_map_is_feasible_without_latent_target(self):
+        chi = np.linspace(0.0, 1.0, 16).reshape(4, 4)
+        state = initialize_existing_boundary_front(
+            self.parent(), chi, 1e8, 0, 1)
+        fields = front_feasibility_fields(state)
+        np.testing.assert_array_equal(fields["feasibility_margin_m2"], 0.0)
+        np.testing.assert_allclose(
+            reconstruct_mixture(state).rp, self.parent().rp,
+            rtol=2*np.finfo(float).eps, atol=0.0)
+
+    def test_support_owned_increment_does_not_evolve_absent_child(self):
+        state = self.state()
+        old = reconstruct_mixture(state)
+        updated = DefectState(
+            old.rp+3.0, old.rm+2.0, old.forest+1.0, old.wall+4.0)
+        result = apply_common_constitutive_increment(state, updated)
+        np.testing.assert_array_equal(result.child.rp, 0.0)
+        np.testing.assert_array_equal(result.recovered_wake.rp, 0.0)
+        np.testing.assert_allclose(reconstruct_mixture(result).rp, updated.rp)
+
+    def test_randomized_per_sign_transfer_closes_and_is_permutation_symmetric(self):
+        rng = np.random.default_rng(417)
+        parent = DefectState(
+            rng.uniform(0, 8e15, (3, 5, 4)),
+            rng.uniform(0, 8e15, (3, 5, 4)),
+            rng.uniform(0, 2e15, (3, 5, 4)),
+            rng.uniform(0, 1e15, (3, 5)))
+        transfer = conservative_front_transfer(
+            parent, transmission_fraction=np.array([0.1, 0.4, 0.7, 0.9]),
+            boundary_storage_fraction=0.2, neutral_sink_fraction=0.1)
+        self.assertGreaterEqual(min(np.min(x) for x in (
+            transfer.child.rp, transfer.child.rm, transfer.child.forest,
+            transfer.child.wall, transfer.boundary_excess_line_density_m2,
+            transfer.annihilated_line_density_m2,
+            transfer.sink_line_density_m2)), 0.0)
+        self.assertLessEqual(np.max(np.abs(transfer.line_closure_density_m2)), 8.0)
+        self.assertLess(np.max(np.abs(transfer.signed_closure_density_m2)), 1.0)
+        permutation = np.array([2, 0, 3, 1])
+        permuted = DefectState(
+            parent.rp[..., permutation], parent.rm[..., permutation],
+            parent.forest[..., permutation], parent.wall)
+        other = conservative_front_transfer(
+            permuted,
+            transmission_fraction=np.array([0.1, 0.4, 0.7, 0.9])[permutation],
+            boundary_storage_fraction=0.2, neutral_sink_fraction=0.1)
+        np.testing.assert_allclose(
+            other.boundary_excess_signed_density_m2,
+            transfer.boundary_excess_signed_density_m2[..., permutation])
+        np.testing.assert_allclose(
+            other.boundary_excess_line_density_m2,
+            transfer.boundary_excess_line_density_m2)
+
+    def test_signed_dominated_neutral_rich_and_zero_mismatch_transfers(self):
+        signed = DefectState(
+            np.full((1, 1, 2), 9e14), np.full((1, 1, 2), 1e14),
+            np.zeros((1, 1, 2)), np.zeros((1, 1)))
+        result = conservative_front_transfer(signed, transmission_fraction=0.25)
+        self.assertGreater(result.boundary_excess_line_density_m2.item(), 0.0)
+        self.assertEqual(result.annihilated_line_density_m2.item(), 3e14)
+        neutral = DefectState(
+            np.full((1, 1, 2), 5e14), np.full((1, 1, 2), 5e14),
+            np.full((1, 1, 2), 2e14), np.full((1, 1), 1e14))
+        result = conservative_front_transfer(neutral, transmission_fraction=0.0)
+        self.assertEqual(np.max(np.abs(result.boundary_excess_signed_density_m2)), 0.0)
+        self.assertEqual(result.boundary_excess_line_density_m2.item(), 0.0)
+        self.assertGreater(result.annihilated_line_density_m2.item(), 0.0)
+
+    def test_explicit_signed_sink_is_separate_and_conservative(self):
+        result = conservative_front_transfer(
+            self.parent(), transmission_fraction=0.25,
+            signed_sink_fraction=0.4)
+        self.assertGreater(np.max(np.abs(result.sink_signed_density_m2)), 0.0)
+        self.assertGreater(result.sink_line_density_m2.max(), 0.0)
+        self.assertLess(np.max(np.abs(result.signed_closure_density_m2)), 1.0)
+
+    def test_capacity_limit_stalls_without_partial_mutation(self):
+        state = self.state()
+        before = state_arrays(state)
+        stalled, mixture = advance_front(
+            state, np.ones_like(state.chi), cell_area_m2=1e-14,
+            represented_thickness_m=1e-6, line_energy_J_m=2e-9,
+            transmission_fraction=0.5, boundary_capacity_density_m2=0.0)
+        self.assertEqual(stalled.ledger.swept_volume_m3, 0.0)
+        self.assertGreater(stalled.ledger.capacity_limited_volume_m3, 0.0)
+        for key, value in before.items():
+            np.testing.assert_array_equal(state_arrays(stalled)[key], value)
+        np.testing.assert_array_equal(mixture.rp, state.parent.rp)
+
+    def test_normal_sweep_volume_and_profile_relaxation_are_separate(self):
+        state = self.state()
+        phase_profile = np.full((4, 4), 0.4)
+        normal = np.zeros((4, 4)); normal[:, 0] = 0.25
+        state, _ = advance_front(
+            state, phase_profile, cell_area_m2=2e-14,
+            represented_thickness_m=3e-6, line_energy_J_m=2e-9,
+            newly_swept_fraction=normal, transmission_fraction=0.5)
+        expected = float(np.sum(normal))*2e-14*3e-6
+        self.assertEqual(state.ledger.swept_volume_m3, expected)
+        np.testing.assert_array_equal(state.chi, normal)
+
+    def test_intrinsic_hagb_does_not_create_excess_reservoir(self):
+        chi = np.full((4, 4), 0.5)
+        state = initialize_existing_boundary_front(
+            self.parent(), chi, 5e14, 0, 1)
+        self.assertEqual(np.max(state.boundary_line_density_m2), 0.0)
+        self.assertEqual(np.max(np.abs(state.boundary_signed_density_m2)), 0.0)
+        translated, _ = advance_front(
+            state, chi, cell_area_m2=1e-14,
+            represented_thickness_m=1e-6, line_energy_J_m=2e-9,
+            newly_swept_fraction=np.zeros_like(chi), transmission_fraction=0.5)
+        self.assertEqual(np.max(translated.boundary_line_density_m2), 0.0)
 
 
 if __name__ == "__main__":

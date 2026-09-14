@@ -1,0 +1,29 @@
+{
+  "classification": "SIBM_EQUILIBRATED_COMMON_STATE_BUILT",
+  "front_ledger": {
+    "boundary_line_stored_m": 0.0,
+    "capacity_limited_volume_m3": 0.0,
+    "child_line_transmitted_m": 0.0,
+    "heat_released_J": 0.0,
+    "line_closure_m": 0.0,
+    "line_energy_released_J": 0.0,
+    "neutral_pair_annihilated_m": 0.0,
+    "parent_line_processed_m": 0.0,
+    "requested_swept_volume_m3": 0.0,
+    "signed_burgers_change_m2": 0.0,
+    "sink_line_m": 0.0,
+    "swept_volume_m3": 0.0
+  },
+  "grid": [
+    128,
+    128
+  ],
+  "maximum_chi_processed_difference": 0.0,
+  "maximum_child_fraction": 1.0,
+  "minimum_child_fraction": 0.0,
+  "output_checkpoint": ".hpc3/inputs/v14_equilibrated_common_128.npz",
+  "output_sha256": "084b789dd020f2159f4da1b23722218dd5ab6d9a55299ab71505aed4866cdc79",
+  "schema": "full-v34-v14-common-front-checkpoint/v1",
+  "source_checkpoint": "/tmp/v14-equilibrate5.TSaa2h/drx_v25_restart_000459.npz",
+  "source_sha256": "32a6db96a97a54e6ae51a6e7f69351ff842df9edbb42135c5b9c3d4927669511"
+}

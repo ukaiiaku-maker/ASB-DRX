@@ -16,7 +16,8 @@ if str(PRODUCTION) not in sys.path:
     sys.path.insert(0, str(PRODUCTION))
 
 from moving_front import (  # noqa: E402
-    DefectState, FrontAdmissibilityError, advance_front,
+    DefectState, FrontAdmissibilityError,
+    _advance_front_v13_infeasible_reference,
     front_feasibility_fields, initialize_existing_boundary_front,
     state_from_checkpoint,
 )
@@ -73,7 +74,7 @@ def run(source_path: Path, checkpoint_path: Path) -> dict:
         geometric = np.zeros_like(requested)
         geometric[i, j] = increment
         try:
-            advance_front(
+            _advance_front_v13_infeasible_reference(
                 after, requested, cell_area_m2=(10e-6/requested.shape[0])**2,
                 represented_thickness_m=2.0*2.86e-10,
                 line_energy_J_m=1.6e-9,

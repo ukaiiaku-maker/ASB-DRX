@@ -41,6 +41,22 @@ class FrontLedger:
     line_energy_released_J: float = 0.0
     heat_released_J: float = 0.0
     swept_volume_m3: float = 0.0
+    requested_swept_volume_m3: float = 0.0
+    capacity_limited_volume_m3: float = 0.0
+
+
+@dataclass(frozen=True)
+class FrontTransfer:
+    """Per-unit-volume conservative parent-to-child reaction."""
+
+    child: DefectState
+    boundary_excess_line_density_m2: np.ndarray
+    boundary_excess_signed_density_m2: np.ndarray
+    annihilated_line_density_m2: np.ndarray
+    sink_line_density_m2: np.ndarray
+    sink_signed_density_m2: np.ndarray
+    line_closure_density_m2: np.ndarray
+    signed_closure_density_m2: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -108,6 +124,60 @@ def front_feasibility_fields(state):
         "signed_minimum_line_density_m2": signed_minimum,
         "feasibility_margin_m2": removable-signed_minimum,
     }
+
+
+def conservative_front_transfer(parent, *, transmission_fraction=0.0,
+                                boundary_storage_fraction=0.0,
+                                neutral_sink_fraction=0.0,
+                                signed_sink_fraction=0.0):
+    """Partition incoming signed line through bounded physical channels.
+
+    ``transmission_fraction`` may be scalar, per-family, or grid/family data.
+    The boundary fields are *excess* content only; intrinsic HAGB structure is
+    represented by the phase-field interfacial energy and never charged here.
+    """
+    rp, rm, forest, wall = _validate_defect(parent)
+    transmission = np.asarray(transmission_fraction, dtype=float)
+    try:
+        transmission = np.broadcast_to(transmission, rp.shape)
+    except ValueError as exc:
+        raise ValueError("transmission fraction is not slip-grid broadcastable") from exc
+    fractions = (float(boundary_storage_fraction),
+                 float(neutral_sink_fraction), float(signed_sink_fraction))
+    if (not np.all(np.isfinite(transmission)) or np.any(transmission < 0.0)
+            or np.any(transmission > 1.0)
+            or any(not math.isfinite(x) or x < 0.0 or x > 1.0
+                   for x in fractions)
+            or fractions[0]+fractions[1] > 1.0):
+        raise ValueError("front transfer fractions must be finite and bounded")
+    fb, fs, f_signed = fractions
+    wall_transmission = np.mean(transmission, axis=2)
+    child = DefectState(
+        transmission*rp, transmission*rm, transmission*forest,
+        wall_transmission*wall)
+    blocked_plus = (1.0-transmission)*rp
+    blocked_minus = (1.0-transmission)*rm
+    blocked_signed = blocked_plus-blocked_minus
+    sink_signed = f_signed*blocked_signed
+    boundary_signed = blocked_signed-sink_signed
+    mandatory_boundary = np.sum(np.abs(boundary_signed), axis=2)
+    signed_sink_line = np.sum(np.abs(sink_signed), axis=2)
+    neutral = (
+        np.sum(blocked_plus+blocked_minus-np.abs(blocked_signed), axis=2)
+        +np.sum((1.0-transmission)*forest, axis=2)
+        +(1.0-wall_transmission)*wall)
+    boundary_line = mandatory_boundary+fb*neutral
+    sink_line = signed_sink_line+fs*neutral
+    annihilated = (1.0-fb-fs)*neutral
+    parent_total = total_line_density(parent)
+    child_total = total_line_density(child)
+    line_closure = parent_total-(
+        child_total+boundary_line+sink_line+annihilated)
+    signed_closure = (
+        (rp-rm)-(child.rp-child.rm)-boundary_signed-sink_signed)
+    return FrontTransfer(
+        child, boundary_line, boundary_signed, annihilated, sink_line,
+        sink_signed, line_closure, signed_closure)
 
 
 def _cellwise_failure_record(state, newly, geometric, feasibility):
@@ -240,52 +310,28 @@ def initialize_existing_boundary_front(parent, child_fraction,
                                        parent_label, child_label):
     """Map an already existing two-grain boundary without changing defects.
 
-    The existing child side owns the current full-field state exactly.  Only
-    unswept parent cells carry a latent recovered child state for subsequent
-    advance.  This makes initialization an exact representation map while
-    allowing newly swept material to use the normal v9 front ledger.
+    The full-field state is the only observed material state at initialization.
+    Copying it to every intensive slot is an exact support-weighted
+    representation because absent slots have zero extensive weight.  The
+    recovered density is a later kinetic attractor, not an independently
+    prescribed latent child target.  Newly swept child state is constructed
+    conservatively from the current parent by :func:`advance_front`.
     """
-    local_target = np.minimum(
-        float(target_total_density_m2), total_line_density(parent))
-    base = initialize_sparse_front(
-        parent, child_fraction, local_target,
-        parent_label, child_label, reaction_fraction=1.0)
+    _validate_defect(parent)
+    target = float(target_total_density_m2)
+    if not math.isfinite(target) or target < 0.0:
+        raise ValueError("recovered target must be finite and nonnegative")
     chi = np.asarray(child_fraction, dtype=float)
-    def mapped(current, recovered):
-        q = chi[:, :, None] if current.ndim == 3 else chi
-        # On the established child side the current field is already the child
-        # state.  On the parent side retain a latent recovered state even when
-        # diffuse eta tails make chi numerically nonzero.
-        latent = np.asarray(recovered)
-        # Exact nonnegative deconvolution requires q*C <= current.  Diffuse
-        # tails can overlap a reservoir that is identically zero, so reduce
-        # only that latent component rather than introducing negative parent
-        # content.
-        cap = np.divide(np.asarray(current), q,
-                        out=np.full_like(np.asarray(current), np.inf),
-                        where=q > 0.0)
-        latent = np.minimum(latent, cap)
-        return np.where(q >= 0.5, current, latent)
-    child_values = tuple(mapped(np.asarray(current), np.asarray(recovered))
-                         for current, recovered in zip(
-                             (parent.rp, parent.rm, parent.forest, parent.wall),
-                             (base.child.rp, base.child.rm,
-                              base.child.forest, base.child.wall)))
-    child = DefectState(*child_values)
-    parent_values = []
-    for current, child_value in zip(
-            (parent.rp, parent.rm, parent.forest, parent.wall), child_values):
-        q = chi[:, :, None] if current.ndim == 3 else chi
-        parent_value = np.divide(
-            np.asarray(current)-q*child_value, 1.0-q,
-            out=np.asarray(current).copy(), where=(1.0-q) > 64*np.finfo(float).eps)
-        if np.min(parent_value) < -64*np.finfo(float).eps*max(float(np.max(current)), 1.0):
-            raise RuntimeError("existing-boundary map requires negative parent content")
-        parent_values.append(np.maximum(parent_value, 0.0))
-    mapped_parent = DefectState(*parent_values)
-    state = replace(
-        base, parent=mapped_parent, child=child, recovered_wake=child,
-        chi=chi.copy(), processed_max=chi.copy(), cleanup_max=chi.copy())
+    if (chi.shape != parent.wall.shape or not np.all(np.isfinite(chi))
+            or np.any(chi < 0.0) or np.any(chi > 1.0)):
+        raise ValueError("child fraction must be finite, bounded, and grid matched")
+    copied = lambda: DefectState(*(np.asarray(x).copy() for x in (
+        parent.rp, parent.rm, parent.forest, parent.wall)))
+    zero = np.zeros_like(chi)
+    state = SparseFrontState(
+        copied(), copied(), copied(), chi.copy(), chi.copy(), chi.copy(),
+        zero, np.zeros_like(parent.rp), FrontLedger(),
+        int(parent_label), int(child_label))
     mixture = reconstruct_mixture(state)
     for actual, expected in zip(
             (mixture.rp, mixture.rm, mixture.forest, mixture.wall),
@@ -337,18 +383,20 @@ def phase_total_line_densities(state):
 
 
 def apply_common_constitutive_increment(state, updated_mixture):
-    """Apply the full-field constitutive increment to both material states.
+    """Apply a constitutive update only to material with physical support.
 
-    If ``delta = updated_mixture - reconstruct_mixture(state)``, adding delta
-    to both states reconstructs the updated mixture exactly for every phase
-    fraction. A step that would make either state negative is rejected rather
-    than clipped, because clipping would silently violate the balance.
+    Positive mixture increments are shared by supported parent, child and wake
+    states. Negative increments scale their existing extensive content. A
+    zero-weight latent slot is set to zero and cannot acquire history. This is
+    the sparse equivalent of evolving ``Q_p=(1-m)rho_p``, ``Q_c=chi rho_c``
+    and ``Q_w=(m-chi)rho_w``.
     """
     old = reconstruct_mixture(state)
     _validate_defect(updated_mixture)
-    values = []
-    wake_values = []
-    for reservoir_index, (parent, child, recovered, old_mix, new_mix) in enumerate(zip(
+    weights2 = (1.0-state.processed_max, state.chi,
+                state.processed_max-state.chi)
+    owner_values = [[], [], []]
+    for parent, child, recovered, old_mix, new_mix in zip(
             (state.parent.rp, state.parent.rm, state.parent.forest,
              state.parent.wall),
             (state.child.rp, state.child.rm, state.child.forest,
@@ -357,49 +405,25 @@ def apply_common_constitutive_increment(state, updated_mixture):
              state.recovered_wake.forest, state.recovered_wake.wall),
             (old.rp, old.rm, old.forest, old.wall),
             (updated_mixture.rp, updated_mixture.rm,
-             updated_mixture.forest, updated_mixture.wall))):
-        delta = np.asarray(new_mix)-np.asarray(old_mix)
-        p1 = np.asarray(parent)+delta
-        c1 = np.asarray(child)+delta
-        w1 = np.asarray(recovered)+delta
-        scale = max(float(np.max(np.abs(parent))),
-                    float(np.max(np.abs(child))), 1.0)
-        tol = 64.0*np.finfo(float).eps*scale
-        if np.min(p1) < -tol or np.min(c1) < -tol or np.min(w1) < -tol:
-            # Project provisional populations onto the nonnegative simplex
-            # while preserving each physical mixture reservoir exactly. Any
-            # resulting signed parent/child mismatch is carried by the explicit
-            # signed boundary reservoir when that material is swept.
-            p1, c1, w1 = (np.maximum(x, 0.0) for x in (p1, c1, w1))
-            virgin = 1.0-state.processed_max
-            active = state.chi
-            wake_weight = state.processed_max-state.chi
-            if p1.ndim == 3:
-                virgin = virgin[:, :, None]
-                active = active[:, :, None]
-                wake_weight = wake_weight[:, :, None]
-            projected = virgin*p1+active*c1+wake_weight*w1
-            target = np.asarray(new_mix)
-            factor = np.divide(
-                target, projected, out=np.ones_like(target),
-                where=projected > 0.0)
-            p1, c1, w1 = p1*factor, c1*factor, w1*factor
-            missing = (projected <= 0.0) & (target > 0.0)
-            if np.any(missing):
-                weights = np.stack(np.broadcast_arrays(
-                    virgin, active, wake_weight), axis=0)
-                owner = np.argmax(weights, axis=0)
-                for owner_index, (value, weight) in enumerate(
-                        ((p1, virgin), (c1, active), (w1, wake_weight))):
-                    mask = missing & (owner == owner_index) & (weight > 0.0)
-                    value[mask] = target[mask]/weight[mask]
-        values.append((np.maximum(p1, 0.0), np.maximum(c1, 0.0)))
-        wake_values.append(np.maximum(w1, 0.0))
+             updated_mixture.forest, updated_mixture.wall)):
+        old_mix = np.asarray(old_mix)
+        target = np.asarray(new_mix)
+        ratio = np.divide(target, old_mix, out=np.zeros_like(target),
+                          where=old_mix > 0.0)
+        addition = np.maximum(target-old_mix, 0.0)
+        for owner_index, (value, weight2) in enumerate(zip(
+                (parent, child, recovered), weights2)):
+            value = np.asarray(value)
+            weight = weight2[:, :, None] if value.ndim == 3 else weight2
+            supported = weight > 64.0*np.finfo(float).eps
+            result = np.where(target < old_mix, value*ratio, value+addition)
+            owner_values[owner_index].append(
+                np.where(supported, np.maximum(result, 0.0), 0.0))
     candidate = replace(
         state,
-        parent=DefectState(*(pair[0] for pair in values)),
-        child=DefectState(*(pair[1] for pair in values)),
-        recovered_wake=DefectState(*wake_values))
+        parent=DefectState(*owner_values[0]),
+        child=DefectState(*owner_values[1]),
+        recovered_wake=DefectState(*owner_values[2]))
     check = reconstruct_mixture(candidate)
     error = max(float(np.max(np.abs(a-b))) for a, b in zip(
         (check.rp, check.rm, check.forest, check.wall),
@@ -443,10 +467,11 @@ def activated_front_fraction(process, stress_pa, temperature_K, dt_s, *,
     return -np.expm1(-rate*float(dt_s))
 
 
-def advance_front(state, new_child_fraction, *, cell_area_m2,
-                  represented_thickness_m, line_energy_J_m,
-                  boundary_storage_fraction=0.0, sink_fraction=0.0,
-                  newly_swept_fraction=None):
+def _advance_front_v13_infeasible_reference(
+        state, new_child_fraction, *, cell_area_m2,
+        represented_thickness_m, line_energy_J_m,
+        boundary_storage_fraction=0.0, sink_fraction=0.0,
+        newly_swept_fraction=None):
     """Advance or retreat a resolved front with no repeated cleanup.
 
     Physical processing occurs only for ``new_child_fraction`` beyond the
@@ -586,11 +611,169 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
     return replace(candidate, ledger=ledger), mixture1
 
 
+def _blend_intensive(old_value, old_weight, incoming_value, increment):
+    weight = old_weight[:, :, None] if old_value.ndim == 3 else old_weight
+    amount = increment[:, :, None] if old_value.ndim == 3 else increment
+    new_weight = weight+amount
+    return np.divide(
+        weight*old_value+amount*incoming_value, new_weight,
+        out=np.asarray(old_value).copy(), where=new_weight > 0.0)
+
+
+def _blend_state(old, old_weight, incoming, increment):
+    return DefectState(*(_blend_intensive(a, old_weight, b, increment)
+                         for a, b in zip(
+                             (old.rp, old.rm, old.forest, old.wall),
+                             (incoming.rp, incoming.rm,
+                              incoming.forest, incoming.wall))))
+
+
+def advance_front(state, new_child_fraction, *, cell_area_m2,
+                  represented_thickness_m, line_energy_J_m,
+                  boundary_storage_fraction=0.0, sink_fraction=0.0,
+                  newly_swept_fraction=None, transmission_fraction=1.0,
+                  signed_sink_fraction=0.0,
+                  boundary_capacity_density_m2=None):
+    """Advance the physical front with a feasible per-sign transfer map.
+
+    When ``newly_swept_fraction`` is supplied it is the signed normal-contour
+    conversion. The phase-field target is then diagnostic only: diffuse width
+    relaxation cannot process material. Positive virgin sweep constructs child
+    and future-wake state from the current parent through
+    :func:`conservative_front_transfer`. Retreat and re-advance only exchange
+    already processed child/wake material and never repeat cleanup.
+    """
+    requested_phase = np.asarray(new_child_fraction, dtype=float)
+    if (requested_phase.shape != state.chi.shape
+            or not np.all(np.isfinite(requested_phase))
+            or np.any(requested_phase < 0.0)
+            or np.any(requested_phase > 1.0)):
+        raise ValueError("new child fraction must be finite and bounded")
+    for value, name in ((cell_area_m2, "cell area"),
+                        (represented_thickness_m, "thickness"),
+                        (line_energy_J_m, "line energy")):
+        if not math.isfinite(value) or value < 0.0:
+            raise ValueError(f"{name} must be finite and nonnegative")
+    if newly_swept_fraction is None:
+        normal_change = requested_phase-state.chi
+    else:
+        normal_change = np.asarray(newly_swept_fraction, dtype=float)
+        if (normal_change.shape != state.chi.shape
+                or not np.all(np.isfinite(normal_change))
+                or np.any(normal_change < -1.0)
+                or np.any(normal_change > 1.0)):
+            raise ValueError("normal sweep fraction must be finite and in [-1,1]")
+
+    # Retreat transfers active child into recovered wake without line removal.
+    retreat = np.minimum(np.maximum(-normal_change, 0.0), state.chi)
+    wake_weight0 = state.processed_max-state.chi
+    wake = _blend_state(
+        state.recovered_wake, wake_weight0, state.child, retreat)
+    child_weight = state.chi-retreat
+    child = state.child
+
+    # Re-advance through processed wake without repeating the front reaction.
+    positive = np.maximum(normal_change, 0.0)
+    revisit_available = state.processed_max-child_weight
+    revisit = np.minimum(positive, revisit_available)
+    child = _blend_state(child, child_weight, wake, revisit)
+    child_weight = child_weight+revisit
+    virgin_requested = np.minimum(
+        positive-revisit, np.maximum(1.0-state.processed_max, 0.0))
+
+    transfer = conservative_front_transfer(
+        state.parent, transmission_fraction=transmission_fraction,
+        boundary_storage_fraction=boundary_storage_fraction,
+        neutral_sink_fraction=sink_fraction,
+        signed_sink_fraction=signed_sink_fraction)
+    closure_scale = max(float(np.max(total_line_density(state.parent))), 1.0)
+    closure_tolerance = 512.0*np.finfo(float).eps*closure_scale
+    if (float(np.max(np.abs(transfer.line_closure_density_m2)))
+            > closure_tolerance
+            or float(np.max(np.abs(transfer.signed_closure_density_m2)))
+            > closure_tolerance):
+        raise RuntimeError("constrained front transfer failed algebraic closure")
+
+    if boundary_capacity_density_m2 is None:
+        alpha = np.ones_like(state.chi)
+    else:
+        capacity = np.asarray(boundary_capacity_density_m2, dtype=float)
+        if capacity.ndim == 0:
+            capacity = np.full(state.chi.shape, float(capacity))
+        if (capacity.shape != state.chi.shape or not np.all(np.isfinite(capacity))
+                or np.any(capacity < 0.0)):
+            raise ValueError("boundary capacity must be finite and nonnegative")
+        available = np.maximum(capacity-state.boundary_line_density_m2, 0.0)
+        demand = virgin_requested*transfer.boundary_excess_line_density_m2
+        alpha = np.divide(available, demand, out=np.ones_like(demand),
+                          where=demand > 0.0)
+        alpha = np.clip(alpha, 0.0, 1.0)
+    accepted = virgin_requested*alpha
+    child = _blend_state(child, child_weight, transfer.child, accepted)
+    child_weight = child_weight+accepted
+    processed = state.processed_max+accepted
+
+    boundary_density = (state.boundary_line_density_m2
+                        +accepted*transfer.boundary_excess_line_density_m2)
+    boundary_signed = (state.boundary_signed_density_m2
+                       +accepted[:, :, None]
+                       *transfer.boundary_excess_signed_density_m2)
+    candidate = replace(
+        state, child=child, recovered_wake=wake, chi=child_weight,
+        processed_max=processed, cleanup_max=processed.copy(),
+        boundary_line_density_m2=boundary_density,
+        boundary_signed_density_m2=boundary_signed)
+    mixture = reconstruct_mixture(candidate)
+
+    volume = float(cell_area_m2)*float(represented_thickness_m)
+    parent_m = float(np.sum(
+        accepted*total_line_density(state.parent), dtype=np.longdouble)*volume)
+    child_m = float(np.sum(
+        accepted*total_line_density(transfer.child), dtype=np.longdouble)*volume)
+    boundary_m = float(np.sum(
+        accepted*transfer.boundary_excess_line_density_m2,
+        dtype=np.longdouble)*volume)
+    annihilated_m = float(np.sum(
+        accepted*transfer.annihilated_line_density_m2,
+        dtype=np.longdouble)*volume)
+    sink_m = float(np.sum(
+        accepted*transfer.sink_line_density_m2,
+        dtype=np.longdouble)*volume)
+    closure = parent_m-(child_m+boundary_m+annihilated_m+sink_m)
+    signed_change = float(np.max(np.abs(
+        accepted[:, :, None]*transfer.signed_closure_density_m2)))
+    scale = max(abs(parent_m), abs(child_m), abs(boundary_m), 1e-300)
+    if abs(closure) > 8192.0*math.ulp(scale) or signed_change > closure_tolerance:
+        raise RuntimeError(
+            f"moving-front balance failed: line={closure:.17g} m, "
+            f"signed={signed_change:.17g} m^-2")
+    requested_volume = float(np.sum(virgin_requested))*volume
+    swept_volume = float(np.sum(accepted))*volume
+    energy = annihilated_m*float(line_energy_J_m)
+    old = state.ledger
+    ledger = FrontLedger(
+        old.parent_line_processed_m+parent_m,
+        old.child_line_transmitted_m+child_m,
+        old.boundary_line_stored_m+boundary_m,
+        old.neutral_pair_annihilated_m+annihilated_m,
+        old.sink_line_m+sink_m,
+        old.line_closure_m+closure,
+        max(old.signed_burgers_change_m2, signed_change),
+        old.line_energy_released_J+energy,
+        old.heat_released_J+energy,
+        old.swept_volume_m3+swept_volume,
+        old.requested_swept_volume_m3+requested_volume,
+        old.capacity_limited_volume_m3+(requested_volume-swept_volume))
+    return replace(candidate, ledger=ledger), mixture
+
+
 def state_metadata_json(state):
     return json.dumps({
-        "schema": "full-v34-sparse-front/v4",
+        "schema": "full-v34-sparse-front/v5",
         "parent_label": state.parent_label,
         "child_label": state.child_label,
+        "boundary_content_semantics": "excess_only_intrinsic_HAGB_excluded",
+        "state_ownership": "support_weighted",
         "ledger": state.ledger.__dict__,
     }, sort_keys=True, separators=(",", ":"))
 
@@ -615,7 +798,8 @@ def state_arrays(state):
 def state_from_checkpoint(metadata_json, arrays):
     raw = json.loads(str(metadata_json))
     if raw.get("schema") not in ("full-v34-sparse-front/v3",
-                                  "full-v34-sparse-front/v4"):
+                                  "full-v34-sparse-front/v4",
+                                  "full-v34-sparse-front/v5"):
         raise ValueError("unsupported sparse-front schema")
     parent = DefectState(*(np.asarray(arrays[k]).copy() for k in (
         "parent_rp", "parent_rm", "parent_forest", "parent_wall")))
