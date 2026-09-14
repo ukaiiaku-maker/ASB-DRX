@@ -138,7 +138,8 @@ def main():
         ledgers=dict(sibm=favorable.ledger.__dict__, front=front1.ledger.__dict__),
         checks=checks, fixture_passed=all(checks.values()),
         scientific_gate_passed=False,
-        full_model_experiment_status="pending_single_HPC3_existing_HAGB_run",
+        full_model_experiment_status=(
+            "first_HPC3_validity_failure_corrected_pair_scoped_local_qualification"),
         asb_regression_status=("passed_short_source_regression"
                                if asb["passed"] else "pending_v10_rerun"))
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")

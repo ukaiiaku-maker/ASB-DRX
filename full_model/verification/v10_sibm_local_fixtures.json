@@ -32,7 +32,7 @@
     "supercritical_radius_m": 3e-07
   },
   "fixture_passed": true,
-  "full_model_experiment_status": "pending_single_HPC3_existing_HAGB_run",
+  "full_model_experiment_status": "first_HPC3_validity_failure_corrected_pair_scoped_local_qualification",
   "kinetics": "EXP-floor DeltaG=DeltaH-TDeltaS; sign supplied only by common pressure",
   "labels": [
     3,
