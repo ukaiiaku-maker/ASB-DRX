@@ -901,3 +901,35 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   directive, 192/256 threshold fitting, long canonical motion, polycrystal
   promotion, and the overnight HPC3 bundle are not authorized. Claim level
   remains 2.
+
+## Directive v18 logarithmic storage and intragranular precursor (2026-09-14)
+
+- V14/V15 evidence is frozen as numerical moving-front diagnostics. The V15
+  coupled-neutral scalar-pressure root is retired; production rejects its flag.
+- The common phase-owned defect energy now includes the complete v34 line,
+  positive `rho log rho`, ordering, and low-density branches. The phase force
+  retains pointwise temperature dependence. GND/orientation and boundary
+  residual terms remain separately declared and are not double counted.
+- The positive log coefficient is classified only as the existing
+  phenomenological configurational/correlation term. Its curvature is positive;
+  it is not an elastic-cutoff logarithm and is not the source of negative
+  Hessian modes. Machine Hessian evidence is in
+  `full_model/verification/v18_total_hessian.json`.
+- A new one-grain/no-internal-GB fixture evolves differential-slip orientation,
+  four-family signed wall populations, wall order, and neutral recovery. It has
+  no phase-label allocation method and uses separate EXP-floor activated
+  capture, ordering, and recovery processes.
+- At 1.5 ms the 128-square result has `12.9239 deg` independent
+  misorientation, a closed ordered boundary, `3.7606%` independent
+  Frank--Bilby residual, a low-gradient interior, and lower interior defect
+  density/energy. Grid and timestep comparisons remain below 5%.
+- Negative controls reject wall-order-off, orientation-gradient-off, and
+  no-stored-energy-advantage routes as physical grain handoffs.
+- A separate qualified handoff inherits the measured interior orientation,
+  uses the common thermodynamics and v14 conservative moving-front ledger, and
+  closes phase simplex, line, and signed-Burgers balances. Sustained
+  supercritical front growth is not yet demonstrated.
+- Decision: `SINGLE_CRYSTAL_DEFORMATION_GENERATES_A_COMPATIBLE_LAGB_PRECURSOR`.
+  The stronger `INTRAGRANULAR_SUBGRAIN_TO_PHYSICAL_DRX_GRAIN_PATH_SUPPORTED`
+  claim remains false. No HPC3 job was needed; the complete local suite passes
+  362 tests. ASB qualification remains separate and unchanged.

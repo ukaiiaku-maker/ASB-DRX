@@ -171,6 +171,23 @@
       "intrinsic_hagb_content_charged_as_excess": false,
       "hpc3_job_launched": false,
       "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v18-log-storage-and-intragranular-lagb-precursor",
+      "source_commit": "pending-scientific-checkpoint",
+      "execution": "local_64_96_128_grid_and_timestep_refinement",
+      "classification": "SINGLE_CRYSTAL_DEFORMATION_GENERATES_A_COMPATIBLE_LAGB_PRECURSOR",
+      "thermodynamic_audit_path": "full_model/verification/v18_total_hessian.json",
+      "result_path": "full_model/verification/v18_intragranular_decision.json",
+      "plot_path": "full_model/verification/v18_intragranular_fields.png",
+      "initial_grains": 1,
+      "initial_internal_boundaries": 0,
+      "external_pressure_Pa": 0.0,
+      "hpc3_job_launched": false,
+      "full_local_test_count": 362,
+      "fixture_passed": true,
+      "scientific_gate_passed": true,
+      "stronger_intragranular_grain_path_claim": false
     }
   ]
 }

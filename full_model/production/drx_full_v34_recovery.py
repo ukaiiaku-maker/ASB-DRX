@@ -79,6 +79,11 @@ from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
     signed_pair_pressure_offsets,
 )
+from dislocation_free_energy import (
+    DislocationFreeEnergyParameters, free_energy_components_J_m3,
+    logarithmic_energy_J_m3,
+)
+from wall_ordering_energy import smooth_order
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
@@ -760,7 +765,7 @@ P = dict(
     # The verified b9afe1f trajectory used ``lineage_scoped``.  Directive-v8
     # qualification compares it with a common functional, no stored-energy
     # drive, and a deliberately reversed-sign negative control.
-    stored_energy_coupling_mode='lineage_scoped',
+    stored_energy_coupling_mode='common_variational',
     stored_energy_phase_purity=0.80,
     disable_new_stochastic_creation_after_restart=False,
 
@@ -998,6 +1003,10 @@ if str(P.get('stored_energy_coupling_mode', 'lineage_scoped')).lower() not in _s
     raise SystemExit(
         "stored_energy_coupling_mode must be one of "
         + ", ".join(sorted(_stored_energy_coupling_modes)))
+if P.get('sibm_coupled_neutral_feedback', False):
+    raise SystemExit(
+        'sibm_coupled_neutral_feedback was retired by Directive v18; '
+        'use physical stored-energy contrast or an analysis-only v15 audit')
 if P.get('use_sparse_common_front_state', False):
     if str(P.get('stored_energy_coupling_mode', '')).lower() != 'common_variational':
         raise SystemExit(
@@ -1218,15 +1227,16 @@ class ATPotential:
       Φ_elastic  = ½ α μ(T) b² ρ
                    Taylor stored energy — linear in ρ, sets the energy scale.
 
-      Φ_entropy  = C_ent · ρ · (ln(ρ/ρ₀) - 1)
-                   Configurational entropy of dislocation arrangements.
-                   Creates a logarithmic peak at low ρ that prevents ρ→0.
-                   (Kröner/Wilkens; "ρ ln ρ" storage term in the literature.)
+      Φ_log      = C_log · ρ · (ln(ρ/ρ₀) - 1)
+                   Existing phenomenological configurational/correlation
+                   branch. Its positive coefficient gives C_log/rho > 0
+                   curvature. It is not also claimed as the opposite-sign
+                   elastic outer-cutoff logarithm.
 
-      Φ_ordering = -A_ord · exp(-(log₁₀ρ - x_ord)²/(2 w_ord²))
-                   Read-Shockley / KWC ordering energy.  A Gaussian dip
-                   centred at ρ_ord represents the energy gain when
-                   dislocations self-organise into low-angle walls.
+      Φ_ordering = -A_ord · exp(-(ρ/ρ_ch-r_ord)²/(2 w_ord²))
+                   Inherited v34 ordering surrogate. In the explicit v18
+                   wall-order model this is the q_w=1 limit; density alone is
+                   not classified as a boundary.
                    Temperature-dependent through μ(T) → A_ord(T).
 
     The chemical potential μ = dΦ/dρ drives the Cahn-Hilliard.
@@ -1845,6 +1855,38 @@ class ATPotential:
     def _Phi(s, rho):
         """Selected variational potential Φ(ρ) [J/m³] from the v14 table."""
         return s._interp_log(np.maximum(np.asarray(rho, dtype=float), s.rmin), s.Phi_tab)
+
+    def phase_owned_free_energy(s, rho, temperature_K=None, wall_density_m2=None):
+        """Complete v34 defect energy used by the common phase functional."""
+        params = DislocationFreeEnergyParameters(
+            line_coefficient_J_m=s.A1,
+            log_coefficient_J_m=s.C_ent,
+            reference_density_m2=s.rho_ref,
+            ordering_amplitude_J_m3=(s.A_ord_r if P.get('use_potential_ordering', True) else 0.0),
+            ordering_density_scale_m2=s.rho_ch,
+            ordering_center_ratio=s.r_ord,
+            ordering_width_ratio=s.w_r,
+            low_density_strength=(float(P.get('lowrho_mu_strength', 1.0))
+                                  if (P.get('use_lowrho_soft_penalty', True)
+                                      and P.get('use_potential_lowrho_penalty', True)) else 0.0),
+            low_density_width_ratio=max(float(P.get('rho_soft_floor_frac', 0.03)), 1e-9),
+        )
+        positive = np.maximum(np.asarray(rho, dtype=float), 0.0)
+        parts = free_energy_components_J_m3(positive, params)
+        if wall_density_m2 is not None:
+            wall = np.clip(np.asarray(wall_density_m2, dtype=float), 0.0, positive)
+            q_equivalent = np.divide(
+                wall, positive, out=np.zeros_like(positive), where=positive > 0.0)
+            parts['ordering'] = parts['ordering']*smooth_order(q_equivalent)
+        value = sum(parts.values())
+        if not P.get('use_potential_entropy', True):
+            value -= logarithmic_energy_J_m3(positive, s.C_ent, s.rho_ref)
+        # Every retained coefficient is proportional to A_E(T).  The table is
+        # refreshed at mean T for CH efficiency; phase ownership retains the
+        # prior pointwise temperature dependence through this exact scaling.
+        if temperature_K is not None:
+            value = value*(s.Estar_coeff(temperature_K)/max(s.A1, 1e-300))
+        return value
 
     def _lowrho_phi(s, rho):
         """Soft low-density free-energy penalty [J/m^3].
@@ -6567,7 +6609,11 @@ for n in range(_restart_step_offset, _restart_end_step):
     # --- ALLEN-CAHN (VARIATIONAL: dF/deta_i) ---
     eta_before_ac = eta[:, :, :Ng].copy()
     A_E_field = ATpot.Estar_coeff(T) if P.get('use_temperature_dependent_Estar', True) else 0.5*mu_iso*P['b']**2
-    Estar = A_E_field * rho  # stored dislocation energy density E*(rho,T)
+    Estar = A_E_field * rho  # linear branch retained for power/legacy diagnostics
+    _phase_temperature = T if P.get('use_temperature_dependent_Estar', True) else None
+    Psi_dis = ATpot.phase_owned_free_energy(
+        rho, _phase_temperature,
+        rho_wall if P.get('use_rho_state_partition', False) else None)
     sum_eta_sq = np.sum(eta[:,:,:Ng]**2, axis=2)
     # Recompute rho-eta drive after the CH update.  This is the piece that lets
     # high-rho/GND density bands lower the energy by becoming KWC support rather
@@ -6585,7 +6631,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     phase_stored_energy_values = np.full(Ng, np.nan)
     if stored_energy_mode in ('common_variational', 'sign_reversed'):
         _, phase_stored_energy_values = phase_mean_stored_energy_states(
-            eta[:, :, :Ng], Estar,
+            eta[:, :, :Ng], Psi_dis,
             float(P.get('stored_energy_phase_purity', 0.80)))
         # All unrecrystallized phases are alternative orientations of the same
         # current local deformed matrix and therefore share Estar(x).  A
@@ -6601,11 +6647,21 @@ for n in range(_restart_step_offset, _restart_end_step):
                 DefectState(rp, rm, rho_forest, rho_wall))
             _nonchild_rho, _child_rho = sparse_phase_total_line_densities(
                 sparse_front_state)
+            _nonchild_weight = 1.0-sparse_front_state.chi
+            _nonchild_wall = np.divide(
+                (1.0-sparse_front_state.processed_max)*sparse_front_state.parent.wall
+                +(sparse_front_state.processed_max-sparse_front_state.chi)
+                *sparse_front_state.recovered_wake.wall,
+                _nonchild_weight, out=sparse_front_state.parent.wall.copy(),
+                where=_nonchild_weight > 64.0*np.finfo(float).eps)
+            _child_wall = sparse_front_state.child.wall
             phase_energy_fields = np.broadcast_to(
-                (A_E_field*_nonchild_rho)[:, :, None],
+                ATpot.phase_owned_free_energy(
+                    _nonchild_rho, _phase_temperature, _nonchild_wall)[:, :, None],
                 eta[:, :, :Ng].shape).copy()
             phase_energy_fields[:, :, sparse_front_state.child_label] = (
-                A_E_field*_child_rho)
+                ATpot.phase_owned_free_energy(
+                    _child_rho, _phase_temperature, _child_wall))
             if P.get('use_sibm_existing_boundary', False):
                 # Physical compatibility resistance is a declared frozen-state
                 # term in this accepted phase step.  It is priced at line
@@ -6646,72 +6702,6 @@ for n in range(_restart_step_offset, _restart_end_step):
                     'sibm_applied_pressure_Pa', 0.0))
                 _neutral_derivative_at_0 = None
                 _neutral_derivative_at_1MPa = None
-                if P.get('sibm_coupled_neutral_feedback', False):
-                    # The stored post-equilibration cap relative to its flat
-                    # reference is the declared physical amplitude mode. The
-                    # pressure is the exact root of the same full functional
-                    # projected onto this mode at the current coupled state.
-                    _has_declared_direction = (
-                        sibm_coupled_neutral_direction is not None)
-                    _cap_mode = np.asarray(
-                        (sibm_coupled_neutral_direction
-                         if _has_declared_direction else
-                         sibm_initial_child_fraction
-                         -sibm_reference_child_fraction), dtype=float).copy()
-                    _pair_interior = (
-                        (eta[:, :, _child_index] > 1.0e-6)
-                        &(eta[:, :, _child_index] < 1.0-1.0e-6)
-                        &(eta[:, :, _parent_index] > 1.0e-6)
-                        &(eta[:, :, _parent_index] < 1.0-1.0e-6)
-                        &sibm_active_mask)
-                    _cap_mode = np.where(_pair_interior, _cap_mode, 0.0)
-                    # A normal interface variation has support on the diffuse
-                    # pair interface, not in exponentially small phase tails.
-                    # The symmetric weight is label-objective and tends to one
-                    # at the pair equality contour and zero in both pure cores.
-                    if not _has_declared_direction:
-                        _cap_mode *= (4.0*eta[:, :, _child_index]
-                                      *eta[:, :, _parent_index])
-                    _mode_scale = float(np.max(np.abs(_cap_mode)))
-                    if _mode_scale <= 1.0e-14:
-                        raise RuntimeError(
-                            'coupled-neutral feedback has no resolved cap mode')
-                    _cap_mode /= _mode_scale
-
-                    def _projected_full_derivative(_pressure_scalar):
-                        _, _stored_derivative = common_variational_stored_energy(
-                            eta[:, :, :Ng],
-                            _phase_energy_at_pressure(_pressure_scalar))
-                        _projection = 0.0
-                        for _phase, _sign in (
-                                (_child_index, 1.0), (_parent_index, -1.0)):
-                            _field = (
-                                -P['kappa_eta']*lap(eta[:, :, _phase])
-                                +P['W_eta']*2.0*eta[:, :, _phase]
-                                *(sum_eta_sq-eta[:, :, _phase]**2)
-                                +_stored_derivative[:, :, _phase])
-                            if P.get('use_rho_eta_coupling', True):
-                                _field += (-float(P.get(
-                                    'rho_eta_ac_strength', 0.0))
-                                    *rho_eta_drive_ac
-                                    *(1.0-2.0*eta[:, :, _phase]))
-                            _projection += float(np.sum(
-                                _field*(_sign*_cap_mode))*dx*dy)
-                        return _projection
-
-                    _neutral_derivative_at_0 = _projected_full_derivative(0.0)
-                    _neutral_derivative_at_1MPa = _projected_full_derivative(1.0e6)
-                    _pressure_slope = (
-                        _neutral_derivative_at_1MPa-_neutral_derivative_at_0)
-                    if abs(_pressure_slope) <= 1.0e-30:
-                        raise RuntimeError(
-                            'coupled-neutral pressure derivative is singular')
-                    _applied_pressure_scalar = float(
-                        -_neutral_derivative_at_0*1.0e6/_pressure_slope)
-                    if (not np.isfinite(_applied_pressure_scalar)
-                            or abs(_applied_pressure_scalar) > 1.0e9):
-                        raise RuntimeError(
-                            'coupled-neutral pressure left the declared 1 GPa bound')
 
                 _applied_pressure = _applied_pressure_scalar*gb_for_ac
                 # Signed pressure is represented by nonnegative absolute
@@ -6720,7 +6710,11 @@ for n in range(_restart_step_offset, _restart_end_step):
                     _applied_pressure_scalar)
                 _interface_weight = gb_for_ac/np.maximum(
                     np.sum(gb_for_ac), 1e-300)
-                _stored_drive = A_E_field*(_nonchild_rho-_child_rho)
+                _stored_drive = (
+                    ATpot.phase_owned_free_energy(
+                        _nonchild_rho, _phase_temperature, _nonchild_wall)
+                    -ATpot.phase_owned_free_energy(
+                        _child_rho, _phase_temperature, _child_wall))
                 _drive_mean = float(np.sum(_interface_weight*_stored_drive))
                 _compat_mean = float(np.sum(_physical_compat_pressure)
                                      / np.maximum(np.sum(gb_for_ac), 1e-300))
@@ -6750,7 +6744,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                         if _net_drive > 0.0 else None))
         else:
             phase_energy_fields = np.broadcast_to(
-                Estar[:, :, None], eta[:, :, :Ng].shape).copy()
+                Psi_dis[:, :, None], eta[:, :, :Ng].shape).copy()
             for phase_index, phase_record in enumerate(grain_tracker.records[:Ng]):
                 if phase_record.embryo_promoted:
                     phase_energy_fields[:, :, phase_index] = phase_stored_energy_values[phase_index]

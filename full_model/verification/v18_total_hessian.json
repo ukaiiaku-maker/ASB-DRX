@@ -1,0 +1,310 @@
+{
+  "schema": "asb-drx/v18-total-hessian/v1",
+  "variables": [
+    "rho_mobile/rho_scale",
+    "rho_forest/rho_scale",
+    "rho_wall/rho_scale",
+    "q_wall"
+  ],
+  "rho_scale_m2": 500000000000000.0,
+  "log_coefficient_J_m": 8.303040000000002e-11,
+  "log_curvature_sign": "strictly_positive_for_positive_density",
+  "scalar_ordering_count": 0,
+  "explicit_q_weighted_ordering_count": 1,
+  "states": [
+    {
+      "total_density_ratio": 0.35,
+      "wall_order": 0.05,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -21387.224599513233,
+        -0.019826984600466672,
+        116358.8283133284,
+        462428.97952481674
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -21387.224599513233,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 0.35,
+      "wall_order": 0.35,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -5715.904623538144,
+        0.004183675613543401,
+        135603.76988444722,
+        553930.483546199
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -5715.904623538144,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 0.35,
+      "wall_order": 0.65,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -130303.94890931151,
+        0.043473846740987705,
+        3680.924305104672,
+        415276.07254146656
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -130303.94890931151,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 0.35,
+      "wall_order": 0.95,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -548858.2409425849,
+        -106844.8101377367,
+        0.06511982067839352,
+        188991.1289536159
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -548858.2409425849,
+      "negative_eigenvalue_count": 2
+    },
+    {
+      "total_density_ratio": 0.7,
+      "wall_order": 0.05,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -318550.66933872335,
+        -0.0036379787886294057,
+        79561.28538957609,
+        326298.66415582935
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -318550.66933872335,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 0.7,
+      "wall_order": 0.35,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1063660.318465563,
+        -0.06148184183447548,
+        45144.05019399209,
+        624395.4576744833
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1063660.318465563,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 0.7,
+      "wall_order": 0.65,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -2349634.2649203455,
+        -0.15279511007348423,
+        9391.086820399705,
+        477685.55863908643
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -2349634.2649203455,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 0.7,
+      "wall_order": 0.95,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -3106590.3716176962,
+        -271276.6319822348,
+        -0.20991137666079004,
+        152096.5713452829
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -3106590.3716176962,
+      "negative_eigenvalue_count": 2
+    },
+    {
+      "total_density_ratio": 1.0,
+      "wall_order": 0.05,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1061530.3247592016,
+        -0.002910383137509312,
+        78911.59181281066,
+        323135.57398545265
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1061530.3247592016,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.0,
+      "wall_order": 0.35,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1278588.5302034437,
+        -0.10695657702551736,
+        115364.44447833058,
+        1426252.9067890397
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1278588.5302034437,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.0,
+      "wall_order": 0.65,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1033469.040250726,
+        -0.26921043172323444,
+        117548.48343931354,
+        1660570.1282362277
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1033469.040250726,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.0,
+      "wall_order": 0.95,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -11273.943900570219,
+        -0.36816345532248174,
+        156248.01163623595,
+        640404.774820717
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -11273.943900570219,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.3,
+      "wall_order": 0.05,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1614867.5055268179,
+        0.006548361702737678,
+        76076.5812675117,
+        297475.892456792
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1614867.5055268179,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.3,
+      "wall_order": 0.35,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -359329.91310230206,
+        0.25684130390905135,
+        209417.824296726,
+        2519173.429014627
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -359329.91310230206,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.3,
+      "wall_order": 0.65,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        0.6635673347308157,
+        74113.28590498606,
+        673093.3347642431,
+        6136831.926617537
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": 0.6635673347308157,
+      "negative_eigenvalue_count": 0
+    },
+    {
+      "total_density_ratio": 1.3,
+      "wall_order": 0.95,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        0.9145878731830636,
+        141157.66577123682,
+        1059551.0270225543,
+        8412123.49869375
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": 0.9145878731830636,
+      "negative_eigenvalue_count": 0
+    },
+    {
+      "total_density_ratio": 1.6,
+      "wall_order": 0.05,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1206517.3138021743,
+        -0.014551915261614819,
+        70004.55333199646,
+        262188.393437791
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1206517.3138021743,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.6,
+      "wall_order": 0.35,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1092222.9030260176,
+        -0.11787051318502695,
+        177843.98011427265,
+        1074657.6011431515
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1092222.9030260176,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.6,
+      "wall_order": 0.65,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -804382.8667166702,
+        -0.28085196417650066,
+        182611.50047606372,
+        1375761.8236920424
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -804382.8667166702,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 1.6,
+      "wall_order": 0.95,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -13999.983434961541,
+        -0.3798049862227564,
+        220088.15836078886,
+        700722.5905198695
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -13999.983434961541,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 2.0,
+      "wall_order": 0.05,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -557815.2060301302,
+        0.002910383070022943,
+        32292.55394875912,
+        233373.0555830235
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -557815.2060301302,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 2.0,
+      "wall_order": 0.35,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -619201.4149026454,
+        -19250.760272443138,
+        0.001455191545270115,
+        304869.3251765959
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -619201.4149026454,
+      "negative_eigenvalue_count": 2
+    },
+    {
+      "total_density_ratio": 2.0,
+      "wall_order": 0.65,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -1630244.3056704728,
+        0.008731149200358893,
+        18789.14045868833,
+        402610.1601903536
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -1630244.3056704728,
+      "negative_eigenvalue_count": 1
+    },
+    {
+      "total_density_ratio": 2.0,
+      "wall_order": 0.95,
+      "eigenvalues_J_m3_per_normalized_state2": [
+        -2278478.2635348984,
+        -11423.036455736534,
+        0.0101863404095597,
+        157840.30565471997
+      ],
+      "minimum_eigenvalue_J_m3_per_normalized_state2": -2278478.2635348984,
+      "negative_eigenvalue_count": 2
+    }
+  ],
+  "interpretation": {
+    "convex_storage": "positive rho-log-rho curvature and wall-reservoir partition penalty",
+    "nonconvex_organization": "q-weighted inherited ordering dip plus bounded q double-well",
+    "low_density_regularization": "positive rho-log-rho curvature and optional exponential soft penalty",
+    "wall_state_stabilization": "q-weighted ordering dip and wall-reservoir target"
+  }
+}
