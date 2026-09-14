@@ -2005,6 +2005,45 @@
         "matched_v32_full_v34_asb_source_regression": true
       },
       "scientific_decision": "LOCAL_V14_REPAIR_AND_PINNED_CRITICALITY_PASSED_HPC3_COMPACT_BUNDLE_AUTHORIZED"
+    },
+    {
+      "run_id": "20260914T184004Z-777fa08-a20d64",
+      "purpose": "directive_v14_compact_nonarray_HPC3_bundle_first_packaging_attempt",
+      "git_commit": "777fa08277b4040c8759adb01b1043e7d90478c4",
+      "input_bundle_sha256": "be3af70054d5d960777a3fa847d9f2a11d0cb82ad6682a368b4767f99ea23c3a",
+      "slurm": {"job_id": "56013885", "state": "FAILED", "exit_status": "1:0", "elapsed": "00:00:08", "node": "hpc3-17-05"},
+      "retrieval_status": "partial_unverified_diagnostics_fetched",
+      "result_archive_sha256": "913263e8f276f0f9f60220798a5f7adbfc482c4dddc14479ffc4ade864a7125c",
+      "classification": "PACKAGING_FAILURE_NO_SCIENTIFIC_TRAJECTORY",
+      "failure": "sibm_geometry.py omitted from source archive",
+      "compute_node_invariant_tests_passed": 20,
+      "scientific_parameters_changed_before_retry": false,
+      "unrelated_job_preserved": "55950433"
+    },
+    {
+      "run_id": "20260914T184138Z-c292ef7-eb2b2a",
+      "purpose": "directive_v14_compact_nonarray_HPC3_qualification",
+      "git_commit": "c292ef7d58070b4a9f5215b49b5d057405fa383c",
+      "input_bundle_sha256": "c6e407f51842b3c47245aed4209a2a9d3c1470da25985e701c25a55d1c99bf24",
+      "slurm": {"job_id": "56013924", "state": "COMPLETED", "exit_status": "0:0", "elapsed": "00:03:28", "node": "hpc3-17-05", "cpu_efficiency": 0.976, "peak_memory_MB": 379.05},
+      "retrieval_status": "verified",
+      "result_archive_sha256": "2f2721a657cba737ffa30f195673bf1edf88fc6873c8d41ed08dd3437885e31c",
+      "cases": ["pinned_subcritical_128", "pinned_supercritical_128", "production_unseeded_128", "production_bulge_128", "production_bulge_192"],
+      "postprocessing": {
+        "classification": "V14_HPC3_COMPACT_BUNDLE_PASSED",
+        "pinned_subcritical_amplitude_change_m": -1.872848675062082e-9,
+        "pinned_supercritical_amplitude_change_m": 5.29070390624354e-9,
+        "production_unseeded_tip_displacement_m": 0.0,
+        "production_bulge_grid_relative_spread": 0.0003252934004720683,
+        "all_pair_geometry_and_conservation_invariants_passed": true,
+        "no_label_or_orientation_allocation": true,
+        "fixture_passed": true,
+        "scientific_gate_passed": true,
+        "result": "full_model/verification/v14_hpc3_compact.json",
+        "result_sha256": "f67dbd4231e6f35c282b3f03f3ffab1bbb16e0ea65ac1057d5019be758992cf5"
+      },
+      "claim_limit": "generic controlled numerical qualification_not_material_calibration_or_temperature_rate_trend",
+      "unrelated_job_preserved": "55950433"
     }
   ]
 }
