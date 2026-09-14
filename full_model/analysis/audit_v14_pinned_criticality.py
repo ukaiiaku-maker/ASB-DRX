@@ -146,9 +146,13 @@ def main() -> None:
                spec.split(":", 3)[1]) for spec in args.case}
     required = {(g, n) for g in (128, 192) for n in
                 ("neutral", "subcritical", "supercritical", "mobility_off", "reversed")}
+    functional_path = args.output.with_name("v14_full_functional_fd.json")
+    functional = (json.loads(functional_path.read_text())
+                  if functional_path.exists() else {"passed": False})
     passed = (matrix == required and all(x["passed"] for x in cases)
               and len(restarts) >= 2
-              and all(x["restart_exact_within_declared_roundoff"] for x in restarts))
+              and all(x["restart_exact_within_declared_roundoff"] for x in restarts)
+              and functional.get("passed", False))
     result = {
         "schema": "full-v34-v14-pinned-criticality/v1",
         "classification": ("V14_LOCAL_PINNED_CRITICALITY_PASSED" if passed
@@ -166,7 +170,10 @@ def main() -> None:
         "full_functional_derivative_verification": {
             "common_interpolation_test": "tests/test_full_model_stored_energy_coupling.py",
             "pinned_cap_finite_difference_test": "tests/test_full_model_sibm_geometry.py",
-            "status": "analytical derivatives match centered finite differences",
+            "result": str(functional_path),
+            "classification": functional.get("classification"),
+            "results": functional.get("results", []),
+            "status": "analytical full-functional derivatives match centered finite differences",
         },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

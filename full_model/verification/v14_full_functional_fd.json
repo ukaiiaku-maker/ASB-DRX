@@ -1,0 +1,43 @@
+{
+  "classification": "V14_FULL_FUNCTIONAL_FD_PASSED",
+  "passed": true,
+  "results": [
+    {
+      "analytical_derivative_at_0Pa_J": 1.543928434892762e-06,
+      "analytical_derivative_at_1MPa_J": -2.11379032091388e-07,
+      "analytical_diffuse_critical_pressure_Pa": 879577.204525561,
+      "critical_inside_observed_sign_bracket": true,
+      "direction": "supercritical-minus-subcritical pair-field mode",
+      "finite_difference_derivative_at_0Pa_J": 1.543928179748022e-06,
+      "finite_difference_derivative_at_1MPa_J": -2.113795249947259e-07,
+      "finite_difference_diffuse_critical_pressure_Pa": 879576.9400296087,
+      "grid": 128,
+      "maximum_relative_derivative_error": 3.192527106476434e-07,
+      "passed": true,
+      "perturbation": 1e-06,
+      "tested_motion_bracket_Pa": [
+        -4500000.0,
+        5500000.0
+      ]
+    },
+    {
+      "analytical_derivative_at_0Pa_J": 1.1534356925223069e-05,
+      "analytical_derivative_at_1MPa_J": 9.038024136343496e-06,
+      "analytical_diffuse_critical_pressure_Pa": 4620520.539811531,
+      "critical_inside_observed_sign_bracket": true,
+      "direction": "supercritical-minus-subcritical pair-field mode",
+      "finite_difference_derivative_at_0Pa_J": 1.1534360272458244e-05,
+      "finite_difference_derivative_at_1MPa_J": 9.038027271035531e-06,
+      "finite_difference_diffuse_critical_pressure_Pa": 4620521.487271357,
+      "grid": 192,
+      "maximum_relative_derivative_error": 2.9019694782737493e-07,
+      "passed": true,
+      "perturbation": 1e-06,
+      "tested_motion_bracket_Pa": [
+        -4500000.0,
+        5500000.0
+      ]
+    }
+  ],
+  "schema": "full-v34-v14-full-functional-fd/v1"
+}

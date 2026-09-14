@@ -1960,6 +1960,51 @@
         "v13_jobs_present": false,
         "unrelated_job_preserved": "55950433"
       }
+    },
+    {
+      "run_id": "local-v14-moving-front-repair-20260914",
+      "purpose": "directive_v14_conservative_front_repair_and_restart_exact_pinned_criticality",
+      "branch": "exp/full-v34-recovery-v1",
+      "scientific_repair_commit": "b0bddea788f0ac54fc4bcf7cc9f3b565577263ac",
+      "execution": "local_full_driver_128_and_192_plus_complete_regression_suite",
+      "hpc3_submission": null,
+      "common_states": {
+        "grid128_checkpoint_sha256": "084b789dd020f2159f4da1b23722218dd5ab6d9a55299ab71505aed4866cdc79",
+        "grid192_checkpoint_sha256": "67bb2989b7f871a2a7e6ad1aeba9e078978923e578ba6ecf3ce92c824133f6d1",
+        "zero_front_ledger": true,
+        "chi_equals_processed_max": true
+      },
+      "repair": {
+        "state_ownership": "support_weighted",
+        "transfer": "constrained_per_family_per_sign",
+        "intrinsic_HAGB_in_excess_reservoir": false,
+        "capacity_limit_without_clipping": true,
+        "profile_relaxation_processes_content": false
+      },
+      "pinned_criticality": {
+        "classification": "V14_LOCAL_PINNED_CRITICALITY_PASSED",
+        "grids": [128, 192],
+        "cases_per_grid": ["neutral", "subcritical", "supercritical", "mobility_off", "reversed"],
+        "neutral_tolerance_cells": 0.02,
+        "neutral_drift_cells": {"128": -8.768740333451804e-5, "192": -0.010385979110592856},
+        "continuous_segmented_maximum_scaled_difference": {"subcritical": 1.9323114496898004e-13, "supercritical": 2.0533218695716491e-13},
+        "restart_tolerance": 1e-12,
+        "diffuse_critical_pressure_Pa": {"128": 879576.9400296087, "192": 4620521.487271357},
+        "full_functional_derivative_maximum_relative_error": 3.192527106476434e-7,
+        "all_line_signed_energy_heat_ledgers_passed": true,
+        "no_label_or_orientation_allocation": true,
+        "fixture_passed": true,
+        "scientific_gate_passed": true
+      },
+      "verification": {
+        "pinned_result": "full_model/verification/v14_pinned_criticality.json",
+        "pinned_result_sha256": "1144b80507bd53eee6829e6c9139c5923e1ac95c0af62cff1938694c5bb45e40",
+        "functional_result": "full_model/verification/v14_full_functional_fd.json",
+        "functional_result_sha256": "8ee613b63182a2d23045ecc0dd969f54622c15e5d53e10e4cf45e9994b4e9ac6",
+        "configured_regression_tests_passed": 338,
+        "matched_v32_full_v34_asb_source_regression": true
+      },
+      "scientific_decision": "LOCAL_V14_REPAIR_AND_PINNED_CRITICALITY_PASSED_HPC3_COMPACT_BUNDLE_AUTHORIZED"
     }
   ]
 }
