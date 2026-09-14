@@ -76,6 +76,23 @@
       "hpc3_job_launched": false,
       "fixture_passed": true,
       "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v9-common-state-moving-front-route-b-decision",
+      "source_commit": "4de9243d1d59f4bc86fb00147e19367c38aae8f3",
+      "execution": "local_same_host_deterministic_replay",
+      "frozen_source_checkpoint_step": 6750,
+      "frozen_source_checkpoint_sha256": "b160c3b2ff0ef3456a2761d9d154c6f5dee95cc0ea70b2bacf86af66e2886a93",
+      "decision_replay_checkpoint_step": 6900,
+      "decision_replay_checkpoint_sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b",
+      "classification": "BULK_ROUTE_B_PRECURSOR_NOT_SELF_SUSTAINING_UNDER_COMMON_THERMODYNAMICS",
+      "result_path": "full_model/verification/v9_common_state_moving_front_decision.json",
+      "result_sha256": "552649725212390285ae3b38788189682c4a83b38a2e9ea2167ce9b4646d16ea",
+      "lifecycle_audit_path": "full_model/verification/v9_lifecycle_audit.json",
+      "matched_asb_regression_path": "full_model/verification/v9_matched_asb_smoke.json",
+      "hpc3_job_launched": false,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
     }
   ]
 }

@@ -2,6 +2,38 @@
 
 Updated: 2026-09-13 (America/Los_Angeles)
 
+## Directive v9 decision: bulk Route-B precursor rejected
+
+- Source `4de9243` adds an opt-in sparse parent/child/recovered-wake state,
+  continuous moving-front line processing, explicit signed boundary content,
+  EXP-floor reaction kinetics, cumulative line/energy/heat ledgers, and exact
+  checkpoint/restart. The frozen lifecycle behavior remains the default.
+- The v8 lifecycle audit classifies the old common result as
+  `IRREVERSIBLE_CLEANUP_WITH_FAILED_CHILD`: the atomic transaction removed line
+  even though child support later vanished. Fixed-region ablations showed the
+  reported five-step “rehardening” was dominated by moving-mask parent/interface
+  contamination, not deformation storage.
+- An unbounded preliminary front replay was rejected because it cashed the
+  precursor's age into disk-wide cleanup and generated domain-scale evolution
+  within a few steps. Production initialization is now limited to one accepted
+  EXP-floor step and the resolved kinematic bound `v_n*dt/w_interface`.
+- The clean-source deterministic replay made five attempts at steps 6904--6908.
+  Every common transaction was rejected without mutation. The first had
+  `Delta F=+4.796821e-15 J`: `+5.037872e-15 J` compatibility cost exceeded the
+  finite bulk/line relief. No label was allocated, no cleanup committed, and
+  final `Tmax=1120.414 K` remained on the parent trajectory.
+- Decision:
+  `BULK_ROUTE_B_PRECURSOR_NOT_SELF_SUSTAINING_UNDER_COMMON_THERMODYNAMICS`.
+  `FULL_MODEL_DRX_GROWTH_MECHANISM_SUPPORTED=false`; only the historical
+  `SINGLE_FULL_MODEL_DRX_LIFECYCLE_PATH_VERIFIED` claim remains.
+- All 306 tests pass. A short matched 16x16, two-step v32/full-v34 ASB smoke is
+  bitwise equal across all 41 common fields. This preserves the source path but
+  is not strict ASB qualification. No HPC3 job, grid, mobility, domain, or seed
+  sweep was launched.
+- Next work moves to common-state HAGB bulging/SIBM, pre-existing subgrain/CDRX,
+  and orientation-gradient support; the rejected lineage sign and hazard tuning
+  remain prohibited.
+
 ## Directive v8 decision: lineage-scoped growth mechanism rejected
 
 - Provenance is frozen explicitly: validated source `b9afe1f`, validated HPC3

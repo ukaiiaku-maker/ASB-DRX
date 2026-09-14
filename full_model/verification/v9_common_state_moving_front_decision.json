@@ -1,0 +1,80 @@
+{
+  "schema": "full-v34-v9-common-state-moving-front-decision/v1",
+  "source_commit": "4de9243d1d59f4bc86fb00147e19367c38aae8f3",
+  "branch": "exp/full-v34-recovery-v1",
+  "architecture": "full_2d_phase_field_v34_recovery",
+  "frozen_reference": {
+    "run_id": "20260913T194443Z-b9afe1f-69c00f",
+    "source_commit": "b9afe1f83ba2f2cb36ed1819fd3f38cb067e79f4",
+    "checkpoint_step": 6750,
+    "checkpoint_sha256": "b160c3b2ff0ef3456a2761d9d154c6f5dee95cc0ea70b2bacf86af66e2886a93"
+  },
+  "deterministic_replay": {
+    "execution": "local_same_host",
+    "source_checkpoint_step": 6900,
+    "source_checkpoint_sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b",
+    "source_checkpoint_lineage": "deterministic continuation of frozen step-6750 state with no promotion commit",
+    "steps": [6901, 6908],
+    "physical_horizon_s": 8e-7,
+    "strain_rate_s-1": 1000.0,
+    "new_stochastic_creation_disabled": true,
+    "hazard_interface_mobility_retuned": false,
+    "promotion_attempt_steps": [6904, 6905, 6906, 6907, 6908],
+    "promotion_attempts": 5,
+    "promotion_commits": 0,
+    "final_allocated_labels": 12,
+    "final_mean_density_m-2": 1.1921747312968533e17,
+    "final_max_temperature_K": 1120.4135004587122,
+    "final_checkpoint_sha256": "6b9d17f7a13029a00561125ef97e0aa1415a0a8fa1911fafa5572b5da08f1d35"
+  },
+  "front_initialization": {
+    "activated_law": "EXP_floor_DeltaH_minus_T_DeltaS",
+    "entropy_count": 1,
+    "kinematic_bound": "reaction_fraction <= radial_velocity*dt/interface_width",
+    "radial_velocity_m_s": 0.0030542751816215667,
+    "interface_width_m": 3.162277660168379e-7,
+    "maximum_initial_reaction_fraction": 0.00096584661748486,
+    "bulk_atomic_cleanup_enabled": false
+  },
+  "first_rejected_transaction_J": {
+    "bulk_stored": -1.6282311609725186e-16,
+    "line": -3.6161804519096045e-16,
+    "interface_order": 2.833907344859466e-16,
+    "compatibility": 5.0378716963261908e-15,
+    "elastic": 0.0,
+    "total_free_energy_change": 4.796821269523925e-15
+  },
+  "invariants": {
+    "nonnegative_populations": true,
+    "atomic_unledgered_core_reset": false,
+    "signed_burgers_closure": true,
+    "line_closure": true,
+    "restart_schema_fixture": true,
+    "advance_retreat_no_double_processing": true,
+    "failed_transaction_mutated_state": false
+  },
+  "tests": {
+    "unit_and_regression_count": 306,
+    "unit_and_regression_passed": true,
+    "matched_asb_common_fields": 41,
+    "matched_asb_bitwise_equal_fields": 41,
+    "matched_asb_passed": true,
+    "strict_asb_qualification": "pending"
+  },
+  "lifecycle_audit": {
+    "path": "full_model/verification/v9_lifecycle_audit.json",
+    "sha256": "0463c4810f961035e63aa11a98df529dd4b86fc7fb208bb5580dd2e33e61593d",
+    "old_common_classification": "IRREVERSIBLE_CLEANUP_WITH_FAILED_CHILD"
+  },
+  "decision": "BULK_ROUTE_B_PRECURSOR_NOT_SELF_SUSTAINING_UNDER_COMMON_THERMODYNAMICS",
+  "accepted_historical_claim": "SINGLE_FULL_MODEL_DRX_LIFECYCLE_PATH_VERIFIED",
+  "full_model_drx_growth_mechanism_supported": false,
+  "next_pathways": [
+    "strain_induced_HAGB_migration_and_bulging",
+    "pre_existing_subgrain_CDRX_promotion",
+    "orientation_gradient_driven_phase_support"
+  ],
+  "hpc3_job_launched": false,
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}
