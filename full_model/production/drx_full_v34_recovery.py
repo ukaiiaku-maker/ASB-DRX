@@ -74,6 +74,15 @@ from phase_promotion import (
 from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
 )
+from moving_front import (
+    DefectState, activated_front_fraction, advance_front,
+    apply_common_constitutive_increment, initialize_sparse_front,
+    reconstruct_mixture, state_arrays as sparse_front_arrays,
+    state_from_checkpoint as sparse_front_from_checkpoint,
+    state_metadata_json as sparse_front_metadata_json,
+    phase_total_line_densities as sparse_phase_total_line_densities,
+    total_line_density as sparse_total_line_density,
+)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -701,6 +710,21 @@ P = dict(
     physical_grain_retirement_grace_s=1.0e-6,
     physical_grain_min_energy_drop_Jm3=1.0e6,
     use_atomic_stateful_promotion=False,
+    # v9 common-state repair. Disabled by default so the frozen lifecycle
+    # architecture remains bitwise reproducible. When enabled, atomic promotion
+    # allocates only a phase slot; all line processing belongs to the sparse
+    # finite-rate moving-front state and ledger.
+    use_sparse_common_front_state=False,
+    moving_front_attempt_frequency_s=1.0e8,
+    moving_front_entropy_over_kB=0.0,
+    moving_front_drag_rate_s=1.0e8,
+    moving_front_h0_eV=0.35,
+    moving_front_critical_stress_pa=1.0e9,
+    moving_front_exp_a=2.0,
+    moving_front_exp_n=1.5,
+    moving_front_exp_floor=0.10,
+    moving_front_boundary_storage_fraction=0.05,
+    moving_front_sink_fraction=0.02,
     atomic_promotion_purity_threshold=0.80,
     # The verified b9afe1f trajectory used ``lineage_scoped``.  Directive-v8
     # qualification compares it with a common functional, no stored-energy
@@ -930,7 +954,8 @@ _entropy_names = (
     'glide_activation_entropy_kB', 'recovery_activation_entropy_kB',
     'climb_activation_entropy_kB', 'wall_activation_entropy_kB',
     'gb_source_activation_entropy_kB', 'gb_transmission_activation_entropy_kB',
-    'embryo_activation_entropy_kB', 'boundary_activation_entropy_kB')
+    'embryo_activation_entropy_kB', 'boundary_activation_entropy_kB',
+    'moving_front_entropy_over_kB')
 _entropy_bound = float(P.get('activation_entropy_abs_max_kB', 20.0))
 for _entropy_name in _entropy_names:
     _entropy_value = float(P.get(_entropy_name, 0.0))
@@ -942,6 +967,12 @@ if str(P.get('stored_energy_coupling_mode', 'lineage_scoped')).lower() not in _s
     raise SystemExit(
         "stored_energy_coupling_mode must be one of "
         + ", ".join(sorted(_stored_energy_coupling_modes)))
+if P.get('use_sparse_common_front_state', False):
+    if str(P.get('stored_energy_coupling_mode', '')).lower() != 'common_variational':
+        raise SystemExit(
+            'sparse common front state requires stored_energy_coupling_mode=common_variational')
+    if not P.get('use_rho_state_partition', False):
+        raise SystemExit('sparse common front state requires dislocation reservoir partition')
 if float(P.get('expf_n', 0.0)) < 1.0:
     raise SystemExit('production EXP-floor exponent expf_n must be >= 1')
 
@@ -3316,6 +3347,33 @@ else:
     rho = np.maximum(np.sum(rp+rm, axis=2), P['rho_min'])
     P['_rho_state_ref_runtime'] = float(rho_c)
 
+# v9 sparse material state exists only for an actually promoted parent/child
+# pair. Initial orientation labels remain one common deformed material class.
+sparse_front_state = None
+if (P.get('use_sparse_common_front_state', False) and _restart_loaded
+        and not P.get('restart_reset_clock', True)):
+    with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
+        if 'sparse_front_metadata_json' in _restart_npz.files:
+            _front_keys = (
+                'parent_rp', 'parent_rm', 'parent_forest', 'parent_wall',
+                'child_rp', 'child_rm', 'child_forest', 'child_wall',
+                'wake_rp', 'wake_rm', 'wake_forest', 'wake_wall',
+                'chi', 'processed_max', 'boundary_line_density_m2',
+                'boundary_signed_density_m2')
+            if not all(f'sparse_front__{key}' in _restart_npz.files
+                       for key in _front_keys):
+                raise ValueError('checkpoint contains partial sparse-front state')
+            sparse_front_state = sparse_front_from_checkpoint(
+                str(_restart_npz['sparse_front_metadata_json'].item()),
+                {key: _restart_npz[f'sparse_front__{key}'] for key in _front_keys})
+            _front_mixture = reconstruct_mixture(sparse_front_state)
+            rp, rm = _front_mixture.rp, _front_mixture.rm
+            rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
+            rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+        elif atomic_promotion_commit_total:
+            raise ValueError(
+                'promoted sparse-common restart omits phase-resolved front state')
+
 if _restart_loaded and not P.get('restart_reset_clock', True):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
         _potential_keys = [name for name in _restart_npz.files if name.startswith('ATpot__')]
@@ -4831,6 +4889,7 @@ def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
 def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
                                        rho_forest, rho_wall, rho_GB, T):
     global embryo_population, grain_tracker
+    global sparse_front_state
     global atomic_promotion_attempt_total, atomic_promotion_commit_total
     global atomic_promotion_rollback_total, atomic_promotion_event_records
     ready = [record for record in embryo_population.records
@@ -4866,6 +4925,65 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
         eta_preview, psi_preview_values, psi_plastic, Ng+1)
     boundary_density_target = np.clip(
         P['c_GB']*grad_mag(psi_preview)/P['b'], 0.0, P['rho_max'])
+    _use_sparse_front = bool(P.get('use_sparse_common_front_state', False))
+    _front_candidate = None
+    _front_mixture = None
+    _front_rho_gb = None
+    _energy_evaluator = lambda **trial: _promotion_energy_evaluator(
+        **trial, temperature_K=T)
+    if _use_sparse_front:
+        if sparse_front_state is not None:
+            raise RuntimeError('only one sparse promoted parent/child pair is supported')
+        _front_process = ActivatedProcess(
+            'moving-front-recovery',
+            float(P.get('moving_front_attempt_frequency_s', 1.0e8)),
+            float(P.get('moving_front_entropy_over_kB', 0.0)),
+            float(P.get('moving_front_drag_rate_s', 1.0e8)))
+        # Resolved phase allocation gets one accepted front-processing step.
+        # The embryo's historical age cannot be cashed in as instantaneous
+        # cleanup of the newly allocated disk; later sweep is processed only as
+        # the diffuse front advances.
+        _front_exposure_s = float(P['dt'])
+        _activated_reacted = float(activated_front_fraction(
+            _front_process, abs(float(sigma_bar)), float(np.nanmean(T)),
+            _front_exposure_s,
+            h0_J=float(P.get('moving_front_h0_eV', 0.35))*eV_J,
+            critical_stress_pa=float(P.get('moving_front_critical_stress_pa', 1.0e9)),
+            exp_a=float(P.get('moving_front_exp_a', 2.0)),
+            exp_n=float(P.get('moving_front_exp_n', 1.5)),
+            exp_floor=float(P.get('moving_front_exp_floor', 0.10))))
+        _kinematic_reacted = max(
+            float(embryo.history[-1].radial_velocity_m_s), 0.0)*P['dt'] \
+            / max(interface_width, dx)
+        _reacted = min(_activated_reacted, _kinematic_reacted, 1.0)
+        _parent_state = DefectState(
+            np.asarray(rp).copy(), np.asarray(rm).copy(),
+            np.asarray(rho_forest).copy(), np.asarray(rho_wall).copy())
+        _front_initial = initialize_sparse_front(
+            _parent_state, np.zeros_like(support),
+            float(_nuc_low_rho_from_potential()), embryo.parent_grain, Ng,
+            reaction_fraction=_reacted)
+        _line_energy = float(np.nanmean(ATpot.Estar_coeff(T)))
+        _front_candidate, _front_mixture = advance_front(
+            _front_initial, support, cell_area_m2=dx*dx,
+            represented_thickness_m=max(
+                float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+            line_energy_J_m=_line_energy,
+            boundary_storage_fraction=float(P.get(
+                'moving_front_boundary_storage_fraction', 0.05)),
+            sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)))
+        _front_rho_gb = np.clip(
+            np.asarray(rho_GB)+_front_candidate.boundary_line_density_m2,
+            0.0, P['rho_max'])
+
+        def _energy_evaluator(**trial):
+            if int(trial['Ng']) == Ng+1:
+                trial = dict(trial)
+                trial.update(
+                    rp=_front_mixture.rp, rm=_front_mixture.rm,
+                    rho_forest=_front_mixture.forest,
+                    rho_wall=_front_mixture.wall, rho_gb=_front_rho_gb)
+            return _promotion_energy_evaluator(**trial, temperature_K=T)
     try:
         result = atomic_phase_promotion(
             eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB,
@@ -4879,8 +4997,8 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
             boundary_density_target_m2=boundary_density_target,
             minimum_core_area_m2=grain_criteria.minimum_area_m2,
             step=int(step), time_s=float(time_s),
-            energy_evaluator=lambda **trial: _promotion_energy_evaluator(
-                **trial, temperature_K=T))
+            energy_evaluator=_energy_evaluator,
+            perform_density_transfer=not _use_sparse_front)
     except (ValueError, RuntimeError) as exc:
         atomic_promotion_rollback_total += 1
         return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
@@ -4888,6 +5006,13 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
                      embryo_id=int(embryo.embryo_id)))
     embryo_population = result.embryos
     grain_tracker = result.tracker
+    if _use_sparse_front:
+        sparse_front_state = _front_candidate
+        result = result.__class__(
+            result.eta, result.psi_gv, result.Ng,
+            _front_mixture.rp, _front_mixture.rm,
+            _front_mixture.forest, _front_mixture.wall, _front_rho_gb,
+            result.embryos, result.tracker, result.heat_support, result.ledger)
     T1 = np.asarray(T, dtype=float) + (
         result.ledger.heat_released_J*result.heat_support
         / max(dx*dx
@@ -4935,7 +5060,10 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
                  compatibility_energy_change_J=float(ledger.compatibility_energy_change_J),
                  energy_closure_J=float(ledger.energy_closure_J),
                  line_closure_m=float(ledger.transfer.line_content_closure_m),
-                 signed_burgers_change_m2=float(ledger.transfer.maximum_signed_burgers_density_change_m2)))
+                 signed_burgers_change_m2=float(ledger.transfer.maximum_signed_burgers_density_change_m2),
+                 front_line_closure_m=(float(sparse_front_state.ledger.line_closure_m)
+                                       if _use_sparse_front else 0.0),
+                 front_reaction_fraction=(_reacted if _use_sparse_front else np.nan)))
 
 
 def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_tot,
@@ -5433,6 +5561,18 @@ def _potential_checkpoint_state():
     return state
 
 
+def _sparse_front_checkpoint_state():
+    state = globals().get('sparse_front_state', None)
+    if state is None:
+        return {}
+    payload = {
+        f'sparse_front__{key}': value
+        for key, value in sparse_front_arrays(state).items()}
+    payload['sparse_front_metadata_json'] = np.array(
+        sparse_front_metadata_json(state))
+    return payload
+
+
 def _save_restart_checkpoint(step_local, sim_time_value=None):
     """Save exact continuation checkpoint for branch/sweep workflows."""
     if not P.get('write_restart_npz', True):
@@ -5495,6 +5635,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             rng_nuc_state_json=np.array(_rng_state_to_json(_rng_nuc)),
             P_json=np.array(json.dumps(P, default=str)),
             **_potential_checkpoint_state(),
+            **_sparse_front_checkpoint_state(),
         )
         return fname
     except OSError as exc:
@@ -5581,6 +5722,11 @@ for n in range(_restart_step_offset, _restart_end_step):
                'storage_violation_max': np.nan, 'v_orowan_mean': np.nan, 'v_orowan_p95': np.nan,
                'v_orowan_max': np.nan, 'v_adv_mean': np.nan, 'v_adv_max': np.nan,
                'v_cfl_active_frac': np.nan, 'gdot_abs_mean': np.nan, 'gdot_abs_max': np.nan}
+
+    if sparse_front_state is not None:
+        sparse_front_state = apply_common_constitutive_increment(
+            sparse_front_state,
+            DefectState(rp, rm, rho_forest, rho_wall))
 
     # --- Temperature-dependent potential refresh and grain-slaved orientation ---
     if P.get('update_potential_with_temperature', True) and (n % max(int(P.get('potential_update_interval', 50)), 1) == 0):
@@ -6130,11 +6276,26 @@ for n in range(_restart_step_offset, _restart_end_step):
         # promoted phase carries its own recovered material state, evaluated
         # from its current pure core so continued deformation can re-harden it.
         # Lineage selects that state; it does not select a different equation.
-        phase_energy_fields = np.broadcast_to(
-            Estar[:, :, None], eta[:, :, :Ng].shape).copy()
-        for phase_index, phase_record in enumerate(grain_tracker.records[:Ng]):
-            if phase_record.embryo_promoted:
-                phase_energy_fields[:, :, phase_index] = phase_stored_energy_values[phase_index]
+        if sparse_front_state is not None:
+            # Absorb every storage/transport/recovery increment accumulated by
+            # the common full-field constitutive solver before evaluating the
+            # phase derivative. No moving pure-core mask is sampled.
+            sparse_front_state = apply_common_constitutive_increment(
+                sparse_front_state,
+                DefectState(rp, rm, rho_forest, rho_wall))
+            _nonchild_rho, _child_rho = sparse_phase_total_line_densities(
+                sparse_front_state)
+            phase_energy_fields = np.broadcast_to(
+                (A_E_field*_nonchild_rho)[:, :, None],
+                eta[:, :, :Ng].shape).copy()
+            phase_energy_fields[:, :, sparse_front_state.child_label] = (
+                A_E_field*_child_rho)
+        else:
+            phase_energy_fields = np.broadcast_to(
+                Estar[:, :, None], eta[:, :, :Ng].shape).copy()
+            for phase_index, phase_record in enumerate(grain_tracker.records[:Ng]):
+                if phase_record.embryo_promoted:
+                    phase_energy_fields[:, :, phase_index] = phase_stored_energy_values[phase_index]
         _, common_stored_derivative = common_variational_stored_energy(
             eta[:, :, :Ng], phase_energy_fields)
         if stored_energy_mode == 'sign_reversed':
@@ -6188,11 +6349,41 @@ for n in range(_restart_step_offset, _restart_end_step):
 
     ac_eta_delta_mean = float(np.nanmean(np.abs(eta[:, :, :Ng] - eta_before_ac))) if Ng > 0 else 0.0
 
+    if sparse_front_state is not None:
+        _h_phase = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
+        _chi_new = (_h_phase[:, :, sparse_front_state.child_label]
+                    / np.maximum(np.sum(_h_phase, axis=2), 1e-300))
+        _processed0 = sparse_front_state.processed_max.copy()
+        _boundary0 = sparse_front_state.boundary_line_density_m2.copy()
+        _parent_line0 = sparse_total_line_density(sparse_front_state.parent)
+        _child_line0 = sparse_total_line_density(sparse_front_state.child)
+        _front_heat_density = (
+            np.maximum(_chi_new-_processed0, 0.0)
+            * np.maximum(_parent_line0-_child_line0, 0.0)
+            * float(np.nanmean(A_E_field))
+            * (1.0-float(P.get('moving_front_boundary_storage_fraction', 0.05))
+               -float(P.get('moving_front_sink_fraction', 0.02))))
+        sparse_front_state, _front_mixture = advance_front(
+            sparse_front_state, _chi_new, cell_area_m2=dx*dx,
+            represented_thickness_m=max(
+                float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+            line_energy_J_m=float(np.nanmean(A_E_field)),
+            boundary_storage_fraction=float(P.get(
+                'moving_front_boundary_storage_fraction', 0.05)),
+            sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)))
+        rp, rm = _front_mixture.rp, _front_mixture.rm
+        rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
+        rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+        rho_GB = np.clip(
+            rho_GB+sparse_front_state.boundary_line_density_m2-_boundary0,
+            0.0, P['rho_max'])
+        T = T+_front_heat_density/max(float(P['cp_rho_vol']), 1e-300)
+
     # detect label changes → sweep cleaning
     new_lab = np.argmax(eta[:,:,:Ng],2)
     flip = (new_lab!=lab) & (not P.get('freeze_kwc_eta', False))
     nflip = int(np.sum(flip))
-    if nflip > 0:
+    if nflip > 0 and sparse_front_state is None:
         # Migrated GB wake: reset mobile density and plastic orientation in swept cells.
         for s in range(nSlip):
             rp[:,:,s] = np.where(flip, P['sweep_wake_rho']/(2*nSlip), rp[:,:,s])
@@ -6209,6 +6400,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                 and str(P.get('hazard_measure_mode', '')).lower() != 'area_integrated'):
             H_nuc = np.where(flip, 0.0, H_nuc)
             E_nuc = np.where(flip, _draw_exp_threshold(H_nuc.shape), E_nuc)
+    if nflip > 0:
         lab = new_lab
 
     # Topology bookkeeping: split disconnected hard-label components into fresh

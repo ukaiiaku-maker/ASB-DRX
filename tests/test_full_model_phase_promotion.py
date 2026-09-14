@@ -205,6 +205,20 @@ class AtomicPromotionTest(unittest.TestCase):
         self.assertEqual(error.free_energy_change_J, 1.0)
         self.assertIn("interface_order=1 J", str(error))
 
+    def test_phase_initialization_can_defer_all_density_processing(self):
+        args, _ = self.promote()
+        result = atomic_phase_promotion(**{
+            **args, "perform_density_transfer": False})
+        for actual, name in ((result.rp, "rp"), (result.rm, "rm"),
+                             (result.rho_forest, "rho_forest"),
+                             (result.rho_wall, "rho_wall"),
+                             (result.rho_gb, "rho_gb")):
+            np.testing.assert_array_equal(actual, args[name])
+        ledger = result.ledger.transfer
+        self.assertEqual(ledger.line_content_removed_from_core_m, 0.0)
+        self.assertEqual(ledger.line_content_pair_annihilation_m, 0.0)
+        self.assertEqual(ledger.line_content_declared_sink_m, 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()

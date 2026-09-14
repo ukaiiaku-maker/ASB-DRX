@@ -246,7 +246,8 @@ def atomic_phase_promotion(
         target_core_density_m2, cell_area_m2, maximum_density_m2,
         represented_thickness_m, boundary_density_target_m2=None,
         minimum_core_area_m2=0.0,
-        step, time_s, energy_evaluator: Callable):
+        step, time_s, energy_evaluator: Callable,
+        perform_density_transfer=True):
     """Construct and validate one all-or-nothing embryo-to-phase transaction.
 
     ``energy_evaluator`` receives the trial arrays as keyword arguments and
@@ -302,13 +303,28 @@ def atomic_phase_promotion(
         raise RuntimeError("trial child insertion violated the phase simplex")
     psi1 = np.asarray(psi_gv, dtype=float).copy()
     psi1[Ng] = embryo.orientation_rad
-    rp1, rm1, forest1, wall1, gb1, transfer = conservative_neutral_density_relief(
-        rp, rm, rho_forest, rho_wall, rho_gb, core, shell,
-        target_core_density_m2=target_core_density_m2,
-        cell_area_m2=cell_area_m2,
-        represented_thickness_m=represented_thickness_m,
-        maximum_density_m2=maximum_density_m2,
-        target_shell_density_m2=boundary_density_target_m2)
+    if perform_density_transfer:
+        rp1, rm1, forest1, wall1, gb1, transfer = conservative_neutral_density_relief(
+            rp, rm, rho_forest, rho_wall, rho_gb, core, shell,
+            target_core_density_m2=target_core_density_m2,
+            cell_area_m2=cell_area_m2,
+            represented_thickness_m=represented_thickness_m,
+            maximum_density_m2=maximum_density_m2,
+            target_shell_density_m2=boundary_density_target_m2)
+    else:
+        # Phase-slot allocation is separate from dislocation processing. The
+        # moving-front operator owns all subsequent physical transfer and heat.
+        rp1 = np.asarray(rp, dtype=float).copy()
+        rm1 = np.asarray(rm, dtype=float).copy()
+        forest1 = np.asarray(rho_forest, dtype=float).copy()
+        wall1 = np.asarray(rho_wall, dtype=float).copy()
+        gb1 = np.asarray(rho_gb, dtype=float).copy()
+        volume = float(cell_area_m2)*float(represented_thickness_m)
+        line = float(np.sum(
+            np.sum(rp1+rm1+forest1, axis=2)+wall1+gb1,
+            dtype=np.longdouble)*volume)
+        transfer = PromotionTransferLedger(
+            line, line, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     trial = dict(eta=eta1, psi_gv=psi1, Ng=Ng+1, rp=rp1, rm=rm1,
                  rho_forest=forest1, rho_wall=wall1, rho_gb=gb1)
     new_energy = energy_evaluator(**trial)

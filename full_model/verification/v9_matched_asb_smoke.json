@@ -1,0 +1,16 @@
+{
+  "bitwise_equal_common_fields": 41,
+  "common_field_count": 41,
+  "drx_disabled": true,
+  "dt_s": 1e-08,
+  "grid": [
+    16,
+    16
+  ],
+  "mismatched_common_fields": [],
+  "passed": true,
+  "schema": "full-v34-v9-matched-asb-smoke/v1",
+  "scope": "short source regression only; not strict ASB qualification",
+  "steps": 2,
+  "strain_rate_s-1": 3000.0
+}
