@@ -69,6 +69,7 @@ from hazard_measure import (
     initialize_area_hazard,
 )
 from sibm_boundary import select_resolved_hagb
+from sibm_contour import measure_pair_contour
 from phase_promotion import (
     atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
 )
@@ -736,12 +737,14 @@ P = dict(
     # ~=0.316 um at the frozen v34 settings); this is a representation
     # resolution condition, not mobility or critical-radius tuning.
     sibm_initial_bulge_radius_um=0.75,
-    sibm_active_window_radius_um=2.0,
+    sibm_active_window_radius_um=3.0,
     sibm_activation_h0_eV=0.35,
     sibm_activation_critical_pressure_Pa=1.0e9,
     sibm_activation_exp_a=2.0,
     sibm_activation_exp_n=1.5,
     sibm_activation_exp_floor=0.10,
+    sibm_mobility_multiplier=1.0,
+    sibm_physical_drag_pressure_Pa=0.0,
     atomic_promotion_purity_threshold=0.80,
     # The verified b9afe1f trajectory used ``lineage_scoped``.  Directive-v8
     # qualification compares it with a common functional, no stored-energy
@@ -3372,16 +3375,19 @@ sibm_reference_parent_mask = None
 sibm_reference_child_fraction = None
 sibm_initial_child_fraction = None
 sibm_active_mask = None
+sibm_reference_eta = None
 if (P.get('use_sparse_common_front_state', False) and _restart_loaded
         and not P.get('restart_reset_clock', True)):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
         if 'sparse_front_metadata_json' in _restart_npz.files:
-            _front_keys = (
+            _front_keys = [
                 'parent_rp', 'parent_rm', 'parent_forest', 'parent_wall',
                 'child_rp', 'child_rm', 'child_forest', 'child_wall',
                 'wake_rp', 'wake_rm', 'wake_forest', 'wake_wall',
                 'chi', 'processed_max', 'boundary_line_density_m2',
-                'boundary_signed_density_m2')
+                'boundary_signed_density_m2']
+            if 'sparse_front__cleanup_max' in _restart_npz.files:
+                _front_keys.append('cleanup_max')
             if not all(f'sparse_front__{key}' in _restart_npz.files
                        for key in _front_keys):
                 raise ValueError('checkpoint contains partial sparse-front state')
@@ -3409,7 +3415,8 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                 _sibm_geometry_keys = (
                     'sibm_reference_parent_mask',
                     'sibm_reference_child_fraction',
-                    'sibm_initial_child_fraction', 'sibm_active_mask')
+                    'sibm_initial_child_fraction', 'sibm_active_mask',
+                    'sibm_reference_eta')
                 if not all(key in _restart_npz.files for key in _sibm_geometry_keys):
                     raise ValueError('SIBM checkpoint omits reference geometry')
                 sibm_reference_parent_mask = np.asarray(
@@ -3420,6 +3427,8 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                     _restart_npz['sibm_initial_child_fraction'], dtype=float)
                 sibm_active_mask = np.asarray(
                     _restart_npz['sibm_active_mask'], dtype=bool)
+                sibm_reference_eta = np.asarray(
+                    _restart_npz['sibm_reference_eta'], dtype=float)
         elif atomic_promotion_commit_total:
             raise ValueError(
                 'promoted sparse-common restart omits phase-resolved front state')
@@ -3451,6 +3460,7 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     _pair_domain_mask = (
         eta[:, :, parent_label]+eta[:, :, child_label] > 0.70)
     _h_reference = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
+    sibm_reference_eta = eta[:, :, :Ng].copy()
     sibm_reference_child_fraction = (
         _h_reference[:, :, child_label]
         / np.maximum(np.sum(_h_reference, axis=2), 1e-300))
@@ -3462,8 +3472,9 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     sibm_active_mask = _pair_domain_mask & (np.sqrt(di*di+dj*dj) <= _active_radius)
     sibm_reference_parent_mask = (
         eta[:, :, parent_label] >= eta[:, :, child_label]) & sibm_active_mask
-    bulge = 0.5*(1.0-np.tanh((np.sqrt(di*di+dj*dj)-radius)
-                             /(np.sqrt(2.0)*max(np.sqrt(P['kappa_eta']/P['W_eta']), dx))))
+    bulge = (np.zeros((Nx, Ny)) if radius <= 0.0 else
+             0.5*(1.0-np.tanh((np.sqrt(di*di+dj*dj)-radius)
+                              /(np.sqrt(2.0)*max(np.sqrt(P['kappa_eta']/P['W_eta']), dx)))))
     bulge *= sibm_reference_parent_mask
     transfer = bulge*eta[:, :, parent_label]
     eta[:, :, parent_label] -= transfer
@@ -5743,6 +5754,7 @@ def _potential_checkpoint_state():
 
 
 def _sparse_front_checkpoint_state():
+    global sparse_front_state
     state = globals().get('sparse_front_state', None)
     if state is None:
         return {}
@@ -5755,6 +5767,11 @@ def _sparse_front_checkpoint_state():
         state, DefectState(
             np.asarray(rp), np.asarray(rm),
             np.asarray(rho_forest), np.asarray(rho_wall)))
+    # Publish the synchronized representation to the continuing trajectory as
+    # well as the checkpoint.  Otherwise taking a checkpoint changes the state
+    # from which a restart continues but not the in-memory state, defeating
+    # continuous-versus-restart identity.
+    sparse_front_state = state
     payload = {
         f'sparse_front__{key}': value
         for key, value in sparse_front_arrays(state).items()}
@@ -5835,6 +5852,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                 'sibm_initial_child_fraction': np.asarray(
                     sibm_initial_child_fraction, dtype=float),
                 'sibm_active_mask': np.asarray(sibm_active_mask, dtype=np.uint8),
+                'sibm_reference_eta': np.asarray(sibm_reference_eta, dtype=float),
             } if globals().get('sibm_experiment_state', {}) else {}),
             **_potential_checkpoint_state(),
             **_sparse_front_checkpoint_state(),
@@ -5852,6 +5870,12 @@ if P.get('write_diag_csv', True):
     _diag_csv_path = out / P.get('diag_csv_name', 'drx_v8_gb_hp_source_sink_diagnostics.csv')
     _diag_csv_fh = open(_diag_csv_path, 'w', newline='')
     print(f"Diagnostics CSV: {_diag_csv_path}")
+_sibm_contour_fh = None
+_sibm_contour_writer = None
+if P.get('use_sibm_existing_boundary', False):
+    _sibm_contour_path = out/'sibm_contour_diagnostics.csv'
+    _sibm_contour_fh = open(_sibm_contour_path, 'w', newline='')
+    print(f"SIBM contour diagnostics: {_sibm_contour_path}")
 tw0 = _wtime.time()
 _last_checkpoint_wallclock = tw0
 sim_time = _restart_sim_time
@@ -6510,20 +6534,25 @@ for n in range(_restart_step_offset, _restart_end_step):
                     * (np.abs(np.abs(kappa_for_ac)-_alpha_target)
                        + np.abs(rho_GB-_gb_target))
                     * gb_for_ac)
+                _physical_drag_pressure = max(float(P.get(
+                    'sibm_physical_drag_pressure_Pa', 0.0)), 0.0)*gb_for_ac
                 phase_energy_fields[:, :, sparse_front_state.child_label] += (
-                    _physical_compat_pressure)
+                    _physical_compat_pressure+_physical_drag_pressure)
                 _interface_weight = gb_for_ac/np.maximum(
                     np.sum(gb_for_ac), 1e-300)
                 _stored_drive = A_E_field*(_nonchild_rho-_child_rho)
                 _drive_mean = float(np.sum(_interface_weight*_stored_drive))
                 _compat_mean = float(np.sum(_physical_compat_pressure)
                                      / np.maximum(np.sum(gb_for_ac), 1e-300))
-                _net_drive = _drive_mean-_compat_mean
+                _drag_mean = float(np.sum(_physical_drag_pressure)
+                                   / np.maximum(np.sum(gb_for_ac), 1e-300))
+                _net_drive = _drive_mean-_compat_mean-_drag_mean
                 sibm_experiment_state.update(
                     stored_energy_drive_Pa=_drive_mean,
                     physical_compatibility_pressure_Pa=_compat_mean,
                     physical_compatibility_pressure_max_Pa=float(
                         np.max(_physical_compat_pressure)),
+                    physical_drag_pressure_Pa=_drag_mean,
                     numerical_penalty_in_migration_decision_J=0.0,
                     net_flat_boundary_drive_Pa=_net_drive,
                     analytical_critical_radius_m=(
@@ -6541,6 +6570,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             common_stored_derivative = -common_stored_derivative
     if not P.get('freeze_kwc_eta', False):
         L_ac_eff = P['L_ac'] * _gb_mobility_factor_from_T(T)
+        if P.get('use_sibm_existing_boundary', False):
+            L_ac_eff *= max(float(P.get('sibm_mobility_multiplier', 1.0)), 0.0)
         for i in range(Ng):
             if np.max(eta[:,:,i]) < 1e-6: continue
             # functional derivative
@@ -6614,6 +6645,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                     / np.maximum(np.sum(_h_phase, axis=2), 1e-300))
         _processed0 = sparse_front_state.processed_max.copy()
         _boundary0 = sparse_front_state.boundary_line_density_m2.copy()
+        _front_heat0_J = sparse_front_state.ledger.heat_released_J
         _parent_line0 = sparse_total_line_density(sparse_front_state.parent)
         _child_line0 = sparse_total_line_density(sparse_front_state.child)
         _front_heat_density = (
@@ -6622,6 +6654,20 @@ for n in range(_restart_step_offset, _restart_end_step):
             * float(np.nanmean(A_E_field))
             * (1.0-float(P.get('moving_front_boundary_storage_fraction', 0.05))
                -float(P.get('moving_front_sink_fraction', 0.02))))
+        _newly_swept_geometry = None
+        if P.get('use_sibm_existing_boundary', False):
+            _phi0 = (eta_before_ac[:, :, sparse_front_state.child_label]
+                     -eta_before_ac[:, :, sparse_front_state.parent_label])
+            _phi1 = (eta[:, :, sparse_front_state.child_label]
+                     -eta[:, :, sparse_front_state.parent_label])
+            def _subcell_contour_fraction(_phi):
+                _grad = np.hypot(ddx(_phi), ddy(_phi))
+                _distance = _phi/np.maximum(_grad, 1e-300)
+                return np.clip(0.5+0.5*_distance/max(dx, dy), 0.0, 1.0)
+            _contour0 = _subcell_contour_fraction(_phi0)
+            _contour1 = _subcell_contour_fraction(_phi1)
+            _newly_swept_geometry = np.where(
+                sibm_active_mask, np.maximum(_contour1-_contour0, 0.0), 0.0)
         sparse_front_state, _front_mixture = advance_front(
             sparse_front_state, _chi_new, cell_area_m2=dx*dx,
             represented_thickness_m=max(
@@ -6629,7 +6675,17 @@ for n in range(_restart_step_offset, _restart_end_step):
             line_energy_J_m=float(np.nanmean(A_E_field)),
             boundary_storage_fraction=float(P.get(
                 'moving_front_boundary_storage_fraction', 0.05)),
-            sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)))
+            sink_fraction=float(P.get('moving_front_sink_fraction', 0.02)),
+            newly_swept_fraction=_newly_swept_geometry)
+        if _newly_swept_geometry is not None:
+            _front_heat_increment_J = (
+                sparse_front_state.ledger.heat_released_J-_front_heat0_J)
+            _heat_weight = (_newly_swept_geometry
+                            * np.maximum(_parent_line0-_child_line0, 0.0))
+            _heat_weight_volume = float(np.sum(_heat_weight)*dx*dx*max(
+                float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30))
+            _front_heat_density = (_front_heat_increment_J*_heat_weight
+                                   / max(_heat_weight_volume, 1e-300))
         rp, rm = _front_mixture.rp, _front_mixture.rm
         rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
@@ -7047,6 +7103,58 @@ for n in range(_restart_step_offset, _restart_end_step):
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:
+        if P.get('use_sibm_existing_boundary', False):
+            _previous_excess = sibm_experiment_state.get(
+                'last_contour_excess_area_m2')
+            _previous_step = int(sibm_experiment_state.get(
+                'last_contour_step', n))
+            _contour_dt = max((n-_previous_step)*P['dt'], P['dt'])
+            _contour_row = measure_pair_contour(
+                eta=eta[:, :, :Ng], reference_eta=sibm_reference_eta,
+                active_mask=sibm_active_mask,
+                centre_index=sibm_experiment_state['centre_index'],
+                advance_direction_index=sibm_experiment_state[
+                    'advance_direction_index'],
+                parent_label=sparse_front_state.parent_label,
+                child_label=sparse_front_state.child_label,
+                spacing_m=dx, dt_s=_contour_dt,
+                local_pressure_Pa=sibm_experiment_state.get(
+                    'net_flat_boundary_drive_Pa', np.nan),
+                previous_excess_area_m2=_previous_excess,
+                active_window_radius_m=sibm_experiment_state.get(
+                    'active_window_radius_m'))
+            _current_child_area = float(np.sum(_h_phase[:, :, sparse_front_state.child_label]
+                / np.maximum(np.sum(_h_phase, axis=2), 1e-300))*dx*dy)
+            _previous_child_area = float(sibm_experiment_state.get(
+                'last_contour_child_area_m2', _current_child_area))
+            _contour_area_delta = (0.0 if _previous_excess is None else
+                                   _contour_row['excess_bulge_area_m2']-_previous_excess)
+            _phase_area_delta = _current_child_area-_previous_child_area
+            _old_front_ledger = sibm_experiment_state.get('last_contour_front_ledger', {})
+            for _ledger_name, _ledger_value in sparse_front_state.ledger.__dict__.items():
+                _contour_row[f'interval_{_ledger_name}'] = (
+                    float(_ledger_value)-float(_old_front_ledger.get(
+                        _ledger_name, _ledger_value)))
+            _contour_row.update(
+                step=int(n), time_s=float(sim_time+P['dt']),
+                strain=float(E_tot[0, 0]),
+                parent_to_child_contour_area_m2=max(_contour_area_delta, 0.0),
+                child_to_parent_contour_area_m2=max(-_contour_area_delta, 0.0),
+                diffuse_profile_area_change_m2=_phase_area_delta-_contour_area_delta)
+            sibm_experiment_state.update(
+                last_contour_step=int(n),
+                last_contour_excess_area_m2=_contour_row['excess_bulge_area_m2'],
+                last_contour_child_area_m2=_current_child_area,
+                last_contour_metrics=_contour_row,
+                last_contour_front_ledger={
+                    key: float(value) for key, value
+                    in sparse_front_state.ledger.__dict__.items()})
+            if _sibm_contour_writer is None:
+                _sibm_contour_writer = csv.DictWriter(
+                    _sibm_contour_fh, fieldnames=list(_contour_row.keys()))
+                _sibm_contour_writer.writeheader()
+            _sibm_contour_writer.writerow(_contour_row)
+            _sibm_contour_fh.flush()
         mr=float(rho.mean()); xr=float(rho.max()); sr=float(rho.std())
         pm=float(np.rad2deg(np.abs(psi_lat).max()))
         el=_wtime.time()-tw0
@@ -7286,6 +7394,8 @@ for n in range(_restart_step_offset, _restart_end_step):
 
 if _diag_csv_fh is not None:
     _diag_csv_fh.close()
+if _sibm_contour_fh is not None:
+    _sibm_contour_fh.close()
 
 # ================================================================
 # 12. SUMMARY

@@ -789,3 +789,13 @@ The 2026-08-27 DD-data no-go is superseded by the clarified scope: DD will not p
 ## Remaining interpretation limits
 
 The generic campaign may proceed without selecting Fe, Cr, or another materials class. A predictive materials claim would still require an authoritative dataset. “Post-peak collective candidate” is deliberately broader than a particular transparent-junction mechanism; a specific transfer kernel and reset law remain research questions rather than boundary inputs.
+
+## Directive v12 overnight SIBM range campaign (2026-09-13)
+
+- Active architecture is `exp/full-v34-recovery-v1`; the independent-DD worktree is not the v12 source line.
+- Preflight adds pair-contour diagnostics, a true zero-bulge matched control, geometric newly-swept cleanup accounting, an independently checkpointed cleanup history, mobility/temperature/rate/grid controls, and a fixed-drag criticality fixture.
+- The final 50-step bulge/control preflight closes the line, signed-Burgers, energy/heat, nonnegativity, phase-simplex, label, and outside-window invariants. A 21+29 restart is bitwise identical to the continuous 50-step trajectory across 148 authoritative fields.
+- The 192-square resampled source checkpoint is readable and completes a full-model step. The 256-square source was also generated and checksum verified.
+- No Tier-C pair is admitted: the frozen source has no second HAGB pair with at least 250 pure-core cells on both sides. The released budget is assigned to refined-grid and criticality cases without relaxing the criterion.
+- The short preflight is not positive SIBM evidence: the no-bulge boundary advances farther than the seeded bulge over the compact horizon. This is preserved as the reason for the matched overnight matrix, not tuned away.
+- The planned HPC3 bundle contains 17 priority-ordered trajectories, permits at most two concurrent processes, stops launching at 11 h 20 min, independently finalizes every case, and requests 12 hours on two CPUs.

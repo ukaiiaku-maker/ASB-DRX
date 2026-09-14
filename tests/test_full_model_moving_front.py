@@ -64,6 +64,23 @@ class MovingFrontTest(unittest.TestCase):
         state, _ = self.advance(state, np.ones((4, 4)))
         self.assertAlmostEqual(state.ledger.swept_volume_m3, 2.0*first)
 
+    def test_diffuse_profile_change_without_contour_sweep_is_not_processed(self):
+        state = self.state()
+        broadened = np.full((4, 4), 0.25)
+        state, _ = advance_front(
+            state, broadened, cell_area_m2=1e-14,
+            represented_thickness_m=1e-6, line_energy_J_m=2e-9,
+            newly_swept_fraction=np.zeros((4, 4)))
+        self.assertEqual(state.ledger.swept_volume_m3, 0.0)
+        np.testing.assert_array_equal(state.cleanup_max, 0.0)
+        swept = np.full((4, 4), 0.25)
+        state, _ = advance_front(
+            state, broadened, cell_area_m2=1e-14,
+            represented_thickness_m=1e-6, line_energy_J_m=2e-9,
+            newly_swept_fraction=swept)
+        self.assertGreater(state.ledger.swept_volume_m3, 0.0)
+        np.testing.assert_array_equal(state.cleanup_max, swept)
+
     def test_subcritical_collapse_leaves_recovered_wake_without_reversing_heat(self):
         state = self.state(); chi = np.zeros((4, 4)); chi[1:3, 1:3] = 1.0
         state, _ = self.advance(state, chi); heat = state.ledger.heat_released_J

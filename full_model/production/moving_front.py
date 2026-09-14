@@ -50,6 +50,7 @@ class SparseFrontState:
     recovered_wake: DefectState
     chi: np.ndarray
     processed_max: np.ndarray
+    cleanup_max: np.ndarray
     boundary_line_density_m2: np.ndarray
     boundary_signed_density_m2: np.ndarray
     ledger: FrontLedger
@@ -133,7 +134,7 @@ def initialize_sparse_front(parent, child_fraction, target_total_density_m2,
     return SparseFrontState(
         DefectState(*(np.asarray(x).copy() for x in (
             parent.rp, parent.rm, parent.forest, parent.wall))), child, child,
-        zero, zero.copy(), np.zeros_like(chi), np.zeros_like(parent.rp),
+        zero, zero.copy(), zero.copy(), np.zeros_like(chi), np.zeros_like(parent.rp),
         FrontLedger(),
         int(parent_label), int(child_label))
 
@@ -188,7 +189,7 @@ def initialize_existing_boundary_front(parent, child_fraction,
     mapped_parent = DefectState(*parent_values)
     state = replace(
         base, parent=mapped_parent, child=child, recovered_wake=child,
-        chi=chi.copy(), processed_max=chi.copy())
+        chi=chi.copy(), processed_max=chi.copy(), cleanup_max=chi.copy())
     mixture = reconstruct_mixture(state)
     for actual, expected in zip(
             (mixture.rp, mixture.rm, mixture.forest, mixture.wall),
@@ -348,7 +349,8 @@ def activated_front_fraction(process, stress_pa, temperature_K, dt_s, *,
 
 def advance_front(state, new_child_fraction, *, cell_area_m2,
                   represented_thickness_m, line_energy_J_m,
-                  boundary_storage_fraction=0.0, sink_fraction=0.0):
+                  boundary_storage_fraction=0.0, sink_fraction=0.0,
+                  newly_swept_fraction=None):
     """Advance or retreat a resolved front with no repeated cleanup.
 
     Physical processing occurs only for ``new_child_fraction`` beyond the
@@ -368,7 +370,16 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
     fb = float(boundary_storage_fraction); fs = float(sink_fraction)
     if fb < 0.0 or fs < 0.0 or fb+fs > 1.0:
         raise ValueError("front partition fractions must be nonnegative and sum to <=1")
-    newly = np.maximum(chi1-state.processed_max, 0.0)
+    newly = np.maximum(chi1-state.cleanup_max, 0.0)
+    if newly_swept_fraction is not None:
+        geometric = np.asarray(newly_swept_fraction, dtype=float)
+        if (geometric.shape != chi1.shape or not np.all(np.isfinite(geometric))
+                or np.any(geometric < 0.0) or np.any(geometric > 1.0)):
+            raise ValueError("newly swept fraction must be finite and bounded")
+        # The phase-fraction maximum prevents repeated cleanup; the geometric
+        # cap prevents profile sharpening/broadening from masquerading as
+        # normal contour sweep.
+        newly = np.minimum(newly, geometric)
     volume = float(cell_area_m2)*float(represented_thickness_m)
     parent_line = total_line_density(state.parent)
     child_line = total_line_density(state.child)
@@ -431,7 +442,12 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
     mixture0 = reconstruct_mixture(state, state.chi)
     candidate = replace(
         state, chi=chi1.copy(),
+        # Advance the processed marker only by content that the geometric
+        # contour audit accepts as newly swept.  A diffuse-profile change that
+        # is rejected here must remain eligible for later, genuine contour
+        # passage.
         processed_max=np.maximum(state.processed_max, chi1),
+        cleanup_max=np.minimum(1.0, state.cleanup_max+newly),
         boundary_line_density_m2=boundary_density,
         boundary_signed_density_m2=boundary_signed)
     mixture1 = reconstruct_mixture(candidate, chi1)
@@ -467,7 +483,7 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
 
 def state_metadata_json(state):
     return json.dumps({
-        "schema": "full-v34-sparse-front/v3",
+        "schema": "full-v34-sparse-front/v4",
         "parent_label": state.parent_label,
         "child_label": state.child_label,
         "ledger": state.ledger.__dict__,
@@ -485,6 +501,7 @@ def state_arrays(state):
         "wake_forest": state.recovered_wake.forest,
         "wake_wall": state.recovered_wake.wall,
         "chi": state.chi, "processed_max": state.processed_max,
+        "cleanup_max": state.cleanup_max,
         "boundary_line_density_m2": state.boundary_line_density_m2,
         "boundary_signed_density_m2": state.boundary_signed_density_m2,
     }
@@ -492,7 +509,8 @@ def state_arrays(state):
 
 def state_from_checkpoint(metadata_json, arrays):
     raw = json.loads(str(metadata_json))
-    if raw.get("schema") != "full-v34-sparse-front/v3":
+    if raw.get("schema") not in ("full-v34-sparse-front/v3",
+                                  "full-v34-sparse-front/v4"):
         raise ValueError("unsupported sparse-front schema")
     parent = DefectState(*(np.asarray(arrays[k]).copy() for k in (
         "parent_rp", "parent_rm", "parent_forest", "parent_wall")))
@@ -500,9 +518,12 @@ def state_from_checkpoint(metadata_json, arrays):
         "child_rp", "child_rm", "child_forest", "child_wall")))
     wake = DefectState(*(np.asarray(arrays[k]).copy() for k in (
         "wake_rp", "wake_rm", "wake_forest", "wake_wall")))
+    processed = np.asarray(arrays["processed_max"]).copy()
+    cleanup = (np.asarray(arrays["cleanup_max"]).copy()
+               if "cleanup_max" in arrays else processed.copy())
     state = SparseFrontState(
         parent, child, wake, np.asarray(arrays["chi"]).copy(),
-        np.asarray(arrays["processed_max"]).copy(),
+        processed, cleanup,
         np.asarray(arrays["boundary_line_density_m2"]).copy(),
         np.asarray(arrays["boundary_signed_density_m2"]).copy(),
         FrontLedger(**raw["ledger"]), int(raw["parent_label"]),

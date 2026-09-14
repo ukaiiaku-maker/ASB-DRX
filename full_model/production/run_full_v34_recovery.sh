@@ -21,6 +21,18 @@ PYTHON="${PYTHON:-python3}"
 RESTART_FILE="${RESTART_FILE:-}"
 RESTART_RESET_CLOCK="${RESTART_RESET_CLOCK:-false}"
 ALLOW_LEGACY_CANDIDATE_RESTART="${ALLOW_LEGACY_CANDIDATE_RESTART:-false}"
+NX="${NX:-128}"
+NY="${NY:-128}"
+SIBM_INITIAL_BULGE_RADIUS_UM="${SIBM_INITIAL_BULGE_RADIUS_UM:-0.75}"
+SIBM_ACTIVE_WINDOW_RADIUS_UM="${SIBM_ACTIVE_WINDOW_RADIUS_UM:-3.0}"
+SIBM_MOBILITY_MULTIPLIER="${SIBM_MOBILITY_MULTIPLIER:-1.0}"
+SIBM_PHYSICAL_DRAG_PRESSURE_PA="${SIBM_PHYSICAL_DRAG_PRESSURE_PA:-0.0}"
+DIAG_INTERVAL="${DIAG_INTERVAL:-25}"
+SAVE_INTERVAL="${SAVE_INTERVAL:-250}"
+RESTART_INTERVAL="${RESTART_INTERVAL:-250}"
+RESTART_WALLCLOCK_INTERVAL_S="${RESTART_WALLCLOCK_INTERVAL_S:-900}"
+SAVE_MAIN_PANELS="${SAVE_MAIN_PANELS:-true}"
+RESTART_INITIALIZATION_AUDIT_ONLY="${RESTART_INITIALIZATION_AUDIT_ONLY:-false}"
 
 # Mechanism-specific activation entropies ΔS*/kB.  Zero is the exact v34
 # regression; nonzero values are bounded experiment inputs, not universal fits.
@@ -122,7 +134,9 @@ import json
 def b(s): return str(s).lower() in ('1','true','yes','on')
 rate=float('$RATE'); deps=float('$DT_STRAIN_STEP')
 params=dict(
+    Nx=int('$NX'), Ny=int('$NY'),
     restart_file=('$RESTART_FILE' or None), restart_reset_clock=b('$RESTART_RESET_CLOCK'),
+    restart_initialization_audit_only=b('$RESTART_INITIALIZATION_AUDIT_ONLY'),
     allow_legacy_candidate_restart_without_state=b('$ALLOW_LEGACY_CANDIDATE_RESTART'),
     glide_activation_entropy_kB=float('$GLIDE_ACTIVATION_ENTROPY_KB'),
     recovery_activation_entropy_kB=float('$RECOVERY_ACTIVATION_ENTROPY_KB'),
@@ -190,6 +204,10 @@ params=dict(
     use_atomic_stateful_promotion=b('$USE_ATOMIC_STATEFUL_PROMOTION'),
     use_sparse_common_front_state=b('$USE_SPARSE_COMMON_FRONT_STATE'),
     use_sibm_existing_boundary=b('$USE_SIBM_EXISTING_BOUNDARY'),
+    sibm_initial_bulge_radius_um=float('$SIBM_INITIAL_BULGE_RADIUS_UM'),
+    sibm_active_window_radius_um=float('$SIBM_ACTIVE_WINDOW_RADIUS_UM'),
+    sibm_mobility_multiplier=float('$SIBM_MOBILITY_MULTIPLIER'),
+    sibm_physical_drag_pressure_Pa=float('$SIBM_PHYSICAL_DRAG_PRESSURE_PA'),
     stored_energy_coupling_mode='$STORED_ENERGY_COUPLING_MODE',
     use_expf_embryo_creation=b('$USE_EXPF_EMBRYO_CREATION'),
     embryo_creation_route='$EMBRYO_CREATION_ROUTE',
@@ -209,8 +227,11 @@ params=dict(
     gb_trans_store_residual_scale=1.5, gb_trans_use_hard_grain_orientation=True, gb_trans_include_plastic_orientation=True,
     use_gb_residual_rotation=True, gb_residual_rotation_rate=2.0e3, gb_residual_rotation_cap_deg_step=0.01,
     gb_residual_rotation_requires_net_signed=True, gb_residual_rotation_smooth_um=0.35,
-    plot_interval=250, diag_interval=25, save_interval=250, restart_interval=250,
-    save_main_panels=True, save_signed_panels=False, diag_print_extended=True,
+    plot_interval=int('$SAVE_INTERVAL'), diag_interval=int('$DIAG_INTERVAL'),
+    save_interval=int('$SAVE_INTERVAL'), restart_interval=int('$RESTART_INTERVAL'),
+    restart_wallclock_interval_s=float('$RESTART_WALLCLOCK_INTERVAL_S'),
+    save_main_panels=b('$SAVE_MAIN_PANELS'), save_signed_panels=False,
+    diag_print_extended=True,
 )
 print(json.dumps(params))
 PY
