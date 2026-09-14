@@ -1,0 +1,54 @@
+name = "full-v34-sibm-v14-compact"
+entrypoint = ["bash", "../hpc3/run_v14_compact_bundle.sh"]
+working_directory = "full_model/production"
+modules = ["anaconda/2025.12"]
+environment = { OMP_NUM_THREADS = "1", SCIENTIFIC_SOURCE_SHA = "6fa5c73" }
+input_paths = [
+  "full_model/production/arrhenius_kinetics.py",
+  "full_model/production/asb_classifier.py",
+  "full_model/production/compatibility_energy.py",
+  "full_model/production/drx_full_v34_recovery.py",
+  "full_model/production/embryo_coupling.py",
+  "full_model/production/hazard_measure.py",
+  "full_model/production/moving_front.py",
+  "full_model/production/phase_promotion.py",
+  "full_model/production/physical_grains.py",
+  "full_model/production/run_full_v34_recovery.sh",
+  "full_model/production/sibm_boundary.py",
+  "full_model/production/sibm_contour.py",
+  "full_model/production/stateful_embryos.py",
+  "full_model/production/stored_energy_coupling.py",
+  "full_model/analysis/run_v10_sibm_fixtures.py",
+  "full_model/hpc3/run_v14_compact_bundle.sh",
+  "full_model/verification/v10_matched_asb_smoke.json",
+  "tests/test_full_model_moving_front.py",
+  ".hpc3/inputs/v13_canonical_bicrystal_128.npz",
+  ".hpc3/inputs/v13_canonical_bicrystal_192.npz",
+  ".hpc3/inputs/v14_equilibrated_common_128.npz",
+  ".hpc3/inputs/v14_equilibrated_common_192.npz",
+]
+output_paths = ["output"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "01:00:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "4G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
