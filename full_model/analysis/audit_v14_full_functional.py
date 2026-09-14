@@ -13,7 +13,9 @@ import numpy as np
 PRODUCTION = Path(__file__).resolve().parents[1] / "production"
 sys.path.insert(0, str(PRODUCTION))
 from moving_front import phase_total_line_densities, state_from_checkpoint  # noqa: E402
-from stored_energy_coupling import common_variational_stored_energy  # noqa: E402
+from stored_energy_coupling import (  # noqa: E402
+    common_variational_stored_energy, signed_pair_pressure_offsets,
+)
 
 
 def _front(state):
@@ -107,8 +109,9 @@ def audit(common_path: Path, sub_path: Path, super_path: Path) -> dict:
         energy = np.broadcast_to((line_energy*nonchild_rho)[..., None], eta.shape).copy()
         energy[..., child] = line_energy*child_rho
         applied = applied_pressure*gb
-        energy += applied[..., None]
-        energy[..., child] += compatibility-applied
+        parent_offset, child_offset = signed_pair_pressure_offsets(applied)
+        energy += parent_offset[..., None]
+        energy[..., child] += compatibility+child_offset-parent_offset
         return energy
 
     def functional(fields, pressure):

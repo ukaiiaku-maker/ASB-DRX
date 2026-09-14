@@ -5,10 +5,17 @@ import numpy as np
 from full_model.production.stored_energy_coupling import (
     common_variational_stored_energy,
     phase_mean_stored_energy_states,
+    signed_pair_pressure_offsets,
 )
 
 
 class CommonStoredEnergyCouplingTest(unittest.TestCase):
+    def test_signed_pressure_offsets_are_nonnegative_and_exact(self):
+        pressure = np.array([-3.0e6, 0.0, 5.0e6])
+        parent, child = signed_pair_pressure_offsets(pressure)
+        self.assertGreaterEqual(min(np.min(parent), np.min(child)), 0.0)
+        np.testing.assert_array_equal(child-parent, -pressure)
+
     def test_two_phase_derivative_has_thermodynamic_sign(self):
         eta = np.array([[0.5, 0.5]])
         energy = np.array([[3.0e8, 2.0e7]])

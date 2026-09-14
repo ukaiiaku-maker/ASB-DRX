@@ -873,3 +873,31 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The configured local suite passes 342 tests. The next hard gate is the fully
   coupled neutral fixed point and 128/192/256 critical-pressure convergence;
   no v15 HPC job has been submitted.
+
+## Directive v15 coupled-neutral rejection at 128 (2026-09-14)
+
+- A signed-pressure representation defect was found and repaired: positive and
+  negative pressures now use nonnegative phase-energy offsets whose child-minus-
+  parent difference is exactly `-P`. The ordinary pressure derivative is
+  unchanged and the baseline path remains opt-out.
+- The declared amplitude direction is a centered derivative of the actual
+  `0.6 um` pinned-cap seed family, not a final-state offset or delayed trajectory
+  response. The full-functional analytical/finite-difference derivative agrees
+  to `5.59e-7` relative. Coupled-neutral feedback checkpoints this direction,
+  and a 20 versus 10+10 continuation is bitwise identical.
+- Immobile-interface constitutive relaxation showed that the V14 common state
+  was strongly aging. About `60 ms` of physical material relaxation reduced
+  mean density from `2.47e17` to `9.63e16 m^-2`; qualification then returned to
+  the original `0.1 us` phase step.
+- Two exact 240-step coupled holds both satisfy the `0.02 cell` contour bound,
+  but fail the material fixed-point requirements. Neutral pressure shifts by
+  `-0.489543 MPa`, the processed-line increment grows from `4.33212e-7` to
+  `2.47427e-6 m` (ratio `5.71146`), and the late velocity is statistically
+  nonzero. All conservation, nonnegativity, simplex, restart, and no-allocation
+  invariants pass.
+- Decision: `V15_COUPLED_NEUTRAL_FIXED_POINT_FAILED_AT_128`, with
+  `fixture_passed=true` and `scientific_gate_passed=false`. This is a failure of
+  irreversible local front-state stationarity, not of bookkeeping. Per the
+  directive, 192/256 threshold fitting, long canonical motion, polycrystal
+  promotion, and the overnight HPC3 bundle are not authorized. Claim level
+  remains 2.

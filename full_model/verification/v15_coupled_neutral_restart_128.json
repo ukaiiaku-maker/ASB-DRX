@@ -1,0 +1,9 @@
+{
+  "continuous": "results-local/v15-restart-continuous-128/drx_v25_restart_004079.npz",
+  "declared_tolerance": 1e-12,
+  "limiting_field": null,
+  "maximum_absolute_difference": 0.0,
+  "maximum_scaled_difference": 0.0,
+  "restart_exact_within_declared_roundoff": true,
+  "segmented": "results-local/v15-restart-second-128/drx_v25_restart_004079.npz"
+}

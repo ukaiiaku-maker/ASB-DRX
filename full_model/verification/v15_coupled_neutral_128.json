@@ -1,0 +1,196 @@
+{
+  "classification": "V15_COUPLED_NEUTRAL_FIXED_POINT_FAILED_AT_128",
+  "downstream_authorization": {
+    "grid_192_256_threshold_campaign": false,
+    "long_horizon_canonical_campaign": false,
+    "overnight_HPC3_bundle": false,
+    "polycrystal_pair_campaign": false
+  },
+  "failure_reasons": [
+    "neutral pressure is not stationary within 0.1 MPa",
+    "fresh front processing grows rather than approaching zero or stationary cycling",
+    "a scalar energetic root does not arrest irreversible local front-state feedback"
+  ],
+  "first_hold": {
+    "Ng": 12,
+    "amplitude_drift_cells": -0.0032236770046239166,
+    "amplitude_drift_m": -2.518497659862435e-10,
+    "directory": "results-local/v15-coupled-geometric-exact-128",
+    "early_velocity_fit": {
+      "residual_rms_m": 1.6522794805328765e-11,
+      "sample_count": 4,
+      "time_end_s": 0.060027733028937505,
+      "time_start_s": 0.06002173302893733,
+      "velocity_m_s": -3.702923154814732e-05,
+      "velocity_standard_error_m_s": 5.224966489493483e-06
+    },
+    "final_amplitude_m": 5.670083323321275e-07,
+    "initial_amplitude_m": 5.672601820981138e-07,
+    "late_velocity_fit": {
+      "residual_rms_m": 4.812862309956958e-13,
+      "sample_count": 4,
+      "time_end_s": 0.06004563302893802,
+      "time_start_s": 0.06003973302893785,
+      "velocity_m_s": 1.3406040793957787e-06,
+      "velocity_standard_error_m_s": 1.5450183349615844e-07
+    },
+    "ledger": {
+      "boundary_line_stored_m": 2.18518363243195e-08,
+      "capacity_limited_volume_m3": 0.0,
+      "child_line_transmitted_m": 2.1660583836824836e-07,
+      "heat_released_J": 3.0704599841710884e-16,
+      "line_closure_m": 1.075334796318936e-23,
+      "line_energy_released_J": 3.0704599841710884e-16,
+      "neutral_pair_annihilated_m": 1.9065391779037242e-07,
+      "parent_line_processed_m": 4.3321167673649673e-07,
+      "requested_swept_volume_m3": 4.053910063856409e-24,
+      "signed_burgers_change_m2": 0.0,
+      "sink_line_m": 4.100084253556397e-09,
+      "swept_volume_m3": 4.053910063856409e-24
+    },
+    "ledger_closure_passed": true,
+    "ledger_increment": {
+      "boundary_line_stored_m": 2.18518363243195e-08,
+      "capacity_limited_volume_m3": 0.0,
+      "child_line_transmitted_m": 2.1660583836824836e-07,
+      "heat_released_J": 3.0704599841710884e-16,
+      "line_closure_m": 1.075334796318936e-23,
+      "line_energy_released_J": 3.0704599841710884e-16,
+      "neutral_pair_annihilated_m": 1.9065391779037242e-07,
+      "parent_line_processed_m": 4.3321167673649673e-07,
+      "requested_swept_volume_m3": 4.053910063856409e-24,
+      "signed_burgers_change_m2": 0.0,
+      "sink_line_m": 4.100084253556397e-09,
+      "swept_volume_m3": 4.053910063856409e-24
+    },
+    "mean_total_density_m2": 9.628804043800706e+16,
+    "minimum_population_m2": 0.41945984864997166,
+    "orientation_count": 12,
+    "path": "results-local/v15-coupled-geometric-exact-128/drx_v25_restart_004299.npz",
+    "phase_simplex_error": 2.220446049250313e-16,
+    "pressure_Pa": 565141.7706929316
+  },
+  "fixture_passed": true,
+  "full_functional_finite_difference": {
+    "classification": "V14_FULL_FUNCTIONAL_FD_PASSED",
+    "passed": true,
+    "results": [
+      {
+        "analytical_derivative_at_0Pa_J": 1.1484762858397303e-07,
+        "analytical_derivative_at_1MPa_J": -1.4456961707228101e-06,
+        "analytical_diffuse_critical_pressure_Pa": 73594.62043615185,
+        "critical_inside_observed_sign_bracket": true,
+        "direction": "supercritical-minus-subcritical pair-field mode",
+        "finite_difference_derivative_at_0Pa_J": 1.1484736772704451e-07,
+        "finite_difference_derivative_at_1MPa_J": -1.4456977281973593e-06,
+        "finite_difference_diffuse_critical_pressure_Pa": 73594.39213066353,
+        "grid": 128,
+        "maximum_relative_derivative_error": 1.077318029007178e-06,
+        "passed": true,
+        "perturbation": 1e-06,
+        "tested_motion_bracket_Pa": [
+          -4500000.0,
+          5500000.0
+        ]
+      }
+    ],
+    "schema": "full-v34-v14-full-functional-fd/v1"
+  },
+  "grid": 128,
+  "hard_invariants_passed": true,
+  "pressure_shift_between_holds_Pa": -489542.5064916542,
+  "processed_line_increment_ratio_second_to_first": 5.711458163911766,
+  "restart_comparison": {
+    "continuous": "results-local/v15-restart-continuous-128/drx_v25_restart_004079.npz",
+    "declared_tolerance": 1e-12,
+    "limiting_field": null,
+    "maximum_absolute_difference": 0.0,
+    "maximum_scaled_difference": 0.0,
+    "restart_exact_within_declared_roundoff": true,
+    "segmented": "results-local/v15-restart-second-128/drx_v25_restart_004079.npz"
+  },
+  "schema": "full-v34-v15-coupled-neutral-audit/v1",
+  "scientific_gate_passed": false,
+  "second_hold": {
+    "Ng": 12,
+    "amplitude_drift_cells": -0.002433248431259541,
+    "amplitude_drift_m": -1.9009753369215164e-10,
+    "directory": "results-local/v15-coupled-geometric-exact-128b",
+    "early_velocity_fit": {
+      "residual_rms_m": 7.4229404234441e-13,
+      "sample_count": 4,
+      "time_end_s": 0.060051733028938195,
+      "time_start_s": 0.06004573302893802,
+      "velocity_m_s": -2.789438078515619e-07,
+      "velocity_standard_error_m_s": 2.3473398673143097e-07
+    },
+    "final_amplitude_m": 5.668182052552425e-07,
+    "initial_amplitude_m": 5.670083027889346e-07,
+    "late_velocity_fit": {
+      "residual_rms_m": 3.323862409526035e-12,
+      "sample_count": 4,
+      "time_end_s": 0.06006963302893871,
+      "time_start_s": 0.06006373302893854,
+      "velocity_m_s": -1.7528990535495205e-05,
+      "velocity_standard_error_m_s": 1.0670216671237456e-06
+    },
+    "ledger": {
+      "boundary_line_stored_m": 1.345404430358815e-07,
+      "capacity_limited_volume_m3": 0.0,
+      "child_line_transmitted_m": 1.453741022267533e-06,
+      "heat_released_J": 2.079824606838193e-15,
+      "line_closure_m": 9.760731228125727e-23,
+      "line_energy_released_J": 2.079824606838193e-15,
+      "neutral_pair_annihilated_m": 1.2914279354583514e-06,
+      "parent_line_processed_m": 2.907482044535066e-06,
+      "requested_swept_volume_m3": 2.1662929498786114e-23,
+      "signed_burgers_change_m2": 0.0,
+      "sink_line_m": 2.7772643773297904e-08,
+      "swept_volume_m3": 2.1662929498786114e-23
+    },
+    "ledger_closure_passed": true,
+    "ledger_increment": {
+      "boundary_line_stored_m": 1.1268860671156202e-07,
+      "capacity_limited_volume_m3": 0.0,
+      "child_line_transmitted_m": 1.2371351838992845e-06,
+      "heat_released_J": 1.772778608421084e-15,
+      "line_closure_m": 8.68539643180679e-23,
+      "line_energy_released_J": 1.772778608421084e-15,
+      "neutral_pair_annihilated_m": 1.1007740176679789e-06,
+      "parent_line_processed_m": 2.474270367798569e-06,
+      "requested_swept_volume_m3": 1.7609019434929704e-23,
+      "signed_burgers_change_m2": 0.0,
+      "sink_line_m": 2.3672559519741506e-08,
+      "swept_volume_m3": 1.7609019434929704e-23
+    },
+    "mean_total_density_m2": 9.62562126401895e+16,
+    "minimum_population_m2": 0.7091373954449394,
+    "orientation_count": 12,
+    "path": "results-local/v15-coupled-geometric-exact-128b/drx_v25_restart_004539.npz",
+    "phase_simplex_error": 2.220446049250313e-16,
+    "pressure_Pa": 75599.26420127739
+  },
+  "source": {
+    "Ng": 12,
+    "ledger": {
+      "boundary_line_stored_m": 0.0,
+      "capacity_limited_volume_m3": 0.0,
+      "child_line_transmitted_m": 0.0,
+      "heat_released_J": 0.0,
+      "line_closure_m": 0.0,
+      "line_energy_released_J": 0.0,
+      "neutral_pair_annihilated_m": 0.0,
+      "parent_line_processed_m": 0.0,
+      "requested_swept_volume_m3": 0.0,
+      "signed_burgers_change_m2": 0.0,
+      "sink_line_m": 0.0,
+      "swept_volume_m3": 0.0
+    },
+    "mean_total_density_m2": 9.629930652875688e+16,
+    "minimum_population_m2": 22.632116828016745,
+    "orientation_count": 12,
+    "path": ".hpc3/inputs/v15_relaxed_geometric_128.npz",
+    "phase_simplex_error": 0.0,
+    "pressure_Pa": 0.0
+  }
+}

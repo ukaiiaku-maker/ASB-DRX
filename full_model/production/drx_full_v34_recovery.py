@@ -77,6 +77,7 @@ from phase_promotion import (
 from compatibility_energy import decompose_compatibility_energy
 from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
+    signed_pair_pressure_offsets,
 )
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
@@ -3384,6 +3385,7 @@ sibm_experiment_state = {}
 sibm_reference_parent_mask = None
 sibm_reference_child_fraction = None
 sibm_initial_child_fraction = None
+sibm_coupled_neutral_direction = None
 sibm_active_mask = None
 sibm_reference_eta = None
 sibm_pin_mask = None
@@ -3441,6 +3443,11 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                     _restart_npz['sibm_active_mask'], dtype=bool)
                 sibm_reference_eta = np.asarray(
                     _restart_npz['sibm_reference_eta'], dtype=float)
+                if 'sibm_coupled_neutral_direction' in _restart_npz.files:
+                    sibm_coupled_neutral_direction = np.asarray(
+                        _restart_npz['sibm_coupled_neutral_direction'], dtype=float)
+                    if sibm_coupled_neutral_direction.shape != (Nx, Ny):
+                        raise ValueError('coupled-neutral direction has wrong grid')
         elif atomic_promotion_commit_total:
             raise ValueError(
                 'promoted sparse-common restart omits phase-resolved front state')
@@ -5933,6 +5940,9 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                     sibm_initial_child_fraction, dtype=float),
                 'sibm_active_mask': np.asarray(sibm_active_mask, dtype=np.uint8),
                 'sibm_reference_eta': np.asarray(sibm_reference_eta, dtype=float),
+                **({'sibm_coupled_neutral_direction': np.asarray(
+                    sibm_coupled_neutral_direction, dtype=float)}
+                   if sibm_coupled_neutral_direction is not None else {}),
             } if globals().get('sibm_experiment_state', {}) else {}),
             **_potential_checkpoint_state(),
             **_sparse_front_checkpoint_state(),
@@ -6616,16 +6626,98 @@ for n in range(_restart_step_offset, _restart_end_step):
                     * gb_for_ac)
                 _physical_drag_pressure = max(float(P.get(
                     'sibm_physical_drag_pressure_Pa', 0.0)), 0.0)*gb_for_ac
-                _applied_pressure = float(P.get(
-                    'sibm_applied_pressure_Pa', 0.0))*gb_for_ac
-                # A common positive shift leaves the variational derivative
-                # unchanged while keeping every phase energy nonnegative. The
-                # child then omits that shift, which is exactly a favorable
-                # parent-to-child continuation pressure.
-                phase_energy_fields += _applied_pressure[:, :, None]
-                phase_energy_fields[:, :, sparse_front_state.child_label] += (
-                    _physical_compat_pressure+_physical_drag_pressure
-                    -_applied_pressure)
+                _child_index = sparse_front_state.child_label
+                _parent_index = sparse_front_state.parent_label
+                phase_energy_fields[:, :, _child_index] += (
+                    _physical_compat_pressure+_physical_drag_pressure)
+                _phase_energy_without_pressure = phase_energy_fields.copy()
+
+                def _phase_energy_at_pressure(_pressure_scalar):
+                    _pressure_field = float(_pressure_scalar)*gb_for_ac
+                    _parent_offset, _child_offset = (
+                        signed_pair_pressure_offsets(_pressure_field))
+                    _energy = (_phase_energy_without_pressure
+                               +_parent_offset[:, :, None])
+                    _energy[:, :, _child_index] += (
+                        _child_offset-_parent_offset)
+                    return _energy
+
+                _applied_pressure_scalar = float(P.get(
+                    'sibm_applied_pressure_Pa', 0.0))
+                _neutral_derivative_at_0 = None
+                _neutral_derivative_at_1MPa = None
+                if P.get('sibm_coupled_neutral_feedback', False):
+                    # The stored post-equilibration cap relative to its flat
+                    # reference is the declared physical amplitude mode. The
+                    # pressure is the exact root of the same full functional
+                    # projected onto this mode at the current coupled state.
+                    _has_declared_direction = (
+                        sibm_coupled_neutral_direction is not None)
+                    _cap_mode = np.asarray(
+                        (sibm_coupled_neutral_direction
+                         if _has_declared_direction else
+                         sibm_initial_child_fraction
+                         -sibm_reference_child_fraction), dtype=float).copy()
+                    _pair_interior = (
+                        (eta[:, :, _child_index] > 1.0e-6)
+                        &(eta[:, :, _child_index] < 1.0-1.0e-6)
+                        &(eta[:, :, _parent_index] > 1.0e-6)
+                        &(eta[:, :, _parent_index] < 1.0-1.0e-6)
+                        &sibm_active_mask)
+                    _cap_mode = np.where(_pair_interior, _cap_mode, 0.0)
+                    # A normal interface variation has support on the diffuse
+                    # pair interface, not in exponentially small phase tails.
+                    # The symmetric weight is label-objective and tends to one
+                    # at the pair equality contour and zero in both pure cores.
+                    if not _has_declared_direction:
+                        _cap_mode *= (4.0*eta[:, :, _child_index]
+                                      *eta[:, :, _parent_index])
+                    _mode_scale = float(np.max(np.abs(_cap_mode)))
+                    if _mode_scale <= 1.0e-14:
+                        raise RuntimeError(
+                            'coupled-neutral feedback has no resolved cap mode')
+                    _cap_mode /= _mode_scale
+
+                    def _projected_full_derivative(_pressure_scalar):
+                        _, _stored_derivative = common_variational_stored_energy(
+                            eta[:, :, :Ng],
+                            _phase_energy_at_pressure(_pressure_scalar))
+                        _projection = 0.0
+                        for _phase, _sign in (
+                                (_child_index, 1.0), (_parent_index, -1.0)):
+                            _field = (
+                                -P['kappa_eta']*lap(eta[:, :, _phase])
+                                +P['W_eta']*2.0*eta[:, :, _phase]
+                                *(sum_eta_sq-eta[:, :, _phase]**2)
+                                +_stored_derivative[:, :, _phase])
+                            if P.get('use_rho_eta_coupling', True):
+                                _field += (-float(P.get(
+                                    'rho_eta_ac_strength', 0.0))
+                                    *rho_eta_drive_ac
+                                    *(1.0-2.0*eta[:, :, _phase]))
+                            _projection += float(np.sum(
+                                _field*(_sign*_cap_mode))*dx*dy)
+                        return _projection
+
+                    _neutral_derivative_at_0 = _projected_full_derivative(0.0)
+                    _neutral_derivative_at_1MPa = _projected_full_derivative(1.0e6)
+                    _pressure_slope = (
+                        _neutral_derivative_at_1MPa-_neutral_derivative_at_0)
+                    if abs(_pressure_slope) <= 1.0e-30:
+                        raise RuntimeError(
+                            'coupled-neutral pressure derivative is singular')
+                    _applied_pressure_scalar = float(
+                        -_neutral_derivative_at_0*1.0e6/_pressure_slope)
+                    if (not np.isfinite(_applied_pressure_scalar)
+                            or abs(_applied_pressure_scalar) > 1.0e9):
+                        raise RuntimeError(
+                            'coupled-neutral pressure left the declared 1 GPa bound')
+
+                _applied_pressure = _applied_pressure_scalar*gb_for_ac
+                # Signed pressure is represented by nonnegative absolute
+                # phase energies while preserving child-parent = -P.
+                phase_energy_fields = _phase_energy_at_pressure(
+                    _applied_pressure_scalar)
                 _interface_weight = gb_for_ac/np.maximum(
                     np.sum(gb_for_ac), 1e-300)
                 _stored_drive = A_E_field*(_nonchild_rho-_child_rho)
@@ -6645,6 +6737,12 @@ for n in range(_restart_step_offset, _restart_end_step):
                         np.max(_physical_compat_pressure)),
                     physical_drag_pressure_Pa=_drag_mean,
                     applied_continuation_pressure_Pa=_applied_mean,
+                    coupled_neutral_feedback_enabled=bool(P.get(
+                        'sibm_coupled_neutral_feedback', False)),
+                    coupled_neutral_derivative_at_0Pa_J=(
+                        _neutral_derivative_at_0),
+                    coupled_neutral_derivative_at_1MPa_J=(
+                        _neutral_derivative_at_1MPa),
                     numerical_penalty_in_migration_decision_J=0.0,
                     net_flat_boundary_drive_Pa=_net_drive,
                     analytical_critical_radius_m=(

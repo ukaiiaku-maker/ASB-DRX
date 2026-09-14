@@ -15,6 +15,20 @@ from __future__ import annotations
 import numpy as np
 
 
+def signed_pair_pressure_offsets(applied_pressure_Pa):
+    """Return nonnegative parent/child offsets with child-parent = ``-P``.
+
+    A common variational interpolation requires nonnegative absolute phase
+    energies, while a continuation pressure is signed. Splitting it into its
+    positive and negative parts preserves the exact energetic difference for
+    favorable and reverse loading without imposing a positive-only pressure.
+    """
+    pressure = np.asarray(applied_pressure_Pa, dtype=float)
+    if not np.all(np.isfinite(pressure)):
+        raise ValueError("applied pressure must be finite")
+    return np.maximum(pressure, 0.0), np.maximum(-pressure, 0.0)
+
+
 def smooth_phase_interpolation(eta):
     """Return ``h(eta)`` and ``dh/deta`` for bounded phase support."""
     fields = np.asarray(eta, dtype=float)

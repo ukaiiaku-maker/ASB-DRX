@@ -1,0 +1,20 @@
+{
+  "amplitude_m": 6e-07,
+  "common": "results-local/v15-material-relax-128d/drx_v25_restart_004059.npz",
+  "common_sha256": "da97106d61a3da916ea30fb2ffecb78cf551ed2b4a8d9f63564f36b002272d45",
+  "geometric_response_mode_correlation": 0.8875221739510419,
+  "grid": [
+    128,
+    128
+  ],
+  "mode_max_abs": 1.0,
+  "mode_nonzero_cells": 1832,
+  "output": ".hpc3/inputs/v15_relaxed_geometric_128.npz",
+  "output_sha256": "1b449b509a8a504923c3dd32cd55e1a7db746b21a37af63d5328cc271380e6b1",
+  "perturbation_m": 1e-09,
+  "schema": "full-v34-v15-neutral-direction-checkpoint/v1",
+  "subcritical": "/tmp/v14-sub.pFRlYb/drx_v25_restart_000539.npz",
+  "subcritical_sha256": "38691904fd5277f180b2db86a198c511e37b86d248ae6175daf3feac3f04e858",
+  "supercritical": "/tmp/v14-super.3tRuX6/drx_v25_restart_000539.npz",
+  "supercritical_sha256": "45b721ceeb8981aeb92c59444ab77d736694fd34283fd39f67d0fe44ac6414b2"
+}
