@@ -1879,10 +1879,37 @@
       "slurm": {
         "job_id": "56003778", "account": "SDILLON1", "partition": "free",
         "qos": "low", "node": "hpc3-14-16", "cpus_per_task": 2,
-        "memory": "8G", "state_at_record": "RUNNING"
+        "memory": "8G", "state_at_record": "COMPLETED"
       },
       "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260914T045532Z-567ba0a-c6d113",
-      "retrieval_status": "running_not_yet_fetched",
+      "retrieval_status": "verified_runner_archive_and_17_case_outputs",
+      "result_archive_sha256": "7b4f48ba4f8d93e1604db35525181b370f71b7b28aea630f08bfc2941eb8d047",
+      "slurm_final": {
+        "state": "COMPLETED",
+        "exit_status": "0:0",
+        "elapsed": "09:34:00",
+        "node": "hpc3-14-16"
+      },
+      "case_execution": {
+        "case_count_finalized": 17,
+        "first_case_start_utc": "2026-09-14T04:56:03Z",
+        "last_case_end_utc": "2026-09-14T14:21:40Z",
+        "summed_case_wallclock_seconds": 44112
+      },
+      "postprocessing": {
+        "classification": "FULL_MODEL_SIBM_GROWTH_MECHANISM_NOT_SUPPORTED",
+        "all_conservation_invariants_passed": true,
+        "all_no_allocation_checks_passed": true,
+        "all_hard_invariants_passed": false,
+        "pair_identity_finding": "all seeded step-0 states lack a resolved parent pure core; controls lose it by step 250",
+        "baseline_tip_relative_to_control_m": -6.267996407632566e-7,
+        "grid_relative_spread": 0.8022502939251341,
+        "criticality_fixture_passed": false,
+        "result": "full_model/verification/v12_sibm_overnight/v12_sibm_postprocessed.json",
+        "decision_note": "full_model/verification/v12_sibm_overnight/v12_sibm_decision.md",
+        "artifact_checksums": "full_model/verification/v12_sibm_overnight/checksums.sha256",
+        "configured_regression_tests_passed": 325
+      },
       "unrelated_job_preserved": "55950433"
     }
   ]
