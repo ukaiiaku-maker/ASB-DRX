@@ -82,8 +82,11 @@ def signed_density(state):
 def recovered_child_state(parent, target_total_density_m2):
     """Return a low-line child while preserving signed content pointwise."""
     rp, rm, forest, wall = _validate_defect(parent)
-    target = float(target_total_density_m2)
-    if not math.isfinite(target) or target < 0.0:
+    target = np.asarray(target_total_density_m2, dtype=float)
+    if target.ndim == 0:
+        target = np.full(parent.wall.shape, float(target))
+    if target.shape != parent.wall.shape or not np.all(np.isfinite(target)) \
+            or np.any(target < 0.0):
         raise ValueError("target density must be finite and nonnegative")
     signed = rp-rm
     cp = np.maximum(signed, 0.0)
@@ -133,6 +136,67 @@ def initialize_sparse_front(parent, child_fraction, target_total_density_m2,
         zero, zero.copy(), np.zeros_like(chi), np.zeros_like(parent.rp),
         FrontLedger(),
         int(parent_label), int(child_label))
+
+
+def initialize_existing_boundary_front(parent, child_fraction,
+                                       target_total_density_m2,
+                                       parent_label, child_label):
+    """Map an already existing two-grain boundary without changing defects.
+
+    The existing child side owns the current full-field state exactly.  Only
+    unswept parent cells carry a latent recovered child state for subsequent
+    advance.  This makes initialization an exact representation map while
+    allowing newly swept material to use the normal v9 front ledger.
+    """
+    local_target = np.minimum(
+        float(target_total_density_m2), total_line_density(parent))
+    base = initialize_sparse_front(
+        parent, child_fraction, local_target,
+        parent_label, child_label, reaction_fraction=1.0)
+    chi = np.asarray(child_fraction, dtype=float)
+    def mapped(current, recovered):
+        q = chi[:, :, None] if current.ndim == 3 else chi
+        # On the established child side the current field is already the child
+        # state.  On the parent side retain a latent recovered state even when
+        # diffuse eta tails make chi numerically nonzero.
+        latent = np.asarray(recovered)
+        # Exact nonnegative deconvolution requires q*C <= current.  Diffuse
+        # tails can overlap a reservoir that is identically zero, so reduce
+        # only that latent component rather than introducing negative parent
+        # content.
+        cap = np.divide(np.asarray(current), q,
+                        out=np.full_like(np.asarray(current), np.inf),
+                        where=q > 0.0)
+        latent = np.minimum(latent, cap)
+        return np.where(q >= 0.5, current, latent)
+    child_values = tuple(mapped(np.asarray(current), np.asarray(recovered))
+                         for current, recovered in zip(
+                             (parent.rp, parent.rm, parent.forest, parent.wall),
+                             (base.child.rp, base.child.rm,
+                              base.child.forest, base.child.wall)))
+    child = DefectState(*child_values)
+    parent_values = []
+    for current, child_value in zip(
+            (parent.rp, parent.rm, parent.forest, parent.wall), child_values):
+        q = chi[:, :, None] if current.ndim == 3 else chi
+        parent_value = np.divide(
+            np.asarray(current)-q*child_value, 1.0-q,
+            out=np.asarray(current).copy(), where=(1.0-q) > 64*np.finfo(float).eps)
+        if np.min(parent_value) < -64*np.finfo(float).eps*max(float(np.max(current)), 1.0):
+            raise RuntimeError("existing-boundary map requires negative parent content")
+        parent_values.append(np.maximum(parent_value, 0.0))
+    mapped_parent = DefectState(*parent_values)
+    state = replace(
+        base, parent=mapped_parent, child=child, recovered_wake=child,
+        chi=chi.copy(), processed_max=chi.copy())
+    mixture = reconstruct_mixture(state)
+    for actual, expected in zip(
+            (mixture.rp, mixture.rm, mixture.forest, mixture.wall),
+            (parent.rp, parent.rm, parent.forest, parent.wall)):
+        scale = max(float(np.max(np.abs(expected))), 1.0)
+        if float(np.max(np.abs(actual-expected))) > 4.0*np.finfo(float).eps*scale:
+            raise RuntimeError("existing-boundary representation map changed defects")
+    return state
 
 
 def reconstruct_mixture(state, chi=None):
@@ -308,10 +372,36 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
     volume = float(cell_area_m2)*float(represented_thickness_m)
     parent_line = total_line_density(state.parent)
     child_line = total_line_density(state.child)
-    removable = np.maximum(parent_line-child_line, 0.0)
+    # Continued common deformation can re-harden a latent child state above
+    # the material it is about to sweep.  A boundary may transmit the parent
+    # state but cannot create the excess line.  Replace only those newly swept
+    # latent cells by exact transmission before forming the partition ledger.
+    transmit = (newly > 0.0) & (child_line > parent_line)
+    if np.any(transmit):
+        def transmitted(child_value, parent_value):
+            mask = transmit[:, :, None] if child_value.ndim == 3 else transmit
+            return np.where(mask, parent_value, child_value)
+        child = DefectState(*(transmitted(c, p) for c, p in zip(
+            (state.child.rp, state.child.rm, state.child.forest, state.child.wall),
+            (state.parent.rp, state.parent.rm, state.parent.forest, state.parent.wall))))
+        wake = DefectState(*(transmitted(c, p) for c, p in zip(
+            (state.recovered_wake.rp, state.recovered_wake.rm,
+             state.recovered_wake.forest, state.recovered_wake.wall),
+            (state.parent.rp, state.parent.rm, state.parent.forest, state.parent.wall))))
+        state = replace(state, child=child, recovered_wake=wake)
+        child_line = total_line_density(state.child)
+    line_difference = parent_line-child_line
+    density_tolerance = 64.0*np.finfo(float).eps*max(
+        float(np.max(parent_line)), float(np.max(child_line)), 1.0)
+    if np.any(newly > 0.0) and np.min(line_difference[newly > 0.0]) < -density_tolerance:
+        raise RuntimeError("moving front child contains more line than parent")
+    removable = np.maximum(line_difference, 0.0)
     removed_m = float(np.sum(newly*removable, dtype=np.longdouble)*volume)
-    child_m = float(np.sum(newly*child_line, dtype=np.longdouble)*volume)
     parent_m = float(np.sum(newly*parent_line, dtype=np.longdouble)*volume)
+    # Define transmitted content by the local partition identity.  Independently
+    # summing two O(parent) fields and subtracting their much smaller difference
+    # loses the front increment to cancellation on physical grids.
+    child_m = parent_m-removed_m
     signed_residual_density = np.sum(np.abs(
         (state.parent.rp-state.parent.rm)
         -(state.child.rp-state.child.rm)), axis=2)

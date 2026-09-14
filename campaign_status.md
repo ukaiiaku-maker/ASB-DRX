@@ -2,6 +2,40 @@
 
 Updated: 2026-09-13 (America/Los_Angeles)
 
+## Directive v10 local decision: Route B retired; existing-HAGB SIBM qualified
+
+- The embryo-to-phase ownership audit found and repaired one omission: the
+  embryo's evolved classical excess energy was not retired during phase
+  mapping. The zero-front map now transfers that energy without processing
+  defects or changing orientation, lineage, RNG, labels, or boundary content.
+- The only authorized corrected Route-B replay still rejected all five frozen
+  attempts. Its first total map change was `+3.017016359e-13 J`, including
+  `+5.051614232e-15 J` converged physical compatibility and
+  `+2.833907345e-16 J` interface/order energy. Numerical penalties are
+  separately reported and excluded. Decision:
+  `BULK_ROUTE_B_PRECURSOR_REJECTED_AFTER_ENERGY_HANDOFF_AND_COMPATIBILITY_AUDIT`.
+- Compatibility refinement covers four grids, two widths, and two penalty
+  strengths. The physical result and rejection converge; penalty strength
+  changes only the diagnostic numerical term.
+- Twenty deterministic SIBM fixtures pass: stationary/equal and zero-mobility
+  controls, drive reversal, curvature relaxation, sub/supercritical circular
+  bulges, label symmetry, inherited orientation, content/energy/heat ledgers,
+  no double processing, three restart locations, and the short matched ASB
+  source regression.
+- A short 128x128 full-model replay selected the existing label 5/9 HAGB
+  (`23.474 deg`) with parent/child mean densities `1.405e17` and `4.250e15
+  m^-2`. The mean stored-energy drive was `160.90 MPa`, physical compatibility
+  opposition `2.39 MPa`, and the model critical radius `3.15 nm`; the declared
+  `250 nm` bulge grew over `2 us`. No new label or orientation was created.
+  The front line residual was `3.18e-22 m`, signed Burgers change was zero,
+  and line release equalled heat (`1.807e-14 J`). Classification:
+  `SIBM_SUPERCRITICAL_GROWTH` (local qualification).
+- Continuous four-step and 2+2-step restart trajectories are identical across
+  all 145 authoritative fields, treating matching unused `NaN` sentinels as
+  equal. The complete local suite passes 315 tests. The single preregistered
+  HPC3 existing-HAGB horizon is next; strict ASB qualification remains
+  separate and pending.
+
 ## Directive v9 decision: bulk Route-B precursor rejected
 
 - Source `4de9243` adds an opt-in sparse parent/child/recovered-wake state,

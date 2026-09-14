@@ -71,12 +71,14 @@ from hazard_measure import (
 from phase_promotion import (
     atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
 )
+from compatibility_energy import decompose_compatibility_energy
 from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
 )
 from moving_front import (
     DefectState, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
+    initialize_existing_boundary_front,
     reconstruct_mixture, state_arrays as sparse_front_arrays,
     state_from_checkpoint as sparse_front_from_checkpoint,
     state_metadata_json as sparse_front_metadata_json,
@@ -725,6 +727,16 @@ P = dict(
     moving_front_exp_floor=0.10,
     moving_front_boundary_storage_fraction=0.05,
     moving_front_sink_fraction=0.02,
+    # v10 deterministic existing-HAGB SIBM pathway.  It perturbs only two
+    # existing labels and never allocates an orientation or grain identity.
+    use_sibm_existing_boundary=False,
+    sibm_min_misorientation_deg=15.0,
+    sibm_initial_bulge_radius_um=0.25,
+    sibm_activation_h0_eV=0.35,
+    sibm_activation_critical_pressure_Pa=1.0e9,
+    sibm_activation_exp_a=2.0,
+    sibm_activation_exp_n=1.5,
+    sibm_activation_exp_floor=0.10,
     atomic_promotion_purity_threshold=0.80,
     # The verified b9afe1f trajectory used ``lineage_scoped``.  Directive-v8
     # qualification compares it with a common functional, no stored-energy
@@ -3350,6 +3362,10 @@ else:
 # v9 sparse material state exists only for an actually promoted parent/child
 # pair. Initial orientation labels remain one common deformed material class.
 sparse_front_state = None
+sibm_experiment_state = {}
+sibm_reference_parent_mask = None
+sibm_reference_child_fraction = None
+sibm_initial_child_fraction = None
 if (P.get('use_sparse_common_front_state', False) and _restart_loaded
         and not P.get('restart_reset_clock', True)):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
@@ -3367,12 +3383,179 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                 str(_restart_npz['sparse_front_metadata_json'].item()),
                 {key: _restart_npz[f'sparse_front__{key}'] for key in _front_keys})
             _front_mixture = reconstruct_mixture(sparse_front_state)
-            rp, rm = _front_mixture.rp, _front_mixture.rm
-            rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
-            rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+            # The separately checkpointed full-field arrays are authoritative
+            # bit patterns.  Reconstructing a weighted mixture can differ by
+            # a few ulps even when the synchronized sparse state is algebraicly
+            # identical.  Retain the saved arrays and let the normal top-of-step
+            # projection absorb that representational roundoff exactly as the
+            # uninterrupted trajectory does.
+            _restart_mix_error = max(float(np.max(np.abs(a-b))) for a, b in zip(
+                (_front_mixture.rp, _front_mixture.rm,
+                 _front_mixture.forest, _front_mixture.wall),
+                (rp, rm, rho_forest, rho_wall)))
+            _restart_mix_scale = max(float(np.max(np.abs(a))) for a in
+                                     (rp, rm, rho_forest, rho_wall))
+            if _restart_mix_error > 8.0*np.finfo(float).eps*max(_restart_mix_scale, 1.0):
+                raise ValueError('checkpoint sparse/full defect states are inconsistent')
+            if 'sibm_experiment_json' in _restart_npz.files:
+                sibm_experiment_state = json.loads(
+                    str(_restart_npz['sibm_experiment_json'].item()))
+                _sibm_geometry_keys = (
+                    'sibm_reference_parent_mask',
+                    'sibm_reference_child_fraction',
+                    'sibm_initial_child_fraction')
+                if not all(key in _restart_npz.files for key in _sibm_geometry_keys):
+                    raise ValueError('SIBM checkpoint omits reference geometry')
+                sibm_reference_parent_mask = np.asarray(
+                    _restart_npz['sibm_reference_parent_mask'], dtype=bool)
+                sibm_reference_child_fraction = np.asarray(
+                    _restart_npz['sibm_reference_child_fraction'], dtype=float)
+                sibm_initial_child_fraction = np.asarray(
+                    _restart_npz['sibm_initial_child_fraction'], dtype=float)
         elif atomic_promotion_commit_total:
             raise ValueError(
                 'promoted sparse-common restart omits phase-resolved front state')
+
+if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
+    if not _restart_loaded:
+        raise ValueError('deterministic SIBM initialization requires a full 2-D restart')
+    if str(P.get('stored_energy_coupling_mode', '')).lower() != 'common_variational':
+        raise ValueError('SIBM requires the common variational stored-energy functional')
+    if not P.get('use_rho_state_partition', False):
+        raise ValueError('SIBM requires explicit defect reservoirs')
+    # Select the existing HAGB pair with the largest measured mean line-density
+    # contrast.  Labels and orientations are inherited; selection is
+    # deterministic and contains no stochastic trial orientation.
+    candidates = {}
+    for di, dj in ((1, 0), (0, 1)):
+        neigh = np.roll(lab, (-di, -dj), axis=(0, 1))
+        edge = lab != neigh
+        for a, b_ in zip(lab[edge], neigh[edge]):
+            pair = tuple(sorted((int(a), int(b_))))
+            candidates[pair] = candidates.get(pair, 0) + 1
+    rho_for_sibm = _rho_total_state(rp, rm, rho_forest, rho_wall)
+    rho_mean = {g: float(np.mean(rho_for_sibm[lab == g])) for g in range(Ng)}
+    period = 0.5*np.pi
+    viable = []
+    for pair, edge_count in candidates.items():
+        delta = abs((float(psi_gv[pair[0]])-float(psi_gv[pair[1]])
+                     +0.5*period) % period-0.5*period)
+        if np.rad2deg(delta) >= float(P.get('sibm_min_misorientation_deg', 15.0)):
+            viable.append((abs(rho_mean[pair[0]]-rho_mean[pair[1]]),
+                           edge_count, pair, delta))
+    if not viable:
+        raise ValueError('no resolved existing HAGB satisfies the SIBM criterion')
+    _, edge_count, pair, misorientation = max(viable)
+    child_label = min(pair, key=lambda g: (rho_mean[g], g))
+    parent_label = max(pair, key=lambda g: (rho_mean[g], -g))
+    adjacent = np.zeros((Nx, Ny), dtype=bool)
+    child_mask = lab == child_label
+    for di, dj in ((-1,0),(1,0),(0,-1),(0,1)):
+        adjacent |= (lab == parent_label) & np.roll(child_mask, (di, dj), (0, 1))
+    points = np.argwhere(adjacent)
+    if points.size == 0:
+        raise RuntimeError('selected HAGB has no parent-side support')
+    centre_index = points[len(points)//2]
+    radius = float(P.get('sibm_initial_bulge_radius_um', 0.25))*1e-6
+    sibm_reference_parent_mask = lab == parent_label
+    _h_reference = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
+    sibm_reference_child_fraction = (
+        _h_reference[:, :, child_label]
+        / np.maximum(np.sum(_h_reference, axis=2), 1e-300))
+    _child_neighbour_offsets = [
+        (di0, dj0) for di0, dj0 in ((-1,0),(1,0),(0,-1),(0,1))
+        if child_mask[(int(centre_index[0])+di0) % Nx,
+                      (int(centre_index[1])+dj0) % Ny]]
+    if not _child_neighbour_offsets:
+        raise RuntimeError('selected SIBM centre has no cardinal child neighbour')
+    _child_direction = _child_neighbour_offsets[0]
+    _advance_direction = [-int(_child_direction[0]), -int(_child_direction[1])]
+    ii = np.arange(Nx)[:, None]; jj = np.arange(Ny)[None, :]
+    di = np.minimum(np.abs(ii-centre_index[0]), Nx-np.abs(ii-centre_index[0]))*dx
+    dj = np.minimum(np.abs(jj-centre_index[1]), Ny-np.abs(jj-centre_index[1]))*dy
+    bulge = 0.5*(1.0-np.tanh((np.sqrt(di*di+dj*dj)-radius)
+                             /(np.sqrt(2.0)*max(np.sqrt(P['kappa_eta']/P['W_eta']), dx))))
+    bulge *= (lab == parent_label)
+    transfer = bulge*eta[:, :, parent_label]
+    eta[:, :, parent_label] -= transfer
+    eta[:, :, child_label] += transfer
+    eta[:, :, :Ng] /= np.maximum(np.sum(eta[:, :, :Ng], axis=2, keepdims=True), 1e-300)
+    lab = np.argmax(eta[:, :, :Ng], axis=2)
+    psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
+    hphase = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
+    child_fraction = hphase[:, :, child_label]/np.maximum(np.sum(hphase, axis=2), 1e-300)
+    sibm_initial_child_fraction = child_fraction.copy()
+    target_density = rho_mean[child_label]
+    sparse_front_state = initialize_existing_boundary_front(
+        DefectState(rp.copy(), rm.copy(), rho_forest.copy(), rho_wall.copy()),
+        child_fraction, target_density, parent_label, child_label)
+    sibm_experiment_state = dict(
+        schema='full-v34-sibm-existing-HAGB/v2', parent_label=parent_label,
+        child_label=child_label, parent_orientation_rad=float(psi_gv[parent_label]),
+        child_orientation_rad=float(psi_gv[child_label]),
+        misorientation_rad=float(misorientation), edge_count=int(edge_count),
+        parent_mean_density_m2=rho_mean[parent_label],
+        child_mean_density_m2=rho_mean[child_label],
+        initial_bulge_radius_m=radius,
+        centre_index=[int(centre_index[0]), int(centre_index[1])],
+        advance_direction_index=_advance_direction,
+        metric_definition=(
+            'excess child support relative to the pre-bulge field, restricted '
+            'to cells belonging to the selected parent at initialization'),
+        initial_child_area_m2=float(np.sum(child_fraction)*dx*dy),
+        initial_excess_bulge_area_m2=float(np.sum(
+            (child_fraction-sibm_reference_child_fraction)
+            * sibm_reference_parent_mask)*dx*dy))
+
+
+def _update_sibm_geometry_metrics(child_fraction_now, dt_metric):
+    """Update declared field-based bulge observables without changing state."""
+    global sibm_experiment_state
+    if not sibm_experiment_state or sibm_reference_parent_mask is None:
+        return
+    ci, cj = sibm_experiment_state['centre_index']
+    ai, aj = sibm_experiment_state['advance_direction_index']
+    ii0 = ((np.arange(Nx)-ci+Nx//2) % Nx-Nx//2)[:, None]
+    jj0 = ((np.arange(Ny)-cj+Ny//2) % Ny-Ny//2)[None, :]
+    normal = ai*ii0*dx + aj*jj0*dy
+    tangent = -aj*ii0*dx + ai*jj0*dy
+    excess = ((child_fraction_now-sibm_reference_child_fraction)
+              * sibm_reference_parent_mask)
+    area = float(np.sum(excess)*dx*dy)
+    support = (excess > 0.05) & sibm_reference_parent_mask
+    # Reject unrelated motion of other portions of the same periodic grain
+    # pair: bulge observables belong to the four-connected component seeded at
+    # the declared centre (or the nearest component if the centre is diffuse).
+    component_id, component_count = ndimage.label(
+        support, structure=np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=int))
+    if component_count:
+        selected_id = int(component_id[ci, cj])
+        if selected_id == 0:
+            ids = np.arange(1, component_count+1)
+            centres = ndimage.center_of_mass(support, component_id, ids)
+            selected_id = int(ids[np.argmin([
+                (c[0]-ci)**2+(c[1]-cj)**2 for c in centres])])
+        support = component_id == selected_id
+    if np.any(support):
+        amplitude = float(max(np.max(normal[support])+0.5*dx, 0.0))
+        throat = support & (normal >= -0.5*dx) & (normal <= 1.5*dx)
+        neck = (float(np.ptp(tangent[throat])+dx) if np.any(throat) else 0.0)
+    else:
+        amplitude = 0.0
+        neck = 0.0
+    old_area = float(sibm_experiment_state.get('current_excess_bulge_area_m2', area))
+    velocity = ((area-old_area)/max(neck, dx)/max(float(dt_metric), 1e-300))
+    sibm_experiment_state.update(
+        current_child_area_m2=float(np.sum(child_fraction_now)*dx*dy),
+        current_excess_bulge_area_m2=area,
+        bulge_amplitude_m=amplitude,
+        neck_width_m=neck,
+        area_equivalent_normal_velocity_m_s=float(velocity))
+
+
+if sibm_experiment_state:
+    _update_sibm_geometry_metrics(
+        sparse_front_state.chi, max(float(P.get('dt', 0.0)), 1e-300))
 
 if _restart_loaded and not P.get('restart_reset_clock', True):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
@@ -4860,9 +5043,18 @@ def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
         np.maximum(np.asarray(temperature_K, dtype=float), 1.0))*P['b']**2)
     represented_thickness = max(
         float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30)
-    physical_compatibility = float(np.nansum(
-        line_tension*(np.abs(residual_alpha)+np.abs(residual_gb)))
-        * dx*dy*represented_thickness)
+    compatibility_terms = decompose_compatibility_energy(
+        signed_gnd_density_m2=kappa_trial,
+        boundary_density_m2=rho_gb,
+        orientation_gradient_m1=gp_trial,
+        line_tension_J_m=line_tension,
+        cell_area_m2=dx*dy,
+        represented_thickness_m=represented_thickness,
+        burgers_m=P['b'],
+        alpha_target_coefficient=P['c_alpha'],
+        gb_target_coefficient=P['c_GB'],
+        alpha_penalty_coefficient=P['A_alpha'],
+        gb_penalty_coefficient=P['A_GB'])
     physical_line = float(np.nansum(
         ATpot.Estar_coeff(np.maximum(np.asarray(temperature_K, dtype=float), 1.0))
         * rho_trial) * dx*dy*represented_thickness)
@@ -4881,7 +5073,13 @@ def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
         interface_order=(audit['F_eta_grad'] + audit['F_eta_barrier'])*represented_thickness,
         diagnostic_interface_gradient=audit['F_eta_grad']*represented_thickness,
         diagnostic_interface_barrier=audit['F_eta_barrier']*represented_thickness,
-        compatibility=physical_compatibility,
+        compatibility=compatibility_terms.physical_total_J,
+        physical_long_range_gnd=compatibility_terms.long_range_gnd_J,
+        physical_frank_bilby_gb=compatibility_terms.frank_bilby_gb_J,
+        physical_orientation=compatibility_terms.orientation_J,
+        numerical_compatibility_penalty=compatibility_terms.numerical_total_J,
+        constraint_alpha_rms_m2=compatibility_terms.alpha_residual_rms_m2,
+        constraint_gb_rms_m2=compatibility_terms.gb_residual_rms_m2,
         diagnostic_compatibility_alpha=audit['F_comp_alpha']*represented_thickness,
         diagnostic_compatibility_gb=audit['F_comp_GB']*represented_thickness)
 
@@ -4934,28 +5132,13 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
     if _use_sparse_front:
         if sparse_front_state is not None:
             raise RuntimeError('only one sparse promoted parent/child pair is supported')
-        _front_process = ActivatedProcess(
-            'moving-front-recovery',
-            float(P.get('moving_front_attempt_frequency_s', 1.0e8)),
-            float(P.get('moving_front_entropy_over_kB', 0.0)),
-            float(P.get('moving_front_drag_rate_s', 1.0e8)))
-        # Resolved phase allocation gets one accepted front-processing step.
-        # The embryo's historical age cannot be cashed in as instantaneous
-        # cleanup of the newly allocated disk; later sweep is processed only as
-        # the diffuse front advances.
-        _front_exposure_s = float(P['dt'])
-        _activated_reacted = float(activated_front_fraction(
-            _front_process, abs(float(sigma_bar)), float(np.nanmean(T)),
-            _front_exposure_s,
-            h0_J=float(P.get('moving_front_h0_eV', 0.35))*eV_J,
-            critical_stress_pa=float(P.get('moving_front_critical_stress_pa', 1.0e9)),
-            exp_a=float(P.get('moving_front_exp_a', 2.0)),
-            exp_n=float(P.get('moving_front_exp_n', 1.5)),
-            exp_floor=float(P.get('moving_front_exp_floor', 0.10))))
-        _kinematic_reacted = max(
-            float(embryo.history[-1].radial_velocity_m_s), 0.0)*P['dt'] \
-            / max(interface_width, dx)
-        _reacted = min(_activated_reacted, _kinematic_reacted, 1.0)
+        # Phase allocation is a zero-front representation map.  The embryo
+        # record has no phase-resolved defect inventory, so altering defect
+        # content here would invent an unledgered latent state.  The initial
+        # child therefore carries the parent defect state exactly.  Only later
+        # growth beyond this mapped support is a physical sweep and may invoke
+        # EXP-floor front processing.  Embryo age is never cashed into cleanup.
+        _reacted = 0.0
         _parent_state = DefectState(
             np.asarray(rp).copy(), np.asarray(rm).copy(),
             np.asarray(rho_forest).copy(), np.asarray(rho_wall).copy())
@@ -4998,7 +5181,8 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
             minimum_core_area_m2=grain_criteria.minimum_area_m2,
             step=int(step), time_s=float(time_s),
             energy_evaluator=_energy_evaluator,
-            perform_density_transfer=not _use_sparse_front)
+            perform_density_transfer=not _use_sparse_front,
+            transfer_owned_embryo_energy=True)
     except (ValueError, RuntimeError) as exc:
         atomic_promotion_rollback_total += 1
         return (eta, psi_gv, Ng, rp, rm, rho_forest, rho_wall, rho_GB, T,
@@ -5036,6 +5220,7 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
         line_energy_change_J=float(ledger.line_energy_change_J),
         interface_order_energy_change_J=float(ledger.interface_order_energy_change_J),
         compatibility_energy_change_J=float(ledger.compatibility_energy_change_J),
+        embryo_owned_energy_change_J=float(ledger.embryo_owned_energy_change_J),
         heat_released_J=float(ledger.heat_released_J),
         other_dissipation_J=float(ledger.other_dissipation_J),
         energy_closure_J=float(ledger.energy_closure_J),
@@ -5058,6 +5243,7 @@ def _attempt_atomic_stateful_promotion(step, time_s, eta, psi_gv, Ng, rp, rm,
                  line_energy_change_J=float(ledger.line_energy_change_J),
                  interface_order_energy_change_J=float(ledger.interface_order_energy_change_J),
                  compatibility_energy_change_J=float(ledger.compatibility_energy_change_J),
+                 embryo_owned_energy_change_J=float(ledger.embryo_owned_energy_change_J),
                  energy_closure_J=float(ledger.energy_closure_J),
                  line_closure_m=float(ledger.transfer.line_content_closure_m),
                  signed_burgers_change_m2=float(ledger.transfer.maximum_signed_burgers_density_change_m2),
@@ -5565,6 +5751,15 @@ def _sparse_front_checkpoint_state():
     state = globals().get('sparse_front_state', None)
     if state is None:
         return {}
+    # Front processing occurs before several common constitutive/GND/GB
+    # updates in a timestep.  Continuous execution absorbs those increments at
+    # the top of the next step.  A checkpoint must serialize that synchronized
+    # state now; otherwise restart reconstructs the older front mixture and
+    # silently discards the post-front increments.
+    state = apply_common_constitutive_increment(
+        state, DefectState(
+            np.asarray(rp), np.asarray(rm),
+            np.asarray(rho_forest), np.asarray(rho_wall)))
     payload = {
         f'sparse_front__{key}': value
         for key, value in sparse_front_arrays(state).items()}
@@ -5634,6 +5829,17 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             grain_birth_barrier_eV=grain_birth_barrier_eV[:Ng],
             rng_nuc_state_json=np.array(_rng_state_to_json(_rng_nuc)),
             P_json=np.array(json.dumps(P, default=str)),
+            sibm_experiment_json=np.array(json.dumps(
+                globals().get('sibm_experiment_state', {}),
+                sort_keys=True, separators=(',', ':'))),
+            **({
+                'sibm_reference_parent_mask': np.asarray(
+                    sibm_reference_parent_mask, dtype=np.uint8),
+                'sibm_reference_child_fraction': np.asarray(
+                    sibm_reference_child_fraction, dtype=float),
+                'sibm_initial_child_fraction': np.asarray(
+                    sibm_initial_child_fraction, dtype=float),
+            } if globals().get('sibm_experiment_state', {}) else {}),
             **_potential_checkpoint_state(),
             **_sparse_front_checkpoint_state(),
         )
@@ -6290,6 +6496,43 @@ for n in range(_restart_step_offset, _restart_end_step):
                 eta[:, :, :Ng].shape).copy()
             phase_energy_fields[:, :, sparse_front_state.child_label] = (
                 A_E_field*_child_rho)
+            if P.get('use_sibm_existing_boundary', False):
+                # Physical compatibility resistance is a declared frozen-state
+                # term in this accepted phase step.  It is priced at line
+                # tension and enters the same common functional as stored
+                # energy.  The stiff quadratic alpha/GB penalties remain
+                # diagnostics only and cannot decide migration or become heat.
+                _psi_sibm = reconstruct_psi_lat(
+                    eta[:, :, :Ng], psi_gv, psi_plastic, Ng)
+                _grad_sibm = grad_mag(_psi_sibm)
+                _alpha_target = P['c_alpha']*_grad_sibm/P['b']
+                _gb_target = P['c_GB']*_grad_sibm/P['b']
+                _line_tension_sibm = (
+                    0.5*ATpot.mu_shear(np.maximum(T, 1.0))*P['b']**2)
+                _physical_compat_pressure = (
+                    _line_tension_sibm
+                    * (np.abs(np.abs(kappa_for_ac)-_alpha_target)
+                       + np.abs(rho_GB-_gb_target))
+                    * gb_for_ac)
+                phase_energy_fields[:, :, sparse_front_state.child_label] += (
+                    _physical_compat_pressure)
+                _interface_weight = gb_for_ac/np.maximum(
+                    np.sum(gb_for_ac), 1e-300)
+                _stored_drive = A_E_field*(_nonchild_rho-_child_rho)
+                _drive_mean = float(np.sum(_interface_weight*_stored_drive))
+                _compat_mean = float(np.sum(_physical_compat_pressure)
+                                     / np.maximum(np.sum(gb_for_ac), 1e-300))
+                _net_drive = _drive_mean-_compat_mean
+                sibm_experiment_state.update(
+                    stored_energy_drive_Pa=_drive_mean,
+                    physical_compatibility_pressure_Pa=_compat_mean,
+                    physical_compatibility_pressure_max_Pa=float(
+                        np.max(_physical_compat_pressure)),
+                    numerical_penalty_in_migration_decision_J=0.0,
+                    net_flat_boundary_drive_Pa=_net_drive,
+                    analytical_critical_radius_m=(
+                        float(P.get('nuc_gamma_GB', 0.5))/_net_drive
+                        if _net_drive > 0.0 else None))
         else:
             phase_energy_fields = np.broadcast_to(
                 Estar[:, :, None], eta[:, :, :Ng].shape).copy()
@@ -6334,7 +6577,25 @@ for n in range(_restart_step_offset, _restart_end_step):
                 # support only where high density coincides with GND/grad-r/GB
                 # structure.  Existing W_eta and kappa_eta then sharpen it.
                 dFdei += -float(P.get('rho_eta_ac_strength', 0.0))*rho_eta_drive_ac*(1.0 - 2.0*eta[:,:,i])
-            deta_i = -P['dt'] * L_ac_eff * dFdei
+            if P.get('use_sibm_existing_boundary', False):
+                _sibm_process = ActivatedProcess(
+                    'existing-HAGB-SIBM',
+                    float(P.get('moving_front_attempt_frequency_s', 1.0e8)),
+                    float(P.get('boundary_activation_entropy_kB', 0.0)),
+                    float(P.get('moving_front_drag_rate_s', 1.0e8)))
+                _sibm_fraction = activated_front_fraction(
+                    _sibm_process, np.abs(dFdei), T, P['dt'],
+                    h0_J=float(P.get('sibm_activation_h0_eV', 0.35))*eV_J,
+                    critical_stress_pa=float(P.get(
+                        'sibm_activation_critical_pressure_Pa', 1.0e9)),
+                    exp_a=float(P.get('sibm_activation_exp_a', 2.0)),
+                    exp_n=float(P.get('sibm_activation_exp_n', 1.5)),
+                    exp_floor=float(P.get('sibm_activation_exp_floor', 0.10)))
+                _sibm_factor = _sibm_fraction/max(
+                    _sibm_process.attempt_frequency_s*P['dt'], 1e-300)
+                deta_i = -P['dt'] * L_ac_eff * _sibm_factor * dFdei
+            else:
+                deta_i = -P['dt'] * L_ac_eff * dFdei
             if P.get('use_ac_increment_limiter', True):
                 lim = float(P.get('ac_max_abs_step', 0.02))
                 deta_i = np.clip(deta_i, -lim, lim)
@@ -6378,6 +6639,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             rho_GB+sparse_front_state.boundary_line_density_m2-_boundary0,
             0.0, P['rho_max'])
         T = T+_front_heat_density/max(float(P['cp_rho_vol']), 1e-300)
+        if P.get('use_sibm_existing_boundary', False):
+            _update_sibm_geometry_metrics(_chi_new, P['dt'])
 
     # detect label changes → sweep cleaning
     new_lab = np.argmax(eta[:,:,:Ng],2)
@@ -6769,6 +7032,20 @@ for n in range(_restart_step_offset, _restart_end_step):
         grain_tracker, _physical_grain_metrics = update_tracker(
             eta[:, :, :Ng], np.maximum(ATpot._Phi(np.maximum(rho, P['rho_min'])), 0.0),
             grain_tracker, sim_time + P['dt'], dx, dx, _physical_grain_criteria())
+
+    # Canonicalize the common sparse/full representation at every physical
+    # step, independent of checkpoint cadence.  This absorbs all post-front
+    # GND/GB/constitutive increments and makes restart a bitwise state copy
+    # rather than a delayed projection.
+    if sparse_front_state is not None:
+        sparse_front_state = apply_common_constitutive_increment(
+            sparse_front_state, DefectState(rp, rm, rho_forest, rho_wall))
+        _canonical_front_mixture = reconstruct_mixture(sparse_front_state)
+        rp, rm = _canonical_front_mixture.rp, _canonical_front_mixture.rm
+        rho_forest, rho_wall = (
+            _canonical_front_mixture.forest, _canonical_front_mixture.wall)
+        rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+        kappa_tot = np.sum(rp-rm, axis=2)
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:

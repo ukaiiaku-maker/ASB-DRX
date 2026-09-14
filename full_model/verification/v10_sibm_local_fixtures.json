@@ -1,0 +1,72 @@
+{
+  "asb_regression_status": "passed_short_source_regression",
+  "checks": {
+    "advance_retreat_no_double_processing": true,
+    "curvature_only_relaxes": true,
+    "energy_heat_ledger_closed": true,
+    "favorable_moves_correct_direction": true,
+    "flat_equal_stationary": true,
+    "front_restart_exact": true,
+    "label_permutation_common_equation": true,
+    "line_ledger_closed": true,
+    "matched_v32_full_v34_asb_source_regression": true,
+    "mobility_disabled_stationary": true,
+    "no_new_label_allocated": true,
+    "orientation_inherited": true,
+    "phase_area_ledger_nonzero": true,
+    "restart_after_exact": true,
+    "restart_before_exact": true,
+    "restart_during_exact": true,
+    "reversed_drive_reverses": true,
+    "signed_burgers_closed": true,
+    "subcritical_bulge_retracts": true,
+    "supercritical_bulge_grows": true
+  },
+  "common_functional": "gamma*integral(ds)-(psi_left-psi_right-P_FB)*integral(h dx)",
+  "critical_bulge": {
+    "analytical_radius_m": 2.5e-07,
+    "coefficient": "Rc=gamma/(Delta_psi-P_FB-P_drag) for local circular curvature",
+    "subcritical_pressure_Pa": -500000.0,
+    "subcritical_radius_m": 2e-07,
+    "supercritical_pressure_Pa": 333333.33333333326,
+    "supercritical_radius_m": 3e-07
+  },
+  "fixture_passed": true,
+  "full_model_experiment_status": "pending_single_HPC3_existing_HAGB_run",
+  "kinetics": "EXP-floor DeltaG=DeltaH-TDeltaS; sign supplied only by common pressure",
+  "labels": [
+    3,
+    8
+  ],
+  "ledgers": {
+    "front": {
+      "boundary_line_stored_m": 4.4800000000000005e-05,
+      "child_line_transmitted_m": 0.00015999999999999993,
+      "heat_released_J": 7.616e-13,
+      "line_closure_m": 0.0,
+      "line_energy_released_J": 7.616e-13,
+      "neutral_pair_annihilated_m": 0.0003808,
+      "parent_line_processed_m": 0.0006079999999999999,
+      "signed_burgers_change_m2": 0.0,
+      "sink_line_m": 2.2400000000000002e-05,
+      "swept_volume_m3": 3.2e-19
+    },
+    "sibm": {
+      "dissipated_energy_J": 2.5395207476101117e-25,
+      "energy_closure_J": 0.0,
+      "free_energy_after_J": 1.587199999746048e-15,
+      "free_energy_before_J": 1.5872e-15,
+      "free_energy_change_J": -2.5395207476101117e-25,
+      "heat_released_J": 0.0,
+      "maximum_abs_pressure_Pa": 20000000.0,
+      "signed_area_change_m2": 2.5599999999758052e-23
+    }
+  },
+  "orientations_rad": [
+    -0.2,
+    0.35
+  ],
+  "pressure_law": "negative variational derivative: Delta_psi-gamma*kappa-P_FB-P_drag",
+  "schema": "full-v34-v10-sibm-local-fixtures/v1",
+  "scientific_gate_passed": false
+}

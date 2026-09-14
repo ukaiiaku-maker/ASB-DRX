@@ -48,6 +48,7 @@ class AtomicPromotionLedger:
     other_dissipation_J: float
     energy_closure_J: float
     transfer: PromotionTransferLedger
+    embryo_owned_energy_change_J: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -247,7 +248,7 @@ def atomic_phase_promotion(
         represented_thickness_m, boundary_density_target_m2=None,
         minimum_core_area_m2=0.0,
         step, time_s, energy_evaluator: Callable,
-        perform_density_transfer=True):
+        perform_density_transfer=True, transfer_owned_embryo_energy=False):
     """Construct and validate one all-or-nothing embryo-to-phase transaction.
 
     ``energy_evaluator`` receives the trial arrays as keyword arguments and
@@ -336,13 +337,22 @@ def atomic_phase_promotion(
         for key in sorted(set(old_energy) & set(new_energy) - set(required))
         if math.isfinite(float(old_energy[key])) and math.isfinite(float(new_energy[key]))
     }
-    free_change = sum(delta.values())
+    # A stateful embryo is a thermodynamic object, not merely a trigger.  Its
+    # latest classical excess energy is removed when the same object becomes a
+    # PF phase.  Omitting this term charged neither its positive formation cost
+    # nor the loss of its negative post-critical energy during handoff.
+    embryo_old_energy = (
+        float(embryo.history[-1].total_excess_energy_J)
+        if transfer_owned_embryo_energy and embryo.history else 0.0)
+    embryo_energy_change = -embryo_old_energy
+    diagnostic_delta["embryo_owned_energy_change"] = embryo_energy_change
+    free_change = sum(delta.values()) + embryo_energy_change
     tolerance = 512.0*math.ulp(max(*(abs(float(old_energy[k])) for k in required), 1e-300))
     if free_change > tolerance:
         raise PromotionEnergyIncreaseError(
             delta, free_change, tolerance, diagnostic_delta)
     heat = max(-free_change, 0.0)
-    closure = -(sum(delta.values()) + heat)
+    closure = -(sum(delta.values()) + embryo_energy_change + heat)
     if abs(closure) > tolerance:
         raise RuntimeError("atomic promotion energy ledger does not close")
 
@@ -361,7 +371,8 @@ def atomic_phase_promotion(
     ledger = AtomicPromotionLedger(
         embryo.embryo_id, Ng, 0.0, delta["elastic"], delta["bulk_stored"],
         delta["line"], delta["interface_order"], delta["compatibility"],
-        heat, 0.0, closure, transfer)
+        heat, 0.0, closure, transfer,
+        embryo_owned_energy_change_J=embryo_energy_change)
     return AtomicPromotionResult(
         eta1, psi1, Ng+1, rp1, rm1, forest1, wall1, gb1,
         embryos1, tracker1, support/float(np.sum(support)), ledger)

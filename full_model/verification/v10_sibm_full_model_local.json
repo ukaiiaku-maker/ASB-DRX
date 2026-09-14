@@ -1,0 +1,98 @@
+{
+  "boundary": {
+    "advance_direction_index": [
+      0,
+      -1
+    ],
+    "analytical_critical_radius_m": 3.1544750189104263e-09,
+    "area_equivalent_normal_velocity_m_s": 0.140574795430993,
+    "bulge_amplitude_m": 3.90625e-08,
+    "centre_index": [
+      36,
+      77
+    ],
+    "child_label": 9,
+    "child_mean_density_m2": 4249648180403296.5,
+    "child_orientation_rad": -0.24509954683059576,
+    "current_child_area_m2": 9.527800823735607e-12,
+    "current_excess_bulge_area_m2": 2.7017772316785246e-13,
+    "edge_count": 16,
+    "initial_bulge_radius_m": 2.5e-07,
+    "initial_child_area_m2": 9.335451465186152e-12,
+    "initial_excess_bulge_area_m2": 1.331166179550077e-13,
+    "metric_definition": "excess child support relative to the pre-bulge field, restricted to cells belonging to the selected parent at initialization",
+    "misorientation_rad": 0.4096890241041904,
+    "neck_width_m": 7.03125e-07,
+    "net_flat_boundary_drive_Pa": 158504980.0688239,
+    "numerical_penalty_in_migration_decision_J": 0.0,
+    "parent_label": 5,
+    "parent_mean_density_m2": 1.4048538972439352e+17,
+    "parent_orientation_rad": 0.16458947727359474,
+    "physical_compatibility_pressure_Pa": 2393111.627114748,
+    "physical_compatibility_pressure_max_Pa": 26710958.004001558,
+    "schema": "full-v34-sibm-existing-HAGB/v2",
+    "stored_energy_drive_Pa": 160898091.69593865
+  },
+  "checks": {
+    "bulge_area_grew": true,
+    "existing_hagb_selected": true,
+    "favorable_common_drive": true,
+    "front_energy_heat_closed": true,
+    "initial_bulge_supercritical": true,
+    "line_balance_closed": true,
+    "new_stochastic_creation_disabled": true,
+    "no_new_label": true,
+    "numerical_penalty_excluded": true,
+    "orientations_inherited": true,
+    "restart_exact": true,
+    "signed_burgers_balance_closed": true
+  },
+  "classification": "SIBM_SUPERCRITICAL_GROWTH",
+  "final_checkpoint": {
+    "path": "/tmp/full-v34-v10-sibm-physical-final/drx_v25_restart_006920.npz",
+    "sha256": "03dcd6a131702cf09960c2d5948eea0e5785bb9e574c514f4012199c5a403e58",
+    "step": 6920
+  },
+  "fixture_passed": true,
+  "front_ledger": {
+    "boundary_line_stored_m": 6.26253861293471e-07,
+    "child_line_transmitted_m": 4.2788626533642646e-07,
+    "heat_released_J": 1.8069021614902263e-14,
+    "line_closure_m": 3.1763735522036263e-22,
+    "line_energy_released_J": 1.8069021614902263e-14,
+    "neutral_pair_annihilated_m": 1.1365353829117551e-05,
+    "parent_line_processed_m": 1.2663910167126319e-05,
+    "signed_burgers_change_m2": 0.0,
+    "sink_line_m": 2.4441621137887205e-07,
+    "swept_volume_m3": 9.693606022345701e-23
+  },
+  "numerical_compatibility_penalty": {
+    "alpha_J": 193.7280584596544,
+    "converted_to_heat": false,
+    "enters_migration_decision": false,
+    "gb_J": 120.10644239792337
+  },
+  "physical_compatibility": {
+    "basis": "line-tension price of signed-GND and Frank-Bilby residuals",
+    "maximum_pressure_Pa": 26710958.004001558,
+    "mean_pressure_Pa": 2393111.627114748
+  },
+  "physical_horizon_s": 1.9999999999989644e-06,
+  "restart": {
+    "authoritative_field_count": 145,
+    "comparison": "4 continuous steps versus 2+2 steps",
+    "excluded_field": "P_json (continuation nSteps/restart path metadata)",
+    "mismatched_fields": [],
+    "missing_fields": [],
+    "nan_sentinels_compared_equal": true
+  },
+  "schema": "full-v34-v10-sibm-full-model-local/v1",
+  "scientific_gate_passed": true,
+  "scope": "short local full-2D qualification; HPC3 horizon pending",
+  "source_checkpoint": {
+    "path": "/tmp/full-v34-v9-event.zzn49H/v9_event_restart_006900.npz",
+    "sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b",
+    "step": 6900
+  },
+  "strict_asb_qualification": "pending_separate_campaign"
+}

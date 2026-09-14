@@ -70,6 +70,18 @@ case "$case_name" in
     export RESTART_FILE="${RESTART_FILE:?continuation requires RESTART_FILE}"
     export RESTART_RESET_CLOCK=false
     ;;
+  drx_iso_rate1000_seed42_sibm_v10)
+    export BRANCH=drx_isothermal RATE=1000 NSTEPS=6000
+    unset TARGET_STRAIN
+    export T0=1100.0 POLY_SEED=42 NUC_SEED=271870
+    export RESTART_FILE="${RESTART_FILE:-input/v9_event_restart_006900.npz}"
+    export RESTART_RESET_CLOCK=false
+    export USE_STATEFUL_EMBRYOS=false USE_ATOMIC_STATEFUL_PROMOTION=false
+    export USE_SPARSE_COMMON_FRONT_STATE=true USE_SIBM_EXISTING_BOUNDARY=true
+    export STORED_ENERGY_COUPLING_MODE=common_variational
+    export USE_HAZARD_NUCLEATION=true
+    export DISABLE_NEW_STOCHASTIC_CREATION_AFTER_RESTART=true
+    ;;
   *)
     echo "unknown CASE_NAME=$case_name" >&2
     exit 2
@@ -79,7 +91,7 @@ esac
 python -m py_compile \
   drx_full_v34_recovery.py arrhenius_kinetics.py stateful_embryos.py \
   embryo_coupling.py physical_grains.py phase_promotion.py hazard_measure.py \
-  asb_classifier.py
+  asb_classifier.py compatibility_energy.py sibm_boundary.py moving_front.py
 bash run_full_v34_recovery.sh
 inventory_tmp=$(mktemp "${TMPDIR:-/tmp}/full-v34-output-inventory.XXXXXX")
 trap 'rm -f "$inventory_tmp"' EXIT

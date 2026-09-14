@@ -6,6 +6,7 @@ import numpy as np
 from full_model.production.moving_front import (
     DefectState, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
+    initialize_existing_boundary_front,
     reconstruct_mixture, signed_density, state_arrays, state_from_checkpoint,
     state_metadata_json,
 )
@@ -144,6 +145,17 @@ class MovingFrontTest(unittest.TestCase):
         self.assertGreater(float(stressed), float(cold))
         self.assertGreater(float(entropy), float(cold))
         self.assertTrue(0.0 <= float(cold) <= 1.0)
+
+    def test_existing_boundary_initialization_is_exact_and_future_sweep_processes(self):
+        chi = np.zeros((4, 4)); chi[:, :2] = 1.0
+        state = initialize_existing_boundary_front(
+            self.parent(), chi, 5e14, 0, 1)
+        mixture = reconstruct_mixture(state)
+        np.testing.assert_allclose(mixture.rp, self.parent().rp, rtol=1e-15, atol=0.0)
+        self.assertEqual(state.ledger.parent_line_processed_m, 0.0)
+        grown = chi.copy(); grown[:, 2] = 1.0
+        state, _ = self.advance(state, grown)
+        self.assertGreater(state.ledger.parent_line_processed_m, 0.0)
 
 
 if __name__ == "__main__":

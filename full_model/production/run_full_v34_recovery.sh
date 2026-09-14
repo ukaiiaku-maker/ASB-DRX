@@ -36,6 +36,7 @@ BOUNDARY_ACTIVATION_ENTROPY_KB="${BOUNDARY_ACTIVATION_ENTROPY_KB:-0.0}"
 # Conservative DRX candidate defaults.  These are deliberately much less eager
 # than v33 and use candidate incubation before allocating a new grain ID.
 USE_HAZARD_NUCLEATION="${USE_HAZARD_NUCLEATION:-true}"
+DISABLE_NEW_STOCHASTIC_CREATION_AFTER_RESTART="${DISABLE_NEW_STOCHASTIC_CREATION_AFTER_RESTART:-false}"
 NUC_ATTEMPT_FREQ="${NUC_ATTEMPT_FREQ:-1.0e4}"
 NUC_INTERVAL="${NUC_INTERVAL:-20}"
 NUC_MIN_STRAIN="${NUC_MIN_STRAIN:-0.02}"
@@ -57,6 +58,9 @@ NUC_CANDIDATE_DIAGNOSTIC_ONLY="${NUC_CANDIDATE_DIAGNOSTIC_ONLY:-false}"
 USE_STATEFUL_EMBRYOS="${USE_STATEFUL_EMBRYOS:-false}"
 USE_ATOMIC_STATEFUL_PROMOTION="${USE_ATOMIC_STATEFUL_PROMOTION:-false}"
 USE_EXPF_EMBRYO_CREATION="${USE_EXPF_EMBRYO_CREATION:-false}"
+USE_SPARSE_COMMON_FRONT_STATE="${USE_SPARSE_COMMON_FRONT_STATE:-false}"
+USE_SIBM_EXISTING_BOUNDARY="${USE_SIBM_EXISTING_BOUNDARY:-false}"
+STORED_ENERGY_COUPLING_MODE="${STORED_ENERGY_COUPLING_MODE:-lineage_scoped}"
 EMBRYO_CREATION_ROUTE="${EMBRYO_CREATION_ROUTE:-precursor}"
 EMBRYO_CREATION_H0_EV="${EMBRYO_CREATION_H0_EV:-1.20}"
 EMBRYO_CREATION_CRITICAL_DRIVE_PA="${EMBRYO_CREATION_CRITICAL_DRIVE_PA:-2.0e8}"
@@ -164,6 +168,7 @@ params=dict(
     collective_rate_closure='domain_count', collective_domain_power=2.0, collective_min_suppression=1.0e-4,
     local_gdot_cap_factor=0.0, enforce_macro_rate_after_ms=False,
     use_hazard_nucleation=b('$USE_HAZARD_NUCLEATION'), disable_nucleation=False,
+    disable_new_stochastic_creation_after_restart=b('$DISABLE_NEW_STOCHASTIC_CREATION_AFTER_RESTART'),
     nuc_min_strain=float('$NUC_MIN_STRAIN'), nuc_interval=int(float('$NUC_INTERVAL')),
     nuc_attempt_freq=float('$NUC_ATTEMPT_FREQ'), nuc_hazard_rate_cap=float('$NUC_HAZARD_RATE_CAP'),
     nuc_hazard_site_floor=float('$NUC_HAZARD_SITE_FLOOR'), nuc_site_gb_weight=float('$NUC_SITE_GB_WEIGHT'),
@@ -183,6 +188,9 @@ params=dict(
     nuc_candidate_promote_select='oldest', nuc_candidate_diagnostic_only=b('$NUC_CANDIDATE_DIAGNOSTIC_ONLY'),
     use_stateful_embryos=b('$USE_STATEFUL_EMBRYOS'),
     use_atomic_stateful_promotion=b('$USE_ATOMIC_STATEFUL_PROMOTION'),
+    use_sparse_common_front_state=b('$USE_SPARSE_COMMON_FRONT_STATE'),
+    use_sibm_existing_boundary=b('$USE_SIBM_EXISTING_BOUNDARY'),
+    stored_energy_coupling_mode='$STORED_ENERGY_COUPLING_MODE',
     use_expf_embryo_creation=b('$USE_EXPF_EMBRYO_CREATION'),
     embryo_creation_route='$EMBRYO_CREATION_ROUTE',
     embryo_creation_H0_eV=float('$EMBRYO_CREATION_H0_EV'),
