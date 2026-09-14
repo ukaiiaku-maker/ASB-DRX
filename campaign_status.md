@@ -849,3 +849,27 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - HPC3 reproduces the pinned sign split from the exact common 128 state: subcritical amplitude changes by `-1.87285e-9 m`, while supercritical changes by `+5.29070e-9 m`.
 - The production-like unseeded control has zero final tip displacement. Both 128 and 192 seeded cases retain valid independently resolved parent/child cores, nonnegative populations, phase-simplex closure, exact label/orientation counts, and closed line/signed-Burgers/energy/heat ledgers. Their final cap-amplitude spread is `0.03253%`, below the provisional 5% refinement threshold.
 - Machine result `full_model/verification/v14_hpc3_compact.json` reports `V14_HPC3_COMPACT_BUNDLE_PASSED`, `fixture_passed=true`, and `scientific_gate_passed=true`. This is a generic controlled qualification, not a material calibration or a temperature/rate trend.
+
+## Directive v15 scope, increments, and state semantics (2026-09-14)
+
+- The complete V14 evidence set is frozen at source `fb745be` by the SHA-256
+  manifest `full_model/verification/v15_frozen_v14_evidence.json`; no raw V14
+  result was rewritten. The claim-scope addendum retains conservation, pinned
+  sign discrimination, and compact cross-platform qualification, while leaving
+  mesh-converged pressure/velocity, production-polycrystal SIBM, mechanism
+  support, and material calibration false.
+- Historical `production_*` directories are reclassified scientifically as
+  loaded canonical bicrystal controls. Their increments are `+2.60663e-11 m`
+  (`+3.33648e-4 cell`) at 128 and `-9.60000e-11 m`
+  (`-1.84320e-3 cell`) at 192. The signs disagree; the `0.03253%` final-
+  amplitude spread is not a convergence result. Early/late OLS velocities,
+  standard errors, residuals, cell-normalized increments, and width-normalized
+  increments are recorded in `v15_loaded_canonical_increment_audit.json`.
+- Sparse-front schema v6 names current child support and maximum swept history
+  explicitly, retains byte-identical `chi`/`processed_max` compatibility
+  aliases, derives wake support, validates the three-weight simplex, rejects
+  conflicting aliases, and explicitly migrates v3--v5 restarts. The corrected
+  mixture is `(1-s)q_parent+c q_child+(s-c)q_wake`, `0<=c<=s<=1`.
+- The configured local suite passes 342 tests. The next hard gate is the fully
+  coupled neutral fixed point and 128/192/256 critical-pressure convergence;
+  no v15 HPC job has been submitted.

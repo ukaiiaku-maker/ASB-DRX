@@ -1,0 +1,12 @@
+{
+  "canonical_pinned_sign_split_qualified": true,
+  "compact_cross_platform_qualification_passed": true,
+  "full_model_SIBM_growth_mechanism_supported": false,
+  "material_calibration": false,
+  "mesh_converged_critical_pressure": false,
+  "mesh_converged_interface_velocity": false,
+  "moving_front_conservation_qualified": true,
+  "production_polycrystal_pair_tested": false,
+  "raw_v14_evidence_modified": false,
+  "schema": "full-v34-v15-claim-scope-addendum/v1"
+}

@@ -106,6 +106,41 @@ class MovingFrontTest(unittest.TestCase):
         self.assertEqual(final_a.ledger, final_b.ledger)
         self.assertTrue(np.array_equal(mix_a.forest, mix_b.forest))
 
+    def test_v6_fraction_semantics_and_v5_migration_are_explicit(self):
+        state = self.state(); state, _ = self.advance(
+            state, np.full_like(state.chi, 0.75))
+        state, _ = self.advance(state, np.full_like(state.chi, 0.25))
+        parent, child, wake = state.material_support_weights()
+        np.testing.assert_array_equal(child, state.current_child_fraction)
+        np.testing.assert_array_equal(
+            state.maximum_swept_fraction, state.processed_max)
+        np.testing.assert_array_equal(wake, state.recovered_wake_fraction)
+        np.testing.assert_allclose(parent+child+wake, 1.0, rtol=0.0, atol=0.0)
+        self.assertGreaterEqual(min(np.min(x) for x in (parent, child, wake)), 0.0)
+
+        metadata = __import__("json").loads(state_metadata_json(state))
+        self.assertEqual(metadata["schema"], "full-v34-sparse-front/v6")
+        arrays = state_arrays(state)
+        np.testing.assert_array_equal(
+            arrays["current_child_fraction"], arrays["chi"])
+        np.testing.assert_array_equal(
+            arrays["maximum_swept_fraction"], arrays["processed_max"])
+
+        # Historical v5 files contain only the two legacy array names.
+        metadata["schema"] = "full-v34-sparse-front/v5"
+        legacy = {k: v for k, v in arrays.items() if k not in (
+            "current_child_fraction", "maximum_swept_fraction")}
+        restored = state_from_checkpoint(__import__("json").dumps(metadata), legacy)
+        np.testing.assert_array_equal(restored.chi, state.chi)
+        np.testing.assert_array_equal(restored.processed_max, state.processed_max)
+
+    def test_v6_rejects_conflicting_fraction_aliases(self):
+        state = self.state()
+        arrays = state_arrays(state)
+        arrays["current_child_fraction"] = np.ones_like(state.chi)
+        with self.assertRaisesRegex(ValueError, "conflicting current-child"):
+            state_from_checkpoint(state_metadata_json(state), arrays)
+
     def test_common_increment_reconstructs_and_has_pure_phase_limits(self):
         state = self.state()
         old = reconstruct_mixture(state)

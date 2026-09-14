@@ -5,11 +5,24 @@
 Each material state carries nonnegative positive and negative mobile densities
 `rho+_a`, `rho-_a` and forest density `rhoF_a` in m^-2 for every slip family,
 plus wall density `rhoW` in m^-2. Parent, child, and wake values are intensive
-states owned only on their phase support. The reconstructed physical field is
+states owned only on their phase support. The canonical checkpoint-v6
+fractions are `c`, the current child fraction, and `s`, the maximum
+historically swept fraction. The recovered-wake fraction is derived:
 
-`q = (1-chi) q_parent + (chi-m) q_wake + m q_child`,
+`w = s-c`, with `0 <= c <= s <= 1`.
 
-where `0 <= m <= chi <= 1`. Absent support owns exactly zero extensive content.
+The reconstructed physical field is
+
+`q = (1-s) q_parent + c q_child + (s-c) q_wake`.
+
+The three weights are nonnegative and sum exactly to one. Absent support owns
+exactly zero extensive content. In source, `current_child_fraction` is the
+explicit alias for legacy `chi`, and `maximum_swept_fraction` is the explicit
+alias for legacy `processed_max`. Historical schema-v3--v5 checkpoints migrate
+by precisely those mappings; `cleanup_max` is retained only as a reaction-
+history compatibility field. Schema v6 writes both canonical names and
+byte-identical legacy aliases, rejects conflicting aliases, and derives wake
+support as `maximum_swept_fraction-current_child_fraction`.
 The intrinsic HAGB energy `gamma(theta)` is a phase-field property and is never
 stored in the excess boundary-dislocation reservoir.
 

@@ -73,6 +73,33 @@ class SparseFrontState:
     parent_label: int
     child_label: int
 
+    @property
+    def current_child_fraction(self):
+        """Current child support (canonical schema-v6 name; legacy ``chi``)."""
+        return self.chi
+
+    @property
+    def maximum_swept_fraction(self):
+        """Maximum historically swept support (legacy ``processed_max``)."""
+        return self.processed_max
+
+    @property
+    def recovered_wake_fraction(self):
+        """Processed support no longer occupied by the current child."""
+        return self.processed_max-self.chi
+
+    def material_support_weights(self):
+        """Return parent, child, and wake weights after checking the simplex."""
+        tolerance = 32.0*np.finfo(float).eps
+        parent = 1.0-self.processed_max
+        child = self.chi
+        wake = self.processed_max-self.chi
+        if (not all(np.all(np.isfinite(x)) for x in (parent, child, wake))
+                or min(float(np.min(x)) for x in (parent, child, wake)) < -tolerance
+                or float(np.max(np.abs(parent+child+wake-1.0))) > tolerance):
+            raise ValueError("front material-support weights are inadmissible")
+        return tuple(np.maximum(x, 0.0) for x in (parent, child, wake))
+
 
 class FrontAdmissibilityError(RuntimeError):
     """A requested sweep lies outside the conservative transfer cone."""
@@ -355,7 +382,7 @@ def reconstruct_mixture(state, chi=None):
         raise ValueError("mixture fraction is invalid")
     if np.any(fraction > state.processed_max+16.0*np.finfo(float).eps):
         raise ValueError("mixture fraction exceeds processed front history")
-    virgin = 1.0-state.processed_max
+    virgin, _, _ = state.material_support_weights()
     wake = state.processed_max-fraction
     c3 = fraction[:, :, None]
     v3 = virgin[:, :, None]
@@ -769,11 +796,24 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
 
 def state_metadata_json(state):
     return json.dumps({
-        "schema": "full-v34-sparse-front/v5",
+        "schema": "full-v34-sparse-front/v6",
         "parent_label": state.parent_label,
         "child_label": state.child_label,
         "boundary_content_semantics": "excess_only_intrinsic_HAGB_excluded",
         "state_ownership": "support_weighted",
+        "fraction_semantics": {
+            "current_child_fraction": "current child support; legacy alias chi",
+            "maximum_swept_fraction": (
+                "maximum historically swept support; legacy alias processed_max"),
+            "recovered_wake_fraction": (
+                "maximum_swept_fraction-current_child_fraction; derived, not stored"),
+            "weights": [
+                "1-maximum_swept_fraction", "current_child_fraction",
+                "maximum_swept_fraction-current_child_fraction"],
+        },
+        "schema_migration": (
+            "v3-v5 chi -> current_child_fraction; processed_max -> "
+            "maximum_swept_fraction; cleanup_max retained as reaction-history alias"),
         "ledger": state.ledger.__dict__,
     }, sort_keys=True, separators=(",", ":"))
 
@@ -788,6 +828,10 @@ def state_arrays(state):
         "wake_rm": state.recovered_wake.rm,
         "wake_forest": state.recovered_wake.forest,
         "wake_wall": state.recovered_wake.wall,
+        # Canonical names are written together with byte-identical legacy
+        # aliases so older full-v34 drivers can restart v6 checkpoints.
+        "current_child_fraction": state.chi,
+        "maximum_swept_fraction": state.processed_max,
         "chi": state.chi, "processed_max": state.processed_max,
         "cleanup_max": state.cleanup_max,
         "boundary_line_density_m2": state.boundary_line_density_m2,
@@ -799,7 +843,8 @@ def state_from_checkpoint(metadata_json, arrays):
     raw = json.loads(str(metadata_json))
     if raw.get("schema") not in ("full-v34-sparse-front/v3",
                                   "full-v34-sparse-front/v4",
-                                  "full-v34-sparse-front/v5"):
+                                  "full-v34-sparse-front/v5",
+                                  "full-v34-sparse-front/v6"):
         raise ValueError("unsupported sparse-front schema")
     parent = DefectState(*(np.asarray(arrays[k]).copy() for k in (
         "parent_rp", "parent_rm", "parent_forest", "parent_wall")))
@@ -807,15 +852,26 @@ def state_from_checkpoint(metadata_json, arrays):
         "child_rp", "child_rm", "child_forest", "child_wall")))
     wake = DefectState(*(np.asarray(arrays[k]).copy() for k in (
         "wake_rp", "wake_rm", "wake_forest", "wake_wall")))
-    processed = np.asarray(arrays["processed_max"]).copy()
+    current_key = ("current_child_fraction"
+                   if "current_child_fraction" in arrays else "chi")
+    swept_key = ("maximum_swept_fraction"
+                 if "maximum_swept_fraction" in arrays else "processed_max")
+    current = np.asarray(arrays[current_key]).copy()
+    processed = np.asarray(arrays[swept_key]).copy()
+    if "chi" in arrays and not np.array_equal(current, np.asarray(arrays["chi"])):
+        raise ValueError("conflicting current-child fraction aliases")
+    if ("processed_max" in arrays
+            and not np.array_equal(processed, np.asarray(arrays["processed_max"]))):
+        raise ValueError("conflicting maximum-swept fraction aliases")
     cleanup = (np.asarray(arrays["cleanup_max"]).copy()
                if "cleanup_max" in arrays else processed.copy())
     state = SparseFrontState(
-        parent, child, wake, np.asarray(arrays["chi"]).copy(),
+        parent, child, wake, current,
         processed, cleanup,
         np.asarray(arrays["boundary_line_density_m2"]).copy(),
         np.asarray(arrays["boundary_signed_density_m2"]).copy(),
         FrontLedger(**raw["ledger"]), int(raw["parent_label"]),
         int(raw["child_label"]))
     _validate_defect(parent); _validate_defect(child); _validate_defect(wake)
+    state.material_support_weights()
     return state

@@ -1,0 +1,78 @@
+{
+  "cases": [
+    {
+      "amplitude_increment_cells": 0.00033364847414844157,
+      "amplitude_increment_interface_widths": 8.242883719913156e-05,
+      "amplitude_increment_m": 2.6066287042847e-11,
+      "contour_csv": "hpc3-results/asb-drx-full-v34-recovery/20260914T184138Z-c292ef7-eb2b2a/work/full_model/production/output/cases/production_bulge_128/sibm_contour_diagnostics.csv",
+      "early_velocity_fit": {
+        "residual_rms_m": 1.8252206576338662e-13,
+        "sample_count": 3,
+        "time_end_s": 1.774965008013111e-07,
+        "time_start_s": 3.034958085985684e-08,
+        "velocity_m_s": 1.7755947965471087e-05,
+        "velocity_standard_error_m_s": 3.0071895965180743e-06
+      },
+      "final_amplitude_m": 6.001013482353852e-07,
+      "grid": 128,
+      "grid_spacing_m": 7.8125e-08,
+      "initial_amplitude_m": 6.000752819483423e-07,
+      "interface_points_per_width": 4.047715405015525,
+      "interface_width_m": 3.162277660168379e-07,
+      "late_velocity_fit": {
+        "residual_rms_m": 1.271855806511377e-12,
+        "sample_count": 3,
+        "time_end_s": 4.2309032331994607e-07,
+        "time_start_s": 1.774965008013111e-07,
+        "velocity_m_s": 9.675431108888477e-05,
+        "velocity_standard_error_m_s": 1.2645932473628553e-05
+      },
+      "scientific_class": "LOADED_CANONICAL_BICRYSTAL_BULGE"
+    },
+    {
+      "amplitude_increment_cells": -0.0018432005507659514,
+      "amplitude_increment_interface_widths": -0.000303578746088397,
+      "amplitude_increment_m": -9.600002868572665e-11,
+      "contour_csv": "hpc3-results/asb-drx-full-v34-recovery/20260914T184138Z-c292ef7-eb2b2a/work/full_model/production/output/cases/production_bulge_192/sibm_contour_diagnostics.csv",
+      "early_velocity_fit": {
+        "residual_rms_m": 1.4018925348066697e-12,
+        "sample_count": 3,
+        "time_end_s": 3.0534842141828277e-07,
+        "time_start_s": 3.7578189030312376e-08,
+        "velocity_m_s": -4.831401208584712e-05,
+        "velocity_standard_error_m_s": 1.2624521583496877e-05
+      },
+      "final_amplitude_m": 5.999061392271898e-07,
+      "grid": 192,
+      "grid_spacing_m": 5.208333333333334e-08,
+      "initial_amplitude_m": 6.000021392558755e-07,
+      "interface_points_per_width": 6.071573107523287,
+      "interface_width_m": 3.162277660168379e-07,
+      "late_velocity_fit": {
+        "residual_rms_m": 1.6818819054948994e-11,
+        "sample_count": 3,
+        "time_end_s": 8.817152698586745e-07,
+        "time_start_s": 3.0534842141828277e-07,
+        "velocity_m_s": -0.00014533806147626102,
+        "velocity_standard_error_m_s": 7.144188981383941e-05
+      },
+      "scientific_class": "LOADED_CANONICAL_BICRYSTAL_BULGE"
+    }
+  ],
+  "classification": "LOADED_CANONICAL_BICRYSTAL_INCREMENTS_NOT_CONVERGED",
+  "comparison": {
+    "absolute_increment_spread_m": 1.2206631572857365e-10,
+    "final_amplitude_relative_spread": 0.0003252934004720683,
+    "increment_converged": false,
+    "increment_relative_spread": 1.2715237422290746,
+    "sign_agreement": false,
+    "signs": [
+      1,
+      -1
+    ]
+  },
+  "fixture_passed": true,
+  "reason": "signed increments disagree and displacements are unresolved",
+  "schema": "full-v34-v15-growth-increment-audit/v1",
+  "scientific_gate_passed": false
+}
