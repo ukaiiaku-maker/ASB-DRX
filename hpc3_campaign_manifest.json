@@ -1850,6 +1850,40 @@
         "status_json": "01a961e2c942d13c153b1bb54c12b2a09a3fe0ecf7828e40e15967a719acb27a"
       },
       "follow_up": "one physical lifecycle path is established; seed statistics, DRX mesh convergence, and strict matched-control ASB qualification remain separate future decisions"
+    },
+    {
+      "run_id": "20260914T045532Z-567ba0a-c6d113",
+      "purpose": "directive_v12_contour_resolved_overnight_SIBM_range_campaign",
+      "scientific_source_commit": "873c3b03d7019807ce71b70755b4475a8ab58a01",
+      "clean_archive_commit": "567ba0ada24c49e9da54c7a13a3fd05f1c76112a",
+      "branch": "exp/full-v34-recovery-v1",
+      "source_status": "clean_pushed",
+      "source_archive_sha256": "91089b588eaa1ebb87577399594925a479ce92f9cc5e0376604330dee03540a4",
+      "source_checkpoint_sha256": "17759bd60839062b0cb35c621fcc862bad538b894dd6e31f144ceef82972957b",
+      "resampled_checkpoint_sha256": {
+        "192": "79edfea2ea9a64ffe0244fd5dce9d6e29186e11fe5d820a7422bd574ed46f717",
+        "256": "07d5e443ff849056249e4edc8282b8f0744796f75852e5cd2f5852fdb4092c9f"
+      },
+      "configuration": {
+        "trajectory_count": 17,
+        "tiers": ["A", "B", "D", "E"],
+        "tier_C_omission": "no_second_pair_with_250_pure_core_cells_on_both_sides",
+        "maximum_concurrency": 2,
+        "walltime": "12:00:00",
+        "maximum_cpu_hours": 24.0,
+        "grid_sizes": [128, 192, 256],
+        "diagnostic_interval_steps": 100,
+        "checkpoint_interval_steps": 250,
+        "checkpoint_wallclock_interval_s": 600
+      },
+      "slurm": {
+        "job_id": "56003778", "account": "SDILLON1", "partition": "free",
+        "qos": "low", "node": "hpc3-14-16", "cpus_per_task": 2,
+        "memory": "8G", "state_at_record": "RUNNING"
+      },
+      "remote_path": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/20260914T045532Z-567ba0a-c6d113",
+      "retrieval_status": "running_not_yet_fetched",
+      "unrelated_job_preserved": "55950433"
     }
   ]
 }
