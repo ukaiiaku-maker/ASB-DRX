@@ -69,7 +69,10 @@ def main() -> None:
     ledger = front["ledger"]
     line_scale = max(abs(ledger["parent_line_processed_m"]), 1e-300)
     checks = {
-        "existing_hagb_selected": experiment["misorientation_rad"] >= np.deg2rad(15.0),
+        "existing_hagb_selected": (
+            experiment["misorientation_rad"] >= np.deg2rad(15.0)
+            and experiment.get("parent_pure_core_cells", 0) >= 16
+            and experiment.get("child_pure_core_cells", 0) >= 16),
         "favorable_common_drive": experiment["net_flat_boundary_drive_Pa"] > 0.0,
         "initial_bulge_supercritical": (
             experiment["initial_bulge_radius_m"]

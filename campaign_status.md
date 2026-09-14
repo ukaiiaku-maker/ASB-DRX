@@ -2,7 +2,7 @@
 
 Updated: 2026-09-13 (America/Los_Angeles)
 
-## Directive v10 local decision: Route B retired; existing-HAGB SIBM qualified
+## Directive v10 decision: Route B retired; first HPC SIBM run falsified and repaired locally
 
 - The embryo-to-phase ownership audit found and repaired one omission: the
   embryo's evolved classical excess energy was not retired during phase
@@ -22,19 +22,31 @@ Updated: 2026-09-13 (America/Los_Angeles)
   bulges, label symmetry, inherited orientation, content/energy/heat ledgers,
   no double processing, three restart locations, and the short matched ASB
   source regression.
-- A short 128x128 full-model replay selected the existing label 5/9 HAGB
-  (`23.474 deg`) with parent/child mean densities `1.405e17` and `4.250e15
-  m^-2`. The mean stored-energy drive was `160.90 MPa`, physical compatibility
-  opposition `2.39 MPa`, and the model critical radius `3.15 nm`; the declared
-  `250 nm` bulge grew over `2 us`. No new label or orientation was created.
-  The front line residual was `3.18e-22 m`, signed Burgers change was zero,
-  and line release equalled heat (`1.807e-14 J`). Classification:
-  `SIBM_SUPERCRITICAL_GROWTH` (local qualification).
-- Continuous four-step and 2+2-step restart trajectories are identical across
-  all 145 authoritative fields, treating matching unused `NaN` sentinels as
-  equal. The complete local suite passes 315 tests. The single preregistered
-  HPC3 existing-HAGB horizon is next; strict ASB qualification remains
-  separate and pending.
+- The single preregistered HPC3 run `20260914T021444Z-280bb7b-135b30`, job
+  `56001115`, completed 6000 steps in `37m22s`; its archive and all 80 internal
+  outputs verify. It is classified `SIBM_VALIDITY_FAILURE`, not growth
+  evidence: argmax adjacency selected unresolved label 9 and applied its
+  recovered state at every boundary. Label 9 consumed 88.3% of the domain
+  while the seeded connected-component amplitude stayed at half a cell.
+- The selector now requires independent pure cores and shared diffuse HAGB
+  support, and phase/front updates are restricted to one pair-local window.
+  The nominal 250 nm seed was also rejected as unresolved because it was
+  narrower than the `~316 nm` diffuse-interface width. A declared 750 nm seed
+  exceeds two interface widths; no mobility, energy, critical condition, or
+  mechanics parameter was changed.
+- The repaired 128x128 local continuation selects the resolved 3/5 HAGB
+  (`41.364 deg`, 57 and 5938 pure-core cells). Over 500 steps (`49.92 us`),
+  excess bulge area rises from `8.350e-13` to `1.501e-12 m2`, neck width from
+  `1.484` to `3.203 um`, and the inherited child area increases without a new
+  label or orientation. Final stored drive is `16.76 MPa`, physical
+  compatibility opposition `2.95 MPa`, and `Rc=36.2 nm`; the area velocity
+  has slowed to `2.79e-5 m/s` but remains positive. Local classification:
+  `SIBM_SUPERCRITICAL_GROWTH`.
+- The repaired front line residual is `1.32e-21 m`, signed Burgers change is
+  zero, and line release equals heat (`1.764e-13 J`). Continuous four-step and
+  2+2-step trajectories match exactly across 146 authoritative fields. The
+  complete suite passes 315 tests. No second HPC job was launched after the
+  validity failure. Strict ASB qualification remains separate and pending.
 
 ## Directive v9 decision: bulk Route-B precursor rejected
 

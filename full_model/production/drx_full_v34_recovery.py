@@ -68,6 +68,7 @@ from hazard_measure import (
     AreaHazardState, advance_area_hazard, exposure_statistics,
     initialize_area_hazard,
 )
+from sibm_boundary import select_resolved_hagb
 from phase_promotion import (
     atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
 )
@@ -731,7 +732,11 @@ P = dict(
     # existing labels and never allocates an orientation or grain identity.
     use_sibm_existing_boundary=False,
     sibm_min_misorientation_deg=15.0,
-    sibm_initial_bulge_radius_um=0.25,
+    # The seed must exceed two diffuse-interface widths (sqrt(kappa_eta/W_eta)
+    # ~=0.316 um at the frozen v34 settings); this is a representation
+    # resolution condition, not mobility or critical-radius tuning.
+    sibm_initial_bulge_radius_um=0.75,
+    sibm_active_window_radius_um=2.0,
     sibm_activation_h0_eV=0.35,
     sibm_activation_critical_pressure_Pa=1.0e9,
     sibm_activation_exp_a=2.0,
@@ -3366,6 +3371,7 @@ sibm_experiment_state = {}
 sibm_reference_parent_mask = None
 sibm_reference_child_fraction = None
 sibm_initial_child_fraction = None
+sibm_active_mask = None
 if (P.get('use_sparse_common_front_state', False) and _restart_loaded
         and not P.get('restart_reset_clock', True)):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
@@ -3403,7 +3409,7 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                 _sibm_geometry_keys = (
                     'sibm_reference_parent_mask',
                     'sibm_reference_child_fraction',
-                    'sibm_initial_child_fraction')
+                    'sibm_initial_child_fraction', 'sibm_active_mask')
                 if not all(key in _restart_npz.files for key in _sibm_geometry_keys):
                     raise ValueError('SIBM checkpoint omits reference geometry')
                 sibm_reference_parent_mask = np.asarray(
@@ -3412,6 +3418,8 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                     _restart_npz['sibm_reference_child_fraction'], dtype=float)
                 sibm_initial_child_fraction = np.asarray(
                     _restart_npz['sibm_initial_child_fraction'], dtype=float)
+                sibm_active_mask = np.asarray(
+                    _restart_npz['sibm_active_mask'], dtype=bool)
         elif atomic_promotion_commit_total:
             raise ValueError(
                 'promoted sparse-common restart omits phase-resolved front state')
@@ -3426,56 +3434,37 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     # Select the existing HAGB pair with the largest measured mean line-density
     # contrast.  Labels and orientations are inherited; selection is
     # deterministic and contains no stochastic trial orientation.
-    candidates = {}
-    for di, dj in ((1, 0), (0, 1)):
-        neigh = np.roll(lab, (-di, -dj), axis=(0, 1))
-        edge = lab != neigh
-        for a, b_ in zip(lab[edge], neigh[edge]):
-            pair = tuple(sorted((int(a), int(b_))))
-            candidates[pair] = candidates.get(pair, 0) + 1
     rho_for_sibm = _rho_total_state(rp, rm, rho_forest, rho_wall)
-    rho_mean = {g: float(np.mean(rho_for_sibm[lab == g])) for g in range(Ng)}
-    period = 0.5*np.pi
-    viable = []
-    for pair, edge_count in candidates.items():
-        delta = abs((float(psi_gv[pair[0]])-float(psi_gv[pair[1]])
-                     +0.5*period) % period-0.5*period)
-        if np.rad2deg(delta) >= float(P.get('sibm_min_misorientation_deg', 15.0)):
-            viable.append((abs(rho_mean[pair[0]]-rho_mean[pair[1]]),
-                           edge_count, pair, delta))
-    if not viable:
-        raise ValueError('no resolved existing HAGB satisfies the SIBM criterion')
-    _, edge_count, pair, misorientation = max(viable)
-    child_label = min(pair, key=lambda g: (rho_mean[g], g))
-    parent_label = max(pair, key=lambda g: (rho_mean[g], -g))
-    adjacent = np.zeros((Nx, Ny), dtype=bool)
-    child_mask = lab == child_label
-    for di, dj in ((-1,0),(1,0),(0,-1),(0,1)):
-        adjacent |= (lab == parent_label) & np.roll(child_mask, (di, dj), (0, 1))
-    points = np.argwhere(adjacent)
-    if points.size == 0:
-        raise RuntimeError('selected HAGB has no parent-side support')
-    centre_index = points[len(points)//2]
+    _pure_threshold = float(P.get('stored_energy_phase_purity', 0.80))
+    _pure_masks = [eta[:, :, g] >= _pure_threshold for g in range(Ng)]
+    _min_core_cells = max(int(P.get('sibm_min_pure_core_cells', 16)), 1)
+    _selection = select_resolved_hagb(
+        eta[:, :, :Ng], psi_gv[:Ng], rho_for_sibm,
+        purity_threshold=_pure_threshold,
+        min_pure_core_cells=_min_core_cells,
+        min_misorientation_deg=float(P.get('sibm_min_misorientation_deg', 15.0)))
+    parent_label, child_label = _selection.parent_label, _selection.child_label
+    edge_count = _selection.boundary_cells
+    misorientation = _selection.misorientation_rad
+    centre_index = np.asarray(_selection.centre_index, dtype=int)
     radius = float(P.get('sibm_initial_bulge_radius_um', 0.25))*1e-6
-    sibm_reference_parent_mask = lab == parent_label
+    _pair_domain_mask = (
+        eta[:, :, parent_label]+eta[:, :, child_label] > 0.70)
     _h_reference = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
     sibm_reference_child_fraction = (
         _h_reference[:, :, child_label]
         / np.maximum(np.sum(_h_reference, axis=2), 1e-300))
-    _child_neighbour_offsets = [
-        (di0, dj0) for di0, dj0 in ((-1,0),(1,0),(0,-1),(0,1))
-        if child_mask[(int(centre_index[0])+di0) % Nx,
-                      (int(centre_index[1])+dj0) % Ny]]
-    if not _child_neighbour_offsets:
-        raise RuntimeError('selected SIBM centre has no cardinal child neighbour')
-    _child_direction = _child_neighbour_offsets[0]
-    _advance_direction = [-int(_child_direction[0]), -int(_child_direction[1])]
+    _advance_direction = list(_selection.advance_direction_index)
     ii = np.arange(Nx)[:, None]; jj = np.arange(Ny)[None, :]
     di = np.minimum(np.abs(ii-centre_index[0]), Nx-np.abs(ii-centre_index[0]))*dx
     dj = np.minimum(np.abs(jj-centre_index[1]), Ny-np.abs(jj-centre_index[1]))*dy
+    _active_radius = float(P.get('sibm_active_window_radius_um', 1.0))*1e-6
+    sibm_active_mask = _pair_domain_mask & (np.sqrt(di*di+dj*dj) <= _active_radius)
+    sibm_reference_parent_mask = (
+        eta[:, :, parent_label] >= eta[:, :, child_label]) & sibm_active_mask
     bulge = 0.5*(1.0-np.tanh((np.sqrt(di*di+dj*dj)-radius)
                              /(np.sqrt(2.0)*max(np.sqrt(P['kappa_eta']/P['W_eta']), dx))))
-    bulge *= (lab == parent_label)
+    bulge *= sibm_reference_parent_mask
     transfer = bulge*eta[:, :, parent_label]
     eta[:, :, parent_label] -= transfer
     eta[:, :, child_label] += transfer
@@ -3485,7 +3474,7 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     hphase = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
     child_fraction = hphase[:, :, child_label]/np.maximum(np.sum(hphase, axis=2), 1e-300)
     sibm_initial_child_fraction = child_fraction.copy()
-    target_density = rho_mean[child_label]
+    target_density = _selection.child_mean_density_m2
     sparse_front_state = initialize_existing_boundary_front(
         DefectState(rp.copy(), rm.copy(), rho_forest.copy(), rho_wall.copy()),
         child_fraction, target_density, parent_label, child_label)
@@ -3494,9 +3483,13 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
         child_label=child_label, parent_orientation_rad=float(psi_gv[parent_label]),
         child_orientation_rad=float(psi_gv[child_label]),
         misorientation_rad=float(misorientation), edge_count=int(edge_count),
-        parent_mean_density_m2=rho_mean[parent_label],
-        child_mean_density_m2=rho_mean[child_label],
+        parent_mean_density_m2=_selection.parent_mean_density_m2,
+        child_mean_density_m2=_selection.child_mean_density_m2,
+        parent_pure_core_cells=_selection.parent_pure_core_cells,
+        child_pure_core_cells=_selection.child_pure_core_cells,
+        selection_basis='resolved pure cores plus shared diffuse HAGB support',
         initial_bulge_radius_m=radius,
+        active_window_radius_m=_active_radius,
         centre_index=[int(centre_index[0]), int(centre_index[1])],
         advance_direction_index=_advance_direction,
         metric_definition=(
@@ -3551,6 +3544,8 @@ def _update_sibm_geometry_metrics(child_fraction_now, dt_metric):
         bulge_amplitude_m=amplitude,
         neck_width_m=neck,
         area_equivalent_normal_velocity_m_s=float(velocity))
+    sibm_experiment_state.setdefault('initial_measured_bulge_amplitude_m', amplitude)
+    sibm_experiment_state.setdefault('initial_measured_neck_width_m', neck)
 
 
 if sibm_experiment_state:
@@ -5839,6 +5834,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                     sibm_reference_child_fraction, dtype=float),
                 'sibm_initial_child_fraction': np.asarray(
                     sibm_initial_child_fraction, dtype=float),
+                'sibm_active_mask': np.asarray(sibm_active_mask, dtype=np.uint8),
             } if globals().get('sibm_experiment_state', {}) else {}),
             **_potential_checkpoint_state(),
             **_sparse_front_checkpoint_state(),
@@ -6596,6 +6592,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                 deta_i = -P['dt'] * L_ac_eff * _sibm_factor * dFdei
             else:
                 deta_i = -P['dt'] * L_ac_eff * dFdei
+            if P.get('use_sibm_existing_boundary', False):
+                deta_i = np.where(sibm_active_mask, deta_i, 0.0)
             if P.get('use_ac_increment_limiter', True):
                 lim = float(P.get('ac_max_abs_step', 0.02))
                 deta_i = np.clip(deta_i, -lim, lim)

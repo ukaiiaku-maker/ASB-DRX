@@ -57,6 +57,69 @@ class BoundaryGraphState:
     ledger: BoundaryLedger = BoundaryLedger()
 
 
+@dataclass(frozen=True)
+class ResolvedHAGB:
+    parent_label: int
+    child_label: int
+    parent_mean_density_m2: float
+    child_mean_density_m2: float
+    parent_pure_core_cells: int
+    child_pure_core_cells: int
+    misorientation_rad: float
+    boundary_cells: int
+    boundary_band: np.ndarray
+    centre_index: tuple[int, int]
+    advance_direction_index: tuple[int, int]
+
+
+def select_resolved_hagb(eta, orientations_rad, density_m2, *,
+                         purity_threshold=0.8, min_pure_core_cells=16,
+                         min_misorientation_deg=15.0):
+    """Select a resolved HAGB without using unstable argmax-label edges."""
+    eta = np.asarray(eta, dtype=float)
+    orientations = np.asarray(orientations_rad, dtype=float)
+    density = np.asarray(density_m2, dtype=float)
+    if eta.ndim != 3 or density.shape != eta.shape[:2]:
+        raise ValueError("eta and density grids are inconsistent")
+    if orientations.shape != (eta.shape[2],):
+        raise ValueError("one orientation is required per phase")
+    pure = [eta[:, :, g] >= purity_threshold for g in range(eta.shape[2])]
+    resolved = [g for g, mask in enumerate(pure)
+                if int(np.sum(mask)) >= int(min_pure_core_cells)]
+    means = {g: float(np.mean(density[pure[g]])) for g in resolved}
+    period = 0.5*np.pi
+    viable = []
+    for ia, a in enumerate(resolved):
+        for b in resolved[ia+1:]:
+            band = ((eta[:, :, a] > 0.15) & (eta[:, :, b] > 0.15)
+                    & (eta[:, :, a]+eta[:, :, b] > 0.70))
+            count = int(np.sum(band))
+            mis = abs((orientations[a]-orientations[b]+0.5*period)
+                      % period-0.5*period)
+            if count >= 8 and np.rad2deg(mis) >= min_misorientation_deg:
+                viable.append((abs(means[a]-means[b]), count, (a, b), mis, band))
+    if not viable:
+        raise ValueError("no resolved existing HAGB satisfies the SIBM criterion")
+    _, count, pair, mis, band = max(
+        viable, key=lambda row: (row[0], row[1], row[2]))
+    child = min(pair, key=lambda g: (means[g], g))
+    parent = max(pair, key=lambda g: (means[g], -g))
+    difference = eta[:, :, child]-eta[:, :, parent]
+    gx = 0.5*(np.roll(difference, -1, axis=0)-np.roll(difference, 1, axis=0))
+    gy = 0.5*(np.roll(difference, -1, axis=1)-np.roll(difference, 1, axis=1))
+    magnitude = np.hypot(gx, gy)
+    centre = np.unravel_index(
+        int(np.argmax(np.where(band, magnitude, -np.inf))), band.shape)
+    if abs(gx[centre]) >= abs(gy[centre]):
+        advance = (-int(np.sign(gx[centre]) or 1), 0)
+    else:
+        advance = (0, -int(np.sign(gy[centre]) or 1))
+    return ResolvedHAGB(
+        parent, child, means[parent], means[child], int(np.sum(pure[parent])),
+        int(np.sum(pure[child])), float(mis), count, band,
+        (int(centre[0]), int(centre[1])), advance)
+
+
 def _derivatives_periodic(values, spacing_m):
     f = np.asarray(values, dtype=float)
     first = (np.roll(f, -1)-np.roll(f, 1))/(2.0*spacing_m)

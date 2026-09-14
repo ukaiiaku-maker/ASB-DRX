@@ -1,37 +1,43 @@
 {
   "boundary": {
+    "active_window_radius_m": 2e-06,
     "advance_direction_index": [
       0,
-      -1
+      1
     ],
-    "analytical_critical_radius_m": 3.1544750189104263e-09,
-    "area_equivalent_normal_velocity_m_s": 0.140574795430993,
-    "bulge_amplitude_m": 3.90625e-08,
+    "analytical_critical_radius_m": 3.6201416963075304e-08,
+    "area_equivalent_normal_velocity_m_s": 2.7927181638608748e-05,
+    "bulge_amplitude_m": 8.984375e-07,
     "centre_index": [
-      36,
-      77
+      92,
+      47
     ],
-    "child_label": 9,
-    "child_mean_density_m2": 4249648180403296.5,
-    "child_orientation_rad": -0.24509954683059576,
-    "current_child_area_m2": 9.527800823735607e-12,
-    "current_excess_bulge_area_m2": 2.7017772316785246e-13,
-    "edge_count": 16,
-    "initial_bulge_radius_m": 2.5e-07,
-    "initial_child_area_m2": 9.335451465186152e-12,
-    "initial_excess_bulge_area_m2": 1.331166179550077e-13,
+    "child_label": 5,
+    "child_mean_density_m2": 2.6957506496911533e+17,
+    "child_orientation_rad": 0.16458947727359474,
+    "child_pure_core_cells": 5938,
+    "current_child_area_m2": 5.930093020448361e-11,
+    "current_excess_bulge_area_m2": 1.5011941253529437e-12,
+    "edge_count": 643,
+    "initial_bulge_radius_m": 7.5e-07,
+    "initial_child_area_m2": 5.861806114465603e-11,
+    "initial_excess_bulge_area_m2": 8.349933086268297e-13,
+    "initial_measured_bulge_amplitude_m": 8.984375e-07,
+    "initial_measured_neck_width_m": 1.484375e-06,
     "metric_definition": "excess child support relative to the pre-bulge field, restricted to cells belonging to the selected parent at initialization",
-    "misorientation_rad": 0.4096890241041904,
-    "neck_width_m": 7.03125e-07,
-    "net_flat_boundary_drive_Pa": 158504980.0688239,
+    "misorientation_rad": 0.7219383198284389,
+    "neck_width_m": 3.2031250000000004e-06,
+    "net_flat_boundary_drive_Pa": 13811614.073283087,
     "numerical_penalty_in_migration_decision_J": 0.0,
-    "parent_label": 5,
-    "parent_mean_density_m2": 1.4048538972439352e+17,
-    "parent_orientation_rad": 0.16458947727359474,
-    "physical_compatibility_pressure_Pa": 2393111.627114748,
-    "physical_compatibility_pressure_max_Pa": 26710958.004001558,
+    "parent_label": 3,
+    "parent_mean_density_m2": 3.0535875662692614e+17,
+    "parent_orientation_rad": -0.5573488425548442,
+    "parent_pure_core_cells": 57,
+    "physical_compatibility_pressure_Pa": 2951114.906048375,
+    "physical_compatibility_pressure_max_Pa": 32590746.551080033,
     "schema": "full-v34-sibm-existing-HAGB/v2",
-    "stored_energy_drive_Pa": 160898091.69593865
+    "selection_basis": "resolved pure cores plus shared diffuse HAGB support",
+    "stored_energy_drive_Pa": 16762728.979331462
   },
   "checks": {
     "bulge_area_grew": true,
@@ -49,37 +55,37 @@
   },
   "classification": "SIBM_SUPERCRITICAL_GROWTH",
   "final_checkpoint": {
-    "path": "/tmp/full-v34-v10-sibm-physical-final/drx_v25_restart_006920.npz",
-    "sha256": "03dcd6a131702cf09960c2d5948eea0e5785bb9e574c514f4012199c5a403e58",
-    "step": 6920
+    "path": "/tmp/full-v34-v10-sibm-resolved35-record/run500/drx_v25_restart_007400.npz",
+    "sha256": "09db1291a9de77e51617782b658ed8bb97ced9c22d0759f0c87d0393b8bf7ab0",
+    "step": 7400
   },
   "fixture_passed": true,
   "front_ledger": {
-    "boundary_line_stored_m": 6.26253861293471e-07,
-    "child_line_transmitted_m": 4.2788626533642646e-07,
-    "heat_released_J": 1.8069021614902263e-14,
-    "line_closure_m": 3.1763735522036263e-22,
-    "line_energy_released_J": 1.8069021614902263e-14,
-    "neutral_pair_annihilated_m": 1.1365353829117551e-05,
-    "parent_line_processed_m": 1.2663910167126319e-05,
+    "boundary_line_stored_m": 6.050338806179905e-06,
+    "child_line_transmitted_m": 1.9560457235353775e-05,
+    "heat_released_J": 1.764192735284244e-13,
+    "line_closure_m": 1.315217173959314e-21,
+    "line_energy_released_J": 1.764192735284244e-13,
+    "neutral_pair_annihilated_m": 0.00011100020262103599,
+    "parent_line_processed_m": 0.00013899809979420473,
     "signed_burgers_change_m2": 0.0,
-    "sink_line_m": 2.4441621137887205e-07,
-    "swept_volume_m3": 9.693606022345701e-23
+    "sink_line_m": 2.387101131635184e-06,
+    "swept_volume_m3": 3.6253971911166894e-22
   },
   "numerical_compatibility_penalty": {
-    "alpha_J": 193.7280584596544,
+    "alpha_J": 362.37155177813736,
     "converted_to_heat": false,
     "enters_migration_decision": false,
-    "gb_J": 120.10644239792337
+    "gb_J": 224.1243284677906
   },
   "physical_compatibility": {
     "basis": "line-tension price of signed-GND and Frank-Bilby residuals",
-    "maximum_pressure_Pa": 26710958.004001558,
-    "mean_pressure_Pa": 2393111.627114748
+    "maximum_pressure_Pa": 32590746.551080033,
+    "mean_pressure_Pa": 2951114.906048375
   },
-  "physical_horizon_s": 1.9999999999989644e-06,
+  "physical_horizon_s": 4.992183446500206e-05,
   "restart": {
-    "authoritative_field_count": 145,
+    "authoritative_field_count": 146,
     "comparison": "4 continuous steps versus 2+2 steps",
     "excluded_field": "P_json (continuation nSteps/restart path metadata)",
     "mismatched_fields": [],

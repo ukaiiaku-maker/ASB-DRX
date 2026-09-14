@@ -8,6 +8,12 @@ orientation and lineage.  Its defect state uses the v9 virgin-parent,
 active-child, recovered-wake, current-fraction, and maximum-swept-fraction
 representation.
 
+An argmax-label contact is insufficient evidence for an existing boundary in
+a diffuse multiphase field.  Both phases must have independent `eta>=0.8` pure
+cores and share a resolved diffuse pair band.  The deterministic experiment
+then freezes phase evolution outside one declared pair-local circular window.
+Its seed radius must exceed two `sqrt(kappa_eta/W_eta)` interface widths.
+
 For a graph fixture with height `h(x)` and represented thickness `t`, the
 declared free energy is
 
@@ -68,6 +74,12 @@ Bulge amplitude and neck width are measured on the four-connected excess-child
 component seeded at the declared boundary point, relative to the pre-bulge
 field and restricted to the original parent support.  Area-equivalent normal
 velocity is the increment of that excess area divided by neck width and time.
+
+The first HPC3 run predates the resolved-core/pair-window rule.  It is retained
+as `SIBM_VALIDITY_FAILURE`: an unresolved argmax phase was allowed to consume
+the domain while the seeded component did not advance.  It is not SIBM growth
+evidence.  The corrected pair-scoped implementation is locally qualified; no
+second HPC job was launched in v10.
 
 The deterministic fixture record is
 `full_model/verification/v10_sibm_local_fixtures.json`; the short full-model
