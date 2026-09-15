@@ -71,6 +71,14 @@
         "rms_m1": 2666.9871965877146,
         "maximum_m1": 13937.88183481439
       },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 5099.896057020874,
+        "total_alpha_rms_m1": 2666.9871965877146,
+        "total_to_wall_rms_ratio": 0.5229493242153737,
+        "mean_tensor_cosine": -0.57905703954607,
+        "p95_uncancelled_fraction": 0.909708499133917,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
+      },
       "orientation": {
         "span_deg": 0.0646646010701516,
         "p95_minus_p05_deg": 0.02694430058717962,
@@ -200,6 +208,14 @@
         "line_divergence_relative_rms": 5.458320868320272e-15,
         "rms_m1": 1472.7148000154518,
         "maximum_m1": 16423.414266860487
+      },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 2850.0040917724555,
+        "total_alpha_rms_m1": 1472.7148000154518,
+        "total_to_wall_rms_ratio": 0.5167412932026884,
+        "mean_tensor_cosine": -0.29336337873126234,
+        "p95_uncancelled_fraction": 0.8372874513227903,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
       },
       "orientation": {
         "span_deg": 0.06755538546468494,
@@ -331,6 +347,14 @@
         "rms_m1": 1316.8210662988697,
         "maximum_m1": 16403.55684501648
       },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 3358.0533434934246,
+        "total_alpha_rms_m1": 1316.8210662988697,
+        "total_to_wall_rms_ratio": 0.39213822164271056,
+        "mean_tensor_cosine": -0.4651249230313054,
+        "p95_uncancelled_fraction": 0.5967721496956788,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
+      },
       "orientation": {
         "span_deg": 0.06571234590103951,
         "p95_minus_p05_deg": 0.019422277107626007,
@@ -460,6 +484,14 @@
         "line_divergence_relative_rms": 5.364301633145735e-15,
         "rms_m1": 2673.8485202793913,
         "maximum_m1": 13935.103497175953
+      },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 5120.01244852344,
+        "total_alpha_rms_m1": 2673.8485202793913,
+        "total_to_wall_rms_ratio": 0.5222347693803953,
+        "mean_tensor_cosine": -0.5793078325581983,
+        "p95_uncancelled_fraction": 0.9088080208780265,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
       },
       "orientation": {
         "span_deg": 0.06470132241395404,
@@ -591,6 +623,14 @@
         "rms_m1": 3373.794693866886,
         "maximum_m1": 10856.419765520473
       },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 5799.416165787017,
+        "total_alpha_rms_m1": 3373.794693866886,
+        "total_to_wall_rms_ratio": 0.5817472996282275,
+        "mean_tensor_cosine": -0.6285364024876356,
+        "p95_uncancelled_fraction": 0.9991146284298497,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
+      },
       "orientation": {
         "span_deg": 0.06693284448744612,
         "p95_minus_p05_deg": 0.026648952840171256,
@@ -720,6 +760,14 @@
         "line_divergence_relative_rms": 1.91176242322494e-15,
         "rms_m1": 2838.4284580458407,
         "maximum_m1": 8095.333466634717
+      },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 5327.279227319903,
+        "total_alpha_rms_m1": 2838.4284580458407,
+        "total_to_wall_rms_ratio": 0.5328101525990075,
+        "mean_tensor_cosine": -0.5713214427741062,
+        "p95_uncancelled_fraction": 0.915152732967001,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
       },
       "orientation": {
         "span_deg": 0.02568142080814103,
@@ -851,6 +899,14 @@
         "rms_m1": 1173.338278027349,
         "maximum_m1": 12474.399829422237
       },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 76.39230926433825,
+        "total_alpha_rms_m1": 1173.338278027349,
+        "total_to_wall_rms_ratio": 15.359377001777471,
+        "mean_tensor_cosine": -0.18370361091269882,
+        "p95_uncancelled_fraction": 73.30195833631544,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
+      },
       "orientation": {
         "span_deg": 0.057199444999505335,
         "p95_minus_p05_deg": 0.021870767963629044,
@@ -980,6 +1036,14 @@
         "line_divergence_relative_rms": 3.306128287561467e-15,
         "rms_m1": 2659.9084172754065,
         "maximum_m1": 13940.062625465145
+      },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 5079.6435377653015,
+        "total_alpha_rms_m1": 2659.9084172754065,
+        "total_to_wall_rms_ratio": 0.5236407628802996,
+        "mean_tensor_cosine": -0.5788199650159387,
+        "p95_uncancelled_fraction": 0.9099808629762138,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
       },
       "orientation": {
         "span_deg": 0.06462484035093355,

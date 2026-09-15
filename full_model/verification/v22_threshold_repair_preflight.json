@@ -1,0 +1,298 @@
+{
+  "schema": "asb-drx/v22-long-wall-postprocess/v1",
+  "cases": [
+    {
+      "case": "exact_zero_32",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_000499.npz",
+      "checkpoint_count": 6,
+      "final_step": 499,
+      "physical_time_s": 4.999999999999962e-06,
+      "axial_strain": 0.050000000000000405,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696909533.7405561,
+          696909533.7405562,
+          697038725.2690164,
+          696834700.5417068
+        ],
+        "final_unsigned_m2_by_family": [
+          3925500528488.032,
+          3923276082269.698,
+          23870893239286.453,
+          391364135128.0495
+        ],
+        "delta_unsigned_m2_by_family": [
+          3924803618954.294,
+          3922579172735.9604,
+          23870196200561.21,
+          390667300427.5082
+        ],
+        "initial_signed_m2_by_family": [
+          -2866.3394660464837,
+          3316.417027328862,
+          2409.3193338850397,
+          -160.2371694818139
+        ],
+        "final_signed_m2_by_family": [
+          -180461088.8294139,
+          29724835.69831395,
+          96288502.79079819,
+          -5225397.250947177
+        ],
+        "delta_signed_m2_by_family": [
+          -180458222.4899474,
+          29721519.281286605,
+          96286093.4717497,
+          -5225237.013777714
+        ]
+      },
+      "wall_order": {
+        "mean": 0.0,
+        "maximum": 0.0,
+        "standard_deviation": 0.0
+      },
+      "wall_polarization": {
+        "mean": 0.01024065695534183,
+        "maximum": 0.05965900946363557,
+        "gate_mean": 0.0002348499149978284,
+        "gate_maximum": 0.004980154761033438
+      },
+      "multi_hit": {
+        "mean": 0.03651002554673528,
+        "maximum": 0.03839289204381658
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 3.1907711858314826e-13,
+        "line_divergence_relative_rms": 2.4609098222201694e-15,
+        "rms_m1": 930.4937681014145,
+        "maximum_m1": 5440.7095863550385
+      },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 106.75996701380727,
+        "total_alpha_rms_m1": 930.4937681014145,
+        "total_to_wall_rms_ratio": 8.715755485209861,
+        "mean_tensor_cosine": -0.18740880563252588,
+        "p95_uncancelled_fraction": 40.19326812348977,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
+      },
+      "orientation": {
+        "span_deg": 0.04885941918750032,
+        "p95_minus_p05_deg": 0.02075071403940586,
+        "gradient_rms_deg_m": 9923.536043189779
+      },
+      "structure_factor": {
+        "mode_index": [
+          0,
+          1
+        ],
+        "wavelength_m": 1e-05,
+        "peak_power_fraction": 0.06650243369718083
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 18,
+        "transverse_index": 16,
+        "left_orientation_rad": 0.4220591857334238,
+        "right_orientation_rad": 0.4220541769762224,
+        "orientation_closure_vector": [
+          2.0517748899884225e-06,
+          -4.569230624917875e-06,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          5.816031368793824e-05,
+          -2.130974652510484e-05,
+          -4.615023254209443e-05
+        ],
+        "absolute_residual": 7.455371863518844e-05,
+        "relative_residual": 14.884674109159663,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.0005703515852588379,
+        "collision_frequency_s": 0.04440500243618898,
+        "coordination": 0.03651002554673527,
+        "junction_turnover": 0.0037004168696824174,
+        "lock_minus_turnover": 0.05722058886838149,
+        "lock_plus_turnover": 0.057219368936973096,
+        "multiplication_pairs": 2.5502687556474157e-09,
+        "order": 0.0,
+        "wall_minus_turnover": 0.04460396469314412,
+        "wall_plus_turnover": 0.04460259108169797
+      },
+      "balance_ledger": {
+        "accepted_steps": 500,
+        "cumulative_free_energy_change_J_m3": -12974.048170597503,
+        "cumulative_heat_J_m3": 99219467.55182198,
+        "cumulative_plastic_work_J_m3": 99206493.50365138,
+        "maximum_relative_burgers_rate_residual": 7.567827258187414e-17,
+        "maximum_relative_energy_balance_residual": 4.897151482570216e-18,
+        "maximum_relative_line_balance_residual": 1.8633012505213265e-16,
+        "minimum_accept_scale": 1.0
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "NO_COMPATIBLE_LAGB_OBSERVED"
+    },
+    {
+      "case": "fixed_1e-6_perturbation_32",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_000499.npz",
+      "checkpoint_count": 6,
+      "final_step": 499,
+      "physical_time_s": 3.966641222699583e-06,
+      "axial_strain": 0.0396664122269962,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696909533.7405561,
+          696909533.7405562,
+          697038725.2690164,
+          696834700.5417068
+        ],
+        "final_unsigned_m2_by_family": [
+          3284892569837.0195,
+          3286797296725.2188,
+          25934574431426.234,
+          403332940759.72375
+        ],
+        "delta_unsigned_m2_by_family": [
+          3284195660303.2803,
+          3286100387191.471,
+          25933877392701.0,
+          402636106059.18207
+        ],
+        "initial_signed_m2_by_family": [
+          -2866.3394660464837,
+          3316.417027328862,
+          2409.3193338850397,
+          -160.2371694818139
+        ],
+        "final_signed_m2_by_family": [
+          -47938061427.38416,
+          -22402978209.208267,
+          -408926043084.58563,
+          -3904210231.2766933
+        ],
+        "delta_signed_m2_by_family": [
+          -47938058561.04474,
+          -22402981525.625305,
+          -408926045493.90314,
+          -3904210071.039517
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999813637811668,
+        "maximum": 0.999983591474842,
+        "standard_deviation": 5.715211403694775e-07
+      },
+      "wall_polarization": {
+        "mean": 0.7922642093065699,
+        "maximum": 0.8435514265142666,
+        "gate_mean": 0.4630006582437366,
+        "gate_maximum": 0.5104023819372167
+      },
+      "multi_hit": {
+        "mean": 0.0260178381146784,
+        "maximum": 0.027714717218658085
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 5.814265543377136e-14,
+        "line_divergence_relative_rms": 1.0514455305227755e-15,
+        "rms_m1": 3371.037838312653,
+        "maximum_m1": 9379.65603765172
+      },
+      "wall_to_total_nye_compatibility": {
+        "wall_alpha_rms_m1": 6466.874437405202,
+        "total_alpha_rms_m1": 3371.037838312653,
+        "total_to_wall_rms_ratio": 0.5212777626876677,
+        "mean_tensor_cosine": -0.6397658485667927,
+        "p95_uncancelled_fraction": 0.8786127023608903,
+        "interpretation": "A small total-to-wall ratio identifies cancellation by other signed reservoirs; wall polarization alone is not a compatible boundary."
+      },
+      "orientation": {
+        "span_deg": 0.0805427142398061,
+        "p95_minus_p05_deg": 0.05031115155186907,
+        "gradient_rms_deg_m": 30732.978736149977
+      },
+      "structure_factor": {
+        "mode_index": [
+          31,
+          4
+        ],
+        "wavelength_m": 2.42535625036333e-06,
+        "peak_power_fraction": 0.007124394811338946
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 0,
+        "section_index": 14,
+        "transverse_index": 21,
+        "left_orientation_rad": 0.426202510273385,
+        "right_orientation_rad": 0.4261623434667663,
+        "orientation_closure_vector": [
+          3.657390813793793e-05,
+          1.6604866673652907e-05,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          0.0013179328470800783,
+          -0.0005305492951208254,
+          -0.0010435708264072497
+        ],
+        "absolute_residual": 0.0017407752516922614,
+        "relative_residual": 43.3386519454141,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.00046616739922727106,
+        "collision_frequency_s": 0.030248447579272374,
+        "coordination": 0.026017838114678418,
+        "junction_turnover": 0.0025207039649393624,
+        "lock_minus_turnover": 0.04342311381022103,
+        "lock_plus_turnover": 0.0436215965297134,
+        "multiplication_pairs": 1.8944294025319377e-09,
+        "order": 1.0000033342151777,
+        "wall_minus_turnover": 0.01925106230028522,
+        "wall_plus_turnover": 0.01907817752809864
+      },
+      "balance_ledger": {
+        "accepted_steps": 500,
+        "cumulative_free_energy_change_J_m3": -5118717226.163707,
+        "cumulative_heat_J_m3": 5190452321.207599,
+        "cumulative_plastic_work_J_m3": 71735095.0438925,
+        "maximum_relative_burgers_rate_residual": 6.547695250084455e-17,
+        "maximum_relative_energy_balance_residual": 4.901946555784965e-18,
+        "maximum_relative_line_balance_residual": 1.4507562838238175e-16,
+        "minimum_accept_scale": 0.09570218028989728
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    }
+  ],
+  "fixture_passed": true,
+  "classification": "THRESHOLD_SMOOTHSTEP_REPAIR_REJECTED_UNDER_FIXED_PERTURBATION",
+  "scientific_gate_passed": false,
+  "decision_evidence": {
+    "complete_case_count": 2,
+    "ordering_enabled_uniform_case_count": 1,
+    "frank_bilby_candidate_count": 0,
+    "order_disabled_control_passed": false,
+    "maximum_orientation_span_deg": 0.0805427142398061,
+    "minimum_uniform_order_mean": 0.9999813637811668,
+    "maximum_uniform_order_standard_deviation": 5.715211403694775e-07,
+    "wall_spacing_grid_domain_convergence": "NOT_EVALUABLE_NO_WALL",
+    "release_test": "NOT_TRIGGERED_NO_PRECURSOR"
+  },
+  "candidate_change": "Replace h(q)=q(2-q) by h(q)=q^2(3-2q) without changing the objective wall gate or mobility.",
+  "candidate_decision": "Exact q=0 is invariant, but a fixed 1e-6 perturbation reaches nearly uniform q=0.999981 at 3.97 percent strain without a Frank-Bilby wall. The interpolation-only repair is rejected and is not production source.",
+  "claim_boundary": "This rejects only the interpolation-only threshold candidate. It does not reject a compactly thresholded physical gate, a ledgered wall-formation trigger, or intragranular DRX in general."
+}

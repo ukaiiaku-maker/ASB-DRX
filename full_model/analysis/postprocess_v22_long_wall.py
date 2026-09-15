@@ -120,6 +120,11 @@ def summarize_case(case, plot_dir):
         nye = consistency_metrics(
             tensorial, systems, final.orientation_rad, parameters.spacing_m)
         alpha_norm = np.linalg.norm(nye["alpha_rho_m1"], axis=(-2, -1))
+        wall_alpha = np.asarray(invariants["wall_alpha_m1"])
+        wall_alpha_norm = np.linalg.norm(wall_alpha, axis=(-2, -1))
+        overlap = np.sum(wall_alpha*nye["alpha_rho_m1"], axis=(-2, -1))
+        cosine = overlap/np.maximum(wall_alpha_norm*alpha_norm, 1e-300)
+        uncancelled = alpha_norm/np.maximum(wall_alpha_norm, 1e-300)
         orientation_deg = np.rad2deg(
             final.orientation_rad-np.mean(final.orientation_rad))
         wall_signed = np.sum(final.wall_plus_m2-final.wall_minus_m2, axis=2)
@@ -153,6 +158,21 @@ def summarize_case(case, plot_dir):
                     "line_divergence_relative_rms": nye["relative_divergence_rms"],
                     "rms_m1": float(np.sqrt(np.mean(alpha_norm**2))),
                     "maximum_m1": float(np.max(alpha_norm))},
+            "wall_to_total_nye_compatibility": {
+                "wall_alpha_rms_m1": float(np.sqrt(np.mean(
+                    wall_alpha_norm**2))),
+                "total_alpha_rms_m1": float(np.sqrt(np.mean(alpha_norm**2))),
+                "total_to_wall_rms_ratio": float(
+                    np.sqrt(np.mean(alpha_norm**2))/max(
+                        np.sqrt(np.mean(wall_alpha_norm**2)), 1e-300)),
+                "mean_tensor_cosine": float(np.mean(cosine)),
+                "p95_uncancelled_fraction": float(np.percentile(
+                    uncancelled, 95)),
+                "interpretation": (
+                    "A small total-to-wall ratio identifies cancellation by "
+                    "other signed reservoirs; wall polarization alone is not "
+                    "a compatible boundary."),
+            },
             "orientation": {
                 "span_deg": float(np.ptp(orientation_deg)),
                 "p95_minus_p05_deg": float(np.percentile(orientation_deg, 95)

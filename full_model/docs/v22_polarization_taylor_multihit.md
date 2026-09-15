@@ -83,10 +83,10 @@ The differentiable friction map used by the same nonlinear residual and JVP is
 \]
 
 It is odd, is zero at zero drive, never reverses the drive, and reduces exactly
-to (	au) when (alpha_T=0). The EXP-floor activation enthalpy is evaluated
-at (|\tau_{\rm eff}|), and signed velocity uses
-(\tanh(\tau_{\rm eff}/\tau_c)). Thus both
-(\tau\dot\gamma\ge0) and (\tau_{\rm eff}\dot\gamma\ge0). Raw mechanical
+to \(\tau\) when \(\alpha_T=0\). The EXP-floor activation enthalpy is evaluated
+at \(|\tau_{\rm eff}|\), and signed velocity uses
+\(\tanh(\tau_{\rm eff}/\tau_c)\). Thus both
+\(\tau\dot\gamma\ge0\) and \(\tau_{\rm eff}\dot\gamma\ge0\). Raw mechanical
 power supplies the energy ledger; Taylor friction contributes to heat rather
 than a hidden stored-energy reservoir.
 
@@ -146,3 +146,19 @@ invariant-interval kinetics plus the \(10^{-12}\) numerical active set.
 Local thermodynamic, dissipation, balance, symmetry, JVP, and bitwise restart
 fixtures pass. These fixtures authorize a long nonlinear campaign but do not
 constitute a scientific DRX result. Grain/phase allocation remains disabled.
+
+## Long-campaign decision and rejected threshold candidate
+
+The completed 64/128-grid, 10/12.7-micrometre campaign returned nearly uniform
+order in every ordering-enabled branch, with no one-degree Frank--Bilby wall
+candidate. The order-disabled control remained exactly at zero. The V22
+decision is therefore `WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL`; this rejects
+the present ordering handoff, not intragranular DRX in general.
+
+Replacing only \(h(q)=q(2-q)\) by \(h(q)=q^2(3-2q)\) was tested and rejected.
+Exact \(q=0\) became invariant, but a fixed \(10^{-6}\) perturbation still
+bootstrapped to nearly uniform order by four-percent strain without a physical
+wall. That candidate was not retained in production. A subsequent repair must
+threshold the physical gate itself or introduce a thermodynamically ledgered
+physical wall-formation trigger; changing mobility or relying on exact-zero
+initialization is not acceptable.
