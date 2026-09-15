@@ -6326,6 +6326,8 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                 'v20_last_tau_effective', np.zeros((Nx, Ny, nSlip))),
             v20_last_gdot=globals().get(
                 'v20_last_gdot', np.zeros((Nx, Ny, nSlip))),
+            asb_last_gdot_abs=globals().get(
+                'asb_last_gdot_abs', np.zeros((Nx, Ny))),
             v20_last_wall_order_target=globals().get(
                 'v20_last_wall_order_target', np.zeros((Nx, Ny))),
             v20_last_wall_order_rate_s=globals().get(
@@ -7311,6 +7313,9 @@ for n in range(_restart_step_offset, _restart_end_step):
                    _storage_rate_field=KM_storage_rate_total,
                    _anni_rate_field=KM_anni_rate_total,
                    _diffrec_rate_field=diffrec_rate_field)
+    # Preserve the exact field used by the online ASB diagnostics. Matched
+    # histories must not reconstruct plastic rate through a parallel law.
+    asb_last_gdot_abs = km_diag['_gdot_abs_field'].copy()
 
     # --- CAHN-HILLIARD (VARIATIONAL: dF/dr) ---
     rho_before_ch = rho.copy()
