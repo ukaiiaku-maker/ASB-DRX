@@ -77,6 +77,10 @@ def case_record(directory: Path) -> dict:
                                experiment.get("stored_energy_drive_Pa", np.nan))),
             "final_stored_energy_drive_Pa": float(
                 experiment.get("stored_energy_drive_Pa", np.nan)),
+            "final_physical_compatibility_pressure_Pa": float(
+                experiment.get("physical_compatibility_pressure_Pa", np.nan)),
+            "final_net_flat_boundary_drive_Pa": float(
+                experiment.get("net_flat_boundary_drive_Pa", np.nan)),
             "applied_external_pressure_Pa": float(
                 experiment.get("applied_continuation_pressure_Pa", 0.0)),
             "final_strain": float(rows[-1]["strain"]),
@@ -107,8 +111,8 @@ def main() -> None:
                           for item in records.values())
     directional = bool(
         equal["amplitude_change_m"] < 0.0
-        and favorable["amplitude_change_m"] > equal["amplitude_change_m"]
-        and reverse["amplitude_change_m"] < favorable["amplitude_change_m"])
+        and favorable["amplitude_change_m"] > 0.0
+        and reverse["amplitude_change_m"] < 0.0)
     curvature = large["amplitude_change_m"] > small["amplitude_change_m"]
     rehardening = (deformation["final_child_mean_density_m2"]
                    > 1.01*deformation["initial_child_mean_density_m2"])
