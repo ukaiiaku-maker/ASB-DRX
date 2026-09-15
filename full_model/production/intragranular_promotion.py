@@ -9,7 +9,7 @@ import numpy as np
 from scipy import ndimage
 
 from .dislocation_free_energy import phase_owned_free_energy_J_m3
-from .moving_front import DefectState, advance_front, initialize_sparse_front
+from .moving_front import DefectState, initialize_existing_subgrain_front
 from .stored_energy_coupling import common_variational_stored_energy
 
 
@@ -57,19 +57,10 @@ def promote_qualified_subgrain(state, recognition, intragranular_parameters,
     )
     total = (np.sum(state.mobile_plus_m2+state.mobile_minus_m2+state.forest_m2
                     +state.wall_plus_m2+state.wall_minus_m2, axis=0))
-    target = float(np.mean(total[interior]))
-    front = initialize_sparse_front(parent, np.zeros_like(support), target, 0, 1)
+    front = initialize_existing_subgrain_front(parent, support, 0, 1)
     spacing = intragranular_parameters.domain_m/support.shape[0]
     thickness = (2.0*intragranular_parameters.burgers_m
                  if represented_thickness_m is None else float(represented_thickness_m))
-    line_energy = free_energy_parameters.line_coefficient_J_m
-    front, _ = advance_front(
-        front, support, cell_area_m2=spacing**2,
-        represented_thickness_m=thickness, line_energy_J_m=line_energy,
-        transmission_fraction=0.50, boundary_storage_fraction=0.05,
-        sink_fraction=0.02,
-    )
-
     parent_wall = np.sum(state.wall_plus_m2+state.wall_minus_m2, axis=0)
     parent_energy = phase_owned_free_energy_J_m3(
         total, parent_wall, free_energy_parameters)
@@ -81,10 +72,10 @@ def promote_qualified_subgrain(state, recognition, intragranular_parameters,
     volume = spacing**2*thickness
     before = float(np.sum(parent_energy)*volume)
     after = float(np.sum(mixture)*volume)
-    # The handoff cannot be used to manufacture an uphill phase state.
+    # Phase allocation is a representation change, not a cleanup event.
     tolerance = 256.0*math.ulp(max(abs(before), abs(after), 1e-300))
-    if after > before+tolerance:
-        raise ValueError("intragranular phase handoff would increase common defect energy")
+    if abs(after-before) > tolerance:
+        raise ValueError("intragranular representation handoff changed common defect energy")
     return IntragranularPromotion(
         eta, orientations, 0, 1, inherited, before, after,
         float(np.max(np.abs(np.sum(eta, axis=2)-1.0))), front,

@@ -103,6 +103,38 @@ P = dict(
     # -- Grid --
     Nx=128, Ny=128, L_phys=10.0e-6,
 
+    # -- V19 unforced one-grain mechanics qualification (off by default) --
+    # These switches alter initial/mechanical conditions only.  They never
+    # prescribe orientation, wall content, recovery support, or phase support.
+    v19_one_grain_mode=False,
+    v19_density_noise_fraction=0.0,
+    v19_signed_noise_fraction=0.0,
+    v19_noise_seed=1901,
+    v19_noise_min_wavelength_um=0.50,
+    v19_mechanical_heterogeneity='none',  # 'none' or 'eigenstrain_particle'
+    v19_particle_center_fraction=(0.50, 0.50),
+    v19_particle_radius_um=0.75,
+    v19_particle_interface_um=0.15,
+    v19_particle_eigenstrain_11=0.004,
+    v19_particle_eigenstrain_22=-0.004,
+    v19_particle_eigenstrain_12=0.0,
+    v19_predictive_wall_enabled=False,
+    v19_wall_attempt_frequency_s=1.0e7,
+    v19_wall_capture_G0_eV=0.80,
+    v19_wall_release_G0_eV=1.10,
+    v19_wall_annihilation_G0_eV=1.20,
+    v19_wall_order_G0_eV=0.70,
+    v19_wall_critical_stress_Pa=1.50e9,
+    v19_wall_exp_a=2.20,
+    v19_wall_exp_n=2.50,
+    v19_wall_exp_floor=0.05,
+    v19_wall_capture_efficiency=0.20,
+    v19_wall_junction_efficiency=0.05,
+    v19_wall_junction_G0_eV=0.85,
+    v19_wall_release_efficiency=0.02,
+    v19_wall_annihilation_efficiency=0.02,
+    v19_wall_order_density_fraction=0.20,
+
     # -- Material (BCC iron) --
     b=2.48e-10,
     C11=228e9, C12=132e9, C44=116.5e9,
@@ -975,6 +1007,22 @@ def _lattice_diffusive_recovery_rate(rho_total, Tfield):
     rate = np.where(np.isfinite(rate), rate, 0.0)
     return np.maximum(rate, 0.0), D_L, arg
 
+
+def _v19_wall_rate_field(tau_field, temperature_field, barrier_key):
+    """EXP-floor signed-wall event rate [s^-1] for the production V19 branch."""
+    tau = np.abs(np.asarray(tau_field, dtype=float))
+    TT = np.maximum(np.asarray(temperature_field, dtype=float), 1.0)
+    G0 = float(P.get(barrier_key, 1.0))*eV_J
+    critical = max(float(P.get('v19_wall_critical_stress_Pa', 1.5e9)), 1.0)
+    a = max(float(P.get('v19_wall_exp_a', 2.2)), 0.0)
+    n = max(float(P.get('v19_wall_exp_n', 2.5)), 1.0)
+    floor = np.clip(float(P.get('v19_wall_exp_floor', .05)), 0.0, 1.0)
+    enthalpy = G0*(floor+(1.0-floor)*np.exp(-a*(tau/critical)**n))
+    entropy = float(P.get('wall_activation_entropy_kB', 0.0))
+    free_barrier = enthalpy-kB_J*TT*entropy
+    return float(P.get('v19_wall_attempt_frequency_s', 1e7))*\
+        _activation_exponential_from_free_barrier(free_barrier, TT)
+
 # env override
 _ov = os.environ.get('DRX_PARAMS', '')
 if _ov:
@@ -985,6 +1033,19 @@ if _ov:
         raise SystemExit(f"Invalid DRX_PARAMS JSON: {exc}. First 240 chars: {_ov[:240]!r}") from exc
     except Exception as exc:
         raise SystemExit(f"Could not apply DRX_PARAMS override: {exc}. First 240 chars: {_ov[:240]!r}") from exc
+
+if P.get('v19_one_grain_mode', False):
+    # Qualification policy: one physical crystal and no route capable of
+    # allocating a grain/phase label.  The rejected orientation-targeted GND
+    # transfer and unvalidated collective DD closure are disabled explicitly.
+    P.update(poly_n=1, disable_nucleation=True, use_hazard_nucleation=False,
+             use_stateful_embryos=False, use_component_relabel=False,
+             use_signed_gnd_feedback=False, use_collective_taylor=False,
+             collective_taylor_mode='off')
+    if P.get('v19_predictive_wall_enabled', False):
+        # The V27 collective conversion is not a signed source ledger and is
+        # therefore mutually exclusive with the V19 predictive wall operator.
+        P['use_collective_organization'] = False
 
 _entropy_names = (
     'glide_activation_entropy_kB', 'recovery_activation_entropy_kB',
@@ -1856,7 +1917,8 @@ class ATPotential:
         """Selected variational potential Φ(ρ) [J/m³] from the v14 table."""
         return s._interp_log(np.maximum(np.asarray(rho, dtype=float), s.rmin), s.Phi_tab)
 
-    def phase_owned_free_energy(s, rho, temperature_K=None, wall_density_m2=None):
+    def phase_owned_free_energy(s, rho, temperature_K=None, wall_density_m2=None,
+                                wall_order=None):
         """Complete v34 defect energy used by the common phase functional."""
         params = DislocationFreeEnergyParameters(
             line_coefficient_J_m=s.A1,
@@ -1875,9 +1937,15 @@ class ATPotential:
         parts = free_energy_components_J_m3(positive, params)
         if wall_density_m2 is not None:
             wall = np.clip(np.asarray(wall_density_m2, dtype=float), 0.0, positive)
-            q_equivalent = np.divide(
-                wall, positive, out=np.zeros_like(positive), where=positive > 0.0)
-            parts['ordering'] = parts['ordering']*smooth_order(q_equivalent)
+            if wall_order is None:
+                q_state = np.divide(
+                    wall, positive, out=np.zeros_like(positive), where=positive > 0.0)
+            else:
+                q_state = np.asarray(wall_order, dtype=float)
+                if q_state.shape != positive.shape or np.any(~np.isfinite(q_state)) \
+                        or np.any(q_state < 0.0) or np.any(q_state > 1.0):
+                    raise ValueError('wall order must match density and lie in [0,1]')
+            parts['ordering'] = parts['ordering']*smooth_order(q_state)
         value = sum(parts.values())
         if not P.get('use_potential_entropy', True):
             value -= logarithmic_energy_J_m3(positive, s.C_ent, s.rho_ref)
@@ -2020,12 +2088,37 @@ for i in range(2):
                     -(lam_iso+mu_iso)/(mu_iso*(lam_iso+2*mu_iso))*ki*kj*kk*kl/K2nz**2)
 Gamma[:,:,:,:,0,0] = 0
 
+def _v19_fixed_eigenstrain():
+    """Resolved elastic heterogeneity; it is not an orientation/wall target."""
+    mode = str(P.get('v19_mechanical_heterogeneity', 'none')).lower()
+    eigen = np.zeros((Nx, Ny, 2, 2))
+    if mode in ('none', 'off', 'false'):
+        return eigen
+    if mode != 'eigenstrain_particle':
+        raise ValueError(f"unknown v19 mechanical heterogeneity {mode!r}")
+    centre = P.get('v19_particle_center_fraction', (0.5, 0.5))
+    cx, cy = float(centre[0])*Lx, float(centre[1])*Ly
+    x = np.arange(Nx)[:, None]*dx
+    y = np.arange(Ny)[None, :]*dy
+    rx = np.minimum(np.abs(x-cx), Lx-np.abs(x-cx))
+    ry = np.minimum(np.abs(y-cy), Ly-np.abs(y-cy))
+    radius = float(P.get('v19_particle_radius_um', .75))*1e-6
+    width = max(float(P.get('v19_particle_interface_um', .15))*1e-6, dx)
+    support = .5*(1.0-np.tanh((np.sqrt(rx*rx+ry*ry)-radius)/width))
+    eigen[:, :, 0, 0] = float(P.get('v19_particle_eigenstrain_11', .004))*support
+    eigen[:, :, 1, 1] = float(P.get('v19_particle_eigenstrain_22', -.004))*support
+    shear = float(P.get('v19_particle_eigenstrain_12', 0.0))*support
+    eigen[:, :, 0, 1] = eigen[:, :, 1, 0] = shear
+    return eigen
+
+
 def ms_solve(eps_p, eps_bar, nit=3):
+    inelastic = eps_p + _v19_fixed_eigenstrain()
     eps = np.zeros((Nx,Ny,2,2))
     for i in range(2):
         for j in range(2): eps[:,:,i,j] = eps_bar[i,j]
     for _ in range(nit):
-        sig = np.einsum('ijkl,...kl->...ij', C4, eps-eps_p)
+        sig = np.einsum('ijkl,...kl->...ij', C4, eps-inelastic)
         sh = np.zeros((Nx,Ny,2,2), dtype=complex)
         deh = np.zeros_like(sh)
         for i in range(2):
@@ -2041,7 +2134,7 @@ def ms_solve(eps_p, eps_bar, nit=3):
                 eps[:,:,i,j] -= np.real(np.fft.ifft2(deh[:,:,i,j]))
                 eps[:,:,i,j] += eps_bar[i,j]-eps[:,:,i,j].mean()
         eps = 0.5*(eps+eps.transpose(0,1,3,2))
-    return np.einsum('ijkl,...kl->...ij', C4, eps-eps_p), eps
+    return np.einsum('ijkl,...kl->...ij', C4, eps-inelastic), eps
 
 
 # ================================================================
@@ -2069,6 +2162,19 @@ def _rho_total_state(rp_arr, rm_arr, rho_forest_arr=None, rho_wall_arr=None):
     return np.maximum(_rho_mobile_field(rp_arr, rm_arr)
                       + _rho_forest_total_field(rho_forest_arr)
                       + _rho_wall_field(rho_wall_arr), P['rho_min'])
+
+
+def _signed_kappa_field(rp_arr, rm_arr):
+    """Total signed content, including V19 structural reservoirs when active."""
+    kappa = np.sum(rp_arr-rm_arr, axis=2)
+    if P.get('v19_predictive_wall_enabled', False):
+        fp = globals().get('rho_forest_plus')
+        fm = globals().get('rho_forest_minus')
+        wp = globals().get('rho_wall_plus')
+        wm = globals().get('rho_wall_minus')
+        if all(value is not None for value in (fp, fm, wp, wm)):
+            kappa = kappa+np.sum(fp-fm+wp-wm, axis=2)
+    return kappa
 
 
 def _rho_obstacle_for_slip(ss, rp_arr, rm_arr, rho_total_arr=None,
@@ -2344,7 +2450,7 @@ def macro_bisect(edot_tgt, tau_back, rp, rm, T_field, s11, Sch):
     def eval_sb(sb):
         gd = np.zeros((Nx,Ny,nSlip))
         rho_tot_eval = _rho_total_state(rp, rm, globals().get('rho_forest', None), globals().get('rho_wall', None))
-        kappa_eval = np.sum(rp-rm, axis=2)
+        kappa_eval = _signed_kappa_field(rp, rm)
         for s in range(nSlip):
             rs = _rho_obstacle_for_slip(s, rp, rm, rho_tot_eval, globals().get('rho_forest', None),
                                         globals().get('rho_wall', None), globals().get('rho_GB', None), kappa_eval)
@@ -3208,6 +3314,37 @@ for s in range(nSlip):
         r0g = max(r0g, P['rho_min'])
         rp[m,s] = 0.5*r0g/nSlip
         rm[m,s] = 0.5*r0g/nSlip
+
+if P.get('v19_one_grain_mode', False):
+    def _v19_broadband_noise(seed):
+        rng = np.random.default_rng(int(seed))
+        raw = rng.standard_normal((Nx, Ny))
+        spectrum = np.fft.fft2(raw)
+        min_wave = max(float(P.get('v19_noise_min_wavelength_um', .5))*1e-6,
+                       2.0*max(dx, dy))
+        spectrum[K2 > (2.0*np.pi/min_wave)**2] = 0.0
+        spectrum[0, 0] = 0.0
+        field = np.real(np.fft.ifft2(spectrum))
+        return field/max(float(np.std(field)), 1e-300)
+
+    amplitude = float(P.get('v19_density_noise_fraction', 0.0))
+    if amplitude < 0.0 or amplitude >= 0.25:
+        raise SystemExit('v19_density_noise_fraction must lie in [0,0.25)')
+    if amplitude:
+        noise = _v19_broadband_noise(P.get('v19_noise_seed', 1901))
+        scale = np.maximum(1.0+amplitude*noise, 0.5)
+        rp *= scale[:, :, None]
+        rm *= scale[:, :, None]
+    signed_amplitude = float(P.get('v19_signed_noise_fraction', 0.0))
+    if signed_amplitude < 0.0 or signed_amplitude >= 0.25:
+        raise SystemExit('v19_signed_noise_fraction must lie in [0,0.25)')
+    if signed_amplitude:
+        for s in range(nSlip):
+            signed_noise = _v19_broadband_noise(
+                int(P.get('v19_noise_seed', 1901))+104729*(s+1))
+            delta = signed_amplitude*signed_noise
+            rp[:, :, s] *= np.maximum(1.0+delta, 0.5)
+            rm[:, :, s] *= np.maximum(1.0-delta, 0.5)
 rho = np.maximum(np.sum(rp+rm, axis=2), P['rho_min'])
 
 T = np.full((Nx,Ny), P['T0'])
@@ -3419,6 +3556,55 @@ if P.get('use_rho_state_partition', False):
 else:
     rho = np.maximum(np.sum(rp+rm, axis=2), P['rho_min'])
     P['_rho_state_ref_runtime'] = float(rho_c)
+
+# V19 predictive signed structural reservoirs.  The legacy scalar arrays stay
+# as exact sums for compatibility with the mature full-v34 energy/stress code.
+# In V19 mode the signed arrays are authoritative and checkpointed.
+rho_forest_plus = np.zeros_like(rho_forest)
+rho_forest_minus = np.zeros_like(rho_forest)
+rho_wall_plus = np.zeros_like(rp)
+rho_wall_minus = np.zeros_like(rm)
+q_wall_v19 = np.zeros((Nx, Ny), dtype=float)
+v19_wall_ledger = dict(captured_line_per_thickness=0.0,
+                       junctioned_line_per_thickness=0.0,
+                       released_line_per_thickness=0.0,
+                       annihilated_line_per_thickness=0.0,
+                       transfer_line_residual_per_thickness=0.0,
+                       signed_residual_line_per_thickness_by_slip=np.zeros(nSlip).tolist())
+if P.get('v19_predictive_wall_enabled', False):
+    loaded_v19 = False
+    if _restart_loaded and not P.get('restart_reset_clock', True):
+        with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as ztmp:
+            names = ('rho_forest_plus', 'rho_forest_minus', 'rho_wall_plus',
+                     'rho_wall_minus', 'q_wall_v19', 'v19_wall_ledger_json')
+            if not all(name in ztmp.files for name in names):
+                raise ValueError('exact V19 restart requires complete signed wall state')
+            rho_forest_plus = np.asarray(ztmp['rho_forest_plus'], dtype=float).copy()
+            rho_forest_minus = np.asarray(ztmp['rho_forest_minus'], dtype=float).copy()
+            rho_wall_plus = np.asarray(ztmp['rho_wall_plus'], dtype=float).copy()
+            rho_wall_minus = np.asarray(ztmp['rho_wall_minus'], dtype=float).copy()
+            q_wall_v19 = np.asarray(ztmp['q_wall_v19'], dtype=float).copy()
+            v19_wall_ledger = json.loads(str(ztmp['v19_wall_ledger_json'].item()))
+            loaded_v19 = True
+    if not loaded_v19:
+        mobile_sum = np.maximum(rp+rm, 1e-300)
+        rho_forest_plus = rho_forest*rp/mobile_sum
+        rho_forest_minus = rho_forest*rm/mobile_sum
+        wall_weight = mobile_sum/np.maximum(np.sum(mobile_sum, axis=2)[:, :, None], 1e-300)
+        rho_wall_plus = rho_wall[:, :, None]*wall_weight*rp/mobile_sum
+        rho_wall_minus = rho_wall[:, :, None]*wall_weight*rm/mobile_sum
+    if (rho_forest_plus.shape != rho_forest.shape
+            or rho_wall_plus.shape != rp.shape
+            or q_wall_v19.shape != (Nx, Ny)
+            or min(np.min(rho_forest_plus), np.min(rho_forest_minus),
+                   np.min(rho_wall_plus), np.min(rho_wall_minus),
+                   np.min(q_wall_v19)) < 0.0
+            or np.max(q_wall_v19) > 1.0):
+        raise ValueError('V19 signed wall state is inadmissible')
+    np.testing.assert_allclose(rho_forest_plus+rho_forest_minus, rho_forest,
+                               rtol=2e-15, atol=1.0)
+    np.testing.assert_allclose(np.sum(rho_wall_plus+rho_wall_minus, axis=2),
+                               rho_wall, rtol=2e-15, atol=1.0)
 
 # v9 sparse material state exists only for an actually promoted parent/child
 # pair. Initial orientation labels remain one common deformed material class.
@@ -5162,7 +5348,7 @@ def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
     lab_trial = np.argmax(eta[:, :, :Ng], axis=2)
     psi_trial = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
     gb_trial = diffuse_gb_support(eta, lab_trial, Ng)
-    kappa_trial = np.sum(rp-rm, axis=2)
+    kappa_trial = _signed_kappa_field(rp, rm)
     audit = _energy_audit(
         rho_trial/max(_rho_ch_scale(), P['rho_min']), rho_trial, eta,
         psi_trial, kappa_trial, rho_gb, gb_trial, Ng)
@@ -5921,12 +6107,20 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             rho=rho, rp=rp, rm=rm,
             rho_forest=globals().get('rho_forest', np.zeros((Nx, Ny, nSlip))),
             rho_wall=globals().get('rho_wall', np.zeros((Nx, Ny))),
+            rho_forest_plus=globals().get('rho_forest_plus', np.zeros((Nx, Ny, nSlip))),
+            rho_forest_minus=globals().get('rho_forest_minus', np.zeros((Nx, Ny, nSlip))),
+            rho_wall_plus=globals().get('rho_wall_plus', np.zeros((Nx, Ny, nSlip))),
+            rho_wall_minus=globals().get('rho_wall_minus', np.zeros((Nx, Ny, nSlip))),
+            q_wall_v19=globals().get('q_wall_v19', np.zeros((Nx, Ny))),
+            v19_wall_ledger_json=np.array(json.dumps(
+                globals().get('v19_wall_ledger', {}), sort_keys=True,
+                separators=(',', ':'))),
             rho_mobile=_rho_mobile_field(rp, rm),
             collective_activity_memory=globals().get('collective_activity_memory', np.zeros((Nx, Ny))),
             eta=eta[:, :, :Ng], psi_gv=psi_gv[:Ng], Ng=np.array(Ng, dtype=np.int32),
             lab=lab, psi_lat=psi_lat, psi_plastic=psi_plastic, T=T, rho_GB=rho_GB,
             gamma_slip=gamma_slip, eps_p=eps_p, E_tot=E_tot,
-            H_nuc=H_nuc, E_nuc=E_nuc, kappa_tot=np.sum(rp-rm, axis=2),
+            H_nuc=H_nuc, E_nuc=E_nuc, kappa_tot=_signed_kappa_field(rp, rm),
             nuc_cand_active=nuc_cand_active,
             nuc_cand_age=nuc_cand_age,
             nuc_cand_best_barrier=nuc_cand_best_barrier,
@@ -6034,7 +6228,7 @@ if P.get('restart_initialization_audit_only', False):
     raise SystemExit(0)
 
 if P.get('hazard_reweight_audit_only', False):
-    kappa_audit = np.sum(rp-rm, axis=2)
+    kappa_audit = _signed_kappa_field(rp, rm)
     fields_audit = _nuc_barrier_fields(
         rho, kappa_audit, rho_GB, gb_mask, psi_lat, T,
         activity_factor=np.ones((Nx, Ny), dtype=float))
@@ -6159,7 +6353,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     _gcf = float(P.get('local_gdot_cap_factor', 10.0))
     gdot_cap = (_gcf * abs(P['edot_app']) / max(_P11_mean, 1e-6)) if _gcf > 0.0 else np.inf
     rho_total_for_gdot = _rho_total_state(rp, rm, rho_forest, rho_wall)
-    kappa_for_gdot = np.sum(rp-rm, axis=2)
+    kappa_for_gdot = _signed_kappa_field(rp, rm)
     for s in range(nSlip):
         rs = _rho_obstacle_for_slip(s, rp, rm, rho_total_for_gdot, rho_forest, rho_wall, rho_GB, kappa_for_gdot)
         tau = np.zeros((Nx,Ny))
@@ -6272,7 +6466,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     if P.get('collective_diag', True) and ATpot._collective_enabled():
         _coll_rows = []
         rho_total_for_coll = _rho_total_state(rp, rm, rho_forest, rho_wall)
-        kappa_for_coll = np.sum(rp-rm, axis=2)
+        kappa_for_coll = _signed_kappa_field(rp, rm)
         for ss in range(nSlip):
             rs = _rho_obstacle_for_slip(ss, rp, rm, rho_total_for_coll, rho_forest, rho_wall, rho_GB, kappa_for_coll)
             seq = np.abs(tau_effective[:,:,ss]) * drive_sc
@@ -6333,7 +6527,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     forest_lock_total = np.zeros((Nx, Ny))
     rho_mobile_pre_km = _rho_mobile_field(rp, rm)
     rho_total_pre_km = _rho_total_state(rp, rm, rho_forest, rho_wall)
-    kappa_pre_km = np.sum(rp-rm, axis=2)
+    kappa_pre_km = _signed_kappa_field(rp, rm)
 
     for s in range(nSlip):
         rps = rp[:,:,s].copy(); rms = rm[:,:,s].copy()
@@ -6424,7 +6618,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             rp[:,:,s] = np.clip(rps + P['dt']*(0.5*stor - anni_p), P['rho_min'], P['rho_max'])
             rm[:,:,s] = np.clip(rms + P['dt']*(0.5*stor - anni_m), P['rho_min'], P['rho_max'])
 
-    if P.get('use_rho_state_partition', False):
+    if (P.get('use_rho_state_partition', False)
+            and not P.get('v19_predictive_wall_enabled', False)):
         # Organized wall density relaxes thermally/kinetically but more slowly than
         # mobile content.  This is a state conversion, not a nucleation trigger.
         A_act = np.sum(np.abs(gdot), axis=2)
@@ -6504,6 +6699,31 @@ for n in range(_restart_step_offset, _restart_end_step):
     v_adv_vals = []
     v_cfl_active_vals = []
     gdot_abs_vals = []
+    if P.get('v19_predictive_wall_enabled', False):
+        # Reconcile KM multiplication/recovery with the signed forest
+        # partition. Newly multiplied forest line inherits the local carrier
+        # sign fractions; recovery scales existing signs proportionally.
+        forest_signed_total = rho_forest_plus+rho_forest_minus
+        forest_scale = np.divide(
+            rho_forest, forest_signed_total, out=np.zeros_like(rho_forest),
+            where=forest_signed_total > 0.0)
+        rho_forest_plus *= forest_scale
+        rho_forest_minus *= forest_scale
+        empty_forest = forest_signed_total <= 0.0
+        mobile_pair = np.maximum(rp+rm, 1e-300)
+        rho_forest_plus = np.where(
+            empty_forest, rho_forest*rp/mobile_pair, rho_forest_plus)
+        rho_forest_minus = np.where(
+            empty_forest, rho_forest*rm/mobile_pair, rho_forest_minus)
+
+        wall_signed_total = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
+        wall_scale = np.divide(
+            rho_wall, wall_signed_total, out=np.zeros_like(rho_wall),
+            where=wall_signed_total > 0.0)
+        rho_wall_plus *= wall_scale[:, :, None]
+        rho_wall_minus *= wall_scale[:, :, None]
+        rp_before_v19_transport = rp.copy()
+        rm_before_v19_transport = rm.copy()
     if P['use_advection']:
         vcap = P['v_cfl_frac']*dx/P['dt']
         for s in range(nSlip):
@@ -6517,6 +6737,165 @@ for n in range(_restart_step_offset, _restart_end_step):
             vx = vmag*sv[:,:,s,0]; vy = vmag*sv[:,:,s,1]
             rp[:,:,s] = advect(rp[:,:,s], +vx, +vy, P['dt'])
             rm[:,:,s] = advect(rm[:,:,s], -vx, -vy, P['dt'])
+
+        if P.get('v19_predictive_wall_enabled', False):
+            _v19_reservoirs_before = tuple(a.copy() for a in (
+                rp, rm, rho_forest_plus, rho_forest_minus,
+                rho_wall_plus, rho_wall_minus))
+            before_transfer_total = sum(
+                np.sum(a, dtype=np.longdouble) for a in _v19_reservoirs_before)
+            before_transfer_signed = sum(
+                sign*np.sum(a, axis=(0, 1), dtype=np.longdouble)
+                for sign, a in zip((1, -1, 1, -1, 1, -1),
+                                   _v19_reservoirs_before))
+            captured = 0.0
+            junctioned = 0.0
+            released = 0.0
+            annihilated = 0.0
+            for s in range(nSlip):
+                capture_rate = _v19_wall_rate_field(
+                    tau_effective[:, :, s], T, 'v19_wall_capture_G0_eV')
+                capture_fraction = np.clip(
+                    float(P.get('v19_wall_capture_efficiency', .2))
+                    *(-np.expm1(-capture_rate*P['dt'])), 0.0, 1.0)
+                # Only newly arrived signed flux is eligible for trapping. No
+                # orientation or recognition field enters this source.
+                incoming_p = np.maximum(rp[:, :, s]-rp_before_v19_transport[:, :, s], 0.0)
+                incoming_m = np.maximum(rm[:, :, s]-rm_before_v19_transport[:, :, s], 0.0)
+                cap_p = np.minimum(capture_fraction*incoming_p,
+                                   np.maximum(rp[:, :, s]-P['rho_min'], 0.0))
+                cap_m = np.minimum(capture_fraction*incoming_m,
+                                   np.maximum(rm[:, :, s]-P['rho_min'], 0.0))
+                old_p = rp[:, :, s].copy(); old_m = rm[:, :, s].copy()
+                rp[:, :, s] = old_p-cap_p; rm[:, :, s] = old_m-cap_m
+                # Credit only the donor decrement actually representable in
+                # floating point; this prevents sub-ULP line creation.
+                cap_p = old_p-rp[:, :, s]; cap_m = old_m-rm[:, :, s]
+                rho_wall_plus[:, :, s] += cap_p
+                rho_wall_minus[:, :, s] += cap_m
+                captured += float(np.sum(cap_p, dtype=np.longdouble)
+                                  +np.sum(cap_m, dtype=np.longdouble))*dx*dy
+
+                release_rate = _v19_wall_rate_field(
+                    tau_effective[:, :, s], T, 'v19_wall_release_G0_eV')
+                release_fraction = np.clip(
+                    float(P.get('v19_wall_release_efficiency', .02))
+                    *(-np.expm1(-release_rate*P['dt'])), 0.0, 1.0)
+                rel_p = release_fraction*rho_wall_plus[:, :, s]
+                rel_m = release_fraction*rho_wall_minus[:, :, s]
+                old_p = rp[:, :, s].copy(); old_m = rm[:, :, s].copy()
+                rp[:, :, s] = old_p+rel_p; rm[:, :, s] = old_m+rel_m
+                rel_p = rp[:, :, s]-old_p; rel_m = rm[:, :, s]-old_m
+                rho_wall_plus[:, :, s] -= rel_p
+                rho_wall_minus[:, :, s] -= rel_m
+                released += float(np.sum(rel_p, dtype=np.longdouble)
+                                  +np.sum(rel_m, dtype=np.longdouble))*dx*dy
+
+                annihilation_rate = _v19_wall_rate_field(
+                    tau_effective[:, :, s], T, 'v19_wall_annihilation_G0_eV')
+                ann_fraction = np.clip(
+                    float(P.get('v19_wall_annihilation_efficiency', .02))
+                    *(-np.expm1(-annihilation_rate*P['dt'])), 0.0, 1.0)
+                pair = ann_fraction*np.minimum(
+                    rho_wall_plus[:, :, s], rho_wall_minus[:, :, s])
+                old_wp = rho_wall_plus[:, :, s].copy()
+                old_wm = rho_wall_minus[:, :, s].copy()
+                rho_wall_plus[:, :, s] = old_wp-pair
+                rho_wall_minus[:, :, s] = old_wm-pair
+                realized_p = old_wp-rho_wall_plus[:, :, s]
+                realized_m = old_wm-rho_wall_minus[:, :, s]
+                # The same pair is removed from both signs; at these similarly
+                # scaled wall reservoirs the realized decrement is identical.
+                realized_pair = np.minimum(realized_p, realized_m)
+                rho_wall_plus[:, :, s] = old_wp-realized_pair
+                rho_wall_minus[:, :, s] = old_wm-realized_pair
+                annihilated += 2.0*float(np.sum(
+                    realized_pair, dtype=np.longdouble))*dx*dy
+
+            # Cross-family forest junctions are a separate conservative wall
+            # source. Symmetric +/- pairs give zero polarization and therefore
+            # cannot order a homogeneous dense tangle by themselves.
+            for first in range(nSlip):
+                for second in range(first+1, nSlip):
+                    tau_pair = np.maximum(np.abs(tau_effective[:, :, first]),
+                                          np.abs(tau_effective[:, :, second]))
+                    junction_rate = _v19_wall_rate_field(
+                        tau_pair, T, 'v19_wall_junction_G0_eV')
+                    activity = np.minimum(np.abs(gdot[:, :, first]),
+                                          np.abs(gdot[:, :, second]))
+                    activity /= max(abs(float(P.get('edot_app', 0.0))), 1e-300)
+                    junction_fraction = np.clip(
+                        float(P.get('v19_wall_junction_efficiency', .05))
+                        *(-np.expm1(-junction_rate*P['dt']))
+                        *np.clip(activity, 0.0, 1.0), 0.0, 1.0)
+                    for sign_first, sign_second in ((0, 1), (1, 0)):
+                        source_first = (rho_forest_plus if sign_first == 0
+                                        else rho_forest_minus)
+                        source_second = (rho_forest_plus if sign_second == 0
+                                         else rho_forest_minus)
+                        target_first = (rho_wall_plus if sign_first == 0
+                                        else rho_wall_minus)
+                        target_second = (rho_wall_plus if sign_second == 0
+                                         else rho_wall_minus)
+                        amount = junction_fraction*np.minimum(
+                            source_first[:, :, first],
+                            source_second[:, :, second])
+                        old_first = source_first[:, :, first].copy()
+                        old_second = source_second[:, :, second].copy()
+                        source_first[:, :, first] = old_first-amount
+                        source_second[:, :, second] = old_second-amount
+                        realized = np.minimum(
+                            old_first-source_first[:, :, first],
+                            old_second-source_second[:, :, second])
+                        source_first[:, :, first] = old_first-realized
+                        source_second[:, :, second] = old_second-realized
+                        target_first[:, :, first] += realized
+                        target_second[:, :, second] += realized
+                        junctioned += 2.0*float(np.sum(
+                            realized, dtype=np.longdouble))*dx*dy
+
+            rho_forest = rho_forest_plus+rho_forest_minus
+
+            rho_wall = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
+            wall_polarization = np.sum(
+                np.abs(rho_wall_plus-rho_wall_minus), axis=2)
+            wall_polarization /= np.maximum(rho_wall, P['rho_min'])
+            wall_fraction = rho_wall/np.maximum(
+                _rho_total_state(rp, rm, rho_forest, rho_wall), P['rho_min'])
+            q_equilibrium = np.clip(
+                wall_fraction/max(float(P.get('v19_wall_order_density_fraction', .2)), 1e-12),
+                0.0, 1.0)*np.clip(wall_polarization, 0.0, 1.0)
+            order_rate = _v19_wall_rate_field(
+                np.max(np.abs(tau_effective), axis=2), T,
+                'v19_wall_order_G0_eV')
+            order_fraction = np.clip(-np.expm1(-order_rate*P['dt']), 0.0, 1.0)
+            q_wall_v19 = np.clip(q_wall_v19
+                                 +order_fraction*(q_equilibrium-q_wall_v19),
+                                 0.0, 1.0)
+            _v19_reservoirs_after = (rp, rm, rho_forest_plus,
+                                     rho_forest_minus, rho_wall_plus,
+                                     rho_wall_minus)
+            after_transfer_total = sum(
+                np.sum(a, dtype=np.longdouble) for a in _v19_reservoirs_after)
+            after_transfer_signed = sum(
+                sign*np.sum(a, axis=(0, 1), dtype=np.longdouble)
+                for sign, a in zip((1, -1, 1, -1, 1, -1),
+                                   _v19_reservoirs_after))
+            expected_after = before_transfer_total-annihilated/(dx*dy)
+            v19_wall_ledger['captured_line_per_thickness'] += captured
+            v19_wall_ledger['junctioned_line_per_thickness'] += junctioned
+            v19_wall_ledger['released_line_per_thickness'] += released
+            v19_wall_ledger['annihilated_line_per_thickness'] += annihilated
+            v19_wall_ledger['transfer_line_residual_per_thickness'] += (
+                float(after_transfer_total-expected_after)*dx*dy)
+            signed_residual = np.asarray(
+                v19_wall_ledger['signed_residual_line_per_thickness_by_slip'],
+                dtype=float)
+            signed_residual += np.asarray(
+                after_transfer_signed-before_transfer_signed,
+                dtype=float)*dx*dy
+            v19_wall_ledger[
+                'signed_residual_line_per_thickness_by_slip'] = signed_residual.tolist()
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
     else:
         for s in range(nSlip):
@@ -6552,7 +6931,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         rho_ch_field = rho
     r = rho_ch_field/max(rho_scale_ch, P['rho_min'])
     # Current structural fields used by both CH and KWC; updated again after eta.
-    kappa_tot_for_ch = np.sum(rp-rm, axis=2)
+    kappa_tot_for_ch = _signed_kappa_field(rp, rm)
     gb_mask_for_ch = diffuse_gb_support(eta, lab, Ng)
     Hr_eta, dHdr_eta, rho_eta_precursor, rho_eta_drive = _rho_eta_fields(r, rho, kappa_tot_for_ch, gb_mask_for_ch)
     mu_ch = ATpot.mu_dw(r)
@@ -6613,7 +6992,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     _phase_temperature = T if P.get('use_temperature_dependent_Estar', True) else None
     Psi_dis = ATpot.phase_owned_free_energy(
         rho, _phase_temperature,
-        rho_wall if P.get('use_rho_state_partition', False) else None)
+        rho_wall if P.get('use_rho_state_partition', False) else None,
+        q_wall_v19 if P.get('v19_predictive_wall_enabled', False) else None)
     sum_eta_sq = np.sum(eta[:,:,:Ng]**2, axis=2)
     # Recompute rho-eta drive after the CH update.  This is the piece that lets
     # high-rho/GND density bands lower the energy by becoming KWC support rather
@@ -6622,7 +7002,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         r_ac = np.maximum(_rho_structural_field(rho_forest, rho_wall), P['rho_min'])/max(_rho_ch_scale(), P['rho_min'])
     else:
         r_ac = rho/max(_rho_ch_scale(), P['rho_min'])
-    kappa_for_ac = np.sum(rp-rm, axis=2)
+    kappa_for_ac = _signed_kappa_field(rp, rm)
     gb_for_ac = diffuse_gb_support(eta, lab, Ng)
     Hr_ac, dHdr_ac, rho_eta_precursor_ac, rho_eta_drive_ac = _rho_eta_fields(r_ac, rho, kappa_for_ac, gb_for_ac)
     stored_energy_mode = str(P.get(
@@ -6997,7 +7377,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 
     # --- ORIENTATION (VARIATIONAL + plastic spin) ---
-    kappa_tot = np.sum(rp-rm, axis=2)
+    kappa_tot = _signed_kappa_field(rp, rm)
     Lp12 = np.zeros((Nx,Ny)); Lp21 = np.zeros_like(Lp12)
     for s in range(nSlip):
         Lp12 += gdot[:,:,s]*sv[:,:,s,0]*nv[:,:,s,1]
@@ -7082,7 +7462,7 @@ for n in range(_restart_step_offset, _restart_end_step):
             rps -= amt2; rms += amt2
             rp[:,:,ss] = rps; rm[:,:,ss] = rms
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
-        kappa_tot = np.sum(rp-rm, axis=2)
+        kappa_tot = _signed_kappa_field(rp, rm)
 
     # --- BOUNDARY DISLOCATION (Frank-Bilby relaxation + mobile absorption) ---
     if P.get('freeze_rhoGB', False):
@@ -7125,14 +7505,14 @@ for n in range(_restart_step_offset, _restart_end_step):
     rp, rm, rho, H_nuc, E_nuc, gb_comoving_diag = apply_gb_comoving_gnd_projection(
         rp, rm, rho, gb_mask_old_for_gnd, gb_mask, H_nuc=H_nuc, E_nuc=E_nuc)
     rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
-    kappa_tot = np.sum(rp-rm, axis=2)
+    kappa_tot = _signed_kappa_field(rp, rm)
 
     # --- v9 ARRHENIUS HALL-PETCH GB SOURCE/TRANSMISSION ---
     if P.get('use_gb_hp_source_sink', True):
         rp, rm, rho, rho_GB, gb_hp_diag = apply_gb_hp_source_sink(
             rp, rm, rho, rho_GB, gb_mask, lab, Ng, sig_use, Sch, T, psi_lat=psi_lat)
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
-        kappa_tot = np.sum(rp-rm, axis=2)
+        kappa_tot = _signed_kappa_field(rp, rm)
 
     # v28 persistent collective activity memory.  The source combines the
     # instantaneous multi-hit/domain-count activity with the actual local slip
@@ -7310,7 +7690,7 @@ for n in range(_restart_step_offset, _restart_end_step):
             eta, psi_gv, Ng, lab, psi_lat, psi_plastic,
             rp, rm, rho, rho_GB, gb_mask, kappa_tot, T, H_nuc, E_nuc,
             activity_factor=hazard_activity_factor)
-        kappa_tot = np.sum(rp-rm, axis=2)
+        kappa_tot = _signed_kappa_field(rp, rm)
     elif n % max(int(P.get('nuc_interval', 20)), 1) == 0:
         _last_nuc_diag = {'cand': 0, 'best_dF': np.nan, 'best_score': np.nan,
                           'event': 0, 'hazard_max': 0.0, 'Hmax': float(np.nanmax(H_nuc)),
@@ -7333,7 +7713,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         lab = np.argmax(eta[:, :, :Ng], axis=2)
         gb_mask = diffuse_gb_support(eta, lab, Ng)
         psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
-        kappa_tot = np.sum(rp-rm, axis=2)
+        kappa_tot = _signed_kappa_field(rp, rm)
         grain_tracker, _physical_grain_metrics = update_tracker(
             eta[:, :, :Ng], np.maximum(ATpot._Phi(np.maximum(rho, P['rho_min'])), 0.0),
             grain_tracker, sim_time + P['dt'], dx, dx, _physical_grain_criteria())
@@ -7350,7 +7730,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         rho_forest, rho_wall = (
             _canonical_front_mixture.forest, _canonical_front_mixture.wall)
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
-        kappa_tot = np.sum(rp-rm, axis=2)
+        kappa_tot = _signed_kappa_field(rp, rm)
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:
@@ -7589,7 +7969,16 @@ for n in range(_restart_step_offset, _restart_end_step):
 
         if _save_due and P.get('write_field_npz', True):
             np.savez_compressed(out/f'drx_v8_fields_{n:06d}.npz',
-                                rho=rho, rp=rp, rm=rm, kappa_tot=np.sum(rp-rm,axis=2),
+                                rho=rho, rp=rp, rm=rm, kappa_tot=_signed_kappa_field(rp, rm),
+                                rho_forest=rho_forest, rho_wall=rho_wall,
+                                rho_forest_plus=rho_forest_plus,
+                                rho_forest_minus=rho_forest_minus,
+                                rho_wall_plus=rho_wall_plus,
+                                rho_wall_minus=rho_wall_minus,
+                                q_wall_v19=q_wall_v19,
+                                v19_wall_ledger_json=np.array(json.dumps(
+                                    v19_wall_ledger, sort_keys=True,
+                                    separators=(',', ':'))),
                                 rho_GB=rho_GB, gb_mask=gb_mask, lab=lab,
                                 eta_max=eta_purity_fields(eta, Ng)[0],
                                 eta_second=eta_purity_fields(eta, Ng)[1],

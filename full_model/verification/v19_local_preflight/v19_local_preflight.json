@@ -1,0 +1,102 @@
+{
+  "schema": "asb-drx/v19-full-mechanics-local-preflight/v1",
+  "source_driver": "full_model/production/drx_full_v34_recovery.py",
+  "branches": {
+    "homogeneous_noise": {
+      "checkpoint": "full_model/verification/v19_local_preflight/homogeneous_loaded/drx_v25_restart_000999.npz",
+      "grid": [
+        32,
+        32
+      ],
+      "domain_m": 8e-06,
+      "spacing_m": 2.5e-07,
+      "step": 999,
+      "time_s": 9.999999999999914e-06,
+      "strain": 0.10000000000000184,
+      "grain_labels": 1,
+      "mean_density_m2": 5.545200656287357e+17,
+      "density_coefficient_of_variation": 0.002446127316272332,
+      "orientation_span_deg": 0.8400229496334148,
+      "orientation_robust_99_1_span_deg": 0.5800000704028143,
+      "signed_content_rms_m2": 395748751818184.0,
+      "orientation_nye_proxy_rms_m2": 34536735845805.94,
+      "independent_scalar_compatibility_relative_residual": 10.565067990912006,
+      "frank_bilby_tensor_check_available": false,
+      "wall_density_mean_m2": 264404736897023.78,
+      "wall_density_max_m2": 296567989813544.1,
+      "wall_fraction_p95": 0.0005024310376168718,
+      "wall_order_mean": 1.818346407547148e-07,
+      "wall_order_max": 6.715721378892107e-07,
+      "temperature_mean_K": 1305.7924248514541,
+      "temperature_max_K": 1305.8214765386062,
+      "accumulated_absolute_slip_mean": 0.1789243725943085,
+      "wall_structure_factor": {
+        "peak_wavelength_m": 1.0504514628777805e-06,
+        "peak_power_fraction": 0.010246481695223143
+      },
+      "transfer_line_relative_residual": 3.3005910104321093e-15,
+      "transfer_signed_relative_residual": 1.0716194359555987e-18,
+      "wall_formed": false
+    },
+    "mechanical_particle": {
+      "checkpoint": "full_model/verification/v19_local_preflight/particle_loaded/drx_v25_restart_000999.npz",
+      "grid": [
+        32,
+        32
+      ],
+      "domain_m": 8e-06,
+      "spacing_m": 2.5e-07,
+      "step": 999,
+      "time_s": 9.999999999999914e-06,
+      "strain": 0.10000000000000184,
+      "grain_labels": 1,
+      "mean_density_m2": 5.546922397624024e+17,
+      "density_coefficient_of_variation": 0.002462744887182729,
+      "orientation_span_deg": 0.8600006554572488,
+      "orientation_robust_99_1_span_deg": 0.5400254854858773,
+      "signed_content_rms_m2": 395876715382643.6,
+      "orientation_nye_proxy_rms_m2": 34715415992864.05,
+      "independent_scalar_compatibility_relative_residual": 10.508641900234053,
+      "frank_bilby_tensor_check_available": false,
+      "wall_density_mean_m2": 245338537071014.22,
+      "wall_density_max_m2": 278160174995554.53,
+      "wall_fraction_p95": 0.0004655403698523581,
+      "wall_order_mean": 1.6882023573269272e-07,
+      "wall_order_max": 6.153677844612841e-07,
+      "temperature_mean_K": 1306.253091640447,
+      "temperature_max_K": 1306.365296078378,
+      "accumulated_absolute_slip_mean": 0.17780042361871798,
+      "wall_structure_factor": {
+        "peak_wavelength_m": 1.0504514628777805e-06,
+        "peak_power_fraction": 0.009844584661852462
+      },
+      "transfer_line_relative_residual": 2.032612438025877e-15,
+      "transfer_signed_relative_residual": 9.6336435541615e-19,
+      "wall_formed": false
+    }
+  },
+  "thermodynamic_functional_consistent": true,
+  "manufactured_LAGB_fixture_passed": true,
+  "projected_dynamic_instability_identified": true,
+  "full_mechanics_wall_formed": false,
+  "Frank_Bilby_independent_check_passed": false,
+  "persistent_after_release": false,
+  "neutral_phase_handoff_passed": true,
+  "sustained_subgrain_growth_observed": false,
+  "intragranular_DRX_path_supported": false,
+  "material_calibrated": false,
+  "phase_allocation_attempted": false,
+  "hpc3_submission_authorized": false,
+  "full_mechanics_preflight_completed": true,
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "release_test_run": false,
+  "release_test_not_run_reason": "no loaded branch formed a physical ordered LAGB precursor",
+  "classification": "NO_PHYSICAL_LAGB_PRECURSOR_IN_LOCAL_PREFLIGHT",
+  "limitations": [
+    "This is a 32x32 local preflight, not the required convergence campaign.",
+    "The reduced 2-D v34 slip basis does not yet expose a full Nye tensor for an independent Frank-Bilby audit.",
+    "Release is not scientifically triggered because neither loaded branch formed an ordered LAGB precursor.",
+    "No phase label was allocated and no moving-front growth test was run."
+  ]
+}

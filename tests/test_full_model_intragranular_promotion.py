@@ -24,7 +24,7 @@ class IntragranularPromotionTest(unittest.TestCase):
             line, .06*line, 1e14, 1.2*line*5e14*.3, 5e14, 1.3, .3, .25
         )
 
-    def test_qualified_subgrain_inherits_orientation_and_uses_front_ledger(self):
+    def test_qualified_subgrain_handoff_is_content_and_energy_neutral(self):
         result = promote_qualified_subgrain(
             self.state, self.recognition, self.p, self.energy
         )
@@ -33,11 +33,20 @@ class IntragranularPromotionTest(unittest.TestCase):
         self.assertEqual(result.inherited_orientation_rad,
                          self.recognition["interior_orientation_rad"])
         self.assertEqual(result.phase_simplex_residual, 0.0)
-        self.assertLessEqual(result.common_energy_after_J, result.common_energy_before_J)
+        self.assertEqual(result.common_energy_after_J, result.common_energy_before_J)
         ledger = result.front_state.ledger
-        self.assertLess(abs(ledger.line_closure_m), 1e-20)
+        self.assertEqual(ledger.parent_line_processed_m, 0.0)
+        self.assertEqual(ledger.child_line_transmitted_m, 0.0)
+        self.assertEqual(ledger.boundary_line_stored_m, 0.0)
+        self.assertEqual(ledger.neutral_pair_annihilated_m, 0.0)
+        self.assertEqual(ledger.sink_line_m, 0.0)
+        self.assertEqual(ledger.line_closure_m, 0.0)
         self.assertEqual(ledger.signed_burgers_change_m2, 0.0)
-        self.assertGreater(ledger.swept_volume_m3, 0.0)
+        self.assertEqual(ledger.heat_released_J, 0.0)
+        self.assertEqual(ledger.swept_volume_m3, 0.0)
+        np.testing.assert_array_equal(result.front_state.chi, result.eta[:, :, 1])
+        np.testing.assert_array_equal(
+            result.front_state.processed_max, result.eta[:, :, 1])
 
     def test_unqualified_state_cannot_allocate_phase(self):
         initial = initialize_one_grain(64, self.p)

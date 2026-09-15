@@ -1,6 +1,41 @@
 # Campaign status
 
-Updated: 2026-09-13 (America/Los_Angeles)
+Updated: 2026-09-14 (America/Los_Angeles)
+
+## Directive v19 decision: full mechanics does not form a local LAGB precursor
+
+- V18 is frozen and reclassified as
+  `PRESCRIBED_DIFFERENTIAL_SLIP_ISLAND_MAPS_TO_A_COMPATIBLE_ORDERED_LAGB_PRECURSOR`.
+  Its result, Hessian, and plot hashes remain unchanged.
+- Existing-subgrain phase allocation is now a neutral representation handoff:
+  current and historical support agree, all physical defect fields are
+  inherited, newly swept volume is zero, and line/Burgers/heat changes are
+  exactly zero. The moving-front/promotion group passes 39 tests.
+- A projected-Hessian audit now uses the actual conservative reaction tangent
+  space. The Fourier kinetic operator contains EXP-floor Arrhenius transfers,
+  opposite-sign transport, gradients, wall order, compatibility, and
+  orientation/plastic-spin coupling. Most unstable samples are `k=0`; one
+  finite-mode candidate at 9.69 um is comparable to the domain scale and is
+  not accepted as wavelength selection.
+- The authoritative v34 driver now has an opt-in one-grain mode with filtered
+  broadband density/sign noise, a removable mechanically resolved eigenstrain
+  particle, signed mobile/forest/wall reservoirs, conservative flux capture,
+  cross-family junction locking, release, neutral annihilation, explicit wall
+  order, and exact checkpoint state. It disables nucleation, component
+  relabeling, DD multi-hit, and the rejected orientation-targeted GND source.
+- A continuous 20-step trajectory and a 10+10 restart are bitwise identical
+  across all 13 checked field groups and the complete wall ledger.
+- Matched 32x32, 8 um, 10%-strain local preflights remain one-grain states.
+  Homogeneous/noise and particle branches reach only 0.840 and 0.860 deg
+  orientation spans. Their 95th-percentile wall fractions are 5.02e-4 and
+  4.66e-4, while maximum wall order is only 6.72e-7 and 6.15e-7.
+  Transfer line and signed residuals are below 4e-15 relative.
+- Classification: `NO_PHYSICAL_LAGB_PRECURSOR_IN_LOCAL_PREFLIGHT`.
+  `full_mechanics_wall_formed=false`, independent Frank--Bilby, release,
+  growth, and intragranular DRX claims remain false. No phase was allocated and
+  no HPC3 job was submitted. The next work is a production Nye-tensor repair
+  and a physical signed nonlocal/junction transport audit, not coefficient
+  tuning or a mesh/seed sweep.
 
 ## Directive v10 decision: Route B retired; first HPC SIBM run falsified and repaired locally
 

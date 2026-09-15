@@ -369,6 +369,23 @@ def initialize_existing_boundary_front(parent, child_fraction,
     return state
 
 
+def initialize_existing_subgrain_front(parent, child_fraction,
+                                       parent_label, child_label):
+    """Map an already physical subgrain with zero sweep and zero heat.
+
+    Current and historically processed support both equal the observed
+    subgrain support. Every intensive defect field is copied from the common
+    physical state, so this operation changes representation only. A later
+    positive normal increment is the first operation allowed to process virgin
+    parent material.
+    """
+
+    observed_total = total_line_density(parent)
+    return initialize_existing_boundary_front(
+        parent, child_fraction, float(np.min(observed_total)),
+        parent_label, child_label)
+
+
 def reconstruct_mixture(state, chi=None):
     """Reconstruct unswept parent, active child, and recovered wake.
 
@@ -382,6 +399,18 @@ def reconstruct_mixture(state, chi=None):
         raise ValueError("mixture fraction is invalid")
     if np.any(fraction > state.processed_max+16.0*np.finfo(float).eps):
         raise ValueError("mixture fraction exceeds processed front history")
+    # A neutral representation handoff gives every material slot the same
+    # intensive state.  Preserve that state bit for bit instead of evaluating
+    # a partition-of-unity sum, whose multiplication and addition can inject a
+    # one-ulp defect change even though the physical map is the identity.
+    reservoirs = ("rp", "rm", "forest", "wall")
+    if all(np.array_equal(getattr(state.parent, name),
+                          getattr(state.child, name))
+           and np.array_equal(getattr(state.parent, name),
+                              getattr(state.recovered_wake, name))
+           for name in reservoirs):
+        return DefectState(*(np.array(getattr(state.parent, name), copy=True)
+                             for name in reservoirs))
     virgin, _, _ = state.material_support_weights()
     wake = state.processed_max-fraction
     c3 = fraction[:, :, None]

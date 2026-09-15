@@ -1,0 +1,22 @@
+{
+  "schema": "asb-drx/v19-v18-claim-addendum/v1",
+  "supersedes_interpretation_not_artifacts": true,
+  "frozen_v18_result_sha256": "4985f969cb9740c86c7a36b8994035baaa8f79c536668c8ae0e5d5d4ed39c49b",
+  "frozen_v18_hessian_sha256": "62f13c70cf69677970842fa83e0ad6d33523dc95d0522f3b6fdb9c1528fd4715",
+  "frozen_v18_plot_sha256": "6afac51dae5d1d10ccdb2be85b73420f64d2f6ee6a0b77fd331ef027ca64c4f5",
+  "thermodynamic_functional_consistent": true,
+  "positive_rho_log_rho_audit_passed": true,
+  "manufactured_LAGB_fixture_passed": true,
+  "signed_wall_ledger_passed": true,
+  "Frank_Bilby_representation_check_passed": true,
+  "manufactured_fixture_classification": "PRESCRIBED_DIFFERENTIAL_SLIP_ISLAND_MAPS_TO_A_COMPATIBLE_ORDERED_LAGB_PRECURSOR",
+  "projected_dynamic_instability_identified": false,
+  "full_mechanics_wall_formed": false,
+  "independent_Frank_Bilby_mechanism_check_passed": false,
+  "persistent_after_loading_release": false,
+  "neutral_phase_handoff_passed": false,
+  "sustained_subgrain_growth_observed": false,
+  "intragranular_DRX_path_supported": false,
+  "material_calibrated": false,
+  "physical_LAGB_scientific_gate_passed": false
+}
