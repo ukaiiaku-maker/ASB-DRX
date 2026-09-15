@@ -111,11 +111,12 @@ def make_coupled_state(common, density, topologies=()):
 def _remap_wall_split(old_tangle, old_ordered, new_total):
     old_total = old_tangle + old_ordered
     growth = new_total >= old_total
-    ratio = np.divide(new_total, old_total, out=np.zeros_like(new_total),
-                      where=old_total > 0)
     tangle = np.where(growth, old_tangle + (new_total-old_total),
-                      old_tangle*ratio)
-    ordered = np.where(growth, old_ordered, old_ordered*ratio)
+                      old_tangle-(old_total-new_total))
+    ordered = old_ordered.copy()
+    if np.min(tangle) < -1e-6:
+        raise FloatingPointError("transport removed more than the V23 tangle donor")
+    tangle = np.maximum(tangle, 0.0)
     return tangle, ordered
 
 
@@ -131,10 +132,11 @@ def accepted_coupled_step(state, driving, systems, topologies,
         wall_order_amplitude_J_m3=0.0,
         wall_absent_penalty_J_m3=1e-300,
         wall_partition_J_m=1e-300,
+        extensive_wall_partition_enabled=True,
         transport_scheme="upwind",
         mobile_correlation_diffusivity_m2_s=0.0)
     transported, transport_residual, transport_scale = accepted_euler_step(
-        replace(state.common, wall_order=np.zeros_like(state.common.wall_order)),
+        state.common,
         driving, systems, topologies, transport_parameters, dt_s)
     density_updates = {
         "mobile_plus_m2": transported.mobile_plus_m2,

@@ -1179,5 +1179,10 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   inventory, polarization, Frank--Bilby mismatch, and orientation criteria.
   Decision: `UNSEEDED_EXTENSIVE_ORDERING_PRESENT_NO_PHYSICAL_WALL`; fixture
   true, scientific gate false, HPC wall campaign not authorized.
+- A subsequent reservoir-ownership audit corrected capture/release to act on
+  tangle wall line only while Taylor resistance continues to use total wall
+  line. The corrected local bracket still produces no physical wall; the
+  failure is now an explicit Frank--Bilby line-supply deficit rather than a
+  hidden failure to refill the tangle reservoir.
 - The canonical suite passes 408 tests. No phase or grain label exists in the
   V23 wall state, and multi-hit remains disabled.

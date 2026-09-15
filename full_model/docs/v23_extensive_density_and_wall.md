@@ -101,7 +101,10 @@ The V23 coupled map disables the scalar-q energy, advances signed transport,
 slip, plastic distortion, Nye, orientation, and heat through the common
 operator, remaps wall capture/removal without changing total line, and then
 advances the extensive tangle/ordered exchange. New captured wall line enters
-the tangle reservoir; removal acts proportionally on the existing split.
+the tangle reservoir; release draws only from tangle line. Taylor resistance
+still sees total tangle plus ordered wall line. This ownership matters: the
+first coupled version incorrectly let capture see total wall content, so
+ordering did not expose a depleted tangle pool for replenishment.
 
 A conservative periodic upwind transport option was required for this map.
 The inherited spectral flux produced negative undershoots under heterogeneous

@@ -123,6 +123,7 @@ class CommonWallParameters:
     wall_density_width_ratio: float = 0.3
     wall_order_gradient_J_m: float = 2.0e-7
     wall_order_enabled: bool = True
+    extensive_wall_partition_enabled: bool = False
     attempt_frequency_s: float = 1.0e7
     critical_stress_Pa: float = 1.5e9
     exp_a: float = 2.2
@@ -576,11 +577,18 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                     -chemical["forest_mu_J_m"][..., None])
     delta_wall_m = (chemical["wall_minus_mu_J_m"]
                     -chemical["forest_mu_J_m"][..., None])
+    wall_target_plus = state.wall_plus_m2
+    wall_target_minus = state.wall_minus_m2
+    if parameters.extensive_wall_partition_enabled:
+        # In V23 wall_order is a derived ordered/total fraction, not a state.
+        # Capture/release acts only on the disordered (tangle) complement.
+        wall_target_plus = wall_target_plus*(1.0-state.wall_order[..., None])
+        wall_target_minus = wall_target_minus*(1.0-state.wall_order[..., None])
     transfer_p, transfer_p_turnover = _biased_exchange_components(
-        state.forest_plus_m2, state.wall_plus_m2,
+        state.forest_plus_m2, wall_target_plus,
         delta_wall_p, k_wall, parameters)
     transfer_m, transfer_m_turnover = _biased_exchange_components(
-        state.forest_minus_m2, state.wall_minus_m2,
+        state.forest_minus_m2, wall_target_minus,
         delta_wall_m, k_wall, parameters)
     fp_rate -= transfer_p; fm_rate -= transfer_m
     wp_rate += transfer_p; wm_rate += transfer_m
@@ -817,10 +825,14 @@ def accepted_euler_step(state, driving, systems, topologies, parameters, dt_s):
         "forest_minus_m2", "wall_plus_m2", "wall_minus_m2", "junction_m2")
     for name in nonnegative:
         value = np.asarray(getattr(state, name)); derivative = np.asarray(getattr(rate, name))
+        donor = value
+        if (parameters.extensive_wall_partition_enabled
+                and name in ("wall_plus_m2", "wall_minus_m2")):
+            donor = value*(1.0-state.wall_order[..., None])
         mask = derivative < 0.0
         if np.any(mask):
             scale = min(scale, float(np.min(
-                parameters.maximum_fraction_per_step*value[mask]
+                parameters.maximum_fraction_per_step*donor[mask]
                 /np.maximum(-dt_s*derivative[mask], 1e-300))))
     for name in ("wall_order", "multi_hit_coordination"):
         value = np.asarray(getattr(state, name))
