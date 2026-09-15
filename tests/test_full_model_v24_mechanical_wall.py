@@ -68,6 +68,12 @@ def test_topology_on_branch_has_explicit_R_topology_or_zero_physical_supply():
     if ledger["junction_topology"] is not None:
         source = ledger["junction_topology"]["R_topology_m1_s"]
         assert np.all(np.isfinite(source))
+    detailed_balance = ledger["line_reorientation_topology"]["thermodynamics"]
+    expected = np.broadcast_to(
+        detailed_balance["expected_ratio"],
+        detailed_balance["detailed_balance_ratio"].shape)
+    np.testing.assert_allclose(
+        detailed_balance["detailed_balance_ratio"], expected, rtol=2e-14)
 
 
 def test_complete_checkpoint_restart_matches_continuous_accepted_map_bitwise():

@@ -145,8 +145,9 @@ def accepted_v24_mechanical_step(
         resolved_stress_Pa=drive["raw_stress_Pa"])
     residual = wall_residual(
         state.common, resolved, systems, topologies, mechanics_parameters)
-    _, slip_directions, _ = rotated_system_fields(
+    _, slip_directions, plane_normals = rotated_system_fields(
         systems, state.common.orientation_rad)
+    disordered_line_directions = np.cross(plane_normals, slip_directions)
     velocity_plus = drive["speed_m_s"][..., None]*slip_directions[..., :2]
     velocity_minus = -velocity_plus
     courant_rate = np.max(
@@ -188,25 +189,45 @@ def accepted_v24_mechanical_step(
         family_rate_s = activated_rate_array_s(
             topology_kinetics.junction_process, family_enthalpy,
             common.temperature_K[..., None])
-        fraction = np.minimum(-np.expm1(-accepted_dt*family_rate_s),
-                              topology_kinetics.maximum_junction_fraction_per_step)
-        # Thermodynamic affinity selects direction; this first implementation
-        # only accepts the favorable tangle->ordered branch. The reverse branch
-        # remains available through the detailed-balanced non-reorienting route.
-        favorable = (extensive_parameters.ordered_excess_J_m
-                     < extensive_parameters.disordered_excess_J_m)
-        request_plus = (fraction*working_density.wall_tangle_plus_m2
-                        if favorable else np.zeros_like(
-                            working_density.wall_tangle_plus_m2))
-        request_minus = (fraction*working_density.wall_tangle_minus_m2
-                         if favorable else np.zeros_like(
-                             working_density.wall_tangle_minus_m2))
+        delta_free_energy_J = (
+            (extensive_parameters.ordered_excess_J_m
+             -extensive_parameters.disordered_excess_J_m)
+            *extensive_parameters.event_length_m)
+        thermal_energy_J = 1.380649e-23*common.temperature_K[..., None]
+        affinity = delta_free_energy_J/thermal_energy_J
+        # Two stable logistic factors retain k_forward/k_reverse=exp(-Delta F/kT)
+        # without cancellation when one direction is strongly favored.
+        bounded_affinity = np.clip(affinity, -700.0, 700.0)
+        forward_rate_s = family_rate_s*2.0/(1.0+np.exp(bounded_affinity))
+        reverse_rate_s = family_rate_s*2.0/(1.0+np.exp(-bounded_affinity))
+        forward_fraction = np.minimum(
+            -np.expm1(-accepted_dt*forward_rate_s),
+            topology_kinetics.maximum_junction_fraction_per_step)
+        reverse_fraction = np.minimum(
+            -np.expm1(-accepted_dt*reverse_rate_s),
+            topology_kinetics.maximum_junction_fraction_per_step)
+        request_plus = (
+            forward_fraction*working_density.wall_tangle_plus_m2
+            -reverse_fraction*working_density.wall_ordered_plus_m2)
+        request_minus = (
+            forward_fraction*working_density.wall_tangle_minus_m2
+            -reverse_fraction*working_density.wall_ordered_minus_m2)
         working_density, working_alignment, reorientation_ledger = (
             accepted_line_reorientation_step(
                 working_density, working_alignment, request_plus,
                 request_minus, (0.0, 0.0, 1.0),
+                disordered_line_directions,
                 extensive_parameters.event_length_m, systems,
                 common.orientation_rad, accepted_dt, topologies))
+        reorientation_ledger["thermodynamics"] = {
+            "delta_free_energy_per_event_J": delta_free_energy_J,
+            "forward_rate_s": forward_rate_s,
+            "reverse_rate_s": reverse_rate_s,
+            "detailed_balance_ratio": np.divide(
+                forward_rate_s, reverse_rate_s,
+                out=np.ones_like(forward_rate_s), where=reverse_rate_s > 0.0),
+            "expected_ratio": np.exp(-bounded_affinity),
+        }
         pair_stress = np.stack([
             np.maximum(np.abs(drive["effective_stress_Pa"][..., item.parent_a]),
                        np.abs(drive["effective_stress_Pa"][..., item.parent_b]))

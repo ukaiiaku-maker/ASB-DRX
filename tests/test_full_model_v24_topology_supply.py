@@ -156,7 +156,7 @@ def test_finite_segment_reorientation_carries_node_curvature_and_nye_ledgers():
     request = np.full(inventory.wall_tangle_plus_m2.shape, 5e12)
     updated, aligned, ledger = accepted_line_reorientation_step(
         inventory, alignment, request, np.zeros_like(request),
-        (1.0, 0.0, 0.0), event_length_m=2.5e-9,
+        (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), event_length_m=2.5e-9,
         systems=systems, orientation_rad=orientation, dt_s=1e-7)
     np.testing.assert_allclose(updated.wall_tangle_plus_m2, 1.5e13)
     np.testing.assert_allclose(updated.wall_ordered_plus_m2, 5e12)
@@ -167,6 +167,29 @@ def test_finite_segment_reorientation_carries_node_curvature_and_nye_ledgers():
     assert np.max(np.abs(ledger["R_topology_m1_s"])) > 0.0
     assert np.max(np.abs(ledger["sign"]["plus"]
                              ["paired_node_closure_residual_m3"])) == 0.0
+
+
+def test_finite_segment_reorientation_is_reversible_with_topology_inventory():
+    inventory, alignment, systems, orientation = fixture(n=4)
+    forward = np.full(inventory.wall_tangle_plus_m2.shape, 5e12)
+    first, first_alignment, _ = accepted_line_reorientation_step(
+        inventory, alignment, forward, np.zeros_like(forward),
+        (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), event_length_m=2.5e-9,
+        systems=systems, orientation_rad=orientation, dt_s=1e-7)
+    reverse = -forward
+    restored, restored_alignment, ledger = accepted_line_reorientation_step(
+        first, first_alignment, reverse, np.zeros_like(reverse),
+        (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), event_length_m=2.5e-9,
+        systems=systems, orientation_rad=orientation, dt_s=1e-7)
+    np.testing.assert_allclose(restored.wall_tangle_plus_m2,
+                               inventory.wall_tangle_plus_m2)
+    assert np.max(np.abs(restored.wall_ordered_plus_m2
+                         -inventory.wall_ordered_plus_m2)) < 2e-3
+    assert np.max(np.abs(
+        restored_alignment.wall_turning_nodes_plus_m3)) < 1e8
+    assert np.max(np.abs(restored_alignment.wall_curvature_plus_m3)) < 1e8
+    np.testing.assert_allclose(
+        ledger["sign"]["plus"]["accepted_reverse_m2"], 5e12)
 
 
 def test_junction_first_moment_cannot_exceed_product_line_content():

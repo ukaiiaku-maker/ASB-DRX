@@ -44,11 +44,12 @@ The scalar line source `(m_product-2)*extent`, vector Burgers residual, free
 energy change, and irreversible heat are separate fields.
 
 The single-line cross-slip/climb comparator reorients only a finite segment of
-declared event length. It creates a pair of turning nodes and records the
-integrated turning curvature in m^-3. Scalar line and signed Burgers family are
-unchanged, while the resulting tensorial change is exposed as a separate
-`R_topology`. These node/curvature fields are checkpointed state, not transient
-diagnostics.
+declared event length. A forward event creates a pair of turning nodes and
+records the integrated turning curvature in m^-3; its reverse consumes the
+same stored node and curvature inventories and restores the declared glide-line
+direction. Scalar line and signed Burgers family are unchanged, while the
+resulting tensorial change is exposed as a separate `R_topology`. These
+node/curvature fields are checkpointed state, not transient diagnostics.
 
 ## Kinetics
 
@@ -56,6 +57,11 @@ The extensive ordering attempt rate now calls the campaign-wide EXP-floor
 enthalpy and signed-entropy kernel. Activation entropy is applied once in
 `Delta G* = Delta H*_EXP-floor - T Delta S*`. Every process declares either a
 drag-limited or rejection policy for a nonpositive free barrier.
+
+Finite-segment forward and reverse rates share that same attempt rate and use
+stable logistic affinity factors. Consequently
+`k_forward/k_reverse = exp(-Delta F_event/(k_B T))` pointwise; the free-energy
+affinity selects direction while the EXP-floor barrier controls timescale.
 
 ## Independent qualification
 

@@ -415,8 +415,8 @@ def apply_signed_ordering_extent(inventory, alignments, extent_plus_m2,
 
 def accepted_line_reorientation_step(
         inventory, alignments, requested_plus_m2, requested_minus_m2,
-        ordered_line_direction, event_length_m, systems, orientation_rad,
-        dt_s, topologies=()):
+        ordered_line_direction, disordered_line_direction, event_length_m,
+        systems, orientation_rad, dt_s, topologies=()):
     """Form kink-pair-bounded ordered segments with an explicit Nye source.
 
     A finite segment of existing tangle line is reoriented between two turning
@@ -428,15 +428,22 @@ def accepted_line_reorientation_step(
     if event_length_m <= 0.0 or dt_s <= 0.0:
         raise ValueError("reorientation requires positive event length and time")
     direction = np.asarray(ordered_line_direction, dtype=float)
+    disordered_direction = np.asarray(disordered_line_direction, dtype=float)
     shape = inventory.mobile_plus_m2.shape
-    if direction.shape == (3,):
-        direction = np.broadcast_to(direction, shape+(3,))
-    if direction.shape != shape+(3,) or np.any(~np.isfinite(direction)):
-        raise ValueError("ordered line direction must be vector or grid x family x vector")
-    norm = np.linalg.norm(direction, axis=-1, keepdims=True)
-    if np.any(norm <= 0.0):
-        raise ValueError("ordered line direction cannot vanish")
-    unit = direction/norm
+    def normalized_field(value, label):
+        if value.shape == (3,):
+            value = np.broadcast_to(value, shape+(3,))
+        if value.shape != shape+(3,) or np.any(~np.isfinite(value)):
+            raise ValueError(
+                f"{label} line direction must be vector or grid x family x vector")
+        norm = np.linalg.norm(value, axis=-1, keepdims=True)
+        if np.any(norm <= 0.0):
+            raise ValueError(f"{label} line direction cannot vanish")
+        return value/norm
+    ordered_unit = normalized_field(direction, "ordered")
+    disordered_unit = normalized_field(disordered_direction, "disordered")
+    turning_angle = np.arccos(np.clip(
+        np.sum(disordered_unit*ordered_unit, axis=-1), -1.0, 1.0))
     before = reservoir_nye_m1(alignments, systems, orientation_rad, topologies)
     density_updates = {}; alignment_updates = {}; topology_updates = {}
     sign_ledger = {}
@@ -450,29 +457,47 @@ def accepted_line_reorientation_step(
         ordered = np.asarray(getattr(inventory, oname), dtype=float)
         atangle = np.asarray(getattr(alignments, tname), dtype=float)
         aordered = np.asarray(getattr(alignments, oname), dtype=float)
-        extent = _accepted_extent(request, tangle)
-        fraction = np.divide(extent, tangle, out=np.zeros_like(extent),
-                             where=tangle > 0.0)
-        removed_alignment = fraction[..., None]*atangle
-        created_alignment = extent[..., None]*unit
-        source_unit = np.divide(
-            atangle, np.linalg.norm(atangle, axis=-1, keepdims=True),
-            out=np.zeros_like(atangle),
-            where=np.linalg.norm(atangle, axis=-1, keepdims=True) > 0.0)
-        turning_angle = np.arccos(np.clip(
-            np.sum(source_unit*unit, axis=-1), -1.0, 1.0))
+        trial = np.asarray(request, dtype=float)
+        if trial.shape != tangle.shape or np.any(~np.isfinite(trial)):
+            raise ValueError("reorientation extent must match signed family layout")
+        nodes = np.asarray(getattr(alignments, nname), dtype=float)
+        curvature = np.asarray(getattr(alignments, cname), dtype=float)
+        reverse_limit = np.minimum(ordered, 0.5*nodes*event_length_m)
+        positive_angle = turning_angle > 1e-14
+        curvature_limit = np.divide(
+            curvature*event_length_m, turning_angle,
+            out=np.full_like(curvature, np.inf), where=positive_angle)
+        reverse_limit = np.minimum(reverse_limit, curvature_limit)
+        extent = np.where(trial >= 0.0, np.minimum(trial, tangle),
+                          -np.minimum(-trial, reverse_limit))
+        forward = np.maximum(extent, 0.0)
+        reverse = np.maximum(-extent, 0.0)
+        tangle_fraction = np.divide(
+            forward, tangle, out=np.zeros_like(forward), where=tangle > 0.0)
+        ordered_fraction = np.divide(
+            reverse, ordered, out=np.zeros_like(reverse), where=ordered > 0.0)
+        removed_tangle_alignment = tangle_fraction[..., None]*atangle
+        removed_ordered_alignment = ordered_fraction[..., None]*aordered
+        created_ordered_alignment = forward[..., None]*ordered_unit
+        created_tangle_alignment = reverse[..., None]*disordered_unit
         density_updates[tname] = tangle-extent
         density_updates[oname] = ordered+extent
-        alignment_updates[tname] = atangle-removed_alignment
-        alignment_updates[oname] = aordered+created_alignment
+        alignment_updates[tname] = (atangle-removed_tangle_alignment
+                                    +created_tangle_alignment)
+        alignment_updates[oname] = (aordered-removed_ordered_alignment
+                                    +created_ordered_alignment)
         node_increment = 2.0*extent/event_length_m
         curvature_increment = turning_angle*extent/event_length_m
-        topology_updates[nname] = getattr(alignments, nname)+node_increment
-        topology_updates[cname] = getattr(alignments, cname)+curvature_increment
+        topology_updates[nname] = nodes+node_increment
+        topology_updates[cname] = curvature+curvature_increment
         sign_ledger[sign] = {
-            "accepted_reoriented_line_m2": extent,
-            "removed_alignment_m2": removed_alignment,
-            "created_alignment_m2": created_alignment,
+            "accepted_net_tangle_to_ordered_m2": extent,
+            "accepted_forward_m2": forward,
+            "accepted_reverse_m2": reverse,
+            "removed_tangle_alignment_m2": removed_tangle_alignment,
+            "removed_ordered_alignment_m2": removed_ordered_alignment,
+            "created_ordered_alignment_m2": created_ordered_alignment,
+            "created_tangle_alignment_m2": created_tangle_alignment,
             "turning_node_increment_m3": node_increment,
             "curvature_increment_m3": curvature_increment,
             "paired_node_closure_residual_m3": node_increment
