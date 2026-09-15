@@ -1,0 +1,107 @@
+{
+  "classification": "SIBM_SEQUENTIAL_HANDOFF_PASSED_FULL_DYNAMIC_REQUALIFICATION_PENDING",
+  "fixture_passed": true,
+  "no_phase_or_label_allocation": true,
+  "schema": "v23-sibm-sequential-handoff-audit-1",
+  "scientific_gate_passed": false,
+  "semantic_checks": {
+    "all_stage_uses_every_requested_channel": true,
+    "recovery_stage_releases_heat": true,
+    "storage_stage_stores_boundary_line": true,
+    "transfer_only_has_no_released_heat": true
+  },
+  "stages": [
+    {
+      "boundary_storage_fraction": 0.0,
+      "common_constitutive_increment": false,
+      "ledger": {
+        "boundary_line_stored_m": 0.0,
+        "capacity_limited_volume_m3": 0.0,
+        "child_line_transmitted_m": 0.000148,
+        "heat_released_J": 0.0,
+        "line_closure_m": 0.0,
+        "line_energy_released_J": 0.0,
+        "neutral_pair_annihilated_m": 0.0,
+        "parent_line_processed_m": 0.000148,
+        "requested_swept_volume_m3": 4e-20,
+        "signed_burgers_change_m2": 0.0,
+        "sink_line_m": 0.0,
+        "swept_volume_m3": 4e-20
+      },
+      "passed": true,
+      "restart_bitwise_exact": true,
+      "sink_fraction": 0.0,
+      "stage": "front_transfer_only",
+      "transmission_fraction": 1.0
+    },
+    {
+      "boundary_storage_fraction": 0.2,
+      "common_constitutive_increment": false,
+      "ledger": {
+        "boundary_line_stored_m": 2.12e-05,
+        "capacity_limited_volume_m3": 0.0,
+        "child_line_transmitted_m": 7.4e-05,
+        "heat_released_J": 7.919999999999999e-14,
+        "line_closure_m": 0.0,
+        "line_energy_released_J": 7.919999999999999e-14,
+        "neutral_pair_annihilated_m": 5.2799999999999996e-05,
+        "parent_line_processed_m": 0.000148,
+        "requested_swept_volume_m3": 4e-20,
+        "signed_burgers_change_m2": 0.0,
+        "sink_line_m": 0.0,
+        "swept_volume_m3": 4e-20
+      },
+      "passed": true,
+      "restart_bitwise_exact": true,
+      "sink_fraction": 0.0,
+      "stage": "boundary_storage",
+      "transmission_fraction": 0.5
+    },
+    {
+      "boundary_storage_fraction": 0.0,
+      "common_constitutive_increment": false,
+      "ledger": {
+        "boundary_line_stored_m": 8e-06,
+        "capacity_limited_volume_m3": 0.0,
+        "child_line_transmitted_m": 7.4e-05,
+        "heat_released_J": 9.899999999999998e-14,
+        "line_closure_m": 0.0,
+        "line_energy_released_J": 9.899999999999998e-14,
+        "neutral_pair_annihilated_m": 6.599999999999999e-05,
+        "parent_line_processed_m": 0.000148,
+        "requested_swept_volume_m3": 4e-20,
+        "signed_burgers_change_m2": 0.0,
+        "sink_line_m": 0.0,
+        "swept_volume_m3": 4e-20
+      },
+      "passed": true,
+      "restart_bitwise_exact": true,
+      "sink_fraction": 0.0,
+      "stage": "recovery_and_heat",
+      "transmission_fraction": 0.5
+    },
+    {
+      "boundary_storage_fraction": 0.2,
+      "common_constitutive_increment": true,
+      "ledger": {
+        "boundary_line_stored_m": 2.1448e-05,
+        "capacity_limited_volume_m3": 0.0,
+        "child_line_transmitted_m": 7.492e-05,
+        "heat_released_J": 7.0182e-14,
+        "line_closure_m": 0.0,
+        "line_energy_released_J": 7.0182e-14,
+        "neutral_pair_annihilated_m": 4.6788e-05,
+        "parent_line_processed_m": 0.00014984,
+        "requested_swept_volume_m3": 4e-20,
+        "signed_burgers_change_m2": 0.0,
+        "sink_line_m": 6.684e-06,
+        "swept_volume_m3": 4e-20
+      },
+      "passed": true,
+      "restart_bitwise_exact": true,
+      "sink_fraction": 0.1,
+      "stage": "all_channels",
+      "transmission_fraction": 0.5
+    }
+  ]
+}

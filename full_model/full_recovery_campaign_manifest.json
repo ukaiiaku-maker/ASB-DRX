@@ -333,6 +333,10 @@
       "rejected_v22_glide_line_projection_relative_residual": 0.6267912791582055,
       "nonlinear_local_result_path": "full_model/verification/v23_local_nonlinear_trajectory.json",
       "nonlinear_local_classification": "UNSEEDED_EXTENSIVE_ORDERING_PRESENT_NO_PHYSICAL_WALL",
+      "planar_sibm_result_path": "full_model/verification/v23_planar_sibm_audit.json",
+      "planar_sibm_classification": "PLANAR_SIBM_FUNCTIONAL_PASSED_SEQUENTIAL_HANDOFF_PENDING",
+      "sibm_handoff_result_path": "full_model/verification/v23_sibm_handoff_audit.json",
+      "sibm_handoff_classification": "SIBM_SEQUENTIAL_HANDOFF_PASSED_FULL_DYNAMIC_REQUALIFICATION_PENDING",
       "hpc3_hostname_resolved": true,
       "hpc3_login_alias": "uci-hpc3",
       "queue_audit": {

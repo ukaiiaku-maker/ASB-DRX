@@ -1184,5 +1184,16 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   line. The corrected local bracket still produces no physical wall; the
   failure is now an explicit Frank--Bilby line-supply deficit rather than a
   hidden failure to refill the tangle reservoir.
-- The canonical suite passes 408 tests. No phase or grain label exists in the
+- The V23 zero-external-pressure planar SIBM fixture passes equal-energy
+  stationarity, favorable growth, reverse retreat, and mobility-off
+  stationarity with exactly zero curvature. The common functional derivative
+  agrees with centered finite differences to `4.14e-10`. The pinned-cap audit
+  uses the actual amplitude direction and changes sign across its
+  geometry-specific `0.230 MPa` critical pressure with at most `1.1e-8`
+  derivative error; no flat-interface drive is substituted for the cap.
+- Sequential front-only, boundary-storage, recovery/heat, and all-channel
+  handoffs close line, signed Burgers, and energy/heat ledgers and restart
+  bitwise exactly. SIBM remains a fixture rather than a scientific pass until
+  the full dynamic frozen-state pair is requalified with these controls.
+- The canonical suite passes 411 tests. No phase or grain label exists in the
   V23 wall state, and multi-hit remains disabled.

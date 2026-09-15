@@ -88,3 +88,28 @@ def phase_mean_stored_energy_states(eta, stored_energy_J_m3, purity_threshold=0.
             values[i] = (float(np.sum(weight*stored))/total
                          if total > 0.0 else float(np.mean(stored)))
     return np.broadcast_to(values, fields.shape).copy(), values
+
+
+def frozen_planar_sibm_response(parent_energy_J_m3, child_energy_J_m3,
+                                boundary_mobility_m4_J_s):
+    """Zero-curvature, zero-external-pressure sharp-interface response.
+
+    Positive velocity advances the child into the parent.  This is the planar
+    limit of the same common stored-energy functional: ``v=M(f_p-f_c)``.
+    Mobility has units m^4/(J s), pressure J/m^3=Pa, and velocity m/s.
+    """
+    parent = float(parent_energy_J_m3)
+    child = float(child_energy_J_m3)
+    mobility = float(boundary_mobility_m4_J_s)
+    if (not np.isfinite(parent) or not np.isfinite(child)
+            or not np.isfinite(mobility) or min(parent, child, mobility) < 0):
+        raise ValueError("planar SIBM energies and mobility must be nonnegative")
+    pressure = parent-child
+    return {
+        "parent_energy_J_m3": parent,
+        "child_energy_J_m3": child,
+        "stored_energy_pressure_Pa": pressure,
+        "external_pressure_Pa": 0.0,
+        "curvature_m1": 0.0,
+        "normal_velocity_m_s": mobility*pressure,
+    }
