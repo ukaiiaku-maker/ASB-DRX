@@ -1,0 +1,82 @@
+{
+  "cases": [
+    {
+      "amplitude_change_cells": -0.02397089122975395,
+      "amplitude_change_m": -1.8727258773245276e-09,
+      "checkpoint": "full_model/verification/v21_alternative_sibm/subcritical/drx_v25_restart_000539.npz",
+      "checkpoint_sha256": "8110d82808118b523d729802c855d473f137d3d4e7dc20fa6d1af7ea9e1a2e22",
+      "continuation_pressure_relative_to_declared_neutral_Pa": -5000000.0,
+      "directory": "full_model/verification/v21_alternative_sibm/subcritical",
+      "expected_sign": -1,
+      "final_amplitude_m": 5.653937064886986e-07,
+      "initial_amplitude_m": 5.672664323660231e-07,
+      "ledger": {
+        "boundary_line_stored_m": 2.3987583658598974e-10,
+        "capacity_limited_volume_m3": 0.0,
+        "child_line_transmitted_m": 3.198687080147203e-09,
+        "heat_released_J": 4.6053215772007955e-18,
+        "line_closure_m": 1.550963648536927e-25,
+        "line_energy_released_J": 4.6053215772007955e-18,
+        "neutral_pair_annihilated_m": 2.8965204805388737e-09,
+        "parent_line_processed_m": 6.397374160294406e-09,
+        "requested_swept_volume_m3": 3.344879286779402e-26,
+        "signed_burgers_change_m2": 0.0,
+        "sink_line_m": 6.229076302234133e-11,
+        "swept_volume_m3": 3.344879286779402e-26
+      },
+      "ledger_passed": true,
+      "name": "subcritical",
+      "no_label_or_orientation_allocation": true,
+      "passed": true,
+      "reported_local_normal_pressure_Pa": 16159915.323658261,
+      "reported_terminal_area_velocity_m_s": -0.0006424753289473635,
+      "sign_or_stationarity_passed": true
+    },
+    {
+      "amplitude_change_cells": 0.13052443958316448,
+      "amplitude_change_m": 1.0197221842434726e-08,
+      "checkpoint": "full_model/verification/v21_alternative_sibm/supercritical/drx_v25_restart_000539.npz",
+      "checkpoint_sha256": "db9b5a8a4c2109605a4874db49e3091743abcc46cf0a108cfb1dafdda5cbc483",
+      "continuation_pressure_relative_to_declared_neutral_Pa": 5000000.000000001,
+      "directory": "full_model/verification/v21_alternative_sibm/supercritical",
+      "expected_sign": 1,
+      "final_amplitude_m": 5.774636542084578e-07,
+      "initial_amplitude_m": 5.672664323660231e-07,
+      "ledger": {
+        "boundary_line_stored_m": 3.3286298433369726e-07,
+        "capacity_limited_volume_m3": 0.0,
+        "child_line_transmitted_m": 5.4213008420720736e-06,
+        "heat_released_J": 7.919930179229684e-15,
+        "line_closure_m": 4.433688083284228e-22,
+        "line_energy_released_J": 7.919930179229684e-15,
+        "neutral_pair_annihilated_m": 4.981312850207042e-06,
+        "parent_line_processed_m": 1.0842601684144147e-05,
+        "requested_swept_volume_m3": 2.9059375796916356e-23,
+        "signed_burgers_change_m2": 0.0,
+        "sink_line_m": 1.0712500753133423e-07,
+        "swept_volume_m3": 2.9059375796916356e-23
+      },
+      "ledger_passed": true,
+      "name": "supercritical",
+      "no_label_or_orientation_allocation": true,
+      "passed": true,
+      "reported_local_normal_pressure_Pa": 30349677.14797534,
+      "reported_terminal_area_velocity_m_s": 0.0,
+      "sign_or_stationarity_passed": true
+    }
+  ],
+  "claim_limit": "short generic pinned-HAGB sign discrimination; not converged production SIBM kinetics or material calibration",
+  "classification": "V21_EXISTING_HAGB_SIBM_SIGN_DISCRIMINATION_PASSED",
+  "fixture_passed": true,
+  "hpc3_job_launched": false,
+  "purpose": "Outcome-C/D fallback after the common intragranular operator selected only uniform order and no robust finite signed-wall mode",
+  "schema": "asb-drx/v21-existing-hagb-fallback/v1",
+  "scientific_gate_passed": true,
+  "source": {
+    "Ng": 12,
+    "amplitude_m": 5.672664323660231e-07,
+    "grid": 128,
+    "path": ".hpc3/inputs/v14_equilibrated_common_128.npz",
+    "sha256": "084b789dd020f2159f4da1b23722218dd5ab6d9a55299ab71505aed4866cdc79"
+  }
+}

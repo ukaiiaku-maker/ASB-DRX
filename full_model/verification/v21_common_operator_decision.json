@@ -1,0 +1,117 @@
+{
+  "schema": "asb-drx/v21-common-operator-decision/v1",
+  "date": "2026-09-14",
+  "scientific_source_commit": "23f6e4188cf162a81bd2858835b717209e66fe6d",
+  "starting_checkpoint": "ff125d678d63a17c0b89c98c33b6cb5d64298b6a",
+  "common_operator_implemented": true,
+  "production_and_projected_operator_identical": true,
+  "collective_multi_hit_enabled": false,
+  "phase_or_grain_allocation_enabled_during_wall_qualification": false,
+  "trajectory_classification": {
+    "homogeneous_noise": "UNIFORM_ORDERING_ONLY",
+    "mechanical_particle": "UNIFORM_ORDERING_ONLY"
+  },
+  "on_trajectory_exposure": {
+    "homogeneous_uniform_G": 43.36062674160926,
+    "homogeneous_finite_signed_wall_G": 0.0,
+    "particle_uniform_G": 43.12008898999606,
+    "particle_finite_signed_wall_G": 0.0
+  },
+  "final_state": {
+    "homogeneous": {
+      "physical_time_s": 3.6626631426250803e-06,
+      "strain": 0.003662663142625085,
+      "wall_order_mean": 0.9999999999999992,
+      "wall_order_std": 1.3668035872266426e-16,
+      "aggregate_wall_polarization_mean": 1.2226966786965982e-12,
+      "orientation_span_deg": 1.236687340412252e-05,
+      "dual_nye_relative_residual": 1.4073684781540602e-13
+    },
+    "mechanical_particle": {
+      "physical_time_s": 3.646406209364808e-06,
+      "strain": 0.0036464062093648094,
+      "wall_order_mean": 0.999999999999941,
+      "wall_order_std": 2.015170052321633e-13,
+      "aggregate_wall_polarization_mean": 2.5047296836328607e-09,
+      "orientation_span_deg": 0.005614760699306903,
+      "dual_nye_relative_residual": 3.7838979935605105e-15
+    }
+  },
+  "maximum_balance_residuals": {
+    "relative_burgers_rate": 7.961160258408833e-17,
+    "relative_line": 1.6232538484740258e-16,
+    "relative_energy_heat": 2.8868253500096194e-17,
+    "relative_nye_divergence": 1.1743994481628516e-15
+  },
+  "bounded_search": {
+    "state_count": 36,
+    "temperature_K": [900.0, 1300.0, 1600.0],
+    "density_over_reference": [0.5, 1.3, 3.0],
+    "wall_order": [0.01, 0.5],
+    "domains_um": [7.3, 11.1],
+    "robust_interior_matches": 0,
+    "maximum_signed_wall_growth_s_inv": -0.05815191717598668,
+    "maximum_finite_over_uniform_advantage_s_inv": -0.08116037050910614,
+    "finite_mode_region_found": false
+  },
+  "primary_decision": "UNIFORM_RESERVOIR_OR_ORDER_TRANSITION_NOT_A_LAGB",
+  "signed_wall_decision": "INTRAGRANULAR_WALL_MECHANISM_NOT_EXERCISED_IN_BOUNDED_LOADING_FAMILY",
+  "wall_hpc3_campaign_authorized": false,
+  "wall_hpc3_job_launched": false,
+  "decision_grade_outcome_reached": true,
+  "fallback": {
+    "pathway": "existing_HAGB_SIBM_common_moving_front",
+    "classification": "V21_EXISTING_HAGB_SIBM_SIGN_DISCRIMINATION_PASSED",
+    "subcritical_amplitude_change_cells": -0.02397089122975395,
+    "supercritical_amplitude_change_cells": 0.13052443958316448,
+    "claim_limit": "short generic sign discrimination, not converged SIBM kinetics or material calibration",
+    "hpc3_job_launched": false
+  },
+  "verification": {
+    "configured_tests_passed": 383,
+    "exact_restart_passed": true,
+    "legacy_common_numeric_fields_bitwise_equal": 144,
+    "legacy_regression_passed": true,
+    "grain_count_remained_one_during_wall_qualification": true
+  },
+  "artifacts": {
+    "trajectory_audit": {
+      "path": "full_model/verification/v21_common_on_trajectory_audit.json",
+      "sha256": "285bb2104e4696ae9ad012428e86704422f4872a6c4fa2b2a48fec5314f5d199"
+    },
+    "bounded_search": {
+      "path": "full_model/verification/v21_bounded_common_spectrum_search.json",
+      "sha256": "f825d9c412767115155ee03c6c72b51f7f53861ff16e9c9af008c5dfa1cc2dce"
+    },
+    "exact_restart": {
+      "path": "full_model/verification/v21_common_restart.json",
+      "sha256": "bb0712123a469dc41f98878d568d9e8bbad3c91b125026721d4a00fbba15700a"
+    },
+    "legacy_regression": {
+      "path": "full_model/verification/v21_legacy_regression.json",
+      "sha256": "9db058f18577a3fd70f1551db3fc9dfe6788bfe57d73d9d35483ef8dc265e400"
+    },
+    "fallback_decision": {
+      "path": "full_model/verification/v21_alternative_sibm_decision.json",
+      "sha256": "5bde222f7c889c04e0c156b40e5cb7996d3e9ef45c8529a7982190906a83b08b"
+    },
+    "raw_local_evidence_manifest": {
+      "path": "full_model/verification/v21_local_evidence_manifest.json",
+      "sha256": "e142a05a0db0885e63666632f4f2ebe0779b0cf9470ba3153ee7d8725e9b5629"
+    },
+    "homogeneous_field_plot": {
+      "path": "full_model/verification/v21_common_homogeneous_fields.png",
+      "sha256": "48baadebe4175749e6773f55c992a8579a2a32430b2a0337d97697eecdcda3c4"
+    },
+    "particle_field_plot": {
+      "path": "full_model/verification/v21_common_particle_fields.png",
+      "sha256": "75ae1a33f5793cefc0e1aa1f67421d7c78ca020b073ffc382a01e3cbf543b24b"
+    }
+  },
+  "untouched_external_jobs_at_final_audit": [
+    {"job_id": "55950433", "state": "RUNNING", "relationship": "unrelated"},
+    {"job_id": "56017421", "state": "RUNNING", "relationship": "unrelated"}
+  ],
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

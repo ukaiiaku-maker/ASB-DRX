@@ -1,0 +1,272 @@
+{
+  "schema": "asb-drx/v21-local-evidence-manifest/v1",
+  "scientific_source_commit": "23f6e4188cf162a81bd2858835b717209e66fe6d",
+  "execution": "local_same_host",
+  "roots": [
+    "full_model/verification/v21_on_trajectory",
+    "full_model/verification/v21_alternative_sibm"
+  ],
+  "file_count": 52,
+  "files": [
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_diagnostic_audit.png",
+      "bytes": 130210,
+      "sha256": "a235642c60b37dd850d99030e967dfad244aeaf6789c738d0b52db8b638e7017"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_potential.png",
+      "bytes": 93316,
+      "sha256": "c66c3320264a5c5f5f523443f5ee88905aad3d6567b40b1d35e72cf1a92fd874"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000000.npz",
+      "bytes": 359042,
+      "sha256": "cc2ec61705f0820143db106310e5899b6f7ce1e45618f07e33ec784e97381498"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000020.npz",
+      "bytes": 398756,
+      "sha256": "24937e14be5e96f3c2425e635fd57a9b71a71e7d292933b5ba615f2d30410a82"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000040.npz",
+      "bytes": 398545,
+      "sha256": "9fbcfcbccad8ba4d8be74dafc148da022f8b324f9e9aea5afdaa72804bb29b5d"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000060.npz",
+      "bytes": 396125,
+      "sha256": "4c501feb314a28d93b6adc7eef5a588c8aa908ee15f1e677da489d81a9712b5e"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000080.npz",
+      "bytes": 395732,
+      "sha256": "6e4b864d3b5bfe6567bb2a6734e2576ae04699bbe684868947f2781865b1710c"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000100.npz",
+      "bytes": 395687,
+      "sha256": "31b0b0ba7fb17184db1921c02062cc7c15fa62644a47c18173b34e977100e664"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000120.npz",
+      "bytes": 395965,
+      "sha256": "43464bc77ea986b76406b3ed687c6742fd0c936380a34712a9460f44eb5dc257"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000140.npz",
+      "bytes": 396199,
+      "sha256": "b6dce51b434a92df286bd2d47fb1b1828b7a68bae03794d6f7214634c7ef5bf6"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000160.npz",
+      "bytes": 396302,
+      "sha256": "eafea113a038dae25d3245c7e9409abc3db94fa7a6394e50e0c6cfa982c33d0b"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000180.npz",
+      "bytes": 396369,
+      "sha256": "2a6452e69f99d4a64df54bb85589398efd44e1d477c85fa15d2e7a5627e81bf1"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000200.npz",
+      "bytes": 396294,
+      "sha256": "2b68a0327ce71c11b9b8a82afe489ec34759ed55cbecf829eb778e4c7eec9486"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000219.npz",
+      "bytes": 396217,
+      "sha256": "9c2a6df326b64237086a286c19468409805bed342e79de40ef1cd23586952923"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_asb_diagnostics.csv",
+      "bytes": 39371,
+      "sha256": "5b86f28e97754e2ddb913779fdf907bf896253848017f3699e41531b558d6391"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_summary.png",
+      "bytes": 125439,
+      "sha256": "47af01695b0ae0932c6044fbf1d8843c73af4cea08a491a10b73ca0b99b047d8"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/homogeneous/run.log",
+      "bytes": 20938,
+      "sha256": "0f78f68acb14d8c9e3d0cbe4f2553f257a4c51dea48452a5c2f19908728106dc"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_diagnostic_audit.png",
+      "bytes": 126639,
+      "sha256": "785248c41ba677ed9e37f3972b1ff9da0b086cd498494b9cbbfd74b8433f4993"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_potential.png",
+      "bytes": 93375,
+      "sha256": "1891bf0412ba8f85b650f24ce83a572d051a51613e67acd7bd6df61f5bc4c1b7"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000000.npz",
+      "bytes": 388359,
+      "sha256": "036f1b55f8c1e268822205f1d93a2d619b755f994264cb5e3bfffe149aa90224"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000020.npz",
+      "bytes": 402474,
+      "sha256": "cf4a0d4a1cc87360ba8bcab5b8da72daa6cd44a53cdc4dee03c68cd3da70fdd1"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000040.npz",
+      "bytes": 402515,
+      "sha256": "22af71154095fbaf5b8a1c08c4fd2e5db55e0dc689f20f6d461cf41efce51ce8"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000060.npz",
+      "bytes": 400310,
+      "sha256": "05cb1cd50320861d2dcc337b7047e82d5f8aa9589d4d2917f07861149fd787b0"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000080.npz",
+      "bytes": 400224,
+      "sha256": "9fa4b1e0881d81c39878f978b400e82e19d948fa64bffa4a0d71a1dbc6b43ade"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000100.npz",
+      "bytes": 400233,
+      "sha256": "9eaad1921016a60fc794317e9df274a4d977dd623b163c10e110636710b90cf6"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000120.npz",
+      "bytes": 400277,
+      "sha256": "e0842795736280cbf72bca170e9fe221967242cc68e88e090e922e335ca8089d"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000140.npz",
+      "bytes": 400290,
+      "sha256": "e23af71d77300e0d5b86adbd4d4d50cd5178f4043890ee9b45ba89b61595fd68"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000160.npz",
+      "bytes": 400214,
+      "sha256": "320d64a90aaacd09dd0198bf5a6ec5265d9e0a65c22c36e66d8da8c371cac556"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000180.npz",
+      "bytes": 400233,
+      "sha256": "9ed585f17f8f22b168a821009908850008afb956b1bd5940b88ef3ead2ab5119"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000200.npz",
+      "bytes": 400201,
+      "sha256": "ede2627b8f2ef279d98d2ce9b7c0edc4253635f117ad8240bbdfd06ee485f0ad"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000219.npz",
+      "bytes": 400112,
+      "sha256": "e73ffa2c44c3c45531c3aa20d4ac121373bef5679fcca21ef667feea8ebcfa32"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_asb_diagnostics.csv",
+      "bytes": 40134,
+      "sha256": "748f84b4412c9461f1f7962b922d5f7d3fce4edf989b2ced559ace6bb7f928f6"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_summary.png",
+      "bytes": 122145,
+      "sha256": "dcc021b1aa821247d2112878b91b96d4e1eac2d5f27043f96da19f8400a13f87"
+    },
+    {
+      "path": "full_model/verification/v21_on_trajectory/particle/run.log",
+      "bytes": 20903,
+      "sha256": "dc63f4844cd36c3fa701817922b10782580aeedf3b2633477ade08845ac229e2"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/drx_v25_diagnostic_audit.png",
+      "bytes": 110558,
+      "sha256": "38ccaf366b0eee5c4aa856425892cf6e4c24cb6d48b9f2541417d6fa37923bec"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/drx_v25_potential.png",
+      "bytes": 89004,
+      "sha256": "ebdcbe27fa805f12d655b20394c15bc1668495dd7e93dc2535b30fdb728f1cee"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/drx_v25_restart_000539.npz",
+      "bytes": 4593291,
+      "sha256": "8110d82808118b523d729802c855d473f137d3d4e7dc20fa6d1af7ea9e1a2e22"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/drx_v25_restart_asb_diagnostics.csv",
+      "bytes": 26402,
+      "sha256": "177063b0757feeb2924a835a1007823bc6a5e8f3e70d2c0432d2ad52020e9f30"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/drx_v25_summary.png",
+      "bytes": 121474,
+      "sha256": "8b151c1dd6f1e64be5fda5482961878c202c6e59157f1f3f8030a97849877c9d"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/drx_v8_fields_000539.npz",
+      "bytes": 1859065,
+      "sha256": "36946af085f2cd09a6f1435a718aa48c788471c52bb4583d0d12d14fb2d7994b"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/runner.log",
+      "bytes": 16802,
+      "sha256": "568b278e98d4eb64b5436dec0d08ab27379f28c5d1a151fc393b575ac9fab47e"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/sibm_contour_diagnostics.csv",
+      "bytes": 3667,
+      "sha256": "219da2bcdf652983d545e4fb12415162de56e7611b6656c65d45e8f9bd15729b"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/subcritical/v34_params.json",
+      "bytes": 5823,
+      "sha256": "c284754f8b29e51f74f7b79903a9d6a79833725499fbf9b3ea25e5c845b61d24"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/drx_v25_diagnostic_audit.png",
+      "bytes": 110124,
+      "sha256": "3622c32baca125ac2191b505876004dd265d2db8297d97a8a1ebc18809cdf88a"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/drx_v25_potential.png",
+      "bytes": 89004,
+      "sha256": "ebdcbe27fa805f12d655b20394c15bc1668495dd7e93dc2535b30fdb728f1cee"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/drx_v25_restart_000539.npz",
+      "bytes": 4588939,
+      "sha256": "db9b5a8a4c2109605a4874db49e3091743abcc46cf0a108cfb1dafdda5cbc483"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/drx_v25_restart_asb_diagnostics.csv",
+      "bytes": 26422,
+      "sha256": "af62c2966e7cdbc271820c0c1fdf3ab960f02987d6a7b56f305ac309880df030"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/drx_v25_summary.png",
+      "bytes": 135240,
+      "sha256": "cee5066bbaaf52bb1e79e876a883b439a9deb9ce6c291e7e7bf7d0a3a268f4ea"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/drx_v8_fields_000539.npz",
+      "bytes": 1859220,
+      "sha256": "e4f3b9f906029bebfdc36185847a435da8d9ad059c8428e7fe5cb3a19b7ca5e9"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/runner.log",
+      "bytes": 16814,
+      "sha256": "b25b7891fd4dda97a28b51dbd756841d28bf44834df19ec78bf815b5636ce6f0"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/sibm_contour_diagnostics.csv",
+      "bytes": 3563,
+      "sha256": "6e09e0c967784c49c7787942251fe1b08629e9b300b51c8288130a73963248ee"
+    },
+    {
+      "path": "full_model/verification/v21_alternative_sibm/supercritical/v34_params.json",
+      "bytes": 5823,
+      "sha256": "13bdc9b13d1bb59ccda806df0bb2acb272beb465b2e9c590bc487979d5cc9047"
+    }
+  ]
+}

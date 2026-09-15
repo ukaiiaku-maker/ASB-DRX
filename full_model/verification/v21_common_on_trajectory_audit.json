@@ -1,0 +1,4678 @@
+{
+  "schema": "asb-drx/v21-common-on-trajectory-audit/v1",
+  "operator": "Fourier blocks assembled only from JVPs of the production residual",
+  "branches": {
+    "homogeneous_noise": {
+      "modes": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "checkpoints": [
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000000.npz",
+          "step": 0,
+          "time_s": 1e-06,
+          "strain": 0.001,
+          "stress_MPa": 151.578947368421,
+          "temperature_mean_K": 1300.0792750277353,
+          "wall_order_mean": 4.072268064761096e-05,
+          "wall_order_std": 3.970157571547322e-06,
+          "orientation_span_deg": 0.0,
+          "nye_relative_residual": 0.0,
+          "nye_divergence_relative_rms": 0.0,
+          "reaction_exposure": {
+            "annihilation_pairs": 1.4709854616867869e-06,
+            "junction_turnover": 3.5091314881744776e-05,
+            "lock_minus_turnover": 0.00062467598266232,
+            "lock_plus_turnover": 0.00062467598266232,
+            "multiplication_pairs": 0.0,
+            "order": 3.973499091429259e-05,
+            "wall_minus_turnover": 0.0003641588100466155,
+            "wall_plus_turnover": 0.0003641588100466155
+          },
+          "balance_ledger": {
+            "accepted_steps": 1,
+            "cumulative_free_energy_change_J_m3": -301245.10539378785,
+            "cumulative_heat_J_m3": 301245.10539378785,
+            "cumulative_plastic_work_J_m3": 0.0,
+            "maximum_relative_burgers_rate_residual": 0.0,
+            "maximum_relative_energy_balance_residual": 0.0,
+            "maximum_relative_line_balance_residual": 1.1217139799057332e-16,
+            "minimum_accept_scale": 1.0
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 41102579.086787455,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 4.285208291672449e-18,
+                  "wall_order": 0.9999999999528921,
+                  "beta_p": 5.175501781064246e-20,
+                  "orientation": 6.379692265078479e-22,
+                  "temperature": 4.710781263812749e-11,
+                  "junction": 1.5276133231971507e-19,
+                  "signed_polarization": 7.023517964358958e-32,
+                  "unsigned_density": 4.285208291672379e-18
+                }
+              },
+              "leading_wall_candidate": {
+                "real_growth_s_inv": 4.318909275849331e-06,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.6394160324342696,
+                  "wall_order": 3.723977762532659e-26,
+                  "beta_p": 8.081619636917225e-05,
+                  "orientation": 5.162577102065156e-20,
+                  "temperature": 1.1907816072470227e-19,
+                  "junction": 0.3605031513693615,
+                  "signed_polarization": 0.6394160324342693,
+                  "unsigned_density": 1.9212834228744122e-19
+                }
+              }
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 41094758.64124255,
+                "imaginary_s_inv": 48.4982855246736,
+                "participation": {
+                  "density": 4.3517729998152304e-18,
+                  "wall_order": 0.9999999999521871,
+                  "beta_p": 5.273663390638558e-20,
+                  "orientation": 6.479690452407969e-22,
+                  "temperature": 4.781287657151784e-11,
+                  "junction": 1.5513216213847733e-19,
+                  "signed_polarization": 1.698924172303337e-24,
+                  "unsigned_density": 4.351771300891059e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 41071416.84979126,
+                "imaginary_s_inv": 7.544690064635618e-09,
+                "participation": {
+                  "density": 4.238657664825924e-18,
+                  "wall_order": 0.9999999999534881,
+                  "beta_p": 5.13600379623376e-20,
+                  "orientation": 6.310547767762115e-22,
+                  "temperature": 4.6511933788144564e-11,
+                  "junction": 1.5117962512721997e-19,
+                  "signed_polarization": 6.618304996290094e-24,
+                  "unsigned_density": 4.2386510465209284e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 41032393.782745734,
+                "imaginary_s_inv": -48.49828686368787,
+                "participation": {
+                  "density": 4.3610539740041735e-18,
+                  "wall_order": 0.9999999999522451,
+                  "beta_p": 5.283279281194942e-20,
+                  "orientation": 6.491500244799645e-22,
+                  "temperature": 4.775480971356716e-11,
+                  "junction": 1.5568756457997388e-19,
+                  "signed_polarization": 1.531817913973406e-23,
+                  "unsigned_density": 4.361038655825035e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 41094785.371327884,
+                "imaginary_s_inv": 10.193511726107701,
+                "participation": {
+                  "density": 4.281713046468194e-18,
+                  "wall_order": 0.9999999999529521,
+                  "beta_p": 5.1771510381085087e-20,
+                  "orientation": 6.365293338383675e-22,
+                  "temperature": 4.7047835436558145e-11,
+                  "junction": 1.5265141229825675e-19,
+                  "signed_polarization": 7.179244983597309e-25,
+                  "unsigned_density": 4.281712328543698e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 41071335.88838157,
+                "imaginary_s_inv": 7.544681640130631e-09,
+                "participation": {
+                  "density": 4.447408082661332e-18,
+                  "wall_order": 0.9999999999511928,
+                  "beta_p": 5.376871152403017e-20,
+                  "orientation": 6.610849205088765e-22,
+                  "temperature": 4.880713717163023e-11,
+                  "junction": 1.5864475561734589e-19,
+                  "signed_polarization": 2.982475547229416e-24,
+                  "unsigned_density": 4.447405100185785e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 41032420.51283187,
+                "imaginary_s_inv": -10.193512017843725,
+                "participation": {
+                  "density": 4.290836472321103e-18,
+                  "wall_order": 0.9999999999530093,
+                  "beta_p": 5.186572732412565e-20,
+                  "orientation": 6.37687885873681e-22,
+                  "temperature": 4.6990697708151797e-11,
+                  "junction": 1.5319790600711988e-19,
+                  "signed_polarization": 6.4730690142698866e-24,
+                  "unsigned_density": 4.290829999252087e-18
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000020.npz",
+          "step": 20,
+          "time_s": 3.109873769723911e-06,
+          "strain": 0.003109873769723911,
+          "stress_MPa": 442.3439463147859,
+          "temperature_mean_K": 1316.2637657480223,
+          "wall_order_mean": 0.9380283977347428,
+          "wall_order_std": 0.008595822060499018,
+          "orientation_span_deg": 6.733983637507874e-06,
+          "nye_relative_residual": 3.13471196795553e-14,
+          "nye_divergence_relative_rms": 3.343964896328723e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 4.755768036912568e-06,
+            "junction_turnover": 0.00011048712315330932,
+            "lock_minus_turnover": 0.001993499891665373,
+            "lock_plus_turnover": 0.0019934998916653645,
+            "multiplication_pairs": 7.327672645404497e-13,
+            "order": 0.9380274100450097,
+            "wall_minus_turnover": 0.0011659443688449172,
+            "wall_plus_turnover": 0.0011659443688449172
+          },
+          "balance_ledger": {
+            "accepted_steps": 21,
+            "cumulative_free_energy_change_J_m3": -61720517.861786,
+            "cumulative_heat_J_m3": 61807309.354450166,
+            "cumulative_plastic_work_J_m3": 86791.49266415418,
+            "maximum_relative_burgers_rate_residual": 4.658299620170443e-17,
+            "maximum_relative_energy_balance_residual": 3.081583542908808e-18,
+            "maximum_relative_line_balance_residual": 1.1217139799057332e-16,
+            "minimum_accept_scale": 0.0030952106172815468
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 1.2895893175441592e-06,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0005893341363896355,
+                  "wall_order": 5.748646041341687e-18,
+                  "beta_p": 0.99925234559132,
+                  "orientation": 1.9784830042514993e-18,
+                  "temperature": 7.650749600419949e-19,
+                  "junction": 0.00015832027229039294,
+                  "signed_polarization": 0.0005893341363896274,
+                  "unsigned_density": 7.907846862732325e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.0033741578054773034,
+                "imaginary_s_inv": -0.0007706908021874425,
+                "participation": {
+                  "density": 1.520543782423358e-09,
+                  "wall_order": 1.3818588407965884e-13,
+                  "beta_p": 0.9999999984036818,
+                  "orientation": 1.515052097984431e-11,
+                  "temperature": 1.2002409472825315e-13,
+                  "junction": 6.03655809764468e-11,
+                  "signed_polarization": 1.5172853152967512e-09,
+                  "unsigned_density": 3.258467126606582e-12
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.010191461782275979,
+                "imaginary_s_inv": 1.3126205075462697e-05,
+                "participation": {
+                  "density": 3.363135014691039e-09,
+                  "wall_order": 1.6488415954629466e-12,
+                  "beta_p": 0.999999996367358,
+                  "orientation": 1.3159481115201336e-10,
+                  "temperature": 9.666620029924927e-13,
+                  "junction": 1.3529658450616356e-10,
+                  "signed_polarization": 3.3351248192207267e-09,
+                  "unsigned_density": 2.801019547031359e-11
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.06544480563347418,
+                "imaginary_s_inv": 0.011597065799842756,
+                "participation": {
+                  "density": 5.880093854111522e-08,
+                  "wall_order": 1.46099008563374e-10,
+                  "beta_p": 0.9999999328647596,
+                  "orientation": 5.667446595538406e-09,
+                  "temperature": 2.7170323583823764e-11,
+                  "junction": 2.493585955020842e-09,
+                  "signed_polarization": 5.7598768596317664e-08,
+                  "unsigned_density": 1.2021699447975664e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 3.3694459508619e-08,
+                "imaginary_s_inv": -3.489276530903373e-10,
+                "participation": {
+                  "density": 1.3458325900439036e-19,
+                  "wall_order": 8.80265403880448e-24,
+                  "beta_p": 1.0,
+                  "orientation": 3.9951466388997125e-23,
+                  "temperature": 6.335710411086721e-23,
+                  "junction": 1.5909247944326236e-20,
+                  "signed_polarization": 1.321352851658804e-19,
+                  "unsigned_density": 2.447973838509948e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.7040712026030287e-08,
+                "imaginary_s_inv": 3.099456540067336e-08,
+                "participation": {
+                  "density": 6.136208470132068e-20,
+                  "wall_order": 2.546412086728802e-22,
+                  "beta_p": 1.0,
+                  "orientation": 2.6923819366294363e-21,
+                  "temperature": 1.01330601511943e-21,
+                  "junction": 1.5221253794446598e-21,
+                  "signed_polarization": 5.1963572055179587e-20,
+                  "unsigned_density": 9.398512646141086e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000040.npz",
+          "step": 40,
+          "time_s": 3.168861684357243e-06,
+          "strain": 0.003168861684357243,
+          "stress_MPa": 448.5292710539703,
+          "temperature_mean_K": 1316.4657375005713,
+          "wall_order_mean": 0.9975658891229324,
+          "wall_order_std": 0.00036065311829933604,
+          "orientation_span_deg": 5.167635549783121e-06,
+          "nye_relative_residual": 4.059297869694058e-14,
+          "nye_divergence_relative_rms": 3.808239507450313e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 4.87928492300967e-06,
+            "junction_turnover": 0.00011208027407539076,
+            "lock_minus_turnover": 0.0020405315481971144,
+            "lock_plus_turnover": 0.002040531548197102,
+            "multiplication_pairs": 7.98289988633613e-13,
+            "order": 0.9975649014331992,
+            "wall_minus_turnover": 0.0011959443523292,
+            "wall_plus_turnover": 0.0011959443523292
+          },
+          "balance_ledger": {
+            "accepted_steps": 41,
+            "cumulative_free_energy_change_J_m3": -62479840.25149811,
+            "cumulative_heat_J_m3": 62579646.558282696,
+            "cumulative_plastic_work_J_m3": 99806.30678458449,
+            "maximum_relative_burgers_rate_residual": 5.882614385039455e-17,
+            "maximum_relative_energy_balance_residual": 8.544955428754756e-18,
+            "maximum_relative_line_balance_residual": 1.1217139799057332e-16,
+            "minimum_accept_scale": 0.0028926592418153027
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 6.274094237642633e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.01396091406865783,
+                  "wall_order": 2.5974793075615475e-22,
+                  "beta_p": 0.9858210596422164,
+                  "orientation": 4.3291171827457204e-19,
+                  "temperature": 4.176964068841537e-22,
+                  "junction": 0.0002180262891257204,
+                  "signed_polarization": 0.013960914068657829,
+                  "unsigned_density": 1.888668584582121e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.08825734824184402,
+                "imaginary_s_inv": -0.0002595563340097263,
+                "participation": {
+                  "density": 3.041815871506034e-07,
+                  "wall_order": 1.839589159199323e-12,
+                  "beta_p": 0.9999996692241853,
+                  "orientation": 1.011299428403234e-08,
+                  "temperature": 2.289327682126347e-12,
+                  "junction": 1.6477104400287713e-08,
+                  "signed_polarization": 3.0128878313805615e-07,
+                  "unsigned_density": 2.8928040125471667e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.29221431373086726,
+                "imaginary_s_inv": 9.82461944098741e-08,
+                "participation": {
+                  "density": 1.001542035796023e-06,
+                  "wall_order": 1.8420836999592883e-11,
+                  "beta_p": 0.9999988358210317,
+                  "orientation": 1.098389353479884e-07,
+                  "temperature": 2.2475213149876294e-12,
+                  "junction": 5.2777329096122377e-08,
+                  "signed_polarization": 9.71790077886503e-07,
+                  "unsigned_density": 2.9751957909519723e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.5637306275087821,
+                "imaginary_s_inv": -3.3727721108613656e-05,
+                "participation": {
+                  "density": 1.918174365111178e-06,
+                  "wall_order": 6.218173067503753e-11,
+                  "beta_p": 0.9999975727983943,
+                  "orientation": 4.0798209525739707e-07,
+                  "temperature": 2.072354250515049e-12,
+                  "junction": 1.009808912384001e-07,
+                  "signed_polarization": 1.809943527111727e-06,
+                  "unsigned_density": 1.0823083799945108e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 6.314250787757899e-11,
+                "imaginary_s_inv": 7.225153773669274e-11,
+                "participation": {
+                  "density": 3.881588436394424e-23,
+                  "wall_order": 1.4051884441881167e-28,
+                  "beta_p": 1.0,
+                  "orientation": 1.1614074268494064e-26,
+                  "temperature": 1.3753249861077522e-28,
+                  "junction": 1.5643720634683453e-24,
+                  "signed_polarization": 3.8594663179629127e-23,
+                  "unsigned_density": 2.2122118431512527e-25
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 1.2065240517772803e-07,
+                "imaginary_s_inv": -4.7414431783738336e-08,
+                "participation": {
+                  "density": 1.0845238517405325e-18,
+                  "wall_order": 1.3277059303263375e-22,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.6695807567687898e-20,
+                  "temperature": 1.4443571589790443e-23,
+                  "junction": 1.0005418171354896e-19,
+                  "signed_polarization": 1.0204911207300018e-18,
+                  "unsigned_density": 6.403273101053031e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.5771944940274816e-11,
+                "imaginary_s_inv": -2.0978337856759895e-10,
+                "participation": {
+                  "density": 1.7857599394393505e-23,
+                  "wall_order": 2.480139046846942e-28,
+                  "beta_p": 1.0,
+                  "orientation": 2.754681451021083e-26,
+                  "temperature": 6.752197985393535e-30,
+                  "junction": 6.737620699207191e-25,
+                  "signed_polarization": 1.7280892863708762e-23,
+                  "unsigned_density": 5.767065306847466e-25
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000060.npz",
+          "step": 60,
+          "time_s": 3.2262319393016704e-06,
+          "strain": 0.003226231939301671,
+          "stress_MPa": 454.44980672599354,
+          "temperature_mean_K": 1316.4730902191413,
+          "wall_order_mean": 0.9999051445858123,
+          "wall_order_std": 1.383818162180824e-05,
+          "orientation_span_deg": 3.398026462724879e-06,
+          "nye_relative_residual": 5.469923443048924e-14,
+          "nye_divergence_relative_rms": 3.589343980522709e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.000436332660509e-06,
+            "junction_turnover": 0.00011363834311525672,
+            "lock_minus_turnover": 0.002086535501321269,
+            "lock_plus_turnover": 0.0020865355013212515,
+            "multiplication_pairs": 8.640811264037924e-13,
+            "order": 0.9999041568960787,
+            "wall_minus_turnover": 0.0012252892378087818,
+            "wall_plus_turnover": 0.0012252892378087818
+          },
+          "balance_ledger": {
+            "accepted_steps": 61,
+            "cumulative_free_energy_change_J_m3": -62499225.50163621,
+            "cumulative_heat_J_m3": 62612311.1354785,
+            "cumulative_plastic_work_J_m3": 113085.63384230944,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.069548587302399e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.0028520879542568824
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 9.515830826859805e-08,
+                "imaginary_s_inv": 8.648942351235129e-08,
+                "participation": {
+                  "density": 0.0012121389624442796,
+                  "wall_order": 5.097692765920095e-25,
+                  "beta_p": 0.9987832319928701,
+                  "orientation": 1.7438124669429436e-20,
+                  "temperature": 4.132835436048888e-21,
+                  "junction": 4.629044685653835e-06,
+                  "signed_polarization": 0.0012121389624442792,
+                  "unsigned_density": 3.4368886996504923e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.10556567307620825,
+                "imaginary_s_inv": 5.25725349739628e-05,
+                "participation": {
+                  "density": 3.626161164281673e-07,
+                  "wall_order": 4.1088848193558735e-15,
+                  "beta_p": 0.999999603428127,
+                  "orientation": 1.375527803681802e-08,
+                  "temperature": 5.185370217890928e-12,
+                  "junction": 2.019528922740278e-08,
+                  "signed_polarization": 3.585622729012222e-07,
+                  "unsigned_density": 4.053843526944943e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.34525097381615,
+                "imaginary_s_inv": 3.6831632613719733e-07,
+                "participation": {
+                  "density": 1.1999039489255104e-06,
+                  "wall_order": 3.907335092067588e-14,
+                  "beta_p": 0.9999985901070958,
+                  "orientation": 1.4549612038431786e-07,
+                  "temperature": 5.414685018732923e-12,
+                  "junction": 6.448738113445774e-08,
+                  "signed_polarization": 1.159853761842798e-06,
+                  "unsigned_density": 4.005018708271201e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.6644032028357537,
+                "imaginary_s_inv": -0.0003738417935858495,
+                "participation": {
+                  "density": 2.3246392147178247e-06,
+                  "wall_order": 1.2967287234856619e-13,
+                  "beta_p": 0.9999970136926825,
+                  "orientation": 5.373147658759539e-07,
+                  "temperature": 4.321272959232518e-12,
+                  "junction": 1.24348886055471e-07,
+                  "signed_polarization": 2.1804903306972428e-06,
+                  "unsigned_density": 1.4414888402058084e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 7.910376331180423e-09,
+                "imaginary_s_inv": 2.59925065367868e-08,
+                "participation": {
+                  "density": 6.936247067284708e-20,
+                  "wall_order": 1.2244543550734958e-26,
+                  "beta_p": 1.0,
+                  "orientation": 6.9205814319671055e-22,
+                  "temperature": 1.2386082487938137e-24,
+                  "junction": 6.573224191361375e-21,
+                  "signed_polarization": 6.526493584689003e-20,
+                  "unsigned_density": 4.097534825957054e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.252633308355387e-10,
+                "imaginary_s_inv": -8.638166366562419e-11,
+                "participation": {
+                  "density": 4.365312025099281e-23,
+                  "wall_order": 1.2079306021059185e-29,
+                  "beta_p": 1.0,
+                  "orientation": 1.0696124357375882e-28,
+                  "temperature": 2.784280191869684e-28,
+                  "junction": 6.488504726374236e-24,
+                  "signed_polarization": 4.009456161984294e-23,
+                  "unsigned_density": 3.558558631149888e-24
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000080.npz",
+          "step": 80,
+          "time_s": 3.2829729591558693e-06,
+          "strain": 0.0032829729591558714,
+          "stress_MPa": 460.21187814200005,
+          "temperature_mean_K": 1316.480228798679,
+          "wall_order_mean": 0.9999962986581348,
+          "wall_order_std": 5.299235136712029e-07,
+          "orientation_span_deg": 1.6227757618420863e-06,
+          "nye_relative_residual": 6.2931503772415e-14,
+          "nye_divergence_relative_rms": 3.4661559311045316e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.121231109100962e-06,
+            "junction_turnover": 0.00011518895836890006,
+            "lock_minus_turnover": 0.0021322827829107563,
+            "lock_plus_turnover": 0.002132282782910735,
+            "multiplication_pairs": 9.311710424083481e-13,
+            "order": 0.9999953109684013,
+            "wall_minus_turnover": 0.0012544653583180093,
+            "wall_plus_turnover": 0.0012544653583180093
+          },
+          "balance_ledger": {
+            "accepted_steps": 81,
+            "cumulative_free_energy_change_J_m3": -62517275.90615483,
+            "cumulative_heat_J_m3": 62644112.195218734,
+            "cumulative_plastic_work_J_m3": 126836.28906392434,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.069548587302399e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.0028237372332657416
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 2.9175004667082565e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0001926706443633758,
+                  "wall_order": 1.9402584103442842e-28,
+                  "beta_p": 0.9997995102173765,
+                  "orientation": 8.45490875919859e-20,
+                  "temperature": 4.8819207802691644e-23,
+                  "junction": 7.819138260065452e-06,
+                  "signed_polarization": 0.00019267064436337555,
+                  "unsigned_density": 2.1496106124392766e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.12036269521475738,
+                "imaginary_s_inv": 5.529939913687427e-05,
+                "participation": {
+                  "density": 4.069117392481197e-07,
+                  "wall_order": 8.024025353621897e-18,
+                  "beta_p": 0.9999995530764856,
+                  "orientation": 1.6963345029663966e-08,
+                  "temperature": 6.839694600725128e-12,
+                  "junction": 2.30415902840655e-08,
+                  "signed_polarization": 4.018463165404481e-07,
+                  "unsigned_density": 5.065422707671524e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.39633736808384007,
+                "imaginary_s_inv": -9.544093900308e-07,
+                "participation": {
+                  "density": 1.3764127148378526e-06,
+                  "wall_order": 7.731985768718594e-17,
+                  "beta_p": 0.9999983665501251,
+                  "orientation": 1.818912091575895e-07,
+                  "temperature": 7.252034548901986e-12,
+                  "junction": 7.513869885240246e-08,
+                  "signed_polarization": 1.3258242871631138e-06,
+                  "unsigned_density": 5.0588427674738276e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.7662958327143781,
+                "imaginary_s_inv": -0.00039707788169462846,
+                "participation": {
+                  "density": 2.715156857857342e-06,
+                  "wall_order": 2.5889117377810636e-16,
+                  "beta_p": 0.9999964595121781,
+                  "orientation": 6.779584860959024e-07,
+                  "temperature": 5.837517074303891e-12,
+                  "junction": 1.4736664025741812e-07,
+                  "signed_polarization": 2.531579653410263e-06,
+                  "unsigned_density": 1.8357720444707887e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 4.002496062436611e-07,
+                "imaginary_s_inv": 2.3625426724326426e-08,
+                "participation": {
+                  "density": 4.116707335730304e-17,
+                  "wall_order": 3.603739779320676e-27,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 1.3134173439424933e-19,
+                  "temperature": 1.893997488221068e-21,
+                  "junction": 4.627610784220352e-18,
+                  "signed_polarization": 4.046512559405064e-17,
+                  "unsigned_density": 7.019477632524236e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.52675361412724e-08,
+                "imaginary_s_inv": -5.555021766417736e-09,
+                "participation": {
+                  "density": 1.2756807255603052e-20,
+                  "wall_order": 2.6166007192586158e-30,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 3.240193901834365e-22,
+                  "temperature": 3.32891452021126e-26,
+                  "junction": 1.5340554915645143e-21,
+                  "signed_polarization": 1.2164384203875337e-20,
+                  "unsigned_density": 5.924230517277119e-22
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000100.npz",
+          "step": 100,
+          "time_s": 3.3391593670235084e-06,
+          "strain": 0.00333915936702351,
+          "stress_MPa": 465.8236707028074,
+          "temperature_mean_K": 1316.4874768809282,
+          "wall_order_mean": 0.9999998555688072,
+          "wall_order_std": 2.0287883487435732e-08,
+          "orientation_span_deg": 7.920433640915429e-07,
+          "nye_relative_residual": 7.572369895116585e-14,
+          "nye_divergence_relative_rms": 3.3201851740776847e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.241811221761091e-06,
+            "junction_turnover": 0.00011673395465680273,
+            "lock_minus_turnover": 0.002177828292161646,
+            "lock_plus_turnover": 0.0021778282921616214,
+            "multiplication_pairs": 9.996283837620677e-13,
+            "order": 0.999998867879074,
+            "wall_minus_turnover": 0.0012835078036519548,
+            "wall_plus_turnover": 0.0012835078036519548
+          },
+          "balance_ledger": {
+            "accepted_steps": 101,
+            "cumulative_free_energy_change_J_m3": -62535209.39769988,
+            "cumulative_heat_J_m3": 62676285.695019044,
+            "cumulative_plastic_work_J_m3": 141076.2973191723,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.1592826249586072e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.002796370023105062
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 7.998979384185225e-07,
+                "imaginary_s_inv": 2.6469779601696886e-23,
+                "participation": {
+                  "density": 0.001923637118114694,
+                  "wall_order": 1.398614580528153e-29,
+                  "beta_p": 0.9979533354388372,
+                  "orientation": 6.00150027407394e-19,
+                  "temperature": 3.842965317759095e-20,
+                  "junction": 0.000123027443048107,
+                  "signed_polarization": 0.0019236371181146905,
+                  "unsigned_density": 3.689367796545215e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.13592729585291266,
+                "imaginary_s_inv": 6.197602951089769e-05,
+                "participation": {
+                  "density": 4.490419084550808e-07,
+                  "wall_order": 1.5353708934345373e-20,
+                  "beta_p": 0.999999504561693,
+                  "orientation": 2.0538039971103327e-08,
+                  "temperature": 8.83481860873155e-12,
+                  "junction": 2.5849523835956264e-08,
+                  "signed_polarization": 4.428278418454235e-07,
+                  "unsigned_density": 6.2140666096571715e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.44990416912721387,
+                "imaginary_s_inv": -3.3587265193821206e-07,
+                "participation": {
+                  "density": 1.5474508603911643e-06,
+                  "wall_order": 1.4942296798335475e-19,
+                  "beta_p": 0.9999981442309692,
+                  "orientation": 2.2250641150292619e-07,
+                  "temperature": 9.478937768433087e-12,
+                  "junction": 8.580227980584844e-08,
+                  "signed_polarization": 1.4849191004406314e-06,
+                  "unsigned_density": 6.253175995053225e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.8726788251711778,
+                "imaginary_s_inv": -0.00041968259437581994,
+                "participation": {
+                  "density": 3.099527037571212e-06,
+                  "wall_order": 5.0334572371025975e-19,
+                  "beta_p": 0.9999958951838611,
+                  "orientation": 8.346095256942698e-07,
+                  "temperature": 7.675132243338106e-12,
+                  "junction": 1.7067190050087109e-07,
+                  "signed_polarization": 2.8714027978990086e-06,
+                  "unsigned_density": 2.2812423967220241e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.3051750938758843e-08,
+                "imaginary_s_inv": 7.474859234549934e-08,
+                "participation": {
+                  "density": 3.356702147043927e-18,
+                  "wall_order": 4.33025555183228e-31,
+                  "beta_p": 1.0,
+                  "orientation": 2.5278363107193e-21,
+                  "temperature": 1.8053778703669966e-22,
+                  "junction": 3.3582419221082923e-19,
+                  "signed_polarization": 3.298348405560502e-18,
+                  "unsigned_density": 5.835374148342407e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 1.4753267628809009e-08,
+                "imaginary_s_inv": 2.702352441091086e-08,
+                "participation": {
+                  "density": 1.5248165578473014e-19,
+                  "wall_order": 6.313177471178103e-32,
+                  "beta_p": 1.0,
+                  "orientation": 3.3873609349044056e-22,
+                  "temperature": 3.572030409517605e-24,
+                  "junction": 9.553434742676276e-21,
+                  "signed_polarization": 1.4208889547146595e-19,
+                  "unsigned_density": 1.0392760313264195e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 8.70729346699909e-09,
+                "imaginary_s_inv": 2.6175627372132483e-08,
+                "participation": {
+                  "density": 8.199602979149531e-20,
+                  "wall_order": 5.974491031538182e-32,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 4.024470769029114e-22,
+                  "temperature": 6.813153374767588e-25,
+                  "junction": 9.08370801343966e-21,
+                  "signed_polarization": 7.460673215911693e-20,
+                  "unsigned_density": 7.389297632378401e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000120.npz",
+          "step": 120,
+          "time_s": 3.3948044168505964e-06,
+          "strain": 0.0033948044168505996,
+          "stress_MPa": 471.2870347225268,
+          "temperature_mean_K": 1316.494836355189,
+          "wall_order_mean": 0.9999999943643293,
+          "wall_order_std": 7.765648363423604e-10,
+          "orientation_span_deg": 2.208666417172628e-06,
+          "nye_relative_residual": 8.12670174869214e-14,
+          "nye_divergence_relative_rms": 3.3639409114917254e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.362189053010086e-06,
+            "junction_turnover": 0.00011827349826229928,
+            "lock_minus_turnover": 0.0022231777501633553,
+            "lock_plus_turnover": 0.002223177750163329,
+            "multiplication_pairs": 1.0694517258568858e-12,
+            "order": 0.999999006674596,
+            "wall_minus_turnover": 0.0013124203100292123,
+            "wall_plus_turnover": 0.0013124203100292123
+          },
+          "balance_ledger": {
+            "accepted_steps": 121,
+            "cumulative_free_energy_change_J_m3": -62553030.53915862,
+            "cumulative_heat_J_m3": 62708839.89795202,
+            "cumulative_plastic_work_J_m3": 155809.35879340683,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.2591106641108737e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.002769567676074236
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 5.249951316651574e-11,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 3.079173239241485e-11,
+                  "wall_order": 3.6591368947408723e-41,
+                  "beta_p": 0.9999999999692001,
+                  "orientation": 2.4463349503027425e-27,
+                  "temperature": 5.356535100638992e-31,
+                  "junction": 8.33576713320676e-15,
+                  "signed_polarization": 3.079173239241485e-11,
+                  "unsigned_density": 4.8389585269540384e-27
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.1522605938430332,
+                "imaginary_s_inv": 6.465862095794475e-05,
+                "participation": {
+                  "density": 4.887905144988471e-07,
+                  "wall_order": 2.886182642705338e-23,
+                  "beta_p": 0.999999458116958,
+                  "orientation": 2.4482420809052157e-08,
+                  "temperature": 1.1213894739259373e-11,
+                  "junction": 2.8598892750907326e-08,
+                  "signed_polarization": 4.812851838966479e-07,
+                  "unsigned_density": 7.505330602199132e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.5059454907732928,
+                "imaginary_s_inv": 9.151615408881589e-07,
+                "participation": {
+                  "density": 1.7117286352176653e-06,
+                  "wall_order": 2.8299259362180206e-22,
+                  "beta_p": 0.9999979245395427,
+                  "orientation": 2.673328509489914e-07,
+                  "temperature": 1.2144811223401732e-11,
+                  "junction": 9.638682626177919e-08,
+                  "signed_polarization": 1.6358104721743223e-06,
+                  "unsigned_density": 7.591816304334236e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.983489551353576,
+                "imaginary_s_inv": -0.0004420163495727191,
+                "participation": {
+                  "density": 3.4742230192877086e-06,
+                  "wall_order": 9.570100816865175e-22,
+                  "beta_p": 0.9999953248043635,
+                  "orientation": 1.0069272252005308e-06,
+                  "temperature": 9.870635158672916e-12,
+                  "junction": 1.9403552151535566e-07,
+                  "signed_polarization": 3.196392339640117e-06,
+                  "unsigned_density": 2.778306796475908e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.8112165431309206e-07,
+                "imaginary_s_inv": 6.524991657268257e-08,
+                "participation": {
+                  "density": 1.5553797739053538e-17,
+                  "wall_order": 3.3219355569575656e-33,
+                  "beta_p": 0.9999999999999998,
+                  "orientation": 3.2449487336446616e-20,
+                  "temperature": 7.857186550533415e-22,
+                  "junction": 2.063766858126979e-18,
+                  "signed_polarization": 1.5296652160449256e-17,
+                  "unsigned_density": 2.571455786042919e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 2.553486548930576e-08,
+                "imaginary_s_inv": -7.4269923335721675e-09,
+                "participation": {
+                  "density": 5.0950838223486395e-20,
+                  "wall_order": 9.914830127994596e-36,
+                  "beta_p": 1.0,
+                  "orientation": 1.2989513411802056e-22,
+                  "temperature": 5.736838287121476e-25,
+                  "junction": 4.403913129037638e-21,
+                  "signed_polarization": 4.833557313735156e-20,
+                  "unsigned_density": 2.615265086134835e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.0078899763513067e-13,
+                "imaginary_s_inv": 9.600687043800239e-14,
+                "participation": {
+                  "density": 6.046558957334965e-30,
+                  "wall_order": 6.581970869284253e-45,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.0097182122569727e-32,
+                  "temperature": 6.233197248077028e-35,
+                  "junction": 4.331417141810422e-31,
+                  "signed_polarization": 5.267323065181607e-30,
+                  "unsigned_density": 7.792358921533579e-31
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000140.npz",
+          "step": 140,
+          "time_s": 3.449919306125198e-06,
+          "strain": 0.0034499193061252017,
+          "stress_MPa": 476.60367744646624,
+          "temperature_mean_K": 1316.502308209607,
+          "wall_order_mean": 0.9999999997801066,
+          "wall_order_std": 2.9719119464539505e-11,
+          "orientation_span_deg": 4.159288797095225e-06,
+          "nye_relative_residual": 9.073092467154289e-14,
+          "nye_divergence_relative_rms": 3.9833540632777153e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.482371944916692e-06,
+            "junction_turnover": 0.00011980769334466181,
+            "lock_minus_turnover": 0.0022683350834969565,
+            "lock_plus_turnover": 0.002268335083496926,
+            "multiplication_pairs": 1.1406360588203228e-12,
+            "order": 0.9999990120903732,
+            "wall_minus_turnover": 0.0013412054795199824,
+            "wall_plus_turnover": 0.0013412054795199821
+          },
+          "balance_ledger": {
+            "accepted_steps": 141,
+            "cumulative_free_energy_change_J_m3": -62570741.36463818,
+            "cumulative_heat_J_m3": 62741779.47397456,
+            "cumulative_plastic_work_J_m3": 171038.10933636292,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.4127409793601713e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.0027433276988854493
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 4.771677393591522e-08,
+                "imaginary_s_inv": 7.54346465938655e-08,
+                "participation": {
+                  "density": 0.00012384503826364754,
+                  "wall_order": 5.169458954140913e-38,
+                  "beta_p": 0.9998755628276487,
+                  "orientation": 6.701797133449373e-21,
+                  "temperature": 8.29515167628451e-23,
+                  "junction": 5.921340874174644e-07,
+                  "signed_polarization": 0.00012384503826364752,
+                  "unsigned_density": 1.3151747197329109e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.16936058116306993,
+                "imaginary_s_inv": 6.799582367083996e-05,
+                "participation": {
+                  "density": 5.260676395439704e-07,
+                  "wall_order": 5.342366950669211e-26,
+                  "beta_p": 0.9999994138465946,
+                  "orientation": 2.8797580937851114e-08,
+                  "temperature": 1.401868860956236e-11,
+                  "junction": 3.127416624101267e-08,
+                  "signed_polarization": 5.171233250547028e-07,
+                  "unsigned_density": 8.944314489267528e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.5644287073244918,
+                "imaginary_s_inv": -2.2991184042922077e-07,
+                "participation": {
+                  "density": 1.8684063599514e-06,
+                  "wall_order": 5.26701392540847e-25,
+                  "beta_p": 0.9999977084398121,
+                  "orientation": 3.1632157979039845e-07,
+                  "temperature": 1.5294960255623735e-11,
+                  "junction": 1.0681695326635737e-07,
+                  "signed_polarization": 1.7776335231986865e-06,
+                  "unsigned_density": 9.077283675271316e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.0986292018841688,
+                "imaginary_s_inv": -0.00046756296007679257,
+                "participation": {
+                  "density": 3.836801366008012e-06,
+                  "wall_order": 1.785256347536812e-24,
+                  "beta_p": 0.9999947514714261,
+                  "orientation": 1.1944468028619548e-06,
+                  "temperature": 1.245755431444577e-11,
+                  "junction": 2.1726794731263986e-07,
+                  "signed_polarization": 3.5041047301116415e-06,
+                  "unsigned_density": 3.326966358963694e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 2.466126347905204e-13,
+                "imaginary_s_inv": 6.48876504038271e-14,
+                "participation": {
+                  "density": 1.3295779609925785e-29,
+                  "wall_order": 3.007048176624026e-48,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 3.3939119091878014e-32,
+                  "temperature": 1.1542890629208858e-33,
+                  "junction": 2.4063530720934406e-30,
+                  "signed_polarization": 1.309238660601501e-29,
+                  "unsigned_density": 2.0339300391077923e-31
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 1.06875966342174e-14,
+                "imaginary_s_inv": -6.520978220132425e-14,
+                "participation": {
+                  "density": 1.943469057223283e-30,
+                  "wall_order": 1.4036587481738906e-48,
+                  "beta_p": 0.9999999999999998,
+                  "orientation": 1.4242524350889312e-34,
+                  "temperature": 3.087080871468304e-35,
+                  "junction": 2.324739478529858e-31,
+                  "signed_polarization": 1.8643006783848185e-30,
+                  "unsigned_density": 7.91683788384653e-32
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 6.158200958459896e-08,
+                "imaginary_s_inv": -1.5992857364696833e-09,
+                "participation": {
+                  "density": 2.94958694144112e-20,
+                  "wall_order": 3.7110278046683495e-38,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 1.0639071644161526e-21,
+                  "temperature": 2.051371142334393e-25,
+                  "junction": 5.962817332532477e-21,
+                  "signed_polarization": 2.635635332769279e-20,
+                  "unsigned_density": 3.139516086718392e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000160.npz",
+          "step": 160,
+          "time_s": 3.5045154006233595e-06,
+          "strain": 0.003504515400623364,
+          "stress_MPa": 481.7753905602965,
+          "temperature_mean_K": 1316.509893285599,
+          "wall_order_mean": 0.9999999999914205,
+          "wall_order_std": 1.1371220171633073e-12,
+          "orientation_span_deg": 6.168397471513843e-06,
+          "nye_relative_residual": 1.1031178995152575e-13,
+          "nye_divergence_relative_rms": 5.050964809770116e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.602366985101395e-06,
+            "junction_turnover": 0.00012133664340944243,
+            "lock_minus_turnover": 0.0023133042336301052,
+            "lock_plus_turnover": 0.0023133042336300714,
+            "multiplication_pairs": 1.213175391962727e-12,
+            "order": 0.9999990123016871,
+            "wall_minus_turnover": 0.0013698659334632002,
+            "wall_plus_turnover": 0.0013698659334632
+          },
+          "balance_ledger": {
+            "accepted_steps": 161,
+            "cumulative_free_energy_change_J_m3": -62588343.90612029,
+            "cumulative_heat_J_m3": 62775108.5499663,
+            "cumulative_plastic_work_J_m3": 186764.6438459823,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.4127409793601713e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.002717661302519295
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 2.3340512942760908e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.00225799416725705,
+                  "wall_order": 1.2078607246867867e-35,
+                  "beta_p": 0.9977250552413225,
+                  "orientation": 4.340800537488362e-20,
+                  "temperature": 4.370426344796108e-21,
+                  "junction": 1.695059142056836e-05,
+                  "signed_polarization": 0.00225799416725705,
+                  "unsigned_density": 2.623422273660612e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.18722137311278297,
+                "imaginary_s_inv": 7.412670888400441e-05,
+                "participation": {
+                  "density": 5.60854668242244e-07,
+                  "wall_order": 9.754615600641375e-29,
+                  "beta_p": 0.9999993717817185,
+                  "orientation": 3.3482252909264414e-08,
+                  "temperature": 1.7290485326754696e-11,
+                  "junction": 3.386406979033905e-08,
+                  "signed_polarization": 5.50319667579042e-07,
+                  "unsigned_density": 1.0535000663202045e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.6253110731010847,
+                "imaginary_s_inv": -3.030830691814027e-07,
+                "participation": {
+                  "density": 2.0170374487161856e-06,
+                  "wall_order": 9.654569633623289e-28,
+                  "beta_p": 0.9999974965112615,
+                  "orientation": 3.693981395333449e-07,
+                  "temperature": 1.8974342336285308e-11,
+                  "junction": 1.170341761530091e-07,
+                  "signed_polarization": 1.9099258279645112e-06,
+                  "unsigned_density": 1.0711162075167306e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.2179667098426454,
+                "imaginary_s_inv": -0.0004929254033832537,
+                "participation": {
+                  "density": 4.185687823876433e-06,
+                  "wall_order": 3.275796672140117e-27,
+                  "beta_p": 0.9999941775021881,
+                  "orientation": 1.3965811675595668e-06,
+                  "temperature": 1.546805643099556e-11,
+                  "junction": 2.4021335246880594e-07,
+                  "signed_polarization": 3.793008966444044e-06,
+                  "unsigned_density": 3.926788574323889e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.0744156943297983e-07,
+                "imaginary_s_inv": -8.585338350902398e-08,
+                "participation": {
+                  "density": 2.7835122433141755e-18,
+                  "wall_order": 9.474445925304235e-40,
+                  "beta_p": 1.0,
+                  "orientation": 6.1184468495245234e-21,
+                  "temperature": 1.5242526788450492e-22,
+                  "junction": 1.6577412658077557e-19,
+                  "signed_polarization": 2.7247172553075015e-18,
+                  "unsigned_density": 5.879498800667337e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 9.669791322282083e-08,
+                "imaginary_s_inv": -1.452118718590412e-08,
+                "participation": {
+                  "density": 2.400079862771407e-19,
+                  "wall_order": 1.887929747558171e-40,
+                  "beta_p": 1.0,
+                  "orientation": 6.1030692826585254e-21,
+                  "temperature": 1.8678297289654807e-24,
+                  "junction": 4.4425145577083515e-21,
+                  "signed_polarization": 2.3241985647722815e-19,
+                  "unsigned_density": 7.588129799912438e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.575537362745474e-10,
+                "imaginary_s_inv": -1.9054336049360858e-10,
+                "participation": {
+                  "density": 9.846182805268744e-24,
+                  "wall_order": 3.1443835749956424e-44,
+                  "beta_p": 1.0,
+                  "orientation": 3.3727795074592686e-26,
+                  "temperature": 9.673291532336912e-29,
+                  "junction": 1.0451495410003422e-24,
+                  "signed_polarization": 8.565433938173762e-24,
+                  "unsigned_density": 1.2807488670949872e-24
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000180.npz",
+          "step": 180,
+          "time_s": 3.558604273509634e-06,
+          "strain": 0.0035586042735096385,
+          "stress_MPa": 486.80405284240265,
+          "temperature_mean_K": 1316.5175922865876,
+          "wall_order_mean": 0.9999999999996653,
+          "wall_order_std": 4.3509330394334145e-14,
+          "orientation_span_deg": 8.224510215014624e-06,
+          "nye_relative_residual": 1.175042660699367e-13,
+          "nye_divergence_relative_rms": 6.537642214986319e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.722181164897684e-06,
+            "junction_turnover": 0.0001228604532768839,
+            "lock_minus_turnover": 0.0023580892101470554,
+            "lock_plus_turnover": 0.0023580892101470186,
+            "multiplication_pairs": 1.287062835184256e-12,
+            "order": 0.9999990123099319,
+            "wall_minus_turnover": 0.0013984043457287247,
+            "wall_plus_turnover": 0.0013984043457287245
+          },
+          "balance_ledger": {
+            "accepted_steps": 181,
+            "cumulative_free_energy_change_J_m3": -62605840.216689736,
+            "cumulative_heat_J_m3": 62808830.7461694,
+            "cumulative_plastic_work_J_m3": 202990.52947964522,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.4257451675965782e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.002692577545206526
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 1.3940942632652544e-07,
+                "imaginary_s_inv": -1.3234889800848443e-23,
+                "participation": {
+                  "density": 0.0002325894081149627,
+                  "wall_order": 1.5710170757968894e-38,
+                  "beta_p": 0.9997645229118353,
+                  "orientation": 1.4743701150805142e-20,
+                  "temperature": 1.6461406491279758e-24,
+                  "junction": 2.8876800498740243e-06,
+                  "signed_polarization": 0.0002325894081149626,
+                  "unsigned_density": 8.693318684044547e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.2058275514221642,
+                "imaginary_s_inv": 7.68782012908887e-05,
+                "participation": {
+                  "density": 5.931937911844923e-07,
+                  "wall_order": 1.7595718851739535e-31,
+                  "beta_p": 0.9999993318951015,
+                  "orientation": 3.853085662130446e-08,
+                  "temperature": 2.1069993634416068e-11,
+                  "junction": 3.635918077663102e-08,
+                  "signed_polarization": 5.809136766585293e-07,
+                  "unsigned_density": 1.2280114525962572e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.6885343924007793,
+                "imaginary_s_inv": -7.14384800979614e-08,
+                "participation": {
+                  "density": 2.157484060815401e-06,
+                  "wall_order": 1.745864753243649e-30,
+                  "beta_p": 0.9999972890432688,
+                  "orientation": 4.2645678024468547e-07,
+                  "temperature": 2.3226733202485508e-11,
+                  "junction": 1.2699266355674038e-07,
+                  "signed_polarization": 2.0325448751944117e-06,
+                  "unsigned_density": 1.2493918562098848e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.3413626226498072,
+                "imaginary_s_inv": -0.0005175255417872317,
+                "participation": {
+                  "density": 4.520074115685028e-06,
+                  "wall_order": 5.9246373597205976e-30,
+                  "beta_p": 0.9999936044828943,
+                  "orientation": 1.6126746783520596e-06,
+                  "temperature": 1.8933017126176143e-11,
+                  "junction": 2.627493789202397e-07,
+                  "signed_polarization": 4.062370307415363e-06,
+                  "unsigned_density": 4.5770380826966387e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 7.713877791936404e-08,
+                "imaginary_s_inv": -5.429169414796959e-08,
+                "participation": {
+                  "density": 3.219911156890517e-19,
+                  "wall_order": 7.015354429581496e-43,
+                  "beta_p": 1.0,
+                  "orientation": 7.696929772127137e-21,
+                  "temperature": 7.568001997173907e-24,
+                  "junction": 4.0071193484178254e-20,
+                  "signed_polarization": 2.97998480065695e-19,
+                  "unsigned_density": 2.3992635623356744e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 3.2950347078217996e-08,
+                "imaginary_s_inv": -5.268492355948002e-08,
+                "participation": {
+                  "density": 1.5686227770897406e-19,
+                  "wall_order": 8.994174186630389e-43,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 3.781778164882116e-21,
+                  "temperature": 1.6294367243519564e-24,
+                  "junction": 2.1337060585970486e-20,
+                  "signed_polarization": 1.3794346446589334e-19,
+                  "unsigned_density": 1.8918813243080716e-20
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000200.npz",
+          "step": 200,
+          "time_s": 3.61219768088584e-06,
+          "strain": 0.003612197680885845,
+          "stress_MPa": 491.6916260600034,
+          "temperature_mean_K": 1316.5254057785532,
+          "wall_order_mean": 0.9999999999999869,
+          "wall_order_std": 1.665681445500385e-15,
+          "orientation_span_deg": 1.0327049769645104e-05,
+          "nye_relative_residual": 1.2745529542469907e-13,
+          "nye_divergence_relative_rms": 8.142431196774392e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.841821400324898e-06,
+            "junction_turnover": 0.00012437922927555303,
+            "lock_minus_turnover": 0.002402694091829307,
+            "lock_plus_turnover": 0.0024026940918292663,
+            "multiplication_pairs": 1.3622906103231837e-12,
+            "order": 0.9999990123102538,
+            "wall_minus_turnover": 0.0014268234427195347,
+            "wall_plus_turnover": 0.0014268234427195342
+          },
+          "balance_ledger": {
+            "accepted_steps": 201,
+            "cumulative_free_energy_change_J_m3": -62623232.3704322,
+            "cumulative_heat_J_m3": 62842949.1762914,
+            "cumulative_plastic_work_J_m3": 219716.80585915621,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.4257451675965782e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.0026681094220934393
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 3.4621127433933596e-08,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0001795532263696765,
+                  "wall_order": 1.855951876979395e-37,
+                  "beta_p": 0.9998194642589403,
+                  "orientation": 8.641907083640392e-22,
+                  "temperature": 6.053745211027475e-23,
+                  "junction": 9.825146899354515e-07,
+                  "signed_polarization": 0.00017955322636967644,
+                  "unsigned_density": 9.315468675377136e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.225161848206959,
+                "imaginary_s_inv": 8.272170257273358e-05,
+                "participation": {
+                  "density": 6.23175913987664e-07,
+                  "wall_order": 3.137349331485629e-34,
+                  "beta_p": 0.999999294110059,
+                  "orientation": 4.393566031671748e-08,
+                  "temperature": 2.539624216576274e-11,
+                  "junction": 3.875297064186149e-08,
+                  "signed_polarization": 6.089947129450324e-07,
+                  "unsigned_density": 1.4181201042631214e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.7540216464647743,
+                "imaginary_s_inv": -1.1128849610130542e-06,
+                "participation": {
+                  "density": 2.2898111434707593e-06,
+                  "wall_order": 3.120628240959101e-33,
+                  "beta_p": 0.9999970861496564,
+                  "orientation": 4.873553647072969e-07,
+                  "temperature": 2.8093455155472604e-11,
+                  "junction": 1.3665574197439117e-07,
+                  "signed_polarization": 2.1455648491357465e-06,
+                  "unsigned_density": 1.442462943350125e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.4686382806039482,
+                "imaginary_s_inv": -0.0005434878559524598,
+                "participation": {
+                  "density": 4.839641858644695e-06,
+                  "wall_order": 1.0558818096078207e-32,
+                  "beta_p": 0.999993033620539,
+                  "orientation": 1.8419404122371164e-06,
+                  "temperature": 2.2880724368107125e-11,
+                  "junction": 2.847743093908122e-07,
+                  "signed_polarization": 4.31199294569729e-06,
+                  "unsigned_density": 5.276489129474024e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 4.878456464650793e-09,
+                "imaginary_s_inv": -6.331556676985396e-08,
+                "participation": {
+                  "density": 8.606552585652467e-18,
+                  "wall_order": 1.0627794808407677e-44,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.0028480336916269e-21,
+                  "temperature": 6.083535919284187e-22,
+                  "junction": 1.1838852704954882e-18,
+                  "signed_polarization": 8.430677740359603e-18,
+                  "unsigned_density": 1.7587484529286623e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 3.799035531096075e-08,
+                "imaginary_s_inv": -2.283256668931121e-08,
+                "participation": {
+                  "density": 1.0973559392153867e-19,
+                  "wall_order": 4.2790626202300915e-46,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 1.3404666952478993e-21,
+                  "temperature": 2.6047615764053143e-24,
+                  "junction": 8.846011814488116e-21,
+                  "signed_polarization": 1.0216609910332303e-19,
+                  "unsigned_density": 7.569494818215675e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.6934539484681995e-08,
+                "imaginary_s_inv": -5.554494826775888e-09,
+                "participation": {
+                  "density": 6.097088159137803e-21,
+                  "wall_order": 2.7760060598109873e-47,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 3.005343756449453e-22,
+                  "temperature": 5.29222991447663e-26,
+                  "junction": 1.2218480524806117e-22,
+                  "signed_polarization": 5.157554412833014e-21,
+                  "unsigned_density": 9.395337463047897e-22
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/homogeneous/drx_v25_restart_000219.npz",
+          "step": 219,
+          "time_s": 3.6626631426250803e-06,
+          "strain": 0.003662663142625085,
+          "stress_MPa": 496.20597657759373,
+          "temperature_mean_K": 1316.5329350058344,
+          "wall_order_mean": 0.9999999999999992,
+          "wall_order_std": 1.3668035872266426e-16,
+          "orientation_span_deg": 1.236687340412252e-05,
+          "nye_relative_residual": 1.4073684781540602e-13,
+          "nye_divergence_relative_rms": 9.418193260364088e-17,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.955324303623511e-06,
+            "junction_turnover": 0.0001258174964605681,
+            "lock_minus_turnover": 0.002444905525761912,
+            "lock_plus_turnover": 0.002444905525761867,
+            "multiplication_pairs": 1.4349903184848263e-12,
+            "order": 0.9999990123102664,
+            "wall_minus_turnover": 0.0014537134919111563,
+            "wall_plus_turnover": 0.0014537134919111558
+          },
+          "balance_ledger": {
+            "accepted_steps": 220,
+            "cumulative_free_energy_change_J_m3": -62639660.283380575,
+            "cumulative_heat_J_m3": 62875730.947517216,
+            "cumulative_plastic_work_J_m3": 236070.66413658683,
+            "maximum_relative_burgers_rate_residual": 6.144511033605573e-17,
+            "maximum_relative_energy_balance_residual": 2.4257451675965782e-17,
+            "maximum_relative_line_balance_residual": 1.4068804974235402e-16,
+            "minimum_accept_scale": 0.002645206067243482
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 7.195549187435728e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 4.5678735115058634e-05,
+                  "wall_order": 3.80096782562146e-38,
+                  "beta_p": 0.9999387538306517,
+                  "orientation": 3.5499994328732046e-19,
+                  "temperature": 4.688195682247991e-20,
+                  "junction": 1.5567434233176995e-05,
+                  "signed_polarization": 4.5678735115055226e-05,
+                  "unsigned_density": 3.4150644622098464e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.24418661640861825,
+                "imaginary_s_inv": 8.625100055162215e-05,
+                "participation": {
+                  "density": 6.49592574856614e-07,
+                  "wall_order": 9.64118234714539e-37,
+                  "beta_p": 0.9999992600548031,
+                  "orientation": 4.939188707539274e-08,
+                  "temperature": 3.004771412668088e-11,
+                  "junction": 4.093068753354087e-08,
+                  "signed_polarization": 6.334600658560196e-07,
+                  "unsigned_density": 1.6132509000594143e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.8182587919851387,
+                "imaginary_s_inv": 5.620087507210257e-07,
+                "participation": {
+                  "density": 2.4082453752335363e-06,
+                  "wall_order": 9.606109683726482e-36,
+                  "beta_p": 0.9999968975592692,
+                  "orientation": 5.486227037380436e-07,
+                  "temperature": 3.332207828650241e-11,
+                  "junction": 1.4553932971938394e-07,
+                  "signed_polarization": 2.244301966974118e-06,
+                  "unsigned_density": 1.639434082594185e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.5929726512559175,
+                "imaginary_s_inv": -0.0005644383714431766,
+                "participation": {
+                  "density": 5.129612279019636e-06,
+                  "wall_order": 3.1836366864704745e-35,
+                  "beta_p": 0.9999924940334648,
+                  "orientation": 2.0711738747463792e-06,
+                  "temperature": 2.710182689614789e-11,
+                  "junction": 3.0515327969026593e-07,
+                  "signed_polarization": 4.5310982406757486e-06,
+                  "unsigned_density": 5.98514038343887e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.7103103367456995e-08,
+                "imaginary_s_inv": 2.0386894423691364e-09,
+                "participation": {
+                  "density": 9.62029249626893e-19,
+                  "wall_order": 2.3774797710182398e-48,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 2.8566046169764516e-23,
+                  "temperature": 7.040241110564537e-23,
+                  "junction": 1.3523142505819416e-19,
+                  "signed_polarization": 9.421756903098564e-19,
+                  "unsigned_density": 1.9853559317036556e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 5.856717923796588e-09,
+                "imaginary_s_inv": 2.1489905069801383e-08,
+                "participation": {
+                  "density": 6.028146935176223e-20,
+                  "wall_order": 1.1525168981154542e-49,
+                  "beta_p": 1.0,
+                  "orientation": 9.78216678645119e-23,
+                  "temperature": 1.1651556657277403e-24,
+                  "junction": 1.8864035380636355e-21,
+                  "signed_polarization": 5.672720797948585e-20,
+                  "unsigned_density": 3.5542613722763895e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 7.313267821761243e-10,
+                "imaginary_s_inv": -2.4935746331245817e-10,
+                "participation": {
+                  "density": 2.6609786196391195e-23,
+                  "wall_order": 5.445737179096831e-52,
+                  "beta_p": 1.0,
+                  "orientation": 4.560192356473407e-25,
+                  "temperature": 3.100010249665437e-28,
+                  "junction": 3.254754233578853e-24,
+                  "signed_polarization": 2.2606954477262704e-23,
+                  "unsigned_density": 4.00283171912849e-24
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        }
+      ],
+      "cumulative_exposure": {
+        "uniform_leading_G": 43.36062674160926,
+        "finite_leading_G": 43.35240546718609,
+        "finite_wall_candidate_G": 0.0,
+        "finite_over_uniform_advantage_G": 0.0
+      },
+      "classification": "UNIFORM_ORDERING_ONLY"
+    },
+    "mechanical_particle": {
+      "modes": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "checkpoints": [
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000000.npz",
+          "step": 0,
+          "time_s": 1e-06,
+          "strain": 0.001,
+          "stress_MPa": 153.07503583165717,
+          "temperature_mean_K": 1300.0798831026632,
+          "wall_order_mean": 4.0815485636560345e-05,
+          "wall_order_std": 3.996226571213972e-06,
+          "orientation_span_deg": 0.0008907871874027123,
+          "nye_relative_residual": 4.3684901829255225e-16,
+          "nye_divergence_relative_rms": 2.752649163036045e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 1.473798305617265e-06,
+            "junction_turnover": 3.5150725029930354e-05,
+            "lock_minus_turnover": 0.0006255237330262214,
+            "lock_plus_turnover": 0.0006255237330262214,
+            "multiplication_pairs": 5.695042740199522e-14,
+            "order": 3.9827795903241984e-05,
+            "wall_minus_turnover": 0.00036462471767575365,
+            "wall_plus_turnover": 0.00036462471767575365
+          },
+          "balance_ledger": {
+            "accepted_steps": 1,
+            "cumulative_free_energy_change_J_m3": -301688.48777680536,
+            "cumulative_heat_J_m3": 303555.7901194088,
+            "cumulative_plastic_work_J_m3": 1867.3023426034606,
+            "maximum_relative_burgers_rate_residual": 1.7624257815084235e-17,
+            "maximum_relative_energy_balance_residual": 0.0,
+            "maximum_relative_line_balance_residual": 0.0,
+            "minimum_accept_scale": 1.0
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 40867581.28387493,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 4.3304255735881966e-18,
+                  "wall_order": 0.9999999999526823,
+                  "beta_p": 3.422883361901763e-20,
+                  "orientation": 3.5353137215023578e-22,
+                  "temperature": 4.731777965353013e-11,
+                  "junction": 1.542146663524124e-19,
+                  "signed_polarization": 4.550680468877431e-32,
+                  "unsigned_density": 4.330425573588152e-18
+                }
+              },
+              "leading_wall_candidate": {
+                "real_growth_s_inv": 3.598295309489283e-06,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.74038970205214,
+                  "wall_order": 1.233799914765908e-26,
+                  "beta_p": 5.625093729838077e-07,
+                  "orientation": 4.0811927325979446e-22,
+                  "temperature": 1.8140547722020145e-19,
+                  "junction": 0.2596097354384869,
+                  "signed_polarization": 0.74038970205214,
+                  "unsigned_density": 3.2925263352232077e-19
+                }
+              }
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 40841111.08839539,
+                "imaginary_s_inv": 47.90315163704765,
+                "participation": {
+                  "density": 4.4035187941163645e-18,
+                  "wall_order": 0.9999999999519278,
+                  "beta_p": 3.339342838890646e-20,
+                  "orientation": 3.0025517412129475e-22,
+                  "temperature": 4.8072301224709894e-11,
+                  "junction": 1.5675061462623057e-19,
+                  "signed_polarization": 1.0255041227871148e-24,
+                  "unsigned_density": 4.403517768612244e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 40833000.72774272,
+                "imaginary_s_inv": 7.499068287793898e-09,
+                "participation": {
+                  "density": 4.284370686270745e-18,
+                  "wall_order": 0.9999999999532788,
+                  "beta_p": 3.354505446825816e-20,
+                  "orientation": 3.328969396094014e-22,
+                  "temperature": 4.672114990905038e-11,
+                  "junction": 1.5276523223402088e-19,
+                  "signed_polarization": 4.1857729142528546e-24,
+                  "unsigned_density": 4.28436650049783e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 40779131.13417785,
+                "imaginary_s_inv": -47.90315294984763,
+                "participation": {
+                  "density": 4.412878697600688e-18,
+                  "wall_order": 0.9999999999519864,
+                  "beta_p": 3.34540723990826e-20,
+                  "orientation": 3.0080020873335495e-22,
+                  "temperature": 4.8013557075239524e-11,
+                  "junction": 1.5731234529762036e-19,
+                  "signed_polarization": 9.242723841265069e-24,
+                  "unsigned_density": 4.412869454876847e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 40796017.28852059,
+                "imaginary_s_inv": 10.148065795446358,
+                "participation": {
+                  "density": 4.3460898237734086e-18,
+                  "wall_order": 0.999999999952613,
+                  "beta_p": 2.846006925347314e-20,
+                  "orientation": 2.9794698624894125e-22,
+                  "temperature": 4.738696975451073e-11,
+                  "junction": 1.5484105037119427e-19,
+                  "signed_polarization": 3.8085187791865504e-25,
+                  "unsigned_density": 4.346089442921529e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 40846957.88295191,
+                "imaginary_s_inv": 7.485233888113963e-09,
+                "participation": {
+                  "density": 4.502096996258468e-18,
+                  "wall_order": 0.9999999999508724,
+                  "beta_p": 3.393084241416887e-20,
+                  "orientation": 3.524035892527622e-22,
+                  "temperature": 4.9127667377955514e-11,
+                  "junction": 1.6041283526413683e-19,
+                  "signed_polarization": 1.807672620003315e-24,
+                  "unsigned_density": 4.5020951885858486e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 40734105.82585111,
+                "imaginary_s_inv": -10.14806609202294,
+                "participation": {
+                  "density": 4.355317527747313e-18,
+                  "wall_order": 0.999999999952671,
+                  "beta_p": 2.851161270859602e-20,
+                  "orientation": 2.9848672521134023e-22,
+                  "temperature": 4.73289991090119e-11,
+                  "junction": 1.5539602258230001e-19,
+                  "signed_polarization": 3.429739820873702e-24,
+                  "unsigned_density": 4.355314098007492e-18
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000020.npz",
+          "step": 20,
+          "time_s": 3.110234451629192e-06,
+          "strain": 0.0031102344516291914,
+          "stress_MPa": 447.94787733956605,
+          "temperature_mean_K": 1316.1467402009903,
+          "wall_order_mean": 0.9225996165420581,
+          "wall_order_std": 0.02308761282007404,
+          "orientation_span_deg": 0.003376060606388563,
+          "nye_relative_residual": 1.2478097841549695e-15,
+          "nye_divergence_relative_rms": 3.748375351017958e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 4.721818428028009e-06,
+            "junction_turnover": 0.00010985738528542428,
+            "lock_minus_turnover": 0.001983674340450393,
+            "lock_plus_turnover": 0.001983674340439974,
+            "multiplication_pairs": 6.921324751003109e-13,
+            "order": 0.9225986288523247,
+            "wall_minus_turnover": 0.001160397121002336,
+            "wall_plus_turnover": 0.0011603971210021277
+          },
+          "balance_ledger": {
+            "accepted_steps": 21,
+            "cumulative_free_energy_change_J_m3": -61290058.71890612,
+            "cumulative_heat_J_m3": 61362438.20531528,
+            "cumulative_plastic_work_J_m3": 72379.48640914453,
+            "maximum_relative_burgers_rate_residual": 3.9019656168997424e-17,
+            "maximum_relative_energy_balance_residual": 9.70974548600755e-19,
+            "maximum_relative_line_balance_residual": 6.374242537246485e-17,
+            "minimum_accept_scale": 0.0030228751538160926
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 1.1240407117331616e-06,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0010689432034029153,
+                  "wall_order": 2.1649350142201963e-17,
+                  "beta_p": 0.9986309980187617,
+                  "orientation": 1.8911634632342467e-18,
+                  "temperature": 1.3578704742203354e-17,
+                  "junction": 0.00030005877783534856,
+                  "signed_polarization": 0.0010689432034028939,
+                  "unsigned_density": 2.2076756202324946e-17
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 9.216537514905751e-07,
+                "imaginary_s_inv": 3.5717798009708286e-08,
+                "participation": {
+                  "density": 1.1879174263460438e-16,
+                  "wall_order": 1.1579252192985879e-20,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.296562418549899e-18,
+                  "temperature": 1.2071326562292094e-20,
+                  "junction": 5.680318300367645e-18,
+                  "signed_polarization": 1.1850021061604198e-16,
+                  "unsigned_density": 2.9153201856239724e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 3.330545970675418e-07,
+                "imaginary_s_inv": 3.565419202140681e-07,
+                "participation": {
+                  "density": 8.125016702710924e-18,
+                  "wall_order": 7.139056092112058e-21,
+                  "beta_p": 0.9999999999999998,
+                  "orientation": 3.4372120413936325e-19,
+                  "temperature": 3.312312050904835e-21,
+                  "junction": 3.704227127061635e-19,
+                  "signed_polarization": 8.047202188398782e-18,
+                  "unsigned_density": 7.781451431214524e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.696718940501457e-07,
+                "imaginary_s_inv": -7.238412057633585e-08,
+                "participation": {
+                  "density": 1.3609704137636915e-18,
+                  "wall_order": 2.6619705958304516e-21,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.2342319151138866e-19,
+                  "temperature": 9.060721626770173e-22,
+                  "junction": 7.640467872780349e-20,
+                  "signed_polarization": 1.3294377252543755e-18,
+                  "unsigned_density": 3.153268850931594e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 2.127667284515672e-10,
+                "imaginary_s_inv": -3.0256973187780595e-11,
+                "participation": {
+                  "density": 9.484105281947318e-22,
+                  "wall_order": 8.70551317588791e-25,
+                  "beta_p": 1.0,
+                  "orientation": 5.907336272816141e-26,
+                  "temperature": 5.421669515672534e-24,
+                  "junction": 2.4236504362505484e-23,
+                  "signed_polarization": 9.294005288448055e-22,
+                  "unsigned_density": 1.900999934992612e-23
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 1.5249953488742036e-08,
+                "imaginary_s_inv": -3.655884361661168e-08,
+                "participation": {
+                  "density": 1.6181860029645994e-19,
+                  "wall_order": 1.0693418498054127e-21,
+                  "beta_p": 1.0,
+                  "orientation": 4.360402525583539e-22,
+                  "temperature": 1.7315759333627397e-21,
+                  "junction": 1.3357870804338694e-20,
+                  "signed_polarization": 1.5757099239042826e-19,
+                  "unsigned_density": 4.247607906031664e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.1365832888809296e-10,
+                "imaginary_s_inv": -1.9440021264057465e-10,
+                "participation": {
+                  "density": 5.200957610104425e-23,
+                  "wall_order": 8.529078994624435e-26,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.6832408581448626e-25,
+                  "temperature": 4.032807419808412e-26,
+                  "junction": 2.083177943258463e-24,
+                  "signed_polarization": 5.02951422971727e-23,
+                  "unsigned_density": 1.7144338038715477e-24
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000040.npz",
+          "step": 40,
+          "time_s": 3.1677129917212502e-06,
+          "strain": 0.0031677129917212507,
+          "stress_MPa": 454.270005176439,
+          "temperature_mean_K": 1316.4686370589561,
+          "wall_order_mean": 0.9959582337464262,
+          "wall_order_std": 0.0021284787951971786,
+          "orientation_span_deg": 0.0035822872474198433,
+          "nye_relative_residual": 1.7045613902486438e-15,
+          "nye_divergence_relative_rms": 5.224613552700262e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 4.838658197338507e-06,
+            "junction_turnover": 0.0001113704207679618,
+            "lock_minus_turnover": 0.0020285649170918253,
+            "lock_plus_turnover": 0.0020285649170831764,
+            "multiplication_pairs": 7.493123812327528e-13,
+            "order": 0.995957246056693,
+            "wall_minus_turnover": 0.0011890606682243504,
+            "wall_plus_turnover": 0.001189060668224152
+          },
+          "balance_ledger": {
+            "accepted_steps": 41,
+            "cumulative_free_energy_change_J_m3": -62507190.62397874,
+            "cumulative_heat_J_m3": 62590359.56939087,
+            "cumulative_plastic_work_J_m3": 83168.94541209919,
+            "maximum_relative_burgers_rate_residual": 5.897703180585323e-17,
+            "maximum_relative_energy_balance_residual": 8.992679920978791e-18,
+            "maximum_relative_line_balance_residual": 1.410358060884554e-16,
+            "minimum_accept_scale": 0.0028191658536812375
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 4.1463286542368203e-07,
+                "imaginary_s_inv": -3.5732086181937444e-07,
+                "participation": {
+                  "density": 0.005891470785901411,
+                  "wall_order": 1.7882358621420333e-21,
+                  "beta_p": 0.9939592968565314,
+                  "orientation": 4.154317701926132e-19,
+                  "temperature": 1.0531413799932875e-20,
+                  "junction": 0.0001492323575672239,
+                  "signed_polarization": 0.005891470785901408,
+                  "unsigned_density": 1.4455641602680689e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.008959444489557301,
+                "imaginary_s_inv": -0.0009807704302477668,
+                "participation": {
+                  "density": 9.740194846715975e-09,
+                  "wall_order": 2.73678219830615e-14,
+                  "beta_p": 0.9999999897024862,
+                  "orientation": 1.2892403437793137e-10,
+                  "temperature": 6.159332168198351e-14,
+                  "junction": 4.283058560038178e-10,
+                  "signed_polarization": 9.705469035718305e-09,
+                  "unsigned_density": 3.47258109976762e-11
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.08051723299540502,
+                "imaginary_s_inv": 8.500537418762622e-07,
+                "participation": {
+                  "density": 1.612426948295503e-07,
+                  "wall_order": 3.0143057261458445e-12,
+                  "beta_p": 0.9999998210203197,
+                  "orientation": 1.0165486281496406e-08,
+                  "temperature": 4.5049883022820993e-13,
+                  "junction": 7.56803422450063e-09,
+                  "signed_polarization": 1.5850336131573943e-07,
+                  "unsigned_density": 2.7393335138109253e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.10887580103959651,
+                "imaginary_s_inv": 0.0019027055273853144,
+                "participation": {
+                  "density": 1.5379226971120732e-07,
+                  "wall_order": 5.779386404904765e-12,
+                  "beta_p": 0.9999998198312864,
+                  "orientation": 1.9106695720454775e-08,
+                  "temperature": 3.5094725927253453e-13,
+                  "junction": 7.263617859615518e-09,
+                  "signed_polarization": 1.4852872412080892e-07,
+                  "unsigned_density": 5.263545590398366e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.8544577703416548e-08,
+                "imaginary_s_inv": 1.2451827666259964e-08,
+                "participation": {
+                  "density": 1.3955668768975116e-18,
+                  "wall_order": 4.5411388099762954e-23,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.815564730242896e-22,
+                  "temperature": 1.3474579271016584e-22,
+                  "junction": 3.470225097987192e-20,
+                  "signed_polarization": 1.3857609212776957e-18,
+                  "unsigned_density": 9.805955619816176e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 2.971869406646175e-08,
+                "imaginary_s_inv": 8.630731613689204e-09,
+                "participation": {
+                  "density": 5.222114160852342e-19,
+                  "wall_order": 1.487495983471358e-22,
+                  "beta_p": 1.0,
+                  "orientation": 2.7163167668443508e-21,
+                  "temperature": 6.677264827735462e-23,
+                  "junction": 9.129922845780404e-20,
+                  "signed_polarization": 5.006474634573831e-19,
+                  "unsigned_density": 2.1563952627851085e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.49618697543929e-11,
+                "imaginary_s_inv": -9.659885970252416e-11,
+                "participation": {
+                  "density": 2.597765123359412e-23,
+                  "wall_order": 1.1099271813465713e-26,
+                  "beta_p": 0.9999999999999998,
+                  "orientation": 2.2586420523568828e-26,
+                  "temperature": 9.877806335972646e-28,
+                  "junction": 1.0479038957716189e-24,
+                  "signed_polarization": 2.4468136368322142e-23,
+                  "unsigned_density": 1.5095148652719836e-24
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000060.npz",
+          "step": 60,
+          "time_s": 3.223710984281677e-06,
+          "strain": 0.0032237109842816786,
+          "stress_MPa": 460.3463180305695,
+          "temperature_mean_K": 1316.4759789700622,
+          "wall_order_mean": 0.999789734565933,
+          "wall_order_std": 0.00016114886515295276,
+          "orientation_span_deg": 0.0037904919212265963,
+          "nye_relative_residual": 2.007977491942894e-15,
+          "nye_divergence_relative_rms": 5.707028041475863e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 4.953411522456231e-06,
+            "junction_turnover": 0.00011285106217410807,
+            "lock_minus_turnover": 0.002072538933771781,
+            "lock_plus_turnover": 0.002072538933765073,
+            "multiplication_pairs": 8.068345807535024e-13,
+            "order": 0.9997887468761998,
+            "wall_minus_turnover": 0.001217144108993565,
+            "wall_plus_turnover": 0.0012171441089933821
+          },
+          "balance_ledger": {
+            "accepted_steps": 61,
+            "cumulative_free_energy_change_J_m3": -62528664.60315173,
+            "cumulative_heat_J_m3": 62622870.95580851,
+            "cumulative_plastic_work_J_m3": 94206.35265677107,
+            "maximum_relative_burgers_rate_residual": 5.897703180585323e-17,
+            "maximum_relative_energy_balance_residual": 1.7720827621793952e-17,
+            "maximum_relative_line_balance_residual": 1.410358060884554e-16,
+            "minimum_accept_scale": 0.0027854155743800815
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 7.260931216865657e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0011707922289312378,
+                  "wall_order": 1.8855485040042124e-23,
+                  "beta_p": 0.9987506694105478,
+                  "orientation": 6.957391672815135e-19,
+                  "temperature": 2.6651425713924014e-20,
+                  "junction": 7.853836052100765e-05,
+                  "signed_polarization": 0.0011707922289312346,
+                  "unsigned_density": 2.849767640141729e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.04059661146434482,
+                "imaginary_s_inv": 2.4901985178076882e-05,
+                "participation": {
+                  "density": 1.1951467162848595e-07,
+                  "wall_order": 2.985117445712825e-15,
+                  "beta_p": 0.9999998719472671,
+                  "orientation": 2.561269881518102e-09,
+                  "temperature": 5.83384569169084e-13,
+                  "junction": 5.976204969946103e-09,
+                  "signed_polarization": 1.1874809771732786e-07,
+                  "unsigned_density": 7.665739111579967e-10
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.14263281239812445,
+                "imaginary_s_inv": -4.6640519031492153e-07,
+                "participation": {
+                  "density": 3.971056114467525e-07,
+                  "wall_order": 3.0079266269610565e-14,
+                  "beta_p": 0.9999995527821568,
+                  "orientation": 3.055381068129462e-08,
+                  "temperature": 7.379846880405082e-13,
+                  "junction": 1.955765296244392e-08,
+                  "signed_polarization": 3.885174172813002e-07,
+                  "unsigned_density": 8.588194165452298e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.2059994982793717,
+                "imaginary_s_inv": -0.0002240049751611159,
+                "participation": {
+                  "density": 4.5836668303583445e-07,
+                  "wall_order": 6.215493518292072e-14,
+                  "beta_p": 0.9999994541357546,
+                  "orientation": 6.518773329583293e-08,
+                  "temperature": 3.1428649941062575e-13,
+                  "junction": 2.2309452693541607e-08,
+                  "signed_polarization": 4.4001193093364937e-07,
+                  "unsigned_density": 1.835475210218508e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 4.077667714104964e-08,
+                "imaginary_s_inv": -9.05391990924916e-09,
+                "participation": {
+                  "density": 4.818862333289266e-19,
+                  "wall_order": 3.777768086123054e-25,
+                  "beta_p": 1.0,
+                  "orientation": 2.3067661349962278e-21,
+                  "temperature": 6.1119683849993764e-24,
+                  "junction": 6.532702497325228e-20,
+                  "signed_polarization": 4.638508538063811e-19,
+                  "unsigned_density": 1.8035379522545374e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.23063905753376e-08,
+                "imaginary_s_inv": -2.3919366561751657e-08,
+                "participation": {
+                  "density": 4.985143354923009e-20,
+                  "wall_order": 5.121253752314752e-26,
+                  "beta_p": 1.0,
+                  "orientation": 1.1883430594291538e-21,
+                  "temperature": 2.427151205586985e-25,
+                  "junction": 3.957900121256146e-21,
+                  "signed_polarization": 4.486466579790452e-20,
+                  "unsigned_density": 4.9867677513255586e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000080.npz",
+          "step": 80,
+          "time_s": 3.2791350377247705e-06,
+          "strain": 0.003279135037724773,
+          "stress_MPa": 466.2792034389744,
+          "temperature_mean_K": 1316.4823378277008,
+          "wall_order_mean": 0.9999886838826191,
+          "wall_order_std": 1.1819379234095615e-05,
+          "orientation_span_deg": 0.004003962844180378,
+          "nye_relative_residual": 2.2390152078812335e-15,
+          "nye_divergence_relative_rms": 6.598007817355362e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.067845448779391e-06,
+            "junction_turnover": 0.00011432506442481794,
+            "lock_minus_turnover": 0.0021162831095623124,
+            "lock_plus_turnover": 0.0021162831095575727,
+            "multiplication_pairs": 8.655324702692995e-13,
+            "order": 0.999987696192886,
+            "wall_minus_turnover": 0.0012450764298498193,
+            "wall_plus_turnover": 0.0012450764298496536
+          },
+          "balance_ledger": {
+            "accepted_steps": 81,
+            "cumulative_free_energy_change_J_m3": -62545949.155820936,
+            "cumulative_heat_J_m3": 62651601.27636813,
+            "cumulative_plastic_work_J_m3": 105652.12054721828,
+            "maximum_relative_burgers_rate_residual": 5.897703180585323e-17,
+            "maximum_relative_energy_balance_residual": 1.7720827621793952e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.0027585842684031484
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 2.0817695072992599e-07,
+                "imaginary_s_inv": -1.4247709016559456e-23,
+                "participation": {
+                  "density": 0.14389627524810936,
+                  "wall_order": 1.1228334495090498e-24,
+                  "beta_p": 0.8538033754244614,
+                  "orientation": 4.432080628439389e-20,
+                  "temperature": 4.699308408437685e-19,
+                  "junction": 0.0023003493274292965,
+                  "signed_polarization": 0.1438962752481093,
+                  "unsigned_density": 3.370273813451907e-17
+                }
+              },
+              "leading_wall_candidate": {
+                "real_growth_s_inv": 2.0817695072992599e-07,
+                "imaginary_s_inv": -1.4247709016559456e-23,
+                "participation": {
+                  "density": 0.14389627524810936,
+                  "wall_order": 1.1228334495090498e-24,
+                  "beta_p": 0.8538033754244614,
+                  "orientation": 4.432080628439389e-20,
+                  "temperature": 4.699308408437685e-19,
+                  "junction": 0.0023003493274292965,
+                  "signed_polarization": 0.1438962752481093,
+                  "unsigned_density": 3.370273813451907e-17
+                }
+              }
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.05024029944953952,
+                "imaginary_s_inv": 3.334424278034186e-05,
+                "participation": {
+                  "density": 1.5915260057461662e-07,
+                  "wall_order": 1.3353564946710296e-17,
+                  "beta_p": 0.9999998290641259,
+                  "orientation": 3.7223277018052687e-09,
+                  "temperature": 9.447217179254108e-13,
+                  "junction": 8.060001146102764e-09,
+                  "signed_polarization": 1.5802883907461867e-07,
+                  "unsigned_density": 1.1237614999979427e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.17813913591801273,
+                "imaginary_s_inv": -2.4377908077289414e-07,
+                "participation": {
+                  "density": 5.426063857109644e-07,
+                  "wall_order": 1.3238825569469412e-16,
+                  "beta_p": 0.9999993851291646,
+                  "orientation": 4.5221104062581426e-08,
+                  "temperature": 1.206800426061752e-12,
+                  "junction": 2.7042138447880032e-08,
+                  "signed_polarization": 5.29812842286354e-07,
+                  "unsigned_density": 1.2793543424610165e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.27361711877198486,
+                "imaginary_s_inv": -0.00024687270534124513,
+                "participation": {
+                  "density": 7.149601566667367e-07,
+                  "wall_order": 3.1870681820702915e-16,
+                  "beta_p": 0.9999991407960183,
+                  "orientation": 1.0909528842410973e-07,
+                  "temperature": 5.840731404281694e-13,
+                  "junction": 3.5147952315422684e-08,
+                  "signed_polarization": 6.84112077316676e-07,
+                  "unsigned_density": 3.0848079350060355e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 8.590940904215229e-10,
+                "imaginary_s_inv": -7.847283723152002e-10,
+                "participation": {
+                  "density": 9.324874753913223e-21,
+                  "wall_order": 1.0546852406624227e-29,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 1.4276568963918987e-24,
+                  "temperature": 4.170469277723354e-25,
+                  "junction": 1.4205692595346246e-21,
+                  "signed_polarization": 9.192463377165527e-21,
+                  "unsigned_density": 1.3241137674769817e-22
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 4.3298300269208e-08,
+                "imaginary_s_inv": -1.601639201568431e-08,
+                "participation": {
+                  "density": 2.182979846802527e-19,
+                  "wall_order": 6.130703937767285e-28,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 1.8180127457430777e-21,
+                  "temperature": 3.674956417206386e-24,
+                  "junction": 1.6681749441362217e-20,
+                  "signed_polarization": 2.0607355665832585e-19,
+                  "unsigned_density": 1.2224428021926838e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.668341777430242e-08,
+                "imaginary_s_inv": -9.178413970610752e-09,
+                "participation": {
+                  "density": 4.521064890603756e-20,
+                  "wall_order": 3.526226532319394e-28,
+                  "beta_p": 1.0,
+                  "orientation": 1.1088660963281324e-22,
+                  "temperature": 3.7625593630284895e-25,
+                  "junction": 5.574229682521038e-21,
+                  "signed_polarization": 3.976954519518899e-20,
+                  "unsigned_density": 5.441103710848554e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000100.npz",
+          "step": 100,
+          "time_s": 3.334035446189904e-06,
+          "strain": 0.003334035446189908,
+          "stress_MPa": 472.07433811572565,
+          "temperature_mean_K": 1316.4887859217226,
+          "wall_order_mean": 0.9999993669996363,
+          "wall_order_std": 8.614648686611736e-07,
+          "orientation_span_deg": 0.004222834440195233,
+          "nye_relative_residual": 2.321059675681652e-15,
+          "nye_divergence_relative_rms": 7.58425579094903e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.182053018317652e-06,
+            "junction_turnover": 0.0001157936368936526,
+            "lock_minus_turnover": 0.002159833569098235,
+            "lock_plus_turnover": 0.002159833569095493,
+            "multiplication_pairs": 9.254470415303725e-13,
+            "order": 0.999998379309903,
+            "wall_minus_turnover": 0.0012728807011168045,
+            "wall_plus_turnover": 0.0012728807011166577
+          },
+          "balance_ledger": {
+            "accepted_steps": 101,
+            "cumulative_free_energy_change_J_m3": -62563110.916283,
+            "cumulative_heat_J_m3": 62680629.3062803,
+            "cumulative_plastic_work_J_m3": 117518.38999731786,
+            "maximum_relative_burgers_rate_residual": 5.897703180585323e-17,
+            "maximum_relative_energy_balance_residual": 1.7720827621793952e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.002732915254140974
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 3.241127332907322e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 6.213742655315844e-05,
+                  "wall_order": 2.1550458501422923e-30,
+                  "beta_p": 0.9999299500589532,
+                  "orientation": 1.2370726373899736e-19,
+                  "temperature": 3.488259640004266e-23,
+                  "junction": 7.912514493696124e-06,
+                  "signed_polarization": 6.213742655315828e-05,
+                  "unsigned_density": 1.6140817893452673e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.060208663063793515,
+                "imaginary_s_inv": 3.827440533017633e-05,
+                "participation": {
+                  "density": 1.9947143014938898e-07,
+                  "wall_order": 6.049608410606542e-20,
+                  "beta_p": 0.999999785225028,
+                  "orientation": 5.075514123861637e-09,
+                  "temperature": 1.3794631065498431e-12,
+                  "junction": 1.0226648258794557e-08,
+                  "signed_polarization": 1.979268126037622e-07,
+                  "unsigned_density": 1.5446175456267286e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.2153166264947648,
+                "imaginary_s_inv": -3.742650482914853e-08,
+                "participation": {
+                  "density": 6.956010883763699e-07,
+                  "wall_order": 5.901625480864223e-19,
+                  "beta_p": 0.9999992065793765,
+                  "orientation": 6.272910767197975e-08,
+                  "temperature": 1.7944886714448753e-12,
+                  "junction": 3.508863296557586e-08,
+                  "signed_polarization": 6.777373893680824e-07,
+                  "unsigned_density": 1.786369900828736e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.34428990464028975,
+                "imaginary_s_inv": -0.00026091391029441676,
+                "participation": {
+                  "density": 1.002230838886775e-06,
+                  "wall_order": 1.590171739480505e-18,
+                  "beta_p": 0.9999987840135787,
+                  "orientation": 1.6397128531930096e-07,
+                  "temperature": 9.404815720274519e-13,
+                  "junction": 4.978335668134543e-08,
+                  "signed_polarization": 9.556581116059985e-07,
+                  "unsigned_density": 4.6572727280776234e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 2.3012756738877928e-08,
+                "imaginary_s_inv": -6.981270889228599e-08,
+                "participation": {
+                  "density": 1.7183103411373736e-18,
+                  "wall_order": 6.486515422416224e-30,
+                  "beta_p": 1.0,
+                  "orientation": 1.0533087159884535e-20,
+                  "temperature": 4.729387542439368e-23,
+                  "junction": 2.8956940129998713e-19,
+                  "signed_polarization": 1.6988681249609437e-18,
+                  "unsigned_density": 1.9442216176429796e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 1.1734219358583401e-07,
+                "imaginary_s_inv": -1.3670934039404986e-07,
+                "participation": {
+                  "density": 1.9702448269583192e-18,
+                  "wall_order": 2.6849544277886164e-29,
+                  "beta_p": 1.0,
+                  "orientation": 5.851185411999122e-20,
+                  "temperature": 3.4671601775799826e-23,
+                  "junction": 3.6309709030698205e-19,
+                  "signed_polarization": 1.8603405824743726e-18,
+                  "unsigned_density": 1.0990424448394685e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 1.826590822738105e-10,
+                "imaginary_s_inv": -1.0837935827706582e-11,
+                "participation": {
+                  "density": 7.442976583116474e-23,
+                  "wall_order": 1.8058159676737565e-33,
+                  "beta_p": 1.0,
+                  "orientation": 3.865732346248805e-26,
+                  "temperature": 5.5991332177895525e-28,
+                  "junction": 1.2387675085754094e-23,
+                  "signed_polarization": 6.803014641500903e-23,
+                  "unsigned_density": 6.3996194161556974e-24
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000120.npz",
+          "step": 120,
+          "time_s": 3.388434361328817e-06,
+          "strain": 0.00338843436132882,
+          "stress_MPa": 477.73428884553044,
+          "temperature_mean_K": 1316.4953297470543,
+          "wall_order_mean": 0.9999999631856149,
+          "wall_order_std": 6.289280033389252e-08,
+          "orientation_span_deg": 0.004447129288455038,
+          "nye_relative_residual": 2.4549766163716967e-15,
+          "nye_divergence_relative_rms": 7.60232357008068e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.296070106571416e-06,
+            "junction_turnover": 0.00011725724115628001,
+            "lock_minus_turnover": 0.0022032044844283007,
+            "lock_plus_turnover": 0.0022032044844275873,
+            "multiplication_pairs": 9.86591808065849e-13,
+            "order": 0.9999989754958816,
+            "wall_minus_turnover": 0.0013005660086703242,
+            "wall_plus_turnover": 0.0013005660086701971
+          },
+          "balance_ledger": {
+            "accepted_steps": 121,
+            "cumulative_free_energy_change_J_m3": -62580169.54440598,
+            "cumulative_heat_J_m3": 62709981.54478583,
+            "cumulative_plastic_work_J_m3": 129812.00037984346,
+            "maximum_relative_burgers_rate_residual": 5.897703180585323e-17,
+            "maximum_relative_energy_balance_residual": 2.137147282528861e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.0027084204749039794
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 1.2306260469202062e-06,
+                "imaginary_s_inv": -2.6469779616697504e-23,
+                "participation": {
+                  "density": 0.0006461714803485597,
+                  "wall_order": 1.2767931950984129e-30,
+                  "beta_p": 0.9991561225611594,
+                  "orientation": 1.686030619686333e-18,
+                  "temperature": 5.793958437269473e-20,
+                  "junction": 0.00019770595849203152,
+                  "signed_polarization": 0.0006461714803485531,
+                  "unsigned_density": 6.533225743235977e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.07072226876450091,
+                "imaginary_s_inv": 3.7599248278685477e-05,
+                "participation": {
+                  "density": 2.40409512167452e-07,
+                  "wall_order": 2.862613541609885e-22,
+                  "beta_p": 0.9999997404522561,
+                  "orientation": 6.653406596289523e-09,
+                  "temperature": 1.933365818753945e-12,
+                  "junction": 1.2482891879559181e-08,
+                  "signed_polarization": 2.3836767823647818e-07,
+                  "unsigned_density": 2.041833930973807e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.254394667403377,
+                "imaginary_s_inv": -3.014098169138169e-07,
+                "participation": {
+                  "density": 8.530511964800989e-07,
+                  "wall_order": 2.727077775114992e-21,
+                  "beta_p": 0.999999020172868,
+                  "orientation": 8.320229706854231e-08,
+                  "temperature": 2.5473007710876998e-12,
+                  "junction": 4.357109116275016e-08,
+                  "signed_polarization": 8.291937364805551e-07,
+                  "unsigned_density": 2.385745999954418e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.4182811491290112,
+                "imaginary_s_inv": -0.00027572490827365266,
+                "participation": {
+                  "density": 1.311273647468229e-06,
+                  "wall_order": 8.043277170395317e-21,
+                  "beta_p": 0.9999983929668906,
+                  "orientation": 2.2991916956215275e-07,
+                  "temperature": 1.4107182337515897e-12,
+                  "junction": 6.583888146701497e-08,
+                  "signed_polarization": 1.2456554590040415e-06,
+                  "unsigned_density": 6.561818846418772e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.173078275428355e-07,
+                "imaginary_s_inv": 1.8368483005771805e-07,
+                "participation": {
+                  "density": 2.423492649586266e-17,
+                  "wall_order": 4.034303540680143e-31,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 7.062524440820143e-20,
+                  "temperature": 9.700833686137205e-22,
+                  "junction": 3.820633327393939e-18,
+                  "signed_polarization": 2.3893836865228966e-17,
+                  "unsigned_density": 3.410896306336935e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 2.4213448547023744e-08,
+                "imaginary_s_inv": 8.659643116041585e-09,
+                "participation": {
+                  "density": 2.530437206414982e-19,
+                  "wall_order": 9.242328255614659e-33,
+                  "beta_p": 1.0,
+                  "orientation": 7.217934635854547e-23,
+                  "temperature": 4.194896794314418e-24,
+                  "junction": 2.762362166021244e-20,
+                  "signed_polarization": 2.4103103939443416e-19,
+                  "unsigned_density": 1.201268124706396e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 7.836776107306186e-09,
+                "imaginary_s_inv": -1.4579548139658909e-08,
+                "participation": {
+                  "density": 7.327285063372019e-20,
+                  "wall_order": 8.045564815714065e-33,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 8.043860497504997e-23,
+                  "temperature": 6.918226211903599e-25,
+                  "junction": 5.0758343226347554e-21,
+                  "signed_polarization": 6.454903734211137e-20,
+                  "unsigned_density": 8.723813291608783e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000140.npz",
+          "step": 140,
+          "time_s": 3.442358702999615e-06,
+          "strain": 0.00344235870299962,
+          "stress_MPa": 483.2620771264236,
+          "temperature_mean_K": 1316.5019728349596,
+          "wall_order_mean": 0.9999999977779864,
+          "wall_order_std": 4.609979843622769e-09,
+          "orientation_span_deg": 0.004676883010482045,
+          "nye_relative_residual": 2.5528381524879283e-15,
+          "nye_divergence_relative_rms": 8.95225903904842e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.409942836077082e-06,
+            "junction_turnover": 0.0001187164694449814,
+            "lock_minus_turnover": 0.0022464139090903738,
+            "lock_plus_turnover": 0.00224641390909172,
+            "multiplication_pairs": 1.048986728514971e-12,
+            "order": 0.9999990100882529,
+            "wall_minus_turnover": 0.0013281439210489508,
+            "wall_plus_turnover": 0.0013281439210488448
+          },
+          "balance_ledger": {
+            "accepted_steps": 141,
+            "cumulative_free_energy_change_J_m3": -62597132.5871437,
+            "cumulative_heat_J_m3": 62739673.625056475,
+            "cumulative_plastic_work_J_m3": 142541.037912791,
+            "maximum_relative_burgers_rate_residual": 7.961160258408833e-17,
+            "maximum_relative_energy_balance_residual": 2.137147282528861e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.00268545522053348
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 4.448584399346803e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0003255286923422694,
+                  "wall_order": 5.835277362501478e-33,
+                  "beta_p": 0.9995661950632129,
+                  "orientation": 2.0856818026858813e-19,
+                  "temperature": 4.7831685195705195e-20,
+                  "junction": 0.00010827624444477842,
+                  "signed_polarization": 0.00032552869234226485,
+                  "unsigned_density": 4.5643346151025234e-18
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.08179046798728033,
+                "imaginary_s_inv": 4.042747910597514e-05,
+                "participation": {
+                  "density": 2.8120281516066886e-07,
+                  "wall_order": 1.4239550508784777e-24,
+                  "beta_p": 0.999999695541297,
+                  "orientation": 8.460909300281008e-09,
+                  "temperature": 2.6246823948308137e-12,
+                  "junction": 1.4792353959910167e-08,
+                  "signed_polarization": 2.7858363310078786e-07,
+                  "unsigned_density": 2.6191820598810114e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.29540811406360823,
+                "imaginary_s_inv": 6.77358988932793e-07,
+                "participation": {
+                  "density": 1.0118892345889625e-06,
+                  "wall_order": 1.317942397130977e-23,
+                  "beta_p": 0.9999988290811773,
+                  "orientation": 1.0667775486918523e-07,
+                  "temperature": 3.4900115349262454e-12,
+                  "junction": 5.234834341586633e-08,
+                  "signed_polarization": 9.810808918897878e-07,
+                  "unsigned_density": 3.0808342699174535e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.4956367057589116,
+                "imaginary_s_inv": -0.0002911415958868761,
+                "participation": {
+                  "density": 1.6341266655646383e-06,
+                  "wall_order": 4.1974944058196585e-23,
+                  "beta_p": 0.999997976009615,
+                  "orientation": 3.0689837014164396e-07,
+                  "temperature": 2.0116235136851154e-12,
+                  "junction": 8.296333778614106e-08,
+                  "signed_polarization": 1.54609053989916e-06,
+                  "unsigned_density": 8.803612566547863e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 3.112934002324848e-08,
+                "imaginary_s_inv": 1.4150861505275997e-09,
+                "participation": {
+                  "density": 3.6815596704454894e-19,
+                  "wall_order": 1.049167608416504e-35,
+                  "beta_p": 1.0,
+                  "orientation": 2.7653338444421624e-22,
+                  "temperature": 7.779772173180317e-24,
+                  "junction": 2.5306427179962658e-20,
+                  "signed_polarization": 3.6315496087683315e-19,
+                  "unsigned_density": 5.0010061677158664e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 2.7074196144740372e-08,
+                "imaginary_s_inv": 1.2286741774246513e-07,
+                "participation": {
+                  "density": 9.751586296667713e-19,
+                  "wall_order": 1.7002611832396626e-34,
+                  "beta_p": 1.0,
+                  "orientation": 1.1299163377180261e-20,
+                  "temperature": 1.7895844873656797e-23,
+                  "junction": 6.00062477645733e-20,
+                  "signed_polarization": 9.17299039497171e-19,
+                  "unsigned_density": 5.785959016960041e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.4355734627421962e-08,
+                "imaginary_s_inv": 7.454325594057379e-09,
+                "participation": {
+                  "density": 4.732887442689489e-20,
+                  "wall_order": 1.0443687171185744e-35,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 8.784534546204524e-22,
+                  "temperature": 3.0871732392176293e-25,
+                  "junction": 2.991985114803032e-21,
+                  "signed_polarization": 4.25122611698399e-20,
+                  "unsigned_density": 4.816613257054985e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000160.npz",
+          "step": 160,
+          "time_s": 3.4958438642421027e-06,
+          "strain": 0.0034958438642421056,
+          "stress_MPa": 488.661512051386,
+          "temperature_mean_K": 1316.5087198662852,
+          "wall_order_mean": 0.9999999998613385,
+          "wall_order_std": 3.3910886514054997e-10,
+          "orientation_span_deg": 0.004912164207644275,
+          "nye_relative_residual": 2.812476814273985e-15,
+          "nye_divergence_relative_rms": 9.298442788631658e-16,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.523735912061172e-06,
+            "junction_turnover": 0.00012017215005629751,
+            "lock_minus_turnover": 0.002289486877972795,
+            "lock_plus_turnover": 0.002289486877976235,
+            "multiplication_pairs": 1.1126634944782296e-12,
+            "order": 0.9999990121716053,
+            "wall_minus_turnover": 0.0013556304650208198,
+            "wall_plus_turnover": 0.0013556304650207364
+          },
+          "balance_ledger": {
+            "accepted_steps": 161,
+            "cumulative_free_energy_change_J_m3": -62614010.22559904,
+            "cumulative_heat_J_m3": 62769726.25099513,
+            "cumulative_plastic_work_J_m3": 155716.02539610481,
+            "maximum_relative_burgers_rate_residual": 7.961160258408833e-17,
+            "maximum_relative_energy_balance_residual": 2.8868253500096194e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.0026639548184982215
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 5.900345199593747e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.09748659646610881,
+                  "wall_order": 1.6737589425487727e-36,
+                  "beta_p": 0.9004731341390886,
+                  "orientation": 3.110503238347199e-19,
+                  "temperature": 2.483146530077129e-19,
+                  "junction": 0.0020402693948024775,
+                  "signed_polarization": 0.09748659646610881,
+                  "unsigned_density": 2.7267314025765494e-17
+                }
+              },
+              "leading_wall_candidate": {
+                "real_growth_s_inv": 5.900345199593747e-07,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.09748659646610881,
+                  "wall_order": 1.6737589425487727e-36,
+                  "beta_p": 0.9004731341390886,
+                  "orientation": 3.110503238347199e-19,
+                  "temperature": 2.483146530077129e-19,
+                  "junction": 0.0020402693948024775,
+                  "signed_polarization": 0.09748659646610881,
+                  "unsigned_density": 2.7267314025765494e-17
+                }
+              }
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.09343397444404507,
+                "imaginary_s_inv": 4.333600495563053e-05,
+                "participation": {
+                  "density": 3.213072749600664e-07,
+                  "wall_order": 7.437400319792143e-27,
+                  "beta_p": 0.9999996510562863,
+                  "orientation": 1.0504973027662728e-08,
+                  "temperature": 3.4736932703820075e-12,
+                  "junction": 1.7127992115243058e-08,
+                  "signed_polarization": 3.1802604405355757e-07,
+                  "unsigned_density": 3.2812309065088213e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.3383999465660065,
+                "imaginary_s_inv": 8.31072876801918e-07,
+                "participation": {
+                  "density": 1.1697541161068367e-06,
+                  "wall_order": 6.668644239141855e-26,
+                  "beta_p": 0.9999986357378999,
+                  "orientation": 1.3319620828960002e-07,
+                  "temperature": 4.649170699716347e-12,
+                  "junction": 6.130712658981793e-08,
+                  "signed_polarization": 1.1310020866857596e-06,
+                  "unsigned_density": 3.8752029421077066e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.5764089498313838,
+                "imaginary_s_inv": -0.00031015776561863173,
+                "participation": {
+                  "density": 1.9643948991522093e-06,
+                  "wall_order": 2.270939310561528e-25,
+                  "beta_p": 0.9999975398651111,
+                  "orientation": 3.948712188442859e-07,
+                  "temperature": 2.761091661563264e-12,
+                  "junction": 1.0086600977219911e-07,
+                  "signed_polarization": 1.8505114115232352e-06,
+                  "unsigned_density": 1.1388348762897484e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 6.474426848640322e-08,
+                "imaginary_s_inv": 7.41308534682919e-08,
+                "participation": {
+                  "density": 2.3574799190360542e-18,
+                  "wall_order": 1.759174069467478e-37,
+                  "beta_p": 1.0,
+                  "orientation": 1.0501702006138283e-20,
+                  "temperature": 5.152741831957112e-23,
+                  "junction": 1.6260861812989289e-19,
+                  "signed_polarization": 2.3213020162773027e-18,
+                  "unsigned_density": 3.617790275875117e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 2.685498909509992e-08,
+                "imaginary_s_inv": -1.2336726838064098e-08,
+                "participation": {
+                  "density": 5.642451249872357e-20,
+                  "wall_order": 4.0941703886497613e-38,
+                  "beta_p": 1.0,
+                  "orientation": 5.897259689338959e-22,
+                  "temperature": 1.781524341139267e-25,
+                  "junction": 1.0476098360663656e-20,
+                  "signed_polarization": 5.300574400263058e-20,
+                  "unsigned_density": 3.418768496092979e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000180.npz",
+          "step": 180,
+          "time_s": 3.548715560774199e-06,
+          "strain": 0.0035487155607741997,
+          "stress_MPa": 493.91560775725145,
+          "temperature_mean_K": 1316.5155483299347,
+          "wall_order_mean": 0.9999999999909932,
+          "wall_order_std": 2.527387642283375e-11,
+          "orientation_span_deg": 0.005152076130554748,
+          "nye_relative_residual": 3.2822497359947758e-15,
+          "nye_divergence_relative_rms": 1.0617311201203672e-15,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.637064092360563e-06,
+            "junction_turnover": 0.000121619367014551,
+            "lock_minus_turnover": 0.0023322786115749328,
+            "lock_plus_turnover": 0.002332278611580494,
+            "multiplication_pairs": 1.1773963777592648e-12,
+            "order": 0.9999990123012601,
+            "wall_minus_turnover": 0.0013829333272107214,
+            "wall_plus_turnover": 0.0013829333272106631
+          },
+          "balance_ledger": {
+            "accepted_steps": 181,
+            "cumulative_free_energy_change_J_m3": -62630746.21755147,
+            "cumulative_heat_J_m3": 62800039.486935355,
+            "cumulative_plastic_work_J_m3": 169293.26938389408,
+            "maximum_relative_burgers_rate_residual": 7.961160258408833e-17,
+            "maximum_relative_energy_balance_residual": 2.8868253500096194e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.002623859650593018
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.1056162534655186,
+                "imaginary_s_inv": 4.8217447226170576e-05,
+                "participation": {
+                  "density": 3.601372654350042e-07,
+                  "wall_order": 4.142816085019967e-29,
+                  "beta_p": 0.9999996076190061,
+                  "orientation": 1.278170930897114e-08,
+                  "temperature": 4.497245931044535e-12,
+                  "junction": 1.9457521801563488e-08,
+                  "signed_polarization": 3.56108193651688e-07,
+                  "unsigned_density": 4.029071783316268e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.3832122980202782,
+                "imaginary_s_inv": 7.694990324912773e-07,
+                "participation": {
+                  "density": 1.3241775568887458e-06,
+                  "wall_order": 3.5977197851848545e-28,
+                  "beta_p": 0.999998442842833,
+                  "orientation": 1.6265898892271665e-07,
+                  "temperature": 6.046524657624666e-12,
+                  "junction": 7.031457471431934e-08,
+                  "signed_polarization": 1.2764943050900612e-06,
+                  "unsigned_density": 4.768325179868379e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.6603004584245464,
+                "imaginary_s_inv": -0.00032717405959900727,
+                "participation": {
+                  "density": 2.2956475806236296e-06,
+                  "wall_order": 1.2984933086453976e-27,
+                  "beta_p": 0.9999970917460348,
+                  "orientation": 4.933719125821992e-07,
+                  "temperature": 3.673978212470627e-12,
+                  "junction": 1.192307979966338e-07,
+                  "signed_polarization": 2.152554924656307e-06,
+                  "unsigned_density": 1.4309265596732207e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 8.765743790790833e-08,
+                "imaginary_s_inv": 7.419660954132045e-09,
+                "participation": {
+                  "density": 9.835834254129411e-18,
+                  "wall_order": 1.1400090514477298e-38,
+                  "beta_p": 1.0,
+                  "orientation": 9.755715032921052e-22,
+                  "temperature": 5.319255635714472e-22,
+                  "junction": 1.0249099026890301e-18,
+                  "signed_polarization": 9.649284817650649e-18,
+                  "unsigned_density": 1.86549436478759e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 2.8033623019779755e-08,
+                "imaginary_s_inv": 2.82549870121851e-08,
+                "participation": {
+                  "density": 2.2140555937196623e-19,
+                  "wall_order": 8.112659832238812e-40,
+                  "beta_p": 1.0,
+                  "orientation": 2.6801365446175743e-21,
+                  "temperature": 3.538400969029428e-24,
+                  "junction": 4.80096396953441e-20,
+                  "signed_polarization": 2.1127456638161322e-19,
+                  "unsigned_density": 1.0130992990352991e-20
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 4.1338662463203814e-08,
+                "imaginary_s_inv": 3.677558277875578e-08,
+                "participation": {
+                  "density": 2.1499566646227737e-20,
+                  "wall_order": 4.03034007915355e-41,
+                  "beta_p": 1.0,
+                  "orientation": 4.2266044714439655e-21,
+                  "temperature": 2.6369402794568466e-27,
+                  "junction": 1.3286253983146782e-21,
+                  "signed_polarization": 1.9185891337251567e-20,
+                  "unsigned_density": 2.3136753089761716e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000200.npz",
+          "step": 200,
+          "time_s": 3.6002646660409007e-06,
+          "strain": 0.0036002646660409027,
+          "stress_MPa": 498.9567051760753,
+          "temperature_mean_K": 1316.5223618705895,
+          "wall_order_mean": 0.9999999999993691,
+          "wall_order_std": 1.98183133230166e-12,
+          "orientation_span_deg": 0.005393070559093166,
+          "nye_relative_residual": 3.5457130875272903e-15,
+          "nye_divergence_relative_rms": 1.2032687393079905e-15,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.748371027393731e-06,
+            "junction_turnover": 0.00012303832387788502,
+            "lock_minus_turnover": 0.002374205248123148,
+            "lock_plus_turnover": 0.002374205248130827,
+            "multiplication_pairs": 1.2422521506698678e-12,
+            "order": 0.999999012309636,
+            "wall_minus_turnover": 0.0014096801704320061,
+            "wall_plus_turnover": 0.0014096801704319738
+          },
+          "balance_ledger": {
+            "accepted_steps": 201,
+            "cumulative_free_energy_change_J_m3": -62647113.491157584,
+            "cumulative_heat_J_m3": 62830188.580955066,
+            "cumulative_plastic_work_J_m3": 183075.08979750128,
+            "maximum_relative_burgers_rate_residual": 7.961160258408833e-17,
+            "maximum_relative_energy_balance_residual": 2.8868253500096194e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.002520685897235793
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 5.478251617489048e-08,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 3.1908768922940145e-05,
+                  "wall_order": 7.499958134076016e-39,
+                  "beta_p": 0.9999679715969909,
+                  "orientation": 2.7000732789211437e-21,
+                  "temperature": 7.08521643948843e-24,
+                  "junction": 1.1963408611246177e-07,
+                  "signed_polarization": 3.190876892294013e-05,
+                  "unsigned_density": 3.7609107818661925e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.11815033152396771,
+                "imaginary_s_inv": 5.03474570054627e-05,
+                "participation": {
+                  "density": 3.968501296506593e-07,
+                  "wall_order": 2.635713956544845e-31,
+                  "beta_p": 0.9999995661622041,
+                  "orientation": 1.525434369368109e-08,
+                  "temperature": 5.696228440461131e-12,
+                  "junction": 2.172762625241595e-08,
+                  "signed_polarization": 3.919972688107681e-07,
+                  "unsigned_density": 4.852860839891377e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.4291714652355548,
+                "imaginary_s_inv": 4.32706070423328e-08,
+                "participation": {
+                  "density": 1.4717594648487943e-06,
+                  "wall_order": 2.222558285931218e-30,
+                  "beta_p": 0.9999982544938486,
+                  "orientation": 1.945716998347563e-07,
+                  "temperature": 7.68235176385478e-12,
+                  "junction": 7.916730436413016e-08,
+                  "signed_polarization": 1.4142866112978324e-06,
+                  "unsigned_density": 5.7472853550961505e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.7460257641998728,
+                "imaginary_s_inv": -0.0003451866364196343,
+                "participation": {
+                  "density": 2.6191923349679645e-06,
+                  "wall_order": 8.423269378381668e-30,
+                  "beta_p": 0.9999966426658105,
+                  "orientation": 6.005545669974376e-07,
+                  "temperature": 4.750518924682586e-12,
+                  "junction": 1.3758253714773836e-07,
+                  "signed_polarization": 2.4440130689093528e-06,
+                  "unsigned_density": 1.751792660586118e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 9.413000371350508e-08,
+                "imaginary_s_inv": -1.1749042138713943e-07,
+                "participation": {
+                  "density": 1.0029125333133605e-17,
+                  "wall_order": 7.497336944820065e-41,
+                  "beta_p": 1.0,
+                  "orientation": 2.53937492551967e-20,
+                  "temperature": 5.269833006943932e-22,
+                  "junction": 1.425650926707731e-18,
+                  "signed_polarization": 9.847917638307942e-18,
+                  "unsigned_density": 1.8120769482565898e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.0,
+                "imaginary_s_inv": 0.0,
+                "participation": {
+                  "density": 0.0,
+                  "wall_order": 0.0,
+                  "beta_p": 1.0,
+                  "orientation": 0.0,
+                  "temperature": 0.0,
+                  "junction": 0.0,
+                  "signed_polarization": 0.0,
+                  "unsigned_density": 0.0
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 5.3757109904704504e-08,
+                "imaginary_s_inv": -2.0750196204454226e-08,
+                "participation": {
+                  "density": 9.099997032472597e-20,
+                  "wall_order": 5.61515212786028e-42,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 5.3253118745280385e-21,
+                  "temperature": 9.05497569272688e-25,
+                  "junction": 2.38841775040024e-20,
+                  "signed_polarization": 7.823349165080263e-20,
+                  "unsigned_density": 1.276647867392329e-20
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        },
+        {
+          "path": "full_model/verification/v21_on_trajectory/particle/drx_v25_restart_000219.npz",
+          "step": 219,
+          "time_s": 3.646406209364808e-06,
+          "strain": 0.0036464062093648094,
+          "stress_MPa": 503.39929402058425,
+          "temperature_mean_K": 1316.528594312228,
+          "wall_order_mean": 0.999999999999941,
+          "wall_order_std": 2.015170052321633e-13,
+          "orientation_span_deg": 0.005614760699306903,
+          "nye_relative_residual": 3.7838979935605105e-15,
+          "nye_divergence_relative_rms": 1.1743994481628516e-15,
+          "reaction_exposure": {
+            "annihilation_pairs": 5.8486903138803446e-06,
+            "junction_turnover": 0.00012431512723036966,
+            "lock_minus_turnover": 0.0024119069242778263,
+            "lock_plus_turnover": 0.0024119069242874444,
+            "multiplication_pairs": 1.3017892022888419e-12,
+            "order": 0.9999990123102079,
+            "wall_minus_turnover": 0.0014337283250313376,
+            "wall_plus_turnover": 0.00143372832503133
+          },
+          "balance_ledger": {
+            "accepted_steps": 220,
+            "cumulative_free_energy_change_J_m3": -62661805.76733467,
+            "cumulative_heat_J_m3": 62857684.37419326,
+            "cumulative_plastic_work_J_m3": 195878.60685861393,
+            "maximum_relative_burgers_rate_residual": 7.961160258408833e-17,
+            "maximum_relative_energy_balance_residual": 2.8868253500096194e-17,
+            "maximum_relative_line_balance_residual": 1.6232538484740258e-16,
+            "minimum_accept_scale": 0.002313803029222792
+          },
+          "spectra": [
+            {
+              "mode": [
+                0,
+                0
+              ],
+              "wavelength_m": null,
+              "leading": {
+                "real_growth_s_inv": 3.8291105235810667e-07,
+                "imaginary_s_inv": -1.5563556705962936e-23,
+                "participation": {
+                  "density": 0.0005298365870116748,
+                  "wall_order": 2.483034634512195e-37,
+                  "beta_p": 0.9993512594744678,
+                  "orientation": 1.2614250914429178e-19,
+                  "temperature": 2.559073970871913e-22,
+                  "junction": 0.0001189039385206923,
+                  "signed_polarization": 0.0005298365870116746,
+                  "unsigned_density": 1.8515762905013849e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                1,
+                0
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 0.12993650986921385,
+                "imaginary_s_inv": 5.144895843540222e-05,
+                "participation": {
+                  "density": 4.28559523683031e-07,
+                  "wall_order": 2.8740017697902896e-33,
+                  "beta_p": 0.9999995299994536,
+                  "orientation": 1.7686923103528708e-08,
+                  "temperature": 6.959492375306942e-12,
+                  "junction": 2.3747140010134788e-08,
+                  "signed_polarization": 4.228853179455735e-07,
+                  "unsigned_density": 5.674205737457517e-09
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                2,
+                0
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 0.4722376238511277,
+                "imaginary_s_inv": -5.394956434165159e-07,
+                "participation": {
+                  "density": 1.600467835139481e-06,
+                  "wall_order": 2.367847633311573e-32,
+                  "beta_p": 0.9999980865736507,
+                  "orientation": 2.258517151344437e-07,
+                  "temperature": 9.403039964784537e-12,
+                  "junction": 8.709739591027769e-08,
+                  "signed_polarization": 1.5332902398800876e-06,
+                  "unsigned_density": 6.717759525939362e-08
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                3,
+                0
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 0.8260958642228928,
+                "imaginary_s_inv": -0.00035878839743635295,
+                "participation": {
+                  "density": 2.906712121521303e-06,
+                  "wall_order": 9.30452489157011e-32,
+                  "beta_p": 0.999996233144161,
+                  "orientation": 7.058865149538922e-07,
+                  "temperature": 5.88868133823892e-12,
+                  "junction": 1.5425131388060896e-07,
+                  "signed_polarization": 2.699710356726606e-06,
+                  "unsigned_density": 2.070017647946965e-07
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                1
+              ],
+              "wavelength_m": 1e-05,
+              "leading": {
+                "real_growth_s_inv": 1.3820784906374306e-07,
+                "imaginary_s_inv": -4.3541472219391795e-08,
+                "participation": {
+                  "density": 1.565783455986699e-17,
+                  "wall_order": 9.018130677535858e-43,
+                  "beta_p": 1.0000000000000002,
+                  "orientation": 2.7079080214064413e-21,
+                  "temperature": 8.774905244228427e-22,
+                  "junction": 1.7766082984778573e-18,
+                  "signed_polarization": 1.5353569299350637e-17,
+                  "unsigned_density": 3.042652605163553e-19
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                2
+              ],
+              "wavelength_m": 5e-06,
+              "leading": {
+                "real_growth_s_inv": 1.7238949576678063e-08,
+                "imaginary_s_inv": 2.614767066836622e-08,
+                "participation": {
+                  "density": 1.0579369799552847e-19,
+                  "wall_order": 1.3831362084912274e-44,
+                  "beta_p": 1.0,
+                  "orientation": 2.198964515651383e-22,
+                  "temperature": 1.7135369471692853e-24,
+                  "junction": 9.636300335163742e-21,
+                  "signed_polarization": 1.000098063812288e-19,
+                  "unsigned_density": 5.783891614299645e-21
+                }
+              },
+              "leading_wall_candidate": null
+            },
+            {
+              "mode": [
+                0,
+                3
+              ],
+              "wavelength_m": 3.3333333333333333e-06,
+              "leading": {
+                "real_growth_s_inv": 3.1600742881255224e-09,
+                "imaginary_s_inv": -7.4158458502261385e-09,
+                "participation": {
+                  "density": 8.896088288524932e-20,
+                  "wall_order": 2.2229814388913168e-44,
+                  "beta_p": 0.9999999999999999,
+                  "orientation": 9.463692321045005e-24,
+                  "temperature": 5.752792811469589e-25,
+                  "junction": 7.667496069347011e-21,
+                  "signed_polarization": 8.212262406673093e-20,
+                  "unsigned_density": 6.838258818518418e-21
+                }
+              },
+              "leading_wall_candidate": null
+            }
+          ]
+        }
+      ],
+      "cumulative_exposure": {
+        "uniform_leading_G": 43.12008898999606,
+        "finite_leading_G": 43.09832910588784,
+        "finite_wall_candidate_G": 0.0,
+        "finite_over_uniform_advantage_G": 0.0
+      },
+      "classification": "UNIFORM_ORDERING_ONLY"
+    }
+  },
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

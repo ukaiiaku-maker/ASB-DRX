@@ -82,6 +82,27 @@ def test_wall_order_residual_is_derivative_of_same_free_energy():
     assert np.all(residual.state_rate.wall_order*derivative <= 1e-8)
 
 
+def test_reported_defect_energy_rate_is_directional_derivative():
+    systems, topologies, p, state, driving = fixture()
+    residual = wall_residual(state, driving, systems, topologies, p)
+    rate = residual.state_rate
+    # Keep the centered perturbation small relative to every positive reservoir
+    # and to the bounded order coordinate.
+    h = 1e-8
+    plus = CommonWallState(**{
+        name: value+h*getattr(rate, name)
+        for name, value in state.__dict__.items()})
+    minus = CommonWallState(**{
+        name: value-h*getattr(rate, name)
+        for name, value in state.__dict__.items()})
+    numerical = np.mean(
+        wall_free_energy_density_J_m3(plus, p, topologies)
+        -wall_free_energy_density_J_m3(minus, p, topologies))/(2*h)
+    np.testing.assert_allclose(
+        np.mean(residual.free_energy_rate_W_m3), numerical,
+        rtol=2e-8, atol=2e-2)
+
+
 def test_accepted_step_is_exactly_scaled_common_residual_and_nonnegative():
     systems, topologies, p, state, driving = fixture()
     dt = 1e-8

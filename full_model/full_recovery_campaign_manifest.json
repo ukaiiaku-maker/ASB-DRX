@@ -209,6 +209,30 @@
       "hpc3_job_launched": false,
       "fixture_passed": false,
       "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v21-common-tensorial-wall-bounded-decision",
+      "scientific_source_commit": "23f6e4188cf162a81bd2858835b717209e66fe6d",
+      "execution": "local_common-JVP_trajectory_and_bounded_search_with_existing-HAGB_fallback",
+      "primary_classification": "UNIFORM_RESERVOIR_OR_ORDER_TRANSITION_NOT_A_LAGB",
+      "signed_wall_classification": "INTRAGRANULAR_WALL_MECHANISM_NOT_EXERCISED_IN_BOUNDED_LOADING_FAMILY",
+      "fallback_classification": "V21_EXISTING_HAGB_SIBM_SIGN_DISCRIMINATION_PASSED",
+      "result_path": "full_model/verification/v21_common_operator_decision.json",
+      "trajectory_audit_path": "full_model/verification/v21_common_on_trajectory_audit.json",
+      "bounded_search_path": "full_model/verification/v21_bounded_common_spectrum_search.json",
+      "restart_result_path": "full_model/verification/v21_common_restart.json",
+      "legacy_regression_path": "full_model/verification/v21_legacy_regression.json",
+      "fallback_result_path": "full_model/verification/v21_alternative_sibm_decision.json",
+      "raw_evidence_manifest_path": "full_model/verification/v21_local_evidence_manifest.json",
+      "homogeneous_field_plot": "full_model/verification/v21_common_homogeneous_fields.png",
+      "particle_field_plot": "full_model/verification/v21_common_particle_fields.png",
+      "bounded_state_count": 36,
+      "robust_finite_signed_wall_matches": 0,
+      "wall_hpc3_job_launched": false,
+      "fallback_hpc3_job_launched": false,
+      "configured_regression_tests_passed": 383,
+      "fixture_passed": true,
+      "scientific_gate_passed": false
     }
   ]
 }

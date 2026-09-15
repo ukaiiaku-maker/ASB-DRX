@@ -979,3 +979,56 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The full driver now uses a shared nonlocal periodic elastic solver. Sign, zero-mode, energy, and work-conjugacy tests pass; the 1000-step V19 replay changes by at most `4.31e-13` relative. A 20 versus 8+12 V20 restart is bitwise identical for every declared state.
 - The complete configured suite passes 377 tests. Explicit junction topology passes as a local Frank-rule/line-node fixture but is not yet the production wall reaction, and density flux is not yet one common discrete update with alignment. Decision: `V20_COMMON_OPERATOR_REPAIR_REQUIRED_NO_HPC`; `fixture_passed=false`, `scientific_gate_passed=false`, and no HPC3 job is authorized.
 - Live queue audit preserved unrelated jobs `55950433` and `56017421`; no DRX/ASB campaign job was submitted.
+
+## Directive v21 common tensorial operator and bounded decision (2026-09-14)
+
+- Production source `23f6e4188cf162a81bd2858835b717209e66fe6d` implements one opt-in
+  common residual for the four-family signed mobile, forest, wall,
+  and explicit junction reservoirs; slip, full plastic distortion, alignment,
+  family Nye, orientation, wall order, temperature, nonlocal elasticity, and
+  complete reaction/line/Burgers/work/free-energy/heat ledgers use that residual.
+  The nonlinear step, JVP, and Fourier symbols do not maintain parallel laws.
+- Restart auditing found and repaired three provenance-threatening integration
+  defects before evidence was accepted: obsolete V21 override names had left
+  scalar Cahn--Hilliard active, a legacy work limiter could rescale reported slip
+  without the tensorial state, and the positivity limiter shortened only the
+  constitutive update. V21 now disables the duplicate paths and applies the
+  accepted factor as the physical timestep for state, load, heat, clock, and
+  exposure together.
+- Exact 20 versus 8+12 restart is bitwise identical for all signed reservoirs,
+  junction products, tensorial kinematics, thermal/orientation state, topology,
+  exposure, and balance ledgers. The complete configured suite passes 383 tests.
+  With V21 disabled, 144 common numeric checkpoint fields are bitwise identical
+  to the starting `ff125d6` source trajectory.
+- Regular 8-square full-driver trajectories were evaluated at 12 checkpoints.
+  Homogeneous/noise and eigenstrain-particle paths accumulated leading uniform
+  amplification `G=43.3606` and `43.1201`, respectively, but zero finite signed-
+  wall exposure. Both saturated at spatially uniform wall order near one;
+  aggregate wall polarization was only `1.22e-12` and `2.50e-9`, while final
+  orientation spans were `1.24e-5 deg` and `0.00561 deg`. They are classified
+  `UNIFORM_ORDERING_ONLY`, not LAGB precursors.
+- The bounded common-JVP search covered 36 states over 900--1600 K, density ratios
+  0.5--3, two wall-order levels, both coordinate directions, and 7.3/11.1 um
+  incommensurate domains. No signed-polarization branch was positive: the least
+  damped maximum was `-0.05815 s^-1`, and the best finite-over-uniform advantage
+  was `-0.08116 s^-1`. There were zero robust interior wavelength matches.
+  The operator's local reaction, dissipative `k^2`, and scale-free elastic terms
+  provide no intrinsic finite wavelength in this bounded family.
+- Decision: `UNIFORM_RESERVOIR_OR_ORDER_TRANSITION_NOT_A_LAGB` and
+  `INTRAGRANULAR_WALL_MECHANISM_NOT_EXERCISED_IN_BOUNDED_LOADING_FAMILY`.
+  The 64/128 wall HPC matrix was correctly not launched because the preregistered
+  `G_finite>=8` signed/interior/domain-robust promotion condition failed.
+- The required alternative pathway was executed on the current source using a
+  valid existing HAGB and the common moving-front law. The pinned boundary moved
+  `-0.0239709` cell subcritically and `+0.130524` cell supercritically; phase
+  simplex, nonnegativity, line, signed-Burgers, energy/heat, and no-allocation
+  checks pass. Classification:
+  `V21_EXISTING_HAGB_SIBM_SIGN_DISCRIMINATION_PASSED`. This is a generic short
+  sign test, not mesh-converged production SIBM kinetics or material calibration.
+- Machine decision is
+  `full_model/verification/v21_common_operator_decision.json`; governing
+  equations and the dispersion explanation are in
+  `full_model/docs/v21_common_tensorial_wall_operator.md`. Raw local outputs are
+  checksum-indexed by `v21_local_evidence_manifest.json`.
+- Final queue audit again observed only unrelated jobs `55950433` and `56017421`;
+  both were left untouched. Multi-hit coupling remains disabled and uncalibrated.

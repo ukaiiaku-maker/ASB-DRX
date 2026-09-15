@@ -20,7 +20,10 @@ ARRAY_KEYS = (
     "T", "psi_lat", "psi_plastic", "E_tot", "v20_slip", "v20_beta_p",
     "v20_alignment_m2", "v20_family_nye_m1", "v21_junction_m2",
 )
-JSON_KEYS = ("v21_channel_exposure_json", "v21_balance_ledger_json")
+JSON_KEYS = (
+    "v21_channel_exposure_json", "v21_balance_ledger_json",
+    "v21_common_parameters_json", "v21_topology_json",
+)
 
 
 def run(driver: Path, output: Path, parameters: dict) -> Path:

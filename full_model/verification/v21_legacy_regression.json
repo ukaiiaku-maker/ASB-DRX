@@ -1,0 +1,20 @@
+{
+  "schema": "asb-drx/v21-opt-in-legacy-regression/v1",
+  "candidate_commit": "23f6e4188cf162a81bd2858835b717209e66fe6d",
+  "reference_commit": "ff125d678d63a17c0b89c98c33b6cb5d64298b6a",
+  "candidate_checkpoint_sha256": "6019d54a1b4124b5f5106df876cdd3530e79acaad01f914b2068f139fa6371ec",
+  "reference_checkpoint_sha256": "142b34d9b8d80f9024fa986db486a61e5b6380f46f28b0cf812efd8cb220aea9",
+  "common_numeric_fields_tested": 144,
+  "excluded_schema_only_fields": [
+    "P_json",
+    "v21_balance_ledger_json",
+    "v21_channel_exposure_json",
+    "v21_common_parameters_json",
+    "v21_junction_m2",
+    "v21_topology_json"
+  ],
+  "nonidentical_fields": [],
+  "bitwise_legacy_trajectory_passed": true,
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}
