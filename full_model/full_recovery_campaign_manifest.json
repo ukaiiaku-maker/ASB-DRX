@@ -236,12 +236,13 @@
     },
     {
       "qualification_id": "v22-polarization-taylor-multihit-long-wall",
-      "scientific_source_commit": "c04e69c",
+      "scientific_source_commit": "576fd5b",
       "source_foundation_commit": "d4dfd75",
-      "execution": "local-invariants-accepted-map-search-and-single-HPC3-long-bundle",
+      "execution": "local-invariants-accepted-map-search-and-walltime-safe-HPC3-groups",
       "restart_result_path": "full_model/verification/v22_common_restart_qualification.json",
+      "legacy_regression_path": "full_model/verification/v22_legacy_regression.json",
       "finite_time_search_path": "full_model/verification/v22_finite_time_search.json",
-      "configured_regression_tests_passed": 391,
+      "configured_regression_tests_passed": 393,
       "cancelled_preflight_runs": [
         {
           "run_id": "20260915T133632Z-d4dfd75-948ca9",
@@ -266,18 +267,33 @@
           "slurm_job_id": "56037584",
           "elapsed": "00:11:01",
           "reason": "exhausted-family and bound-order Zeno timestep exposed in early checkpoint"
+        },
+        {
+          "run_id": "20260915T141528Z-3caf6ed-6b1943",
+          "slurm_job_id": "56037618",
+          "elapsed": "00:16:24",
+          "reason": "pilot throughput proved eight serial cases could not archive within 12 hours; preserved exact steps 0, 250, and 500 before splitting",
+          "preserved_step_250_sha256": "fa1dc8d9e4f98e9efdb23b7209d6136ef99bcd006ad48add7e7a115483ac5c7a",
+          "preserved_step_500_sha256": "427d29d734b3bce0fa55dc8f3d16d3624e52cb557905c798656feb8a7e14ea45"
         }
       ],
-      "active_run_id": null,
-      "active_slurm_job_id": null,
+      "active_runs": [
+        {"group": "primary64", "run_id": "20260915T143743Z-576fd5b-7de584", "slurm_job_id": "56037686"},
+        {"group": "repeat128_10um", "run_id": "20260915T143756Z-576fd5b-f830d6", "slurm_job_id": "56037688"},
+        {"group": "repeat128_12.7um", "run_id": "20260915T143808Z-576fd5b-27129f", "slurm_job_id": "56037689"}
+      ],
       "active_cases": 8,
-      "target_steps_per_case": 5000,
+      "target_steps_per_case": {"saturated_homogeneous": 500, "negative_controls": 1000, "heterogeneous_primary_and_repeats": 2200},
       "target_minimum_strain": 0.20,
       "checkpoint_interval_steps": 250,
+      "homogeneous_pilot_result_path": "full_model/verification/v22_homogeneous_pilot_postprocessed.json",
+      "homogeneous_pilot_classification": "UNIFORM_ORDERING_ONLY_AT_NONLINEAR_SATURATION",
+      "stored_energy_sibm_fallback_prepared": true,
+      "stored_energy_sibm_fallback_submitted": false,
       "grain_allocation_disabled": true,
       "fixture_passed": true,
       "scientific_gate_passed": false,
-      "classification": "ZENO_TIMESTEP_REPAIR_QUALIFIED_RELAUNCH_PENDING"
+      "classification": "LONG_NONLINEAR_SPLIT_CAMPAIGN_RUNNING"
     }
   ]
 }

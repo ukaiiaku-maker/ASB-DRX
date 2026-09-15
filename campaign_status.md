@@ -1072,3 +1072,48 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   checksum-indexed by `v21_local_evidence_manifest.json`.
 - Final queue audit again observed only unrelated jobs `55950433` and `56017421`;
   both were left untouched. Multi-hit coupling remains disabled and uncalibrated.
+
+## Directive v22 polarization, Taylor resistance, and multi-hit campaign (2026-09-15)
+
+- Source `d4dfd75` introduced the objective signed-wall polarization gate, two
+  bounded gate forms, a wall-order functional stable at absent wall and neutral
+  tangle states, state-dependent forest/wall/junction Taylor resistance inside
+  the EXP-floor forward/reverse glide law, and an opt-in collision-driven
+  bounded multi-hit state. Accepted nonlinear steps, JVPs, Fourier symbols,
+  ledgers, and restart all use the same residual. Subsequent source `3caf6ed`
+  repaired exhausted-reservoir and bound-order Zeno limits with attempt-bounded
+  detailed-balance exchange and bound-degenerate order mobility.
+- The configured suite passes `393` tests at source `576fd5b`; V22-off legacy
+  evolution remains bitwise identical across all 144 reference numeric fields.
+  The SIBM selector now keeps distinct labels in the equal-energy limit and can
+  accept an explicitly declared existing parent/child pair for the required
+  reversed-density control; it still cannot allocate a phase or orientation.
+- The final 18-case accepted-map search spans two temperatures, two rates, two
+  densities, multi-hit off/on, modes 0--2, and incommensurate 6/9.7 micrometer
+  domains. Its best signed finite-time gain is `1.000000067450916`; there is no
+  positive signed interior mode and no cross-domain wavelength match. Decision:
+  `NO_DECISION_THRESHOLD_REACHED_IN_LOCAL_SEARCH`. This does not veto the
+  mechanically forced nonlinear branch.
+- The initial serial HPC3 pilot (`56037618`) was stopped at 16:24 only after
+  exact steps 0/250/500 were transferred and checksummed. At step 500 it had one
+  grain, 2.883% strain, 1156--1164 K, Nye-construction residual `1.35e-13`, and
+  line-divergence residual `1.93e-15`. It had already saturated to nearly
+  uniform wall order (mean `0.999915`, standard deviation `1.57e-6`) with only
+  `0.0257 deg` orientation span. This control is `UNIFORM_ORDERING_ONLY`, not a
+  LAGB. Measured throughput also proved eight serial cases could not archive in
+  the 12-hour allocation.
+- Walltime-safe, non-array continuations now run from source `576fd5b`:
+  primary 64-square cases `56037686`, the 10 micrometer 128-square repeat
+  `56037688`, and the incommensurate 12.7 micrometer 128-square repeat
+  `56037689`. The homogeneous control stops at its observed nonlinear
+  saturation; heterogeneous primary/repeat branches retain 2200 steps and exact
+  250-step restart checkpoints. Scientific classification remains pending.
+- A zero-external-pressure physical SIBM fallback is prepared but is not yet
+  submitted. Initialization audits of the canonical common-functional HAGB give
+  parent/child densities `(3.964e17,1.036e17) m^-2` for the favorable state,
+  equal `2.5e17 m^-2` states, and the declared reversed pair
+  `(1.036e17,3.964e17) m^-2`. Two-step full-driver probes report net drives of
+  `+49.6`, `-12.6`, and `-75.9 MPa`, respectively, with applied pressure exactly
+  zero. The planned fallback also compares two curvatures and continued child
+  rehardening; it will be submitted if the nonlinear intragranular result enters
+  Outcome D.

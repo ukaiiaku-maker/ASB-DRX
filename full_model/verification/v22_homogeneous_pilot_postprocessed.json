@@ -1,0 +1,117 @@
+{
+  "schema": "asb-drx/v22-long-wall-postprocess/v1",
+  "cases": [
+    {
+      "case": "homogeneous_off_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_000500.npz",
+      "checkpoint_count": 2,
+      "final_step": 500,
+      "physical_time_s": 2.8830841143800753e-06,
+      "axial_strain": 0.02883084114380079,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696801612.746838,
+          696801612.746838,
+          696801612.746838,
+          696801612.746838
+        ],
+        "final_unsigned_m2_by_family": [
+          2114650576372.7307,
+          2115164835168.2795,
+          20751980192722.586,
+          288999442970.52106
+        ],
+        "delta_unsigned_m2_by_family": [
+          2113953774759.981,
+          2114468033555.5366,
+          20751283391109.797,
+          288302641357.7743
+        ],
+        "initial_signed_m2_by_family": [
+          -1527.7584912360908,
+          579.659872550721,
+          1630.9386786377145,
+          759.4958610238682
+        ],
+        "final_signed_m2_by_family": [
+          -22471477239.43402,
+          -20323949668.610447,
+          -234060693708.37695,
+          -2463986468.773729
+        ],
+        "delta_signed_m2_by_family": [
+          -22471475711.675484,
+          -20323950248.270397,
+          -234060695339.3168,
+          -2463987228.2695985
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999149557619557,
+        "maximum": 0.9999203113968624,
+        "standard_deviation": 1.5747763526583222e-06
+      },
+      "wall_polarization": {
+        "mean": 0.8499895121249235,
+        "maximum": 0.8569200690142161,
+        "gate_mean": 0.36922806680873277,
+        "gate_maximum": 0.3843956743050303
+      },
+      "multi_hit": {
+        "mean": 0.0,
+        "maximum": 0.0
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 1.3511935299761178e-13,
+        "line_divergence_relative_rms": 1.9274771137517748e-15,
+        "rms_m1": 2838.428657221504,
+        "maximum_m1": 8095.334665452161
+      },
+      "orientation": {
+        "span_deg": 0.025681420527625648,
+        "p95_minus_p05_deg": 0.013632160266266829,
+        "gradient_rms_deg_m": 24498.812297482098
+      },
+      "structure_factor": {
+        "mode_index": [
+          60,
+          9
+        ],
+        "wavelength_m": 1.015346165133619e-06,
+        "peak_power_fraction": 0.0025005777917513437
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.0003343844944574248,
+        "collision_frequency_s": 0.01773772148903266,
+        "coordination": 0.0,
+        "junction_turnover": 0.0014781434574193894,
+        "lock_minus_turnover": 0.028484631239198827,
+        "lock_plus_turnover": 0.02857693330791185,
+        "multiplication_pairs": 1.1997410709910855e-09,
+        "order": 0.9999150413588178,
+        "wall_minus_turnover": 0.00943500877841787,
+        "wall_plus_turnover": 0.009245107939317819
+      },
+      "balance_ledger": {
+        "accepted_steps": 501,
+        "cumulative_free_energy_change_J_m3": -4078644389.2684255,
+        "cumulative_heat_J_m3": 4123171350.5051265,
+        "cumulative_plastic_work_J_m3": 44526961.236701064,
+        "maximum_relative_burgers_rate_residual": 1.5139515816550985e-17,
+        "maximum_relative_energy_balance_residual": 1.9604613116528726e-18,
+        "maximum_relative_line_balance_residual": 5.9773447834834825e-16,
+        "minimum_accept_scale": 5.867651501467097e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "PENDING_RELEASE_AND_GRID_DOMAIN_COMPARISON"
+    }
+  ],
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "classification": "PENDING_CASEWISE_SCIENTIFIC_DECISION"
+}
