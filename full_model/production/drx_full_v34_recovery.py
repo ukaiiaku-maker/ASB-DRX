@@ -809,6 +809,8 @@ P = dict(
     # existing labels and never allocates an orientation or grain identity.
     use_sibm_existing_boundary=False,
     sibm_min_misorientation_deg=15.0,
+    sibm_parent_label_override=-1,
+    sibm_child_label_override=-1,
     # The seed must exceed two diffuse-interface widths (sqrt(kappa_eta/W_eta)
     # ~=0.316 um at the frozen v34 settings); this is a representation
     # resolution condition, not mobility or critical-radius tuning.
@@ -3892,7 +3894,13 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
         eta[:, :, :Ng], psi_gv[:Ng], rho_for_sibm,
         purity_threshold=_pure_threshold,
         min_pure_core_cells=_min_core_cells,
-        min_misorientation_deg=float(P.get('sibm_min_misorientation_deg', 15.0)))
+        min_misorientation_deg=float(P.get('sibm_min_misorientation_deg', 15.0)),
+        parent_label_override=(
+            int(P.get('sibm_parent_label_override', -1))
+            if int(P.get('sibm_parent_label_override', -1)) >= 0 else None),
+        child_label_override=(
+            int(P.get('sibm_child_label_override', -1))
+            if int(P.get('sibm_child_label_override', -1)) >= 0 else None))
     parent_label, child_label = _selection.parent_label, _selection.child_label
     edge_count = _selection.boundary_cells
     misorientation = _selection.misorientation_rad
@@ -3977,6 +3985,7 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
         schema='full-v34-sibm-existing-HAGB/v2', parent_label=parent_label,
         child_label=child_label, parent_orientation_rad=float(psi_gv[parent_label]),
         child_orientation_rad=float(psi_gv[child_label]),
+        initial_phase_count=int(Ng),
         misorientation_rad=float(misorientation), edge_count=int(edge_count),
         parent_mean_density_m2=_selection.parent_mean_density_m2,
         child_mean_density_m2=_selection.child_mean_density_m2,
@@ -7485,6 +7494,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                                       / np.maximum(np.sum(gb_for_ac), 1e-300))
                 _net_drive = (_drive_mean-_compat_mean-_drag_mean
                               +_applied_mean)
+                sibm_experiment_state.setdefault(
+                    'initial_stored_energy_drive_Pa', _drive_mean)
                 sibm_experiment_state.update(
                     stored_energy_drive_Pa=_drive_mean,
                     physical_compatibility_pressure_Pa=_compat_mean,

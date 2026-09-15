@@ -184,20 +184,68 @@ def main():
         row["mode"] != [0, 0]
         and row["maximum_signed_instantaneous_real_s_inv"] > 0.0
         for case in cases for row in case["modes"])
+    positive_rows = []
+    for case_index, case in enumerate(cases):
+        inputs = case["inputs"]
+        for row in case["modes"]:
+            mode_number = int(np.hypot(*row["mode"]))
+            if (mode_number > 0
+                    and row["maximum_signed_instantaneous_real_s_inv"] > 0.0):
+                positive_rows.append({
+                    "case_index": case_index,
+                    "domain_m": inputs["domain_m"],
+                    "wavelength_m": inputs["domain_m"]/mode_number,
+                    "temperature_K": inputs["temperature_K"],
+                    "density_ratio": inputs["density_ratio"],
+                    "strain_rate_s": inputs["strain_rate_s"],
+                    "multi_hit_enabled": inputs["multi_hit_enabled"],
+                    "mode": row["mode"],
+                    "growth_rate_s_inv":
+                        row["maximum_signed_instantaneous_real_s_inv"],
+                })
+    robust_matches = []
+    for index, left in enumerate(positive_rows):
+        for right in positive_rows[index+1:]:
+            same_loading = all(left[key] == right[key] for key in (
+                "temperature_K", "density_ratio", "strain_rate_s",
+                "multi_hit_enabled"))
+            different_domain = left["domain_m"] != right["domain_m"]
+            wavelength_error = abs(
+                left["wavelength_m"]-right["wavelength_m"]
+            )/max(left["wavelength_m"], right["wavelength_m"])
+            if same_loading and different_domain and wavelength_error <= 0.10:
+                robust_matches.append({
+                    "left": left, "right": right,
+                    "relative_wavelength_difference": wavelength_error,
+                })
+    threshold = float(np.exp(8))
+    if robust_matches:
+        classification = "SIGNED_INTERIOR_CANDIDATE_REQUIRES_NONLINEAR_TEST"
+    elif best_signed >= threshold:
+        classification = "SIGNED_TRANSIENT_CANDIDATE_REQUIRES_NONLINEAR_TEST"
+    else:
+        classification = "NO_DECISION_THRESHOLD_REACHED_IN_LOCAL_SEARCH"
     result = {
         "schema": "v22_finite_time_search_v1",
         "method": "JVP_OF_AUTHORITATIVE_ACCEPTED_STEP_MAP",
         "signed_projection": "normalized plus-minus differences for mobile/forest/wall; q excluded",
-        "thresholds": {"finite_time_signed_gain": float(np.exp(8))},
+        "thresholds": {"finite_time_signed_gain": threshold,
+                       "cross_domain_wavelength_relative_difference": 0.10},
         "best_signed_finite_time_gain": best_signed,
         "positive_interior_mode_found": positive_interior,
+        "positive_interior_rows": positive_rows,
+        "robust_cross_domain_signed_matches": robust_matches,
+        "classification": classification,
+        "fixture_passed": True,
+        "scientific_gate_passed": False,
         "local_campaign_authorized": True,
         "cases": cases,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2)+"\n")
     print(json.dumps({key: result[key] for key in (
-        "best_signed_finite_time_gain", "positive_interior_mode_found")}, indent=2))
+        "best_signed_finite_time_gain", "positive_interior_mode_found",
+        "classification")}, indent=2))
 
 
 if __name__ == "__main__":

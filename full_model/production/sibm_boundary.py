@@ -74,7 +74,9 @@ class ResolvedHAGB:
 
 def select_resolved_hagb(eta, orientations_rad, density_m2, *,
                          purity_threshold=0.8, min_pure_core_cells=16,
-                         min_misorientation_deg=15.0):
+                         min_misorientation_deg=15.0,
+                         parent_label_override=None,
+                         child_label_override=None):
     """Select a resolved HAGB without using unstable argmax-label edges."""
     eta = np.asarray(eta, dtype=float)
     orientations = np.asarray(orientations_rad, dtype=float)
@@ -100,10 +102,27 @@ def select_resolved_hagb(eta, orientations_rad, density_m2, *,
                 viable.append((abs(means[a]-means[b]), count, (a, b), mis, band))
     if not viable:
         raise ValueError("no resolved existing HAGB satisfies the SIBM criterion")
-    _, count, pair, mis, band = max(
-        viable, key=lambda row: (row[0], row[1], row[2]))
-    child = min(pair, key=lambda g: (means[g], g))
-    parent = max(pair, key=lambda g: (means[g], -g))
+    if ((parent_label_override is None) != (child_label_override is None)):
+        raise ValueError("parent and child label overrides must be supplied together")
+    if parent_label_override is not None:
+        declared = (int(parent_label_override), int(child_label_override))
+        if declared[0] == declared[1]:
+            raise ValueError("parent and child labels must be distinct")
+        candidates = [row for row in viable if set(row[2]) == set(declared)]
+        if not candidates:
+            raise ValueError("declared parent/child labels do not form a resolved HAGB")
+        _, count, pair, mis, band = max(
+            candidates, key=lambda row: (row[0], row[1], row[2]))
+        parent, child = declared
+    else:
+        _, count, pair, mis, band = max(
+            viable, key=lambda row: (row[0], row[1], row[2]))
+        # Choose the lower-energy child deterministically, then take the other
+        # member as parent.  Computing both extrema independently can select the
+        # same label when the phase means tie exactly, which invalidates the
+        # equal-stored-energy control.
+        child = min(pair, key=lambda g: (means[g], g))
+        parent = pair[1] if child == pair[0] else pair[0]
     difference = eta[:, :, child]-eta[:, :, parent]
     gx = 0.5*(np.roll(difference, -1, axis=0)-np.roll(difference, 1, axis=0))
     gy = 0.5*(np.roll(difference, -1, axis=1)-np.roll(difference, 1, axis=1))

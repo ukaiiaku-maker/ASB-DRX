@@ -96,6 +96,28 @@ class SIBMBoundaryTest(unittest.TestCase):
                 eta, np.deg2rad([0.0, 30.0]), np.ones((8, 8)),
                 min_pure_core_cells=4)
 
+    def test_resolved_selector_equal_energy_keeps_distinct_labels(self):
+        x = np.arange(32)[:, None]
+        q = np.broadcast_to(0.5*(1.0+np.tanh((x-15.5)/2.0)), (32, 24))
+        eta = np.stack((1.0-q, q), axis=2)
+        selected = select_resolved_hagb(
+            eta, np.deg2rad([0.0, 30.0]), np.full((32, 24), 2.5e14),
+            purity_threshold=0.8, min_pure_core_cells=16)
+        self.assertEqual((selected.parent_label, selected.child_label), (1, 0))
+
+    def test_resolved_selector_allows_declared_reverse_contrast(self):
+        x = np.arange(32)[:, None]
+        q = np.broadcast_to(0.5*(1.0+np.tanh((x-15.5)/2.0)), (32, 24))
+        eta = np.stack((1.0-q, q), axis=2)
+        rho = np.where(x < 16, 1e14, 4e14)+np.zeros((32, 24))
+        selected = select_resolved_hagb(
+            eta, np.deg2rad([0.0, 30.0]), rho,
+            purity_threshold=0.8, min_pure_core_cells=16,
+            parent_label_override=0, child_label_override=1)
+        self.assertEqual((selected.parent_label, selected.child_label), (0, 1))
+        self.assertLess(selected.parent_mean_density_m2,
+                        selected.child_mean_density_m2)
+
 
 if __name__ == "__main__":
     unittest.main()
