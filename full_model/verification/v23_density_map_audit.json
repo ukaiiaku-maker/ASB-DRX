@@ -1,0 +1,24 @@
+{
+  "classification": "DENSITY_MAP_QUALIFIED_FB_WALL_CLOSURE_PENDING",
+  "fixture_passed": true,
+  "junction_product_line_multiplicity": 0.816496580927726,
+  "maximum_total_density_reconstruction_residual_m2": 0.0,
+  "mean_line_energy_density_J_m3": 960123.724356958,
+  "mean_total_density_m2": 640082482904638.6,
+  "schema": "v23-density-map-audit-1",
+  "scientific_gate_passed": false,
+  "silent_1e3_conversion_present": false,
+  "source_sha256": "386f3dc45fdaec1c3b7440ea92c5d0dfb5542b7a043fda2cfc67cfa6293fae2a",
+  "taylor_resistance_range_Pa": [
+    105445905.01522571,
+    106170578.89330037
+  ],
+  "thickness_factor": 1.0,
+  "units": {
+    "all_line_populations": "m^-2",
+    "area_integral": "line length per out-of-plane thickness",
+    "energy_density": "J m^-3",
+    "line_energy": "J m^-1",
+    "taylor_resistance": "Pa"
+  }
+}

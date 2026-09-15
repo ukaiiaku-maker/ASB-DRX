@@ -1,0 +1,57 @@
+{
+  "classification": "LOCAL_EXTENSIVE_WALL_PREREQUISITES_PASSED_NONLINEAR_FORMATION_PENDING",
+  "convergence": [
+    {
+      "frank_bilby_relative_closure_error": 3.012646815334197e-16,
+      "grid": 16,
+      "maximum_ordered_density_m2": 406234552737326.3,
+      "physical_wall_cell_count": 48,
+      "projection_relative_residual": 4.327098038907515e-16,
+      "spacing_m": 2e-07,
+      "wall_width_cells": 3,
+      "wall_width_m": 6e-07
+    },
+    {
+      "frank_bilby_relative_closure_error": 3.930170433861083e-16,
+      "grid": 32,
+      "maximum_ordered_density_m2": 406234552737326.3,
+      "physical_wall_cell_count": 192,
+      "projection_relative_residual": 5.1577288383753395e-16,
+      "spacing_m": 1e-07,
+      "wall_width_cells": 6,
+      "wall_width_m": 6e-07
+    },
+    {
+      "frank_bilby_relative_closure_error": 3.930170433861083e-16,
+      "grid": 64,
+      "maximum_ordered_density_m2": 406234552737326.3,
+      "physical_wall_cell_count": 768,
+      "projection_relative_residual": 5.1577288383753395e-16,
+      "spacing_m": 5e-08,
+      "wall_width_cells": 12,
+      "wall_width_m": 6e-07
+    }
+  ],
+  "fixture_passed": true,
+  "negative_controls": {
+    "absent_wall": "passed_by_pytest",
+    "balanced_tangle": "passed_by_pytest",
+    "high_ordered_density_zero_orientation_jump": "passed_by_pytest",
+    "incompatible_line_tensor": "passed_by_pytest",
+    "reversed_sign": "passed_by_pytest",
+    "rigid_rotation": "passed_by_pytest"
+  },
+  "ordered_boundary_line_direction_crystal": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "ordered_line_interpretation": "sessile boundary line; Burgers family retained",
+  "rejected_v22_glide_line_projection_relative_residual": 0.6267912791582055,
+  "schema": "v23-extensive-wall-local-qualification-1",
+  "scientific_gate_passed": false,
+  "source_sha256": {
+    "density_state_map.py": "386f3dc45fdaec1c3b7440ea92c5d0dfb5542b7a043fda2cfc67cfa6293fae2a",
+    "extensive_wall.py": "ed5f5a6a70713c1c7ebaa9863281fac6267ce744b7a76f061fbe889e0af1d223"
+  }
+}

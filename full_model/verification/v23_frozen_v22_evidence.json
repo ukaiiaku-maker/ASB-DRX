@@ -1,0 +1,34 @@
+{
+  "schema": "v23-frozen-v22-evidence-1",
+  "frozen_at_campaign_checkpoint": "185ee86fad7aa3851c9bf40e83ad28671f43f335",
+  "remote_ref": "refs/heads/exp/full-v34-recovery-v1",
+  "remote_sha": "185ee86fad7aa3851c9bf40e83ad28671f43f335",
+  "files": [
+    {
+      "path": "full_model/verification/v22_long_wall_postprocessed.json",
+      "sha256": "14fd0f1e4463dc27113a6703057c5f14333cc029e44c8cbf54c5bdccb02221bf"
+    },
+    {
+      "path": "full_model/verification/v22_stored_energy_sibm_result.json",
+      "sha256": "695cff403c2f0029abaee8add4c08adaa8e7fc7546098eadaa56bb90b4cd28d8"
+    },
+    {
+      "path": "full_model/verification/v22_strict_asb_result.json",
+      "sha256": "e88aefef598193374cf38b3463df296d681f8158b00d78b1bec8e427c686fef0"
+    },
+    {
+      "path": "full_model/full_recovery_campaign_manifest.json",
+      "sha256": "f5073e716ede5222f4e90cca4d1de0b4f30d75a8b7696516d5845da01125b414"
+    },
+    {
+      "path": "campaign_status.md",
+      "sha256": "4bb063731fe8faa5ba8ba8ddd105a29d65a215af8297ad36a07f04ab743c0351"
+    }
+  ],
+  "scientific_classifications": {
+    "wall": "WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL",
+    "sibm": "ZERO_PRESSURE_STORED_ENERGY_SIBM_PATHWAY_UNRESOLVED",
+    "asb": "STRICT_ASB_NOT_OBSERVED"
+  },
+  "immutable_evidence": true
+}
