@@ -2199,6 +2199,7 @@
       "purpose": "directive_v24_local_line_supply_dynamic_planar_sibm_and_asb_persistence",
       "git_commits": {
         "local_scientific_result": "03ec506",
+        "reversible_topology_kinetics": "846587a",
         "asb_128_submission_source": "952489f",
         "planar_sibm_submission_source": "ef3a61c",
         "asb_64_submission_source": "8ea33e0"
@@ -2206,9 +2207,10 @@
       "local_wall_decision": {
         "classification": "KINEMATIC_TRANSITION_BAND_WITH_INSUFFICIENT_BOUNDARY_INVENTORY",
         "result": "full_model/verification/v24_mechanical_supply_local.json",
-        "result_sha256": "d4b7b3bf80e564b7bedb78f133aad6f5c459e65670533634bc22431bf53bdbeb",
+        "result_sha256": "e048786f0e650765760a24eff1ae622afe6c798c2554bfb3aa8d4f843e689908",
         "plot": "full_model/verification/v24_mechanical_supply_fields.png",
-        "plot_sha256": "2da8b8f8e0a9237d8e391cc9ff1cb597f63d0274112cf84c3eb605feb784b191",
+        "plot_sha256": "0a122b244e38cf7730e02b07190edefd95c15b6686f1410244f1efa66d33f93c",
+        "finite_segment_detailed_balance_verified": true,
         "fixture_passed": true,
         "scientific_gate_passed": false,
         "hpc_wall_campaign_authorized": false
@@ -2228,7 +2230,7 @@
         {"run_id": "20260915T184159Z-952489f-083e19", "job_id": "56040498", "reason": "scalar diagnostics were cadence 10 but required field checkpoints remained cadence 250"},
         {"run_id": "20260915T184840Z-8ea33e0-e1a4d2", "job_id": "56040513", "reason": "scalar diagnostics were cadence 10 but required field checkpoints remained cadence 250"}
       ],
-      "configured_regression_tests_passed": 427,
+      "configured_regression_tests_passed": 429,
       "unrelated_jobs_observed_and_not_touched": ["55950433", "56040470"]
     }
   ]

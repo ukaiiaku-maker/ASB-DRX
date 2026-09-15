@@ -1211,6 +1211,11 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   curvature inventories. Transport/capture, non-reorienting maturity,
   junction reaction, and kink-pair reorientation have separate scalar,
   Burgers, tensorial Nye, energy, heat, and topology-source ledgers.
+- Finite-segment reorientation is now reversible: reverse events consume the
+  stored turning-node and curvature inventories and restore the declared glide
+  line. Forward and reverse rates obey pointwise detailed balance,
+  `k_f/k_r=exp(-Delta F_event/(k_B T))`, while sharing the EXP-floor attempt
+  rate. The corrected local rerun retains the same scientific rejection.
 - Extensive ordering uses the shared EXP-floor plus signed-entropy kernel.
   The V24 mechanical seam requires the Nye-match coefficient to be exactly
   zero and accepts no orientation-derived ordering target. It uses the full
@@ -1225,7 +1230,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   against the postprocessed target. Decision:
   `KINEMATIC_TRANSITION_BAND_WITH_INSUFFICIENT_BOUNDARY_INVENTORY`; fixture
   true, scientific gate false, long HPC wall campaign not authorized.
-- The configured suite passes 427 tests. A complete V24 mechanical restart is
+- The configured suite passes 429 tests. A complete V24 mechanical restart is
   bitwise identical across the accepted map, phase/grain allocation remains
   disabled, and multi-hit remains off.
 - Active checksum-bound, non-array HPC3 jobs are: `56040570` (seed-43 128 base
