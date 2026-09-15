@@ -87,6 +87,9 @@ The full generic mechanism claim remains false until the prepared 64/128 HPC3
 matrix verifies longer-time direction/derivative consistency, restart, and
 grid behavior.
 
+The matrix was submitted from pushed source `bf150ca` as Slurm job `56055686`
+(run `20260915T232402Z-bf150ca-b4b6bc`).
+
 ## C. ASB spatial resolution
 
 A cell-integrated periodic manufactured Gaussian was applied at 64, 96, 128,
@@ -112,6 +115,10 @@ Classification: `ASB_COARSE_GRID_KERNEL_UNDERRESOLVED`.
 The physical response remains unqualified pending the prepared HPC spatial
 matrix; no strain-rate bracket is authorized.
 
+The 96/128/192 plus homogeneous-control matrix was submitted from pushed source
+`bf150ca` as Slurm job `56055688` (run
+`20260915T232425Z-bf150ca-5e84d7`).
+
 ## Claim boundary
 
 ```text
@@ -126,4 +133,3 @@ ASB_COARSE_GRID_KERNEL_UNDERRESOLVED = true
 ASB_GRID_SCALING_QUALIFIED = false
 STRICT_ASB_QUALIFIED = false
 ```
-

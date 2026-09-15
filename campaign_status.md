@@ -19,9 +19,12 @@ Updated: 2026-09-15 (America/Los_Angeles)
   (7.84% second-moment and 11.94% physical-peak discrepancies). The valid
   spatial sequence is 96/128/192 plus a homogeneous 128 control. Physical ASB
   convergence and the rate bracket remain unauthorized pending HPC evidence.
-- Prepared long jobs are fault-isolated: one 64/128 S5 SIBM matrix and one
-  96/128/192 ASB first-law/resolution matrix. The unrelated live Slurm job
-  `55950433` remains untouched.
+- Submitted fault-isolated long jobs from pushed source `bf150ca`: SIBM
+  64/128 S5 matrix, job `56055686`, run
+  `20260915T232402Z-bf150ca-b4b6bc`; and ASB 96/128/192 plus homogeneous
+  first-law/resolution matrix, job `56055688`, run
+  `20260915T232425Z-bf150ca-5e84d7`. Both were pending at the provenance
+  checkpoint. The unrelated live Slurm job `55950433` remains untouched.
 
 ## Directive v22 source qualification and long-horizon campaign
 
