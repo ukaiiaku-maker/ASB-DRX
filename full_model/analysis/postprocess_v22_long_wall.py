@@ -226,6 +226,38 @@ def classify_campaign(cases):
     disabled = [case for case in complete if "order_disabled" in case["case"]]
     disabled_control_passed = bool(disabled and all(
         case["wall_order"]["maximum"] <= 1e-12 for case in disabled))
+    by_name = {case["case"]: case for case in complete}
+
+    def comparison(left_name, right_name):
+        if left_name not in by_name or right_name not in by_name:
+            return None
+        left, right = by_name[left_name], by_name[right_name]
+
+        def relative(a, b):
+            return abs(a-b)/max(abs(a), abs(b), 1e-300)
+
+        return {
+            "left": left_name, "right": right_name,
+            "wall_order_mean_relative_difference": relative(
+                left["wall_order"]["mean"], right["wall_order"]["mean"]),
+            "orientation_span_relative_difference": relative(
+                left["orientation"]["span_deg"],
+                right["orientation"]["span_deg"]),
+            "dominant_wavelength_relative_difference": relative(
+                left["structure_factor"]["wavelength_m"] or 0.0,
+                right["structure_factor"]["wavelength_m"] or 0.0),
+            "scientific_wall_spacing_comparison_valid": False,
+            "invalid_reason": "neither case contains a Frank-Bilby wall",
+        }
+
+    comparisons = [item for item in (
+        comparison("heterogeneous_on_64", "heterogeneous_on_128_10um"),
+        comparison("heterogeneous_on_domain_seed_64",
+                   "heterogeneous_on_128_12p7um"),
+        comparison("heterogeneous_on_128_10um",
+                   "heterogeneous_on_128_12p7um"),
+        comparison("heterogeneous_off_64", "heterogeneous_on_64"),
+    ) if item is not None]
 
     for case in complete:
         if "order_disabled" in case["case"]:
@@ -263,6 +295,7 @@ def classify_campaign(cases):
             "wall_spacing_grid_domain_convergence": "NOT_EVALUABLE_NO_WALL",
             "release_test": "NOT_TRIGGERED_NO_PRECURSOR",
         },
+        "comparison_table": comparisons,
         "claim_boundary": (
             "The tested V22 closure converts a broadly distributed signed-wall "
             "reservoir into nearly uniform order; this rejects the present "

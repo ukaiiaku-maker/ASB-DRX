@@ -40,6 +40,44 @@ def matched_pair(adiabatic: Path, control: Path):
     return history,interface,used
 
 
+def observable_summary(history, interface_width_m, criteria):
+    qualifying = []
+    run_start = None
+    maximum_run = 0.0
+    for snapshot in history:
+        passed = bool(
+            snapshot.active_fraction <= criteria.maximum_active_fraction
+            and snapshot.temperature_excess_K
+            >= criteria.minimum_temperature_excess_K
+            and snapshot.softening_fraction
+            >= criteria.minimum_softening_fraction
+            and snapshot.effective_width_m
+            >= criteria.minimum_width_to_interface*interface_width_m)
+        if passed:
+            qualifying.append(snapshot.time_s)
+            if run_start is None:
+                run_start = snapshot.time_s
+            maximum_run = max(maximum_run, snapshot.time_s-run_start)
+        else:
+            run_start = None
+    return {
+        "physical_time_start_s": history[0].time_s,
+        "physical_time_end_s": history[-1].time_s,
+        "minimum_active_fraction": min(x.active_fraction for x in history),
+        "minimum_effective_width_m": min(x.effective_width_m for x in history),
+        "maximum_temperature_excess_K": max(
+            x.temperature_excess_K for x in history),
+        "maximum_post_peak_softening_fraction": max(
+            x.softening_fraction for x in history),
+        "maximum_softening_after_50K_fraction": max(
+            (x.softening_fraction for x in history
+             if x.temperature_excess_K >= 50.0), default=None),
+        "simultaneous_qualifying_snapshot_times_s": qualifying,
+        "maximum_conjunctive_run_s": maximum_run,
+        "required_persistence_s": criteria.minimum_persistence_s,
+    }
+
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--coarse-adiabatic",type=Path,required=True)
@@ -68,8 +106,20 @@ def main():
             "classification":"STRICT_ASB_QUALIFIED" if passed else "STRICT_ASB_NOT_OBSERVED",
             "criteria":asdict(criteria),"refinement_passed":refined,
             "decisions":{k:asdict(v) for k,v in decisions.items()},
+            "observable_summaries": {
+                "coarse": observable_summary(ch, ci, criteria),
+                "fine": observable_summary(fh, fi, criteria),
+                "second_seed": observable_summary(sh, si, criteria)},
+            "matched_histories": {
+                "coarse": [asdict(x) for x in ch],
+                "fine": [asdict(x) for x in fh],
+                "second_seed": [asdict(x) for x in sh]},
             "matched_steps":{"coarse":cs,"fine":fs,"second_seed":ss},
-            "fixture_passed":True,"scientific_gate_passed":passed}
+            "fixture_passed": bool(cs and fs and ss),
+            "scientific_gate_passed":passed,
+            "claim_boundary": (
+                "Classification is conjunctive and specific to these matched "
+                "fields; localization or heating alone is not strict ASB.")}
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2)+"\n")
     print(result["classification"])

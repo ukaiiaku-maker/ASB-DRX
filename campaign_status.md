@@ -35,12 +35,13 @@ Updated: 2026-09-15 (America/Los_Angeles)
   checkpoint the next accepted factor improves from 3.4e-17 to 1.0. Restart
   cadence is independently verified at steps 0/2/4/5, and the common-off
   trajectory remains bitwise identical across 144 numeric fields.
-- A fault-isolated HPC3 bundle is prepared for homogeneous, forced-
-  heterogeneous, multi-hit off/on, wall-order-off, recovery-dominant,
-  domain/seed, and 64/128-grid cases. Every case remains one grain, disables
-  creation/relabeling, checkpoints every 250 steps, and targets 5,000 steps so
-  the adaptively accepted trajectory can reach at least 20% strain; the actual
-  physical horizon and any hard validity stop will be reported.
+- The fault-isolated 64/128-grid HPC3 wall campaign completed all eight cases
+  with verified archives. Every case remained one grain and closed its Nye,
+  line, Burgers, work/free-energy, heat, and restart ledgers. All seven
+  ordering-enabled branches saturated almost uniformly by 1.83--3.11 us and
+  1.83--3.11% strain; no case formed a one-degree Frank--Bilby wall. Decision:
+  `WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL`, with
+  `fixture_passed=true` and `scientific_gate_passed=false`.
 
 ## Directive v19 decision: full mechanics does not form a local LAGB precursor
 
@@ -1083,7 +1084,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   ledgers, and restart all use the same residual. Subsequent source `3caf6ed`
   repaired exhausted-reservoir and bound-order Zeno limits with attempt-bounded
   detailed-balance exchange and bound-degenerate order mobility.
-- The configured suite passes `393` tests at source `576fd5b`; V22-off legacy
+- The configured suite passes `395` tests after decision postprocessing; V22-off legacy
   evolution remains bitwise identical across all 144 reference numeric fields.
   The SIBM selector now keeps distinct labels in the equal-energy limit and can
   accept an explicitly declared existing parent/child pair for the required
@@ -1102,26 +1103,43 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `0.0257 deg` orientation span. This control is `UNIFORM_ORDERING_ONLY`, not a
   LAGB. Measured throughput also proved eight serial cases could not archive in
   the 12-hour allocation.
-- Walltime-safe, non-array continuations now run from source `576fd5b`:
+- Walltime-safe, non-array continuations from source `576fd5b` completed:
   primary 64-square cases `56037686`, the 10 micrometer 128-square repeat
   `56037688`, and the incommensurate 12.7 micrometer 128-square repeat
-  `56037689`. The homogeneous control stops at its observed nonlinear
-  saturation; heterogeneous primary/repeat branches retain 2200 steps and exact
-  250-step restart checkpoints. Scientific classification remains pending.
-- A zero-external-pressure physical SIBM fallback is prepared but is not yet
-  submitted. Initialization audits of the canonical common-functional HAGB give
-  parent/child densities `(3.964e17,1.036e17) m^-2` for the favorable state,
-  equal `2.5e17 m^-2` states, and the declared reversed pair
-  `(1.036e17,3.964e17) m^-2`. Two-step full-driver probes report net drives of
-  `+49.6`, `-12.6`, and `-75.9 MPa`, respectively, with applied pressure exactly
-  zero. The planned fallback also compares two curvatures and continued child
-  rehardening; it will be submitted if the nonlinear intragranular result enters
-  Outcome D.
-- Strict ASB qualification is running independently at source `4f9eb55`. The
-  driver now checkpoints the exact plastic-rate field used by its online
-  diagnostics, avoiding reconstruction through a second law. Each adiabatic
-  trajectory has a matched isothermal trajectory with identical grid, seed,
-  loading, and mechanics. Jobs are `56037722` (64, seed 42), `56037723` (128,
-  seed 42), and `56037724` (128, seed 43). Classification remains conjunctive:
-  plastic concentration, matched temperature excess, post-peak softening,
-  resolved width, persistence, and 5% onset/width refinement must all pass.
+  `56037689`. All three result archives passed compute-node and local SHA-256
+  verification. The seven active-order cases have mean q from `0.999597` to
+  `0.999930`, standard deviation at most `3.74e-5`, orientation span at most
+  `0.0676 deg`, and zero independent one-degree Frank--Bilby candidates. The
+  order-disabled control remains exactly q=0. Dominant wavelengths change with
+  the 10/12.7 micrometer domains rather than selecting a common physical scale.
+  Decision: `WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL`; the claim is restricted
+  to the present ordering handoff.
+- An interpolation-only threshold repair was tested at source `595b95e` and
+  rejected. Smoothstep h(q) kept exact q=0 invariant, but a fixed `1e-6`
+  perturbation again reached nearly uniform q=`0.999981` by 3.97% strain with
+  only `0.0805 deg` orientation span. Accepted V22 production was restored at
+  `618f1b5`; the next repair must threshold the physical gate or supply a
+  ledgered physical ordering trigger rather than rely on invariant zero.
+- Zero-external-pressure SIBM fallback job `56037730` completed and was fetched
+  with archive SHA-256 `c5ba8f4ac6fc8e37ca5b57a4e9273d6c42e0ca6f26f214c0fb53a20c9b3b8541`.
+  All six cases have zero applied pressure, valid labels, and closed front
+  ledgers. Curvature ordering and child rehardening pass, but every cap retreats,
+  including the favorable high-parent/low-child case while its final net flat
+  drive is `+8.37 MPa`. Decision:
+  `ZERO_PRESSURE_STORED_ENERGY_SIBM_PATHWAY_UNRESOLVED`; fixture true,
+  scientific gate false.
+- Strict ASB jobs `56037722` (64, seed 42), `56037723` (128, seed 42), and
+  `56037724` (128, seed 43) completed from source `4f9eb55`; all three archives
+  were fetched and checksum verified. Each adiabatic trajectory is matched to
+  an isothermal trajectory with identical grid, seed, loading, and mechanics,
+  and classification uses the exact checkpointed plastic-rate field. All
+  branches localize and heat: minimum active fractions are `0.0110`, `0.00790`,
+  and `0.0150`, while maximum matched temperature excesses are `262`, `275`,
+  and `250 K`. Coarse/fine seed 42 never reach 20% post-peak softening. Seed 43
+  briefly reaches 24.4%, but its longest uninterrupted conjunctive interval is
+  only `0.348 us`, below the fixed `1 us` requirement, and has no grid-robust
+  counterpart. Decision: `STRICT_ASB_NOT_OBSERVED`; fixture true, refinement
+  false, scientific gate false. This does not erase the localization/heating
+  near-miss.
+- Final queue audit found only unrelated job `55950433`; it was observed and
+  left untouched. No V22 wall, SIBM, or ASB job remains active.

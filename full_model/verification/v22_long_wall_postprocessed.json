@@ -1120,5 +1120,43 @@
     "wall_spacing_grid_domain_convergence": "NOT_EVALUABLE_NO_WALL",
     "release_test": "NOT_TRIGGERED_NO_PRECURSOR"
   },
+  "comparison_table": [
+    {
+      "left": "heterogeneous_on_64",
+      "right": "heterogeneous_on_128_10um",
+      "wall_order_mean_relative_difference": 0.0003093935957271802,
+      "orientation_span_relative_difference": 0.042247750214124344,
+      "dominant_wavelength_relative_difference": 0.2928932188134525,
+      "scientific_wall_spacing_comparison_valid": false,
+      "invalid_reason": "neither case contains a Frank-Bilby wall"
+    },
+    {
+      "left": "heterogeneous_on_domain_seed_64",
+      "right": "heterogeneous_on_128_12p7um",
+      "wall_order_mean_relative_difference": 0.00019247540475559444,
+      "orientation_span_relative_difference": 0.018234673810038363,
+      "dominant_wavelength_relative_difference": 0.0,
+      "scientific_wall_spacing_comparison_valid": false,
+      "invalid_reason": "neither case contains a Frank-Bilby wall"
+    },
+    {
+      "left": "heterogeneous_on_128_10um",
+      "right": "heterogeneous_on_128_12p7um",
+      "wall_order_mean_relative_difference": 0.00014036126829480817,
+      "orientation_span_relative_difference": 0.027281904336241093,
+      "dominant_wavelength_relative_difference": 0.21259842519685038,
+      "scientific_wall_spacing_comparison_valid": false,
+      "invalid_reason": "neither case contains a Frank-Bilby wall"
+    },
+    {
+      "left": "heterogeneous_off_64",
+      "right": "heterogeneous_on_64",
+      "wall_order_mean_relative_difference": 6.081960703401896e-07,
+      "orientation_span_relative_difference": 0.0005675516733260564,
+      "dominant_wavelength_relative_difference": 0.0,
+      "scientific_wall_spacing_comparison_valid": false,
+      "invalid_reason": "neither case contains a Frank-Bilby wall"
+    }
+  ],
   "claim_boundary": "The tested V22 closure converts a broadly distributed signed-wall reservoir into nearly uniform order; this rejects the present ordering handoff, not intragranular DRX in general."
 }

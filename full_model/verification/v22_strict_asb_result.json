@@ -1,0 +1,610 @@
+{
+  "schema": "asb-drx/v22-strict-asb/v1",
+  "classification": "STRICT_ASB_NOT_OBSERVED",
+  "criteria": {
+    "maximum_active_fraction": 0.25,
+    "minimum_temperature_excess_K": 50.0,
+    "minimum_softening_fraction": 0.2,
+    "minimum_width_to_interface": 2.0,
+    "minimum_persistence_s": 1e-06,
+    "refinement_tolerance": 0.05
+  },
+  "refinement_passed": false,
+  "decisions": {
+    "coarse": {
+      "classified": false,
+      "onset_time_s": null,
+      "persistence_s": 0.0,
+      "failed_criteria": [
+        "post_peak_softening",
+        "grid_and_timestep_refinement"
+      ],
+      "refinement_passed": false
+    },
+    "fine": {
+      "classified": false,
+      "onset_time_s": null,
+      "persistence_s": 0.0,
+      "failed_criteria": [
+        "post_peak_softening",
+        "grid_and_timestep_refinement"
+      ],
+      "refinement_passed": false
+    },
+    "second_seed": {
+      "classified": false,
+      "onset_time_s": null,
+      "persistence_s": 0.0,
+      "failed_criteria": [
+        "post_peak_softening",
+        "grid_and_timestep_refinement"
+      ],
+      "refinement_passed": false
+    }
+  },
+  "observable_summaries": {
+    "coarse": {
+      "physical_time_start_s": 3.3333333333333334e-08,
+      "physical_time_end_s": 6.322517189308299e-06,
+      "minimum_active_fraction": 0.01099433740918817,
+      "minimum_effective_width_m": 1.0124962267484691e-06,
+      "maximum_temperature_excess_K": 261.5538283723961,
+      "maximum_post_peak_softening_fraction": 0.19164244783516207,
+      "maximum_softening_after_50K_fraction": 0.12157180809975189,
+      "simultaneous_qualifying_snapshot_times_s": [],
+      "maximum_conjunctive_run_s": 0.0,
+      "required_persistence_s": 1e-06
+    },
+    "fine": {
+      "physical_time_start_s": 3.3333333333333334e-08,
+      "physical_time_end_s": 6.744737885983135e-06,
+      "minimum_active_fraction": 0.007900309004706445,
+      "minimum_effective_width_m": 8.840480742428794e-07,
+      "maximum_temperature_excess_K": 274.9295356918444,
+      "maximum_post_peak_softening_fraction": 0.17396299724620254,
+      "maximum_softening_after_50K_fraction": 0.17396299724620254,
+      "simultaneous_qualifying_snapshot_times_s": [],
+      "maximum_conjunctive_run_s": 0.0,
+      "required_persistence_s": 1e-06
+    },
+    "second_seed": {
+      "physical_time_start_s": 3.3333333333333334e-08,
+      "physical_time_end_s": 6.180580781426279e-06,
+      "minimum_active_fraction": 0.01501029763249758,
+      "minimum_effective_width_m": 1.3076499354165642e-06,
+      "maximum_temperature_excess_K": 250.32407048036498,
+      "maximum_post_peak_softening_fraction": 0.24432085623655803,
+      "maximum_softening_after_50K_fraction": 0.24432085623655803,
+      "simultaneous_qualifying_snapshot_times_s": [
+        3.2773431718994037e-06,
+        3.907155856908304e-06,
+        4.255370264492207e-06
+      ],
+      "maximum_conjunctive_run_s": 3.4821440758390276e-07,
+      "required_persistence_s": 1e-06
+    }
+  },
+  "matched_histories": {
+    "coarse": [
+      {
+        "time_s": 3.3333333333333334e-08,
+        "active_fraction": 1.0,
+        "effective_width_m": 1e-05,
+        "temperature_excess_K": 0.0,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 4.708585410819764e-07,
+        "active_fraction": 0.2119684108712636,
+        "effective_width_m": 4.081301736180321e-06,
+        "temperature_excess_K": 23.495393417688774,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 7.600650684134688e-07,
+        "active_fraction": 0.11375039315902638,
+        "effective_width_m": 3.4159750979828498e-06,
+        "temperature_excess_K": 26.81421766672861,
+        "softening_fraction": 0.19164244783516207
+      },
+      {
+        "time_s": 1.0115043304100298e-06,
+        "active_fraction": 0.05370525342799856,
+        "effective_width_m": 2.5637679403321314e-06,
+        "temperature_excess_K": 27.234985202960615,
+        "softening_fraction": 0.024012651850275946
+      },
+      {
+        "time_s": 1.2491653076290032e-06,
+        "active_fraction": 0.032860764280318845,
+        "effective_width_m": 1.6635723355374288e-06,
+        "temperature_excess_K": 35.363030654135855,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.4942101088335237e-06,
+        "active_fraction": 0.02537899557154045,
+        "effective_width_m": 1.3769968057628189e-06,
+        "temperature_excess_K": 63.28641655164938,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.7498544770249901e-06,
+        "active_fraction": 0.022621038098582784,
+        "effective_width_m": 1.3548170931111206e-06,
+        "temperature_excess_K": 94.25174807173607,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 2.031331858015682e-06,
+        "active_fraction": 0.02288308153599135,
+        "effective_width_m": 1.3765338451382175e-06,
+        "temperature_excess_K": 129.86132781885135,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 2.3437411420632794e-06,
+        "active_fraction": 0.023580351605633265,
+        "effective_width_m": 1.407843302813082e-06,
+        "temperature_excess_K": 171.19002096670533,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 2.6799040311798436e-06,
+        "active_fraction": 0.028860669814666937,
+        "effective_width_m": 1.5126580235740408e-06,
+        "temperature_excess_K": 211.65769368422593,
+        "softening_fraction": 0.08070650266053207
+      },
+      {
+        "time_s": 2.9924779903775824e-06,
+        "active_fraction": 0.01099433740918817,
+        "effective_width_m": 1.3093779303975465e-06,
+        "temperature_excess_K": 220.80520933186858,
+        "softening_fraction": 0.020769173360912208
+      },
+      {
+        "time_s": 3.3182381062790205e-06,
+        "active_fraction": 0.011400942839414603,
+        "effective_width_m": 1.349329420112615e-06,
+        "temperature_excess_K": 218.16421525161422,
+        "softening_fraction": 0.08396686892085294
+      },
+      {
+        "time_s": 3.6885463520251344e-06,
+        "active_fraction": 0.01682638269866446,
+        "effective_width_m": 1.4187625440918744e-06,
+        "temperature_excess_K": 223.08490149174213,
+        "softening_fraction": 0.12157180809975189
+      },
+      {
+        "time_s": 4.082506058618948e-06,
+        "active_fraction": 0.013556588698507253,
+        "effective_width_m": 1.267692613654151e-06,
+        "temperature_excess_K": 261.5538283723961,
+        "softening_fraction": 0.035344720277710386
+      },
+      {
+        "time_s": 4.462590346876169e-06,
+        "active_fraction": 0.012708986334473062,
+        "effective_width_m": 1.0124962267484691e-06,
+        "temperature_excess_K": 260.68702939906643,
+        "softening_fraction": 0.012105725766779743
+      },
+      {
+        "time_s": 4.874967373031426e-06,
+        "active_fraction": 0.013442927562687161,
+        "effective_width_m": 1.2007475156089958e-06,
+        "temperature_excess_K": 257.0397615685399,
+        "softening_fraction": 0.015919899952975634
+      },
+      {
+        "time_s": 5.181165196287152e-06,
+        "active_fraction": 0.02984052637225673,
+        "effective_width_m": 1.0989716646537696e-06,
+        "temperature_excess_K": 253.89768807008682,
+        "softening_fraction": 0.06021534364234298
+      },
+      {
+        "time_s": 5.43815435321426e-06,
+        "active_fraction": 0.02489084422738056,
+        "effective_width_m": 1.0852598744905055e-06,
+        "temperature_excess_K": 251.27835421646705,
+        "softening_fraction": 0.052013341923167256
+      },
+      {
+        "time_s": 5.70622189277505e-06,
+        "active_fraction": 0.018231310506846978,
+        "effective_width_m": 1.0937675332647923e-06,
+        "temperature_excess_K": 248.6395961865253,
+        "softening_fraction": 0.0331693692480313
+      },
+      {
+        "time_s": 5.999204457442328e-06,
+        "active_fraction": 0.0186939125101362,
+        "effective_width_m": 1.1222581676491877e-06,
+        "temperature_excess_K": 245.85215395796286,
+        "softening_fraction": 0.025848606637863782
+      },
+      {
+        "time_s": 6.322517189308299e-06,
+        "active_fraction": 0.019705901472747842,
+        "effective_width_m": 1.1682588504657749e-06,
+        "temperature_excess_K": 242.86565177939474,
+        "softening_fraction": 0.02909971372097358
+      }
+    ],
+    "fine": [
+      {
+        "time_s": 3.3333333333333334e-08,
+        "active_fraction": 1.0,
+        "effective_width_m": 1e-05,
+        "temperature_excess_K": 0.0,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 4.5815471412451904e-07,
+        "active_fraction": 0.24747842949609156,
+        "effective_width_m": 4.366663657071073e-06,
+        "temperature_excess_K": 8.135711637434042,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 7.357654501963549e-07,
+        "active_fraction": 0.10271788034684878,
+        "effective_width_m": 3.2577404634874057e-06,
+        "temperature_excess_K": 9.224414522704137,
+        "softening_fraction": 0.05383862156698811
+      },
+      {
+        "time_s": 9.839201663676592e-07,
+        "active_fraction": 0.04221541213897299,
+        "effective_width_m": 2.2796725299316326e-06,
+        "temperature_excess_K": 13.56956857774685,
+        "softening_fraction": 0.006884613057870755
+      },
+      {
+        "time_s": 1.2199151668204458e-06,
+        "active_fraction": 0.0249626951320251,
+        "effective_width_m": 1.6778951406623167e-06,
+        "temperature_excess_K": 28.15880717630057,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.459148156516416e-06,
+        "active_fraction": 0.02149714270312836,
+        "effective_width_m": 1.6508863782324145e-06,
+        "temperature_excess_K": 53.35158988367789,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.7157739019357112e-06,
+        "active_fraction": 0.01994102095691498,
+        "effective_width_m": 1.508797299248682e-06,
+        "temperature_excess_K": 83.85600400928183,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.9839474030763806e-06,
+        "active_fraction": 0.020415568451239586,
+        "effective_width_m": 1.5385065098913255e-06,
+        "temperature_excess_K": 115.13307297337792,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 2.260468785679237e-06,
+        "active_fraction": 0.01859001518572159,
+        "effective_width_m": 1.4219477751981397e-06,
+        "temperature_excess_K": 150.0364724775568,
+        "softening_fraction": 0.024031569040864762
+      },
+      {
+        "time_s": 2.559715786039861e-06,
+        "active_fraction": 0.021552460870731056,
+        "effective_width_m": 1.690999904945742e-06,
+        "temperature_excess_K": 186.62146825578088,
+        "softening_fraction": 0.07615012319884124
+      },
+      {
+        "time_s": 2.8823870636683483e-06,
+        "active_fraction": 0.02086243150044322,
+        "effective_width_m": 1.6928472932038699e-06,
+        "temperature_excess_K": 222.82624759336773,
+        "softening_fraction": 0.15108980846588033
+      },
+      {
+        "time_s": 3.229979542634476e-06,
+        "active_fraction": 0.01966442515337113,
+        "effective_width_m": 2.0973251025587927e-06,
+        "temperature_excess_K": 257.22282934331247,
+        "softening_fraction": 0.062648233772949
+      },
+      {
+        "time_s": 3.5631236449292113e-06,
+        "active_fraction": 0.010777375537510158,
+        "effective_width_m": 1.7116190691959938e-06,
+        "temperature_excess_K": 272.8087301387254,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 3.900989659825001e-06,
+        "active_fraction": 0.008224731327693307,
+        "effective_width_m": 1.049380942492044e-06,
+        "temperature_excess_K": 274.9295356918444,
+        "softening_fraction": 0.028901921314893206
+      },
+      {
+        "time_s": 4.278328425681927e-06,
+        "active_fraction": 0.011073043384196651,
+        "effective_width_m": 1.1391590604167307e-06,
+        "temperature_excess_K": 272.9740448324269,
+        "softening_fraction": 0.17396299724620254
+      },
+      {
+        "time_s": 4.6352963940073545e-06,
+        "active_fraction": 0.007900309004706445,
+        "effective_width_m": 1.428726197794716e-06,
+        "temperature_excess_K": 269.97543721664397,
+        "softening_fraction": 0.0036261494159275983
+      },
+      {
+        "time_s": 5.011229500576365e-06,
+        "active_fraction": 0.009032016538321927,
+        "effective_width_m": 1.6886055732281502e-06,
+        "temperature_excess_K": 268.63272849745226,
+        "softening_fraction": 0.007010970285431138
+      },
+      {
+        "time_s": 5.419472901342954e-06,
+        "active_fraction": 0.012944876900613866,
+        "effective_width_m": 1.31812893981077e-06,
+        "temperature_excess_K": 266.81933082863475,
+        "softening_fraction": 0.12928691625545297
+      },
+      {
+        "time_s": 5.854720909797808e-06,
+        "active_fraction": 0.010018502769227918,
+        "effective_width_m": 9.956947598183503e-07,
+        "temperature_excess_K": 263.95467754932474,
+        "softening_fraction": 0.13548659731938356
+      },
+      {
+        "time_s": 6.286138324179613e-06,
+        "active_fraction": 0.011989346228000845,
+        "effective_width_m": 8.840480742428794e-07,
+        "temperature_excess_K": 261.6389822896426,
+        "softening_fraction": 0.06232942601880409
+      },
+      {
+        "time_s": 6.744737885983135e-06,
+        "active_fraction": 0.01241524046277875,
+        "effective_width_m": 8.960739877943011e-07,
+        "temperature_excess_K": 259.16402072440997,
+        "softening_fraction": 0.09301423096185538
+      }
+    ],
+    "second_seed": [
+      {
+        "time_s": 3.3333333333333334e-08,
+        "active_fraction": 1.0,
+        "effective_width_m": 1e-05,
+        "temperature_excess_K": 0.0,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 4.2985289321610623e-07,
+        "active_fraction": 0.08876160476643229,
+        "effective_width_m": 2.4929420309549188e-06,
+        "temperature_excess_K": 12.92785798493378,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 7.074416116294095e-07,
+        "active_fraction": 0.06246329260268024,
+        "effective_width_m": 2.016652726498355e-06,
+        "temperature_excess_K": 24.538597712914225,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 9.69361364583338e-07,
+        "active_fraction": 0.03461578807642797,
+        "effective_width_m": 1.5021288725017106e-06,
+        "temperature_excess_K": 38.19488582516419,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.233153643626568e-06,
+        "active_fraction": 0.02662886294646943,
+        "effective_width_m": 1.3088655149439104e-06,
+        "temperature_excess_K": 60.27203289042063,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.504563055075681e-06,
+        "active_fraction": 0.023944298257990982,
+        "effective_width_m": 1.3076499354165642e-06,
+        "temperature_excess_K": 93.98340222197385,
+        "softening_fraction": 0.0
+      },
+      {
+        "time_s": 1.8042653760625714e-06,
+        "active_fraction": 0.051821182276781,
+        "effective_width_m": 1.7357333589924165e-06,
+        "temperature_excess_K": 126.48057426129367,
+        "softening_fraction": 0.13435735990015685
+      },
+      {
+        "time_s": 2.1019672003388974e-06,
+        "active_fraction": 0.03875340634016502,
+        "effective_width_m": 1.6524857719620513e-06,
+        "temperature_excess_K": 141.35773403866187,
+        "softening_fraction": 0.09482867531243584
+      },
+      {
+        "time_s": 2.3736551738842225e-06,
+        "active_fraction": 0.019809617053295387,
+        "effective_width_m": 1.4280110916422115e-06,
+        "temperature_excess_K": 149.20440734407953,
+        "softening_fraction": 0.0472193784757823
+      },
+      {
+        "time_s": 2.6576844857093007e-06,
+        "active_fraction": 0.018234749954509057,
+        "effective_width_m": 1.4409112355882142e-06,
+        "temperature_excess_K": 147.40735585940388,
+        "softening_fraction": 0.12274614191153725
+      },
+      {
+        "time_s": 2.962361262901473e-06,
+        "active_fraction": 0.024273509244340043,
+        "effective_width_m": 1.867231290542257e-06,
+        "temperature_excess_K": 147.37208044805834,
+        "softening_fraction": 0.12218489195214353
+      },
+      {
+        "time_s": 3.2773431718994037e-06,
+        "active_fraction": 0.018939219555213428,
+        "effective_width_m": 1.5840648622191927e-06,
+        "temperature_excess_K": 162.54942047095142,
+        "softening_fraction": 0.24432085623655803
+      },
+      {
+        "time_s": 3.584731282146324e-06,
+        "active_fraction": 0.01501029763249758,
+        "effective_width_m": 1.5713713703435644e-06,
+        "temperature_excess_K": 170.50379059486363,
+        "softening_fraction": 0.15578424441017083
+      },
+      {
+        "time_s": 3.907155856908304e-06,
+        "active_fraction": 0.016534840640370065,
+        "effective_width_m": 1.6093175030708525e-06,
+        "temperature_excess_K": 169.34507273084705,
+        "softening_fraction": 0.22751226063000307
+      },
+      {
+        "time_s": 4.255370264492207e-06,
+        "active_fraction": 0.021635048972759467,
+        "effective_width_m": 2.7105772394965104e-06,
+        "temperature_excess_K": 175.693921324445,
+        "softening_fraction": 0.21957678247638474
+      },
+      {
+        "time_s": 4.583478805260833e-06,
+        "active_fraction": 0.02099101337166728,
+        "effective_width_m": 1.5031248965802967e-06,
+        "temperature_excess_K": 181.38502603914048,
+        "softening_fraction": 0.09715493057187981
+      },
+      {
+        "time_s": 4.860420781279663e-06,
+        "active_fraction": 0.016448479166246643,
+        "effective_width_m": 1.3722981873483396e-06,
+        "temperature_excess_K": 179.0740786197632,
+        "softening_fraction": 0.05675041074977534
+      },
+      {
+        "time_s": 5.152472294893855e-06,
+        "active_fraction": 0.01657750595104238,
+        "effective_width_m": 1.3314575474575354e-06,
+        "temperature_excess_K": 176.72389620824424,
+        "softening_fraction": 0.07167071606856897
+      },
+      {
+        "time_s": 5.4753964385298955e-06,
+        "active_fraction": 0.016300131775672685,
+        "effective_width_m": 1.4363039834970083e-06,
+        "temperature_excess_K": 179.86528144684462,
+        "softening_fraction": 0.1410629469827269
+      },
+      {
+        "time_s": 5.813141983820586e-06,
+        "active_fraction": 0.017654693341788378,
+        "effective_width_m": 1.4718249336168996e-06,
+        "temperature_excess_K": 227.20353415525688,
+        "softening_fraction": 0.12486771907404039
+      },
+      {
+        "time_s": 6.180580781426279e-06,
+        "active_fraction": 0.01637233743347825,
+        "effective_width_m": 2.1385334845268594e-06,
+        "temperature_excess_K": 250.32407048036498,
+        "softening_fraction": 0.1467543032955822
+      }
+    ]
+  },
+  "matched_steps": {
+    "coarse": [
+      0,
+      250,
+      500,
+      750,
+      1000,
+      1250,
+      1500,
+      1750,
+      2000,
+      2250,
+      2500,
+      2750,
+      3000,
+      3250,
+      3500,
+      3750,
+      4000,
+      4250,
+      4500,
+      4750,
+      4999
+    ],
+    "fine": [
+      0,
+      250,
+      500,
+      750,
+      1000,
+      1250,
+      1500,
+      1750,
+      2000,
+      2250,
+      2500,
+      2750,
+      3000,
+      3250,
+      3500,
+      3750,
+      4000,
+      4250,
+      4500,
+      4750,
+      4999
+    ],
+    "second_seed": [
+      0,
+      250,
+      500,
+      750,
+      1000,
+      1250,
+      1500,
+      1750,
+      2000,
+      2250,
+      2500,
+      2750,
+      3000,
+      3250,
+      3500,
+      3750,
+      4000,
+      4250,
+      4500,
+      4750,
+      4999
+    ]
+  },
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "claim_boundary": "Classification is conjunctive and specific to these matched fields; localization or heating alone is not strict ASB."
+}

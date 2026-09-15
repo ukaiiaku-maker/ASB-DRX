@@ -242,7 +242,7 @@
       "restart_result_path": "full_model/verification/v22_common_restart_qualification.json",
       "legacy_regression_path": "full_model/verification/v22_legacy_regression.json",
       "finite_time_search_path": "full_model/verification/v22_finite_time_search.json",
-      "configured_regression_tests_passed": 393,
+      "configured_regression_tests_passed": 395,
       "cancelled_preflight_runs": [
         {
           "run_id": "20260915T133632Z-d4dfd75-948ca9",
@@ -277,31 +277,49 @@
           "preserved_step_500_sha256": "427d29d734b3bce0fa55dc8f3d16d3624e52cb557905c798656feb8a7e14ea45"
         }
       ],
-      "active_runs": [
-        {"group": "primary64", "run_id": "20260915T143743Z-576fd5b-7de584", "slurm_job_id": "56037686"},
-        {"group": "repeat128_10um", "run_id": "20260915T143756Z-576fd5b-f830d6", "slurm_job_id": "56037688"},
-        {"group": "repeat128_12.7um", "run_id": "20260915T143808Z-576fd5b-27129f", "slurm_job_id": "56037689"}
+      "completed_wall_runs": [
+        {"group": "primary64", "run_id": "20260915T143743Z-576fd5b-7de584", "slurm_job_id": "56037686", "elapsed": "00:29:25", "result_archive_sha256": "6cca0493702487058fb77cac953b4ed223cc7815adea7f5bc63f6115e96728ea", "source_archive_sha256": "ae4df40dc39bd58258516d0e4bd31f67dc53b4d2a8a97af7ad567ca4dfe62b3c"},
+        {"group": "repeat128_10um", "run_id": "20260915T143756Z-576fd5b-f830d6", "slurm_job_id": "56037688", "elapsed": "00:24:53", "result_archive_sha256": "06a08ba4a068327815fd1f4fc4964f7a36c9e7a72af0d4cfe7ac51a8baed123c", "source_archive_sha256": "5087ad0af72e5ce568ba89b6e88da89ddde47e808d9c6388fa823853e92f45fa"},
+        {"group": "repeat128_12.7um", "run_id": "20260915T143808Z-576fd5b-27129f", "slurm_job_id": "56037689", "elapsed": "00:24:38", "result_archive_sha256": "169be5fae9effcd62deba429f96566731b0377170f90a9b2588c42ebb184bbbc", "source_archive_sha256": "67da0891edb329600f1895758b464a2bb992e8c5d07b9b48cd4886122812f862"}
       ],
-      "active_cases": 8,
+      "completed_wall_cases": 8,
       "target_steps_per_case": {"saturated_homogeneous": 500, "negative_controls": 1000, "heterogeneous_primary_and_repeats": 2200},
       "target_minimum_strain": 0.20,
+      "actual_wall_strain_range": [0.0182960508369194, 0.031078636872751735],
+      "wall_horizon_stop": "nonlinear wall-order saturation before the nominal strain target",
       "checkpoint_interval_steps": 250,
       "homogeneous_pilot_result_path": "full_model/verification/v22_homogeneous_pilot_postprocessed.json",
       "homogeneous_pilot_classification": "UNIFORM_ORDERING_ONLY_AT_NONLINEAR_SATURATION",
+      "long_wall_result_path": "full_model/verification/v22_long_wall_postprocessed.json",
+      "long_wall_result_sha256": "14fd0f1e4463dc27113a6703057c5f14333cc029e44c8cbf54c5bdccb02221bf",
+      "long_wall_classification": "WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL",
+      "threshold_candidate_source_commit": "595b95e293d12d95c0bd6116c65ddbcd5013bc8e",
+      "threshold_candidate_result_path": "full_model/verification/v22_threshold_repair_preflight.json",
+      "threshold_candidate_result_sha256": "bdd46883aa153cca23551710f512d8a265d0e6cc1c99a52f497a18b33f96401b",
+      "threshold_candidate_classification": "THRESHOLD_SMOOTHSTEP_REPAIR_REJECTED_UNDER_FIXED_PERTURBATION",
+      "accepted_source_restoration_commit": "618f1b5",
       "stored_energy_sibm_fallback_prepared": true,
-      "stored_energy_sibm_fallback_submitted": false,
+      "stored_energy_sibm_fallback_submitted": true,
+      "stored_energy_sibm_fallback_run_id": "20260915T144903Z-3e9968c-8ab6f5",
+      "stored_energy_sibm_fallback_slurm_job_id": "56037730",
+      "stored_energy_sibm_fallback_result_archive_sha256": "c5ba8f4ac6fc8e37ca5b57a4e9273d6c42e0ca6f26f214c0fb53a20c9b3b8541",
+      "stored_energy_sibm_fallback_result_path": "full_model/verification/v22_stored_energy_sibm_result.json",
+      "stored_energy_sibm_fallback_result_sha256": "695cff403c2f0029abaee8add4c08adaa8e7fc7546098eadaa56bb90b4cd28d8",
+      "stored_energy_sibm_fallback_classification": "ZERO_PRESSURE_STORED_ENERGY_SIBM_PATHWAY_UNRESOLVED",
       "strict_asb_source_commit": "4f9eb55",
-      "strict_asb_active_runs": [
-        {"grid": 64, "seed": 42, "run_id": "20260915T144548Z-4f9eb55-cc20f4", "slurm_job_id": "56037722"},
-        {"grid": 128, "seed": 42, "run_id": "20260915T144600Z-4f9eb55-270c68", "slurm_job_id": "56037723"},
-        {"grid": 128, "seed": 43, "run_id": "20260915T144612Z-4f9eb55-2c3fe3", "slurm_job_id": "56037724"}
+      "strict_asb_completed_runs": [
+        {"grid": 64, "seed": 42, "run_id": "20260915T144548Z-4f9eb55-cc20f4", "slurm_job_id": "56037722", "elapsed": "00:17:21", "result_archive_sha256": "ae3dff91d833d2456293f4df8d36a4414731acfa5cbb375429c25de3170bb1d2", "source_archive_sha256": "2679769251b1afb09a8d06b02126c43e5fe6179ea813be399ce4b590e16611c7"},
+        {"grid": 128, "seed": 42, "run_id": "20260915T144600Z-4f9eb55-270c68", "slurm_job_id": "56037723", "elapsed": "00:56:54", "result_archive_sha256": "cdb9df04bd643e3fdd4b618c32fbbe38359cf044063dbf2582c5cff033c1cb62", "source_archive_sha256": "7f88e8a163918e521ae513fb82250459a8ecf12185522d8a74e29c96a096c75f"},
+        {"grid": 128, "seed": 43, "run_id": "20260915T144612Z-4f9eb55-2c3fe3", "slurm_job_id": "56037724", "elapsed": "01:01:37", "result_archive_sha256": "9465b5cf2c579db1e909299d518731b86a73ca78ac41cf9c77b1a01e96e5746d", "source_archive_sha256": "ad77a24d66d7f7a75b017c03b8958bad3197ee364ebdef708299e812c3b4a042"}
       ],
       "strict_asb_matched_control": "adiabatic and isothermal fields from identical source, grid, seed, and loading",
-      "strict_asb_classification": "RUNNING",
+      "strict_asb_result_path": "full_model/verification/v22_strict_asb_result.json",
+      "strict_asb_result_sha256": "e88aefef598193374cf38b3463df296d681f8158b00d78b1bec8e427c686fef0",
+      "strict_asb_classification": "STRICT_ASB_NOT_OBSERVED",
       "grain_allocation_disabled": true,
       "fixture_passed": true,
       "scientific_gate_passed": false,
-      "classification": "LONG_NONLINEAR_SPLIT_CAMPAIGN_RUNNING"
+      "classification": "V22_DECISION_CAMPAIGN_COMPLETE_WITH_NEGATIVE_SCIENTIFIC_GATES"
     }
   ]
 }
