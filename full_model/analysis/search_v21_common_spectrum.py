@@ -44,7 +44,7 @@ def make_state(n, total_density, q, temperature, parameters, topologies):
         arrays["mobile_plus_m2"], arrays["mobile_minus_m2"],
         arrays["forest_plus_m2"], arrays["forest_minus_m2"],
         arrays["wall_plus_m2"], arrays["wall_minus_m2"], junction,
-        np.full((n, n), q), np.zeros(shape), np.zeros((n, n, 3, 3)),
+        np.full((n, n), q), np.zeros((n, n)), np.zeros(shape), np.zeros((n, n, 3, 3)),
         np.zeros(shape+(3,)), np.zeros(shape+(3, 3)),
         np.full((n, n), np.deg2rad(25.1)), np.full((n, n), temperature),
     )

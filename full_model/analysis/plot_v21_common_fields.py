@@ -34,7 +34,10 @@ def render(checkpoint, output, title):
         state = CommonWallState(
             z["rp"], z["rm"], z["rho_forest_plus"], z["rho_forest_minus"],
             z["rho_wall_plus"], z["rho_wall_minus"], z["v21_junction_m2"],
-            z["q_wall_v19"], z["v20_slip"], z["v20_beta_p"],
+            z["q_wall_v19"], (z["v22_multi_hit_coordination"]
+                              if "v22_multi_hit_coordination" in z else
+                              np.zeros_like(z["q_wall_v19"])),
+            z["v20_slip"], z["v20_beta_p"],
             z["v20_alignment_m2"], z["v20_family_nye_m1"], z["psi_lat"], z["T"])
         c11, c12 = float(p["C11"]), float(p["C12"])
         effective = (c11*c11-c12*c12)/c11; poisson = c12/c11

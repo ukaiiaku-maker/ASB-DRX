@@ -23,14 +23,14 @@ try:
     from .tensorial_nye import (
         JunctionTopology, SlipSystem3D, nye_from_plastic_distortion,
         plastic_distortion_from_slip, rotated_system_fields,
-        alignment_increment_from_slip,
+        alignment_increment_from_slip, bcc_four_family_systems,
     )
     from .nonlocal_elasticity import solve_periodic_eigenstrain
 except ImportError:  # direct execution by the production driver
     from tensorial_nye import (
         JunctionTopology, SlipSystem3D, nye_from_plastic_distortion,
         plastic_distortion_from_slip, rotated_system_fields,
-        alignment_increment_from_slip,
+        alignment_increment_from_slip, bcc_four_family_systems,
     )
     from nonlocal_elasticity import solve_periodic_eigenstrain
 
@@ -48,6 +48,7 @@ class CommonWallState:
     wall_minus_m2: np.ndarray
     junction_m2: np.ndarray
     wall_order: np.ndarray
+    multi_hit_coordination: np.ndarray
     slip: np.ndarray
     beta_p: np.ndarray
     alignment_m2: np.ndarray
@@ -66,8 +67,9 @@ class CommonWallState:
         grid = family_shape[:2]
         if np.asarray(self.junction_m2).shape != grid+(len(topologies),):
             raise ValueError("junction reservoir has inconsistent layout")
-        if np.asarray(self.wall_order).shape != grid:
-            raise ValueError("wall order has inconsistent layout")
+        if (np.asarray(self.wall_order).shape != grid
+                or np.asarray(self.multi_hit_coordination).shape != grid):
+            raise ValueError("wall order/coordination has inconsistent layout")
         if np.asarray(self.beta_p).shape != grid+(3, 3):
             raise ValueError("plastic distortion has inconsistent layout")
         if np.asarray(self.alignment_m2).shape != family_shape+(3,):
@@ -92,6 +94,9 @@ class CommonWallState:
             if np.any(np.asarray(self.wall_order) < 0.0) or np.any(
                     np.asarray(self.wall_order) > 1.0):
                 raise ValueError("wall order must lie in [0,1]")
+            if np.any(np.asarray(self.multi_hit_coordination) < 0.0) or np.any(
+                    np.asarray(self.multi_hit_coordination) > 1.0):
+                raise ValueError("multi-hit coordination must lie in [0,1]")
         return grid, family_shape
 
 
@@ -106,11 +111,18 @@ class CommonWallParameters:
     junction_energy_J_m: float = 2.0e-10
     wall_order_amplitude_J_m3: float = 1.0e6
     wall_order_barrier_J_m3: float = 2.0e5
+    wall_absent_penalty_J_m3: float = 4.0e5
+    wall_gate_form: str = "joint_rational"
+    wall_gate_half_density_ratio: float = 0.20
+    wall_gate_half_polarization: float = 0.25
+    wall_gate_joint_half: float = 0.08
+    polarization_density_epsilon_ratio: float = 1.0e-12
     wall_partition_J_m: float = 2.0e-10
     wall_target_m2: float = 4.0e14
     wall_density_center_ratio: float = 1.3
     wall_density_width_ratio: float = 0.3
     wall_order_gradient_J_m: float = 2.0e-7
+    wall_order_enabled: bool = True
     attempt_frequency_s: float = 1.0e7
     critical_stress_Pa: float = 1.5e9
     exp_a: float = 2.2
@@ -138,17 +150,34 @@ class CommonWallParameters:
     bath_temperature_K: float = 1100.0
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
     multiplication_coefficient: float = 10.0
+    taylor_alpha: float = 0.30
+    taylor_wall_weight: float = 2.0
+    taylor_junction_weight: float = 1.0
+    taylor_regularization_Pa: float = 2.0e7
+    multi_hit_enabled: bool = False
+    multi_hit_relaxation_s: float = 1.0e-5
+    multi_hit_collision_scale: float = 1.0
+    multi_hit_lock_log_factor: float = 0.0
+    multi_hit_wall_log_factor: float = 1.0
+    multi_hit_junction_log_factor: float = 1.0
+    multi_hit_annihilation_log_factor: float = -0.5
 
     def __post_init__(self):
         positive = (
             self.spacing_m, self.burgers_m, self.rho_reference_m2,
             self.line_energy_J_m, self.wall_order_barrier_J_m3,
+            self.wall_absent_penalty_J_m3,
             self.wall_partition_J_m, self.wall_target_m2,
             self.wall_density_width_ratio, self.attempt_frequency_s,
             self.critical_stress_Pa, self.exp_n,
             self.reaction_energy_scale_J_m,
             self.c11_Pa, self.c44_Pa, self.glide_speed_attempt_m_s,
             self.volumetric_heat_capacity_J_m3_K,
+            self.wall_gate_half_density_ratio,
+            self.wall_gate_half_polarization, self.wall_gate_joint_half,
+            self.polarization_density_epsilon_ratio,
+            self.taylor_regularization_Pa, self.multi_hit_relaxation_s,
+            self.multi_hit_collision_scale,
         )
         if any(not math.isfinite(float(value)) or value <= 0.0 for value in positive):
             raise ValueError("common wall parameters must be finite and positive")
@@ -158,6 +187,15 @@ class CommonWallParameters:
             raise ValueError("mobile correlation diffusivity cannot be negative")
         if self.multiplication_coefficient < 0.0:
             raise ValueError("multiplication coefficient cannot be negative")
+        if self.taylor_alpha < 0.0 or self.taylor_wall_weight < 0.0 or self.taylor_junction_weight < 0.0:
+            raise ValueError("Taylor weights cannot be negative")
+        if self.wall_gate_form not in ("product_rational", "joint_rational"):
+            raise ValueError("unknown wall polarization gate")
+        if any(abs(value) > 5.0 for value in (
+                self.multi_hit_lock_log_factor, self.multi_hit_wall_log_factor,
+                self.multi_hit_junction_log_factor,
+                self.multi_hit_annihilation_log_factor)):
+            raise ValueError("multi-hit rate modifiers must remain bounded")
 
 
 @dataclass(frozen=True)
@@ -209,7 +247,62 @@ def exp_floor_rate(stress_pa, temperature_K, barrier_eV, parameters):
         -free/(KB_J_K*temperature), -700.0, 40.0))
 
 
-def wall_free_energy_derivatives(state, parameters, topologies=()):
+def wall_polarization_invariants(state, systems, parameters):
+    """Objective wall-content/polarization gate and exact density derivatives."""
+    wall_plus = np.asarray(state.wall_plus_m2)
+    wall_minus = np.asarray(state.wall_minus_m2)
+    wall = np.sum(wall_plus+wall_minus, axis=2)
+    signed = wall_plus-wall_minus
+    burgers, directions, normals = rotated_system_fields(
+        systems, state.orientation_rad)
+    lines = np.cross(normals, directions)
+    lines /= np.maximum(np.linalg.norm(lines, axis=-1)[..., None], 1e-300)
+    basis = np.einsum("...ai,...aj->...aij", burgers, lines)
+    alpha_wall = np.einsum("...a,...aij->...ij", signed, basis)
+    norm = np.sqrt(np.sum(alpha_wall*alpha_wall, axis=(-2, -1)))
+    dnorm_ds = np.einsum("...ij,...aij->...a", alpha_wall, basis)
+    dnorm_ds /= np.maximum(norm[..., None], 1e-300)
+    reference = parameters.rho_reference_m2
+    epsilon = (parameters.polarization_density_epsilon_ratio
+               *parameters.burgers_m*reference)
+    denominator = parameters.burgers_m*wall+epsilon
+    polarization = norm/denominator
+    dpi_dnorm = 1.0/denominator
+    dpi_dwall = -norm*parameters.burgers_m/(denominator*denominator)
+    if parameters.wall_gate_form == "product_rational":
+        half_rho = parameters.wall_gate_half_density_ratio*reference
+        phi_gate = wall/(wall+half_rho)
+        dphi_dwall = half_rho/(wall+half_rho)**2
+        half_pi2 = parameters.wall_gate_half_polarization**2
+        pi_gate = polarization**2/(polarization**2+half_pi2)
+        dpi_gate = (2.0*polarization*half_pi2
+                    /(polarization**2+half_pi2)**2)
+        gate = phi_gate*pi_gate
+        dgate_dnorm = phi_gate*dpi_gate*dpi_dnorm
+        dgate_dwall = dphi_dwall*pi_gate+phi_gate*dpi_gate*dpi_dwall
+    else:
+        joint = wall/reference*polarization
+        half2 = parameters.wall_gate_joint_half**2
+        gate = joint*joint/(joint*joint+half2)
+        dgate_djoint = 2.0*joint*half2/(joint*joint+half2)**2
+        djoint_dnorm = wall/reference*dpi_dnorm
+        djoint_dwall = polarization/reference+wall/reference*dpi_dwall
+        dgate_dnorm = dgate_djoint*djoint_dnorm
+        dgate_dwall = dgate_djoint*djoint_dwall
+    dgate_plus = dgate_dwall[..., None]+dgate_dnorm[..., None]*dnorm_ds
+    dgate_minus = dgate_dwall[..., None]-dgate_dnorm[..., None]*dnorm_ds
+    return {
+        "wall_density_m2": wall,
+        "wall_alpha_m1": alpha_wall,
+        "wall_alpha_norm_m1": norm,
+        "wall_polarization": polarization,
+        "wall_gate": gate,
+        "wall_gate_derivative_plus_m2": dgate_plus,
+        "wall_gate_derivative_minus_m2": dgate_minus,
+    }
+
+
+def wall_free_energy_derivatives(state, parameters, topologies=(), systems=None):
     reservoirs = (
         state.mobile_plus_m2+state.mobile_minus_m2
         +state.forest_plus_m2+state.forest_minus_m2
@@ -222,43 +315,60 @@ def wall_free_energy_derivatives(state, parameters, topologies=()):
         if topologies else np.zeros(state.junction_m2.shape[2]))
     total = (np.sum(reservoirs, axis=2)
              +np.sum(state.junction_m2*multiplicity, axis=2))
-    wall = np.sum(state.wall_plus_m2+state.wall_minus_m2, axis=2)
+    if systems is None:
+        systems = bcc_four_family_systems(parameters.burgers_m)
+    invariants = wall_polarization_invariants(state, systems, parameters)
+    wall = invariants["wall_density_m2"]
+    gate = invariants["wall_gate"]
     q = state.wall_order
     reference = parameters.rho_reference_m2
     safe = np.maximum(total, 1e-30*reference)
     base_mu = (parameters.line_energy_J_m
                +parameters.correlation_energy_J_m*(np.log(safe/reference)+1.0))
-    ratio = total/reference
-    offset = (ratio-parameters.wall_density_center_ratio)/parameters.wall_density_width_ratio
-    exponential = np.exp(-.5*offset*offset)
-    dip = -parameters.wall_order_amplitude_J_m3*exponential
-    dip_derivative = (parameters.wall_order_amplitude_J_m3*exponential*offset
-                      /(parameters.wall_density_width_ratio*reference))
-    h = q*q*(3.0-2.0*q)
-    dh = 6.0*q*(1.0-q)
-    partition_offset = wall-h*parameters.wall_target_m2
-    wall_extra_mu = parameters.wall_partition_J_m*partition_offset/parameters.wall_target_m2
-    common_mu = base_mu+h*dip_derivative
+    # Physical polarization initiates ordering without numerical q noise:
+    # h'(0)=2 and h'(1)=0. The objective gate makes this source identically
+    # zero for absent or unpolarized wall content.
+    h = q*(2.0-q)
+    dh = 2.0*(1.0-q)
+    partition_offset = wall-gate*h*parameters.wall_target_m2
+    partition_direct_mu = (parameters.wall_partition_J_m*partition_offset
+                           /parameters.wall_target_m2)
+    common_mu = base_mu
     forest_mu = common_mu+parameters.forest_energy_J_m
-    wall_mu = common_mu+wall_extra_mu
+    denergy_dgate = (
+        -parameters.wall_absent_penalty_J_m3*q*q
+        -parameters.wall_order_amplitude_J_m3*h
+        -parameters.wall_partition_J_m*partition_offset*h)
+    wall_plus_mu = (common_mu[..., None]+partition_direct_mu[..., None]
+                    +denergy_dgate[..., None]
+                    *invariants["wall_gate_derivative_plus_m2"])
+    wall_minus_mu = (common_mu[..., None]+partition_direct_mu[..., None]
+                     +denergy_dgate[..., None]
+                     *invariants["wall_gate_derivative_minus_m2"])
     junction_mu = (multiplicity*common_mu[..., None]
                    +multiplicity*parameters.junction_energy_J_m
                    +topology_energy)
     barrier_derivative = (2.0*parameters.wall_order_barrier_J_m3*q*(1.0-q)
                           *(1.0-2.0*q))
-    dq = (dh*dip+barrier_derivative
-          -parameters.wall_partition_J_m*partition_offset*dh)
+    dq = (barrier_derivative
+          +2.0*parameters.wall_absent_penalty_J_m3*(1.0-gate)*q
+          -parameters.wall_order_amplitude_J_m3*gate*dh
+          -parameters.wall_partition_J_m*partition_offset*gate*dh)
     return {
         "total_density_m2": total, "wall_density_m2": wall,
+        **invariants,
         "mobile_mu_J_m": common_mu, "forest_mu_J_m": forest_mu,
-        "wall_mu_J_m": wall_mu, "junction_mu_J_m": junction_mu,
+        "wall_plus_mu_J_m": wall_plus_mu,
+        "wall_minus_mu_J_m": wall_minus_mu,
+        "junction_mu_J_m": junction_mu,
         "wall_order_derivative_J_m3": dq,
     }
 
 
-def wall_free_energy_density_J_m3(state, parameters, topologies=()):
+def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None):
     """Local part of the exact common free energy differentiated above."""
-    chemical = wall_free_energy_derivatives(state, parameters, topologies)
+    chemical = wall_free_energy_derivatives(
+        state, parameters, topologies, systems)
     total = chemical["total_density_m2"]
     wall = chemical["wall_density_m2"]
     q = state.wall_order
@@ -277,16 +387,15 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=()):
     junction = np.sum(
         state.junction_m2*(multiplicity*parameters.junction_energy_J_m
                            +topology_energy), axis=2)
-    ratio = total/reference
-    dip = -parameters.wall_order_amplitude_J_m3*np.exp(
-        -.5*((ratio-parameters.wall_density_center_ratio)
-             /parameters.wall_density_width_ratio)**2)
-    h = q*q*(3.0-2.0*q)
+    gate = chemical["wall_gate"]
+    h = q*(2.0-q)
     barrier = parameters.wall_order_barrier_J_m3*q*q*(1.0-q)*(1.0-q)
+    absent = parameters.wall_absent_penalty_J_m3*(1.0-gate)*q*q
+    ordering = -parameters.wall_order_amplitude_J_m3*gate*h
     partition = (.5*parameters.wall_partition_J_m
-                 *(wall-h*parameters.wall_target_m2)**2
+                 *(wall-gate*h*parameters.wall_target_m2)**2
                  /parameters.wall_target_m2)
-    return density+forest+junction+h*dip+barrier+partition
+    return density+forest+junction+barrier+absent+ordering+partition
 
 
 def _biased_exchange(source, target, delta_mu_J_m, rate_s, parameters):
@@ -303,8 +412,24 @@ def _biased_exchange_components(source, target, delta_mu_J_m, rate_s,
     return forward-reverse, forward+reverse
 
 
-def resolved_driving_fields(state, driving, systems, parameters):
-    """Resolve nonlocal stress and glide speed used by the common residual."""
+def taylor_resistance_Pa(state, systems, topologies, parameters):
+    """Objective family resistance from forest, wall, and junction content."""
+    obstacle = (state.forest_plus_m2+state.forest_minus_m2
+                +parameters.taylor_wall_weight
+                *(state.wall_plus_m2+state.wall_minus_m2))
+    obstacle = obstacle.copy()
+    for index, topology in enumerate(topologies):
+        contribution = (parameters.taylor_junction_weight
+                        *topology.product_line_multiplicity
+                        *state.junction_m2[..., index])
+        obstacle[..., topology.parent_a] += .5*contribution
+        obstacle[..., topology.parent_b] += .5*contribution
+    return (parameters.taylor_alpha*parameters.c44_Pa*parameters.burgers_m
+            *np.sqrt(np.maximum(obstacle, 0.0)))
+
+
+def resolved_driving_components(state, driving, systems, topologies, parameters):
+    """Return raw/effective stress, Taylor resistance, and glide speed."""
     family_shape = state.mobile_plus_m2.shape
     if driving.resolved_stress_Pa is None:
         if driving.mean_strain is None:
@@ -322,22 +447,38 @@ def resolved_driving_fields(state, driving, systems, parameters):
         schmid = .5*(
             np.einsum("...si,...sj->...sij", directions[..., :2], normals[..., :2])
             +np.einsum("...si,...sj->...sij", normals[..., :2], directions[..., :2]))
-        stress = np.einsum("...ij,...sij->...s", stress_tensor, schmid)
+        raw = np.einsum("...ij,...sij->...s", stress_tensor, schmid)
     else:
-        stress = np.asarray(driving.resolved_stress_Pa, dtype=float)
-    if stress.shape != family_shape:
+        raw = np.asarray(driving.resolved_stress_Pa, dtype=float)
+    if raw.shape != family_shape:
         raise ValueError("resolved stress requires grid x family layout")
+    resistance = taylor_resistance_Pa(state, systems, topologies, parameters)
+    if parameters.taylor_alpha == 0.0:
+        effective = raw.copy()
+    else:
+        smooth = np.sqrt(raw*raw+resistance*resistance
+                         +parameters.taylor_regularization_Pa**2)
+        effective = raw*(1.0-resistance/smooth)
     if driving.glide_speed_m_s is None:
         activation = exp_floor_rate(
-            stress, state.temperature_K[..., None],
+            effective, state.temperature_K[..., None],
             parameters.glide_barrier_eV, parameters)/parameters.attempt_frequency_s
         speed = (parameters.glide_speed_attempt_m_s*activation
-                 *np.tanh(stress/parameters.critical_stress_Pa))
+                 *np.tanh(effective/parameters.critical_stress_Pa))
     else:
         speed = np.asarray(driving.glide_speed_m_s, dtype=float)
     if speed.shape != family_shape:
         raise ValueError("glide speed requires grid x family layout")
-    return speed, stress
+    return {"speed_m_s": speed, "raw_stress_Pa": raw,
+            "effective_stress_Pa": effective,
+            "taylor_resistance_Pa": resistance}
+
+
+def resolved_driving_fields(state, driving, systems, parameters):
+    """Resolve nonlocal stress and glide speed used by the common residual."""
+    components = resolved_driving_components(
+        state, driving, systems, (), parameters)
+    return components["speed_m_s"], components["effective_stress_Pa"]
 
 
 def wall_residual(state: CommonWallState, driving: CommonWallDriving,
@@ -348,8 +489,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     """Evaluate the single authoritative nonlinear residual."""
     grid, family_shape = state.validate(
         systems, topologies, admissibility=not differentiation_state)
-    speed, stress = resolved_driving_fields(
-        state, driving, systems, parameters)
+    drive = resolved_driving_components(
+        state, driving, systems, topologies, parameters)
+    speed = drive["speed_m_s"]
+    stress = drive["effective_stress_Pa"]
     _, directions, _ = rotated_system_fields(systems, state.orientation_rad)
     planar = directions[..., :2]
     flux_plus = state.mobile_plus_m2[..., None]*speed[..., None]*planar
@@ -372,9 +515,18 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     wp_rate = np.zeros(family_shape); wm_rate = np.zeros(family_shape)
     junction_rate = np.zeros(grid+(len(topologies),))
 
-    chemical = wall_free_energy_derivatives(state, parameters, topologies)
+    chemical = wall_free_energy_derivatives(
+        state, parameters, topologies, systems)
     temperature = state.temperature_K[..., None]
+    coordination = state.multi_hit_coordination[..., None]
+
+    def coordinated(base, log_factor):
+        if not parameters.multi_hit_enabled:
+            return base
+        return base*np.exp(log_factor*coordination)
+
     k_lock = exp_floor_rate(stress, temperature, parameters.lock_barrier_eV, parameters)
+    k_lock = coordinated(k_lock, parameters.multi_hit_lock_log_factor)
     delta_lock = chemical["forest_mu_J_m"]-chemical["mobile_mu_J_m"]
     lock_p, lock_p_turnover = _biased_exchange_components(
         state.mobile_plus_m2, state.forest_plus_m2,
@@ -386,18 +538,23 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     fp_rate += lock_p; fm_rate += lock_m
 
     k_wall = exp_floor_rate(stress, temperature, parameters.wall_barrier_eV, parameters)
-    delta_wall = chemical["wall_mu_J_m"]-chemical["forest_mu_J_m"]
+    k_wall = coordinated(k_wall, parameters.multi_hit_wall_log_factor)
+    delta_wall_p = (chemical["wall_plus_mu_J_m"]
+                    -chemical["forest_mu_J_m"][..., None])
+    delta_wall_m = (chemical["wall_minus_mu_J_m"]
+                    -chemical["forest_mu_J_m"][..., None])
     transfer_p, transfer_p_turnover = _biased_exchange_components(
         state.forest_plus_m2, state.wall_plus_m2,
-        delta_wall[..., None], k_wall, parameters)
+        delta_wall_p, k_wall, parameters)
     transfer_m, transfer_m_turnover = _biased_exchange_components(
         state.forest_minus_m2, state.wall_minus_m2,
-        delta_wall[..., None], k_wall, parameters)
+        delta_wall_m, k_wall, parameters)
     fp_rate -= transfer_p; fm_rate -= transfer_m
     wp_rate += transfer_p; wm_rate += transfer_m
 
     k_ann = exp_floor_rate(stress, temperature,
                            parameters.annihilation_barrier_eV, parameters)
+    k_ann = coordinated(k_ann, parameters.multi_hit_annihilation_log_factor)
     annihilation = (k_ann*state.mobile_plus_m2*state.mobile_minus_m2
                     /parameters.rho_reference_m2)
     mp_rate -= annihilation; mm_rate -= annihilation
@@ -423,6 +580,9 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         pair_stress = np.maximum(np.abs(stress[..., first]), np.abs(stress[..., second]))
         kf = exp_floor_rate(pair_stress, state.temperature_K,
                             parameters.junction_barrier_eV, parameters)
+        if parameters.multi_hit_enabled:
+            kf = kf*np.exp(parameters.multi_hit_junction_log_factor
+                           *state.multi_hit_coordination)
         source_pair = source_first*source_second/parameters.rho_reference_m2
         delta_mu = (chemical["junction_mu_J_m"][..., index]
                     -2.0*chemical["forest_mu_J_m"])
@@ -436,6 +596,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         junction_rate[..., index] += extent
         junction_extents.append(extent)
         junction_turnovers.append(turnover)
+
+    junction_turnover_array = (np.stack(junction_turnovers, axis=2)
+                               if junction_turnovers else np.zeros(grid+(0,)))
+    collision_frequency = (parameters.multi_hit_collision_scale
+                           *np.sum(junction_turnover_array, axis=2)
+                           /parameters.rho_reference_m2)
+    coordination_rate = (np.zeros(grid) if not parameters.multi_hit_enabled else
+                         (1.0-state.multi_hit_coordination)*collision_frequency
+                         -state.multi_hit_coordination
+                         /parameters.multi_hit_relaxation_s)
 
     beta_rate = plastic_distortion_from_slip(
         slip_rate, systems, state.orientation_rad)
@@ -459,7 +629,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     lap_q = _divergence(np.stack((qx, qy), axis=-1), parameters.spacing_m)
     q_chemical_potential = (chemical["wall_order_derivative_J_m3"]
                             -parameters.wall_order_gradient_J_m*lap_q)
-    q_rate = (-k_order*q_chemical_potential
+    q_rate = (np.zeros(grid) if not parameters.wall_order_enabled else
+              -k_order*q_chemical_potential
               /max(parameters.wall_order_barrier_J_m3, 1.0))
 
     zero_beta = np.zeros_like(state.beta_p)
@@ -469,16 +640,20 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         np.stack((tx, ty), axis=-1), parameters.spacing_m)
     state_rate = CommonWallState(
         mp_rate, mm_rate, fp_rate, fm_rate, wp_rate, wm_rate,
-        junction_rate, np.real(q_rate), slip_rate, beta_rate,
+        junction_rate, np.real(q_rate), coordination_rate, slip_rate, beta_rate,
         alignment_rate, family_nye_rate, orientation_rate,
         np.zeros_like(state.temperature_K))
-    plastic_power = np.sum(stress*slip_rate, axis=2)
+    # Raw mechanical work includes the smooth Taylor-friction loss; the
+    # effective drive controls kinetics and has the same sign, so both raw and
+    # effective stress powers are nonnegative.
+    plastic_power = np.sum(drive["raw_stress_Pa"]*slip_rate, axis=2)
     # Exact directional derivative of the declared defect free-energy
     # functional.  The q term includes the variational gradient contribution.
     free_energy_rate = (
         chemical["mobile_mu_J_m"]*np.sum(mp_rate+mm_rate, axis=2)
         +chemical["forest_mu_J_m"]*np.sum(fp_rate+fm_rate, axis=2)
-        +chemical["wall_mu_J_m"]*np.sum(wp_rate+wm_rate, axis=2)
+        +np.sum(chemical["wall_plus_mu_J_m"]*wp_rate
+                +chemical["wall_minus_mu_J_m"]*wm_rate, axis=2)
         +np.sum(chemical["junction_mu_J_m"]*junction_rate, axis=2)
         +q_chemical_potential*q_rate)
     heat_rate = plastic_power-free_energy_rate
@@ -488,7 +663,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         -parameters.bath_rate_s*(state.temperature_K-parameters.bath_temperature_K))
     state_rate = CommonWallState(
         mp_rate, mm_rate, fp_rate, fm_rate, wp_rate, wm_rate,
-        junction_rate, np.real(q_rate), slip_rate, beta_rate,
+        junction_rate, np.real(q_rate), coordination_rate, slip_rate, beta_rate,
         alignment_rate, family_nye_rate, orientation_rate,
         np.real(temperature_rate))
     channels = {
@@ -502,13 +677,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "multiplication_pairs": multiplication,
         "junction": (np.stack(junction_extents, axis=2)
                      if junction_extents else np.zeros(grid+(0,))),
-        "junction_turnover": (np.stack(junction_turnovers, axis=2)
-                              if junction_turnovers else np.zeros(grid+(0,))),
+        "junction_turnover": junction_turnover_array,
         "junction_line_sink": (np.stack([
             (2.0-topology.product_line_multiplicity)*extent
             for topology, extent in zip(topologies, junction_extents)], axis=2)
             if junction_extents else np.zeros(grid+(0,))),
-        "order": q_rate,
+        "order": q_rate, "coordination": coordination_rate,
+        "collision_frequency_s": collision_frequency,
+        "raw_stress_Pa": drive["raw_stress_Pa"],
+        "effective_stress_Pa": stress,
+        "taylor_resistance_Pa": drive["taylor_resistance_Pa"],
     }
     return CommonWallResidual(
         state_rate, channels, plastic_power, free_energy_rate, heat_rate)
@@ -596,16 +774,18 @@ def accepted_euler_step(state, driving, systems, topologies, parameters, dt_s):
             scale = min(scale, float(np.min(
                 parameters.maximum_fraction_per_step*value[mask]
                 /np.maximum(-dt_s*derivative[mask], 1e-300))))
-    q = state.wall_order; dq = rate.wall_order
-    upper = dq > 0.0; lower = dq < 0.0
-    if np.any(upper):
-        scale = min(scale, float(np.min(
-            parameters.maximum_fraction_per_step*(1.0-q[upper])
-            /np.maximum(dt_s*dq[upper], 1e-300))))
-    if np.any(lower):
-        scale = min(scale, float(np.min(
-            parameters.maximum_fraction_per_step*q[lower]
-            /np.maximum(-dt_s*dq[lower], 1e-300))))
+    for name in ("wall_order", "multi_hit_coordination"):
+        value = np.asarray(getattr(state, name))
+        derivative = np.asarray(getattr(rate, name))
+        upper = derivative > 0.0; lower = derivative < 0.0
+        if np.any(upper):
+            scale = min(scale, float(np.min(
+                parameters.maximum_fraction_per_step*(1.0-value[upper])
+                /np.maximum(dt_s*derivative[upper], 1e-300))))
+        if np.any(lower):
+            scale = min(scale, float(np.min(
+                parameters.maximum_fraction_per_step*value[lower]
+                /np.maximum(-dt_s*derivative[lower], 1e-300))))
     scale = float(np.clip(scale, 0.0, 1.0))
     updated = _state_map(
         state, lambda name, value: value+dt_s*scale*np.asarray(getattr(rate, name)))
@@ -639,6 +819,38 @@ def jacobian_vector_product(state, direction, driving, systems, topologies,
         value-np.asarray(getattr(rm, name)))/(2.0*step))
 
 
+def accepted_step_jacobian_vector_product(
+        state, direction, driving, systems, topologies, parameters, dt_s,
+        relative_step=1.0e-6):
+    """Centered JVP of the actual bounded accepted-step map.
+
+    This differentiates through the global adaptive acceptance factor.  It is
+    therefore the authoritative tangent for finite-time/non-normal analysis,
+    including active-set effects omitted by ``I + dt*J_residual``.
+    """
+    candidate_steps = []
+    for item in fields(state):
+        base = np.asarray(getattr(state, item.name))
+        vector = np.asarray(getattr(direction, item.name))
+        magnitude = float(np.max(np.abs(vector)))
+        if magnitude > 0.0:
+            candidate_steps.append(
+                relative_step*max(float(np.max(np.abs(base))), 1.0)/magnitude)
+    if not candidate_steps:
+        return _state_map(state, lambda name, value: np.zeros_like(value))
+    step = min(candidate_steps)
+    plus = _state_map(
+        state, lambda name, value: value+step*np.asarray(getattr(direction, name)))
+    minus = _state_map(
+        state, lambda name, value: value-step*np.asarray(getattr(direction, name)))
+    mapped_plus = accepted_euler_step(
+        plus, driving, systems, topologies, parameters, dt_s)[0]
+    mapped_minus = accepted_euler_step(
+        minus, driving, systems, topologies, parameters, dt_s)[0]
+    return _state_map(mapped_plus, lambda name, value: (
+        value-np.asarray(getattr(mapped_minus, name)))/(2.0*step))
+
+
 def active_component_layout(state, parameters):
     """Declared normalized coordinates used by the projected common operator."""
     layout = []
@@ -651,6 +863,7 @@ def active_component_layout(state, parameters):
     for index in np.ndindex(np.asarray(state.junction_m2).shape[2:]):
         layout.append(("junction_m2", index, parameters.rho_reference_m2))
     layout.append(("wall_order", (), 1.0))
+    layout.append(("multi_hit_coordination", (), 1.0))
     for index in np.ndindex((3, 3)):
         layout.append(("beta_p", index, 1.0))
     layout.append(("orientation_rad", (), 1.0))
@@ -713,3 +926,42 @@ def fourier_symbol(state, driving, systems, topologies, parameters,
         "mode_numbers": (mx, my),
         "wavelength_m": (None if wavelength is None else float(wavelength)),
     }
+
+
+def accepted_step_fourier_symbol(
+        state, driving, systems, topologies, parameters, mode_numbers, dt_s,
+        relative_step=1e-6):
+    """Fourier projection of the authoritative accepted-step tangent map."""
+    nx, ny = state.wall_order.shape
+    mx, my = map(int, mode_numbers)
+    x = np.arange(nx)[:, None]/nx; y = np.arange(ny)[None, :]/ny
+    phase = 2*np.pi*(mx*x+my*y)
+    cosine, sine = np.cos(phase), np.sin(phase)
+    norm_cos = float(np.mean(cosine*cosine))
+    norm_sin = float(np.mean(sine*sine))
+    zero_mode = mx == 0 and my == 0
+    layout = active_component_layout(state, parameters)
+    symbol = np.zeros((len(layout), len(layout)), dtype=complex)
+    zero = {name: np.zeros_like(value) for name, value in state.__dict__.items()}
+    for column, (input_name, input_index, input_scale) in enumerate(layout):
+        arrays = {name: value.copy() for name, value in zero.items()}
+        target = arrays[input_name]
+        if input_index:
+            target[(...,)+input_index] = input_scale*cosine
+        else:
+            target[...] = input_scale*cosine
+        response = accepted_step_jacobian_vector_product(
+            state, CommonWallState(**arrays), driving, systems, topologies,
+            parameters, dt_s, relative_step)
+        for row, (output_name, output_index, output_scale) in enumerate(layout):
+            value = _component(getattr(response, output_name), output_index)/output_scale
+            real_part = float(np.mean(value*cosine)/norm_cos)
+            imag_part = (0.0 if zero_mode else
+                         -float(np.mean(value*sine)/norm_sin))
+            symbol[row, column] = real_part+1j*imag_part
+    frequency = np.sqrt((mx/(nx*parameters.spacing_m))**2
+                        +(my/(ny*parameters.spacing_m))**2)
+    return {"matrix": symbol, "singular_values": np.linalg.svd(
+                symbol, compute_uv=False), "layout": layout,
+            "mode_numbers": (mx, my),
+            "wavelength_m": None if frequency == 0.0 else float(1/frequency)}

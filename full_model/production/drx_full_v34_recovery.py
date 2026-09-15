@@ -93,7 +93,7 @@ from common_tensorial_wall import (
     CommonWallDriving, CommonWallParameters, CommonWallState,
     accepted_euler_step as accepted_common_wall_step,
     balance_ledger as common_wall_balance_ledger,
-    resolved_driving_fields as resolve_common_wall_driving,
+    resolved_driving_components as resolve_common_wall_components,
 )
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
@@ -152,6 +152,21 @@ P = dict(
     v21_common_tensorial_wall_enabled=False,
     v21_wall_order_noise_amplitude=0.0,
     v21_wall_order_noise_seed=210021,
+    # V22 selects the polarization-gated thermodynamics and Taylor resistance
+    # in the common operator. The multi-hit coordination law remains opt-in.
+    v22_common_tensorial_wall_enabled=False,
+    v22_wall_gate_form='joint_rational',
+    v22_wall_order_enabled=True,
+    v22_taylor_alpha=0.30,
+    v22_taylor_wall_weight=2.0,
+    v22_taylor_junction_weight=1.0,
+    v22_multi_hit_enabled=False,
+    v22_multi_hit_relaxation_s=1.0e-5,
+    v22_multi_hit_collision_scale=1.0,
+    v22_multi_hit_lock_log_factor=0.0,
+    v22_multi_hit_wall_log_factor=1.0,
+    v22_multi_hit_junction_log_factor=1.0,
+    v22_multi_hit_annihilation_log_factor=-0.5,
 
     # -- Material (BCC iron) --
     b=2.48e-10,
@@ -1069,6 +1084,8 @@ if P.get('v20_tensorial_nye_enabled', False):
     # Burgers family. It remains opt-in so frozen V19/v32 trajectories reduce
     # exactly to their original two-slip representation.
     P['nSlip'] = 4
+if P.get('v22_common_tensorial_wall_enabled', False):
+    P['v21_common_tensorial_wall_enabled'] = True
 if P.get('v21_common_tensorial_wall_enabled', False):
     # Wall qualification is a one-grain tensorial constitutive experiment.
     # Retire every older duplicate wall/transport/orientation source while the
@@ -3710,6 +3727,7 @@ v21_junction_m2 = np.zeros((Nx, Ny, 0))
 v21_channel_exposure = {}
 v21_balance_ledger = {}
 v21_common_parameters = None
+v22_multi_hit_coordination = np.zeros((Nx, Ny))
 if P.get('v21_common_tensorial_wall_enabled', False):
     v21_topologies = tuple(
         make_junction_topology(
@@ -3722,7 +3740,8 @@ if P.get('v21_common_tensorial_wall_enabled', False):
         'lock_plus_turnover', 'lock_minus_turnover',
         'wall_plus_turnover', 'wall_minus_turnover',
         'annihilation_pairs', 'multiplication_pairs',
-        'junction_turnover', 'order')}
+        'junction_turnover', 'order', 'coordination',
+        'collision_frequency_s')}
     v21_balance_ledger = {
         'accepted_steps': 0, 'minimum_accept_scale': 1.0,
         'maximum_relative_burgers_rate_residual': 0.0,
@@ -3743,6 +3762,11 @@ if P.get('v21_common_tensorial_wall_enabled', False):
                 ztmp['v21_channel_exposure_json'].item()))
             v21_balance_ledger = json.loads(str(
                 ztmp['v21_balance_ledger_json'].item()))
+            if P.get('v22_common_tensorial_wall_enabled', False):
+                if 'v22_multi_hit_coordination' not in ztmp.files:
+                    raise ValueError('exact V22 restart requires multi-hit coordination state')
+                v22_multi_hit_coordination = np.asarray(
+                    ztmp['v22_multi_hit_coordination'], dtype=float).copy()
     _rho_reference = float(P.get('_rho_state_total_ref_runtime', np.nanmean(rho)))
     v21_common_parameters = CommonWallParameters(
         spacing_m=dx, burgers_m=P['b'],
@@ -3761,7 +3785,20 @@ if P.get('v21_common_tensorial_wall_enabled', False):
         volumetric_heat_capacity_J_m3_K=P['cp_rho_vol'],
         thermal_diffusivity_m2_s=P['k_thermal']/max(P['cp_rho_vol'], 1.0),
         bath_rate_s=P['T_bath_coupling']/max(P['cp_rho_vol'], 1.0),
-        bath_temperature_K=P['T0'])
+        bath_temperature_K=P['T0'],
+        wall_gate_form=str(P.get('v22_wall_gate_form', 'joint_rational')),
+        wall_order_enabled=bool(P.get('v22_wall_order_enabled', True)),
+        taylor_alpha=float(P.get('v22_taylor_alpha', .30)),
+        taylor_wall_weight=float(P.get('v22_taylor_wall_weight', 2.0)),
+        taylor_junction_weight=float(P.get('v22_taylor_junction_weight', 1.0)),
+        multi_hit_enabled=bool(P.get('v22_multi_hit_enabled', False)),
+        multi_hit_relaxation_s=float(P.get('v22_multi_hit_relaxation_s', 1e-5)),
+        multi_hit_collision_scale=float(P.get('v22_multi_hit_collision_scale', 1.0)),
+        multi_hit_lock_log_factor=float(P.get('v22_multi_hit_lock_log_factor', 0.0)),
+        multi_hit_wall_log_factor=float(P.get('v22_multi_hit_wall_log_factor', 1.0)),
+        multi_hit_junction_log_factor=float(P.get('v22_multi_hit_junction_log_factor', 1.0)),
+        multi_hit_annihilation_log_factor=float(P.get(
+            'v22_multi_hit_annihilation_log_factor', -.5)))
 
 # v9 sparse material state exists only for an actually promoted parent/child
 # pair. Initial orientation labels remain one common deformed material class.
@@ -6303,6 +6340,8 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                 'v20_tensorial_state') is not None else np.zeros((Nx, Ny, nSlip, 3, 3))),
             v21_junction_m2=globals().get(
                 'v21_junction_m2', np.zeros((Nx, Ny, 0))),
+            v22_multi_hit_coordination=globals().get(
+                'v22_multi_hit_coordination', np.zeros((Nx, Ny))),
             v21_channel_exposure_json=np.array(json.dumps(
                 globals().get('v21_channel_exposure', {}), sort_keys=True,
                 separators=(',', ':'))),
@@ -6605,16 +6644,18 @@ for n in range(_restart_step_offset, _restart_end_step):
             rp.copy(), rm.copy(), rho_forest_plus.copy(),
             rho_forest_minus.copy(), rho_wall_plus.copy(),
             rho_wall_minus.copy(), v21_junction_m2.copy(),
-            q_wall_v19.copy(), v20_tensorial_state.slip.copy(),
+            q_wall_v19.copy(), v22_multi_hit_coordination.copy(),
+            v20_tensorial_state.slip.copy(),
             v20_tensorial_state.beta_p.copy(),
             v20_tensorial_state.alignment_m2.copy(),
             v20_tensorial_state.family_nye_m1.copy(),
             psi_lat.copy(), T.copy())
         _v21_driving = CommonWallDriving(
             mean_strain=ebar, fixed_eigenstrain=_v19_fixed_eigenstrain())
-        _v21_speed, _v21_tau = resolve_common_wall_driving(
+        _v21_drive = resolve_common_wall_components(
             _v21_state_before, _v21_driving, V20_SYSTEMS,
-            v21_common_parameters)
+            v21_topologies, v21_common_parameters)
+        _v21_speed = _v21_drive['speed_m_s']
         _v21_requested_dt = float(P['dt'])
         _v21_state_after, _v21_residual, _v21_accept_scale = accepted_common_wall_step(
             _v21_state_before, _v21_driving, V20_SYSTEMS,
@@ -6635,6 +6676,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         rho_wall = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
         q_wall_v19 = _v21_state_after.wall_order.copy()
+        v22_multi_hit_coordination = _v21_state_after.multi_hit_coordination.copy()
         v21_junction_m2 = _v21_state_after.junction_m2.copy()
         v20_tensorial_state = TensorialKinematicState(
             _v21_state_after.slip.copy(), _v21_state_after.beta_p.copy(),
@@ -6649,8 +6691,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         T = _v21_state_after.temperature_K.copy()
         gdot = ((_v21_state_after.slip-_v21_state_before.slip)
                 /max(P['dt'], 1e-300))
-        tau_resolved = _v21_tau.copy()
-        tau_effective = _v21_tau.copy()
+        tau_resolved = _v21_drive['raw_stress_Pa'].copy()
+        tau_effective = _v21_drive['effective_stress_Pa'].copy()
         v21_last_heat_rate = _v21_residual.heat_rate_W_m3.copy()
         _v21_ledger = common_wall_balance_ledger(
             _v21_state_before, _v21_residual, V20_SYSTEMS, v21_topologies)
@@ -6680,7 +6722,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             _v21_accepted_dt*float(_v21_ledger['heat_rate_W_m3']))
         for _channel, _field in _v21_residual.channel_rates_m2_s.items():
             if _channel in v21_channel_exposure:
-                _v21_normalizer = (1.0 if _channel == 'order' else
+                _v21_normalizer = (1.0 if _channel in (
+                    'order', 'coordination', 'collision_frequency_s') else
                     max(v21_common_parameters.rho_reference_m2, P['rho_min']))
                 v21_channel_exposure[_channel] += (
                     _v21_accepted_dt*float(np.mean(np.abs(_field)))

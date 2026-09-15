@@ -1,6 +1,36 @@
 # Campaign status
 
-Updated: 2026-09-14 (America/Los_Angeles)
+Updated: 2026-09-15 (America/Los_Angeles)
+
+## Directive v22 source qualification and long-horizon campaign
+
+- V21 is frozen and narrowed to
+  `V21_CURRENT_OPERATOR_DOMINATED_BY_UNIFORM_ORDERING_AND_HAS_NO_SIGNED_FINITE_MODE`;
+  the intragranular DRX mechanism remains unresolved. Its SIBM result is only
+  `SIBM_NUMERICAL_SIGN_REGRESSION_PASSED`.
+- Wall order is now gated by an objective tensor norm constructed from signed
+  evolved wall populations and rotated Burgers/line directions. Both
+  product-rational and joint-rational forms keep q=0 stable for no wall and a
+  dense sign-balanced tangle; only a polarized wall supplies an ordering
+  source. The joint-rational form is retained.
+- EXP-floor glide now uses smooth family Taylor resistance from forest, wall,
+  and explicit junction content. Zero resistance is an exact regression, zero
+  drive has zero rate, forward/reverse symmetry is preserved, and raw/effective
+  stress powers are nonnegative.
+- The optional bounded multi-hit state is driven only by measured junction
+  turnover and changes competing wall, junction, and annihilation rates. Its
+  disabled state is exact and its evolution does not alter reaction
+  stoichiometry, Burgers closure, or phase labels.
+- Finite-time analysis differentiates the authoritative bounded accepted-step
+  map, not an appended surrogate. Exact V22 continuous-versus-segmented restart
+  is bitwise identical, including coordination. The configured suite passes
+  390 tests. These are source/fixture results; scientific qualification remains
+  false pending the long nonlinear evidence.
+- A fault-isolated HPC3 bundle is prepared for homogeneous, forced-
+  heterogeneous, multi-hit off/on, wall-order-off, recovery-dominant,
+  domain/seed, and 64/128-grid cases. Every case remains one grain, disables
+  creation/relabeling, checkpoints every 250 steps, and targets 2,500 steps
+  (nominally 25% strain; accepted physical horizon will be reported).
 
 ## Directive v19 decision: full mechanics does not form a local LAGB precursor
 

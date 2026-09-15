@@ -98,6 +98,9 @@ def checkpoint(path, modes):
             np.asarray(z["rho_forest_plus"]), np.asarray(z["rho_forest_minus"]),
             np.asarray(z["rho_wall_plus"]), np.asarray(z["rho_wall_minus"]),
             np.asarray(z["v21_junction_m2"]), np.asarray(z["q_wall_v19"]),
+            (np.asarray(z["v22_multi_hit_coordination"])
+             if "v22_multi_hit_coordination" in z else
+             np.zeros_like(np.asarray(z["q_wall_v19"]))),
             np.asarray(z["v20_slip"]), np.asarray(z["v20_beta_p"]),
             np.asarray(z["v20_alignment_m2"]), np.asarray(z["v20_family_nye_m1"]),
             np.asarray(z["psi_lat"]), np.asarray(z["T"]),
