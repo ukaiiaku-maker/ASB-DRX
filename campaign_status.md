@@ -29,8 +29,9 @@ Updated: 2026-09-15 (America/Los_Angeles)
 - A fault-isolated HPC3 bundle is prepared for homogeneous, forced-
   heterogeneous, multi-hit off/on, wall-order-off, recovery-dominant,
   domain/seed, and 64/128-grid cases. Every case remains one grain, disables
-  creation/relabeling, checkpoints every 250 steps, and targets 2,500 steps
-  (nominally 25% strain; accepted physical horizon will be reported).
+  creation/relabeling, checkpoints every 250 steps, and targets 7,000 steps so
+  the adaptively accepted trajectory can reach at least 20% strain; the actual
+  physical horizon and any hard validity stop will be reported.
 
 ## Directive v19 decision: full mechanics does not form a local LAGB precursor
 
