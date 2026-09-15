@@ -1197,3 +1197,50 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   the full dynamic frozen-state pair is requalified with these controls.
 - The canonical suite passes 411 tests. No phase or grain label exists in the
   V23 wall state, and multi-hit remains disabled.
+
+## Directive v24 topological supply, planar SIBM, and ASB persistence (active 2026-09-15)
+
+- V23 evidence is frozen by SHA-256 in
+  `full_model/verification/v24_frozen_v23_evidence.json`. Local qualification
+  now uses connected, two-sided plateau misorientation and fixed-physical-width
+  integrated Nye/Frank--Bilby circuits. Global orientation span and pointwise
+  orientation-gradient targets are diagnostic only.
+- Every signed mobile, forest, tangle, and ordered reservoir now carries a
+  bounded first line-direction moment. Junction products carry their own line
+  moment. Finite-segment reorientation carries persistent turning-node and
+  curvature inventories. Transport/capture, non-reorienting maturity,
+  junction reaction, and kink-pair reorientation have separate scalar,
+  Burgers, tensorial Nye, energy, heat, and topology-source ledgers.
+- Extensive ordering uses the shared EXP-floor plus signed-entropy kernel.
+  The V24 mechanical seam requires the Nye-match coefficient to be exactly
+  zero and accepts no orientation-derived ordering target. It uses the full
+  periodic elastic solve for slip, plastic distortion, orientation, and heat;
+  legacy scalar ordering and unlocalized common-density reaction rates are not
+  accepted.
+- The fixed-domain 16/24/32 local comparison develops global orientation spans
+  of 1.25--1.47 degrees but only 0.91--0.95 degree local plateau jumps.
+  Transport/capture supplies 0.014--0.038 of the required circuit inventory.
+  Explicit kink-pair reorientation supplies 3.05--3.51 times the required
+  magnitude but has a local Frank--Bilby residual above 1.0. No rate was tuned
+  against the postprocessed target. Decision:
+  `KINEMATIC_TRANSITION_BAND_WITH_INSUFFICIENT_BOUNDARY_INVENTORY`; fixture
+  true, scientific gate false, long HPC wall campaign not authorized.
+- The configured suite passes 427 tests. A complete V24 mechanical restart is
+  bitwise identical across the accepted map, phase/grain allocation remains
+  disabled, and multi-hit remains off.
+- Active checksum-bound, non-array HPC3 jobs are: `56040570` (seed-43 128 base
+  matched continuation), `56040575` (seed-43 128 half-step matched
+  continuation), `56040506` (common-state zero-pressure planar SIBM matrix),
+  and `56040576` (seed-43 64 high-cadence matched run). The ASB continuations
+  start from the exact step-2500 adiabatic/isothermal checkpoints preceding the
+  first former qualifying interval. The planar SIBM branches use one
+  equilibrated phase geometry, zero applied pressure, zero seeded curvature,
+  equal/favorable/reversed defect contrast, and mobility-off control.
+- Initial ASB submissions `56040497`, `56040498`, and `56040513` were cancelled
+  after a pre-result audit found that scalar diagnostics were written every 10
+  steps but classifier-required fields remained at cadence 250. Their corrected
+  replacements checkpoint all classifier fields every 25 steps; no result from
+  the superseded jobs is used.
+- Queue audits preserved unrelated jobs `55950433` and `56040470` without
+  modification. Final SIBM and strict-ASB classifications remain pending
+  fetched, checksum-verified HPC output.
