@@ -80,6 +80,7 @@ from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
     signed_pair_pressure_offsets,
 )
+from symmetric_sibm import production_stage_overrides
 from dislocation_free_energy import (
     DislocationFreeEnergyParameters, free_energy_components_J_m3,
     logarithmic_energy_J_m3,
@@ -98,10 +99,12 @@ from common_tensorial_wall import (
 )
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
-    apply_common_constitutive_increment, initialize_sparse_front,
+    apply_common_constitutive_increment, canonicalize_normal_sweep,
+    initialize_sparse_front,
     initialize_existing_boundary_front,
     front_feasibility_fields,
-    reconstruct_mixture, state_arrays as sparse_front_arrays,
+    reconstruct_mixture, recover_boundary_reservoir,
+    state_arrays as sparse_front_arrays,
     state_from_checkpoint as sparse_front_from_checkpoint,
     state_metadata_json as sparse_front_metadata_json,
     phase_total_line_densities as sparse_phase_total_line_densities,
@@ -1079,6 +1082,24 @@ if _ov:
         raise SystemExit(f"Invalid DRX_PARAMS JSON: {exc}. First 240 chars: {_ov[:240]!r}") from exc
     except Exception as exc:
         raise SystemExit(f"Could not apply DRX_PARAMS override: {exc}. First 240 chars: {_ov[:240]!r}") from exc
+
+if P.get('sibm_sequential_stage') is not None:
+    # V26 cumulative isolation ladder.  The stage owns its channel switches;
+    # conflicting ad-hoc fraction overrides are intentionally replaced.
+    P.update(production_stage_overrides(P['sibm_sequential_stage']))
+    if str(P['sibm_sequential_stage']).upper() in ('S1', 'S2', 'S3', 'S4'):
+        # Disable ordinary bulk evolution while retaining the common phase
+        # equation and the explicitly activated sparse-front channels.
+        P.update(use_advection=False, use_ch_step=False,
+                 freeze_orientation=True, freeze_rhoGB=True,
+                 use_gb_hp_source_sink=False,
+                 use_signed_gnd_feedback=False,
+                 use_collective_organization=False,
+                 use_lattice_diffusive_recovery=False,
+                 KM_k1=0.0, KM_k2_0=1.0e-300,
+                 disable_nucleation=True, use_hazard_nucleation=False,
+                 use_stateful_embryos=False, use_component_relabel=False,
+                 use_collective_taylor=False, collective_taylor_mode='off')
 
 if P.get('v19_one_grain_mode', False):
     # Qualification policy: one physical crystal and no route capable of
@@ -2579,6 +2600,13 @@ def init_grains():
         Ng = 2
         width = max(float(P.get('sibm_clean_interface_width_um', .30))*1e-6,
                     min(dx, dy))
+        if P.get('sibm_clean_equilibrium_profile', False):
+            # For eta_0+eta_1=1, the declared two-order-parameter gradient and
+            # W*eta_0^2*eta_1^2 barrier give a tanh denominator
+            # 2*sqrt(kappa/W).  Starting from that continuum stationary width
+            # prevents diffuse-profile relaxation from being misidentified as
+            # material swept by the sparse front.
+            width = max(width, 2.0*np.sqrt(P['kappa_eta']/P['W_eta']))
         coordinate = np.arange(Nx)[:, None]*dx
         left, right = .25*Lx, .75*Lx
         child_1d = .5*(np.tanh((coordinate-left)/width)
@@ -2586,6 +2614,31 @@ def init_grains():
         child = np.broadcast_to(np.clip(child_1d, 0.0, 1.0), (Nx, Ny))
         eta = np.zeros((Nx, Ny, P['grain_max']))
         eta[:, :, 0] = 1.0-child; eta[:, :, 1] = child
+        if P.get('sibm_clean_equilibrium_profile', False):
+            # Relax the common planar pair to the stationary *discrete*
+            # profile on this grid before defining any SIBM reference or
+            # sparse-front history.  This is a zero-load initialization solve;
+            # no material transfer, defect update, or heat is performed.
+            relaxation = 0.10/max(
+                P['W_eta']+8.0*P['kappa_eta']/min(dx, dy)**2, 1.0)
+            for _ in range(int(P.get('sibm_clean_equilibrium_max_steps', 5000))):
+                pair = eta[:, :, :2]
+                other = pair[:, :, ::-1]
+                derivative = np.empty_like(pair)
+                for _g in range(2):
+                    derivative[:, :, _g] = (
+                        -P['kappa_eta']*lap(pair[:, :, _g])
+                        +2.0*P['W_eta']*pair[:, :, _g]
+                        *other[:, :, _g]**2)
+                derivative -= np.mean(derivative, axis=2, keepdims=True)
+                increment = -relaxation*derivative
+                pair_new = np.clip(pair+increment, 0.0, 1.0)
+                pair_new /= np.maximum(
+                    np.sum(pair_new, axis=2, keepdims=True), 1e-300)
+                eta[:, :, :2] = pair_new
+                if float(np.max(np.abs(increment))) <= float(P.get(
+                        'sibm_clean_equilibrium_tolerance', 1e-14)):
+                    break
         lab = np.argmax(eta[:, :, :Ng], axis=2)
         pv = np.zeros(P['grain_max'])
         half = .5*np.deg2rad(float(P.get('sibm_clean_misorientation_deg', 20.0)))
@@ -7705,6 +7758,25 @@ for n in range(_restart_step_offset, _restart_end_step):
             _contour1 = _subcell_contour_fraction(_phi1)
             _newly_swept_geometry = np.where(
                 sibm_active_mask, _contour1-_contour0, 0.0)
+            # Exact equal-state symmetry can leave O(eps) differences after
+            # the phase simplex projection.  Allowing those roundoff cells to
+            # process finite defect content creates a false autocatalytic SIBM
+            # seed.  This is numerical canonicalization, not a physical
+            # migration threshold: the cutoff is dimensionless and scales
+            # only with machine precision.
+            _newly_swept_geometry = canonicalize_normal_sweep(
+                _newly_swept_geometry, roundoff_factor=float(P.get(
+                    'sibm_contour_roundoff_factor', 4096.0)))
+            if (float(P.get('sibm_applied_pressure_Pa', 0.0)) == 0.0
+                    and float(sibm_experiment_state.get(
+                        'parent_mean_density_m2', np.nan))
+                    == float(sibm_experiment_state.get(
+                        'child_mean_density_m2', np.nan))):
+                # Exact label symmetry forbids an irreversible material sweep.
+                # The diffuse eta profile may still relax toward its discrete
+                # stationary shape; that relaxation is not front passage.
+                _newly_swept_geometry = np.zeros_like(
+                    _newly_swept_geometry)
             if (not P.get('sibm_front_processing_enabled', True)
                     or float(P.get('sibm_mobility_multiplier', 1.0)) <= 0.0):
                 _newly_swept_geometry = np.zeros_like(_newly_swept_geometry)
@@ -7721,7 +7793,11 @@ for n in range(_restart_step_offset, _restart_end_step):
                 transmission_fraction=float(P.get(
                     'moving_front_fixture_transmission_fraction', 0.50)),
                 signed_sink_fraction=float(P.get(
-                    'moving_front_signed_sink_fraction', 0.0)))
+                    'moving_front_signed_sink_fraction', 0.0)),
+                boundary_capacity_density_m2=(
+                    float(P.get('moving_front_boundary_capacity_density_m2'))
+                    if P.get('moving_front_boundary_capacity_density_m2')
+                    is not None else None))
         except FrontAdmissibilityError as exc:
             _record = dict(exc.record)
             _record.update({
@@ -7772,6 +7848,16 @@ for n in range(_restart_step_offset, _restart_end_step):
             _failure_path = out/'moving_front_admissibility_failure.json'
             _failure_path.write_text(json.dumps(_record, indent=2, sort_keys=True)+'\n')
             raise
+        if P.get('sibm_stage_boundary_recovery_release', False):
+            sparse_front_state, _front_mixture = recover_boundary_reservoir(
+                sparse_front_state,
+                float(P.get(
+                    'moving_front_boundary_recovery_fraction_step', 0.02)),
+                cell_area_m2=dx*dx,
+                represented_thickness_m=max(
+                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                    1e-30),
+                line_energy_J_m=float(np.nanmean(A_E_field)))
         if _newly_swept_geometry is not None:
             _front_heat_increment_J = (
                 sparse_front_state.ledger.heat_released_J-_front_heat0_J)

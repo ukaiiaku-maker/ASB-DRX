@@ -2,6 +2,27 @@
 
 Updated: 2026-09-15 (America/Los_Angeles)
 
+## Directive v26 local qualification and HPC continuation
+
+- V25 evidence is frozen at `9acb5f9`. Strict reaction events now close
+  `Delta alpha_rho + Curl(Delta beta_p) - Delta alpha_source` explicitly;
+  unowned V24 reorientation remains disabled. The algebraic transport columns
+  span the frozen deficits, but current donor capacity cannot be qualified from
+  compact V24 records, so no wall HPC run is authorized.
+- The full driver now has cumulative S0--S5 SIBM channel isolation. An S2
+  equal-state numerical ratchet was traced to diffuse-profile equilibration
+  being counted as sweep and repaired at the common-state handoff. S1--S5 now
+  pass equal/favorable/reversed/mobility-off/label-swap controls with maximum
+  line closure `2.37e-20 m`. Classification:
+  `LOCAL_SEQUENTIAL_SIBM_CHANNELS_QUALIFIED_HPC_PENDING`.
+- A manufactured heat-kernel audit rejects 64-square ASB as underresolved
+  (7.84% second-moment and 11.94% physical-peak discrepancies). The valid
+  spatial sequence is 96/128/192 plus a homogeneous 128 control. Physical ASB
+  convergence and the rate bracket remain unauthorized pending HPC evidence.
+- Prepared long jobs are fault-isolated: one 64/128 S5 SIBM matrix and one
+  96/128/192 ASB first-law/resolution matrix. The unrelated live Slurm job
+  `55950433` remains untouched.
+
 ## Directive v22 source qualification and long-horizon campaign
 
 - V21 is frozen and narrowed to

@@ -5,6 +5,86 @@ from __future__ import annotations
 import numpy as np
 
 
+def manufactured_periodic_kernel(n, length_m, sigma_m, *, source_fraction=(.5, .5),
+                                 minimum_sigma_pixels=0.0):
+    """Return a cell-integrated, periodic Gaussian deposition kernel.
+
+    The array sums to one, so multiplying it by an energy increment deposits
+    exactly that energy.  Coordinates use minimum-image distances from a
+    source at the same physical fractional location on every grid.
+    """
+    n = int(n); length_m = float(length_m); sigma_m = float(sigma_m)
+    if n < 4 or length_m <= 0.0 or sigma_m < 0.0:
+        raise ValueError("kernel grid, length, and width are invalid")
+    dx = length_m/n
+    sigma_eff = max(sigma_m, float(minimum_sigma_pixels)*dx)
+    if sigma_eff <= 0.0:
+        raise ValueError("effective kernel width must be positive")
+    sx, sy = (float(source_fraction[0])*length_m,
+              float(source_fraction[1])*length_m)
+    x = (np.arange(n)+.5)*dx
+    rx = (x-sx+.5*length_m) % length_m-.5*length_m
+    ry = (x-sy+.5*length_m) % length_m-.5*length_m
+    radius2 = rx[:, None]**2+ry[None, :]**2
+    kernel = np.exp(-.5*radius2/sigma_eff**2)
+    kernel /= np.sum(kernel, dtype=np.longdouble)
+    return kernel, rx[:, None], ry[None, :], sigma_eff
+
+
+def kernel_moment_audit(kernel, rx_m, ry_m, cell_size_m):
+    """Measure normalization, centroid, covariance, peak, and transfer data."""
+    kernel = np.asarray(kernel, float)
+    rx = np.broadcast_to(np.asarray(rx_m, float), kernel.shape)
+    ry = np.broadcast_to(np.asarray(ry_m, float), kernel.shape)
+    if kernel.shape != rx.shape or kernel.shape != ry.shape:
+        raise ValueError("kernel coordinates must be grid matched")
+    mass = float(np.sum(kernel, dtype=np.longdouble))
+    cx = float(np.sum(kernel*rx, dtype=np.longdouble))/mass
+    cy = float(np.sum(kernel*ry, dtype=np.longdouble))/mass
+    second = float(np.sum(kernel*((rx-cx)**2+(ry-cy)**2),
+                          dtype=np.longdouble))/mass
+    transfer = np.abs(np.fft.rfft2(kernel))
+    transfer /= max(float(transfer[0, 0]), 1e-300)
+    return {
+        "normalization": mass,
+        "centroid_m": [cx, cy],
+        "radial_second_moment_m2": second,
+        "peak_cell_fraction": float(np.max(kernel)),
+        "cell_size_m": float(cell_size_m),
+        "fourier_axis_transfer": transfer[:, 0].tolist(),
+    }
+
+
+def compare_kernel_audits(coarse, fine, *, moment_tolerance=.05,
+                          peak_tolerance=.10, transfer_tolerance=.10):
+    """Compare physical moments and common Fourier modes across two grids."""
+    cn = np.asarray(coarse["fourier_axis_transfer"], float)
+    fn = np.asarray(fine["fourier_axis_transfer"], float)
+    # The first axis is a full FFT axis.  Compare only its nonnegative branch;
+    # indices beyond the coarse Nyquist represent wrapped negative modes and
+    # do not correspond to the same signed wavenumber on unequal grids.
+    common = min(cn.size, fn.size)//2+1
+    # Same physical domain gives the same mode wavenumbers for equal indices.
+    transfer_error = float(np.max(np.abs(cn[:common]-fn[:common])))
+    moment_error = relative_difference(
+        coarse["radial_second_moment_m2"],
+        fine["radial_second_moment_m2"])
+    peak_error = relative_difference(
+        coarse["peak_cell_fraction"]/(coarse["cell_size_m"]**2),
+        fine["peak_cell_fraction"]/(fine["cell_size_m"]**2))
+    passed = (abs(coarse["normalization"]-1.0) <= 1e-12
+              and abs(fine["normalization"]-1.0) <= 1e-12
+              and moment_error <= moment_tolerance
+              and peak_error <= peak_tolerance
+              and transfer_error <= transfer_tolerance)
+    return {
+        "second_moment_relative_difference": moment_error,
+        "physical_peak_relative_difference": peak_error,
+        "common_mode_max_transfer_difference": transfer_error,
+        "passed": bool(passed),
+    }
+
+
 def physical_scales(parameters):
     p = dict(parameters)
     n = int(p["Nx"]); length = float(p["L_phys"]); dx = length/n
@@ -119,4 +199,40 @@ def integrate_work_heat(history, edot_app_s, cp_J_m3_K, t0_K,
         "stored_thermal_energy_change_J_m3": float(
             cp_J_m3_K*(temperature[-1]-temperature[0])),
         "final_temperature_excess_from_T0_K": float(temperature[-1]-t0_K),
+    }
+
+
+def first_law_budget(*, external_work_J_m3, elastic_change_J_m3,
+                     plastic_work_J_m3, defect_free_energy_change_J_m3,
+                     taylor_quinney_heat_J_m3, conducted_out_J_m3,
+                     thermal_energy_change_J_m3, other_dissipation_J_m3=0.0):
+    """Return an explicit mechanical/thermal ledger without hiding residuals.
+
+    Plastic work is reported as a diagnostic intermediate.  It is partitioned
+    into defect storage, Taylor--Quinney heat, and other dissipation; the final
+    system first law then accounts for elastic/defect/thermal storage and heat
+    conducted out.
+    """
+    values = {name: float(value) for name, value in locals().items()}
+    if not all(np.isfinite(value) for value in values.values()):
+        raise ValueError("first-law terms must be finite")
+    plastic_partition_residual = (
+        values["plastic_work_J_m3"]
+        -values["defect_free_energy_change_J_m3"]
+        -values["taylor_quinney_heat_J_m3"]
+        -values["other_dissipation_J_m3"])
+    system_residual = (
+        values["external_work_J_m3"]
+        -values["elastic_change_J_m3"]
+        -values["defect_free_energy_change_J_m3"]
+        -values["thermal_energy_change_J_m3"]
+        -values["conducted_out_J_m3"]
+        -values["other_dissipation_J_m3"])
+    scale = max(*(abs(x) for x in values.values()), 1e-300)
+    return {
+        **values,
+        "plastic_partition_residual_J_m3": plastic_partition_residual,
+        "system_residual_J_m3": system_residual,
+        "plastic_partition_relative_residual": abs(plastic_partition_residual)/scale,
+        "system_relative_residual": abs(system_residual)/scale,
     }

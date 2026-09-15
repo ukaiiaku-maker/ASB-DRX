@@ -11,35 +11,92 @@ from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 
-from .stored_energy_coupling import common_variational_stored_energy
+try:
+    from .stored_energy_coupling import common_variational_stored_energy
+except ImportError:  # pragma: no cover - direct production-script execution
+    from stored_energy_coupling import common_variational_stored_energy
 
 
 @dataclass(frozen=True)
 class DriverActivation:
+    name: str = "S0"
     phase: bool = True
     conservative_transfer: bool = False
     boundary_storage: bool = False
-    recovery_and_heat: bool = False
+    neutral_cleanup_and_heat: bool = False
+    boundary_recovery_and_release: bool = False
     constitutive_and_rehardening: bool = False
 
     @property
     def all_defects_frozen(self):
         return not any((self.conservative_transfer, self.boundary_storage,
-                        self.recovery_and_heat,
+                        self.neutral_cleanup_and_heat,
+                        self.boundary_recovery_and_release,
                         self.constitutive_and_rehardening))
+
+    @property
+    def recovery_and_heat(self):
+        """Compatibility alias for the pre-V26 combined activation."""
+        return self.neutral_cleanup_and_heat
 
 
 def sequential_activations():
     return (
-        DriverActivation(),
-        DriverActivation(conservative_transfer=True),
-        DriverActivation(conservative_transfer=True, boundary_storage=True),
-        DriverActivation(conservative_transfer=True, boundary_storage=True,
-                         recovery_and_heat=True),
-        DriverActivation(conservative_transfer=True, boundary_storage=True,
-                         recovery_and_heat=True,
+        DriverActivation(name="S0"),
+        DriverActivation(name="S1", conservative_transfer=True),
+        DriverActivation(name="S2", conservative_transfer=True,
+                         boundary_storage=True),
+        DriverActivation(name="S3", conservative_transfer=True,
+                         boundary_storage=True,
+                         neutral_cleanup_and_heat=True),
+        DriverActivation(name="S4", conservative_transfer=True,
+                         boundary_storage=True,
+                         neutral_cleanup_and_heat=True,
+                         boundary_recovery_and_release=True),
+        DriverActivation(name="S5", conservative_transfer=True,
+                         boundary_storage=True,
+                         neutral_cleanup_and_heat=True,
+                         boundary_recovery_and_release=True,
                          constitutive_and_rehardening=True),
     )
+
+
+def production_stage_overrides(stage):
+    """Return explicit full-driver switches for a cumulative V26 SIBM stage."""
+    name = str(stage).upper()
+    stages = {item.name: item for item in sequential_activations()}
+    if name not in stages:
+        raise ValueError("SIBM stage must be one of S0, S1, S2, S3, S4, S5")
+    active = stages[name]
+    result = {
+        "sibm_sequential_stage": name,
+        "sibm_clean_equilibrium_profile": True,
+        "sibm_all_defects_frozen": name == "S0",
+        "sibm_front_processing_enabled": name != "S0",
+        "sibm_stage_conservative_transfer": active.conservative_transfer,
+        "sibm_stage_boundary_storage": active.boundary_storage,
+        "sibm_stage_neutral_cleanup_heat": active.neutral_cleanup_and_heat,
+        "sibm_stage_boundary_recovery_release":
+            active.boundary_recovery_and_release,
+        "sibm_stage_constitutive_rehardening":
+            active.constitutive_and_rehardening,
+    }
+    if active.boundary_recovery_and_release:
+        result["moving_front_boundary_recovery_fraction_step"] = 0.02
+    if name == "S1":
+        result.update(moving_front_fixture_transmission_fraction=1.0,
+                      moving_front_boundary_storage_fraction=0.0,
+                      moving_front_sink_fraction=0.0)
+    elif name == "S2":
+        result.update(moving_front_fixture_transmission_fraction=0.5,
+                      moving_front_boundary_storage_fraction=1.0,
+                      moving_front_sink_fraction=0.0,
+                      moving_front_boundary_capacity_density_m2=5e17)
+    elif name in ("S3", "S4"):
+        result.update(moving_front_fixture_transmission_fraction=0.5,
+                      moving_front_boundary_storage_fraction=0.20,
+                      moving_front_sink_fraction=0.10)
+    return result
 
 
 def clean_periodic_bicrystal(n=256, length_m=10e-6, interface_width_m=.3e-6):

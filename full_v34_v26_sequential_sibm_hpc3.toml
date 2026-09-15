@@ -1,0 +1,44 @@
+name = "full-v34-v26-sequential-sibm"
+entrypoint = ["bash", "../hpc3/run_v26_sequential_sibm.sh"]
+working_directory = "full_model/production"
+modules = ["anaconda/2025.12"]
+environment = { OMP_NUM_THREADS = "1" }
+input_paths = [
+  "full_model/analysis/run_v26_sequential_sibm.py",
+  "full_model/production/arrhenius_kinetics.py", "full_model/production/asb_classifier.py",
+  "full_model/production/common_tensorial_wall.py", "full_model/production/compatibility_energy.py",
+  "full_model/production/dislocation_free_energy.py", "full_model/production/drx_full_v34_recovery.py",
+  "full_model/production/embryo_coupling.py", "full_model/production/hazard_measure.py",
+  "full_model/production/intragranular_promotion.py", "full_model/production/intragranular_subgrain.py",
+  "full_model/production/moving_front.py", "full_model/production/nonlocal_elasticity.py",
+  "full_model/production/phase_promotion.py", "full_model/production/physical_grains.py",
+  "full_model/production/predictive_signed_wall.py", "full_model/production/sibm_boundary.py",
+  "full_model/production/sibm_contour.py", "full_model/production/sibm_geometry.py",
+  "full_model/production/stateful_embryos.py", "full_model/production/stored_energy_coupling.py",
+  "full_model/production/symmetric_sibm.py", "full_model/production/tensorial_nye.py",
+  "full_model/production/wall_ordering_energy.py",
+  "full_model/hpc3/run_v26_sequential_sibm.sh",
+]
+output_paths = ["output/v26-sequential-sibm"]
+result_mode = "archive"
+scratch_mode = "none"
+input_mode = "archive"
+remote_inputs = {}
+checkpoint_command = []
+contains_sensitive_data = false
+[resources]
+account = "SDILLON1"
+partition = "free"
+time = "08:00:00"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "8G"
+temporary_space = ""
+constraint = ""
+gres = ""
+qos = "low"
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

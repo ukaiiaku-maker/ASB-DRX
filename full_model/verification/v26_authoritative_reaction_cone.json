@@ -1,0 +1,1114 @@
+{
+  "all_admissible_columns_close_event_identity": true,
+  "alpha_convention": "alpha_beta=-Curl(beta_p)",
+  "candidate_audits": [
+    {
+      "cone": {
+        "absolute_residual": 5.717017518206692e-12,
+        "classification": "FB_TARGET_REACHABLE_BUT_KINETICALLY_UNEXPOSED",
+        "event_extents_m1": [
+          11270532.054538403,
+          0.0,
+          44378422.7524092,
+          0.0,
+          47213027.13374992,
+          0.0,
+          10446684.500574866,
+          0.0,
+          71630719.27860656,
+          0.0,
+          11054871.188753365,
+          0.0,
+          7975843.309490292,
+          0.0,
+          87137756.81553736,
+          0.0
+        ],
+        "event_identity_required": true,
+        "event_names": [
+          "incoming_transport_b0_-1",
+          "disabled_v24_reorientation_b0_-1",
+          "incoming_transport_b0_+1",
+          "disabled_v24_reorientation_b0_+1",
+          "incoming_transport_b1_-1",
+          "disabled_v24_reorientation_b1_-1",
+          "incoming_transport_b1_+1",
+          "disabled_v24_reorientation_b1_+1",
+          "incoming_transport_b2_-1",
+          "disabled_v24_reorientation_b2_-1",
+          "incoming_transport_b2_+1",
+          "disabled_v24_reorientation_b2_+1",
+          "incoming_transport_b3_-1",
+          "disabled_v24_reorientation_b3_-1",
+          "incoming_transport_b3_+1",
+          "disabled_v24_reorientation_b3_+1"
+        ],
+        "event_validation": [
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 1.502411014777324e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.6274545602851337e-11
+              ],
+              [
+                -5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.6274545602851337e-11
+              ],
+              [
+                -5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.6274545602851337e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 1.502411014777324e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.6274545602851337e-11
+              ],
+              [
+                5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.6274545602851337e-11
+              ],
+              [
+                5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.6274545602851337e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 4.726982244802256e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.600911879152031e-10
+              ],
+              [
+                -5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.600911879152031e-10
+              ],
+              [
+                5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.600911879152031e-10
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 4.726982244802256e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.600911879152031e-10
+              ],
+              [
+                5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.600911879152031e-10
+              ],
+              [
+                -5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.600911879152031e-10
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808795e-11,
+                1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                -1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                -1.169083211561759e-10,
+                -8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808795e-11,
+                -1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                1.169083211561759e-10,
+                8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808795e-11,
+                1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                -1.169083211561759e-10,
+                8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808795e-11,
+                -1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                -1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                1.169083211561759e-10,
+                -8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          }
+        ],
+        "inadmissible_events": [
+          "disabled_v24_reorientation_b0_-1",
+          "disabled_v24_reorientation_b0_+1",
+          "disabled_v24_reorientation_b1_-1",
+          "disabled_v24_reorientation_b1_+1",
+          "disabled_v24_reorientation_b2_-1",
+          "disabled_v24_reorientation_b2_+1",
+          "disabled_v24_reorientation_b3_-1",
+          "disabled_v24_reorientation_b3_+1"
+        ],
+        "kinetically_exposed_fraction": 0.10051408666175696,
+        "optimizer_is_diagnostic_only": true,
+        "reachable": true,
+        "relative_residual": 3.496559589487317e-10,
+        "relative_tolerance": 0.05,
+        "required_total_extent_m1": 291107857.03365993,
+        "target_norm": 0.01635040779912734
+      },
+      "estimated_unit_supply_time_s": 1.888422010323735e-05,
+      "target": [
+        0.016337132869999344,
+        0.0006587293785660603,
+        6.257516156072912e-07
+      ],
+      "topology_route_enabled": false
+    },
+    {
+      "cone": {
+        "absolute_residual": 2.510641043789992e-10,
+        "classification": "FB_TARGET_REACHABLE_BUT_KINETICALLY_UNEXPOSED",
+        "event_extents_m1": [
+          10366117.848700283,
+          0.0,
+          35912927.37894535,
+          0.0,
+          54871277.777955554,
+          0.0,
+          10379133.163085692,
+          0.0,
+          3515664.243985223,
+          0.0,
+          98363504.13785249,
+          0.0,
+          81374642.5753415,
+          0.0,
+          6456518.608197624,
+          0.0
+        ],
+        "event_identity_required": true,
+        "event_names": [
+          "incoming_transport_b0_-1",
+          "disabled_v24_reorientation_b0_-1",
+          "incoming_transport_b0_+1",
+          "disabled_v24_reorientation_b0_+1",
+          "incoming_transport_b1_-1",
+          "disabled_v24_reorientation_b1_-1",
+          "incoming_transport_b1_+1",
+          "disabled_v24_reorientation_b1_+1",
+          "incoming_transport_b2_-1",
+          "disabled_v24_reorientation_b2_-1",
+          "incoming_transport_b2_+1",
+          "disabled_v24_reorientation_b2_+1",
+          "incoming_transport_b3_-1",
+          "disabled_v24_reorientation_b3_-1",
+          "incoming_transport_b3_+1",
+          "disabled_v24_reorientation_b3_+1"
+        ],
+        "event_validation": [
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 1.502411014777324e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.6274545602851337e-11
+              ],
+              [
+                -5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.6274545602851337e-11
+              ],
+              [
+                -5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.6274545602851337e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 1.502411014777324e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.6274545602851337e-11
+              ],
+              [
+                5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.6274545602851337e-11
+              ],
+              [
+                5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.6274545602851337e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 4.726982244802256e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.600911879152031e-10
+              ],
+              [
+                -5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.600911879152031e-10
+              ],
+              [
+                5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.600911879152031e-10
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 4.726982244802256e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.600911879152031e-10
+              ],
+              [
+                5.845416057808794e-11,
+                -5.845416057808794e-11,
+                -2.600911879152031e-10
+              ],
+              [
+                -5.845416057808794e-11,
+                5.845416057808794e-11,
+                2.600911879152031e-10
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808795e-11,
+                1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                -1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                -1.169083211561759e-10,
+                -8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808795e-11,
+                -1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                1.169083211561759e-10,
+                8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                -5.845416057808795e-11,
+                1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                1.169083211561759e-10,
+                -8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                -1.169083211561759e-10,
+                8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": true,
+            "authoritative_nye_ownership_valid": true,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "transport",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 0.0,
+            "nye_identity_relative_residual": 0.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "plastic_distortion_curl_declared": true
+          },
+          {
+            "authoritative_event_identity_required": true,
+            "authoritative_event_identity_valid": false,
+            "authoritative_nye_ownership_valid": false,
+            "declared_source_or_sink_tensor": false,
+            "event_class": "local_junction_conversion",
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false,
+            "nye_identity_absolute_residual_m": 2.697965794568589e-10,
+            "nye_identity_relative_residual": 1.0,
+            "nye_identity_residual_tensor_m": [
+              [
+                5.845416057808795e-11,
+                -1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                5.845416057808795e-11,
+                -1.169083211561759e-10,
+                8.472870618093926e-11
+              ],
+              [
+                -5.845416057808795e-11,
+                1.169083211561759e-10,
+                -8.472870618093926e-11
+              ]
+            ],
+            "plastic_distortion_curl_declared": false
+          }
+        ],
+        "inadmissible_events": [
+          "disabled_v24_reorientation_b0_-1",
+          "disabled_v24_reorientation_b0_+1",
+          "disabled_v24_reorientation_b1_-1",
+          "disabled_v24_reorientation_b1_+1",
+          "disabled_v24_reorientation_b2_-1",
+          "disabled_v24_reorientation_b2_+1",
+          "disabled_v24_reorientation_b3_-1",
+          "disabled_v24_reorientation_b3_+1"
+        ],
+        "kinetically_exposed_fraction": 0.09713338594534435,
+        "optimizer_is_diagnostic_only": true,
+        "reachable": true,
+        "relative_residual": 1.3775899664952903e-08,
+        "relative_tolerance": 0.05,
+        "required_total_extent_m1": 301239785.73406374,
+        "target_norm": 0.01822487899049732
+      },
+      "estimated_unit_supply_time_s": 1.888422010323735e-05,
+      "target": [
+        -0.0017353905451147796,
+        -0.0010498925034283146,
+        0.018111663634394325
+      ],
+      "topology_route_enabled": true
+    }
+  ],
+  "capacity_limitation": "V24 terminal candidate records do not retain signed donor fields; the audited bound is the frozen initial circuit-window inventory",
+  "classification": "AUTHORITATIVE_EVENT_COLUMNS_REPAIRED_CURRENT_CAPACITY_PENDING",
+  "current_capacity_qualified": false,
+  "event_residual": "Delta alpha_rho + Curl Delta beta_p - Delta alpha_source",
+  "fixture_passed": true,
+  "inadmissible_v24_reorientation_disabled": true,
+  "long_wall_hpc_authorized": false,
+  "schema": "asb-drx/v26-authoritative-reaction-cone/v1",
+  "scientific_gate_passed": false,
+  "strict_event_identity": true
+}

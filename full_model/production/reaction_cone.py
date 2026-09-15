@@ -30,16 +30,31 @@ class ReactionEvent:
     explicit_source_or_sink: bool = False
     frank_rule_residual_m: float = 0.0
     line_node_residual: float = 0.0
+    plastic_distortion_curl_increment_per_extent_m: np.ndarray | None = None
+    declared_nye_source_increment_per_extent_m: np.ndarray | None = None
+    event_class: str = "local_junction_conversion"
 
-    def validate(self, tolerance=1e-12):
+    def validate(self, tolerance=1e-12, *, require_event_identity=False):
         vector = np.asarray(self.circuit_increment_per_extent_m, dtype=float)
         burgers = np.asarray(self.burgers_increment_per_extent_m, dtype=float)
         nye = np.asarray(self.nye_increment_per_extent_m, dtype=float)
         alignment = np.asarray(self.alignment_increment_per_extent, dtype=float)
+        curl_beta = (np.zeros((3, 3)) if
+                     self.plastic_distortion_curl_increment_per_extent_m is None
+                     else np.asarray(
+                         self.plastic_distortion_curl_increment_per_extent_m,
+                         dtype=float))
+        source = (np.zeros((3, 3)) if
+                  self.declared_nye_source_increment_per_extent_m is None
+                  else np.asarray(
+                      self.declared_nye_source_increment_per_extent_m,
+                      dtype=float))
         if vector.shape != (3,) or burgers.shape != (3,) or nye.shape != (3, 3):
             raise ValueError("reaction event requires 3-vector circuit/Burgers and 3x3 Nye")
-        if alignment.shape != (3,) or any(np.any(~np.isfinite(x)) for x in
-                                          (vector, burgers, nye, alignment)):
+        if (alignment.shape != (3,) or curl_beta.shape != (3, 3)
+                or source.shape != (3, 3)
+                or any(np.any(~np.isfinite(x)) for x in
+                       (vector, burgers, nye, alignment, curl_beta, source))):
             raise ValueError("reaction event increments must be finite")
         scalars = (self.line_increment_per_extent,
                    self.turning_node_increment_per_extent_m1,
@@ -51,13 +66,38 @@ class ReactionEvent:
                 or self.kinetic_exposure_extent_m1 < 0.0:
             raise ValueError("reaction event capacities and ledgers must be finite/nonnegative")
         local_nye_change = float(np.linalg.norm(nye))
-        scale = max(float(np.linalg.norm(vector)), 1e-300)
+        scale = max(float(np.linalg.norm(vector)), local_nye_change,
+                    float(np.linalg.norm(curl_beta)),
+                    float(np.linalg.norm(source)), 1e-300)
         conservative = local_nye_change <= tolerance*scale
-        ownership_valid = (conservative or self.swept_area_declared
-                           or self.explicit_source_or_sink)
+        residual_tensor = nye+curl_beta-source
+        residual = float(np.linalg.norm(residual_tensor))
+        identity_valid = residual <= tolerance*scale
+        increments_declared = (
+            self.plastic_distortion_curl_increment_per_extent_m is not None
+            or self.declared_nye_source_increment_per_extent_m is not None
+            or conservative)
+        ownership_valid = identity_valid and increments_declared
+        # V25 used ownership flags without carrying the corresponding tensor.
+        # Preserve that route only when explicitly not requesting the V26 hard
+        # invariant, so archived diagnostics remain reproducible.
+        legacy_ownership_valid = (conservative or self.swept_area_declared
+                                  or self.explicit_source_or_sink)
+        if not require_event_identity:
+            ownership_valid = legacy_ownership_valid
         return {
             "local_total_nye_conservative": bool(conservative),
             "authoritative_nye_ownership_valid": bool(ownership_valid),
+            "authoritative_event_identity_valid": bool(identity_valid),
+            "authoritative_event_identity_required": bool(require_event_identity),
+            "nye_identity_absolute_residual_m": residual,
+            "nye_identity_relative_residual": residual/scale,
+            "nye_identity_residual_tensor_m": residual_tensor.tolist(),
+            "plastic_distortion_curl_declared": bool(
+                self.plastic_distortion_curl_increment_per_extent_m is not None),
+            "declared_source_or_sink_tensor": bool(
+                self.declared_nye_source_increment_per_extent_m is not None),
+            "event_class": str(self.event_class),
             "frank_rule_valid": bool(abs(self.frank_rule_residual_m)
                                       <= tolerance*scale),
             "line_node_valid": bool(abs(self.line_node_residual)
@@ -66,12 +106,15 @@ class ReactionEvent:
 
 
 def audit_reaction_cone(events, missing_circuit_inventory, *,
-                        relative_tolerance=0.05, ownership_tolerance=1e-12):
+                        relative_tolerance=0.05, ownership_tolerance=1e-12,
+                        require_event_identity=False):
     """Solve the bounded diagnostic cone and return a machine-readable audit."""
     target = np.asarray(missing_circuit_inventory, dtype=float)
     if target.shape != (3,) or np.any(~np.isfinite(target)):
         raise ValueError("missing Frank--Bilby inventory must be a finite 3-vector")
-    validations = [event.validate(ownership_tolerance) for event in events]
+    validations = [event.validate(
+        ownership_tolerance, require_event_identity=require_event_identity)
+        for event in events]
     admissible_indices = [i for i, valid in enumerate(validations)
                           if valid["authoritative_nye_ownership_valid"]
                           and valid["frank_rule_valid"]
@@ -104,11 +147,15 @@ def audit_reaction_cone(events, missing_circuit_inventory, *,
     required = float(np.sum(solution))
     exposed_fraction = exposure/max(required, 1e-300)
     if not reachable:
-        classification = "FB_TARGET_OUTSIDE_PHYSICAL_REACTION_CONE"
+        classification = ("FB_TARGET_OUTSIDE_AUTHORITATIVE_REACTION_CONE"
+                          if require_event_identity else
+                          "FB_TARGET_OUTSIDE_PHYSICAL_REACTION_CONE")
     elif exposed_fraction < 1.0-relative_tolerance:
         classification = "FB_TARGET_REACHABLE_BUT_KINETICALLY_UNEXPOSED"
     else:
-        classification = "FB_TARGET_REACHABLE_WITH_SUFFICIENT_LOCAL_CAPACITY"
+        classification = ("FB_TARGET_REACHABLE_WITH_CURRENT_CAPACITY"
+                          if require_event_identity else
+                          "FB_TARGET_REACHABLE_WITH_SUFFICIENT_LOCAL_CAPACITY")
     return {
         "classification": classification,
         "target_norm": target_norm,
@@ -124,6 +171,7 @@ def audit_reaction_cone(events, missing_circuit_inventory, *,
         "inadmissible_events": [events[i].name for i in range(len(events))
                                 if i not in admissible_indices],
         "optimizer_is_diagnostic_only": True,
+        "event_identity_required": bool(require_event_identity),
     }
 
 
@@ -149,3 +197,23 @@ def circuit_event_from_line_change(name, burgers_m, line_before, line_after,
         free_energy_increment_per_extent_J_m=float(kwargs.pop(
             "free_energy_increment_per_extent_J_m", 0.0)),
         capacity_extent_m1=float(capacity_extent_m1), **kwargs)
+
+
+def swept_line_event(name, burgers_m, line_before, line_after, circuit_line,
+                     capacity_extent_m1, **kwargs):
+    """Construct a reorientation with an explicit swept-area kinematic owner.
+
+    Under ``alpha = -Curl(beta_p)``, the plastic-distortion curl increment is
+    exactly the negative of the reservoir Nye increment.  Supplying this
+    tensor, rather than an ownership flag, makes the event independently
+    auditable by :func:`audit_reaction_cone`.
+    """
+    event = circuit_event_from_line_change(
+        name, burgers_m, line_before, line_after, circuit_line,
+        capacity_extent_m1, swept_area_declared=True, **kwargs)
+    return ReactionEvent(**{
+        **event.__dict__,
+        "plastic_distortion_curl_increment_per_extent_m":
+            -np.asarray(event.nye_increment_per_extent_m, dtype=float),
+        "event_class": "node_motion_or_swept_area",
+    })

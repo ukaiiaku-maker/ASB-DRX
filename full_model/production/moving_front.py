@@ -43,6 +43,9 @@ class FrontLedger:
     swept_volume_m3: float = 0.0
     requested_swept_volume_m3: float = 0.0
     capacity_limited_volume_m3: float = 0.0
+    boundary_line_recovered_m: float = 0.0
+    boundary_signed_released_m: float = 0.0
+    boundary_neutral_recovered_m: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -107,6 +110,29 @@ class FrontAdmissibilityError(RuntimeError):
     def __init__(self, message, record):
         super().__init__(message)
         self.record = record
+
+
+def canonicalize_normal_sweep(increment, *, roundoff_factor=4096.0):
+    """Remove only floating-point contour noise from a normal-sweep field."""
+    value = np.asarray(increment, dtype=float)
+    factor = float(roundoff_factor)
+    if not np.all(np.isfinite(value)) or not math.isfinite(factor) or factor < 0.0:
+        raise ValueError("normal sweep and roundoff factor must be finite")
+    tolerance = factor*np.finfo(float).eps
+    return np.where(np.abs(value) <= tolerance, 0.0, value)
+
+
+def complete_front_state_is_exactly_equal(state):
+    """True only for the label-symmetric, reservoir-free complete state."""
+    reservoirs = ("rp", "rm", "forest", "wall")
+    return bool(
+        all(np.array_equal(getattr(state.parent, name),
+                           getattr(state.child, name))
+            and np.array_equal(getattr(state.parent, name),
+                               getattr(state.recovered_wake, name))
+            for name in reservoirs)
+        and not np.any(state.boundary_line_density_m2)
+        and not np.any(state.boundary_signed_density_m2))
 
 
 def _validate_defect(state):
@@ -821,6 +847,67 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
         old.requested_swept_volume_m3+requested_volume,
         old.capacity_limited_volume_m3+(requested_volume-swept_volume))
     return replace(candidate, ledger=ledger), mixture
+
+
+def recover_boundary_reservoir(state, recovery_fraction, *, cell_area_m2,
+                               represented_thickness_m, line_energy_J_m):
+    """Recover boundary excess while conserving signed Burgers content.
+
+    Signed excess is released into the active child mobile populations;
+    neutral excess annihilates and its exact line energy is deposited as heat.
+    Intrinsic HAGB content is absent from this excess-only reservoir.
+    """
+    fraction = float(recovery_fraction)
+    if not math.isfinite(fraction) or fraction < 0.0 or fraction > 1.0:
+        raise ValueError("boundary recovery fraction must lie in [0,1]")
+    for value, name in ((cell_area_m2, "cell area"),
+                        (represented_thickness_m, "thickness"),
+                        (line_energy_J_m, "line energy")):
+        if not math.isfinite(float(value)) or float(value) < 0.0:
+            raise ValueError(f"{name} must be finite and nonnegative")
+    if fraction == 0.0 or not np.any(state.boundary_line_density_m2):
+        return state, reconstruct_mixture(state)
+    released_signed = fraction*state.boundary_signed_density_m2
+    released_signed_line = np.sum(np.abs(released_signed), axis=2)
+    released_total = fraction*state.boundary_line_density_m2
+    released_neutral = np.maximum(released_total-released_signed_line, 0.0)
+    support = state.chi[:, :, None]
+    plus = np.maximum(released_signed, 0.0)
+    minus = np.maximum(-released_signed, 0.0)
+    child = DefectState(
+        state.child.rp+np.divide(
+            plus, support, out=np.zeros_like(plus), where=support > 0.0),
+        state.child.rm+np.divide(
+            minus, support, out=np.zeros_like(minus), where=support > 0.0),
+        state.child.forest.copy(), state.child.wall.copy())
+    if np.any((released_signed_line > 0.0) & (state.chi <= 0.0)):
+        raise RuntimeError("signed boundary content has no child support for release")
+    volume = float(cell_area_m2)*float(represented_thickness_m)
+    total_m = float(np.sum(released_total, dtype=np.longdouble)*volume)
+    signed_m = float(np.sum(released_signed_line, dtype=np.longdouble)*volume)
+    neutral_m = float(np.sum(released_neutral, dtype=np.longdouble)*volume)
+    closure = total_m-signed_m-neutral_m
+    if abs(closure) > 8192.0*math.ulp(max(total_m, 1e-300)):
+        raise RuntimeError("boundary recovery line balance failed")
+    energy = neutral_m*float(line_energy_J_m)
+    old = state.ledger
+    ledger = replace(
+        old,
+        neutral_pair_annihilated_m=old.neutral_pair_annihilated_m+neutral_m,
+        line_closure_m=old.line_closure_m+closure,
+        line_energy_released_J=old.line_energy_released_J+energy,
+        heat_released_J=old.heat_released_J+energy,
+        boundary_line_recovered_m=old.boundary_line_recovered_m+total_m,
+        boundary_signed_released_m=old.boundary_signed_released_m+signed_m,
+        boundary_neutral_recovered_m=old.boundary_neutral_recovered_m+neutral_m)
+    candidate = replace(
+        state, child=child,
+        boundary_line_density_m2=(1.0-fraction)
+        *state.boundary_line_density_m2,
+        boundary_signed_density_m2=(1.0-fraction)
+        *state.boundary_signed_density_m2,
+        ledger=ledger)
+    return candidate, reconstruct_mixture(candidate)
 
 
 def state_metadata_json(state):

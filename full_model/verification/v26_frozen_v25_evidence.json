@@ -1,0 +1,11 @@
+{
+  "checkpoint": "9acb5f9e5f0d1fbe5ebea7a64af687d3ef71158c",
+  "files": {
+    "full_model/docs/v25_decision_report.md": "666654a2a18f435cd46a82cc868857e3e4645ce1b442a5d8c6785fffd3cd8ca2",
+    "full_model/verification/v25_asb_grid_audit.json": "41a0801a9610bf74854028ee7b1e911b5058774a540b4d45d75547836d48a6c2",
+    "full_model/verification/v25_clean_sibm_matrix.json": "367881a9f5558a55ea83a20e06d274e2b08c5cf5d5cc5c87d5ad6ca989079923",
+    "full_model/verification/v25_reaction_cone_local.json": "ecb6f75f8ef5dbfb63e16669deeb1adc41447c9ccf8b2aedfb983d19fd65e68d"
+  },
+  "immutable": true,
+  "schema": "asb-drx/v26-frozen-v25-evidence/v1"
+}

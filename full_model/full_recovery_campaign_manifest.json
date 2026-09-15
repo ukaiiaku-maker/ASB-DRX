@@ -349,6 +349,29 @@
       "fixture_passed": true,
       "scientific_gate_passed": false,
       "classification": "V23_EXTENSIVE_STATE_QUALIFIED_WALL_LINE_SUPPLY_UNRESOLVED"
+    },
+    {
+      "directive": "v26",
+      "restart_checkpoint": "9acb5f9e5f0d1fbe5ebea7a64af687d3ef71158c",
+      "frozen_v25_evidence_path": "full_model/verification/v26_frozen_v25_evidence.json",
+      "wall_result_path": "full_model/verification/v26_authoritative_reaction_cone.json",
+      "wall_classification": "AUTHORITATIVE_EVENT_COLUMNS_REPAIRED_CURRENT_CAPACITY_PENDING",
+      "authoritative_event_identity_passed": true,
+      "authoritative_current_capacity_qualified": false,
+      "wall_hpc_authorized": false,
+      "sibm_first_failure_path": "full_model/verification/v26_smoke_sequential_s2_s5.json",
+      "sibm_local_result_path": "full_model/verification/v26_sequential_sibm_local.json",
+      "sibm_local_classification": "LOCAL_SEQUENTIAL_SIBM_CHANNELS_QUALIFIED_HPC_PENDING",
+      "sibm_local_stages_passed": ["S1", "S2", "S3", "S4", "S5"],
+      "sibm_hpc_authorized": true,
+      "asb_kernel_result_path": "full_model/verification/v26_asb_manufactured_kernel.json",
+      "asb_kernel_classification": "ASB_COARSE_GRID_KERNEL_UNDERRESOLVED",
+      "asb_valid_spatial_sequence": [96, 128, 192],
+      "asb_rate_bracket_authorized": false,
+      "configured_regression_tests_passed": 450,
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "V26_LOCAL_CHANNEL_QUALIFICATION_COMPLETE_HPC_RESOLUTION_PENDING"
     }
   ]
 }
