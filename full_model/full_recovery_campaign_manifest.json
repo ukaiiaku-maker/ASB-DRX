@@ -233,6 +233,45 @@
       "configured_regression_tests_passed": 383,
       "fixture_passed": true,
       "scientific_gate_passed": false
+    },
+    {
+      "qualification_id": "v22-polarization-taylor-multihit-long-wall",
+      "scientific_source_commit": "9805ea2",
+      "source_foundation_commit": "d4dfd75",
+      "execution": "local-invariants-accepted-map-search-and-single-HPC3-long-bundle",
+      "restart_result_path": "full_model/verification/v22_common_restart_qualification.json",
+      "finite_time_search_path": "full_model/verification/v22_finite_time_search.json",
+      "configured_regression_tests_passed": 390,
+      "cancelled_preflight_runs": [
+        {
+          "run_id": "20260915T133632Z-d4dfd75-948ca9",
+          "slurm_job_id": "56037378",
+          "elapsed": "00:00:31",
+          "reason": "ignored Lx/Ly keys discovered before evidence"
+        },
+        {
+          "run_id": "20260915T133735Z-9cc6488-7da5f1",
+          "slurm_job_id": "56037381",
+          "elapsed": "00:01:44",
+          "reason": "legacy density scale caused declared mechanical validity stop"
+        },
+        {
+          "run_id": "20260915T134121Z-9805ea2-407124",
+          "slurm_job_id": "56037461",
+          "elapsed": "00:07:22",
+          "reason": "restart cadence was incorrectly nested under field-save cadence"
+        }
+      ],
+      "active_run_id": null,
+      "active_slurm_job_id": null,
+      "active_cases": 8,
+      "target_steps_per_case": 7000,
+      "target_minimum_strain": 0.20,
+      "checkpoint_interval_steps": 250,
+      "grain_allocation_disabled": true,
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "RESTART_CADENCE_REPAIR_QUALIFIED_RELAUNCH_PENDING"
     }
   ]
 }

@@ -8407,6 +8407,19 @@ for n in range(_restart_step_offset, _restart_end_step):
             if chk is not None:
                 _last_checkpoint_wallclock = _wtime.time()
 
+    # Restart cadence is independent of field/plot cadence. Historically this
+    # block was reachable only through `_save_due`, silently coarsening a
+    # requested restart interval to the field-save interval.
+    _restart_due = (n % max(int(P.get(
+        'restart_interval', P['save_interval'])), 1) == 0
+        or n == _restart_end_step-1)
+    if P.get('write_restart_npz', True) and _restart_due and not _save_due:
+        chk = _save_restart_checkpoint(n)
+        if chk is not None:
+            _last_checkpoint_wallclock = _wtime.time()
+            if P.get('diag_print_extended', True):
+                print(f"        restart checkpoint: {chk}")
+
     _wallclock_checkpoint_interval = float(P.get('restart_wallclock_interval_s', 900.0))
     if (P.get('write_restart_npz', True) and _wallclock_checkpoint_interval > 0.0
             and _wtime.time() - _last_checkpoint_wallclock >= _wallclock_checkpoint_interval):

@@ -83,6 +83,7 @@ def search_case(n, domain_m, temperature, density_ratio, strain_rate,
     modes = ((0, 0), (1, 0), (2, 0))
     propagators = {mode: None for mode in modes}
     maximum_real = {mode: -np.inf for mode in modes}
+    maximum_signed_real = {mode: -np.inf for mode in modes}
     elapsed = 0.0; minimum_scale = 1.0
     cumulative_collision = 0.0
     for _ in range(steps):
@@ -95,9 +96,15 @@ def search_case(n, domain_m, temperature, density_ratio, strain_rate,
         for mode in modes:
             instantaneous = fourier_symbol(
                 state, driving, systems, topology, p, mode, 2e-6)
+            basis = signed_basis(instantaneous["layout"])
             maximum_real[mode] = max(
                 maximum_real[mode], float(np.max(
                     instantaneous["eigenvalues_s_inv"].real)))
+            signed_generator = (basis.conj().T
+                                @instantaneous["matrix_s_inv"]@basis)
+            maximum_signed_real[mode] = max(
+                maximum_signed_real[mode], float(np.max(
+                    np.linalg.eigvals(signed_generator).real)))
             accepted = accepted_step_fourier_symbol(
                 state, driving, systems, topology, p, mode, requested_dt, 2e-6)
             matrix = accepted["matrix"]
@@ -120,6 +127,7 @@ def search_case(n, domain_m, temperature, density_ratio, strain_rate,
         rows.append({
             "mode": list(mode),
             "maximum_instantaneous_real_s_inv": maximum_real[mode],
+            "maximum_signed_instantaneous_real_s_inv": maximum_signed_real[mode],
             "full_finite_time_gain": float(np.linalg.svd(
                 matrix, compute_uv=False)[0]),
             "signed_finite_time_gain": float(singular[0]),
@@ -164,11 +172,17 @@ def main():
                     cases.append(search_case(
                         6, 6e-6, temperature, density, rate, 0.0, multi_hit,
                         3 if args.quick else 5, 2e-9))
+    if not args.quick:
+        # Incommensurate-domain check of the strongest high-T/high-density
+        # branch; wavelength is never varied as a constitutive parameter.
+        for multi_hit in (False, True):
+            cases.append(search_case(
+                6, 9.7e-6, 1250., 2.0, 1e5, 0.0, multi_hit, 5, 2e-9))
     best_signed = max(row["signed_finite_time_gain"]
                       for case in cases for row in case["modes"])
     positive_interior = any(
         row["mode"] != [0, 0]
-        and row["maximum_instantaneous_real_s_inv"] > 0.0
+        and row["maximum_signed_instantaneous_real_s_inv"] > 0.0
         for case in cases for row in case["modes"])
     result = {
         "schema": "v22_finite_time_search_v1",

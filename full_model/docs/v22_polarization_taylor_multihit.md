@@ -56,15 +56,15 @@ order/partition energy is
  +{C_p\over2\rho_*}[\rho_w-g h(q)\rho_*]^2.
 \]
 
-The gradient term is (kappa_q|\nabla q|^2/2). At (g=0),
-(\partial^2f_q/\partial q^2|_0=2(W+C_0)>0), independently of total density.
+The gradient term is \(\kappa_q|\nabla q|^2/2\). At \(g=0\),
+\(\partial^2f_q/\partial q^2|_0=2(W+C_0)>0\), independently of total density.
 At sufficient signed polarization, \(h'(0)=2\) lets the physical gate—not
 order-field noise—initiate ordering, and the negative \(A_0g h\) branch can
 make an ordered wall favorable. At \(g=0\) this source vanishes exactly. The
 non-ordering defect branch remains
-(E_l\rho+C_\rho\rho\ln(\rho/\rho_{\rm ref})), whose second derivative is
-(C_\rho/\rho>0). All wall chemical potentials include the exact derivative
-of (g) with respect to each signed family population.
+\(E_l\rho+C_\rho\rho\ln(\rho/\rho_{\rm ref})\), whose second derivative is
+\(C_\rho/\rho>0\). All wall chemical potentials include the exact derivative
+of \(g\) with respect to each signed family population.
 
 ## Arrhenius--Taylor glide
 

@@ -1,7 +1,7 @@
 {
   "schema": "asb-drx/v22-common-operator-restart-qualification/v1",
-  "continuous_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-d356abg6/continuous/drx_v25_restart_000009.npz",
-  "segmented_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-d356abg6/segmented/drx_v25_restart_000009.npz",
+  "continuous_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-epbtcc6r/continuous/drx_v25_restart_000009.npz",
+  "segmented_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-epbtcc6r/segmented/drx_v25_restart_000009.npz",
   "array_bitwise_identity": {
     "rho": true,
     "rp": true,
@@ -57,6 +57,13 @@
   "grain_count_remained_one": true,
   "step_identity": true,
   "time_identity": true,
+  "restart_cadence_steps": [
+    0,
+    2,
+    4,
+    5
+  ],
+  "restart_cadence_independent_of_field_save": true,
   "fixture_passed": true,
   "scientific_gate_passed": false
 }

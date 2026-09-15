@@ -33,6 +33,7 @@
             0
           ],
           "maximum_instantaneous_real_s_inv": 0.005196485426770659,
+          "maximum_signed_instantaneous_real_s_inv": 7.835605049978984e-08,
           "full_finite_time_gain": 1.0000022582220116,
           "signed_finite_time_gain": 1.0000000121424513,
           "signed_optimal_input": [
@@ -92,6 +93,7 @@
             0
           ],
           "maximum_instantaneous_real_s_inv": 0.0,
+          "maximum_signed_instantaneous_real_s_inv": -0.3806801031463853,
           "full_finite_time_gain": 1.000002257820867,
           "signed_finite_time_gain": 1.000000009833622,
           "signed_optimal_input": [
@@ -151,6 +153,7 @@
             0
           ],
           "maximum_instantaneous_real_s_inv": 0.0,
+          "maximum_signed_instantaneous_real_s_inv": -1.5206777235942432,
           "full_finite_time_gain": 1.0000022568193108,
           "signed_finite_time_gain": 1.00000000299424,
           "signed_optimal_input": [
@@ -230,6 +233,7 @@
             0
           ],
           "maximum_instantaneous_real_s_inv": 0.005239321123224984,
+          "maximum_signed_instantaneous_real_s_inv": 7.744150941956911e-08,
           "full_finite_time_gain": 1.00000225920369,
           "signed_finite_time_gain": 1.0000000120822494,
           "signed_optimal_input": [
@@ -289,6 +293,7 @@
             0
           ],
           "maximum_instantaneous_real_s_inv": 0.0,
+          "maximum_signed_instantaneous_real_s_inv": -0.380680031335777,
           "full_finite_time_gain": 1.000002258947476,
           "signed_finite_time_gain": 1.000000009767057,
           "signed_optimal_input": [
@@ -348,6 +353,7 @@
             0
           ],
           "maximum_instantaneous_real_s_inv": 0.0,
+          "maximum_signed_instantaneous_real_s_inv": -1.5206776872178556,
           "full_finite_time_gain": 1.0000022579257102,
           "signed_finite_time_gain": 1.000000002931495,
           "signed_optimal_input": [

@@ -63,6 +63,12 @@ def main():
     segmented = run(args.driver.resolve(), root/"segmented", dict(
         base, nSteps=6, restart_interval=5, restart_file=str(first),
         restart_reset_clock=False))
+    cadence_dir = root/"cadence"
+    run(args.driver.resolve(), cadence_dir, dict(
+        base, nSteps=6, save_interval=1000, restart_interval=2))
+    cadence_steps = [int(path.stem.rsplit("_", 1)[1]) for path in sorted(
+        cadence_dir.glob("drx_v25_restart_*.npz"))]
+    cadence_independent = cadence_steps == [0, 2, 4, 5]
     checks = {}; maxima = {}
     with np.load(continuous, allow_pickle=True) as left, np.load(
             segmented, allow_pickle=True) as right:
@@ -76,7 +82,7 @@ def main():
         step_equal = int(left["step"]) == int(right["step"]) == 9
         time_equal = float(left["sim_time"]) == float(right["sim_time"])
     passed = bool(all(checks.values()) and grain_count_equal and step_equal
-                  and time_equal)
+                  and time_equal and cadence_independent)
     result = {
         "schema": "asb-drx/v22-common-operator-restart-qualification/v1",
         "continuous_checkpoint": str(continuous),
@@ -85,6 +91,8 @@ def main():
         "maximum_absolute_difference": maxima,
         "grain_count_remained_one": grain_count_equal,
         "step_identity": step_equal, "time_identity": time_equal,
+        "restart_cadence_steps": cadence_steps,
+        "restart_cadence_independent_of_field_save": cadence_independent,
         "fixture_passed": passed, "scientific_gate_passed": False,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
