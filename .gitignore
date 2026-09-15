@@ -23,6 +23,7 @@ results*/
 *.tar.gz
 *.tar.xz
 *.b64
+full_model/verification/v20_on_trajectory/
 
 # OS/editor
 .DS_Store

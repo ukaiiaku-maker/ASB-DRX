@@ -1,0 +1,1936 @@
+{
+  "schema": "asb-drx/v20-v19-on-trajectory-audit/v1",
+  "branches": {
+    "homogeneous_noise": {
+      "checkpoints": [
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000000.npz",
+          "step": 0,
+          "time_s": 1e-08,
+          "strain": 0.0001,
+          "stress_MPa": 15.176495985801605,
+          "temperature_mean_K": 1300.0,
+          "temperature_max_K": 1300.0,
+          "wall_order_mean": 2.7809779935539303e-14,
+          "wall_order_max": 1.1148733306039197e-13,
+          "wall_order_target_mean": 1.43868602014183e-10,
+          "wall_order_force_mean": 1.4384079223424745e-10,
+          "polarization_mean_by_family": [
+            0.0005618673654999395,
+            0.0005618714246142327
+          ],
+          "polarization_max_by_family": [
+            0.002260731088803033,
+            0.0022612330616823325
+          ],
+          "aggregate_polarization_mean": 9.324702926933009e-08,
+          "aggregate_polarization_max": 6.570044230540606e-07,
+          "rate_mean_s_inv": {
+            "capture": 7917.683451513758,
+            "release": 543.966851423952,
+            "sink": 222.790773878163,
+            "order": 19331.85040096518,
+            "junction": 5067.112987146332
+          },
+          "rate_max_s_inv": {
+            "capture": 7917.708017082507,
+            "release": 543.9691720441679,
+            "sink": 222.7918107318636,
+            "order": 19331.900308146585,
+            "junction": 5067.128871560742
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              1.98387e-07,
+              1.95028e-07
+            ],
+            "unsigned_junction_line_m": [
+              1.06485562113,
+              1.06485562113
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_sink_line_m": [
+              -2.5087996132517885e-15,
+              -2.7227675380205874e-15
+            ],
+            "signed_capture_line_m": [
+              2.805e-09,
+              1.3e-10
+            ],
+            "signed_junction_line_m": [
+              -6.66861e-07,
+              6.66861e-07
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_sink_line_m": [
+              0.0,
+              0.0
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 0.0,
+          "signed_wall_budget_relative_residual": 0.0
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000100.npz",
+          "step": 100,
+          "time_s": 1.0100000000000003e-06,
+          "strain": 0.010099999999999994,
+          "stress_MPa": 260.7910432640885,
+          "temperature_mean_K": 1300.5326207300018,
+          "temperature_max_K": 1300.537045385081,
+          "wall_order_mean": 1.0564924003204017e-09,
+          "wall_order_max": 4.2360590987980665e-09,
+          "wall_order_target_mean": 1.157920681179998e-07,
+          "wall_order_force_mean": 1.1473557571767942e-07,
+          "polarization_mean_by_family": [
+            0.000636793370643162,
+            0.0006367516412004295
+          ],
+          "polarization_max_by_family": [
+            0.002504509792501217,
+            0.0025031234481073675
+          ],
+          "aggregate_polarization_mean": 2.2432026425951312e-07,
+          "aggregate_polarization_max": 1.685321121071304e-06,
+          "rate_mean_s_inv": {
+            "capture": 8995.423978922621,
+            "release": 648.4940650518358,
+            "sink": 269.90820166796675,
+            "order": 22248.369164832322,
+            "junction": 6010.030082924015
+          },
+          "rate_max_s_inv": {
+            "capture": 9329.379509077651,
+            "release": 681.6281929895922,
+            "sink": 284.9568754424812,
+            "order": 22315.631452590336,
+            "junction": 6032.100346197094
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000126362438,
+              0.000459577289
+            ],
+            "unsigned_junction_line_m": [
+              742.9414547822845,
+              742.9414547822845
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.003917928599,
+              -0.00429430927
+            ],
+            "unsigned_sink_line_m": [
+              -0.23096235737248969,
+              -0.2311330632247574
+            ],
+            "signed_capture_line_m": [
+              2.50847e-06,
+              4.079611e-06
+            ],
+            "signed_junction_line_m": [
+              -0.0088929497475,
+              0.0088929497475
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              5.0059e-08,
+              -4.748e-08
+            ],
+            "signed_sink_line_m": [
+              1.6804458067385435e-05,
+              -1.680630491387361e-05
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 3.3303655827011985e-16,
+          "signed_wall_budget_relative_residual": 6.231140729435722e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000200.npz",
+          "step": 200,
+          "time_s": 2.009999999999991e-06,
+          "strain": 0.020099999999999934,
+          "stress_MPa": 261.10362536334105,
+          "temperature_mean_K": 1301.118664721623,
+          "temperature_max_K": 1301.126735158876,
+          "wall_order_mean": 5.428198719080316e-09,
+          "wall_order_max": 2.0839971754458818e-08,
+          "wall_order_target_mean": 2.8367614504377594e-07,
+          "wall_order_force_mean": 2.7824794632469563e-07,
+          "polarization_mean_by_family": [
+            0.000708325782273898,
+            0.0007082841051955363
+          ],
+          "polarization_max_by_family": [
+            0.0026042094369982927,
+            0.0026028051034587833
+          ],
+          "aggregate_polarization_mean": 2.2431500983453375e-07,
+          "aggregate_polarization_max": 1.658977660638574e-06,
+          "rate_mean_s_inv": {
+            "capture": 9027.240743964016,
+            "release": 651.6509558059624,
+            "sink": 271.3420295440393,
+            "order": 22318.78214151558,
+            "junction": 6033.134473273387
+          },
+          "rate_max_s_inv": {
+            "capture": 9364.700113582589,
+            "release": 685.179052993087,
+            "sink": 286.57665669656166,
+            "order": 22389.539959619433,
+            "junction": 6056.367798359735
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000269245377,
+              0.000997796154
+            ],
+            "unsigned_junction_line_m": [
+              1607.2206936410134,
+              1607.2206936410134
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.018435835626999998,
+              -0.020216839651
+            ],
+            "unsigned_sink_line_m": [
+              -1.0313181871154753,
+              -1.0321256822951015
+            ],
+            "signed_capture_line_m": [
+              5.989083e-06,
+              1.4637822e-05
+            ],
+            "signed_junction_line_m": [
+              -0.018465483063499998,
+              0.018465483063499998
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              2.31215e-07,
+              -2.19583e-07
+            ],
+            "signed_sink_line_m": [
+              5.383870870074725e-05,
+              -5.3851026713861405e-05
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 4.731846919852122e-16,
+          "signed_wall_budget_relative_residual": 5.135691806313229e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000300.npz",
+          "step": 300,
+          "time_s": 3.0099999999999813e-06,
+          "strain": 0.030099999999999873,
+          "stress_MPa": 261.3842137067051,
+          "temperature_mean_K": 1301.7046044922681,
+          "temperature_max_K": 1301.7156365118776,
+          "wall_order_mean": 1.3568429715010263e-08,
+          "wall_order_max": 5.0416709265022935e-08,
+          "wall_order_target_mean": 4.622388211925718e-07,
+          "wall_order_force_mean": 4.486703914775615e-07,
+          "polarization_mean_by_family": [
+            0.0007383122231283122,
+            0.0007382662612292902
+          ],
+          "polarization_max_by_family": [
+            0.002683444129881696,
+            0.0026851839495495556
+          ],
+          "aggregate_polarization_mean": 2.2256540571484252e-07,
+          "aggregate_polarization_max": 1.619203063175759e-06,
+          "rate_mean_s_inv": {
+            "capture": 9058.791589051829,
+            "release": 654.7854689460524,
+            "sink": 272.7663011889243,
+            "order": 22388.37159193004,
+            "junction": 6055.983989071612
+          },
+          "rate_max_s_inv": {
+            "capture": 9398.40772925215,
+            "release": 688.5724425506975,
+            "sink": 288.1253186310298,
+            "order": 22460.040965578515,
+            "junction": 6079.532362457722
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000408654327,
+              0.001527154931
+            ],
+            "unsigned_junction_line_m": [
+              2469.95379120592,
+              2469.95379120592
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.043768074023,
+              -0.048005639520999996
+            ],
+            "unsigned_sink_line_m": [
+              -2.333838822944431,
+              -2.3357594245132467
+            ],
+            "signed_capture_line_m": [
+              1.0063981e-05,
+              3.1090473e-05
+            ],
+            "signed_junction_line_m": [
+              -0.028897657041,
+              0.028897657041
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              5.47905e-07,
+              -5.22121e-07
+            ],
+            "signed_sink_line_m": [
+              9.837185364862322e-05,
+              -9.840541633483308e-05
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 5.675091369627197e-16,
+          "signed_wall_budget_relative_residual": 6.743154863256333e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000400.npz",
+          "step": 400,
+          "time_s": 4.009999999999972e-06,
+          "strain": 0.04010000000000012,
+          "stress_MPa": 261.6348747109715,
+          "temperature_mean_K": 1302.290372596575,
+          "temperature_max_K": 1302.3038876169662,
+          "wall_order_mean": 2.558325199461916e-08,
+          "wall_order_max": 9.384487854510907e-08,
+          "wall_order_target_mean": 6.469301677559927e-07,
+          "wall_order_force_mean": 6.213469157613735e-07,
+          "polarization_mean_by_family": [
+            0.0007536172557084714,
+            0.0007535679425112705
+          ],
+          "polarization_max_by_family": [
+            0.0027600748888357667,
+            0.002761789563861898
+          ],
+          "aggregate_polarization_mean": 2.2072284031508483e-07,
+          "aggregate_polarization_max": 1.5792898894650367e-06,
+          "rate_mean_s_inv": {
+            "capture": 9090.097465492474,
+            "release": 657.8996133497233,
+            "sink": 274.1819193979263,
+            "order": 22457.25425423456,
+            "junction": 6078.616399763656
+          },
+          "rate_max_s_inv": {
+            "capture": 9431.216819551773,
+            "release": 691.8797624949495,
+            "sink": 289.63536827540037,
+            "order": 22528.632427020573,
+            "junction": 6102.084428970752
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000545354998,
+              0.002054281832
+            ],
+            "unsigned_junction_line_m": [
+              3331.53964668616,
+              3331.53964668616
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.07999229948,
+              -0.087749750051
+            ],
+            "unsigned_sink_line_m": [
+              -4.075288643822879,
+              -4.0788035050800415
+            ],
+            "signed_capture_line_m": [
+              1.47115e-05,
+              5.2596876e-05
+            ],
+            "signed_junction_line_m": [
+              -0.039037952322,
+              0.039037952322
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              1.003284e-06,
+              -9.59395e-07
+            ],
+            "signed_sink_line_m": [
+              0.000147197256714175,
+              -0.00014726499055382723
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 6.771955258974541e-16,
+          "signed_wall_budget_relative_residual": 4.9052443840011295e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000500.npz",
+          "step": 500,
+          "time_s": 5.009999999999962e-06,
+          "strain": 0.05010000000000041,
+          "stress_MPa": 261.85781211356897,
+          "temperature_mean_K": 1302.8759012084402,
+          "temperature_max_K": 1302.8916309187875,
+          "wall_order_mean": 4.15367238759912e-08,
+          "wall_order_max": 1.5125539323853436e-07,
+          "wall_order_target_mean": 8.370723696798088e-07,
+          "wall_order_force_mean": 7.955356458038176e-07,
+          "polarization_mean_by_family": [
+            0.0007627583955846959,
+            0.0007627084840784441
+          ],
+          "polarization_max_by_family": [
+            0.002805119014393534,
+            0.0028068098228403813
+          ],
+          "aggregate_polarization_mean": 2.192713955344597e-07,
+          "aggregate_polarization_max": 1.540970627052918e-06,
+          "rate_mean_s_inv": {
+            "capture": 9121.182816377168,
+            "release": 660.9957546585699,
+            "sink": 275.5899505562048,
+            "order": 22525.540532389583,
+            "junction": 6101.067524467305
+          },
+          "rate_max_s_inv": {
+            "capture": 9463.997601655263,
+            "release": 695.1885406054739,
+            "sink": 291.1467404771012,
+            "order": 22597.134839156828,
+            "junction": 6124.621934759672
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000679988571,
+              0.002584850444
+            ],
+            "unsigned_junction_line_m": [
+              4192.2029217343,
+              4192.2029217343
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.12718969725999998,
+              -0.139541876364
+            ],
+            "unsigned_sink_line_m": [
+              -6.202907723306475,
+              -6.2085030267450705
+            ],
+            "signed_capture_line_m": [
+              1.9897425e-05,
+              7.7916042e-05
+            ],
+            "signed_junction_line_m": [
+              -0.0488720191595,
+              0.0488720191595
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              1.59373e-06,
+              -1.5280559999999999e-06
+            ],
+            "signed_sink_line_m": [
+              0.00019924666822174333,
+              -0.0001993629199449405
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 6.95350353000754e-16,
+          "signed_wall_budget_relative_residual": 3.933502338036502e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000600.npz",
+          "step": 600,
+          "time_s": 6.009999999999953e-06,
+          "strain": 0.060100000000000695,
+          "stress_MPa": 262.0575141395009,
+          "temperature_mean_K": 1303.4611353932642,
+          "temperature_max_K": 1303.4788567807348,
+          "wall_order_mean": 6.148360860594649e-08,
+          "wall_order_max": 2.2299603868045756e-07,
+          "wall_order_target_mean": 1.0325101654579907e-06,
+          "wall_order_force_mean": 9.71026556852044e-07,
+          "polarization_mean_by_family": [
+            0.000768836647031829,
+            0.0007687854554578051
+          ],
+          "polarization_max_by_family": [
+            0.002834770570766977,
+            0.002836438926472412
+          ],
+          "aggregate_polarization_mean": 2.182029550611638e-07,
+          "aggregate_polarization_max": 1.504319775176664e-06,
+          "rate_mean_s_inv": {
+            "capture": 9152.076856365065,
+            "release": 664.0766814628722,
+            "sink": 276.9916454288895,
+            "order": 22593.24189575429,
+            "junction": 6123.340717951634
+          },
+          "rate_max_s_inv": {
+            "capture": 9496.174097265395,
+            "release": 698.4405065831679,
+            "sink": 292.6327995881981,
+            "order": 22664.345768036073,
+            "junction": 6146.748725880018
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.0008131783439999999,
+              0.003123734777
+            ],
+            "unsigned_junction_line_m": [
+              5052.231130881646,
+              5052.231130881646
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.185444644464,
+              -0.203477310913
+            ],
+            "unsigned_sink_line_m": [
+              -8.672268772690554,
+              -8.68043555889784
+            ],
+            "signed_capture_line_m": [
+              2.5583762e-05,
+              0.000106749673
+            ],
+            "signed_junction_line_m": [
+              -0.058442973868499996,
+              0.058442973868499996
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              2.316374e-06,
+              -2.2254949999999998e-06
+            ],
+            "signed_sink_line_m": [
+              0.00025446824351349137,
+              -0.0002546480573499698
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 8.195054567730062e-16,
+          "signed_wall_budget_relative_residual": 6.908535618997008e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000700.npz",
+          "step": 700,
+          "time_s": 7.009999999999943e-06,
+          "strain": 0.07010000000000098,
+          "stress_MPa": 262.2367331509144,
+          "temperature_mean_K": 1304.0460254182653,
+          "temperature_max_K": 1304.0661661505414,
+          "wall_order_mean": 8.547493983952894e-08,
+          "wall_order_max": 3.114766967272635e-07,
+          "wall_order_target_mean": 1.2331505597369344e-06,
+          "wall_order_force_mean": 1.1476756198974054e-06,
+          "polarization_mean_by_family": [
+            0.0007731776133856405,
+            0.0007731266899077179
+          ],
+          "polarization_max_by_family": [
+            0.002855779073931802,
+            0.002857426375932425
+          ],
+          "aggregate_polarization_mean": 2.1753396409524454e-07,
+          "aggregate_polarization_max": 1.4692823301595597e-06,
+          "rate_mean_s_inv": {
+            "capture": 9182.804193331653,
+            "release": 667.1447737744438,
+            "sink": 278.38807653075276,
+            "order": 22660.412578949323,
+            "junction": 6145.453444569786
+          },
+          "rate_max_s_inv": {
+            "capture": 9528.222280639418,
+            "release": 701.683614503183,
+            "sink": 294.1154373932347,
+            "order": 22731.260477159885,
+            "junction": 6168.791938984415
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000945534059,
+              0.0036760181849999998
+            ],
+            "unsigned_junction_line_m": [
+              5911.871738463968,
+              5911.871738463968
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.254844977623,
+              -0.2796546318
+            ],
+            "unsigned_sink_line_m": [
+              -11.445677761668131,
+              -11.456911933455968
+            ],
+            "signed_capture_line_m": [
+              3.1728119e-05,
+              0.000138575671
+            ],
+            "signed_junction_line_m": [
+              -0.067774056817,
+              0.067774056817
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              3.169229e-06,
+              -3.049372e-06
+            ],
+            "signed_sink_line_m": [
+              0.0003132523463489406,
+              -0.00031351089012438384
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.440581622645175e-16,
+          "signed_wall_budget_relative_residual": 5.870266904426153e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000800.npz",
+          "step": 800,
+          "time_s": 8.009999999999933e-06,
+          "strain": 0.08010000000000127,
+          "stress_MPa": 262.39723531373613,
+          "temperature_mean_K": 1304.630527123321,
+          "temperature_max_K": 1304.653141663499,
+          "wall_order_mean": 1.1355827265935224e-07,
+          "wall_order_max": 4.152765592300143e-07,
+          "wall_order_target_mean": 1.4388908715657061e-06,
+          "wall_order_force_mean": 1.3253325989063538e-06,
+          "polarization_mean_by_family": [
+            0.000776416736956768,
+            0.0007763664349614065
+          ],
+          "polarization_max_by_family": [
+            0.002871441205596708,
+            0.0028730687608734856
+          ],
+          "aggregate_polarization_mean": 2.1750367194579525e-07,
+          "aggregate_polarization_max": 1.4357158291301333e-06,
+          "rate_mean_s_inv": {
+            "capture": 9213.384995227432,
+            "release": 670.2019969649172,
+            "sink": 279.7801319752723,
+            "order": 22727.13424404316,
+            "junction": 6167.432237935209
+          },
+          "rate_max_s_inv": {
+            "capture": 9559.702584745613,
+            "release": 704.8732410816168,
+            "sink": 295.5742331436404,
+            "order": 22796.962110504075,
+            "junction": 6190.449068380338
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.001077550348,
+              0.004246564031
+            ],
+            "unsigned_junction_line_m": [
+              6771.355029218694,
+              6771.355029218694
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.335481689336,
+              -0.368175340884
+            ],
+            "unsigned_sink_line_m": [
+              -14.490880061970326,
+              -14.505682347265564
+            ],
+            "signed_capture_line_m": [
+              3.829616e-05,
+              0.000172896661
+            ],
+            "signed_junction_line_m": [
+              -0.076876531011,
+              0.076876531011
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              4.149618e-06,
+              -3.998638e-06
+            ],
+            "signed_sink_line_m": [
+              0.0003750674920349758,
+              -0.0003754197935770206
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.63840818502541e-16,
+          "signed_wall_budget_relative_residual": 5.103476363646897e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000900.npz",
+          "step": 900,
+          "time_s": 9.009999999999924e-06,
+          "strain": 0.09010000000000155,
+          "stress_MPa": 262.5402890263669,
+          "temperature_mean_K": 1305.2146033150636,
+          "temperature_max_K": 1305.2395936957244,
+          "wall_order_mean": 1.457790316346251e-07,
+          "wall_order_max": 5.345735362528784e-07,
+          "wall_order_target_mean": 1.649724740234161e-06,
+          "wall_order_force_mean": 1.503945708599536e-06,
+          "polarization_mean_by_family": [
+            0.0007789361500619245,
+            0.0007788872095631215
+          ],
+          "polarization_max_by_family": [
+            0.002883568383402807,
+            0.0028851771072353257
+          ],
+          "aggregate_polarization_mean": 2.179651763033204e-07,
+          "aggregate_polarization_max": 1.4034651981313695e-06,
+          "rate_mean_s_inv": {
+            "capture": 9243.830046864136,
+            "release": 673.2493789176381,
+            "sink": 281.16827307454093,
+            "order": 22793.44193105774,
+            "junction": 6189.288356830905
+          },
+          "rate_max_s_inv": {
+            "capture": 9592.505910032807,
+            "release": 708.2011110108665,
+            "sink": 297.0968951424547,
+            "order": 22865.396236008164,
+            "junction": 6213.021123437537
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.001209716403,
+              0.004838420477
+            ],
+            "unsigned_junction_line_m": [
+              7630.9329319972585,
+              7630.9329319972585
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.427449324788,
+              -0.469143952855
+            ],
+            "unsigned_sink_line_m": [
+              -17.780123901605684,
+              -17.79899966426639
+            ],
+            "signed_capture_line_m": [
+              4.5235975e-05,
+              0.00020882076899999999
+            ],
+            "signed_junction_line_m": [
+              -0.0857911685645,
+              0.0857911685645
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              5.255914e-06,
+              -5.070717e-06
+            ],
+            "signed_sink_line_m": [
+              0.00043998334424591337,
+              -0.0004404438383070005
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.720993746652696e-16,
+          "signed_wall_budget_relative_residual": 4.5139840218937636e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/homogeneous_budget/drx_v25_restart_000999.npz",
+          "step": 999,
+          "time_s": 9.999999999999914e-06,
+          "strain": 0.10000000000000184,
+          "stress_MPa": 262.667549466953,
+          "temperature_mean_K": 1305.7923819331231,
+          "temperature_max_K": 1305.8196811554417,
+          "wall_order_mean": 1.817959754042979e-07,
+          "wall_order_max": 6.681098466421778e-07,
+          "wall_order_target_mean": 1.8634029690233215e-06,
+          "wall_order_force_mean": 1.6816069936190235e-06,
+          "polarization_mean_by_family": [
+            0.000780928674776564,
+            0.0007808803810488967
+          ],
+          "polarization_max_by_family": [
+            0.0028931496154026553,
+            0.0028947403784886916
+          ],
+          "aggregate_polarization_mean": 2.1869184764585525e-07,
+          "aggregate_polarization_max": 1.3728266012812597e-06,
+          "rate_mean_s_inv": {
+            "capture": 9273.860740193099,
+            "release": 676.2589098432071,
+            "sink": 282.5397230959178,
+            "order": 22858.710686423772,
+            "junction": 6210.815327260896
+          },
+          "rate_max_s_inv": {
+            "capture": 9622.645653651061,
+            "release": 711.2625273246467,
+            "sink": 298.4982162949798,
+            "order": 22928.24790569277,
+            "junction": 6233.764614361251
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.001341097601,
+              0.005448189759
+            ],
+            "unsigned_junction_line_m": [
+              8482.16145903226,
+              8482.16145903226
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.529753794236,
+              -0.581469815802
+            ],
+            "unsigned_sink_line_m": [
+              -21.253275209404364,
+              -21.27668628215185
+            ],
+            "signed_capture_line_m": [
+              5.2493175e-05,
+              0.000245096815
+            ],
+            "signed_junction_line_m": [
+              -0.094431241406,
+              0.094431241406
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              6.4735619999999995e-06,
+              -6.251842e-06
+            ],
+            "signed_sink_line_m": [
+              0.0005072509724422024,
+              -0.0005078320149197931
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.7494410833001e-16,
+          "signed_wall_budget_relative_residual": 4.2616708889853496e-14
+        }
+      ],
+      "reaction_channel_exposure": {
+        "capture": {
+          "mean_path_integral": 0.09058801632751375,
+          "maximum_path_integral_upper_bound": 0.09383840772335023,
+          "efficiency_weighted_mean_exposure": 0.01811760326550275
+        },
+        "release": {
+          "mean_path_integral": 0.006551864028121734,
+          "maximum_path_integral_upper_bound": 0.0068761649963053045,
+          "efficiency_weighted_mean_exposure": 0.0001310372805624347
+        },
+        "sink": {
+          "mean_path_integral": 0.0027299632378706817,
+          "maximum_path_integral_upper_bound": 0.0028775273627463117,
+          "efficiency_weighted_mean_exposure": 5.4599264757413635e-05
+        },
+        "junction": {
+          "mean_path_integral": 0.06048131086557014,
+          "maximum_path_integral_upper_bound": 0.060701930541698756,
+          "efficiency_weighted_mean_exposure": 0.003024065543278507
+        },
+        "order": {
+          "mean_path_integral": 0.22357956811531177,
+          "maximum_path_integral_upper_bound": 0.22425005012188312,
+          "efficiency_weighted_mean_exposure": 0.22357956811531177
+        }
+      },
+      "trajectory_secants": {
+        "stress_MPa_per_unit_strain": [
+          24561.454727828703,
+          12296.356468876944,
+          29.658522130832353,
+          26.562467381521856,
+          23.67992034319286,
+          21.131971426470045,
+          18.946051867271308,
+          16.98605871176187,
+          15.177793772625591,
+          13.576335431474945,
+          12.854589958191436
+        ],
+        "temperature_K_per_unit_strain": [
+          53.26207300017816,
+          55.93323608114588,
+          58.59918811332318,
+          58.58539374760585,
+          58.5648358085964,
+          58.53813983445434,
+          58.50621049125766,
+          58.469586502840684,
+          58.42889483991166,
+          58.38443193677813,
+          58.36147657166328
+        ]
+      },
+      "signed_wall_source_absolute_line_m": 0.189160072802,
+      "signed_source_is_exactly_zero": false,
+      "final_budget_closure_passed": true
+    },
+    "mechanical_particle": {
+      "checkpoints": [
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000000.npz",
+          "step": 0,
+          "time_s": 1e-08,
+          "strain": 0.0001,
+          "stress_MPa": 15.507167753720887,
+          "temperature_mean_K": 1300.0,
+          "temperature_max_K": 1300.0,
+          "wall_order_mean": 3.536331488606908e-14,
+          "wall_order_max": 7.537084851951887e-13,
+          "wall_order_target_mean": 1.792495029356558e-10,
+          "wall_order_force_mean": 1.7921413962076972e-10,
+          "polarization_mean_by_family": [
+            0.000561866943755169,
+            0.0005618715874113366
+          ],
+          "polarization_max_by_family": [
+            0.00226071487136004,
+            0.0022612177840252096
+          ],
+          "aggregate_polarization_mean": 9.486375118502196e-08,
+          "aggregate_polarization_max": 6.570964962572468e-07,
+          "rate_mean_s_inv": {
+            "capture": 7948.152543088876,
+            "release": 546.882277098337,
+            "sink": 224.09900594950437,
+            "order": 19408.816044930503,
+            "junction": 5091.753497127007
+          },
+          "rate_max_s_inv": {
+            "capture": 8911.617538266568,
+            "release": 640.0151314578761,
+            "sink": 266.0325695869566,
+            "order": 21439.367665062182,
+            "junction": 5745.513153567986
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              2.39811e-07,
+              2.4229e-07
+            ],
+            "unsigned_junction_line_m": [
+              1.282758354819,
+              1.282758354819
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_sink_line_m": [
+              -3.3869368045023052e-15,
+              -3.113124887583307e-15
+            ],
+            "signed_capture_line_m": [
+              -2.729e-09,
+              -7.959999999999999e-10
+            ],
+            "signed_junction_line_m": [
+              -1.3895832e-05,
+              1.3895832e-05
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_sink_line_m": [
+              0.0,
+              0.0
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 0.0,
+          "signed_wall_budget_relative_residual": 0.0
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000100.npz",
+          "step": 100,
+          "time_s": 1.0100000000000003e-06,
+          "strain": 0.010099999999999994,
+          "stress_MPa": 281.97008724088033,
+          "temperature_mean_K": 1300.5708490837674,
+          "temperature_max_K": 1300.6809241661038,
+          "wall_order_mean": 9.736342832432566e-10,
+          "wall_order_max": 4.501561839267389e-09,
+          "wall_order_target_mean": 1.0692705473900416e-07,
+          "wall_order_force_mean": 1.0595342045576091e-07,
+          "polarization_mean_by_family": [
+            0.0006370663343290429,
+            0.0006370138403657767
+          ],
+          "polarization_max_by_family": [
+            0.0024638980165781754,
+            0.002464132416450522
+          ],
+          "aggregate_polarization_mean": 2.410620042677442e-07,
+          "aggregate_polarization_max": 1.8369862047894534e-06,
+          "rate_mean_s_inv": {
+            "capture": 8983.603533929312,
+            "release": 647.3501931513867,
+            "sink": 269.39304021952785,
+            "order": 22267.360275469327,
+            "junction": 6016.276388537261
+          },
+          "rate_max_s_inv": {
+            "capture": 9335.046676418835,
+            "release": 682.1975871069646,
+            "sink": 285.2165620887035,
+            "order": 22327.44220563489,
+            "junction": 6035.993656468453
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000115884072,
+              0.000459973867
+            ],
+            "unsigned_junction_line_m": [
+              685.0447799486014,
+              685.0447799486014
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.003586343248,
+              -0.003954974127
+            ],
+            "unsigned_sink_line_m": [
+              -0.21621264016615271,
+              -0.21637980649319674
+            ],
+            "signed_capture_line_m": [
+              2.13687e-06,
+              3.309307e-06
+            ],
+            "signed_junction_line_m": [
+              -0.0128579584955,
+              0.0128579584955
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              8.0352e-08,
+              -8.2295e-08
+            ],
+            "signed_sink_line_m": [
+              1.854329316928792e-05,
+              -1.8546024723690985e-05
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 3.363804058836616e-16,
+          "signed_wall_budget_relative_residual": 6.558389403405726e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000200.npz",
+          "step": 200,
+          "time_s": 2.009999999999991e-06,
+          "strain": 0.020099999999999934,
+          "stress_MPa": 282.25280377644987,
+          "temperature_mean_K": 1301.2044322726701,
+          "temperature_max_K": 1301.3130763862957,
+          "wall_order_mean": 5.023572874662115e-09,
+          "wall_order_max": 2.1289755814474455e-08,
+          "wall_order_target_mean": 2.6269146128347227e-07,
+          "wall_order_force_mean": 2.5766788840881015e-07,
+          "polarization_mean_by_family": [
+            0.0007099421868561839,
+            0.0007098880040836338
+          ],
+          "polarization_max_by_family": [
+            0.0025581208482128664,
+            0.0025565595969545677
+          ],
+          "aggregate_polarization_mean": 2.428158040495783e-07,
+          "aggregate_polarization_max": 1.813122146106924e-06,
+          "rate_mean_s_inv": {
+            "capture": 9017.33313144618,
+            "release": 650.6953218687695,
+            "sink": 270.91213640784997,
+            "order": 22341.843915858823,
+            "junction": 6040.721351461418
+          },
+          "rate_max_s_inv": {
+            "capture": 9371.477378320138,
+            "release": 685.860961754071,
+            "sink": 286.8878076996883,
+            "order": 22403.666487419527,
+            "junction": 6061.024855601713
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000247749167,
+              0.001007649393
+            ],
+            "unsigned_junction_line_m": [
+              1485.003277040696,
+              1485.003277040696
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.016924178673,
+              -0.018678518197
+            ],
+            "unsigned_sink_line_m": [
+              -0.9594278900252649,
+              -0.9602231919517665
+            ],
+            "signed_capture_line_m": [
+              5.017601e-06,
+              1.1601891e-05
+            ],
+            "signed_junction_line_m": [
+              -0.021908402051,
+              0.021908402051
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              3.05949e-07,
+              -3.0859699999999997e-07
+            ],
+            "signed_sink_line_m": [
+              5.364354026413655e-05,
+              -5.365764939791584e-05
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 4.927584129710647e-16,
+          "signed_wall_budget_relative_residual": 5.621193432211022e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000300.npz",
+          "step": 300,
+          "time_s": 3.0099999999999813e-06,
+          "strain": 0.030099999999999873,
+          "stress_MPa": 282.49811558729374,
+          "temperature_mean_K": 1301.8377755319148,
+          "temperature_max_K": 1301.945207117778,
+          "wall_order_mean": 1.2570267801292968e-08,
+          "wall_order_max": 5.0573676067549365e-08,
+          "wall_order_target_mean": 4.280519694253333e-07,
+          "wall_order_force_mean": 4.154817016240403e-07,
+          "polarization_mean_by_family": [
+            0.0007395541707503148,
+            0.000739498305130269
+          ],
+          "polarization_max_by_family": [
+            0.002694853496755677,
+            0.002696832735497873
+          ],
+          "aggregate_polarization_mean": 2.4149167793818155e-07,
+          "aggregate_polarization_max": 1.7781315223458198e-06,
+          "rate_mean_s_inv": {
+            "capture": 9050.762949439151,
+            "release": 654.0153109271139,
+            "sink": 272.42051188049624,
+            "order": 22415.48207440188,
+            "junction": 6064.906069666214
+          },
+          "rate_max_s_inv": {
+            "capture": 9405.735893375273,
+            "release": 689.3107830984088,
+            "sink": 288.4623716532137,
+            "order": 22475.31350070875,
+            "junction": 6084.569114812447
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000376667363,
+              0.001545662141
+            ],
+            "unsigned_junction_line_m": [
+              2284.1767703040855,
+              2284.1767703040855
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.040232266079,
+              -0.044413018711
+            ],
+            "unsigned_sink_line_m": [
+              -2.167285837397579,
+              -2.169180477950151
+            ],
+            "signed_capture_line_m": [
+              8.259489e-06,
+              2.5316111e-05
+            ],
+            "signed_junction_line_m": [
+              -0.0316395631475,
+              0.0316395631475
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              6.58045e-07,
+              -6.58607e-07
+            ],
+            "signed_sink_line_m": [
+              9.397713919943929e-05,
+              -9.401251424972248e-05
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 5.34931362998797e-16,
+          "signed_wall_budget_relative_residual": 6.037964967564106e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000400.npz",
+          "step": 400,
+          "time_s": 4.009999999999972e-06,
+          "strain": 0.04010000000000012,
+          "stress_MPa": 282.71365616966494,
+          "temperature_mean_K": 1302.4708035798096,
+          "temperature_max_K": 1302.57788191611,
+          "wall_order_mean": 2.3711869150309883e-08,
+          "wall_order_max": 9.245310426500145e-08,
+          "wall_order_target_mean": 5.991984791901276e-07,
+          "wall_order_force_mean": 5.754866100398177e-07,
+          "polarization_mean_by_family": [
+            0.0007546492111326205,
+            0.0007545864390109728
+          ],
+          "polarization_max_by_family": [
+            0.0027693324683797527,
+            0.0027711952225900303
+          ],
+          "aggregate_polarization_mean": 2.397591325444513e-07,
+          "aggregate_polarization_max": 1.7426108486925195e-06,
+          "rate_mean_s_inv": {
+            "capture": 9083.960071521538,
+            "release": 657.3166676211007,
+            "sink": 273.921100944412,
+            "order": 22488.45022460033,
+            "junction": 6088.887509489199
+          },
+          "rate_max_s_inv": {
+            "capture": 9439.267742957314,
+            "release": 692.6919957864247,
+            "sink": 290.00631665555284,
+            "order": 22545.40914016562,
+            "junction": 6107.619162275071
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000503249051,
+              0.002080379251
+            ],
+            "unsigned_junction_line_m": [
+              3082.843828251844,
+              3082.843828251844
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.073595594736,
+              -0.08125548395
+            ],
+            "unsigned_sink_line_m": [
+              -3.7828598701326976,
+              -3.7863301979467368
+            ],
+            "signed_capture_line_m": [
+              1.1876657e-05,
+              4.4351523e-05
+            ],
+            "signed_junction_line_m": [
+              -0.041234787948,
+              0.041234787948
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              1.140178e-06,
+              -1.13712e-06
+            ],
+            "signed_sink_line_m": [
+              0.00013701943681565022,
+              -0.00013708800257442952
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 6.98122519152794e-16,
+          "signed_wall_budget_relative_residual": 5.366696137568752e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000500.npz",
+          "step": 500,
+          "time_s": 5.009999999999962e-06,
+          "strain": 0.05010000000000041,
+          "stress_MPa": 282.9039597290327,
+          "temperature_mean_K": 1303.1034540544606,
+          "temperature_max_K": 1303.2112521727718,
+          "wall_order_mean": 3.851100400437014e-08,
+          "wall_order_max": 1.4707507262149757e-07,
+          "wall_order_target_mean": 7.754733652454633e-07,
+          "wall_order_force_mean": 7.369623612410931e-07,
+          "polarization_mean_by_family": [
+            0.0007636157709476537,
+            0.0007635507410050595
+          ],
+          "polarization_max_by_family": [
+            0.0028128867466727407,
+            0.0028146139243368775
+          ],
+          "aggregate_polarization_mean": 2.3805846412487536e-07,
+          "aggregate_polarization_max": 1.707996087984519e-06,
+          "rate_mean_s_inv": {
+            "capture": 9116.956756206655,
+            "release": 660.6024803011815,
+            "sink": 275.41529043289506,
+            "order": 22560.79286484536,
+            "junction": 6112.679815536636
+          },
+          "rate_max_s_inv": {
+            "capture": 9473.10743776505,
+            "release": 696.1088198033632,
+            "sink": 291.5672188035161,
+            "order": 22616.116702670242,
+            "junction": 6130.886013758562
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000628081197,
+              0.002617580679
+            ],
+            "unsigned_junction_line_m": [
+              3881.280081661997,
+              3881.280081661997
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.117102587827,
+              -0.12930608810799998
+            ],
+            "unsigned_sink_line_m": [
+              -5.758161954664313,
+              -5.763689472637796
+            ],
+            "signed_capture_line_m": [
+              1.5882855e-05,
+              6.6970213e-05
+            ],
+            "signed_junction_line_m": [
+              -0.050650423723,
+              0.050650423723
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              1.751367e-06,
+              -1.742968e-06
+            ],
+            "signed_sink_line_m": [
+              0.00018213985170334554,
+              -0.00018225482756222246
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 7.169290908716822e-16,
+          "signed_wall_budget_relative_residual": 4.211979611299913e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000600.npz",
+          "step": 600,
+          "time_s": 6.009999999999953e-06,
+          "strain": 0.060100000000000695,
+          "stress_MPa": 283.07020411480397,
+          "temperature_mean_K": 1303.7356728416717,
+          "temperature_max_K": 1303.8442902707136,
+          "wall_order_mean": 5.7022150674011546e-08,
+          "wall_order_max": 2.146162797475969e-07,
+          "wall_order_target_mean": 9.567871402969736e-07,
+          "wall_order_force_mean": 8.997649896229622e-07,
+          "polarization_mean_by_family": [
+            0.0007695773334270599,
+            0.0007695116424770948
+          ],
+          "polarization_max_by_family": [
+            0.002841443647651517,
+            0.0028430293473753975
+          ],
+          "aggregate_polarization_mean": 2.3664179412920974e-07,
+          "aggregate_polarization_max": 1.6748809031378996e-06,
+          "rate_mean_s_inv": {
+            "capture": 9149.760762393385,
+            "release": 663.8734535344706,
+            "sink": 276.90339156748513,
+            "order": 22632.56305497585,
+            "junction": 6136.299984579064
+          },
+          "rate_max_s_inv": {
+            "capture": 9506.700696814869,
+            "release": 699.5052912451562,
+            "sink": 293.1195137814288,
+            "order": 22686.27811061273,
+            "junction": 6153.98856426076
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000751722274,
+              0.0031628932689999997
+            ],
+            "unsigned_junction_line_m": [
+              4679.750136334452,
+              4679.750136334452
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.1708453426,
+              -0.18866841307499999
+            ],
+            "unsigned_sink_line_m": [
+              -8.052639540410471,
+              -8.060710887781564
+            ],
+            "signed_capture_line_m": [
+              2.0326819999999998e-05,
+              9.242592699999999e-05
+            ],
+            "signed_junction_line_m": [
+              -0.059911700465,
+              0.059911700465
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              2.49053e-06,
+              -2.475195e-06
+            ],
+            "signed_sink_line_m": [
+              0.00022944147431833576,
+              -0.00022961646943209552
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 7.795431599953871e-16,
+          "signed_wall_budget_relative_residual": 6.964998660302339e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000700.npz",
+          "step": 700,
+          "time_s": 7.009999999999943e-06,
+          "strain": 0.07010000000000098,
+          "stress_MPa": 283.2160453616278,
+          "temperature_mean_K": 1304.3674108218931,
+          "temperature_max_K": 1304.4768850642208,
+          "wall_order_mean": 7.929649901747503e-08,
+          "wall_order_max": 2.952457007732828e-07,
+          "wall_order_target_mean": 1.1430426939246621e-06,
+          "wall_order_force_mean": 1.063746194907187e-06,
+          "polarization_mean_by_family": [
+            0.0007738251675706522,
+            0.000773757288649273
+          ],
+          "polarization_max_by_family": [
+            0.0028616209739352255,
+            0.002863063974830057
+          ],
+          "aggregate_polarization_mean": 2.3560137755777e-07,
+          "aggregate_polarization_max": 1.6431857139489384e-06,
+          "rate_mean_s_inv": {
+            "capture": 9182.406431427118,
+            "release": 667.1329274073593,
+            "sink": 278.38691226277183,
+            "order": 22703.82969094545,
+            "junction": 6159.770299555561
+          },
+          "rate_max_s_inv": {
+            "capture": 9540.393796168015,
+            "release": 702.916380909172,
+            "sink": 294.67917953196104,
+            "order": 22756.616818335053,
+            "junction": 6177.164901909669
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.000874645349,
+              0.0037211074969999997
+            ],
+            "unsigned_junction_line_m": [
+              5478.47853739084,
+              5478.47853739084
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.234919011398,
+              -0.259448934633
+            ],
+            "unsigned_sink_line_m": [
+              -10.63180967082339,
+              -10.642916633052282
+            ],
+            "signed_capture_line_m": [
+              2.5197049e-05,
+              0.000120552807
+            ],
+            "signed_junction_line_m": [
+              -0.069004773869,
+              0.069004773869
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              3.3561999999999997e-06,
+              -3.3327809999999998e-06
+            ],
+            "signed_sink_line_m": [
+              0.0002792050777890389,
+              -0.0002794537669530916
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.197205990078542e-16,
+          "signed_wall_budget_relative_residual": 6.367514205356611e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000800.npz",
+          "step": 800,
+          "time_s": 8.009999999999933e-06,
+          "strain": 0.08010000000000127,
+          "stress_MPa": 283.3447769777442,
+          "temperature_mean_K": 1304.9986270001737,
+          "temperature_max_K": 1305.1089113277549,
+          "wall_order_mean": 1.0538226364745143e-07,
+          "wall_order_max": 3.891193136736704e-07,
+          "wall_order_target_mean": 1.3341808937516726e-06,
+          "wall_order_force_mean": 1.228798630104221e-06,
+          "polarization_mean_by_family": [
+            0.0007769946900862382,
+            0.0007769270819373309
+          ],
+          "polarization_max_by_family": [
+            0.002876663030694087,
+            0.0028779635368399803
+          ],
+          "aggregate_polarization_mean": 2.3495730781825628e-07,
+          "aggregate_polarization_max": 1.612828257177559e-06,
+          "rate_mean_s_inv": {
+            "capture": 9214.9244188417,
+            "release": 670.3838901938036,
+            "sink": 279.86720271072943,
+            "order": 22774.65373919068,
+            "junction": 6183.110479260956
+          },
+          "rate_max_s_inv": {
+            "capture": 9573.911939401169,
+            "release": 706.3142433918662,
+            "sink": 296.23348159067586,
+            "order": 22826.55568264797,
+            "junction": 6200.225969648538
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.00099729932,
+              0.004295864843
+            ],
+            "unsigned_junction_line_m": [
+              6277.714372005312,
+              6277.714372005312
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.309422265661,
+              -0.341757168333
+            ],
+            "unsigned_sink_line_m": [
+              -13.466165014233749,
+              -13.480804372788054
+            ],
+            "signed_capture_line_m": [
+              3.048499e-05,
+              0.00015098102699999998
+            ],
+            "signed_junction_line_m": [
+              -0.0779216921755,
+              0.0779216921755
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              4.347237e-06,
+              -4.314459e-06
+            ],
+            "signed_sink_line_m": [
+              0.00033142998829050374,
+              -0.00033176601066061117
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.57527135107257e-16,
+          "signed_wall_budget_relative_residual": 5.5340880170763654e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000900.npz",
+          "step": 900,
+          "time_s": 9.009999999999924e-06,
+          "strain": 0.09010000000000155,
+          "stress_MPa": 283.45494417706163,
+          "temperature_mean_K": 1305.6292825037785,
+          "temperature_max_K": 1305.7403380880062,
+          "wall_order_mean": 1.3532600985334536e-07,
+          "wall_order_max": 4.96387975950382e-07,
+          "wall_order_target_mean": 1.5301835450944494e-06,
+          "wall_order_force_mean": 1.394857535241104e-06,
+          "polarization_mean_by_family": [
+            0.0007794594926668352,
+            0.0007793914562227829
+          ],
+          "polarization_max_by_family": [
+            0.002888289311221217,
+            0.002889449115100231
+          ],
+          "aggregate_polarization_mean": 2.347255676319122e-07,
+          "aggregate_polarization_max": 1.5839304163628407e-06,
+          "rate_mean_s_inv": {
+            "capture": 9247.297399042016,
+            "release": 673.6245818201176,
+            "sink": 281.34345833911175,
+            "order": 22845.05205886862,
+            "junction": 6206.3257672025575
+          },
+          "rate_max_s_inv": {
+            "capture": 9607.383779555348,
+            "release": 709.7118666025247,
+            "sink": 297.7883540294697,
+            "order": 22896.374875003516,
+            "junction": 6223.260216209316
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.0011201788669999999,
+              0.004890540122
+            ],
+            "unsigned_junction_line_m": [
+              7077.653636477805,
+              7077.653636477805
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.394456978471,
+              -0.43570591754099997
+            ],
+            "unsigned_sink_line_m": [
+              -16.53030537686305,
+              -16.54897900362675
+            ],
+            "signed_capture_line_m": [
+              3.6194809e-05,
+              0.00018310739
+            ],
+            "signed_junction_line_m": [
+              -0.086680963524,
+              0.086680963524
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              5.462311e-06,
+              -5.419187e-06
+            ],
+            "signed_sink_line_m": [
+              0.00038607111712448826,
+              -0.000386507989292935
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.81486617688733e-16,
+          "signed_wall_budget_relative_residual": 4.8930515136611557e-14
+        },
+        {
+          "path": "full_model/verification/v20_on_trajectory/particle_budget/drx_v25_restart_000999.npz",
+          "step": 999,
+          "time_s": 9.999999999999914e-06,
+          "strain": 0.10000000000000184,
+          "stress_MPa": 283.54872207945886,
+          "temperature_mean_K": 1306.2530404201968,
+          "temperature_max_K": 1306.3649870454328,
+          "wall_order_mean": 1.6881439458131749e-07,
+          "wall_order_max": 6.159073369261911e-07,
+          "wall_order_target_mean": 1.7289608695270825e-06,
+          "wall_order_force_mean": 1.5601464749457651e-06,
+          "polarization_mean_by_family": [
+            0.0007814078951292329,
+            0.0007813394413156133
+          ],
+          "polarization_max_by_family": [
+            0.0028974630435504483,
+            0.002898485467853577
+          ],
+          "aggregate_polarization_mean": 2.3485980000358919e-07,
+          "aggregate_polarization_max": 1.556720086607104e-06,
+          "rate_mean_s_inv": {
+            "capture": 9279.224820968499,
+            "release": 676.8247675075443,
+            "sink": 282.80188465652964,
+            "order": 22914.339534020553,
+            "junction": 6229.189691273389
+          },
+          "rate_max_s_inv": {
+            "capture": 9641.778200128634,
+            "release": 713.2077652107209,
+            "sink": 299.38890723113997,
+            "order": 22968.083077168252,
+            "junction": 6246.934578378164
+          },
+          "budget": {
+            "unsigned_capture_line_m": [
+              0.00124239191,
+              0.0055011715619999995
+            ],
+            "unsigned_junction_line_m": [
+              7870.39974128188,
+              7870.39974128188
+            ],
+            "unsigned_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "unsigned_release_line_m": [
+              -0.489116942589,
+              -0.540294301011
+            ],
+            "unsigned_sink_line_m": [
+              -19.768516870395757,
+              -19.79168397719881
+            ],
+            "signed_capture_line_m": [
+              4.2232482e-05,
+              0.000216061228
+            ],
+            "signed_junction_line_m": [
+              -0.0951754325985,
+              0.0951754325985
+            ],
+            "signed_transport_line_m": [
+              0.0,
+              0.0
+            ],
+            "signed_release_line_m": [
+              6.6868469999999995e-06,
+              -6.633157e-06
+            ],
+            "signed_sink_line_m": [
+              0.00044251752061765236,
+              -0.0004430670975126621
+            ]
+          },
+          "unsigned_wall_budget_relative_residual": 9.851816275746336e-16,
+          "signed_wall_budget_relative_residual": 4.3893324638259537e-14
+        }
+      ],
+      "reaction_channel_exposure": {
+        "capture": {
+          "mean_path_integral": 0.0905680615251749,
+          "maximum_path_integral_upper_bound": 0.09443347740007438,
+          "efficiency_weighted_mean_exposure": 0.01811361230503498
+        },
+        "release": {
+          "mean_path_integral": 0.006550096102381549,
+          "maximum_path_integral_upper_bound": 0.0069341147798731234,
+          "efficiency_weighted_mean_exposure": 0.00013100192204763098
+        },
+        "sink": {
+          "mean_path_integral": 0.0027291927633532947,
+          "maximum_path_integral_upper_bound": 0.00290368565793693,
+          "efficiency_weighted_mean_exposure": 5.45838552670659e-05
+        },
+        "junction": {
+          "mean_path_integral": 0.06060727168219616,
+          "maximum_path_integral_upper_bound": 0.06110860534694415,
+          "efficiency_weighted_mean_exposure": 0.003030363584109808
+        },
+        "order": {
+          "mean_path_integral": 0.22396280873066549,
+          "maximum_path_integral_upper_bound": 0.22550817660455072,
+          "efficiency_weighted_mean_exposure": 0.22396280873066549
+        }
+      },
+      "trajectory_secants": {
+        "stress_MPa_per_unit_strain": [
+          26646.29194871596,
+          13337.281801136418,
+          26.40141732067059,
+          23.042619660756827,
+          20.29220708694629,
+          17.82739725695137,
+          15.604281629754041,
+          13.72864314700928,
+          11.944940771692927,
+          10.240737751802953,
+          9.472515393658433
+        ],
+        "temperature_K_per_unit_strain": [
+          57.084908376737104,
+          60.2216136335046,
+          63.34632240737119,
+          63.31856535697443,
+          63.28392612728203,
+          63.24346309309476,
+          63.19783837162686,
+          63.147707925098075,
+          63.09358409426932,
+          63.03555025132664,
+          63.005850143260716
+        ]
+      },
+      "signed_wall_source_absolute_line_m": 0.190609158907,
+      "signed_source_is_exactly_zero": false,
+      "final_budget_closure_passed": true
+    }
+  },
+  "production_projected_common_operator_passed": false,
+  "operator_mismatch": {
+    "production_order_law": "qdot=k_order*(q_equilibrium(wall_fraction,polarization)-q)",
+    "v19_projected_order_law": "Onsager gradient flow of wall-order free energy",
+    "production_capture_law": "one-sided trapping of newly arrived discrete advective flux",
+    "v19_projected_capture_law": "local differentiable mobile-to-wall reaction",
+    "consequence": "the prior projected eigenvalues and cumulative G are not trajectory predictions"
+  },
+  "thermodynamic_instability": "NOT_EVALUABLE_UNTIL_COMMON_OPERATOR_REPAIR",
+  "finite_mode_cumulative_amplification": null,
+  "kinetic_accessibility": "reaction events are active, but the signed source is flux-limited and nearly cancelling",
+  "classification": "MECHANISM_NOT_ENTERED",
+  "v19_wall_absence_attribution": [
+    "INSUFFICIENT_PHYSICAL_EXPOSURE_NOT_YET_QUANTIFIABLE_WITH_A_VALID_COMMON_OPERATOR",
+    "SIGNED_CONTENT_PRESENT_BUT_NOT_SPATIALLY_ORGANIZED",
+    "MISSING_NONLOCAL_TOPOLOGICAL_PHYSICS_IN_V19"
+  ],
+  "not_supported": [
+    "ADEQUATE_LINEAR_EXPOSURE_NO_NONLINEAR_RESPONSE",
+    "PROJECTED_WALL_INSTABILITY_FALSIFIED_NONLINEARLY",
+    "MATERIAL_OR_MECHANISM_NO_GO"
+  ],
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "hpc3_submission_authorized": false
+}

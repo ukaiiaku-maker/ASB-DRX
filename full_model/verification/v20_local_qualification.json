@@ -1,0 +1,70 @@
+{
+  "schema": "asb-drx/v20-local-qualification/v1",
+  "restart_sha": "09450752ec2e32eb6956fdcb8a74fa44aa3e4e1e",
+  "classification": "V20_COMMON_OPERATOR_REPAIR_REQUIRED_NO_HPC",
+  "v19_claim_retained": "NO_PHYSICAL_LAGB_PRECURSOR_OBSERVED_AT_32x32_AND_10_PERCENT_STRAIN",
+  "v19_wall_absence_primary_classification": "SIGNED_CONTENT_PRESENT_BUT_NOT_SPATIALLY_ORGANIZED",
+  "v19_wall_absence_contributors": [
+    "ALL_EFFICIENCY_WEIGHTED_REACTION_EXPOSURES_BELOW_ONE",
+    "MISSING_NONLOCAL_TOPOLOGICAL_PHYSICS_IN_V19",
+    "NO_VALID_COMMON_OPERATOR_FOR_FINITE_MODE_EXPOSURE"
+  ],
+  "stage_A": {
+    "regular_checkpoint_replay_completed": true,
+    "branches": ["homogeneous_noise", "mechanical_particle"],
+    "unsigned_wall_budget_closed": true,
+    "signed_wall_budget_closed": true,
+    "maximum_unsigned_relative_residual": 9.86e-16,
+    "maximum_signed_relative_residual": 4.39e-14,
+    "aggregate_wall_polarization_mean_range": [2.1869184764585525e-7, 2.3485980000358919e-7],
+    "efficiency_weighted_exposure_ranges": {
+      "capture": [0.01811361230503498, 0.01811760326550275],
+      "junction": [0.003024065543278507, 0.003030363584109808],
+      "release": [0.00013100192204763098, 0.0001310372805624347],
+      "annihilation_sink": [0.0000545838552670659, 0.000054599264757413635],
+      "order": [0.22357956811531177, 0.22396280873066549]
+    },
+    "production_projected_common_operator_passed": false,
+    "finite_mode_cumulative_G": null,
+    "reason": "V19 production uses a nonsmooth incoming-flux capture and algebraic polarization-target order law; its projected fixture uses local differentiable transfer and Onsager wall-energy gradient flow."
+  },
+  "stage_B": {
+    "production_four_family_2p5d_state_implemented": true,
+    "dual_nye_manufactured_relative_residual": 1.8953978359897483e-15,
+    "discrete_line_divergence_relative_residual": 5.774707958590975e-16,
+    "frame_covariance_passed": true,
+    "balanced_unsigned_zero_nye_control_passed": true,
+    "independent_frank_bilby_residual_128": 0.03464776667031086,
+    "independent_frank_bilby_residual_256": 0.01734718547179221,
+    "frank_bilby_grid_convergent_below_five_percent": true,
+    "density_flux_to_alignment_closure_in_production_qualified": false
+  },
+  "stage_C": {
+    "complete_local_family_budget_exposed": true,
+    "signed_source_exactly_zero": false,
+    "classification": "SIGNED_CONTENT_PRESENT_BUT_NOT_SPATIALLY_ORGANIZED"
+  },
+  "stage_D": {
+    "shared_nonlocal_elastic_solver_installed": true,
+    "zero_mode_sign_energy_and_work_tests_passed": true,
+    "explicit_frank_rule_junction_fixture_passed": true,
+    "junction_topology_used_by_production_reactions": false,
+    "stage_passed": false
+  },
+  "canonical_tests": {
+    "configured_test_suite": "377 passed",
+    "continuous_segmented_restart_bitwise_equal": true,
+    "no_phase_or_label_allocation": true,
+    "legacy_full_driver_shared_elastic_max_relative_change": 4.31e-13,
+    "matched_v32_full_v34_regression_artifact_retained": true
+  },
+  "fixture_passed": false,
+  "scientific_gate_passed": false,
+  "hpc3_submission_authorized": false,
+  "next_required_work": [
+    "replace the mismatched V19 wall law with one differentiable common production/projected operator",
+    "couple accepted conservative signed flux to density, plastic distortion, and alignment state in one update",
+    "use explicit junction products in production rather than symmetric scalar transfer",
+    "recompute on-trajectory finite-mode G and authorize HPC3 only if G_finite is at least 8"
+  ]
+}

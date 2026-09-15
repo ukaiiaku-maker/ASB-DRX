@@ -84,6 +84,11 @@ from dislocation_free_energy import (
     logarithmic_energy_J_m3,
 )
 from wall_ordering_energy import smooth_order
+from tensorial_nye import (
+    TensorialKinematicState, accept_slip_increment, bcc_four_family_systems,
+    initialize_tensorial_state, rotated_system_fields,
+)
+from nonlocal_elasticity import solve_periodic_eigenstrain
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
@@ -134,6 +139,10 @@ P = dict(
     v19_wall_release_efficiency=0.02,
     v19_wall_annihilation_efficiency=0.02,
     v19_wall_order_density_fraction=0.20,
+    # V20 diagnostics are evolution-neutral. They expose the exact accepted
+    # V19 wall increments and local kinetic fields for common-operator audits.
+    v20_trajectory_diagnostics=False,
+    v20_tensorial_nye_enabled=False,
 
     # -- Material (BCC iron) --
     b=2.48e-10,
@@ -1046,6 +1055,11 @@ if P.get('v19_one_grain_mode', False):
         # The V27 collective conversion is not a signed source ledger and is
         # therefore mutually exclusive with the V19 predictive wall operator.
         P['use_collective_organization'] = False
+if P.get('v20_tensorial_nye_enabled', False):
+    # The tensorial production state has one population per declared BCC
+    # Burgers family. It remains opt-in so frozen V19/v32 trajectories reduce
+    # exactly to their original two-slip representation.
+    P['nSlip'] = 4
 
 _entropy_names = (
     'glide_activation_entropy_kB', 'recovery_activation_entropy_kB',
@@ -2040,10 +2054,24 @@ class ATPotential:
 # ================================================================
 nSlip = P['nSlip']
 base_ang = np.deg2rad(np.array(P['slip_angles_deg']))
-_P11_mean = max(np.mean(np.abs([0.5*np.sin(2*a) for a in base_ang])), 1e-6)
+V20_SYSTEMS = (bcc_four_family_systems(P['b'])
+               if P.get('v20_tensorial_nye_enabled', False) else None)
+if V20_SYSTEMS is None:
+    _P11_mean = max(np.mean(np.abs([0.5*np.sin(2*a) for a in base_ang])), 1e-6)
+else:
+    _, _s0, _n0 = rotated_system_fields(V20_SYSTEMS, np.zeros((1, 1)))
+    _P11_mean = max(float(np.mean(np.abs(_s0[0, 0, :, 0]*_n0[0, 0, :, 0]))), 1e-6)
 drive_sc = 1.0 / _P11_mean
 
 def build_slip(psi):
+    if V20_SYSTEMS is not None:
+        _, s3, n3 = rotated_system_fields(V20_SYSTEMS, psi)
+        sv = s3[..., :2]
+        nv = n3[..., :2]
+        Sch = 0.5*(np.einsum('...si,...sj->...sij', sv, nv)
+                   +np.einsum('...si,...sj->...sij', nv, sv))
+        ang = np.arctan2(sv[..., 1], sv[..., 0])
+        return ang, sv, nv, Sch, Sch[..., 0, 0]
     ang = base_ang[None,None,:] + psi[:,:,None]
     sv = np.stack([np.cos(ang), np.sin(ang)], axis=-1)
     nv = np.stack([np.cos(ang), -np.sin(ang)], axis=-1)
@@ -2055,7 +2083,7 @@ def build_slip(psi):
     s11 = Sch[:,:,:,0,0]
     return ang, sv, nv, Sch, s11
 
-print(f"Slip: {P['slip_angles_deg']}, drive_scale={drive_sc:.2f}")
+print(f"Slip: {'four BCC 2.5-D families' if V20_SYSTEMS is not None else P['slip_angles_deg']}, drive_scale={drive_sc:.2f}")
 
 # ================================================================
 # 5. STRESS SOLVER
@@ -2113,28 +2141,9 @@ def _v19_fixed_eigenstrain():
 
 
 def ms_solve(eps_p, eps_bar, nit=3):
-    inelastic = eps_p + _v19_fixed_eigenstrain()
-    eps = np.zeros((Nx,Ny,2,2))
-    for i in range(2):
-        for j in range(2): eps[:,:,i,j] = eps_bar[i,j]
-    for _ in range(nit):
-        sig = np.einsum('ijkl,...kl->...ij', C4, eps-inelastic)
-        sh = np.zeros((Nx,Ny,2,2), dtype=complex)
-        deh = np.zeros_like(sh)
-        for i in range(2):
-            for j in range(2): sh[:,:,i,j] = np.fft.fft2(sig[:,:,i,j])
-        for i in range(2):
-            for j in range(2):
-                acc = np.zeros((Nx,Ny), dtype=complex)
-                for k in range(2):
-                    for l in range(2): acc += Gamma[i,j,k,l]*sh[:,:,k,l]
-                deh[:,:,i,j] = acc
-        for i in range(2):
-            for j in range(2):
-                eps[:,:,i,j] -= np.real(np.fft.ifft2(deh[:,:,i,j]))
-                eps[:,:,i,j] += eps_bar[i,j]-eps[:,:,i,j].mean()
-        eps = 0.5*(eps+eps.transpose(0,1,3,2))
-    return np.einsum('ijkl,...kl->...ij', C4, eps-inelastic), eps
+    return solve_periodic_eigenstrain(
+        eps_p+_v19_fixed_eigenstrain(), eps_bar, dx,
+        P['C11'], P['C12'], P['C44'], iterations=nit)
 
 
 # ================================================================
@@ -3571,6 +3580,17 @@ v19_wall_ledger = dict(captured_line_per_thickness=0.0,
                        annihilated_line_per_thickness=0.0,
                        transfer_line_residual_per_thickness=0.0,
                        signed_residual_line_per_thickness_by_slip=np.zeros(nSlip).tolist())
+_v20_wall_budget_channels = ('capture', 'junction', 'transport', 'release', 'sink')
+v20_wall_budget_fields = {
+    f'{kind}_{channel}': np.zeros_like(rp)
+    for kind in ('unsigned', 'signed')
+    for channel in _v20_wall_budget_channels}
+v20_wall_initial_unsigned = np.zeros_like(rp)
+v20_wall_initial_signed = np.zeros_like(rp)
+v20_last_tau_effective = np.zeros_like(rp)
+v20_last_gdot = np.zeros_like(rp)
+v20_last_wall_order_target = np.zeros((Nx, Ny))
+v20_last_wall_order_rate_s = np.zeros((Nx, Ny))
 if P.get('v19_predictive_wall_enabled', False):
     loaded_v19 = False
     if _restart_loaded and not P.get('restart_reset_clock', True):
@@ -3601,10 +3621,56 @@ if P.get('v19_predictive_wall_enabled', False):
                    np.min(q_wall_v19)) < 0.0
             or np.max(q_wall_v19) > 1.0):
         raise ValueError('V19 signed wall state is inadmissible')
-    np.testing.assert_allclose(rho_forest_plus+rho_forest_minus, rho_forest,
-                               rtol=2e-15, atol=1.0)
-    np.testing.assert_allclose(np.sum(rho_wall_plus+rho_wall_minus, axis=2),
-                               rho_wall, rtol=2e-15, atol=1.0)
+    if not loaded_v19:
+        np.testing.assert_allclose(rho_forest_plus+rho_forest_minus, rho_forest,
+                                   rtol=2e-15, atol=1.0)
+        np.testing.assert_allclose(np.sum(rho_wall_plus+rho_wall_minus, axis=2),
+                                   rho_wall, rtol=2e-15, atol=1.0)
+    # On an exact restart the scalar state and signed partition intentionally
+    # retain their end-of-step stagger.  The continuous path reconciles them
+    # after the next KM/recovery update; doing so here would shift that operator
+    # across the checkpoint boundary and destroy segmented identity.
+    v20_wall_initial_unsigned = rho_wall_plus+rho_wall_minus
+    v20_wall_initial_signed = rho_wall_plus-rho_wall_minus
+    if (_restart_loaded and not P.get('restart_reset_clock', True)
+            and P.get('v20_trajectory_diagnostics', False)):
+        with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as ztmp:
+            required = tuple(
+                f'v20_wall_budget__{kind}_{channel}'
+                for kind in ('unsigned', 'signed')
+                for channel in _v20_wall_budget_channels)
+            if not all(name in ztmp.files for name in required):
+                raise ValueError('exact V20 restart requires the complete wall budget')
+            for name in required:
+                key = name.removeprefix('v20_wall_budget__')
+                v20_wall_budget_fields[key] = np.asarray(ztmp[name], dtype=float).copy()
+            if 'v20_wall_initial_unsigned' not in ztmp.files or 'v20_wall_initial_signed' not in ztmp.files:
+                raise ValueError('exact V20 restart requires initial wall reference fields')
+            v20_wall_initial_unsigned = np.asarray(ztmp['v20_wall_initial_unsigned'], dtype=float).copy()
+            v20_wall_initial_signed = np.asarray(ztmp['v20_wall_initial_signed'], dtype=float).copy()
+
+# V20 authoritative plastic distortion and family-resolved Nye state.  Exact
+# restarts must carry all four arrays; reconstruction from the old symmetric
+# eps_p proxy is intentionally forbidden.
+v20_tensorial_state = None
+if V20_SYSTEMS is not None:
+    if _restart_loaded and not P.get('restart_reset_clock', True):
+        with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as ztmp:
+            names = ('v20_slip', 'v20_beta_p', 'v20_alignment_m2',
+                     'v20_family_nye_m1')
+            if not all(name in ztmp.files for name in names):
+                raise ValueError('exact tensorial-Nye restart requires complete V20 kinematics')
+            v20_tensorial_state = TensorialKinematicState(
+                np.asarray(ztmp['v20_slip'], dtype=float).copy(),
+                np.asarray(ztmp['v20_beta_p'], dtype=float).copy(),
+                np.asarray(ztmp['v20_alignment_m2'], dtype=float).copy(),
+                np.asarray(ztmp['v20_family_nye_m1'], dtype=float).copy())
+            v20_tensorial_state.validate(V20_SYSTEMS)
+    else:
+        v20_tensorial_state = initialize_tensorial_state((Nx, Ny), V20_SYSTEMS)
+    gamma_slip = v20_tensorial_state.slip.copy()
+    eps_p = 0.5*(v20_tensorial_state.beta_p[..., :2, :2]
+                 +np.swapaxes(v20_tensorial_state.beta_p[..., :2, :2], -1, -2))
 
 # v9 sparse material state exists only for an actually promoted parent/child
 # pair. Initial orientation labels remain one common deformed material class.
@@ -6115,11 +6181,35 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             v19_wall_ledger_json=np.array(json.dumps(
                 globals().get('v19_wall_ledger', {}), sort_keys=True,
                 separators=(',', ':'))),
+            v20_wall_initial_unsigned=globals().get(
+                'v20_wall_initial_unsigned', np.zeros((Nx, Ny, nSlip))),
+            v20_wall_initial_signed=globals().get(
+                'v20_wall_initial_signed', np.zeros((Nx, Ny, nSlip))),
+            v20_last_tau_effective=globals().get(
+                'v20_last_tau_effective', np.zeros((Nx, Ny, nSlip))),
+            v20_last_gdot=globals().get(
+                'v20_last_gdot', np.zeros((Nx, Ny, nSlip))),
+            v20_last_wall_order_target=globals().get(
+                'v20_last_wall_order_target', np.zeros((Nx, Ny))),
+            v20_last_wall_order_rate_s=globals().get(
+                'v20_last_wall_order_rate_s', np.zeros((Nx, Ny))),
+            **{
+                f'v20_wall_budget__{key}': value
+                for key, value in globals().get(
+                    'v20_wall_budget_fields', {}).items()},
             rho_mobile=_rho_mobile_field(rp, rm),
             collective_activity_memory=globals().get('collective_activity_memory', np.zeros((Nx, Ny))),
             eta=eta[:, :, :Ng], psi_gv=psi_gv[:Ng], Ng=np.array(Ng, dtype=np.int32),
             lab=lab, psi_lat=psi_lat, psi_plastic=psi_plastic, T=T, rho_GB=rho_GB,
             gamma_slip=gamma_slip, eps_p=eps_p, E_tot=E_tot,
+            v20_slip=(v20_tensorial_state.slip if globals().get(
+                'v20_tensorial_state') is not None else np.zeros((Nx, Ny, nSlip))),
+            v20_beta_p=(v20_tensorial_state.beta_p if globals().get(
+                'v20_tensorial_state') is not None else np.zeros((Nx, Ny, 3, 3))),
+            v20_alignment_m2=(v20_tensorial_state.alignment_m2 if globals().get(
+                'v20_tensorial_state') is not None else np.zeros((Nx, Ny, nSlip, 3))),
+            v20_family_nye_m1=(v20_tensorial_state.family_nye_m1 if globals().get(
+                'v20_tensorial_state') is not None else np.zeros((Nx, Ny, nSlip, 3, 3))),
             H_nuc=H_nuc, E_nuc=E_nuc, kappa_tot=_signed_kappa_field(rp, rm),
             nuc_cand_active=nuc_cand_active,
             nuc_cand_age=nuc_cand_age,
@@ -6482,11 +6572,19 @@ for n in range(_restart_step_offset, _restart_end_step):
                     collective_diag[kk] = np.nan
 
     # --- Plastic strain update ---
-    for s in range(nSlip):
-        gamma_slip[:,:,s] += gdot[:,:,s]*P['dt']
-        for i in range(2):
-            for j in range(2):
-                eps_p[:,:,i,j] += gdot[:,:,s]*Sch[:,:,s,i,j]*P['dt']
+    if V20_SYSTEMS is not None:
+        v20_tensorial_state = accept_slip_increment(
+            v20_tensorial_state, gdot*P['dt'], V20_SYSTEMS,
+            psi_lat, dx)
+        gamma_slip = v20_tensorial_state.slip.copy()
+        beta_2d = v20_tensorial_state.beta_p[..., :2, :2]
+        eps_p = 0.5*(beta_2d+np.swapaxes(beta_2d, -1, -2))
+    else:
+        for s in range(nSlip):
+            gamma_slip[:,:,s] += gdot[:,:,s]*P['dt']
+            for i in range(2):
+                for j in range(2):
+                    eps_p[:,:,i,j] += gdot[:,:,s]*Sch[:,:,s,i,j]*P['dt']
     E_tot[0,0] += P['edot_app']*P['dt']
 
     # --- Kocks-Mecking (EXPLICIT KINETICS) ---
@@ -6716,12 +6814,21 @@ for n in range(_restart_step_offset, _restart_end_step):
         rho_forest_minus = np.where(
             empty_forest, rho_forest*rm/mobile_pair, rho_forest_minus)
 
+        wall_plus_before_reconcile = rho_wall_plus.copy()
+        wall_minus_before_reconcile = rho_wall_minus.copy()
         wall_signed_total = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
         wall_scale = np.divide(
             rho_wall, wall_signed_total, out=np.zeros_like(rho_wall),
             where=wall_signed_total > 0.0)
         rho_wall_plus *= wall_scale[:, :, None]
         rho_wall_minus *= wall_scale[:, :, None]
+        if P.get('v20_trajectory_diagnostics', False):
+            v20_wall_budget_fields['unsigned_sink'] += (
+                rho_wall_plus+rho_wall_minus
+                -wall_plus_before_reconcile-wall_minus_before_reconcile)
+            v20_wall_budget_fields['signed_sink'] += (
+                rho_wall_plus-rho_wall_minus
+                -wall_plus_before_reconcile+wall_minus_before_reconcile)
         rp_before_v19_transport = rp.copy()
         rm_before_v19_transport = rm.copy()
     if P['use_advection']:
@@ -6773,6 +6880,9 @@ for n in range(_restart_step_offset, _restart_end_step):
                 cap_p = old_p-rp[:, :, s]; cap_m = old_m-rm[:, :, s]
                 rho_wall_plus[:, :, s] += cap_p
                 rho_wall_minus[:, :, s] += cap_m
+                if P.get('v20_trajectory_diagnostics', False):
+                    v20_wall_budget_fields['unsigned_capture'][:, :, s] += cap_p+cap_m
+                    v20_wall_budget_fields['signed_capture'][:, :, s] += cap_p-cap_m
                 captured += float(np.sum(cap_p, dtype=np.longdouble)
                                   +np.sum(cap_m, dtype=np.longdouble))*dx*dy
 
@@ -6788,6 +6898,9 @@ for n in range(_restart_step_offset, _restart_end_step):
                 rel_p = rp[:, :, s]-old_p; rel_m = rm[:, :, s]-old_m
                 rho_wall_plus[:, :, s] -= rel_p
                 rho_wall_minus[:, :, s] -= rel_m
+                if P.get('v20_trajectory_diagnostics', False):
+                    v20_wall_budget_fields['unsigned_release'][:, :, s] -= rel_p+rel_m
+                    v20_wall_budget_fields['signed_release'][:, :, s] -= rel_p-rel_m
                 released += float(np.sum(rel_p, dtype=np.longdouble)
                                   +np.sum(rel_m, dtype=np.longdouble))*dx*dy
 
@@ -6809,6 +6922,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                 realized_pair = np.minimum(realized_p, realized_m)
                 rho_wall_plus[:, :, s] = old_wp-realized_pair
                 rho_wall_minus[:, :, s] = old_wm-realized_pair
+                if P.get('v20_trajectory_diagnostics', False):
+                    v20_wall_budget_fields['unsigned_sink'][:, :, s] -= 2.0*realized_pair
+                    # Pair annihilation removes equal signs, hence exactly zero
+                    # signed-wall contribution by construction.
                 annihilated += 2.0*float(np.sum(
                     realized_pair, dtype=np.longdouble))*dx*dy
 
@@ -6851,6 +6968,13 @@ for n in range(_restart_step_offset, _restart_end_step):
                         source_second[:, :, second] = old_second-realized
                         target_first[:, :, first] += realized
                         target_second[:, :, second] += realized
+                        if P.get('v20_trajectory_diagnostics', False):
+                            first_sign = 1.0 if sign_first == 0 else -1.0
+                            second_sign = 1.0 if sign_second == 0 else -1.0
+                            v20_wall_budget_fields['unsigned_junction'][:, :, first] += realized
+                            v20_wall_budget_fields['unsigned_junction'][:, :, second] += realized
+                            v20_wall_budget_fields['signed_junction'][:, :, first] += first_sign*realized
+                            v20_wall_budget_fields['signed_junction'][:, :, second] += second_sign*realized
                         junctioned += 2.0*float(np.sum(
                             realized, dtype=np.longdouble))*dx*dy
 
@@ -6868,6 +6992,11 @@ for n in range(_restart_step_offset, _restart_end_step):
             order_rate = _v19_wall_rate_field(
                 np.max(np.abs(tau_effective), axis=2), T,
                 'v19_wall_order_G0_eV')
+            if P.get('v20_trajectory_diagnostics', False):
+                v20_last_tau_effective = tau_effective.copy()
+                v20_last_gdot = gdot.copy()
+                v20_last_wall_order_target = q_equilibrium.copy()
+                v20_last_wall_order_rate_s = order_rate.copy()
             order_fraction = np.clip(-np.expm1(-order_rate*P['dt']), 0.0, 1.0)
             q_wall_v19 = np.clip(q_wall_v19
                                  +order_fraction*(q_equilibrium-q_wall_v19),

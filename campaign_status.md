@@ -968,3 +968,14 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   The stronger `INTRAGRANULAR_SUBGRAIN_TO_PHYSICAL_DRX_GRAIN_PATH_SUPPORTED`
   claim remains false. No HPC3 job was needed; the complete local suite passes
   362 tests. ASB qualification remains separate and unchanged.
+
+## Directive v20 tensorial Nye and on-trajectory audit (2026-09-14)
+
+- The frozen V19 claim remains `NO_PHYSICAL_LAGB_PRECURSOR_OBSERVED_AT_32x32_AND_10_PERCENT_STRAIN`; it is not promoted to a material or mechanism rejection.
+- Exact evolution-neutral replays retained spatial checkpoints every 1% strain for the homogeneous/noise and eigenstrain-particle branches. Complete signed and unsigned family wall budgets close below `4.4e-14` and `9.9e-16` relative.
+- V19 efficiency-weighted exposures are short: capture `0.0181`, junction `0.00303`, release `1.31e-4`, annihilation `5.46e-5`, and order `0.224`. Aggregate wall polarization remains `2.19e-7` to `2.35e-7`. Classification: `SIGNED_CONTENT_PRESENT_BUT_NOT_SPATIALLY_ORGANIZED`.
+- The V19 projected operator is not the production linearization: its Onsager wall-energy order law and local differentiable capture differ from production's algebraic polarization target and one-sided arrived-flux capture. The prior finite-mode eigenvalue therefore cannot define on-trajectory cumulative growth. `ADEQUATE_LINEAR_EXPOSURE_NO_NONLINEAR_RESPONSE` and nonlinear falsification are unsupported.
+- An opt-in production four-family BCC 2.5-D state now carries full Burgers vectors/normals, plastic distortion, alignment, and family Nye. A production smoke closes the two Nye paths to `1.90e-15` and line divergence to `5.77e-16`, while retaining one grain. Independent Frank--Bilby residual falls from `3.46%` at 128 to `1.73%` at 256.
+- The full driver now uses a shared nonlocal periodic elastic solver. Sign, zero-mode, energy, and work-conjugacy tests pass; the 1000-step V19 replay changes by at most `4.31e-13` relative. A 20 versus 8+12 V20 restart is bitwise identical for every declared state.
+- The complete configured suite passes 377 tests. Explicit junction topology passes as a local Frank-rule/line-node fixture but is not yet the production wall reaction, and density flux is not yet one common discrete update with alignment. Decision: `V20_COMMON_OPERATOR_REPAIR_REQUIRED_NO_HPC`; `fixture_passed=false`, `scientific_gate_passed=false`, and no HPC3 job is authorized.
+- Live queue audit preserved unrelated jobs `55950433` and `56017421`; no DRX/ASB campaign job was submitted.
