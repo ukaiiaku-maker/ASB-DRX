@@ -2153,6 +2153,11 @@
       "configured_regression_tests_passed": 367,
       "fixture_passed": true,
       "scientific_gate_passed": false,
+      "live_queue_audit_after_push": {
+        "observed_at": "2026-09-14 America/Los_Angeles",
+        "campaign_jobs_running": 0,
+        "unrelated_jobs_observed_and_not_touched": ["55950433", "56017421"]
+      },
       "downstream_decision": {
         "release_and_growth": "not_triggered_no_physical_precursor",
         "grid_seed_domain_sweep": "not_authorized",
