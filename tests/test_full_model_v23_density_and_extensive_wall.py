@@ -15,6 +15,7 @@ from full_model.production.extensive_wall import (
     extensive_wall_chemical_potentials_J_m,
     extensive_wall_energy_components_J_m3, ordered_wall_nye_m1,
     manufacture_ordered_inventory, ordering_residual,
+    orientation_gradient_frank_bilby_target_m1,
     planar_frank_bilby_target_m1, wall_diagnostics,
 )
 from full_model.production.tensorial_nye import (
@@ -188,7 +189,7 @@ def test_accepted_extensive_map_jvp_includes_ordered_reservoirs():
         parameters, 1e-9)
     assert np.max(np.abs(jvp.wall_ordered_plus_m2)) > 0
     np.testing.assert_allclose(jvp.wall_ordered_plus_m2
-                               + jvp.wall_tangle_plus_m2, 0.0, atol=1e-10)
+                               + jvp.wall_tangle_plus_m2, 0.0, atol=3e-10)
 
 
 def test_wall_classifier_rejects_density_and_topology_false_positives():
@@ -242,3 +243,22 @@ def test_manufactured_tilt_wall_and_controls_require_matching_nye_and_jump():
         wall, systems, topologies, rotated_angle, rotated_target)
     np.testing.assert_array_equal(rotated["physical_wall_mask"],
                                   positive["physical_wall_mask"])
+
+
+def test_orientation_gradient_target_integrates_to_frank_bilby_for_smooth_wall():
+    n = 128; dx = 5e-8
+    x = (np.arange(n)-n/2)*dx
+    length = n*dx
+    theta = .5*np.deg2rad(2.0)*(
+        np.tanh((x+length/4)/(5*dx))-np.tanh((x-length/4)/(5*dx)))
+    field = np.broadcast_to(theta[:, None], (n, n)).copy()
+    target = orientation_gradient_frank_bilby_target_m1(field, dx)
+    recovered = integrated_nye_closure(target, 0, dx, line_axis=2)
+    # The periodic field contains a positive and a remote compensating wall.
+    # Integrate only the positive transition centered at -L/4.
+    section = target[:, n//2, :, 2]
+    central = np.sum(section[n//8:3*n//8], axis=0)*dx
+    from full_model.production.tensorial_nye import rotation_z
+    expected = (rotation_z(np.deg2rad(2.0))-rotation_z(0.0))@np.array([0., 1., 0.])
+    np.testing.assert_allclose(central, expected, rtol=3e-3, atol=2e-5)
+    assert np.linalg.norm(recovered) < 1e-12

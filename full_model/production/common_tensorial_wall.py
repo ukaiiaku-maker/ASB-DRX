@@ -150,6 +150,7 @@ class CommonWallParameters:
     bath_rate_s: float = 0.0
     bath_temperature_K: float = 1100.0
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
+    transport_scheme: str = "spectral"
     multiplication_coefficient: float = 10.0
     taylor_alpha: float = 0.30
     taylor_wall_weight: float = 2.0
@@ -188,6 +189,8 @@ class CommonWallParameters:
             raise ValueError("bound active tolerance must lie in (0,0.5)")
         if self.mobile_correlation_diffusivity_m2_s < 0.0:
             raise ValueError("mobile correlation diffusivity cannot be negative")
+        if self.transport_scheme not in ("spectral", "upwind"):
+            raise ValueError("transport scheme must be spectral or upwind")
         if self.multiplication_coefficient < 0.0:
             raise ValueError("multiplication coefficient cannot be negative")
         if self.taylor_alpha < 0.0 or self.taylor_wall_weight < 0.0 or self.taylor_junction_weight < 0.0:
@@ -237,6 +240,20 @@ def _divergence(vector, spacing):
     dx, _ = _spectral_gradient(vector[..., 0], spacing)
     _, dy = _spectral_gradient(vector[..., 1], spacing)
     return np.real(dx+dy)
+
+
+def _periodic_upwind_rate(density, velocity, spacing):
+    """Conservative first-order finite-volume advection on a periodic grid."""
+    rho = np.asarray(density, dtype=float)
+    vel = np.asarray(velocity, dtype=float)
+    rate = np.zeros_like(rho)
+    for axis in (0, 1):
+        right_rho = np.roll(rho, -1, axis=axis)
+        face_velocity = 0.5*(vel[..., axis]+np.roll(vel[..., axis], -1, axis=axis))
+        face_flux = (np.maximum(face_velocity, 0.0)*rho
+                     +np.minimum(face_velocity, 0.0)*right_rho)
+        rate -= (face_flux-np.roll(face_flux, 1, axis=axis))/spacing
+    return rate
 
 
 def exp_floor_rate(stress_pa, temperature_K, barrier_eV, parameters):
@@ -515,8 +532,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                 state.mobile_minus_m2[..., family], parameters.spacing_m)
             flux_minus[..., family, 0] -= parameters.mobile_correlation_diffusivity_m2_s*gx
             flux_minus[..., family, 1] -= parameters.mobile_correlation_diffusivity_m2_s*gy
-    mp_rate = -_divergence(flux_plus, parameters.spacing_m)
-    mm_rate = -_divergence(flux_minus, parameters.spacing_m)
+    if parameters.transport_scheme == "upwind":
+        mp_rate = _periodic_upwind_rate(
+            state.mobile_plus_m2, speed[..., None]*planar,
+            parameters.spacing_m)
+        mm_rate = _periodic_upwind_rate(
+            state.mobile_minus_m2, -speed[..., None]*planar,
+            parameters.spacing_m)
+    else:
+        mp_rate = -_divergence(flux_plus, parameters.spacing_m)
+        mm_rate = -_divergence(flux_minus, parameters.spacing_m)
     slip_rate = (parameters.burgers_m*speed
                  *(state.mobile_plus_m2+state.mobile_minus_m2))
     fp_rate = np.zeros(family_shape); fm_rate = np.zeros(family_shape)

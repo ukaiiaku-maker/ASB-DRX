@@ -94,3 +94,28 @@ operator must first be coupled to the mechanically heterogeneous accepted
 trajectory and demonstrate unseeded nonlinear formation with the required
 RSS, slip-gradient, Curl-beta, Nye, and orientation diagnostics. Manufactured
 closure is a fixture, not scientific wall formation.
+
+## First coupled nonlinear decision
+
+The V23 coupled map disables the scalar-q energy, advances signed transport,
+slip, plastic distortion, Nye, orientation, and heat through the common
+operator, remaps wall capture/removal without changing total line, and then
+advances the extensive tangle/ordered exchange. New captured wall line enters
+the tangle reservoir; removal acts proportionally on the existing split.
+
+A conservative periodic upwind transport option was required for this map.
+The inherited spectral flux produced negative undershoots under heterogeneous
+velocity and drove the global positivity step into a Zeno sequence. The V22
+spectral default remains unchanged. V23 uses upwind transport with zero
+spectral density diffusion. The ordering map likewise uses a local exponential
+donor update, so an exhausted pixel cannot throttle the domain.
+
+The first 16-square, 240-step local comparison gives exact zero ordering and
+zero orientation/Nye structure in the homogeneous control. Heterogeneous cases
+produce up to 3.21 degrees orientation span, `9.45e5 m^-1` slip gradient,
+`5.39e5 m^-1` Curl-beta Nye, and nonzero extensive ordering. Across the
+declared `K_alpha` bracket, no cell jointly passes ordered-line inventory,
+polarization, Frank--Bilby mismatch, and orientation criteria. Classification:
+`UNSEEDED_EXTENSIVE_ORDERING_PRESENT_NO_PHYSICAL_WALL`. The result identifies
+insufficient wall-line supply relative to the sharpening Frank--Bilby target;
+it does not authorize a long run or phase allocation.

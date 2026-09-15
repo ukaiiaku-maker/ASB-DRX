@@ -320,6 +320,31 @@
       "fixture_passed": true,
       "scientific_gate_passed": false,
       "classification": "V22_DECISION_CAMPAIGN_COMPLETE_WITH_NEGATIVE_SCIENTIFIC_GATES"
+    },
+    {
+      "directive": "v23",
+      "frozen_v22_checkpoint": "185ee86fad7aa3851c9bf40e83ad28671f43f335",
+      "frozen_evidence_path": "full_model/verification/v23_frozen_v22_evidence.json",
+      "density_map_result_path": "full_model/verification/v23_density_map_audit.json",
+      "density_map_classification": "DENSITY_MAP_QUALIFIED_FB_WALL_CLOSURE_PENDING",
+      "extensive_wall_fixture_path": "full_model/verification/v23_extensive_wall_local.json",
+      "frank_bilby_grid_set": [16, 32, 64],
+      "frank_bilby_maximum_relative_error": 5.1577288383753395e-16,
+      "rejected_v22_glide_line_projection_relative_residual": 0.6267912791582055,
+      "nonlinear_local_result_path": "full_model/verification/v23_local_nonlinear_trajectory.json",
+      "nonlinear_local_classification": "UNSEEDED_EXTENSIVE_ORDERING_PRESENT_NO_PHYSICAL_WALL",
+      "hpc3_hostname_resolved": true,
+      "hpc3_login_alias": "uci-hpc3",
+      "queue_audit": {
+        "unrelated_running_job": "55950433",
+        "action": "observed_only"
+      },
+      "hpc_wall_campaign_authorized": false,
+      "grain_allocation_disabled": true,
+      "multi_hit_enabled": false,
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "V23_EXTENSIVE_STATE_QUALIFIED_WALL_LINE_SUPPLY_UNRESOLVED"
     }
   ]
 }

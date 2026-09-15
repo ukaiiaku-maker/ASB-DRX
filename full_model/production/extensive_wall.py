@@ -106,6 +106,25 @@ def planar_frank_bilby_target_m1(shape, spacing_m, left_angle_rad,
     return target, closure
 
 
+def orientation_gradient_frank_bilby_target_m1(orientation_rad, spacing_m,
+                                                line_axis=2):
+    """Smooth local Frank--Bilby density derived only from lattice rotation.
+
+    Integrating the x-gradient term through an x-normal planar wall returns
+    ``(R_right-R_left)e_y``; the y-gradient term uses the consistently oriented
+    x tangent.  No dislocation population enters this construction.
+    """
+    theta = np.asarray(orientation_rad, dtype=float)
+    tx, ty = spectral_derivatives(theta, spacing_m)
+    c, s = np.cos(theta), np.sin(theta)
+    dR_ey = np.stack((-c, -s, np.zeros_like(theta)), axis=-1)
+    dR_ex = np.stack((-s, c, np.zeros_like(theta)), axis=-1)
+    closure_density = tx[..., None]*dR_ey - ty[..., None]*dR_ex
+    target = np.zeros(theta.shape+(3, 3))
+    target[..., :, int(line_axis)] = closure_density
+    return target
+
+
 def manufacture_ordered_inventory(inventory, systems, orientation_rad,
                                   target_nye_m1,
                                   line_direction_crystal=(0.0, 0.0, 1.0)):
@@ -254,33 +273,36 @@ def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
     transfer, turnover, mu = ordering_residual(
         inventory, systems, topologies, orientation_rad, target_nye_m1,
         stress_Pa, temperature_K, parameters)
-    scale = 1.0
-    for sign in ("plus", "minus"):
-        extent = dt_s * transfer[sign]
-        tangle = getattr(inventory, f"wall_tangle_{sign}_m2")
-        ordered = getattr(inventory, f"wall_ordered_{sign}_m2")
-        demand = np.zeros_like(extent)
-        np.divide(extent, tangle, out=demand, where=(extent >= 0) & (tangle > 0))
-        np.divide(-extent, ordered, out=demand, where=(extent < 0) & (ordered > 0))
-        demand[(extent >= 0) & (tangle <= 0)] = np.inf
-        demand[(extent < 0) & (ordered <= 0)] = np.inf
-        maximum = float(np.max(demand))
-        if maximum > parameters.maximum_fraction_per_step:
-            scale = min(scale, parameters.maximum_fraction_per_step / maximum)
     updates = {}
+    effective_rates = {}
+    local_scales = []
     for sign in ("plus", "minus"):
-        extent = dt_s * scale * transfer[sign]
+        raw_extent = dt_s * transfer[sign]
+        tangle0 = getattr(inventory, f"wall_tangle_{sign}_m2")
+        ordered0 = getattr(inventory, f"wall_ordered_{sign}_m2")
+        donor = np.where(raw_extent >= 0, tangle0, ordered0)
+        demand = np.divide(np.abs(raw_extent), donor, out=np.zeros_like(raw_extent),
+                           where=donor > 0)
+        fraction = np.minimum(-np.expm1(-demand),
+                              parameters.maximum_fraction_per_step)
+        extent = np.sign(raw_extent) * donor * fraction
+        ratio = np.divide(np.abs(extent), np.abs(raw_extent),
+                          out=np.ones_like(extent), where=raw_extent != 0)
+        local_scales.append(ratio)
+        effective_rates[sign] = extent/max(float(dt_s), 1e-300)
         updates[f"wall_tangle_{sign}_m2"] = (
-            getattr(inventory, f"wall_tangle_{sign}_m2") - extent)
+            tangle0 - extent)
         updates[f"wall_ordered_{sign}_m2"] = (
-            getattr(inventory, f"wall_ordered_{sign}_m2") + extent)
+            ordered0 + extent)
     updated = replace(inventory, **updates)
     updated.validate(len(systems), len(topologies))
     dissipation_W_m3 = np.sum(
-        (mu["ordered_plus"] - mu["tangle_plus"]) * scale * transfer["plus"]
-        + (mu["ordered_minus"] - mu["tangle_minus"]) * scale * transfer["minus"],
+        (mu["ordered_plus"] - mu["tangle_plus"]) * effective_rates["plus"]
+        + (mu["ordered_minus"] - mu["tangle_minus"]) * effective_rates["minus"],
         axis=2)
+    scale = float(np.min(np.stack(local_scales)))
     return updated, {"transfer_m2_s": transfer, "turnover_m2_s": turnover,
+                     "accepted_transfer_m2_s": effective_rates,
                      "chemical_potential_J_m": mu,
                      "free_energy_rate_W_m3": dissipation_W_m3}, scale
 

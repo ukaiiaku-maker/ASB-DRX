@@ -1,0 +1,115 @@
+{
+  "cases": [
+    {
+      "case": "homogeneous",
+      "elapsed_time_s": 2.3999999999999934e-07,
+      "maximum_curl_beta_nye_m1": 0.0,
+      "maximum_frank_bilby_target_m1": 0.0,
+      "maximum_order_fraction": 0.0,
+      "maximum_ordered_density_m2": 0.0,
+      "maximum_ordering_local_scale_last_step": 1.0,
+      "maximum_polarization": 0.0,
+      "maximum_slip": 0.0034414164480109947,
+      "maximum_slip_gradient_m1": 0.0,
+      "mean_absolute_slip": 0.003438705795472674,
+      "minimum_relative_nye_mismatch": 0.0,
+      "minimum_transport_accept_scale": 1.0,
+      "nye_match_coefficient_J_m": 2e-05,
+      "orientation_span_deg": 0.0,
+      "physical_wall_cell_count": 0,
+      "rss_range_Pa": [
+        1200000000.0,
+        1200000000.0
+      ],
+      "steps": 240
+    },
+    {
+      "case": "heterogeneous",
+      "elapsed_time_s": 2.2361438983328988e-07,
+      "maximum_curl_beta_nye_m1": 539090.0902712214,
+      "maximum_frank_bilby_target_m1": 194876.77070798,
+      "maximum_order_fraction": 0.05383793859790975,
+      "maximum_ordered_density_m2": 8811356125417.078,
+      "maximum_ordering_local_scale_last_step": 6.739528632398002e-06,
+      "maximum_polarization": 0.36527912042236177,
+      "maximum_slip": 0.1436180459947045,
+      "maximum_slip_gradient_m1": 944757.8577466069,
+      "mean_absolute_slip": 0.05036881530106063,
+      "minimum_relative_nye_mismatch": 0.02573422752927408,
+      "minimum_transport_accept_scale": 0.30188147936400467,
+      "nye_match_coefficient_J_m": 2e-05,
+      "orientation_span_deg": 3.2066630903258573,
+      "physical_wall_cell_count": 0,
+      "rss_range_Pa": [
+        400000000.0,
+        2000000000.0
+      ],
+      "steps": 240
+    },
+    {
+      "case": "heterogeneous",
+      "elapsed_time_s": 2.2361438983328988e-07,
+      "maximum_curl_beta_nye_m1": 539090.0902712214,
+      "maximum_frank_bilby_target_m1": 194876.77070798006,
+      "maximum_order_fraction": 0.06391959937396353,
+      "maximum_ordered_density_m2": 10713575876529.344,
+      "maximum_ordering_local_scale_last_step": 0.05610689811815288,
+      "maximum_polarization": 0.30457148623762076,
+      "maximum_slip": 0.1436180459947045,
+      "maximum_slip_gradient_m1": 944757.8577466068,
+      "mean_absolute_slip": 0.05036881530106063,
+      "minimum_relative_nye_mismatch": 0.02549988116798222,
+      "minimum_transport_accept_scale": 0.30188147936400467,
+      "nye_match_coefficient_J_m": 6e-05,
+      "orientation_span_deg": 3.206663090325859,
+      "physical_wall_cell_count": 0,
+      "rss_range_Pa": [
+        400000000.0,
+        2000000000.0
+      ],
+      "steps": 240
+    },
+    {
+      "case": "heterogeneous",
+      "elapsed_time_s": 2.2361438983328988e-07,
+      "maximum_curl_beta_nye_m1": 539090.0902712215,
+      "maximum_frank_bilby_target_m1": 194876.77070798,
+      "maximum_order_fraction": 0.05941134786556782,
+      "maximum_ordered_density_m2": 9957947007157.088,
+      "maximum_ordering_local_scale_last_step": 2.5648069719546967e-06,
+      "maximum_polarization": 0.37092536989559016,
+      "maximum_slip": 0.1436180459947045,
+      "maximum_slip_gradient_m1": 944757.857746607,
+      "mean_absolute_slip": 0.05036881530106063,
+      "minimum_relative_nye_mismatch": 0.01845857127350159,
+      "minimum_transport_accept_scale": 0.30188147936400467,
+      "nye_match_coefficient_J_m": 0.0002,
+      "orientation_span_deg": 3.206663090325859,
+      "physical_wall_cell_count": 0,
+      "rss_range_Pa": [
+        400000000.0,
+        2000000000.0
+      ],
+      "steps": 240
+    }
+  ],
+  "classification": "UNSEEDED_EXTENSIVE_ORDERING_PRESENT_NO_PHYSICAL_WALL",
+  "fixture_passed": true,
+  "heterogeneous_minus_homogeneous": {
+    "maximum_curl_beta_nye_m1": 539090.0902712214,
+    "maximum_frank_bilby_target_m1": 194876.77070798006,
+    "maximum_ordered_density_m2": 10713575876529.344,
+    "maximum_slip_gradient_m1": 944757.8577466068,
+    "orientation_span_deg": 3.206663090325859
+  },
+  "hpc_wall_campaign_authorized": false,
+  "reason": "no cell jointly meets extensive density, polarization, Nye match, and orientation jump",
+  "schema": "v23-local-nonlinear-trajectory-1",
+  "scientific_gate_passed": false,
+  "source_sha256": {
+    "common_tensorial_wall.py": "8d92bb0699c942b0a45bb4b7f83dadee0a495fa743eccba17de1250be60f203a",
+    "density_state_map.py": "386f3dc45fdaec1c3b7440ea92c5d0dfb5542b7a043fda2cfc67cfa6293fae2a",
+    "extensive_wall.py": "dad0ad557d045d3adaef2d5c62193ab15af84722ec8976cc6988a3ed11b52e01",
+    "v23_coupled_wall.py": "72efb2e85f5a52233ed12e63713738f90293027e1c49af82cd9153ebc55bd2e9"
+  }
+}

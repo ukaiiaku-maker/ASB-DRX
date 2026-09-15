@@ -1143,3 +1143,41 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   near-miss.
 - Final queue audit found only unrelated job `55950433`; it was observed and
   left untouched. No V22 wall, SIBM, or ASB job remains active.
+
+## Directive v23 extensive wall and topology recovery (2026-09-15)
+
+- V22 evidence was frozen at `185ee86` with per-file SHA-256 values in
+  `full_model/verification/v23_frozen_v22_evidence.json`. The remote branch
+  matched the local checkpoint before development. The obsolete local `hpc3`
+  alias did not resolve; the configured `uci-hpc3` alias did. Its queue contains
+  only unrelated running job `55950433`, which was observed and not touched.
+- A single authoritative density map now counts signed mobile, forest,
+  disordered-wall, ordered-wall, and junction-product line in m^-2. Legacy
+  scalar totals and wall order are derived views only. The reconstruction
+  residual is exactly zero; the audit Taylor resistance is 105--106 MPa and
+  no thickness or hidden 1e3 conversion is present.
+- Scalar wall order has been replaced in the V23 path by extensive
+  `rho_w=rho_t+rho_o` reservoirs for every sign and four BCC Burgers families.
+  The detailed-balanced transfer uses a declared 2.5 nm event length, exactly
+  conserves line/Burgers content, is dissipative, and has a lossless complete
+  restart representation and accepted-map JVP.
+- The V22 inherited glide-line topology is quantitatively incapable of a
+  planar two-degree Frank--Bilby wall (relative projection residual 0.627).
+  Separating the sessile ordered boundary line from the mobile glide line
+  closes the independent circuit to below 6e-16 on 16/32/64 grids at fixed
+  0.6 micrometer physical width. Absent, balanced, vanishing-content,
+  sign-reversed, incompatible-line, zero-orientation-jump, and rigid-rotation
+  controls pass.
+- Heterogeneous transport initially exposed a spectral-advection Zeno failure.
+  V23 now uses a conservative periodic upwind option while V22 retains its
+  frozen spectral default. A local donor-exponential ordering map similarly
+  prevents one exhausted pixel from freezing the domain.
+- The first coupled 16-square nonlinear comparison produced up to 3.21 degrees
+  orientation contrast, `9.45e5 m^-1` slip gradient, `5.39e5 m^-1` Curl-beta
+  Nye, and nonzero extensive ordering. The homogeneous control retained zero
+  ordering and zero gradients. No heterogeneous case jointly met ordered-line
+  inventory, polarization, Frank--Bilby mismatch, and orientation criteria.
+  Decision: `UNSEEDED_EXTENSIVE_ORDERING_PRESENT_NO_PHYSICAL_WALL`; fixture
+  true, scientific gate false, HPC wall campaign not authorized.
+- The canonical suite passes 408 tests. No phase or grain label exists in the
+  V23 wall state, and multi-hit remains disabled.
