@@ -13,7 +13,8 @@ from full_model.production.common_tensorial_wall import (
 )
 from full_model.production.tensorial_nye import (
     JunctionTopology, TensorialKinematicState, bcc_four_family_systems,
-    consistency_metrics,
+    consistency_metrics, frank_bilby_closure_from_orientations,
+    integrated_nye_closure,
 )
 
 
@@ -67,6 +68,38 @@ def reservoir_budget(initial, final, plus_name, minus_name):
     }
 
 
+def axial_frank_bilby_audit(orientation, alpha_m1, spacing):
+    """Independent axial section audit; diagnostic even when no wall exists."""
+    gx, gy = np.gradient(np.asarray(orientation), spacing)
+    peak = np.unravel_index(np.argmax(gx*gx+gy*gy), gx.shape)
+    normal_axis = 0 if abs(gx[peak]) >= abs(gy[peak]) else 1
+    coordinate = peak[normal_axis]
+    size = orientation.shape[normal_axis]
+    offset = max(size//4, 1)
+    left_index = (coordinate-offset) % size
+    right_index = (coordinate+offset) % size
+    left = float(np.mean(np.take(orientation, left_index, axis=normal_axis)))
+    right = float(np.mean(np.take(orientation, right_index, axis=normal_axis)))
+    tangent = np.array([0., 1., 0.]) if normal_axis == 0 else np.array([1., 0., 0.])
+    from_orientation = frank_bilby_closure_from_orientations(left, right, tangent)
+    transverse = peak[1-normal_axis]
+    from_nye = integrated_nye_closure(
+        alpha_m1, normal_axis, spacing, line_axis=2,
+        transverse_slice=transverse)
+    residual = float(np.linalg.norm(from_nye-from_orientation))
+    scale = max(float(np.linalg.norm(from_orientation)), 1e-30)
+    return {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": normal_axis, "section_index": int(coordinate),
+        "transverse_index": int(transverse),
+        "left_orientation_rad": left, "right_orientation_rad": right,
+        "orientation_closure_vector": from_orientation.tolist(),
+        "integrated_nye_closure_vector": from_nye.tolist(),
+        "absolute_residual": residual, "relative_residual": residual/scale,
+        "candidate_wall_present": bool(abs(right-left) >= np.deg2rad(1.0)),
+    }
+
+
 def summarize_case(case, plot_dir):
     checkpoints = sorted(case.glob("drx_v25_restart_*.npz"))
     if len(checkpoints) < 2:
@@ -91,6 +124,8 @@ def summarize_case(case, plot_dir):
             final.orientation_rad-np.mean(final.orientation_rad))
         wall_signed = np.sum(final.wall_plus_m2-final.wall_minus_m2, axis=2)
         structure = dominant_wavelength(alpha_norm, parameters.spacing_m)
+        frank_bilby = axial_frank_bilby_audit(
+            final.orientation_rad, nye["alpha_rho_m1"], parameters.spacing_m)
         strain = float(np.asarray(z["E_tot"])[0, 0])
         grain_count = int(np.asarray(z["Ng"]))
         ledger = json.loads(str(z["v21_balance_ledger_json"].item()))
@@ -126,6 +161,7 @@ def summarize_case(case, plot_dir):
                     g*g for g in np.gradient(orientation_deg,
                                               parameters.spacing_m)))))},
             "structure_factor": structure,
+            "independent_frank_bilby": frank_bilby,
             "cumulative_channel_exposure": exposure,
             "balance_ledger": ledger,
             "fixture_passed": bool(
