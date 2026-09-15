@@ -1243,7 +1243,14 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE`; fixture true,
   scientific gate false. Exact all-defect freeze and full-driver sequential
   stage controls remain unavailable and are explicit qualification limits.
-- Active checksum-bound, non-array HPC3 jobs are: `56040570` (seed-43 128 base
+- The failure audit found that the inherited nominal bicrystal carried 62.7%
+  accumulated strain and a 465 MPa macroscopic stress. A local zero-load reset
+  reduced 50-step equal-state drift from many interface widths to 0.0025
+  widths. One bounded repair job, `56040797`, therefore repeats the identical
+  matrix after resetting clock, total strain, and plastic strain before common
+  equilibration; it does not retune mobility or stored-energy parameters.
+- Active checksum-bound, non-array HPC3 jobs are: `56040797` (unloaded planar
+  SIBM repair), `56040570` (seed-43 128 base
   matched continuation), `56040575` (seed-43 128 half-step matched
   continuation), and `56040576` (seed-43 64 high-cadence matched run). The ASB continuations
   start from the exact step-2500 adiabatic/isothermal checkpoints preceding the

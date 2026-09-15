@@ -2220,6 +2220,7 @@
         "sha256": "b380471709aea1d672b3cd478043a8da909a92c366881bbbbd63fd485da063c3"
       },
       "active_hpc3_jobs": [
+        {"run_id": "20260915T192037Z-29a0282-c0a8eb", "job_id": "56040797", "purpose": "zero_load_planar_sibm_repair_without_parameter_retuning"},
         {"run_id": "20260915T185229Z-0ff33cb-e261ab", "job_id": "56040570", "purpose": "seed43_128_base_matched_continuation_field_cadence_25"},
         {"run_id": "20260915T185230Z-0ff33cb-0f6b77", "job_id": "56040575", "purpose": "seed43_128_dt_refined_matched_continuation_field_cadence_25"},
         {"run_id": "20260915T185231Z-0ff33cb-939ac3", "job_id": "56040576", "purpose": "seed43_64_high_cadence_matched_control_field_cadence_25"}
