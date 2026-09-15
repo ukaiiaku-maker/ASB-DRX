@@ -1,0 +1,134 @@
+{
+  "classification": "COMMON_PHASE_FUNCTIONAL_PHASE_ONLY_SIGN_QUALIFIED_FULL_DRIVER_PENDING",
+  "clean_state": {
+    "excess_boundary_reservoir": false,
+    "historical_sweep": false,
+    "zero_plastic_strain": true,
+    "zero_stress": true,
+    "zero_total_strain": true
+  },
+  "fixture_passed": true,
+  "full_driver_sequential_activation_completed": false,
+  "hpc_sibm_authorized": false,
+  "label_permutation_symmetric": true,
+  "phase_only_dynamics": {
+    "equal": {
+      "all_defects_frozen": true,
+      "displacement_interface_widths": 3.059104821308741e-09,
+      "displacement_m": 9.177314463926223e-16,
+      "expected_sign": 0,
+      "final_child_fraction": 0.4999999984404372,
+      "first_phase_only_rate_sign": -1,
+      "initial_child_fraction": 0.4999999982568909,
+      "observed_sign": 1,
+      "stable_velocity_sign": true,
+      "zero_load": true
+    },
+    "favorable": {
+      "all_defects_frozen": true,
+      "displacement_interface_widths": 0.9168666618546004,
+      "displacement_m": 2.750599985563801e-07,
+      "expected_sign": 1,
+      "final_child_fraction": 0.5550119979681669,
+      "first_phase_only_rate_sign": 1,
+      "initial_child_fraction": 0.4999999982568909,
+      "observed_sign": 1,
+      "stable_velocity_sign": true,
+      "zero_load": true
+    },
+    "mobility_off": {
+      "displacement_interface_widths": 0.0,
+      "observed_sign": 0
+    },
+    "reversed": {
+      "all_defects_frozen": true,
+      "displacement_interface_widths": -0.9168667683165203,
+      "displacement_m": -2.7506003049495606e-07,
+      "expected_sign": -1,
+      "final_child_fraction": 0.4449879921578997,
+      "first_phase_only_rate_sign": -1,
+      "initial_child_fraction": 0.4999999982568909,
+      "observed_sign": -1,
+      "stable_velocity_sign": true,
+      "zero_load": true
+    }
+  },
+  "phase_only_sign_qualified": true,
+  "schema": "asb-drx/v25-clean-symmetric-sibm/v1",
+  "scientific_gate_passed": false,
+  "sequential_activation_switches": [
+    {
+      "boundary_storage": false,
+      "conservative_transfer": false,
+      "constitutive_and_rehardening": false,
+      "phase": true,
+      "recovery_and_heat": false
+    },
+    {
+      "boundary_storage": false,
+      "conservative_transfer": true,
+      "constitutive_and_rehardening": false,
+      "phase": true,
+      "recovery_and_heat": false
+    },
+    {
+      "boundary_storage": true,
+      "conservative_transfer": true,
+      "constitutive_and_rehardening": false,
+      "phase": true,
+      "recovery_and_heat": false
+    },
+    {
+      "boundary_storage": true,
+      "conservative_transfer": true,
+      "constitutive_and_rehardening": false,
+      "phase": true,
+      "recovery_and_heat": true
+    },
+    {
+      "boundary_storage": true,
+      "conservative_transfer": true,
+      "constitutive_and_rehardening": true,
+      "phase": true,
+      "recovery_and_heat": true
+    }
+  ],
+  "variational_derivatives": {
+    "equal": {
+      "analytical_total_Pa": 9.357452392578125e-08,
+      "boundary_Pa": 0.0,
+      "centered_finite_difference_Pa": 0.0,
+      "compatibility_Pa": 0.0,
+      "defect_Pa": -1.5217863251737267e-25,
+      "elastic_Pa": 0.0,
+      "gnd_Pa": 0.0,
+      "interface_Pa": 9.357452392578125e-08,
+      "phase_Pa": 0.0,
+      "relative_derivative_mismatch": 9.357452392578125e-08
+    },
+    "favorable": {
+      "analytical_total_Pa": -119729388.1745157,
+      "boundary_Pa": 0.0,
+      "centered_finite_difference_Pa": -119729384.65277138,
+      "compatibility_Pa": 0.0,
+      "defect_Pa": -119729388.17451578,
+      "elastic_Pa": 0.0,
+      "gnd_Pa": 0.0,
+      "interface_Pa": 9.357452392578125e-08,
+      "phase_Pa": 0.0,
+      "relative_derivative_mismatch": 2.941420117943496e-08
+    },
+    "reversed": {
+      "analytical_total_Pa": 119729388.17451587,
+      "boundary_Pa": 0.0,
+      "centered_finite_difference_Pa": 119729384.65333982,
+      "compatibility_Pa": 0.0,
+      "defect_Pa": 119729388.17451578,
+      "elastic_Pa": 0.0,
+      "gnd_Pa": 0.0,
+      "interface_Pa": 9.357452392578125e-08,
+      "phase_Pa": 0.0,
+      "relative_derivative_mismatch": 2.940945501150746e-08
+    }
+  }
+}

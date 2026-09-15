@@ -1,0 +1,13 @@
+{
+  "checkpoint": "a335b07498cc4f4490e3247fe2540e554afb05c8",
+  "files": {
+    "full_model/docs/v24_decision_report.md": "f6198e8bce440e01e5b0a480d50813b321433e46f7107bff1c7eb0f887192a15",
+    "full_model/verification/v24_mechanical_supply_fields.png": "0a122b244e38cf7730e02b07190edefd95c15b6686f1410244f1efa66d33f93c",
+    "full_model/verification/v24_mechanical_supply_local.json": "e048786f0e650765760a24eff1ae622afe6c798c2554bfb3aa8d4f843e689908",
+    "full_model/verification/v24_planar_sibm_result.json": "8137a8eca54c5b4b7beb34dc1a4827ee58d7bcfa9401b6bb25e7ea22fc95f3bb",
+    "full_model/verification/v24_planar_sibm_unloaded_result.json": "2b61d9aacd4efa6a84788296e83a34cd7eb978ad41b4f2b56eb30f0c9dd94f72",
+    "full_model/verification/v24_strict_asb_result.json": "d81e9f2e36937e7ae7db46714e3157d367ee0f7c88241d60ea348fac0719e137"
+  },
+  "raw_hpc_archives_remain_immutable": true,
+  "schema": "asb-drx/v25-frozen-v24-evidence/v1"
+}

@@ -1,0 +1,370 @@
+{
+  "algebraic_transport_cone_reachable": true,
+  "authoritative_state_consistent": false,
+  "candidate_audits": [
+    {
+      "capacity_basis": "initial signed donor line integrated over fixed 0.8 um window",
+      "cone": {
+        "absolute_residual": 5.717017518206692e-12,
+        "classification": "FB_TARGET_REACHABLE_BUT_KINETICALLY_UNEXPOSED",
+        "event_extents_m1": [
+          11270532.054538403,
+          0.0,
+          44378422.7524092,
+          0.0,
+          47213027.13374992,
+          0.0,
+          10446684.500574866,
+          0.0,
+          71630719.27860656,
+          0.0,
+          11054871.188753365,
+          0.0,
+          7975843.309490292,
+          0.0,
+          87137756.81553736,
+          0.0
+        ],
+        "event_names": [
+          "incoming_transport_b0_-1",
+          "v24_local_reorientation_b0_-1",
+          "incoming_transport_b0_+1",
+          "v24_local_reorientation_b0_+1",
+          "incoming_transport_b1_-1",
+          "v24_local_reorientation_b1_-1",
+          "incoming_transport_b1_+1",
+          "v24_local_reorientation_b1_+1",
+          "incoming_transport_b2_-1",
+          "v24_local_reorientation_b2_-1",
+          "incoming_transport_b2_+1",
+          "v24_local_reorientation_b2_+1",
+          "incoming_transport_b3_-1",
+          "v24_local_reorientation_b3_-1",
+          "incoming_transport_b3_+1",
+          "v24_local_reorientation_b3_+1"
+        ],
+        "event_validation": [
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          }
+        ],
+        "inadmissible_events": [
+          "v24_local_reorientation_b0_-1",
+          "v24_local_reorientation_b0_+1",
+          "v24_local_reorientation_b1_-1",
+          "v24_local_reorientation_b1_+1",
+          "v24_local_reorientation_b2_-1",
+          "v24_local_reorientation_b2_+1",
+          "v24_local_reorientation_b3_-1",
+          "v24_local_reorientation_b3_+1"
+        ],
+        "kinetically_exposed_fraction": 0.10051408666175696,
+        "optimizer_is_diagnostic_only": true,
+        "reachable": true,
+        "relative_residual": 3.496559589487317e-10,
+        "relative_tolerance": 0.05,
+        "required_total_extent_m1": 291107857.03365993,
+        "target_norm": 0.01635040779912734
+      },
+      "current_ordered_inventory": [
+        6.148782448718908e-07,
+        4.224322090779146e-07,
+        -6.257516156072912e-07
+      ],
+      "declared_transport_supply_fraction": 0.03809953173150996,
+      "frank_bilby_target": [
+        0.016337747748244216,
+        0.0006591518107751382,
+        0.0
+      ],
+      "missing_inventory": [
+        0.016337132869999344,
+        0.0006587293785660603,
+        6.257516156072912e-07
+      ],
+      "topology_route_enabled": false
+    },
+    {
+      "capacity_basis": "initial signed donor line integrated over fixed 0.8 um window",
+      "cone": {
+        "absolute_residual": 2.510641043789992e-10,
+        "classification": "FB_TARGET_REACHABLE_BUT_KINETICALLY_UNEXPOSED",
+        "event_extents_m1": [
+          10366117.848700283,
+          0.0,
+          35912927.37894535,
+          0.0,
+          54871277.777955554,
+          0.0,
+          10379133.163085692,
+          0.0,
+          3515664.243985223,
+          0.0,
+          98363504.13785249,
+          0.0,
+          81374642.5753415,
+          0.0,
+          6456518.608197624,
+          0.0
+        ],
+        "event_names": [
+          "incoming_transport_b0_-1",
+          "v24_local_reorientation_b0_-1",
+          "incoming_transport_b0_+1",
+          "v24_local_reorientation_b0_+1",
+          "incoming_transport_b1_-1",
+          "v24_local_reorientation_b1_-1",
+          "incoming_transport_b1_+1",
+          "v24_local_reorientation_b1_+1",
+          "incoming_transport_b2_-1",
+          "v24_local_reorientation_b2_-1",
+          "incoming_transport_b2_+1",
+          "v24_local_reorientation_b2_+1",
+          "incoming_transport_b3_-1",
+          "v24_local_reorientation_b3_-1",
+          "incoming_transport_b3_+1",
+          "v24_local_reorientation_b3_+1"
+        ],
+        "event_validation": [
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": true,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          },
+          {
+            "authoritative_nye_ownership_valid": false,
+            "frank_rule_valid": true,
+            "line_node_valid": true,
+            "local_total_nye_conservative": false
+          }
+        ],
+        "inadmissible_events": [
+          "v24_local_reorientation_b0_-1",
+          "v24_local_reorientation_b0_+1",
+          "v24_local_reorientation_b1_-1",
+          "v24_local_reorientation_b1_+1",
+          "v24_local_reorientation_b2_-1",
+          "v24_local_reorientation_b2_+1",
+          "v24_local_reorientation_b3_-1",
+          "v24_local_reorientation_b3_+1"
+        ],
+        "kinetically_exposed_fraction": 0.09713338594534435,
+        "optimizer_is_diagnostic_only": true,
+        "reachable": true,
+        "relative_residual": 1.3775899664952903e-08,
+        "relative_tolerance": 0.05,
+        "required_total_extent_m1": 301239785.73406374,
+        "target_norm": 0.01822487899049732
+      },
+      "current_ordered_inventory": [
+        0.01807313829335903,
+        0.0017090443142034528,
+        -0.018111663634394325
+      ],
+      "declared_transport_supply_fraction": 0.03809953173150996,
+      "frank_bilby_target": [
+        0.01633774774824425,
+        0.0006591518107751382,
+        0.0
+      ],
+      "missing_inventory": [
+        -0.0017353905451147796,
+        -0.0010498925034283146,
+        0.018111663634394325
+      ],
+      "topology_route_enabled": true
+    }
+  ],
+  "candidate_grid": 32,
+  "classification": "REACTION_CONE_TEST_INVALID_DUE_TO_STATE_INCONSISTENCY",
+  "curl_beta_vs_reservoir_relative_rms": [
+    1.3119014832604485,
+    1.2419686141835493
+  ],
+  "fixture_passed": true,
+  "long_wall_hpc_authorized": false,
+  "rate_tuning_authorized": false,
+  "reason_reorientation_rejected": "nonzero local total-Nye increment has neither swept plastic area nor an explicit loop/source/sink; beta_p is not updated",
+  "schema": "asb-drx/v25-reaction-cone-audit/v1",
+  "scientific_gate_passed": false,
+  "transport_kinetically_exposed": false,
+  "v24_local_reorientation_admissible": false
+}

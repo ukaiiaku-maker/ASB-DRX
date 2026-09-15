@@ -1,0 +1,160 @@
+{
+  "classification": "ASB_PHYSICAL_RESPONSE_NOT_YET_GRID_CONVERGED",
+  "coarse_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T185231Z-0ff33cb-939ac3/work/full_model/production/output/cases/adiabatic_64_seed43_high_cadence/drx_v25_restart_004999.npz",
+  "common_time_interval_s": [
+    2.973577757386624e-06,
+    5.528671624487475e-06
+  ],
+  "fine_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T185229Z-0ff33cb-e261ab/work/full_model/production/output/cases/adiabatic_128_seed43_base/drx_v25_restart_004500.npz",
+  "fixture_passed": true,
+  "physical_scales": {
+    "coarse64": {
+      "cell_area_m2": 2.4414062500000004e-14,
+      "cell_size_m": 1.5625e-07,
+      "cell_volume_m3": 1.2109375000000004e-23,
+      "classifier_width_declared_m": null,
+      "conductivity_W_m_K": 0.015,
+      "domain_size_m": 1e-05,
+      "gb_transmission_width_m": null,
+      "grid": 64,
+      "heat_capacity_J_m3_K": 3800000.0,
+      "heat_kernel_effective_m": 3.125e-07,
+      "heat_kernel_requested_m": 3e-07,
+      "hotspot_process_zone_width_m": 3e-07,
+      "mechanical_correlation_length_m": 1e-07,
+      "noise_amplitude_declared": null,
+      "noise_spectrum_declared": null,
+      "phase_interface_intrinsic_m": 3.162277660168379e-07,
+      "phase_interface_resolved_m": 3.162277660168379e-07,
+      "represented_thickness_m": 4.96e-10,
+      "thermal_diffusivity_m2_s": 3.947368421052631e-09
+    },
+    "fine128": {
+      "cell_area_m2": 6.103515625000001e-15,
+      "cell_size_m": 7.8125e-08,
+      "cell_volume_m3": 3.027343750000001e-24,
+      "classifier_width_declared_m": null,
+      "conductivity_W_m_K": 0.015,
+      "domain_size_m": 1e-05,
+      "gb_transmission_width_m": null,
+      "grid": 128,
+      "heat_capacity_J_m3_K": 3800000.0,
+      "heat_kernel_effective_m": 3e-07,
+      "heat_kernel_requested_m": 3e-07,
+      "hotspot_process_zone_width_m": 3e-07,
+      "mechanical_correlation_length_m": 1e-07,
+      "noise_amplitude_declared": null,
+      "noise_spectrum_declared": null,
+      "phase_interface_intrinsic_m": 3.162277660168379e-07,
+      "phase_interface_resolved_m": 3.162277660168379e-07,
+      "represented_thickness_m": 4.96e-10,
+      "thermal_diffusivity_m2_s": 3.947368421052631e-09
+    }
+  },
+  "restriction_consistency": {
+    "edge_relation_mismatch_fraction": 0.03125,
+    "restriction_consistent": true
+  },
+  "scale_comparison": {
+    "conductivity_W_m_K": {
+      "coarse": 0.015,
+      "fine": 0.015,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "domain_size_m": {
+      "coarse": 1e-05,
+      "fine": 1e-05,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "heat_capacity_J_m3_K": {
+      "coarse": 3800000.0,
+      "fine": 3800000.0,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "heat_kernel_effective_m": {
+      "coarse": 3.125e-07,
+      "fine": 3e-07,
+      "passed": true,
+      "relative_difference": 0.04000000000000012
+    },
+    "heat_kernel_requested_m": {
+      "coarse": 3e-07,
+      "fine": 3e-07,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "hotspot_process_zone_width_m": {
+      "coarse": 3e-07,
+      "fine": 3e-07,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "mechanical_correlation_length_m": {
+      "coarse": 1e-07,
+      "fine": 1e-07,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "phase_interface_intrinsic_m": {
+      "coarse": 3.162277660168379e-07,
+      "fine": 3.162277660168379e-07,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "phase_interface_resolved_m": {
+      "coarse": 3.162277660168379e-07,
+      "fine": 3.162277660168379e-07,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "represented_thickness_m": {
+      "coarse": 4.96e-10,
+      "fine": 4.96e-10,
+      "passed": true,
+      "relative_difference": 0.0
+    },
+    "thermal_diffusivity_m2_s": {
+      "coarse": 3.947368421052631e-09,
+      "fine": 3.947368421052631e-09,
+      "passed": true,
+      "relative_difference": 0.0
+    }
+  },
+  "schema": "asb-drx/v25-asb-grid-scaling-audit/v1",
+  "scientific_gate_passed": false,
+  "strain_rate_bracket_authorized": false,
+  "work_heat": {
+    "coarse64": {
+      "deposited_heat_J_m3": 24229796.361474253,
+      "end_time_s": 5.523075359415343e-06,
+      "external_work_J_m3": 25320445.205115624,
+      "final_temperature_excess_from_T0_K": 14.604011773104503,
+      "plastic_work_J_m3": 1106561645.3597755,
+      "start_time_s": 2.9786821776970946e-06,
+      "stored_thermal_energy_change_J_m3": 24200987.113382053
+    },
+    "fine128": {
+      "deposited_heat_J_m3": 21940557.421289846,
+      "end_time_s": 5.528671624487475e-06,
+      "external_work_J_m3": 23297564.834823545,
+      "final_temperature_excess_from_T0_K": -186.6408736024448,
+      "plastic_work_J_m3": 649266643.0153102,
+      "start_time_s": 2.973577757386624e-06,
+      "stored_thermal_energy_change_J_m3": 21483695.981154732
+    },
+    "heat_normalization_relative_difference": 0.015855881310142702,
+    "heat_to_external_work_ratio": {
+      "coarse64": 0.956926158493413,
+      "fine128": 0.9417532509017706
+    },
+    "relative_differences": {
+      "deposited_heat_J_m3": 0.09448032109028914,
+      "external_work_J_m3": 0.07989118492606068,
+      "plastic_work_J_m3": 0.41325759325029326,
+      "stored_thermal_energy_change_J_m3": 0.11228017764303427
+    }
+  }
+}

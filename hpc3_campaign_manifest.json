@@ -2302,6 +2302,46 @@
       "configured_regression_tests_passed": 429,
       "unrelated_jobs_observed_and_not_touched": ["55950433", "56040470"],
       "final_live_queue_unrelated_only": ["55950433"]
+    },
+    {
+      "run_id": "v25-reaction-cone-phase-symmetry-asb-grid-local-20260915",
+      "purpose": "directive_v25_local_prerequisites_before_hpc",
+      "restart_checkpoint": "a335b07498cc4f4490e3247fe2540e554afb05c8",
+      "frozen_v24_evidence": {
+        "manifest": "full_model/verification/v25_frozen_v24_evidence.json",
+        "sha256": "c6d1d2cd947cf47450a2f4361ef49509187e60ecfe72caa5db901bc8f9347e33"
+      },
+      "wall_decision": {
+        "classification": "REACTION_CONE_TEST_INVALID_DUE_TO_STATE_INCONSISTENCY",
+        "algebraic_transport_cone_reachable": true,
+        "transport_kinetically_exposed": false,
+        "local_reorientation_authoritative_nye_valid": false,
+        "rate_tuning_authorized": false,
+        "hpc_authorized": false,
+        "result": "full_model/verification/v25_reaction_cone_local.json",
+        "result_sha256": "ecb6f75f8ef5dbfb63e16669deeb1adc41447c9ccf8b2aedfb983d19fd65e68d"
+      },
+      "sibm_decision": {
+        "classification": "CLEAN_PRODUCTION_PHASE_ONLY_SIBM_SIGN_QUALIFIED",
+        "phase_only_directional_controls_passed": true,
+        "exact_all_defect_freeze_passed": true,
+        "sequential_full_driver_activation_completed": false,
+        "hpc_authorized": false,
+        "result": "full_model/verification/v25_clean_sibm_matrix.json",
+        "result_sha256": "367881a9f5558a55ea83a20e06d274e2b08c5cf5d5cc5c87d5ad6ca989079923"
+      },
+      "asb_decision": {
+        "classification": "ASB_PHYSICAL_RESPONSE_NOT_YET_GRID_CONVERGED",
+        "physical_length_audit_passed": true,
+        "restriction_consistency_passed": true,
+        "heat_normalization_relative_difference": 0.015,
+        "strain_rate_bracket_authorized": false,
+        "result": "full_model/verification/v25_asb_grid_audit.json",
+        "result_sha256": "41a0801a9610bf74854028ee7b1e911b5058774a540b4d45d75547836d48a6c2"
+      },
+      "configured_regression_tests_passed": 439,
+      "hpc3_jobs_submitted": [],
+      "unrelated_jobs_observed_and_not_touched": ["55950433"]
     }
   ]
 }

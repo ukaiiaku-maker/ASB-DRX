@@ -51,6 +51,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pathlib import Path
+import copy
 import os, json, time as _wtime, csv, tempfile
 from arrhenius_kinetics import (
     ActivatedProcess, KB_J_K as ARRHENIUS_KB_J_K, exp_floor_enthalpy_j,
@@ -561,6 +562,16 @@ P = dict(
     freeze_kwc_eta=False,            # ablation: keep eta/lab fixed while CH/KM run
     freeze_orientation=False,        # ablation: keep psi_plastic fixed
     freeze_rhoGB=False,              # ablation: keep rho_GB fixed
+    # V25 scientific isolation: phase evolution remains active while every
+    # defect, thermal, mechanical, front-transfer, history, and tracker state
+    # is restored exactly after the accepted phase step. This is not a
+    # production approximation and defaults off.
+    sibm_all_defects_frozen=False,
+    sibm_clean_bicrystal_initialize=False,
+    sibm_clean_parent_density_m2=4.0e17,
+    sibm_clean_child_density_m2=1.0e17,
+    sibm_clean_misorientation_deg=20.0,
+    sibm_clean_interface_width_um=0.30,
     disable_nucleation=False,
     L_ac=3.0e-3,          # v7: modestly slower GB/AC mobility; preserves growth but resolves it
     # Numerical explicit-AC limiter, analogous to the CH increment limiter.
@@ -2564,6 +2575,25 @@ def F_comp_derivs(kappa_tot, rho_GB, psi):
 # 9. GRAIN INITIALISATION
 # ================================================================
 def init_grains():
+    if P.get('sibm_clean_bicrystal_initialize', False):
+        Ng = 2
+        width = max(float(P.get('sibm_clean_interface_width_um', .30))*1e-6,
+                    min(dx, dy))
+        coordinate = np.arange(Nx)[:, None]*dx
+        left, right = .25*Lx, .75*Lx
+        child_1d = .5*(np.tanh((coordinate-left)/width)
+                      -np.tanh((coordinate-right)/width))
+        child = np.broadcast_to(np.clip(child_1d, 0.0, 1.0), (Nx, Ny))
+        eta = np.zeros((Nx, Ny, P['grain_max']))
+        eta[:, :, 0] = 1.0-child; eta[:, :, 1] = child
+        lab = np.argmax(eta[:, :, :Ng], axis=2)
+        pv = np.zeros(P['grain_max'])
+        half = .5*np.deg2rad(float(P.get('sibm_clean_misorientation_deg', 20.0)))
+        pv[:2] = (-half, half)
+        psi = eta[:, :, 0]*pv[0]+eta[:, :, 1]*pv[1]
+        gb = diffuse_gb_support(eta, lab, Ng)
+        print(f"  Clean V25 bicrystal: planar pair, misorientation={2*np.rad2deg(half):.1f} deg")
+        return lab, eta, psi, pv, gb, Ng
     Ng = min(P['poly_n'], P['grain_max'])
     rng = np.random.default_rng(P['poly_seed'])
     seeds = np.column_stack((rng.uniform(0,Nx,Ng), rng.uniform(0,Ny,Ng)))
@@ -3367,6 +3397,16 @@ for s in range(nSlip):
         rp[m,s] = 0.5*r0g/nSlip
         rm[m,s] = 0.5*r0g/nSlip
 
+if P.get('sibm_clean_bicrystal_initialize', False):
+    _clean_h = eta[:, :, :2]**2*(3.0-2.0*eta[:, :, :2])
+    _clean_child = _clean_h[:, :, 1]/np.maximum(
+        np.sum(_clean_h, axis=2), 1e-300)
+    _clean_target = (
+        float(P.get('sibm_clean_parent_density_m2', 4.0e17))*(1.0-_clean_child)
+        +float(P.get('sibm_clean_child_density_m2', 1.0e17))*_clean_child)
+    rp[:] = _clean_target[:, :, None]/(2.0*nSlip)
+    rm[:] = _clean_target[:, :, None]/(2.0*nSlip)
+
 if P.get('v19_one_grain_mode', False):
     def _v19_broadband_noise(seed):
         rng = np.random.default_rng(int(seed))
@@ -3877,7 +3917,7 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                 'promoted sparse-common restart omits phase-resolved front state')
 
 if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
-    if not _restart_loaded:
+    if not _restart_loaded and not P.get('sibm_clean_bicrystal_initialize', False):
         raise ValueError('deterministic SIBM initialization requires a full 2-D restart')
     if str(P.get('stored_energy_coupling_mode', '')).lower() != 'common_variational':
         raise ValueError('SIBM requires the common variational stored-energy functional')
@@ -6532,6 +6572,23 @@ for n in range(_restart_step_offset, _restart_end_step):
                'v_orowan_max': np.nan, 'v_adv_mean': np.nan, 'v_adv_max': np.nan,
                'v_cfl_active_frac': np.nan, 'gdot_abs_mean': np.nan, 'gdot_abs_max': np.nan}
 
+    _v25_exact_freeze = bool(P.get('sibm_all_defects_frozen', False))
+    _v25_frozen_state = None
+    if _v25_exact_freeze:
+        # Snapshot by value. Phase support/labels are intentionally excluded:
+        # the purpose of this control is to isolate the common phase equation.
+        _v25_names = (
+            'rp', 'rm', 'rho', 'rho_forest', 'rho_wall', 'rho_GB', 'T',
+            'psi_plastic', 'gamma_slip', 'eps_p', 'E_tot', 'sigma_bar',
+            'q_wall_v19', 'collective_activity_memory', 'v20_tensorial_state',
+            'v21_balance_ledger', 'sparse_front_state', 'grain_tracker',
+            'embryo_population', 'area_hazard_state', 'H_nuc', 'E_nuc',
+            'nuc_cand_active', 'nuc_cand_age', 'nuc_cand_best_barrier',
+            'nuc_cand_birth_step')
+        _v25_frozen_state = {
+            name: copy.deepcopy(globals()[name]) for name in _v25_names
+            if name in globals()}
+
     if sparse_front_state is not None:
         sparse_front_state = apply_common_constitutive_increment(
             sparse_front_state,
@@ -7459,8 +7516,16 @@ for n in range(_restart_step_offset, _restart_end_step):
                     'sibm_physical_drag_pressure_Pa', 0.0)), 0.0)*gb_for_ac
                 _child_index = sparse_front_state.child_label
                 _parent_index = sparse_front_state.parent_label
-                phase_energy_fields[:, :, _child_index] += (
-                    _physical_compat_pressure+_physical_drag_pressure)
+                # V25 phase symmetry: an interface-owned compatibility/drag
+                # density is common to both alternatives. Attaching it only
+                # to the child made a label exchange change the functional and
+                # drove equal/favorable/reversed branches in one direction.
+                # A genuinely phase-state-specific compatibility energy must
+                # be supplied as two physical state fields upstream; lineage
+                # is never used to choose its sign here.
+                phase_energy_fields += (
+                    _physical_compat_pressure
+                    +_physical_drag_pressure)[:, :, None]
                 _phase_energy_without_pressure = phase_energy_fields.copy()
 
                 def _phase_energy_at_pressure(_pressure_scalar):
@@ -7497,8 +7562,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                                    / np.maximum(np.sum(gb_for_ac), 1e-300))
                 _applied_mean = float(np.sum(_applied_pressure)
                                       / np.maximum(np.sum(gb_for_ac), 1e-300))
-                _net_drive = (_drive_mean-_compat_mean-_drag_mean
-                              +_applied_mean)
+                # The common interface-owned fields cancel in the frozen
+                # parent/child exchange derivative. They remain reported for
+                # energy accounting but are not a lineage-scoped pressure.
+                _net_drive = _drive_mean+_applied_mean
                 sibm_experiment_state.setdefault(
                     'initial_stored_energy_drive_Pa', _drive_mean)
                 sibm_experiment_state.update(
@@ -8122,11 +8189,26 @@ for n in range(_restart_step_offset, _restart_end_step):
             eta[:, :, :Ng], np.maximum(ATpot._Phi(np.maximum(rho, P['rho_min'])), 0.0),
             grain_tracker, sim_time + P['dt'], dx, dx, _physical_grain_criteria())
 
+    if _v25_exact_freeze:
+        for _v25_name, _v25_value in _v25_frozen_state.items():
+            globals()[_v25_name] = _v25_value
+        # Phase support is the sole evolving state. Reconstruct only its
+        # derived labels/lattice field from the unchanged declared orientations.
+        lab = np.argmax(eta[:, :, :Ng], axis=2)
+        gb_mask = diffuse_gb_support(eta, lab, Ng)
+        psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
+        kappa_tot = _signed_kappa_field(rp, rm)
+        heat_diag = {'qdot_mean': 0.0, 'qdot_max': 0.0, 'qdot_std': 0.0,
+                     'dT_mean_step': 0.0, 'dT_max_step': 0.0,
+                     'mode': 'v25_exact_all_defect_freeze'}
+        km_store_mean = km_anni_mean = ch_delta_abs_mean = ch_delta_std = 0.0
+        gnd_transfer_mean = rhoGB_delta_mean = 0.0
+
     # Canonicalize the common sparse/full representation at every physical
     # step, independent of checkpoint cadence.  This absorbs all post-front
     # GND/GB/constitutive increments and makes restart a bitwise state copy
     # rather than a delayed projection.
-    if sparse_front_state is not None:
+    if sparse_front_state is not None and not _v25_exact_freeze:
         sparse_front_state = apply_common_constitutive_increment(
             sparse_front_state, DefectState(rp, rm, rho_forest, rho_wall))
         _canonical_front_mixture = reconstruct_mixture(sparse_front_state)

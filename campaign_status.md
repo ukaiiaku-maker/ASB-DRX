@@ -1271,3 +1271,37 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Final queue audit found only unrelated job `55950433`; it remains untouched.
   No V24 campaign job remains active. The three independent outcomes are
   recorded in `full_model/docs/v24_decision_report.md`.
+
+## Directive v25 reaction cone, phase symmetry, and ASB grid audit (local checkpoint 2026-09-15)
+
+- V24 evidence is frozen by SHA-256 in
+  `full_model/verification/v25_frozen_v24_evidence.json`; no raw evidence or
+  retrieved archive was overwritten.
+- The algebraic signed-BCC transport cone can span the missing 32-grid local
+  Frank--Bilby inventory, but measured transport exposure supplies only about
+  9.7--10.1% of the optimized extent. Every V24 local line-reorientation event
+  is rejected because its nonzero total-Nye increment has no swept plastic
+  area, explicit source/sink, or matching beta-p update. With the retained
+  1.24--1.39 dual-Nye mismatch, the authoritative decision is
+  `REACTION_CONE_TEST_INVALID_DUE_TO_STATE_INCONSISTENCY`; rate tuning and a
+  long wall job remain unauthorized.
+- The production driver can now create a clean periodic planar bicrystal from
+  first principles at zero strain, plastic strain, stress, historical sweep,
+  and boundary reservoir. Compatibility/drag ownership is label symmetric,
+  and the exact all-defect freeze was verified bitwise while phase support
+  evolved.
+- The 32-grid production phase-only matrix uses identical initial geometry.
+  Equal moves `1.1e-9` interface widths, favorable moves `+0.26156`, reversed
+  moves `-0.26156`, and mobility-off moves exactly zero. Decision:
+  `CLEAN_PRODUCTION_PHASE_ONLY_SIBM_SIGN_QUALIFIED`. Scientific promotion and
+  HPC remain blocked pending sequential activation of transfer, boundary
+  storage, recovery/heat, and constitutive rehardening.
+- The ASB physical-length and restriction audits pass at the provisional 5%
+  level, and heat/external-work normalization differs by only 1.5%. Across the
+  common time interval, however, external work differs by 8.0%, deposited heat
+  by 9.4%, stored thermal energy by 11.2%, and plastic work by 41.3%. Decision:
+  `ASB_PHYSICAL_RESPONSE_NOT_YET_GRID_CONVERGED`; no rate bracket is authorized.
+- The canonical configured suite passes 439 tests. No V25 HPC3 job was
+  submitted because none of the mechanism-specific prerequisites authorizes
+  one. Queue audit still shows only unrelated job `55950433`, untouched.
+- Full report: `full_model/docs/v25_decision_report.md`.

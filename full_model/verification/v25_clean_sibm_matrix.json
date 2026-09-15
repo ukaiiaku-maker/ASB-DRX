@@ -1,0 +1,54 @@
+{
+  "classification": "CLEAN_PRODUCTION_PHASE_ONLY_SIBM_SIGN_QUALIFIED",
+  "common_phase_geometry": true,
+  "fixture_passed": true,
+  "grid": 32,
+  "hpc_sibm_authorized": false,
+  "phase_only_directional_controls_passed": true,
+  "records": [
+    {
+      "all_defect_freeze_bitwise_exact": true,
+      "case": "equal",
+      "contour_samples": 101,
+      "normal_displacement_interface_widths": 1.1183983697371803e-09,
+      "normal_displacement_m": 3.5366861797886203e-16,
+      "phase_geometry_sha256": "7e8f6360790d3334cef8302c0bec1d54ff98c190020fe049132b22dbf6f8afb0",
+      "stable_velocity_sign": false,
+      "zero_load": true
+    },
+    {
+      "all_defect_freeze_bitwise_exact": true,
+      "case": "favorable",
+      "contour_samples": 101,
+      "normal_displacement_interface_widths": 0.2615602389349753,
+      "normal_displacement_m": 8.27126100372376e-08,
+      "phase_geometry_sha256": "7e8f6360790d3334cef8302c0bec1d54ff98c190020fe049132b22dbf6f8afb0",
+      "stable_velocity_sign": true,
+      "zero_load": true
+    },
+    {
+      "all_defect_freeze_bitwise_exact": true,
+      "case": "reversed",
+      "contour_samples": 101,
+      "normal_displacement_interface_widths": -0.2615602372809559,
+      "normal_displacement_m": -8.271260951419072e-08,
+      "phase_geometry_sha256": "7e8f6360790d3334cef8302c0bec1d54ff98c190020fe049132b22dbf6f8afb0",
+      "stable_velocity_sign": true,
+      "zero_load": true
+    },
+    {
+      "all_defect_freeze_bitwise_exact": true,
+      "case": "mobility_off",
+      "contour_samples": 101,
+      "normal_displacement_interface_widths": 0.0,
+      "normal_displacement_m": 0.0,
+      "phase_geometry_sha256": "7e8f6360790d3334cef8302c0bec1d54ff98c190020fe049132b22dbf6f8afb0",
+      "stable_velocity_sign": true,
+      "zero_load": true
+    }
+  ],
+  "schema": "asb-drx/v25-clean-production-sibm-phase-only/v1",
+  "scientific_gate_passed": false,
+  "sequential_full_driver_activation_completed": false,
+  "steps": 1000
+}
