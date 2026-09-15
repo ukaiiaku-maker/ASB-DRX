@@ -4,9 +4,12 @@ import numpy as np
 import pytest
 
 from full_model.production.density_state_map import DensityInventory
-from full_model.production.tensorial_nye import bcc_four_family_systems
+from full_model.production.tensorial_nye import (
+    bcc_four_family_systems, make_junction_topology,
+)
 from full_model.production.wall_topology_supply import (
-    accepted_topology_ordering, accepted_transport_capture,
+    accepted_junction_topology_step, accepted_topology_ordering,
+    accepted_transport_capture,
     aligned_state_from_directions, alignment_checkpoint_arrays,
     alignment_from_checkpoint_arrays, conservative_transport_capture_step,
     maximum_ledger_residual,
@@ -115,3 +118,33 @@ def test_transport_rejects_super_cfl_before_mutating_state():
         conservative_transport_capture_step(
             inventory, alignment, velocity, -velocity, np.zeros((4, 4), bool),
             systems, orientation, spacing_m=1e-7, dt_s=5e-8)
+
+
+def test_explicit_junction_route_closes_frank_node_and_declared_nye_source():
+    systems = bcc_four_family_systems()
+    topology = make_junction_topology(
+        systems, 0, 1, sign_a=1, sign_b=-1, line_tension_J_m=1e-9)
+    n = 5; shape = (n, n, 4); z = np.zeros(shape)
+    plus = z.copy(); minus = z.copy()
+    plus[..., 0] = 3e13; minus[..., 1] = 4e13
+    inventory = DensityInventory(
+        z.copy(), z.copy(), z.copy(), z.copy(), plus, minus,
+        z.copy(), z.copy(), np.zeros((n, n, 1)))
+    directions = np.zeros(shape+(3,)); directions[..., 2] = 1.0
+    directions[..., 0, :] = topology.parent_line_directions[0]
+    directions[..., 1, :] = topology.parent_line_directions[1]
+    alignment = aligned_state_from_directions(inventory, directions)
+    request = np.full((n, n, 1), 2e13)
+    updated, aligned, ledger = accepted_junction_topology_step(
+        inventory, alignment, request, systems, (topology,),
+        np.zeros((n, n)), dt_s=1e-6)
+    np.testing.assert_allclose(updated.wall_tangle_plus_m2[..., 0], 1e13)
+    np.testing.assert_allclose(updated.wall_tangle_minus_m2[..., 1], 2e13)
+    np.testing.assert_allclose(updated.junction_m2[..., 0], 2e13)
+    assert np.max(np.abs(ledger["scalar_line_balance_residual_m2"])) < .02
+    assert np.max(np.abs(ledger["vector_burgers_balance_residual_m1"])) < 1e-12
+    assert ledger["frank_and_node_closure"][0]["frank_rule_residual_m"] < 1e-25
+    assert ledger["frank_and_node_closure"][0]["line_node_residual"] < 1e-14
+    # Reorientation is allowed only because its tensorial source is explicit.
+    assert np.max(np.abs(ledger["R_topology_m1_s"])) > 0.0
+    assert aligned.junction_alignment_m2.shape == (n, n, 1, 3)

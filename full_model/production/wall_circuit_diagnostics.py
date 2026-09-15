@@ -136,12 +136,87 @@ def local_integrated_wall_circuits(
     overlap = (float(np.sum(ordered_scalar*wall_weight))/total_ordered
                if total_ordered > 0 else 0.0)
     return {
+        "nye_integration_convention": (
+            "2.5D line-column integral: integral alpha[:,line_axis] dn; "
+            "line_axis is the retained out-of-plane line coordinate"),
+        "line_axis": int(line_axis),
         "candidate_support": support,
         "candidate_weight": wall_weight,
         "segments": segments,
         "ordered_line_overlap": overlap,
         "ordered_line_outside_support": 1.0-overlap if total_ordered > 0 else 0.0,
         "global_orientation_span_rad_diagnostic_only": float(np.ptp(theta)),
+    }
+
+
+def classify_persistent_wall_history(
+        snapshots, *, minimum_misorientation_rad=np.deg2rad(1.0),
+        maximum_frank_bilby_residual=0.25, minimum_supply_ratio=0.75,
+        maximum_supply_ratio=1.25, minimum_ordered_overlap=0.7,
+        required_release_persistence_s=0.0):
+    """Classify a time sequence using only local, integrated wall measures.
+
+    Each snapshot must contain ``time_s``, ``orientation_rad``,
+    ``ordered_nye_m1``, ``total_nye_m1``, ``spacing_m``,
+    ``normal_window_m``, and a boolean ``mechanical_loading_active``.  This
+    postprocessor has no phase/grain state and cannot allocate a grain label.
+    """
+    records = []
+    for snapshot in snapshots:
+        audit = local_integrated_wall_circuits(
+            snapshot["orientation_rad"], snapshot["ordered_nye_m1"],
+            snapshot["total_nye_m1"], snapshot["spacing_m"],
+            normal_window_m=snapshot["normal_window_m"],
+            plateau_offset_m=snapshot.get("plateau_offset_m"))
+        qualifying = []
+        for segment in audit["segments"]:
+            qualifies = bool(
+                segment.local_misorientation_rad >= minimum_misorientation_rad
+                and segment.ordered_frank_bilby_residual
+                <= maximum_frank_bilby_residual
+                and minimum_supply_ratio <= segment.ordered_supply_ratio
+                <= maximum_supply_ratio)
+            if qualifies:
+                qualifying.append(segment.label)
+        audit_record = {
+            key: value for key, value in audit.items()
+            if key not in ("candidate_support", "candidate_weight", "segments")
+        }
+        audit_record["segments"] = [segment.to_dict()
+                                    for segment in audit["segments"]]
+        record = {
+            "time_s": float(snapshot["time_s"]),
+            "mechanical_loading_active": bool(
+                snapshot["mechanical_loading_active"]),
+            "qualifying_segment_labels": qualifying,
+            "ordered_line_overlap": audit["ordered_line_overlap"],
+            "local_integrated_audit": audit_record,
+        }
+        record["snapshot_qualified"] = bool(
+            qualifying and audit["ordered_line_overlap"] >= minimum_ordered_overlap)
+        records.append(record)
+    records.sort(key=lambda item: item["time_s"])
+    loaded = [item for item in records if item["mechanical_loading_active"]]
+    released = [item for item in records if not item["mechanical_loading_active"]]
+    release_duration = 0.0
+    if released and all(item["snapshot_qualified"] for item in released):
+        release_duration = released[-1]["time_s"]-released[0]["time_s"]
+    passed = bool(
+        loaded and any(item["snapshot_qualified"] for item in loaded)
+        and released and all(item["snapshot_qualified"] for item in released)
+        and release_duration >= required_release_persistence_s)
+    return {
+        "records": records,
+        "loaded_wall_observed": bool(
+            any(item["snapshot_qualified"] for item in loaded)),
+        "release_duration_s": float(release_duration),
+        "required_release_persistence_s": float(required_release_persistence_s),
+        "fixture_passed": bool(records),
+        "scientific_gate_passed": passed,
+        "classification": (
+            "PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR" if passed else
+            "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR"),
+        "grain_labels_allocated": 0,
     }
 
 

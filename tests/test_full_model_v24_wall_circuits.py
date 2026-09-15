@@ -4,7 +4,7 @@ from full_model.production.extensive_wall import (
     orientation_gradient_frank_bilby_target_m1,
 )
 from full_model.production.wall_circuit_diagnostics import (
-    local_integrated_wall_circuits,
+    classify_persistent_wall_history, local_integrated_wall_circuits,
 )
 
 
@@ -59,3 +59,22 @@ def test_zero_orientation_gradient_produces_no_candidate_segments():
         theta, alpha, alpha, 1e-7, normal_window_m=1e-6)
     assert audit["segments"] == []
     assert audit["ordered_line_overlap"] == 0.0
+
+
+def test_scientific_classification_requires_qualified_release_persistence():
+    theta, alpha, dx = periodic_tilt_wall(64, 6.4e-6)
+    snapshots = []
+    for time_s, active in ((0.0, True), (1e-6, False), (2e-6, False)):
+        snapshots.append({
+            "time_s": time_s, "mechanical_loading_active": active,
+            "orientation_rad": theta, "ordered_nye_m1": alpha,
+            "total_nye_m1": alpha, "spacing_m": dx,
+            "normal_window_m": 1.4e-6, "plateau_offset_m": .8e-6,
+        })
+    result = classify_persistent_wall_history(
+        snapshots, required_release_persistence_s=1e-6)
+    assert result["scientific_gate_passed"]
+    assert result["grain_labels_allocated"] == 0
+    # A loaded-only match remains a fixture and cannot pass persistence.
+    result = classify_persistent_wall_history(snapshots[:1])
+    assert result["fixture_passed"] and not result["scientific_gate_passed"]
