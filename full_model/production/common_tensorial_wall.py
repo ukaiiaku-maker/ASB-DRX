@@ -328,10 +328,11 @@ def wall_free_energy_derivatives(state, parameters, topologies=(), systems=None)
     safe = np.maximum(total, 1e-30*reference)
     base_mu = (parameters.line_energy_J_m
                +parameters.correlation_energy_J_m*(np.log(safe/reference)+1.0))
-    # Candidate threshold interpolation: q=0 is stationary and sufficient
-    # gated content can make its small-q curvature negative.
-    h = q*q*(3.0-2.0*q)
-    dh = 6.0*q*(1.0-q)
+    # Physical polarization initiates ordering without numerical q noise:
+    # h'(0)=2 and h'(1)=0. The objective gate makes this source identically
+    # zero for absent or unpolarized wall content.
+    h = q*(2.0-q)
+    dh = 2.0*(1.0-q)
     partition_offset = wall-gate*h*parameters.wall_target_m2
     partition_direct_mu = (parameters.wall_partition_J_m*partition_offset
                            /parameters.wall_target_m2)
@@ -390,7 +391,7 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
         state.junction_m2*(multiplicity*parameters.junction_energy_J_m
                            +topology_energy), axis=2)
     gate = chemical["wall_gate"]
-    h = q*q*(3.0-2.0*q)
+    h = q*(2.0-q)
     barrier = parameters.wall_order_barrier_J_m3*q*q*(1.0-q)*(1.0-q)
     absent = parameters.wall_absent_penalty_J_m3*(1.0-gate)*q*q
     ordering = -parameters.wall_order_amplitude_J_m3*gate*h

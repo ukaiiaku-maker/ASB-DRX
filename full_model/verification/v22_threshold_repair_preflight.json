@@ -279,6 +279,7 @@
     }
   ],
   "fixture_passed": true,
+  "candidate_source_commit": "595b95e293d12d95c0bd6116c65ddbcd5013bc8e",
   "classification": "THRESHOLD_SMOOTHSTEP_REPAIR_REJECTED_UNDER_FIXED_PERTURBATION",
   "scientific_gate_passed": false,
   "decision_evidence": {

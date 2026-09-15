@@ -213,20 +213,8 @@ def test_only_polarized_wall_can_favor_order_and_gate_is_objective():
             replace(polarized, wall_order=np.ones_like(polarized.wall_order)),
             parameters, topologies, systems)
         assert np.mean(e1-e0) < 0.0
-        zero_rate = wall_residual(
-            polarized, driving, systems, topologies,
-            parameters).state_rate.wall_order
-        assert np.max(np.abs(zero_rate)) == 0.0
-        h = 1e-4
-        energy = lambda q: np.mean(wall_free_energy_density_J_m3(
-            replace(polarized, wall_order=np.full_like(
-                polarized.wall_order, q)), parameters, topologies, systems))
-        curvature = (energy(h)-2*energy(0.0)+energy(-h))/h**2
-        assert curvature < 0.0
-        perturbed = replace(
-            polarized, wall_order=np.full_like(polarized.wall_order, h))
         assert np.min(wall_residual(
-            perturbed, driving, systems, topologies,
+            polarized, driving, systems, topologies,
             parameters).state_rate.wall_order) > 0.0
         forward = wall_polarization_invariants(polarized, systems, parameters)
         reversed_state = replace(
