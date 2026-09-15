@@ -29,7 +29,7 @@ p={
  "v19_signed_noise_fraction": .01,
  "v19_noise_seed": seed,
  "v19_mechanical_heterogeneity": heterogeneity,
- "Nx": grid, "Ny": grid, "Lx": domain, "Ly": domain,
+ "Nx": grid, "Ny": grid, "L_phys": domain,
  "poly_n": 1, "T0": 1100., "edot_app": 1e4,
  "dt": 1e-8, "dt_base": 1e-8, "dt_base_mode": "fixed",
  "nSteps": 2500, "diag_interval": 100, "save_interval": 500,
