@@ -137,6 +137,7 @@ class CommonWallParameters:
     activation_entropy_kB: float = 0.0
     reaction_energy_scale_J_m: float = 1.0e-9
     maximum_fraction_per_step: float = 0.15
+    bound_active_tolerance: float = 1.0e-12
     orientation_spin_weight: float = 1.0
     c11_Pa: float = 228e9
     c12_Pa: float = 132e9
@@ -183,6 +184,8 @@ class CommonWallParameters:
             raise ValueError("common wall parameters must be finite and positive")
         if not 0.0 <= self.exp_floor <= 1.0 or not 0.0 < self.maximum_fraction_per_step <= 1.0:
             raise ValueError("bounded fractions are invalid")
+        if not 0.0 < self.bound_active_tolerance < 0.5:
+            raise ValueError("bound active tolerance must lie in (0,0.5)")
         if self.mobile_correlation_diffusivity_m2_s < 0.0:
             raise ValueError("mobile correlation diffusivity cannot be negative")
         if self.multiplication_coefficient < 0.0:
@@ -405,10 +408,15 @@ def _biased_exchange(source, target, delta_mu_J_m, rate_s, parameters):
 
 def _biased_exchange_components(source, target, delta_mu_J_m, rate_s,
                                 parameters):
-    argument = np.clip(delta_mu_J_m/(2.0*parameters.reaction_energy_scale_J_m),
-                       -40.0, 40.0)
-    forward = rate_s*source*np.exp(-argument)
-    reverse = rate_s*target*np.exp(argument)
+    # Attempt-bounded detailed-balance split.  The former symmetric
+    # exponential split had the correct ratio but made one coefficient
+    # unbounded as |Delta mu| grew, producing a Zeno timestep when a parent
+    # reservoir was exhausted. Here k+/k-=exp(-Delta mu/E) exactly, while
+    # both coefficients remain smoothly in [0,2*k_attempt].
+    bias = np.tanh(
+        delta_mu_J_m/(2.0*parameters.reaction_energy_scale_J_m))
+    forward = rate_s*source*(1.0-bias)
+    reverse = rate_s*target*(1.0+bias)
     return forward-reverse, forward+reverse
 
 
@@ -606,6 +614,13 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                          (1.0-state.multi_hit_coordination)*collision_frequency
                          -state.multi_hit_coordination
                          /parameters.multi_hit_relaxation_s)
+    tolerance = parameters.bound_active_tolerance
+    coordination_rate = np.where(
+        (state.multi_hit_coordination <= tolerance)&(coordination_rate < 0.0),
+        0.0, coordination_rate)
+    coordination_rate = np.where(
+        (state.multi_hit_coordination >= 1.0-tolerance)&(coordination_rate > 0.0),
+        0.0, coordination_rate)
 
     beta_rate = plastic_distortion_from_slip(
         slip_rate, systems, state.orientation_rad)
@@ -629,9 +644,17 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     lap_q = _divergence(np.stack((qx, qy), axis=-1), parameters.spacing_m)
     q_chemical_potential = (chemical["wall_order_derivative_J_m3"]
                             -parameters.wall_order_gradient_J_m*lap_q)
-    q_rate = (np.zeros(grid) if not parameters.wall_order_enabled else
-              -k_order*q_chemical_potential
-              /max(parameters.wall_order_barrier_J_m3, 1.0))
+    raw_q_rate = (-k_order*q_chemical_potential
+                  /max(parameters.wall_order_barrier_J_m3, 1.0))
+    # Directional bound-degenerate Onsager mobility. It preserves the sign of
+    # -delta F/dq and therefore dissipation, permits a physical polarized-wall
+    # source at q=0, and makes an outward rate vanish in proportion to distance
+    # from the applicable bound. No order pixel can create a Zeno timestep.
+    q_rate = np.where(raw_q_rate >= 0.0,
+                      (1.0-state.wall_order)*raw_q_rate,
+                      state.wall_order*raw_q_rate)
+    if not parameters.wall_order_enabled:
+        q_rate = np.zeros(grid)
 
     zero_beta = np.zeros_like(state.beta_p)
     zero_nye = np.zeros_like(state.family_nye_m1)

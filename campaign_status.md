@@ -26,10 +26,19 @@ Updated: 2026-09-15 (America/Los_Angeles)
   is bitwise identical, including coordination. The configured suite passes
   390 tests. These are source/fixture results; scientific qualification remains
   false pending the long nonlinear evidence.
+- Three short HPC pre-evidence audits were deliberately cancelled after they
+  exposed, respectively, an ignored domain key, a legacy 1000x density-scale
+  mismatch, and restart cadence nested under field saves. A fourth early
+  checkpoint exposed unbounded reaction bias and bound-order Zeno stepping.
+  Reversible exchange now has an attempt-bounded exact detailed-balance split;
+  wall order uses dissipative bound-degenerate mobility. On the stalled
+  checkpoint the next accepted factor improves from 3.4e-17 to 1.0. Restart
+  cadence is independently verified at steps 0/2/4/5, and the common-off
+  trajectory remains bitwise identical across 144 numeric fields.
 - A fault-isolated HPC3 bundle is prepared for homogeneous, forced-
   heterogeneous, multi-hit off/on, wall-order-off, recovery-dominant,
   domain/seed, and 64/128-grid cases. Every case remains one grain, disables
-  creation/relabeling, checkpoints every 250 steps, and targets 7,000 steps so
+  creation/relabeling, checkpoints every 250 steps, and targets 5,000 steps so
   the adaptively accepted trajectory can reach at least 20% strain; the actual
   physical horizon and any hard validity stop will be reported.
 

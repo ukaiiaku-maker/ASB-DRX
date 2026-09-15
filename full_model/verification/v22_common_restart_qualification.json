@@ -1,7 +1,7 @@
 {
   "schema": "asb-drx/v22-common-operator-restart-qualification/v1",
-  "continuous_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-epbtcc6r/continuous/drx_v25_restart_000009.npz",
-  "segmented_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-epbtcc6r/segmented/drx_v25_restart_000009.npz",
+  "continuous_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-ldo78lao/continuous/drx_v25_restart_000009.npz",
+  "segmented_checkpoint": "/var/folders/v0/3g9_dj_95814fp5gl9jfyl3w0000gn/T/v22-restart-ldo78lao/segmented/drx_v25_restart_000009.npz",
   "array_bitwise_identity": {
     "rho": true,
     "rp": true,

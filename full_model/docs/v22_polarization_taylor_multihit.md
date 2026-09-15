@@ -107,6 +107,19 @@ labeled ablation rather than DD calibration. The same global accepted-step
 limiter preserves (0\le c_{\rm mh}\le1); no term changes the Burgers or line
 stoichiometry.
 
+Every reversible reservoir exchange uses the attempt-bounded split
+
+\[
+ k_+=k_A[1-\tanh(\Delta\mu/2E_r)],\qquad
+ k_-=k_A[1+\tanh(\Delta\mu/2E_r)].
+\]
+
+Thus \(0\le k_\pm\le2k_A\) and
+\(k_+/k_-=\exp(-\Delta\mu/E_r)\) exactly. This replaces the V21 unbounded
+symmetric-exponential factor that stalled an exhausted reservoir while
+preserving the thermodynamic bias, EXP-floor attempt frequency, and reaction
+stoichiometry.
+
 ## Finite-time tangent ownership
 
 Instantaneous symbols differentiate the common residual. Finite-time analysis
@@ -116,8 +129,17 @@ tangents along the actually advanced trajectory yield propagator singular
 values. Signed gain is projected onto normalized plus/minus differences of the
 mobile, forest, and wall reservoirs; the scalar (q) coordinate is excluded.
 Centered boundary derivatives are evaluated at a declared small interior
-audit state ((q=c_{\rm mh}=10^{-4})); exact-zero stability is tested directly
+audit state \(q=c_{\rm mh}=10^{-4}\); exact-zero stability is tested directly
 from the Hessian and nonlinear residual.
+
+Wall order uses a directional bound-degenerate Onsager mobility. If the raw
+Allen--Cahn rate is positive it is multiplied by \(1-q\); if negative it is
+multiplied by \(q\). This retains
+\(\dot q\,\delta F/\delta q\le0\), permits a physical polarized-wall source at
+\(q=0\), and makes outward motion vanish continuously at either bound. It
+prevents a roundoff-scale order pixel from producing a Zeno timestep without
+clipping an interior thermodynamic force. Coordination uses its analytic
+invariant-interval kinetics plus the \(10^{-12}\) numerical active set.
 
 ## Current qualification boundary
 
