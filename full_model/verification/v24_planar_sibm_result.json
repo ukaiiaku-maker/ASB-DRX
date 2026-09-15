@@ -99,6 +99,7 @@
   ],
   "classification": "FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE",
   "common_phase_geometry_sha256": "82f92c264619ebf722242e1181c8787e4228ba23061bade354d01afe3dc7cc2e",
+  "directional_controls_passed": false,
   "equal_energy_stationary": false,
   "favorable_low_defect_child_advances": false,
   "fixture_passed": true,

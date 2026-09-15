@@ -123,8 +123,10 @@ def main():
         and reverse["resolved_quarter_width"]
         and reverse["stable_velocity_sign"])
     sequential_dynamic_activation_completed = False
-    passed = bool(zero_pressure and planar and invariants and equal_stationary
-                  and mobility_stationary and favorable_advance and reverse_retreat
+    directional_controls_passed = bool(
+        zero_pressure and planar and invariants and equal_stationary
+        and mobility_stationary and favorable_advance and reverse_retreat)
+    passed = bool(directional_controls_passed
                   and sequential_dynamic_activation_completed)
     fixture = bool(invariants and zero_pressure and planar
                    and common["zero_cumulative_front_sweep_on_assignment"])
@@ -132,6 +134,8 @@ def main():
         fixture and (not favorable_advance or not reverse_retreat))
     classification = (
         "FULL_DYNAMIC_ZERO_PRESSURE_PLANAR_SIBM_SUPPORTED" if passed else
+        "PLANAR_SIBM_DIRECTIONALITY_SUPPORTED_STAGING_INCOMPLETE"
+        if directional_controls_passed else
         "FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE"
         if sign_coupling_failure else
         "FULL_DYNAMIC_PLANAR_SIBM_FIXTURE_INVALID")
@@ -148,6 +152,7 @@ def main():
         "favorable_low_defect_child_advances": favorable_advance,
         "reversed_contrast_retreats": reverse_retreat,
         "sign_or_coupling_failure": sign_coupling_failure,
+        "directional_controls_passed": directional_controls_passed,
         "sequential_dynamic_activation_completed": (
             sequential_dynamic_activation_completed),
         "cases": list(records.values()),

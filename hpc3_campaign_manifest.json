@@ -2238,7 +2238,7 @@
           "fixture_passed": true,
           "scientific_gate_passed": false,
           "result": "full_model/verification/v24_planar_sibm_result.json",
-          "result_sha256": "f3ebc603629a939739703a24cdebbc1fe92c9474d87b010af275d63398749e89"
+          "result_sha256": "8137a8eca54c5b4b7beb34dc1a4827ee58d7bcfa9401b6bb25e7ea22fc95f3bb"
         }
       ],
       "superseded_cancelled_jobs": [

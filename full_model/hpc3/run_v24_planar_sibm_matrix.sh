@@ -8,11 +8,14 @@ overall=0
 
 run_case() {
   name="$1" source="$2" steps="$3" mobility="$4" processing="$5"
+  reset_clock="$6" reset_plastic="$7"
   case_out="$out/cases/$name"; mkdir -p "$case_out"
-  params=$(python3 - "$source" "$steps" "$mobility" "$processing" <<'PY'
+  params=$(python3 - "$source" "$steps" "$mobility" "$processing" "$reset_clock" "$reset_plastic" <<'PY'
 import json,sys
 p={"Nx":128,"Ny":128,"nSteps":int(sys.argv[2]),"edot_app":.001,
-   "dt_strain_step":1e-10,"restart_file":sys.argv[1],"restart_reset_clock":False,
+   "dt_strain_step":1e-10,"restart_file":sys.argv[1],
+   "restart_reset_clock":sys.argv[5].lower()=="true",
+   "restart_reset_plastic_strain":sys.argv[6].lower()=="true",
    "use_sparse_common_front_state":True,"use_sibm_existing_boundary":True,
    "stored_energy_coupling_mode":"common_variational",
    "sibm_parent_label_override":0,"sibm_child_label_override":1,
@@ -41,13 +44,16 @@ PY
 cd "$root/production" || exit 2
 source_equal=../../.hpc3/inputs/v13_canonical_bicrystal_equal_128.npz
 # Profile equilibration fixture: no front transfer and negligible imposed rate.
-run_case equilibrate_planar "$source_equal" 300 1 false
+# The inherited v13 checkpoint is at 62.7% macroscopic strain.  Reset clock,
+# total strain, and plastic strain for the common zero-load equilibration; all
+# material density, phase geometry, temperature, and orientations are retained.
+run_case equilibrate_planar "$source_equal" 300 1 false true true
 equilibrated=$(find "$out/cases/equilibrate_planar" -name 'drx_v25_restart_*.npz' | sort | tail -n 1)
 if [ -z "$equilibrated" ]; then exit 3; fi
 python3 ../analysis/assign_v24_planar_sibm_variants.py \
   "$equilibrated" "$out/common_state"
-run_case equal "$out/common_state/equal.npz" 500 200 true
-run_case parent_high_child_low "$out/common_state/parent_high_child_low.npz" 1200 200 true
-run_case reversed "$out/common_state/reversed.npz" 1200 200 true
-run_case mobility_off "$out/common_state/mobility_off.npz" 500 0 true
+run_case equal "$out/common_state/equal.npz" 500 200 true false false
+run_case parent_high_child_low "$out/common_state/parent_high_child_low.npz" 1200 200 true false false
+run_case reversed "$out/common_state/reversed.npz" 1200 200 true false false
+run_case mobility_off "$out/common_state/mobility_off.npz" 500 0 true false false
 exit "$overall"
