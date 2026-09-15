@@ -1198,7 +1198,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The canonical suite passes 411 tests. No phase or grain label exists in the
   V23 wall state, and multi-hit remains disabled.
 
-## Directive v24 topological supply, planar SIBM, and ASB persistence (active 2026-09-15)
+## Directive v24 topological supply, planar SIBM, and ASB persistence (complete 2026-09-15)
 
 - V23 evidence is frozen by SHA-256 in
   `full_model/verification/v24_frozen_v23_evidence.json`. Local qualification
@@ -1249,19 +1249,25 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   widths. One bounded repair job, `56040797`, therefore repeats the identical
   matrix after resetting clock, total strain, and plastic strain before common
   equilibration; it does not retune mobility or stored-energy parameters.
-- Active checksum-bound, non-array HPC3 jobs are: `56040797` (unloaded planar
-  SIBM repair), `56040570` (seed-43 128 base
-  matched continuation), `56040575` (seed-43 128 half-step matched
-  continuation), and `56040576` (seed-43 64 high-cadence matched run). The ASB continuations
-  start from the exact step-2500 adiabatic/isothermal checkpoints preceding the
-  first former qualifying interval. The planar SIBM branches use one
-  equilibrated phase geometry, zero applied pressure, zero seeded curvature,
-  equal/favorable/reversed defect contrast, and mobility-off control.
+- Repair job `56040797` completed and was checksum-verified. Unloading does not
+  change the decision: equal, favorable, and reversed active branches move
+  `19.76`, `19.96`, and `18.45` interface widths in the same net direction,
+  while mobility-off is stationary. The child-only compatibility contribution
+  means equal assigned density is not equal complete phase-owned free energy;
+  this production coupling must be repaired before another SIBM campaign.
+- ASB jobs `56040570`, `56040575`, and `56040576` completed, were fetched, and
+  passed archive checksum verification. The 64-grid case reaches 16
+  conjunctively qualifying snapshots, but its longest interval is only
+  `0.210 us`. The base and half-step 128-grid histories both peak at `18.00%`
+  softening and therefore never reach the fixed `20%` threshold. Grid and
+  timestep qualification cannot be established when neither 128 history
+  qualifies. Decision: `STRICT_ASB_NOT_OBSERVED`; fixture true, scientific
+  gate false. The `1 us` persistence and all other criteria remain unchanged.
 - Initial ASB submissions `56040497`, `56040498`, and `56040513` were cancelled
   after a pre-result audit found that scalar diagnostics were written every 10
   steps but classifier-required fields remained at cadence 250. Their corrected
   replacements checkpoint all classifier fields every 25 steps; no result from
   the superseded jobs is used.
-- Queue audits preserved unrelated jobs `55950433` and `56040470` without
-  modification. Final strict-ASB classification remains pending fetched,
-  checksum-verified HPC output.
+- Final queue audit found only unrelated job `55950433`; it remains untouched.
+  No V24 campaign job remains active. The three independent outcomes are
+  recorded in `full_model/docs/v24_decision_report.md`.

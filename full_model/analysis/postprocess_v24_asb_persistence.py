@@ -63,6 +63,39 @@ def summary(history):
     }
 
 
+def conjunctive_persistence_diagnostic(history, interface_width_m, criteria):
+    """Report the longest raw qualifying interval before refinement gating."""
+    qualifies = [
+        item.active_fraction <= criteria.maximum_active_fraction
+        and item.temperature_excess_K >= criteria.minimum_temperature_excess_K
+        and item.softening_fraction >= criteria.minimum_softening_fraction
+        and item.effective_width_m >= (
+            criteria.minimum_width_to_interface*interface_width_m)
+        for item in history]
+    intervals = []; start = None
+    for index, accepted in enumerate(qualifies):
+        if accepted and start is None:
+            start = index
+        if start is not None and (not accepted or index == len(qualifies)-1):
+            end = index if accepted else index-1
+            intervals.append((start, end))
+            start = None
+    if not intervals:
+        return {"qualifying_snapshot_count": 0,
+                "longest_conjunctive_persistence_s": 0.0,
+                "longest_interval_start_s": None,
+                "longest_interval_end_s": None}
+    longest = max(intervals, key=lambda pair:
+                  history[pair[1]].time_s-history[pair[0]].time_s)
+    return {
+        "qualifying_snapshot_count": int(sum(qualifies)),
+        "longest_conjunctive_persistence_s": float(
+            history[longest[1]].time_s-history[longest[0]].time_s),
+        "longest_interval_start_s": history[longest[0]].time_s,
+        "longest_interval_end_s": history[longest[1]].time_s,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--coarse-root", type=Path, required=True)
@@ -115,6 +148,14 @@ def main():
         "decisions": {key: asdict(value) for key, value in decisions.items()},
         "summaries": {"coarse64": summary(coarse), "base128": summary(base),
                       "dt_refined128": summary(refined)},
+        "raw_conjunctive_persistence": {
+            "coarse64": conjunctive_persistence_diagnostic(
+                coarse, cw, criteria),
+            "base128": conjunctive_persistence_diagnostic(
+                base, bw, criteria),
+            "dt_refined128": conjunctive_persistence_diagnostic(
+                refined, rw, criteria),
+        },
         "matched_steps": {"coarse64": cs, "base128": bs,
                           "dt_refined128": rs},
         "fixture_passed": True,

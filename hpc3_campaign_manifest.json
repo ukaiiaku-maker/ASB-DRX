@@ -2202,7 +2202,8 @@
         "reversible_topology_kinetics": "846587a",
         "asb_128_submission_source": "952489f",
         "planar_sibm_submission_source": "ef3a61c",
-        "asb_64_submission_source": "8ea33e0"
+        "asb_64_submission_source": "8ea33e0",
+        "zero_load_sibm_repair_source": "29a0282"
       },
       "local_wall_decision": {
         "classification": "KINEMATIC_TRANSITION_BAND_WITH_INSUFFICIENT_BOUNDARY_INVENTORY",
@@ -2219,12 +2220,7 @@
         "manifest": "full_model/verification/v24_frozen_v23_evidence.json",
         "sha256": "b380471709aea1d672b3cd478043a8da909a92c366881bbbbd63fd485da063c3"
       },
-      "active_hpc3_jobs": [
-        {"run_id": "20260915T192037Z-29a0282-c0a8eb", "job_id": "56040797", "purpose": "zero_load_planar_sibm_repair_without_parameter_retuning"},
-        {"run_id": "20260915T185229Z-0ff33cb-e261ab", "job_id": "56040570", "purpose": "seed43_128_base_matched_continuation_field_cadence_25"},
-        {"run_id": "20260915T185230Z-0ff33cb-0f6b77", "job_id": "56040575", "purpose": "seed43_128_dt_refined_matched_continuation_field_cadence_25"},
-        {"run_id": "20260915T185231Z-0ff33cb-939ac3", "job_id": "56040576", "purpose": "seed43_64_high_cadence_matched_control_field_cadence_25"}
-      ],
+      "active_hpc3_jobs": [],
       "completed_hpc3_jobs": [
         {
           "run_id": "20260915T184720Z-ef3a61c-1fed5c",
@@ -2240,15 +2236,72 @@
           "scientific_gate_passed": false,
           "result": "full_model/verification/v24_planar_sibm_result.json",
           "result_sha256": "8137a8eca54c5b4b7beb34dc1a4827ee58d7bcfa9401b6bb25e7ea22fc95f3bb"
+        },
+        {
+          "run_id": "20260915T192037Z-29a0282-c0a8eb",
+          "job_id": "56040797",
+          "purpose": "zero_load_planar_sibm_repair_without_parameter_retuning",
+          "state": "COMPLETED",
+          "exit_code": 0,
+          "retrieval_verified": true,
+          "archive_sha256": "c9c834ddc17aaf661008a3a858b94c62815c50c467be6fb4a0df25bd91cc1588",
+          "checksum_manifest_sha256": "eb357d71a092b4869714249d71d46a234fd7db3407dc1349cadb52bebe69fe27",
+          "classification": "FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE",
+          "fixture_passed": true,
+          "scientific_gate_passed": false,
+          "result": "full_model/verification/v24_planar_sibm_unloaded_result.json",
+          "result_sha256": "2b61d9aacd4efa6a84788296e83a34cd7eb978ad41b4f2b56eb30f0c9dd94f72"
+        },
+        {
+          "run_id": "20260915T185231Z-0ff33cb-939ac3",
+          "job_id": "56040576",
+          "purpose": "seed43_64_high_cadence_matched_control_field_cadence_25",
+          "state": "COMPLETED",
+          "exit_code": 0,
+          "retrieval_verified": true,
+          "archive_sha256": "2b52c240b2b0eb6d655f7d786504e99afeafa5a014c4b1c7fd53811ac5516273",
+          "checksum_manifest_sha256": "3bd17298d8c34bbca1907de2bbe613c3cd1c69306dedf180bbbc5de055929630"
+        },
+        {
+          "run_id": "20260915T185229Z-0ff33cb-e261ab",
+          "job_id": "56040570",
+          "purpose": "seed43_128_base_matched_continuation_field_cadence_25",
+          "state": "COMPLETED",
+          "exit_code": 0,
+          "retrieval_verified": true,
+          "archive_sha256": "c8a63662d353429cad9178ab4bb04e1e28b4118d80d89a81284cf9fe52c6f092",
+          "checksum_manifest_sha256": "69e7446109adceb28b76a41a9c2f54026792ab2d13a8b9b6caf5e5d7c18ce0c8"
+        },
+        {
+          "run_id": "20260915T185230Z-0ff33cb-0f6b77",
+          "job_id": "56040575",
+          "purpose": "seed43_128_dt_refined_matched_continuation_field_cadence_25",
+          "state": "COMPLETED",
+          "exit_code": 0,
+          "retrieval_verified": true,
+          "archive_sha256": "f4c16c49851b8119bd1c892e259422f7853dbff9c633fae5d7aa1e15750182f1",
+          "checksum_manifest_sha256": "d8157a07f6a65aec477adba3d39b631aa5c0306306f3d466528d5445cb834cbf"
         }
       ],
+      "strict_asb_decision": {
+        "classification": "STRICT_ASB_NOT_OBSERVED",
+        "fixture_passed": true,
+        "scientific_gate_passed": false,
+        "result": "full_model/verification/v24_strict_asb_result.json",
+        "result_sha256": "d81e9f2e36937e7ae7db46714e3157d367ee0f7c88241d60ea348fac0719e137",
+        "coarse64_longest_conjunctive_persistence_s": 2.1039257597987523e-7,
+        "base128_maximum_softening_fraction": 0.18001927187880457,
+        "dt_refined128_maximum_softening_fraction": 0.18001927187880457,
+        "criteria_unchanged": true
+      },
       "superseded_cancelled_jobs": [
         {"run_id": "20260915T184158Z-952489f-e0ef23", "job_id": "56040497", "reason": "scalar diagnostics were cadence 10 but required field checkpoints remained cadence 250"},
         {"run_id": "20260915T184159Z-952489f-083e19", "job_id": "56040498", "reason": "scalar diagnostics were cadence 10 but required field checkpoints remained cadence 250"},
         {"run_id": "20260915T184840Z-8ea33e0-e1a4d2", "job_id": "56040513", "reason": "scalar diagnostics were cadence 10 but required field checkpoints remained cadence 250"}
       ],
       "configured_regression_tests_passed": 429,
-      "unrelated_jobs_observed_and_not_touched": ["55950433", "56040470"]
+      "unrelated_jobs_observed_and_not_touched": ["55950433", "56040470"],
+      "final_live_queue_unrelated_only": ["55950433"]
     }
   ]
 }
