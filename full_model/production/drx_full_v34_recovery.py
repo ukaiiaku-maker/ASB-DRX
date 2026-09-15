@@ -86,9 +86,15 @@ from dislocation_free_energy import (
 from wall_ordering_energy import smooth_order
 from tensorial_nye import (
     TensorialKinematicState, accept_slip_increment, bcc_four_family_systems,
-    initialize_tensorial_state, rotated_system_fields,
+    initialize_tensorial_state, make_junction_topology, rotated_system_fields,
 )
 from nonlocal_elasticity import solve_periodic_eigenstrain
+from common_tensorial_wall import (
+    CommonWallDriving, CommonWallParameters, CommonWallState,
+    accepted_euler_step as accepted_common_wall_step,
+    balance_ledger as common_wall_balance_ledger,
+    resolved_driving_fields as resolve_common_wall_driving,
+)
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
@@ -143,6 +149,9 @@ P = dict(
     # V19 wall increments and local kinetic fields for common-operator audits.
     v20_trajectory_diagnostics=False,
     v20_tensorial_nye_enabled=False,
+    v21_common_tensorial_wall_enabled=False,
+    v21_wall_order_noise_amplitude=0.0,
+    v21_wall_order_noise_seed=210021,
 
     # -- Material (BCC iron) --
     b=2.48e-10,
@@ -1060,6 +1069,21 @@ if P.get('v20_tensorial_nye_enabled', False):
     # Burgers family. It remains opt-in so frozen V19/v32 trajectories reduce
     # exactly to their original two-slip representation.
     P['nSlip'] = 4
+if P.get('v21_common_tensorial_wall_enabled', False):
+    # Wall qualification is a one-grain tensorial constitutive experiment.
+    # Retire every older duplicate wall/transport/orientation source while the
+    # common residual owns those states. Phase creation remains impossible.
+    P.update(
+        v20_tensorial_nye_enabled=True, nSlip=4, poly_n=1,
+        v19_predictive_wall_enabled=False,
+        use_advection=False, use_ch_step=False, freeze_orientation=True,
+        freeze_kwc_eta=True, freeze_rhoGB=True, use_gb_hp_source_sink=False,
+        use_signed_gnd_feedback=False, use_collective_organization=False,
+        use_lattice_diffusive_recovery=False, KM_k1=0.0, KM_k2_0=1.0e-300,
+        use_finite_loading_work_budget=False,
+        disable_nucleation=True, use_hazard_nucleation=False,
+        use_stateful_embryos=False, use_component_relabel=False,
+        use_collective_taylor=False, collective_taylor_mode='off')
 
 _entropy_names = (
     'glide_activation_entropy_kB', 'recovery_activation_entropy_kB',
@@ -3591,7 +3615,8 @@ v20_last_tau_effective = np.zeros_like(rp)
 v20_last_gdot = np.zeros_like(rp)
 v20_last_wall_order_target = np.zeros((Nx, Ny))
 v20_last_wall_order_rate_s = np.zeros((Nx, Ny))
-if P.get('v19_predictive_wall_enabled', False):
+if (P.get('v19_predictive_wall_enabled', False)
+        or P.get('v21_common_tensorial_wall_enabled', False)):
     loaded_v19 = False
     if _restart_loaded and not P.get('restart_reset_clock', True):
         with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as ztmp:
@@ -3613,6 +3638,14 @@ if P.get('v19_predictive_wall_enabled', False):
         wall_weight = mobile_sum/np.maximum(np.sum(mobile_sum, axis=2)[:, :, None], 1e-300)
         rho_wall_plus = rho_wall[:, :, None]*wall_weight*rp/mobile_sum
         rho_wall_minus = rho_wall[:, :, None]*wall_weight*rm/mobile_sum
+        if P.get('v21_common_tensorial_wall_enabled', False):
+            _v21_q_noise = float(P.get('v21_wall_order_noise_amplitude', 0.0))
+            if _v21_q_noise > 0.0:
+                _v21_q_rng = np.random.default_rng(int(
+                    P.get('v21_wall_order_noise_seed', 210021)))
+                q_wall_v19 = np.clip(
+                    _v21_q_noise*(1.0+0.1*_v21_q_rng.standard_normal((Nx, Ny))),
+                    0.0, 1.0)
     if (rho_forest_plus.shape != rho_forest.shape
             or rho_wall_plus.shape != rp.shape
             or q_wall_v19.shape != (Nx, Ny)
@@ -3671,6 +3704,64 @@ if V20_SYSTEMS is not None:
     gamma_slip = v20_tensorial_state.slip.copy()
     eps_p = 0.5*(v20_tensorial_state.beta_p[..., :2, :2]
                  +np.swapaxes(v20_tensorial_state.beta_p[..., :2, :2], -1, -2))
+
+v21_topologies = ()
+v21_junction_m2 = np.zeros((Nx, Ny, 0))
+v21_channel_exposure = {}
+v21_balance_ledger = {}
+v21_common_parameters = None
+if P.get('v21_common_tensorial_wall_enabled', False):
+    v21_topologies = tuple(
+        make_junction_topology(
+            V20_SYSTEMS, first, second, sign_first, sign_second,
+            line_tension_J_m=0.5*mu_iso*P['b']**2)
+        for first in range(nSlip) for second in range(first+1, nSlip)
+        for sign_first, sign_second in ((1, -1), (-1, 1)))
+    v21_junction_m2 = np.zeros((Nx, Ny, len(v21_topologies)))
+    v21_channel_exposure = {name: 0.0 for name in (
+        'lock_plus_turnover', 'lock_minus_turnover',
+        'wall_plus_turnover', 'wall_minus_turnover',
+        'annihilation_pairs', 'multiplication_pairs',
+        'junction_turnover', 'order')}
+    v21_balance_ledger = {
+        'accepted_steps': 0, 'minimum_accept_scale': 1.0,
+        'maximum_relative_burgers_rate_residual': 0.0,
+        'maximum_relative_line_balance_residual': 0.0,
+        'maximum_relative_energy_balance_residual': 0.0,
+        'cumulative_plastic_work_J_m3': 0.0,
+        'cumulative_free_energy_change_J_m3': 0.0,
+        'cumulative_heat_J_m3': 0.0,
+    }
+    if _restart_loaded and not P.get('restart_reset_clock', True):
+        with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as ztmp:
+            if ('v21_junction_m2' not in ztmp.files
+                    or 'v21_channel_exposure_json' not in ztmp.files
+                    or 'v21_balance_ledger_json' not in ztmp.files):
+                raise ValueError('exact V21 restart requires junction state and exposure ledger')
+            v21_junction_m2 = np.asarray(ztmp['v21_junction_m2'], dtype=float).copy()
+            v21_channel_exposure = json.loads(str(
+                ztmp['v21_channel_exposure_json'].item()))
+            v21_balance_ledger = json.loads(str(
+                ztmp['v21_balance_ledger_json'].item()))
+    _rho_reference = float(P.get('_rho_state_total_ref_runtime', np.nanmean(rho)))
+    v21_common_parameters = CommonWallParameters(
+        spacing_m=dx, burgers_m=P['b'],
+        rho_reference_m2=max(_rho_reference, P['rho_min']),
+        line_energy_J_m=0.5*mu_iso*P['b']**2,
+        correlation_energy_J_m=max(float(P.get('rho_log_coeff_J_m', 8e-11)), 1e-15),
+        wall_order_amplitude_J_m3=max(float(getattr(ATpot, 'A_ord_r', 1e6)), 1.0),
+        wall_target_m2=max(.2*_rho_reference, P['rho_min']),
+        attempt_frequency_s=float(P.get('v19_wall_attempt_frequency_s', 1e7)),
+        critical_stress_Pa=float(P.get('v19_wall_critical_stress_Pa', 1.5e9)),
+        exp_a=float(P.get('v19_wall_exp_a', 2.2)),
+        exp_n=float(P.get('v19_wall_exp_n', 2.5)),
+        exp_floor=float(P.get('v19_wall_exp_floor', .05)),
+        activation_entropy_kB=float(P.get('wall_activation_entropy_kB', 0.0)),
+        c11_Pa=P['C11'], c12_Pa=P['C12'], c44_Pa=P['C44'],
+        volumetric_heat_capacity_J_m3_K=P['cp_rho_vol'],
+        thermal_diffusivity_m2_s=P['k_thermal']/max(P['cp_rho_vol'], 1.0),
+        bath_rate_s=P['T_bath_coupling']/max(P['cp_rho_vol'], 1.0),
+        bath_temperature_K=P['T0'])
 
 # v9 sparse material state exists only for an actually promoted parent/child
 # pair. Initial orientation labels remain one common deformed material class.
@@ -6210,6 +6301,32 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                 'v20_tensorial_state') is not None else np.zeros((Nx, Ny, nSlip, 3))),
             v20_family_nye_m1=(v20_tensorial_state.family_nye_m1 if globals().get(
                 'v20_tensorial_state') is not None else np.zeros((Nx, Ny, nSlip, 3, 3))),
+            v21_junction_m2=globals().get(
+                'v21_junction_m2', np.zeros((Nx, Ny, 0))),
+            v21_channel_exposure_json=np.array(json.dumps(
+                globals().get('v21_channel_exposure', {}), sort_keys=True,
+                separators=(',', ':'))),
+            v21_balance_ledger_json=np.array(json.dumps(
+                globals().get('v21_balance_ledger', {}), sort_keys=True,
+                separators=(',', ':'))),
+            v21_common_parameters_json=np.array(json.dumps(
+                (globals().get('v21_common_parameters').__dict__
+                 if globals().get('v21_common_parameters') is not None else {}),
+                sort_keys=True, separators=(',', ':'))),
+            v21_topology_json=np.array(json.dumps([
+                {
+                    'parent_a': int(topology.parent_a),
+                    'parent_b': int(topology.parent_b),
+                    'sign_a': int(topology.sign_a),
+                    'sign_b': int(topology.sign_b),
+                    'product_burgers_m': topology.product_burgers_m.tolist(),
+                    'parent_line_directions': topology.parent_line_directions.tolist(),
+                    'product_line_direction': topology.product_line_direction.tolist(),
+                    'product_line_multiplicity': float(topology.product_line_multiplicity),
+                    'character': topology.character,
+                    'delta_free_energy_J_m': float(topology.delta_free_energy_J_m),
+                } for topology in globals().get('v21_topologies', ())],
+                sort_keys=True, separators=(',', ':'))),
             H_nuc=H_nuc, E_nuc=E_nuc, kappa_tot=_signed_kappa_field(rp, rm),
             nuc_cand_active=nuc_cand_active,
             nuc_cand_age=nuc_cand_age,
@@ -6480,6 +6597,95 @@ for n in range(_restart_step_offset, _restart_end_step):
             mag = np.minimum(mag, gdot_cap)  # optional numerical safety for legacy rate-control runs
         gdot[:,:,s] = np.sign(tnet)*mag
 
+    # V21 common tensorial operator. The same residual supplies this nonlinear
+    # accepted step and the Fourier/JVP audit; all legacy duplicate wall,
+    # advection, plastic-spin, and heat state updates are disabled in V21 mode.
+    if P.get('v21_common_tensorial_wall_enabled', False):
+        _v21_state_before = CommonWallState(
+            rp.copy(), rm.copy(), rho_forest_plus.copy(),
+            rho_forest_minus.copy(), rho_wall_plus.copy(),
+            rho_wall_minus.copy(), v21_junction_m2.copy(),
+            q_wall_v19.copy(), v20_tensorial_state.slip.copy(),
+            v20_tensorial_state.beta_p.copy(),
+            v20_tensorial_state.alignment_m2.copy(),
+            v20_tensorial_state.family_nye_m1.copy(),
+            psi_lat.copy(), T.copy())
+        _v21_driving = CommonWallDriving(
+            mean_strain=ebar, fixed_eigenstrain=_v19_fixed_eigenstrain())
+        _v21_speed, _v21_tau = resolve_common_wall_driving(
+            _v21_state_before, _v21_driving, V20_SYSTEMS,
+            v21_common_parameters)
+        _v21_requested_dt = float(P['dt'])
+        _v21_state_after, _v21_residual, _v21_accept_scale = accepted_common_wall_step(
+            _v21_state_before, _v21_driving, V20_SYSTEMS,
+            v21_topologies, v21_common_parameters, _v21_requested_dt)
+        if not np.isfinite(_v21_accept_scale) or _v21_accept_scale <= 0.0:
+            raise FloatingPointError('V21 common operator could not accept a positive timestep')
+        # The limiter is a real adaptive timestep, not a constitutive-rate cap:
+        # every downstream loading, heat, clock, and ledger update uses the
+        # identical interval already accepted above.
+        P['dt'] = _v21_requested_dt*float(_v21_accept_scale)
+        rp = _v21_state_after.mobile_plus_m2.copy()
+        rm = _v21_state_after.mobile_minus_m2.copy()
+        rho_forest_plus = _v21_state_after.forest_plus_m2.copy()
+        rho_forest_minus = _v21_state_after.forest_minus_m2.copy()
+        rho_wall_plus = _v21_state_after.wall_plus_m2.copy()
+        rho_wall_minus = _v21_state_after.wall_minus_m2.copy()
+        rho_forest = rho_forest_plus+rho_forest_minus
+        rho_wall = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
+        rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+        q_wall_v19 = _v21_state_after.wall_order.copy()
+        v21_junction_m2 = _v21_state_after.junction_m2.copy()
+        v20_tensorial_state = TensorialKinematicState(
+            _v21_state_after.slip.copy(), _v21_state_after.beta_p.copy(),
+            _v21_state_after.alignment_m2.copy(),
+            _v21_state_after.family_nye_m1.copy())
+        gamma_slip = v20_tensorial_state.slip.copy()
+        _v21_beta2 = v20_tensorial_state.beta_p[..., :2, :2]
+        eps_p = .5*(_v21_beta2+np.swapaxes(_v21_beta2, -1, -2))
+        _v21_orientation_increment = _v21_state_after.orientation_rad-psi_lat
+        psi_plastic = psi_plastic+_v21_orientation_increment
+        psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
+        T = _v21_state_after.temperature_K.copy()
+        gdot = ((_v21_state_after.slip-_v21_state_before.slip)
+                /max(P['dt'], 1e-300))
+        tau_resolved = _v21_tau.copy()
+        tau_effective = _v21_tau.copy()
+        v21_last_heat_rate = _v21_residual.heat_rate_W_m3.copy()
+        _v21_ledger = common_wall_balance_ledger(
+            _v21_state_before, _v21_residual, V20_SYSTEMS, v21_topologies)
+        _v21_line_scale = max(
+            abs(_v21_ledger['line_rate_m2_s'])
+            +abs(_v21_ledger['annihilation_line_sink_m2_s'])
+            +abs(_v21_ledger['multiplication_line_source_m2_s'])
+            +abs(_v21_ledger['junction_line_sink_m2_s']), 1.0)
+        v21_balance_ledger['accepted_steps'] += 1
+        v21_balance_ledger['minimum_accept_scale'] = min(
+            v21_balance_ledger['minimum_accept_scale'], float(_v21_accept_scale))
+        v21_balance_ledger['maximum_relative_burgers_rate_residual'] = max(
+            v21_balance_ledger['maximum_relative_burgers_rate_residual'],
+            float(_v21_ledger['relative_burgers_rate_residual']))
+        v21_balance_ledger['maximum_relative_line_balance_residual'] = max(
+            v21_balance_ledger['maximum_relative_line_balance_residual'],
+            abs(float(_v21_ledger['line_balance_residual_m2_s']))/_v21_line_scale)
+        v21_balance_ledger['maximum_relative_energy_balance_residual'] = max(
+            v21_balance_ledger['maximum_relative_energy_balance_residual'],
+            float(_v21_ledger['relative_energy_balance_residual']))
+        _v21_accepted_dt = float(P['dt'])
+        v21_balance_ledger['cumulative_plastic_work_J_m3'] += (
+            _v21_accepted_dt*float(_v21_ledger['plastic_power_W_m3']))
+        v21_balance_ledger['cumulative_free_energy_change_J_m3'] += (
+            _v21_accepted_dt*float(_v21_ledger['free_energy_rate_W_m3']))
+        v21_balance_ledger['cumulative_heat_J_m3'] += (
+            _v21_accepted_dt*float(_v21_ledger['heat_rate_W_m3']))
+        for _channel, _field in _v21_residual.channel_rates_m2_s.items():
+            if _channel in v21_channel_exposure:
+                _v21_normalizer = (1.0 if _channel == 'order' else
+                    max(v21_common_parameters.rho_reference_m2, P['rho_min']))
+                v21_channel_exposure[_channel] += (
+                    _v21_accepted_dt*float(np.mean(np.abs(_field)))
+                    /_v21_normalizer)
+
     # Local plastic strain rate implied by the heterogeneous stress field.
     ed11_loc = np.zeros((Nx, Ny))
     for ss in range(nSlip):
@@ -6572,7 +6778,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                     collective_diag[kk] = np.nan
 
     # --- Plastic strain update ---
-    if V20_SYSTEMS is not None:
+    if P.get('v21_common_tensorial_wall_enabled', False):
+        # Already advanced by the common accepted step above.
+        pass
+    elif V20_SYSTEMS is not None:
         v20_tensorial_state = accept_slip_increment(
             v20_tensorial_state, gdot*P['dt'], V20_SYSTEMS,
             psi_lat, dx)
@@ -7768,6 +7977,12 @@ for n in range(_restart_step_offset, _restart_end_step):
             heat_mode = heat_mode + '_process_zone'
         except Exception:
             pass
+    if P.get('v21_common_tensorial_wall_enabled', False):
+        qdot_field = np.asarray(v21_last_heat_rate, dtype=float)
+        heat_mode = 'v21_common_tensorial_residual'
+        heat_pz_diag = dict(active=0.0, sigma_px=0.0,
+                            raw_max=float(np.nanmax(qdot_field)),
+                            smooth_max=float(np.nanmax(qdot_field)))
     dT_heat = P['dt'] * qdot_field / max(P['cp_rho_vol'], 1.0)
     heat_diag = {
         'qdot_mean': float(np.nanmean(qdot_field)),
@@ -7796,7 +8011,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         'thermal_dt_dT_allow': float(thermal_dt_diag.get('dT_allow', np.nan)),
         'thermal_dt_dT_macro_pred': float(thermal_dt_diag.get('dT_macro_pred', np.nan)),
     }
-    T = update_temperature_field(T, qdot_field)
+    if not P.get('v21_common_tensorial_wall_enabled', False):
+        T = update_temperature_field(T, qdot_field)
 
     _bad_T, _bad_T_reason = _thermal_validity_exceeded(T)
     if _bad_T:
