@@ -191,6 +191,24 @@
       "fixture_passed": true,
       "scientific_gate_passed": true,
       "stronger_intragranular_grain_path_claim": false
+    },
+    {
+      "qualification_id": "v20-tensorial-nye-on-trajectory-prerequisite",
+      "scientific_source_commit": "bb8356f",
+      "execution": "local_regular_checkpoint_replay_and_tensorial_qualification",
+      "classification": "V20_COMMON_OPERATOR_REPAIR_REQUIRED_NO_HPC",
+      "result_path": "full_model/verification/v20_local_qualification.json",
+      "result_sha256": "a5d19bf8ff0acbeed6a9fd7a8d88a355bb8632c06ee93500aa99643778f67a48",
+      "trajectory_audit_path": "full_model/verification/v20_v19_on_trajectory_audit.json",
+      "trajectory_audit_sha256": "39b991719e8d767f1642e1b3d848f8bb6a314be3ea45043f9fe62737e59b44c4",
+      "restart_result_path": "full_model/verification/v20_tensorial_restart.json",
+      "restart_result_sha256": "89e37e68c604e98128f6970b79db3c06d670b18913305c392001789ae75d6422",
+      "replay_manifest_path": "full_model/verification/v20_on_trajectory_manifest.json",
+      "replay_manifest_sha256": "edd36a817731076b4f7c973c4f83b312f419a961d6f4488f0ff8f3b174512219",
+      "configured_regression_tests_passed": 377,
+      "hpc3_job_launched": false,
+      "fixture_passed": false,
+      "scientific_gate_passed": false
     }
   ]
 }

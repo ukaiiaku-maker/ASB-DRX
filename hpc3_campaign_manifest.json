@@ -2163,6 +2163,36 @@
         "grid_seed_domain_sweep": "not_authorized",
         "hpc3_bundle": "not_submitted"
       }
+    },
+    {
+      "run_id": "local-v20-tensorial-nye-trajectory-audit-20260914",
+      "purpose": "directive_v20_on_trajectory_budget_tensorial_nye_and_nonlocal_foundations",
+      "git_commit": "bb8356f",
+      "execution": "local_only_regular_v19_replay_and_canonical_tensorial_tests",
+      "hpc3_submission": null,
+      "hpc3_launch_authorized": false,
+      "classification": "V20_COMMON_OPERATOR_REPAIR_REQUIRED_NO_HPC",
+      "v19_claim_retained": "NO_PHYSICAL_LAGB_PRECURSOR_OBSERVED_AT_32x32_AND_10_PERCENT_STRAIN",
+      "trajectory_audit": {
+        "result": "full_model/verification/v20_v19_on_trajectory_audit.json",
+        "sha256": "39b991719e8d767f1642e1b3d848f8bb6a314be3ea45043f9fe62737e59b44c4",
+        "signed_unsigned_budget_closed": true,
+        "common_operator_passed": false,
+        "finite_mode_cumulative_G": null
+      },
+      "tensorial_restart": {
+        "result": "full_model/verification/v20_tensorial_restart.json",
+        "sha256": "89e37e68c604e98128f6970b79db3c06d670b18913305c392001789ae75d6422",
+        "all_declared_arrays_bitwise_equal": true
+      },
+      "configured_regression_tests_passed": 377,
+      "fixture_passed": false,
+      "scientific_gate_passed": false,
+      "live_queue_audit": {
+        "observed_at": "2026-09-14 America/Los_Angeles",
+        "campaign_jobs_running": 0,
+        "unrelated_jobs_observed_and_not_touched": ["55950433", "56017421"]
+      }
     }
   ]
 }
