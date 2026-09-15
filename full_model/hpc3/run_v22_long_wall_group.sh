@@ -65,7 +65,10 @@ python3 -m py_compile common_tensorial_wall.py tensorial_nye.py \
 
 case "$group" in
   primary64)
-    run_case homogeneous_off_64 64 10.0 2201 none false true false 2200
+    # The homogeneous branch is already nonlinearly saturated by step 500 in
+    # the preserved pilot; spending a nominal strain horizon on that uniform
+    # state adds no wall-pattern evidence.
+    run_case homogeneous_off_64 64 10.0 2201 none false true false 500
     run_case heterogeneous_off_64 64 10.0 2201 eigenstrain_particle false true false 2200
     run_case heterogeneous_on_64 64 10.0 2201 eigenstrain_particle true true false 2200
     run_case order_disabled_64 64 10.0 2201 eigenstrain_particle true false false 1000
