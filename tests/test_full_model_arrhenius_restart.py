@@ -41,6 +41,16 @@ class FullModelArrheniusTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             KIN.activated_rate_s(reject, 0.01 * KIN.EV_J, 1500.0)
 
+    def test_vectorized_kernel_matches_scalar_and_applies_entropy_once(self):
+        process = KIN.ActivatedProcess(
+            "array", 4e9, entropy_over_kB=1.7, drag_rate_s=8e8)
+        enthalpy = np.array([0.8, 0.2, 0.01])*KIN.EV_J
+        temperature = np.array([800.0, 1200.0, 1800.0])
+        vector = KIN.activated_rate_array_s(process, enthalpy, temperature)
+        scalar = np.array([KIN.activated_rate_s(process, h, t)
+                           for h, t in zip(enthalpy, temperature)])
+        np.testing.assert_allclose(vector, scalar, rtol=2e-15)
+
     def test_event_frequency_and_velocity_are_distinct(self):
         self.assertEqual(KIN.event_velocity_m_s(2.0e6, 2.5e-10), 5.0e-4)
 

@@ -1,0 +1,32 @@
+{
+  "schema": "v24-frozen-v23-evidence-1",
+  "checkpoint": "263ae7aabaab6b13f6f474efbae0db76bdcac9fc",
+  "remote_ref": "refs/heads/exp/full-v34-recovery-v1",
+  "remote_sha": "263ae7aabaab6b13f6f474efbae0db76bdcac9fc",
+  "files": {
+    "campaign_status.md": "825812746534d571904c2d3641de58121af8f091508862040903ffa18fcf1555",
+    "full_model/docs/v23_extensive_density_and_wall.md": "dc7925d5451177106f6ac02269a9fea6f72c98e7ecadfe7df692e70249104a4c",
+    "full_model/full_recovery_campaign_manifest.json": "84e64df413f326dbcdce20626d0274864dcc4aaf391beb9ea71e96ab69cfa12f",
+    "full_model/production/density_state_map.py": "386f3dc45fdaec1c3b7440ea92c5d0dfb5542b7a043fda2cfc67cfa6293fae2a",
+    "full_model/production/extensive_wall.py": "dad0ad557d045d3adaef2d5c62193ab15af84722ec8976cc6988a3ed11b52e01",
+    "full_model/production/stored_energy_coupling.py": "071cc1bdea14eb7247dd2ef5ec7af242501c1e9197bedcc9ba94eca0d944459f",
+    "full_model/production/v23_coupled_wall.py": "652f6db50820ff35d183a9f37d577b7ce840bf14dd2774fc543fd75a550f513a",
+    "full_model/verification/v23_density_map_audit.json": "47480071cbf9f86d6547708f8ea32280743cf9dc6c33a8bc42af1812fa81c8de",
+    "full_model/verification/v23_extensive_wall_local.json": "dcc9e1b6e458448c32633eba416ac3477deee5f85e081cad60cc3946c01fc5f8",
+    "full_model/verification/v23_frozen_v22_evidence.json": "e037cc463c13999db6037c34b04a48f8b7c950a7be0e1ff956c70f89e378c469",
+    "full_model/verification/v23_local_nonlinear_fields.png": "cd23e0f429632d81a8aa66d194f5a45497f9fed35d763388dba2ef89c1fb9f40",
+    "full_model/verification/v23_local_nonlinear_trajectory.json": "3ed6d3a7a03adb0e6ebb5c41f8d027344558caefe68cad3c3574d8054e43b358",
+    "full_model/verification/v23_planar_sibm_audit.json": "6bc693479034275e2a5f9e54753858c63f4fa69867fd93d6f7c5554a8f199837",
+    "full_model/verification/v23_sibm_handoff_audit.json": "510ab024a5edb6508e824e880dcabb1def0e64a35908a64f3b8e195d30375cd7"
+  },
+  "claims": {
+    "extensive_wall_state_and_ledger_qualified": true,
+    "manufactured_sessile_frank_bilby_representation_qualified": true,
+    "independent_frank_bilby_mechanism_validation": false,
+    "line_direction_topology_balance_qualified": false,
+    "persistent_lagb_precursor": false,
+    "full_dynamic_zero_pressure_sibm_growth": false,
+    "strict_asb_qualified": false
+  },
+  "immutable": true
+}

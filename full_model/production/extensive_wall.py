@@ -12,9 +12,15 @@ from dataclasses import dataclass, replace
 import numpy as np
 
 try:
+    from .arrhenius_kinetics import (
+        ActivatedProcess, activated_rate_array_s, exp_floor_enthalpy_j,
+    )
     from .density_state_map import DensityInventory, derived_density_fields
     from .tensorial_nye import rotation_z, rotated_system_fields, spectral_derivatives
 except ImportError:
+    from arrhenius_kinetics import (
+        ActivatedProcess, activated_rate_array_s, exp_floor_enthalpy_j,
+    )
     from density_state_map import DensityInventory, derived_density_fields
     from tensorial_nye import rotation_z, rotated_system_fields, spectral_derivatives
 
@@ -33,6 +39,9 @@ class ExtensiveWallParameters:
     nye_match_coefficient_J_m: float = 2e-5
     ordered_gradient_J_m3: float = 1e-33
     ordering_attempt_frequency_s: float = 1e7
+    ordering_entropy_over_kB: float = 0.0
+    ordering_drag_rate_s: float = np.inf
+    negative_barrier_mode: str = "drag"
     ordering_barrier_eV: float = 0.70
     event_length_m: float = 2.5e-9
     exp_floor: float = 0.05
@@ -56,6 +65,12 @@ class ExtensiveWallParameters:
             raise ValueError("invalid gradient coefficient or EXP floor")
         if self.maximum_fraction_per_step > 1:
             raise ValueError("step fraction cannot exceed one")
+        # Validate entropy, drag limit, and negative-barrier validity policy in
+        # the campaign-wide Arrhenius representation.
+        ActivatedProcess(
+            "extensive-wall-ordering", self.ordering_attempt_frequency_s,
+            self.ordering_entropy_over_kB, self.ordering_drag_rate_s,
+            self.negative_barrier_mode)
 
 
 def _laplacian(field, spacing_m):
@@ -221,14 +236,16 @@ def extensive_wall_chemical_potentials_J_m(inventory, systems, topologies,
 
 
 def _attempt_rate_s(stress_Pa, temperature_K, parameters):
-    stress = np.abs(np.asarray(stress_Pa, dtype=float))
-    temperature = np.asarray(temperature_K, dtype=float)
-    barrier = parameters.ordering_barrier_eV * EV_J * (
-        parameters.exp_floor + (1 - parameters.exp_floor) * np.exp(
-            -parameters.exp_a * (stress / parameters.critical_stress_Pa)
-            ** parameters.exp_n))
-    return parameters.ordering_attempt_frequency_s * np.exp(np.clip(
-        -barrier / (KB_J_K * temperature), -700, 40))
+    enthalpy = exp_floor_enthalpy_j(
+        np.abs(np.asarray(stress_Pa, dtype=float)),
+        parameters.ordering_barrier_eV*EV_J,
+        parameters.critical_stress_Pa, parameters.exp_a,
+        parameters.exp_n, parameters.exp_floor)
+    process = ActivatedProcess(
+        "extensive-wall-ordering", parameters.ordering_attempt_frequency_s,
+        parameters.ordering_entropy_over_kB, parameters.ordering_drag_rate_s,
+        parameters.negative_barrier_mode)
+    return activated_rate_array_s(process, enthalpy, temperature_K)
 
 
 def ordering_residual(inventory, systems, topologies, orientation_rad,

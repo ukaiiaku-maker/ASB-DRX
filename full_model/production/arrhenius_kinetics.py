@@ -76,6 +76,34 @@ def activated_rate_s(process, enthalpy_j, temperature_k):
     return float(process.attempt_frequency_s) * math.exp(-barrier / (KB_J_K * temperature_k))
 
 
+def activated_rate_array_s(process, enthalpy_j, temperature_k):
+    """Vectorized event frequency [1/s] using the same free barrier once.
+
+    This is the field-valued counterpart of :func:`activated_rate_s`.  The
+    activation entropy is subtracted exactly once and negative free barriers
+    follow the process' declared ``drag`` or ``reject`` validity policy.
+    """
+    enthalpy = np.asarray(enthalpy_j, dtype=float)
+    temperature = np.asarray(temperature_k, dtype=float)
+    try:
+        enthalpy, temperature = np.broadcast_arrays(enthalpy, temperature)
+    except ValueError as error:
+        raise ValueError("enthalpy and temperature are not broadcast-compatible") from error
+    if (np.any(~np.isfinite(enthalpy)) or np.any(~np.isfinite(temperature))
+            or np.any(enthalpy < 0.0) or np.any(temperature <= 0.0)):
+        raise ValueError("enthalpy must be finite/nonnegative and temperature finite/positive")
+    barrier = enthalpy-KB_J_K*temperature*process.entropy_over_kB
+    negative = barrier < 0.0
+    if np.any(negative) and process.negative_barrier_mode == "reject":
+        raise ValueError(f"{process.name}: negative free barrier outside validity envelope")
+    thermal = process.attempt_frequency_s*np.exp(np.clip(
+        -np.maximum(barrier, 0.0)/(KB_J_K*temperature), -700.0, 0.0))
+    if np.any(negative):
+        thermal = np.where(negative, min(process.attempt_frequency_s,
+                                         process.drag_rate_s), thermal)
+    return thermal
+
+
 def event_velocity_m_s(event_rate_s, glide_distance_m):
     """Convert event frequency [1/s] to physical velocity [m/s]."""
     if glide_distance_m < 0.0:
