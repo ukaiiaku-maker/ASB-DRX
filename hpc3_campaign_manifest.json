@@ -2103,6 +2103,61 @@
       "configured_regression_tests_passed": 343,
       "matched_v32_full_v34_asb_source_regression": true,
       "unrelated_jobs_preserved": ["55950433", "56017421"]
+    },
+    {
+      "run_id": "local-v19-unforced-one-grain-20260914",
+      "purpose": "directive_v19_projected_dynamics_neutral_handoff_and_full_mechanics_preflight",
+      "git_commit": "0767460126117f727df0404aca588615dca8b8f7",
+      "execution": "local_only_two_32x32_full_driver_branches_to_10_percent_strain",
+      "hpc3_submission": null,
+      "hpc3_launch_authorized": false,
+      "v18_claim_addendum": {
+        "classification": "PRESCRIBED_DIFFERENTIAL_SLIP_ISLAND_MAPS_TO_A_COMPATIBLE_ORDERED_LAGB_PRECURSOR",
+        "result": "full_model/verification/v19_v18_claim_addendum.json",
+        "sha256": "2683cff1e12e5117de9aa826b3c459f2d55f4b2142fdd583b72ca396c8c53321"
+      },
+      "projected_dynamics": {
+        "projected_dynamic_instability_identified": true,
+        "candidate_finite_wavelength_mode_identified": true,
+        "candidate_wavelength_m": 9.686172671751179e-6,
+        "candidate_is_domain_independent": false,
+        "result": "full_model/verification/v19_projected_dynamics.json",
+        "sha256": "0a4191cb651765f8110f7ea23f2532e5b87398b0fc8c5311431d2429c240089f"
+      },
+      "neutral_handoff": {
+        "newly_swept_volume_m3": 0.0,
+        "line_change_m": 0.0,
+        "signed_burgers_change_m2": 0.0,
+        "heat_released_J": 0.0,
+        "bitwise_identity_map": true
+      },
+      "full_mechanics_preflight": {
+        "classification": "NO_PHYSICAL_LAGB_PRECURSOR_IN_LOCAL_PREFLIGHT",
+        "homogeneous_orientation_span_deg": 0.8400229496334148,
+        "particle_orientation_span_deg": 0.8600006554572488,
+        "homogeneous_wall_order_max": 6.715721378892107e-7,
+        "particle_wall_order_max": 6.153677844612841e-7,
+        "grain_labels_each_branch": 1,
+        "phase_allocation_attempted": false,
+        "release_test_run": false,
+        "result": "full_model/verification/v19_local_preflight/v19_local_preflight.json",
+        "sha256": "ae1665dd635fed81db191ca885c189b3f44fcb056d8635445d218bd49372cace",
+        "field_plot": "full_model/verification/v19_local_preflight/v19_local_fields.png",
+        "field_plot_sha256": "17b881bb774bc1d05c708f22ae48d6e3895a3258053c2cae97ce27f2006eb0df"
+      },
+      "restart": {
+        "continuous_vs_split_arrays_checked": 13,
+        "all_arrays_bitwise_equal": true,
+        "wall_ledger_bitwise_equal": true
+      },
+      "configured_regression_tests_passed": 367,
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "downstream_decision": {
+        "release_and_growth": "not_triggered_no_physical_precursor",
+        "grid_seed_domain_sweep": "not_authorized",
+        "hpc3_bundle": "not_submitted"
+      }
     }
   ]
 }
