@@ -30,6 +30,7 @@ from .wall_topology_supply import (
     accepted_line_reorientation_step,
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
     apply_signed_ordering_extent, conservative_transport_capture_step,
+    validate_junction_alignment,
 )
 
 
@@ -42,6 +43,8 @@ class V24MechanicalWallState:
     def validate(self, systems, topologies):
         self.common.validate(systems, topologies)
         self.reservoir_alignment.validate(self.density, len(systems))
+        validate_junction_alignment(
+            self.density, self.reservoir_alignment, topologies)
         pairs = (
             (self.common.mobile_plus_m2, self.density.mobile_plus_m2),
             (self.common.mobile_minus_m2, self.density.mobile_minus_m2),

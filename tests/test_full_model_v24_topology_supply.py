@@ -14,6 +14,7 @@ from full_model.production.wall_topology_supply import (
     alignment_from_checkpoint_arrays, conservative_transport_capture_step,
     maximum_ledger_residual,
     reservoir_nye_m1, zero_alignment_state,
+    validate_junction_alignment,
 )
 
 
@@ -166,3 +167,13 @@ def test_finite_segment_reorientation_carries_node_curvature_and_nye_ledgers():
     assert np.max(np.abs(ledger["R_topology_m1_s"])) > 0.0
     assert np.max(np.abs(ledger["sign"]["plus"]
                              ["paired_node_closure_residual_m3"])) == 0.0
+
+
+def test_junction_first_moment_cannot_exceed_product_line_content():
+    inventory, alignment, systems, _ = fixture(n=3)
+    topology = make_junction_topology(systems, 0, 1)
+    inventory = replace(inventory, junction_m2=np.ones((3, 3, 1)))
+    alignment = replace(
+        alignment, junction_alignment_m2=np.full((3, 3, 1, 3), 10.0))
+    with pytest.raises(ValueError, match="junction alignment exceeds"):
+        validate_junction_alignment(inventory, alignment, (topology,))

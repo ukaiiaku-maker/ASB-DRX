@@ -159,6 +159,20 @@ def reservoir_nye_m1(alignments, systems, orientation_rad, topologies=()):
     return parts
 
 
+def validate_junction_alignment(inventory, alignments, topologies,
+                                tolerance=2e-13):
+    """Enforce product-line first moment <= declared junction line content."""
+    if len(topologies) != inventory.junction_m2.shape[-1]:
+        raise ValueError("topology list does not match junction inventory")
+    multiplicity = np.asarray([
+        item.product_line_multiplicity for item in topologies])
+    bound = np.asarray(inventory.junction_m2)*multiplicity
+    norm = np.linalg.norm(alignments.junction_alignment_m2, axis=-1)
+    if np.any(norm-bound > float(tolerance)*np.maximum(bound, 1.0)):
+        raise ValueError("junction alignment exceeds declared product line")
+    return True
+
+
 def _accepted_extent(requested_m2, donor_m2):
     request = np.maximum(np.asarray(requested_m2, dtype=float), 0.0)
     donor = np.asarray(donor_m2, dtype=float)
@@ -549,6 +563,7 @@ def accepted_junction_topology_step(
     aligned = replace(
         alignments, junction_alignment_m2=junction_alignment, **alignment)
     aligned.validate(updated, len(systems))
+    validate_junction_alignment(updated, aligned, topologies)
     after_nye = reservoir_nye_m1(
         aligned, systems, orientation_rad, topologies)
     after_total = derived_density_fields(updated, topologies)["rho_total_m2"]
