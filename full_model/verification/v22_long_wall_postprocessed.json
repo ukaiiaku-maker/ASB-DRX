@@ -1,0 +1,1060 @@
+{
+  "schema": "asb-drx/v22-long-wall-postprocess/v1",
+  "cases": [
+    {
+      "case": "heterogeneous_off_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_002199.npz",
+      "checkpoint_count": 10,
+      "final_step": 2199,
+      "physical_time_s": 2.7809851118807402e-06,
+      "axial_strain": 0.027809851118807384,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696953594.8646271,
+          696953594.8646271,
+          697108729.6332037,
+          696870097.6452315
+        ],
+        "final_unsigned_m2_by_family": [
+          1979742576568.799,
+          1979994344730.962,
+          19897576845545.965,
+          278272238015.0755
+        ],
+        "delta_unsigned_m2_by_family": [
+          1979045622973.935,
+          1979297391136.098,
+          19896879736816.438,
+          277575367917.4296
+        ],
+        "initial_signed_m2_by_family": [
+          -1708.626285940758,
+          557.4756569306046,
+          2021.5266047067125,
+          649.476687760849
+        ],
+        "final_signed_m2_by_family": [
+          -20672345093.748295,
+          -20462078018.10662,
+          -209838292159.73392,
+          -2011993556.3541055
+        ],
+        "delta_signed_m2_by_family": [
+          -20672343385.12193,
+          -20462078575.582375,
+          -209838294181.2612,
+          -2011994205.8308082
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999057406935815,
+        "maximum": 0.9999160611823302,
+        "standard_deviation": 4.695336108821584e-06
+      },
+      "wall_polarization": {
+        "mean": 0.8519194067555711,
+        "maximum": 0.8986095824383655,
+        "gate_mean": 0.3490365238008837,
+        "gate_maximum": 0.38625178716430997
+      },
+      "multi_hit": {
+        "mean": 0.0,
+        "maximum": 0.0
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 3.8276249157183317e-13,
+        "line_divergence_relative_rms": 5.329798109156917e-15,
+        "rms_m1": 2666.9871965877146,
+        "maximum_m1": 13937.88183481439
+      },
+      "orientation": {
+        "span_deg": 0.0646646010701516,
+        "p95_minus_p05_deg": 0.02694430058717962,
+        "gradient_rms_deg_m": 25469.081903275994
+      },
+      "structure_factor": {
+        "mode_index": [
+          1,
+          63
+        ],
+        "wavelength_m": 7.071067811865475e-06,
+        "peak_power_fraction": 0.008403436181452006
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 28,
+        "transverse_index": 32,
+        "left_orientation_rad": 0.4310838740291494,
+        "right_orientation_rad": 0.431079659041146,
+        "orientation_closure_vector": [
+          1.7612489524587716e-06,
+          -3.829376711173005e-06,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -8.045464237436366e-05,
+          2.7216680547014015e-05,
+          6.837841370012873e-05
+        ],
+        "absolute_residual": 0.00011135042845938429,
+        "relative_residual": 26.41773318694475,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.000319143121547406,
+        "collision_frequency_s": 0.016644873333121347,
+        "coordination": 0.0,
+        "junction_turnover": 0.0013870727777601096,
+        "lock_minus_turnover": 0.026933115566070684,
+        "lock_plus_turnover": 0.027012397600498183,
+        "multiplication_pairs": 1.1294618246935773e-09,
+        "order": 0.9999058350870131,
+        "wall_minus_turnover": 0.009001202776925982,
+        "wall_plus_turnover": 0.008828852240357673
+      },
+      "balance_ledger": {
+        "accepted_steps": 2200,
+        "cumulative_free_energy_change_J_m3": -3855199887.629899,
+        "cumulative_heat_J_m3": 3897052841.0787435,
+        "cumulative_plastic_work_J_m3": 41852953.448847756,
+        "maximum_relative_burgers_rate_residual": 1.4708104075453806e-16,
+        "maximum_relative_energy_balance_residual": 2.4915796226920237e-18,
+        "maximum_relative_line_balance_residual": 3.5104111950447325e-16,
+        "minimum_accept_scale": 7.810524682226143e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    },
+    {
+      "case": "heterogeneous_on_128_10um",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_002199.npz",
+      "checkpoint_count": 10,
+      "final_step": 2199,
+      "physical_time_s": 1.829605083691937e-06,
+      "axial_strain": 0.0182960508369194,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696956080.6614858,
+          696956080.6614858,
+          697113783.5906427,
+          696872432.6043713
+        ],
+        "final_unsigned_m2_by_family": [
+          935409397755.4943,
+          935768587501.6642,
+          11466155913717.906,
+          161071933760.36264
+        ],
+        "delta_unsigned_m2_by_family": [
+          934712441674.8284,
+          935071631421.0065,
+          11465458799934.264,
+          160375061327.75867
+        ],
+        "initial_signed_m2_by_family": [
+          2034.4117213033169,
+          -1083.3248497765962,
+          671.7983135059003,
+          -911.0062555569202
+        ],
+        "final_signed_m2_by_family": [
+          3871764663.544158,
+          2224483972.806679,
+          67046337693.25216,
+          543148579.7830774
+        ],
+        "delta_signed_m2_by_family": [
+          3871762629.1324363,
+          2224485056.1315165,
+          67046337021.45441,
+          543149490.7893368
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9995969842120378,
+        "maximum": 0.9996874956325313,
+        "standard_deviation": 3.7408543627861055e-05
+      },
+      "wall_polarization": {
+        "mean": 0.8511043396527209,
+        "maximum": 0.8881217545047018,
+        "gate_mean": 0.1434457284317121,
+        "gate_maximum": 0.16667393193621602
+      },
+      "multi_hit": {
+        "mean": 0.007207405693264076,
+        "maximum": 0.008237639515333087
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 6.312587638727814e-13,
+        "line_divergence_relative_rms": 5.458320868320272e-15,
+        "rms_m1": 1472.7148000154518,
+        "maximum_m1": 16423.414266860487
+      },
+      "orientation": {
+        "span_deg": 0.06755538546468494,
+        "p95_minus_p05_deg": 0.02538968204215499,
+        "gradient_rms_deg_m": 18333.602499701898
+      },
+      "structure_factor": {
+        "mode_index": [
+          1,
+          0
+        ],
+        "wavelength_m": 9.999999999999999e-06,
+        "peak_power_fraction": 0.08325745193562763
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 73,
+        "transverse_index": 65,
+        "left_orientation_rad": 0.4349276725961425,
+        "right_orientation_rad": 0.43492769331519443,
+        "orientation_closure_vector": [
+          -8.729865164092132e-09,
+          1.8790118849754123e-08,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -0.0009858494114596407,
+          0.00036203266203945427,
+          0.000735979279607863
+        ],
+        "absolute_residual": 0.0012824201312213244,
+        "relative_residual": 61895.69564331158,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.00016497862071755462,
+        "collision_frequency_s": 0.007550438015958841,
+        "coordination": 0.007207405693264078,
+        "junction_turnover": 0.0006292031679965719,
+        "lock_minus_turnover": 0.013184086825382978,
+        "lock_plus_turnover": 0.013175064576258461,
+        "multiplication_pairs": 5.117699225904258e-10,
+        "order": 1.0894679525535635,
+        "wall_minus_turnover": 0.0049724904778914334,
+        "wall_plus_turnover": 0.005024009374087588
+      },
+      "balance_ledger": {
+        "accepted_steps": 2200,
+        "cumulative_free_energy_change_J_m3": -1583581137.5228915,
+        "cumulative_heat_J_m3": 1602266028.660777,
+        "cumulative_plastic_work_J_m3": 18684891.13789174,
+        "maximum_relative_burgers_rate_residual": 2.4798419025934105e-16,
+        "maximum_relative_energy_balance_residual": 1.0307647687985473e-18,
+        "maximum_relative_line_balance_residual": 2.0169779878157828e-16,
+        "minimum_accept_scale": 6.690336744640396e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    },
+    {
+      "case": "heterogeneous_on_128_12p7um",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_002199.npz",
+      "checkpoint_count": 10,
+      "final_step": 2199,
+      "physical_time_s": 2.01607143292203e-06,
+      "axial_strain": 0.0201607143292203,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696888608.45997,
+          696888608.45997,
+          696977691.2138302,
+          696845314.2334567
+        ],
+        "final_unsigned_m2_by_family": [
+          1147597630092.621,
+          1147658213118.4072,
+          13372697919866.082,
+          185131762576.61368
+        ],
+        "delta_unsigned_m2_by_family": [
+          1146900741484.167,
+          1146961324509.9587,
+          13372000942174.953,
+          184434917262.38113
+        ],
+        "initial_signed_m2_by_family": [
+          10.078806722438458,
+          -1976.426106826293,
+          2919.2765138452487,
+          1655.8199590571094
+        ],
+        "final_signed_m2_by_family": [
+          728600796.2370346,
+          1493591590.1847475,
+          -1932140188.2534885,
+          -142147291.04888722
+        ],
+        "delta_signed_m2_by_family": [
+          728600786.1582115,
+          1493593566.6108522,
+          -1932143107.5304844,
+          -142148946.86884707
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9997373086086357,
+        "maximum": 0.9997883098190051,
+        "standard_deviation": 1.6305760483977353e-05
+      },
+      "wall_polarization": {
+        "mean": 0.8540022334581808,
+        "maximum": 0.8929308766790929,
+        "gate_mean": 0.18866374675123,
+        "gate_maximum": 0.2117453776440307
+      },
+      "multi_hit": {
+        "mean": 0.008801332092123165,
+        "maximum": 0.009930206391302387
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 7.043299561266015e-13,
+        "line_divergence_relative_rms": 5.518978880857804e-15,
+        "rms_m1": 1316.8210662988697,
+        "maximum_m1": 16403.55684501648
+      },
+      "orientation": {
+        "span_deg": 0.06571234590103951,
+        "p95_minus_p05_deg": 0.019422277107626007,
+        "gradient_rms_deg_m": 15143.39662806571
+      },
+      "structure_factor": {
+        "mode_index": [
+          1,
+          0
+        ],
+        "wavelength_m": 1.2699999999999999e-05,
+        "peak_power_fraction": 0.03604631602646626
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 71,
+        "transverse_index": 65,
+        "left_orientation_rad": 0.43416966432821785,
+        "right_orientation_rad": 0.43417015433722006,
+        "orientation_closure_vector": [
+          -2.0612594808788742e-07,
+          4.445457409407716e-07,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -0.000872481457806977,
+          0.00032411088308878543,
+          0.0006438180999120183
+        ],
+        "absolute_residual": 0.0011314264882333388,
+        "relative_residual": 2308.991228917674,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.00019866798869730564,
+        "collision_frequency_s": 0.009308607075732578,
+        "coordination": 0.008801332092123179,
+        "junction_turnover": 0.0007757172563110456,
+        "lock_minus_turnover": 0.015990210692064362,
+        "lock_plus_turnover": 0.01599155333537933,
+        "multiplication_pairs": 6.357969039982214e-10,
+        "order": 1.016091195821853,
+        "wall_minus_turnover": 0.0058673128655909925,
+        "wall_plus_turnover": 0.005867319626217509
+      },
+      "balance_ledger": {
+        "accepted_steps": 2200,
+        "cumulative_free_energy_change_J_m3": -2080451027.3511956,
+        "cumulative_heat_J_m3": 2103725117.3857853,
+        "cumulative_plastic_work_J_m3": 23274090.034592886,
+        "maximum_relative_burgers_rate_residual": 1.9123759607299484e-16,
+        "maximum_relative_energy_balance_residual": 1.979306074502204e-18,
+        "maximum_relative_line_balance_residual": 1.1836239115603804e-16,
+        "minimum_accept_scale": 2.710473418599001e-05
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    },
+    {
+      "case": "heterogeneous_on_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_002199.npz",
+      "checkpoint_count": 10,
+      "final_step": 2199,
+      "physical_time_s": 2.7807075376569618e-06,
+      "axial_strain": 0.027807075376569637,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696953594.8646271,
+          696953594.8646271,
+          697108729.6332037,
+          696870097.6452315
+        ],
+        "final_unsigned_m2_by_family": [
+          1995483115583.076,
+          1995732169585.1829,
+          19969582912850.145,
+          280318764192.5773
+        ],
+        "delta_unsigned_m2_by_family": [
+          1994786161988.2114,
+          1995035215990.3167,
+          19968885804120.535,
+          279621894094.93164
+        ],
+        "initial_signed_m2_by_family": [
+          -1708.626285940758,
+          557.4756569306046,
+          2021.5266047067125,
+          649.476687760849
+        ],
+        "final_signed_m2_by_family": [
+          -20843111439.338326,
+          -20634779156.700794,
+          -210594291047.96597,
+          -2031771311.9752936
+        ],
+        "delta_signed_m2_by_family": [
+          -20843109730.71209,
+          -20634779714.176502,
+          -210594293069.49286,
+          -2031771961.4519765
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999063488326936,
+        "maximum": 0.9999165920955222,
+        "standard_deviation": 4.674668712055391e-06
+      },
+      "wall_polarization": {
+        "mean": 0.8515561814800052,
+        "maximum": 0.8983973547359263,
+        "gate_mean": 0.3508259882246292,
+        "gate_maximum": 0.38810066583956965
+      },
+      "multi_hit": {
+        "mean": 0.015254362959160016,
+        "maximum": 0.01658798259494667
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 3.8149648219500516e-13,
+        "line_divergence_relative_rms": 5.364301633145735e-15,
+        "rms_m1": 2673.8485202793913,
+        "maximum_m1": 13935.103497175953
+      },
+      "orientation": {
+        "span_deg": 0.06470132241395404,
+        "p95_minus_p05_deg": 0.026946562247998098,
+        "gradient_rms_deg_m": 25527.44750220946
+      },
+      "structure_factor": {
+        "mode_index": [
+          1,
+          63
+        ],
+        "wavelength_m": 7.071067811865475e-06,
+        "peak_power_fraction": 0.00836084416387027
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 28,
+        "transverse_index": 32,
+        "left_orientation_rad": 0.43108485711896527,
+        "right_orientation_rad": 0.4310806184180064,
+        "orientation_closure_vector": [
+          1.7711612423365608e-06,
+          -3.850918549153093e-06,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -7.986072620030742e-05,
+          2.6985281911680743e-05,
+          6.796741533187258e-05
+        ],
+        "absolute_residual": 0.00011060834441037662,
+        "relative_residual": 26.0948685656638,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.0003179421882902653,
+        "collision_frequency_s": 0.016764212329125117,
+        "coordination": 0.015254362959159985,
+        "junction_turnover": 0.0013970176940937596,
+        "lock_minus_turnover": 0.026922065585737957,
+        "lock_plus_turnover": 0.027001556040777655,
+        "multiplication_pairs": 1.1292807313981083e-09,
+        "order": 0.9999064432172227,
+        "wall_minus_turnover": 0.00903996850287037,
+        "wall_plus_turnover": 0.008866840741110504
+      },
+      "balance_ledger": {
+        "accepted_steps": 2200,
+        "cumulative_free_energy_change_J_m3": -3875009061.3226295,
+        "cumulative_heat_J_m3": 3916853304.9282694,
+        "cumulative_plastic_work_J_m3": 41844243.60564608,
+        "maximum_relative_burgers_rate_residual": 1.9231774467144044e-16,
+        "maximum_relative_energy_balance_residual": 2.601962982224041e-18,
+        "maximum_relative_line_balance_residual": 3.0456264571540053e-16,
+        "minimum_accept_scale": 7.818595085488961e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    },
+    {
+      "case": "heterogeneous_on_domain_seed_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_002199.npz",
+      "checkpoint_count": 10,
+      "final_step": 2199,
+      "physical_time_s": 3.107863687275149e-06,
+      "axial_strain": 0.031078636872751735,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696878346.000613,
+          696878346.0006131,
+          696960372.2061226,
+          696835618.8796159
+        ],
+        "final_unsigned_m2_by_family": [
+          2370720504276.554,
+          2369808117830.833,
+          22508299241551.938,
+          317671545961.336
+        ],
+        "delta_unsigned_m2_by_family": [
+          2370023625930.5503,
+          2369111239484.8228,
+          22507602281179.695,
+          316974710342.45776
+        ],
+        "initial_signed_m2_by_family": [
+          -1063.1481877289043,
+          2319.0934885179595,
+          910.9129459986434,
+          3949.6211984205875
+        ],
+        "final_signed_m2_by_family": [
+          -8450683356.285519,
+          -11853304790.540373,
+          -72603086582.00723,
+          -724395213.1976999
+        ],
+        "delta_signed_m2_by_family": [
+          -8450682293.137318,
+          -11853307109.63395,
+          -72603087492.92026,
+          -724399162.8189019
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999297704959391,
+        "maximum": 0.9999363422529903,
+        "standard_deviation": 2.4688631175900526e-06
+      },
+      "wall_polarization": {
+        "mean": 0.8482075379060404,
+        "maximum": 0.8943670505687862,
+        "gate_mean": 0.40948312870833037,
+        "gate_maximum": 0.4486907819980053
+      },
+      "multi_hit": {
+        "mean": 0.01805383787841324,
+        "maximum": 0.01954035068423933
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 2.925472214031576e-13,
+        "line_divergence_relative_rms": 5.360016051205378e-15,
+        "rms_m1": 3373.794693866886,
+        "maximum_m1": 10856.419765520473
+      },
+      "orientation": {
+        "span_deg": 0.06693284448744612,
+        "p95_minus_p05_deg": 0.026648952840171256,
+        "gradient_rms_deg_m": 28934.764738183443
+      },
+      "structure_factor": {
+        "mode_index": [
+          0,
+          63
+        ],
+        "wavelength_m": 1.2699999999999999e-05,
+        "peak_power_fraction": 0.002600228845814362
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 29,
+        "transverse_index": 32,
+        "left_orientation_rad": 0.42976628387549687,
+        "right_orientation_rad": 0.4297620016736856,
+        "orientation_closure_vector": [
+          1.7842068108508968e-06,
+          -3.892795705950913e-06,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -0.0003193446415707761,
+          0.00012124190288480937,
+          0.0002336232864147866
+        ],
+        "absolute_residual": 0.0004163679502670154,
+        "relative_residual": 97.2322110495755,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.00036293258850039794,
+        "collision_frequency_s": 0.02016700342934387,
+        "coordination": 0.018053837878413262,
+        "junction_turnover": 0.001680583619111987,
+        "lock_minus_turnover": 0.03156181550024679,
+        "lock_plus_turnover": 0.03159156004093833,
+        "multiplication_pairs": 1.3411141998231962e-09,
+        "order": 0.9999298819873536,
+        "wall_minus_turnover": 0.010190606579538937,
+        "wall_plus_turnover": 0.010126589968247375
+      },
+      "balance_ledger": {
+        "accepted_steps": 2200,
+        "cumulative_free_energy_change_J_m3": -4526245630.152592,
+        "cumulative_heat_J_m3": 4576217614.668299,
+        "cumulative_plastic_work_J_m3": 49971984.51571425,
+        "maximum_relative_burgers_rate_residual": 7.110185334926758e-17,
+        "maximum_relative_energy_balance_residual": 3.489875819462752e-18,
+        "maximum_relative_line_balance_residual": 2.2394389130445944e-16,
+        "minimum_accept_scale": 3.204073121200694e-05
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    },
+    {
+      "case": "homogeneous_off_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_000499.npz",
+      "checkpoint_count": 3,
+      "final_step": 499,
+      "physical_time_s": 2.8830840556838786e-06,
+      "axial_strain": 0.02883084055683882,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696801612.746838,
+          696801612.746838,
+          696801612.746838,
+          696801612.746838
+        ],
+        "final_unsigned_m2_by_family": [
+          2114650511330.1868,
+          2115164770143.5364,
+          20751979741512.12,
+          288999436325.06165
+        ],
+        "delta_unsigned_m2_by_family": [
+          2113953709717.4407,
+          2114467968530.7898,
+          20751282939899.37,
+          288302634712.31537
+        ],
+        "initial_signed_m2_by_family": [
+          -1527.7584912360908,
+          579.659872550721,
+          1630.9386786377145,
+          759.4958610238682
+        ],
+        "final_signed_m2_by_family": [
+          -22471476493.747032,
+          -20323949001.712753,
+          -234060688696.1799,
+          -2463986393.039435
+        ],
+        "delta_signed_m2_by_family": [
+          -22471474965.988544,
+          -20323949581.372665,
+          -234060690327.11792,
+          -2463987152.5353093
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999149557575125,
+        "maximum": 0.999920311392547,
+        "standard_deviation": 1.5747764264271682e-06
+      },
+      "wall_polarization": {
+        "mean": 0.8499895126105352,
+        "maximum": 0.8569200692595348,
+        "gate_mean": 0.3692280562395114,
+        "gate_maximum": 0.3843956636684175
+      },
+      "multi_hit": {
+        "mean": 0.0,
+        "maximum": 0.0
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 1.344407500559966e-13,
+        "line_divergence_relative_rms": 1.91176242322494e-15,
+        "rms_m1": 2838.4284580458407,
+        "maximum_m1": 8095.333466634717
+      },
+      "orientation": {
+        "span_deg": 0.02568142080814103,
+        "p95_minus_p05_deg": 0.013632159596248795,
+        "gradient_rms_deg_m": 24498.810700380804
+      },
+      "structure_factor": {
+        "mode_index": [
+          60,
+          9
+        ],
+        "wavelength_m": 1.015346165133619e-06,
+        "peak_power_fraction": 0.0025005796036725557
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 0,
+        "section_index": 0,
+        "transverse_index": 29,
+        "left_orientation_rad": 0.43064599818367477,
+        "right_orientation_rad": 0.43067214160139833,
+        "orientation_closure_vector": [
+          -2.3756283303422165e-05,
+          -1.0914086944646684e-05,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -0.0020435188298362004,
+          0.0007778446177393764,
+          0.0015701236148789378
+        ],
+        "absolute_residual": 0.002677100895482255,
+        "relative_residual": 102.4005707237574,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.00033438448629187516,
+        "collision_frequency_s": 0.017737720894859362,
+        "coordination": 0.0,
+        "junction_turnover": 0.0014781434079049478,
+        "lock_minus_turnover": 0.02848463041793253,
+        "lock_plus_turnover": 0.028576932481376757,
+        "multiplication_pairs": 1.1997410331657334e-09,
+        "order": 0.9999150413543747,
+        "wall_minus_turnover": 0.009435008563559633,
+        "wall_plus_turnover": 0.009245107729003865
+      },
+      "balance_ledger": {
+        "accepted_steps": 500,
+        "cumulative_free_energy_change_J_m3": -4078644272.067609,
+        "cumulative_heat_J_m3": 4123171231.858364,
+        "cumulative_plastic_work_J_m3": 44526959.79075533,
+        "maximum_relative_burgers_rate_residual": 1.5139515816550985e-17,
+        "maximum_relative_energy_balance_residual": 1.9604613116528726e-18,
+        "maximum_relative_line_balance_residual": 5.9773447834834825e-16,
+        "minimum_accept_scale": 5.867651501467097e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    },
+    {
+      "case": "order_disabled_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_000999.npz",
+      "checkpoint_count": 5,
+      "final_step": 999,
+      "physical_time_s": 2.712617851372703e-06,
+      "axial_strain": 0.027126178513727135,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696953594.8646271,
+          696953594.8646271,
+          697108729.6332037,
+          696870097.6452315
+        ],
+        "final_unsigned_m2_by_family": [
+          1656734557599.587,
+          1656907226522.781,
+          17714135918434.77,
+          209675608780.91125
+        ],
+        "delta_unsigned_m2_by_family": [
+          1656037604004.7263,
+          1656210272927.926,
+          17713438809705.17,
+          208978738683.26627
+        ],
+        "initial_signed_m2_by_family": [
+          -1708.626285940758,
+          557.4756569306046,
+          2021.5266047067125,
+          649.476687760849
+        ],
+        "final_signed_m2_by_family": [
+          75395553.16182241,
+          1844393.1412433684,
+          19918865.54240465,
+          -755444.6504938975
+        ],
+        "delta_signed_m2_by_family": [
+          75397261.7881089,
+          1843835.6655863742,
+          19916844.015750505,
+          -756094.1271816704
+        ]
+      },
+      "wall_order": {
+        "mean": 0.0,
+        "maximum": 0.0,
+        "standard_deviation": 0.0
+      },
+      "wall_polarization": {
+        "mean": 0.010567662428064273,
+        "maximum": 0.09603199422658497,
+        "gate_mean": 0.00012027700831022305,
+        "gate_maximum": 0.004867361764888052
+      },
+      "multi_hit": {
+        "mean": 0.014596139482307615,
+        "maximum": 0.01598975941077697
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 5.354619109377785e-13,
+        "line_divergence_relative_rms": 3.4350849447411902e-15,
+        "rms_m1": 1173.338278027349,
+        "maximum_m1": 12474.399829422237
+      },
+      "orientation": {
+        "span_deg": 0.057199444999505335,
+        "p95_minus_p05_deg": 0.021870767963629044,
+        "gradient_rms_deg_m": 14059.26496181239
+      },
+      "structure_factor": {
+        "mode_index": [
+          63,
+          0
+        ],
+        "wavelength_m": 9.999999999999999e-06,
+        "peak_power_fraction": 0.0705199913822578
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 36,
+        "transverse_index": 33,
+        "left_orientation_rad": 0.43143690118563766,
+        "right_orientation_rad": 0.43143693685338574,
+        "orientation_closure_vector": [
+          -1.4915413348859374e-08,
+          3.239936258170317e-08,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -0.0006840210149436149,
+          0.0002611340089750232,
+          0.0004921883423060019
+        ],
+        "absolute_residual": 0.0008822061885062619,
+        "relative_residual": 24734.003033539386,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.0003009130706735673,
+        "collision_frequency_s": 0.015968357120510392,
+        "coordination": 0.014596139482307632,
+        "junction_turnover": 0.0013306964267091996,
+        "lock_minus_turnover": 0.025289678295643804,
+        "lock_plus_turnover": 0.025289780514266617,
+        "multiplication_pairs": 1.0710108239565432e-09,
+        "order": 0.0,
+        "wall_minus_turnover": 0.015557663602422543,
+        "wall_plus_turnover": 0.015557636920181847
+      },
+      "balance_ledger": {
+        "accepted_steps": 1000,
+        "cumulative_free_energy_change_J_m3": -7212.0933040196105,
+        "cumulative_heat_J_m3": 40405257.71237187,
+        "cumulative_plastic_work_J_m3": 40398045.61906787,
+        "maximum_relative_burgers_rate_residual": 1.2226346655070395e-16,
+        "maximum_relative_energy_balance_residual": 2.117821286465362e-18,
+        "maximum_relative_line_balance_residual": 2.1304671752636877e-16,
+        "minimum_accept_scale": 7.338619832355229e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "NEGATIVE_CONTROL_NO_WALL_ORDER"
+    },
+    {
+      "case": "recovery_dominant_64",
+      "complete_enough_to_classify": true,
+      "initial_checkpoint": "drx_v25_restart_000000.npz",
+      "final_checkpoint": "drx_v25_restart_000999.npz",
+      "checkpoint_count": 5,
+      "final_step": 999,
+      "physical_time_s": 2.781098316358911e-06,
+      "axial_strain": 0.027810983163589147,
+      "grain_count": 1,
+      "no_grain_allocation": true,
+      "wall_budget": {
+        "initial_unsigned_m2_by_family": [
+          696953594.8646271,
+          696953594.8646271,
+          697108729.6332037,
+          696870097.6452315
+        ],
+        "final_unsigned_m2_by_family": [
+          1964162557402.9521,
+          1964416928577.4387,
+          19824944373037.14,
+          276250420901.0445
+        ],
+        "delta_unsigned_m2_by_family": [
+          1963465603808.086,
+          1963719974982.5642,
+          19824247264307.508,
+          275553550803.39996
+        ],
+        "initial_signed_m2_by_family": [
+          -1708.626285940758,
+          557.4756569306046,
+          2021.5266047067125,
+          649.476687760849
+        ],
+        "final_signed_m2_by_family": [
+          -20503256575.27586,
+          -20291223773.406395,
+          -209075343265.44153,
+          -1992452361.42841
+        ],
+        "delta_signed_m2_by_family": [
+          -20503254866.6496,
+          -20291224330.882114,
+          -209075345286.96866,
+          -1992453010.9050908
+        ]
+      },
+      "wall_order": {
+        "mean": 0.9999051182787035,
+        "maximum": 0.9999155182932442,
+        "standard_deviation": 4.716998163154425e-06
+      },
+      "wall_polarization": {
+        "mean": 0.8522729515895745,
+        "maximum": 0.898815626769627,
+        "gate_mean": 0.3472320843762229,
+        "gate_maximum": 0.3843817443396179
+      },
+      "multi_hit": {
+        "mean": 0.01503305639168855,
+        "maximum": 0.016323241483340988
+      },
+      "nye": {
+        "beta_vs_family_relative_rms": 2.352181792636458e-13,
+        "line_divergence_relative_rms": 3.306128287561467e-15,
+        "rms_m1": 2659.9084172754065,
+        "maximum_m1": 13940.062625465145
+      },
+      "orientation": {
+        "span_deg": 0.06462484035093355,
+        "p95_minus_p05_deg": 0.026938321090354357,
+        "gradient_rms_deg_m": 25408.90803613896
+      },
+      "structure_factor": {
+        "mode_index": [
+          1,
+          63
+        ],
+        "wavelength_m": 7.071067811865475e-06,
+        "peak_power_fraction": 0.008446885542572603
+      },
+      "independent_frank_bilby": {
+        "method": "maximum-orientation-gradient axial section",
+        "normal_axis": 1,
+        "section_index": 28,
+        "transverse_index": 32,
+        "left_orientation_rad": 0.4310835950995247,
+        "right_orientation_rad": 0.43107940429650643,
+        "orientation_closure_vector": [
+          1.7511421473992428e-06,
+          -3.807404774569534e-06,
+          0.0
+        ],
+        "integrated_nye_closure_vector": [
+          -8.096324971530318e-05,
+          2.741645275659902e-05,
+          6.872501230746816e-05
+        ],
+        "absolute_residual": 0.00011198092345129618,
+        "relative_residual": 26.720636346666332,
+        "candidate_wall_present": false
+      },
+      "cumulative_channel_exposure": {
+        "annihilation_pairs": 0.0003237361369661779,
+        "collision_frequency_s": 0.016526360836339394,
+        "coordination": 0.015033056391688547,
+        "junction_turnover": 0.0013771967363616136,
+        "lock_minus_turnover": 0.026941340954794394,
+        "lock_plus_turnover": 0.02702040590201119,
+        "multiplication_pairs": 1.1295074162109212e-09,
+        "order": 0.9999052126819958,
+        "wall_minus_turnover": 0.008962332976638255,
+        "wall_plus_turnover": 0.008790761869825412
+      },
+      "balance_ledger": {
+        "accepted_steps": 1000,
+        "cumulative_free_energy_change_J_m3": -3835224687.7625413,
+        "cumulative_heat_J_m3": 3877082179.8220506,
+        "cumulative_plastic_work_J_m3": 41857492.059511356,
+        "maximum_relative_burgers_rate_residual": 1.5123423667019386e-16,
+        "maximum_relative_energy_balance_residual": 2.3875258843810947e-18,
+        "maximum_relative_line_balance_residual": 2.4845433559403857e-16,
+        "minimum_accept_scale": 7.831932226167973e-06
+      },
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "UNIFORM_ORDER_WITHOUT_LAGB"
+    }
+  ],
+  "fixture_passed": true,
+  "classification": "WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL",
+  "scientific_gate_passed": false,
+  "decision_evidence": {
+    "complete_case_count": 8,
+    "ordering_enabled_uniform_case_count": 7,
+    "frank_bilby_candidate_count": 0,
+    "order_disabled_control_passed": true,
+    "maximum_orientation_span_deg": 0.06755538546468494,
+    "minimum_uniform_order_mean": 0.9995969842120378,
+    "maximum_uniform_order_standard_deviation": 3.7408543627861055e-05,
+    "wall_spacing_grid_domain_convergence": "NOT_EVALUABLE_NO_WALL",
+    "release_test": "NOT_TRIGGERED_NO_PRECURSOR"
+  },
+  "claim_boundary": "The tested V22 closure converts a broadly distributed signed-wall reservoir into nearly uniform order; this rejects the present ordering handoff, not intragranular DRX in general."
+}

@@ -168,7 +168,7 @@ def summarize_case(case, plot_dir):
                 grain_count == 1 and nye["relative_rms_residual"] < 1e-10
                 and nye["relative_divergence_rms"] < 1e-10),
             "scientific_gate_passed": False,
-            "classification": "PENDING_RELEASE_AND_GRID_DOMAIN_COMPARISON",
+            "classification": "PENDING_AGGREGATE_SCIENTIFIC_DECISION",
         }
         plot_dir.mkdir(parents=True, exist_ok=True)
         panels = ((np.sum(final.wall_plus_m2+final.wall_minus_m2, axis=2)/1e14,
@@ -192,6 +192,64 @@ def summarize_case(case, plot_dir):
         return summary
 
 
+def classify_campaign(cases):
+    """Apply the V22 decision tree without converting a fixture into a claim."""
+    complete = [case for case in cases
+                if case.get("complete_enough_to_classify", False)]
+    ordered = [case for case in complete
+               if case["wall_order"]["mean"] >= 0.95]
+    uniformly_ordered = [case for case in ordered
+                         if case["wall_order"]["standard_deviation"] <= 1e-3]
+    wall_candidates = [case for case in complete
+                       if case["independent_frank_bilby"][
+                           "candidate_wall_present"]]
+    disabled = [case for case in complete if "order_disabled" in case["case"]]
+    disabled_control_passed = bool(disabled and all(
+        case["wall_order"]["maximum"] <= 1e-12 for case in disabled))
+
+    for case in complete:
+        if "order_disabled" in case["case"]:
+            case["classification"] = "NEGATIVE_CONTROL_NO_WALL_ORDER"
+        elif case in uniformly_ordered and case not in wall_candidates:
+            case["classification"] = "UNIFORM_ORDER_WITHOUT_LAGB"
+        elif case in wall_candidates:
+            case["classification"] = "FRANK_BILBY_WALL_CANDIDATE"
+        else:
+            case["classification"] = "NO_COMPATIBLE_LAGB_OBSERVED"
+
+    outcome_b = bool(
+        complete and uniformly_ordered and not wall_candidates
+        and disabled_control_passed)
+    return {
+        "classification": (
+            "WALL_ORDER_FUNCTIONAL_STILL_UNPHYSICAL" if outcome_b else
+            "COMPATIBLE_LAGB_CANDIDATE_REQUIRES_RELEASE_AUDIT"
+            if wall_candidates else "INTRAGRANULAR_LAGB_UNRESOLVED"),
+        "scientific_gate_passed": False,
+        "decision_evidence": {
+            "complete_case_count": len(complete),
+            "ordering_enabled_uniform_case_count": len(uniformly_ordered),
+            "frank_bilby_candidate_count": len(wall_candidates),
+            "order_disabled_control_passed": disabled_control_passed,
+            "maximum_orientation_span_deg": max(
+                (case["orientation"]["span_deg"] for case in complete),
+                default=None),
+            "minimum_uniform_order_mean": min(
+                (case["wall_order"]["mean"] for case in uniformly_ordered),
+                default=None),
+            "maximum_uniform_order_standard_deviation": max(
+                (case["wall_order"]["standard_deviation"]
+                 for case in uniformly_ordered), default=None),
+            "wall_spacing_grid_domain_convergence": "NOT_EVALUABLE_NO_WALL",
+            "release_test": "NOT_TRIGGERED_NO_PRECURSOR",
+        },
+        "claim_boundary": (
+            "The tested V22 closure converts a broadly distributed signed-wall "
+            "reservoir into nearly uniform order; this rejects the present "
+            "ordering handoff, not intragranular DRX in general."),
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cases", type=Path, required=True)
@@ -200,12 +258,12 @@ def main():
     args = parser.parse_args()
     cases = [summarize_case(path, args.plot_dir)
              for path in sorted(args.cases.iterdir()) if path.is_dir()]
+    decision = classify_campaign(cases)
     result = {"schema": "asb-drx/v22-long-wall-postprocess/v1",
               "cases": cases,
               "fixture_passed": bool(cases and all(
                   case.get("fixture_passed", False) for case in cases)),
-              "scientific_gate_passed": False,
-              "classification": "PENDING_CASEWISE_SCIENTIFIC_DECISION"}
+              **decision}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2)+"\n")
     print(json.dumps({"case_count": len(cases),
