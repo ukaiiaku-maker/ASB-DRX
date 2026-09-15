@@ -1117,3 +1117,11 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   zero. The planned fallback also compares two curvatures and continued child
   rehardening; it will be submitted if the nonlinear intragranular result enters
   Outcome D.
+- Strict ASB qualification is running independently at source `4f9eb55`. The
+  driver now checkpoints the exact plastic-rate field used by its online
+  diagnostics, avoiding reconstruction through a second law. Each adiabatic
+  trajectory has a matched isothermal trajectory with identical grid, seed,
+  loading, and mechanics. Jobs are `56037722` (64, seed 42), `56037723` (128,
+  seed 42), and `56037724` (128, seed 43). Classification remains conjunctive:
+  plastic concentration, matched temperature excess, post-peak softening,
+  resolved width, persistence, and 5% onset/width refinement must all pass.

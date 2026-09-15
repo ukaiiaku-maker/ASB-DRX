@@ -1,13 +1,14 @@
 {
   "schema": "asb-drx/v21-opt-in-legacy-regression/v1",
-  "candidate_commit": "576fd5b",
+  "candidate_commit": "4f9eb55",
   "reference_commit": "23f6e41",
-  "candidate_checkpoint_sha256": "330324d2beaa48faac1d27a38662276843704ead0d29d7108753ef632b8d1a1d",
-  "predecessor_commit": "3caf6ed",
-  "predecessor_checkpoint_sha256": "7e0a73c0598e71148fa2caf71b510bbbe1ca79807c61c84179ad8089adec5e0d",
+  "candidate_checkpoint_sha256": "8d90b541af1b46eeaed4b8d8f94b63be3a344960b2bd96d6aa5f3de5ac4a3780",
+  "predecessor_commit": "576fd5b",
+  "predecessor_checkpoint_sha256": "330324d2beaa48fa2caf71b510bbbe1ca79807c61c84179ad8089adec5e0d",
   "reference_checkpoint_sha256": "6019d54a1b4124b5f5106df876cdd3530e79acaad01f914b2068f139fa6371ec",
   "common_numeric_fields_tested": 144,
   "candidate_to_predecessor_numeric_fields_tested": 145,
+  "candidate_only_diagnostic_fields": ["asb_last_gdot_abs"],
   "excluded_schema_only_fields": [
     "P_json",
     "v21_balance_ledger_json",

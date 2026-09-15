@@ -290,6 +290,14 @@
       "homogeneous_pilot_classification": "UNIFORM_ORDERING_ONLY_AT_NONLINEAR_SATURATION",
       "stored_energy_sibm_fallback_prepared": true,
       "stored_energy_sibm_fallback_submitted": false,
+      "strict_asb_source_commit": "4f9eb55",
+      "strict_asb_active_runs": [
+        {"grid": 64, "seed": 42, "run_id": "20260915T144548Z-4f9eb55-cc20f4", "slurm_job_id": "56037722"},
+        {"grid": 128, "seed": 42, "run_id": "20260915T144600Z-4f9eb55-270c68", "slurm_job_id": "56037723"},
+        {"grid": 128, "seed": 43, "run_id": "20260915T144612Z-4f9eb55-2c3fe3", "slurm_job_id": "56037724"}
+      ],
+      "strict_asb_matched_control": "adiabatic and isothermal fields from identical source, grid, seed, and loading",
+      "strict_asb_classification": "RUNNING",
       "grain_allocation_disabled": true,
       "fixture_passed": true,
       "scientific_gate_passed": false,
