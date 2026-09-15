@@ -69,12 +69,16 @@ def case_record(directory, interface_width_m):
         "initial_pressure_Pa": float(pressure[0]),
         "median_pressure_Pa": float(np.median(pressure)),
         "normal_displacement_m": delta,
-        "normal_displacement_interface_widths": delta/interface_width_m,
+        "normal_displacement_interface_widths": float(delta/interface_width_m),
         "stable_window_velocities_m_s": slopes,
         "stable_velocity_sign": stable,
-        "resolved_quarter_width": abs(delta) >= .25*interface_width_m,
-        "initial_curvature_relative_to_inverse_width": abs(
-            float(rows[0]["tip_curvature_m-1"]))*interface_width_m,
+        "resolved_quarter_width": bool(
+            abs(delta) >= .25*interface_width_m),
+        "declared_initial_curvature_relative_to_inverse_width": float(abs(
+            float(experiment.get("seed_tip_curvature_m_1", np.inf)))
+            *interface_width_m),
+        "first_observed_curvature_relative_to_inverse_width": float(abs(
+            float(rows[0]["tip_curvature_m-1"]))*interface_width_m),
         "applied_external_pressure_Pa": float(
             experiment.get("applied_continuation_pressure_Pa", 0.0)),
         "front_ledger_passed": closure,
@@ -99,13 +103,15 @@ def main():
     reverse = records["reversed"]; off = records["mobility_off"]
     zero_pressure = all(item["applied_external_pressure_Pa"] == 0.0
                         for item in records.values())
-    planar = all(item["initial_curvature_relative_to_inverse_width"] < .01
+    planar = all(item["declared_initial_curvature_relative_to_inverse_width"] < .01
                  for item in records.values())
     invariants = all(item["front_ledger_passed"] and item["phase_count_unchanged"]
                      and item["phase_simplex_error"] <= 1e-12
                      for item in records.values())
-    equal_stationary = abs(equal["normal_displacement_interface_widths"]) < .1
-    mobility_stationary = abs(off["normal_displacement_interface_widths"]) < .02
+    equal_stationary = bool(
+        abs(equal["normal_displacement_interface_widths"]) < .1)
+    mobility_stationary = bool(
+        abs(off["normal_displacement_interface_widths"]) < .02)
     favorable_advance = bool(
         favorable["initial_pressure_Pa"] > 0.0
         and favorable["normal_displacement_m"] > 0.0
@@ -116,8 +122,19 @@ def main():
         and reverse["normal_displacement_m"] < 0.0
         and reverse["resolved_quarter_width"]
         and reverse["stable_velocity_sign"])
+    sequential_dynamic_activation_completed = False
     passed = bool(zero_pressure and planar and invariants and equal_stationary
-                  and mobility_stationary and favorable_advance and reverse_retreat)
+                  and mobility_stationary and favorable_advance and reverse_retreat
+                  and sequential_dynamic_activation_completed)
+    fixture = bool(invariants and zero_pressure and planar
+                   and common["zero_cumulative_front_sweep_on_assignment"])
+    sign_coupling_failure = bool(
+        fixture and (not favorable_advance or not reverse_retreat))
+    classification = (
+        "FULL_DYNAMIC_ZERO_PRESSURE_PLANAR_SIBM_SUPPORTED" if passed else
+        "FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE"
+        if sign_coupling_failure else
+        "FULL_DYNAMIC_PLANAR_SIBM_FIXTURE_INVALID")
     result = {
         "schema": "asb-drx/v24-full-dynamic-planar-sibm/v1",
         "common_phase_geometry_sha256": common["phase_geometry_sha256"],
@@ -130,16 +147,20 @@ def main():
         "mobility_off_stationary": mobility_stationary,
         "favorable_low_defect_child_advances": favorable_advance,
         "reversed_contrast_retreats": reverse_retreat,
+        "sign_or_coupling_failure": sign_coupling_failure,
+        "sequential_dynamic_activation_completed": (
+            sequential_dynamic_activation_completed),
         "cases": list(records.values()),
-        "fixture_passed": bool(invariants and zero_pressure and planar),
+        "fixture_passed": fixture,
         "scientific_gate_passed": passed,
-        "classification": (
-            "FULL_DYNAMIC_ZERO_PRESSURE_PLANAR_SIBM_SUPPORTED" if passed else
-            "FULL_DYNAMIC_ZERO_PRESSURE_PLANAR_SIBM_UNRESOLVED"),
+        "classification": classification,
         "qualification_limit": (
             "The initial equilibration disables front transfer but the legacy "
-            "full driver has no exact all-defect freeze switch; this remains an "
-            "explicit qualification limitation even if directionality passes."),
+            "full driver has no exact all-defect freeze switch. The submitted "
+            "matrix tests the final all-channel state; the preceding sequential "
+            "handoffs remain V23 algebraic fixtures rather than full-driver "
+            "stages. These are explicit qualification limitations even if "
+            "directionality passes."),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")

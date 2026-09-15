@@ -2220,10 +2220,26 @@
         "sha256": "b380471709aea1d672b3cd478043a8da909a92c366881bbbbd63fd485da063c3"
       },
       "active_hpc3_jobs": [
-        {"run_id": "20260915T184720Z-ef3a61c-1fed5c", "job_id": "56040506", "purpose": "common_state_zero_pressure_planar_sibm_matrix"},
         {"run_id": "20260915T185229Z-0ff33cb-e261ab", "job_id": "56040570", "purpose": "seed43_128_base_matched_continuation_field_cadence_25"},
         {"run_id": "20260915T185230Z-0ff33cb-0f6b77", "job_id": "56040575", "purpose": "seed43_128_dt_refined_matched_continuation_field_cadence_25"},
         {"run_id": "20260915T185231Z-0ff33cb-939ac3", "job_id": "56040576", "purpose": "seed43_64_high_cadence_matched_control_field_cadence_25"}
+      ],
+      "completed_hpc3_jobs": [
+        {
+          "run_id": "20260915T184720Z-ef3a61c-1fed5c",
+          "job_id": "56040506",
+          "purpose": "common_state_zero_pressure_planar_sibm_matrix",
+          "state": "COMPLETED",
+          "exit_code": 0,
+          "retrieval_verified": true,
+          "archive_sha256": "f3b8a9279665f839a86bb5a339e520ff71bf9e254d9c01ec637985a0242bda15",
+          "checksum_manifest_sha256": "d30bdb3c4b18bea5f3ef16d6743c86b124e5e12251e56dfa76c20abe18bedc7a",
+          "classification": "FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE",
+          "fixture_passed": true,
+          "scientific_gate_passed": false,
+          "result": "full_model/verification/v24_planar_sibm_result.json",
+          "result_sha256": "f3ebc603629a939739703a24cdebbc1fe92c9474d87b010af275d63398749e89"
+        }
       ],
       "superseded_cancelled_jobs": [
         {"run_id": "20260915T184158Z-952489f-e0ef23", "job_id": "56040497", "reason": "scalar diagnostics were cadence 10 but required field checkpoints remained cadence 250"},

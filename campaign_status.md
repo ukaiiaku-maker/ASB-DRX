@@ -1233,10 +1233,19 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The configured suite passes 429 tests. A complete V24 mechanical restart is
   bitwise identical across the accepted map, phase/grain allocation remains
   disabled, and multi-hit remains off.
+- The common-state planar SIBM matrix job `56040506` completed, was fetched,
+  and passed archive checksum verification. Its zero-pressure, exactly
+  zero-seeded-curvature branches preserve labels, the phase simplex, and front
+  balances. The mobility-off control is stationary. The equal-energy branch
+  nevertheless moves `21.73` interface widths, the favorable branch moves
+  `19.24` widths but lacks a stable velocity, and the reversed branch moves
+  `18.89` widths in the advancing rather than retracting direction. Decision:
+  `FULL_DYNAMIC_PLANAR_SIBM_SIGN_OR_COUPLING_FAILURE`; fixture true,
+  scientific gate false. Exact all-defect freeze and full-driver sequential
+  stage controls remain unavailable and are explicit qualification limits.
 - Active checksum-bound, non-array HPC3 jobs are: `56040570` (seed-43 128 base
   matched continuation), `56040575` (seed-43 128 half-step matched
-  continuation), `56040506` (common-state zero-pressure planar SIBM matrix),
-  and `56040576` (seed-43 64 high-cadence matched run). The ASB continuations
+  continuation), and `56040576` (seed-43 64 high-cadence matched run). The ASB continuations
   start from the exact step-2500 adiabatic/isothermal checkpoints preceding the
   first former qualifying interval. The planar SIBM branches use one
   equilibrated phase geometry, zero applied pressure, zero seeded curvature,
@@ -1247,5 +1256,5 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   replacements checkpoint all classifier fields every 25 steps; no result from
   the superseded jobs is used.
 - Queue audits preserved unrelated jobs `55950433` and `56040470` without
-  modification. Final SIBM and strict-ASB classifications remain pending
-  fetched, checksum-verified HPC output.
+  modification. Final strict-ASB classification remains pending fetched,
+  checksum-verified HPC output.
