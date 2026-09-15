@@ -43,7 +43,8 @@ def transport_parameters(cp):
     return replace(cp, wall_order_enabled=False, wall_order_amplitude_J_m3=0.0,
                    wall_absent_penalty_J_m3=1e-300,
                    wall_partition_J_m=1e-300, transport_scheme="upwind",
-                   mobile_correlation_diffusivity_m2_s=0.0)
+                   mobile_correlation_diffusivity_m2_s=0.0,
+                   extensive_wall_partition_enabled=True)
 
 
 def test_homogeneous_zero_target_reduces_exactly_to_transport_state():
@@ -54,7 +55,7 @@ def test_homogeneous_zero_target_reduces_exactly_to_transport_state():
         resolved_stress_Pa=np.full(shape, 5e8))
     dt = 1e-10
     reference, _, scale = accepted_euler_step(
-        replace(state.common, wall_order=np.zeros_like(state.common.wall_order)),
+        state.common,
         driving, systems, topologies, transport_parameters(cp), dt)
     result, _, scales = accepted_coupled_step(
         state, driving, systems, topologies, cp, ep, dt)
