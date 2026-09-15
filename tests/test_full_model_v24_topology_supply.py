@@ -9,7 +9,7 @@ from full_model.production.tensorial_nye import (
 )
 from full_model.production.wall_topology_supply import (
     accepted_junction_topology_step, accepted_topology_ordering,
-    accepted_transport_capture,
+    accepted_transport_capture, accepted_line_reorientation_step,
     aligned_state_from_directions, alignment_checkpoint_arrays,
     alignment_from_checkpoint_arrays, conservative_transport_capture_step,
     maximum_ledger_residual,
@@ -148,3 +148,21 @@ def test_explicit_junction_route_closes_frank_node_and_declared_nye_source():
     # Reorientation is allowed only because its tensorial source is explicit.
     assert np.max(np.abs(ledger["R_topology_m1_s"])) > 0.0
     assert aligned.junction_alignment_m2.shape == (n, n, 1, 3)
+
+
+def test_finite_segment_reorientation_carries_node_curvature_and_nye_ledgers():
+    inventory, alignment, systems, orientation = fixture(n=4)
+    request = np.full(inventory.wall_tangle_plus_m2.shape, 5e12)
+    updated, aligned, ledger = accepted_line_reorientation_step(
+        inventory, alignment, request, np.zeros_like(request),
+        (1.0, 0.0, 0.0), event_length_m=2.5e-9,
+        systems=systems, orientation_rad=orientation, dt_s=1e-7)
+    np.testing.assert_allclose(updated.wall_tangle_plus_m2, 1.5e13)
+    np.testing.assert_allclose(updated.wall_ordered_plus_m2, 5e12)
+    np.testing.assert_allclose(aligned.wall_turning_nodes_plus_m3, 4e21)
+    np.testing.assert_allclose(
+        aligned.wall_curvature_plus_m3, .5*np.pi*5e12/2.5e-9)
+    assert np.max(np.abs(ledger["scalar_line_balance_residual_m2"])) == 0.0
+    assert np.max(np.abs(ledger["R_topology_m1_s"])) > 0.0
+    assert np.max(np.abs(ledger["sign"]["plus"]
+                             ["paired_node_closure_residual_m3"])) == 0.0

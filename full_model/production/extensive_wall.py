@@ -54,14 +54,16 @@ class ExtensiveWallParameters:
         positive = (
             self.spacing_m, self.rho_reference_m2, self.line_energy_J_m,
             self.rho_log_coefficient_J_m, self.disordered_excess_J_m,
-            self.ordered_excess_J_m, self.nye_match_coefficient_J_m,
+            self.ordered_excess_J_m,
             self.ordering_attempt_frequency_s, self.ordering_barrier_eV,
             self.event_length_m, self.exp_a, self.exp_n,
             self.critical_stress_Pa, self.maximum_fraction_per_step,
         )
         if any((not np.isfinite(x)) or x <= 0 for x in positive):
             raise ValueError("V23 wall parameters must be finite and positive")
-        if self.ordered_gradient_J_m3 < 0 or not 0 <= self.exp_floor <= 1:
+        if (self.ordered_gradient_J_m3 < 0
+                or self.nye_match_coefficient_J_m < 0
+                or not 0 <= self.exp_floor <= 1):
             raise ValueError("invalid gradient coefficient or EXP floor")
         if self.maximum_fraction_per_step > 1:
             raise ValueError("step fraction cannot exceed one")

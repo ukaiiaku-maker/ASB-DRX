@@ -33,6 +33,12 @@ except ImportError:
     )
 
 
+TOPOLOGY_MOMENT_FIELDS = (
+    "wall_turning_nodes_plus_m3", "wall_turning_nodes_minus_m3",
+    "wall_curvature_plus_m3", "wall_curvature_minus_m3",
+)
+
+
 @dataclass(frozen=True)
 class ReservoirAlignmentState:
     """First line-direction moments for every signed scalar reservoir."""
@@ -46,6 +52,10 @@ class ReservoirAlignmentState:
     wall_ordered_plus_m2: np.ndarray
     wall_ordered_minus_m2: np.ndarray
     junction_alignment_m2: np.ndarray
+    wall_turning_nodes_plus_m3: np.ndarray
+    wall_turning_nodes_minus_m3: np.ndarray
+    wall_curvature_plus_m3: np.ndarray
+    wall_curvature_minus_m3: np.ndarray
 
     def validate(self, inventory: DensityInventory, family_count: int,
                  tolerance=2e-13):
@@ -64,6 +74,11 @@ class ReservoirAlignmentState:
         if junction.shape != inventory.junction_m2.shape+(3,) or np.any(
                 ~np.isfinite(junction)):
             raise ValueError("inadmissible junction alignment reservoir")
+        for name in TOPOLOGY_MOMENT_FIELDS:
+            value = np.asarray(getattr(self, name), dtype=float)
+            if value.shape != scalar_shape or np.any(~np.isfinite(value)) \
+                    or np.any(value < 0.0):
+                raise ValueError(f"inadmissible topology moment: {name}")
         return scalar_shape
 
 
@@ -73,17 +88,18 @@ def zero_alignment_state(inventory, family_count):
     return ReservoirAlignmentState(**{
         **{name: zero.copy() for name in SIGNED_RESERVOIRS},
         "junction_alignment_m2": np.zeros(inventory.junction_m2.shape+(3,)),
+        **{name: np.zeros(shape) for name in TOPOLOGY_MOMENT_FIELDS},
     })
 
 
 def alignment_checkpoint_arrays(alignments, prefix="v24_alignment__"):
-    return {prefix+name: np.asarray(getattr(alignments, name))
-            for name in SIGNED_RESERVOIRS+("junction_alignment_m2",)}
+    names = SIGNED_RESERVOIRS+("junction_alignment_m2",)+TOPOLOGY_MOMENT_FIELDS
+    return {prefix+name: np.asarray(getattr(alignments, name)) for name in names}
 
 
 def alignment_from_checkpoint_arrays(mapping, inventory, family_count,
                                      prefix="v24_alignment__"):
-    names = SIGNED_RESERVOIRS+("junction_alignment_m2",)
+    names = SIGNED_RESERVOIRS+("junction_alignment_m2",)+TOPOLOGY_MOMENT_FIELDS
     missing = [name for name in names if prefix+name not in mapping]
     if missing:
         raise ValueError("incomplete V24 alignment restart: "+", ".join(missing))
@@ -113,6 +129,7 @@ def aligned_state_from_directions(inventory, directions):
         **{name: np.asarray(getattr(inventory, name))[..., None]*unit
            for name in SIGNED_RESERVOIRS},
         "junction_alignment_m2": np.zeros(inventory.junction_m2.shape+(3,)),
+        **{name: np.zeros(scalar_shape) for name in TOPOLOGY_MOMENT_FIELDS},
     })
     result.validate(inventory, scalar_shape[-1])
     return result
@@ -250,36 +267,33 @@ def conservative_transport_capture_step(
         captured = np.zeros_like(mobile)
         captured_alignment = np.zeros_like(amobile)
         velocity = velocities[sign]
-        nx, ny, families = shape
         # Each donor's outgoing amounts are based on the beginning-of-step
-        # state. This makes the event independent of iteration ordering.
-        for i in range(nx):
-            for j in range(ny):
-                for family in range(families):
-                    rho0 = mobile0[i, j, family]
-                    if rho0 == 0.0:
-                        continue
-                    for axis, size in ((0, nx), (1, ny)):
-                        speed = velocity[i, j, family, axis]
-                        if speed == 0.0:
-                            continue
-                        destination = [i, j]
-                        destination[axis] = ((i if axis == 0 else j)
-                                             +(1 if speed > 0 else -1)) % size
-                        di, dj = destination
-                        fraction = dt_s*abs(speed)/spacing_m
-                        amount = fraction*rho0
-                        alignment_amount = fraction*amobile0[i, j, family]
-                        mobile[i, j, family] -= amount
-                        amobile[i, j, family] -= alignment_amount
-                        if support[di, dj] and not support[i, j]:
-                            tangle[di, dj, family] += amount
-                            atangle[di, dj, family] += alignment_amount
-                            captured[di, dj, family] += amount
-                            captured_alignment[di, dj, family] += alignment_amount
-                        else:
-                            mobile[di, dj, family] += amount
-                            amobile[di, dj, family] += alignment_amount
+        # state. Vectorized rolls perform the same periodic face scatter as a
+        # cell loop while making long exposure calculations practical.
+        outside = ~support
+        for axis in (0, 1):
+            component = velocity[..., axis]
+            for step, positive_speed in ((1, np.maximum(component, 0.0)),
+                                         (-1, np.maximum(-component, 0.0))):
+                fraction = dt_s*positive_speed/spacing_m
+                amount = fraction*mobile0
+                alignment_amount = fraction[..., None]*amobile0
+                destination_support = np.roll(support, -step, axis=axis)
+                capture_from_source = (outside & destination_support)[..., None]
+                captured_amount = amount*capture_from_source
+                captured_alignment_amount = (
+                    alignment_amount*capture_from_source[..., None])
+                transmitted_amount = amount-captured_amount
+                transmitted_alignment = alignment_amount-captured_alignment_amount
+                mobile -= amount
+                amobile -= alignment_amount
+                mobile += np.roll(transmitted_amount, step, axis=axis)
+                amobile += np.roll(transmitted_alignment, step, axis=axis)
+                tangle += np.roll(captured_amount, step, axis=axis)
+                atangle += np.roll(captured_alignment_amount, step, axis=axis)
+                captured += np.roll(captured_amount, step, axis=axis)
+                captured_alignment += np.roll(
+                    captured_alignment_amount, step, axis=axis)
         # Roundoff at an exhausted donor may be slightly negative only at the
         # scale of machine precision; anything larger is a failed CFL ledger.
         scale = max(float(np.max(mobile0)), 1.0)
@@ -334,6 +348,134 @@ def accepted_topology_ordering(inventory, alignments, ordered_plus_m2,
         "total_nye_residual_m1": after["total"]-before["total"],
         "reservoir_nye_change_m1": {
             key: after[key]-before[key] for key in before if key != "total"},
+    }
+
+
+def apply_signed_ordering_extent(inventory, alignments, extent_plus_m2,
+                                 extent_minus_m2, systems, orientation_rad,
+                                 topologies=()):
+    """Apply a signed tangle-to-ordered extent while moving alignment exactly.
+
+    Positive extent orders tangle; negative extent disorders ordered line.
+    This map is used after a thermodynamic/Arrhenius law has selected the
+    direction and trial magnitude. Local donor availability is enforced here.
+    """
+    before = reservoir_nye_m1(alignments, systems, orientation_rad, topologies)
+    density_updates = {}; alignment_updates = {}; sign_ledger = {}
+    for sign, raw in (("plus", extent_plus_m2), ("minus", extent_minus_m2)):
+        tname = f"wall_tangle_{sign}_m2"
+        oname = f"wall_ordered_{sign}_m2"
+        tangle = np.asarray(getattr(inventory, tname), dtype=float)
+        ordered = np.asarray(getattr(inventory, oname), dtype=float)
+        atangle = np.asarray(getattr(alignments, tname), dtype=float)
+        aordered = np.asarray(getattr(alignments, oname), dtype=float)
+        trial = np.asarray(raw, dtype=float)
+        if trial.shape != tangle.shape or np.any(~np.isfinite(trial)):
+            raise ValueError("ordering extent must match signed family layout")
+        accepted = np.where(trial >= 0.0, np.minimum(trial, tangle),
+                            -np.minimum(-trial, ordered))
+        donor = np.where(accepted >= 0.0, tangle, ordered)
+        fraction = np.divide(np.abs(accepted), donor,
+                             out=np.zeros_like(accepted), where=donor > 0.0)
+        moved = np.where((accepted >= 0.0)[..., None],
+                         fraction[..., None]*atangle,
+                         -fraction[..., None]*aordered)
+        density_updates[tname] = tangle-accepted
+        density_updates[oname] = ordered+accepted
+        alignment_updates[tname] = atangle-moved
+        alignment_updates[oname] = aordered+moved
+        sign_ledger[sign] = {
+            "accepted_tangle_to_ordered_m2": accepted,
+            "accepted_alignment_m2": moved,
+        }
+    updated = replace(inventory, **density_updates)
+    aligned = replace(alignments, **alignment_updates)
+    aligned.validate(updated, len(systems))
+    after = reservoir_nye_m1(aligned, systems, orientation_rad, topologies)
+    return updated, aligned, {
+        "operator": "signed_topology_ordering_extent",
+        "sign": sign_ledger,
+        "total_nye_residual_m1": after["total"]-before["total"],
+    }
+
+
+def accepted_line_reorientation_step(
+        inventory, alignments, requested_plus_m2, requested_minus_m2,
+        ordered_line_direction, event_length_m, systems, orientation_rad,
+        dt_s, topologies=()):
+    """Form kink-pair-bounded ordered segments with an explicit Nye source.
+
+    A finite segment of existing tangle line is reoriented between two turning
+    nodes. The scalar line and signed Burgers family are unchanged. The change
+    in line direction is recorded as ``R_topology``; paired node and integrated
+    curvature inventories are incremented from the declared event length.
+    No orientation-gradient or Frank--Bilby target is an input.
+    """
+    if event_length_m <= 0.0 or dt_s <= 0.0:
+        raise ValueError("reorientation requires positive event length and time")
+    direction = np.asarray(ordered_line_direction, dtype=float)
+    shape = inventory.mobile_plus_m2.shape
+    if direction.shape == (3,):
+        direction = np.broadcast_to(direction, shape+(3,))
+    if direction.shape != shape+(3,) or np.any(~np.isfinite(direction)):
+        raise ValueError("ordered line direction must be vector or grid x family x vector")
+    norm = np.linalg.norm(direction, axis=-1, keepdims=True)
+    if np.any(norm <= 0.0):
+        raise ValueError("ordered line direction cannot vanish")
+    unit = direction/norm
+    before = reservoir_nye_m1(alignments, systems, orientation_rad, topologies)
+    density_updates = {}; alignment_updates = {}; topology_updates = {}
+    sign_ledger = {}
+    for sign, request in (("plus", requested_plus_m2),
+                          ("minus", requested_minus_m2)):
+        tname = f"wall_tangle_{sign}_m2"
+        oname = f"wall_ordered_{sign}_m2"
+        nname = f"wall_turning_nodes_{sign}_m3"
+        cname = f"wall_curvature_{sign}_m3"
+        tangle = np.asarray(getattr(inventory, tname), dtype=float)
+        ordered = np.asarray(getattr(inventory, oname), dtype=float)
+        atangle = np.asarray(getattr(alignments, tname), dtype=float)
+        aordered = np.asarray(getattr(alignments, oname), dtype=float)
+        extent = _accepted_extent(request, tangle)
+        fraction = np.divide(extent, tangle, out=np.zeros_like(extent),
+                             where=tangle > 0.0)
+        removed_alignment = fraction[..., None]*atangle
+        created_alignment = extent[..., None]*unit
+        source_unit = np.divide(
+            atangle, np.linalg.norm(atangle, axis=-1, keepdims=True),
+            out=np.zeros_like(atangle),
+            where=np.linalg.norm(atangle, axis=-1, keepdims=True) > 0.0)
+        turning_angle = np.arccos(np.clip(
+            np.sum(source_unit*unit, axis=-1), -1.0, 1.0))
+        density_updates[tname] = tangle-extent
+        density_updates[oname] = ordered+extent
+        alignment_updates[tname] = atangle-removed_alignment
+        alignment_updates[oname] = aordered+created_alignment
+        node_increment = 2.0*extent/event_length_m
+        curvature_increment = turning_angle*extent/event_length_m
+        topology_updates[nname] = getattr(alignments, nname)+node_increment
+        topology_updates[cname] = getattr(alignments, cname)+curvature_increment
+        sign_ledger[sign] = {
+            "accepted_reoriented_line_m2": extent,
+            "removed_alignment_m2": removed_alignment,
+            "created_alignment_m2": created_alignment,
+            "turning_node_increment_m3": node_increment,
+            "curvature_increment_m3": curvature_increment,
+            "paired_node_closure_residual_m3": node_increment
+                                                  -2.0*extent/event_length_m,
+        }
+    updated = replace(inventory, **density_updates)
+    aligned = replace(alignments, **alignment_updates, **topology_updates)
+    aligned.validate(updated, len(systems))
+    after = reservoir_nye_m1(aligned, systems, orientation_rad, topologies)
+    return updated, aligned, {
+        "operator": "finite_segment_kink_pair_reorientation",
+        "event_length_m": float(event_length_m),
+        "sign": sign_ledger,
+        "scalar_line_balance_residual_m2": (
+            derived_density_fields(updated, topologies)["rho_total_m2"]
+            -derived_density_fields(inventory, topologies)["rho_total_m2"]),
+        "R_topology_m1_s": (after["total"]-before["total"])/dt_s,
     }
 
 

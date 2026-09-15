@@ -1,0 +1,3361 @@
+{
+  "cases": [
+    {
+      "classification": {
+        "classification": "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR",
+        "fixture_passed": true,
+        "grain_labels_allocated": 0,
+        "loaded_wall_observed": false,
+        "records": [
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.01217049442262346,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.0,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.006956270004200236,
+                    0.00012113161842730591,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    4.888890081855007e-05,
+                    -4.7880650852409215e-05,
+                    -4.8453014659974825e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.005658802442033923,
+                    0.007480412840007235,
+                    -0.005780121045117963
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.013932871261061667,
+                  "local_misorientation_rad": 0.006957338606832839,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9931430299085986,
+                  "ordered_supply_ratio": 0.012051663888477006,
+                  "right_orientation_rad": 0.020890209867894506,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.3578984770011289,
+                  "total_supply_ratio": 1.583603182290243
+                },
+                {
+                  "centroid_index": [
+                    7.0,
+                    7.500000000000001
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.00820062890611609,
+                    0.00012646541905669828,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    4.888890081855007e-05,
+                    -4.7880650852409215e-05,
+                    -4.8453014659974825e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.005119205047523173,
+                    0.006988276559211592,
+                    -0.005214463263003529
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.019521020471126284,
+                  "local_misorientation_rad": 0.008201626974231475,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9941650671817187,
+                  "ordered_supply_ratio": 0.010223285283394445,
+                  "right_orientation_rad": 0.011319393496894809,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1159535445381163,
+                  "total_supply_ratio": 1.232811104447699
+                },
+                {
+                  "centroid_index": [
+                    9.0,
+                    7.500000000000001
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008126845807732873,
+                    -0.0001253156441120007,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -5.026769155130158e-05,
+                    1.4495481819390434e-05,
+                    5.013516599981109e-05
+                  ],
+                  "integrated_total_burgers": [
+                    -0.005253675206765702,
+                    0.0065833928070198056,
+                    0.005164651081983107
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.019482656005393863,
+                  "local_misorientation_rad": 0.00812783430388662,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9938644974408969,
+                  "ordered_supply_ratio": 0.008915105056124912,
+                  "right_orientation_rad": 0.011354821701507244,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1000089019076102,
+                  "total_supply_ratio": 1.215587930117338
+                },
+                {
+                  "centroid_index": [
+                    10.999999999999998,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.006953548114504793,
+                    -0.00012103103440197494,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -5.026769155130158e-05,
+                    1.4495481819390434e-05,
+                    5.013516599981109e-05
+                  ],
+                  "integrated_total_burgers": [
+                    -0.005882122414878122,
+                    0.0067572858186506265,
+                    0.005774024531084397
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.013926586308374024,
+                  "local_misorientation_rad": 0.0069546153622116426,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9928380230459072,
+                  "ordered_supply_ratio": 0.010419043972876602,
+                  "right_orientation_rad": 0.020881201670585665,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.3004707115059524,
+                  "total_supply_ratio": 1.5325555589094622
+                }
+              ]
+            },
+            "mechanical_loading_active": true,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.904702647043782e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.012328959815373972,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.675106473856181,
+                    7.500000000000001
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.008266950722137898,
+                    0.0001477571811877576,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    4.1632413234724695e-05,
+                    -4.0619779410475544e-05,
+                    -4.118506526872701e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.00620805749799051,
+                    0.007184106482165013,
+                    -0.006324190562025143
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.013737188248379521,
+                  "local_misorientation_rad": 0.008268294618819437,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9950784334832397,
+                  "ordered_supply_ratio": 0.00861971588027551,
+                  "right_orientation_rad": 0.02200548286719896,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1710043666961305,
+                  "total_supply_ratio": 1.3797549405858185
+                },
+                {
+                  "centroid_index": [
+                    10.32439809383336,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.008225490939012281,
+                    -0.0001469141161568599,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -4.2750949074754566e-05,
+                    1.2239533978745087e-05,
+                    4.261489352864504e-05
+                  ],
+                  "integrated_total_burgers": [
+                    -0.006399697944723799,
+                    0.006728898245732737,
+                    0.006291412922645693
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.013745520618958737,
+                  "local_misorientation_rad": 0.008226826038464542,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9948455934178684,
+                  "ordered_supply_ratio": 0.007486653824762358,
+                  "right_orientation_rad": 0.02197234665742328,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.154392196600441,
+                  "total_supply_ratio": 1.3634430078744664
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.906568938270784e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.0213227197861396,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.336565018592382,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 6.4e-06,
+                  "frank_bilby_burgers": [
+                    0.01573733947338321,
+                    0.0006411845443257125,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.00017558336927998562,
+                    -6.9761941998496495e-06,
+                    -0.00017530478823756665
+                  ],
+                  "integrated_total_burgers": [
+                    0.009983866913908635,
+                    0.009322044321479372,
+                    -0.010327023098430765
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03284507959056647,
+                  "local_misorientation_rad": 0.0157505587177929,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9889424431772482,
+                  "ordered_supply_ratio": 0.01575919295751296,
+                  "right_orientation_rad": 0.04859563830835937,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.9311850128707612,
+                  "total_supply_ratio": 1.0871999003607975
+                },
+                {
+                  "centroid_index": [
+                    10.666766685691885,
+                    7.500000000000001
+                  ],
+                  "estimated_segment_length_m": 6.4e-06,
+                  "frank_bilby_burgers": [
+                    -0.015602075396983953,
+                    -0.0006346153015834854,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.00013717232837227923,
+                    4.75257188747962e-05,
+                    0.0001357312737885474
+                  ],
+                  "integrated_total_burgers": [
+                    -0.010468748712190818,
+                    0.0053411817045942965,
+                    0.01025282427557597
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03284507959056647,
+                  "local_misorientation_rad": 0.015615135214137224,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9913902212980064,
+                  "ordered_supply_ratio": 0.012727578306538357,
+                  "right_orientation_rad": 0.048460214804703694,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.828043018003577,
+                  "total_supply_ratio": 0.9988013731583462
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 6.671473204656903e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.021862240128880685,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.651986314572131,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.01594855343072476,
+                    0.0006519579588066815,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.0001380457020221009,
+                    0.00014639961600091802,
+                    -0.00014231609527720388
+                  ],
+                  "integrated_total_burgers": [
+                    0.009852477525062043,
+                    0.009343737284604128,
+                    -0.010190920223272145
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03287504536794315,
+                  "local_misorientation_rad": 0.015962042956972337,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9910634069201557,
+                  "ordered_supply_ratio": 0.015440645397293918,
+                  "right_orientation_rad": 0.048837088324915484,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.9219540826703566,
+                  "total_supply_ratio": 1.0636210594206685
+                },
+                {
+                  "centroid_index": [
+                    10.348365912632211,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.015738225765270862,
+                    -0.0006421853367551966,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -7.5918367884608e-05,
+                    -8.046292341705146e-05,
+                    7.825579949477361e-05
+                  ],
+                  "integrated_total_burgers": [
+                    -0.01027603782954003,
+                    0.005265071819299559,
+                    0.0100673618264934
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.032905810174099194,
+                  "local_misorientation_rad": 0.015751485074565946,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9950004369279531,
+                  "ordered_supply_ratio": 0.008602827417731006,
+                  "right_orientation_rad": 0.04865729524866514,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.8181737086084664,
+                  "total_supply_ratio": 0.9725490208938747
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 7.651473204656925e-07
+          }
+        ],
+        "release_duration_s": 0.0,
+        "required_release_persistence_s": 0.0,
+        "scientific_gate_passed": false
+      },
+      "curl_beta_vs_reservoir_nye_relative_rms": 1.3859321934220519,
+      "elapsed_time_s": 7.651473204656925e-07,
+      "grid": 16,
+      "maximum_junction_extent_m2": 0.0,
+      "maximum_local_misorientation_deg": 0.9145576938410356,
+      "maximum_ordered_density_m2": 12173350177932.543,
+      "maximum_ordered_supply_ratio": 0.01575919295751296,
+      "maximum_total_nye_m1": 129602.34539449726,
+      "minimum_ordered_frank_bilby_residual": 0.9889424431772482,
+      "orientation_span_deg_diagnostic_only": 1.2526140900864082,
+      "restart_at_release_seam_exact_representation": true,
+      "spacing_m": 2e-07,
+      "topology_route_enabled": false
+    },
+    {
+      "classification": {
+        "classification": "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR",
+        "fixture_passed": true,
+        "grain_labels_allocated": 0,
+        "loaded_wall_observed": false,
+        "records": [
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.01217049442262346,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.0,
+                    7.500000000000001
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.006956270004200236,
+                    0.00012113161842730591,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.01721339642431857,
+                    0.001480056065849514,
+                    -0.01722610002274619
+                  ],
+                  "integrated_total_burgers": [
+                    0.015844859729767537,
+                    0.008356237543810947,
+                    -0.015973694664613236
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.013932871261061667,
+                  "local_misorientation_rad": 0.006957338606832839,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.8882686082829716,
+                  "ordered_supply_ratio": 3.5067126446904573,
+                  "right_orientation_rad": 0.020890209867894506,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.881784722390229,
+                  "total_supply_ratio": 3.4497372568041804
+                },
+                {
+                  "centroid_index": [
+                    7.0,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.008200628906116088,
+                    0.00012646541905669828,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.01721339642431857,
+                    0.001480056065849514,
+                    -0.01722610002274619
+                  ],
+                  "integrated_total_burgers": [
+                    0.015305262335256786,
+                    0.007864101263015304,
+                    -0.015408036882498805
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.01952102047112628,
+                  "local_misorientation_rad": 0.008201626974231473,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.376178649642576,
+                  "ordered_supply_ratio": 2.974703253036675,
+                  "right_orientation_rad": 0.011319393496894807,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.2737229057261894,
+                  "total_supply_ratio": 2.8162391613136624
+                },
+                {
+                  "centroid_index": [
+                    9.0,
+                    7.499999999999999
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008126845807732869,
+                    -0.0001253156441120007,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.01720983611577887,
+                    0.0008201057589690736,
+                    0.01720175198467064
+                  ],
+                  "integrated_total_burgers": [
+                    -0.015437625605727286,
+                    0.007068692661885729,
+                    0.015343816777168
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.01948265600539386,
+                  "local_misorientation_rad": 0.008127834303886616,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.396154414924253,
+                  "ordered_supply_ratio": 2.9954537127317904,
+                  "right_orientation_rad": 0.011354821701507244,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.270755277160026,
+                  "total_supply_ratio": 2.8156306912032756
+                },
+                {
+                  "centroid_index": [
+                    10.999999999999998,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.006953548114504798,
+                    -0.00012103103440197494,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.01720983611577887,
+                    0.0008201057589690736,
+                    0.01720175198467064
+                  ],
+                  "integrated_total_burgers": [
+                    -0.016066072813839708,
+                    0.007242585673516555,
+                    0.015953190226269284
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.013926586308374022,
+                  "local_misorientation_rad": 0.006954615362211648,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.88289355298087,
+                  "ordered_supply_ratio": 3.5007735472760406,
+                  "right_orientation_rad": 0.02088120167058567,
+                  "segment_pixel_count": 16,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.846038084348413,
+                  "total_supply_ratio": 3.418077988431705
+                }
+              ]
+            },
+            "mechanical_loading_active": true,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.904702647043782e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.012328959815373974,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.675106473856178,
+                    7.499999999999999
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.008266950722137898,
+                    0.0001477571811877576,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.0172138583307517,
+                    0.0015128101207454398,
+                    -0.017229392415528122
+                  ],
+                  "integrated_total_burgers": [
+                    0.016394388123355797,
+                    0.00807931345150799,
+                    -0.016519712458800684
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.013737188248379521,
+                  "local_misorientation_rad": 0.008268294618819437,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.3537957504394744,
+                  "ordered_supply_ratio": 2.9512817351386147,
+                  "right_orientation_rad": 0.02200548286719896,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.4245200306914785,
+                  "total_supply_ratio": 2.9796312968185563
+                },
+                {
+                  "centroid_index": [
+                    10.32439809383336,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.008225490939012281,
+                    -0.0001469141161568599,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.017214667123063746,
+                    0.0007875127954747758,
+                    0.017205047942944838
+                  ],
+                  "integrated_total_burgers": [
+                    -0.01658650710373351,
+                    0.0071949111608349825,
+                    0.01647252900523592
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.013745520618958737,
+                  "local_misorientation_rad": 0.008226826038464542,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.362315344495511,
+                  "ordered_supply_ratio": 2.9599776140179497,
+                  "right_orientation_rad": 0.02197234665742328,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.4163045029191412,
+                  "total_supply_ratio": 2.973038464042984
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.906568938270784e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.021322719786139588,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.336565018592381,
+                    7.499999999999999
+                  ],
+                  "estimated_segment_length_m": 6.4e-06,
+                  "frank_bilby_burgers": [
+                    0.01573733947338319,
+                    0.0006411845443257125,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.01721279339383304,
+                    0.0018292942041406158,
+                    -0.017258871236294833
+                  ],
+                  "integrated_total_burgers": [
+                    0.020169567396110203,
+                    0.010404531267590458,
+                    -0.020539989121880417
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.032845079590566484,
+                  "local_misorientation_rad": 0.01575055871779288,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.102354703130251,
+                  "ordered_supply_ratio": 1.551942902516842,
+                  "right_orientation_rad": 0.04859563830835936,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4710876097563397,
+                  "total_supply_ratio": 1.9434274190699095
+                },
+                {
+                  "centroid_index": [
+                    10.666766685691888,
+                    7.500000000000002
+                  ],
+                  "estimated_segment_length_m": 6.4e-06,
+                  "frank_bilby_burgers": [
+                    -0.015602075396983925,
+                    -0.0006346153015834854,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.017255710451780978,
+                    0.00047566766961046987,
+                    0.017234558687760238
+                  ],
+                  "integrated_total_burgers": [
+                    -0.020679845361467285,
+                    0.005622659751223899,
+                    0.020451403378090056
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.032845079590566484,
+                  "local_misorientation_rad": 0.015615135214137196,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1110661774678798,
+                  "ordered_supply_ratio": 1.5621506649335108,
+                  "right_orientation_rad": 0.04846021480470368,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4077347787459609,
+                  "total_supply_ratio": 1.8970977134584672
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 6.671473204656903e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.021862240128880682,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    5.65198631457213,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.01594855343072475,
+                    0.0006519579588066815,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.01721225137638949,
+                    0.001835821358739017,
+                    -0.01725902307605987
+                  ],
+                  "integrated_total_burgers": [
+                    0.020037857267989845,
+                    0.010430086685664405,
+                    -0.020403976098080392
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.032875045367943154,
+                  "local_misorientation_rad": 0.01596204295697233,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.0866939995768852,
+                  "ordered_supply_ratio": 1.5313947965182955,
+                  "right_orientation_rad": 0.048837088324915484,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4404656357549566,
+                  "total_supply_ratio": 1.9070762830295187
+                },
+                {
+                  "centroid_index": [
+                    10.348365912632211,
+                    7.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.01573822576527082,
+                    -0.0006421853367551966,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.017256032443847096,
+                    0.0004694784636801802,
+                    0.017234710691959945
+                  ],
+                  "integrated_total_burgers": [
+                    -0.020487325018566573,
+                    0.005542887392699001,
+                    0.020266030877681595
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03290581017409921,
+                  "local_misorientation_rad": 0.015751485074565905,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1006753922425756,
+                  "ordered_supply_ratio": 1.54864213522351,
+                  "right_orientation_rad": 0.04865729524866511,
+                  "segment_pixel_count": 48,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.3785849672270796,
+                  "total_supply_ratio": 1.863058298646675
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 7.651473204656925e-07
+          }
+        ],
+        "release_duration_s": 0.0,
+        "required_release_persistence_s": 0.0,
+        "scientific_gate_passed": false
+      },
+      "curl_beta_vs_reservoir_nye_relative_rms": 1.3115140059533559,
+      "elapsed_time_s": 7.651473204656925e-07,
+      "grid": 16,
+      "maximum_junction_extent_m2": 0.0,
+      "maximum_local_misorientation_deg": 0.9145576938410352,
+      "maximum_ordered_density_m2": 602691718562634.4,
+      "maximum_ordered_supply_ratio": 3.5067126446904573,
+      "maximum_total_nye_m1": 139996.67100860702,
+      "minimum_ordered_frank_bilby_residual": 1.0866939995768852,
+      "orientation_span_deg_diagnostic_only": 1.252614090086408,
+      "restart_at_release_seam_exact_representation": true,
+      "spacing_m": 2e-07,
+      "topology_route_enabled": true
+    },
+    {
+      "classification": {
+        "classification": "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR",
+        "fixture_passed": true,
+        "grain_labels_allocated": 0,
+        "loaded_wall_observed": false,
+        "records": [
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.014157750156301687,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    8.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.008322862632540116,
+                    0.00014664977481348984,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    1.673051487463606e-05,
+                    9.65308410556378e-06,
+                    -1.680816022487654e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.006290002292110537,
+                    0.006961978085002883,
+                    -0.00640256377261969
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.013456199933237142,
+                  "local_misorientation_rad": 0.008324178558282724,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9979726821792178,
+                  "ordered_supply_ratio": 0.003075965514924694,
+                  "right_orientation_rad": 0.021780378491519866,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1495981682438274,
+                  "total_supply_ratio": 1.364578849652418
+                },
+                {
+                  "centroid_index": [
+                    10.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.007907604239333866,
+                    0.00013260895476363554,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    1.673051487463606e-05,
+                    9.65308410556378e-06,
+                    -1.680816022487654e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.005567989288206138,
+                    0.006567537527344292,
+                    -0.005659621857639143
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.020722598239992764,
+                  "local_misorientation_rad": 0.007908736685613501,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9978673457041257,
+                  "ordered_supply_ratio": 0.003237543492518683,
+                  "right_orientation_rad": 0.01281386155437926,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1232319742111978,
+                  "total_supply_ratio": 1.302829269109524
+                },
+                {
+                  "centroid_index": [
+                    14.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.007848448073025363,
+                    -0.00013154010469929034,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -2.029870360846913e-06,
+                    -8.031197712891501e-07,
+                    2.036281709749882e-06
+                  ],
+                  "integrated_total_burgers": [
+                    -0.005697645840339934,
+                    0.00620100727092181,
+                    0.005612849307366868
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.02068323085856192,
+                  "local_misorientation_rad": 0.007849570455036953,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9997397631976517,
+                  "ordered_supply_ratio": 0.0003803105590851982,
+                  "right_orientation_rad": 0.012833660403524967,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1122990217109505,
+                  "total_supply_ratio": 1.2892794204103948
+                },
+                {
+                  "centroid_index": [
+                    16.0,
+                    11.500000000000002
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008311908353261758,
+                    -0.00014639387057369113,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -2.029870360846913e-06,
+                    -8.031197712891501e-07,
+                    2.036281709749882e-06
+                  ],
+                  "integrated_total_burgers": [
+                    -0.006489939624953959,
+                    0.00629640645198289,
+                    0.0063907921877820835
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.013454114786228571,
+                  "local_misorientation_rad": 0.00831322137618265,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9997541964400164,
+                  "ordered_supply_ratio": 0.00035909971903628406,
+                  "right_orientation_rad": 0.02176733616241122,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.1133969222153648,
+                  "total_supply_ratio": 1.331951019185476
+                }
+              ]
+            },
+            "mechanical_loading_active": true,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.831984490986043e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.013750028087183268,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    6.0,
+                    11.499999999999998
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.011288721633516718,
+                    0.0002012160874731439,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    1.4206343145040402e-05,
+                    8.230510370496264e-06,
+                    -1.4286938966026212e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.007951581139304728,
+                    0.0073952511875646845,
+                    -0.008095881609888937
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.01217734908964528,
+                  "local_misorientation_rad": 0.011290574751871058,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9987300050386564,
+                  "ordered_supply_ratio": 0.0019276488104561895,
+                  "right_orientation_rad": 0.023467923841516337,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.0037514151598381,
+                  "total_supply_ratio": 1.1996588381115663
+                },
+                {
+                  "centroid_index": [
+                    8.730421510828041,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.00904344678427557,
+                    0.00016195847869759916,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    1.4206343145040395e-05,
+                    8.230510370496264e-06,
+                    -1.428693896602621e-05
+                  ],
+                  "integrated_total_burgers": [
+                    0.00655387106100936,
+                    0.006727363116052005,
+                    -0.006660921411095227
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.013384554423405214,
+                  "local_misorientation_rad": 0.009044927751883411,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9984149494515611,
+                  "ordered_supply_ratio": 0.002406234983244408,
+                  "right_orientation_rad": 0.022429482175288624,
+                  "segment_pixel_count": 72,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.0700339672281245,
+                  "total_supply_ratio": 1.2730133332605063
+                },
+                {
+                  "centroid_index": [
+                    15.26846932673676,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.009003852532669977,
+                    -0.00016112261293843577,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -1.7241597666977543e-06,
+                    -6.858755555574381e-07,
+                    1.730841840674167e-06
+                  ],
+                  "integrated_total_burgers": [
+                    -0.006725402590276472,
+                    0.0062957716819640255,
+                    0.006627007452656517
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.013390280489375633,
+                  "local_misorientation_rad": 0.009005324478883766,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9998072283644722,
+                  "ordered_supply_ratio": 0.0002817799942516712,
+                  "right_orientation_rad": 0.0223956049682594,
+                  "segment_pixel_count": 72,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.0581448815307923,
+                  "total_supply_ratio": 1.2601863108904512
+                },
+                {
+                  "centroid_index": [
+                    18.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.011310906718528111,
+                    -0.0002014376465881984,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -1.7241597666977545e-06,
+                    -6.858755555574376e-07,
+                    1.7308418406741666e-06
+                  ],
+                  "integrated_total_burgers": [
+                    -0.008232381467507323,
+                    0.006391829776419442,
+                    0.008107487742068322
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.012150888309946728,
+                  "local_misorientation_rad": 0.011312760617582079,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9998465487557543,
+                  "ordered_supply_ratio": 0.00022430645556759265,
+                  "right_orientation_rad": 0.023463648927528807,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.9629909678743985,
+                  "total_supply_ratio": 1.1672283867878854
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.833228652200645e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.02356845333942323,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    8.45728600382336,
+                    11.500000000000002
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016344326804650623,
+                    0.0006506219266518842,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.0001463221023304206,
+                    9.776516547821979e-05,
+                    -0.0001489106647308945
+                  ],
+                  "integrated_total_burgers": [
+                    0.010288652011465043,
+                    0.008862368762795881,
+                    -0.01060104583623093
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03160746923534517,
+                  "local_misorientation_rad": 0.016357453760051925,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9908816972244754,
+                  "ordered_supply_ratio": 0.014093226194879427,
+                  "right_orientation_rad": 0.0479649229953971,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.8995062911133099,
+                  "total_supply_ratio": 1.0531895432816154
+                },
+                {
+                  "centroid_index": [
+                    15.54073513976191,
+                    11.500000000000002
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.016176265092284738,
+                    -0.0006427644040934988,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -1.2947493351678773e-05,
+                    -4.001086433541819e-06,
+                    1.3050392747352344e-05
+                  ],
+                  "integrated_total_burgers": [
+                    -0.010711275501838811,
+                    0.0050027229061218705,
+                    0.010513359972448604
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03161953568018116,
+                  "local_misorientation_rad": 0.0161892069801921,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9991913967390256,
+                  "ordered_supply_ratio": 0.0011621325455245266,
+                  "right_orientation_rad": 0.04780874266037326,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.8107406466872548,
+                  "total_supply_ratio": 0.9772381060247021
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 6.447016424923152e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.02430451569142226,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    8.45331929038495,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016489639466732924,
+                    0.0006715576951389357,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    5.085520822996882e-08,
+                    3.505716808495334e-08,
+                    -5.183321356770353e-08
+                  ],
+                  "integrated_total_burgers": [
+                    0.010418511500000907,
+                    0.009016508056026674,
+                    -0.010741882569769115
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03245179686001159,
+                  "local_misorientation_rad": 0.01650349603365979,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9999968346027054,
+                  "ordered_supply_ratio": 4.885965878910391e-06,
+                  "right_orientation_rad": 0.04895529289367138,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.9025947091140286,
+                  "total_supply_ratio": 1.0586275251634203
+                },
+                {
+                  "centroid_index": [
+                    15.54417483829183,
+                    11.500000000000002
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.016298620264684364,
+                    -0.00066242464720212,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.00012263440659545917,
+                    -4.7184755051004465e-06,
+                    0.00012271742272450565
+                  ],
+                  "integrated_total_burgers": [
+                    -0.010836314465820058,
+                    0.004885843207989232,
+                    0.010637887869739694
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03246450408814646,
+                  "local_misorientation_rad": 0.016312257023639202,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9925049542575032,
+                  "ordered_supply_ratio": 0.010639608575305428,
+                  "right_orientation_rad": 0.04877676111178566,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.8081585137869534,
+                  "total_supply_ratio": 0.9779172011536659
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 7.427016424923174e-07
+          }
+        ],
+        "release_duration_s": 0.0,
+        "required_release_persistence_s": 0.0,
+        "scientific_gate_passed": false
+      },
+      "curl_beta_vs_reservoir_nye_relative_rms": 1.3406235350193312,
+      "elapsed_time_s": 7.427016424923174e-07,
+      "grid": 24,
+      "maximum_junction_extent_m2": 0.0,
+      "maximum_local_misorientation_deg": 0.9455806699396,
+      "maximum_ordered_density_m2": 15745395183671.852,
+      "maximum_ordered_supply_ratio": 0.014093226194879427,
+      "maximum_total_nye_m1": 202589.39704888733,
+      "minimum_ordered_frank_bilby_residual": 0.9908816972244754,
+      "orientation_span_deg_diagnostic_only": 1.3925461722279795,
+      "restart_at_release_seam_exact_representation": true,
+      "spacing_m": 1.3333333333333334e-07,
+      "topology_route_enabled": false
+    },
+    {
+      "classification": {
+        "classification": "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR",
+        "fixture_passed": true,
+        "grain_labels_allocated": 0,
+        "loaded_wall_observed": false,
+        "records": [
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.014157750156301678,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    8.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.008322862632540118,
+                    0.00014664977481348984,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.017989028368353532,
+                    0.0014421122077000789,
+                    -0.01800011256165264
+                  ],
+                  "integrated_total_burgers": [
+                    0.016935041101928786,
+                    0.007815349456436018,
+                    -0.017054160640925114
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.013456199933237144,
+                  "local_misorientation_rad": 0.008324178558282725,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.4593906805344496,
+                  "ordered_supply_ratio": 3.0620521549711532,
+                  "right_orientation_rad": 0.02178037849151987,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.4731594125714937,
+                  "total_supply_ratio": 3.036092659686452
+                },
+                {
+                  "centroid_index": [
+                    10.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.007907604239333883,
+                    0.00013260895476363554,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.017989028368353532,
+                    0.0014421122077000789,
+                    -0.01800011256165264
+                  ],
+                  "integrated_total_burgers": [
+                    0.016213028098024388,
+                    0.00742090889877742,
+                    -0.01631121872594456
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.020722598239992777,
+                  "local_misorientation_rad": 0.007908736685613519,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.6138934687158817,
+                  "ordered_supply_ratio": 3.222899275033761,
+                  "right_orientation_rad": 0.012813861554379257,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.491132002890085,
+                  "total_supply_ratio": 3.055596377658033
+                },
+                {
+                  "centroid_index": [
+                    13.999999999999998,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.00784844807302536,
+                    -0.00013154010469929034,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.017994201674605356,
+                    0.0009643771472844334,
+                    0.017985880281903063
+                  ],
+                  "integrated_total_burgers": [
+                    -0.016345745891763238,
+                    0.0067716799535236715,
+                    0.01625602426985064
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.020683230858561916,
+                  "local_misorientation_rad": 0.00784957045503695,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.6344436882502142,
+                  "ordered_supply_ratio": 3.243501929634388,
+                  "right_orientation_rad": 0.012833660403524967,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.496818066714329,
+                  "total_supply_ratio": 3.0609414154529015
+                },
+                {
+                  "centroid_index": [
+                    16.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008311908353261748,
+                    -0.00014639387057369113,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.017994201674605356,
+                    0.0009643771472844334,
+                    0.017985880281903063
+                  ],
+                  "integrated_total_burgers": [
+                    -0.017138039676377278,
+                    0.006867079134584757,
+                    0.017033967150265856
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.013454114786228571,
+                  "local_misorientation_rad": 0.00831322137618264,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.4607379645613006,
+                  "ordered_supply_ratio": 3.062603979303206,
+                  "right_orientation_rad": 0.02176733616241121,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.457127551442907,
+                  "total_supply_ratio": 3.0217272580351637
+                }
+              ]
+            },
+            "mechanical_loading_active": true,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.831984490986043e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.01375002808718326,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    6.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.011288721633516728,
+                    0.0002012160874731439,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.017989815361961422,
+                    0.0014741955519875444,
+                    -0.018003489586715313
+                  ],
+                  "integrated_total_burgers": [
+                    0.018597085657478248,
+                    0.008267607930370714,
+                    -0.01874947683680128
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.012177349089645283,
+                  "local_misorientation_rad": 0.011290574751871068,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.7051740326891929,
+                  "ordered_supply_ratio": 2.2579812554128336,
+                  "right_orientation_rad": 0.02346792384151635,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.9201945424008573,
+                  "total_supply_ratio": 2.4509200248515275
+                },
+                {
+                  "centroid_index": [
+                    8.730421510828045,
+                    11.500000000000002
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.009043446784275584,
+                    0.00016195847869759916,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.017989815361961422,
+                    0.0014741955519875442,
+                    -0.018003489586715306
+                  ],
+                  "integrated_total_burgers": [
+                    0.01719937557918286,
+                    0.007599719858858037,
+                    -0.017314516638007562
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.013384554423405214,
+                  "local_misorientation_rad": 0.009044927751883425,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.2273985886727536,
+                  "ordered_supply_ratio": 2.818580572774911,
+                  "right_orientation_rad": 0.02242948217528864,
+                  "segment_pixel_count": 72,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.2701948671840504,
+                  "total_supply_ratio": 2.826017796534564
+                },
+                {
+                  "centroid_index": [
+                    15.26846932673676,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.009003852532669979,
+                    -0.00016112261293843577,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.01799929498018534,
+                    0.0009324325997552082,
+                    0.017989270735016806
+                  ],
+                  "integrated_total_burgers": [
+                    -0.017376516617053438,
+                    0.006847541126063509,
+                    0.017272188720061102
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.013390280489375635,
+                  "local_misorientation_rad": 0.009005324478883768,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.236760249800263,
+                  "ordered_supply_ratio": 2.8277629394949195,
+                  "right_orientation_rad": 0.022395604968259403,
+                  "segment_pixel_count": 72,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.2691178927842466,
+                  "total_supply_ratio": 2.82493301112708
+                },
+                {
+                  "centroid_index": [
+                    18.0,
+                    11.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.011310906718528115,
+                    -0.0002014376465881984,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.017999294980185335,
+                    0.0009324325997552086,
+                    0.017989270735016816
+                  ],
+                  "integrated_total_burgers": [
+                    -0.018883495494284298,
+                    0.006943599220518915,
+                    0.018752669009472922
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.012150888309946728,
+                  "local_misorientation_rad": 0.011312760617582083,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.699494291840207,
+                  "ordered_supply_ratio": 2.250995439999164,
+                  "right_orientation_rad": 0.02346364892752881,
+                  "segment_pixel_count": 24,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.8960078402637366,
+                  "total_supply_ratio": 2.4312378012380402
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.833228652200645e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.023568453339423225,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    8.457286003823357,
+                    11.499999999999998
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016344326804650616,
+                    0.0006506219266518842,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.01799207841031174,
+                    0.0017844069686758922,
+                    -0.018033726172426826
+                  ],
+                  "integrated_total_burgers": [
+                    0.02093549572582355,
+                    0.009918293620871994,
+                    -0.02127253359878605
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03160746923534518,
+                  "local_misorientation_rad": 0.016357453760051918,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1092501539100137,
+                  "ordered_supply_ratio": 1.5611728629023698,
+                  "right_orientation_rad": 0.0479649229953971,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4460556817278702,
+                  "total_supply_ratio": 1.9227756224914643
+                },
+                {
+                  "centroid_index": [
+                    15.54073513976191,
+                    11.499999999999998
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.01617626509228471,
+                    -0.0006427644040934988,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.018043013363605875,
+                    0.0006274229286986646,
+                    0.01801962755034185
+                  ],
+                  "integrated_total_burgers": [
+                    -0.021388259985515946,
+                    0.0053740023739675775,
+                    0.02117650492373946
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03161953568018116,
+                  "local_misorientation_rad": 0.01618920698019207,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1217804112758984,
+                  "ordered_supply_ratio": 1.5756262485745092,
+                  "right_orientation_rad": 0.04780874266037323,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.3974422261426591,
+                  "total_supply_ratio": 1.8885753670272538
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 6.447016424923152e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.02430451569142226,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    8.453319290384949,
+                    11.499999999999998
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016489639466732903,
+                    0.0006715576951389357,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.01799158549820544,
+                    0.0017909427407085882,
+                    -0.018033881915294103
+                  ],
+                  "integrated_total_burgers": [
+                    0.021065063533231232,
+                    0.01007630046842388,
+                    -0.021413462493351618
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.0324517968600116,
+                  "local_misorientation_rad": 0.01650349603365977,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.0986224967841811,
+                  "ordered_supply_ratio": 1.5473714302061974,
+                  "right_orientation_rad": 0.04895529289367137,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4440179209197281,
+                  "total_supply_ratio": 1.919789784101109
+                },
+                {
+                  "centroid_index": [
+                    15.544174838291832,
+                    11.500000000000004
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.016298620264684364,
+                    -0.00066242464720212,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.018043377371412705,
+                    0.0006214452559799196,
+                    0.018019783912488863
+                  ],
+                  "integrated_total_burgers": [
+                    -0.02151351435210342,
+                    0.005253585377758148,
+                    0.021301125348528904
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03246450408814646,
+                  "local_misorientation_rad": 0.016312257023639202,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.112643221175287,
+                  "ordered_supply_ratio": 1.5637544998786113,
+                  "right_orientation_rad": 0.04877676111178566,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.3924739885044441,
+                  "total_supply_ratio": 1.8837172719762147
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 7.427016424923174e-07
+          }
+        ],
+        "release_duration_s": 0.0,
+        "required_release_persistence_s": 0.0,
+        "scientific_gate_passed": false
+      },
+      "curl_beta_vs_reservoir_nye_relative_rms": 1.2681614075763292,
+      "elapsed_time_s": 7.427016424923174e-07,
+      "grid": 24,
+      "maximum_junction_extent_m2": 0.0,
+      "maximum_local_misorientation_deg": 0.9455806699395988,
+      "maximum_ordered_density_m2": 944625123079602.6,
+      "maximum_ordered_supply_ratio": 3.243501929634388,
+      "maximum_total_nye_m1": 218978.10672291444,
+      "minimum_ordered_frank_bilby_residual": 1.0986224967841811,
+      "orientation_span_deg_diagnostic_only": 1.3925461722279795,
+      "restart_at_release_seam_exact_representation": true,
+      "spacing_m": 1.3333333333333334e-07,
+      "topology_route_enabled": true
+    },
+    {
+      "classification": {
+        "classification": "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR",
+        "fixture_passed": true,
+        "grain_labels_allocated": 0,
+        "loaded_wall_observed": false,
+        "records": [
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.015041387542850105,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    9.0,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.009643932824777001,
+                    0.00016758852876153085,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.00012862629845937848,
+                    -0.00012670320544720182,
+                    -0.0001276915034175934
+                  ],
+                  "integrated_total_burgers": [
+                    0.007086187370470317,
+                    0.0070488901593804614,
+                    -0.007209983989794604
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.012553150573653069,
+                  "local_misorientation_rad": 0.009645426248874715,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9870740181444201,
+                  "ordered_supply_ratio": 0.022927169338426645,
+                  "right_orientation_rad": 0.022198576822527783,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.066801510362261,
+                  "total_supply_ratio": 1.2777249554724264
+                },
+                {
+                  "centroid_index": [
+                    11.785259291079521,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.008684919802272387,
+                    0.00014860983586972853,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.00012862629845937848,
+                    -0.00012670320544720182,
+                    -0.0001276915034175934
+                  ],
+                  "integrated_total_burgers": [
+                    0.006114723152321387,
+                    0.006514662620065438,
+                    -0.006211828300279711
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.01276647125027185,
+                  "local_misorientation_rad": 0.008686218466675938,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9856649247252599,
+                  "ordered_supply_ratio": 0.02545896810852744,
+                  "right_orientation_rad": 0.02145268971694779,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.0658842651015477,
+                  "total_supply_ratio": 1.2527907064366668
+                },
+                {
+                  "centroid_index": [
+                    19.0,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008401907672747198,
+                    -0.00014078467093414648,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.00022613555232272713,
+                    1.6784370671765045e-05,
+                    0.00022600747351535737
+                  ],
+                  "integrated_total_burgers": [
+                    -0.00587825870839484,
+                    0.0060296797191763205,
+                    0.005796472864651922
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.02095626240034557,
+                  "local_misorientation_rad": 0.0084031118266925,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9735009190717335,
+                  "ordered_supply_ratio": 0.03809953173150996,
+                  "right_orientation_rad": 0.012553150573653069,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.051300356809328,
+                  "total_supply_ratio": 1.216578632844179
+                },
+                {
+                  "centroid_index": [
+                    21.0,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008912003726534414,
+                    -0.00015493713015302113,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.00022613555232272713,
+                    1.6784370671765045e-05,
+                    0.00022600747351535737
+                  ],
+                  "integrated_total_burgers": [
+                    -0.006626822956450506,
+                    0.006088779805387052,
+                    0.0065339278826925815
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.012926777097726187,
+                  "local_misorientation_rad": 0.008913379939053613,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9749986675165971,
+                  "ordered_supply_ratio": 0.03591844460179439,
+                  "right_orientation_rad": 0.0218401570367798,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.045838375596047,
+                  "total_supply_ratio": 1.2476971140708997
+                },
+                {
+                  "centroid_index": [
+                    23.0,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.00965314562761591,
+                    -0.0001676639544664349,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.00022613555232272713,
+                    1.6784370671765045e-05,
+                    0.00022600747351535737
+                  ],
+                  "integrated_total_burgers": [
+                    -0.007322678712289309,
+                    0.0061168391630293814,
+                    0.007217316958651939
+                  ],
+                  "label": 5,
+                  "left_orientation_rad": 0.012539775486749335,
+                  "local_misorientation_rad": 0.009654639079113691,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9768940303848137,
+                  "ordered_supply_ratio": 0.03316073491069102,
+                  "right_orientation_rad": 0.022194414565863026,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.020203239395587,
+                  "total_supply_ratio": 1.23915730480791
+                }
+              ]
+            },
+            "mechanical_loading_active": true,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.760896117419612e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.014271486361005564,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    9.0,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.010519010236142176,
+                    0.00018869121140185907,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.00010952559911850529,
+                    -0.00010750105497996,
+                    -0.00010853778027603608
+                  ],
+                  "integrated_total_burgers": [
+                    0.00764159007197656,
+                    0.007019212495263349,
+                    -0.007771259154491955
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.012675815481009387,
+                  "local_misorientation_rad": 0.010520751003160087,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9898828854823866,
+                  "ordered_supply_ratio": 0.01786669346930029,
+                  "right_orientation_rad": 0.023196566484169474,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.020757806739864,
+                  "total_supply_ratio": 1.232201971972576
+                },
+                {
+                  "centroid_index": [
+                    11.758886564992572,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.009445328756872146,
+                    0.0001660089781081453,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.00010952559911850529,
+                    -0.00010750105497996,
+                    -0.00010853778027603608
+                  ],
+                  "integrated_total_burgers": [
+                    0.006597516797389282,
+                    0.006490760794389934,
+                    -0.006698746874841176
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.012850554787641556,
+                  "local_misorientation_rad": 0.009446822639857615,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9887424079282446,
+                  "ordered_supply_ratio": 0.019897787060900347,
+                  "right_orientation_rad": 0.02229737742749917,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.020760841802799,
+                  "total_supply_ratio": 1.2094048605436125
+                },
+                {
+                  "centroid_index": [
+                    20.239682081208723,
+                    15.500000000000002
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.009408008799287649,
+                    -0.00016521703980765245,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.0001922407530301764,
+                    1.3918269034499837e-05,
+                    0.00019210635452166668
+                  ],
+                  "integrated_total_burgers": [
+                    -0.006731043722838039,
+                    0.006095441569799176,
+                    0.006638868146656781
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.012854766562161139,
+                  "local_misorientation_rad": 0.00940949411458768,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9798129911163779,
+                  "ordered_supply_ratio": 0.028920962710558294,
+                  "right_orientation_rad": 0.02226426067674882,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.0106652671490943,
+                  "total_supply_ratio": 1.1954798326546294
+                },
+                {
+                  "centroid_index": [
+                    23.0,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.010522477883766061,
+                    -0.00018867122639454337,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.0001922407530301764,
+                    1.3918269034499837e-05,
+                    0.00019210635452166668
+                  ],
+                  "integrated_total_burgers": [
+                    -0.007886074764554824,
+                    0.006160085109229127,
+                    0.007774061360047817
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.012666273888307836,
+                  "local_misorientation_rad": 0.010524217782882175,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9819311157510761,
+                  "ordered_supply_ratio": 0.02585768234590173,
+                  "right_orientation_rad": 0.02319049167119001,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.9860674841534945,
+                  "total_supply_ratio": 1.2040603096089357
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.761829235460184e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.024591489659636867,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    11.479522699888872,
+                    15.499999999999996
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016148906956185885,
+                    0.000634005659837511,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    5.842176726029245e-08,
+                    -3.4586220741406855e-09,
+                    -5.834475408031252e-08
+                  ],
+                  "integrated_total_burgers": [
+                    0.010097353163923484,
+                    0.008486510321466087,
+                    -0.010388686100390895
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03115905932764896,
+                  "local_misorientation_rad": 0.016161523574083125,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9999963962777685,
+                  "ordered_supply_ratio": 5.113362197392579e-06,
+                  "right_orientation_rad": 0.047320582901732085,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.888536165922435,
+                  "total_supply_ratio": 1.0388950019444354
+                },
+                {
+                  "centroid_index": [
+                    20.518665724512903,
+                    15.500000000000005
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.015971531872267877,
+                    -0.0006259636774533783,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -5.688494675120988e-08,
+                    2.402789874322664e-09,
+                    5.683182475356933e-08
+                  ],
+                  "integrated_total_burgers": [
+                    -0.010494219801359592,
+                    0.004976310701253568,
+                    0.010301786253596346
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03118043271054814,
+                  "local_misorientation_rad": 0.015983963848106356,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.999996449709728,
+                  "ordered_supply_ratio": 5.032960407593126e-06,
+                  "right_orientation_rad": 0.047164396558654495,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.8097383073179445,
+                  "total_supply_ratio": 0.9712832079943928
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 6.214799430481076e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.025631735126754762,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    11.47487684778866,
+                    15.500000000000005
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016337747748244216,
+                    0.0006591518107751382,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    6.148782448718908e-07,
+                    4.224322090779146e-07,
+                    -6.257516156072912e-07
+                  ],
+                  "integrated_total_burgers": [
+                    0.010278023019830272,
+                    0.008632888268583059,
+                    -0.01058038359620802
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03214784920745455,
+                  "local_misorientation_rad": 0.016351221343719885,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9999613852718343,
+                  "ordered_supply_ratio": 5.9549657206566215e-05,
+                  "right_orientation_rad": 0.04849907055117444,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.8909916506975292,
+                  "total_supply_ratio": 1.04526674807321
+                },
+                {
+                  "centroid_index": [
+                    20.522722873515267,
+                    15.499999999999996
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.0161337159922193,
+                    -0.0006496116747058966,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -1.0958544478418243e-06,
+                    1.2206892059882472e-07,
+                    1.0923444593051499e-06
+                  ],
+                  "integrated_total_burgers": [
+                    -0.010667678677221988,
+                    0.004880573786020058,
+                    0.010472859698439241
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.032169011596109555,
+                  "local_misorientation_rad": 0.01614696416563358,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 0.9999324931785823,
+                  "ordered_supply_ratio": 9.612437242360896e-05,
+                  "right_orientation_rad": 0.04831597576174313,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 0.807827655371862,
+                  "total_supply_ratio": 0.973926166965718
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 7.194799430481098e-07
+          }
+        ],
+        "release_duration_s": 0.0,
+        "required_release_persistence_s": 0.0,
+        "scientific_gate_passed": false
+      },
+      "curl_beta_vs_reservoir_nye_relative_rms": 1.3119014832604485,
+      "elapsed_time_s": 7.194799430481098e-07,
+      "grid": 32,
+      "maximum_junction_extent_m2": 0.0,
+      "maximum_local_misorientation_deg": 0.9368559728793802,
+      "maximum_ordered_density_m2": 186935850374.2194,
+      "maximum_ordered_supply_ratio": 0.03809953173150996,
+      "maximum_total_nye_m1": 270933.39846715075,
+      "minimum_ordered_frank_bilby_residual": 0.9735009190717335,
+      "orientation_span_deg_diagnostic_only": 1.468590244360268,
+      "restart_at_release_seam_exact_representation": true,
+      "spacing_m": 1e-07,
+      "topology_route_enabled": false
+    },
+    {
+      "classification": {
+        "classification": "NO_PERSISTENT_LOCAL_INTEGRATED_LAGB_PRECURSOR",
+        "fixture_passed": true,
+        "grain_labels_allocated": 0,
+        "loaded_wall_observed": false,
+        "records": [
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.015041387542850112,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    9.0,
+                    15.499999999999996
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.009643932824776996,
+                    0.00016758852876153085,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.018067769641953554,
+                    0.001367795022485608,
+                    -0.018077333570129795
+                  ],
+                  "integrated_total_burgers": [
+                    0.01777782139981121,
+                    0.007858284328899894,
+                    -0.017907276583996032
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.01255315057365307,
+                  "local_misorientation_rad": 0.00964542624887471,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.0714330808248738,
+                  "ordered_supply_ratio": 2.6536018807617006,
+                  "right_orientation_rad": 0.02219857682252778,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.189458577386782,
+                  "total_supply_ratio": 2.740030636585295
+                },
+                {
+                  "centroid_index": [
+                    11.785259291079523,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.008684919802272375,
+                    0.00014860983586972853,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.018067769641953554,
+                    0.001367795022485608,
+                    -0.018077333570129795
+                  ],
+                  "integrated_total_burgers": [
+                    0.01680635718166228,
+                    0.007324056789584861,
+                    -0.016909120894481128
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.012766471250271855,
+                  "local_misorientation_rad": 0.008686218466675926,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.348990537701586,
+                  "ordered_supply_ratio": 2.946633518417443,
+                  "right_orientation_rad": 0.021452689716947783,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.3121645008154377,
+                  "total_supply_ratio": 2.871247525359563
+                },
+                {
+                  "centroid_index": [
+                    19.0,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008401907672747193,
+                    -0.00014078467093414648,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.01807985884208529,
+                    0.001050824792782577,
+                    0.018071732860660928
+                  ],
+                  "integrated_total_burgers": [
+                    -0.016577046479069716,
+                    0.0066515078386887,
+                    0.01649045129201105
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.020956262400345566,
+                  "local_misorientation_rad": 0.008403111826692495,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.443698318196349,
+                  "ordered_supply_ratio": 3.044669785042598,
+                  "right_orientation_rad": 0.01255315057365307,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.3347309907969453,
+                  "total_supply_ratio": 2.892984192189691
+                },
+                {
+                  "centroid_index": [
+                    21.0,
+                    15.5
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.008912003726534414,
+                    -0.00015493713015302113,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.01807985884208529,
+                    0.001050824792782577,
+                    0.018071732860660928
+                  ],
+                  "integrated_total_burgers": [
+                    -0.01732561072712539,
+                    0.006710607924899422,
+                    0.017227906310051715
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.012926777097726187,
+                  "local_misorientation_rad": 0.008913379939053613,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.2774851886429333,
+                  "ordered_supply_ratio": 2.870371315203446,
+                  "right_orientation_rad": 0.0218401570367798,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.2847529994039584,
+                  "total_supply_ratio": 2.842692265800203
+                },
+                {
+                  "centroid_index": [
+                    23.0,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.009653145627615906,
+                    -0.0001676639544664349,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.01807985884208529,
+                    0.001050824792782577,
+                    0.018071732860660928
+                  ],
+                  "integrated_total_burgers": [
+                    -0.018021466482964196,
+                    0.0067386672825417515,
+                    0.017911295386011095
+                  ],
+                  "label": 5,
+                  "left_orientation_rad": 0.012539775486749337,
+                  "local_misorientation_rad": 0.009654639079113686,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.069171898519257,
+                  "ordered_supply_ratio": 2.6499928750800628,
+                  "right_orientation_rad": 0.022194414565863022,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.1690551780727736,
+                  "total_supply_ratio": 2.7227254332193462
+                }
+              ]
+            },
+            "mechanical_loading_active": true,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.760896117419612e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.014271486361005569,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    9.0,
+                    15.500000000000002
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    0.01051901023614217,
+                    0.00018869121140185907,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.018068716299091462,
+                    0.0014003396990654863,
+                    -0.018080766667767822
+                  ],
+                  "integrated_total_burgers": [
+                    0.018333784290434817,
+                    0.00784786503061685,
+                    -0.01847058328854719
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.012675815481009389,
+                  "local_misorientation_rad": 0.010520751003160082,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.8659500034937895,
+                  "ordered_supply_ratio": 2.4332856780105954,
+                  "right_orientation_rad": 0.02319656648416947,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.040594773119388,
+                  "total_supply_ratio": 2.583699169972898
+                },
+                {
+                  "centroid_index": [
+                    11.758886564992574,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    0.009445328756872137,
+                    0.0001660089781081453,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.018068716299091462,
+                    0.0014003396990654863,
+                    -0.018080766667767822
+                  ],
+                  "integrated_total_burgers": [
+                    0.017289711015847548,
+                    0.0073194133297434325,
+                    -0.01739807100889641
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.012850554787641561,
+                  "local_misorientation_rad": 0.009446822639857607,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.1245201677550556,
+                  "ordered_supply_ratio": 2.7099026668021473,
+                  "right_orientation_rad": 0.022297377427499168,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.1574873785723345,
+                  "total_supply_ratio": 2.7095867533884674
+                },
+                {
+                  "centroid_index": [
+                    20.239682081208727,
+                    15.499999999999998
+                  ],
+                  "estimated_segment_length_m": 9.6e-06,
+                  "frank_bilby_burgers": [
+                    -0.009408008799287645,
+                    -0.00016521703980765245,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.018085190049905896,
+                    0.0010184291354413825,
+                    0.018075186095609142
+                  ],
+                  "integrated_total_burgers": [
+                    -0.01743298624756599,
+                    0.006698099505555406,
+                    0.01733489003037398
+                  ],
+                  "label": 3,
+                  "left_orientation_rad": 0.012854766562161139,
+                  "local_misorientation_rad": 0.009409494114587677,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 2.1345530795126204,
+                  "ordered_supply_ratio": 2.719552863306105,
+                  "right_orientation_rad": 0.022264260676748818,
+                  "segment_pixel_count": 96,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.157177751481584,
+                  "total_supply_ratio": 2.7079999410779236
+                },
+                {
+                  "centroid_index": [
+                    23.0,
+                    15.500000000000002
+                  ],
+                  "estimated_segment_length_m": 3.2e-06,
+                  "frank_bilby_burgers": [
+                    -0.010522477883766056,
+                    -0.00018867122639454337,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.018085190049905896,
+                    0.0010184291354413825,
+                    0.018075186095609142
+                  ],
+                  "integrated_total_burgers": [
+                    -0.01858801728928277,
+                    0.006762743044985358,
+                    0.018470083243764993
+                  ],
+                  "label": 4,
+                  "left_orientation_rad": 0.012666273888307837,
+                  "local_misorientation_rad": 0.01052421778288217,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.865296097096699,
+                  "ordered_supply_ratio": 2.431500457506703,
+                  "right_orientation_rad": 0.023190491671190007,
+                  "segment_pixel_count": 32,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 2.0257611044275303,
+                  "total_supply_ratio": 2.5714867237577224
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 5.761829235460184e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.024591489659636895,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    11.479522699888873,
+                    15.500000000000005
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.01614890695618588,
+                    0.000634005659837511,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.018073617985787774,
+                    0.001702278025187102,
+                    -0.01811150530578876
+                  ],
+                  "integrated_total_burgers": [
+                    0.020792447992872703,
+                    0.00949383535871778,
+                    -0.021106199862232892
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.031159059327648963,
+                  "local_misorientation_rad": 0.016161523574083122,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1289151019045676,
+                  "ordered_supply_ratio": 1.5867070020164744,
+                  "right_orientation_rad": 0.047320582901732085,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4452135859715574,
+                  "total_supply_ratio": 1.925061056886412
+                },
+                {
+                  "centroid_index": [
+                    20.5186657245129,
+                    15.500000000000002
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.015971531872267877,
+                    -0.0006259636774533783,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.018130558052745955,
+                    0.0007220263267389281,
+                    0.018106105035373143
+                  ],
+                  "integrated_total_burgers": [
+                    -0.021223008944197708,
+                    0.005403571784414343,
+                    0.021016104460903684
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03118043271054814,
+                  "local_misorientation_rad": 0.015983963848106356,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1439169639986446,
+                  "ordered_supply_ratio": 1.6037098172967583,
+                  "right_orientation_rad": 0.047164396558654495,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4067856938082044,
+                  "total_supply_ratio": 1.8989723001203511
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 6.214799430481079e-07
+          },
+          {
+            "local_integrated_audit": {
+              "global_orientation_span_rad_diagnostic_only": 0.025631735126754783,
+              "line_axis": 2,
+              "nye_integration_convention": "2.5D line-column integral: integral alpha[:,line_axis] dn; line_axis is the retained out-of-plane line coordinate",
+              "ordered_line_outside_support": 0.0,
+              "ordered_line_overlap": 1.0,
+              "segments": [
+                {
+                  "centroid_index": [
+                    11.47487684778866,
+                    15.500000000000004
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    0.016337747748244237,
+                    0.0006591518107751382,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    0.018073138293596133,
+                    0.0017090443142065168,
+                    -0.018111663634631445
+                  ],
+                  "integrated_total_burgers": [
+                    0.02097283399051416,
+                    0.009644217268975302,
+                    -0.021297991049342217
+                  ],
+                  "label": 1,
+                  "left_orientation_rad": 0.03214784920745457,
+                  "local_misorientation_rad": 0.016351221343719906,
+                  "normal_xy": [
+                    -1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1146006549745067,
+                  "ordered_supply_ratio": 1.5683130005216162,
+                  "right_orientation_rad": 0.04849907055117447,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    -1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4418552606265829,
+                  "total_supply_ratio": 1.9208688226481434
+                },
+                {
+                  "centroid_index": [
+                    20.52272287351527,
+                    15.500000000000004
+                  ],
+                  "estimated_segment_length_m": 1.28e-05,
+                  "frank_bilby_burgers": [
+                    -0.016133715992219286,
+                    -0.0006496116747058966,
+                    0.0
+                  ],
+                  "integrated_ordered_burgers": [
+                    -0.018130955970562804,
+                    0.000716033320841775,
+                    0.01810626429291558
+                  ],
+                  "integrated_total_burgers": [
+                    -0.021396703288927805,
+                    0.00530428849767409,
+                    0.021187272146608406
+                  ],
+                  "label": 2,
+                  "left_orientation_rad": 0.03216901159610957,
+                  "local_misorientation_rad": 0.016146964165633566,
+                  "normal_xy": [
+                    1.0,
+                    0.0
+                  ],
+                  "ordered_frank_bilby_residual": 1.1313212047360321,
+                  "ordered_supply_ratio": 1.5875350258615593,
+                  "right_orientation_rad": 0.04831597576174313,
+                  "segment_pixel_count": 128,
+                  "tangent_xyz": [
+                    -0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "total_frank_bilby_residual": 1.4014234174876916,
+                  "total_supply_ratio": 1.8935899429367753
+                }
+              ]
+            },
+            "mechanical_loading_active": false,
+            "ordered_line_overlap": 1.0,
+            "qualifying_segment_labels": [],
+            "snapshot_qualified": false,
+            "time_s": 7.1947994304811e-07
+          }
+        ],
+        "release_duration_s": 0.0,
+        "required_release_persistence_s": 0.0,
+        "scientific_gate_passed": false
+      },
+      "curl_beta_vs_reservoir_nye_relative_rms": 1.241968614184116,
+      "elapsed_time_s": 7.1947994304811e-07,
+      "grid": 32,
+      "maximum_junction_extent_m2": 0.0,
+      "maximum_local_misorientation_deg": 0.9368559728793814,
+      "maximum_ordered_density_m2": 1264932477339693.2,
+      "maximum_ordered_supply_ratio": 3.044669785042598,
+      "maximum_total_nye_m1": 293022.65165763994,
+      "minimum_ordered_frank_bilby_residual": 1.1146006549745067,
+      "orientation_span_deg_diagnostic_only": 1.4685902443602692,
+      "restart_at_release_seam_exact_representation": true,
+      "spacing_m": 1e-07,
+      "topology_route_enabled": true
+    }
+  ],
+  "classification": "KINEMATIC_TRANSITION_BAND_WITH_INSUFFICIENT_BOUNDARY_INVENTORY",
+  "fixture_passed": true,
+  "future_orientation_profile_prescribed": false,
+  "hpc_wall_campaign_authorized": false,
+  "mechanical_heterogeneity": "full-elastic finite-width eigenstrain stripe",
+  "multi_hit_enabled": false,
+  "orientation_derived_ordering_target_used": false,
+  "phase_and_grain_allocation_enabled": false,
+  "schema": "asb-drx/v24-mechanical-line-supply-local/v1",
+  "scientific_gate_passed": false,
+  "source_sha256": {
+    "common_tensorial_wall.py": "e8abad9184ef45ec72d4c21347ac531698acc2e02df6246c717b3e012b53a4c3",
+    "nonlocal_elasticity.py": "28fa7c75a1a30bb302062068e2e74404a629b956559320c8c4a53ec43e4f5198",
+    "v24_mechanical_wall.py": "5ae304e3ddfdb0e33a72703424149cc988c0d8a06e0fbfd7ac0592bd2373894d",
+    "wall_circuit_diagnostics.py": "5ee1afef1029ea4449b6d5274bf12ec2c0198f9b7a124efb54f0424fd5e60f0e",
+    "wall_topology_supply.py": "91d4718ab88089cd4b83f34b197342960ff5a6f712c0fe887ac6fdaf2153b559"
+  }
+}

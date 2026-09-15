@@ -43,6 +43,13 @@ in tensorial content “conservative” merely because scalar density is balance
 The scalar line source `(m_product-2)*extent`, vector Burgers residual, free
 energy change, and irreversible heat are separate fields.
 
+The single-line cross-slip/climb comparator reorients only a finite segment of
+declared event length. It creates a pair of turning nodes and records the
+integrated turning curvature in m^-3. Scalar line and signed Burgers family are
+unchanged, while the resulting tensorial change is exposed as a separate
+`R_topology`. These node/curvature fields are checkpointed state, not transient
+diagnostics.
+
 ## Kinetics
 
 The extensive ordering attempt rate now calls the campaign-wide EXP-floor
