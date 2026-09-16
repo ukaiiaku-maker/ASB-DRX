@@ -135,7 +135,8 @@ from common_front_state import (
     state_from_checkpoint as common_front_from_checkpoint,
     state_metadata_json as common_front_metadata_json,
 )
-from complete_front_energy import evaluate_common_front_transaction
+from complete_front_energy import (
+    evaluate_common_front_transaction, evaluate_complete_directional_kinetics)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -8264,57 +8265,137 @@ for n in range(_restart_step_offset, _restart_end_step):
         _front_sparse_before = sparse_front_state
         _front_runtime_before = coupled_front_runtime
         _front_common_before = common_front_state
+        _front_eta_trial = eta[:, :, :Ng].copy()
+        _front_thickness = max(
+            float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30)
+        _front_accept_kwargs = dict(
+            spacing_m=dx, represented_thickness_m=_front_thickness,
+            dt_s=P['dt'], temperature_K=T,
+            line_energy_J_m=float(np.nanmean(A_E_field)),
+            process=_sibm_process,
+            h0_J=float(P.get('sibm_activation_h0_eV', 0.35))*eV_J,
+            critical_pressure_Pa=float(P.get(
+                'sibm_activation_critical_pressure_Pa', 1.0e9)),
+            exp_a=float(P.get('sibm_activation_exp_a', 2.0)),
+            exp_n=float(P.get('sibm_activation_exp_n', 1.5)),
+            exp_floor=float(P.get('sibm_activation_exp_floor', 0.10)),
+            driving_pressure_a_to_b_Pa=float(sibm_experiment_state.get(
+                'net_flat_boundary_drive_Pa', 0.0)),
+            applied_pressure_a_to_b_Pa=float(P.get(
+                'sibm_applied_pressure_Pa', 0.0)),
+            mobility_enabled=(
+                P.get('sibm_front_processing_enabled', True)
+                and float(P.get('sibm_mobility_multiplier', 1.0)) > 0.0),
+            active_mask=sibm_active_mask, periodic=True,
+            transmission_fraction=float(P.get(
+                'moving_front_fixture_transmission_fraction', 0.50)),
+            boundary_storage_fraction=float(P.get(
+                'moving_front_boundary_storage_fraction', 0.05)),
+            neutral_sink_fraction=float(P.get(
+                'moving_front_sink_fraction', 0.02)),
+            signed_sink_fraction=float(P.get(
+                'moving_front_signed_sink_fraction', 0.0)),
+            boundary_capacity_density_m2=(
+                float(P.get('moving_front_boundary_capacity_density_m2'))
+                if P.get('moving_front_boundary_capacity_density_m2')
+                is not None else None),
+            support_component_reconnection=bool(P.get(
+                'moving_front_support_component_reconnection', True)),
+            topology_backtracking_enabled=bool(P.get(
+                'moving_front_topology_backtracking_enabled', True)),
+            minimum_topology_backtrack_fraction=float(P.get(
+                'moving_front_minimum_topology_backtrack_fraction', 2.0**-12)),
+            topology_backtracking_bisections=int(P.get(
+                'moving_front_topology_backtracking_bisections', 12)))
         sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
             accept_coupled_front_candidate(
                 sparse_front_state, coupled_front_runtime,
-                eta_before_ac[:, :, :Ng], eta[:, :, :Ng],
-                spacing_m=dx,
-                represented_thickness_m=max(
+                eta_before_ac[:, :, :Ng], _front_eta_trial,
+                **_front_accept_kwargs))
+        if (common_front_state is not None
+                and not _front_decision.accepted
+                and _front_decision.classification
+                == 'REJECTED_BY_BIDIRECTIONAL_RATE'
+                and abs(_front_decision.proposed_signed_volume_m3)
+                >= 1.0e-6*dx*dy*max(
                     float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
-                    1e-30),
-                dt_s=P['dt'], temperature_K=T,
-                line_energy_J_m=float(np.nanmean(A_E_field)),
-                process=_sibm_process,
-                h0_J=float(P.get('sibm_activation_h0_eV', 0.35))*eV_J,
-                critical_pressure_Pa=float(P.get(
-                    'sibm_activation_critical_pressure_Pa', 1.0e9)),
-                exp_a=float(P.get('sibm_activation_exp_a', 2.0)),
-                exp_n=float(P.get('sibm_activation_exp_n', 1.5)),
-                exp_floor=float(P.get('sibm_activation_exp_floor', 0.10)),
-                driving_pressure_a_to_b_Pa=float(sibm_experiment_state.get(
-                    'net_flat_boundary_drive_Pa', 0.0)),
-                applied_pressure_a_to_b_Pa=float(P.get(
-                    'sibm_applied_pressure_Pa', 0.0)),
-                mobility_enabled=(
-                    P.get('sibm_front_processing_enabled', True)
-                    and float(P.get('sibm_mobility_multiplier', 1.0)) > 0.0),
-                active_mask=sibm_active_mask, periodic=True,
-                transmission_fraction=float(P.get(
-                    'moving_front_fixture_transmission_fraction', 0.50)),
-                boundary_storage_fraction=float(P.get(
-                    'moving_front_boundary_storage_fraction', 0.05)),
-                neutral_sink_fraction=float(P.get(
-                    'moving_front_sink_fraction', 0.02)),
-                signed_sink_fraction=float(P.get(
-                    'moving_front_signed_sink_fraction', 0.0)),
-                boundary_capacity_density_m2=(
-                    float(P.get('moving_front_boundary_capacity_density_m2'))
-                    if P.get('moving_front_boundary_capacity_density_m2')
-                    is not None else None),
-                support_component_reconnection=bool(P.get(
-                    'moving_front_support_component_reconnection', True)),
-                topology_backtracking_enabled=bool(P.get(
-                    'moving_front_topology_backtracking_enabled', True)),
-                minimum_topology_backtrack_fraction=float(P.get(
-                    'moving_front_minimum_topology_backtrack_fraction',
-                    2.0**-12)),
-                topology_backtracking_bisections=int(P.get(
-                    'moving_front_topology_backtracking_bisections', 12))))
+                    1e-30)):
+            # Obtain a finite geometric candidate for the non-mutating common
+            # energy trial when the legacy scalar bias is exactly neutral.
+            # The probe is never published; its only role is to define the
+            # actual signed support transaction subsequently priced in both
+            # directions by the complete functional.
+            _probe_J = 50.0*ARRHENIUS_KB_J_K*float(np.mean(T))
+            _probe_positive = _front_decision.proposed_signed_volume_m3 > 0.0
+            _probe_kwargs = dict(_front_accept_kwargs)
+            _probe_kwargs.update(
+                kinetic_free_energy_a_to_b_J=(
+                    -_probe_J if _probe_positive else _probe_J),
+                kinetic_free_energy_b_to_a_J=(
+                    _probe_J if _probe_positive else -_probe_J))
+            (_probe_state, _probe_runtime, _probe_eta,
+             _probe_decision) = accept_coupled_front_candidate(
+                _front_sparse_before, _front_runtime_before,
+                eta_before_ac[:, :, :Ng], _front_eta_trial,
+                **_probe_kwargs)
+            if _probe_decision.accepted:
+                sparse_front_state, coupled_front_runtime = (
+                    _probe_state, _probe_runtime)
+                _eta_accepted, _front_decision = _probe_eta, _probe_decision
         eta[:, :, :Ng] = _eta_accepted
         if common_front_state is not None:
-            _front_volume = dx*dy*max(
-                float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
-                1e-30)
+            _front_volume = dx*dy*_front_thickness
+            _front_energy_kwargs = dict(
+                wall_parameters=v21_common_parameters,
+                mean_strain=ebar,
+                topologies=v21_topologies,
+                systems=V20_SYSTEMS,
+                phase_barrier_J_m3=float(P['W_eta']),
+                phase_gradient_J_m=float(P['kappa_eta']),
+                boundary_line_energy_J_m=float(np.nanmean(A_E_field)),
+                boundary_junction_energy_J_m=(
+                    v21_common_parameters.junction_energy_J_m),
+                reference_temperature_K=float(P['T0']))
+            if (_front_decision.accepted
+                    and abs(_front_decision.accepted_signed_volume_m3) > 0.0):
+                _complete_directional = evaluate_complete_directional_kinetics(
+                    _front_common_before, sparse_front_state,
+                    eta_before_ac[:, :, :Ng], _eta_accepted,
+                    event_volume_m3=_front_volume,
+                    spacing_m=dx, cell_volume_m3=_front_volume,
+                    represented_thickness_m=_front_thickness,
+                    transmission_fraction=_front_accept_kwargs[
+                        'transmission_fraction'],
+                    boundary_storage_fraction=_front_accept_kwargs[
+                        'boundary_storage_fraction'],
+                    neutral_sink_fraction=_front_accept_kwargs[
+                        'neutral_sink_fraction'],
+                    signed_sink_fraction=_front_accept_kwargs[
+                        'signed_sink_fraction'],
+                    energy_kwargs=_front_energy_kwargs,
+                    external_work_density_Pa=float(P.get(
+                        'sibm_applied_pressure_Pa', 0.0)),
+                    prescribed_temperature=bool(P.get(
+                        'v33_prescribed_temperature_control', False)))
+                _last_complete_front_directional_kinetics = dict(
+                    a_to_b_event_J=_complete_directional.a_to_b_event_J,
+                    b_to_a_event_J=_complete_directional.b_to_a_event_J,
+                    forward_signed_volume_m3=(
+                        _complete_directional.forward_signed_volume_m3),
+                    opposite_signed_volume_m3=(
+                        _complete_directional.opposite_signed_volume_m3))
+                _complete_rate_kwargs = dict(_front_accept_kwargs)
+                _complete_rate_kwargs.update(
+                    kinetic_free_energy_a_to_b_J=(
+                        _complete_directional.a_to_b_event_J),
+                    kinetic_free_energy_b_to_a_J=(
+                        _complete_directional.b_to_a_event_J))
+                (sparse_front_state, coupled_front_runtime, _eta_accepted,
+                 _front_decision) = accept_coupled_front_candidate(
+                    _front_sparse_before, _front_runtime_before,
+                    eta_before_ac[:, :, :Ng], _front_eta_trial,
+                    **_complete_rate_kwargs)
+                eta[:, :, :Ng] = _eta_accepted
             _complete_front_trial = evaluate_common_front_transaction(
                 _front_common_before, sparse_front_state,
                 eta_before_ac[:, :, :Ng], _eta_accepted,
@@ -8331,17 +8412,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                     'moving_front_sink_fraction', 0.02)),
                 signed_sink_fraction=float(P.get(
                     'moving_front_signed_sink_fraction', 0.0)),
-                energy_kwargs=dict(
-                    wall_parameters=v21_common_parameters,
-                    mean_strain=ebar,
-                    topologies=v21_topologies,
-                    systems=V20_SYSTEMS,
-                    phase_barrier_J_m3=float(P['W_eta']),
-                    phase_gradient_J_m=float(P['kappa_eta']),
-                    boundary_line_energy_J_m=float(np.nanmean(A_E_field)),
-                    boundary_junction_energy_J_m=(
-                        v21_common_parameters.junction_energy_J_m),
-                    reference_temperature_K=float(P['T0'])),
+                energy_kwargs=_front_energy_kwargs,
                 external_work_J=(float(P.get('sibm_applied_pressure_Pa', 0.0))
                                  *_front_decision.accepted_signed_volume_m3),
                 prescribed_temperature=bool(P.get(
@@ -8440,6 +8511,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             front_last_decision=_front_decision.__dict__,
             complete_front_energy_last_decision=globals().get(
                 '_last_complete_front_energy_decision'),
+            complete_front_directional_kinetics=globals().get(
+                '_last_complete_front_directional_kinetics'),
             front_attempts=int(coupled_front_runtime.ledger.attempts),
             front_accepts=int(coupled_front_runtime.ledger.accepted),
             front_rejects=int(

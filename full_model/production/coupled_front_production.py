@@ -107,6 +107,9 @@ class CoupledFrontDecision:
     maximum_abs_phase_change: float = 0.0
     rms_phase_change: float = 0.0
     component_motion: tuple = ()
+    kinetic_free_energy_a_to_b_J: float = 0.0
+    kinetic_free_energy_b_to_a_J: float = 0.0
+    microscopic_reverse_pair: bool = False
 
 
 def initialize_coupled_front_runtime(state: SparseFrontState, phi,
@@ -378,7 +381,9 @@ def accept_coupled_front_candidate(
         support_component_reconnection=False,
         topology_backtracking_enabled=False,
         minimum_topology_backtrack_fraction=2.0**-12,
-        topology_backtracking_bisections=12):
+        topology_backtracking_bisections=12,
+        kinetic_free_energy_a_to_b_J=None,
+        kinetic_free_energy_b_to_a_J=None):
     """Atomically accept a trial two-phase update and its material transaction."""
     before = np.asarray(eta_before, dtype=float)
     trial = np.asarray(eta_trial, dtype=float)
@@ -477,7 +482,9 @@ def accept_coupled_front_candidate(
         transmission_fraction=transmission_fraction,
         boundary_storage_fraction=boundary_storage_fraction,
         neutral_sink_fraction=neutral_sink_fraction,
-        signed_sink_fraction=signed_sink_fraction)
+        signed_sink_fraction=signed_sink_fraction,
+        kinetic_free_energy_a_to_b_J=kinetic_free_energy_a_to_b_J,
+        kinetic_free_energy_b_to_a_J=kinetic_free_energy_b_to_a_J)
     proposed = (topology.signed_receiver_area_cells2*float(spacing_m)**2
                 *float(represented_thickness_m))
     velocity = event.net_velocity_a_to_b_m_s
@@ -655,4 +662,7 @@ def accept_coupled_front_candidate(
         cell_volume_m3=event_volume,
         maximum_abs_phase_change=float(np.max(np.abs(phase_change))),
         rms_phase_change=float(np.sqrt(np.mean(phase_change*phase_change))),
-        component_motion=component_motion)
+        component_motion=component_motion,
+        kinetic_free_energy_a_to_b_J=event.kinetic_free_energy_a_to_b_J,
+        kinetic_free_energy_b_to_a_J=event.kinetic_free_energy_b_to_a_J,
+        microscopic_reverse_pair=event.microscopic_reverse_pair)

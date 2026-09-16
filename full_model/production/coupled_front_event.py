@@ -66,6 +66,9 @@ class BidirectionalFrontEvent:
     rate_b_to_a_s: float
     net_velocity_a_to_b_m_s: float
     detailed_balance_log_residual: float
+    kinetic_free_energy_a_to_b_J: float = 0.0
+    kinetic_free_energy_b_to_a_J: float = 0.0
+    microscopic_reverse_pair: bool = False
 
 
 def _mean_density(field):
@@ -111,13 +114,22 @@ def directional_front_trial(donor: DefectState, *, donor_name: str,
         defect_delta, full_delta, heat, sink_export, closure)
 
 
-def _metropolis_pair(base_rate_s, delta_delta_f_J, temperature_K):
-    """Bounded rate pair with an exact local detailed-balance ratio."""
+def _directional_metropolis_pair(base_rate_s, delta_f_ab_J, delta_f_ba_J,
+                                 temperature_K):
+    """Evaluate two actual directional trials without a factor-two bias.
+
+    When the second trial is the microscopic reverse of the first,
+    ``delta_f_ba = -delta_f_ab`` and this construction gives the required
+    ratio ``exp(-delta_f_ab/kT)``.  Subtracting the two directional energies
+    would instead double the exponent.  Irreversible line removal can make the
+    two trials non-reverses; their rates then remain separately meaningful but
+    are not presented as a microscopic reverse pair.
+    """
     thermal = KB_J_K * float(temperature_K)
-    exponent = float(delta_delta_f_J) / thermal
-    if exponent >= 0.0:
-        return base_rate_s * math.exp(-min(exponent, 700.0)), base_rate_s
-    return base_rate_s, base_rate_s * math.exp(-min(-exponent, 700.0))
+    ab_penalty = max(float(delta_f_ab_J)/thermal, 0.0)
+    ba_penalty = max(float(delta_f_ba_J)/thermal, 0.0)
+    return (base_rate_s*math.exp(-min(ab_penalty, 700.0)),
+            base_rate_s*math.exp(-min(ba_penalty, 700.0)))
 
 
 def propose_bidirectional_front_event(
@@ -127,7 +139,9 @@ def propose_bidirectional_front_event(
         exp_floor, energy_a_to_b=FrontEnergyTerms(),
         energy_b_to_a=FrontEnergyTerms(), mobility_enabled=True,
         transmission_fraction=0.0, boundary_storage_fraction=0.0,
-        neutral_sink_fraction=0.0, signed_sink_fraction=0.0):
+        neutral_sink_fraction=0.0, signed_sink_fraction=0.0,
+        kinetic_free_energy_a_to_b_J=None,
+        kinetic_free_energy_b_to_a_J=None):
     """Construct both transactions and then evaluate their detailed-balance rate."""
     common = dict(
         event_volume_m3=event_volume_m3, line_energy_J_m=line_energy_J_m,
@@ -146,21 +160,28 @@ def propose_bidirectional_front_event(
     if (not math.isfinite(length) or length < 0.0 or not math.isfinite(temperature)
             or temperature <= 0.0):
         raise ValueError("event length or temperature is invalid")
-    pressure = abs(ab.full_free_energy_change_J-ba.full_free_energy_change_J) / float(event_volume_m3)
+    kinetic_ab = (ab.full_free_energy_change_J
+                  if kinetic_free_energy_a_to_b_J is None
+                  else float(kinetic_free_energy_a_to_b_J))
+    kinetic_ba = (ba.full_free_energy_change_J
+                  if kinetic_free_energy_b_to_a_J is None
+                  else float(kinetic_free_energy_b_to_a_J))
+    pressure = max(abs(kinetic_ab), abs(kinetic_ba))/float(event_volume_m3)
     enthalpy = exp_floor_enthalpy_j(
         pressure, h0_J, critical_pressure_Pa, exp_a, exp_n, exp_floor)
     base = activated_rate_s(process, enthalpy, temperature) if mobility_enabled else 0.0
-    delta = ab.full_free_energy_change_J-ba.full_free_energy_change_J
-    rate_ab, rate_ba = _metropolis_pair(base, delta, temperature)
-    # The public rates are explicitly bounded to the representable EXP-floor
-    # pair.  Audit detailed balance against that same bounded affinity; using
-    # the unbounded exponent here reports a fictitious residual after the rate
-    # pair has correctly saturated at exp(±700).
+    rate_ab, rate_ba = _directional_metropolis_pair(
+        base, kinetic_ab, kinetic_ba, temperature)
     expected_log_ratio = float(np.clip(
-        -delta/(KB_J_K*temperature), -700.0, 700.0))
+        (-max(kinetic_ab, 0.0)+max(kinetic_ba, 0.0))
+        /(KB_J_K*temperature), -700.0, 700.0))
     if rate_ab == 0.0 and rate_ba == 0.0:
         residual = 0.0
     else:
         residual = math.log(rate_ab/rate_ba)-expected_log_ratio
+    reverse_scale = max(abs(kinetic_ab), abs(kinetic_ba), 1e-300)
+    microscopic_reverse = bool(abs(kinetic_ab+kinetic_ba) <= (
+        4096.0*np.finfo(float).eps*reverse_scale))
     return BidirectionalFrontEvent(
-        ab, ba, rate_ab, rate_ba, length*(rate_ab-rate_ba), residual)
+        ab, ba, rate_ab, rate_ba, length*(rate_ab-rate_ba), residual,
+        kinetic_ab, kinetic_ba, microscopic_reverse)

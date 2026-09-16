@@ -1,13 +1,15 @@
 from dataclasses import replace
 
 import numpy as np
+import pytest
 
 from full_model.production.common_front_state import (
     initialize_common_front, state_arrays)
 from full_model.production.common_tensorial_wall import (
     CommonWallParameters, CommonWallState)
 from full_model.production.complete_front_energy import (
-    evaluate_common_front_transaction, evaluate_complete_front_energy,
+    evaluate_common_front_transaction, evaluate_complete_directional_kinetics,
+    evaluate_complete_front_energy,
     independently_assemble_product_rule_nye)
 from full_model.production.moving_front import (
     DefectState, initialize_declared_boundary_front)
@@ -166,3 +168,47 @@ def test_exact_zero_event_is_bitwise_identity_including_ledger():
     for name, value in state_arrays(state).items():
         np.testing.assert_array_equal(
             value, state_arrays(result.published_state)[name])
+
+
+def test_directional_kinetics_prices_actual_opposite_not_negated_forward():
+    spacing = 2e-8
+    volume = spacing*spacing*5e-10
+    state = _state()
+    # Give both directions finite support so each actual trial can move.
+    chi = np.full_like(state.front.chi, .4)
+    state = replace(state, front=replace(
+        state.front, chi=chi, processed_max=np.full_like(chi, .7),
+        cleanup_max=np.full_like(chi, .7)))
+    forward_chi = chi.copy(); forward_chi[:, :3] += .1
+    forward = replace(state.front, chi=forward_chi)
+    eta0 = _eta(12); eta1 = _eta(12, shift=-.1)
+    kinetics = evaluate_complete_directional_kinetics(
+        state, forward, eta0, eta1, event_volume_m3=volume,
+        spacing_m=spacing, cell_volume_m3=volume,
+        represented_thickness_m=5e-10, transmission_fraction=.6,
+        boundary_storage_fraction=.05, neutral_sink_fraction=.05,
+        energy_kwargs=_options(spacing))
+    assert kinetics.forward_signed_volume_m3 > 0.0
+    assert kinetics.opposite_signed_volume_m3 < 0.0
+    assert np.isfinite(kinetics.a_to_b_event_J)
+    assert np.isfinite(kinetics.b_to_a_event_J)
+    # Irreversible processing means the independently evaluated opposite need
+    # not be the algebraic negative of the forward trial.
+    assert kinetics.a_to_b_event_J != -kinetics.b_to_a_event_J
+
+
+def test_directional_event_normalization_rejects_roundoff_sweep():
+    spacing = 2e-8
+    volume = spacing*spacing*5e-10
+    state = _state()
+    tiny = state.front.chi.copy(); tiny[0, 0] = 1e-12
+    front = replace(state.front, chi=tiny, processed_max=tiny.copy(),
+                    cleanup_max=tiny.copy())
+    eta = _eta(12)
+    with pytest.raises(ValueError, match="below resolved volume"):
+        evaluate_complete_directional_kinetics(
+            state, front, eta, eta, event_volume_m3=volume,
+            spacing_m=spacing, cell_volume_m3=volume,
+            represented_thickness_m=5e-10, transmission_fraction=.6,
+            boundary_storage_fraction=.05, neutral_sink_fraction=.05,
+            energy_kwargs=_options(spacing))

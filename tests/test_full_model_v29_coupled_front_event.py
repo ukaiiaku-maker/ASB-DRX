@@ -66,3 +66,22 @@ def test_each_direction_closes_line_burgers_defect_energy_and_heat():
 def test_rate_ratio_satisfies_detailed_balance():
     event = _event(_state(1.4e14), _state(0.7e14), -1e-22, 1e-22)
     assert event.detailed_balance_log_residual == pytest.approx(0.0, abs=2e-13)
+
+
+def test_true_reverse_pair_uses_one_delta_f_not_difference_of_opposites():
+    thermal = 1.380649e-23*900.0
+    delta = .25*thermal
+    # Unit transmission removes irreversible processing, so the explicitly
+    # overridden pair is a true microscopic reverse independent of density.
+    event = propose_bidirectional_front_event(
+        _state(1e14), _state(1e14), event_volume_m3=2e-27,
+        event_length_m=2.8e-10, line_energy_J_m=1.1e-9,
+        temperature_K=900.0,
+        process=ActivatedProcess("front", 2e10, 0.2, 1e9),
+        h0_J=.3*EV_J, critical_pressure_Pa=1e9, exp_a=2.0,
+        exp_n=1.5, exp_floor=.1, transmission_fraction=1.0,
+        kinetic_free_energy_a_to_b_J=delta,
+        kinetic_free_energy_b_to_a_J=-delta)
+    assert event.microscopic_reverse_pair
+    assert np.log(event.rate_a_to_b_s/event.rate_b_to_a_s) == pytest.approx(-.25)
+    assert np.log(event.rate_a_to_b_s/event.rate_b_to_a_s) != pytest.approx(-.5)

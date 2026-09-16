@@ -94,6 +94,16 @@ class CommonFrontTransactionResult:
     decision: CompleteFrontTrialDecision
 
 
+@dataclass(frozen=True)
+class CompleteDirectionalKinetics:
+    a_to_b_event_J: float
+    b_to_a_event_J: float
+    forward: CommonFrontTransactionResult
+    opposite: CommonFrontTransactionResult
+    forward_signed_volume_m3: float
+    opposite_signed_volume_m3: float
+
+
 def _curl_from_derivatives(dx, dy):
     alpha = np.zeros_like(dx)
     alpha[..., :, 0] = -dy[..., :, 2]
@@ -334,3 +344,78 @@ def evaluate_common_front_transaction(
     before_mixture, _ = reconstruct_common(state, spacing_m)
     return CommonFrontTransactionResult(
         state, before_mixture, candidate_state, candidate_mixture, decision)
+
+
+def evaluate_complete_directional_kinetics(
+        state, forward_front, eta_before, eta_forward, *, event_volume_m3,
+        spacing_m, cell_volume_m3, represented_thickness_m,
+        transmission_fraction, boundary_storage_fraction,
+        neutral_sink_fraction, signed_sink_fraction=0.0, energy_kwargs=None,
+        external_work_density_Pa=0.0, prescribed_temperature=False,
+        minimum_event_fraction=1.0e-6):
+    """Price actual forward and opposite trials at one event normalization.
+
+    The opposite trial starts from the current accepted state.  It is not
+    manufactured by negating the forward energy, and it never recreates line
+    removed by a previous event.  A later retreat from the forward state is a
+    different history state and must be priced again from that state.
+    """
+    delta = np.asarray(forward_front.chi)-np.asarray(state.front.chi)
+    forward_volume = float(np.sum(delta, dtype=np.longdouble)*cell_volume_m3)
+    minimum_volume = float(minimum_event_fraction)*float(event_volume_m3)
+    if abs(forward_volume) < minimum_volume:
+        raise ValueError(
+            "complete directional event normalization is below resolved volume")
+    common = dict(
+        spacing_m=spacing_m, cell_volume_m3=cell_volume_m3,
+        represented_thickness_m=represented_thickness_m,
+        transmission_fraction=transmission_fraction,
+        boundary_storage_fraction=boundary_storage_fraction,
+        neutral_sink_fraction=neutral_sink_fraction,
+        signed_sink_fraction=signed_sink_fraction,
+        energy_kwargs=energy_kwargs,
+        prescribed_temperature=prescribed_temperature)
+    forward = evaluate_common_front_transaction(
+        state, forward_front, eta_before, eta_forward,
+        external_work_J=float(external_work_density_Pa)*forward_volume,
+        **common)
+
+    opposite_chi = np.clip(np.asarray(state.front.chi)-delta, 0.0, 1.0)
+    opposite_processed = np.maximum(
+        np.asarray(state.front.processed_max), opposite_chi)
+    opposite_front = replace(
+        state.front, chi=opposite_chi,
+        processed_max=opposite_processed,
+        cleanup_max=np.maximum(state.front.cleanup_max, opposite_processed))
+    opposite_eta = np.clip(
+        np.asarray(eta_before)-(np.asarray(eta_forward)-np.asarray(eta_before)),
+        0.0, 1.0)
+    eta_sum = np.sum(opposite_eta, axis=2, keepdims=True)
+    opposite_eta = np.divide(
+        opposite_eta, eta_sum, out=np.asarray(eta_before).copy(),
+        where=eta_sum > 0.0)
+    opposite_delta = opposite_chi-np.asarray(state.front.chi)
+    opposite_volume = float(np.sum(
+        opposite_delta, dtype=np.longdouble)*cell_volume_m3)
+    if abs(opposite_volume) < minimum_volume:
+        raise ValueError(
+            "complete opposite event normalization is below resolved volume")
+    opposite = evaluate_common_front_transaction(
+        state, opposite_front, eta_before, opposite_eta,
+        external_work_J=(float(external_work_density_Pa)*opposite_volume),
+        **common)
+
+    def normalized(result, volume):
+        if abs(volume) <= 0.0:
+            return 0.0
+        return (result.decision.available_change_J*float(event_volume_m3)
+                /abs(volume))
+
+    forward_event = normalized(forward, forward_volume)
+    opposite_event = normalized(opposite, opposite_volume)
+    if forward_volume >= 0.0:
+        ab, ba = forward_event, opposite_event
+    else:
+        ab, ba = opposite_event, forward_event
+    return CompleteDirectionalKinetics(
+        ab, ba, forward, opposite, forward_volume, opposite_volume)
