@@ -419,6 +419,17 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     return density+forest+junction+barrier+absent+ordering+partition
 
 
+def wall_total_free_energy_density_J_m3(
+        state, parameters, topologies=(), systems=None):
+    """Exact local-plus-gradient defect Helmholtz density used by V31."""
+    local = wall_free_energy_density_J_m3(
+        state, parameters, topologies, systems)
+    qx, qy = _spectral_gradient(state.wall_order, parameters.spacing_m)
+    gradient = (0.5*parameters.wall_order_gradient_J_m
+                *(qx*qx+qy*qy))
+    return local+gradient
+
+
 def _biased_exchange(source, target, delta_mu_J_m, rate_s, parameters):
     return _biased_exchange_components(
         source, target, delta_mu_J_m, rate_s, parameters)[0]
@@ -426,15 +437,25 @@ def _biased_exchange(source, target, delta_mu_J_m, rate_s, parameters):
 
 def _biased_exchange_components(source, target, delta_mu_J_m, rate_s,
                                 parameters):
-    # Attempt-bounded detailed-balance split.  The former symmetric
-    # exponential split had the correct ratio but made one coefficient
-    # unbounded as |Delta mu| grew, producing a Zeno timestep when a parent
-    # reservoir was exhausted. Here k+/k-=exp(-Delta mu/E) exactly, while
-    # both coefficients remain smoothly in [0,2*k_attempt].
+    """Bounded reversible Onsager exchange driven by the declared affinity.
+
+    The former mass-action split could flow uphill in the *declared* free
+    energy when source and target populations differed, because its implicit
+    ideal-mixing chemical potential was absent from that free energy.  This
+    harmonic mobility has no undeclared population entropy: the net extent is
+    zero at equal declared chemical potential, reverses exactly with the
+    affinity, and satisfies ``-delta_mu*extent >= 0`` pointwise.  Forward and
+    reverse gross attempts remain nonnegative and bounded.  A depleted pair
+    has zero mobility, which also prevents a positivity-limiter Zeno step.
+    """
+    source = np.asarray(source, dtype=float)
+    target = np.asarray(target, dtype=float)
     bias = np.tanh(
         delta_mu_J_m/(2.0*parameters.reaction_energy_scale_J_m))
-    forward = rate_s*source*(1.0-bias)
-    reverse = rate_s*target*(1.0+bias)
+    pair_mobility = (rate_s*2.0*source*target
+                     /np.maximum(source+target, 1e-300))
+    forward = pair_mobility*(1.0-bias)
+    reverse = pair_mobility*(1.0+bias)
     return forward-reverse, forward+reverse
 
 
@@ -543,6 +564,11 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     else:
         mp_rate = -_divergence(flux_plus, parameters.spacing_m)
         mm_rate = -_divergence(flux_minus, parameters.spacing_m)
+    # Preserve the accepted transport contribution before reactions are
+    # accumulated.  V31 uses this to construct a term-by-term first-law
+    # transaction; no channel is inferred from the final balance residual.
+    transport_mp_rate = mp_rate.copy()
+    transport_mm_rate = mm_rate.copy()
     slip_rate = (parameters.burgers_m*speed
                  *(state.mobile_plus_m2+state.mobile_minus_m2))
     fp_rate = np.zeros(family_shape); fm_rate = np.zeros(family_shape)
@@ -640,10 +666,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
 
     junction_turnover_array = (np.stack(junction_turnovers, axis=2)
                                if junction_turnovers else np.zeros(grid+(0,)))
-    junction_dissipation = (np.sum(np.maximum(np.stack([
+    junction_dissipation = (np.sum(np.stack([
         -(chemical["junction_mu_J_m"][..., index]
           -2.0*chemical["forest_mu_J_m"])*extent
-        for index, extent in enumerate(junction_extents)], axis=2), 0.0), axis=2)
+        for index, extent in enumerate(junction_extents)], axis=2), axis=2)
         if junction_extents else np.zeros(grid))
     collision_frequency = (parameters.multi_hit_collision_scale
                            *np.sum(junction_turnover_array, axis=2)
@@ -708,6 +734,23 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # effective drive controls kinetics and has the same sign, so both raw and
     # effective stress powers are nonnegative.
     plastic_power = np.sum(drive["raw_stress_Pa"]*slip_rate, axis=2)
+    # V31 physical-channel decomposition.  Each contribution is evaluated
+    # directly from the declared chemical potential and the accepted process
+    # rate.  Their algebraic sum is identically plastic_power-dF/dt, but no
+    # individual term is defined by that residual.  A negative contribution
+    # is intentionally retained so the thermodynamic hard gate fails loudly.
+    transport_free_energy_rate = chemical["mobile_mu_J_m"]*np.sum(
+        transport_mp_rate+transport_mm_rate, axis=2)
+    multiplication_free_energy_rate = chemical["mobile_mu_J_m"]*2.0*np.sum(
+        multiplication, axis=2)
+    plastic_drag_dissipation = (plastic_power-transport_free_energy_rate
+                                -multiplication_free_energy_rate)
+    lock_dissipation = -delta_lock*np.sum(lock_p+lock_m, axis=2)
+    wall_exchange_dissipation = -np.sum(
+        delta_wall_p*transfer_p+delta_wall_m*transfer_m, axis=2)
+    annihilation_dissipation = (2.0*chemical["mobile_mu_J_m"]
+                                *np.sum(annihilation, axis=2))
+    order_dissipation = -q_chemical_potential*q_rate
     # Exact directional derivative of the declared defect free-energy
     # functional.  The q term includes the variational gradient contribution.
     free_energy_rate = (
@@ -718,6 +761,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         +np.sum(chemical["junction_mu_J_m"]*junction_rate, axis=2)
         +q_chemical_potential*q_rate)
     heat_rate = plastic_power-free_energy_rate
+    physical_channel_sum = (
+        plastic_drag_dissipation+lock_dissipation
+        +annihilation_dissipation+junction_dissipation
+        +wall_exchange_dissipation+order_dissipation)
     temperature_rate = (
         heat_rate/parameters.volumetric_heat_capacity_J_m3_K
         +parameters.thermal_diffusivity_m2_s*lap_temperature
@@ -743,6 +790,17 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         # This is not the total-energy residual and remains zero at detailed
         # balance even when forward/reverse turnover is nonzero.
         "junction_dissipation_W_m3": junction_dissipation,
+        "plastic_drag_dissipation_W_m3": plastic_drag_dissipation,
+        "mobile_forest_recovery_dissipation_W_m3": lock_dissipation,
+        "neutral_pair_annihilation_dissipation_W_m3": annihilation_dissipation,
+        "boundary_recovery_dissipation_W_m3": (
+            wall_exchange_dissipation+order_dissipation),
+        "wall_exchange_dissipation_W_m3": wall_exchange_dissipation,
+        "wall_order_dissipation_W_m3": order_dissipation,
+        "transport_free_energy_rate_W_m3": transport_free_energy_rate,
+        "multiplication_free_energy_rate_W_m3": multiplication_free_energy_rate,
+        "physical_channel_sum_W_m3": physical_channel_sum,
+        "physical_channel_closure_W_m3": heat_rate-physical_channel_sum,
         "junction_line_sink": (np.stack([
             (2.0-topology.product_line_multiplicity)*extent
             for topology, extent in zip(topologies, junction_extents)], axis=2)

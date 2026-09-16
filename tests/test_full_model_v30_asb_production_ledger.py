@@ -89,6 +89,21 @@ def test_heat_is_not_double_counted_as_both_dissipation_and_storage():
     assert ledger.dissipation_heat_residual_J_m3 == 0.0
 
 
+def test_conduction_and_bath_exergy_are_not_counted_as_deposited_heat():
+    channels = _channels(0.0)
+    channels["thermal_conduction"] = accepted_channel(
+        "thermal_conduction", 3.0, 2.0, source="Fourier exergy")
+    channels["declared_sinks"] = accepted_channel(
+        "declared_sinks", 4.0, 2.0, source="bath exergy")
+    zero = PhysicalEnergyState()
+    ledger = build_production_step_ledger(
+        channels=channels, energy_before=zero, energy_after=zero,
+        external_work_J_m3=0.0, deposited_heat_J_m3=0.0,
+        exported_heat_J_m3=0.0, dt_s=1.0)
+    assert ledger.dissipation_J_m3 == 14.0
+    assert ledger.dissipation_heat_residual_J_m3 == 0.0
+
+
 def test_homogeneous_zero_process_and_json_restart_payload_are_exact():
     state = PhysicalEnergyState(thermal_J_m3=9.0)
     ledger = build_production_step_ledger(

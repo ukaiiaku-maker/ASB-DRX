@@ -171,7 +171,12 @@ class ProductionASBStepLedger:
 
     @property
     def dissipation_heat_residual_J_m3(self):
-        return self.deposited_heat_J_m3-self.dissipation_J_m3
+        # Fourier conduction redistributes heat and a declared bath sink
+        # exports it; neither is a local mechanical heat source.  Compare
+        # deposited heat only with the five constitutive conversion channels.
+        mechanical = self.dt_s*sum(
+            channel.dissipation_W_m3 for channel in self.channels[:5])
+        return self.deposited_heat_J_m3-mechanical
 
     def to_dict(self):
         result = asdict(self)

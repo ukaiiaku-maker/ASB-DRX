@@ -100,6 +100,7 @@ from common_tensorial_wall import (
     accepted_euler_step as accepted_common_wall_step,
     balance_ledger as common_wall_balance_ledger,
     resolved_driving_components as resolve_common_wall_components,
+    wall_total_free_energy_density_J_m3 as common_wall_free_energy_density_J_m3,
 )
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
@@ -345,6 +346,9 @@ P = dict(
     # constitutive rates.  Missing independently owned channels fail closed.
     v30_asb_physical_ledger=True,
     v30_energy_suboperator_audit=True,
+    # V31 promotes the common Mura/wall transaction to the sole physical ASB
+    # owner. It remains opt-in for exact reproduction of frozen V30 cases.
+    v31_asb_common_mura_ledger=False,
     heat_partition_tiny=1.0e-300,
     # v31: finite-loading work-budget consistency.  Local tau*gdot is used as
     # the spatial partition of plastic work, but total heat cannot exceed the
@@ -1155,6 +1159,12 @@ if P.get('v20_tensorial_nye_enabled', False):
     P['nSlip'] = 4
 if P.get('v22_common_tensorial_wall_enabled', False):
     P['v21_common_tensorial_wall_enabled'] = True
+if P.get('v31_asb_common_mura_ledger', False):
+    P.update(v21_common_tensorial_wall_enabled=True,
+             v30_asb_physical_ledger=True,
+             # Legacy snapshots evaluate a different scalar free energy and
+             # cannot be interleaved with the common transaction.
+             v30_energy_suboperator_audit=False)
 if P.get('v21_common_tensorial_wall_enabled', False):
     # Wall qualification is a one-grain tensorial constitutive experiment.
     # Retire every older duplicate wall/transport/orientation source while the
@@ -4342,6 +4352,8 @@ v30_asb_cumulative = {
     'thermal_change_J_m3': 0.0,
     'first_law_residual_J_m3': 0.0,
     'dissipation_heat_residual_J_m3': 0.0,
+    'v31_maximum_channel_closure_W_m3': 0.0,
+    'v31_minimum_physical_channel_W_m3': 1.0e300,
     'suboperator_physical_stored_change_J_m3': {},
     'suboperator_numerical_constraint_change_J_m3': {},
     **{f'{name}_J_m3': 0.0 for name in CHANNEL_NAMES},
@@ -4359,6 +4371,10 @@ if (_restart_loaded and not P.get('restart_reset_clock', True)
             'suboperator_physical_stored_change_J_m3', {})
         v30_asb_cumulative.setdefault(
             'suboperator_numerical_constraint_change_J_m3', {})
+        v30_asb_cumulative.setdefault(
+            'v31_maximum_channel_closure_W_m3', 0.0)
+        v30_asb_cumulative.setdefault(
+            'v31_minimum_physical_channel_W_m3', 1.0e300)
 
 
 
@@ -5835,6 +5851,25 @@ def _v30_physical_energy_state(rho_field, eta_field, psi_field,
         multiplier_constraint_work_J_m3=0.0)
 
 
+def _v31_common_mura_energy_state(common_state):
+    """Physical state owned by one accepted common-Mura transaction.
+
+    The common residual is driven by plastic work already extracted from the
+    elastic problem, so this local transaction contains defect Helmholtz and
+    thermal energies exactly once.  Numerical A_alpha/A_GB penalties, legacy
+    phase storage, and a second scalar elastic proxy are deliberately absent.
+    """
+    defect = float(np.mean(common_wall_free_energy_density_J_m3(
+        common_state, v21_common_parameters, v21_topologies, V20_SYSTEMS)))
+    thermal = float(v21_common_parameters.volumetric_heat_capacity_J_m3_K
+                    *np.mean(common_state.temperature_K-float(P['T0'])))
+    return PhysicalEnergyState(
+        local_line_correlation_J_m3=defect,
+        thermal_J_m3=thermal,
+        numerical_augmented_constraints_J_m3=0.0,
+        multiplier_constraint_work_J_m3=0.0)
+
+
 def _v30_thermal_dissipation_channels(temperature_field):
     """Independent Fourier and bath exergy-production channels."""
     temp = np.maximum(np.asarray(temperature_field, dtype=float), 1.0)
@@ -6928,6 +6963,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     _v30_neutral_annihilation_rate_m2_s = 0.0
     _v30_junction_dissipation_W_m3 = None
     _v30_boundary_recovery_rate_m2_s = np.zeros((Nx, Ny))
+    _v31_physical_channel_fields = None
+    _v31_channel_closure_W_m3 = None
     if P.get('v30_asb_physical_ledger', True):
         _v30_energy_before = _v30_physical_energy_state(
             rho, eta, psi_lat, _signed_kappa_field(rp, rm), rho_GB,
@@ -7051,6 +7088,10 @@ for n in range(_restart_step_offset, _restart_end_step):
             v20_tensorial_state.alignment_m2.copy(),
             v20_tensorial_state.family_nye_m1.copy(),
             psi_lat.copy(), T.copy())
+        if P.get('v31_asb_common_mura_ledger', False):
+            _v30_energy_before = _v31_common_mura_energy_state(
+                _v21_state_before)
+            _v30_suboperator_states = {'start': _v30_energy_before}
         _v21_driving = CommonWallDriving(
             mean_strain=ebar, fixed_eigenstrain=_v19_fixed_eigenstrain())
         _v21_drive = resolve_common_wall_components(
@@ -7098,6 +7139,22 @@ for n in range(_restart_step_offset, _restart_end_step):
         _v30_junction_dissipation_W_m3 = np.asarray(
             _v21_residual.channel_rates_m2_s[
                 'junction_dissipation_W_m3'], dtype=float)
+        if P.get('v31_asb_common_mura_ledger', False):
+            _v31_physical_channel_fields = {
+                name: np.asarray(_v21_residual.channel_rates_m2_s[key], dtype=float)
+                for name, key in {
+                    'plastic_drag': 'plastic_drag_dissipation_W_m3',
+                    'mobile_forest_recovery':
+                        'mobile_forest_recovery_dissipation_W_m3',
+                    'neutral_pair_annihilation':
+                        'neutral_pair_annihilation_dissipation_W_m3',
+                    'junction_relaxation': 'junction_dissipation_W_m3',
+                    'boundary_recovery':
+                        'boundary_recovery_dissipation_W_m3',
+                }.items()}
+            _v31_channel_closure_W_m3 = np.asarray(
+                _v21_residual.channel_rates_m2_s[
+                    'physical_channel_closure_W_m3'], dtype=float)
         _v21_ledger = common_wall_balance_ledger(
             _v21_state_before, _v21_residual, V20_SYSTEMS, v21_topologies)
         _v21_line_scale = max(
@@ -8736,6 +8793,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     if P.get('v30_asb_physical_ledger', True) and not _v25_exact_freeze:
         _v30_energy_after = _v30_physical_energy_state(
             rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng, T, sigma_bar)
+        if P.get('v31_asb_common_mura_ledger', False):
+            _v30_energy_after = _v31_common_mura_energy_state(_v21_state_after)
         _v30_suboperator_states['thermal_and_terminal_events'] = _v30_energy_after
         _v30_line_affinity = np.maximum(ATpot.Estar_coeff(T), 0.0)
         _v30_channels = {
@@ -8769,6 +8828,14 @@ for n in range(_restart_step_offset, _restart_end_step):
         (_v30_channels['thermal_conduction'],
          _v30_channels['declared_sinks']) = _v30_thermal_dissipation_channels(
              0.5*(_v30_temperature_before+np.asarray(T, dtype=float)))
+        if P.get('v31_asb_common_mura_ledger', False):
+            if _v31_physical_channel_fields is None:
+                raise RuntimeError('V31 common-Mura channel ownership was not evaluated')
+            for _v31_name, _v31_field in _v31_physical_channel_fields.items():
+                _v30_channels[_v31_name] = accepted_channel(
+                    _v31_name, _v31_field, np.ones_like(_v31_field),
+                    source=('accepted common-Mura termwise chemical affinity '
+                            'times accepted process extent'))
         _v30_qdot = np.asarray(
             heat_diag.get('_qdot_field', np.zeros_like(T)), dtype=float)
         _v30_deposited = float(P['dt']*np.mean(np.maximum(_v30_qdot, 0.0)))
@@ -8784,6 +8851,23 @@ for n in range(_restart_step_offset, _restart_end_step):
         _v30_external = P['dt']*max(
             0.5*(float(sigma_bar_old)+float(sigma_bar))*float(P['edot_app']),
             0.0)
+        if P.get('v31_asb_common_mura_ledger', False):
+            # The common transaction receives plastic work from the nonlocal
+            # elastic solve and deposits only its independently decomposed
+            # physical heat. Periodic conduction has zero net energy; the bath
+            # term is the sole exported heat in this local ledger.
+            _v30_external = P['dt']*float(np.mean(
+                _v21_residual.plastic_power_W_m3))
+            _v30_deposited = P['dt']*float(np.mean(
+                _v21_residual.heat_rate_W_m3))
+            _v30_exported = P['dt']*max(
+                v21_common_parameters.volumetric_heat_capacity_J_m3_K
+                *v21_common_parameters.bath_rate_s
+                # The accepted common step is explicit Euler; use its actual
+                # beginning-of-step bath flux rather than a midpoint estimate.
+                *float(np.mean(_v30_temperature_before
+                               -v21_common_parameters.bath_temperature_K)),
+                0.0)
         v30_asb_last_step = build_production_step_ledger(
             channels=_v30_channels, energy_before=_v30_energy_before,
             energy_after=_v30_energy_after,
@@ -8829,6 +8913,14 @@ for n in range(_restart_step_offset, _restart_end_step):
         for _v30_channel in v30_asb_last_step.channels:
             v30_asb_cumulative[f'{_v30_channel.name}_J_m3'] += (
                 P['dt']*_v30_channel.dissipation_W_m3)
+        if P.get('v31_asb_common_mura_ledger', False):
+            v30_asb_cumulative['v31_maximum_channel_closure_W_m3'] = max(
+                float(v30_asb_cumulative['v31_maximum_channel_closure_W_m3']),
+                float(np.max(np.abs(_v31_channel_closure_W_m3))))
+            v30_asb_cumulative['v31_minimum_physical_channel_W_m3'] = min(
+                float(v30_asb_cumulative['v31_minimum_physical_channel_W_m3']),
+                min(float(np.min(field))
+                    for field in _v31_physical_channel_fields.values()))
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:
@@ -9223,6 +9315,44 @@ if P.get('v30_asb_physical_ledger', True):
     }
     (out/'v30_asb_energy_dissipation_ledger.json').write_text(
         json.dumps(_v30_result, indent=2, sort_keys=True)+'\n')
+    if P.get('v31_asb_common_mura_ledger', False):
+        _v31_heat_scale = max(
+            abs(float(v30_asb_cumulative['deposited_heat_J_m3'])),
+            sum(abs(float(v30_asb_cumulative[f'{name}_J_m3']))
+                for name in CHANNEL_NAMES[:5]), 1.0)
+        _v31_failures = []
+        if _v30_missing:
+            _v31_failures.append('ASB_JUNCTION_AFFINITY_UNRESOLVED')
+        if (float(v30_asb_cumulative[
+                'v31_minimum_physical_channel_W_m3']) < -1e-10):
+            _v31_failures.append('ASB_NEGATIVE_PHYSICAL_DISSIPATION_CHANNEL')
+        if abs(float(v30_asb_cumulative[
+                'first_law_residual_J_m3']))/_v30_scale > 0.05:
+            _v31_failures.append('ASB_PHYSICAL_FIRST_LAW_CLOSURE_FAILURE')
+        if abs(float(v30_asb_cumulative[
+                'dissipation_heat_residual_J_m3']))/_v31_heat_scale > 0.05:
+            _v31_failures.append('ASB_DISSIPATION_HEAT_CLOSURE_FAILURE')
+        _v31_result = {
+            'schema': 'v31-common-mura-asb-ledger-v1',
+            'classification': ('ASB_COMMON_MURA_LEDGER_QUALIFIED'
+                               if not _v31_failures else _v31_failures[0]),
+            'failure_classifications': _v31_failures,
+            'all_channels_available': not _v30_missing,
+            'authoritative_orientation': 'accepted Mura plastic distortion elastic spin',
+            'legacy_junction_enabled': False,
+            'numerical_constraint_drives_physical_state': False,
+            'numerical_constraints_in_physical_energy': False,
+            'residual_defined_dissipation': False,
+            'relative_first_law_residual': abs(float(
+                v30_asb_cumulative['first_law_residual_J_m3']))/_v30_scale,
+            'relative_dissipation_heat_residual': abs(float(
+                v30_asb_cumulative['dissipation_heat_residual_J_m3']))/_v31_heat_scale,
+            'cumulative': v30_asb_cumulative,
+            'last_step': (None if v30_asb_last_step is None
+                          else v30_asb_last_step.to_dict()),
+        }
+        (out/'v31_common_mura_asb_ledger.json').write_text(
+            json.dumps(_v31_result, indent=2, sort_keys=True)+'\n')
 
 # ================================================================
 # 12. SUMMARY

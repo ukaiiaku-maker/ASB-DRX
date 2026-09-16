@@ -1,0 +1,76 @@
+{
+  "schema": "asb-drx/v31/common-mura-asb-local-gate/v1",
+  "campaign": "V31 Workstream C",
+  "source_branch": "exp/full-v34-recovery-v1",
+  "source_checkpoint_before_workstream": "512b8f0bf00ff901aa34ed636345283c08bd48c2",
+  "working_patch_sha256_before_evidence": "00550a00122d9ded7d052d8b1ce084a0a79706066b241849f4713c8063a0517d",
+  "execution_date": "2026-09-16",
+  "long_run_authorized": false,
+  "production_grid_smokes": {
+    "parameters": {
+      "v31_asb_common_mura_ledger": true,
+      "nSteps": 2,
+      "T0_K": 1300.0,
+      "edot_app_s-1": 0.01,
+      "poly_n": 1
+    },
+    "32": {
+      "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+      "relative_first_law_residual": 1.2149076216939457e-05,
+      "relative_dissipation_heat_residual": 4.394126749023172e-16,
+      "minimum_physical_channel_W_m3": 0.0
+    },
+    "64": {
+      "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+      "relative_first_law_residual": 1.2149076216939457e-05,
+      "relative_dissipation_heat_residual": 4.394126749023172e-16,
+      "minimum_physical_channel_W_m3": 0.0
+    },
+    "128": {
+      "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+      "relative_first_law_residual": 1.2149076216939457e-05,
+      "relative_dissipation_heat_residual": 4.394126749023172e-16,
+      "minimum_physical_channel_W_m3": 0.0
+    }
+  },
+  "restart_gate": {
+    "grid": 8,
+    "continuous_steps": 8,
+    "segmented_steps": [3, 5],
+    "bitwise_authoritative_state": true,
+    "bitwise_cumulative_ledger": true,
+    "continuous_classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+    "segmented_classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+    "relative_first_law_residual": 1.6847905905788782e-05
+  },
+  "channel_ownership": {
+    "plastic_drag": "raw plastic work minus independently evaluated transport and multiplication defect-energy rates",
+    "mobile_forest_recovery": "negative mobile-to-forest chemical-potential jump times accepted Onsager extent",
+    "neutral_pair_annihilation": "two mobile chemical potentials times accepted neutral-pair extent",
+    "junction_relaxation": "negative junction reaction affinity times accepted reversible junction extent",
+    "boundary_recovery": "forest-to-wall exchange affinity times extent plus wall-order chemical-potential relaxation",
+    "thermal_conduction": "T0*k*|grad(T)|^2/T^2",
+    "declared_sinks": "h*(T-T0)^2/T"
+  },
+  "hard_gate_results": {
+    "all_seven_channels_available": true,
+    "no_residual_defined_channel": true,
+    "physical_channels_nonnegative": true,
+    "channel_sum_closes_common_heat": true,
+    "numerical_constraint_in_physical_energy": false,
+    "numerical_constraint_drives_orientation": false,
+    "legacy_unaffined_junction_enabled": false,
+    "authoritative_orientation": "accepted common-Mura plastic distortion elastic spin",
+    "grid_threshold_5_percent_passed": true,
+    "restart_bitwise_passed": true
+  },
+  "tests": {
+    "focused": "41 passed in 6.72s (including exact wall-order-gradient energy derivative)",
+    "expanded_workstream_regression": "68 passed in 18.48s",
+    "full_repository_tests": "599 passed in 215.75s with PYTHONPATH=src and tests/ scope"
+  },
+  "fixture_passed": true,
+  "scientific_gate_passed": true,
+  "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+  "secondary_classification": "ASB_ORIENTATION_NUMERICAL_CONSTRAINT_CONTAMINATION_REMOVED"
+}
