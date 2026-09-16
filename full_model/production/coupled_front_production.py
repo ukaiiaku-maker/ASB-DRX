@@ -22,7 +22,10 @@ try:
         DefectState, FrontLedger, SparseFrontState, conservative_front_transfer,
         reconstruct_mixture, supported_front_state_is_exactly_equal,
         total_line_density)
-    from .signed_front_geometry import measure_signed_front_motion
+    from .front_topology import (
+        TopologySnapshot, diagnostic_ray_crossing_count,
+        initialize_front_topology, match_front_topology,
+        snapshot_from_dict, snapshot_to_dict)
 except ImportError:  # pragma: no cover - direct production-script execution
     from arrhenius_kinetics import ActivatedProcess
     from coupled_front_event import FrontEnergyTerms, propose_bidirectional_front_event
@@ -30,7 +33,10 @@ except ImportError:  # pragma: no cover - direct production-script execution
         DefectState, FrontLedger, SparseFrontState, conservative_front_transfer,
         reconstruct_mixture, supported_front_state_is_exactly_equal,
         total_line_density)
-    from signed_front_geometry import measure_signed_front_motion
+    from front_topology import (
+        TopologySnapshot, diagnostic_ray_crossing_count,
+        initialize_front_topology, match_front_topology,
+        snapshot_from_dict, snapshot_to_dict)
 
 
 SCHEMA = "full-v34-coupled-front-production/v1"
@@ -66,6 +72,9 @@ class CoupledFrontRuntime:
     maximum_b_fraction: np.ndarray
     minimum_b_fraction: np.ndarray
     previous_phi: np.ndarray
+    topology: TopologySnapshot
+    periodic: bool = True
+    topology_event_count: int = 0
     ledger: CoupledFrontLedger = CoupledFrontLedger()
 
 
@@ -82,19 +91,31 @@ class CoupledFrontDecision:
     maximum_abs_line_closure_m: float
     maximum_abs_signed_closure_m2: float
     heat_increment_J: float
+    topology_event: dict | None = None
+    component_count: int = 0
+    ray_crossing_count_before: int = 0
+    ray_crossing_count_after: int = 0
+    maximum_component_distance_cells: float = 0.0
 
 
 def initialize_coupled_front_runtime(state: SparseFrontState, phi,
-                                     *, normal_axis: int):
+                                     *, normal_axis: int, active_mask=None,
+                                     periodic=True):
     value = np.asarray(phi, dtype=float)
     if value.shape != state.chi.shape or not np.all(np.isfinite(value)):
         raise ValueError("front phi is not finite and grid matched")
     axis = int(normal_axis)
     if axis not in (0, 1):
         raise ValueError("normal axis must be 0 or 1")
+    ray_count = diagnostic_ray_crossing_count(
+        value, normal_axis=axis, active_mask=active_mask, periodic=periodic)
+    topology = initialize_front_topology(
+        value, active_mask=active_mask, periodic=periodic,
+        ray_crossing_count=ray_count)
     return CoupledFrontRuntime(
         state.parent_label, state.child_label, axis, 1,
-        state.chi.copy(), state.chi.copy(), state.chi.copy(), value.copy())
+        state.chi.copy(), state.chi.copy(), state.chi.copy(), value.copy(),
+        topology, bool(periodic))
 
 
 def runtime_metadata_json(runtime: CoupledFrontRuntime):
@@ -104,6 +125,9 @@ def runtime_metadata_json(runtime: CoupledFrontRuntime):
         "material_b_label": runtime.material_b_label,
         "normal_axis": runtime.normal_axis,
         "normal_orientation": runtime.normal_orientation,
+        "topology": snapshot_to_dict(runtime.topology),
+        "periodic": runtime.periodic,
+        "topology_event_count": runtime.topology_event_count,
         "ledger": asdict(runtime.ledger),
     }, sort_keys=True)
 
@@ -118,13 +142,15 @@ def runtime_arrays(runtime: CoupledFrontRuntime):
 
 
 def runtime_from_checkpoint(metadata_json, arrays, *, fallback_state=None,
-                            fallback_phi=None, normal_axis=None):
+                            fallback_phi=None, normal_axis=None,
+                            active_mask=None, periodic=True):
     """Load v1 state or migrate a legacy sparse-front checkpoint explicitly."""
     if metadata_json is None:
         if fallback_state is None or fallback_phi is None or normal_axis is None:
             raise ValueError("legacy front migration requires sparse state, phi, and axis")
         return initialize_coupled_front_runtime(
-            fallback_state, fallback_phi, normal_axis=normal_axis)
+            fallback_state, fallback_phi, normal_axis=normal_axis,
+            active_mask=active_mask, periodic=periodic)
     metadata = json.loads(str(metadata_json))
     if metadata.get("schema") != SCHEMA:
         raise ValueError("unsupported coupled-front checkpoint schema")
@@ -136,10 +162,19 @@ def runtime_from_checkpoint(metadata_json, arrays, *, fallback_state=None,
     if len({value.shape for value in values}) != 1 or not all(
             np.all(np.isfinite(value)) for value in values):
         raise ValueError("invalid coupled-front checkpoint arrays")
+    topology = (snapshot_from_dict(metadata["topology"])
+                if "topology" in metadata
+                else initialize_front_topology(
+                    values[-1], active_mask=active_mask, periodic=periodic,
+                    ray_crossing_count=diagnostic_ray_crossing_count(
+                        values[-1], normal_axis=int(metadata["normal_axis"]),
+                        active_mask=active_mask, periodic=periodic)))
     return CoupledFrontRuntime(
         int(metadata["material_a_label"]), int(metadata["material_b_label"]),
         int(metadata["normal_axis"]), int(metadata["normal_orientation"]),
         *[value.copy() for value in values],
+        topology, bool(metadata.get("periodic", periodic)),
+        int(metadata.get("topology_event_count", 0)),
         CoupledFrontLedger(**metadata.get("ledger", {})))
 
 
@@ -337,10 +372,25 @@ def accept_coupled_front_candidate(
     a, b = runtime.material_a_label, runtime.material_b_label
     phi0 = before[:, :, b]-before[:, :, a]
     phi1 = trial[:, :, b]-trial[:, :, a]
-    measure = measure_signed_front_motion(
-        phi0, phi1, normal_axis=runtime.normal_axis, spacing_m=spacing_m,
-        represented_thickness_m=represented_thickness_m,
-        active_mask=active_mask, periodic=periodic)
+    # Boundary-condition changes are explicit configuration migrations.  They
+    # alter contour connectivity at a periodic seam, so rebuild from the
+    # unchanged physical field before attempting any motion.
+    if runtime.periodic != bool(periodic):
+        rebased = initialize_front_topology(
+            phi0, active_mask=active_mask, periodic=periodic,
+            ray_crossing_count=diagnostic_ray_crossing_count(
+                phi0, normal_axis=runtime.normal_axis,
+                active_mask=active_mask, periodic=periodic))
+        runtime = replace(runtime, topology=rebased, periodic=bool(periodic))
+    ray_before = diagnostic_ray_crossing_count(
+        phi0, normal_axis=runtime.normal_axis, active_mask=active_mask,
+        periodic=periodic)
+    ray_after = diagnostic_ray_crossing_count(
+        phi1, normal_axis=runtime.normal_axis, active_mask=active_mask,
+        periodic=periodic)
+    topology = match_front_topology(
+        runtime.topology, phi0, phi1, active_mask=active_mask,
+        periodic=periodic, ray_crossing_count=ray_after)
     event_volume = float(spacing_m)**2*float(represented_thickness_m)
     pressure = float(driving_pressure_a_to_b_Pa)
     state_a = _non_b_state(state)
@@ -364,42 +414,84 @@ def accept_coupled_front_candidate(
         boundary_storage_fraction=boundary_storage_fraction,
         neutral_sink_fraction=neutral_sink_fraction,
         signed_sink_fraction=signed_sink_fraction)
-    proposed = measure.signed_receiver_volume_m3
+    proposed = (topology.signed_receiver_area_cells2*float(spacing_m)**2
+                *float(represented_thickness_m))
     velocity = event.net_velocity_a_to_b_m_s
-    interface_length = measure.crossing_count*float(spacing_m)
+    interface_length = (sum(item.interface_length_cells
+                            for item in runtime.topology.components)
+                        *float(spacing_m))
     allowed = velocity*float(dt_s)*interface_length*float(represented_thickness_m)
     tolerance = 8192.0*np.finfo(float).eps*max(event_volume, abs(proposed), 1e-300)
+    if topology.event is not None:
+        ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1)
+        stopped = replace(
+            runtime, topology_event_count=runtime.topology_event_count+1,
+            ledger=ledger)
+        return state, stopped, before.copy(), CoupledFrontDecision(
+            False, topology.event, proposed, 0.0,
+            event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
+            event.detailed_balance_log_residual, 0.0, 0.0, 0.0,
+            topology_event=topology.event_record,
+            component_count=len(runtime.topology.components),
+            ray_crossing_count_before=ray_before,
+            ray_crossing_count_after=ray_after,
+            maximum_component_distance_cells=(
+                topology.maximum_component_distance_cells))
     if abs(proposed) <= tolerance:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          stationary_trials=runtime.ledger.stationary_trials+1)
-        return state, replace(runtime, previous_phi=phi1.copy(), ledger=ledger), trial.copy(), CoupledFrontDecision(
+        return state, replace(runtime, previous_phi=phi1.copy(),
+                              topology=topology.snapshot,
+                              ledger=ledger), trial.copy(), CoupledFrontDecision(
             False, "STATIONARY_GEOMETRY", proposed, 0.0,
             event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
-            event.detailed_balance_log_residual, 0.0, 0.0, 0.0)
+            event.detailed_balance_log_residual, 0.0, 0.0, 0.0,
+            component_count=len(topology.snapshot.components),
+            ray_crossing_count_before=ray_before,
+            ray_crossing_count_after=ray_after,
+            maximum_component_distance_cells=(
+                topology.maximum_component_distance_cells))
     if abs(velocity) <= 0.0 or proposed*velocity <= 0.0:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          rejected_direction=runtime.ledger.rejected_direction+1)
         return state, replace(runtime, ledger=ledger), before.copy(), CoupledFrontDecision(
             False, "REJECTED_BY_BIDIRECTIONAL_RATE", proposed, 0.0,
             event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
-            event.detailed_balance_log_residual, 0.0, 0.0, 0.0)
+            event.detailed_balance_log_residual, 0.0, 0.0, 0.0,
+            component_count=len(runtime.topology.components),
+            ray_crossing_count_before=ray_before,
+            ray_crossing_count_after=ray_after,
+            maximum_component_distance_cells=(
+                topology.maximum_component_distance_cells))
     fraction = min(1.0, abs(allowed)/abs(proposed))
     accepted_eta = before+fraction*(trial-before)
     phi_accept = accepted_eta[:, :, b]-accepted_eta[:, :, a]
-    accepted_measure = measure_signed_front_motion(
-        phi0, phi_accept, normal_axis=runtime.normal_axis, spacing_m=spacing_m,
-        represented_thickness_m=represented_thickness_m,
-        active_mask=active_mask, periodic=periodic)
-    chi_trial = accepted_eta[:, :, b]**2*(3.0-2.0*accepted_eta[:, :, b])
-    pair_h = (accepted_eta[:, :, a]**2*(3.0-2.0*accepted_eta[:, :, a])
-              +chi_trial)
-    chi_trial = np.divide(chi_trial, pair_h, out=state.chi.copy(), where=pair_h > 0.0)
-    raw = chi_trial-state.chi
-    raw = np.maximum(raw, 0.0) if accepted_measure.signed_receiver_volume_m3 > 0.0 else -np.maximum(-raw, 0.0)
-    target_fraction_sum = (abs(accepted_measure.signed_receiver_volume_m3)
-                           / event_volume)
-    raw_sum = float(np.sum(np.abs(raw), dtype=np.longdouble))
-    signed_sweep = raw*(target_fraction_sum/raw_sum if raw_sum > 0.0 else 0.0)
+    accepted_topology = match_front_topology(
+        runtime.topology, phi0, phi_accept, active_mask=active_mask,
+        periodic=periodic, ray_crossing_count=diagnostic_ray_crossing_count(
+            phi_accept, normal_axis=runtime.normal_axis,
+            active_mask=active_mask, periodic=periodic))
+    if accepted_topology.event is not None:
+        ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1)
+        stopped = replace(
+            runtime, topology_event_count=runtime.topology_event_count+1,
+            ledger=ledger)
+        return state, stopped, before.copy(), CoupledFrontDecision(
+            False, accepted_topology.event, proposed, 0.0,
+            event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
+            event.detailed_balance_log_residual, 0.0, 0.0, 0.0,
+            topology_event=accepted_topology.event_record,
+            component_count=len(runtime.topology.components),
+            ray_crossing_count_before=ray_before,
+            ray_crossing_count_after=ray_after,
+            maximum_component_distance_cells=(
+                accepted_topology.maximum_component_distance_cells))
+    signed_sweep = (accepted_topology.receiver_fraction_after
+                    -accepted_topology.receiver_fraction_before)
+    if accepted_topology.signed_receiver_area_cells2 > 0.0:
+        signed_sweep = np.maximum(signed_sweep, 0.0)
+    else:
+        signed_sweep = -np.maximum(-signed_sweep, 0.0)
     signed_sweep = np.clip(signed_sweep, -state.chi, 1.0-state.chi)
     new_state, audit = _transaction(
         state, signed_sweep, cell_volume_m3=event_volume,
@@ -412,10 +504,18 @@ def accept_coupled_front_candidate(
     actual_signed = audit["volume_ab"]-audit["volume_ba"]
     # Capacity limiting is an atomic partial acceptance; scale phase motion by
     # the accepted geometric fraction so state and contour cannot diverge.
-    requested_abs = max(abs(accepted_measure.signed_receiver_volume_m3), 1e-300)
+    requested_abs = max(
+        abs(accepted_topology.signed_receiver_area_cells2*event_volume), 1e-300)
     capacity_scale = min(1.0, abs(actual_signed)/requested_abs)
     if capacity_scale < 1.0:
         accepted_eta = before+capacity_scale*(accepted_eta-before)
+        phi_accept = accepted_eta[:, :, b]-accepted_eta[:, :, a]
+        accepted_topology = match_front_topology(
+            runtime.topology, phi0, phi_accept, active_mask=active_mask,
+            periodic=periodic,
+            ray_crossing_count=diagnostic_ray_crossing_count(
+                phi_accept, normal_axis=runtime.normal_axis,
+                active_mask=active_mask, periodic=periodic))
     old = runtime.ledger
     revisit = np.minimum(np.maximum(signed_sweep, 0.0),
                          np.maximum(runtime.maximum_b_fraction-state.chi, 0.0))
@@ -441,9 +541,15 @@ def accept_coupled_front_candidate(
         runtime, maximum_b_fraction=np.maximum(runtime.maximum_b_fraction, new_state.chi),
         minimum_b_fraction=np.minimum(runtime.minimum_b_fraction, new_state.chi),
         previous_phi=(accepted_eta[:, :, b]-accepted_eta[:, :, a]).copy(),
+        topology=accepted_topology.snapshot,
         ledger=ledger)
     return new_state, runtime, accepted_eta, CoupledFrontDecision(
         True, "ACCEPTED_ATOMIC_COUPLED_FRONT", proposed, actual_signed,
         event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
         event.detailed_balance_log_residual, abs(audit["line_closure_m"]),
-        audit["signed_closure_m2"], audit["heat_J"])
+        audit["signed_closure_m2"], audit["heat_J"],
+        component_count=len(accepted_topology.snapshot.components),
+        ray_crossing_count_before=ray_before,
+        ray_crossing_count_after=accepted_topology.snapshot.ray_crossing_count,
+        maximum_component_distance_cells=(
+            accepted_topology.maximum_component_distance_cells))

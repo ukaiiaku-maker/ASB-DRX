@@ -1,0 +1,104 @@
+{
+  "schema": "asb-drx/v31-front-topology-decision/v1",
+  "decision": "LOCAL_HARD_GATE_PASSED",
+  "fixture_passed": true,
+  "scientific_gate_passed": true,
+  "production_long_run_qualified": false,
+  "production_long_run_reason": "Only the required local 40-step checkpoint replays were run; no V31 HPC long run has been submitted.",
+  "authority": {
+    "base_checkpoint": "67c8b11",
+    "v30_archive_source_sha": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+    "v31_source_commit": null
+  },
+  "implementation": {
+    "authoritative_geometry": "periodic marching-triangle zero-contour component graph",
+    "signed_sweep": "inverse-tanh piecewise-linear cut-cell receiver area",
+    "component_match_keys": [
+      "material-pair identity",
+      "periodic winding",
+      "symmetric sampled-contour overlap",
+      "periodic Hausdorff distance",
+      "interface-length change"
+    ],
+    "ray_crossings_are_authoritative": false,
+    "fail_closed_terminals": [
+      "FRONT_COMPONENT_SPLIT",
+      "FRONT_COMPONENT_MERGE",
+      "GRAIN_CONSUMED",
+      "INTERFACE_PAIR_ANNIHILATED",
+      "PAIR_LEFT_ACTIVE_WINDOW",
+      "PAIR_IDENTITY_LOST",
+      "PAIR_ENTERED_ACTIVE_WINDOW"
+    ],
+    "checkpoint_schema": "full-v34-coupled-front-production/v1",
+    "old_v1_checkpoint_migration_tested": true
+  },
+  "local_tests": {
+    "focused_front_suite": {
+      "command": "python -m pytest -q tests/test_full_model_v29_coupled_front_event.py tests/test_full_model_v29_signed_front_geometry.py tests/test_full_model_v30_coupled_front_production.py tests/test_full_model_v30_front_hpc_bundle.py tests/test_full_model_v31_front_topology.py",
+      "passed": 80,
+      "failed": 0
+    },
+    "full_repository_suite": {
+      "command": "PYTHONPATH=src python -m pytest -q tests",
+      "passed": 599,
+      "failed": 0,
+      "duration_s": 197.25
+    },
+    "manufactured_v31_cases": {
+      "passed": 15,
+      "failed": 0,
+      "coverage": [
+        "32/64 profile-width invariance",
+        "ray-tangency crossing-count change",
+        "periodic seam-crossing loop",
+        "periodic winding pair",
+        "split and merge",
+        "grain consumption",
+        "interface-pair annihilation",
+        "active-window exit",
+        "label exchange",
+        "contour-point shuffle",
+        "oriented frame",
+        "production fail-closed transaction",
+        "checkpoint roundtrip and migration"
+      ]
+    },
+    "python_compile_passed": true
+  },
+  "v30_failed_checkpoint_replay": [
+    {
+      "case": "a1_n64_favorable",
+      "grid": 64,
+      "input_checkpoint_sha256": "116f920d6bad9720832c09a05ff37e88cee84c691024d3052f9ae4d153051041",
+      "input_step": 0,
+      "replayed_through_step": 40,
+      "returncode": 0,
+      "topology_component_count": 1,
+      "topology_event_count": 0,
+      "front_attempts": 41,
+      "front_accepts": 41,
+      "front_rejects": 0,
+      "maximum_abs_line_closure_m": 2.8747723897459225e-20,
+      "classification": "RAY_COUNT_FAILURE_REMOVED_COMPONENT_IDENTITY_PRESERVED"
+    },
+    {
+      "case": "a1_n128_favorable",
+      "grid": 128,
+      "input_checkpoint_sha256": "30f719a4ec5f491be375e1431aef9bbc3f5d51b4001ba755348350ef27bde798",
+      "input_step": 0,
+      "replayed_through_step": 40,
+      "returncode": 0,
+      "topology_component_count": 1,
+      "topology_event_count": 0,
+      "front_attempts": 41,
+      "front_accepts": 4,
+      "front_rejects": 37,
+      "maximum_abs_line_closure_m": 8.027435362878026e-20,
+      "classification": "RAY_COUNT_FAILURE_REMOVED_COMPONENT_IDENTITY_PRESERVED"
+    }
+  ],
+  "archive_mutated": false,
+  "hpc_submission_authorized_by_local_gate": true,
+  "hpc_submitted": false
+}

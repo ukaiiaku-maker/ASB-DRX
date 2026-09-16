@@ -4296,16 +4296,19 @@ if sibm_experiment_state:
                     coupled_front_runtime = coupled_front_runtime_from_checkpoint(
                         str(_restart_npz['coupled_front_metadata_json'].item()),
                         {key: _restart_npz[f'coupled_front__{key}']
-                         for key in _coupled_keys})
+                         for key in _coupled_keys},
+                        active_mask=sibm_active_mask, periodic=True)
                 else:
                     # Explicit schema migration: pre-V30 checkpoints begin with
                     # zero V30 attempts and envelopes at the saved physical state.
                     coupled_front_runtime = coupled_front_runtime_from_checkpoint(
                         None, {}, fallback_state=sparse_front_state,
-                        fallback_phi=_coupled_phi, normal_axis=_coupled_axis)
+                        fallback_phi=_coupled_phi, normal_axis=_coupled_axis,
+                        active_mask=sibm_active_mask, periodic=True)
         else:
             coupled_front_runtime = initialize_coupled_front_runtime(
-                sparse_front_state, _coupled_phi, normal_axis=_coupled_axis)
+                sparse_front_state, _coupled_phi, normal_axis=_coupled_axis,
+                active_mask=sibm_active_mask, periodic=True)
     _update_sibm_geometry_metrics(
         sparse_front_state.chi, max(float(P.get('dt', 0.0)), 1e-300))
 
@@ -8169,6 +8172,32 @@ for n in range(_restart_step_offset, _restart_end_step):
             front_accepts=int(coupled_front_runtime.ledger.accepted),
             front_rejects=int(
                 coupled_front_runtime.ledger.rejected_direction))
+        _front_topology_terminals = {
+            'FRONT_COMPONENT_SPLIT', 'FRONT_COMPONENT_MERGE',
+            'GRAIN_CONSUMED', 'INTERFACE_PAIR_ANNIHILATED',
+            'PAIR_LEFT_ACTIVE_WINDOW', 'PAIR_IDENTITY_LOST',
+            'PAIR_ENTERED_ACTIVE_WINDOW'}
+        if _front_decision.classification in _front_topology_terminals:
+            _front_terminal = {
+                'classification': _front_decision.classification,
+                'step': int(n), 'time_s': float(sim_time+P['dt']),
+                'front_decision': _front_decision.__dict__,
+                'coupled_front_ledger': {
+                    key: (int(value) if isinstance(value, int) else float(value))
+                    for key, value in coupled_front_runtime.ledger.__dict__.items()},
+                'physical_front_ledger': {
+                    key: (int(value) if isinstance(value, int) else float(value))
+                    for key, value in sparse_front_state.ledger.__dict__.items()},
+            }
+            (out/'sibm_front_topology_terminal.json').write_text(
+                json.dumps(_front_terminal, indent=2, sort_keys=True)+'\n')
+            # Keep the generic terminal filename consumed by the restartable
+            # campaign controller while retaining the topology-specific copy.
+            (out/'sibm_terminal_event.json').write_text(
+                json.dumps(_front_terminal, indent=2, sort_keys=True)+'\n')
+            _save_restart_checkpoint(
+                n, sim_time_value=float(sim_time+P['dt']))
+            _stop_run = True
         _update_sibm_geometry_metrics(
             sparse_front_state.chi, P['dt'])
 
