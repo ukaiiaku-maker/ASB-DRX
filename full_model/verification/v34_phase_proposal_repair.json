@@ -1,0 +1,99 @@
+{
+  "schema": "asb-drx/v34-phase-proposal-repair/v1",
+  "authority": {
+    "canonical_parent_commit": "2b8490e",
+    "phase_source_commit": "31bba7db77c58d08a2b917830820ead85b10b5a1"
+  },
+  "decision": "QUALIFIED_EXISTING_BOUNDARY_PHASE_PROPOSAL",
+  "fixture_passed": true,
+  "scientific_gate_passed": true,
+  "production_scope": "coupled_bidirectional_v30 existing-boundary/no-nucleation mode",
+  "old_operator_exact_off": "ac_phase_proposal_mode=legacy_sequential_euler",
+  "first_offending_suboperator": "sequential clipped explicit Allen-Cahn proposal plus unconstrained zero-level topology birth",
+  "negative_discriminator": {
+    "result": "stable unconstrained IMEX still forms the forbidden filament",
+    "terminal": "UNAUTHORIZED_PHASE_ISLAND",
+    "integrated_dt_s": 1e-07,
+    "accepted_substeps": 19,
+    "energy_change_J_m": -2.2943204081589397e-05,
+    "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v34-phase-imex-preflight-20260916/n128_delta_p1e-6/v34_phase_replay_result.json",
+    "sha256": "47adda2cdf679821eb1c6e28b6b29e9d86ca5e10f8eeabb46a19d93d2dcbd1e6"
+  },
+  "repair": {
+    "time_integrator": "simultaneous simplex-tangent embedded IMEX step doubling",
+    "diffusion": "backward Euler spectral",
+    "controls": [
+      "embedded local error",
+      "maximum substep increment",
+      "simplex bounds",
+      "frozen-state free-energy descent",
+      "periodic phase-component active set"
+    ],
+    "topology_contract": "allow attached translation; project disconnected sign births and component-count-changing bridges/pinch-offs",
+    "physical_parameters_changed": false
+  },
+  "archived_preterminal_replay": {
+    "grid": 128,
+    "steps": [138, 139],
+    "positive": {
+      "terminal": null,
+      "substeps": [19, 19],
+      "energy_change_J_m": [-2.2691795526948166e-05, -2.2708158586126626e-05],
+      "maximum_simplex_error": 1.1102230246251565e-16,
+      "adapter_classification": ["REJECTED_BY_BIDIRECTIONAL_RATE", "REJECTED_BY_BIDIRECTIONAL_RATE"],
+      "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v34-phase-source-31bba7d-20260916/n128_delta_p1e-6/v34_phase_replay_result.json",
+      "sha256": "63facd5e6e4e4c5318027869498e20a415799338f4179a729c987810c9b9806e"
+    },
+    "negative": {
+      "terminal": null,
+      "substeps": [15, 15],
+      "energy_change_J_m": [-4.8708386708590234e-06, -4.874875880946095e-06],
+      "maximum_simplex_error": 1.1102230246251565e-16,
+      "adapter_classification": ["REJECTED_BY_BIDIRECTIONAL_RATE", "REJECTED_BY_BIDIRECTIONAL_RATE"],
+      "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v34-phase-source-31bba7d-20260916/n128_delta_m1e-6/v34_phase_replay_result.json",
+      "sha256": "fa91f7d64aaf1708ec5e3ceae7e51a02e290aad5aaaa9c19ca3383992787a36a"
+    }
+  },
+  "finite_resolved_translation": {
+    "physical_pressure_Pa": 200000000.0,
+    "physical_dt_s": 1e-07,
+    "interface_width_m": 3e-07,
+    "n128": {
+      "forward_displacement_m": 2.7018106185619682e-08,
+      "reverse_displacement_m": -2.7018106430399074e-08,
+      "forward_energy_change_J_m": -0.00010809892559593762,
+      "reverse_energy_change_J_m": -0.00010809892559596711,
+      "profile_width_cells": 8.005310837198445,
+      "phase_trials_npz": "/Users/sdillon/HPC3/local-results/asb-drx-v34-qualified-phase-trials-31bba7d-20260916/phase_trials_n128.npz",
+      "sha256": "9a069f769738e3d905a061e3b6b19ab74d525503eba4eeba85b54f687f7e9608"
+    },
+    "n192": {
+      "forward_displacement_m": 2.70181062066395e-08,
+      "reverse_displacement_m": -2.701810644843303e-08,
+      "forward_energy_change_J_m": -0.0001080989255959116,
+      "reverse_energy_change_J_m": -0.00010809892559594282,
+      "profile_width_cells": 11.744548178419091,
+      "phase_trials_npz": "/Users/sdillon/HPC3/local-results/asb-drx-v34-qualified-phase-trials-31bba7d-20260916/phase_trials_n192.npz",
+      "sha256": "f89350b9d9421ec3437163c5ed7997dbc48f9a2ab5c95c41a8e530d18d754712"
+    },
+    "grid_relative_forward_displacement_difference": 7.779900723034459e-10,
+    "forward_reverse_magnitude_relative_residual_n128": 9.059809887937397e-09
+  },
+  "legacy_reproduction": {
+    "classification": "UNAUTHORIZED_PHASE_ISLAND",
+    "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v34-phase-final-ebbf82c-20260916/n128_delta_p1e-6_legacy/v34_phase_replay_result.json",
+    "sha256": "365850250a2c0e1a218cbdaac0966387d9289ec7a192e671f110e49c433d9018"
+  },
+  "tests": {
+    "focused_passed": 70,
+    "full_suite_passed": 668,
+    "full_suite_runtime_s": 310.58,
+    "full_suite_environment": "PYTHONPATH=src:."
+  },
+  "limitations": [
+    "The topology active set is valid only for declared existing-boundary/no-nucleation evolution; it is not a general grain-nucleation algorithm.",
+    "Near-equal archived proposals are now topology-safe but are rejected by the independent complete directional-rate threshold, so they do not demonstrate measurable accepted sweep.",
+    "The unchanged 0.30 micrometre profile is under two cells at n64; resolved qualification therefore uses n128 and n192.",
+    "Long-horizon coupling and the same-state I3 response matrix remain downstream work."
+  ]
+}
