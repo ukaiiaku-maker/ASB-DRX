@@ -59,8 +59,7 @@ def parameters(case):
         "save_signed_panels": False,
     }
     if case == "front_only":
-        values.update(v19_wall_attempt_frequency_s=0.0,
-                      v21_glide_speed_attempt_m_s=0.0)
+        values["v33_common_mura_evolution_enabled"] = False
     elif case == "mura_only":
         values["sibm_mobility_multiplier"] = 0.0
     elif case == "combined_isothermal":

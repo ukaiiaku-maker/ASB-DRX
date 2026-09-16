@@ -53,7 +53,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import copy
 import os, json, time as _wtime, csv, tempfile
-from dataclasses import replace
+from dataclasses import fields, replace
 from arrhenius_kinetics import (
     ActivatedProcess, KB_J_K as ARRHENIUS_KB_J_K, exp_floor_enthalpy_j,
 )
@@ -99,7 +99,7 @@ from tensorial_nye import (
 )
 from nonlocal_elasticity import solve_periodic_eigenstrain
 from common_tensorial_wall import (
-    CommonWallDriving, CommonWallParameters, CommonWallState,
+    CommonWallDriving, CommonWallParameters, CommonWallResidual, CommonWallState,
     accepted_euler_step as accepted_common_wall_step,
     balance_ledger as common_wall_balance_ledger,
     resolved_driving_components as resolve_common_wall_components,
@@ -7222,6 +7222,17 @@ for n in range(_restart_step_offset, _restart_end_step):
         _v21_state_after, _v21_residual, _v21_accept_scale = accepted_common_wall_step(
             _v21_state_before, _v21_driving, V20_SYSTEMS,
             v21_topologies, v21_common_parameters, _v21_requested_dt)
+        if not P.get('v33_common_mura_evolution_enabled', True):
+            _zero_state_rate = CommonWallState(**{
+                _item.name: np.zeros_like(getattr(_v21_state_before, _item.name))
+                for _item in fields(CommonWallState)})
+            _v21_residual = CommonWallResidual(
+                _zero_state_rate,
+                {key: np.zeros_like(value) for key, value in
+                 _v21_residual.channel_rates_m2_s.items()},
+                np.zeros((Nx, Ny)), np.zeros((Nx, Ny)), np.zeros((Nx, Ny)))
+            _v21_state_after = _v21_state_before
+            _v21_accept_scale = 1.0
         if not P.get('v33_common_temperature_evolution_enabled', True):
             # Exact prescribed-temperature diagnostic: physical heat remains
             # in the channel ledger, but temperature is a declared boundary
