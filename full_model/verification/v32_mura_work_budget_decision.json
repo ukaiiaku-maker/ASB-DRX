@@ -1,0 +1,71 @@
+{
+  "schema": "asb-drx/v32-mura-work-budget-decision/v1",
+  "classification": "WORK_BUDGET_REPAIRED_MATCHED_HORIZON_RUNNING",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "broad_b2_authorized": false,
+  "repairs": {
+    "family_complementarity": {
+      "state": "PROMOTED",
+      "description": "Burgers families with negative proposed plastic work stall independently; admissible families remain eligible."
+    },
+    "fixed_strain_energy_backtracking": {
+      "state": "PROMOTED",
+      "description": "The atomic event is backtracked against independently recomputed recoverable elastic release and complete defect free-energy change."
+    },
+    "physical_stall": {
+      "state": "PROMOTED",
+      "description": "A zero-feasible-extent event returns an exact identity and zero physical ledger without projection or clipping."
+    }
+  },
+  "quarantined_trajectory": {
+    "source_commit": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+    "classification": "HARD_INVALID_NUMERICAL_ZERO_VELOCITY_ROUNDOFF",
+    "grid": 64,
+    "step": 1451,
+    "strain": 0.03841278100648024,
+    "checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672",
+    "scientific_saturation_claimed": false
+  },
+  "repaired_continuation": {
+    "source_commit": "e7aa16e70703bcf74df47da8c5669ec052a446c7",
+    "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916",
+    "grid_64": "RUNNING_FROM_PRESERVED_STEP_1451",
+    "latest_reported_step": 1500,
+    "latest_reported_strain": 0.0385601,
+    "latest_event_scale": 0.000030517578125,
+    "latest_hard_invariant_passed": true,
+    "latest_post_step_projection_used": false,
+    "latest_minimum_heat_increment_J_m3": 0.0,
+    "latest_energy_balance_relative": 0.0,
+    "grid_128": "CONDITIONAL_AFTER_VALID_64_COMPLETION"
+  },
+  "convergence": {
+    "target_strain": 0.05,
+    "provisional_tolerance": 0.05,
+    "observables": [
+      "orientation_span_deg",
+      "structure_factor_peak_fraction",
+      "dominant_signed_wavelength_m",
+      "dual_nye_relative_rms"
+    ],
+    "state": "PENDING_MATCHED_64_128_COMPLETION"
+  },
+  "tests": {
+    "focused_zero_identity_passed": 4,
+    "repository_passed": 531,
+    "projection_used": false,
+    "physical_guard_weakened": false
+  },
+  "supporting_evidence": [
+    "full_model/verification/v32_mura_first_rejection.json",
+    "full_model/verification/v32_mura_repair_screen.json",
+    "full_model/verification/v32_mura_zero_velocity_roundoff_repair.json"
+  ],
+  "claims_remaining_false": [
+    "matched 64/128 convergence below five percent",
+    "persistent physical LAGB precursor",
+    "physical DRX grain",
+    "broad B2 campaign authorization"
+  ]
+}
