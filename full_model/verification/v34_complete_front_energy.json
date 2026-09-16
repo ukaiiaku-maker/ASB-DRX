@@ -37,7 +37,16 @@
   },
   "beta_elastic_response_J": 1.1108090021623764e-14,
   "classification": "I2_OPERATOR_QUALIFIED_PRODUCTION_TRAJECTORY_PENDING",
-  "created_utc": "2026-09-16T21:51:35.034851Z",
+  "created_utc": "2026-09-16T22:16:10.535084Z",
+  "directional_kinetics": {
+    "a_to_b_event_J": -2.867473577197128e-19,
+    "b_to_a_event_J": -2.014446053669239e-19,
+    "forward_signed_volume_m3": 6.143999999999999e-23,
+    "minimum_normalization_fraction_of_cell": 1e-06,
+    "opposite_evaluated_from_actual_state": true,
+    "opposite_is_algebraic_negative": false,
+    "opposite_signed_volume_m3": -6.143999999999999e-23
+  },
   "downhill": {
     "accepted": true,
     "available_change_J": -1.637838398502077e-17,
@@ -100,12 +109,12 @@
   "scientific_gate_passed": false,
   "scope": "Manufactured finite common-state transaction; not spontaneous migration.",
   "signed_closure_m2": 0.0078125,
-  "source_commit": "28943ca73be82d9e75aaf2e1d98cb12be590b767",
+  "source_commit": "835ab6a3a9607470304eafd76202573420633951",
   "source_hashes": {
-    "full_model/production/common_front_state.py": "fd27dcf70cf91018d98173a9cbdc5dd8df7687495c052d8cd0348dc24b7259fd",
-    "full_model/production/complete_front_energy.py": "1215088a943a45f487eaf08d658073215a1881f543438b36574bc8e05f65bbbd",
-    "full_model/production/coupled_front_production.py": "ecac46adaaef2622003de722f655cb2fd6a42203f55d8a96a1bd5915c199ab18",
-    "full_model/production/drx_full_v34_recovery.py": "a4f94da16f870dd8ffe8cf5ecaf2397a5a796da350abdece47d917183bf46d70"
+    "full_model/production/common_front_state.py": "3093da90482777a366fd029e07cac6713f0e79634929f7a63d88813053fcfafa",
+    "full_model/production/complete_front_energy.py": "d69a1dd75e4fcf96b760a703fac0d63f86f0e558fc9892575f90603ecf3036db",
+    "full_model/production/coupled_front_production.py": "f36d308af73a3af17c946ae8694db1647602170667543f63a5646d9f927861ce",
+    "full_model/production/drx_full_v34_recovery.py": "e7d0efdec5b5498c27df847813d255be928b58e65bb5903fd788903088122429"
   },
   "uphill": {
     "accepted": false,
