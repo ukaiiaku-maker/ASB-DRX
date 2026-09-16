@@ -57,6 +57,10 @@ def main():
                         default=ROOT/"full_model/verification/v27_sibm_symmetry.json")
     parser.add_argument("--grid", type=int, default=64)
     parser.add_argument("--steps", type=int, default=120)
+    parser.add_argument("--projection-enabled", action=argparse.BooleanOptionalAction,
+                        default=True)
+    parser.add_argument("--front-processing-enabled",
+                        action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--relative-perturbations", nargs="+", type=float,
                         default=[1e-10, 1e-8, 1e-6, 1e-4, 1e-2])
     args = parser.parse_args()
@@ -64,7 +68,10 @@ def main():
     base = 2.5e17
     rows = []
     equal_config = parameters(
-        args.grid, args.steps, "S5", base, base, 1000.0)
+        args.grid, args.steps, "S5", base, base, 1000.0,
+        projection_enabled=args.projection_enabled)
+    equal_config["sibm_front_processing_override"] = bool(
+        args.front_processing_enabled)
     equal = run_case(args.root, "equal", equal_config)
     rows.append(augment(args.root/"equal", equal))
     for delta in args.relative_perturbations:
@@ -75,7 +82,10 @@ def main():
             child = base*(1.0-sign*delta)
             name = f"delta_{delta:.0e}_{sign:+d}"
             config = parameters(
-                args.grid, args.steps, "S5", parent, child, 1000.0)
+                args.grid, args.steps, "S5", parent, child, 1000.0,
+                projection_enabled=args.projection_enabled)
+            config["sibm_front_processing_override"] = bool(
+                args.front_processing_enabled)
             row = run_case(args.root, name, config)
             row.update(relative_density_perturbation=sign*delta)
             rows.append(augment(args.root/name, row))
@@ -107,6 +117,8 @@ def main():
     result = {
         "schema": "asb-drx/v27-sibm-equal-near-equal/v1",
         "grid": args.grid, "steps": args.steps,
+        "equal_state_projection_enabled": bool(args.projection_enabled),
+        "front_processing_enabled": bool(args.front_processing_enabled),
         "records": rows, "antisymmetric_pairs": pairs,
         "equal_state_zero_virgin_sweep": bool(
             equal_row["front_ledger"]["swept_volume_m3"] == 0.0),

@@ -44,7 +44,7 @@ Explicit kinetics (NOT from F):
 """
 
 import numpy as np
-from scipy.optimize import brentq
+from scipy.optimize import brentq, least_squares
 from scipy import ndimage
 from scipy.special import gammainc
 import matplotlib
@@ -102,7 +102,7 @@ from moving_front import (
     apply_common_constitutive_increment, canonicalize_normal_sweep,
     front_is_unprocessed_and_reservoir_free,
     initialize_sparse_front,
-    initialize_existing_boundary_front,
+    initialize_declared_boundary_front, initialize_existing_boundary_front,
     front_feasibility_fields,
     reconstruct_mixture, recover_boundary_reservoir,
     state_arrays as sparse_front_arrays,
@@ -821,6 +821,7 @@ P = dict(
     moving_front_fixture_transmission_fraction=0.50,
     moving_front_signed_sink_fraction=0.0,
     sibm_front_processing_enabled=True,
+    sibm_front_processing_override=None,
     # v10 deterministic existing-HAGB SIBM pathway.  It perturbs only two
     # existing labels and never allocates an orientation or grain identity.
     use_sibm_existing_boundary=False,
@@ -1102,6 +1103,9 @@ if P.get('sibm_sequential_stage') is not None:
                  disable_nucleation=True, use_hazard_nucleation=False,
                  use_stateful_embryos=False, use_component_relabel=False,
                  use_collective_taylor=False, collective_taylor_mode='off')
+if P.get('sibm_front_processing_override') is not None:
+    P['sibm_front_processing_enabled'] = bool(
+        P['sibm_front_processing_override'])
 
 if P.get('v19_one_grain_mode', False):
     # Qualification policy: one physical crystal and no route capable of
@@ -2617,12 +2621,14 @@ def init_grains():
         eta = np.zeros((Nx, Ny, P['grain_max']))
         eta[:, :, 0] = 1.0-child; eta[:, :, 1] = child
         if P.get('sibm_clean_equilibrium_profile', False):
-            # Relax the common planar pair to the stationary *discrete*
-            # profile on this grid before defining any SIBM reference or
-            # sparse-front history.  This is a zero-load initialization solve;
-            # no material transfer, defect update, or heat is performed.
+            # Relax with the exact clip-and-normalize map used by the
+            # production phase step.  The older tangent-projected residual has
+            # different fixed points and left a resolved profile drift that a
+            # later equal-state projection concealed.
             relaxation = 0.10/max(
                 P['W_eta']+8.0*P['kappa_eta']/min(dx, dy)**2, 1.0)
+            _equilibrium_iterations = 0
+            _equilibrium_map_residual = np.inf
             for _ in range(int(P.get('sibm_clean_equilibrium_max_steps', 5000))):
                 pair = eta[:, :, :2]
                 other = pair[:, :, ::-1]
@@ -2632,15 +2638,51 @@ def init_grains():
                         -P['kappa_eta']*lap(pair[:, :, _g])
                         +2.0*P['W_eta']*pair[:, :, _g]
                         *other[:, :, _g]**2)
-                derivative -= np.mean(derivative, axis=2, keepdims=True)
-                increment = -relaxation*derivative
-                pair_new = np.clip(pair+increment, 0.0, 1.0)
+                pair_new = np.clip(pair-relaxation*derivative, 0.0, 1.0)
                 pair_new /= np.maximum(
                     np.sum(pair_new, axis=2, keepdims=True), 1e-300)
+                _equilibrium_map_residual = float(np.max(np.abs(pair_new-pair)))
+                _equilibrium_iterations = _+1
                 eta[:, :, :2] = pair_new
-                if float(np.max(np.abs(increment))) <= float(P.get(
+                if _equilibrium_map_residual <= float(P.get(
                         'sibm_clean_equilibrium_tolerance', 1e-14)):
                     break
+            if _equilibrium_map_residual > float(P.get(
+                    'sibm_clean_equilibrium_tolerance', 1e-14)):
+                # Eliminate the fixed-point iteration floor with a constrained
+                # nonlinear solve of the same production map.  The additional
+                # mass equation fixes the neutral translation/volume gauge
+                # only during initialization.
+                _u0 = eta[:, 0, 1].copy()
+                def _fixed_map_residual(_u):
+                    _pair1 = np.stack((1.0-_u, _u), axis=1)
+                    _other1 = _pair1[:, ::-1]
+                    _lap1 = ((np.roll(_pair1, -1, axis=0)-2.0*_pair1
+                              +np.roll(_pair1, 1, axis=0))/dx**2)
+                    _derivative1 = (-P['kappa_eta']*_lap1
+                                    +2.0*P['W_eta']*_pair1*_other1**2)
+                    _new1 = np.clip(
+                        _pair1-relaxation*_derivative1, 0.0, 1.0)
+                    _new1 /= np.maximum(np.sum(_new1, axis=1, keepdims=True),
+                                        1e-300)
+                    return np.r_[
+                        (_new1[:, 1]-_u)/max(relaxation, 1e-300),
+                        P['W_eta']*(np.mean(_u)-0.5)]
+                _solution = least_squares(
+                    _fixed_map_residual, _u0, bounds=(0.0, 1.0),
+                    ftol=1e-14, xtol=1e-14, gtol=1e-14,
+                    max_nfev=int(P.get('sibm_clean_equilibrium_root_max_nfev', 2000)))
+                _u = np.clip(_solution.x, 0.0, 1.0)
+                eta[:, :, 1] = np.broadcast_to(_u[:, None], (Nx, Ny))
+                eta[:, :, 0] = 1.0-eta[:, :, 1]
+                _scaled = _fixed_map_residual(_u)[:-1]
+                _equilibrium_map_residual = float(
+                    np.max(np.abs(_scaled))*relaxation)
+                P['_sibm_clean_equilibrium_root_success'] = bool(
+                    _solution.success)
+                P['_sibm_clean_equilibrium_root_cost'] = float(_solution.cost)
+            P['_sibm_clean_equilibrium_iterations'] = _equilibrium_iterations
+            P['_sibm_clean_equilibrium_map_residual'] = _equilibrium_map_residual
         lab = np.argmax(eta[:, :, :Ng], axis=2)
         pv = np.zeros(P['grain_max'])
         half = .5*np.deg2rad(float(P.get('sibm_clean_misorientation_deg', 20.0)))
@@ -4071,9 +4113,33 @@ if P.get('use_sibm_existing_boundary', False) and sparse_front_state is None:
     child_fraction = hphase[:, :, child_label]/np.maximum(np.sum(hphase, axis=2), 1e-300)
     sibm_initial_child_fraction = child_fraction.copy()
     target_density = _selection.child_mean_density_m2
-    sparse_front_state = initialize_existing_boundary_front(
-        DefectState(rp.copy(), rm.copy(), rho_forest.copy(), rho_wall.copy()),
-        child_fraction, target_density, parent_label, child_label)
+    if P.get('sibm_clean_bicrystal_initialize', False):
+        _fm = float(np.clip(P.get('rho_state_mobile_fraction', 0.65), 0.0, 1.0))
+        _fw = float(np.clip(P.get('rho_state_wall_fraction', 0.0), 0.0, 1.0-_fm))
+        _ff = float(np.clip(P.get('rho_state_forest_fraction', 1.0-_fm-_fw), 0.0, 1.0-_fm-_fw))
+        _ft = max(_fm+_ff+_fw, 1e-30); _fm, _ff, _fw = _fm/_ft, _ff/_ft, _fw/_ft
+        def _uniform_declared_state(_total):
+            _shape3 = (Nx, Ny, nSlip)
+            _mobile = np.full(_shape3, _total*_fm/(2.0*nSlip))
+            _forest = np.full(_shape3, _total*_ff/nSlip)
+            _wall = np.full((Nx, Ny), _total*_fw)
+            return DefectState(_mobile.copy(), _mobile.copy(), _forest, _wall)
+        _declared_parent = _uniform_declared_state(float(P.get(
+            'sibm_clean_parent_density_m2', 4.0e17)))
+        _declared_child = _uniform_declared_state(float(P.get(
+            'sibm_clean_child_density_m2', 1.0e17)))
+        sparse_front_state = initialize_declared_boundary_front(
+            _declared_parent, _declared_child, child_fraction,
+            parent_label, child_label)
+        _front_mixture = reconstruct_mixture(sparse_front_state)
+        rp, rm, rho_forest, rho_wall = (
+            _front_mixture.rp, _front_mixture.rm,
+            _front_mixture.forest, _front_mixture.wall)
+        rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+    else:
+        sparse_front_state = initialize_existing_boundary_front(
+            DefectState(rp.copy(), rm.copy(), rho_forest.copy(), rho_wall.copy()),
+            child_fraction, target_density, parent_label, child_label)
     _sibm_initial_feasibility_margin = front_feasibility_fields(
         sparse_front_state)['feasibility_margin_m2'].copy()
     sibm_experiment_state = dict(
@@ -7773,7 +7839,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             _newly_swept_geometry = canonicalize_normal_sweep(
                 _newly_swept_geometry, roundoff_factor=float(P.get(
                     'sibm_contour_roundoff_factor', 4096.0)))
-            if (float(P.get('sibm_applied_pressure_Pa', 0.0)) == 0.0
+            if (bool(P.get('sibm_equal_state_projection_enabled', True))
+                    and float(P.get('sibm_applied_pressure_Pa', 0.0)) == 0.0
                     and float(sibm_experiment_state.get(
                         'parent_mean_density_m2', np.nan))
                     == float(sibm_experiment_state.get(

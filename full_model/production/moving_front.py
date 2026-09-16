@@ -467,6 +467,35 @@ def initialize_existing_boundary_front(parent, child_fraction,
     return state
 
 
+def initialize_declared_boundary_front(parent, child, child_fraction,
+                                       parent_label, child_label):
+    """Initialize a clean interface from two declared material states.
+
+    Unlike :func:`initialize_existing_boundary_front`, this constructor is for
+    a manufactured bicrystal whose parent and child states are known before
+    mixing.  It preserves that contrast in the sparse slots and makes their
+    support-weighted mixture the authoritative full field.  No line is
+    processed and no sweep history or boundary reservoir is created.
+    """
+    _validate_defect(parent)
+    _validate_defect(child)
+    for a, b in zip((parent.rp, parent.rm, parent.forest, parent.wall),
+                    (child.rp, child.rm, child.forest, child.wall)):
+        if np.shape(a) != np.shape(b):
+            raise ValueError("declared parent and child states must be grid matched")
+    chi = np.asarray(child_fraction, dtype=float)
+    if (chi.shape != parent.wall.shape or not np.all(np.isfinite(chi))
+            or np.any(chi < 0.0) or np.any(chi > 1.0)):
+        raise ValueError("child fraction must be finite, bounded, and grid matched")
+    copied = lambda state: DefectState(*(np.asarray(x).copy() for x in (
+        state.rp, state.rm, state.forest, state.wall)))
+    zero = np.zeros_like(chi)
+    return SparseFrontState(
+        copied(parent), copied(child), copied(child), chi.copy(), chi.copy(),
+        chi.copy(), zero, np.zeros_like(parent.rp), FrontLedger(),
+        int(parent_label), int(child_label))
+
+
 def initialize_existing_subgrain_front(parent, child_fraction,
                                        parent_label, child_label):
     """Map an already physical subgrain with zero sweep and zero heat.

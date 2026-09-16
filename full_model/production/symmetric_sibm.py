@@ -173,6 +173,31 @@ def allen_cahn_step(eta, phase_energy_J_m3, spacing_m, kappa_J_m,
     return updated, derivative
 
 
+def normalized_production_phase_step(eta, phase_energy_J_m3, spacing_m,
+                                     kappa_J_m, barrier_J_m3, step_scale):
+    """Exact two-phase clip/normalize map used by the production SIBM step."""
+    fields = np.asarray(eta, dtype=float)
+    phase = np.asarray(phase_energy_J_m3, dtype=float)
+    if phase.shape == (2,):
+        phase = np.broadcast_to(phase, fields.shape)
+    _, bulk_derivative = common_variational_stored_energy(fields, phase)
+    lap = (np.roll(fields, -1, axis=0)-2*fields
+           +np.roll(fields, 1, axis=0))/float(spacing_m)**2
+    other = fields[:, ::-1]
+    derivative = (-float(kappa_J_m)*lap
+                  +2*float(barrier_J_m3)*fields*other*other
+                  +bulk_derivative)
+    updated = np.clip(fields-float(step_scale)*derivative, 0.0, 1.0)
+    updated /= np.maximum(np.sum(updated, axis=-1, keepdims=True), 1e-300)
+    return updated, derivative
+
+
+def exchange_reflect_pair(array):
+    """Planar parent/child exchange involution on a periodic pair field."""
+    value = np.asarray(array)
+    return np.roll(value[::-1, ::-1], 1, axis=0)
+
+
 def flat_front_variational_audit(eta, phase_terms_J_m3, spacing_m,
                                  kappa_J_m, barrier_J_m3,
                                  perturbation_m=1e-10):

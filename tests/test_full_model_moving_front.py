@@ -6,7 +6,7 @@ import numpy as np
 from full_model.production.moving_front import (
     DefectState, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, initialize_sparse_front,
-    initialize_existing_boundary_front,
+    initialize_declared_boundary_front, initialize_existing_boundary_front,
     conservative_front_transfer, front_feasibility_fields,
     reconstruct_mixture, signed_density, state_arrays, state_from_checkpoint,
     state_metadata_json,
@@ -36,6 +36,22 @@ class MovingFrontTest(unittest.TestCase):
         updated, mixture = self.advance(state, state.chi)
         self.assertEqual(updated.ledger.parent_line_processed_m, 0.0)
         self.assertTrue(np.array_equal(mixture.rp, state.parent.rp))
+
+    def test_declared_boundary_preserves_phase_contrast_without_processing(self):
+        parent = self.parent()
+        child = DefectState(*(0.25*np.asarray(value) for value in (
+            parent.rp, parent.rm, parent.forest, parent.wall)))
+        chi = np.linspace(0.0, 1.0, 16).reshape(4, 4)
+        state = initialize_declared_boundary_front(parent, child, chi, 0, 1)
+        mixture = reconstruct_mixture(state)
+        for actual, high, low in zip(
+                (mixture.rp, mixture.rm, mixture.forest, mixture.wall),
+                (parent.rp, parent.rm, parent.forest, parent.wall),
+                (child.rp, child.rm, child.forest, child.wall)):
+            weight = chi[:, :, None] if actual.ndim == 3 else chi
+            np.testing.assert_allclose(actual, (1.0-weight)*high+weight*low)
+        self.assertEqual(state.ledger.parent_line_processed_m, 0.0)
+        self.assertEqual(np.max(state.boundary_line_density_m2), 0.0)
 
     def test_advance_closes_line_signed_burgers_and_energy(self):
         state = self.state(); chi = np.zeros((4, 4)); chi[:, :2] = 1.0

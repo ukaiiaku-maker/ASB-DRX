@@ -21,7 +21,8 @@ if str(ROOT) not in sys.path:
 from full_model.production.symmetric_sibm import production_stage_overrides
 
 
-def parameters(n, steps, stage, parent, child, mobility, *, label_swapped=False):
+def parameters(n, steps, stage, parent, child, mobility, *, label_swapped=False,
+               projection_enabled=True):
     result = {
         "Nx": n, "Ny": n, "grain_max": 8,
         "nSteps": steps, "edot_app": .001,
@@ -36,6 +37,7 @@ def parameters(n, steps, stage, parent, child, mobility, *, label_swapped=False)
         "sibm_initial_bulge_radius_um": 0.0, "sibm_pin_endpoints": False,
         "sibm_active_window_radius_um": 4.5,
         "sibm_mobility_multiplier": mobility,
+        "sibm_equal_state_projection_enabled": bool(projection_enabled),
         "disable_nucleation": True, "use_hazard_nucleation": False,
         "use_component_relabel": False, "diag_interval": max(1, steps//10),
         "save_interval": 100000, "restart_interval": max(steps-1, 1),
@@ -106,6 +108,10 @@ def main():
     parser.add_argument("--grid", type=int, default=32)
     parser.add_argument("--steps", type=int, default=100)
     parser.add_argument("--stages", nargs="+", default=[f"S{i}" for i in range(6)])
+    parser.add_argument("--projection-enabled", action=argparse.BooleanOptionalAction,
+                        default=True)
+    parser.add_argument("--front-processing-enabled",
+                        action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args(); args.root.mkdir(parents=True, exist_ok=True)
     cases = {
         "equal": (2.5e17, 2.5e17, 1000.0, False),
@@ -118,10 +124,12 @@ def main():
     for stage in args.stages:
         for case, (parent, child, mobility, swapped) in cases.items():
             name = f"{stage.lower()}-{case}"
-            records.append(run_case(
-                args.root, name,
-                parameters(args.grid, args.steps, stage, parent, child, mobility,
-                           label_swapped=swapped)))
+            config = parameters(
+                args.grid, args.steps, stage, parent, child, mobility,
+                label_swapped=swapped, projection_enabled=args.projection_enabled)
+            config["sibm_front_processing_override"] = bool(
+                args.front_processing_enabled)
+            records.append(run_case(args.root, name, config))
     by_stage = {}
     for stage in args.stages:
         rows = {row["case"].split("-", 1)[1]: row for row in records
@@ -142,6 +150,8 @@ def main():
     result = {
         "schema": "asb-drx/v26-sequential-production-sibm/v1",
         "grid": args.grid, "steps": args.steps, "records": records,
+        "equal_state_projection_enabled": bool(args.projection_enabled),
+        "front_processing_enabled": bool(args.front_processing_enabled),
         "stage_decisions": by_stage,
         "first_directionality_breaking_stage": first_failure,
         "all_requested_stages_passed": first_failure is None,

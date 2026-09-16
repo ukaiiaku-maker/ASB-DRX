@@ -41,15 +41,21 @@ from full_model.production.wall_topology_supply import (
 )
 
 
-def build_case(n, length_m=3.2e-6):
+def build_case(n, length_m=3.2e-6, *, periodic_nye_consistent=False):
     systems = bcc_four_family_systems()
     topologies = (make_junction_topology(
         systems, 0, 1, 1, -1, line_tension_J_m=1e-9),)
     dx = length_m/n
+    if periodic_nye_consistent:
+        mobile_plus = mobile_minus = 7.5e13
+        forest_plus = forest_minus = 4.5e13
+    else:
+        mobile_plus, mobile_minus = 8e13, 7e13
+        forest_plus, forest_minus = 5e13, 4e13
     old = initialize_coupled_state(
-        (n, n), systems, topologies, mobile_plus_m2=8e13,
-        mobile_minus_m2=7e13, forest_plus_m2=5e13,
-        forest_minus_m2=4e13, wall_tangle_plus_m2=0.0,
+        (n, n), systems, topologies, mobile_plus_m2=mobile_plus,
+        mobile_minus_m2=mobile_minus, forest_plus_m2=forest_plus,
+        forest_minus_m2=forest_minus, wall_tangle_plus_m2=0.0,
         wall_tangle_minus_m2=0.0, junction_m2=0.0)
     _, slip_direction, plane_normal = rotated_system_fields(
         systems, np.zeros((n, n)))

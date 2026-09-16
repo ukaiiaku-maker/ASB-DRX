@@ -1,4 +1,5 @@
 from full_model.production.symmetric_sibm import (
+    exchange_reflect_pair, normalized_production_phase_step,
     production_stage_overrides, sequential_activations,
 )
 from full_model.production.moving_front import (
@@ -9,6 +10,20 @@ from full_model.production.moving_front import (
     translation_sweep_from_profile_change,
 )
 import numpy as np
+
+
+def test_normalized_phase_map_is_exchange_reflection_equivariant():
+    rng = np.random.default_rng(2801)
+    child = rng.uniform(0.05, 0.95, 64)
+    eta = np.stack((1.0-child, child), axis=-1)
+    energy = rng.uniform(0.0, 2e6, eta.shape)
+    kwargs = dict(spacing_m=1e-7, kappa_J_m=5e-7,
+                  barrier_J_m3=5e6, step_scale=1e-10)
+    direct, _ = normalized_production_phase_step(eta, energy, **kwargs)
+    transformed, _ = normalized_production_phase_step(
+        exchange_reflect_pair(eta), exchange_reflect_pair(energy), **kwargs)
+    np.testing.assert_allclose(
+        transformed, exchange_reflect_pair(direct), rtol=0.0, atol=2e-16)
 
 
 def test_v26_activation_ladder_has_six_strictly_cumulative_stages():
