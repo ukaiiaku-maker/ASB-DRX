@@ -1,0 +1,73 @@
+{
+  "schema": "asb-drx/v32/asb-adaptive-preflight/v1",
+  "classification": "PREFLIGHT_PASSED_FULL_TIER1_NOT_YET_LAUNCHED",
+  "source": {
+    "commit": "697c529103cc5cca855d42c31ed9aa832bd2fb3a",
+    "local_remote_identity_verified": true,
+    "detached_worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v32-asb-preflight-697c529"
+  },
+  "case": {
+    "case_id": 0,
+    "name": "T0900_R3e4_seed43_adiabatic",
+    "grid": [128, 128],
+    "temperature_K": 900.0,
+    "strain_rate_s-1": 30000.0,
+    "seed": 43,
+    "steps_initial": 2,
+    "steps_restart": 2,
+    "final_checkpoint_step": 3,
+    "final_sim_time_s": 1.3333333333333334e-08,
+    "initial_wall_time_s": 27.92,
+    "restart_wall_time_s": 25.41
+  },
+  "configuration_echo": {
+    "v31_asb_common_mura_ledger": true,
+    "mechanical_heterogeneity": "eigenstrain_particle",
+    "density_noise_fraction": 0.02,
+    "signed_noise_fraction": 0.01,
+    "thermal_control": "adiabatic",
+    "thermal_conductivity_W_m_K": 0.0,
+    "bath_coupling_W_m3_K": 0.0
+  },
+  "restart": {
+    "passed": true,
+    "input": "drx_v25_restart_000001.npz",
+    "output": "drx_v25_restart_000003.npz",
+    "state_step_advanced_exactly": true
+  },
+  "energy_and_dissipation": {
+    "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+    "all_channels_available": true,
+    "legacy_junction_enabled": false,
+    "residual_defined_dissipation": false,
+    "numerical_constraints_in_physical_energy": false,
+    "numerical_constraint_drives_physical_state": false,
+    "external_work_J_m3": 1.3549080603809934e-05,
+    "physical_stored_change_J_m3": -5.035187721252441,
+    "thermal_change_J_m3": 5.035201233026532,
+    "exported_heat_J_m3": 0.0,
+    "relative_first_law_residual": 3.7045752037348923e-09,
+    "relative_dissipation_heat_residual": 4.409845697161902e-17,
+    "minimum_physical_channel_W_m3": 0.0,
+    "maximum_channel_closure_W_m3": 3.814697265625e-06
+  },
+  "common_mura_invariants": {
+    "maximum_relative_burgers_rate_residual": 5.267057296678307e-18,
+    "maximum_relative_line_balance_residual": 4.7730292344031066e-17,
+    "maximum_relative_energy_balance_residual": 0.0
+  },
+  "checksums": {
+    "drx_v25_restart_000003.npz": "7ae8bc0ebf482fe904932a8583a34ba686843084a9ec4c9d264f8fa7ebfaa2f0",
+    "v32_adaptive_run_record.json": "087c802145dddbdfed589a509271aa1400e2b92bcd98631371a10a94c3307817",
+    "output_inventory.sha256.json": "a1373a19d6bfaba70a02ab483a9866f0f1406e7c6513486c35f01d12b3cca770",
+    "all_inventory_entries_verified": true
+  },
+  "runtime_projection": {
+    "basis": "completed V31 128 anchor throughput, not four-step startup cost",
+    "hours_per_case": "approximately 3.6 to 4.0 at current local load",
+    "sequential_eight_case_hours": "approximately 29 to 32",
+    "maximum_concurrency_two_hours": "approximately 14.5 to 16, subject to shared-load slowdown"
+  },
+  "tier1_authorized": true,
+  "tier2_authorized": false
+}
