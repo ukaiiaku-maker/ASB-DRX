@@ -311,81 +311,100 @@ def accepted_v24_mechanical_step(
     proposed_family_work_rate = np.sum(
         drive["raw_stress_Pa"]*proposed_mura_slip_rate, axis=(0, 1))
     proposed_family_work = accepted_dt*proposed_family_work_rate
-    # Each Burgers family is an independent dissipative channel.  A channel
-    # whose proposed flux does nonpositive conjugate work is physically
-    # stalled; it cannot borrow work from a different family.  The exact-off
-    # legacy comparator deliberately retains every proposed family.
+    # The exact-off legacy comparator deliberately retains every proposed
+    # family.  The production energy-limited path selects families below from
+    # their complete finite-event affinity, not from conjugate mechanical work
+    # alone.  Keep the full-rate timestep here: the selection is a constrained
+    # constitutive rate over this interval, not a hidden timestep subdivision.
     family_event_scales = np.ones(len(systems))
-    if mura_work_budget_mode == "energy_limited":
-        work_tolerance = 1e-14*max(float(np.max(np.abs(proposed_family_work))), 1.0)
-        family_event_scales = (proposed_family_work > work_tolerance).astype(float)
-        proposed_velocity_plus_3d = (
-            proposed_velocity_plus_3d*family_event_scales[None, None, :, None])
-        proposed_velocity_minus_3d = (
-            proposed_velocity_minus_3d*family_event_scales[None, None, :, None])
-        proposed_family_flow_rate = (
-            proposed_family_flow_rate*family_event_scales[None, None, :, None, None])
-        proposed_mura_slip_rate = (
-            proposed_mura_slip_rate*family_event_scales[None, None, :])
-        # A physically stalled channel is absent from the accepted event and
-        # therefore cannot impose its CFL or spin restriction on that event.
-        active_planar_velocity = proposed_velocity_plus_3d[..., :2]
-        active_courant_rate = np.max(
-            np.sum(np.abs(active_planar_velocity), axis=-1)
-            /common_parameters.spacing_m)
-        active_total_flow = np.sum(proposed_family_flow_rate, axis=2)
-        active_orientation_rate = common_parameters.orientation_spin_weight*.5*(
-            active_total_flow[..., 1, 0]-active_total_flow[..., 0, 1])
-        accepted_dt = min(
-            float(dt_s), 0.8/max(float(active_courant_rate), 1e-300),
-            maximum_orientation_increment_rad/max(
-                float(np.max(np.abs(active_orientation_rate))), 1e-300))
-        proposed_family_work = accepted_dt*proposed_family_work_rate
-    # The exact fixed-total-strain release is quadratic in the event scale.
-    # One full-event solve plus the conjugate slope therefore defines it for
-    # every backtracked candidate without repeated elastic solves.
-    full_beta = (state.common.beta_p
-                 +accepted_dt*np.sum(proposed_family_flow_rate, axis=2))
     elastic_before = _resolved_elastic_energy_sum_J_m3_cells(drive)
-    elastic_after_full = _elastic_energy_sum_J_m3_cells(
-        state.common, full_beta, driving, common_parameters)
-    full_plastic_work = float(np.sum(
-        accepted_dt*drive["raw_stress_Pa"]*proposed_mura_slip_rate))
-    elastic_quadratic = None
-    if elastic_before is not None:
-        full_release = elastic_before-elastic_after_full
-        elastic_quadratic = full_plastic_work-full_release
+
+    def _candidate_model(scales):
+        scaled_flow = (proposed_family_flow_rate
+                       *scales[None, None, :, None, None])
+        scaled_slip = proposed_mura_slip_rate*scales[None, None, :]
+        full_beta = state.common.beta_p+accepted_dt*np.sum(scaled_flow, axis=2)
+        full_plastic_work = float(np.sum(
+            accepted_dt*drive["raw_stress_Pa"]*scaled_slip))
+        elastic_quadratic = None
+        if elastic_before is not None:
+            elastic_after = _elastic_energy_sum_J_m3_cells(
+                state.common, full_beta, driving, common_parameters)
+            elastic_quadratic = (
+                full_plastic_work-(elastic_before-elastic_after))
+        return scaled_flow, full_plastic_work, elastic_quadratic
+
+    def _candidate_trial(scales, event_scale, model):
+        scaled_flow, full_plastic_work, elastic_quadratic = model
+        velocity_plus = (event_scale*proposed_velocity_plus_3d
+                         *scales[None, None, :, None])
+        velocity_minus = (event_scale*proposed_velocity_minus_3d
+                          *scales[None, None, :, None])
+        family_flow = event_scale*scaled_flow
+        density, alignment, capture = accepted_mura_transport_capture_step(
+            state.density, state.reservoir_alignment,
+            velocity_plus, velocity_minus, capture_support, systems,
+            state.common.orientation_rad, common_parameters.spacing_m,
+            accepted_dt, topologies)
+        elastic_release = None
+        if elastic_before is not None:
+            elastic_release = (event_scale*full_plastic_work
+                               -event_scale*event_scale*elastic_quadratic)
+        audit, slip_rate, plastic_work, defect_delta, line_creation = (
+            _mura_budget_audit(
+                state, density, capture, family_flow,
+                drive["raw_stress_Pa"], schmid_tensors, schmid_norm2,
+                event_scale, accepted_dt, systems, topologies,
+                common_parameters, elastic_release))
+        audit["family_event_scales"] = [float(value) for value in scales]
+        audit["proposed_family_work_before_selection_J_m3_cells"] = [
+            float(value) for value in proposed_family_work]
+        # Retain the V32 key for restart/postprocessor compatibility while
+        # making clear in the new ledger that it no longer selects families.
+        audit["proposed_family_work_before_stall_J_m3_cells"] = [
+            float(value) for value in proposed_family_work]
+        return (density, alignment, capture, family_flow, slip_rate,
+                plastic_work, defect_delta, line_creation, audit)
+
+    family_candidate_audits = []
+    if mura_work_budget_mode == "energy_limited":
+        family_event_scales = np.zeros(len(systems))
+        for family in range(len(systems)):
+            scales = np.zeros(len(systems)); scales[family] = 1.0
+            try:
+                candidate = _candidate_trial(
+                    scales, 1.0, _candidate_model(scales))
+                audit = candidate[-1]
+                selected = bool(audit["admissible"])
+                family_candidate_audits.append({
+                    "family": int(family), "result": "EVALUATED",
+                    "selected": selected, "audit": audit})
+                family_event_scales[family] = float(selected)
+            except (ValueError, RuntimeError) as error:
+                if ("alignment magnitude exceeds" not in str(error)
+                        and "negative mobile density" not in str(error)):
+                    raise
+                family_candidate_audits.append({
+                    "family": int(family),
+                    "result": "INADMISSIBLE_KINEMATICS",
+                    "selected": False,
+                    "error": f"{type(error).__name__}: {error}"})
+
+    selected_model = _candidate_model(family_event_scales)
 
     budget_trials = []
     accepted_transaction = None
     scales = ([1.0] if mura_work_budget_mode == "legacy_reject" else
+              [0.0] if not np.any(family_event_scales > 0.0) else
               [2.0**(-attempt) for attempt in
                range(int(maximum_work_budget_backtracks)+1)]+[0.0])
     for event_scale in scales:
-        velocity_plus_3d = event_scale*proposed_velocity_plus_3d
-        velocity_minus_3d = event_scale*proposed_velocity_minus_3d
-        family_flow_rate = event_scale*proposed_family_flow_rate
         try:
-            transported_density, transported_alignment, capture_ledger = (
-                accepted_mura_transport_capture_step(
-                    state.density, state.reservoir_alignment,
-                    velocity_plus_3d, velocity_minus_3d, capture_support,
-                    systems, state.common.orientation_rad,
-                    common_parameters.spacing_m, accepted_dt, topologies))
-            elastic_release = None
-            if elastic_before is not None:
-                elastic_release = (event_scale*full_plastic_work
-                                   -event_scale*event_scale*elastic_quadratic)
-            audit, mura_slip_rate, plastic_work_increment_J_m3, defect_delta, line_creation = (
-                _mura_budget_audit(
-                    state, transported_density, capture_ledger,
-                    family_flow_rate, drive["raw_stress_Pa"], schmid_tensors,
-                    schmid_norm2, event_scale, accepted_dt, systems, topologies,
-                    common_parameters, elastic_release))
-            audit["family_event_scales"] = [float(value) for value in
-                                             family_event_scales]
-            audit["proposed_family_work_before_stall_J_m3_cells"] = [
-                float(value) for value in proposed_family_work]
+            (transported_density, transported_alignment, capture_ledger,
+             family_flow_rate, mura_slip_rate,
+             plastic_work_increment_J_m3, defect_delta, line_creation,
+             audit) = _candidate_trial(
+                 family_event_scales, event_scale, selected_model)
             budget_trials.append(audit)
             if mura_work_budget_mode == "legacy_reject":
                 old_storage = float(np.sum(line_creation))
@@ -642,7 +661,20 @@ def accepted_v24_mechanical_step(
             "accepted": accepted_budget,
             "trial_count": len(budget_trials),
             "trials": budget_trials,
+            "family_selection_rule": (
+                "complete_discrete_full_event_affinity_then_joint_backtrack"
+                if mura_work_budget_mode == "energy_limited"
+                else "legacy_no_family_selection"),
+            "family_candidate_audits": family_candidate_audits,
+            "joint_selected_family_candidate": budget_trials[0],
             "remainder_fraction_unreacted": float(1.0-event_scale),
+            "unreacted_remainder_semantics": (
+                "deterministic_constrained_rate_no_debt_recomputed_next_step"
+                if mura_work_budget_mode == "energy_limited"
+                else "legacy_not_applicable"),
+            "family_unreacted_fractions": [float(
+                1.0-event_scale*family_event_scales[index])
+                for index in range(len(systems))],
             "physical_stall": bool(event_scale == 0.0
                                    or not np.any(family_event_scales > 0.0)),
             "stalled_families": [int(index) for index, scale in
