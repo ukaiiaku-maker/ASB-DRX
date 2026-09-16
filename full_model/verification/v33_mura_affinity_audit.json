@@ -1,0 +1,3048 @@
+{
+  "cases": [
+    {
+      "applied_strain": 0.03841278100648024,
+      "cell_count": 4096,
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-20260916/cases/mechanical_heterogeneity_64/checkpoint_step_000001451_strain_0.03841278.npz",
+      "checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672",
+      "checkpoint_source_sha": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+      "event_scale_semantics": {
+        "not_scaled": [
+          "accepted_dt_s",
+          "runner physical_time increment",
+          "runner imposed-strain clock increment",
+          "post-Mura reaction interval"
+        ],
+        "scaled": [
+          "signed velocities",
+          "family plastic-flow rate",
+          "slip increment",
+          "beta_p/Nye increment",
+          "orientation increment"
+        ]
+      },
+      "full_discrete_affinity": {
+        "accepted_dt_s": 3.385412109777578e-10,
+        "affinity_definition": "recoverable elastic energy release minus exact defect free-energy change for the complete isolated-family finite-volume event",
+        "all_family_full_event": {
+          "error": "ValueError: donor-cell transport violates multidimensional CFL <= 1",
+          "family_extent": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "label": "all_families",
+          "result": "INADMISSIBLE_KINEMATICS"
+        },
+        "complementarity_masked_full_event": {
+          "accepted_dt_s": 3.385412109777578e-10,
+          "active_cell_ij": [
+            35,
+            34
+          ],
+          "active_cell_line_creation_energy_J_m3": 261629.01353950996,
+          "admissibility_tolerance_J_m3_cells": 2.4365273364066914e-06,
+          "admissible": false,
+          "dissipative_drag_and_heat_J_m3_cells": -2655644.7055473165,
+          "event_scale": 1.0,
+          "existing_defect_energy_release_J_m3_cells": 0.0,
+          "external_work_J_m3_cells": 0.0,
+          "family_extent": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.022729997062500007,
+            0.017466067992187504,
+            2075966.1788212475,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.14386029606515321,
+            0.14386029575715703,
+            117170.68923045172,
+            0.0
+          ],
+          "label": "v32_complementarity_mask",
+          "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+          "plastic_work_J_m3_cells": 117170.97695104452,
+          "plastic_work_not_double_counted": true,
+          "proposed_defect_energy_change_J_m3_cells": 2436527.3364066915,
+          "proposed_line_creation_energy_J_m3_cells": 2075966.21901731,
+          "reaction_extents": {
+            "captured_line_m2_cells": 103936009524774.25,
+            "mura_line_stretching_m2_cells": 1383977479344873.2
+          },
+          "recoverable_elastic_energy_release_J_m3_cells": -219117.369140625,
+          "result": "EVALUATED"
+        },
+        "discrete_family_trials": [
+          {
+            "family": 0,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 0.14386029606515352,
+            "full_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                37,
+                31
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.0015334211484375,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 0.11604383797384799,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                0.022729997062500007,
+                6.468750000000017e-09,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.14386029606515321,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "label": "family_0_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 0.14386029606515366,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 0.026046005776152015,
+              "proposed_line_creation_energy_J_m3_cells": 0.02273000353125,
+              "reaction_extents": {
+                "captured_line_m2_cells": 1025121.4984348207,
+                "mura_line_stretching_m2_cells": 15153335.6875
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.14208984375,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                37,
+                31
+              ],
+              "active_cell_line_creation_energy_J_m3": 1.4765625e-09,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -3.958120942115784e-08,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                9.5367431640625e-07,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                2.6062499999999788e-08,
+                6.468750000000017e-09,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                1.3719586950793573e-07,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "label": "family_0_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 1.3719586950793615e-07,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 3.958120942115784e-08,
+              "proposed_line_creation_energy_J_m3_cells": 3.2531249999999996e-08,
+              "reaction_extents": {
+                "captured_line_m2_cells": 0.9776320442531783,
+                "mura_line_stretching_m2_cells": 21.6875
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.0,
+              "result": "EVALUATED"
+            }
+          },
+          {
+            "family": 1,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 0.14386029575715673,
+            "full_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                36,
+                31
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.0013137838125,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 0.12209207750856876,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                6.281250000000016e-09,
+                0.017466067992187504,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.14386029575715703,
+                0.0,
+                0.0
+              ],
+              "label": "family_1_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 0.1438602957571568,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 0.020089318975806236,
+              "proposed_line_creation_energy_J_m3_cells": 0.0174660742734375,
+              "reaction_extents": {
+                "captured_line_m2_cells": 1030473.9137372754,
+                "mura_line_stretching_m2_cells": 11644049.515625
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.142181396484375,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                36,
+                31
+              ],
+              "active_cell_line_creation_energy_J_m3": 1.265625e-09,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -3.306195139884949e-08,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                9.5367431640625e-07,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                6.281250000000016e-09,
+                2.1445312499999838e-08,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                1.3719586921420768e-07,
+                0.0,
+                0.0
+              ],
+              "label": "family_1_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 1.3719586921420747e-07,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 3.306195139884949e-08,
+              "proposed_line_creation_energy_J_m3_cells": 2.77265625e-08,
+              "reaction_extents": {
+                "captured_line_m2_cells": 0.9827365052578692,
+                "mura_line_stretching_m2_cells": 18.484375
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.0,
+              "result": "EVALUATED"
+            }
+          },
+          {
+            "family": 2,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 117170.68923045363,
+            "full_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                35,
+                34
+              ],
+              "active_cell_line_creation_energy_J_m3": 261629.01353950996,
+              "admissibility_tolerance_J_m3_cells": 2.4365272902654127e-06,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -2655644.9499333813,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                6.281250000000016e-09,
+                6.468750000000017e-09,
+                2075966.1788212475,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                117170.68923045172,
+                0.0
+              ],
+              "label": "family_2_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 117170.68923045136,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 2436527.2902654125,
+              "proposed_line_creation_energy_J_m3_cells": 2075966.1788212573,
+              "reaction_extents": {
+                "captured_line_m2_cells": 103936007469178.88,
+                "mura_line_stretching_m2_cells": 1383977452547505.0
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": -219117.65966796875,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                34,
+                34
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.0456183819375,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -0.08727074088528752,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                9.5367431640625e-07,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                6.281250000000016e-09,
+                6.468750000000017e-09,
+                0.11479082109375001,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                0.1117426769547002,
+                0.0
+              ],
+              "label": "family_2_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 0.11174267695469986,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 0.24309349479153752,
+              "proposed_line_creation_energy_J_m3_cells": 0.11479083384375,
+              "reaction_extents": {
+                "captured_line_m2_cells": 99121100.87316406,
+                "mura_line_stretching_m2_cells": 76527222.5625
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.15582275390625,
+              "result": "EVALUATED"
+            }
+          },
+          {
+            "family": 3,
+            "frozen_v32_complementarity_active": false,
+            "frozen_v32_mechanical_work_J_m3_cells": -1879644.9200663911,
+            "full_event": {
+              "error": "ValueError: donor-cell transport violates multidimensional CFL <= 1",
+              "family_extent": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "label": "family_3_full_event",
+              "result": "INADMISSIBLE_KINEMATICS"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 3.385412109777578e-10,
+              "active_cell_ij": [
+                23,
+                20
+              ],
+              "active_cell_line_creation_energy_J_m3": 2.44054921875e-05,
+              "admissibility_tolerance_J_m3_cells": 1.6280517578124999e-12,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -1.7209619933273643,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                0.0,
+                9.5367431640625e-07
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                6.281250000000016e-09,
+                6.468750000000017e-09,
+                0.0,
+                0.00010686735937499999
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                0.0,
+                -1.7925690842307864
+              ],
+              "label": "family_3_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": -1.7925690842307729,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 0.09291023551486433,
+              "proposed_line_creation_energy_J_m3_cells": 0.000106880109375,
+              "reaction_extents": {
+                "captured_line_m2_cells": 121723706.1592147,
+                "mura_line_stretching_m2_cells": 71253.40625
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": -1.6280517578125,
+              "result": "EVALUATED"
+            }
+          }
+        ],
+        "frozen_v32_complementarity_mask": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "frozen_v32_family_mechanical_work_J_m3_cells": [
+          0.14386029606515352,
+          0.14386029575715673,
+          117170.68923045363,
+          -1879644.9200663911
+        ],
+        "nonadditivity_warning": "isolated family affinities are directional finite-event tests; elastic quadratic and defect-energy coupling prevent summing them",
+        "work_tolerance_J_m3_cells": 1.2750419674636645e-08
+      },
+      "grid": 64,
+      "one_step_checkpoint_forks": [
+        {
+          "accepted_dt_s": 3.385412109777578e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 55154790465109.16,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_1",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14386029606515352,
+            0.14386029575715673,
+            117170.68923045363,
+            -1879644.9200663911
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 3.385412109777578e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 55154790465109.16,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.5",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14386029606515352,
+            0.14386029575715673,
+            117170.68923045363,
+            -1879644.9200663911
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 1e-09,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 3.385412109777578e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 55154790465109.16,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.25",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14386029606515352,
+            0.14386029575715673,
+            117170.68923045363,
+            -1879644.9200663911
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 5e-10,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 2.5e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 40729746244049.47,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.125",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.10623543855241686,
+            0.10623543832497277,
+            86526.16389895865,
+            -1388047.3477938585
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 2.5e-10,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 1.25e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 20364873122024.734,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.0625",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.05311771927620843,
+            0.053117719162486386,
+            43263.081949479325,
+            -694023.6738969292
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 1.25e-10,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 3.385412109777578e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 55154790465109.16,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "fixed_total_strain_hold",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14386029606515352,
+            0.14386029575715673,
+            117170.68923045363,
+            -1879644.9200663911
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 3.377189082209394e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.027899663113651718,
+              "raw_sum_rate_W_m3_cells": 82612084.88628495,
+              "unit_thickness_total_J": 6.811441189856378e-16,
+              "unit_thickness_total_rate_W": 2.0168966036690664e-06,
+              "volume_average_J_m3": 6.8114411898563765e-06,
+              "volume_average_rate_W_m3": 20168.96603669066
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.2708898176210859,
+              "raw_sum_rate_W_m3_cells": 802116230.4713683,
+              "unit_thickness_total_J": 6.613520938014793e-15,
+              "unit_thickness_total_rate_W": 1.958291578299239e-05,
+              "volume_average_J_m3": 6.613520938014792e-05,
+              "volume_average_rate_W_m3": 195829.1578299239
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.24298984883353114,
+              "raw_sum_rate_W_m3_cells": 719503240.4717017,
+              "unit_thickness_total_J": 5.932369356287382e-15,
+              "unit_thickness_total_rate_W": 1.756599708182866e-05,
+              "volume_average_J_m3": 5.9323693562873814e-05,
+              "volume_average_rate_W_m3": 175659.97081828656
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.114718987453125,
+              "raw_sum_rate_W_m3_cells": 339687783.7176786,
+              "unit_thickness_total_J": 2.80075652961731e-15,
+              "unit_thickness_total_rate_W": 8.293158782169889e-06,
+              "volume_average_J_m3": 2.8007565296173097e-05,
+              "volume_average_rate_W_m3": 82931.58782169888
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.27088951194718286,
+              "raw_sum_rate_W_m3_cells": 802115325.3579867,
+              "unit_thickness_total_J": 6.61351347527302e-15,
+              "unit_thickness_total_rate_W": 1.9582893685497726e-05,
+              "volume_average_J_m3": 6.613513475273019e-05,
+              "volume_average_rate_W_m3": 195828.93685497722
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 9.5367431640625e-07,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5968749999999787e-08,
+            2.1398437499999837e-08,
+            0.11471894008593751,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            1.368801949941613e-07,
+            1.3688019470117632e-07,
+            0.2708895438606888,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 55290437279286.95,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "continued_load_plus_requested_increment",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14352928734619844,
+            0.14352928703898085,
+            284048.2743432718,
+            -1565846.677219186
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 99169258.23779488,
+            "mura_line_stretching_m2_cells": 76479324.96875
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 21
+        },
+        {
+          "accepted_dt_s": 2.7168180964444493e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 206658340.91560975,
+              "raw_sum_rate_W_m3_cells": 7.606631492408983e+17,
+              "unit_thickness_total_J": 5.0453696512600045e-06,
+              "unit_thickness_total_rate_W": 18570.877667014123,
+              "volume_average_J_m3": 50453.696512600036,
+              "volume_average_rate_W_m3": 185708776670141.2
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 214784963.59950086,
+              "raw_sum_rate_W_m3_cells": 7.905754304294203e+17,
+              "unit_thickness_total_J": 5.24377352537844e-06,
+              "unit_thickness_total_rate_W": 19301.15796946827,
+              "volume_average_J_m3": 52437.73525378439,
+              "volume_average_rate_W_m3": 193011579694682.7
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 4634210.226144407,
+              "raw_sum_rate_W_m3_cells": 1.7057491748193538e+16,
+              "unit_thickness_total_J": 1.131398980992287e-07,
+              "unit_thickness_total_rate_W": 416.44266963363134,
+              "volume_average_J_m3": 1131.3989809922869,
+              "volume_average_rate_W_m3": 4164426696336.313
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 3915892.5988553576,
+              "raw_sum_rate_W_m3_cells": 1.4413525160113442e+16,
+              "unit_thickness_total_J": 9.560284665174214e-08,
+              "unit_thickness_total_rate_W": 351.8927041043321,
+              "volume_average_J_m3": 956.0284665174213,
+              "volume_average_rate_W_m3": 3518927041043.321
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 211292551.14175415,
+              "raw_sum_rate_W_m3_cells": 7.777206409890918e+17,
+              "unit_thickness_total_J": 5.158509549359233e-06,
+              "unit_thickness_total_rate_W": 18987.320336647754,
+              "volume_average_J_m3": 51585.09549359232,
+              "volume_average_rate_W_m3": 189873203366477.5
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0061009895859375,
+            0.005460643429687498,
+            1261762.6662748312,
+            2654129.9210188887
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.14283256920400877,
+            0.1428325693402648,
+            96854767.6429752,
+            117930195.67086016
+          ],
+          "first_law_residual_J_m3_cells": -3.3527612686157227e-08,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 58274777151299.31,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "mechanical_constraint_release",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14283256920400883,
+            0.14283256934026456,
+            96854767.64297524,
+            117930195.67086041
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 411287781531192.56,
+            "mura_line_stretching_m2_cells": 2610595065903571.5
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 1
+        },
+        {
+          "accepted_dt_s": 3.385412109777578e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": -0.0,
+              "raw_sum_rate_W_m3_cells": -0.0,
+              "unit_thickness_total_J": -0.0,
+              "unit_thickness_total_rate_W": -0.0,
+              "volume_average_J_m3": -0.0,
+              "volume_average_rate_W_m3": -0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 4.456294805984109e-18,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "recovery_exchange_reactions_off",
+          "physical_stall": true,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14386029606515352,
+            0.14386029575715673,
+            117170.68923045363,
+            -1879644.9200663911
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 0.0,
+            "mura_line_stretching_m2_cells": 0.0
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 22
+        },
+        {
+          "accepted_dt_s": 2.232959894004498e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 999.1207445966302,
+              "raw_sum_rate_W_m3_cells": 4474423151438.015,
+              "unit_thickness_total_J": 2.439259630362867e-11,
+              "unit_thickness_total_rate_W": 0.10923884647065468,
+              "volume_average_J_m3": 0.24392596303628666,
+              "volume_average_rate_W_m3": 1092388464.7065465
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 14136.62185068686,
+              "raw_sum_rate_W_m3_cells": 63308892777894.13,
+              "unit_thickness_total_J": 3.4513236940153476e-10,
+              "unit_thickness_total_rate_W": 1.5456272650853062,
+              "volume_average_J_m3": 3.451323694015347,
+              "volume_average_rate_W_m3": 15456272650.85306
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 13129.01955234399,
+              "raw_sum_rate_W_m3_cells": 58796486168853.44,
+              "unit_thickness_total_J": 3.205327039146483e-10,
+              "unit_thickness_total_rate_W": 1.4354610881067738,
+              "volume_average_J_m3": 3.205327039146482,
+              "volume_average_rate_W_m3": 14354610881.067734
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 11202.657254373316,
+              "raw_sum_rate_W_m3_cells": 50169540816440.44,
+              "unit_thickness_total_J": 2.7350237437434857e-10,
+              "unit_thickness_total_rate_W": 1.224842305088878,
+              "volume_average_J_m3": 2.7350237437434854,
+              "volume_average_rate_W_m3": 12248423050.888779
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 14128.14029694062,
+              "raw_sum_rate_W_m3_cells": 63270909320291.45,
+              "unit_thickness_total_J": 3.4492530021827696e-10,
+              "unit_thickness_total_rate_W": 1.5446999345774284,
+              "volume_average_J_m3": 3.4492530021827688,
+              "volume_average_rate_W_m3": 15446999345.77428
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.00390625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            8.823583593750034e-05,
+            6.825712500000032e-05,
+            5178.740633889661,
+            6023.91646399068
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.0005629770422462572,
+            0.0005629770410595217,
+            7376.195484346475,
+            6760.425240386181
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 39212158118742.31,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "temperature_plus_25K",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14412212281504203,
+            0.14412212251123757,
+            1888306.0439926896,
+            1730668.8615388852
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 637595448727.8862,
+            "mura_line_stretching_m2_cells": 7468438169582.211
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 9
+        },
+        {
+          "accepted_dt_s": 3.375139904790145e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 0.06797884581138341,
+              "raw_sum_rate_W_m3_cells": 201410453.28196585,
+              "unit_thickness_total_J": 1.6596397903169782e-15,
+              "unit_thickness_total_rate_W": 4.917247394579245e-06,
+              "volume_average_J_m3": 1.659639790316978e-05,
+              "volume_average_rate_W_m3": 49172.473945792444
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 0.3109430079922113,
+              "raw_sum_rate_W_m3_cells": 921274426.4346124,
+              "unit_thickness_total_J": 7.591382031059848e-15,
+              "unit_thickness_total_rate_W": 2.2492051426626284e-05,
+              "volume_average_J_m3": 7.591382031059846e-05,
+              "volume_average_rate_W_m3": 224920.5142662628
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 0.2429638565517962,
+              "raw_sum_rate_W_m3_cells": 719863067.6226825,
+              "unit_thickness_total_J": 5.9317347790965876e-15,
+              "unit_thickness_total_rate_W": 1.7574781924381897e-05,
+              "volume_average_J_m3": 5.931734779096587e-05,
+              "volume_average_rate_W_m3": 175747.81924381896
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 0.11470095618750001,
+              "raw_sum_rate_W_m3_cells": 339840597.49556285,
+              "unit_thickness_total_J": 2.8003163131713873e-15,
+              "unit_thickness_total_rate_W": 8.296889587294016e-06,
+              "volume_average_J_m3": 2.800316313171387e-05,
+              "volume_average_rate_W_m3": 82968.89587294015
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 0.3109427023631796,
+              "raw_sum_rate_W_m3_cells": 921273520.9046483,
+              "unit_thickness_total_J": 7.591374569413566e-15,
+              "unit_thickness_total_rate_W": 2.2492029318961142e-05,
+              "volume_average_J_m3": 7.591374569413565e-05,
+              "volume_average_rate_W_m3": 224920.2931896114
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 9.5367431640625e-07,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5968749999999787e-08,
+            2.1351562499999837e-08,
+            0.11470090886718752,
+            0.0
+          ],
+          "family_plastic_work_J_m3_cells": [
+            1.3680153121039018e-07,
+            1.3680153091758965e-07,
+            0.3109427343891507,
+            0.0
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 55324434894823.54,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "admissible_load_perturbation_plus_2p5e_5",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.14344680239046587,
+            0.14344680208344324,
+            326047.08865483716,
+            -1486959.4465980832
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 99181368.20797624,
+            "mura_line_stretching_m2_cells": 76467304.125
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [
+            3
+          ],
+          "trial_count": 21
+        }
+      ],
+      "spacing_m": 1.5625e-07,
+      "step": 1451,
+      "strain_rate_s": 10000.0,
+      "trial_dt_s": 2e-09,
+      "unit_thickness_m": 1.0
+    },
+    {
+      "applied_strain": 0.042001034780099734,
+      "cell_count": 4096,
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916/cases/mechanical_heterogeneity_64/checkpoint_step_000002971_strain_0.04200103.npz",
+      "checkpoint_sha256": "7ca24609de5b299290ee75a098b97c8b1912d8f743a4405792330e3fda1c26b0",
+      "checkpoint_source_sha": "e7aa16e70703bcf74df47da8c5669ec052a446c7",
+      "event_scale_semantics": {
+        "not_scaled": [
+          "accepted_dt_s",
+          "runner physical_time increment",
+          "runner imposed-strain clock increment",
+          "post-Mura reaction interval"
+        ],
+        "scaled": [
+          "signed velocities",
+          "family plastic-flow rate",
+          "slip increment",
+          "beta_p/Nye increment",
+          "orientation increment"
+        ]
+      },
+      "full_discrete_affinity": {
+        "accepted_dt_s": 1.8091591163020715e-10,
+        "affinity_definition": "recoverable elastic energy release minus exact defect free-energy change for the complete isolated-family finite-volume event",
+        "all_family_full_event": {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "active_cell_ij": [
+            39,
+            32
+          ],
+          "active_cell_line_creation_energy_J_m3": 1248117.207681714,
+          "admissibility_tolerance_J_m3_cells": 3.227476287405781e-05,
+          "admissible": false,
+          "dissipative_drag_and_heat_J_m3_cells": -50602201.06183247,
+          "event_scale": 1.0,
+          "existing_defect_energy_release_J_m3_cells": 0.0,
+          "external_work_J_m3_cells": 0.0,
+          "family_extent": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.10416105611718772,
+            0.11077795392187487,
+            8732100.486491853,
+            18722899.619603693
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.4709469810570108,
+            0.47094698106960403,
+            3561429.6985889543,
+            21638509.37493602
+          ],
+          "label": "all_families",
+          "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+          "plastic_work_J_m3_cells": 25199940.0154189,
+          "plastic_work_not_double_counted": true,
+          "proposed_defect_energy_change_J_m3_cells": 32274762.874057814,
+          "proposed_line_creation_energy_J_m3_cells": 27455000.321034484,
+          "reaction_extents": {
+            "captured_line_m2_cells": 1021787694627818.4,
+            "mura_line_stretching_m2_cells": 1.830333354735632e+16
+          },
+          "recoverable_elastic_energy_release_J_m3_cells": -18327438.18777466,
+          "result": "EVALUATED"
+        },
+        "complementarity_masked_full_event": {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "active_cell_ij": [
+            39,
+            32
+          ],
+          "active_cell_line_creation_energy_J_m3": 1248117.207681714,
+          "admissibility_tolerance_J_m3_cells": 3.227476287405781e-05,
+          "admissible": false,
+          "dissipative_drag_and_heat_J_m3_cells": -50602201.06183247,
+          "event_scale": 1.0,
+          "existing_defect_energy_release_J_m3_cells": 0.0,
+          "external_work_J_m3_cells": 0.0,
+          "family_extent": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.10416105611718772,
+            0.11077795392187487,
+            8732100.486491853,
+            18722899.619603693
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.4709469810570108,
+            0.47094698106960403,
+            3561429.6985889543,
+            21638509.37493602
+          ],
+          "label": "v32_complementarity_mask",
+          "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+          "plastic_work_J_m3_cells": 25199940.0154189,
+          "plastic_work_not_double_counted": true,
+          "proposed_defect_energy_change_J_m3_cells": 32274762.874057814,
+          "proposed_line_creation_energy_J_m3_cells": 27455000.321034484,
+          "reaction_extents": {
+            "captured_line_m2_cells": 1021787694627818.4,
+            "mura_line_stretching_m2_cells": 1.830333354735632e+16
+          },
+          "recoverable_elastic_energy_release_J_m3_cells": -18327438.18777466,
+          "result": "EVALUATED"
+        },
+        "discrete_family_trials": [
+          {
+            "family": 0,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 0.47094698105701027,
+            "full_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                39,
+                32
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.016869675984375,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 0.3435529943089932,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                0.10416105611718772,
+                5.414062500000012e-09,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.4709469810570108,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "label": "family_0_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 0.47094698105701044,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 0.11854417365975678,
+              "proposed_line_creation_energy_J_m3_cells": 0.10416106153125,
+              "reaction_extents": {
+                "captured_line_m2_cells": 630234.5922225192,
+                "mura_line_stretching_m2_cells": 69440707.6875
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.46209716796875,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                39,
+                32
+              ],
+              "active_cell_line_creation_energy_J_m3": 1.60546875e-08,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 3.0389288440346718e-05,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                9.5367431640625e-07,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                1.013671874999996e-07,
+                5.414062500000012e-09,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                4.4913004022313197e-07,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "label": "family_0_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 4.491300402231316e-07,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 1.2828968465328217e-07,
+              "proposed_line_creation_energy_J_m3_cells": 1.0678124999999999e-07,
+              "reaction_extents": {
+                "captured_line_m2_cells": 0.6010385439133827,
+                "mura_line_stretching_m2_cells": 71.1875
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 3.0517578125e-05,
+              "result": "EVALUATED"
+            }
+          },
+          {
+            "family": 1,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 0.4709469810696027,
+            "full_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                39,
+                32
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.016865998359375,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 0.33823132421821356,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                4.734375000000008e-09,
+                0.11077795392187487,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.47094698106960403,
+                0.0,
+                0.0
+              ],
+              "label": "family_1_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 0.470946981069603,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 0.12612414453178644,
+              "proposed_line_creation_energy_J_m3_cells": 0.11077795865625001,
+              "reaction_extents": {
+                "captured_line_m2_cells": 632325.6476884349,
+                "mura_line_stretching_m2_cells": 73851972.4375
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 0.46435546875,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                39,
+                32
+              ],
+              "active_cell_line_creation_energy_J_m3": 1.603125e-08,
+              "admissibility_tolerance_J_m3_cells": 1e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 6.089871749281883e-05,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                9.5367431640625e-07,
+                0.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                4.734375000000008e-09,
+                1.0788281249999959e-07,
+                0.0,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                4.491300402351418e-07,
+                0.0,
+                0.0
+              ],
+              "label": "family_1_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 4.491300402351408e-07,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 1.364387571811676e-07,
+              "proposed_line_creation_energy_J_m3_cells": 1.126171875e-07,
+              "reaction_extents": {
+                "captured_line_m2_cells": 0.6030327298054075,
+                "mura_line_stretching_m2_cells": 75.078125
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 6.103515625e-05,
+              "result": "EVALUATED"
+            }
+          },
+          {
+            "family": 2,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 3561429.6985889724,
+            "full_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                39,
+                33
+              ],
+              "active_cell_line_creation_energy_J_m3": 713633.215512499,
+              "admissibility_tolerance_J_m3_cells": 1.0249624673631088e-05,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -11518126.530991929,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                4.734375000000008e-09,
+                5.414062500000012e-09,
+                8732100.486491853,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                3561429.6985889543,
+                0.0
+              ],
+              "label": "family_2_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 3561429.6985889487,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 10249624.673631089,
+              "proposed_line_creation_energy_J_m3_cells": 8732100.486491835,
+              "reaction_extents": {
+                "captured_line_m2_cells": 304643809882444.9,
+                "mura_line_stretching_m2_cells": 5821400324327890.0
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": -1268501.8573608398,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                30,
+                31
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.3657240564375,
+              "admissibility_tolerance_J_m3_cells": 3.7637939453125e-12,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 2.3473641683813184,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                9.5367431640625e-07,
+                0.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                4.734375000000008e-09,
+                5.414062500000012e-09,
+                0.9463435242656245,
+                0.0
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                3.396444033230738,
+                0.0
+              ],
+              "label": "family_2_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 3.3964440332307326,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 1.4164297769311816,
+              "proposed_line_creation_energy_J_m3_cells": 0.9463435344140625,
+              "reaction_extents": {
+                "captured_line_m2_cells": 290530977.1370362,
+                "mura_line_stretching_m2_cells": 630895689.609375
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 3.7637939453125,
+              "result": "EVALUATED"
+            }
+          },
+          {
+            "family": 3,
+            "frozen_v32_complementarity_active": true,
+            "frozen_v32_mechanical_work_J_m3_cells": 21638509.37493608,
+            "full_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                39,
+                32
+              ],
+              "active_cell_line_creation_energy_J_m3": 1248117.1739460398,
+              "admissibility_tolerance_J_m3_cells": 2.2008827370581762e-05,
+              "admissible": false,
+              "dissipative_drag_and_heat_J_m3_cells": -41561984.03668894,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                4.734375000000008e-09,
+                5.414062500000012e-09,
+                0.0,
+                18722899.619603693
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                0.0,
+                21638509.37493602
+              ],
+              "label": "family_3_full_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 21638509.374936026,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 22008827.37058176,
+              "proposed_line_creation_energy_J_m3_cells": 18722899.619603653,
+              "reaction_extents": {
+                "captured_line_m2_cells": 717143883482813.2,
+                "mura_line_stretching_m2_cells": 1.248193307973577e+16
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": -19553156.666107178,
+              "result": "EVALUATED"
+            },
+            "near_zero_event": {
+              "accepted_dt_s": 1.8091591163020715e-10,
+              "active_cell_ij": [
+                38,
+                33
+              ],
+              "active_cell_line_creation_energy_J_m3": 0.43977723225,
+              "admissibility_tolerance_J_m3_cells": 2.17801513671875e-11,
+              "admissible": true,
+              "dissipative_drag_and_heat_J_m3_cells": 19.16627136268653,
+              "event_scale": 1.0,
+              "existing_defect_energy_release_J_m3_cells": 0.0,
+              "external_work_J_m3_cells": 0.0,
+              "family_extent": [
+                0.0,
+                0.0,
+                0.0,
+                9.5367431640625e-07
+              ],
+              "family_line_creation_energy_J_m3_cells": [
+                4.734375000000008e-09,
+                5.414062500000012e-09,
+                0.0,
+                2.0162131167656256
+              ],
+              "family_plastic_work_J_m3_cells": [
+                0.0,
+                0.0,
+                0.0,
+                20.63609063619234
+              ],
+              "label": "family_3_near_zero_event",
+              "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+              "plastic_work_J_m3_cells": 20.636090636192346,
+              "plastic_work_not_double_counted": true,
+              "proposed_defect_energy_change_J_m3_cells": 2.6138800045009702,
+              "proposed_line_creation_energy_J_m3_cells": 2.0162131269140624,
+              "reaction_extents": {
+                "captured_line_m2_cells": 683921702.8453953,
+                "mura_line_stretching_m2_cells": 1344142084.609375
+              },
+              "recoverable_elastic_energy_release_J_m3_cells": 21.7801513671875,
+              "result": "EVALUATED"
+            }
+          }
+        ],
+        "frozen_v32_complementarity_mask": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "frozen_v32_family_mechanical_work_J_m3_cells": [
+          0.47094698105701027,
+          0.4709469810696027,
+          3561429.6985889724,
+          21638509.37493608
+        ],
+        "nonadditivity_warning": "isolated family affinities are directional finite-event tests; elastic quadratic and defect-energy coupling prevent summing them",
+        "work_tolerance_J_m3_cells": 1.909913268518877e-07
+      },
+      "grid": 64,
+      "one_step_checkpoint_forks": [
+        {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 87.43585077136777,
+              "raw_sum_rate_W_m3_cells": 483295526543.2208,
+              "unit_thickness_total_J": 2.134664325472846e-12,
+              "unit_thickness_total_rate_W": 0.011799207190996603,
+              "volume_average_J_m3": 0.02134664325472846,
+              "volume_average_rate_W_m3": 117992071.90996602
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 6152.3291053268795,
+              "raw_sum_rate_W_m3_cells": 34006567194057.895,
+              "unit_thickness_total_J": 1.5020334729801953e-10,
+              "unit_thickness_total_rate_W": 0.8302384568861791,
+              "volume_average_J_m3": 1.5020334729801952,
+              "volume_average_rate_W_m3": 8302384568.861791
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 6062.298820639728,
+              "raw_sum_rate_W_m3_cells": 33508931116192.207,
+              "unit_thickness_total_J": 1.4800534230077463e-10,
+              "unit_thickness_total_rate_W": 0.8180891385789114,
+              "volume_average_J_m3": 1.480053423007746,
+              "volume_average_rate_W_m3": 8180891385.789113
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 5171.0456637837415,
+              "raw_sum_rate_W_m3_cells": 28582591863745.957,
+              "unit_thickness_total_J": 1.2624623202597027e-10,
+              "unit_thickness_total_rate_W": 0.6978171841734854,
+              "volume_average_J_m3": 1.2624623202597025,
+              "volume_average_rate_W_m3": 6978171841.734853
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 6149.734671411095,
+              "raw_sum_rate_W_m3_cells": 33992226642735.426,
+              "unit_thickness_total_J": 1.5014000662624748e-10,
+              "unit_thickness_total_rate_W": 0.8298883457699081,
+              "volume_average_J_m3": 1.5014000662624745,
+              "volume_average_rate_W_m3": 8298883457.699079
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.000244140625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5427273437500106e-05,
+            2.694370312500007e-05,
+            1492.7590902723275,
+            3678.2865211404396
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00011497729029712178,
+            0.0001149772903001963,
+            869.4896725070689,
+            5282.839202865239
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 128982508028383.03,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_1",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47094698105701027,
+            0.4709469810696027,
+            3561429.6985889724,
+            21638509.37493608
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 249459886383.74472,
+            "mura_line_stretching_m2_cells": 3447363775855.828
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 13
+        },
+        {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 87.43585077136777,
+              "raw_sum_rate_W_m3_cells": 483295526543.2208,
+              "unit_thickness_total_J": 2.134664325472846e-12,
+              "unit_thickness_total_rate_W": 0.011799207190996603,
+              "volume_average_J_m3": 0.02134664325472846,
+              "volume_average_rate_W_m3": 117992071.90996602
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 6152.3291053268795,
+              "raw_sum_rate_W_m3_cells": 34006567194057.895,
+              "unit_thickness_total_J": 1.5020334729801953e-10,
+              "unit_thickness_total_rate_W": 0.8302384568861791,
+              "volume_average_J_m3": 1.5020334729801952,
+              "volume_average_rate_W_m3": 8302384568.861791
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 6062.298820639728,
+              "raw_sum_rate_W_m3_cells": 33508931116192.207,
+              "unit_thickness_total_J": 1.4800534230077463e-10,
+              "unit_thickness_total_rate_W": 0.8180891385789114,
+              "volume_average_J_m3": 1.480053423007746,
+              "volume_average_rate_W_m3": 8180891385.789113
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 5171.0456637837415,
+              "raw_sum_rate_W_m3_cells": 28582591863745.957,
+              "unit_thickness_total_J": 1.2624623202597027e-10,
+              "unit_thickness_total_rate_W": 0.6978171841734854,
+              "volume_average_J_m3": 1.2624623202597025,
+              "volume_average_rate_W_m3": 6978171841.734853
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 6149.734671411095,
+              "raw_sum_rate_W_m3_cells": 33992226642735.426,
+              "unit_thickness_total_J": 1.5014000662624748e-10,
+              "unit_thickness_total_rate_W": 0.8298883457699081,
+              "volume_average_J_m3": 1.5014000662624745,
+              "volume_average_rate_W_m3": 8298883457.699079
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.000244140625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5427273437500106e-05,
+            2.694370312500007e-05,
+            1492.7590902723275,
+            3678.2865211404396
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00011497729029712178,
+            0.0001149772903001963,
+            869.4896725070689,
+            5282.839202865239
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 128982508028383.03,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.5",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47094698105701027,
+            0.4709469810696027,
+            3561429.6985889724,
+            21638509.37493608
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 249459886383.74472,
+            "mura_line_stretching_m2_cells": 3447363775855.828
+          },
+          "requested_dt_s": 1e-09,
+          "stalled_families": [],
+          "trial_count": 13
+        },
+        {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 87.43585077136777,
+              "raw_sum_rate_W_m3_cells": 483295526543.2208,
+              "unit_thickness_total_J": 2.134664325472846e-12,
+              "unit_thickness_total_rate_W": 0.011799207190996603,
+              "volume_average_J_m3": 0.02134664325472846,
+              "volume_average_rate_W_m3": 117992071.90996602
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 6152.3291053268795,
+              "raw_sum_rate_W_m3_cells": 34006567194057.895,
+              "unit_thickness_total_J": 1.5020334729801953e-10,
+              "unit_thickness_total_rate_W": 0.8302384568861791,
+              "volume_average_J_m3": 1.5020334729801952,
+              "volume_average_rate_W_m3": 8302384568.861791
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 6062.298820639728,
+              "raw_sum_rate_W_m3_cells": 33508931116192.207,
+              "unit_thickness_total_J": 1.4800534230077463e-10,
+              "unit_thickness_total_rate_W": 0.8180891385789114,
+              "volume_average_J_m3": 1.480053423007746,
+              "volume_average_rate_W_m3": 8180891385.789113
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 5171.0456637837415,
+              "raw_sum_rate_W_m3_cells": 28582591863745.957,
+              "unit_thickness_total_J": 1.2624623202597027e-10,
+              "unit_thickness_total_rate_W": 0.6978171841734854,
+              "volume_average_J_m3": 1.2624623202597025,
+              "volume_average_rate_W_m3": 6978171841.734853
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 6149.734671411095,
+              "raw_sum_rate_W_m3_cells": 33992226642735.426,
+              "unit_thickness_total_J": 1.5014000662624748e-10,
+              "unit_thickness_total_rate_W": 0.8298883457699081,
+              "volume_average_J_m3": 1.5014000662624745,
+              "volume_average_rate_W_m3": 8298883457.699079
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.000244140625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5427273437500106e-05,
+            2.694370312500007e-05,
+            1492.7590902723275,
+            3678.2865211404396
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00011497729029712178,
+            0.0001149772903001963,
+            869.4896725070689,
+            5282.839202865239
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 128982508028383.03,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.25",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47094698105701027,
+            0.4709469810696027,
+            3561429.6985889724,
+            21638509.37493608
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 249459886383.74472,
+            "mura_line_stretching_m2_cells": 3447363775855.828
+          },
+          "requested_dt_s": 5e-10,
+          "stalled_families": [],
+          "trial_count": 13
+        },
+        {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 87.43585077136777,
+              "raw_sum_rate_W_m3_cells": 483295526543.2208,
+              "unit_thickness_total_J": 2.134664325472846e-12,
+              "unit_thickness_total_rate_W": 0.011799207190996603,
+              "volume_average_J_m3": 0.02134664325472846,
+              "volume_average_rate_W_m3": 117992071.90996602
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 6152.3291053268795,
+              "raw_sum_rate_W_m3_cells": 34006567194057.895,
+              "unit_thickness_total_J": 1.5020334729801953e-10,
+              "unit_thickness_total_rate_W": 0.8302384568861791,
+              "volume_average_J_m3": 1.5020334729801952,
+              "volume_average_rate_W_m3": 8302384568.861791
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 6062.298820639728,
+              "raw_sum_rate_W_m3_cells": 33508931116192.207,
+              "unit_thickness_total_J": 1.4800534230077463e-10,
+              "unit_thickness_total_rate_W": 0.8180891385789114,
+              "volume_average_J_m3": 1.480053423007746,
+              "volume_average_rate_W_m3": 8180891385.789113
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 5171.0456637837415,
+              "raw_sum_rate_W_m3_cells": 28582591863745.957,
+              "unit_thickness_total_J": 1.2624623202597027e-10,
+              "unit_thickness_total_rate_W": 0.6978171841734854,
+              "volume_average_J_m3": 1.2624623202597025,
+              "volume_average_rate_W_m3": 6978171841.734853
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 6149.734671411095,
+              "raw_sum_rate_W_m3_cells": 33992226642735.426,
+              "unit_thickness_total_J": 1.5014000662624748e-10,
+              "unit_thickness_total_rate_W": 0.8298883457699081,
+              "volume_average_J_m3": 1.5014000662624745,
+              "volume_average_rate_W_m3": 8298883457.699079
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.000244140625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5427273437500106e-05,
+            2.694370312500007e-05,
+            1492.7590902723275,
+            3678.2865211404396
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00011497729029712178,
+            0.0001149772903001963,
+            869.4896725070689,
+            5282.839202865239
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 128982508028383.03,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.125",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47094698105701027,
+            0.4709469810696027,
+            3561429.6985889724,
+            21638509.37493608
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 249459886383.74472,
+            "mura_line_stretching_m2_cells": 3447363775855.828
+          },
+          "requested_dt_s": 2.5e-10,
+          "stalled_families": [],
+          "trial_count": 13
+        },
+        {
+          "accepted_dt_s": 1.25e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 44.808086092854865,
+              "raw_sum_rate_W_m3_cells": 358464688742.83887,
+              "unit_thickness_total_J": 1.0939474143763396e-12,
+              "unit_thickness_total_rate_W": 0.008751579315010716,
+              "volume_average_J_m3": 0.010939474143763395,
+              "volume_average_rate_W_m3": 87515793.15010715
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 8501.641798514505,
+              "raw_sum_rate_W_m3_cells": 68013134388116.04,
+              "unit_thickness_total_J": 2.0755961422154557e-10,
+              "unit_thickness_total_rate_W": 1.6604769137723645,
+              "volume_average_J_m3": 2.0755961422154554,
+              "volume_average_rate_W_m3": 16604769137.723642
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 8451.960249471245,
+              "raw_sum_rate_W_m3_cells": 67615681995769.96,
+              "unit_thickness_total_J": 2.063466857781066e-10,
+              "unit_thickness_total_rate_W": 1.6507734862248526,
+              "volume_average_J_m3": 2.0634668577810658,
+              "volume_average_rate_W_m3": 16507734862.248526
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 7210.272886773375,
+              "raw_sum_rate_W_m3_cells": 57682183094186.99,
+              "unit_thickness_total_J": 1.7603205289974062e-10,
+              "unit_thickness_total_rate_W": 1.4082564231979249,
+              "volume_average_J_m3": 1.760320528997406,
+              "volume_average_rate_W_m3": 14082564231.979246
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 8496.7683355641,
+              "raw_sum_rate_W_m3_cells": 67974146684512.8,
+              "unit_thickness_total_J": 2.0744063319248294e-10,
+              "unit_thickness_total_rate_W": 1.6595250655398635,
+              "volume_average_J_m3": 2.074406331924829,
+              "volume_average_rate_W_m3": 16595250655.398632
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.00048828125,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            3.513496875000004e-05,
+            3.7230210937500114e-05,
+            2072.5443028670124,
+            5137.728511541172
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00015888222498103955,
+            0.00015888222498528773,
+            1201.5107801632876,
+            7300.130700586718
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 89117719708938.47,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "dt_refinement_0.0625",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.32539079676116867,
+            0.32539079676986915,
+            2460694.077774478,
+            14950667.674801653
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 344718002048.4347,
+            "mura_line_stretching_m2_cells": 4806848591182.25
+          },
+          "requested_dt_s": 1.25e-10,
+          "stalled_families": [],
+          "trial_count": 12
+        },
+        {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 87.43585077136777,
+              "raw_sum_rate_W_m3_cells": 483295526543.2208,
+              "unit_thickness_total_J": 2.134664325472846e-12,
+              "unit_thickness_total_rate_W": 0.011799207190996603,
+              "volume_average_J_m3": 0.02134664325472846,
+              "volume_average_rate_W_m3": 117992071.90996602
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 6152.3291053268795,
+              "raw_sum_rate_W_m3_cells": 34006567194057.895,
+              "unit_thickness_total_J": 1.5020334729801953e-10,
+              "unit_thickness_total_rate_W": 0.8302384568861791,
+              "volume_average_J_m3": 1.5020334729801952,
+              "volume_average_rate_W_m3": 8302384568.861791
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 6062.298820639728,
+              "raw_sum_rate_W_m3_cells": 33508931116192.207,
+              "unit_thickness_total_J": 1.4800534230077463e-10,
+              "unit_thickness_total_rate_W": 0.8180891385789114,
+              "volume_average_J_m3": 1.480053423007746,
+              "volume_average_rate_W_m3": 8180891385.789113
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 5171.0456637837415,
+              "raw_sum_rate_W_m3_cells": 28582591863745.957,
+              "unit_thickness_total_J": 1.2624623202597027e-10,
+              "unit_thickness_total_rate_W": 0.6978171841734854,
+              "volume_average_J_m3": 1.2624623202597025,
+              "volume_average_rate_W_m3": 6978171841.734853
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 6149.734671411095,
+              "raw_sum_rate_W_m3_cells": 33992226642735.426,
+              "unit_thickness_total_J": 1.5014000662624748e-10,
+              "unit_thickness_total_rate_W": 0.8298883457699081,
+              "volume_average_J_m3": 1.5014000662624745,
+              "volume_average_rate_W_m3": 8298883457.699079
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.000244140625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5427273437500106e-05,
+            2.694370312500007e-05,
+            1492.7590902723275,
+            3678.2865211404396
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00011497729029712178,
+            0.0001149772903001963,
+            869.4896725070689,
+            5282.839202865239
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 128982508028383.03,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "fixed_total_strain_hold",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47094698105701027,
+            0.4709469810696027,
+            3561429.6985889724,
+            21638509.37493608
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 249459886383.74472,
+            "mura_line_stretching_m2_cells": 3447363775855.828
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 13
+        },
+        {
+          "accepted_dt_s": 1.808130588774717e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 5167.05048423144,
+              "raw_sum_rate_W_m3_cells": 28576754999388.08,
+              "unit_thickness_total_J": 1.2614869346268168e-10,
+              "unit_thickness_total_rate_W": 0.6976746826022482,
+              "volume_average_J_m3": 1.2614869346268165,
+              "volume_average_rate_W_m3": 6976746826.02248
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 421769.7790120711,
+              "raw_sum_rate_W_m3_cells": 2332628968452351.5,
+              "unit_thickness_total_J": 1.0297113745411894e-08,
+              "unit_thickness_total_rate_W": 56.94894942510624,
+              "volume_average_J_m3": 102.97113745411892,
+              "volume_average_rate_W_m3": 569489494251.0624
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 405952.2519442118,
+              "raw_sum_rate_W_m3_cells": 2245148964706725.2,
+              "unit_thickness_total_J": 9.910943650981734e-09,
+              "unit_thickness_total_rate_W": 54.813207146160295,
+              "volume_average_J_m3": 99.10943650981733,
+              "volume_average_rate_W_m3": 548132071461.60284
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 346563.0058105949,
+              "raw_sum_rate_W_m3_cells": 1916692344912122.2,
+              "unit_thickness_total_J": 8.461010884047728e-09,
+              "unit_thickness_total_rate_W": 46.79424670195612,
+              "volume_average_J_m3": 84.61010884047727,
+              "volume_average_rate_W_m3": 467942467019.5611
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 411119.3024284432,
+              "raw_sum_rate_W_m3_cells": 2273725719706113.5,
+              "unit_thickness_total_J": 1.0037092344444416e-08,
+              "unit_thickness_total_rate_W": 55.51088182876254,
+              "volume_average_J_m3": 100.37092344444414,
+              "volume_average_rate_W_m3": 555108818287.6254
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.015625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0016268777109375008,
+            0.0017238600234375024,
+            100786.8418930094,
+            245776.16056684748
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.007356482479542588,
+            0.007356482479739383,
+            62684.54383785187,
+            359085.2204612555
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 129332337389933.64,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "continued_load_plus_requested_increment",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.4708148786907246,
+            0.47081487870332145,
+            4011810.8056225213,
+            22981454.109520342
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 16024393852628.773,
+            "mura_line_stretching_m2_cells": 231042003873729.88
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 7
+        },
+        {
+          "accepted_dt_s": 1.959827561139042e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 148747793.5832635,
+              "raw_sum_rate_W_m3_cells": 7.589840888695942e+17,
+              "unit_thickness_total_J": 3.631537929278894e-06,
+              "unit_thickness_total_rate_W": 18529.88498216783,
+              "volume_average_J_m3": 36315.37929278894,
+              "volume_average_rate_W_m3": 185298849821678.28
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 239771345.1924078,
+              "raw_sum_rate_W_m3_cells": 1.2234308259909043e+18,
+              "unit_thickness_total_J": 5.853792607236519e-06,
+              "unit_thickness_total_rate_W": 29868.91665016857,
+              "volume_average_J_m3": 58537.92607236518,
+              "volume_average_rate_W_m3": 298689166501685.6
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 37239568.038898386,
+              "raw_sum_rate_W_m3_cells": 1.900145134057352e+17,
+              "unit_thickness_total_J": 9.091691415746678e-07,
+              "unit_thickness_total_rate_W": 4639.026206194708,
+              "volume_average_J_m3": 9091.691415746676,
+              "volume_average_rate_W_m3": 46390262061947.07
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 31468618.024102114,
+              "raw_sum_rate_W_m3_cells": 1.605683002325608e+17,
+              "unit_thickness_total_J": 7.682768072290557e-07,
+              "unit_thickness_total_rate_W": 3920.124517396505,
+              "volume_average_J_m3": 7682.768072290555,
+              "volume_average_rate_W_m3": 39201245173965.04
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 185987361.62216187,
+              "raw_sum_rate_W_m3_cells": 9.489986022753294e+17,
+              "unit_thickness_total_J": 4.540707070853562e-06,
+              "unit_thickness_total_rate_W": 23168.911188362537,
+              "volume_average_J_m3": 45407.07070853561,
+              "volume_average_rate_W_m3": 231689111883625.34
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.10019314685156254,
+            0.10705294103906239,
+            6050014.462312686,
+            25418603.354543388
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.5627213938237331,
+            0.5627213937085603,
+            149116587.82548282,
+            90654756.2414819
+          ],
+          "first_law_residual_J_m3_cells": -3.725290298461914e-08,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 152366500856512.5,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "mechanical_constraint_release",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.5627213938237295,
+            0.562721393708558,
+            149116587.8254829,
+            90654756.24148166
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 2312276253671057.0,
+            "mura_line_stretching_m2_cells": 2.0979078682734744e+16
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 1
+        },
+        {
+          "accepted_dt_s": 1.8091591163020715e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 87.43585077136777,
+              "raw_sum_rate_W_m3_cells": 483295526543.2208,
+              "unit_thickness_total_J": 2.134664325472846e-12,
+              "unit_thickness_total_rate_W": 0.011799207190996603,
+              "volume_average_J_m3": 0.02134664325472846,
+              "volume_average_rate_W_m3": 117992071.90996602
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 6152.3291053268795,
+              "raw_sum_rate_W_m3_cells": 34006567194057.895,
+              "unit_thickness_total_J": 1.5020334729801953e-10,
+              "unit_thickness_total_rate_W": 0.8302384568861791,
+              "volume_average_J_m3": 1.5020334729801952,
+              "volume_average_rate_W_m3": 8302384568.861791
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 6062.298820639728,
+              "raw_sum_rate_W_m3_cells": 33508931116192.207,
+              "unit_thickness_total_J": 1.4800534230077463e-10,
+              "unit_thickness_total_rate_W": 0.8180891385789114,
+              "volume_average_J_m3": 1.480053423007746,
+              "volume_average_rate_W_m3": 8180891385.789113
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 5171.0456637837415,
+              "raw_sum_rate_W_m3_cells": 28582591863745.957,
+              "unit_thickness_total_J": 1.2624623202597027e-10,
+              "unit_thickness_total_rate_W": 0.6978171841734854,
+              "volume_average_J_m3": 1.2624623202597025,
+              "volume_average_rate_W_m3": 6978171841.734853
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 6149.734671411095,
+              "raw_sum_rate_W_m3_cells": 33992226642735.426,
+              "unit_thickness_total_J": 1.5014000662624748e-10,
+              "unit_thickness_total_rate_W": 0.8298883457699081,
+              "volume_average_J_m3": 1.5014000662624745,
+              "volume_average_rate_W_m3": 8298883457.699079
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.000244140625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            2.5427273437500106e-05,
+            2.694370312500007e-05,
+            1492.7590902723275,
+            3678.2865211404396
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.00011497729029712178,
+            0.0001149772903001963,
+            869.4896725070689,
+            5282.839202865239
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 3.834679435022225e-13,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "recovery_exchange_reactions_off",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47094698105701027,
+            0.4709469810696027,
+            3561429.6985889724,
+            21638509.37493608
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 249459886383.74472,
+            "mura_line_stretching_m2_cells": 3447363775855.828
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 13
+        },
+        {
+          "accepted_dt_s": 1.766631702886037e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 1329061.3350504888,
+              "raw_sum_rate_W_m3_cells": 7523137578020838.0,
+              "unit_thickness_total_J": 3.244778650025608e-08,
+              "unit_thickness_total_rate_W": 183.6703510258994,
+              "volume_average_J_m3": 324.47786500256075,
+              "volume_average_rate_W_m3": 1836703510258.9937
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 11599649.732474774,
+              "raw_sum_rate_W_m3_cells": 6.565969417125903e+16,
+              "unit_thickness_total_J": 2.831945735467475e-07,
+              "unit_thickness_total_rate_W": 1603.0198772280041,
+              "volume_average_J_m3": 2831.945735467474,
+              "volume_average_rate_W_m3": 16030198772280.037
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 7506370.380853371,
+              "raw_sum_rate_W_m3_cells": 4.248972985478907e+16,
+              "unit_thickness_total_J": 1.8326099562630301e-07,
+              "unit_thickness_total_rate_W": 1037.3469202829365,
+              "volume_average_J_m3": 1832.60995626303,
+              "volume_average_rate_W_m3": 10373469202829.363
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 6409989.6608096715,
+              "raw_sum_rate_W_m3_cells": 3.628367842792625e+16,
+              "unit_thickness_total_J": 1.5649388820336114e-07,
+              "unit_thickness_total_rate_W": 885.8319928692933,
+              "volume_average_J_m3": 1564.9388820336112,
+              "volume_average_rate_W_m3": 8858319928692.932
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 8835431.71590386,
+              "raw_sum_rate_W_m3_cells": 5.001286743280991e+16,
+              "unit_thickness_total_J": 2.157087821265591e-07,
+              "unit_thickness_total_rate_W": 1221.017271308836,
+              "volume_average_J_m3": 2157.0878212655907,
+              "volume_average_rate_W_m3": 12210172713088.357
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.25,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.036857729554687454,
+            0.03917952178125016,
+            2083979.260675889,
+            4326010.324096537
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.16803417054982434,
+            0.16803417055420156,
+            2481328.9192243926,
+            9118320.477182034
+          ],
+          "first_law_residual_J_m3_cells": 9.313225746154785e-10,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 131810031274162.89,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "temperature_plus_25K",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.6721366821992936,
+            0.6721366822168044,
+            9925315.676897619,
+            36473281.90872809
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 263485959462310.06,
+            "mura_line_stretching_m2_cells": 4273326440539782.0
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 3
+        },
+        {
+          "accepted_dt_s": 1.8078740848461313e-10,
+          "energy": {
+            "dissipative_drag_and_heat": {
+              "raw_sum_J_m3_cells": 12064.241880861402,
+              "raw_sum_rate_W_m3_cells": 66731648968175.76,
+              "unit_thickness_total_J": 2.9453715529446786e-10,
+              "unit_thickness_total_rate_W": 1.6291906486371035,
+              "volume_average_J_m3": 2.9453715529446782,
+              "volume_average_rate_W_m3": 16291906486.371035
+            },
+            "existing_defect_energy_release": {
+              "raw_sum_J_m3_cells": 0.0,
+              "raw_sum_rate_W_m3_cells": 0.0,
+              "unit_thickness_total_J": 0.0,
+              "unit_thickness_total_rate_W": 0.0,
+              "volume_average_J_m3": 0.0,
+              "volume_average_rate_W_m3": 0.0
+            },
+            "plastic_work": {
+              "raw_sum_J_m3_cells": 428819.49143287545,
+              "raw_sum_rate_W_m3_cells": 2371954413348275.0,
+              "unit_thickness_total_J": 1.0469225865060437e-08,
+              "unit_thickness_total_rate_W": 57.90904329463562,
+              "volume_average_J_m3": 104.69225865060436,
+              "volume_average_rate_W_m3": 579090432946.3562
+            },
+            "proposed_defect_energy_change": {
+              "raw_sum_J_m3_cells": 406098.8430946099,
+              "raw_sum_rate_W_m3_cells": 2246278358092472.5,
+              "unit_thickness_total_J": 9.914522536489501e-09,
+              "unit_thickness_total_rate_W": 54.84078022686701,
+              "volume_average_J_m3": 99.145225364895,
+              "volume_average_rate_W_m3": 548407802268.67004
+            },
+            "proposed_line_creation_energy": {
+              "raw_sum_J_m3_cells": 346686.5849089165,
+              "raw_sum_rate_W_m3_cells": 1917647848458556.2,
+              "unit_thickness_total_J": 8.464027951877846e-09,
+              "unit_thickness_total_rate_W": 46.81757442525773,
+              "volume_average_J_m3": 84.64027951877844,
+              "volume_average_rate_W_m3": 468175744252.5772
+            },
+            "recoverable_elastic_energy_release": {
+              "raw_sum_J_m3_cells": 418163.0849754713,
+              "raw_sum_rate_W_m3_cells": 2313010007060648.5,
+              "unit_thickness_total_J": 1.0209059691783969e-08,
+              "unit_thickness_total_rate_W": 56.46997087550412,
+              "volume_average_J_m3": 102.09059691783968,
+              "volume_average_rate_W_m3": 564699708755.0411
+            }
+          },
+          "event_extent_changes_accepted_dt_or_loading_clock": false,
+          "event_extent_changes_constitutive_amplitude": true,
+          "event_scale": 0.015625,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.0016267581328125013,
+            0.0017237301562500007,
+            100837.93731076583,
+            245848.6442476622
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.007355968766391594,
+            0.0073559687665884,
+            64458.67185033959,
+            364360.8048705974
+          ],
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "locking_unlocking_abs_line_m2_cells": 129419948585833.97,
+          "minimum_heat_increment_J_m3": 0.0,
+          "name": "admissible_load_perturbation_plus_2p5e_5",
+          "physical_stall": false,
+          "post_step_projection_used": false,
+          "proposed_family_mechanical_work_J_m3_cells": [
+            0.47078200104906287,
+            0.47078200106165746,
+            4125354.9984217836,
+            23319091.511718284
+          ],
+          "reaction_extents": {
+            "captured_line_m2_cells": 16039162454232.953,
+            "mura_line_stretching_m2_cells": 231124389939277.7
+          },
+          "requested_dt_s": 2e-09,
+          "stalled_families": [],
+          "trial_count": 7
+        }
+      ],
+      "spacing_m": 1.5625e-07,
+      "step": 2971,
+      "strain_rate_s": 10000.0,
+      "trial_dt_s": 2e-09,
+      "unit_thickness_m": 1.0
+    }
+  ],
+  "diagnostic_script_sha256": "05c39f5db6e63d08747441a6c13fad9e3b3a0c855808159079132688bd8aa623",
+  "diagnostic_worktree_head_before_evidence_commit": "da2b81522c10e201603f610d5c0b753bf8becb13",
+  "input_checkpoints_are_read_only": true,
+  "schema": "asb-drx/v33-mura-affinity-audit/v1"
+}
