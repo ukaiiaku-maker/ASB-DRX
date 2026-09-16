@@ -103,6 +103,21 @@ def test_grid_aligned_periodic_winding_pair_keeps_both_identities():
             == {item.component_id for item in previous.components})
 
 
+def test_small_periodic_translation_canonicalizes_upper_seam_roundoff():
+    n = 192
+    x = np.arange(n, dtype=float)[:, None]
+    before = np.broadcast_to(
+        np.tanh(np.sin(2*np.pi*x/n)*4), (n, n))
+    after = np.broadcast_to(
+        np.tanh(np.sin(2*np.pi*(x-.01)/n)*4), (n, n))
+    previous = initialize_front_topology(before)
+    match = match_front_topology(previous, before, after)
+    assert match.event is None
+    assert len(match.snapshot.components) == 2
+    assert all(component.closed and component.winding == (0, 1)
+               for component in match.snapshot.components)
+
+
 @pytest.mark.parametrize("reverse,classification", [
     (False, "FRONT_COMPONENT_SPLIT"),
     (True, "FRONT_COMPONENT_MERGE"),

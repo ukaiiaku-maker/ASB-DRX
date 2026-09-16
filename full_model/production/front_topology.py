@@ -334,7 +334,15 @@ def extract_front_components(phi, *, active_mask=None, periodic=True,
     def node_index(point):
         normalized = np.asarray(point, dtype=float)
         if periodic:
-            normalized %= np.asarray(value.shape, dtype=float)
+            box = np.asarray(value.shape, dtype=float)
+            normalized %= box
+            # Linear interpolation at the periodic seam can return the upper
+            # box coordinate minus a few ulps.  Canonicalize that value to
+            # zero before hashing; otherwise the same physical node acquires
+            # two keys and a winding contour is incorrectly reported open.
+            seam = 64.0*np.finfo(float).eps*box
+            normalized[(box-normalized) <= seam] = 0.0
+            normalized[normalized <= seam] = 0.0
         key = tuple(np.round(normalized, 10))
         if key not in node_lookup:
             node_lookup[key] = len(nodes)
