@@ -1,0 +1,49 @@
+{
+  "grids": [
+    32,
+    64,
+    128
+  ],
+  "scale_separation": "physical and numerical-constraint values use separate panels and axes",
+  "schema": "asb-drx/v31/asb-physical-vs-constraint-figure-data/v1",
+  "source_files": {
+    "v30": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v30_asb_energy_dissipation_decision.json",
+    "v31": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v31_asb_common_mura_decision.json"
+  },
+  "v30": {
+    "absolute_numerical_constraint_change_J_m3": [
+      1.3107766813635285e+22,
+      4.008895297043177e+22,
+      7.770291985161487e+22
+    ],
+    "first_law_residual_J_m3": [
+      -516288.0725665746,
+      -12420.297268710274,
+      525085.4250312675
+    ],
+    "orientation_boundary_physical_change_J_m3": [
+      1044939.4574673176,
+      706983.3777709007,
+      527129.8531984091
+    ],
+    "phase_front_physical_change_J_m3": [
+      -21256.092842698097,
+      -185809.7090716362,
+      -542791.8686308861
+    ],
+    "relative_first_law_residual": [
+      0.6307652212081222,
+      0.03949294596984297,
+      1.0888734705057725
+    ]
+  },
+  "v31": {
+    "numerical_constraint_drives_physical_state": false,
+    "numerical_constraint_in_physical_energy": false,
+    "relative_first_law_residual": [
+      1.2149076216939457e-05,
+      1.2149076216939457e-05,
+      1.2149076216939457e-05
+    ]
+  }
+}

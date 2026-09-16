@@ -68,6 +68,15 @@
     "hpc3": "recommended as the prepared four-task fault-isolated Slurm array after commit, push, manifest SHA fill, and coordinator approval",
     "estimated_walltime_per_case": "several hours; request 12 hours with 8 GiB and one CPU per task"
   },
+  "physical_vs_constraint_energy_figure": {
+    "png": "full_model/verification/v31_asb_common_mura_figures/v31_asb_physical_vs_constraint_energy.png",
+    "png_sha256": "02b73c54668eac816becfc1d3539fca2ff6f25c3fe9e729beb946e3efbb7e118",
+    "pdf": "full_model/verification/v31_asb_common_mura_figures/v31_asb_physical_vs_constraint_energy.pdf",
+    "pdf_sha256": "4252df33f1eaea53603d4f70b878d7b1117884b4a86859ff424d0c270019af1f",
+    "data": "full_model/verification/v31_asb_common_mura_figures/v31_asb_physical_vs_constraint_energy_data.json",
+    "plotting_code": "full_model/verification/v31_asb_common_mura_figures/plot_physical_vs_constraint.py",
+    "scale_policy": "physical MJ/m3 terms, relative closure, and numerical-constraint J/m3 magnitudes are shown on separate axes"
+  },
   "channel_ownership": {
     "plastic_drag": "raw plastic work minus independently evaluated transport and multiplication defect-energy rates",
     "mobile_forest_recovery": "negative mobile-to-forest chemical-potential jump times accepted Onsager extent",
