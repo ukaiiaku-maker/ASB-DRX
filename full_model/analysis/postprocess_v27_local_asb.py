@@ -97,10 +97,28 @@ def microstructure_audit(initials):
             "restriction_consistent": bool(consistent)}
 
 
-def case_record(directory):
+def native_end_time(directory):
     csv = pd.read_csv(directory/"drx_v25_restart_asb_diagnostics.csv")
+    return float(csv["t_us"].iloc[-1])*1e-6
+
+
+def case_record(directory, matched_end_time_s):
+    csv = pd.read_csv(directory/"drx_v25_restart_asb_diagnostics.csv")
+    csv = csv.loc[csv["t_us"]*1e-6 <= matched_end_time_s*(1.0+1e-12)].copy()
+    if len(csv) < 2:
+        raise ValueError("matched ASB interval needs at least two diagnostics")
     checkpoints = checkpoint_paths(directory)
-    with np.load(checkpoints[-1], allow_pickle=True) as data:
+    checkpoint_times = []
+    for path in checkpoints:
+        with np.load(path, allow_pickle=True) as data:
+            checkpoint_times.append(float(data["sim_time"]))
+    eligible = [index for index, value in enumerate(checkpoint_times)
+                if value <= matched_end_time_s*(1.0+1e-12)]
+    selected_index = (eligible[-1] if eligible else
+                      int(np.argmin(np.abs(np.asarray(checkpoint_times)
+                                          -matched_end_time_s))))
+    selected = checkpoints[selected_index]
+    with np.load(selected, allow_pickle=True) as data:
         p = json.loads(str(data["P_json"].item()))
         rate = np.asarray(data["asb_last_gdot_abs"], float)
         temperature = np.asarray(data["T"], float)
@@ -138,8 +156,11 @@ def case_record(directory):
     peak = float(np.max(np.abs(stress)))
     return {
         "directory": str(directory), "grid": int(p["Nx"]),
-        "cell_size_m": dx, "end_time_s": final_time,
-        "end_strain": float(p["edot_app"])*final_time,
+        "cell_size_m": dx, "matched_diagnostic_end_time_s": float(time[-1]),
+        "selected_field_checkpoint": str(selected),
+        "selected_field_time_s": final_time,
+        "field_time_relative_mismatch": abs(final_time-time[-1])/max(time[-1], 1e-300),
+        "matched_end_strain": float(p["edot_app"])*float(time[-1]),
         "peak_stress_Pa": peak, "final_stress_Pa": float(stress[-1]),
         "post_peak_softening_fraction": (peak-abs(float(stress[-1])))/max(peak, 1e-300),
         "maximum_temperature_K": float(np.max(temperature)),
@@ -182,7 +203,10 @@ def main():
     args = parser.parse_args()
     directories = {name: getattr(args, "case_"+name)
                    for name in ("96", "128", "192", "homogeneous")}
-    records = {name: case_record(path) for name, path in directories.items()}
+    native_ends = {name: native_end_time(path) for name, path in directories.items()}
+    common_end = min(native_ends[name] for name in ("96", "128", "192"))
+    records = {name: case_record(path, common_end)
+               for name, path in directories.items()}
     initials = {name: initial_record(path) for name, path in directories.items()
                 if name != "homogeneous"}
     microstructure = microstructure_audit(initials)
@@ -190,9 +214,14 @@ def main():
     laws_close = all(records[name]["first_law_closed_5pct"]
                      for name in ("96", "128", "192", "homogeneous"))
     fine_converged = refine["128_vs_192"]["all_within_5pct"]
+    with np.load(records["128"]["selected_field_checkpoint"], allow_pickle=True) as hot, \
+            np.load(records["homogeneous"]["selected_field_checkpoint"],
+                    allow_pickle=True) as control:
+        matched_temperature_excess = float(np.max(
+            np.asarray(hot["T"], float)-np.asarray(control["T"], float)))
     strict_observed = bool(
         records["128"]["active_plastic_fraction"] <= .25
-        and records["128"]["maximum_temperature_excess_from_T0_K"] >= 50.0
+        and matched_temperature_excess >= 50.0
         and records["128"]["post_peak_softening_fraction"] >= .20
         and records["128"]["effective_band_width_m"] >= 2.0*np.sqrt(
             initials["128"]["parameters"]["kappa_eta"]
@@ -215,6 +244,10 @@ def main():
             "homogeneous": "locally executed control",
         },
         "records": records, "microstructure": microstructure,
+        "native_end_times_s": native_ends,
+        "common_matched_end_time_s": common_end,
+        "matched_128_vs_homogeneous_temperature_excess_K":
+            matched_temperature_excess,
         "relative_differences": refine,
         "strict_thresholds": {
             "maximum_active_fraction": .25,

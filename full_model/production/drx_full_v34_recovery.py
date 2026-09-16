@@ -8339,20 +8339,43 @@ for n in range(_restart_step_offset, _restart_end_step):
             _previous_step = int(sibm_experiment_state.get(
                 'last_contour_step', n))
             _contour_dt = max((n-_previous_step)*P['dt'], P['dt'])
-            _contour_row = measure_pair_contour(
-                eta=eta[:, :, :Ng], reference_eta=sibm_reference_eta,
-                active_mask=sibm_active_mask,
-                centre_index=sibm_experiment_state['centre_index'],
-                advance_direction_index=sibm_experiment_state[
-                    'advance_direction_index'],
-                parent_label=sparse_front_state.parent_label,
-                child_label=sparse_front_state.child_label,
-                spacing_m=dx, dt_s=_contour_dt,
-                local_pressure_Pa=sibm_experiment_state.get(
-                    'net_flat_boundary_drive_Pa', np.nan),
-                previous_excess_area_m2=_previous_excess,
-                active_window_radius_m=sibm_experiment_state.get(
-                    'active_window_radius_m'))
+            try:
+                _contour_row = measure_pair_contour(
+                    eta=eta[:, :, :Ng], reference_eta=sibm_reference_eta,
+                    active_mask=sibm_active_mask,
+                    centre_index=sibm_experiment_state['centre_index'],
+                    advance_direction_index=sibm_experiment_state[
+                        'advance_direction_index'],
+                    parent_label=sparse_front_state.parent_label,
+                    child_label=sparse_front_state.child_label,
+                    spacing_m=dx, dt_s=_contour_dt,
+                    local_pressure_Pa=sibm_experiment_state.get(
+                        'net_flat_boundary_drive_Pa', np.nan),
+                    previous_excess_area_m2=_previous_excess,
+                    active_window_radius_m=sibm_experiment_state.get(
+                        'active_window_radius_m'))
+            except ValueError as _contour_error:
+                if "pair zero contour is not resolved" not in str(_contour_error):
+                    raise
+                _terminal = {
+                    'classification': 'SIBM_FRONT_LEFT_ACTIVE_WINDOW',
+                    'step': int(n), 'time_s': float(sim_time+P['dt']),
+                    'reason': str(_contour_error),
+                    'active_window_radius_m': float(
+                        sibm_experiment_state['active_window_radius_m']),
+                    'last_resolved_contour_metrics':
+                        sibm_experiment_state.get('last_contour_metrics'),
+                    'front_ledger': {
+                        key: float(value) for key, value
+                        in sparse_front_state.ledger.__dict__.items()},
+                }
+                (out/'sibm_terminal_event.json').write_text(
+                    json.dumps(_terminal, indent=2, sort_keys=True)+'\n')
+                _save_restart_checkpoint(
+                    n, sim_time_value=float(sim_time+P['dt']))
+                sim_time += P['dt']
+                _stop_run = True
+                break
             _current_child_area = float(np.sum(_h_phase[:, :, sparse_front_state.child_label]
                 / np.maximum(np.sum(_h_phase, axis=2), 1e-300))*dx*dy)
             _previous_child_area = float(sibm_experiment_state.get(

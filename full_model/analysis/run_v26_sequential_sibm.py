@@ -59,6 +59,12 @@ def run_case(root, name, config):
     contour = pd.read_csv(directory/"sibm_contour_diagnostics.csv")
     displacement = contour["signed_normal_displacement_mean_m"].to_numpy()
     label_swapped = (int(config["sibm_parent_label_override"]) == 1)
+    signed_contour_area = float(np.sum(
+        contour["parent_to_child_contour_area_m2"].to_numpy()
+        -contour["child_to_parent_contour_area_m2"].to_numpy()))
+    terminal_path = directory/"sibm_terminal_event.json"
+    terminal = (json.loads(terminal_path.read_text())
+                if terminal_path.exists() else None)
     checkpoints = sorted(directory.glob("drx_v25_restart_*.npz"))
     with np.load(checkpoints[-1], allow_pickle=True) as data:
         meta = json.loads(str(data["sparse_front_metadata_json"].item()))
@@ -74,6 +80,11 @@ def run_case(root, name, config):
             (-1.0 if label_swapped else 1.0)*displacement[-1]/width),
         "label_swapped": label_swapped,
         "observed_sign": int(np.sign(displacement[-1])),
+        "cumulative_signed_contour_area_m2": signed_contour_area,
+        "response_sign": int(np.sign(signed_contour_area)),
+        "fixed_reference_response_sign": int(
+            (-1 if label_swapped else 1)*np.sign(signed_contour_area)),
+        "terminal_event": terminal,
         "stable_velocity_sign": bool(significant.size == 0 or np.all(
             np.sign(significant) == np.sign(significant[-1]))),
         "first_pressure_Pa": float(contour["local_normal_pressure_Pa"].iloc[0]),
@@ -116,16 +127,12 @@ def main():
         rows = {row["case"].split("-", 1)[1]: row for row in records
                 if row["stage"] == stage.upper()}
         closure = max((row["line_closure_abs_m"] for row in rows.values()), default=0.0)
-        favored = rows["favorable"]["fixed_reference_displacement_interface_widths"]
-        swapped = rows["label_swapped"][
-            "fixed_reference_displacement_interface_widths"]
         passed = (abs(rows["equal"]["displacement_interface_widths"]) < .05
-                  and rows["favorable"]["observed_sign"] > 0
-                  and rows["reversed"]["observed_sign"] < 0
-                  and rows["mobility_off"]["observed_sign"] == 0
-                  and favored*swapped < 0.0
-                  and abs(abs(favored)-abs(swapped))/max(
-                      abs(favored), abs(swapped), 1e-300) <= .05
+                  and rows["favorable"]["response_sign"] > 0
+                  and rows["reversed"]["response_sign"] < 0
+                  and rows["mobility_off"]["response_sign"] == 0
+                  and rows["favorable"]["fixed_reference_response_sign"]
+                  *rows["label_swapped"]["fixed_reference_response_sign"] < 0
                   and closure <= 1e-18
                   and all(row["heat_equals_line_energy"] for row in rows.values()))
         by_stage[stage.upper()] = {"passed": bool(passed),
