@@ -31,6 +31,7 @@ from .wall_topology_supply import (
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
     apply_signed_ordering_extent, conservative_transport_capture_step,
     validate_junction_alignment,
+    reservoir_nye_m1,
 )
 
 
@@ -127,6 +128,10 @@ def accepted_v24_mechanical_step(
         topology_route_enabled=False, maximum_orientation_increment_rad=0.02):
     """Advance mechanics, line transport/capture, ordering, and topology once."""
     state.validate(systems, topologies)
+    _nye_reservoir_initial = reservoir_nye_m1(
+        state.reservoir_alignment, systems, state.common.orientation_rad,
+        topologies)["total"]
+    _nye_beta_initial = np.sum(state.common.family_nye_m1, axis=2)
     if extensive_parameters.nye_match_coefficient_J_m != 0.0:
         raise ValueError("V24 production ordering forbids target-Nye driving")
     # The common residual supplies the authoritative full-elastic stress,
@@ -170,12 +175,16 @@ def accepted_v24_mechanical_step(
         temperature_K=(state.common.temperature_K+accepted_dt
                        *residual.plastic_power_W_m3
                        /common_parameters.volumetric_heat_capacity_J_m3_K))
+    _nye_beta_after_kinematics = np.sum(common.family_nye_m1, axis=2)
     transported_density, transported_alignment, capture_ledger = (
         conservative_transport_capture_step(
             state.density, state.reservoir_alignment,
             velocity_plus, velocity_minus, capture_support, systems,
             state.common.orientation_rad, common_parameters.spacing_m,
             accepted_dt, topologies))
+    _nye_reservoir_after_transport = reservoir_nye_m1(
+        transported_alignment, systems, common.orientation_rad,
+        topologies)["total"]
     working_density = transported_density
     working_alignment = transported_alignment
     topology_ledger = None
@@ -276,6 +285,35 @@ def accepted_v24_mechanical_step(
     result = synchronize_common(V24MechanicalWallState(
         common, ordered_density, ordered_alignment), topologies)
     result.validate(systems, topologies)
+    _nye_reservoir_after_reactions = reservoir_nye_m1(
+        result.reservoir_alignment, systems, result.common.orientation_rad,
+        topologies)["total"]
+    _reference = max(float(np.sqrt(np.mean(_nye_beta_initial**2))), 1.0)
+    def _stage(name, reservoir_increment, beta_increment):
+        mismatch = reservoir_increment-beta_increment
+        return {
+            "operator": name,
+            "reservoir_increment_rms_m1": float(np.sqrt(np.mean(
+                reservoir_increment**2))),
+            "plastic_curl_increment_rms_m1": float(np.sqrt(np.mean(
+                beta_increment**2))),
+            "increment_residual_rms_m1": float(np.sqrt(np.mean(mismatch**2))),
+            "increment_residual_relative": float(
+                np.sqrt(np.mean(mismatch**2))/_reference),
+        }
+    _zero = np.zeros_like(_nye_beta_initial)
+    _nye_stages = [
+        _stage("slip_orientation_kinematics", _zero,
+               _nye_beta_after_kinematics-_nye_beta_initial),
+        _stage("physical_signed_advection_and_capture",
+               _nye_reservoir_after_transport-_nye_reservoir_initial, _zero),
+        _stage("ordering_and_topology_reactions",
+               _nye_reservoir_after_reactions-_nye_reservoir_after_transport,
+               _zero),
+    ]
+    _violating = next((row["operator"] for row in _nye_stages
+                       if row["increment_residual_rms_m1"]
+                       > 256.0*np.finfo(float).eps*_reference), None)
     return result, {
         "accepted_dt_s": accepted_dt,
         "raw_stress_Pa": drive["raw_stress_Pa"],
@@ -288,4 +326,10 @@ def accepted_v24_mechanical_step(
         "junction_topology": topology_ledger,
         "legacy_common_density_rates_accepted": False,
         "orientation_target_used": False,
+        "nye_suboperator_audit": {
+            "sign_convention": "alpha=-Curl(beta_p)",
+            "stages": _nye_stages,
+            "first_violating_suboperator": _violating,
+            "accepted_step_hard_invariant_passed": bool(_violating is None),
+        },
     }

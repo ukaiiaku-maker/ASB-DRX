@@ -5691,12 +5691,19 @@ def _energy_audit(r_f, rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng):
     rg = rho_GB - P['c_GB']*gp/P['b']
     F_comp_alpha = float(0.5*P['A_alpha']*np.nansum(ra**2)*dA)
     F_comp_GB = float(0.5*P['A_GB']*np.nansum(rg**2)*dA)
-    F_total = F_bulk + F_r_grad + F_eta_grad + F_eta_barrier + F_comp_alpha + F_comp_GB
+    # Compatibility quadratics are augmented numerical constraints.  Preserve
+    # the legacy diagnostic sum for regression, but never expose it as the
+    # physical Helmholtz energy or a heat reservoir.
+    F_total_physical = F_bulk + F_r_grad + F_eta_grad + F_eta_barrier
+    F_numerical_constraints = F_comp_alpha + F_comp_GB
+    F_total = F_total_physical + F_numerical_constraints
     fb_target = np.clip(P.get('frank_bilby_coeff', 1.0)*gb_mask*gp/P['b'], 0.0, P['rho_max'])
     return dict(
         F_bulk=F_bulk, F_r_grad=F_r_grad, F_eta_grad=F_eta_grad,
         F_eta_barrier=F_eta_barrier, F_comp_alpha=F_comp_alpha,
         F_comp_GB=F_comp_GB, F_total_full=F_total,
+        F_total_physical=F_total_physical,
+        F_numerical_constraints=F_numerical_constraints,
         comp_alpha_rms=float(np.sqrt(np.nanmean(ra**2))),
         comp_GB_rms=float(np.sqrt(np.nanmean(rg**2))),
         FB_target_mean=float(np.nanmean(fb_target)),
