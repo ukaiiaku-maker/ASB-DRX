@@ -61,6 +61,29 @@ def diagnostic_at_or_before(directory: Path, step: int) -> dict[str, str]:
     return eligible[-1] if eligible else {}
 
 
+def read_json_if_present(path: Path) -> dict:
+    """Read a small provenance record without making partial runs fatal."""
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def process_records(path: Path) -> list[dict[str, object]]:
+    """Return launch process identities recorded by the immutable manager."""
+    if not path.exists():
+        return []
+    records = []
+    for line in path.read_text().splitlines():
+        fields = line.split("\t")
+        if len(fields) == 3:
+            records.append({"case_id": int(fields[0]), "pid": int(fields[1]),
+                            "launched_utc": fields[2]})
+    return records
+
+
 def summarize_checkpoint(path: Path, peak_stress: float) -> dict[str, object]:
     with np.load(path, allow_pickle=True) as data:
         parameters = json.loads(str(data["P_json"].item()))
@@ -144,7 +167,7 @@ def main() -> None:
         available[name] = summary
     all_terminal = len(available) == len(CASES) and all(
         item["terminal"] for item in available.values())
-    all_valid = bool(available) and all(
+    all_valid = len(available) == len(CASES) and all(
         item["relative_first_law_residual"] < 0.05
         and item["maximum_relative_burgers_residual"] < 1e-10
         and item["maximum_relative_line_residual"] < 1e-10
@@ -172,11 +195,22 @@ def main() -> None:
         path = args.root/str(case_definition(case_id)["case_name"])/"v34_thermal_run_record.json"
         if path.exists():
             source_commits.add(json.loads(path.read_text())["source_commit"])
+    launch_status = read_json_if_present(args.root/"launch_status.json")
+    shared_record = read_json_if_present(
+        args.root/"shared_prefix_T0900_R3e4_seed43"/"v34_shared_prefix_record.json")
+    for record in (launch_status, shared_record):
+        if record.get("source_sha"):
+            source_commits.add(record["source_sha"])
+        if record.get("source_commit"):
+            source_commits.add(record["source_commit"])
     result = {
         "schema": "asb-drx/v34/thermal-causal-comparison/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_commits": sorted(source_commits),
         "shared_checkpoint_step": 100,
+        "shared_checkpoint_sha256": shared_record.get("checkpoint_sha256"),
+        "launch_status": launch_status,
+        "launch_processes": process_records(args.root/"processes.tsv"),
         "target_common_step": args.target_step,
         "latest_common_step": common_step,
         "strict_asb_thresholds_changed": False,

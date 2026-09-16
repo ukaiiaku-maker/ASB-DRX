@@ -1,0 +1,109 @@
+{
+  "all_cases_terminal": false,
+  "all_cases_valid": false,
+  "cases": {
+    "frozen_flow_T_local_adiabatic": {
+      "active_fraction": 0.9062400163293709,
+      "causal_temperature_ablation": "freeze_flow",
+      "effective_width_m": 9.657823417160173e-06,
+      "entropy_effective_fraction": 0.9466323902450113,
+      "flow_operator_T_mean_K": 900.0,
+      "heat_exported_J_m3": 0.0,
+      "inverse_participation_fraction": 0.9062400163293709,
+      "latest_available_step": 200,
+      "maximum_relative_burgers_residual": 3.412191894230619e-17,
+      "maximum_relative_energy_residual": 1.3275415849141827e-18,
+      "maximum_relative_line_residual": 4.7730292344031066e-17,
+      "nominal_strain": 0.0201,
+      "physical_heat_deposited_J_m3": 870086.9675041738,
+      "recovery_operator_T_mean_K": 900.1936959993053,
+      "relative_first_law_residual": 7.114873930181526e-13,
+      "sim_time_s": 6.700000000000006e-07,
+      "softening_fraction": 0.0,
+      "step": 200,
+      "stress_Pa": 3017213969.6796374,
+      "temperature_max_K": 901.099216643205,
+      "temperature_mean_K": 900.2289702546063,
+      "temperature_min_K": 900.0198833020338,
+      "terminal": false,
+      "terminal_reason": "RUNNING",
+      "thermal_change_J_m3": 870086.967504173,
+      "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+      "thermostat_export_J_m3": 0.0
+    },
+    "full_law_local_adiabatic": {
+      "active_fraction": 0.9062400163293709,
+      "causal_temperature_ablation": "none",
+      "effective_width_m": 9.657823417160173e-06,
+      "entropy_effective_fraction": 0.9466323902450113,
+      "flow_operator_T_mean_K": 900.1936959993053,
+      "heat_exported_J_m3": 0.0,
+      "inverse_participation_fraction": 0.9062400163293709,
+      "latest_available_step": 200,
+      "maximum_relative_burgers_residual": 3.412191894230619e-17,
+      "maximum_relative_energy_residual": 1.3275415849141827e-18,
+      "maximum_relative_line_residual": 4.7730292344031066e-17,
+      "nominal_strain": 0.0201,
+      "physical_heat_deposited_J_m3": 870086.9675041738,
+      "recovery_operator_T_mean_K": 900.1936959993053,
+      "relative_first_law_residual": 7.114873930181526e-13,
+      "sim_time_s": 6.700000000000006e-07,
+      "softening_fraction": 0.0,
+      "step": 200,
+      "stress_Pa": 3017213969.6796374,
+      "temperature_max_K": 901.099216643205,
+      "temperature_mean_K": 900.2289702546063,
+      "temperature_min_K": 900.0198833020338,
+      "terminal": false,
+      "terminal_reason": "RUNNING",
+      "thermal_change_J_m3": 870086.967504173,
+      "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+      "thermostat_export_J_m3": 0.0
+    }
+  },
+  "causal_effects_relative_to_full_law": {
+    "frozen_flow_T_local_adiabatic": {
+      "delta_active_fraction": 0.0,
+      "delta_effective_width_m": 0.0,
+      "delta_softening_fraction": 0.0,
+      "delta_temperature_max_K": 0.0
+    },
+    "full_law_local_adiabatic": {
+      "delta_active_fraction": 0.0,
+      "delta_effective_width_m": 0.0,
+      "delta_softening_fraction": 0.0,
+      "delta_temperature_max_K": 0.0
+    }
+  },
+  "classification": "V34_THERMAL_CAUSAL_RUNNING",
+  "generated_utc": "2026-09-16T22:12:53.866377+00:00",
+  "latest_common_step": null,
+  "launch_processes": [
+    {
+      "case_id": 0,
+      "launched_utc": "2026-09-16T22:04:29Z",
+      "pid": 24419
+    },
+    {
+      "case_id": 1,
+      "launched_utc": "2026-09-16T22:04:29Z",
+      "pid": 24421
+    }
+  ],
+  "launch_status": {
+    "cases": 5,
+    "maximum_concurrency": 2,
+    "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
+    "state": "RUNNING",
+    "target_step": 2500
+  },
+  "schema": "asb-drx/v34/thermal-causal-comparison/v1",
+  "shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+  "shared_checkpoint_step": 100,
+  "source_commits": [
+    "0c45d036306d56d649c53d69d321d59739930698"
+  ],
+  "strict_asb_claimed_from_causal_matrix": false,
+  "strict_asb_thresholds_changed": false,
+  "target_common_step": 2500
+}
