@@ -1,0 +1,115 @@
+{
+  "created_utc": "2026-09-16T20:40:56.622009Z",
+  "records": [
+    {
+      "case": "baseline",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/baseline/v33_front_restart_000138.npz",
+      "final_step": 138,
+      "overrides": {
+        "nSteps": 1
+      },
+      "returncode": 0,
+      "terminal": true,
+      "terminal_classification": "UNAUTHORIZED_PHASE_ISLAND"
+    },
+    {
+      "case": "double_bulk_barrier",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/double_bulk_barrier/v33_front_restart_000138.npz",
+      "final_step": 138,
+      "overrides": {
+        "W_eta": 10000000.0,
+        "nSteps": 1
+      },
+      "returncode": 0,
+      "terminal": true,
+      "terminal_classification": "UNAUTHORIZED_PHASE_ISLAND"
+    },
+    {
+      "case": "double_capillarity",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/double_capillarity/v33_front_restart_000138.npz",
+      "final_step": 138,
+      "overrides": {
+        "kappa_eta": 1e-06,
+        "nSteps": 1
+      },
+      "returncode": 0,
+      "terminal": false,
+      "terminal_classification": null
+    },
+    {
+      "case": "half_bulk_barrier",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/half_bulk_barrier/v33_front_restart_000138.npz",
+      "final_step": 138,
+      "overrides": {
+        "W_eta": 2500000.0,
+        "nSteps": 1
+      },
+      "returncode": 0,
+      "terminal": true,
+      "terminal_classification": "UNAUTHORIZED_PHASE_ISLAND"
+    },
+    {
+      "case": "half_capillarity",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/half_capillarity/v33_front_restart_000138.npz",
+      "final_step": 138,
+      "overrides": {
+        "kappa_eta": 2.5e-07,
+        "nSteps": 1
+      },
+      "returncode": 0,
+      "terminal": true,
+      "terminal_classification": "UNAUTHORIZED_PHASE_ISLAND"
+    },
+    {
+      "case": "half_dt_matched",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/half_dt_matched/v33_front_restart_000139.npz",
+      "final_step": 139,
+      "overrides": {
+        "dt_base": 5e-08,
+        "nSteps": 2
+      },
+      "returncode": 0,
+      "terminal": true,
+      "terminal_classification": "UNAUTHORIZED_PHASE_ISLAND"
+    },
+    {
+      "case": "phase_frozen",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/phase_frozen/v33_front_restart_000138.npz",
+      "final_step": 138,
+      "overrides": {
+        "freeze_kwc_eta": true,
+        "nSteps": 1
+      },
+      "returncode": 0,
+      "terminal": false,
+      "terminal_classification": null
+    },
+    {
+      "case": "quarter_dt_matched",
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v33-front-controls-20260916/quarter_dt_matched/v33_front_restart_000141.npz",
+      "final_step": 141,
+      "overrides": {
+        "dt_base": 2.5e-08,
+        "nSteps": 4
+      },
+      "returncode": 0,
+      "terminal": true,
+      "terminal_classification": "UNAUTHORIZED_PHASE_ISLAND"
+    },
+    {
+      "case": "stored_energy_off",
+      "checkpoint": null,
+      "final_step": null,
+      "overrides": {
+        "nSteps": 1,
+        "stored_energy_coupling_mode": "disabled"
+      },
+      "returncode": 1,
+      "terminal": false,
+      "terminal_classification": null
+    }
+  ],
+  "schema": "asb-drx/v33-front-preterminal-controls/v1",
+  "source_checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916/a1_n128_delta_p1e-6/attempt-000/v31_front_restart_000137.npz",
+  "source_step": 137
+}
