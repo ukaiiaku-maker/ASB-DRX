@@ -1,0 +1,78 @@
+{
+  "schema": "asb-drx/v34-campaign-controller/v1",
+  "campaign": "Complete-energy and resolved common-state campaign V34",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "restart_sha": "8b2f77c9ee7a800a2f7b108015bd898c9e54b228",
+  "current_scientific_source_sha": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+  "frozen_v33_classification": "INTEGRATED_I1_VERIFIED_I2_ENERGY_OPEN",
+  "states": ["READY", "RUNNING", "PASSED_OPERATOR", "PASSED_SCIENTIFIC", "FAILED_SCIENTIFIC", "FAILED_NUMERICAL", "FAILED_INFRASTRUCTURE", "BLOCKED_BY_DEPENDENCY"],
+  "branches": {
+    "complete_front_energy": {
+      "state": "PASSED_SCIENTIFIC",
+      "source_sha": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+      "fixture": "full_model/verification/v34_complete_front_energy.json",
+      "classification": "I2_COMPLETE_ENERGY_PRODUCTION_QUALIFIED",
+      "next_automatic_action": "retain as the production acceptance law"
+    },
+    "phase_proposal": {
+      "state": "PASSED_SCIENTIFIC",
+      "source_sha": "31bba7db77c58d08a2b917830820ead85b10b5a1",
+      "fixture": "full_model/verification/v34_phase_proposal_repair.json",
+      "classification": "QUALIFIED_EXISTING_BOUNDARY_PHASE_PROPOSAL",
+      "next_automatic_action": "use only in declared existing-boundary/no-nucleation scope"
+    },
+    "mura_affinity": {
+      "state": "PASSED_OPERATOR",
+      "source_sha": "873a66e",
+      "fixture": "full_model/verification/v34_mura_affinity_remainder.json",
+      "classification": "COMPLETE_AFFINITY_OPERATOR_QUALIFIED_LONG_TRAJECTORY_PENDING",
+      "unreacted_remainder": "deterministic_constrained_rate_no_debt",
+      "next_automatic_action": "add reservoir-resolved line moments before a multi-cycle common-state run"
+    },
+    "finite_common_state_i3": {
+      "state": "FAILED_SCIENTIFIC",
+      "source_sha": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+      "fixture": "full_model/verification/v34_finite_coupled_response.json",
+      "classification": "MATCHED_TIME_I3_EXECUTED_PHYSICAL_FRONT_RESPONSE_TOO_SMALL_FOR_I3_AMPLITUDE_GATE",
+      "invariants_passed": true,
+      "quarter_interface_width_passed": false,
+      "coupling_split_refinement_passed": false,
+      "next_automatic_action": "implement multi-cycle line-moment ownership and run a long matched-clock continuation"
+    },
+    "thermal_causality": {
+      "state": "RUNNING",
+      "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
+      "manager_pid": 24378,
+      "worker_pids_at_last_audit": [24419, 24421],
+      "target_step": 2500,
+      "latest_durable_step_at_last_audit": 800,
+      "cases": 5,
+      "maximum_concurrency": 2,
+      "fixture": "full_model/verification/v34_thermal_causal_comparison.json",
+      "classification": "V34_THERMAL_CAUSAL_RUNNING",
+      "strict_asb_claimed": false,
+      "next_automatic_action": "manager continues all five cases and postprocessor updates terminal classification"
+    }
+  },
+  "preserved_historical_jobs": {
+    "v32_mura": {
+      "state": "FAILED_SCIENTIFIC_OR_APPLICATION",
+      "source_sha": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+      "step": 1451,
+      "strain": 0.03841278100648024,
+      "mutated": false
+    },
+    "v32_asb_manager_pid": 5163
+  },
+  "compute": {
+    "local_logical_cpus": 16,
+    "hpc3_alias_verified": "uci-hpc3",
+    "hpc3_login_node": "login-i17",
+    "slurm_campaign_jobs": [],
+    "unrelated_jobs_untouched": true
+  },
+  "controller_has_executed_next_actions": true,
+  "prepared_only": false,
+  "campaign_terminal": false,
+  "terminal_reason": "thermal causal matrix is still running; I3 requires a new multi-cycle ownership implementation"
+}

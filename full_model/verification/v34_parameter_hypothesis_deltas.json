@@ -1,0 +1,68 @@
+{
+  "schema": "asb-drx/v34-parameter-hypothesis-deltas/v1",
+  "canonical_source": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+  "deltas": [
+    {
+      "name": "phase_time_integrator",
+      "type": "numerical_discretization",
+      "baseline": "sequential_clipped_explicit_euler",
+      "v34": "simultaneous_simplex_tangent_error_controlled_imex",
+      "physical_functional_changed": false,
+      "reason": "remove the diagnosed one-cell phase proposal instability"
+    },
+    {
+      "name": "existing_boundary_topology_active_set",
+      "type": "declared_model_scope",
+      "baseline": false,
+      "v34": true,
+      "physical_parameters_changed": false,
+      "disabling_control": "ac_phase_proposal_mode=legacy_sequential_euler",
+      "scope": "no-nucleation existing-boundary calculations only"
+    },
+    {
+      "name": "moving_front_activation_volume",
+      "type": "physical_kinetic_hypothesis",
+      "baseline": "one_grid_cell_volume",
+      "v34_value": 1.5252992000000005e-29,
+      "units": "m3",
+      "definition": "b^3 with b=2.48e-10 m",
+      "bounds_tested": [1.5252992000000005e-29],
+      "evidence_status": "generic atomic event; not material calibrated",
+      "reason": "remove forbidden grid-dependent Boltzmann normalization"
+    },
+    {
+      "name": "moving_front_event_length",
+      "type": "physical_kinetic_hypothesis",
+      "baseline": "grid_spacing",
+      "v34_value": 2.48e-10,
+      "units": "m",
+      "definition": "one Burgers-vector jump",
+      "evidence_status": "generic atomic event; not material calibrated",
+      "reason": "obtain grid-independent front velocity"
+    },
+    {
+      "name": "mura_family_acceptance",
+      "type": "thermodynamic_acceptance_rule",
+      "baseline": "mechanical_sign_screen_then_scalar_backtrack",
+      "v34": "complete_family_affinity_then_joint_backtrack",
+      "parameter_change": false,
+      "unreacted_remainder": "deterministic constrained rate with no debt"
+    },
+    {
+      "name": "thermal_causal_controls",
+      "type": "diagnostic_ablation",
+      "baseline": "full temperature dependence",
+      "v34": ["frozen_flow_temperature", "frozen_recovery_temperature", "prescribed_temperature", "periodic_insulated_conduction"],
+      "calibration_claimed": false,
+      "status": "running"
+    }
+  ],
+  "not_changed_to_force_a_positive": [
+    "ASB classifier thresholds",
+    "energy tolerances",
+    "interface width",
+    "phase barrier",
+    "phase gradient coefficient",
+    "Mura energy tolerance"
+  ]
+}

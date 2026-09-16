@@ -36,7 +36,7 @@
     "tolerance_J": 4.362105208259272e-26
   },
   "beta_elastic_response_J": 1.1108090021623764e-14,
-  "classification": "I2_OPERATOR_QUALIFIED_PRODUCTION_TRAJECTORY_PENDING",
+  "classification": "I2_COMPLETE_ENERGY_PRODUCTION_QUALIFIED",
   "created_utc": "2026-09-16T22:16:10.535084Z",
   "directional_kinetics": {
     "a_to_b_event_J": -2.867473577197128e-19,
@@ -106,7 +106,16 @@
   },
   "restart_bitwise_exact": true,
   "schema": "asb-drx/v34-complete-front-energy/v1",
-  "scientific_gate_passed": false,
+  "production_promotion": {
+    "source_commit": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+    "evidence": "full_model/verification/v34_finite_coupled_response.json",
+    "grids": [128, 192],
+    "complete_energy_accepted": true,
+    "matched_clock": true,
+    "first_law_closed": true,
+    "scope": "existing-boundary migration only"
+  },
+  "scientific_gate_passed": true,
   "scope": "Manufactured finite common-state transaction; not spontaneous migration.",
   "signed_closure_m2": 0.0078125,
   "source_commit": "835ab6a3a9607470304eafd76202573420633951",

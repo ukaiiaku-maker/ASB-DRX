@@ -1,0 +1,106 @@
+{
+  "schema": "asb-drx/v34-finite-common-state-i3-decision/v1",
+  "created_utc": "2026-09-16T22:56:52Z",
+  "source_commit": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+  "classification": "MATCHED_TIME_I3_EXECUTED_PHYSICAL_FRONT_RESPONSE_TOO_SMALL_FOR_I3_AMPLITUDE_GATE",
+  "fixture_passed": true,
+  "production_i2_passed": true,
+  "matched_time_common_state_executed": true,
+  "finite_amplitude_i3_passed": false,
+  "scientific_gate_passed": false,
+  "scope": "Controlled existing bicrystal; no nucleation or spontaneous DRX claim.",
+  "physical_parameters": {
+    "length_m": 1e-05,
+    "interface_width_m": 3e-07,
+    "temperature_K": 1100.0,
+    "child_line_fraction": 0.35,
+    "mean_shear_strain": 0.01,
+    "driving_pressure_Pa": 200000000.0,
+    "applied_pressure_Pa": 200000000.0,
+    "common_interval_s": 2e-09,
+    "burgers_m": 2.48e-10,
+    "kinetic_event_volume_m3": 1.5252992000000005e-29,
+    "kinetic_event_length_m": 2.48e-10,
+    "kinetic_normalization": "one_burgers_cubed_and_one_burgers_jump_grid_independent"
+  },
+  "controls": [
+    "front_only",
+    "mura_only",
+    "combined",
+    "combined_prescribed_temperature",
+    "reversed_contrast"
+  ],
+  "grids": {
+    "128": {
+      "phase_input": "/Users/sdillon/HPC3/local-results/asb-drx-v34-matched-time-phase-8cb8b0e-20260916/phase_trials_n128.npz",
+      "phase_input_sha256": "f9d5bebdb3272d6da1b2b1aff120f8aa080e2a75002d7c6ff7f1d14e02c0dd16",
+      "result": "/Users/sdillon/HPC3/local-results/asb-drx-v34-i3-matched-time-b20190a-20260916/n128.json",
+      "result_sha256": "43aec214000dcbbad2bf29f20beb47ccaf578dda193277fa7b0285611541a367",
+      "combined_published": true,
+      "front_classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+      "front_velocity_m_s": 0.00019414506944133894,
+      "component_displacement_m": 3.8827072196207644e-13,
+      "interface_width_fraction": 1.2942357398735883e-06,
+      "net_sweep_m3": 3.851645561863799e-27,
+      "maximum_slip": 1.040919272925152e-08,
+      "maximum_beta_p": 8.499070273651609e-09,
+      "front_delta_helmholtz_J": -3.0295409155397944e-21,
+      "front_available_change_J": -7.733586532882996e-19,
+      "front_first_law_residual_J": 1.5217124498711064e-26,
+      "maximum_abs_line_closure_m": 9.339620400390789e-23,
+      "maximum_abs_signed_closure_m2": 0.0,
+      "reverse_displacement_m": -3.867115487641432e-13,
+      "mura_to_front_net_sweep_change_m3": 4.3279484313537373e-35,
+      "front_to_next_mura_stress_rms_change_Pa": 7.484044235959114e-06
+    },
+    "192": {
+      "phase_input": "/Users/sdillon/HPC3/local-results/asb-drx-v34-matched-time-phase-8cb8b0e-20260916/phase_trials_n192.npz",
+      "phase_input_sha256": "6f21c7d03755edd0ed7058b60198d2bf0fa2bfe92f87801a2d12819a6154458e",
+      "result": "/Users/sdillon/HPC3/local-results/asb-drx-v34-i3-matched-time-b20190a-20260916/n192.json",
+      "result_sha256": "b5ee056037b644904347b76f3502be32c06c6c9003bb219656f648d154e35a71",
+      "combined_published": true,
+      "front_classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+      "front_velocity_m_s": 0.0001941447778260617,
+      "component_displacement_m": 3.8826990778203434e-13,
+      "interface_width_fraction": 1.2942330259401145e-06,
+      "net_sweep_m3": 3.851637485197782e-27,
+      "maximum_slip": 1.040919272925152e-08,
+      "maximum_beta_p": 8.499070273651609e-09,
+      "front_delta_helmholtz_J": -3.02686106038145e-21,
+      "front_available_change_J": -7.73354358099938e-19,
+      "front_first_law_residual_J": 7.778386425914838e-27,
+      "maximum_abs_line_closure_m": 1.0438803954481053e-22,
+      "maximum_abs_signed_closure_m2": 0.0,
+      "reverse_displacement_m": -3.867102588440049e-13,
+      "mura_to_front_net_sweep_change_m3": 4.313618721868466e-35,
+      "front_to_next_mura_stress_rms_change_Pa": 7.4048376569185454e-06
+    }
+  },
+  "refinement": {
+    "relative_component_displacement_difference_128_192": 2.0969390583807216e-06,
+    "provisional_five_percent_threshold_passed": true,
+    "matched_physical_and_front_clock": true,
+    "coupling_split_refinement_passed": false,
+    "coupling_split_limitation": "The checkpoint schema cannot yet carry reservoir-resolved line moments through a second Mura/front cycle."
+  },
+  "rejected_apparent_positive": {
+    "classification": "GRID_CELL_ACTIVATION_NORMALIZATION_ARTIFACT",
+    "description": "Earlier 27 nm and 26.5 nm accepted sweeps used grid-cell volume and spacing as the activation event and did not share the Mura physical clock. They are retained only as diagnostic artifacts.",
+    "n128_result_sha256": "9672e31bd47a79617c8c5e77a1f624d2598388a599e3320f96ba43481ac66951",
+    "n192_result_sha256": "7f066a74b4ce21248af5293b93b6f3635f12aa04c8c9f6393acd9909015553ca"
+  },
+  "decision_basis": {
+    "i2": "The production complete-energy transaction accepts finite downhill passage, rejects uphill passage without mutation, and closes inventory and first law.",
+    "i3_negative": "Both mechanisms execute in one matched interval and the physical front rate is grid convergent, but motion is only 1.29e-6 interface widths and reciprocal effects are negligible; the quarter-width target and split refinement are not met.",
+    "quarter_width_extrapolated_time_s_at_n128_instantaneous_rate": 0.00038630906371104777,
+    "quarter_width_equivalent_two_ns_cycles": 193154.53185552388,
+    "next_hypothesis": "A long matched-clock continuation or a physically justified activation-volume/prefactor comparison is required; mobility will not be multiplied merely to create a nonzero flag."
+  },
+  "source_hashes": {
+    "full_model/analysis/run_v34_finite_coupled_response.py": "78e21b464dee02725562fe384c0e889f96a5f95d4cca10a9abc9d99072b78e8a",
+    "full_model/production/complete_front_energy.py": "d69a1dd75e4fcf96b760a703fac0d63f86f0e558fc9892575f90603ecf3036db",
+    "full_model/production/coupled_front_production.py": "2e52a5c94d2f1d7b6cd1695fae9f86739236dd86214ccc5866c377863b4f740b",
+    "full_model/production/front_topology.py": "def7027261ba40bb2e2adc858154b041b4eb9f99d9301ac96a29b2e10c82eda3",
+    "full_model/production/phase_proposal.py": "6a2ca8d77698b1741bac71400dabd40372a98316ed002fd03818934cd7a85926"
+  }
+}
