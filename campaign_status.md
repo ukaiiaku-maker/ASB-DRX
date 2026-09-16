@@ -1329,3 +1329,40 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   submitted because none of the mechanism-specific prerequisites authorizes
   one. Queue audit still shows only unrelated job `55950433`, untouched.
 - Full report: `full_model/docs/v25_decision_report.md`.
+
+## Directive v27 HPC closure and local decision campaign (complete 2026-09-15)
+
+- V26 scientific source remains `bf150ca`; later SIBM repairs are separately
+  attributed to commits `fb8a9a6` through `29d75a4` and do not rewrite frozen
+  HPC provenance.
+- SIBM job `56055686` failed scientifically after 9:34 on `hpc3-14-00` when a
+  retreat exposed an invalid child-only signed-reservoir release invariant.
+  Its partial output and finalized archive were fetched and preserved. The
+  release, recovery-ledger, and translation/profile bookkeeping defects were
+  repaired locally, with the configured suite passing 456 tests.
+- Local 64/128 SIBM closure gives the primary classification
+  `SIBM_EQUAL_STATE_PROJECTION_DEPENDENT`. The resolved 128 reversed and
+  label-swapped controls advance in the same direction as the favorable case;
+  near-equal perturbations are not odd; and the equal projection suppresses
+  resolved profile motion. A 192 run is not authorized because the mechanism
+  fails before grid convergence.
+- ASB job `56055688` supplied complete 96/128 cases and a 192 checkpoint at
+  step 1250. It was cancelled after 1:05:28 when execution moved locally. The
+  192 case was continued exactly through step 4999, assembled with a strictly
+  increasing 501-row history, and compared with a matched homogeneous control.
+- The ASB microstructure restriction and all first-law checks pass, but the
+  128/192 active fraction, band width, plastic work, and deposited heat differ
+  by 39.47%, 29.84%, 10.19%, and 14.31%. Classification:
+  `ASB_PHYSICAL_RESPONSE_NOT_GRID_CONVERGED`. No rate bracket is authorized.
+- The current-capacity replay closes every admitted event column but retains a
+  1.23 relative-RMS mismatch between reservoir Nye and authoritative
+  `-Curl(beta_p)`. Classification:
+  `REACTION_CONE_INVALID_DUE_TO_DUAL_NYE_MISMATCH`. No wall campaign or grain
+  allocation is authorized.
+- Machine-readable decisions are
+  `full_model/verification/v27_sibm_local_decision.json`,
+  `full_model/verification/v27_asb_local_decision.json`, and
+  `full_model/verification/v27_current_capacity_wall.json`. Full report:
+  `full_model/docs/v27_decision_report.md`.
+- No V27 HPC job is active. Queue audit shows only unrelated job `55950433`,
+  observed and untouched.

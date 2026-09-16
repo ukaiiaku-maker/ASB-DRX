@@ -1,0 +1,338 @@
+{
+  "classification": "ASB_PHYSICAL_RESPONSE_NOT_GRID_CONVERGED",
+  "common_matched_end_time_s": 5.842589456267958e-06,
+  "continuous_conjunctive_persistence_verified": false,
+  "fine_128_192_converged_5pct": false,
+  "first_law_all_cases_closed_5pct": true,
+  "fixture_passed": true,
+  "matched_128_vs_homogeneous_temperature_excess_K": 213.70253251025815,
+  "microstructure": {
+    "common_sample_grid": 96,
+    "physical_declarations": {
+      "L_phys": {
+        "identical": true,
+        "values": {
+          "128": 1e-05,
+          "192": 1e-05,
+          "96": 1e-05
+        }
+      },
+      "T0": {
+        "identical": true,
+        "values": {
+          "128": 1100.0,
+          "192": 1100.0,
+          "96": 1100.0
+        }
+      },
+      "W_eta": {
+        "identical": true,
+        "values": {
+          "128": 5000000.0,
+          "192": 5000000.0,
+          "96": 5000000.0
+        }
+      },
+      "b": {
+        "identical": true,
+        "values": {
+          "128": 2.48e-10,
+          "192": 2.48e-10,
+          "96": 2.48e-10
+        }
+      },
+      "cp_rho_vol": {
+        "identical": true,
+        "values": {
+          "128": 3800000.0,
+          "192": 3800000.0,
+          "96": 3800000.0
+        }
+      },
+      "edot_app": {
+        "identical": true,
+        "values": {
+          "128": 30000.0,
+          "192": 30000.0,
+          "96": 30000.0
+        }
+      },
+      "heat_process_zone_min_sigma_px": {
+        "identical": true,
+        "values": {
+          "128": 2.0,
+          "192": 2.0,
+          "96": 2.0
+        }
+      },
+      "heat_process_zone_sigma_um": {
+        "identical": true,
+        "values": {
+          "128": 0.3,
+          "192": 0.3,
+          "96": 0.3
+        }
+      },
+      "k_thermal": {
+        "identical": true,
+        "values": {
+          "128": 0.015,
+          "192": 0.015,
+          "96": 0.015
+        }
+      },
+      "kappa_eta": {
+        "identical": true,
+        "values": {
+          "128": 5e-07,
+          "192": 5e-07,
+          "96": 5e-07
+        }
+      },
+      "nuc_barrier_thickness_b": {
+        "identical": true,
+        "values": {
+          "128": 2.0,
+          "192": 2.0,
+          "96": 2.0
+        }
+      }
+    },
+    "records": {
+      "128": {
+        "initial_array_hashes": {
+          "T": "dcd99005271cc53ece81bd6eee6e4e9cd2b383b3e2b08fe86d81eec4c0ea4249",
+          "eta": "5b44201e9687afe918f5061185de28f0fd6b93021798a1b845696bb86adb0120",
+          "lab": "5941723ddd9fc10a72f935a6eed4a306ae93224a1dc65e33ccd67ab0541f7a2c",
+          "psi_gv": "f7d273d95b4d95e0fa5b46ac3af33b712dd59db2a3aa40193a488487d8bebba5",
+          "rm": "671f534a9bbb9131c58e670489f1b56364f5300ed7a03e9e23dabc119922ed86",
+          "rp": "671f534a9bbb9131c58e670489f1b56364f5300ed7a03e9e23dabc119922ed86"
+        },
+        "orientation_table_max_abs_difference_rad_vs_96": 0.0,
+        "partition_edge_mismatch_fraction_vs_96": 0.029351128472222224
+      },
+      "192": {
+        "initial_array_hashes": {
+          "T": "dc0261039e67066ddd8b6c5ec24e065c182bb1d4f82020d225394deb1bbf4b61",
+          "eta": "3f3755e375a790d7922d5a971537244626dc6a6cea2b305a7ea56584c0df40c6",
+          "lab": "a324739e91f12d778bf5a857a62bb7e4a2224fc4a31b017d1aaa9625ef22c477",
+          "psi_gv": "f7d273d95b4d95e0fa5b46ac3af33b712dd59db2a3aa40193a488487d8bebba5",
+          "rm": "d5d3f5fb797c471134aa07c56b072a00de370283e324771282e67a5756f54178",
+          "rp": "d5d3f5fb797c471134aa07c56b072a00de370283e324771282e67a5756f54178"
+        },
+        "orientation_table_max_abs_difference_rad_vs_96": 0.0,
+        "partition_edge_mismatch_fraction_vs_96": 0.04660373263888889
+      },
+      "96": {
+        "initial_array_hashes": {
+          "T": "d00e47ee64fd484dc95cb2453f1a57a075fec42c2b18858e8819cd59a25651b9",
+          "eta": "7fa470dbedd5f1209a116b9da60b0cbf45e9a8f2ad8531a42dc5cd22b1c59c36",
+          "lab": "b195b8cd20be04f1f177d199c5f761c2410e94e1a9cebcc5b66665d79270f52e",
+          "psi_gv": "f7d273d95b4d95e0fa5b46ac3af33b712dd59db2a3aa40193a488487d8bebba5",
+          "rm": "3c07ed0d977cbf7d0299311e8070e7b3a6b34ee8ed7cb89bcd28a43a704f6067",
+          "rp": "3c07ed0d977cbf7d0299311e8070e7b3a6b34ee8ed7cb89bcd28a43a704f6067"
+        },
+        "orientation_table_max_abs_difference_rad_vs_96": 0.0,
+        "partition_edge_mismatch_fraction_vs_96": 0.0
+      }
+    },
+    "restriction_consistent": true
+  },
+  "native_end_times_s": {
+    "128": 6.179128016345096e-06,
+    "192": 6.0741788603487525e-06,
+    "96": 5.842589456267958e-06,
+    "homogeneous": 6.13333333333334e-06
+  },
+  "records": {
+    "128": {
+      "active_plastic_fraction": 0.017654693341788378,
+      "cell_size_m": 7.8125e-08,
+      "checkpoint_count": 21,
+      "directory": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_128",
+      "effective_band_width_m": 1.4718249336168996e-06,
+      "field_time_relative_mismatch": 0.004602814575929694,
+      "final_stress_Pa": 307150322.1313966,
+      "first_law": {
+        "conducted_out_J_m3": 8611.39491866088,
+        "defect_free_energy_change_J_m3": -7.786695849001522e+21,
+        "elastic_change_J_m3": 235405.8539760314,
+        "external_work_J_m3": 54818147.86520203,
+        "other_dissipation_J_m3": 7.786695849004325e+21,
+        "plastic_partition_relative_residual": 0.0,
+        "plastic_partition_residual_J_m3": 0.0,
+        "plastic_work_J_m3": 2856987621.221107,
+        "system_relative_residual": 3.599528866095876e-13,
+        "system_residual_J_m3": -2802843648.0,
+        "taylor_quinney_heat_J_m3": 54828692.02369448,
+        "thermal_energy_change_J_m3": 54265393.99629137
+      },
+      "first_law_closed_5pct": true,
+      "grid": 128,
+      "matched_diagnostic_end_time_s": 5.840022524620668e-06,
+      "matched_end_strain": 0.17520067573862003,
+      "maximum_temperature_K": 1327.3097931561797,
+      "maximum_temperature_excess_from_T0_K": 227.3097931561797,
+      "peak_stress_Pa": 363366286.73050237,
+      "plastic_rate_max_s": 14220629.892903876,
+      "plastic_rate_spectral_peak": 3.378502755398276e+18,
+      "post_peak_softening_fraction": 0.15470880665602155,
+      "selected_field_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_128/drx_v25_restart_004750.npz",
+      "selected_field_time_s": 5.813141983820586e-06,
+      "temperature_spectral_peak": 20632286722.20929
+    },
+    "192": {
+      "active_plastic_fraction": 0.010686363915401955,
+      "cell_size_m": 5.208333333333334e-08,
+      "checkpoint_count": 21,
+      "directory": "results-local/v27-asb-resolution/seed43_192_assembled",
+      "effective_band_width_m": 2.0978838317170856e-06,
+      "field_time_relative_mismatch": 0.022212502103842985,
+      "final_stress_Pa": 305184397.3485963,
+      "first_law": {
+        "conducted_out_J_m3": 7391.886144277467,
+        "defect_free_energy_change_J_m3": -1.4495356617900345e+23,
+        "elastic_change_J_m3": 231434.97272472913,
+        "external_work_J_m3": 51346843.26797734,
+        "other_dissipation_J_m3": 1.4495356617900658e+23,
+        "plastic_partition_relative_residual": 0.0,
+        "plastic_partition_residual_J_m3": 0.0,
+        "plastic_work_J_m3": 3180995315.7341256,
+        "system_relative_residual": 2.1643754442892597e-14,
+        "system_residual_J_m3": -3137339392.0,
+        "taylor_quinney_heat_J_m3": 46984141.09211928,
+        "thermal_energy_change_J_m3": 48817959.40675338
+      },
+      "first_law_closed_5pct": true,
+      "grid": 192,
+      "matched_diagnostic_end_time_s": 5.836672948640151e-06,
+      "matched_end_strain": 0.17510018845920453,
+      "maximum_temperature_K": 1387.0090419987,
+      "maximum_temperature_excess_from_T0_K": 287.0090419987,
+      "peak_stress_Pa": 339651312.3274449,
+      "plastic_rate_max_s": 13892831.71369605,
+      "plastic_rate_spectral_peak": 2.1641486522848187e+18,
+      "post_peak_softening_fraction": 0.10147734964621716,
+      "selected_field_checkpoint": "results-local/v27-asb-resolution/seed43_192_assembled/drx_v25_restart_004750.npz",
+      "selected_field_time_s": 5.707025838489038e-06,
+      "temperature_spectral_peak": 118137281559.41214
+    },
+    "96": {
+      "active_plastic_fraction": 0.01587578768720006,
+      "cell_size_m": 1.0416666666666668e-07,
+      "checkpoint_count": 21,
+      "directory": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_96",
+      "effective_band_width_m": 1.2655309990678455e-06,
+      "field_time_relative_mismatch": 0.05278720651767472,
+      "final_stress_Pa": 337055323.7727677,
+      "first_law": {
+        "conducted_out_J_m3": 8518.424732311363,
+        "defect_free_energy_change_J_m3": 3.2196642445147337e+22,
+        "elastic_change_J_m3": 298953.5010358833,
+        "external_work_J_m3": 58331586.61725299,
+        "other_dissipation_J_m3": -3.219664244514367e+22,
+        "plastic_partition_relative_residual": 0.0,
+        "plastic_partition_residual_J_m3": 0.0,
+        "plastic_work_J_m3": 3716344983.194071,
+        "system_relative_residual": 1.1372699492620165e-13,
+        "system_residual_J_m3": -3661627392.0,
+        "taylor_quinney_heat_J_m3": 52223258.292579696,
+        "thermal_energy_change_J_m3": 55936551.510177016
+      },
+      "first_law_closed_5pct": true,
+      "grid": 96,
+      "matched_diagnostic_end_time_s": 5.842589456267958e-06,
+      "matched_end_strain": 0.17527768368803873,
+      "maximum_temperature_K": 1332.0437111744127,
+      "maximum_temperature_excess_from_T0_K": 232.0437111744127,
+      "peak_stress_Pa": 383873682.8626163,
+      "plastic_rate_max_s": 17111379.935330193,
+      "plastic_rate_spectral_peak": 1.5033635607881743e+18,
+      "post_peak_softening_fraction": 0.12196292994277573,
+      "selected_field_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_96/drx_v25_restart_004750.npz",
+      "selected_field_time_s": 5.534175480041952e-06,
+      "temperature_spectral_peak": 7173116882.487766
+    },
+    "homogeneous": {
+      "active_plastic_fraction": 1.0000000000000007,
+      "cell_size_m": 7.8125e-08,
+      "checkpoint_count": 20,
+      "directory": "results-local/v27-asb-resolution/homogeneous_128_matched",
+      "effective_band_width_m": 1.0000000000000004e-05,
+      "field_time_relative_mismatch": 0.022857142857143003,
+      "final_stress_Pa": 322930154.3863509,
+      "first_law": {
+        "conducted_out_J_m3": 8152.754316375809,
+        "defect_free_energy_change_J_m3": -6471614389.020452,
+        "elastic_change_J_m3": 268202.5068067368,
+        "external_work_J_m3": 40049429.409767985,
+        "other_dissipation_J_m3": 6510625566.471552,
+        "plastic_partition_relative_residual": 0.0,
+        "plastic_partition_residual_J_m3": 0.0,
+        "plastic_work_J_m3": 92018752.9859078,
+        "system_relative_residual": 0.008034672068506171,
+        "system_residual_J_m3": -52310741.387431145,
+        "taylor_quinney_heat_J_m3": 53007575.53480753,
+        "thermal_energy_change_J_m3": 53072638.08497546
+      },
+      "first_law_closed_5pct": true,
+      "grid": 128,
+      "matched_diagnostic_end_time_s": 5.833333333333339e-06,
+      "matched_end_strain": 0.17500000000000018,
+      "maximum_temperature_K": 1113.6072606459215,
+      "maximum_temperature_excess_from_T0_K": 13.607260645921542,
+      "peak_stress_Pa": 401636389.3957984,
+      "plastic_rate_max_s": 0.3672124217164006,
+      "plastic_rate_spectral_peak": 3.308722450212111e-24,
+      "post_peak_softening_fraction": 0.19596390438587788,
+      "selected_field_checkpoint": "results-local/v27-asb-resolution/homogeneous_128_matched/drx_v25_restart_000170.npz",
+      "selected_field_time_s": 5.700000000000005e-06,
+      "temperature_spectral_peak": 1.3877787807814457e-17
+    }
+  },
+  "relative_differences": {
+    "128_vs_192": {
+      "active_plastic_fraction": 0.39470124411011426,
+      "all_within_5pct": false,
+      "effective_band_width_m": 0.29842400643688954,
+      "final_stress_Pa": 0.006400529776945209,
+      "first_law.external_work_J_m3": 0.06332400368142019,
+      "first_law.plastic_work_J_m3": 0.10185733154348972,
+      "first_law.taylor_quinney_heat_J_m3": 0.14307382945019265,
+      "first_law.thermal_energy_change_J_m3": 0.10038505552747441,
+      "maximum_temperature_K": 0.04304171568809158,
+      "peak_stress_Pa": 0.06526465241572102,
+      "plastic_rate_max_s": 0.023050890268327566
+    },
+    "96_vs_128": {
+      "active_plastic_fraction": 0.10076106223706967,
+      "all_within_5pct": false,
+      "effective_band_width_m": 0.14016200557365346,
+      "final_stress_Pa": 0.08872431180328176,
+      "first_law.external_work_J_m3": 0.06023218218123649,
+      "first_law.plastic_work_J_m3": 0.23123724139150711,
+      "first_law.taylor_quinney_heat_J_m3": 0.047519531014689025,
+      "first_law.thermal_energy_change_J_m3": 0.029875948172843638,
+      "maximum_temperature_K": 0.003553875881489866,
+      "peak_stress_Pa": 0.05342225072369256,
+      "plastic_rate_max_s": 0.1689372834541375
+    }
+  },
+  "schema": "asb-drx/v27-local-asb-decision/v1",
+  "scientific_gate_passed": false,
+  "source_mix": {
+    "192": "bf150ca checkpoint 1250 exactly continued locally",
+    "96_and_128": "frozen completed V26 HPC cases at bf150ca",
+    "homogeneous": "locally executed control"
+  },
+  "strain_rate_bracket_authorized": false,
+  "strict_endpoint_criteria_observed": false,
+  "strict_thresholds": {
+    "maximum_active_fraction": 0.25,
+    "minimum_continuous_persistence_s": 1e-06,
+    "minimum_post_peak_softening_fraction": 0.2,
+    "minimum_temperature_excess_K": 50.0,
+    "minimum_width_to_interface": 2.0,
+    "refinement_tolerance": 0.05
+  }
+}
