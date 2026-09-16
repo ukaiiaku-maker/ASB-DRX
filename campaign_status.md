@@ -1453,3 +1453,30 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `56070185` and `56070276` are preserved with their missing-module logs.
 - Unrelated job `55950433` remains untouched. Full live checkpoint:
   `full_model/docs/v30_overnight_decision_report.md`.
+
+## Directive v32 autonomous scientific completion (active 2026-09-16)
+
+- Canonical source is pushed through `9945298`; V30/V31 evidence remains
+  frozen. All new long calculations run locally from clean detached source
+  commits and use provenance-separated output roots.
+- The ten-case V31 front continuation is closed. Seven cases reach their
+  horizon; the 64 positive near-equal case and both 128 near-equal signs reach
+  topology terminals. V32 removes the 64 subcell island conservatively, but
+  later pair identity is lost; both 128 signs form resolved forbidden islands.
+  Classification: `V31_CLOSED_FRONT_FRAGMENTATION_NOT_PROMOTED`.
+- Family-resolved Mura complementarity and complete fixed-strain work
+  backtracking repair the first work-budget failure. A later exact-zero-flux
+  roundoff failure is quarantined and repaired as an exact identity with 531
+  tests passing. The repaired 64 continuation from `e7aa16e` is valid beyond
+  the old terminal and remains running; 128 is conditional on its completion.
+- The physical ASB/common-Mura preflight passes source, restart, channel,
+  first-law, and checksum checks. The 1100 K heterogeneous adiabatic anchor is
+  strongly heated but broad and reaches a thermal-validity terminal without
+  strict ASB. Three controls and the bounded eight-case Tier-1 screen remain
+  running locally. Tier-2 seeds are not yet authorized.
+- A combined common-Mura/front reproduction exposed a silent frozen-front and
+  dual-state-owner configuration. Production now fails fast until one atomic
+  adapter owns signed forest/wall, beta/Nye/alignment, junctions, sparse-front
+  reservoirs, work, heat, and reaction extents. Full front + Mura + ASB is not
+  qualified.
+- Decision report: `full_model/docs/v32_autonomous_decision_report.md`.

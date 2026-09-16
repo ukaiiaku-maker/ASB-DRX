@@ -1,0 +1,79 @@
+{
+  "schema": "asb-drx/v32-case-manifest/v1",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "status_checkpoint_commit": "99452982caaba214c188c07c584c0fb96857e5ef",
+  "frozen_inputs": {
+    "v31_long_run_source": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+    "v31_restart_evidence": "8df28e8e3b47eea9f04c154db13f2df468c2c096"
+  },
+  "case_groups": [
+    {
+      "id": "front_v31_continuation",
+      "source_commit": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916",
+      "case_count": 10,
+      "terminal_state": "COMPLETE_WITH_THREE_TOPOLOGY_TERMINALS",
+      "decision": "V31_CLOSED_FRONT_FRAGMENTATION_NOT_PROMOTED",
+      "evidence": "full_model/verification/v32_front_decision.json",
+      "evidence_sha256": "06a3d3eebfb259e0409f2fea412bf4a10096516f6007740a954b02baaba70ec4"
+    },
+    {
+      "id": "mura_first_repaired_continuation_quarantined",
+      "source_commit": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-20260916",
+      "case_count": 1,
+      "terminal_state": "HARD_INVALID_NUMERICAL_ZERO_VELOCITY_ROUNDOFF",
+      "last_valid_step": 1451,
+      "last_valid_strain": 0.03841278100648024,
+      "checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672",
+      "evidence": "full_model/verification/v32_mura_zero_velocity_roundoff_repair.json",
+      "evidence_sha256": "66d7d8e249f9163954d08b30ee8d124980419311256e7d272f5335daba548600"
+    },
+    {
+      "id": "mura_zero_identity_repaired_continuation",
+      "source_commit": "e7aa16e70703bcf74df47da8c5669ec052a446c7",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916",
+      "case_count": 2,
+      "state": "RUNNING_SEQUENTIAL_64_THEN_CONDITIONAL_128",
+      "restart_checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672",
+      "broad_b2_authorized": false
+    },
+    {
+      "id": "asb_v31_anchor",
+      "source_commit": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
+      "case_count": 4,
+      "state": "ONE_VALIDITY_TERMINAL_THREE_RUNNING",
+      "decision": "RUNNING_LONG_ASB_ANCHOR",
+      "evidence": "full_model/verification/v32_asb_decision.json",
+      "evidence_sha256": "22203ef06babda0f77124b708e7002823883c6b7c0b6a400390d75dea43d8a4c"
+    },
+    {
+      "id": "asb_adaptive_preflight",
+      "source_commit": "697c529103cc5cca855d42c31ed9aa832bd2fb3a",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-asb-preflight-697c529",
+      "case_count": 1,
+      "state": "PASSED_INITIAL_AND_EXACT_RESTART",
+      "evidence": "full_model/verification/v32_asb_adaptive_preflight.json",
+      "evidence_sha256": "e5f705f648bb316847a4776c9e8447f0784b43c3b4885e62bea5edb10a8913c5"
+    },
+    {
+      "id": "asb_tier1_temperature_rate_screen",
+      "source_commit": "fb21dbce5e615827060a440759e54b638013f2b2",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-asb-tier1-20260916",
+      "case_count": 8,
+      "state": "RUNNING_MAXIMUM_CONCURRENCY_TWO",
+      "input_manifest": "full_model/hpc3/v32_asb_adaptive_manifest.json",
+      "input_manifest_sha256": "6deed8cab4a30441962e044380a94eb0a4a80bc76a379425d7921b65e3aaa86e",
+      "tier2_authorized": false
+    },
+    {
+      "id": "asb_tier1_wrong_sha_attempt",
+      "state": "FAILED_PROVENANCE_PREFLIGHT_NO_PHYSICAL_TRAJECTORY",
+      "count_as_scientific_case": false,
+      "physical_steps_accepted": 0,
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-asb-tier1-20260916/failed-launch-wrong-sha"
+    }
+  ],
+  "evidence_policy": "V30/V31 raw outputs and quarantined V32 failures are immutable; resumed calculations write to provenance-separated roots."
+}

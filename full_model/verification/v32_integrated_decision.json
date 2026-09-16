@@ -1,0 +1,64 @@
+{
+  "schema": "asb-drx/v32-integrated-decision/v1",
+  "classification": "PARTIAL_INTEGRATION_QUALIFIED_FULL_COUPLING_REJECTED",
+  "source_commit": "99452982caaba214c188c07c584c0fb96857e5ef",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "stages": {
+    "mura_plus_physical_asb": {
+      "state": "INVARIANT_QUALIFIED_RUNNING_CONDITION_SCREEN",
+      "evidence": [
+        "full_model/verification/v32_asb_adaptive_preflight.json",
+        "full_model/verification/v32_asb_decision.json"
+      ],
+      "statement": "The accepted common-Mura transaction is the sole owner of populations, plastic distortion, Nye, physical channel dissipation, and deposited heat. The two-step plus restart preflight closes every declared channel and excludes numerical constraints from physical energy."
+    },
+    "front_plus_physical_asb": {
+      "state": "NOT_QUALIFIED",
+      "statement": "The sparse front has a conservative line and heat ledger, but no staged calculation demonstrates ownership-compatible coupling to the complete independent ASB dissipation ledger."
+    },
+    "front_plus_mura": {
+      "state": "HARD_INVALID_CONFIGURATION_FAILS_CLOSED",
+      "failure": "UNSUPPORTED_COMMON_FRONT_DUAL_OWNER",
+      "statement": "The sparse front owns mobile signed populations plus scalar forest/wall reservoirs, while common Mura additionally owns signed forest/wall, beta, Nye, alignment, and junction state. No atomic adapter currently updates them together."
+    },
+    "full_front_mura_asb": {
+      "state": "NOT_AUTHORIZED",
+      "statement": "Full coupling cannot be claimed while front plus Mura lacks one state transaction and the front scientific branch ends in resolved forbidden fragmentation."
+    }
+  },
+  "positive_drive_reproducer": {
+    "grid": 32,
+    "front_pressure_Pa": 608299773.0689819,
+    "net_front_velocity_m_s": 20.7411387426288,
+    "proposed_swept_volume_m3": 0.0,
+    "observed_classification": "STATIONARY_GEOMETRY",
+    "diagnosis": "common-Mura mode silently set freeze_kwc_eta before the V32 fail-fast repair"
+  },
+  "production_contract": {
+    "module": "full_model/production/integration_modes.py",
+    "combined_mode_name": "v32_existing_boundary_common_state",
+    "adapter_available": false,
+    "single_mode_exact_off_preserved": true,
+    "label_creation_forbidden": true,
+    "required_future_atomic_owners": [
+      "mobile positive and negative populations",
+      "signed forest and wall populations",
+      "plastic distortion and family Nye state",
+      "alignment and junction state",
+      "sparse parent-child-wake front reservoirs",
+      "work, heat, and reaction extents"
+    ]
+  },
+  "tests": {
+    "focused_passed": 27,
+    "repository_passed": 616,
+    "production_entry_fails_before_mode_rewrites": true
+  },
+  "claims_remaining_false": [
+    "front plus Mura is integrated",
+    "front plus physical ASB ledger is qualified",
+    "full front plus Mura plus ASB is qualified",
+    "coupled DRX/ASB has been demonstrated"
+  ]
+}
