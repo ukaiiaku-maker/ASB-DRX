@@ -5750,7 +5750,14 @@ def _v30_physical_energy_state(rho_field, eta_field, psi_field,
     audit = _energy_audit(
         rho_field/max(_rho_ch_scale(), P['rho_min']), rho_field, eta_field,
         psi_field, kappa_field, rho_gb_field, gb_field, grain_count)
-    line_correlation = (audit['F_bulk']+audit['F_r_grad'])/area
+    # Use the declared phase-owned defect functional, not the interpolated
+    # legacy diagnostic table.  This retains a fixed reference and excludes
+    # kinetic Arrhenius stress diagnostics from physical storage.
+    line_correlation = float(np.mean(ATpot.phase_owned_free_energy(
+        rho_field, temperature_K=temperature_field,
+        wall_density_m2=_rho_wall_field(globals().get('rho_wall', None)),
+        wall_order=globals().get('q_wall_v19', None))))
+    line_correlation += audit['F_r_grad']/area
     phase_interface = (audit['F_eta_grad']+audit['F_eta_barrier'])/area
     line_tension = 0.5*ATpot.mu_shear(
         np.maximum(np.asarray(temperature_field, dtype=float), 1.0))*P['b']**2
