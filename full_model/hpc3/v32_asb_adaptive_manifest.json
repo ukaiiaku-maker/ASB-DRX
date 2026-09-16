@@ -1,0 +1,54 @@
+{
+  "schema": "asb-drx/v32/asb-adaptive-screen/v1",
+  "state": "PREPARED_NOT_LAUNCHED",
+  "authorization_basis": {
+    "anchor_source_commit": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+    "anchor_observation": "heterogeneous adiabatic case reached the declared 1811 K model-validity boundary at step 3272 without strict localization",
+    "last_exact_matched_step": 3200,
+    "last_exact_matched_active_fraction": 0.6926267671387116,
+    "last_exact_matched_temperature_excess_K": 357.6961701974717,
+    "last_exact_matched_softening_fraction": 0.1803946387956653,
+    "last_exact_matched_effective_width_m": 9.997860394400692e-06,
+    "interpretation": "strong heating and approaching softening threshold coexist with a broad, domain-spanning response; lower-temperature and rate-separated cases test exposure versus absent localization without exceeding the model domain"
+  },
+  "fixed_strict_criteria": {
+    "maximum_active_fraction": 0.25,
+    "minimum_matched_temperature_excess_K": 50.0,
+    "minimum_post_peak_softening_fraction": 0.20,
+    "minimum_width_to_interface": 2.0,
+    "minimum_persistence_s": 1e-06,
+    "refinement_tolerance": 0.05
+  },
+  "tier_1_one_factor_at_a_time": {
+    "baseline_coordinate": {"temperature_K": 1100.0, "strain_rate_s-1": 30000.0, "seed": 43},
+    "coordinates": [
+      {"label": "T0900_R3e4", "temperature_K": 900.0, "strain_rate_s-1": 30000.0, "purpose": "increase thermal-validity headroom at fixed rate"},
+      {"label": "T1300_R3e4", "temperature_K": 1300.0, "strain_rate_s-1": 30000.0, "purpose": "test stronger activated softening at fixed rate; stop at unchanged validity boundary"},
+      {"label": "T1100_R1e4", "temperature_K": 1100.0, "strain_rate_s-1": 10000.0, "purpose": "test longer physical exposure at fixed strain and temperature"},
+      {"label": "T1100_R1e5", "temperature_K": 1100.0, "strain_rate_s-1": 100000.0, "purpose": "test faster loading versus activated relaxation at fixed temperature"}
+    ],
+    "matched_controls_per_coordinate": ["adiabatic", "isothermal"],
+    "case_count": 8,
+    "unchanged": [
+      "128x128 grid", "10 um domain", "seed 43", "0.02 density noise",
+      "0.01 signed noise", "eigenstrain-particle heterogeneity",
+      "Taylor-Quinney heat conversion", "process-zone width",
+      "thermal-validity boundaries", "strict ASB criteria"
+    ]
+  },
+  "conditional_tier_2": {
+    "launch_condition": "choose at most one tier-1 coordinate using the preregistered localization metrics after every matched pair is terminal and invariant-clean",
+    "seed_replication": [42, 44],
+    "case_count": 4,
+    "selection_order": [
+      "strict conjunction and persistence", "lowest active fraction",
+      "lowest IPR and entropy support", "finite physical band width",
+      "largest matched heating", "largest softening"
+    ]
+  },
+  "forbidden_during_screen": [
+    "change strict thresholds", "retune numerical compatibility penalties",
+    "change more than the declared coordinate", "continue beyond thermal or mechanical model-validity boundaries",
+    "claim strict ASB without 192-grid and second-seed confirmation"
+  ]
+}
