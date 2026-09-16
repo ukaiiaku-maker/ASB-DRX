@@ -37,5 +37,36 @@
     "complete explicit physical work budget",
     "reversible line storage/release with conjugate state",
     "physical saturation/stall"
+  ],
+  "executed_variations": {
+    "front": {
+      "attempt_frequency_multiplier": [0.25, 1.0, 4.0],
+      "activation_enthalpy_eV": [0.30, 0.35, 0.40],
+      "transfer_storage_partition": ["baseline", "lower_transfer"],
+      "outcome": "all compact candidates geometry-limited; no kinetic optimum inferred"
+    },
+    "asb_tier1": {
+      "temperature_K_at_3e4_s-1": [900, 1300],
+      "strain_rate_s-1_at_1100_K": [10000, 100000],
+      "thermal_controls": ["adiabatic", "isothermal"],
+      "seed": 43,
+      "state": "RUNNING"
+    }
+  },
+  "accepted_model_changes": [
+    "resolution-aware subcell front-component filtering",
+    "conservative ordinary front split/merge identity",
+    "front topology event-step backtracking",
+    "per-Burgers-family work complementarity",
+    "fixed-total-strain energy-feasible Mura event backtracking",
+    "exact zero-velocity Mura identity and zero ledger",
+    "fail-fast common-Mura/sparse-front dual-owner contract"
+  ],
+  "rejected_or_not_promoted": [
+    "front kinetic retuning from a geometry-limited three-step screen",
+    "state clipping or post-step projection",
+    "weakening conservation or first-law tolerances",
+    "nominal flag-only common-Mura/front integration",
+    "ASB Tier-2 seed replication before a strict raw Tier-1 candidate"
   ]
 }
