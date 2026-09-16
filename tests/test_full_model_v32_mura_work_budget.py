@@ -1,6 +1,9 @@
 import numpy as np
 
 from full_model.production.v24_mechanical_wall import accepted_v24_mechanical_step
+from full_model.production.wall_topology_supply import (
+    accepted_mura_transport_capture_step,
+)
 from tests.test_full_model_v24_mechanical_wall import mechanical_fixture
 
 
@@ -55,3 +58,29 @@ def test_energy_limited_complete_restart_remains_bitwise_exact():
         left = getattr(continuous, group); right = getattr(restarted, group)
         for name in left.__dict__:
             np.testing.assert_array_equal(getattr(left, name), getattr(right, name))
+
+
+def test_zero_flux_physical_stall_is_exact_identity_with_zero_ledger():
+    state, _, support, systems, topologies, common, _, _ = mechanical_fixture()
+    velocity = np.zeros(state.density.mobile_plus_m2.shape+(3,))
+    density, alignment, ledger = accepted_mura_transport_capture_step(
+        state.density, state.reservoir_alignment, velocity, velocity, support,
+        systems, state.common.orientation_rad, common.spacing_m, 1e-6,
+        topologies)
+    assert density is state.density
+    assert alignment is state.reservoir_alignment
+    assert ledger["exact_zero_flux_identity"]
+    assert not ledger["post_step_projection_used"]
+    assert np.count_nonzero(ledger["local_nye_change_m1"]) == 0
+    assert np.count_nonzero(ledger["alignment_rate_plus_m2_s"]) == 0
+    assert np.count_nonzero(ledger["alignment_rate_minus_m2_s"]) == 0
+    for sign in ("plus", "minus"):
+        assert np.count_nonzero(ledger["sign"][sign][
+            "mura_line_stretching_m2"]) == 0
+        assert np.count_nonzero(ledger["sign"][sign]["captured_line_m2"]) == 0
+        assert np.count_nonzero(ledger["sign"][sign][
+            "captured_alignment_m2"]) == 0
+        assert ledger["sign"][sign][
+            "global_scalar_residual_line_per_thickness"] == 0.0
+        np.testing.assert_array_equal(ledger["sign"][sign][
+            "global_alignment_residual_line_per_thickness"], np.zeros(3))

@@ -1,0 +1,43 @@
+{
+  "schema": "asb-drx/v32-mura-zero-velocity-roundoff-repair/v1",
+  "failed_source_sha": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+  "classification": "HARD_INVALID_NUMERICAL_ZERO_VELOCITY_ROUNDOFF",
+  "scientific_saturation_claimed": false,
+  "case": {
+    "grid": 64,
+    "step": 1451,
+    "applied_strain": 0.03841278100648024,
+    "last_checkpoint": "checkpoint_step_000001451_strain_0.03841278.npz",
+    "last_checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672",
+    "failure_json_sha256": "2d6694b8235ca16590ba1f219d63818ebc54a071f344a748bdf0efafadd91622",
+    "status_json_sha256": "058cc3663f7edcbbb25f74f7dd484a5d79db50bf528f2e9c56da27fc92639b22"
+  },
+  "first_failing_zero_event": {
+    "event_scale": 0.0,
+    "physical_velocity": 0.0,
+    "spurious_line_stretching_m2_cells": 8.5,
+    "spurious_defect_energy_change_J_m3_cells": 1.1874362826347351e-08,
+    "spurious_heat_balance_J_m3_cells": -1.1874362826347351e-08
+  },
+  "repair": {
+    "description": "An identically zero signed Mura velocity returns the exact input density and alignment objects with an exactly zero transport, capture, stretching, Nye-change, and balance ledger.",
+    "state_clipping_used": false,
+    "projection_used": false,
+    "physical_guard_weakened": false,
+    "exact_identity_control": true
+  },
+  "replay_from_preserved_checkpoint": {
+    "accepted_event_scale": 0.0,
+    "physical_stall": true,
+    "defect_energy_change_J_m3_cells": 0.0,
+    "heat_J_m3_cells": 0.0,
+    "first_law_residual_J_m3_cells": 0.0,
+    "hard_invariant_passed": true,
+    "post_step_projection_used": false
+  },
+  "continuation": {
+    "grid_64": "RESUME_FROM_PRESERVED_STEP_1451",
+    "grid_128": "PENDING_NOT_STARTED",
+    "broad_b2_authorized": false
+  }
+}

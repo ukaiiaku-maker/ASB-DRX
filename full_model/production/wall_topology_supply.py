@@ -374,6 +374,33 @@ def accepted_mura_transport_capture_step(
         if np.any(courant > 1.0+5e-15):
             raise ValueError("donor-cell transport violates multidimensional CFL <= 1")
 
+    # The physical-stall endpoint is an exact zero event.  Do not pass it
+    # through norm reconstruction: floating roundoff in |kappa| <= rho can
+    # otherwise manufacture a few units of scalar line from an identically
+    # zero flux and prevent the work-budget complementarity problem from
+    # accepting its exact identity solution.
+    if (not np.any(velocities["plus"])
+            and not np.any(velocities["minus"])):
+        zero_scalar = np.zeros(shape)
+        zero_vector = np.zeros(shape+(3,))
+        sign_ledgers = {sign: {
+            "captured_line_m2": zero_scalar.copy(),
+            "captured_alignment_m2": zero_vector.copy(),
+            "mura_line_stretching_m2": zero_scalar.copy(),
+            "global_scalar_residual_line_per_thickness": 0.0,
+            "global_alignment_residual_line_per_thickness": np.zeros(3),
+        } for sign in ("plus", "minus")}
+        return inventory, alignments, {
+            "operator": "authoritative_mura_face_transport_and_entry_capture",
+            "capture_geometry_source": "caller-declared physical support",
+            "sign": sign_ledgers,
+            "alignment_rate_plus_m2_s": zero_vector.copy(),
+            "alignment_rate_minus_m2_s": zero_vector.copy(),
+            "local_nye_change_m1": np.zeros(shape[:2]+(3, 3)),
+            "post_step_projection_used": False,
+            "exact_zero_flux_identity": True,
+        }
+
     plus_rate, minus_rate = signed_alignment_mura_rates(
         alignments.mobile_plus_m2, alignments.mobile_minus_m2,
         velocities["plus"], velocities["minus"], spacing_m)
