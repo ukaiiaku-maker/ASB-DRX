@@ -32,6 +32,7 @@ def _fixture():
         fixed_eigenstrain=np.zeros((16, 16, 2, 2)))
     controls = I3Controls(
         driving_pressure_a_to_b_Pa=1.0e8,
+        applied_pressure_a_to_b_Pa=1.0e8,
         trial_dt_s=1.0e-10, front_dt_s=1.0e-3)
     return (context, initial, phase_trial(.05*spacing),
             phase_trial(-.05*spacing), driving, controls)

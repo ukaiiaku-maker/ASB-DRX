@@ -24,8 +24,13 @@ import argparse
 from dataclasses import asdict, dataclass, fields, replace
 import json
 from pathlib import Path
+import sys
 
 import numpy as np
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from full_model.analysis.run_v24_mechanical_supply import build_case
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
@@ -39,7 +44,8 @@ from full_model.production.common_tensorial_wall import (
     CommonWallDriving, CommonWallState, resolved_driving_components,
 )
 from full_model.production.complete_front_energy import (
-    evaluate_common_front_transaction, evaluate_complete_front_energy,
+    evaluate_common_front_transaction, evaluate_complete_directional_kinetics,
+    evaluate_complete_front_energy,
 )
 from full_model.production.coupled_front_production import (
     accept_coupled_front_candidate, initialize_coupled_front_runtime,
@@ -240,6 +246,7 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     accepted_eta = state.eta.copy()
     front_decision = None
     energy_decision = None
+    directional_kinetics = None
     front_published = False
     before_front = front_state
     if controls.front_enabled:
@@ -267,6 +274,45 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 signed_sink_fraction=controls.signed_sink_fraction,
                 support_component_reconnection=True,
                 topology_backtracking_enabled=True))
+        if front_decision.accepted:
+            directional_kinetics = evaluate_complete_directional_kinetics(
+                front_state, sparse_candidate, state.eta, accepted_eta,
+                event_volume_m3=cell_volume, spacing_m=spacing,
+                cell_volume_m3=cell_volume,
+                represented_thickness_m=thickness,
+                transmission_fraction=controls.transmission_fraction,
+                boundary_storage_fraction=controls.boundary_storage_fraction,
+                neutral_sink_fraction=controls.neutral_sink_fraction,
+                signed_sink_fraction=controls.signed_sink_fraction,
+                energy_kwargs=_energy_options(context, driving),
+                external_work_density_Pa=(
+                    controls.applied_pressure_a_to_b_Pa),
+                prescribed_temperature=controls.prescribed_temperature)
+            sparse_candidate, runtime_candidate, accepted_eta, front_decision = (
+                accept_coupled_front_candidate(
+                    front_state.front, runtime, state.eta, eta_trial,
+                    spacing_m=spacing, represented_thickness_m=thickness,
+                    dt_s=controls.front_dt_s,
+                    temperature_K=mechanical.common.temperature_K,
+                    line_energy_J_m=context["wall_parameters"].line_energy_J_m,
+                    process=process, h0_J=.35*EV_J,
+                    critical_pressure_Pa=1.0e9, exp_a=2.0, exp_n=1.5,
+                    exp_floor=.10,
+                    driving_pressure_a_to_b_Pa=(
+                        controls.driving_pressure_a_to_b_Pa),
+                    applied_pressure_a_to_b_Pa=(
+                        controls.applied_pressure_a_to_b_Pa),
+                    mobility_enabled=True, periodic=True,
+                    transmission_fraction=controls.transmission_fraction,
+                    boundary_storage_fraction=controls.boundary_storage_fraction,
+                    neutral_sink_fraction=controls.neutral_sink_fraction,
+                    signed_sink_fraction=controls.signed_sink_fraction,
+                    support_component_reconnection=True,
+                    topology_backtracking_enabled=True,
+                    kinetic_free_energy_a_to_b_J=(
+                        directional_kinetics.a_to_b_event_J),
+                    kinetic_free_energy_b_to_a_J=(
+                        directional_kinetics.b_to_a_event_J)))
         transaction = evaluate_common_front_transaction(
             front_state, sparse_candidate, state.eta, accepted_eta,
             spacing_m=spacing, cell_volume_m3=cell_volume,
@@ -363,6 +409,16 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         },
         "front_decision": (None if front_decision is None
                            else asdict(front_decision)),
+        "complete_directional_kinetics": (
+            None if directional_kinetics is None else {
+                "a_to_b_event_J": directional_kinetics.a_to_b_event_J,
+                "b_to_a_event_J": directional_kinetics.b_to_a_event_J,
+                "forward_signed_volume_m3": (
+                    directional_kinetics.forward_signed_volume_m3),
+                "opposite_signed_volume_m3": (
+                    directional_kinetics.opposite_signed_volume_m3),
+                "opposite_evaluated_from_actual_state": True,
+            }),
         "mura": (None if mura_ledger is None else {
             "accepted_dt_s": float(mura_ledger["accepted_dt_s"]),
             "event_scale": float(mura_ledger["mura_event_scale"]),
@@ -491,6 +547,8 @@ def main():
     parser.add_argument("--trial-dt-s", type=float, default=2.0e-9)
     parser.add_argument("--front-dt-s", type=float, default=1.0e-6)
     parser.add_argument("--driving-pressure-Pa", type=float, required=True)
+    parser.add_argument("--applied-pressure-Pa", type=float, default=0.0,
+                        help="external front work density; ledgered separately")
     args = parser.parse_args()
     context = resolved_bicrystal(
         args.grid, args.length_m, args.interface_width_m,
@@ -507,6 +565,7 @@ def main():
         fixed_eigenstrain=fixed)
     controls = I3Controls(
         driving_pressure_a_to_b_Pa=args.driving_pressure_Pa,
+        applied_pressure_a_to_b_Pa=args.applied_pressure_Pa,
         trial_dt_s=args.trial_dt_s, front_dt_s=args.front_dt_s)
     _, result = compare_response_family(
         context, context["state"], forward, reverse, driving, controls)
@@ -518,6 +577,7 @@ def main():
         "mean_shear_strain": args.mean_shear_strain,
         "trial_dt_s": args.trial_dt_s, "front_dt_s": args.front_dt_s,
         "driving_pressure_Pa": args.driving_pressure_Pa,
+        "applied_pressure_Pa": args.applied_pressure_Pa,
         "phase_trials_npz": str(args.phase_trials_npz.resolve()),
     }
     write_result(args.output, result)

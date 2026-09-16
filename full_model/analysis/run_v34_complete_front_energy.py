@@ -24,7 +24,8 @@ from common_front_state import (  # noqa: E402
     state_metadata_json)
 from common_tensorial_wall import CommonWallParameters, CommonWallState  # noqa: E402
 from complete_front_energy import (  # noqa: E402
-    evaluate_common_front_transaction, independently_assemble_product_rule_nye)
+    evaluate_common_front_transaction, evaluate_complete_directional_kinetics,
+    independently_assemble_product_rule_nye)
 from moving_front import DefectState, initialize_declared_boundary_front  # noqa: E402
 
 
@@ -136,6 +137,22 @@ def run(output):
                    child=replace(support_state.child, beta_p=jump_beta))
     jump_audit = independently_assemble_product_rule_nye(jump, spacing)
 
+    # Finite actual forward/opposite trials for kinetic normalization.  The
+    # opposite is evaluated from state, never inferred as minus the forward.
+    kinetic_chi = np.full_like(state.front.chi, .4)
+    kinetic_state = replace(state, front=replace(
+        state.front, chi=kinetic_chi,
+        processed_max=np.full_like(kinetic_chi, .7),
+        cleanup_max=np.full_like(kinetic_chi, .7)))
+    forward_chi = kinetic_chi.copy(); forward_chi[:, :5] += .1
+    directional = evaluate_complete_directional_kinetics(
+        kinetic_state, replace(kinetic_state.front, chi=forward_chi),
+        eta, eta_field(n), event_volume_m3=cell_volume,
+        spacing_m=spacing, cell_volume_m3=cell_volume,
+        represented_thickness_m=thickness, transmission_fraction=.6,
+        boundary_storage_fraction=.05, neutral_sink_fraction=.05,
+        energy_kwargs=energy_options())
+
     restored = state_from_checkpoint(
         state_metadata_json(downhill.published_state),
         state_arrays(downhill.published_state), downhill.published_state.front)
@@ -185,6 +202,16 @@ def run(output):
                 np.linalg.norm(jump_audit.discrete_representation_residual_m1)
                 /max(np.linalg.norm(jump_audit.exact_reconstructed_m1), 1e-300)),
             "assembly_is_independent": True,
+        },
+        "directional_kinetics": {
+            "a_to_b_event_J": directional.a_to_b_event_J,
+            "b_to_a_event_J": directional.b_to_a_event_J,
+            "forward_signed_volume_m3": directional.forward_signed_volume_m3,
+            "opposite_signed_volume_m3": directional.opposite_signed_volume_m3,
+            "opposite_evaluated_from_actual_state": True,
+            "opposite_is_algebraic_negative": bool(
+                directional.a_to_b_event_J == -directional.b_to_a_event_J),
+            "minimum_normalization_fraction_of_cell": 1.0e-6
         },
         "restart_bitwise_exact": restart_exact,
         "fixture_passed": bool(
