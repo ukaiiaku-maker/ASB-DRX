@@ -1,0 +1,60 @@
+{
+  "schema": "asb-drx/v30-mura-tier-b1-bundle-manifest/v1",
+  "submission_status": "PREPARED_NOT_SUBMITTED",
+  "push_status": "NOT_PUSHED",
+  "source_sha_requirement": "replace config placeholder with exact pushed source SHA",
+  "case_matrix": [
+    {"grid": 64, "condition": "homogeneous", "seed": 42},
+    {"grid": 64, "condition": "broadband_noise", "seed": 42},
+    {"grid": 64, "condition": "mechanical_heterogeneity", "seed": 42},
+    {"grid": 128, "condition": "homogeneous", "seed": 42},
+    {"grid": 128, "condition": "broadband_noise", "seed": 42},
+    {"grid": 128, "condition": "mechanical_heterogeneity", "seed": 42}
+  ],
+  "physical_conditions": {
+    "temperature_K": 1100.0,
+    "strain_rate_s-1": 10000.0,
+    "initial_preloaded_strain": 0.01,
+    "target_strain": 0.2,
+    "required_checkpoints": [0.1, 0.2],
+    "domain_length_m": 1e-05,
+    "phase_or_grain_allocation_enabled": false
+  },
+  "restart": {
+    "physical_progress_interval_strain": 0.01,
+    "wall_clock_interval_s": 840.0,
+    "maximum_required_wall_clock_interval_s": 900.0,
+    "partial_case_preservation": true,
+    "automatic_resume_from_latest_checkpoint": true,
+    "checkpoint_reload_verified_exact": true
+  },
+  "resources": {
+    "nodes": 1,
+    "cpus_per_task": 8,
+    "memory": "32G",
+    "walltime": "16:00:00",
+    "concurrent_case_processes": 6,
+    "thread_count_per_case": 1
+  },
+  "local_runtime_benchmark": {
+    "host_scope": "local workstation; three-step and two-step production samples",
+    "grid_64_low_strain_seconds_per_step": 0.56,
+    "grid_64_high_strain_seconds_per_step": 0.59,
+    "grid_128_low_strain_seconds_per_step": 2.32,
+    "grid_128_high_strain_seconds_per_step": 2.49,
+    "estimated_grid_64_hours_to_20_percent_per_case": 12.0,
+    "estimated_grid_128_hours_to_20_percent_per_case": 96.0,
+    "interpretation": "One 16-hour invocation should substantially or fully advance 64-square cases; 128-square cases are expected to remain valid partial cases requiring approximately six resumptions. HPC3 timing may differ."
+  },
+  "hard_gate_thresholds": {
+    "maximum_dual_nye_relative_rms": 0.05,
+    "maximum_normalized_line_continuity_residual": 0.05,
+    "post_step_projection_allowed": false,
+    "accepted_step_hard_invariant_required": true
+  },
+  "bundle_config": "full_v34_v30_mura_tier_b1_hpc3.toml",
+  "entrypoint": "full_model/hpc3/run_v30_mura_tier_b1.sh",
+  "case_runner": "full_model/analysis/run_v30_mura_tier_b1_case.py",
+  "postprocessor": "full_model/analysis/postprocess_v30_mura_tier_b1.py",
+  "decision_output": "full_model/production/output/v30-mura-tier-b1/v30_mura_tier_b1_decision.json"
+}
