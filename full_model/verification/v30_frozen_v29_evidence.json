@@ -1,0 +1,15 @@
+{
+  "schema": "v30-frozen-v29-evidence-1.0",
+  "frozen_at_commit": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
+  "remote_commit": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
+  "v29_scientific_source": "d0e95f8",
+  "v29_audit_runner": "504e17e",
+  "sha256": {
+    "campaign_status.md": "c4beaaa3a38fe935c201f5d984cda61be5d8b43a61ceba378b9fd23da90404a7",
+    "full_model/docs/v29_decision_report.md": "87fc68099e33a22e097d7e07ecbac0eee1a52d9bddd45b5b31844d68cc303da1",
+    "full_model/full_recovery_campaign_manifest.json": "364922e4c135e96623d4254d0891339107a5d7d0bd7965f8e27525ccef8ca4d9",
+    "full_model/verification/v29_frozen_v28_evidence.json": "44def2431048593ecc6b09ca12cbcccfe6a294d0404b60a5e8f03f43a51e01f8",
+    "full_model/verification/v29_local_hard_gates.json": "d9a1207508756d9bac028939e3ea0d4fec9adbf010a18d81b6ff934539e58f14"
+  },
+  "immutable": true
+}

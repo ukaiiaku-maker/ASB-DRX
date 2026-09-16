@@ -1,0 +1,19 @@
+{
+  "schema": "asb-drx/v30-case-manifest/v1",
+  "source_checkpoint": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
+  "cases": [],
+  "authorization": {
+    "front_long_matrix": "BLOCKED_BY_DEPENDENCY",
+    "mura_nye_long_matrix": "BLOCKED_BY_DEPENDENCY",
+    "asb_long_matrix": "BLOCKED_BY_DEPENDENCY",
+    "fully_integrated_matrix": "BLOCKED_BY_DEPENDENCY"
+  },
+  "restart_requirements": {
+    "maximum_wall_clock_checkpoint_minutes": 15,
+    "physical_progress_checkpoints": true,
+    "front_history": true,
+    "mura_nye_state": true,
+    "energy_dissipation_ledgers": true,
+    "rng_state_when_applicable": true
+  }
+}
