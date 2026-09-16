@@ -86,6 +86,11 @@ from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
     signed_pair_pressure_offsets,
 )
+from phase_proposal import (
+    adaptive_phase_proposal, phase_structure_diagnostics,
+    preserve_existing_pair_components,
+    spectral_phase_energy,
+)
 from symmetric_sibm import production_stage_overrides
 from integration_modes import validate_common_front_integration
 from dislocation_free_energy import (
@@ -625,6 +630,17 @@ P = dict(
     # is high, but does not create a thermodynamic gate or stop GB motion.
     use_ac_increment_limiter=True,
     ac_max_abs_step=0.02,
+    # V34 production coupled-front proposal: simultaneous simplex-constrained
+    # embedded Euler/Heun stepping with error, energy, and spectral-CFL checks.
+    # The historical sequential clipped Euler proposal remains reproduction-only.
+    ac_phase_proposal_mode='adaptive_simplex_imex',
+    ac_proposal_absolute_tolerance=2.0e-6,
+    ac_proposal_relative_tolerance=2.0e-4,
+    ac_proposal_max_abs_substep=5.0e-3,
+    ac_proposal_diffusion_safety=0.80,
+    ac_proposal_maximum_substeps=8192,
+    ac_proposal_energy_relative_tolerance=2.0e-10,
+    diagnostic_write_phase_proposal=False,
 
     # Temperature-dependent GB/KWC mobility.
     # Relative Arrhenius form keeps v25 unchanged at gb_mobility_Tref:
@@ -8212,7 +8228,125 @@ for n in range(_restart_step_offset, _restart_end_step):
             eta[:, :, :Ng], phase_energy_fields)
         if stored_energy_mode == 'sign_reversed':
             common_stored_derivative = -common_stored_derivative
-    if not P.get('freeze_kwc_eta', False):
+    ac_phase_proposal_diagnostics = None
+    _ac_mode = str(P.get(
+        'ac_phase_proposal_mode', 'adaptive_simplex_imex')).lower()
+    _adaptive_front_proposal = (
+        _ac_mode in ('adaptive_simplex_imex', 'adaptive_simplex_heun')
+        and sparse_front_state is not None
+        and _front_operator == 'coupled_bidirectional_v30')
+    if (_adaptive_front_proposal
+            and stored_energy_mode not in ('common_variational', 'sign_reversed')):
+        raise RuntimeError(
+            'adaptive coupled-front phase proposal requires the common '
+            'variational stored-energy functional')
+    if _ac_mode not in ('adaptive_simplex_imex', 'adaptive_simplex_heun',
+                        'legacy_sequential_euler'):
+        raise ValueError(f'unknown ac_phase_proposal_mode: {_ac_mode}')
+    if not P.get('freeze_kwc_eta', False) and _adaptive_front_proposal:
+        L_ac_eff = P['L_ac'] * _gb_mobility_factor_from_T(T)
+        if P.get('use_sibm_existing_boundary', False):
+            L_ac_eff *= max(float(P.get('sibm_mobility_multiplier', 1.0)), 0.0)
+        _adaptive_mask = (
+            np.asarray(sibm_active_mask, dtype=bool).copy()
+            if P.get('use_sibm_existing_boundary', False) else None)
+        if sibm_pin_mask is not None:
+            _adaptive_mask = ((np.ones(eta.shape[:2], dtype=bool)
+                               if _adaptive_mask is None else _adaptive_mask)
+                              & ~np.asarray(sibm_pin_mask, dtype=bool))
+
+        def _adaptive_ac_local_force(_eta_fields):
+            _sum_sq = np.sum(_eta_fields**2, axis=2)
+            _force = np.empty_like(_eta_fields)
+            _, _stored_derivative = common_variational_stored_energy(
+                _eta_fields, phase_energy_fields)
+            if stored_energy_mode == 'sign_reversed':
+                _stored_derivative = -_stored_derivative
+            for _phase in range(Ng):
+                _force[:, :, _phase] = (
+                    P['W_eta']*2.0*_eta_fields[:, :, _phase]
+                    *(_sum_sq-_eta_fields[:, :, _phase]**2)
+                    +_stored_derivative[:, :, _phase])
+                if P.get('use_rho_eta_coupling', True):
+                    _force[:, :, _phase] += (
+                        -float(P.get('rho_eta_ac_strength', 0.0))
+                        *rho_eta_drive_ac*(1.0-2.0*_eta_fields[:, :, _phase]))
+            return _force
+
+        def _adaptive_ac_force(_eta_fields):
+            _force = _adaptive_ac_local_force(_eta_fields)
+            for _phase in range(Ng):
+                _force[:, :, _phase] -= (
+                    P['kappa_eta']*lap(_eta_fields[:, :, _phase]))
+            return _force
+
+        def _adaptive_stored_energy(_eta_fields):
+            _mixture, _ = common_variational_stored_energy(
+                _eta_fields, phase_energy_fields)
+            return (-_mixture if stored_energy_mode == 'sign_reversed'
+                    else _mixture)
+
+        def _adaptive_extra_energy(_eta_fields):
+            if not P.get('use_rho_eta_coupling', True):
+                return np.zeros(_eta_fields.shape[:2], dtype=float)
+            return (-float(P.get('rho_eta_ac_strength', 0.0))
+                    *rho_eta_drive_ac
+                    *np.sum(_eta_fields*(1.0-_eta_fields), axis=2))
+
+        def _adaptive_ac_energy(_eta_fields):
+            return spectral_phase_energy(
+                _eta_fields, spacing_m=dx,
+                kappa_J_m=float(P['kappa_eta']),
+                bulk_barrier_J_m3=float(P['W_eta']),
+                stored_energy_density=_adaptive_stored_energy,
+                extra_energy_density=_adaptive_extra_energy)
+
+        eta[:, :, :Ng], _ac_integrator_diag = adaptive_phase_proposal(
+            eta[:, :, :Ng], dt_s=float(P['dt']), spacing_m=dx,
+            mobility=L_ac_eff, kappa_J_m=float(P['kappa_eta']),
+            force=_adaptive_ac_force, energy=_adaptive_ac_energy,
+            local_force=_adaptive_ac_local_force,
+            admissibility_projector=lambda _before, _candidate: (
+                preserve_existing_pair_components(
+                    _before, _candidate,
+                    parent_label=int(sparse_front_state.parent_label),
+                    child_label=int(sparse_front_state.child_label))),
+            active_mask=_adaptive_mask,
+            absolute_tolerance=float(P.get(
+                'ac_proposal_absolute_tolerance', 2.0e-6)),
+            relative_tolerance=float(P.get(
+                'ac_proposal_relative_tolerance', 2.0e-4)),
+            maximum_abs_substep=float(P.get(
+                'ac_proposal_max_abs_substep', 5.0e-3)),
+            diffusion_safety=float(P.get(
+                'ac_proposal_diffusion_safety', 0.80)),
+            maximum_substeps=int(P.get(
+                'ac_proposal_maximum_substeps', 8192)),
+            energy_relative_tolerance=float(P.get(
+                'ac_proposal_energy_relative_tolerance', 2.0e-10)))
+        if sibm_pin_mask is not None:
+            _pin_parent = int(sibm_experiment_state['parent_label'])
+            _pin_child = int(sibm_experiment_state['child_label'])
+            eta[:, :, _pin_parent] = np.where(
+                sibm_pin_mask, sibm_reference_eta[:, :, _pin_parent],
+                eta[:, :, _pin_parent])
+            eta[:, :, _pin_child] = np.where(
+                sibm_pin_mask, sibm_reference_eta[:, :, _pin_child],
+                eta[:, :, _pin_child])
+        _pair_parent = int(sparse_front_state.parent_label)
+        _pair_child = int(sparse_front_state.child_label)
+        ac_phase_proposal_diagnostics = _ac_integrator_diag.to_dict()
+        ac_phase_proposal_diagnostics.update(phase_structure_diagnostics(
+            eta_before_ac, eta[:, :, :Ng], spacing_m=dx,
+            parent_label=_pair_parent, child_label=_pair_child))
+        ac_phase_proposal_diagnostics.update(
+            mode='adaptive_simplex_imex', step=int(n),
+            physical_parameters_changed=False)
+        sibm_experiment_state['phase_proposal'] = (
+            ac_phase_proposal_diagnostics.copy())
+
+    if (not P.get('freeze_kwc_eta', False)
+            and not _adaptive_front_proposal):
         L_ac_eff = P['L_ac'] * _gb_mobility_factor_from_T(T)
         if P.get('use_sibm_existing_boundary', False):
             L_ac_eff *= max(float(P.get('sibm_mobility_multiplier', 1.0)), 0.0)
@@ -8563,6 +8697,25 @@ for n in range(_restart_step_offset, _restart_end_step):
             front_accepts=int(coupled_front_runtime.ledger.accepted),
             front_rejects=int(
                 coupled_front_runtime.ledger.rejected_direction))
+        if ac_phase_proposal_diagnostics is not None:
+            ac_phase_proposal_diagnostics.update(
+                topology_classification=_front_decision.classification,
+                topology_accepted=bool(_front_decision.accepted),
+                topology_component_count=int(_front_decision.component_count),
+                topology_maximum_component_distance_cells=float(
+                    _front_decision.maximum_component_distance_cells),
+                topology_backtrack_fraction=float(
+                    _front_decision.topology_backtrack_fraction),
+                topology_proposed_signed_volume_m3=float(
+                    _front_decision.proposed_signed_volume_m3),
+                topology_accepted_signed_volume_m3=float(
+                    _front_decision.accepted_signed_volume_m3))
+            sibm_experiment_state['phase_proposal'] = (
+                ac_phase_proposal_diagnostics.copy())
+            if P.get('diagnostic_write_phase_proposal', False):
+                with (out/'ac_phase_proposal_diagnostics.jsonl').open('a') as _stream:
+                    _stream.write(json.dumps(
+                        ac_phase_proposal_diagnostics, sort_keys=True)+'\n')
         _front_topology_terminals = {
             'FRONT_COMPONENT_SPLIT', 'FRONT_COMPONENT_MERGE',
             'UNAUTHORIZED_PHASE_ISLAND',
