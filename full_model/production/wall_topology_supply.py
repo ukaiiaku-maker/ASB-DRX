@@ -24,6 +24,7 @@ try:
     from .tensorial_nye import (
         junction_closure_metrics, rotated_system_fields, rotation_z,
     )
+    from .mura_kinematics import signed_alignment_mura_rates
 except ImportError:
     from density_state_map import (
         DensityInventory, SIGNED_RESERVOIRS, derived_density_fields,
@@ -31,6 +32,7 @@ except ImportError:
     from tensorial_nye import (
         junction_closure_metrics, rotated_system_fields, rotation_z,
     )
+    from mura_kinematics import signed_alignment_mura_rates
 
 
 TOPOLOGY_MOMENT_FIELDS = (
@@ -338,6 +340,116 @@ def conservative_transport_capture_step(
         "global_nye_integral_residual_m": np.sum(
             after["total"]-before["total"], axis=(0, 1))*spacing_m**2,
         "local_nye_change_m1": after["total"]-before["total"],
+    }
+
+
+def accepted_mura_transport_capture_step(
+        inventory, alignments, velocity_plus_m_s, velocity_minus_m_s,
+        capture_support, systems, orientation_rad, spacing_m, dt_s,
+        topologies=()):
+    """Accept scalar face extents and line moments as one Mura event.
+
+    Scalar populations use positivity-preserving donor-cell face extents.
+    First moments are advanced by ``-curl(v cross kappa)`` from those same
+    velocities.  Entry capture only repartitions accepted line and moment, so
+    it contributes no independent Nye update.  No alignment clipping or
+    post-step projection is permitted; an inadmissible trial must instead be
+    retried with a smaller extent by the caller.
+    """
+    if spacing_m <= 0.0 or dt_s < 0.0:
+        raise ValueError("positive spacing and nonnegative step required")
+    shape = inventory.validate(len(systems), inventory.junction_m2.shape[-1])
+    alignments.validate(inventory, len(systems))
+    support = np.asarray(capture_support, dtype=bool)
+    if support.shape != shape[:2]:
+        raise ValueError("capture support must match spatial grid")
+    velocities = {
+        "plus": np.asarray(velocity_plus_m_s, dtype=float),
+        "minus": np.asarray(velocity_minus_m_s, dtype=float),
+    }
+    for velocity in velocities.values():
+        if velocity.shape != shape+(3,) or np.any(~np.isfinite(velocity)):
+            raise ValueError("Mura velocity requires grid x family x three-vector layout")
+        courant = dt_s*np.sum(np.abs(velocity[..., :2]), axis=-1)/spacing_m
+        if np.any(courant > 1.0+5e-15):
+            raise ValueError("donor-cell transport violates multidimensional CFL <= 1")
+
+    plus_rate, minus_rate = signed_alignment_mura_rates(
+        alignments.mobile_plus_m2, alignments.mobile_minus_m2,
+        velocities["plus"], velocities["minus"], spacing_m)
+    moment_rates = {"plus": plus_rate, "minus": minus_rate}
+    density_updates = {}; alignment_updates = {}; sign_ledgers = {}
+    for sign in ("plus", "minus"):
+        mobile_name = f"mobile_{sign}_m2"
+        tangle_name = f"wall_tangle_{sign}_m2"
+        mobile0 = np.asarray(getattr(inventory, mobile_name), dtype=float)
+        tangle0 = np.asarray(getattr(inventory, tangle_name), dtype=float)
+        amobile0 = np.asarray(getattr(alignments, mobile_name), dtype=float)
+        atangle0 = np.asarray(getattr(alignments, tangle_name), dtype=float)
+        mobile = mobile0.copy(); tangle = tangle0.copy()
+        captured = np.zeros_like(mobile)
+        captured_alignment = np.zeros_like(amobile0)
+        velocity = velocities[sign][..., :2]
+        outside = ~support
+        for axis in (0, 1):
+            component = velocity[..., axis]
+            for step, positive_speed in ((1, np.maximum(component, 0.0)),
+                                         (-1, np.maximum(-component, 0.0))):
+                fraction = dt_s*positive_speed/spacing_m
+                amount = fraction*mobile0
+                # Capture carries the donor's beginning-of-step line moment.
+                # It is a reservoir transfer, not a second transport law.
+                alignment_amount = fraction[..., None]*amobile0
+                destination_support = np.roll(support, -step, axis=axis)
+                capture_from_source = (outside & destination_support)[..., None]
+                captured_amount = amount*capture_from_source
+                captured_moment = alignment_amount*capture_from_source[..., None]
+                mobile -= amount
+                mobile += np.roll(amount-captured_amount, step, axis=axis)
+                tangle += np.roll(captured_amount, step, axis=axis)
+                captured += np.roll(captured_amount, step, axis=axis)
+                captured_alignment += np.roll(captured_moment, step, axis=axis)
+        scale = max(float(np.max(mobile0)), 1.0)
+        if np.min(mobile) < -32*np.finfo(float).eps*scale:
+            raise RuntimeError("Mura transport produced negative mobile density")
+        mobile = np.maximum(mobile, 0.0)
+        amobile = amobile0+dt_s*moment_rates[sign]-captured_alignment
+        atangle = atangle0+captured_alignment
+        # A Mura event can stretch curved line.  Its scalar measure must be at
+        # least the norm of its first moment.  Accept that geometric line
+        # supply as an explicit event extent instead of clipping/projection of
+        # the authoritative moment after the step.
+        required_mobile = np.linalg.norm(amobile, axis=-1)
+        line_stretching = np.maximum(required_mobile-mobile, 0.0)
+        mobile = mobile+line_stretching
+        density_updates[mobile_name] = mobile
+        density_updates[tangle_name] = tangle
+        alignment_updates[mobile_name] = amobile
+        alignment_updates[tangle_name] = atangle
+        sign_ledgers[sign] = {
+            "captured_line_m2": captured,
+            "captured_alignment_m2": captured_alignment,
+            "mura_line_stretching_m2": line_stretching,
+            "global_scalar_residual_line_per_thickness": float(
+                np.sum(mobile+tangle-mobile0-tangle0-line_stretching)
+                *spacing_m**2),
+            "global_alignment_residual_line_per_thickness": np.sum(
+                amobile+atangle-amobile0-dt_s*moment_rates[sign]-atangle0,
+                axis=(0, 1, 2))*spacing_m**2,
+        }
+    updated = replace(inventory, **density_updates)
+    aligned = replace(alignments, **alignment_updates)
+    aligned.validate(updated, len(systems))
+    before = reservoir_nye_m1(alignments, systems, orientation_rad, topologies)
+    after = reservoir_nye_m1(aligned, systems, orientation_rad, topologies)
+    return updated, aligned, {
+        "operator": "authoritative_mura_face_transport_and_entry_capture",
+        "capture_geometry_source": "caller-declared physical support",
+        "sign": sign_ledgers,
+        "alignment_rate_plus_m2_s": plus_rate,
+        "alignment_rate_minus_m2_s": minus_rate,
+        "local_nye_change_m1": after["total"]-before["total"],
+        "post_step_projection_used": False,
     }
 
 

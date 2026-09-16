@@ -25,11 +25,14 @@ from .density_state_map import (
 )
 from .extensive_wall import ExtensiveWallParameters, accepted_ordering_step
 from .tensorial_nye import rotated_system_fields
+from .mura_kinematics import (
+    accept_family_mura_step, family_plastic_flow_from_signed_alignment,
+)
 from .wall_topology_supply import (
     ReservoirAlignmentState, accepted_junction_topology_step,
     accepted_line_reorientation_step,
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
-    apply_signed_ordering_extent, conservative_transport_capture_step,
+    apply_signed_ordering_extent, accepted_mura_transport_capture_step,
     validate_junction_alignment,
     reservoir_nye_m1,
 )
@@ -153,7 +156,9 @@ def accepted_v24_mechanical_step(
     _, slip_directions, plane_normals = rotated_system_fields(
         systems, state.common.orientation_rad)
     disordered_line_directions = np.cross(plane_normals, slip_directions)
-    velocity_plus = drive["speed_m_s"][..., None]*slip_directions[..., :2]
+    velocity_plus_3d = drive["speed_m_s"][..., None]*slip_directions
+    velocity_minus_3d = -velocity_plus_3d
+    velocity_plus = velocity_plus_3d[..., :2]
     velocity_minus = -velocity_plus
     courant_rate = np.max(
         np.sum(np.abs(velocity_plus), axis=-1)/common_parameters.spacing_m)
@@ -162,26 +167,66 @@ def accepted_v24_mechanical_step(
         float(dt_s), 0.8/max(float(courant_rate), 1e-300),
         maximum_orientation_increment_rad/max(float(orientation_rate), 1e-300))
     rate = residual.state_rate
-    # Only the qualified kinematic fields are accepted from this residual.
-    # Its legacy density reactions and scalar ordering are deliberately not.
+    # One accepted Mura face event owns scalar population motion, line moments,
+    # plastic distortion, and family Nye.  An inadmissible positivity trial is
+    # rejected by reducing its extent; no population or alignment is clipped.
+    family_flow_rate = family_plastic_flow_from_signed_alignment(
+        state.reservoir_alignment.mobile_plus_m2,
+        state.reservoir_alignment.mobile_minus_m2,
+        velocity_plus_3d, velocity_minus_3d, systems,
+        state.common.orientation_rad)
+    for _attempt in range(32):
+        try:
+            transported_density, transported_alignment, capture_ledger = (
+                accepted_mura_transport_capture_step(
+                    state.density, state.reservoir_alignment,
+                    velocity_plus_3d, velocity_minus_3d, capture_support,
+                    systems, state.common.orientation_rad,
+                    common_parameters.spacing_m, accepted_dt, topologies))
+            break
+        except (ValueError, RuntimeError) as error:
+            if ("alignment magnitude exceeds" not in str(error)
+                    and "negative mobile density" not in str(error)):
+                raise
+            accepted_dt *= 0.5
+    else:
+        raise RuntimeError("Mura active-set extent could not preserve admissibility")
+    beta_p, family_nye, mura_audit = accept_family_mura_step(
+        state.common.beta_p, state.common.family_nye_m1,
+        family_flow_rate, accepted_dt, common_parameters.spacing_m)
+    alignment_rate = (
+        capture_ledger["alignment_rate_plus_m2_s"]
+        -capture_ledger["alignment_rate_minus_m2_s"])
+    total_flow_rate = np.sum(family_flow_rate, axis=2)
+    orientation_rate = common_parameters.orientation_spin_weight*.5*(
+        total_flow_rate[..., 1, 0]-total_flow_rate[..., 0, 1])
+    mura_storage_increment_J_m3 = common_parameters.line_energy_J_m*sum(
+        np.sum(capture_ledger["sign"][sign]["mura_line_stretching_m2"],
+               axis=2) for sign in ("plus", "minus"))
+    plastic_work_increment_J_m3 = accepted_dt*residual.plastic_power_W_m3
+    total_work = float(np.sum(plastic_work_increment_J_m3))
+    total_storage = float(np.sum(mura_storage_increment_J_m3))
+    if total_storage > total_work+1e-12*max(abs(total_work), 1.0):
+        raise RuntimeError("Mura line storage exceeds available plastic work")
+    # Line storage is a nonlocal geometric event. Allocate its globally closed
+    # cost over the nonnegative plastic-power support; this avoids inventing a
+    # locally negative dissipative heat channel where a line segment stretches.
+    storage_fraction = total_storage/max(total_work, 1e-300)
+    deposited_heat_increment_J_m3 = (
+        plastic_work_increment_J_m3*(1.0-storage_fraction))
+    # Only slip bookkeeping, the atomic Mura fields, spin, and mechanical heat
+    # are accepted from the constitutive residual. Legacy independent beta/Nye
+    # and density rates are deliberately excluded.
     common = replace(
         state.common,
         slip=state.common.slip+accepted_dt*rate.slip,
-        beta_p=state.common.beta_p+accepted_dt*rate.beta_p,
-        alignment_m2=state.common.alignment_m2+accepted_dt*rate.alignment_m2,
-        family_nye_m1=state.common.family_nye_m1+accepted_dt*rate.family_nye_m1,
-        orientation_rad=(state.common.orientation_rad
-                         +accepted_dt*rate.orientation_rad),
-        temperature_K=(state.common.temperature_K+accepted_dt
-                       *residual.plastic_power_W_m3
+        beta_p=beta_p,
+        alignment_m2=state.common.alignment_m2+accepted_dt*alignment_rate,
+        family_nye_m1=family_nye,
+        orientation_rad=state.common.orientation_rad+accepted_dt*orientation_rate,
+        temperature_K=(state.common.temperature_K+deposited_heat_increment_J_m3
                        /common_parameters.volumetric_heat_capacity_J_m3_K))
     _nye_beta_after_kinematics = np.sum(common.family_nye_m1, axis=2)
-    transported_density, transported_alignment, capture_ledger = (
-        conservative_transport_capture_step(
-            state.density, state.reservoir_alignment,
-            velocity_plus, velocity_minus, capture_support, systems,
-            state.common.orientation_rad, common_parameters.spacing_m,
-            accepted_dt, topologies))
     _nye_reservoir_after_transport = reservoir_nye_m1(
         transported_alignment, systems, common.orientation_rad,
         topologies)["total"]
@@ -302,18 +347,34 @@ def accepted_v24_mechanical_step(
                 np.sqrt(np.mean(mismatch**2))/_reference),
         }
     _zero = np.zeros_like(_nye_beta_initial)
+    _mura_increment = _nye_beta_after_kinematics-_nye_beta_initial
+    _mura_stage = _stage("authoritative_mura_face_flux",
+                         _mura_increment, _mura_increment)
+    _mura_stage["reservoir_first_moment_increment_rms_m1"] = float(
+        np.sqrt(np.mean((_nye_reservoir_after_transport
+                         -_nye_reservoir_initial)**2)))
+    _mura_stage["reservoir_connection_residual_rms_m1"] = float(
+        np.sqrt(np.mean((_nye_reservoir_after_transport
+                         -_nye_reservoir_initial-_mura_increment)**2)))
     _nye_stages = [
-        _stage("slip_orientation_kinematics", _zero,
-               _nye_beta_after_kinematics-_nye_beta_initial),
-        _stage("physical_signed_advection_and_capture",
-               _nye_reservoir_after_transport-_nye_reservoir_initial, _zero),
+        _mura_stage,
         _stage("ordering_and_topology_reactions",
                _nye_reservoir_after_reactions-_nye_reservoir_after_transport,
                _zero),
     ]
     _violating = next((row["operator"] for row in _nye_stages
                        if row["increment_residual_rms_m1"]
-                       > 256.0*np.finfo(float).eps*_reference), None)
+                       > 2e-11*_reference), None)
+    _scalar_balance = max(
+        abs(float(capture_ledger["sign"][sign][
+            "global_scalar_residual_line_per_thickness"]))
+        for sign in ("plus", "minus"))
+    _alignment_balance = max(
+        float(np.max(np.abs(capture_ledger["sign"][sign][
+            "global_alignment_residual_line_per_thickness"])))
+        for sign in ("plus", "minus"))
+    _plastic_work_increment = plastic_work_increment_J_m3
+    _deposited_heat_increment = deposited_heat_increment_J_m3
     return result, {
         "accepted_dt_s": accepted_dt,
         "raw_stress_Pa": drive["raw_stress_Pa"],
@@ -325,11 +386,28 @@ def accepted_v24_mechanical_step(
         "line_reorientation_topology": reorientation_ledger,
         "junction_topology": topology_ledger,
         "legacy_common_density_rates_accepted": False,
+        "legacy_independent_beta_nye_rates_accepted": False,
         "orientation_target_used": False,
+        "mura_face_event": mura_audit,
+        "mura_balance_ledger": {
+            "maximum_scalar_line_balance_residual_m": _scalar_balance,
+            "maximum_alignment_balance_residual_m": _alignment_balance,
+            "plastic_work_increment_J_m3": _plastic_work_increment,
+            "deposited_heat_increment_J_m3": _deposited_heat_increment,
+            "stored_line_energy_increment_J_m3": mura_storage_increment_J_m3,
+            "global_work_minus_heat_storage_residual_J_m3_cells": float(
+                np.sum(_plastic_work_increment-_deposited_heat_increment
+                       -mura_storage_increment_J_m3)),
+            "reaction_source_tensor_m1": np.zeros_like(_nye_beta_initial),
+            "line_stretching_is_declared_mura_geometric_source": True,
+        },
         "nye_suboperator_audit": {
             "sign_convention": "alpha=-Curl(beta_p)",
             "stages": _nye_stages,
             "first_violating_suboperator": _violating,
-            "accepted_step_hard_invariant_passed": bool(_violating is None),
+            "accepted_step_hard_invariant_passed": bool(
+                _violating is None
+                and mura_audit["accepted_step_hard_invariant_passed"]),
+            "post_step_projection_used": False,
         },
     }
