@@ -47,6 +47,14 @@
       "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
       "result_root": "/Users/sdillon/HPC3/local-results/asb-drx-v34-thermal-20260916",
       "record": "full_model/verification/v34_thermal_causal_comparison.json"
+    },
+    {
+      "id": "thermal_causal_selective_corrected",
+      "state": "RUNNING",
+      "scope": "authoritative common-wall frozen-flow and frozen-recovery controls",
+      "source_sha": "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
+      "result_root": "/Users/sdillon/HPC3/local-results/asb-drx-v34-thermal-corrected-20260916",
+      "shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c"
     }
   ]
 }

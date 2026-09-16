@@ -4,6 +4,7 @@
   "canonical_branch": "exp/full-v34-recovery-v1",
   "restart_sha": "8b2f77c9ee7a800a2f7b108015bd898c9e54b228",
   "current_scientific_source_sha": "b20190a08bd72cd5bcf7cd4f06211fff60320281",
+  "latest_integrated_implementation_sha": "cfba165",
   "frozen_v33_classification": "INTEGRATED_I1_VERIFIED_I2_ENERGY_OPEN",
   "states": ["READY", "RUNNING", "PASSED_OPERATOR", "PASSED_SCIENTIFIC", "FAILED_SCIENTIFIC", "FAILED_NUMERICAL", "FAILED_INFRASTRUCTURE", "BLOCKED_BY_DEPENDENCY"],
   "branches": {
@@ -41,17 +42,28 @@
     },
     "thermal_causality": {
       "state": "RUNNING",
-      "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
-      "manager_pid": 24378,
-      "worker_pids_at_last_audit": [24419, 24421],
+      "source_shas": [
+        "0c45d036306d56d649c53d69d321d59739930698",
+        "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3"
+      ],
+      "original_manager_pid": 24378,
+      "original_worker_pids_at_last_audit": [24419, 24421],
+      "corrected_selective_manager_pid": 32055,
+      "corrected_selective_worker_pid_at_last_audit": 32081,
       "target_step": 2500,
-      "latest_durable_step_at_last_audit": 800,
+      "original_latest_durable_step_at_last_audit": 1300,
+      "corrected_selective_latest_durable_step_at_last_audit": 102,
       "cases": 5,
       "maximum_concurrency": 2,
       "fixture": "full_model/verification/v34_thermal_causal_comparison.json",
       "classification": "V34_THERMAL_CAUSAL_RUNNING",
+      "invalid_original_selective_cases": [
+        "frozen_flow_T_local_adiabatic",
+        "frozen_recovery_T_local_adiabatic"
+      ],
+      "corrected_selective_preflight_passed": true,
       "strict_asb_claimed": false,
-      "next_automatic_action": "manager continues all five cases and postprocessor updates terminal classification"
+      "next_automatic_action": "original manager continues independently; corrected selective manager completes both authoritative ablations before terminal postprocessing"
     }
   },
   "preserved_historical_jobs": {

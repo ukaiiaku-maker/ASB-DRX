@@ -151,3 +151,7 @@ Machine-readable records are in `v34_complete_front_energy.json`,
 `v34_mura_affinity_remainder.json`, `v34_thermal_causal_comparison.json`,
 `v34_case_index.json`, `v34_parameter_hypothesis_deltas.json`, and
 `v34_campaign_controller.json`.
+
+The final integrated command `PYTHONPATH=src:. python -m pytest -q tests`
+completed with `673 passed in 318.82 s`.  This is the canonical merged-suite
+count; detached/source-frozen test counts are not added to it.

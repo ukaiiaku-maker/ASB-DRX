@@ -128,8 +128,16 @@ coupling-split gates are not passed.  No spontaneous DRX claim is made.
   `0.038412781` under its frozen old work-budget rule.  Its failure record is
   preserved; V34's complete-affinity forks use that checkpoint but do not
   relabel the old trajectory.
-- The V34 five-case thermal causal manager remains healthy on immutable source
-  `0c45d03`.  Full-law and frozen-flow local-adiabatic cases have durable
-  checkpoints beyond step 800; the remaining three cases are queued.  No
-  strict-ASB claim is made before the matrix terminates.
+- The V34 five-case thermal manager remains healthy on immutable source
+  `0c45d03` and has reached step 1300 in its first pair.  Its nominal selective
+  controls are invalid for causal interpretation because their overrides did
+  not enter the authoritative common residual.  Source `06de449` repairs the
+  flow/recovery routing, passes 32 focused tests and two-step energy/invariant
+  preflights, and runs corrected frozen-flow then frozen-recovery cases from
+  the checksum-identical step-100 state under manager PID 32055.  No strict-ASB
+  claim is made before valid controls terminate.
 - HPC3 was rechecked through `uci-hpc3`; no campaign Slurm jobs were present.
+
+The final integrated suite at implementation/evidence checkpoint `5b1faf5`
+completed with `673 passed in 318.82 s` using
+`PYTHONPATH=src:. python -m pytest -q tests`.
