@@ -7222,6 +7222,13 @@ for n in range(_restart_step_offset, _restart_end_step):
         _v21_state_after, _v21_residual, _v21_accept_scale = accepted_common_wall_step(
             _v21_state_before, _v21_driving, V20_SYSTEMS,
             v21_topologies, v21_common_parameters, _v21_requested_dt)
+        if not P.get('v33_common_temperature_evolution_enabled', True):
+            # Exact prescribed-temperature diagnostic: physical heat remains
+            # in the channel ledger, but temperature is a declared boundary
+            # condition and is not advanced by the constitutive operator.
+            _v21_state_after = replace(
+                _v21_state_after,
+                temperature_K=_v21_state_before.temperature_K.copy())
         if not np.isfinite(_v21_accept_scale) or _v21_accept_scale <= 0.0:
             raise FloatingPointError('V21 common operator could not accept a positive timestep')
         # The limiter is a real adaptive timestep, not a constitutive-rate cap:
@@ -8338,7 +8345,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         _heat_weight = np.abs(sparse_front_state.chi-_chi0)
         _heat_weight_volume = float(np.sum(_heat_weight)*dx*dy*max(
             float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30))
-        if _heat_weight_volume > 0.0:
+        if (_heat_weight_volume > 0.0
+                and P.get('v33_common_temperature_evolution_enabled', True)):
             _front_heat_density = (_front_heat_increment_J*_heat_weight
                                    / _heat_weight_volume)
             T = T+_front_heat_density/max(float(P['cp_rho_vol']), 1e-300)
