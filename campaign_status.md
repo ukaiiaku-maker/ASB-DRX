@@ -1388,3 +1388,27 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   exists. Decision: `ASB_ENERGY_GAUGE_OR_DISSIPATION_FAILURE`.
 - The canonical suite passes 462 tests. No V28 HPC3 job was launched. Full
   report: `full_model/docs/v28_decision_report.md`.
+
+## Directive v29 coupled-front, Mura-Nye, and conditioned-ASB audit (local checkpoint 2026-09-15)
+
+- V28 evidence is frozen by SHA-256 in
+  `full_model/verification/v29_frozen_v28_evidence.json`.
+- One receiver-positive signed contour convention passes all manufactured
+  translations from `+/-0.01` through `+/-1` cell, with `1.56e-13` maximum
+  relative error. Profile broadening/narrowing produces exactly zero material
+  sweep. Decision: `SIGNED_FRONT_GEOMETRY_CONVENTION_QUALIFIED`.
+- A lineage-free bidirectional EXP-floor transaction kernel passes equal-state,
+  oddness, label-exchange, detailed-balance, mobility-off, and conservative
+  defect-ledger fixtures. It has not yet replaced the production phase-first
+  afterburner. Decision: `COUPLED_FRONT_EVENT_NOT_YET_INTEGRATED`.
+- The first accepted dual-Nye violation is localized to slip/orientation
+  kinematics; the next independent violation is physical signed advection.
+  A one-flux Mura discrete complex passes machine-precision tests, but production
+  remains dual-path. Decision: `DUAL_NYE_STATE_STILL_INCONSISTENT`.
+- Compatibility quadratics are now explicitly numerical constraints, not
+  physical storage or heat. Independent nonnegative dissipation types exist,
+  but prior trajectories do not close every channel independently. Decision:
+  `ASB_DISSIPATION_NOT_INDEPENDENTLY_CLOSED`.
+- The canonical suite passes 499 tests. No long local grid continuation or HPC3
+  job was launched because the production front, Nye, and ASB hard gates remain
+  false. Full report: `full_model/docs/v29_decision_report.md`.

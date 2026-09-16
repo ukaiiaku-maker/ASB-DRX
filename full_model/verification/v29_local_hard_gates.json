@@ -1,0 +1,233 @@
+{
+  "asb": {
+    "classification": "ASB_DISSIPATION_NOT_INDEPENDENTLY_CLOSED",
+    "compatibility_dimensional_example": {
+      "classification": "augmented_numerical_constraint",
+      "coefficient_J_m": 5e-09,
+      "coefficient_units": "J m",
+      "eligible_as_physical_heat": false,
+      "energy_density_J_m3": 1e+20,
+      "energy_density_units": "J m^-3",
+      "represented_energy_J": 0.0003,
+      "residual_m2": 200000000000000.0,
+      "residual_units": "m^-2"
+    },
+    "compatibility_penalties_reclassified_as_numerical_constraints": true,
+    "fixture_passed": true,
+    "independent_dissipation_api_nonnegative": true,
+    "production_all_channel_independent_dissipation_available": false,
+    "resolved_grid_continuation_authorized": false,
+    "scientific_gate_passed": false,
+    "v28_maximum_internal_to_external_scale_ratio": 4800370112652309.0
+  },
+  "canonical_test_result": {
+    "duration_s": 69.55,
+    "failed": 0,
+    "passed": 499
+  },
+  "coupled_front": {
+    "classification": "COUPLED_FRONT_EVENT_NOT_YET_INTEGRATED",
+    "detailed_balance_log_residual": -5.551115123125783e-17,
+    "equal_state_net_velocity_m_s": 0.0,
+    "favorable_net_velocity_m_s": 0.040743588878221534,
+    "fixture_passed": true,
+    "maximum_directional_defect_energy_closure_J": 2.938735877055719e-39,
+    "maximum_directional_line_closure_m": 0.0,
+    "production_monolith_replaced": false,
+    "scientific_gate_passed": false
+  },
+  "decision": "REFACTOR_PRODUCTION_FRONT_AND_CDD_AROUND_VERIFIED_ATOMIC_OPERATORS",
+  "execution_scope": "local_only",
+  "front_geometry": {
+    "classification": "SIGNED_FRONT_GEOMETRY_CONVENTION_QUALIFIED",
+    "fixture_passed": true,
+    "maximum_abs_width_only_area_cells2": 0.0,
+    "maximum_translation_relative_error": 1.5635640930137623e-13,
+    "required_controls_tested": [
+      "closed_cycle",
+      "periodic_active_window",
+      "label_exchange",
+      "coordinate_reflection",
+      "two_interface_identity"
+    ],
+    "scientific_gate_passed": true,
+    "translation_records": [
+      {
+        "expected_signed_receiver_area_cells2": 9.0,
+        "relative_error": 0.0,
+        "signed_receiver_area_cells2": 9.0,
+        "translation_cells": -1.0
+      },
+      {
+        "expected_signed_receiver_area_cells2": 4.5,
+        "relative_error": 0.0,
+        "signed_receiver_area_cells2": 4.5,
+        "translation_cells": -0.5
+      },
+      {
+        "expected_signed_receiver_area_cells2": 0.9,
+        "relative_error": 1.4186183092432555e-14,
+        "signed_receiver_area_cells2": 0.9000000000000128,
+        "translation_cells": -0.1
+      },
+      {
+        "expected_signed_receiver_area_cells2": 0.09,
+        "relative_error": 1.5635640930137623e-13,
+        "signed_receiver_area_cells2": 0.09000000000001407,
+        "translation_cells": -0.01
+      },
+      {
+        "expected_signed_receiver_area_cells2": -0.09,
+        "relative_error": 1.5635640930137623e-13,
+        "signed_receiver_area_cells2": -0.09000000000001407,
+        "translation_cells": 0.01
+      },
+      {
+        "expected_signed_receiver_area_cells2": -0.9,
+        "relative_error": 1.4186183092432555e-14,
+        "signed_receiver_area_cells2": -0.9000000000000128,
+        "translation_cells": 0.1
+      },
+      {
+        "expected_signed_receiver_area_cells2": -4.5,
+        "relative_error": 0.0,
+        "signed_receiver_area_cells2": -4.5,
+        "translation_cells": 0.5
+      },
+      {
+        "expected_signed_receiver_area_cells2": -9.0,
+        "relative_error": 0.0,
+        "signed_receiver_area_cells2": -9.0,
+        "translation_cells": 1.0
+      }
+    ],
+    "width_sweep": [
+      {
+        "signed_receiver_area_cells2": 0.0,
+        "width_cells": 0.45
+      },
+      {
+        "signed_receiver_area_cells2": 0.0,
+        "width_cells": 0.8
+      },
+      {
+        "signed_receiver_area_cells2": 0.0,
+        "width_cells": 1.2
+      },
+      {
+        "signed_receiver_area_cells2": 0.0,
+        "width_cells": 2.5
+      },
+      {
+        "signed_receiver_area_cells2": 0.0,
+        "width_cells": 4.0
+      },
+      {
+        "signed_receiver_area_cells2": 0.0,
+        "width_cells": 7.0
+      }
+    ]
+  },
+  "hpc_or_long_grid_runs_launched": false,
+  "nye": {
+    "classification": "DUAL_NYE_STATE_STILL_INCONSISTENT",
+    "first_violating_suboperator": "slip_orientation_kinematics",
+    "fixture_passed": true,
+    "mura_discrete_complex_unit_tests_passed": true,
+    "production_scalar_transport_refactored_around_one_flux": false,
+    "records": [
+      {
+        "accepted_step_hard_invariant_passed": false,
+        "first_violating_suboperator": "slip_orientation_kinematics",
+        "sign_convention": "alpha=-Curl(beta_p)",
+        "stages": [
+          {
+            "increment_residual_relative": 2.9763832274640593e-12,
+            "increment_residual_rms_m1": 2.9763832274640593e-12,
+            "operator": "slip_orientation_kinematics",
+            "plastic_curl_increment_rms_m1": 2.9763832274640593e-12,
+            "reservoir_increment_rms_m1": 0.0
+          },
+          {
+            "increment_residual_relative": 1.372787584735339e-12,
+            "increment_residual_rms_m1": 1.372787584735339e-12,
+            "operator": "physical_signed_advection_and_capture",
+            "plastic_curl_increment_rms_m1": 0.0,
+            "reservoir_increment_rms_m1": 1.372787584735339e-12
+          },
+          {
+            "increment_residual_relative": 3.201688493168658e-14,
+            "increment_residual_rms_m1": 3.201688493168658e-14,
+            "operator": "ordering_and_topology_reactions",
+            "plastic_curl_increment_rms_m1": 0.0,
+            "reservoir_increment_rms_m1": 3.201688493168658e-14
+          }
+        ],
+        "step": 1
+      },
+      {
+        "accepted_step_hard_invariant_passed": false,
+        "first_violating_suboperator": "slip_orientation_kinematics",
+        "sign_convention": "alpha=-Curl(beta_p)",
+        "stages": [
+          {
+            "increment_residual_relative": 598.8609759437995,
+            "increment_residual_rms_m1": 598.8609759437995,
+            "operator": "slip_orientation_kinematics",
+            "plastic_curl_increment_rms_m1": 598.8609759437995,
+            "reservoir_increment_rms_m1": 0.0
+          },
+          {
+            "increment_residual_relative": 467.95739002778095,
+            "increment_residual_rms_m1": 467.95739002778095,
+            "operator": "physical_signed_advection_and_capture",
+            "plastic_curl_increment_rms_m1": 0.0,
+            "reservoir_increment_rms_m1": 467.95739002778095
+          },
+          {
+            "increment_residual_relative": 1.4464194556267128e-13,
+            "increment_residual_rms_m1": 1.4464194556267128e-13,
+            "operator": "ordering_and_topology_reactions",
+            "plastic_curl_increment_rms_m1": 0.0,
+            "reservoir_increment_rms_m1": 1.4464194556267128e-13
+          }
+        ],
+        "step": 2
+      },
+      {
+        "accepted_step_hard_invariant_passed": false,
+        "first_violating_suboperator": "slip_orientation_kinematics",
+        "sign_convention": "alpha=-Curl(beta_p)",
+        "stages": [
+          {
+            "increment_residual_relative": 1.4339139110371235,
+            "increment_residual_rms_m1": 858.7150841830827,
+            "operator": "slip_orientation_kinematics",
+            "plastic_curl_increment_rms_m1": 858.7150841830827,
+            "reservoir_increment_rms_m1": 0.0
+          },
+          {
+            "increment_residual_relative": 1.1087885763040064,
+            "increment_residual_rms_m1": 664.0102089207536,
+            "operator": "physical_signed_advection_and_capture",
+            "plastic_curl_increment_rms_m1": 0.0,
+            "reservoir_increment_rms_m1": 664.0102089207536
+          },
+          {
+            "increment_residual_relative": 4.956441756318358e-16,
+            "increment_residual_rms_m1": 2.968219547397413e-13,
+            "operator": "ordering_and_topology_reactions",
+            "plastic_curl_increment_rms_m1": 0.0,
+            "reservoir_increment_rms_m1": 2.968219547397413e-13
+          }
+        ],
+        "step": 3
+      }
+    ],
+    "scientific_gate_passed": false
+  },
+  "overall_scientific_gate_passed": false,
+  "schema": "asb-drx/v29-local-hard-gates/v1",
+  "v28_checkpoint": "0d4708e",
+  "v29_source_checkpoint": "d0e95f8"
+}

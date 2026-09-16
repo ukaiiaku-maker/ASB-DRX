@@ -1,0 +1,26 @@
+{
+  "schema": "v29-frozen-v28-evidence-1.0",
+  "campaign": "full-model-coupled-front-mura-nye-conditioned-asb-v29",
+  "frozen_at_local_head": "0d4708ea52b8fd3487cbe512f3b73e7d0304541f",
+  "remote_branch": "refs/heads/exp/full-v34-recovery-v1",
+  "remote_sha_at_freeze": "0d4708ea52b8fd3487cbe512f3b73e7d0304541f",
+  "v28_source_commit": "3b2ca17",
+  "v28_evidence_commit": "0d4708e",
+  "sha256": {
+    "campaign_status.md": "fc7be376603d256dde02c1bccd6c8551ca66730ead66780050faa28792a781dc",
+    "full_model/docs/v28_decision_report.md": "43722401f6a9525a2364a887be85e1e7f777a3c0b911349175fb21583dd05efb",
+    "full_model/verification/v28_asb_energy_audit.json": "9fb89679750206a055118f8d09e81a3bfe5e9b9ed2b244cb1c48019220d3458f",
+    "full_model/verification/v28_nye_audit.json": "52a596a1b97f683b7943a26111ce4b7fe5bcfc6bfd54d0d16a78e9976efaf44a",
+    "full_model/verification/v28_sibm_controls_64.json": "2c7f9197f69771ce3743c2a3659b2abc2e7639ccf03accebd06358bd31a6fa95",
+    "full_model/verification/v28_sibm_decision.json": "992acfbc23220919445859f4876a98f8b52fd1170a090b4fe85a465845bf8c57",
+    "full_model/verification/v28_sibm_full_controls_64.json": "49dcd2844010874e3f7efa5d118f173e54ad24b3514b2df505886f83dd05efb",
+    "full_model/verification/v28_sibm_phase_only_64.json": "c7513367975be78aed3ab357e246f476d54c398e3b6b4f1e989cda032cc905ff",
+    "full_model/verification/v28_sibm_registry_64.json": "7fbceff66d262ff273833478f74751de4fb11d343de6a2ebe1414453038f3be1"
+  },
+  "scientific_status": {
+    "sibm": "SIBM_FRONT_FIRST_PASSAGE_ASYMMETRY",
+    "nye": "DUAL_NYE_STATE_STILL_INCONSISTENT",
+    "asb": "ASB_ENERGY_GAUGE_OR_DISSIPATION_FAILURE"
+  },
+  "immutable": true
+}

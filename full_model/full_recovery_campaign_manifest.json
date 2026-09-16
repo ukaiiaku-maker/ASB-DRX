@@ -479,6 +479,35 @@
       "fixture_passed": true,
       "scientific_gate_passed": false,
       "classification": "V28_LOCAL_DIAGNOSTIC_CAMPAIGN_COMPLETE_THREE_FAILURES_LOCALIZED"
+    },
+    {
+      "directive": "v29",
+      "date": "2026-09-15",
+      "restart_checkpoint": "0d4708ea52b8fd3487cbe512f3b73e7d0304541f",
+      "frozen_v28_evidence_path": "full_model/verification/v29_frozen_v28_evidence.json",
+      "frozen_v28_evidence_sha256": "44def2431048593ecc6b09ca12cbcccfe6a294d0404b60a5e8f03f43a51e01f8",
+      "scientific_source_commit": "d0e95f8",
+      "audit_runner_commit": "504e17e",
+      "execution_policy": "local_only_hard_gates_before_resolved_continuation",
+      "result_path": "full_model/verification/v29_local_hard_gates.json",
+      "result_sha256": "d9a1207508756d9bac028939e3ea0d4fec9adbf010a18d81b6ff934539e58f14",
+      "front_geometry_classification": "SIGNED_FRONT_GEOMETRY_CONVENTION_QUALIFIED",
+      "front_geometry_maximum_translation_relative_error": 1.5635640930137623e-13,
+      "front_geometry_maximum_width_only_area_cells2": 0.0,
+      "coupled_front_classification": "COUPLED_FRONT_EVENT_NOT_YET_INTEGRATED",
+      "coupled_front_production_integrated": false,
+      "nye_classification": "DUAL_NYE_STATE_STILL_INCONSISTENT",
+      "nye_first_violating_suboperator": "slip_orientation_kinematics",
+      "mura_discrete_complex_fixture_passed": true,
+      "mura_production_transport_integrated": false,
+      "asb_classification": "ASB_DISSIPATION_NOT_INDEPENDENTLY_CLOSED",
+      "asb_compatibility_penalties_quarantined_from_physical_ledger": true,
+      "asb_resolved_continuation_authorized": false,
+      "hpc3_jobs_submitted": 0,
+      "configured_regression_tests_passed": 499,
+      "fixture_passed": true,
+      "scientific_gate_passed": false,
+      "classification": "REFACTOR_PRODUCTION_FRONT_AND_CDD_AROUND_VERIFIED_ATOMIC_OPERATORS"
     }
   ]
 }
