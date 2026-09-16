@@ -345,6 +345,11 @@ P = dict(
     # ledgered; only the selected constitutive channel sees the reference T.
     causal_temperature_ablation='none',  # none, freeze_flow, freeze_recovery, freeze_flow_and_recovery
     causal_reference_temperature_K=None, # None -> T0
+    # V34 declares the boundary operator independently of historical case
+    # labels. ``exact_prescribed_temperature`` exports the heat required to
+    # enforce T=Tref and records that export in the physical first-law ledger.
+    thermal_control_semantics='auto',     # auto or exact_prescribed_temperature
+    prescribed_temperature_K=None,       # None -> T0
     # v17: heat generation is local plastic dissipation, not a global scalar σ_bar*edot.
     # local_heat_stress='effective' uses (resolved shear - backstress) as the
     # thermodynamic driving stress; 'resolved' uses the resolved shear stress itself.
@@ -1283,6 +1288,30 @@ def _causal_channel_temperature(Tfield, channel):
     reference = P.get('causal_reference_temperature_K', None)
     reference = float(P.get('T0', 1300.0) if reference is None else reference)
     return np.full_like(np.asarray(Tfield, dtype=float), reference, dtype=float)
+
+def _thermal_control_semantics():
+    declared = str(P.get('thermal_control_semantics', 'auto')).lower()
+    if declared == 'exact_prescribed_temperature':
+        return declared
+    if declared != 'auto':
+        raise ValueError(f"unknown thermal_control_semantics {declared!r}")
+    if float(P.get('T_bath_coupling', 0.0)) > 0.0:
+        return 'finite_bath'
+    if float(P.get('k_thermal', 0.0)) > 0.0:
+        return 'finite_conduction_periodic_insulated'
+    return 'no_conduction_local_adiabatic'
+
+def _apply_exact_temperature_thermostat(temperature_field):
+    """Return prescribed T and the independently computed exported heat [J/m3]."""
+    temperature = np.asarray(temperature_field, dtype=float)
+    reference = P.get('prescribed_temperature_K', None)
+    reference = float(P.get('T0', 1300.0) if reference is None else reference)
+    removed = float(P.get('cp_rho_vol', 1.0))*float(np.mean(temperature-reference))
+    tolerance = 1e-10*max(float(P.get('cp_rho_vol', 1.0))*abs(reference), 1.0)
+    if removed < -tolerance:
+        raise RuntimeError(
+            'exact prescribed-temperature control would require undeclared heat input')
+    return np.full_like(temperature, reference), max(removed, 0.0)
 
 def update_temperature_field(Tfield, qdot_field):
     """Advance temperature using local plastic power.
@@ -4446,6 +4475,7 @@ v30_asb_cumulative = {
     'external_work_J_m3': 0.0,
     'deposited_heat_J_m3': 0.0,
     'exported_heat_J_m3': 0.0,
+    'v34_thermostat_export_J_m3': 0.0,
     'physical_stored_change_J_m3': 0.0,
     'thermal_change_J_m3': 0.0,
     'first_law_residual_J_m3': 0.0,
@@ -4473,6 +4503,7 @@ if (_restart_loaded and not P.get('restart_reset_clock', True)
             'v31_maximum_channel_closure_W_m3', 0.0)
         v30_asb_cumulative.setdefault(
             'v31_minimum_physical_channel_W_m3', 1.0e300)
+        v30_asb_cumulative.setdefault('v34_thermostat_export_J_m3', 0.0)
 
 
 
@@ -6475,6 +6506,9 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         heat_process_zone_sigma_px=float(heat_diag.get('process_zone_sigma_px', np.nan)),
         heat_process_zone_raw_qdot_max_MWm3=float(heat_diag.get('process_zone_raw_qdot_max', np.nan)/1e6),
         heat_process_zone_smooth_qdot_max_MWm3=float(heat_diag.get('process_zone_smooth_qdot_max', np.nan)/1e6),
+        thermostat_export_Jm3=float(heat_diag.get('thermostat_export_J_m3', 0.0)),
+        flow_operator_T_mean_K=float(heat_diag.get('flow_operator_T_mean_K', np.nan)),
+        recovery_operator_T_mean_K=float(heat_diag.get('recovery_operator_T_mean_K', np.nan)),
         gb_blocked_active=float(heat_diag.get('gb_blocked_active', np.nan)),
         gb_blocked_frac_mean=float(heat_diag.get('gb_blocked_frac_mean', np.nan)),
         gb_blocked_frac_max=float(heat_diag.get('gb_blocked_frac_max', np.nan)),
@@ -6613,6 +6647,9 @@ print(f"Thermal controls: adaptive_dt={P.get('use_adaptive_thermal_dt', False)} 
 print(f"Causal T feedback: mode={P.get('causal_temperature_ablation', 'none')}  "
       f"reference={P.get('causal_reference_temperature_K', None) if P.get('causal_reference_temperature_K', None) is not None else P.get('T0')}K  "
       "heat_field_and_ledger=evolving")
+print(f"Thermal boundary operator: {_thermal_control_semantics()}  "
+      f"prescribed_T={P.get('prescribed_temperature_K', None)}  "
+      "thermostat_export=physical_ledger")
 print(f"Mechanical validity: stop={P.get('use_mechanical_validity_stop', False)}  "
       f"mode={P.get('mechanical_validity_mode', 'fit_or_ideal')}  "
       f"fit_fraction={P.get('mechanical_validity_fit_fraction', 1.0)}  "
@@ -7067,10 +7104,13 @@ for n in range(_restart_step_offset, _restart_end_step):
             sparse_front_state,
             DefectState(rp, rm, rho_forest, rho_wall))
 
+    _v34_flow_operator_temperature = _causal_channel_temperature(T, 'flow')
+    _v34_recovery_operator_temperature = _causal_channel_temperature(T, 'recovery')
+
     # --- Temperature-dependent potential refresh and grain-slaved orientation ---
     if P.get('update_potential_with_temperature', True) and (n % max(int(P.get('potential_update_interval', 50)), 1) == 0):
-        _T_flow = _causal_channel_temperature(T, 'flow') if 'T' in globals() else P['T0']
-        ATpot.build(finite_clipped_T_mean(_T_flow), P['edot_app'])
+        ATpot.build(finite_clipped_T_mean(
+            _v34_flow_operator_temperature), P['edot_app'])
         rho_c = ATpot.rho_c
     if P.get('use_grain_slaved_orientation', True):
         psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
@@ -7081,6 +7121,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     _v30_neutral_annihilation_rate_m2_s = 0.0
     _v30_junction_dissipation_W_m3 = None
     _v30_boundary_recovery_rate_m2_s = np.zeros((Nx, Ny))
+    _v34_thermostat_export_J_m3 = 0.0
     _v31_physical_channel_fields = None
     _v31_channel_closure_W_m3 = None
     if P.get('v30_asb_physical_ledger', True):
@@ -7111,7 +7152,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     else:
         sb_new, gdot = macro_bisect(
             P['edot_app'], tau_bk, rp, rm,
-            _causal_channel_temperature(T, 'flow'), s11, Sch)
+            _v34_flow_operator_temperature, s11, Sch)
         alpha_sb = 0.3 if n > 0 else 1.0
         sigma_bar = (1-alpha_sb)*sigma_bar + alpha_sb*sb_new
 
@@ -7168,7 +7209,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         tau_effective[:,:,s] = tnet
         mag = ATpot.gdot(
             np.abs(tnet)*drive_sc, rs,
-            _causal_channel_temperature(T, 'flow'))
+            _v34_flow_operator_temperature)
         # v29: persistent activity is allowed to modify the local correlated-slip
         # susceptibility, so heat still comes from tau*gdot rather than an
         # independent activity-weighted heat source.  Default mode is
@@ -7235,10 +7276,15 @@ for n in range(_restart_step_offset, _restart_end_step):
                 np.zeros((Nx, Ny)), np.zeros((Nx, Ny)), np.zeros((Nx, Ny)))
             _v21_state_after = _v21_state_before
             _v21_accept_scale = 1.0
-        if not P.get('v33_common_temperature_evolution_enabled', True):
-            # Exact prescribed-temperature diagnostic: physical heat remains
-            # in the channel ledger, but temperature is a declared boundary
-            # condition and is not advanced by the constitutive operator.
+        if _thermal_control_semantics() == 'exact_prescribed_temperature':
+            _v34_prescribed_T, _v34_thermostat_export_J_m3 = (
+                _apply_exact_temperature_thermostat(
+                    _v21_state_after.temperature_K))
+            _v21_state_after = replace(
+                _v21_state_after, temperature_K=_v34_prescribed_T)
+        elif not P.get('v33_common_temperature_evolution_enabled', True):
+            # Legacy exact-limit diagnostic: freeze at the beginning-of-step
+            # field. It is not an exact prescribed-temperature thermostat.
             _v21_state_after = replace(
                 _v21_state_after,
                 temperature_K=_v21_state_before.temperature_K.copy())
@@ -7455,7 +7501,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     # KM storage/recovery. v26 slip rates may already include collective multi-hit depinning.
     # rho_eq = (k1/k2)^2 sits inside the spinodal, so CH can separate.
     if P.get('KM_recovery_local_T', True):
-        k2_eff = _km_k2_from_T(_causal_channel_temperature(T, 'recovery'))
+        k2_eff = _km_k2_from_T(_v34_recovery_operator_temperature)
     else:
         k2_eff = k2T  # legacy uniform recovery rate evaluated at T0
     km_diag = {
@@ -7508,7 +7554,7 @@ for n in range(_restart_step_offset, _restart_end_step):
             try:
                 seq_s = np.abs(tau_effective[:, :, s]) * drive_sc
                 cf_s = ATpot._collective_fields(
-                    seq_s, rf, _causal_channel_temperature(T, 'flow'))
+                    seq_s, rf, _v34_flow_operator_temperature)
                 A_tmp = _collective_activity_field(cf_s)
                 if A_tmp is not None:
                     A_coll = np.asarray(A_tmp, dtype=float)
@@ -7626,7 +7672,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     diffrec_mean = 0.0
     if P.get('use_lattice_diffusive_recovery', True):
         rec_rate, D_L, rec_arg = _lattice_diffusive_recovery_rate(
-            rho_after_km, _causal_channel_temperature(T, 'recovery'))
+            rho_after_km, _v34_recovery_operator_temperature)
         drho_rec = P['dt'] * rec_rate
         min_total = 2.0 * nSlip * P['rho_min']
         recoverable = np.maximum(rho_after_km - min_total, 0.0)
@@ -9091,6 +9137,16 @@ for n in range(_restart_step_offset, _restart_end_step):
     }
     if not P.get('v21_common_tensorial_wall_enabled', False):
         T = update_temperature_field(T, qdot_field)
+        if _thermal_control_semantics() == 'exact_prescribed_temperature':
+            T, _v34_thermostat_export_J_m3 = (
+                _apply_exact_temperature_thermostat(T))
+
+    heat_diag.update(
+        thermal_control_semantics=_thermal_control_semantics(),
+        thermostat_export_J_m3=float(_v34_thermostat_export_J_m3),
+        flow_operator_T_mean_K=float(np.mean(_v34_flow_operator_temperature)),
+        recovery_operator_T_mean_K=float(np.mean(
+            _v34_recovery_operator_temperature)))
 
     _bad_T, _bad_T_reason = _thermal_validity_exceeded(T)
     if _bad_T:
@@ -9212,6 +9268,13 @@ for n in range(_restart_step_offset, _restart_end_step):
         (_v30_channels['thermal_conduction'],
          _v30_channels['declared_sinks']) = _v30_thermal_dissipation_channels(
              0.5*(_v30_temperature_before+np.asarray(T, dtype=float)))
+        if _v34_thermostat_export_J_m3 > 0.0:
+            _v34_sink_factor = np.sqrt(
+                _v34_thermostat_export_J_m3/max(float(P['dt']), 1e-300))
+            _v30_channels['declared_sinks'] = accepted_channel(
+                'declared_sinks', _v34_sink_factor, _v34_sink_factor,
+                source=('exact prescribed-temperature thermostat: independently '
+                        'computed removed thermal energy per accepted timestep'))
         if P.get('v31_asb_common_mura_ledger', False):
             if _v31_physical_channel_fields is None:
                 raise RuntimeError('V31 common-Mura channel ownership was not evaluated')
@@ -9258,6 +9321,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                 *float(np.mean(_v30_temperature_before
                                -v21_common_parameters.bath_temperature_K)),
                 0.0)
+        _v30_exported += float(_v34_thermostat_export_J_m3)
         v30_asb_last_step = build_production_step_ledger(
             channels=_v30_channels, energy_before=_v30_energy_before,
             energy_after=_v30_energy_after,
@@ -9292,6 +9356,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         v30_asb_cumulative['external_work_J_m3'] += _v30_external
         v30_asb_cumulative['deposited_heat_J_m3'] += _v30_deposited
         v30_asb_cumulative['exported_heat_J_m3'] += _v30_exported
+        v30_asb_cumulative['v34_thermostat_export_J_m3'] += float(
+            _v34_thermostat_export_J_m3)
         v30_asb_cumulative['physical_stored_change_J_m3'] += (
             v30_asb_last_step.physical_stored_change_J_m3)
         v30_asb_cumulative['thermal_change_J_m3'] += (
