@@ -90,6 +90,19 @@ def test_actual_transition_band_has_no_first_step_jump_and_stays_below_gate():
     assert maximum_dual < 0.05
 
 
+def test_scalar_slip_is_owned_by_the_accepted_family_mura_event():
+    args = build_case(16, periodic_nye_consistent=True)
+    initial = args[0]
+    updated, ledger = accepted_v24_mechanical_step(
+        initial, args[1], args[3], *args[4:9], 2e-9,
+        topology_route_enabled=False)
+    np.testing.assert_allclose(
+        updated.common.slip-initial.common.slip,
+        ledger["accepted_dt_s"]*ledger["mura_slip_rate_s"],
+        rtol=0.0, atol=1e-18)
+    assert not ledger["legacy_independent_slip_rate_accepted"]
+
+
 def test_mura_production_restart_is_bitwise_exact():
     args = build_case(16, periodic_nye_consistent=True)
     state, driving, _, support, systems, topologies, common, extensive, kinetics, _ = args

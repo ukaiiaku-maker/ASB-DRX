@@ -167,7 +167,6 @@ def accepted_v24_mechanical_step(
     accepted_dt = min(
         float(dt_s), 0.8/max(float(courant_rate), 1e-300),
         maximum_orientation_increment_rad/max(float(orientation_rate), 1e-300))
-    rate = residual.state_rate
     # One accepted Mura face event owns scalar population motion, line moments,
     # plastic distortion, and family Nye.  An inadmissible positivity trial is
     # rejected by reducing its extent; no population or alignment is clipped.
@@ -176,6 +175,12 @@ def accepted_v24_mechanical_step(
         state.reservoir_alignment.mobile_minus_m2,
         velocity_plus_3d, velocity_minus_3d, systems,
         state.common.orientation_rad)
+    schmid_tensors = np.einsum(
+        "...ai,...aj->...aij", slip_directions, plane_normals)
+    schmid_norm2 = np.sum(schmid_tensors*schmid_tensors, axis=(-2, -1))
+    mura_slip_rate = np.divide(
+        np.sum(family_flow_rate*schmid_tensors, axis=(-2, -1)),
+        schmid_norm2, out=np.zeros_like(schmid_norm2), where=schmid_norm2 > 0.0)
     for _attempt in range(32):
         try:
             transported_density, transported_alignment, capture_ledger = (
@@ -204,7 +209,9 @@ def accepted_v24_mechanical_step(
     mura_storage_increment_J_m3 = common_parameters.line_energy_J_m*sum(
         np.sum(capture_ledger["sign"][sign]["mura_line_stretching_m2"],
                axis=2) for sign in ("plus", "minus"))
-    plastic_work_increment_J_m3 = accepted_dt*residual.plastic_power_W_m3
+    mura_plastic_power_W_m3 = np.sum(
+        drive["raw_stress_Pa"]*mura_slip_rate, axis=2)
+    plastic_work_increment_J_m3 = accepted_dt*mura_plastic_power_W_m3
     total_work = float(np.sum(plastic_work_increment_J_m3))
     total_storage = float(np.sum(mura_storage_increment_J_m3))
     if total_storage > total_work+1e-12*max(abs(total_work), 1.0):
@@ -220,7 +227,7 @@ def accepted_v24_mechanical_step(
     # and density rates are deliberately excluded.
     common = replace(
         state.common,
-        slip=state.common.slip+accepted_dt*rate.slip,
+        slip=state.common.slip+accepted_dt*mura_slip_rate,
         beta_p=beta_p,
         alignment_m2=state.common.alignment_m2+accepted_dt*alignment_rate,
         family_nye_m1=family_nye,
@@ -393,7 +400,7 @@ def accepted_v24_mechanical_step(
         "accepted_dt_s": accepted_dt,
         "raw_stress_Pa": drive["raw_stress_Pa"],
         "effective_stress_Pa": drive["effective_stress_Pa"],
-        "plastic_power_W_m3": residual.plastic_power_W_m3,
+        "plastic_power_W_m3": mura_plastic_power_W_m3,
         "transport_capture": capture_ledger,
         "locking_unlocking": locking_ledger,
         "ordering_thermodynamics": ordering_thermo,
@@ -402,8 +409,10 @@ def accepted_v24_mechanical_step(
         "junction_topology": topology_ledger,
         "legacy_common_density_rates_accepted": False,
         "legacy_independent_beta_nye_rates_accepted": False,
+        "legacy_independent_slip_rate_accepted": False,
         "orientation_target_used": False,
         "mura_face_event": mura_audit,
+        "mura_slip_rate_s": mura_slip_rate,
         "mura_balance_ledger": {
             "maximum_scalar_line_balance_residual_m": _scalar_balance,
             "maximum_alignment_balance_residual_m": _alignment_balance,
