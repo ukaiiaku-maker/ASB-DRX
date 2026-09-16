@@ -140,11 +140,21 @@ def run(output):
     # Finite actual forward/opposite trials for kinetic normalization.  The
     # opposite is evaluated from state, never inferred as minus the forward.
     kinetic_chi = np.full_like(state.front.chi, .4)
-    kinetic_state = replace(state, front=replace(
+    kinetic_child = replace(
+        state.parent,
+        mobile_plus_m2=.7*state.parent.mobile_plus_m2,
+        mobile_minus_m2=.7*state.parent.mobile_minus_m2,
+        forest_plus_m2=.7*state.parent.forest_plus_m2,
+        forest_minus_m2=.7*state.parent.forest_minus_m2,
+        wall_plus_m2=.7*state.parent.wall_plus_m2,
+        wall_minus_m2=.7*state.parent.wall_minus_m2,
+        junction_m2=.7*state.parent.junction_m2)
+    kinetic_state = replace(state, child=kinetic_child, wake=state.parent,
+                            front=replace(
         state.front, chi=kinetic_chi,
         processed_max=np.full_like(kinetic_chi, .7),
         cleanup_max=np.full_like(kinetic_chi, .7)))
-    forward_chi = kinetic_chi.copy(); forward_chi[:, :5] += .1
+    forward_chi = kinetic_chi+.3
     directional = evaluate_complete_directional_kinetics(
         kinetic_state, replace(kinetic_state.front, chi=forward_chi),
         eta, eta_field(n), event_volume_m3=cell_volume,
