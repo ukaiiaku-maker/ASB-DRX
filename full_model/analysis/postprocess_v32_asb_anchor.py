@@ -83,6 +83,38 @@ def valid_checkpoints(directory: Path) -> dict[int, Path]:
     return result
 
 
+def thermal_control_semantics(parameters: dict) -> dict[str, object]:
+    """Declare the actual heat operator; historical case labels are not trusted."""
+    conductivity = float(parameters.get("k_thermal", 0.0))
+    bath = float(parameters.get("T_bath_coupling", 0.0))
+    mode = str(parameters.get("heat_update_mode", "implicit_spectral")).lower()
+    prescribed = bool(parameters.get("exact_prescribed_temperature", False)) \
+        or mode in {"prescribed", "exact_prescribed_temperature"}
+    if prescribed:
+        classification = "EXACT_PRESCRIBED_TEMPERATURE"
+    elif bath > 0.0:
+        classification = "FINITE_BATH"
+    elif conductivity > 0.0:
+        classification = "FINITE_CONDUCTIVITY_PERIODIC_INSULATED"
+    else:
+        classification = "NO_CONDUCTION_LOCAL_ADIABATIC"
+    return {
+        "classification": classification,
+        "conductivity_W_m_K": conductivity,
+        "bath_coupling_W_m3_K": bath,
+        "heat_update_mode": mode,
+        "exact_prescribed_temperature": prescribed,
+    }
+
+
+def checkpoint_parameters(directory: Path) -> dict:
+    checkpoints = valid_checkpoints(directory)
+    if not checkpoints:
+        raise ValueError(f"no valid checkpoint in {directory}")
+    with np.load(checkpoints[max(checkpoints)], allow_pickle=True) as data:
+        return json.loads(str(data["P_json"].item()))
+
+
 def effective_support(rate: np.ndarray) -> dict[str, float]:
     value = np.abs(np.asarray(rate, dtype=float)).ravel()
     total = float(np.sum(value))
@@ -299,6 +331,14 @@ def main():
             "adiabatic": run_terminal_status(args.root/case_names[0]),
             "control": run_terminal_status(args.root/case_names[1]),
         }
+        runs[name]["adiabatic"]["thermal_operator"] = thermal_control_semantics(
+            checkpoint_parameters(args.root/case_names[0]))
+        runs[name]["control"]["thermal_operator"] = thermal_control_semantics(
+            checkpoint_parameters(args.root/case_names[1]))
+        if (runs[name]["adiabatic"]["terminal"]
+                and "VALIDITY_BOUNDARY" in str(runs[name]["adiabatic"]["reason"])
+                and not pairs[name]["complete"]):
+            pairs[name]["diagnosis"] = "VALIDITY_LIMITED_NO_STRICT_LOCALIZATION"
     all_complete = all(pair["complete"] for pair in pairs.values())
     all_terminal = all(run["terminal"] for pair in runs.values()
                        for run in pair.values())

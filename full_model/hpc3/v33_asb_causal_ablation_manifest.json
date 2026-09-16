@@ -1,0 +1,29 @@
+{
+  "schema": "asb-drx/v33/asb-causal-ablation/v1",
+  "state": "PREPARED_NOT_LAUNCHED",
+  "strict_asb_criteria_changed": false,
+  "thermal_semantics": {
+    "frozen_legacy_adiabatic_label": "NO_CONDUCTION_LOCAL_ADIABATIC: k=0, bath=0; local heat remains spatially heterogeneous",
+    "frozen_legacy_isothermal_label": "FINITE_BATH: k=0.15 W/m/K and bath=2e10 W/m3/K; temperature is neither uniform nor prescribed",
+    "finite_conductivity_insulated": "k>0, bath=0 with periodic spectral diffusion; not present in the frozen anchor/Tier1 pair",
+    "exact_prescribed_temperature": "temperature identically fixed to T0; not present in the frozen anchor/Tier1 pair",
+    "causal_ablation": "physical temperature and heat ledger evolve under NO_CONDUCTION_LOCAL_ADIABATIC, while only the named constitutive channel sees T0"
+  },
+  "evidence_selection": {
+    "broad_condition": {"temperature_K": 1100, "strain_rate_s-1": 30000, "seed": 43, "anchor_active_fraction": 0.6926267671387116},
+    "most_localized_valid_condition": {"temperature_K": 900, "strain_rate_s-1": 30000, "seed": 43, "tier1_active_fraction": 0.4304260216712904},
+    "selection_rule": "include both a broad response and the lowest-active invariant-clean response, irrespective of strict-positive status"
+  },
+  "initial_cases": [
+    {"id": 0, "name": "broad_T1100_baseline", "purpose": "same-source broad-condition reference"},
+    {"id": 1, "name": "broad_T1100_freeze_flow", "purpose": "identify Arrhenius/flow thermal feedback in broad response"},
+    {"id": 2, "name": "broad_T1100_freeze_recovery", "purpose": "identify recovery thermal feedback in broad response"},
+    {"id": 3, "name": "localized_T0900_freeze_flow", "purpose": "test whether flow feedback caused the lowest active fraction"},
+    {"id": 4, "name": "localized_T0900_freeze_recovery", "purpose": "test whether recovery feedback caused the lowest active fraction"}
+  ],
+  "conditional_follow_up": {
+    "mode": "freeze_flow_and_recovery",
+    "authorization": "only if separate flow/recovery interventions are non-additive or sign-opposed",
+    "tier2_seed_or_grid_authorized": false
+  }
+}

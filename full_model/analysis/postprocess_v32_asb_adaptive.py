@@ -10,8 +10,10 @@ from pathlib import Path
 
 from full_model.analysis.postprocess_v32_asb_anchor import (
     pair_history,
+    checkpoint_parameters,
     run_terminal_status,
     summarize_pair,
+    thermal_control_semantics,
 )
 from full_model.hpc3.run_v32_asb_adaptive_case import COORDINATES
 
@@ -53,6 +55,10 @@ def main() -> None:
             "adiabatic": run_terminal_status(adiabatic_dir),
             "control": run_terminal_status(control_dir),
         }
+        runs["adiabatic"]["thermal_operator"] = thermal_control_semantics(
+            checkpoint_parameters(adiabatic_dir))
+        runs["control"]["thermal_operator"] = thermal_control_semantics(
+            checkpoint_parameters(control_dir))
         results[label] = {
             "temperature_K": temperature,
             "strain_rate_s-1": rate,
@@ -62,6 +68,10 @@ def main() -> None:
             "pair_terminal": all(item["terminal"] for item in runs.values()),
             "pair_successful": all(item["successful"] for item in runs.values()),
         }
+        if (runs["adiabatic"]["terminal"]
+                and "VALIDITY_BOUNDARY" in str(runs["adiabatic"]["reason"])
+                and not summary["complete"]):
+            summary["diagnosis"] = "VALIDITY_LIMITED_NO_STRICT_LOCALIZATION"
 
     ranked = sorted(results, key=lambda label: rank_key(results[label]))
     expected = len(COORDINATES)

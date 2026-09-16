@@ -6,6 +6,7 @@ from full_model.analysis.postprocess_v32_asb_anchor import (
     raw_conjunction,
     run_terminal_status,
     summarize_pair,
+    thermal_control_semantics,
 )
 from full_model.production.asb_classifier import ASBSnapshot
 
@@ -71,3 +72,19 @@ def test_terminal_status_accepts_adaptive_runner_record(tmp_path):
     assert status["terminal"] is True
     assert status["successful"] is True
     assert status["reason"] == "REQUESTED_HORIZON_OR_CLEAN_DRIVER_STOP"
+
+
+def test_thermal_semantics_do_not_equate_finite_bath_with_isothermal():
+    assert thermal_control_semantics({
+        "k_thermal": 0.0, "T_bath_coupling": 0.0,
+    })["classification"] == "NO_CONDUCTION_LOCAL_ADIABATIC"
+    assert thermal_control_semantics({
+        "k_thermal": 0.15, "T_bath_coupling": 0.0,
+    })["classification"] == "FINITE_CONDUCTIVITY_PERIODIC_INSULATED"
+    assert thermal_control_semantics({
+        "k_thermal": 0.15, "T_bath_coupling": 2.0e10,
+    })["classification"] == "FINITE_BATH"
+    assert thermal_control_semantics({
+        "heat_update_mode": "exact_prescribed_temperature",
+        "k_thermal": 0.0, "T_bath_coupling": 0.0,
+    })["classification"] == "EXACT_PRESCRIBED_TEMPERATURE"

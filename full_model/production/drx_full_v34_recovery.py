@@ -330,6 +330,10 @@ P = dict(
     T0=1300.0,
     taylor_quinney=0.9, cp_rho_vol=3.8e6,
     k_thermal=0.03, T_bath_coupling=5.0e9,
+    # V33 causal controls: heat and temperature continue to evolve and remain
+    # ledgered; only the selected constitutive channel sees the reference T.
+    causal_temperature_ablation='none',  # none, freeze_flow, freeze_recovery, freeze_flow_and_recovery
+    causal_reference_temperature_K=None, # None -> T0
     # v17: heat generation is local plastic dissipation, not a global scalar σ_bar*edot.
     # local_heat_stress='effective' uses (resolved shear - backstress) as the
     # thermodynamic driving stress; 'resolved' uses the resolved shear stress itself.
@@ -1248,6 +1252,20 @@ def finite_clipped_T_mean(Tfield):
     Tm = float(np.nanmean(Tf[finite]))
     return float(np.clip(Tm, float(P.get('potential_T_min', 300.0)),
                          float(P.get('potential_T_max', 3500.0))))
+
+def _causal_channel_temperature(Tfield, channel):
+    """Temperature exposed to one constitutive channel in a V33 ablation."""
+    mode = str(P.get('causal_temperature_ablation', 'none')).lower()
+    valid = {'none', 'freeze_flow', 'freeze_recovery',
+             'freeze_flow_and_recovery'}
+    if mode not in valid:
+        raise ValueError(f"unknown causal_temperature_ablation {mode!r}")
+    freeze = mode == f'freeze_{channel}' or mode == 'freeze_flow_and_recovery'
+    if not freeze:
+        return np.asarray(Tfield, dtype=float)
+    reference = P.get('causal_reference_temperature_K', None)
+    reference = float(P.get('T0', 1300.0) if reference is None else reference)
+    return np.full_like(np.asarray(Tfield, dtype=float), reference, dtype=float)
 
 def update_temperature_field(Tfield, qdot_field):
     """Advance temperature using local plastic power.
@@ -6526,6 +6544,9 @@ print(f"Thermal controls: adaptive_dt={P.get('use_adaptive_thermal_dt', False)} 
       f"validity_stop={P.get('use_thermal_validity_stop', False)}  "
       f"Tmax_limit={P.get('thermal_validity_Tmax_K', None)}K  "
       f"Tmean_limit={P.get('thermal_validity_Tmean_K', None)}K")
+print(f"Causal T feedback: mode={P.get('causal_temperature_ablation', 'none')}  "
+      f"reference={P.get('causal_reference_temperature_K', None) if P.get('causal_reference_temperature_K', None) is not None else P.get('T0')}K  "
+      "heat_field_and_ledger=evolving")
 print(f"Mechanical validity: stop={P.get('use_mechanical_validity_stop', False)}  "
       f"mode={P.get('mechanical_validity_mode', 'fit_or_ideal')}  "
       f"fit_fraction={P.get('mechanical_validity_fit_fraction', 1.0)}  "
@@ -6966,7 +6987,8 @@ for n in range(_restart_step_offset, _restart_end_step):
 
     # --- Temperature-dependent potential refresh and grain-slaved orientation ---
     if P.get('update_potential_with_temperature', True) and (n % max(int(P.get('potential_update_interval', 50)), 1) == 0):
-        ATpot.build(finite_clipped_T_mean(T) if 'T' in globals() else P['T0'], P['edot_app'])
+        _T_flow = _causal_channel_temperature(T, 'flow') if 'T' in globals() else P['T0']
+        ATpot.build(finite_clipped_T_mean(_T_flow), P['edot_app'])
         rho_c = ATpot.rho_c
     if P.get('use_grain_slaved_orientation', True):
         psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
@@ -7005,7 +7027,9 @@ for n in range(_restart_step_offset, _restart_end_step):
         sb_new = sigma_bar
         gdot = np.zeros((Nx, Ny, nSlip))
     else:
-        sb_new, gdot = macro_bisect(P['edot_app'], tau_bk, rp, rm, T, s11, Sch)
+        sb_new, gdot = macro_bisect(
+            P['edot_app'], tau_bk, rp, rm,
+            _causal_channel_temperature(T, 'flow'), s11, Sch)
         alpha_sb = 0.3 if n > 0 else 1.0
         sigma_bar = (1-alpha_sb)*sigma_bar + alpha_sb*sb_new
 
@@ -7060,7 +7084,9 @@ for n in range(_restart_step_offset, _restart_end_step):
         tnet = tau - tau_bk[:,:,s]
         tau_resolved[:,:,s] = tau
         tau_effective[:,:,s] = tnet
-        mag = ATpot.gdot(np.abs(tnet)*drive_sc, rs, T)
+        mag = ATpot.gdot(
+            np.abs(tnet)*drive_sc, rs,
+            _causal_channel_temperature(T, 'flow'))
         # v29: persistent activity is allowed to modify the local correlated-slip
         # susceptibility, so heat still comes from tau*gdot rather than an
         # independent activity-weighted heat source.  Default mode is
@@ -7320,7 +7346,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     # KM storage/recovery. v26 slip rates may already include collective multi-hit depinning.
     # rho_eq = (k1/k2)^2 sits inside the spinodal, so CH can separate.
     if P.get('KM_recovery_local_T', True):
-        k2_eff = _km_k2_from_T(T)
+        k2_eff = _km_k2_from_T(_causal_channel_temperature(T, 'recovery'))
     else:
         k2_eff = k2T  # legacy uniform recovery rate evaluated at T0
     km_diag = {
@@ -7372,7 +7398,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         if P.get('use_collective_organization', True) and ATpot._collective_enabled():
             try:
                 seq_s = np.abs(tau_effective[:, :, s]) * drive_sc
-                cf_s = ATpot._collective_fields(seq_s, rf, T)
+                cf_s = ATpot._collective_fields(
+                    seq_s, rf, _causal_channel_temperature(T, 'flow'))
                 A_tmp = _collective_activity_field(cf_s)
                 if A_tmp is not None:
                     A_coll = np.asarray(A_tmp, dtype=float)
@@ -7489,7 +7516,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     rho_after_km = _rho_total_state(rp, rm, rho_forest, rho_wall)
     diffrec_mean = 0.0
     if P.get('use_lattice_diffusive_recovery', True):
-        rec_rate, D_L, rec_arg = _lattice_diffusive_recovery_rate(rho_after_km, T)
+        rec_rate, D_L, rec_arg = _lattice_diffusive_recovery_rate(
+            rho_after_km, _causal_channel_temperature(T, 'recovery'))
         drho_rec = P['dt'] * rec_rate
         min_total = 2.0 * nSlip * P['rho_min']
         recoverable = np.maximum(rho_after_km - min_total, 0.0)
