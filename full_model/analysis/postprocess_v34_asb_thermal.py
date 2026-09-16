@@ -1,0 +1,194 @@
+#!/usr/bin/env python3
+"""Decision output for the checkpoint-shared V34 thermal causal matrix."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+
+import numpy as np
+
+from full_model.analysis.postprocess_v32_asb_anchor import effective_support
+from full_model.production.asb_classifier import localization_geometry
+from full_model.hpc3.run_v34_asb_thermal_case import CASES, case_definition
+
+
+def checkpoints(directory: Path) -> dict[int, Path]:
+    result = {}
+    for path in directory.glob("drx_v25_restart_*.npz"):
+        try:
+            with np.load(path, allow_pickle=True) as data:
+                result[int(data["step"])] = path
+        except (OSError, ValueError, KeyError, EOFError):
+            continue
+    return result
+
+
+def actual_semantics(parameters: dict) -> str:
+    declared = str(parameters.get("thermal_control_semantics", "auto")).lower()
+    if declared == "exact_prescribed_temperature":
+        return "EXACT_PRESCRIBED_TEMPERATURE_WITH_THERMOSTAT_EXPORT"
+    if float(parameters.get("T_bath_coupling", 0.0)) > 0.0:
+        return "FINITE_BATH"
+    if float(parameters.get("k_thermal", 0.0)) > 0.0:
+        return "FINITE_CONDUCTION_PERIODIC_INSULATED"
+    return "NO_CONDUCTION_LOCAL_ADIABATIC"
+
+
+def terminal_reason(directory: Path) -> str:
+    text = "\n".join(path.read_text(errors="replace")[-20000:]
+                     for path in sorted(directory.glob("run-from-*.log")))
+    if "THERMAL VALIDITY STOP" in text:
+        return "THERMAL_MODEL_VALIDITY_BOUNDARY"
+    if "MECHANICAL VALIDITY STOP" in text:
+        return "MECHANICAL_MODEL_VALIDITY_BOUNDARY"
+    if (directory/"v34_thermal_run_record.json").exists():
+        record = json.loads((directory/"v34_thermal_run_record.json").read_text())
+        return "REQUESTED_HORIZON" if int(record["exit_code"]) == 0 else "DRIVER_FAILURE"
+    return "RUNNING"
+
+
+def diagnostic_at_or_before(directory: Path, step: int) -> dict[str, str]:
+    files = sorted(directory.glob("*_asb_diagnostics.csv"))
+    if not files:
+        return {}
+    with files[-1].open(newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    eligible = [row for row in rows if int(float(row.get("step", -1))) <= step]
+    return eligible[-1] if eligible else {}
+
+
+def summarize_checkpoint(path: Path, peak_stress: float) -> dict[str, object]:
+    with np.load(path, allow_pickle=True) as data:
+        parameters = json.loads(str(data["P_json"].item()))
+        ledger = json.loads(str(data["v30_asb_cumulative_json"].item()))
+        mura = json.loads(str(data["v21_balance_ledger_json"].item()))
+        rate = np.asarray(data["asb_last_gdot_abs"], dtype=float)
+        temperature = np.asarray(data["T"], dtype=float)
+        stress = float(data["sigma_bar"])
+        dx = float(parameters["L_phys"])/int(parameters["Nx"])
+        active, width = localization_geometry(rate, dx, dx)
+        scale = max(abs(float(ledger["external_work_J_m3"])),
+                    abs(float(ledger["physical_stored_change_J_m3"]))
+                    +abs(float(ledger["thermal_change_J_m3"]))
+                    +abs(float(ledger["exported_heat_J_m3"])), 1.0)
+        support = effective_support(rate)
+        return {
+            "step": int(data["step"]), "sim_time_s": float(data["sim_time"]),
+            "nominal_strain": (int(data["step"])+1)*float(parameters["dt_strain_step"]),
+            "active_fraction": active, "effective_width_m": width,
+            **support,
+            "softening_fraction": (peak_stress-abs(stress))/max(peak_stress, 1e-300),
+            "stress_Pa": stress,
+            "temperature_min_K": float(temperature.min()),
+            "temperature_mean_K": float(temperature.mean()),
+            "temperature_max_K": float(temperature.max()),
+            "thermal_semantics": actual_semantics(parameters),
+            "causal_temperature_ablation": parameters.get(
+                "causal_temperature_ablation", "none"),
+            "physical_heat_deposited_J_m3": float(ledger["deposited_heat_J_m3"]),
+            "heat_exported_J_m3": float(ledger["exported_heat_J_m3"]),
+            "thermostat_export_J_m3": float(ledger.get(
+                "v34_thermostat_export_J_m3", 0.0)),
+            "thermal_change_J_m3": float(ledger["thermal_change_J_m3"]),
+            "relative_first_law_residual": abs(float(
+                ledger["first_law_residual_J_m3"]))/scale,
+            "maximum_relative_burgers_residual": float(
+                mura["maximum_relative_burgers_rate_residual"]),
+            "maximum_relative_line_residual": float(
+                mura["maximum_relative_line_balance_residual"]),
+            "maximum_relative_energy_residual": float(
+                mura["maximum_relative_energy_balance_residual"]),
+        }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--target-step", type=int, default=2500)
+    args = parser.parse_args()
+    available = {}
+    histories = {}
+    for case_id in range(len(CASES)):
+        case = case_definition(case_id); name = str(case["case_name"])
+        found = checkpoints(args.root/name)
+        if not found:
+            continue
+        histories[name] = found
+    common_steps = sorted(set.intersection(*(set(item) for item in histories.values()))) \
+        if len(histories) == len(CASES) else []
+    common_step = common_steps[-1] if common_steps else None
+    for case_id in range(len(CASES)):
+        case = case_definition(case_id); name = str(case["case_name"])
+        found = histories.get(name, {})
+        if not found:
+            continue
+        stresses = []
+        for step in sorted(found):
+            with np.load(found[step], allow_pickle=True) as data:
+                stresses.append(abs(float(data["sigma_bar"])))
+        selected_step = common_step if common_step is not None else max(found)
+        summary = summarize_checkpoint(found[selected_step], max(stresses))
+        diag = diagnostic_at_or_before(args.root/name, selected_step)
+        summary.update(
+            terminal_reason=terminal_reason(args.root/name),
+            terminal=(args.root/name/"v34_thermal_run_record.json").exists(),
+            latest_available_step=max(found),
+            flow_operator_T_mean_K=float(diag.get("flow_operator_T_mean_K", "nan")),
+            recovery_operator_T_mean_K=float(diag.get(
+                "recovery_operator_T_mean_K", "nan")))
+        available[name] = summary
+    all_terminal = len(available) == len(CASES) and all(
+        item["terminal"] for item in available.values())
+    all_valid = bool(available) and all(
+        item["relative_first_law_residual"] < 0.05
+        and item["maximum_relative_burgers_residual"] < 1e-10
+        and item["maximum_relative_line_residual"] < 1e-10
+        and item["maximum_relative_energy_residual"] < 1e-10
+        and item["terminal_reason"] != "DRIVER_FAILURE"
+        for item in available.values())
+    effects = {}
+    reference = available.get("full_law_local_adiabatic")
+    if reference:
+        for name, item in available.items():
+            effects[name] = {
+                "delta_active_fraction": item["active_fraction"]-reference["active_fraction"],
+                "delta_temperature_max_K": item["temperature_max_K"]-reference["temperature_max_K"],
+                "delta_softening_fraction": item["softening_fraction"]-reference["softening_fraction"],
+                "delta_effective_width_m": item["effective_width_m"]-reference["effective_width_m"],
+            }
+    if not all_terminal:
+        classification = "V34_THERMAL_CAUSAL_RUNNING"
+    elif not all_valid:
+        classification = "V34_THERMAL_CAUSAL_HARD_INVALID"
+    else:
+        classification = "V34_THERMAL_CAUSAL_COMPLETE"
+    source_commits = set()
+    for case_id in range(len(CASES)):
+        path = args.root/str(case_definition(case_id)["case_name"])/"v34_thermal_run_record.json"
+        if path.exists():
+            source_commits.add(json.loads(path.read_text())["source_commit"])
+    result = {
+        "schema": "asb-drx/v34/thermal-causal-comparison/v1",
+        "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "source_commits": sorted(source_commits),
+        "shared_checkpoint_step": 100,
+        "target_common_step": args.target_step,
+        "latest_common_step": common_step,
+        "strict_asb_thresholds_changed": False,
+        "strict_asb_claimed_from_causal_matrix": False,
+        "classification": classification,
+        "all_cases_terminal": all_terminal, "all_cases_valid": all_valid,
+        "cases": available, "causal_effects_relative_to_full_law": effects,
+    }
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
+    print(classification)
+
+
+if __name__ == "__main__":
+    main()
