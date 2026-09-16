@@ -2,7 +2,7 @@
   "schema": "v30-asb-energy-dissipation-decision-v1",
   "workstream": "C",
   "dependency_state": "FAILED_SCIENTIFIC",
-  "source_commit": "4f99528e7f82c4a8886eed9ccacd2500a44abb67",
+  "source_commit": "8b5643f6d8a9aa2de678ade26c75b6dd3cc605e8",
   "base_commit": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
   "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
   "local_hard_gate_passed": false,
@@ -31,28 +31,28 @@
       "grid": 32,
       "steps": 2,
       "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
-      "relative_first_law_residual": 0.7306518862878217,
+      "relative_first_law_residual": 0.6307652212081222,
       "external_work_J_m3": 302222.6112940761,
-      "first_law_residual_J_m3": -819829.4689258991,
-      "result_sha256": "08a49d6e67e7ca31e5fade52b9dc8a8b69e37a196eafb087132742d7db793cfa"
+      "first_law_residual_J_m3": -516288.0725665746,
+      "result_sha256": "81bce0adc07563989aa3bf3f86989d59275a0cbe956f67041cf15d27a54a00eb"
     },
     {
       "grid": 64,
       "steps": 2,
       "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
-      "relative_first_law_residual": 0.5122708864296159,
+      "relative_first_law_residual": 0.03949294596984297,
       "external_work_J_m3": 302073.7715757481,
-      "first_law_residual_J_m3": -317273.6554507829,
-      "result_sha256": "b0949f2311df96a5e14234985ffadb741459dd0afb42d5b706389d73a5caf959"
+      "first_law_residual_J_m3": -12420.297268710274,
+      "result_sha256": "b99645ef841da7c38886e9f5d2999a1d0c017dbbc87c45c73d7630291e25b3ea"
     },
     {
       "grid": 128,
       "steps": 2,
       "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
-      "relative_first_law_residual": 0.7282247667960304,
+      "relative_first_law_residual": 1.0888734705057725,
       "external_work_J_m3": 302000.47091840085,
-      "first_law_residual_J_m3": 219924.22250684383,
-      "result_sha256": "3d83bc6567c5c528efc9ffc44d01e58c540e69b55d4ddb663ccb6059ad3f763e"
+      "first_law_residual_J_m3": 525085.4250312675,
+      "result_sha256": "201f2ef94948862f45cd46894e5ab1cb193144c924983c21d8603fdf6ac65f09"
     }
   ],
   "restart": {
@@ -78,11 +78,11 @@
     "final_rho_std_m2": 0.0,
     "final_temperature_std_K": 0.0,
     "remained_homogeneous": true,
-    "relative_first_law_residual": 0.9035657598183167
+    "relative_first_law_residual": 1.0646780657601869
   },
   "tests": {
     "focused": "30 passed",
-    "canonical": "509 passed in 60.92 s",
+    "canonical": "509 passed in 63.68 s",
     "compile": "passed"
   },
   "first_law_gate": {

@@ -19,9 +19,10 @@ junction transfer does not declare that affinity, so it is explicitly marked
 unavailable at `drx_full_v34_recovery.py:8578`; a silent zero is forbidden.
 
 The 32/64/128 two-step production smokes give relative first-law residuals
-0.731, 0.512, and 0.728, respectively, versus the 0.05 gate.  The 32-square
+0.631, 0.0395, and 1.089, respectively, versus the 0.05 gate.  The isolated
+64-square pass is not converged and cannot qualify the grid sequence. The 32-square
 homogeneous control remains exactly homogeneous in density and temperature,
-but its relative residual is 0.904.  Thus closure failure is not cured by grid
+but its relative residual is 1.065.  Thus closure failure is not cured by grid
 refinement or removal of spatial heterogeneity.  Its immediate cause is that
 legacy phase/line-storage operators and work partitions are not yet accepted
 as atomic energy transactions; the residual is diagnostic only and is not
@@ -32,8 +33,8 @@ A 32-square three-step run and a 2+1 segmented run are bitwise identical for
 total strain, and the cumulative ledger JSON.
 
 Verification: 30 focused tests passed; the full canonical suite passed 509
-tests in 60.92 seconds.  Source checkpoint:
-`4f99528e7f82c4a8886eed9ccacd2500a44abb67`.
+tests in 63.68 seconds.  Source checkpoint:
+`8b5643f6d8a9aa2de678ade26c75b6dd3cc605e8`.
 
 The next admissible repair is to run this ledger on the authoritative common
 Mura/wall production path, where junction affinity is declared, and to make
