@@ -8257,6 +8257,9 @@ for n in range(_restart_step_offset, _restart_end_step):
             float(P.get('moving_front_attempt_frequency_s', 1.0e8)),
             float(P.get('boundary_activation_entropy_kB', 0.0)),
             float(P.get('moving_front_drag_rate_s', 1.0e8)))
+        _front_trial_diagnostic = (
+            eta[:, :, :Ng].copy()
+            if P.get('diagnostic_write_front_terminal_trial', False) else None)
         sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
             accept_coupled_front_candidate(
                 sparse_front_state, coupled_front_runtime,
@@ -8403,6 +8406,14 @@ for n in range(_restart_step_offset, _restart_end_step):
             # campaign controller while retaining the topology-specific copy.
             (out/'sibm_terminal_event.json').write_text(
                 json.dumps(_front_terminal, indent=2, sort_keys=True)+'\n')
+            if _front_trial_diagnostic is not None:
+                np.savez_compressed(
+                    out/'sibm_front_terminal_fields.npz',
+                    eta_before=eta_before_ac[:, :, :Ng],
+                    eta_trial=_front_trial_diagnostic,
+                    eta_accepted=_eta_accepted,
+                    active_mask=np.asarray(sibm_active_mask, dtype=bool),
+                    spacing_m=np.asarray(dx), step=np.asarray(n))
             _save_restart_checkpoint(
                 n, sim_time_value=float(sim_time+P['dt']))
             _stop_run = True
