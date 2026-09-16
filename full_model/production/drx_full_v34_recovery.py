@@ -8352,6 +8352,16 @@ for n in range(_restart_step_offset, _restart_end_step):
                     and _complete_front_trial.decision.accepted):
                 common_front_state = _complete_front_trial.published_state
                 _common_after_front = _complete_front_trial.published_mixture
+            elif (_front_decision.classification == 'STATIONARY_GEOMETRY'
+                  and _complete_front_trial.decision.accepted):
+                # A width/profile relaxation can be energetically admissible
+                # while the exact contour sweep is zero.  Publish only phase
+                # and topology history; no material owner or front inventory
+                # is allowed to acquire a fictitious commit.
+                sparse_front_state = _front_sparse_before
+                common_front_state = _front_common_before
+                _common_after_front, _ = reconstruct_common_front(
+                    common_front_state, dx)
             else:
                 # Neither geometry/history nor any material owner is published
                 # when the complete common-state event is uphill.
