@@ -4003,6 +4003,11 @@ if P.get('v21_common_tensorial_wall_enabled', False):
         exp_n=float(P.get('v19_wall_exp_n', 2.5)),
         exp_floor=float(P.get('v19_wall_exp_floor', .05)),
         activation_entropy_kB=float(P.get('wall_activation_entropy_kB', 0.0)),
+        glide_barrier_eV=float(P.get('v21_glide_barrier_eV', 1.90)),
+        glide_speed_attempt_m_s=float(P.get(
+            'v21_glide_speed_attempt_m_s', 2.0e3)),
+        maximum_fraction_per_step=float(P.get(
+            'v21_maximum_fraction_per_step', 0.15)),
         c11_Pa=P['C11'], c12_Pa=P['C12'], c44_Pa=P['C44'],
         volumetric_heat_capacity_J_m3_K=P['cp_rho_vol'],
         thermal_diffusivity_m2_s=P['k_thermal']/max(P['cp_rho_vol'], 1.0),
