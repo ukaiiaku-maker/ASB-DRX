@@ -1,0 +1,75 @@
+{
+  "schema": "asb-drx/v31-v30-run-reconciliation/v1",
+  "audit_date": "2026-09-16",
+  "frozen_v30_artifacts_modified": false,
+  "source": {
+    "isolated_mura_development_sha": "37601a81d4d13657048af216619bd0c8370d6865",
+    "merged_scientific_source_sha": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+    "final_v30_evidence_status_sha": "67c8b11dbd6775542e894fd3cde3700c3ffad626",
+    "remote_canonical_sha_at_audit": "67c8b11dbd6775542e894fd3cde3700c3ffad626"
+  },
+  "execution": {
+    "frozen_plan_manifest": "full_model/verification/v30_mura_tier_b1_bundle_manifest.json",
+    "frozen_plan_manifest_sha256": "8510b81bea99016c990f9ae48ee68687f7b90b9c1833c70118a52e1a0af621ca",
+    "frozen_plan_state": "PREPARED_NOT_SUBMITTED",
+    "actual_submitted_runner": "full_model/hpc3/run_v30_mura_tier_b1.sh",
+    "actual_submitted_runner_sha256": "8834e0da599b05a816c86b592c1552b065d48732c9256472a608ab14db2979c6",
+    "superseded_infrastructure_jobs": [
+      {"job_id": "56070185", "state": "FAILED_INFRASTRUCTURE", "reason": "manual wrapper omitted declared anaconda module"},
+      {"job_id": "56070276", "state": "FAILED_INFRASTRUCTURE", "reason": "manual wrapper omitted declared anaconda module"}
+    ],
+    "corrected_job": {"job_id": "56070295", "scheduler_state": "FAILED", "elapsed": "04:15:49", "exit_code": "1:0", "interpretation": "four cases completed; two cases reached a constitutive hard terminal; wrapper propagated the case failures"},
+    "front_jobs": [
+      {"job_id": "56070183", "array": "0-11", "terminal_counts": {"COMPLETED": 4, "FAILED": 8}},
+      {"job_id": "56070184", "array": "12-23", "terminal_counts": {"FAILED": 12}}
+    ],
+    "unrelated_job_untouched": "55950433"
+  },
+  "archive": {
+    "local_root": "/Users/sdillon/HPC3/hpc3-results/asb-drx-full-v34-recovery/v31-v30-closeout-20260916",
+    "remote_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v30-20260916T052139Z-675d741/work/full_model/production/output",
+    "file_count": 408,
+    "aggregate_sha256_of_sorted_sha256_listing": "dcd6dd00c3105b3846671480a0095c8db089e1fadb37d5191515e76caed569df",
+    "local_remote_digest_match": true
+  },
+  "mura_cases": [
+    {"case":"broadband_noise_128","state":"COMPLETED","strain":0.2,"status_sha256":"c19c94c9c5732b6bfb0424a45dff3b0ee76c9b3d8cb7ae419fa8abc42952f67a","checkpoint":"checkpoint_step_000009500_strain_0.20000000.npz","checkpoint_sha256":"8ed7720e9f5e820103742bb6a607552a857466366bab057624160d0c25c2715d"},
+    {"case":"broadband_noise_64","state":"COMPLETED","strain":0.2,"status_sha256":"de1e1d1cb185261b9231096697efbf94953e22b18d44af7f3cf31013bf42f39c","checkpoint":"checkpoint_step_000009500_strain_0.20000000.npz","checkpoint_sha256":"945a7e809fc3e60dae2659ceb56d51dc425bce48820f6c3c5838fb4955c85c14"},
+    {"case":"homogeneous_128","state":"COMPLETED","strain":0.2,"status_sha256":"4571822bc5b6b93ec8943d25504d0db8df7533f895c4a10716ebdba066a97a77","checkpoint":"checkpoint_step_000009500_strain_0.20000000.npz","checkpoint_sha256":"882675704402dfecd4b9861794c9556dff57e699e37d230b5e35f208d0d42688"},
+    {"case":"homogeneous_64","state":"COMPLETED","strain":0.2,"status_sha256":"ec902e0ce29cf0324ff6b06e06b8404d8d61d10a64eaa1d1c9b7b4c47ac888d1","checkpoint":"checkpoint_step_000009500_strain_0.20000000.npz","checkpoint_sha256":"e4ae14f51522ad10e94adbadab10d4fcd2bf678c7b5fa9e193a6e3ad6adaab78"},
+    {"case":"mechanical_heterogeneity_128","state":"FAILED_SCIENTIFIC_OR_APPLICATION","strain":0.031886580091330455,"terminal":"Mura line storage exceeds available plastic work","status_sha256":"0701ee784859094b80238297b20080d38294efd1f81f436f40fe4b3ceeafb217","checkpoint":"checkpoint_step_000001133_strain_0.03188658.npz","checkpoint_sha256":"c3c11d8107d2c3476d9816fd7b295d1a947382861f27a6636da04be2a97b4a83"},
+    {"case":"mechanical_heterogeneity_64","state":"FAILED_SCIENTIFIC_OR_APPLICATION","strain":0.04054977958626303,"terminal":"Mura line storage exceeds available plastic work","status_sha256":"36e5af27c32e7ba9cd01717637d14e3522f458433861a7d8e63d9daccc3180f2","checkpoint":"checkpoint_step_000001641_strain_0.04054978.npz","checkpoint_sha256":"2c277988a1810b2bf22ecaa0ebdb7c5697c2c7500c41195d6df52ff0bd62c7d3"}
+  ],
+  "front_cases": [
+    {"case":"a1_n128_advance_retreat_readvance","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"6fcd00b7c4a41f8f4179a7e103e81627b6ec18a081d222e1915a592e0172caa2"},
+    {"case":"a1_n128_delta_m1e-2","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"5f93f15e4c829253861fdcad7513b8031e0c24dc2b42ea7208dd8509450156be"},
+    {"case":"a1_n128_delta_m1e-3","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"d081226cb4bb27635c511a03ae9a77f9dd2d233771de8863ed1cc382b317ff8c"},
+    {"case":"a1_n128_delta_m1e-6","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"36de402a82df10f9dceefdc10680c8ad7836652700a0e35fdc9c1eeedac8c2e5"},
+    {"case":"a1_n128_delta_p1e-2","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"ea9615907401f6094e21953a4551710b6c5eb7d609241566f9fe3fbcf9485445"},
+    {"case":"a1_n128_delta_p1e-3","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"e9e4cc92bc02f54138a01f94552580e46b7d193cdfa46a2a629fb3c4dc507c6c"},
+    {"case":"a1_n128_delta_p1e-6","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"ff56d795b817a3fe7ea98cf89653dbaefa6c30a3eb8c2e1ea7a06689a9a7ea74"},
+    {"case":"a1_n128_equal","state":"PASSED","checkpoint_sha256":"e94bbe8b250f8c8a2e4994f027e7e0ceb95999228c3d6f20716159fc4fede045"},
+    {"case":"a1_n128_favorable","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"30f719a4ec5f491be375e1431aef9bbc3f5d51b4001ba755348350ef27bde798"},
+    {"case":"a1_n128_label_swap_favorable","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"ac453f7f2dcc6843e92522c38412452d485462a55eaecda29bf500499e19b3e3"},
+    {"case":"a1_n128_mobility_off","state":"PASSED","checkpoint_sha256":"d8edf19810cbed1bfe4cbbaf27971d300d4701ce7e185c57cb06fe23cfdada1b"},
+    {"case":"a1_n128_reversed","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"8a6dab3cfdb195063229b88a2bb398476703b67cb0c2fd3f06477826b285c617"},
+    {"case":"a1_n64_advance_retreat_readvance","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"b5d77fe96253e7e7a60510b19811fa6d6cc739aa26b5ef049be0b0c2e5292493"},
+    {"case":"a1_n64_delta_m1e-2","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"a2e01742c35616dfc1429c0ca54d0cd3813dd55844c5a453d679ce451d9a421c"},
+    {"case":"a1_n64_delta_m1e-3","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"c56ebbca14a5ddc0001f4b601ab72a0baff12ccf455afb08d41a4a4545bfd59f"},
+    {"case":"a1_n64_delta_m1e-6","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"868c3ec3d02977d0c914c86d8f9eed35139183dfaafc698fbb8bfbb501418268"},
+    {"case":"a1_n64_delta_p1e-2","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"cb44e223398b31df7dfe00fe58cf6d21d83f76fec8cf6664aac5090e73367a97"},
+    {"case":"a1_n64_delta_p1e-3","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"98b8e289f2822e411dba528f82ecc0c376782b30be4adda39de93d149d65cd79"},
+    {"case":"a1_n64_delta_p1e-6","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"4f96b65fe70cde3839465c27e766c3b434d3cf30d3c9885bdcb6a8675ca8aa83"},
+    {"case":"a1_n64_equal","state":"PASSED","checkpoint_sha256":"e1c83c805d71c45a96da6e8cb15a8844aa1eaa063be67a83c6a77c9c5f12de6b"},
+    {"case":"a1_n64_favorable","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"116f920d6bad9720832c09a05ff37e88cee84c691024d3052f9ae4d153051041"},
+    {"case":"a1_n64_label_swap_favorable","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"0e895927c09e6ffbdb2c93b23468d9d5cd40d513d66a05d59812c07914955684"},
+    {"case":"a1_n64_mobility_off","state":"PASSED","checkpoint_sha256":"658f3387ee76f575d99cbac5e308c5d431100de5c46f0709ff1c6ade2a689f84"},
+    {"case":"a1_n64_reversed","state":"FAILED_SCIENTIFIC","checkpoint_sha256":"9e564eb62e4582086df65bc158251a76db2baf56a35e067292f754bd1ae07054"}
+  ],
+  "closure": {
+    "v30_jobs_terminal": true,
+    "completed_front_controls_replayed": false,
+    "mura_packaging_retry_required": false,
+    "scientific_continuations_deferred_to_v31_source": true
+  }
+}
