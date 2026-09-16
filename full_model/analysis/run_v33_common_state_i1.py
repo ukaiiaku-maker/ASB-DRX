@@ -122,6 +122,51 @@ def run_case(root, case):
     return record
 
 
+def restart_check(root):
+    continuous = root/"combined"/"drx_v25_restart_000001.npz"
+    first = root/"combined"/"drx_v25_restart_000000.npz"
+    directory = root/"combined_segmented"
+    directory.mkdir(parents=True, exist_ok=True)
+    config = parameters("combined")
+    config.update(nSteps=1, restart_file=str(first), restart_reset_clock=False)
+    environment = dict(os.environ, DRX_OUTDIR=str(directory), MPLBACKEND="Agg",
+                       OMP_NUM_THREADS="1",
+                       DRX_PARAMS=json.dumps(config, separators=(",", ":")))
+    with (directory/"stdout.log").open("w") as stdout:
+        completed = subprocess.run(
+            [sys.executable, DRIVER.name], cwd=DRIVER.parent,
+            env=environment, stdout=stdout, stderr=subprocess.STDOUT)
+    segmented = directory/"drx_v25_restart_000001.npz"
+    if completed.returncode or not segmented.exists():
+        return {"completed": False, "returncode": completed.returncode}
+    prefixes = ("common_front__", "sparse_front__", "coupled_front__")
+    exact_names = {
+        "rho", "rp", "rm", "rho_forest", "rho_wall",
+        "rho_forest_plus", "rho_forest_minus", "rho_wall_plus",
+        "rho_wall_minus", "v21_junction_m2", "v20_slip", "v20_beta_p",
+        "v20_alignment_m2", "v20_family_nye_m1", "eta", "T", "E_tot",
+        "sigma_bar", "sim_time", "step", "common_front_metadata_json",
+        "sparse_front_metadata_json", "coupled_front_metadata_json"}
+    with np.load(continuous, allow_pickle=True) as a, \
+            np.load(segmented, allow_pickle=True) as b:
+        names = sorted(name for name in set(a.files)&set(b.files)
+                       if name in exact_names or name.startswith(prefixes))
+        differences = []
+        for name in names:
+            x, y = a[name], b[name]
+            if x.dtype.kind in "fc":
+                equal = np.array_equal(x, y, equal_nan=True)
+            else:
+                equal = np.array_equal(x, y)
+            if not equal:
+                differences.append(name)
+    return {
+        "completed": True, "exact": not differences,
+        "compared_field_count": len(names), "different_fields": differences,
+        "continuous_checkpoint_sha256": sha256(continuous),
+        "segmented_checkpoint_sha256": sha256(segmented)}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
@@ -129,6 +174,7 @@ def main():
     args = parser.parse_args()
     cases = ("front_only", "mura_only", "combined", "combined_isothermal")
     records = [run_case(args.run_root.resolve(), case) for case in cases]
+    restart = restart_check(args.run_root.resolve())
     by_id = {row["case_id"]: row for row in records}
     complete = all(row.get("completed", False) for row in records)
     i0 = bool(complete
@@ -149,9 +195,11 @@ def main():
         "created_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source_commit": source_sha,
         "driver_sha256": sha256(DRIVER), "records": records,
+        "segmented_restart": restart,
         "i0_exact_limits_passed": i0,
         "i1_simultaneous_activity_passed": i1,
         "i2_history_restart_fixture_passed": True,
+        "i2_production_restart_passed": bool(restart.get("exact", False)),
         "i2_production_energy_gate_passed": False,
         "i3_physical_continuation_passed": False,
         "scientific_classification": (
