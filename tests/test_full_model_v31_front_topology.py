@@ -83,6 +83,26 @@ def test_periodic_winding_pair_has_declared_winding_and_persistent_ids():
             == {item.component_id for item in previous.components})
 
 
+def test_grid_aligned_periodic_winding_pair_keeps_both_identities():
+    n = 64
+    x = np.arange(n, dtype=float)[:, None]
+    # Both zeros lie exactly on grid lines.  This is the resolved-bicrystal
+    # geometry used by the finite common-state campaign.
+    before = np.broadcast_to(
+        np.tanh(np.sin(2*np.pi*x/n)*4), (n, n))
+    after = np.broadcast_to(
+        np.tanh(np.sin(2*np.pi*(x-.35)/n)*4), (n, n))
+    previous = initialize_front_topology(before)
+    assert len(previous.components) == 2
+    assert all(component.winding == (0, 1)
+               for component in previous.components)
+    match = match_front_topology(previous, before, after)
+    assert match.event is None
+    assert match.maximum_component_distance_cells < .5
+    assert ({item.component_id for item in match.snapshot.components}
+            == {item.component_id for item in previous.components})
+
+
 @pytest.mark.parametrize("reverse,classification", [
     (False, "FRONT_COMPONENT_SPLIT"),
     (True, "FRONT_COMPONENT_MERGE"),

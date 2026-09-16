@@ -100,6 +100,57 @@ def _profile_coordinate(phi):
                               -1.0+eps, 1.0-eps))
 
 
+def _topology_coordinate(phi, periodic):
+    """Return profile coordinates with sign-symmetric exact-zero tie breaks.
+
+    A zero contour that lies exactly on a complete row or column otherwise
+    presents marching triangles with zero--zero edges.  Skipping those
+    degenerate edges can turn one member of a periodic winding pair into an
+    open component.  Move exact-zero samples by one floating-point ulp toward
+    the sign selected by the first non-zero centered directional derivative.
+    Reversing ``phi`` reverses that derivative and therefore preserves phase
+    exchange symmetry.  The cut-cell area calculation continues to use the
+    unmodified profile coordinate; this helper affects topology ownership
+    only.
+    """
+    q = _profile_coordinate(phi)
+    # Algebraically exact zero levels commonly arrive as a few ulps after the
+    # partition-of-unity phase construction (for example -6.7e-15).  Treat
+    # only that roundoff neighbourhood as a tie; resolved small values remain
+    # untouched.
+    zero_tolerance = 64.0*np.finfo(float).eps*max(
+        1.0, float(np.max(np.abs(q))))
+    zero = np.abs(q) <= zero_tolerance
+    if not np.any(zero):
+        return q
+    direction = np.zeros_like(q)
+    for axis in range(q.ndim):
+        if periodic:
+            derivative = np.roll(q, -1, axis=axis)-np.roll(q, 1, axis=axis)
+        else:
+            derivative = np.zeros_like(q)
+            interior = [slice(None)]*q.ndim
+            plus = [slice(None)]*q.ndim
+            minus = [slice(None)]*q.ndim
+            interior[axis] = slice(1, -1)
+            plus[axis] = slice(2, None)
+            minus[axis] = slice(None, -2)
+            derivative[tuple(interior)] = (
+                q[tuple(plus)]-q[tuple(minus)])
+        unresolved = zero & (direction == 0.0) & (derivative != 0.0)
+        direction[unresolved] = np.sign(derivative[unresolved])
+    # Fully flat exact-zero regions have no locally identifiable interface.
+    # Leave them untouched rather than inventing topology.
+    resolved = zero & (direction != 0.0)
+    q = q.copy()
+    # Keep the displacement larger than the 1e-10 contour-node hash used
+    # below; an ulp at zero would round back onto the degenerate vertex and
+    # leave duplicate graph nodes.  This is still nine orders below the
+    # O(1) profile coordinate and has no measurable cut-cell-area effect.
+    q[resolved] = np.copysign(1.0e-9, direction[resolved])
+    return q
+
+
 def _positive_triangle_fraction(values):
     """Area fraction of a linear triangle on which the scalar is positive."""
     q = np.asarray(values, dtype=float)
@@ -274,7 +325,7 @@ def extract_front_components(phi, *, active_mask=None, periodic=True,
             else np.asarray(active_mask, dtype=bool))
     if mask.shape != value.shape:
         raise ValueError("active mask shape differs from phi")
-    q = _profile_coordinate(value)
+    q = _topology_coordinate(value, periodic)
     nx, ny = value.shape
     nodes = []
     node_lookup = {}
