@@ -12,7 +12,9 @@ from full_model.production.v24_mechanical_wall import (
     accepted_v24_mechanical_step, mechanical_checkpoint_arrays,
     mechanical_from_checkpoint_arrays,
 )
-from full_model.production.wall_topology_supply import reservoir_nye_m1
+from full_model.production.wall_topology_supply import (
+    apply_signed_reservoir_exchange, reservoir_nye_m1,
+)
 
 
 def _manufactured_family_event(n, rotating=False, diffusion=False):
@@ -121,3 +123,40 @@ def test_active_set_records_geometric_line_stretching_without_moment_clipping():
         assert np.all(event["mura_line_stretching_m2"] >= 0.0)
         assert abs(event["global_scalar_residual_line_per_thickness"]) < 1e-14
     assert not transport["post_step_projection_used"]
+
+
+@pytest.mark.parametrize("n", (16, 32, 64, 128))
+@pytest.mark.parametrize("extent_sign", (-1.0, 1.0))
+def test_locking_unlocking_exchange_conserves_tensorial_nye_at_required_grids(
+        n, extent_sign):
+    state, _, _, _, systems, topologies, _, _, _, _ = build_case(
+        n, periodic_nye_consistent=True)
+    before = reservoir_nye_m1(
+        state.reservoir_alignment, systems,
+        state.common.orientation_rad, topologies)["total"]
+    extent = np.full(state.density.mobile_plus_m2.shape,
+                     extent_sign*1e10)
+    _, alignment, ledger = apply_signed_reservoir_exchange(
+        state.density, state.reservoir_alignment, "mobile", "forest",
+        extent, -extent, systems, state.common.orientation_rad, topologies)
+    after = reservoir_nye_m1(
+        alignment, systems, state.common.orientation_rad, topologies)["total"]
+    np.testing.assert_allclose(after, before, rtol=0.0, atol=5e-13)
+    assert np.max(np.abs(ledger["total_nye_residual_m1"])) < 5e-13
+    assert not ledger["post_step_projection_used"]
+
+
+def test_junction_reorientation_is_an_explicit_persistent_source_not_projection():
+    # The topology route can change total Nye only through its declared source.
+    from tests.test_full_model_v24_mechanical_wall import mechanical_fixture
+    args = mechanical_fixture()
+    first, ledger1 = accepted_v24_mechanical_step(
+        *args, dt_s=1e-9, topology_route_enabled=True)
+    second, ledger2 = accepted_v24_mechanical_step(
+        first, *args[1:], dt_s=1e-9, topology_route_enabled=True)
+    source1 = ledger1["mura_balance_ledger"]["reaction_source_tensor_m1"]
+    assert np.sqrt(np.mean(source1**2)) > 0.0
+    assert ledger1["nye_suboperator_audit"]["accepted_step_hard_invariant_passed"]
+    assert ledger2["nye_suboperator_audit"]["accepted_step_hard_invariant_passed"]
+    assert ledger2["mura_face_event"]["cumulative_declared_source_rms_m1"] > 0.0
+    second.validate(args[3], args[4])

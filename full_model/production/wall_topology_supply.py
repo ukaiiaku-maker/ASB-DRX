@@ -525,6 +525,56 @@ def apply_signed_ordering_extent(inventory, alignments, extent_plus_m2,
     }
 
 
+def apply_signed_reservoir_exchange(
+        inventory, alignments, source_stem, destination_stem,
+        extent_plus_m2, extent_minus_m2, systems, orientation_rad,
+        topologies=()):
+    """Accept a reversible signed-reservoir exchange without changing Nye.
+
+    Positive extent moves source to destination and negative extent reverses
+    that motion.  Scalar line and its first moment share one donor-limited
+    extent, so locking/unlocking cannot become an independent Nye update.
+    """
+    before = reservoir_nye_m1(alignments, systems, orientation_rad, topologies)
+    density_updates = {}; alignment_updates = {}; sign_ledger = {}
+    for sign, raw in (("plus", extent_plus_m2), ("minus", extent_minus_m2)):
+        source_name = f"{source_stem}_{sign}_m2"
+        destination_name = f"{destination_stem}_{sign}_m2"
+        source = np.asarray(getattr(inventory, source_name), dtype=float)
+        destination = np.asarray(getattr(inventory, destination_name), dtype=float)
+        asource = np.asarray(getattr(alignments, source_name), dtype=float)
+        adestination = np.asarray(getattr(alignments, destination_name), dtype=float)
+        trial = np.asarray(raw, dtype=float)
+        if trial.shape != source.shape or np.any(~np.isfinite(trial)):
+            raise ValueError("reservoir exchange extent has invalid layout")
+        accepted = np.where(trial >= 0.0, np.minimum(trial, source),
+                            -np.minimum(-trial, destination))
+        donor = np.where(accepted >= 0.0, source, destination)
+        fraction = np.divide(np.abs(accepted), donor,
+                             out=np.zeros_like(accepted), where=donor > 0.0)
+        moved = np.where((accepted >= 0.0)[..., None],
+                         fraction[..., None]*asource,
+                         -fraction[..., None]*adestination)
+        density_updates[source_name] = source-accepted
+        density_updates[destination_name] = destination+accepted
+        alignment_updates[source_name] = asource-moved
+        alignment_updates[destination_name] = adestination+moved
+        sign_ledger[sign] = {
+            "accepted_line_m2": accepted,
+            "accepted_alignment_m2": moved,
+        }
+    updated = replace(inventory, **density_updates)
+    aligned = replace(alignments, **alignment_updates)
+    aligned.validate(updated, len(systems))
+    after = reservoir_nye_m1(aligned, systems, orientation_rad, topologies)
+    return updated, aligned, {
+        "operator": f"{source_stem}_{destination_stem}_reversible_exchange",
+        "sign": sign_ledger,
+        "total_nye_residual_m1": after["total"]-before["total"],
+        "post_step_projection_used": False,
+    }
+
+
 def accepted_line_reorientation_step(
         inventory, alignments, requested_plus_m2, requested_minus_m2,
         ordered_line_direction, disordered_line_direction, event_length_m,

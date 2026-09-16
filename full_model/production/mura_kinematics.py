@@ -135,9 +135,13 @@ def accept_family_mura_step(beta_p, family_alpha_m1, family_flow_rate_s,
         for family in range(flow.shape[2])], axis=2)
     new_beta = beta+dt*np.sum(flow, axis=2)
     new_alpha = alpha+dt*family_rate
+    initial_offset = (np.sum(alpha, axis=2)
+                      -nye_from_plastic_distortion(beta, spacing_m))
     curl_beta = nye_from_plastic_distortion(new_beta, spacing_m)
     alpha_total = np.sum(new_alpha, axis=2)
-    residual = alpha_total-curl_beta
+    # A previously declared loop/node/boundary source is a persistent offset,
+    # not an error in the next source-free Mura increment.
+    residual = alpha_total-curl_beta-initial_offset
     scale = max(float(np.sqrt(np.mean(curl_beta**2))), 1.0)
     relative = float(np.sqrt(np.mean(residual**2))/scale)
     if relative > float(relative_tolerance):
@@ -149,6 +153,8 @@ def accept_family_mura_step(beta_p, family_alpha_m1, family_flow_rate_s,
             dt*np.sum(family_rate, axis=2)
             -nye_from_plastic_distortion(dt*np.sum(flow, axis=2), spacing_m))**2))),
         "div_curl_rms_m2_s": float(np.sqrt(np.mean(div_curl**2))),
+        "cumulative_declared_source_rms_m1": float(
+            np.sqrt(np.mean(initial_offset**2))),
         "accepted_step_hard_invariant_passed": True,
         "post_step_projection_used": False,
     }

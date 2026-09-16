@@ -32,7 +32,8 @@ from .wall_topology_supply import (
     ReservoirAlignmentState, accepted_junction_topology_step,
     accepted_line_reorientation_step,
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
-    apply_signed_ordering_extent, accepted_mura_transport_capture_step,
+    apply_signed_ordering_extent, apply_signed_reservoir_exchange,
+    accepted_mura_transport_capture_step,
     validate_junction_alignment,
     reservoir_nye_m1,
 )
@@ -230,8 +231,12 @@ def accepted_v24_mechanical_step(
     _nye_reservoir_after_transport = reservoir_nye_m1(
         transported_alignment, systems, common.orientation_rad,
         topologies)["total"]
-    working_density = transported_density
-    working_alignment = transported_alignment
+    working_density, working_alignment, locking_ledger = (
+        apply_signed_reservoir_exchange(
+            transported_density, transported_alignment, "mobile", "forest",
+            accepted_dt*residual.channel_rates_m2_s["lock_plus"],
+            accepted_dt*residual.channel_rates_m2_s["lock_minus"], systems,
+            common.orientation_rad, topologies))
     topology_ledger = None
     reorientation_ledger = None
     if topology_route_enabled and topologies:
@@ -333,6 +338,15 @@ def accepted_v24_mechanical_step(
     _nye_reservoir_after_reactions = reservoir_nye_m1(
         result.reservoir_alignment, systems, result.common.orientation_rad,
         topologies)["total"]
+    _declared_reaction_source = np.zeros_like(_nye_beta_initial)
+    if topology_route_enabled:
+        _declared_reaction_source = (
+            _nye_reservoir_after_reactions-_nye_reservoir_after_transport)
+        family_nye_with_source = result.common.family_nye_m1.copy()
+        family_nye_with_source[..., 0, :, :] += _declared_reaction_source
+        result = replace(result, common=replace(
+            result.common, family_nye_m1=family_nye_with_source))
+        result.validate(systems, topologies)
     _reference = max(float(np.sqrt(np.mean(_nye_beta_initial**2))), 1.0)
     def _stage(name, reservoir_increment, beta_increment):
         mismatch = reservoir_increment-beta_increment
@@ -360,7 +374,7 @@ def accepted_v24_mechanical_step(
         _mura_stage,
         _stage("ordering_and_topology_reactions",
                _nye_reservoir_after_reactions-_nye_reservoir_after_transport,
-               _zero),
+               _declared_reaction_source),
     ]
     _violating = next((row["operator"] for row in _nye_stages
                        if row["increment_residual_rms_m1"]
@@ -381,6 +395,7 @@ def accepted_v24_mechanical_step(
         "effective_stress_Pa": drive["effective_stress_Pa"],
         "plastic_power_W_m3": residual.plastic_power_W_m3,
         "transport_capture": capture_ledger,
+        "locking_unlocking": locking_ledger,
         "ordering_thermodynamics": ordering_thermo,
         "ordering_topology": ordering_topology,
         "line_reorientation_topology": reorientation_ledger,
@@ -398,7 +413,8 @@ def accepted_v24_mechanical_step(
             "global_work_minus_heat_storage_residual_J_m3_cells": float(
                 np.sum(_plastic_work_increment-_deposited_heat_increment
                        -mura_storage_increment_J_m3)),
-            "reaction_source_tensor_m1": np.zeros_like(_nye_beta_initial),
+            "reaction_source_tensor_m1": _declared_reaction_source,
+            "declared_topology_source_tensor_m1": _declared_reaction_source,
             "line_stretching_is_declared_mura_geometric_source": True,
         },
         "nye_suboperator_audit": {
