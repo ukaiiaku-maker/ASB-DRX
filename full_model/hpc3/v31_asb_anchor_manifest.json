@@ -1,7 +1,7 @@
 {
   "schema": "asb-drx/v31/asb-anchor-bundle/v1",
-  "source_commit": null,
-  "source_commit_policy": "fill with the pushed immutable bundle commit before submission and require runtime equality",
+  "source_commit": "supplied as V31_SOURCE_SHA at submission",
+  "source_commit_policy": "runner requires exact equality between V31_SOURCE_SHA and the immutable source-tree HEAD before each case",
   "grid": 128,
   "temperature_K": 1100.0,
   "strain_rate_s-1": 30000.0,

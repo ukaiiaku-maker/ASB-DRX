@@ -40,6 +40,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--case-id", type=int, required=True, choices=CASES)
     parser.add_argument("--source-root", type=Path, required=True)
+    parser.add_argument("--expected-source-sha", required=True)
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--target-steps", type=int, default=5000)
     parser.add_argument("--preflight", action="store_true")
@@ -47,6 +48,12 @@ def main() -> None:
 
     name, heterogeneous, thermal = CASES[args.case_id]
     source = args.source_root.resolve()
+    actual_source_sha = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
+    if actual_source_sha != args.expected_source_sha:
+        raise RuntimeError(
+            f"source SHA mismatch: expected {args.expected_source_sha}, "
+            f"found {actual_source_sha}")
     output = (args.run_root/name).resolve()
     output.mkdir(parents=True, exist_ok=True)
     driver = source/"full_model/production/drx_full_v34_recovery.py"
@@ -103,8 +110,7 @@ def main() -> None:
     record = {
         "case_id": args.case_id, "case_name": name,
         "heterogeneous": heterogeneous, "thermal_control": thermal,
-        "source_root": str(source), "source_commit": subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=source, text=True).strip(),
+        "source_root": str(source), "source_commit": actual_source_sha,
         "restart_file": str(restart) if restart else None,
         "completed_steps_before_run": completed,
         "requested_steps_this_run": remaining,
