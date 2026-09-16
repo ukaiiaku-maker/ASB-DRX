@@ -1,0 +1,693 @@
+{
+  "adaptive_screen_authorized": false,
+  "all_cases_complete": false,
+  "all_invariants_passed": true,
+  "classification": "RUNNING_LONG_ASB_ANCHOR",
+  "criteria": {
+    "maximum_active_fraction": 0.25,
+    "minimum_persistence_s": 1e-06,
+    "minimum_softening_fraction": 0.2,
+    "minimum_temperature_excess_K": 50.0,
+    "minimum_width_to_interface": 2.0,
+    "refinement_tolerance": 0.05
+  },
+  "generated_utc": "2026-09-16T17:45:45.634569+00:00",
+  "latest_invariants": {
+    "heterogeneous": {
+      "maximum_channel_closure_W_m3": 0.125,
+      "maximum_relative_burgers_residual": 8.707165383653998e-17,
+      "maximum_relative_energy_residual": 1.2224545240028781e-18,
+      "maximum_relative_line_residual": 4.0628867627379855e-17,
+      "minimum_physical_channel_W_m3": 0.0,
+      "passed": true,
+      "relative_dissipation_heat_residual": 5.239006483129125e-19,
+      "relative_first_law_residual": 1.7770387499834455e-11
+    },
+    "homogeneous": {
+      "maximum_channel_closure_W_m3": 0.015625,
+      "maximum_relative_burgers_residual": 0.0,
+      "maximum_relative_energy_residual": 1.0998286668449188e-16,
+      "maximum_relative_line_residual": 2.278066808172757e-15,
+      "minimum_physical_channel_W_m3": 0.0,
+      "passed": true,
+      "relative_dissipation_heat_residual": 3.1132447721858076e-18,
+      "relative_first_law_residual": 1.688026471570648e-12
+    }
+  },
+  "pairs": {
+    "heterogeneous": {
+      "complete": false,
+      "diagnosis": "ANCHOR_INCOMPLETE_UNDEREXPOSURE_NOT_EXCLUDED",
+      "history": [
+        {
+          "active_fraction": 0.0771977047480098,
+          "effective_width_m": 2.5063640434392183e-06,
+          "entropy_effective_fraction": 0.1521697766098292,
+          "inverse_participation_fraction": 0.07719770474800983,
+          "softening_fraction": 0.0,
+          "temperature_excess_K": 0.0,
+          "time_s": 3.3333333333333334e-09
+        },
+        {
+          "active_fraction": 0.9922601255335738,
+          "effective_width_m": 9.96071453296052e-06,
+          "entropy_effective_fraction": 0.9958927705359093,
+          "inverse_participation_fraction": 0.9922601255335736,
+          "softening_fraction": 0.0,
+          "temperature_excess_K": 0.00020736966303047666,
+          "time_s": 3.3666666666666695e-07
+        },
+        {
+          "active_fraction": 0.9789177193399308,
+          "effective_width_m": 9.959139685006125e-06,
+          "entropy_effective_fraction": 0.9887908550475888,
+          "inverse_participation_fraction": 0.9789177193399307,
+          "softening_fraction": 0.0,
+          "temperature_excess_K": 0.1967288026908136,
+          "time_s": 6.700000000000006e-07
+        },
+        {
+          "active_fraction": 0.9923568350263264,
+          "effective_width_m": 9.983372453585313e-06,
+          "entropy_effective_fraction": 0.9961602807353841,
+          "inverse_participation_fraction": 0.9923568350263267,
+          "softening_fraction": 0.0009825167356511228,
+          "temperature_excess_K": 2.0790431635775803,
+          "time_s": 1.0033333333333328e-06
+        },
+        {
+          "active_fraction": 0.9929159604162153,
+          "effective_width_m": 9.986888005719967e-06,
+          "entropy_effective_fraction": 0.9964446805553407,
+          "inverse_participation_fraction": 0.9929159604162157,
+          "softening_fraction": 0.008165628956722298,
+          "temperature_excess_K": 5.2246374704168375,
+          "time_s": 1.3366666666666558e-06
+        },
+        {
+          "active_fraction": 0.992677850167646,
+          "effective_width_m": 9.990083312971343e-06,
+          "entropy_effective_fraction": 0.9963265546854208,
+          "inverse_participation_fraction": 0.9926778501676462,
+          "softening_fraction": 0.015252754879874661,
+          "temperature_excess_K": 8.6338492170687,
+          "time_s": 1.669999999999979e-06
+        },
+        {
+          "active_fraction": 0.9918705868370548,
+          "effective_width_m": 9.992826890245366e-06,
+          "entropy_effective_fraction": 0.9959189806481424,
+          "inverse_participation_fraction": 0.9918705868370548,
+          "softening_fraction": 0.022242880483587732,
+          "temperature_excess_K": 12.05837367603499,
+          "time_s": 2.003333333333308e-06
+        },
+        {
+          "active_fraction": 0.9905380150560655,
+          "effective_width_m": 9.99505942800211e-06,
+          "entropy_effective_fraction": 0.9952427582948774,
+          "inverse_participation_fraction": 0.9905380150560656,
+          "softening_fraction": 0.029138387478715725,
+          "temperature_excess_K": 16.199860848828394,
+          "time_s": 2.336666666666652e-06
+        },
+        {
+          "active_fraction": 0.9886575490184941,
+          "effective_width_m": 9.99678031116676e-06,
+          "entropy_effective_fraction": 0.9942851211921201,
+          "inverse_participation_fraction": 0.988657549018494,
+          "softening_fraction": 0.035942714349029535,
+          "temperature_excess_K": 20.91143532569299,
+          "time_s": 2.6699999999999965e-06
+        },
+        {
+          "active_fraction": 0.9861720837794167,
+          "effective_width_m": 9.998031908758459e-06,
+          "entropy_effective_fraction": 0.9930153951304186,
+          "inverse_participation_fraction": 0.9861720837794167,
+          "softening_fraction": 0.04265976848083564,
+          "temperature_excess_K": 26.046595426944805,
+          "time_s": 3.0033333333333407e-06
+        },
+        {
+          "active_fraction": 0.9830036985222479,
+          "effective_width_m": 9.998883138725225e-06,
+          "entropy_effective_fraction": 0.9913915220393724,
+          "inverse_participation_fraction": 0.9830036985222479,
+          "softening_fraction": 0.049293680215155566,
+          "temperature_excess_K": 31.64924304057604,
+          "time_s": 3.336666666666685e-06
+        },
+        {
+          "active_fraction": 0.9790617602811381,
+          "effective_width_m": 9.999414701645479e-06,
+          "entropy_effective_fraction": 0.9893637274224576,
+          "inverse_participation_fraction": 0.979061760281138,
+          "softening_fraction": 0.055848662364712955,
+          "temperature_excess_K": 37.76655401774565,
+          "time_s": 3.6700000000000292e-06
+        },
+        {
+          "active_fraction": 0.9742498330186655,
+          "effective_width_m": 9.999707389850906e-06,
+          "entropy_effective_fraction": 0.9868775157990642,
+          "inverse_participation_fraction": 0.9742498330186653,
+          "softening_fraction": 0.062328895965582415,
+          "temperature_excess_K": 44.44507265253537,
+          "time_s": 4.00333333333335e-06
+        },
+        {
+          "active_fraction": 0.9684733156025646,
+          "effective_width_m": 9.999834013002728e-06,
+          "entropy_effective_fraction": 0.9838769363077216,
+          "inverse_participation_fraction": 0.9684733156025644,
+          "softening_fraction": 0.06873840943512617,
+          "temperature_excess_K": 51.72707139711247,
+          "time_s": 4.336666666666652e-06
+        },
+        {
+          "active_fraction": 0.961648672549577,
+          "effective_width_m": 9.999854829745211e-06,
+          "entropy_effective_fraction": 0.9803085410595258,
+          "inverse_participation_fraction": 0.9616486725495771,
+          "softening_fraction": 0.07508093825882996,
+          "temperature_excess_K": 59.6465174017128,
+          "time_s": 4.669999999999954e-06
+        },
+        {
+          "active_fraction": 0.9537143654071264,
+          "effective_width_m": 9.999815930022557e-06,
+          "entropy_effective_fraction": 0.9761261344913625,
+          "inverse_participation_fraction": 0.9537143654071264,
+          "softening_fraction": 0.08135976422899954,
+          "temperature_excess_K": 68.34007914300332,
+          "time_s": 5.0033333333332555e-06
+        },
+        {
+          "active_fraction": 0.9446425756814949,
+          "effective_width_m": 9.999749745431455e-06,
+          "entropy_effective_fraction": 0.9712960254905162,
+          "inverse_participation_fraction": 0.9446425756814949,
+          "softening_fraction": 0.08757754607933822,
+          "temperature_excess_K": 79.67248460238943,
+          "time_s": 5.336666666666557e-06
+        },
+        {
+          "active_fraction": 0.9344493822859248,
+          "effective_width_m": 9.999676751727956e-06,
+          "entropy_effective_fraction": 0.9658019548631204,
+          "inverse_participation_fraction": 0.9344493822859247,
+          "softening_fraction": 0.09373617129123842,
+          "temperature_excess_K": 91.88180795824269,
+          "time_s": 5.669999999999859e-06
+        },
+        {
+          "active_fraction": 0.9231996894197183,
+          "effective_width_m": 9.99960749017436e-06,
+          "entropy_effective_fraction": 0.9596483152518362,
+          "inverse_participation_fraction": 0.9231996894197185,
+          "softening_fraction": 0.09983667902206106,
+          "temperature_excess_K": 104.88267113653319,
+          "time_s": 6.003333333333161e-06
+        },
+        {
+          "active_fraction": 0.9110030501059587,
+          "effective_width_m": 9.999544346028346e-06,
+          "entropy_effective_fraction": 0.9528601001975123,
+          "inverse_participation_fraction": 0.911003050105959,
+          "softening_fraction": 0.10587931431001647,
+          "temperature_excess_K": 118.54144479941579,
+          "time_s": 6.336666666666463e-06
+        },
+        {
+          "active_fraction": 0.8979988721527937,
+          "effective_width_m": 9.999483104566565e-06,
+          "entropy_effective_fraction": 0.9454786941964715,
+          "inverse_participation_fraction": 0.8979988721527936,
+          "softening_fraction": 0.11186375537177702,
+          "temperature_excess_K": 132.67632594477845,
+          "time_s": 6.669999999999765e-06
+        },
+        {
+          "active_fraction": 0.8843343286537617,
+          "effective_width_m": 9.999414926793692e-06,
+          "entropy_effective_fraction": 0.9375542622956967,
+          "inverse_participation_fraction": 0.8843343286537619,
+          "softening_fraction": 0.11778949777044206,
+          "temperature_excess_K": 147.06792784246568,
+          "time_s": 7.003333333333067e-06
+        },
+        {
+          "active_fraction": 0.8701429995186685,
+          "effective_width_m": 9.999329516204243e-06,
+          "entropy_effective_fraction": 0.9291373377516732,
+          "inverse_participation_fraction": 0.8701429995186687,
+          "softening_fraction": 0.123656301766541,
+          "temperature_excess_K": 161.4820703716416,
+          "time_s": 7.336666666666369e-06
+        },
+        {
+          "active_fraction": 0.8555323239092736,
+          "effective_width_m": 9.999219478847033e-06,
+          "entropy_effective_fraction": 0.9202726015668304,
+          "inverse_participation_fraction": 0.8555323239092736,
+          "softening_fraction": 0.12946457917836804,
+          "temperature_excess_K": 175.70280212554235,
+          "time_s": 7.669999999999681e-06
+        },
+        {
+          "active_fraction": 0.8405809384865865,
+          "effective_width_m": 9.999084609041628e-06,
+          "entropy_effective_fraction": 0.9109955484514253,
+          "inverse_participation_fraction": 0.8405809384865865,
+          "softening_fraction": 0.1352156885505973,
+          "temperature_excess_K": 191.22291007356557,
+          "time_s": 8.003333333333068e-06
+        },
+        {
+          "active_fraction": 0.8253369749053721,
+          "effective_width_m": 9.998934260185346e-06,
+          "entropy_effective_fraction": 0.9013287932817664,
+          "inverse_participation_fraction": 0.8253369749053723,
+          "softening_fraction": 0.14091230259618281,
+          "temperature_excess_K": 209.40651548371102,
+          "time_s": 8.336666666666454e-06
+        },
+        {
+          "active_fraction": 0.8098034386308017,
+          "effective_width_m": 9.998786616108076e-06,
+          "entropy_effective_fraction": 0.8912723507361242,
+          "inverse_participation_fraction": 0.8098034386308016,
+          "softening_fraction": 0.14655916763834195,
+          "temperature_excess_K": 227.5470143808277,
+          "time_s": 8.66999999999984e-06
+        },
+        {
+          "active_fraction": 0.7938995212697291,
+          "effective_width_m": 9.998663848356597e-06,
+          "entropy_effective_fraction": 0.8807831369745128,
+          "inverse_participation_fraction": 0.793899521269729,
+          "softening_fraction": 0.15216456623916583,
+          "temperature_excess_K": 245.78638659313629,
+          "time_s": 9.003333333333227e-06
+        }
+      ],
+      "latest_active_fraction": 0.7938995212697291,
+      "latest_effective_width_m": 9.998663848356597e-06,
+      "latest_entropy_effective_fraction": 0.8807831369745128,
+      "latest_inverse_participation_fraction": 0.793899521269729,
+      "latest_nominal_strain": 0.2701,
+      "latest_softening_fraction": 0.15216456623916583,
+      "latest_step": 2700,
+      "latest_temperature_excess_K": 245.78638659313629,
+      "matched_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000,
+        1100,
+        1200,
+        1300,
+        1400,
+        1500,
+        1600,
+        1700,
+        1800,
+        1900,
+        2000,
+        2100,
+        2200,
+        2300,
+        2400,
+        2500,
+        2600,
+        2700
+      ],
+      "maximum_softening_fraction": 0.15216456623916583,
+      "maximum_temperature_excess_K": 245.78638659313629,
+      "minimum_active_fraction_after_initial": 0.7938995212697291,
+      "progress_fraction": 0.5402,
+      "raw_conjunction": {
+        "last_failed_criteria": [
+          "localized_plastic_rate_or_work",
+          "post_peak_softening"
+        ],
+        "longest_conjunctive_persistence_s": 0.0,
+        "qualifying_snapshot_count": 0
+      },
+      "recent_active_fraction_slope_per_checkpoint": -0.015247086018895024,
+      "recent_heating_slope_K_per_checkpoint": 17.006794950956422,
+      "recent_softening_slope_per_checkpoint": 0.005700620051103749,
+      "strain_increment": 0.0001,
+      "strict_decision_without_refinement": {
+        "classified": false,
+        "failed_criteria": [
+          "localized_plastic_rate_or_work",
+          "post_peak_softening",
+          "grid_and_timestep_refinement"
+        ],
+        "onset_time_s": null,
+        "persistence_s": 0.0,
+        "refinement_passed": false
+      },
+      "target_steps": 5000
+    },
+    "homogeneous": {
+      "complete": false,
+      "diagnosis": "ANCHOR_INCOMPLETE_UNDEREXPOSURE_NOT_EXCLUDED",
+      "history": [
+        {
+          "active_fraction": 1.0,
+          "effective_width_m": 1e-05,
+          "entropy_effective_fraction": 1.0,
+          "inverse_participation_fraction": 1.0,
+          "softening_fraction": 0.0,
+          "temperature_excess_K": 0.0,
+          "time_s": 3.3333333333333334e-09
+        },
+        {
+          "active_fraction": 1.0000000000000007,
+          "effective_width_m": 1.0000000000000003e-05,
+          "entropy_effective_fraction": 0.9999999999999959,
+          "inverse_participation_fraction": 1.0000000000000004,
+          "softening_fraction": 0.0,
+          "temperature_excess_K": 3.421303063078085e-07,
+          "time_s": 3.3666666666666695e-07
+        },
+        {
+          "active_fraction": 0.9999999999999992,
+          "effective_width_m": 9.999999999999992e-06,
+          "entropy_effective_fraction": 1.0000000000000013,
+          "inverse_participation_fraction": 0.9999999999999996,
+          "softening_fraction": 0.0,
+          "temperature_excess_K": 0.00022057090222915576,
+          "time_s": 6.700000000000006e-07
+        },
+        {
+          "active_fraction": 1.0,
+          "effective_width_m": 1e-05,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.0020506503468009627,
+          "temperature_excess_K": 0.012536527064867187,
+          "time_s": 1.0033333333333328e-06
+        },
+        {
+          "active_fraction": 0.9999999999999997,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 1.0,
+          "softening_fraction": 0.009268156171955769,
+          "temperature_excess_K": 0.045234724121655745,
+          "time_s": 1.3366666666666558e-06
+        },
+        {
+          "active_fraction": 1.0000000000000002,
+          "effective_width_m": 1.0000000000000003e-05,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.016375058510603422,
+          "temperature_excess_K": 0.09805898570652971,
+          "time_s": 1.669999999999979e-06
+        },
+        {
+          "active_fraction": 1.0000000000000009,
+          "effective_width_m": 1.0000000000000003e-05,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.023374904670580014,
+          "temperature_excess_K": 0.17074267862949455,
+          "time_s": 2.003333333333308e-06
+        },
+        {
+          "active_fraction": 1.0,
+          "effective_width_m": 9.999999999999992e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.030271126051274064,
+          "temperature_excess_K": 0.26302287821386017,
+          "time_s": 2.336666666666652e-06
+        },
+        {
+          "active_fraction": 1.0000000000000007,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.03706704598127553,
+          "temperature_excess_K": 0.37464015870955336,
+          "time_s": 2.6699999999999965e-06
+        },
+        {
+          "active_fraction": 1.0000000000000009,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999959,
+          "inverse_participation_fraction": 1.0000000000000004,
+          "softening_fraction": 0.04376588753714783,
+          "temperature_excess_K": 0.5053384001412269,
+          "time_s": 3.0033333333333407e-06
+        },
+        {
+          "active_fraction": 0.9999999999999993,
+          "effective_width_m": 9.99999999999999e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.0503707811832973,
+          "temperature_excess_K": 0.654864611026369,
+          "time_s": 3.336666666666685e-06
+        },
+        {
+          "active_fraction": 0.9999999999999997,
+          "effective_width_m": 9.999999999999992e-06,
+          "entropy_effective_fraction": 1.0000000000000013,
+          "inverse_participation_fraction": 0.9999999999999996,
+          "softening_fraction": 0.05688477228073951,
+          "temperature_excess_K": 0.8229687664768335,
+          "time_s": 3.6700000000000292e-06
+        },
+        {
+          "active_fraction": 0.9999999999999993,
+          "effective_width_m": 9.999999999999996e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.06331082851060403,
+          "temperature_excess_K": 1.0094036611976662,
+          "time_s": 4.00333333333335e-06
+        },
+        {
+          "active_fraction": 1.0000000000000007,
+          "effective_width_m": 9.99999999999999e-06,
+          "entropy_effective_fraction": 0.9999999999999959,
+          "inverse_participation_fraction": 1.0000000000000004,
+          "softening_fraction": 0.06965184725645014,
+          "temperature_excess_K": 1.213924776906424,
+          "time_s": 4.336666666666652e-06
+        },
+        {
+          "active_fraction": 1.0000000000000007,
+          "effective_width_m": 1.0000000000000004e-05,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.07591066298771038,
+          "temperature_excess_K": 1.4362901636357037,
+          "time_s": 4.669999999999954e-06
+        },
+        {
+          "active_fraction": 1.0000000000000004,
+          "effective_width_m": 1.0000000000000006e-05,
+          "entropy_effective_fraction": 0.9999999999999959,
+          "inverse_participation_fraction": 1.0000000000000004,
+          "softening_fraction": 0.08209005468492017,
+          "temperature_excess_K": 1.6762603342522198,
+          "time_s": 5.0033333333332555e-06
+        },
+        {
+          "active_fraction": 1.000000000000001,
+          "effective_width_m": 9.999999999999986e-06,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000004,
+          "softening_fraction": 0.08819275334560486,
+          "temperature_excess_K": 1.9335981715107664,
+          "time_s": 5.336666666666557e-06
+        },
+        {
+          "active_fraction": 1.0000000000000007,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.09422144960789493,
+          "temperature_excess_K": 2.208068846632841,
+          "time_s": 5.669999999999859e-06
+        },
+        {
+          "active_fraction": 0.9999999999999992,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.10017880152687715,
+          "temperature_excess_K": 2.499439748354007,
+          "time_s": 6.003333333333161e-06
+        },
+        {
+          "active_fraction": 0.9999999999999997,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 1.0,
+          "softening_fraction": 0.10606744253646071,
+          "temperature_excess_K": 2.807480420961838,
+          "time_s": 6.336666666666463e-06
+        },
+        {
+          "active_fraction": 0.9999999999999996,
+          "effective_width_m": 9.999999999999992e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.11188998962695615,
+          "temperature_excess_K": 3.1319625096675736,
+          "time_s": 6.669999999999765e-06
+        },
+        {
+          "active_fraction": 1.0000000000000004,
+          "effective_width_m": 1.0000000000000003e-05,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 1.0,
+          "softening_fraction": 0.11764905176551116,
+          "temperature_excess_K": 3.4726597112237414,
+          "time_s": 7.003333333333067e-06
+        },
+        {
+          "active_fraction": 1.0000000000000007,
+          "effective_width_m": 9.999999999999992e-06,
+          "entropy_effective_fraction": 0.9999999999999959,
+          "inverse_participation_fraction": 1.0000000000000004,
+          "softening_fraction": 0.1233472385831586,
+          "temperature_excess_K": 3.8293477272748078,
+          "time_s": 7.336666666666369e-06
+        },
+        {
+          "active_fraction": 1.0000000000000002,
+          "effective_width_m": 9.999999999999994e-06,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.1289871693479391,
+          "temperature_excess_K": 4.201804217515928,
+          "time_s": 7.669999999999681e-06
+        },
+        {
+          "active_fraction": 1.0000000000000002,
+          "effective_width_m": 9.999999999999994e-06,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.13457148223880377,
+          "temperature_excess_K": 4.589808749174836,
+          "time_s": 8.003333333333068e-06
+        },
+        {
+          "active_fraction": 1.0000000000000002,
+          "effective_width_m": 9.999999999999997e-06,
+          "entropy_effective_fraction": 0.9999999999999977,
+          "inverse_participation_fraction": 1.0000000000000002,
+          "softening_fraction": 0.1401028439291606,
+          "temperature_excess_K": 4.993142738746656,
+          "time_s": 8.336666666666454e-06
+        },
+        {
+          "active_fraction": 1.0,
+          "effective_width_m": 1e-05,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 1.0,
+          "softening_fraction": 0.14558395948206942,
+          "temperature_excess_K": 5.41158938128865,
+          "time_s": 8.66999999999984e-06
+        },
+        {
+          "active_fraction": 1.0,
+          "effective_width_m": 9.999999999999996e-06,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 1.0,
+          "softening_fraction": 0.15101758255112033,
+          "temperature_excess_K": 5.844933561897051,
+          "time_s": 9.003333333333227e-06
+        }
+      ],
+      "latest_active_fraction": 1.0,
+      "latest_effective_width_m": 9.999999999999996e-06,
+      "latest_entropy_effective_fraction": 0.9999999999999994,
+      "latest_inverse_participation_fraction": 1.0,
+      "latest_nominal_strain": 0.2701,
+      "latest_softening_fraction": 0.15101758255112033,
+      "latest_step": 2700,
+      "latest_temperature_excess_K": 5.844933561897051,
+      "matched_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000,
+        1100,
+        1200,
+        1300,
+        1400,
+        1500,
+        1600,
+        1700,
+        1800,
+        1900,
+        2000,
+        2100,
+        2200,
+        2300,
+        2400,
+        2500,
+        2600,
+        2700
+      ],
+      "maximum_softening_fraction": 0.15101758255112033,
+      "maximum_temperature_excess_K": 5.844933561897051,
+      "minimum_active_fraction_after_initial": 0.9999999999999992,
+      "progress_fraction": 0.5402,
+      "raw_conjunction": {
+        "last_failed_criteria": [
+          "localized_plastic_rate_or_work",
+          "matched_temperature_excess",
+          "post_peak_softening"
+        ],
+        "longest_conjunctive_persistence_s": 0.0,
+        "qualifying_snapshot_count": 0
+      },
+      "recent_active_fraction_slope_per_checkpoint": -3.9528013340747213e-17,
+      "recent_heating_slope_K_per_checkpoint": 0.4031605329714631,
+      "recent_softening_slope_per_checkpoint": 0.00553352719807304,
+      "strain_increment": 0.0001,
+      "strict_decision_without_refinement": {
+        "classified": false,
+        "failed_criteria": [
+          "localized_plastic_rate_or_work",
+          "matched_temperature_excess",
+          "post_peak_softening",
+          "grid_and_timestep_refinement"
+        ],
+        "onset_time_s": null,
+        "persistence_s": 0.0,
+        "refinement_passed": false
+      },
+      "target_steps": 5000
+    }
+  },
+  "root": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
+  "schema": "asb-drx/v32/asb-anchor-decision/v1",
+  "source_commit": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+  "strict_asb_claimed": false
+}
