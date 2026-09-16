@@ -86,6 +86,7 @@ from stored_energy_coupling import (
     signed_pair_pressure_offsets,
 )
 from symmetric_sibm import production_stage_overrides
+from integration_modes import validate_common_front_integration
 from dislocation_free_energy import (
     DislocationFreeEnergyParameters, free_energy_components_J_m3,
     logarithmic_energy_J_m3,
@@ -1109,6 +1110,15 @@ if _ov:
         raise SystemExit(f"Invalid DRX_PARAMS JSON: {exc}. First 240 chars: {_ov[:240]!r}") from exc
     except Exception as exc:
         raise SystemExit(f"Could not apply DRX_PARAMS override: {exc}. First 240 chars: {_ov[:240]!r}") from exc
+
+# Evaluate the combined-mode contract before any mode rewrites configuration.
+# Common Mura and the sparse front currently own overlapping signed state but
+# do not yet share one atomic transaction; never silently freeze the front or
+# reconstruct only the scalar subset.
+try:
+    validate_common_front_integration(P, adapter_active=False)
+except ValueError as exc:
+    raise SystemExit(str(exc)) from exc
 
 if P.get('sibm_sequential_stage') is not None:
     # V26 cumulative isolation ladder.  The stage owns its channel switches;
