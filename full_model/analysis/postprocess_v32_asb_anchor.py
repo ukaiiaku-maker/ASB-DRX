@@ -30,7 +30,11 @@ PAIR_NAMES = {
 
 def run_terminal_status(directory: Path) -> dict[str, object]:
     """Read the runner-owned terminal record without consulting fragile PIDs."""
-    record_path = directory/"v31_anchor_run_record.json"
+    candidates = (
+        directory/"v32_adaptive_run_record.json",
+        directory/"v31_anchor_run_record.json",
+    )
+    record_path = next((path for path in candidates if path.exists()), candidates[-1])
     if not record_path.exists():
         return {"terminal": False, "successful": False, "reason": "RUNNING"}
     try:

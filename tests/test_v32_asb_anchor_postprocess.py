@@ -63,3 +63,11 @@ def test_terminal_status_recognizes_physical_validity_stop(tmp_path):
     assert status["terminal"] is True
     assert status["successful"] is True
     assert status["reason"] == "THERMAL_MODEL_VALIDITY_BOUNDARY"
+
+
+def test_terminal_status_accepts_adaptive_runner_record(tmp_path):
+    (tmp_path/"v32_adaptive_run_record.json").write_text('{"exit_code": 0}\n')
+    status = run_terminal_status(tmp_path)
+    assert status["terminal"] is True
+    assert status["successful"] is True
+    assert status["reason"] == "REQUESTED_HORIZON_OR_CLEAN_DRIVER_STOP"
