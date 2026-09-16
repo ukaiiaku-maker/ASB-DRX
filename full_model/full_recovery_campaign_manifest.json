@@ -508,6 +508,27 @@
       "fixture_passed": true,
       "scientific_gate_passed": false,
       "classification": "REFACTOR_PRODUCTION_FRONT_AND_CDD_AROUND_VERIFIED_ATOMIC_OPERATORS"
+    },
+    {
+      "directive": "v30",
+      "date": "2026-09-15/16",
+      "restart_checkpoint": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
+      "combined_source_checkpoint": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+      "frozen_v29_sha256": "5396f2680ad932c28975fceede96897e2fbc64afef59906a674df60ba3ebbeaa",
+      "configured_regression_tests_passed": 572,
+      "front_local_classification": "PRODUCTION_COUPLED_BIDIRECTIONAL_FRONT_QUALIFIED_LOCAL",
+      "front_long_first_failure": "SIBM_GEOMETRIC_TRACKER_PRODUCTION_ADAPTER_FAILURE",
+      "mura_classification": "PRODUCTION_MURA_NYE_KINEMATICS_QUALIFIED",
+      "asb_classification": "ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER",
+      "fully_integrated_authorized": false,
+      "hpc3_jobs": {
+        "front_anchor": "56070183",
+        "front_delta_history": "56070184",
+        "mura_b1": "56070295",
+        "superseded_infrastructure": ["56070185", "56070276"]
+      },
+      "unrelated_jobs_untouched": ["55950433"],
+      "classification": "V30_PRODUCTION_INTEGRATED_TWO_LONG_BRANCHES_STARTED_ASB_BLOCKED"
     }
   ]
 }

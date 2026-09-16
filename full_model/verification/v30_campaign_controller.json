@@ -10,7 +10,10 @@
       "branch": "exp/v30-front-integration",
       "local_hard_gate": "production atomic front adapter",
       "classification": "PRODUCTION_COUPLED_BIDIRECTIONAL_FRONT_QUALIFIED_LOCAL",
-      "long_run": "READY"
+      "long_run": "RUNNING",
+      "long_run_first_failure": "SIBM_GEOMETRIC_TRACKER_PRODUCTION_ADAPTER_FAILURE",
+      "observed_case_counts": {"PASSED": 2, "FAILED_SCIENTIFIC": 20, "RUNNING": 2},
+      "jobs": ["56070183", "56070184"]
     },
     "mura_nye": {
       "state": "PASSED",
@@ -18,7 +21,9 @@
       "branch": "exp/v30-mura-integration",
       "local_hard_gate": "one authoritative accepted Mura face flux",
       "classification": "PRODUCTION_MURA_NYE_KINEMATICS_QUALIFIED",
-      "long_run": "READY"
+      "long_run": "RUNNING",
+      "jobs": ["56070295"],
+      "superseded_infrastructure_jobs": ["56070185", "56070276"]
     },
     "asb_energy": {
       "state": "RUNNING",
@@ -36,7 +41,13 @@
   },
   "hpc3": {
     "queue_audited": true,
-    "campaign_jobs": [],
+    "campaign_jobs": [
+      {"job_id": "56070183", "branch": "front", "bundle": "A1_anchor", "state_at_submission": "PENDING"},
+      {"job_id": "56070184", "branch": "front", "bundle": "A1_delta_history", "state_at_submission": "PENDING"},
+      {"job_id": "56070185", "branch": "mura_nye", "bundle": "B1", "state_at_submission": "FAILED_INFRASTRUCTURE", "failure": "manual wrapper omitted declared anaconda module"},
+      {"job_id": "56070276", "branch": "mura_nye", "bundle": "B1_retry", "state_at_submission": "FAILED_INFRASTRUCTURE", "failure": "manual wrapper omitted declared anaconda module"},
+      {"job_id": "56070295", "branch": "mura_nye", "bundle": "B1_corrected", "state_at_submission": "RUNNING"}
+    ],
     "unrelated_jobs_untouched": ["55950433"]
   }
 }

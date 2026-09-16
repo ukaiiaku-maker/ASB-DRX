@@ -28,3 +28,25 @@
   cross-branch tests pass.
 - Front and Mura-Nye long bundles are READY pending immutable bundle scripts,
   clean-source push, checksums, and a fresh queue audit.
+
+## 2026-09-16 overnight submissions
+
+- Combined source and bundle scripts pass 572 canonical tests in 62.95 s.
+- Exact clean source `675d74183baf2043ad0f7c055fe6e3370435ae65` was pushed,
+  cloned on HPC3, and verified against the remote branch before submission.
+- Front A1 anchor array `56070183` and delta/history array `56070184` were
+  submitted with four-case concurrency and restartable 8-hour allocations.
+- Mura-Nye B1 job `56070185` was submitted with 8 CPUs, 32 GiB, and a
+  restartable 16-hour allocation.
+- ASB was not submitted because its production hard gate failed as
+  `ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER`.
+- Queue audit before and after submission preserved unrelated job `55950433`.
+
+## 2026-09-16 Mura launcher recovery
+
+- Mura attempts `56070185` and `56070276` failed before scientific execution.
+  Preserved runner logs identify `ModuleNotFoundError: matplotlib`: the manual
+  submission wrapper omitted the bundle's declared `anaconda/2025.12` module.
+- Corrected job `56070295` loads that module and is running on `hpc3-15-16`.
+  This is an infrastructure correction only; source, parameters, and cases are
+  unchanged.

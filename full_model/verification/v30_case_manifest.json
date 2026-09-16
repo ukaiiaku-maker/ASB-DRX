@@ -1,10 +1,36 @@
 {
   "schema": "asb-drx/v30-case-manifest/v1",
-  "source_checkpoint": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
-  "cases": [],
+  "source_checkpoint": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+  "remote_source_checkpoint": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+  "remote_run_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v30-20260916T052139Z-675d741",
+  "cases": [
+    {
+      "bundle": "front_A1_anchor",
+      "job_id": "56070183",
+      "array": "0-11%4",
+      "state": "RUNNING",
+      "first_scientific_failure": "SIBM_GEOMETRIC_TRACKER_PRODUCTION_ADAPTER_FAILURE",
+      "submit_script_sha256": "f5114e7bc93d885f4d1735928c0fbdfc41185fb46ce622da3ea422beb1619ab6"
+    },
+    {
+      "bundle": "front_A1_delta_history",
+      "job_id": "56070184",
+      "array": "12-23%4",
+      "state": "FAILED_SCIENTIFIC",
+      "first_scientific_failure": "SIBM_GEOMETRIC_TRACKER_PRODUCTION_ADAPTER_FAILURE",
+      "submit_script_sha256": "6695f355ca0d51f7a478c9fca57d91598f03aeb87bcdd0289b0a7675fb95a445"
+    },
+    {
+      "bundle": "mura_nye_B1",
+      "job_id": "56070295",
+      "state": "RUNNING",
+      "superseded_infrastructure_jobs": ["56070185", "56070276"],
+      "runner_sha256": "8834e0da599b05a816c86b592c1552b065d48732c9256472a608ab14db2979c6"
+    }
+  ],
   "authorization": {
-    "front_long_matrix": "READY",
-    "mura_nye_long_matrix": "READY",
+    "front_long_matrix": "RUNNING",
+    "mura_nye_long_matrix": "RUNNING",
     "asb_long_matrix": "BLOCKED_BY_DEPENDENCY",
     "fully_integrated_matrix": "BLOCKED_BY_DEPENDENCY"
   },

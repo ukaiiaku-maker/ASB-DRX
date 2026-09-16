@@ -1412,3 +1412,23 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The canonical suite passes 499 tests. No long local grid continuation or HPC3
   job was launched because the production front, Nye, and ASB hard gates remain
   false. Full report: `full_model/docs/v29_decision_report.md`.
+
+## Directive v30 production integration and overnight qualification (active 2026-09-15/16)
+
+- V29 evidence is frozen at checkpoint `45a0f9b` in
+  `full_model/verification/v30_frozen_v29_evidence.json`.
+- The production coupled bidirectional front and authoritative Mura-Nye update
+  are integrated. The merged suite passes 572 tests. Source `675d741` is clean,
+  pushed, and identically staged on HPC3.
+- The Mura-Nye production gate passes with dual-Nye residual below 0.22%, zero
+  normalized line divergence, roundoff energy closure, and exact restart.
+- The ASB gate fails as `ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER`;
+  no ASB job was submitted.
+- Front jobs `56070183` and `56070184` exposed
+  `SIBM_GEOMETRIC_TRACKER_PRODUCTION_ADAPTER_FAILURE` when driven interfaces
+  changed resolved crossing topology. Equal/off controls and partial evidence
+  are retained; no threshold workaround is used.
+- Corrected Mura B1 job `56070295` is running. Infrastructure-only attempts
+  `56070185` and `56070276` are preserved with their missing-module logs.
+- Unrelated job `55950433` remains untouched. Full live checkpoint:
+  `full_model/docs/v30_overnight_decision_report.md`.

@@ -2343,6 +2343,22 @@
       "configured_regression_tests_passed": 439,
       "hpc3_jobs_submitted": [],
       "unrelated_jobs_observed_and_not_touched": ["55950433"]
+    },
+    {
+      "run_id": "v30-production-integration-20260916",
+      "source_sha": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+      "remote_run_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v30-20260916T052139Z-675d741",
+      "jobs": [
+        {"job_id": "56070183", "branch": "front", "bundle": "A1_anchor"},
+        {"job_id": "56070184", "branch": "front", "bundle": "A1_delta_history"},
+        {"job_id": "56070295", "branch": "mura_nye", "bundle": "B1_corrected"}
+      ],
+      "superseded_infrastructure_jobs": [
+        {"job_id": "56070185", "failure": "declared anaconda module omitted by manual wrapper"},
+        {"job_id": "56070276", "failure": "declared anaconda module omitted by manual wrapper"}
+      ],
+      "asb_job_submitted": false,
+      "unrelated_jobs_observed_and_not_touched": ["55950433"]
     }
   ]
 }
