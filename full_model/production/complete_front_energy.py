@@ -228,7 +228,7 @@ def decide_complete_front_trial(
     # Generated heat is an internal conversion and therefore is not another
     # boundary input.  Only declared thermostat/material exports enter the
     # whole-system first-law residual.
-    first_law = delta_u-work+export+sink_export
+    first_law = (delta_u-work+export+sink_export) if accepted else 0.0
     return CompleteFrontTrialDecision(
         accepted,
         "ACCEPTED_COMPLETE_PHYSICAL_ENERGY" if accepted else "REJECTED_UPHILL_COMPLETE_PHYSICAL_ENERGY",
@@ -253,6 +253,20 @@ def evaluate_common_front_transaction(
     before_energy = evaluate_complete_front_energy(
         state, eta_before, spacing_m=spacing_m,
         represented_thickness_m=represented_thickness_m, **options)
+    geometry_identity = (
+        np.array_equal(accepted_front.chi, state.front.chi)
+        and np.array_equal(accepted_front.processed_max,
+                           state.front.processed_max)
+        and np.array_equal(accepted_front.cleanup_max,
+                           state.front.cleanup_max)
+        and accepted_front.parent_label == state.front.parent_label
+        and accepted_front.child_label == state.front.child_label)
+    if geometry_identity and np.array_equal(eta_before, eta_candidate):
+        mixture, _ = reconstruct_common(state, spacing_m)
+        decision = decide_complete_front_trial(before_energy, before_energy)
+        decision = replace(decision, classification="EXACT_ZERO_EVENT_IDENTITY")
+        return CommonFrontTransactionResult(
+            state, mixture, state, mixture, decision)
     candidate_state, candidate_mixture = commit_front_result(
         state, accepted_front, spacing_m=spacing_m,
         cell_volume_m3=cell_volume_m3,
@@ -260,15 +274,25 @@ def evaluate_common_front_transaction(
         boundary_storage_fraction=boundary_storage_fraction,
         neutral_sink_fraction=neutral_sink_fraction,
         signed_sink_fraction=signed_sink_fraction)
-    delta_annihilated = (candidate_state.ledger.annihilated_line_m
-                         -state.ledger.annihilated_line_m)
     delta_sink = (candidate_state.ledger.sink_line_m
                   -state.ledger.sink_line_m)
     wall_parameters = options["wall_parameters"]
-    heat = max(delta_annihilated, 0.0)*wall_parameters.line_energy_J_m
-    # At prescribed temperature, generated physical heat is exported by the
-    # thermostat.  For an evolving temperature it remains in the candidate's
-    # thermal internal-energy owner and export is zero.
+    sink_export = max(delta_sink, 0.0)*wall_parameters.line_energy_J_m
+    cold_energy = evaluate_complete_front_energy(
+        candidate_state, eta_candidate, spacing_m=spacing_m,
+        represented_thickness_m=represented_thickness_m, **options)
+    cold_decision = decide_complete_front_trial(
+        before_energy, cold_energy, external_work_J=external_work_J,
+        material_sink_export_J=sink_export)
+    # Overdamped front kinetics dissipates its *complete* accepted affinity.
+    # This is affinity times realized extent, not a residual relabelled after
+    # the fact.  Neutral annihilation is one contributor to this same channel
+    # and is therefore not deposited a second time using a line-energy proxy.
+    heat = (max(float(external_work_J)-sink_export
+                -(cold_energy.helmholtz_J-before_energy.helmholtz_J), 0.0)
+            if cold_decision.accepted else 0.0)
+    # At prescribed temperature generated heat is exported by the thermostat;
+    # otherwise it becomes thermal internal energy before publication.
     thermostat = heat if prescribed_temperature else 0.0
     if heat > 0.0 and not prescribed_temperature:
         represented_volume = (state.front.chi.size*float(cell_volume_m3))
@@ -289,8 +313,7 @@ def evaluate_common_front_transaction(
     decision = decide_complete_front_trial(
         before_energy, candidate_energy, external_work_J=external_work_J,
         generated_heat_J=heat, thermostat_export_J=thermostat,
-        material_sink_export_J=(
-            max(delta_sink, 0.0)*wall_parameters.line_energy_J_m))
+        material_sink_export_J=sink_export)
     if decision.accepted:
         return CommonFrontTransactionResult(
             candidate_state, candidate_mixture, candidate_state,

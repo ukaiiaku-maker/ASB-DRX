@@ -107,6 +107,7 @@ def test_complete_trial_accepts_downhill_and_prices_junction_and_beta():
         transmission_fraction=.6, boundary_storage_fraction=.05,
         neutral_sink_fraction=.05, energy_kwargs=_options(spacing))
     assert result.decision.accepted
+    assert abs(result.decision.first_law_residual_J) < 1e-27
     assert result.published_state is result.candidate_state
     assert result.decision.before.signed_junction_storage_J != 0.0
     assert (result.decision.candidate.signed_junction_storage_J
@@ -138,8 +139,27 @@ def test_uphill_complete_trial_rejects_without_mutating_any_owner_or_ledger():
     assert not result.decision.accepted
     assert result.decision.classification == "REJECTED_UPHILL_COMPLETE_PHYSICAL_ENERGY"
     assert result.published_state is state
+    assert result.decision.first_law_residual_J == 0.0
     for name, value in before.items():
         np.testing.assert_array_equal(
             value, state_arrays(result.published_state)[name])
     assert result.candidate_state.ledger.accepted_commits == 1
     assert result.published_state.ledger.accepted_commits == 0
+
+
+def test_exact_zero_event_is_bitwise_identity_including_ledger():
+    spacing = 2e-8
+    state = _state()
+    eta = _eta(12)
+    result = evaluate_common_front_transaction(
+        state, state.front, eta, eta, spacing_m=spacing,
+        cell_volume_m3=spacing*spacing*5e-10,
+        represented_thickness_m=5e-10, transmission_fraction=.5,
+        boundary_storage_fraction=.1, neutral_sink_fraction=.05,
+        energy_kwargs=_options(spacing))
+    assert result.decision.classification == "EXACT_ZERO_EVENT_IDENTITY"
+    assert result.published_state is state
+    assert result.published_state.ledger == state.ledger
+    for name, value in state_arrays(state).items():
+        np.testing.assert_array_equal(
+            value, state_arrays(result.published_state)[name])
