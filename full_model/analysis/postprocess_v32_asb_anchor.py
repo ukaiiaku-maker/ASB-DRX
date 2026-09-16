@@ -28,6 +28,36 @@ PAIR_NAMES = {
 }
 
 
+def run_terminal_status(directory: Path) -> dict[str, object]:
+    """Read the runner-owned terminal record without consulting fragile PIDs."""
+    record_path = directory/"v31_anchor_run_record.json"
+    if not record_path.exists():
+        return {"terminal": False, "successful": False, "reason": "RUNNING"}
+    try:
+        record = json.loads(record_path.read_text())
+    except (OSError, ValueError):
+        return {"terminal": False, "successful": False,
+                "reason": "TERMINAL_RECORD_NOT_READABLE"}
+    exit_code = int(record.get("exit_code", -1))
+    logs = sorted(directory.glob("run-from-*.log"))
+    tail = ""
+    if logs:
+        try:
+            tail = logs[-1].read_text(errors="replace")[-20000:]
+        except OSError:
+            pass
+    if "THERMAL VALIDITY STOP" in tail:
+        reason = "THERMAL_MODEL_VALIDITY_BOUNDARY"
+    elif "MECHANICAL VALIDITY STOP" in tail:
+        reason = "MECHANICAL_MODEL_VALIDITY_BOUNDARY"
+    elif exit_code == 0:
+        reason = "REQUESTED_HORIZON_OR_CLEAN_DRIVER_STOP"
+    else:
+        reason = "DRIVER_FAILURE"
+    return {"terminal": True, "successful": exit_code == 0,
+            "exit_code": exit_code, "reason": reason, "record": record}
+
+
 def step_from_path(path: Path) -> int:
     return int(re.search(r"(\d+)$", path.stem).group(1))
 
@@ -250,7 +280,7 @@ def main():
     parser.add_argument("--figure", type=Path)
     parser.add_argument("--target-steps", type=int, default=5000)
     args = parser.parse_args()
-    pairs = {}; invariants = {}; fields = {}
+    pairs = {}; invariants = {}; fields = {}; runs = {}
     for name, case_names in PAIR_NAMES.items():
         history, support, steps, ledger, parameters, interface, final = pair_history(
             args.root, *case_names)
@@ -261,14 +291,26 @@ def main():
         pairs[name]["strain_increment"] = strain_increment
         invariants[name] = ledger[steps[-1]]
         fields[name] = final | {"domain_length_m": float(parameters["L_phys"])}
+        runs[name] = {
+            "adiabatic": run_terminal_status(args.root/case_names[0]),
+            "control": run_terminal_status(args.root/case_names[1]),
+        }
     all_complete = all(pair["complete"] for pair in pairs.values())
+    all_terminal = all(run["terminal"] for pair in runs.values()
+                       for run in pair.values())
+    all_successful = all(run["successful"] for pair in runs.values()
+                         for run in pair.values())
+    validity_limited = any("VALIDITY_BOUNDARY" in str(run["reason"])
+                           for pair in runs.values() for run in pair.values())
     all_invariants = all(item["passed"] for item in invariants.values())
-    if not all_invariants:
+    if not all_invariants or (all_terminal and not all_successful):
         classification = "HARD_INVALID_ASB_ANCHOR"
-    elif not all_complete:
+    elif not all_terminal:
         classification = "RUNNING_LONG_ASB_ANCHOR"
     elif pairs["heterogeneous"]["raw_conjunction"]["qualifying_snapshot_count"]:
         classification = "ASB_LOCALIZATION_CANDIDATE_REQUIRES_REFINEMENT"
+    elif validity_limited:
+        classification = "ASB_ANCHOR_VALIDITY_LIMITED_MECHANISTIC_NEGATIVE"
     else:
         classification = "ASB_ANCHOR_MECHANISTIC_NEGATIVE"
     result = {
@@ -276,12 +318,16 @@ def main():
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
         "root": str(args.root), "criteria": asdict(CRITERIA),
-        "pairs": pairs, "latest_invariants": invariants,
+        "pairs": pairs, "runs": runs, "latest_invariants": invariants,
         "all_cases_complete": all_complete,
+        "all_cases_terminal": all_terminal,
+        "all_cases_successful": all_successful,
+        "validity_limited": validity_limited,
         "all_invariants_passed": all_invariants,
         "classification": classification,
         "adaptive_screen_authorized": bool(
-            all_complete and all_invariants and classification != "HARD_INVALID_ASB_ANCHOR"),
+            all_terminal and all_successful and all_invariants
+            and classification != "HARD_INVALID_ASB_ANCHOR"),
         "strict_asb_claimed": False,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

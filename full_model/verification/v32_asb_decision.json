@@ -1,6 +1,8 @@
 {
   "adaptive_screen_authorized": false,
   "all_cases_complete": false,
+  "all_cases_successful": false,
+  "all_cases_terminal": false,
   "all_invariants_passed": true,
   "classification": "RUNNING_LONG_ASB_ANCHOR",
   "criteria": {
@@ -11,7 +13,7 @@
     "minimum_width_to_interface": 2.0,
     "refinement_tolerance": 0.05
   },
-  "generated_utc": "2026-09-16T17:45:45.634569+00:00",
+  "generated_utc": "2026-09-16T17:51:03.128884+00:00",
   "latest_invariants": {
     "heterogeneous": {
       "maximum_channel_closure_W_m3": 0.125,
@@ -20,8 +22,8 @@
       "maximum_relative_line_residual": 4.0628867627379855e-17,
       "minimum_physical_channel_W_m3": 0.0,
       "passed": true,
-      "relative_dissipation_heat_residual": 5.239006483129125e-19,
-      "relative_first_law_residual": 1.7770387499834455e-11
+      "relative_dissipation_heat_residual": 5.602312119869299e-19,
+      "relative_first_law_residual": 2.159011355981286e-11
     },
     "homogeneous": {
       "maximum_channel_closure_W_m3": 0.015625,
@@ -30,8 +32,8 @@
       "maximum_relative_line_residual": 2.278066808172757e-15,
       "minimum_physical_channel_W_m3": 0.0,
       "passed": true,
-      "relative_dissipation_heat_residual": 3.1132447721858076e-18,
-      "relative_first_law_residual": 1.688026471570648e-12
+      "relative_dissipation_heat_residual": 3.1125888465160043e-18,
+      "relative_first_law_residual": 1.725063175505994e-12
     }
   },
   "pairs": {
@@ -290,16 +292,25 @@
           "softening_fraction": 0.15216456623916583,
           "temperature_excess_K": 245.78638659313629,
           "time_s": 9.003333333333227e-06
+        },
+        {
+          "active_fraction": 0.7773959736203289,
+          "effective_width_m": 9.998581049499248e-06,
+          "entropy_effective_fraction": 0.869743169570296,
+          "inverse_participation_fraction": 0.7773959736203289,
+          "softening_fraction": 0.15774255424034556,
+          "temperature_excess_K": 264.49356191185825,
+          "time_s": 9.336666666666614e-06
         }
       ],
-      "latest_active_fraction": 0.7938995212697291,
-      "latest_effective_width_m": 9.998663848356597e-06,
-      "latest_entropy_effective_fraction": 0.8807831369745128,
-      "latest_inverse_participation_fraction": 0.793899521269729,
-      "latest_nominal_strain": 0.2701,
-      "latest_softening_fraction": 0.15216456623916583,
-      "latest_step": 2700,
-      "latest_temperature_excess_K": 245.78638659313629,
+      "latest_active_fraction": 0.7773959736203289,
+      "latest_effective_width_m": 9.998581049499248e-06,
+      "latest_entropy_effective_fraction": 0.869743169570296,
+      "latest_inverse_participation_fraction": 0.7773959736203289,
+      "latest_nominal_strain": 0.2801,
+      "latest_softening_fraction": 0.15774255424034556,
+      "latest_step": 2800,
+      "latest_temperature_excess_K": 264.49356191185825,
       "matched_steps": [
         0,
         100,
@@ -328,12 +339,13 @@
         2400,
         2500,
         2600,
-        2700
+        2700,
+        2800
       ],
-      "maximum_softening_fraction": 0.15216456623916583,
-      "maximum_temperature_excess_K": 245.78638659313629,
-      "minimum_active_fraction_after_initial": 0.7938995212697291,
-      "progress_fraction": 0.5402,
+      "maximum_softening_fraction": 0.15774255424034556,
+      "maximum_temperature_excess_K": 264.49356191185825,
+      "minimum_active_fraction_after_initial": 0.7773959736203289,
+      "progress_fraction": 0.5602,
       "raw_conjunction": {
         "last_failed_criteria": [
           "localized_plastic_rate_or_work",
@@ -342,9 +354,9 @@
         "longest_conjunctive_persistence_s": 0.0,
         "qualifying_snapshot_count": 0
       },
-      "recent_active_fraction_slope_per_checkpoint": -0.015247086018895024,
-      "recent_heating_slope_K_per_checkpoint": 17.006794950956422,
-      "recent_softening_slope_per_checkpoint": 0.005700620051103749,
+      "recent_active_fraction_slope_per_checkpoint": -0.015607415410567605,
+      "recent_heating_slope_K_per_checkpoint": 17.879563639640228,
+      "recent_softening_slope_per_checkpoint": 0.005653810669078635,
       "strain_increment": 0.0001,
       "strict_decision_without_refinement": {
         "classified": false,
@@ -614,16 +626,25 @@
           "softening_fraction": 0.15101758255112033,
           "temperature_excess_K": 5.844933561897051,
           "time_s": 9.003333333333227e-06
+        },
+        {
+          "active_fraction": 0.9999999999999992,
+          "effective_width_m": 1.0000000000000004e-05,
+          "entropy_effective_fraction": 0.9999999999999994,
+          "inverse_participation_fraction": 0.9999999999999998,
+          "softening_fraction": 0.15640652587137913,
+          "temperature_excess_K": 6.292961743249634,
+          "time_s": 9.336666666666614e-06
         }
       ],
-      "latest_active_fraction": 1.0,
-      "latest_effective_width_m": 9.999999999999996e-06,
+      "latest_active_fraction": 0.9999999999999992,
+      "latest_effective_width_m": 1.0000000000000004e-05,
       "latest_entropy_effective_fraction": 0.9999999999999994,
-      "latest_inverse_participation_fraction": 1.0,
-      "latest_nominal_strain": 0.2701,
-      "latest_softening_fraction": 0.15101758255112033,
-      "latest_step": 2700,
-      "latest_temperature_excess_K": 5.844933561897051,
+      "latest_inverse_participation_fraction": 0.9999999999999998,
+      "latest_nominal_strain": 0.2801,
+      "latest_softening_fraction": 0.15640652587137913,
+      "latest_step": 2800,
+      "latest_temperature_excess_K": 6.292961743249634,
       "matched_steps": [
         0,
         100,
@@ -652,12 +673,13 @@
         2400,
         2500,
         2600,
-        2700
+        2700,
+        2800
       ],
-      "maximum_softening_fraction": 0.15101758255112033,
-      "maximum_temperature_excess_K": 5.844933561897051,
+      "maximum_softening_fraction": 0.15640652587137913,
+      "maximum_temperature_excess_K": 6.292961743249634,
       "minimum_active_fraction_after_initial": 0.9999999999999992,
-      "progress_fraction": 0.5402,
+      "progress_fraction": 0.5602,
       "raw_conjunction": {
         "last_failed_criteria": [
           "localized_plastic_rate_or_work",
@@ -667,9 +689,9 @@
         "longest_conjunctive_persistence_s": 0.0,
         "qualifying_snapshot_count": 0
       },
-      "recent_active_fraction_slope_per_checkpoint": -3.9528013340747213e-17,
-      "recent_heating_slope_K_per_checkpoint": 0.4031605329714631,
-      "recent_softening_slope_per_checkpoint": 0.00553352719807304,
+      "recent_active_fraction_slope_per_checkpoint": -2.914536770703396e-16,
+      "recent_heating_slope_K_per_checkpoint": 0.41827453455363367,
+      "recent_softening_slope_per_checkpoint": 0.005483319974487388,
       "strain_increment": 0.0001,
       "strict_decision_without_refinement": {
         "classified": false,
@@ -687,7 +709,34 @@
     }
   },
   "root": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
+  "runs": {
+    "heterogeneous": {
+      "adiabatic": {
+        "reason": "RUNNING",
+        "successful": false,
+        "terminal": false
+      },
+      "control": {
+        "reason": "RUNNING",
+        "successful": false,
+        "terminal": false
+      }
+    },
+    "homogeneous": {
+      "adiabatic": {
+        "reason": "RUNNING",
+        "successful": false,
+        "terminal": false
+      },
+      "control": {
+        "reason": "RUNNING",
+        "successful": false,
+        "terminal": false
+      }
+    }
+  },
   "schema": "asb-drx/v32/asb-anchor-decision/v1",
   "source_commit": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
-  "strict_asb_claimed": false
+  "strict_asb_claimed": false,
+  "validity_limited": false
 }

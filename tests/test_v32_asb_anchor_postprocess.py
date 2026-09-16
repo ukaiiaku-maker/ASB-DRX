@@ -4,6 +4,7 @@ import pytest
 from full_model.analysis.postprocess_v32_asb_anchor import (
     effective_support,
     raw_conjunction,
+    run_terminal_status,
     summarize_pair,
 )
 from full_model.production.asb_classifier import ASBSnapshot
@@ -52,3 +53,13 @@ def test_incomplete_anchor_is_not_misclassified_as_mechanistic_negative():
     assert result["complete"] is False
     assert result["diagnosis"] == "ANCHOR_INCOMPLETE_UNDEREXPOSURE_NOT_EXCLUDED"
     assert result["latest_nominal_strain"] == 0.2701
+
+
+def test_terminal_status_recognizes_physical_validity_stop(tmp_path):
+    (tmp_path/"v31_anchor_run_record.json").write_text('{"exit_code": 0}\n')
+    (tmp_path/"run-from-000000.log").write_text(
+        "THERMAL VALIDITY STOP at step 3123: Tmax beyond declared domain\n")
+    status = run_terminal_status(tmp_path)
+    assert status["terminal"] is True
+    assert status["successful"] is True
+    assert status["reason"] == "THERMAL_MODEL_VALIDITY_BOUNDARY"
