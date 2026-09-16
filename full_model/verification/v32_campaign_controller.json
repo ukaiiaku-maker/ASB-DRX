@@ -12,32 +12,34 @@
   ],
   "branches": {
     "front": {
-      "state": "RUNNING_LONG",
+      "state": "MECHANISTIC_NEGATIVE",
       "active_hypotheses": ["ordinary component split", "thin-neck contour-resolution split", "kinetic rehardening or stable arrest"],
-      "current_calculation": "finish ten-case V31 topology-aware continuation; no equal/off replay",
-      "next_automatic_action": "classify terminal geometry, support conservative ordinary topology event if required, then bounded kinetics screen"
+      "current_calculation": "all ten V31 cases closed; 128 near-equal pair reached symmetric resolved forbidden-island terminals",
+      "next_automatic_action": "freeze negative front decision and keep long-front promotion disabled"
     },
     "mura": {
-      "state": "DIAGNOSING",
+      "state": "RUNNING_LONG",
       "active_hypotheses": ["oversized accepted extent", "incomplete physical energy budget", "missing reverse/saturation path", "physical saturation"],
-      "current_calculation": "termwise first-rejection audit from frozen common 3% checkpoints",
-      "next_automatic_action": "implement and test the smallest conservative event limiter or physical saturation law"
+      "current_calculation": "resume 64-square matched continuation from preserved 3.841278% checkpoint after exact zero-flux identity repair",
+      "next_automatic_action": "run conditional 128-square continuation and apply frozen below-5-percent convergence classifier"
     },
     "asb": {
-      "state": "RUNNING_LONG",
+      "state": "SCREENING_PARAMETERS",
       "active_hypotheses": ["strict localization", "subcritical localization", "stable homogeneous response", "underexposed physical horizon"],
-      "current_calculation": "four 128-square V31 anchors at 1100 K and 3e4 s-1",
-      "next_automatic_action": "postprocess common-time fields and choose bounded adaptive condition screen"
+      "current_calculation": "three surviving V31 controls plus eight-case 128-square Tier-1 temperature/rate screen at maximum concurrency two",
+      "next_automatic_action": "classify each adiabatic/isothermal pair; authorize seed replication only for a strict invariant-clean candidate"
     },
     "integrated": {
-      "state": "AUDITING",
-      "current_calculation": "inventory invariant-qualified common production ownership",
-      "next_automatic_action": "stage Mura+ASB and front+ASB controls after repaired source is merged"
+      "state": "DIAGNOSING",
+      "current_calculation": "common Mura plus ASB is qualified; nominal common-Mura plus sparse-front mode was shown to silently freeze the front",
+      "next_automatic_action": "promote fail-fast dual-owner contract; do not claim full integration until one atomic transaction owns signed forest/wall, beta/Nye/alignment, junctions, and sparse-front reservoirs"
     }
   },
   "compute": {
     "local_front_output": "/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916",
     "local_asb_output": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
+    "local_asb_tier1_output": "/Users/sdillon/HPC3/local-results/asb-drx-v32-asb-tier1-20260916",
+    "local_mura_repaired_output": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916",
     "v32_slurm_jobs": [],
     "unrelated_slurm_job_untouched": "55950433"
   },
