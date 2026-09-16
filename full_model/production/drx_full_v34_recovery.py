@@ -344,6 +344,7 @@ P = dict(
     # V30 production ASB ledger.  This is diagnostic/stateful and cannot alter
     # constitutive rates.  Missing independently owned channels fail closed.
     v30_asb_physical_ledger=True,
+    v30_energy_suboperator_audit=True,
     heat_partition_tiny=1.0e-300,
     # v31: finite-loading work-budget consistency.  Local tau*gdot is used as
     # the spatial partition of plastic work, but total heat cannot exceed the
@@ -4341,9 +4342,12 @@ v30_asb_cumulative = {
     'thermal_change_J_m3': 0.0,
     'first_law_residual_J_m3': 0.0,
     'dissipation_heat_residual_J_m3': 0.0,
+    'suboperator_physical_stored_change_J_m3': {},
+    'suboperator_numerical_constraint_change_J_m3': {},
     **{f'{name}_J_m3': 0.0 for name in CHANNEL_NAMES},
 }
 v30_asb_last_step = None
+v30_asb_last_suboperator = {}
 if (_restart_loaded and not P.get('restart_reset_clock', True)
         and P.get('v30_asb_physical_ledger', True)):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
@@ -4351,6 +4355,10 @@ if (_restart_loaded and not P.get('restart_reset_clock', True)
             raise ValueError('exact V30 restart requires cumulative ASB physical ledger')
         v30_asb_cumulative = json.loads(str(
             _restart_npz['v30_asb_cumulative_json'].item()))
+        v30_asb_cumulative.setdefault(
+            'suboperator_physical_stored_change_J_m3', {})
+        v30_asb_cumulative.setdefault(
+            'suboperator_numerical_constraint_change_J_m3', {})
 
 
 
@@ -5848,6 +5856,12 @@ def _v30_thermal_dissipation_channels(temperature_field):
             source='accepted temperature field: h*(T-T0)^2/T'))
 
 
+def _v30_capture_current_energy_state():
+    return _v30_physical_energy_state(
+        rho, eta, psi_lat, _signed_kappa_field(rp, rm), rho_GB, gb_mask,
+        Ng, T, sigma_bar)
+
+
 def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
                                 rho_wall, rho_gb, temperature_K):
     """Atomic-event free-energy terms [J] for the represented 3-D patch."""
@@ -6661,6 +6675,9 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                 (globals().get('v30_asb_last_step').to_dict()
                  if globals().get('v30_asb_last_step') is not None else {}),
                 sort_keys=True, separators=(',', ':'))),
+            v30_asb_last_suboperator_json=np.array(json.dumps(
+                globals().get('v30_asb_last_suboperator', {}),
+                sort_keys=True, separators=(',', ':'))),
             v20_wall_initial_unsigned=globals().get(
                 'v20_wall_initial_unsigned', np.zeros((Nx, Ny, nSlip))),
             v20_wall_initial_signed=globals().get(
@@ -6915,6 +6932,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         _v30_energy_before = _v30_physical_energy_state(
             rho, eta, psi_lat, _signed_kappa_field(rp, rm), rho_GB,
             gb_mask, Ng, T, sigma_bar)
+    _v30_suboperator_states = {'start': _v30_energy_before}
 
     # --- Slip geometry ---
     ang, sv, nv, Sch, s11 = build_slip(psi_lat)
@@ -7224,6 +7242,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                 for j in range(2):
                     eps_p[:,:,i,j] += gdot[:,:,s]*Sch[:,:,s,i,j]*P['dt']
     E_tot[0,0] += P['edot_app']*P['dt']
+    if P.get('v30_energy_suboperator_audit', True):
+        _v30_suboperator_states['mechanical_slip'] = _v30_capture_current_energy_state()
 
     # --- Kocks-Mecking (EXPLICIT KINETICS) ---
     # KM storage/recovery. v26 slip rates may already include collective multi-hit depinning.
@@ -7444,6 +7464,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
     _v30_recovery_rate_m2_s = (
         KM_anni_rate_accepted_total+diffrec_rate_field)
+    if P.get('v30_energy_suboperator_audit', True):
+        _v30_suboperator_states['storage_recovery'] = _v30_capture_current_energy_state()
 
     # --- Orowan advection (EXPLICIT KINETICS) ---
     # v22 interpretation: gdot_s = rho_m,s b v_s, so v_s=|gdot_s|/(b rho_m,s).
@@ -7709,6 +7731,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     # Preserve the exact field used by the online ASB diagnostics. Matched
     # histories must not reconstruct plastic rate through a parallel law.
     asb_last_gdot_abs = km_diag['_gdot_abs_field'].copy()
+    if P.get('v30_energy_suboperator_audit', True):
+        _v30_suboperator_states['transport_reactions'] = _v30_capture_current_energy_state()
 
     # --- CAHN-HILLIARD (VARIATIONAL: dF/dr) ---
     rho_before_ch = rho.copy()
@@ -7772,6 +7796,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     ch_delta = rho - rho_before_ch
     ch_delta_abs_mean = float(np.nanmean(np.abs(ch_delta)))
     ch_delta_std = float(np.nanstd(ch_delta))
+    if P.get('v30_energy_suboperator_audit', True):
+        _v30_suboperator_states['density_variational'] = _v30_capture_current_energy_state()
 
     # --- ALLEN-CAHN (VARIATIONAL: dF/deta_i) ---
     eta_before_ac = eta[:, :, :Ng].copy()
@@ -8315,6 +8341,9 @@ for n in range(_restart_step_offset, _restart_end_step):
     if P.get('use_grain_slaved_orientation', True):
         psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 
+    if P.get('v30_energy_suboperator_audit', True):
+        _v30_suboperator_states['phase_front_topology'] = _v30_capture_current_energy_state()
+
     # --- ORIENTATION (VARIATIONAL + plastic spin) ---
     kappa_tot = _signed_kappa_field(rp, rm)
     Lp12 = np.zeros((Nx,Ny)); Lp21 = np.zeros_like(Lp12)
@@ -8483,6 +8512,9 @@ for n in range(_restart_step_offset, _restart_end_step):
                        collective_activity_memory_mode=str(mem_mode))
     else:
         collective_activity_memory = np.zeros_like(collective_activity_total)
+
+    if P.get('v30_energy_suboperator_audit', True):
+        _v30_suboperator_states['orientation_boundary_sources'] = _v30_capture_current_energy_state()
 
     # --- TEMPERATURE (EXPLICIT) ---
     # v17: heat locally from plastic dissipation rather than globally from σ_bar*edot_app.
@@ -8704,6 +8736,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     if P.get('v30_asb_physical_ledger', True) and not _v25_exact_freeze:
         _v30_energy_after = _v30_physical_energy_state(
             rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng, T, sigma_bar)
+        _v30_suboperator_states['thermal_and_terminal_events'] = _v30_energy_after
         _v30_line_affinity = np.maximum(ATpot.Estar_coeff(T), 0.0)
         _v30_channels = {
             'plastic_drag': accepted_channel(
@@ -8757,6 +8790,30 @@ for n in range(_restart_step_offset, _restart_end_step):
             external_work_J_m3=_v30_external,
             deposited_heat_J_m3=_v30_deposited,
             exported_heat_J_m3=_v30_exported, dt_s=P['dt'])
+        v30_asb_last_suboperator = {}
+        _v30_names = tuple(_v30_suboperator_states)
+        for _v30_index in range(1, len(_v30_names)):
+            _v30_previous = _v30_suboperator_states[_v30_names[_v30_index-1]]
+            _v30_current = _v30_suboperator_states[_v30_names[_v30_index]]
+            _v30_name = _v30_names[_v30_index]
+            _v30_physical_delta = (
+                _v30_current.physical_stored_J_m3
+                -_v30_previous.physical_stored_J_m3)
+            _v30_constraint_delta = (
+                _v30_current.numerical_augmented_constraints_J_m3
+                -_v30_previous.numerical_augmented_constraints_J_m3)
+            v30_asb_last_suboperator[_v30_name] = {
+                'physical_stored_change_J_m3': float(_v30_physical_delta),
+                'numerical_constraint_change_J_m3': float(_v30_constraint_delta),
+            }
+            _v30_phys_cumulative = v30_asb_cumulative[
+                'suboperator_physical_stored_change_J_m3']
+            _v30_num_cumulative = v30_asb_cumulative[
+                'suboperator_numerical_constraint_change_J_m3']
+            _v30_phys_cumulative[_v30_name] = float(
+                _v30_phys_cumulative.get(_v30_name, 0.0)+_v30_physical_delta)
+            _v30_num_cumulative[_v30_name] = float(
+                _v30_num_cumulative.get(_v30_name, 0.0)+_v30_constraint_delta)
         v30_asb_cumulative['accepted_steps'] += 1
         v30_asb_cumulative['external_work_J_m3'] += _v30_external
         v30_asb_cumulative['deposited_heat_J_m3'] += _v30_deposited
@@ -9124,13 +9181,34 @@ if P.get('v30_asb_physical_ledger', True):
         abs(float(v30_asb_cumulative['physical_stored_change_J_m3']))
         +abs(float(v30_asb_cumulative['thermal_change_J_m3']))
         +abs(float(v30_asb_cumulative['exported_heat_J_m3'])), 1.0)
+    _v30_orientation_physical = float(v30_asb_cumulative.get(
+        'suboperator_physical_stored_change_J_m3', {}).get(
+            'orientation_boundary_sources', 0.0))
+    _v30_orientation_constraint = float(v30_asb_cumulative.get(
+        'suboperator_numerical_constraint_change_J_m3', {}).get(
+            'orientation_boundary_sources', 0.0))
+    _v30_constraint_contamination = bool(
+        abs(_v30_orientation_constraint) > 100.0*max(
+            abs(_v30_orientation_physical), 1.0)
+        and abs(_v30_orientation_physical) > 0.05*_v30_scale)
+    if _v30_constraint_contamination:
+        _v30_classification = 'ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER'
+    elif _v30_missing:
+        _v30_classification = 'ASB_DISSIPATION_CHANNEL_MISSING'
+    elif abs(v30_asb_cumulative['first_law_residual_J_m3'])/_v30_scale > 0.05:
+        _v30_classification = 'ASB_PHYSICAL_FIRST_LAW_CLOSURE_FAILURE'
+    else:
+        _v30_classification = 'ASB_PHYSICAL_ENERGY_AND_DISSIPATION_LEDGER_QUALIFIED'
     _v30_result = {
         'schema': 'v30-production-asb-ledger-v1',
-        'classification': ('ASB_DISSIPATION_CHANNEL_MISSING' if _v30_missing
-                           else ('ASB_PHYSICAL_ENERGY_AND_DISSIPATION_LEDGER_QUALIFIED'
-                                 if abs(v30_asb_cumulative['first_law_residual_J_m3'])
-                                 /_v30_scale <= 0.05
-                                 else 'ASB_PHYSICAL_FIRST_LAW_CLOSURE_FAILURE')),
+        'classification': _v30_classification,
+        'failure_classifications': ([
+            'ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER']
+            if _v30_constraint_contamination else []) + ([
+            'ASB_DISSIPATION_CHANNEL_MISSING'] if _v30_missing else []) + ([
+            'ASB_PHYSICAL_FIRST_LAW_CLOSURE_FAILURE']
+            if abs(v30_asb_cumulative['first_law_residual_J_m3'])/_v30_scale > 0.05
+            else []),
         'all_channels_available': not _v30_missing,
         'missing_channels': _v30_missing,
         'cumulative': v30_asb_cumulative,
@@ -9138,8 +9216,10 @@ if P.get('v30_asb_physical_ledger', True):
             v30_asb_cumulative['first_law_residual_J_m3']))/_v30_scale,
         'numerical_constraints_in_physical_energy': False,
         'residual_defined_dissipation': False,
+        'numerical_constraint_drives_physical_state': _v30_constraint_contamination,
         'last_step': (None if v30_asb_last_step is None
                       else v30_asb_last_step.to_dict()),
+        'last_suboperator_energy_changes': v30_asb_last_suboperator,
     }
     (out/'v30_asb_energy_dissipation_ledger.json').write_text(
         json.dumps(_v30_result, indent=2, sort_keys=True)+'\n')
