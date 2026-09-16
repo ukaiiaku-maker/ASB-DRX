@@ -2,9 +2,14 @@
   "schema": "v30-asb-energy-dissipation-decision-v1",
   "workstream": "C",
   "dependency_state": "FAILED_SCIENTIFIC",
-  "source_commit": "8b5643f6d8a9aa2de678ade26c75b6dd3cc605e8",
+  "source_commit": "5b20eeaff3ae8234b0bc7c42d536478be20eb83c",
   "base_commit": "45a0f9b3c79e69ab2fdec0914f5bd76fd8a43ff3",
-  "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
+  "classification": "ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER",
+  "failure_classifications": [
+    "ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER",
+    "ASB_DISSIPATION_CHANNEL_MISSING",
+    "ASB_PHYSICAL_FIRST_LAW_CLOSURE_FAILURE"
+  ],
   "local_hard_gate_passed": false,
   "resolved_asb_authorized": false,
   "hpc_authorized": false,
@@ -30,29 +35,29 @@
     {
       "grid": 32,
       "steps": 2,
-      "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
+      "classification": "ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER",
       "relative_first_law_residual": 0.6307652212081222,
       "external_work_J_m3": 302222.6112940761,
       "first_law_residual_J_m3": -516288.0725665746,
-      "result_sha256": "81bce0adc07563989aa3bf3f86989d59275a0cbe956f67041cf15d27a54a00eb"
+      "result_sha256": "2706d07ed2f8bf9a8f22c7a9d3dcb6e9829e9f632d1fbfcbb0525009219c8228"
     },
     {
       "grid": 64,
       "steps": 2,
-      "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
+      "classification": "ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER",
       "relative_first_law_residual": 0.03949294596984297,
       "external_work_J_m3": 302073.7715757481,
       "first_law_residual_J_m3": -12420.297268710274,
-      "result_sha256": "b99645ef841da7c38886e9f5d2999a1d0c017dbbc87c45c73d7630291e25b3ea"
+      "result_sha256": "0a5b4e4961f6d9a69cb968ce957054de90ffe61632b4067711d162e550a3a978"
     },
     {
       "grid": 128,
       "steps": 2,
-      "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
+      "classification": "ASB_NUMERICAL_CONSTRAINT_CONTAMINATES_PHYSICAL_LEDGER",
       "relative_first_law_residual": 1.0888734705057725,
       "external_work_J_m3": 302000.47091840085,
       "first_law_residual_J_m3": 525085.4250312675,
-      "result_sha256": "201f2ef94948862f45cd46894e5ab1cb193144c924983c21d8603fdf6ac65f09"
+      "result_sha256": "697c43641d0a082259d1b895776114bd72545af4b80dd71438862515014115a5"
     }
   ],
   "restart": {
@@ -82,13 +87,63 @@
   },
   "tests": {
     "focused": "30 passed",
-    "canonical": "509 passed in 63.68 s",
+    "canonical": "509 passed in 62.47 s",
     "compile": "passed"
   },
   "first_law_gate": {
     "tolerance": 0.05,
     "passed": false,
     "interpretation": "The sign-changing, nonconvergent 32/64/128 residual is not a grid artifact. Physical phase/line storage and legacy operator work are not yet transactionally owned by the production ledger."
+  },
+  "legacy_junction_blocker": {
+    "accepted_law_location": "full_model/production/drx_full_v34_recovery.py:7558",
+    "extent_location": "full_model/production/drx_full_v34_recovery.py:7571",
+    "finding": "The accepted extent is an irreversible stress/activity-scaled fraction of the minimum donor forest populations. It contains neither a junction chemical potential nor a reverse detailed-balance rate. The legacy phase-owned defect functional also has no conjugate legacy junction state. Therefore no existing affinity supports a junction-relaxation dissipation channel.",
+    "safe_action": "Preserve unavailable-channel failure; do not infer affinity from the first-law residual or import the common-wall affinity into a different state law."
+  },
+  "suboperator_physical_stored_change_J_m3": {
+    "32": {
+      "mechanical_slip": 299428.30287361145,
+      "storage_recovery": -613683.5399791002,
+      "transport_reactions": -0.002146005630493164,
+      "density_variational": -532.8823807239532,
+      "phase_front_topology": -21256.092842698097,
+      "orientation_boundary_sources": 1044939.4574673176,
+      "thermal_and_terminal_events": -19956.150537967682
+    },
+    "64": {
+      "mechanical_slip": 298836.90982687473,
+      "storage_recovery": -614549.4928212166,
+      "transport_reactions": 0.0007534027099609375,
+      "density_variational": -580.227921962738,
+      "phase_front_topology": -185809.7090716362,
+      "orientation_boundary_sources": 706983.3777709007,
+      "thermal_and_terminal_events": -19958.381098985672
+    },
+    "128": {
+      "mechanical_slip": 298545.87513530254,
+      "storage_recovery": -614989.0033712387,
+      "transport_reactions": 0.011367082595825195,
+      "density_variational": -585.8076870441437,
+      "phase_front_topology": -542791.8686308861,
+      "orientation_boundary_sources": 527129.8531984091,
+      "thermal_and_terminal_events": -19965.605531573296
+    }
+  },
+  "constraint_contamination": {
+    "operator": "orientation_boundary_sources",
+    "numerical_constraint_change_J_m3": {
+      "32": -1.3107766813635285e22,
+      "64": -4.008895297043177e22,
+      "128": -7.770291985161487e22
+    },
+    "physical_stored_change_J_m3": {
+      "32": 1044939.4574673176,
+      "64": 706983.3777709007,
+      "128": 527129.8531984091
+    },
+    "first_production_cause": "The orientation update at drx_full_v34_recovery.py:8224 uses dFdpsi derived from numerical A_alpha/A_GB compatibility penalties, so a numerical augmented constraint performs unledgered work on physical orientation/GB state.",
+    "secondary_nonconvergence": "phase_front_topology physical energy change grows in magnitude from -2.13e4 to -5.43e5 J/m3 over 32/64/128, explaining why the isolated 64-grid closure pass is not a converged result."
   },
   "claims_remaining_false": [
     "ASB_PHYSICAL_ENERGY_AND_DISSIPATION_LEDGER_QUALIFIED",
