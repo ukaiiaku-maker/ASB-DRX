@@ -28,14 +28,22 @@ def augment(directory, record):
     checkpoint = sorted(directory.glob("drx_v25_restart_*.npz"))[-1]
     with np.load(checkpoint, allow_pickle=True) as data:
         experiment = json.loads(str(data["sibm_experiment_json"].item()))
+        p = json.loads(str(data["P_json"].item()))
+    represented_thickness = float(p.get(
+        "represented_thickness_m",
+        float(p.get("nuc_barrier_thickness_b", 2.0))*float(p["b"])))
+    represented_volume = float(p["L_phys"])**2*represented_thickness
+    suppressed_abs = float(
+        experiment.get("equal_state_suppressed_abs_volume_m3", 0.0))
     return {
         **record,
         "initial_window_velocity_m_s": float(velocity[0]) if velocity.size else 0.0,
         "mean_window_velocity_m_s": float(np.mean(velocity)) if velocity.size else 0.0,
         "equal_state_projection_activations": int(
             experiment.get("equal_state_projection_activations", 0)),
-        "equal_state_suppressed_abs_volume_m3": float(
-            experiment.get("equal_state_suppressed_abs_volume_m3", 0.0)),
+        "equal_state_suppressed_abs_volume_m3": suppressed_abs,
+        "equal_state_suppressed_abs_volume_fraction": (
+            suppressed_abs/represented_volume),
         "equal_state_suppressed_signed_volume_m3": float(
             experiment.get("equal_state_suppressed_signed_volume_m3", 0.0)),
     }
@@ -104,6 +112,8 @@ def main():
             equal_row["front_ledger"]["swept_volume_m3"] == 0.0),
         "equal_state_projection_is_machine_symmetry_only": bool(
             equal_row["equal_state_projection_activations"] > 0
+            and equal_row["equal_state_suppressed_abs_volume_fraction"]
+            <= 4096.0*np.finfo(float).eps
             and all(row["equal_state_projection_activations"] == 0
                     for row in rows[1:])),
         "near_equal_response_continuous_and_odd": bool(odd),
