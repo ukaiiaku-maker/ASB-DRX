@@ -1,0 +1,15 @@
+{
+  "schema": "asb-drx/v32-hypothesis-registry/v1",
+  "hypotheses": [
+    {"id":"A1","branch":"front","statement":"the 64 near-equal split is ordinary physical neck breakup","discriminator":"before/after graph, enclosed material, winding, and conservative child-component ledger","state":"ACTIVE"},
+    {"id":"A2","branch":"front","statement":"the split is a diffuse-contour resolution artifact","discriminator":"profile/grid replay and persistence of component separation","state":"ACTIVE"},
+    {"id":"A3","branch":"front","statement":"current-state rehardening yields a stable stall or retreat","discriminator":"long force, velocity, storage, and revisit histories under sign/label controls","state":"ACTIVE"},
+    {"id":"B1","branch":"mura","statement":"the rejected accepted extent is too large","discriminator":"energy-feasible backtracking extent with unreacted remainder","state":"ACTIVE"},
+    {"id":"B2","branch":"mura","statement":"the work budget omits explicit recoverable physical energy","discriminator":"termwise first-law reconstruction at first rejected interval","state":"ACTIVE"},
+    {"id":"B3","branch":"mura","statement":"line storage needs a reversible saturation/release state","discriminator":"detailed-balance release control and bounded cyclic test","state":"ACTIVE"},
+    {"id":"B4","branch":"mura","statement":"the heterogeneous proposal is physically inadmissible and should saturate","discriminator":"zero feasible extent after complete budget and timestep refinement","state":"ACTIVE"},
+    {"id":"C1","branch":"asb","statement":"heterogeneous adiabatic loading meets fixed strict-ASB criteria","discriminator":"128 anchor versus isothermal and homogeneous controls","state":"RUNNING"},
+    {"id":"C2","branch":"asb","statement":"localization is physical but subcritical at the anchor","discriminator":"post-peak, active fraction, width, IPR, entropy support, persistence","state":"RUNNING"},
+    {"id":"C3","branch":"asb","statement":"the anchor is underexposed or outside the localization condition range","discriminator":"bounded temperature/rate/seed adaptive screen after anchor closure","state":"RUNNING"}
+  ]
+}

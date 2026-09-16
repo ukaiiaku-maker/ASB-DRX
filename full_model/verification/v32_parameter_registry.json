@@ -1,0 +1,41 @@
+{
+  "schema": "asb-drx/v32-parameter-registry/v1",
+  "rules": {
+    "hard_invariants_may_not_be_tuned": true,
+    "numerical_constraint_strength_is_not_physical": true,
+    "strict_asb_criteria_fixed": true,
+    "default_positive_multiplier_screen": [0.25, 0.5, 1.0, 2.0, 4.0],
+    "activation_energy_bounds_require_physical_basis": true
+  },
+  "fixed_physical_structure": [
+    {"name":"activation_law","value":"DeltaG=DeltaH_EXP-floor-T*DeltaS","reason":"campaign backbone"},
+    {"name":"authoritative_nye","value":"accepted common Mura flux","reason":"V30/V31 kinematic qualification"},
+    {"name":"grain_recognition","value":"existing independent criteria","reason":"no direct label allocation"}
+  ],
+  "uncertain_bounded": {
+    "front": [
+      {"name":"mobility_or_attempt_frequency","screen_multiplier":[0.25,0.5,1,2,4],"purpose":"separate kinetic insufficiency from arrest"},
+      {"name":"transmission_capacity_partition","bounds":"[0,1] with sum closure","purpose":"boundary storage/rehardening sensitivity"},
+      {"name":"annihilation_recovery_sink_fractions","bounds":"simplex [0,1]","purpose":"processed-line fate sensitivity"}
+    ],
+    "mura": [
+      {"name":"storage_efficiency","screen_multiplier":[0.25,0.5,1,2,4],"purpose":"work-budget exposure"},
+      {"name":"reversible_release_rate","screen_multiplier":[0.25,0.5,1,2,4],"purpose":"test missing reverse path"},
+      {"name":"heterogeneity_amplitude","bounds":"baseline-scaled compact screen declared before execution","purpose":"distinguish physical saturation from forcing severity"}
+    ],
+    "asb": [
+      {"name":"temperature_K","values":[900,1100,1300],"purpose":"activated-rate and thermal-softening dependence"},
+      {"name":"strain_rate_s-1","values":[10000,30000,100000],"purpose":"heating versus transport timescale"},
+      {"name":"seed","values":[42,43,44],"purpose":"robustness"},
+      {"name":"heterogeneity_amplitude_and_length","bounds":"baseline-scaled compact adaptive screen","purpose":"physical localization sensitivity"}
+    ]
+  },
+  "numerical_controls": ["timestep", "grid", "checkpoint_interval", "solver_tolerance", "compatibility_penalty"],
+  "structural_alternatives": [
+    "front split/merge/annihilation transactions",
+    "Mura event-limited storage",
+    "complete explicit physical work budget",
+    "reversible line storage/release with conjugate state",
+    "physical saturation/stall"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "asb-drx/v32-campaign-controller/v1",
+  "campaign": "Full-Model Autonomous Scientific Completion Campaign v32",
+  "branch": "exp/full-v34-recovery-v1",
+  "restart_evidence_sha": "8df28e8e3b47eea9f04c154db13f2df468c2c096",
+  "immutable_v31_run_sha": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+  "allowed_states": [
+    "AUDITING", "DIAGNOSING", "REPAIRING", "SCREENING_PARAMETERS",
+    "RUNNING_LONG", "POSTPROCESSING", "BRANCHING_ON_RESULT",
+    "ROBUST_POSITIVE", "MECHANISTIC_NEGATIVE", "HARD_INVALID",
+    "BUDGET_EXHAUSTED"
+  ],
+  "branches": {
+    "front": {
+      "state": "RUNNING_LONG",
+      "active_hypotheses": ["ordinary component split", "thin-neck contour-resolution split", "kinetic rehardening or stable arrest"],
+      "current_calculation": "finish ten-case V31 topology-aware continuation; no equal/off replay",
+      "next_automatic_action": "classify terminal geometry, support conservative ordinary topology event if required, then bounded kinetics screen"
+    },
+    "mura": {
+      "state": "DIAGNOSING",
+      "active_hypotheses": ["oversized accepted extent", "incomplete physical energy budget", "missing reverse/saturation path", "physical saturation"],
+      "current_calculation": "termwise first-rejection audit from frozen common 3% checkpoints",
+      "next_automatic_action": "implement and test the smallest conservative event limiter or physical saturation law"
+    },
+    "asb": {
+      "state": "RUNNING_LONG",
+      "active_hypotheses": ["strict localization", "subcritical localization", "stable homogeneous response", "underexposed physical horizon"],
+      "current_calculation": "four 128-square V31 anchors at 1100 K and 3e4 s-1",
+      "next_automatic_action": "postprocess common-time fields and choose bounded adaptive condition screen"
+    },
+    "integrated": {
+      "state": "AUDITING",
+      "current_calculation": "inventory invariant-qualified common production ownership",
+      "next_automatic_action": "stage Mura+ASB and front+ASB controls after repaired source is merged"
+    }
+  },
+  "compute": {
+    "local_front_output": "/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916",
+    "local_asb_output": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
+    "v32_slurm_jobs": [],
+    "unrelated_slurm_job_untouched": "55950433"
+  },
+  "frozen_evidence_policy": "V30 and V31 raw outputs, checksums, decisions, and checkpoints are read-only inputs"
+}
