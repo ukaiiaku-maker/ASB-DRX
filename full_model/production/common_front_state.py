@@ -381,15 +381,15 @@ def commit_front_result(state, accepted_front, *, spacing_m, cell_volume_m3,
         boundary_plus_m2=boundary_p, boundary_minus_m2=boundary_m,
         boundary_junction_m2=boundary_j)
     mixture, correction = reconstruct_common(candidate, spacing_m)
-    before, _ = reconstruct_common(state, spacing_m)
-    line_before = float(np.sum(_line_total(before), dtype=np.longdouble)*cell_volume_m3)
-    line_after = float(np.sum(_line_total(mixture), dtype=np.longdouble)*cell_volume_m3)
     boundary_added = float(np.sum(
         common_boundary-(np.sum(state.boundary_plus_m2+state.boundary_minus_m2, axis=(2, 3))
                          +np.sum(state.boundary_junction_m2, axis=2)),
         dtype=np.longdouble)*cell_volume_m3)
-    closure = line_before-line_after-boundary_added-annihilated-sink
-    scale = max(abs(line_before), abs(line_after), 1.0)
+    # Close the transaction from its terms rather than subtracting two large
+    # whole-domain inventories.  The latter loses all useful digits for a
+    # subcell sweep and can falsely report a percent-level relative residual.
+    closure = processed-transmitted-boundary_added-annihilated-sink
+    scale = max(abs(processed), abs(transmitted), abs(boundary_added), 1e-300)
     if abs(closure) > 32768*np.finfo(float).eps*scale:
         raise RuntimeError(f"common-front line balance failed: {closure:.17g} m")
     old = state.ledger
