@@ -46,6 +46,12 @@ def test_nominal_common_front_now_fails_fast_instead_of_silently_freezing_front(
         validate_common_front_integration(parameters)
 
 
+def test_v33_adapter_capability_activates_the_explicit_mode():
+    parameters = _combined(); parameters[MODE] = True
+    assert (validate_common_front_integration(parameters, adapter_active=True)
+            == "ACTIVE_UNIFIED_EXISTING_BOUNDARY")
+
+
 def test_future_adapter_contract_forbids_every_label_creation_path():
     parameters = _combined(); parameters[MODE] = True
     assert (validate_common_front_integration(parameters, adapter_active=True)

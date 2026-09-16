@@ -53,6 +53,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import copy
 import os, json, time as _wtime, csv, tempfile
+from dataclasses import replace
 from arrhenius_kinetics import (
     ActivatedProcess, KB_J_K as ARRHENIUS_KB_J_K, exp_floor_enthalpy_j,
 )
@@ -125,6 +126,14 @@ from coupled_front_production import (
     runtime_arrays as coupled_front_runtime_arrays,
     runtime_from_checkpoint as coupled_front_runtime_from_checkpoint,
     runtime_metadata_json as coupled_front_runtime_metadata_json,
+)
+from common_front_state import (
+    apply_common_increment as apply_common_front_increment,
+    commit_front_result as commit_common_front_result,
+    initialize_common_front, reconstruct_common as reconstruct_common_front,
+    state_arrays as common_front_arrays,
+    state_from_checkpoint as common_front_from_checkpoint,
+    state_metadata_json as common_front_metadata_json,
 )
 
 # ================================================================
@@ -1120,7 +1129,7 @@ if _ov:
 # do not yet share one atomic transaction; never silently freeze the front or
 # reconstruct only the scalar subset.
 try:
-    validate_common_front_integration(P, adapter_active=False)
+    validate_common_front_integration(P, adapter_active=True)
 except ValueError as exc:
     raise SystemExit(str(exc)) from exc
 
@@ -1184,11 +1193,17 @@ if P.get('v21_common_tensorial_wall_enabled', False):
     # Wall qualification is a one-grain tensorial constitutive experiment.
     # Retire every older duplicate wall/transport/orientation source while the
     # common residual owns those states. Phase creation remains impossible.
+    _v33_integrated_front = bool(
+        P.get('v32_existing_boundary_common_state', False)
+        and P.get('use_sparse_common_front_state', False)
+        and P.get('use_sibm_existing_boundary', False))
     P.update(
-        v20_tensorial_nye_enabled=True, nSlip=4, poly_n=1,
+        v20_tensorial_nye_enabled=True, nSlip=4,
+        poly_n=(int(P.get('poly_n', 1)) if _v33_integrated_front else 1),
         v19_predictive_wall_enabled=False,
         use_advection=False, use_ch_step=False, freeze_orientation=True,
-        freeze_kwc_eta=True, freeze_rhoGB=True, use_gb_hp_source_sink=False,
+        freeze_kwc_eta=(False if _v33_integrated_front else True),
+        freeze_rhoGB=True, use_gb_hp_source_sink=False,
         use_signed_gnd_feedback=False, use_collective_organization=False,
         use_lattice_diffusive_recovery=False, KM_k1=0.0, KM_k2_0=1.0e-300,
         use_finite_loading_work_budget=False,
@@ -4341,6 +4356,50 @@ if sibm_experiment_state:
     _update_sibm_geometry_metrics(
         sparse_front_state.chi, max(float(P.get('dt', 0.0)), 1e-300))
 
+# V33 common-state adapter.  SparseFrontState remains the geometry/topology
+# compatibility view; signed phase-supported reservoirs and kinematics have a
+# single owner in ``common_front_state``.  Existing pre-V33 checkpoints are
+# migrated once from their complete common and sparse views.  Every checkpoint
+# written after activation carries the authoritative phase state explicitly.
+common_front_state = None
+_common_front_mode = bool(P.get('v32_existing_boundary_common_state', False)
+                          and sparse_front_state is not None
+                          and P.get('v21_common_tensorial_wall_enabled', False))
+if _common_front_mode:
+    _common_at_adapter_start = CommonWallState(
+        rp.copy(), rm.copy(), rho_forest_plus.copy(),
+        rho_forest_minus.copy(), rho_wall_plus.copy(),
+        rho_wall_minus.copy(), v21_junction_m2.copy(),
+        q_wall_v19.copy(), v22_multi_hit_coordination.copy(),
+        v20_tensorial_state.slip.copy(), v20_tensorial_state.beta_p.copy(),
+        v20_tensorial_state.alignment_m2.copy(),
+        v20_tensorial_state.family_nye_m1.copy(), psi_lat.copy(), T.copy())
+    if _restart_loaded and not P.get('restart_reset_clock', True):
+        with np.load(Path(P.get('restart_file')).expanduser(),
+                     allow_pickle=True) as _restart_npz:
+            if 'common_front_metadata_json' in _restart_npz.files:
+                _adapter_arrays = {
+                    key.removeprefix('common_front__'): _restart_npz[key]
+                    for key in _restart_npz.files
+                    if key.startswith('common_front__')}
+                common_front_state = common_front_from_checkpoint(
+                    str(_restart_npz['common_front_metadata_json'].item()),
+                    _adapter_arrays, sparse_front_state)
+            else:
+                common_front_state = initialize_common_front(
+                    sparse_front_state, _common_at_adapter_start)
+                sibm_experiment_state['common_front_restart_migration'] = (
+                    'explicit_v32_sparse_plus_common_state')
+    else:
+        common_front_state = initialize_common_front(
+            sparse_front_state, _common_at_adapter_start)
+    sparse_front_state = common_front_state.front
+    sibm_experiment_state.update(
+        common_front_adapter_schema='full-v34-common-front-authoritative-state/v1',
+        common_front_single_owner=True,
+        common_front_product_rule_nye=True,
+        intrinsic_hagb_separate_from_plastic_excess=True)
+
 if _restart_loaded and not P.get('restart_reset_clock', True):
     with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
         _potential_keys = [name for name in _restart_npz.files if name.startswith('ATpot__')]
@@ -6680,7 +6739,7 @@ def _potential_checkpoint_state():
 
 
 def _sparse_front_checkpoint_state():
-    global sparse_front_state
+    global sparse_front_state, common_front_state
     state = globals().get('sparse_front_state', None)
     if state is None:
         return {}
@@ -6689,10 +6748,13 @@ def _sparse_front_checkpoint_state():
     # the top of the next step.  A checkpoint must serialize that synchronized
     # state now; otherwise restart reconstructs the older front mixture and
     # silently discards the post-front increments.
-    state = apply_common_constitutive_increment(
-        state, DefectState(
-            np.asarray(rp), np.asarray(rm),
-            np.asarray(rho_forest), np.asarray(rho_wall)))
+    if globals().get('common_front_state', None) is not None:
+        state = common_front_state.front
+    else:
+        state = apply_common_constitutive_increment(
+            state, DefectState(
+                np.asarray(rp), np.asarray(rm),
+                np.asarray(rho_forest), np.asarray(rho_wall)))
     # Publish the synchronized representation to the continuing trajectory as
     # well as the checkpoint.  Otherwise taking a checkpoint changes the state
     # from which a restart continues but not the in-memory state, defeating
@@ -6703,6 +6765,18 @@ def _sparse_front_checkpoint_state():
         for key, value in sparse_front_arrays(state).items()}
     payload['sparse_front_metadata_json'] = np.array(
         sparse_front_metadata_json(state))
+    return payload
+
+
+def _common_front_checkpoint_state():
+    state = globals().get('common_front_state', None)
+    if state is None:
+        return {}
+    payload = {
+        f'common_front__{key}': value
+        for key, value in common_front_arrays(state).items()}
+    payload['common_front_metadata_json'] = np.array(
+        common_front_metadata_json(state))
     return payload
 
 
@@ -6870,6 +6944,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             **_potential_checkpoint_state(),
             **_sparse_front_checkpoint_state(),
             **_coupled_front_checkpoint_state(),
+            **_common_front_checkpoint_state(),
         )
         return fname
     except OSError as exc:
@@ -6980,7 +7055,7 @@ for n in range(_restart_step_offset, _restart_end_step):
             name: copy.deepcopy(globals()[name]) for name in _v25_names
             if name in globals()}
 
-    if sparse_front_state is not None:
+    if sparse_front_state is not None and common_front_state is None:
         sparse_front_state = apply_common_constitutive_increment(
             sparse_front_state,
             DefectState(rp, rm, rho_forest, rho_wall))
@@ -7229,6 +7304,15 @@ for n in range(_restart_step_offset, _restart_end_step):
                 v21_channel_exposure[_channel] += (
                     _v21_accepted_dt*float(np.mean(np.abs(_field)))
                     /_v21_normalizer)
+
+        if common_front_state is not None:
+            # Commit the accepted Mura update to phase-supported owners before
+            # constructing the front proposal.  The sparse object exposed to
+            # legacy front geometry is immediately rebuilt from those owners;
+            # it cannot overwrite the signed forest/wall/junction state.
+            common_front_state = apply_common_front_increment(
+                common_front_state, _v21_state_after, dx)
+            sparse_front_state = common_front_state.front
 
     # Local plastic strain rate implied by the heterogeneous stress field.
     ed11_loc = np.zeros((Nx, Ny))
@@ -7931,7 +8015,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         # promoted phase carries its own recovered material state, evaluated
         # from its current pure core so continued deformation can re-harden it.
         # Lineage selects that state; it does not select a different equation.
-        if sparse_front_state is not None:
+        if sparse_front_state is not None and common_front_state is None:
             # Absorb every storage/transport/recovery increment accumulated by
             # the common full-field constitutive solver before evaluating the
             # phase derivative. No moving pure-core mask is sampled.
@@ -8197,9 +8281,49 @@ for n in range(_restart_step_offset, _restart_end_step):
                 topology_backtracking_bisections=int(P.get(
                     'moving_front_topology_backtracking_bisections', 12))))
         eta[:, :, :Ng] = _eta_accepted
-        _front_mixture = reconstruct_mixture(sparse_front_state)
-        rp, rm = _front_mixture.rp, _front_mixture.rm
-        rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
+        if common_front_state is not None:
+            common_front_state, _common_after_front = commit_common_front_result(
+                common_front_state, sparse_front_state,
+                spacing_m=dx,
+                cell_volume_m3=dx*dy*max(
+                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                    1e-30),
+                transmission_fraction=float(P.get(
+                    'moving_front_fixture_transmission_fraction', 0.50)),
+                boundary_storage_fraction=float(P.get(
+                    'moving_front_boundary_storage_fraction', 0.05)),
+                neutral_sink_fraction=float(P.get(
+                    'moving_front_sink_fraction', 0.02)),
+                signed_sink_fraction=float(P.get(
+                    'moving_front_signed_sink_fraction', 0.0)))
+            sparse_front_state = common_front_state.front
+            rp = _common_after_front.mobile_plus_m2.copy()
+            rm = _common_after_front.mobile_minus_m2.copy()
+            rho_forest_plus = _common_after_front.forest_plus_m2.copy()
+            rho_forest_minus = _common_after_front.forest_minus_m2.copy()
+            rho_wall_plus = _common_after_front.wall_plus_m2.copy()
+            rho_wall_minus = _common_after_front.wall_minus_m2.copy()
+            rho_forest = rho_forest_plus+rho_forest_minus
+            rho_wall = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
+            v21_junction_m2 = _common_after_front.junction_m2.copy()
+            q_wall_v19 = _common_after_front.wall_order.copy()
+            v22_multi_hit_coordination = (
+                _common_after_front.multi_hit_coordination.copy())
+            v20_tensorial_state = TensorialKinematicState(
+                _common_after_front.slip.copy(),
+                _common_after_front.beta_p.copy(),
+                _common_after_front.alignment_m2.copy(),
+                _common_after_front.family_nye_m1.copy())
+            gamma_slip = v20_tensorial_state.slip.copy()
+            _common_beta2 = v20_tensorial_state.beta_p[..., :2, :2]
+            eps_p = .5*(_common_beta2+np.swapaxes(
+                _common_beta2, -1, -2))
+            T = _common_after_front.temperature_K.copy()
+            _front_mixture = DefectState(rp, rm, rho_forest, rho_wall)
+        else:
+            _front_mixture = reconstruct_mixture(sparse_front_state)
+            rp, rm = _front_mixture.rp, _front_mixture.rm
+            rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
         rho_GB = np.clip(
             rho_GB+sparse_front_state.boundary_line_density_m2-_boundary0,
@@ -8213,6 +8337,17 @@ for n in range(_restart_step_offset, _restart_end_step):
             _front_heat_density = (_front_heat_increment_J*_heat_weight
                                    / _heat_weight_volume)
             T = T+_front_heat_density/max(float(P['cp_rho_vol']), 1e-300)
+        if common_front_state is not None:
+            # Phase, thermal, and kinematic fields are part of the same
+            # accepted transaction.  Synchronize the accepted front heat and
+            # phase-slaved lattice orientation before any checkpoint can be
+            # published.
+            _common_post_heat = replace(
+                _common_after_front, temperature_K=np.asarray(T).copy(),
+                orientation_rad=np.asarray(psi_lat).copy())
+            common_front_state = apply_common_front_increment(
+                common_front_state, _common_post_heat, dx)
+            sparse_front_state = common_front_state.front
         sibm_experiment_state.update(
             front_operator='coupled_bidirectional_v30',
             front_last_decision=_front_decision.__dict__,
@@ -8855,7 +8990,8 @@ for n in range(_restart_step_offset, _restart_end_step):
     # step, independent of checkpoint cadence.  This absorbs all post-front
     # GND/GB/constitutive increments and makes restart a bitwise state copy
     # rather than a delayed projection.
-    if sparse_front_state is not None and not _v25_exact_freeze:
+    if (sparse_front_state is not None and common_front_state is None
+            and not _v25_exact_freeze):
         sparse_front_state = apply_common_constitutive_increment(
             sparse_front_state, DefectState(rp, rm, rho_forest, rho_wall))
         _canonical_front_mixture = reconstruct_mixture(sparse_front_state)
