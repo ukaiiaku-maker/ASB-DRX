@@ -7,8 +7,11 @@ and refuses residual-defined dissipation.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, fields
+from dataclasses import asdict, dataclass, fields
 import math
+from typing import Mapping
+
+import numpy as np
 
 
 ENERGY_TERM_CLASSIFICATION = {
@@ -20,6 +23,184 @@ ENERGY_TERM_CLASSIFICATION = {
     "compatibility_alpha_penalty_J_m3": "numerical_constraint",
     "compatibility_gb_penalty_J_m3": "numerical_constraint",
 }
+
+CHANNEL_NAMES = (
+    "plastic_drag", "mobile_forest_recovery", "neutral_pair_annihilation",
+    "junction_relaxation", "boundary_recovery", "thermal_conduction",
+    "declared_sinks",
+)
+
+
+@dataclass(frozen=True)
+class AcceptedDissipationChannel:
+    """One independently evaluated accepted process.
+
+    ``affinity`` and ``extent_rate`` may be spatial fields.  The stored power
+    is their volume mean, never a balance residual.  The affinity convention
+    is the non-negative thermodynamic drop ``-A`` so that
+    ``D=(-A)*dot(xi) >= 0``.
+    """
+
+    name: str
+    affinity_J_per_extent: float
+    extent_rate_per_m3_s: float
+    dissipation_W_m3: float
+    available: bool
+    source: str
+
+    def __post_init__(self):
+        if self.name not in CHANNEL_NAMES:
+            raise ValueError(f"unknown dissipation channel {self.name}")
+        values = (self.affinity_J_per_extent, self.extent_rate_per_m3_s,
+                  self.dissipation_W_m3)
+        if not all(math.isfinite(float(value)) for value in values):
+            raise ValueError(f"non-finite values in channel {self.name}")
+        if any(float(value) < 0.0 for value in values):
+            raise ValueError(f"negative accepted dissipation in channel {self.name}")
+        if not self.source:
+            raise ValueError(f"channel {self.name} lacks production provenance")
+
+
+def accepted_channel(name, affinity_J_per_extent, extent_rate_per_m3_s, *,
+                     source, available=True, component_axis=None):
+    """Build a channel from independently supplied affinity/accepted extent.
+
+    Array inputs preserve the correlation between local affinity and extent;
+    multiplying their means would generally be incorrect.
+    """
+    affinity = np.asarray(affinity_J_per_extent, dtype=float)
+    extent = np.asarray(extent_rate_per_m3_s, dtype=float)
+    affinity, extent = np.broadcast_arrays(affinity, extent)
+    if not np.all(np.isfinite(affinity)) or not np.all(np.isfinite(extent)):
+        raise ValueError(f"non-finite affinity or extent in channel {name}")
+    tolerance = 64.0*np.finfo(float).eps
+    if np.min(affinity, initial=0.0) < -tolerance or np.min(extent, initial=0.0) < -tolerance:
+        raise ValueError(f"negative affinity or accepted extent in channel {name}")
+    affinity = np.maximum(affinity, 0.0)
+    extent = np.maximum(extent, 0.0)
+    product = affinity*extent
+    if component_axis is not None:
+        product = np.sum(product, axis=component_axis)
+    return AcceptedDissipationChannel(
+        name=name,
+        affinity_J_per_extent=float(np.mean(affinity)),
+        extent_rate_per_m3_s=float(np.mean(extent)),
+        dissipation_W_m3=float(np.mean(product)),
+        available=bool(available), source=str(source))
+
+
+def unavailable_channel(name, source):
+    return AcceptedDissipationChannel(name, 0.0, 0.0, 0.0, False, source)
+
+
+@dataclass(frozen=True)
+class PhysicalEnergyState:
+    """Volume-averaged physical and numerical energies [J m^-3]."""
+
+    local_line_correlation_J_m3: float = 0.0
+    recoverable_elastic_J_m3: float = 0.0
+    phase_interface_J_m3: float = 0.0
+    physical_gb_disconnection_J_m3: float = 0.0
+    thermal_J_m3: float = 0.0
+    numerical_augmented_constraints_J_m3: float = 0.0
+    multiplier_constraint_work_J_m3: float = 0.0
+
+    def __post_init__(self):
+        for item in fields(self):
+            if not math.isfinite(float(getattr(self, item.name))):
+                raise ValueError(f"non-finite energy {item.name}")
+
+    @property
+    def physical_stored_J_m3(self):
+        return (self.local_line_correlation_J_m3
+                + self.recoverable_elastic_J_m3
+                + self.phase_interface_J_m3
+                + self.physical_gb_disconnection_J_m3)
+
+
+@dataclass(frozen=True)
+class ProductionASBStepLedger:
+    channels: tuple[AcceptedDissipationChannel, ...]
+    energy_before: PhysicalEnergyState
+    energy_after: PhysicalEnergyState
+    external_work_J_m3: float
+    deposited_heat_J_m3: float
+    exported_heat_J_m3: float
+    dt_s: float
+
+    def __post_init__(self):
+        names = tuple(channel.name for channel in self.channels)
+        if names != CHANNEL_NAMES:
+            raise ValueError("production ledger must contain all seven channels in canonical order")
+        if self.dt_s <= 0.0 or not math.isfinite(self.dt_s):
+            raise ValueError("accepted timestep must be finite and positive")
+        for value in (self.external_work_J_m3, self.deposited_heat_J_m3,
+                      self.exported_heat_J_m3):
+            if not math.isfinite(float(value)):
+                raise ValueError("non-finite production energy increment")
+        if self.deposited_heat_J_m3 < 0.0 or self.exported_heat_J_m3 < 0.0:
+            raise ValueError("heat deposition/export must be nonnegative")
+
+    @property
+    def all_channels_available(self):
+        return all(channel.available for channel in self.channels)
+
+    @property
+    def dissipation_J_m3(self):
+        return self.dt_s*sum(channel.dissipation_W_m3 for channel in self.channels)
+
+    @property
+    def physical_stored_change_J_m3(self):
+        return self.energy_after.physical_stored_J_m3-self.energy_before.physical_stored_J_m3
+
+    @property
+    def thermal_change_J_m3(self):
+        return self.energy_after.thermal_J_m3-self.energy_before.thermal_J_m3
+
+    @property
+    def numerical_constraint_change_J_m3(self):
+        return (self.energy_after.numerical_augmented_constraints_J_m3
+                -self.energy_before.numerical_augmented_constraints_J_m3)
+
+    @property
+    def first_law_residual_J_m3(self):
+        # Dissipation is an internal conversion and is therefore not subtracted
+        # again after it has appeared as deposited thermal energy.
+        return (self.external_work_J_m3-self.physical_stored_change_J_m3
+                -self.thermal_change_J_m3-self.exported_heat_J_m3)
+
+    @property
+    def dissipation_heat_residual_J_m3(self):
+        return self.deposited_heat_J_m3-self.dissipation_J_m3
+
+    def to_dict(self):
+        result = asdict(self)
+        result["channels"] = [asdict(channel) for channel in self.channels]
+        result.update(
+            all_channels_available=self.all_channels_available,
+            dissipation_J_m3=self.dissipation_J_m3,
+            physical_stored_change_J_m3=self.physical_stored_change_J_m3,
+            thermal_change_J_m3=self.thermal_change_J_m3,
+            numerical_constraint_change_J_m3=self.numerical_constraint_change_J_m3,
+            first_law_residual_J_m3=self.first_law_residual_J_m3,
+            dissipation_heat_residual_J_m3=self.dissipation_heat_residual_J_m3)
+        return result
+
+
+def build_production_step_ledger(*, channels: Mapping[str, AcceptedDissipationChannel],
+                                 energy_before, energy_after,
+                                 external_work_J_m3, deposited_heat_J_m3,
+                                 exported_heat_J_m3, dt_s):
+    missing = set(CHANNEL_NAMES)-set(channels)
+    extra = set(channels)-set(CHANNEL_NAMES)
+    if missing or extra:
+        raise ValueError(f"invalid channel set; missing={sorted(missing)}, extra={sorted(extra)}")
+    ordered = tuple(channels[name] for name in CHANNEL_NAMES)
+    if any(channel.name != name for channel, name in zip(ordered, CHANNEL_NAMES)):
+        raise ValueError("channel key/name mismatch")
+    return ProductionASBStepLedger(
+        ordered, energy_before, energy_after, float(external_work_J_m3),
+        float(deposited_heat_J_m3), float(exported_heat_J_m3), float(dt_s))
 
 
 @dataclass(frozen=True)

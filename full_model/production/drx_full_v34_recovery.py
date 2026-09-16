@@ -76,6 +76,10 @@ from phase_promotion import (
     atomic_phase_promotion, recrystallized_child_stored_energy_derivative,
 )
 from compatibility_energy import decompose_compatibility_energy
+from asb_physical_ledger import (
+    CHANNEL_NAMES, PhysicalEnergyState, accepted_channel,
+    build_production_step_ledger, unavailable_channel,
+)
 from stored_energy_coupling import (
     common_variational_stored_energy, phase_mean_stored_energy_states,
     signed_pair_pressure_offsets,
@@ -330,6 +334,9 @@ P = dict(
     # macroscopic work budget after the heterogeneous stress re-solve.
     enforce_macro_rate_after_ms=True,
     use_energy_conserving_heat=True,
+    # V30 production ASB ledger.  This is diagnostic/stateful and cannot alter
+    # constitutive rates.  Missing independently owned channels fail closed.
+    v30_asb_physical_ledger=True,
     heat_partition_tiny=1.0e-300,
     # v31: finite-loading work-budget consistency.  Local tau*gdot is used as
     # the spatial partition of plastic work, but total heat cannot exceed the
@@ -4274,6 +4281,28 @@ hist = {k:[] for k in ['t','rho_mean','rho_max','rho_std','sigma','T_mean',
     'grain_initial_lineage','grain_spinodal_lineage','grain_hazard_lineage',
     'grain_topology_births','grain_hazard_births','heat_dT_mech_step','heat_dT_local_max_step','k2_eff_mean','k2_eff_max']}
 
+# V30 cumulative production ledger is checkpoint state, not a postprocessing
+# reconstruction.  Per-channel values are dissipated energy densities [J/m3].
+v30_asb_cumulative = {
+    'accepted_steps': 0,
+    'external_work_J_m3': 0.0,
+    'deposited_heat_J_m3': 0.0,
+    'exported_heat_J_m3': 0.0,
+    'physical_stored_change_J_m3': 0.0,
+    'thermal_change_J_m3': 0.0,
+    'first_law_residual_J_m3': 0.0,
+    'dissipation_heat_residual_J_m3': 0.0,
+    **{f'{name}_J_m3': 0.0 for name in CHANNEL_NAMES},
+}
+v30_asb_last_step = None
+if (_restart_loaded and not P.get('restart_reset_clock', True)
+        and P.get('v30_asb_physical_ledger', True)):
+    with np.load(Path(P.get('restart_file')).expanduser(), allow_pickle=True) as _restart_npz:
+        if 'v30_asb_cumulative_json' not in _restart_npz.files:
+            raise ValueError('exact V30 restart requires cumulative ASB physical ledger')
+        v30_asb_cumulative = json.loads(str(
+            _restart_npz['v30_asb_cumulative_json'].item()))
+
 
 
 # ================================================================
@@ -5712,6 +5741,57 @@ def _energy_audit(r_f, rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng):
     )
 
 
+def _v30_physical_energy_state(rho_field, eta_field, psi_field,
+                               kappa_field, rho_gb_field, gb_field,
+                               grain_count, temperature_field,
+                               stress_Pa):
+    """Production energy partition without compatibility contamination."""
+    area = max(float(Nx*Ny*dx*dy), 1e-300)
+    audit = _energy_audit(
+        rho_field/max(_rho_ch_scale(), P['rho_min']), rho_field, eta_field,
+        psi_field, kappa_field, rho_gb_field, gb_field, grain_count)
+    line_correlation = (audit['F_bulk']+audit['F_r_grad'])/area
+    phase_interface = (audit['F_eta_grad']+audit['F_eta_barrier'])/area
+    line_tension = 0.5*ATpot.mu_shear(
+        np.maximum(np.asarray(temperature_field, dtype=float), 1.0))*P['b']**2
+    physical_gb = float(np.mean(line_tension*np.maximum(rho_gb_field, 0.0)))
+    Eeff = P.get('finite_loading_Eeff', None)
+    Eeff = float(Eeff) if Eeff is not None else float(E_ps)
+    elastic = 0.5*float(stress_Pa)**2/max(Eeff, 1.0)
+    thermal = float(P['cp_rho_vol']*np.mean(
+        np.asarray(temperature_field, dtype=float)-float(P['T0'])))
+    return PhysicalEnergyState(
+        local_line_correlation_J_m3=float(line_correlation),
+        recoverable_elastic_J_m3=float(elastic),
+        phase_interface_J_m3=float(phase_interface),
+        physical_gb_disconnection_J_m3=physical_gb,
+        thermal_J_m3=thermal,
+        numerical_augmented_constraints_J_m3=float(
+            audit['F_numerical_constraints']/area),
+        multiplier_constraint_work_J_m3=0.0)
+
+
+def _v30_thermal_dissipation_channels(temperature_field):
+    """Independent Fourier and bath exergy-production channels."""
+    temp = np.maximum(np.asarray(temperature_field, dtype=float), 1.0)
+    Tref = max(float(P['T0']), 1.0)
+    k = max(float(P.get('k_thermal', 0.0)), 0.0)
+    h = max(float(P.get('T_bath_coupling', 0.0)), 0.0)
+    gradT = np.hypot(ddx(temp), ddy(temp))
+    # Factorization retains the local product and makes the affinity/extent
+    # provenance explicit.  Both products have the standard exergy rate
+    # Tref*k|grad T|^2/T^2 and h(T-Tref)^2/T.
+    cond_factor = np.sqrt(k*Tref)*gradT/temp
+    sink_factor = np.sqrt(h)*np.abs(temp-Tref)/np.sqrt(temp)
+    return (
+        accepted_channel(
+            'thermal_conduction', cond_factor, cond_factor,
+            source='accepted temperature field: T0*k*|grad(T)|^2/T^2'),
+        accepted_channel(
+            'declared_sinks', sink_factor, sink_factor,
+            source='accepted temperature field: h*(T-T0)^2/T'))
+
+
 def _promotion_energy_evaluator(*, eta, psi_gv, Ng, rp, rm, rho_forest,
                                 rho_wall, rho_gb, temperature_K):
     """Atomic-event free-energy terms [J] for the represented 3-D patch."""
@@ -6226,6 +6306,26 @@ def _diagnostic_row(n, t, rho, rho_c, eta, lab, Ng, psi_lat, psi_plastic, kappa_
         row[f'kappa_s{ss}_abs_mean'] = float(np.nanmean(np.abs(ks)))
         row[f'kappa_s{ss}_frac_mean'] = float(np.nanmean(np.abs(ks)/np.maximum(rho, P['rho_min'])))
     row.update(eterms)
+    _v30_step = globals().get('v30_asb_last_step')
+    if _v30_step is not None:
+        row.update(
+            v30_all_channels_available=int(_v30_step.all_channels_available),
+            v30_physical_stored_change_Jm3=float(
+                _v30_step.physical_stored_change_J_m3),
+            v30_thermal_change_Jm3=float(_v30_step.thermal_change_J_m3),
+            v30_numerical_constraint_change_Jm3=float(
+                _v30_step.numerical_constraint_change_J_m3),
+            v30_external_work_Jm3=float(_v30_step.external_work_J_m3),
+            v30_deposited_heat_Jm3=float(_v30_step.deposited_heat_J_m3),
+            v30_exported_heat_Jm3=float(_v30_step.exported_heat_J_m3),
+            v30_first_law_residual_Jm3=float(
+                _v30_step.first_law_residual_J_m3),
+            v30_dissipation_heat_residual_Jm3=float(
+                _v30_step.dissipation_heat_residual_J_m3),
+            **{f'v30_{channel.name}_Wm3': float(channel.dissipation_W_m3)
+               for channel in _v30_step.channels},
+            **{f'v30_{channel.name}_available': int(channel.available)
+               for channel in _v30_step.channels})
     return row
 
 # ================================================================
@@ -6486,6 +6586,13 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             v19_wall_ledger_json=np.array(json.dumps(
                 globals().get('v19_wall_ledger', {}), sort_keys=True,
                 separators=(',', ':'))),
+            v30_asb_cumulative_json=np.array(json.dumps(
+                globals().get('v30_asb_cumulative', {}), sort_keys=True,
+                separators=(',', ':'))),
+            v30_asb_last_step_json=np.array(json.dumps(
+                (globals().get('v30_asb_last_step').to_dict()
+                 if globals().get('v30_asb_last_step') is not None else {}),
+                sort_keys=True, separators=(',', ':'))),
             v20_wall_initial_unsigned=globals().get(
                 'v20_wall_initial_unsigned', np.zeros((Nx, Ny, nSlip))),
             v20_wall_initial_signed=globals().get(
@@ -6729,6 +6836,17 @@ for n in range(_restart_step_offset, _restart_end_step):
     if P.get('use_grain_slaved_orientation', True):
         psi_lat = reconstruct_psi_lat(eta, psi_gv, psi_plastic, Ng)
 
+    _v30_energy_before = None
+    _v30_temperature_before = np.asarray(T, dtype=float).copy()
+    _v30_recovery_rate_m2_s = np.zeros((Nx, Ny))
+    _v30_neutral_annihilation_rate_m2_s = 0.0
+    _v30_junction_dissipation_W_m3 = None
+    _v30_boundary_recovery_rate_m2_s = np.zeros((Nx, Ny))
+    if P.get('v30_asb_physical_ledger', True):
+        _v30_energy_before = _v30_physical_energy_state(
+            rho, eta, psi_lat, _signed_kappa_field(rp, rm), rho_GB,
+            gb_mask, Ng, T, sigma_bar)
+
     # --- Slip geometry ---
     ang, sv, nv, Sch, s11 = build_slip(psi_lat)
     _gb_trans_fields_step = None
@@ -6890,6 +7008,9 @@ for n in range(_restart_step_offset, _restart_end_step):
         tau_resolved = _v21_drive['raw_stress_Pa'].copy()
         tau_effective = _v21_drive['effective_stress_Pa'].copy()
         v21_last_heat_rate = _v21_residual.heat_rate_W_m3.copy()
+        _v30_junction_dissipation_W_m3 = np.asarray(
+            _v21_residual.channel_rates_m2_s[
+                'junction_dissipation_W_m3'], dtype=float)
         _v21_ledger = common_wall_balance_ledger(
             _v21_state_before, _v21_residual, V20_SYSTEMS, v21_topologies)
         _v21_line_scale = max(
@@ -7063,6 +7184,7 @@ for n in range(_restart_step_offset, _restart_end_step):
     storage_violation_field = np.zeros((Nx, Ny))
     KM_storage_rate_total = np.zeros((Nx, Ny))
     KM_anni_rate_total = np.zeros((Nx, Ny))
+    KM_anni_rate_accepted_total = np.zeros((Nx, Ny))
     diffrec_rate_field = np.zeros((Nx, Ny))
     storage_cap_active_count = 0.0
     storage_cap_count = 0
@@ -7160,9 +7282,22 @@ for n in range(_restart_step_offset, _restart_end_step):
             rp[:,:,s] = np.clip(rps - P['dt']*anni_p - 0.5*P['dt']*lock_extra, P['rho_min'], P['rho_max'])
             rm[:,:,s] = np.clip(rms - P['dt']*anni_m - 0.5*P['dt']*lock_extra, P['rho_min'], P['rho_max'])
             rho_forest[:, :, s] = np.clip(rfs + P['dt']*(stor + lock_extra - anni_f - wall_src), 0.0, P['rho_max'])
+            accepted_p = np.minimum(P['dt']*anni_p, np.maximum(
+                rps-0.5*P['dt']*lock_extra-P['rho_min'], 0.0))
+            accepted_m = np.minimum(P['dt']*anni_m, np.maximum(
+                rms-0.5*P['dt']*lock_extra-P['rho_min'], 0.0))
+            accepted_f = np.minimum(P['dt']*anni_f, np.maximum(
+                rfs+P['dt']*(stor+lock_extra-wall_src), 0.0))
         else:
             rp[:,:,s] = np.clip(rps + P['dt']*(0.5*stor - anni_p), P['rho_min'], P['rho_max'])
             rm[:,:,s] = np.clip(rms + P['dt']*(0.5*stor - anni_m), P['rho_min'], P['rho_max'])
+            accepted_p = np.minimum(P['dt']*anni_p, np.maximum(
+                rps+0.5*P['dt']*stor-P['rho_min'], 0.0))
+            accepted_m = np.minimum(P['dt']*anni_m, np.maximum(
+                rms+0.5*P['dt']*stor-P['rho_min'], 0.0))
+            accepted_f = np.zeros_like(accepted_p)
+        KM_anni_rate_accepted_total += (
+            accepted_p+accepted_m+accepted_f)/max(P['dt'], 1e-300)
 
     if (P.get('use_rho_state_partition', False)
             and not P.get('v19_predictive_wall_enabled', False)):
@@ -7238,6 +7373,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         )
 
     rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+    _v30_recovery_rate_m2_s = (
+        KM_anni_rate_accepted_total+diffrec_rate_field)
 
     # --- Orowan advection (EXPLICIT KINETICS) ---
     # v22 interpretation: gdot_s = rho_m,s b v_s, so v_s=|gdot_s|/(b rho_m,s).
@@ -7463,6 +7600,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             v19_wall_ledger['junctioned_line_per_thickness'] += junctioned
             v19_wall_ledger['released_line_per_thickness'] += released
             v19_wall_ledger['annihilated_line_per_thickness'] += annihilated
+            _v30_neutral_annihilation_rate_m2_s = (
+                annihilated/max(Nx*Ny*dx*dy*P['dt'], 1e-300))
             v19_wall_ledger['transfer_line_residual_per_thickness'] += (
                 float(after_transfer_total-expected_after)*dx*dy)
             signed_residual = np.asarray(
@@ -8145,9 +8284,14 @@ for n in range(_restart_step_offset, _restart_end_step):
         # Clear stale boundary content away from current diffuse interfaces.
         rho_GB = np.where(gb_mask > P.get('gb_support_floor', 0.02), rho_GB, 0.0)
         rhoGB_delta_mean = float(np.nanmean(rho_GB - rho_GB_before))
+        _v30_boundary_recovery_rate_m2_s = np.maximum(
+            rho_GB_before-rho_GB, 0.0)/max(P['dt'], 1e-300)
     else:
+        rho_GB_before = rho_GB.copy()
         rho_GB = np.maximum(rho_GB - P['dt']*1e3*dFdg, 0)
         rho_GB += P['dt']*0.01*np.sum(np.abs(gdot),2)*gb_mask
+        _v30_boundary_recovery_rate_m2_s = np.maximum(
+            rho_GB_before-rho_GB, 0.0)/max(P['dt'], 1e-300)
 
     # --- v12 COMOVING GB-GND PROJECTION ---
     # Neutralize signed GND left behind only where GB support has departed.
@@ -8404,6 +8548,81 @@ for n in range(_restart_step_offset, _restart_end_step):
             _canonical_front_mixture.forest, _canonical_front_mixture.wall)
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
         kappa_tot = _signed_kappa_field(rp, rm)
+
+    # V30 production energy/dissipation transaction.  Every populated channel
+    # is evaluated from its own accepted affinity and extent; unavailable
+    # ownership is explicit and can never be replaced by a closure residual.
+    if P.get('v30_asb_physical_ledger', True) and not _v25_exact_freeze:
+        _v30_energy_after = _v30_physical_energy_state(
+            rho, eta, psi_lat, kappa_tot, rho_GB, gb_mask, Ng, T, sigma_bar)
+        _v30_line_affinity = np.maximum(ATpot.Estar_coeff(T), 0.0)
+        _v30_channels = {
+            'plastic_drag': accepted_channel(
+                'plastic_drag', np.maximum(np.abs(tau_effective), 0.0),
+                np.maximum(np.abs(gdot), 0.0),
+                source='accepted tau_effective and slip-rate fields',
+                component_axis=-1),
+            'mobile_forest_recovery': accepted_channel(
+                'mobile_forest_recovery', _v30_line_affinity,
+                _v30_recovery_rate_m2_s,
+                source='extent-limited KM plus accepted lattice recovery'),
+            'neutral_pair_annihilation': accepted_channel(
+                'neutral_pair_annihilation', float(np.mean(_v30_line_affinity)),
+                _v30_neutral_annihilation_rate_m2_s,
+                source='realized equal-sign-pair decrement'),
+            'boundary_recovery': accepted_channel(
+                'boundary_recovery', _v30_line_affinity,
+                _v30_boundary_recovery_rate_m2_s,
+                source='realized boundary-reservoir decrement'),
+        }
+        if _v30_junction_dissipation_W_m3 is None:
+            _v30_channels['junction_relaxation'] = unavailable_channel(
+                'junction_relaxation',
+                'legacy junction transfer has no declared free-energy affinity')
+        else:
+            _v30_channels['junction_relaxation'] = accepted_channel(
+                'junction_relaxation', _v30_junction_dissipation_W_m3,
+                np.ones_like(_v30_junction_dissipation_W_m3),
+                source='accepted common-wall reaction affinity times extent')
+        (_v30_channels['thermal_conduction'],
+         _v30_channels['declared_sinks']) = _v30_thermal_dissipation_channels(
+             0.5*(_v30_temperature_before+np.asarray(T, dtype=float)))
+        _v30_qdot = np.asarray(
+            heat_diag.get('_qdot_field', np.zeros_like(T)), dtype=float)
+        _v30_deposited = float(P['dt']*np.mean(np.maximum(_v30_qdot, 0.0)))
+        _v30_promoted_heat = float(
+            globals().get('_last_promotion_diag', {}).get('heat_released_J', 0.0))
+        _v30_volume = max(Nx*Ny*dx*dy*max(
+            float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30),
+            1e-300)
+        _v30_deposited += _v30_promoted_heat/_v30_volume
+        _v30_Tmid = 0.5*(_v30_temperature_before+np.asarray(T, dtype=float))
+        _v30_exported = P['dt']*max(float(P.get('T_bath_coupling', 0.0))
+            *float(np.mean(_v30_Tmid-float(P['T0']))), 0.0)
+        _v30_external = P['dt']*max(
+            0.5*(float(sigma_bar_old)+float(sigma_bar))*float(P['edot_app']),
+            0.0)
+        v30_asb_last_step = build_production_step_ledger(
+            channels=_v30_channels, energy_before=_v30_energy_before,
+            energy_after=_v30_energy_after,
+            external_work_J_m3=_v30_external,
+            deposited_heat_J_m3=_v30_deposited,
+            exported_heat_J_m3=_v30_exported, dt_s=P['dt'])
+        v30_asb_cumulative['accepted_steps'] += 1
+        v30_asb_cumulative['external_work_J_m3'] += _v30_external
+        v30_asb_cumulative['deposited_heat_J_m3'] += _v30_deposited
+        v30_asb_cumulative['exported_heat_J_m3'] += _v30_exported
+        v30_asb_cumulative['physical_stored_change_J_m3'] += (
+            v30_asb_last_step.physical_stored_change_J_m3)
+        v30_asb_cumulative['thermal_change_J_m3'] += (
+            v30_asb_last_step.thermal_change_J_m3)
+        v30_asb_cumulative['first_law_residual_J_m3'] += (
+            v30_asb_last_step.first_law_residual_J_m3)
+        v30_asb_cumulative['dissipation_heat_residual_J_m3'] += (
+            v30_asb_last_step.dissipation_heat_residual_J_m3)
+        for _v30_channel in v30_asb_last_step.channels:
+            v30_asb_cumulative[f'{_v30_channel.name}_J_m3'] += (
+                P['dt']*_v30_channel.dissipation_W_m3)
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:
@@ -8745,6 +8964,34 @@ if _diag_csv_fh is not None:
     _diag_csv_fh.close()
 if _sibm_contour_fh is not None:
     _sibm_contour_fh.close()
+if P.get('v30_asb_physical_ledger', True):
+    _v30_missing = ([] if v30_asb_last_step is None else [
+        channel.name for channel in v30_asb_last_step.channels
+        if not channel.available])
+    _v30_scale = max(
+        abs(float(v30_asb_cumulative['external_work_J_m3'])),
+        abs(float(v30_asb_cumulative['physical_stored_change_J_m3']))
+        +abs(float(v30_asb_cumulative['thermal_change_J_m3']))
+        +abs(float(v30_asb_cumulative['exported_heat_J_m3'])), 1.0)
+    _v30_result = {
+        'schema': 'v30-production-asb-ledger-v1',
+        'classification': ('ASB_DISSIPATION_CHANNEL_MISSING' if _v30_missing
+                           else ('ASB_PHYSICAL_ENERGY_AND_DISSIPATION_LEDGER_QUALIFIED'
+                                 if abs(v30_asb_cumulative['first_law_residual_J_m3'])
+                                 /_v30_scale <= 0.05
+                                 else 'ASB_PHYSICAL_FIRST_LAW_CLOSURE_FAILURE')),
+        'all_channels_available': not _v30_missing,
+        'missing_channels': _v30_missing,
+        'cumulative': v30_asb_cumulative,
+        'relative_first_law_residual': abs(float(
+            v30_asb_cumulative['first_law_residual_J_m3']))/_v30_scale,
+        'numerical_constraints_in_physical_energy': False,
+        'residual_defined_dissipation': False,
+        'last_step': (None if v30_asb_last_step is None
+                      else v30_asb_last_step.to_dict()),
+    }
+    (out/'v30_asb_energy_dissipation_ledger.json').write_text(
+        json.dumps(_v30_result, indent=2, sort_keys=True)+'\n')
 
 # ================================================================
 # 12. SUMMARY

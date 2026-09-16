@@ -640,6 +640,11 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
 
     junction_turnover_array = (np.stack(junction_turnovers, axis=2)
                                if junction_turnovers else np.zeros(grid+(0,)))
+    junction_dissipation = (np.sum(np.maximum(np.stack([
+        -(chemical["junction_mu_J_m"][..., index]
+          -2.0*chemical["forest_mu_J_m"])*extent
+        for index, extent in enumerate(junction_extents)], axis=2), 0.0), axis=2)
+        if junction_extents else np.zeros(grid))
     collision_frequency = (parameters.multi_hit_collision_scale
                            *np.sum(junction_turnover_array, axis=2)
                            /parameters.rho_reference_m2)
@@ -734,6 +739,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "junction": (np.stack(junction_extents, axis=2)
                      if junction_extents else np.zeros(grid+(0,))),
         "junction_turnover": junction_turnover_array,
+        # Independently evaluated reaction affinity times its signed extent.
+        # This is not the total-energy residual and remains zero at detailed
+        # balance even when forward/reverse turnover is nonzero.
+        "junction_dissipation_W_m3": junction_dissipation,
         "junction_line_sink": (np.stack([
             (2.0-topology.product_line_multiplicity)*extent
             for topology, extent in zip(topologies, junction_extents)], axis=2)
