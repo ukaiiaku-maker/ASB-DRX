@@ -1,6 +1,6 @@
 {
-  "schema": "asb-drx/v32-campaign-controller/v1",
-  "campaign": "Full-Model Autonomous Scientific Completion Campaign v32",
+  "schema": "asb-drx/v33-campaign-controller/v2",
+  "campaign": "Autonomous common-state completion and response-family campaign v33",
   "branch": "exp/full-v34-recovery-v1",
   "restart_evidence_sha": "8df28e8e3b47eea9f04c154db13f2df468c2c096",
   "immutable_v31_run_sha": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
@@ -13,26 +13,26 @@
   "branches": {
     "front": {
       "state": "MECHANISTIC_NEGATIVE",
-      "active_hypotheses": ["ordinary component split", "thin-neck contour-resolution split", "kinetic rehardening or stable arrest"],
-      "current_calculation": "all ten V31 cases closed; 128 near-equal pair reached symmetric resolved forbidden-island terminals",
-      "next_automatic_action": "freeze negative front decision and keep long-front promotion disabled"
+      "active_hypotheses": ["grid-scale Allen-Cahn representation breakdown", "capillarity-resolution alternative"],
+      "current_calculation": "preterminal n128 audit localizes one-cell, zero-pure-core filaments to the explicit Allen-Cahn trial; atomic adapter rejects without mutation",
+      "next_automatic_action": "test a physically width-preserving convergent phase discretization; retain doubled kappa only as an uncalibrated structural alternative"
     },
     "mura": {
       "state": "RUNNING_LONG",
-      "active_hypotheses": ["oversized accepted extent", "incomplete physical energy budget", "missing reverse/saturation path", "physical saturation"],
-      "current_calculation": "resume 64-square matched continuation from preserved 3.841278% checkpoint after exact zero-flux identity repair",
-      "next_automatic_action": "run conditional 128-square continuation and apply frozen below-5-percent convergence classifier"
+      "active_hypotheses": ["load-conditioned constrained trajectory", "complete-affinity family activation", "unreacted event remainder"],
+      "current_calculation": "repaired 64-square continuation remains live beyond 4.25% strain; compact full-affinity audit rejects monotone saturation and verifies physical clock semantics",
+      "next_automatic_action": "preserve continuation to horizon; do not launch broad B2 until complete-affinity activation and event-remainder semantics are selected"
     },
     "asb": {
       "state": "SCREENING_PARAMETERS",
-      "active_hypotheses": ["strict localization", "subcritical localization", "stable homogeneous response", "underexposed physical horizon"],
-      "current_calculation": "three surviving V31 controls plus eight-case 128-square Tier-1 temperature/rate screen at maximum concurrency two",
-      "next_automatic_action": "classify each adiabatic/isothermal pair; authorize seed replication only for a strict invariant-clean candidate"
+      "active_hypotheses": ["thermal-feedback causality", "broad heated response", "subthreshold localization"],
+      "current_calculation": "anchor is validity-limited mechanistic negative; Tier-1 900 K no-conduction case is terminal and its finite-bath partner remains live",
+      "next_automatic_action": "finish source-frozen Tier-1 pairs, then run prepared broad/localized flow- and recovery-temperature causal ablations by information gain"
     },
     "integrated": {
-      "state": "DIAGNOSING",
-      "current_calculation": "common Mura plus ASB is qualified; nominal common-Mura plus sparse-front mode was shown to silently freeze the front",
-      "next_automatic_action": "promote fail-fast dual-owner contract; do not claim full integration until one atomic transaction owns signed forest/wall, beta/Nye/alignment, junctions, and sparse-front reservoirs"
+      "state": "REPAIRING",
+      "current_calculation": "one-owner common-state adapter passes I0 and compact production I1 with simultaneous nonzero slip and accepted geometric sweep plus bitwise segmented restart",
+      "next_automatic_action": "complete signed-junction moving-front energy acceptance (I2), then run resolved continuation and grid comparison (I3)"
     }
   },
   "compute": {
@@ -40,6 +40,7 @@
     "local_asb_output": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
     "local_asb_tier1_output": "/Users/sdillon/HPC3/local-results/asb-drx-v32-asb-tier1-20260916",
     "local_mura_repaired_output": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916",
+    "local_v33_common_state_output": "/Users/sdillon/HPC3/local-results/v33-common-state-i1-matrix-20260916-r4",
     "v32_slurm_jobs": [],
     "unrelated_slurm_job_untouched": "55950433"
   },

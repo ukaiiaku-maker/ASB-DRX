@@ -1,5 +1,5 @@
 {
-  "schema": "asb-drx/v32-parameter-registry/v1",
+  "schema": "asb-drx/v33-parameter-registry/v2",
   "rules": {
     "hard_invariants_may_not_be_tuned": true,
     "numerical_constraint_strength_is_not_physical": true,
@@ -36,7 +36,9 @@
     "Mura event-limited storage",
     "complete explicit physical work budget",
     "reversible line storage/release with conjugate state",
-    "physical saturation/stall"
+    "physical saturation/stall",
+    "phase-gradient coefficient doubled as an uncalibrated front-resolution diagnostic",
+    "complete-affinity family activation and explicit unreacted event remainder"
   ],
   "executed_variations": {
     "front": {
@@ -50,7 +52,19 @@
       "strain_rate_s-1_at_1100_K": [10000, 100000],
       "thermal_controls": ["adiabatic", "isothermal"],
       "seed": 43,
-      "state": "RUNNING"
+      "state": "PARTIAL_900K_NO_CONDUCTION_TERMINAL_FINITE_BATH_RUNNING"
+    },
+    "v33_common_state_i1": {
+      "grid": 32,
+      "steps": 2,
+      "controls": ["front_only", "mura_only", "combined", "combined_prescribed_temperature"],
+      "state": "I0_I1_PASSED"
+    },
+    "v33_front_representation": {
+      "timestep_multipliers": [1.0, 0.5, 0.25],
+      "W_eta_multipliers": [0.5, 1.0, 2.0],
+      "kappa_eta_multipliers": [0.5, 1.0, 2.0],
+      "state": "GRID_SCALE_BREAKDOWN_DOUBLE_KAPPA_DIAGNOSTIC_ONLY"
     }
   },
   "accepted_model_changes": [
@@ -60,13 +74,19 @@
     "per-Burgers-family work complementarity",
     "fixed-total-strain energy-feasible Mura event backtracking",
     "exact zero-velocity Mura identity and zero ledger",
-    "fail-fast common-Mura/sparse-front dual-owner contract"
+    "fail-fast common-Mura/sparse-front dual-owner contract",
+    "V33 one-owner phase-supported common-front adapter",
+    "discrete product-rule Nye reconstruction after phase weighting",
+    "explicit Mura-off and prescribed-temperature exact-limit controls"
   ],
   "rejected_or_not_promoted": [
     "front kinetic retuning from a geometry-limited three-step screen",
     "state clipping or post-step projection",
     "weakening conservation or first-law tolerances",
     "nominal flag-only common-Mura/front integration",
-    "ASB Tier-2 seed replication before a strict raw Tier-1 candidate"
+    "ASB Tier-2 seed replication before a strict raw Tier-1 candidate",
+    "interpreting the n128 zero-level filament as a resolved physical grain",
+    "calling doubled capillarity a calibrated front repair",
+    "calling intermittent Mura backtracking physical saturation"
   ]
 }

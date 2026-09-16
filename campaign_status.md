@@ -1480,3 +1480,33 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   reservoirs, work, heat, and reaction extents. Full front + Mura + ASB is not
   qualified.
 - Decision report: `full_model/docs/v32_autonomous_decision_report.md`.
+
+## Directive v33 common-state completion (active 2026-09-16)
+
+- The production dual-owner guard has been replaced by an actual one-owner
+  adapter for signed mobile/forest/wall/junction inventories, plastic
+  distortion, orientation, product-rule Nye, temperature, boundary excess,
+  donor/receiver/wake history, and checkpoint state.
+- I0 and compact production I1 pass. The combined 32-square case has nonzero
+  plastic slip and accepted geometric sweep, `1.15e-16` relative front-line
+  closure, zero signed closure, and bitwise equality of 95 authoritative
+  fields across segmented restart. I2 energy acceptance and I3 resolved
+  continuation remain open; full integration is not scientifically qualified.
+- The Mura limiter acts on event amplitude, not the physical/loading clock.
+  Full discrete affinity—not raw mechanical work alone—controls the audited
+  constrained family. The live repaired continuation remains valid beyond
+  4.25% strain and is intermittent, so physical saturation is not established.
+- The n128 near-equal front terminal is a one-cell, zero-pure-core Allen-Cahn
+  representation breakdown. It is not a resolved fragmentation instability or
+  periodic seam identity failure. Doubled capillarity is an uncalibrated
+  structural alternative only.
+- The ASB anchor is a validity-limited broad-heating mechanistic negative.
+  Historical "isothermal" cases are finite-bath controls, not prescribed
+  temperature. The source-frozen Tier-1 campaign continues locally; causal
+  flow/recovery temperature ablations are prepared but not launched.
+- V33 report: `full_model/docs/v33_decision_report.md`. Machine decisions:
+  `v33_common_state_decision.json`, `v33_integrated_demonstration_decision.json`,
+  `v33_mura_affinity_audit.json`, `v33_front_preterminal_diagnostic.json`, and
+  `v33_asb_reconciliation.json`.
+- The final merged V33 worktree passes 643 tests (`PYTHONPATH=.:src pytest -q
+  tests`); detached branch test counts remain separate evidence scopes.

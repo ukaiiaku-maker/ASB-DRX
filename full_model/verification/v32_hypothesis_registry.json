@@ -1,5 +1,5 @@
 {
-  "schema": "asb-drx/v32-hypothesis-registry/v1",
+  "schema": "asb-drx/v33-hypothesis-registry/v2",
   "hypotheses": [
     {"id":"A1","branch":"front","statement":"the 64 near-equal split is ordinary physical neck breakup","discriminator":"before/after graph, enclosed material, winding, and conservative child-component ledger","state":"REJECTED_SUBCELL_ISLAND"},
     {"id":"A2","branch":"front","statement":"the split is a diffuse-contour resolution artifact","discriminator":"profile/grid replay and persistence of component separation","state":"SUPPORTED_AT_64_ONLY"},
@@ -7,10 +7,14 @@
     {"id":"B1","branch":"mura","statement":"the rejected accepted extent is too large","discriminator":"energy-feasible backtracking extent with unreacted remainder","state":"SUPPORTED_EVENT_LIMITER_PROMOTED"},
     {"id":"B2","branch":"mura","statement":"the work budget omits explicit recoverable physical energy","discriminator":"termwise first-law reconstruction at first rejected interval","state":"REJECTED_AFTER_COMPLETE_FIXED_STRAIN_BUDGET"},
     {"id":"B3","branch":"mura","statement":"line storage needs a reversible saturation/release state","discriminator":"detailed-balance release control and bounded cyclic test","state":"ACTIVE"},
-    {"id":"B4","branch":"mura","statement":"the heterogeneous proposal is physically inadmissible and should saturate","discriminator":"zero feasible extent after complete budget and timestep refinement","state":"RUNNING_NEAR_SATURATION"},
-    {"id":"C1","branch":"asb","statement":"heterogeneous adiabatic loading meets fixed strict-ASB criteria","discriminator":"128 anchor versus isothermal and homogeneous controls","state":"RUNNING"},
-    {"id":"C2","branch":"asb","statement":"localization is physical but subcritical at the anchor","discriminator":"post-peak, active fraction, width, IPR, entropy support, persistence","state":"RUNNING"},
+    {"id":"B4","branch":"mura","statement":"the heterogeneous proposal is physically inadmissible and should saturate","discriminator":"zero feasible extent after complete budget and timestep refinement","state":"UNRESOLVED_LOAD_CONDITIONED_CONSTRAINT_NOT_MONOTONE_SATURATION"},
+    {"id":"C1","branch":"asb","statement":"heterogeneous adiabatic loading meets fixed strict-ASB criteria","discriminator":"128 anchor versus finite-bath and homogeneous controls","state":"REJECTED_BEFORE_THERMAL_VALIDITY_LIMIT"},
+    {"id":"C2","branch":"asb","statement":"localization is physical but subcritical at the anchor","discriminator":"post-peak, active fraction, width, IPR, entropy support, persistence","state":"SUPPORTED_BROAD_HEATING_NOT_LOCALIZATION"},
     {"id":"C3","branch":"asb","statement":"the anchor is underexposed or outside the localization condition range","discriminator":"bounded temperature/rate/seed adaptive screen after anchor closure","state":"RUNNING_TIER1"},
-    {"id":"I1","branch":"integrated","statement":"existing common-Mura and sparse-front switches form one physically integrated transaction","discriminator":"positive-drive combined-mode reproducer and complete signed-state ownership audit","state":"REJECTED_SILENT_FRONT_FREEZE_AND_DUAL_OWNER"}
+    {"id":"I1-old","branch":"integrated","statement":"existing common-Mura and sparse-front switches form one physically integrated transaction","discriminator":"positive-drive combined-mode reproducer and complete signed-state ownership audit","state":"REJECTED_SILENT_FRONT_FREEZE_AND_DUAL_OWNER"},
+    {"id":"I0-v33","branch":"integrated","statement":"the authoritative adapter has exact front-off, Mura-off, and prescribed-temperature limits","discriminator":"four-case production matrix","state":"PASSED"},
+    {"id":"I1-v33","branch":"integrated","statement":"plastic transport and geometric front sweep coexist in the actual driver","discriminator":"combined production trajectory and front/Mura controls","state":"PASSED_COMPACT_32_GRID"},
+    {"id":"I2-v33","branch":"integrated","statement":"complete signed history transfer is energy-qualified in production","discriminator":"nonzero junction transfer, retreat/revisit, full energy gate, exact restart","state":"PARTIAL_RESTART_AND_FIXTURE_PASS_ENERGY_OPEN"},
+    {"id":"I3-v33","branch":"integrated","statement":"the integrated response continues through resolved migration/arrest/reversal","discriminator":"resolved physical horizon and grid comparison","state":"NOT_RUN"}
   ]
 }

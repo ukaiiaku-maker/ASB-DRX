@@ -42,3 +42,22 @@
   beta/Nye/alignment, and junction state. The nominal flag combination is not
   an integrated model; production is being changed to fail fast until one
   atomic common-state adapter exists.
+
+## 2026-09-16 V33 reconciliation and decisions
+
+- Restart audit resolved local and remote canonical source to `e5f6232` at
+  campaign start. V31/V32 source identities remain immutable. HPC3 queue audit
+  failed at DNS resolution and is recorded as unverified rather than inferred.
+- Common state: source `5b3b5b6`, evidence `327c730`. I0 and compact I1 pass in
+  the actual driver; 95 authoritative fields are bitwise restart-identical.
+  I2 complete front-energy acceptance and I3 continuation remain open.
+- Mura: full-affinity audit commit `e8d9331` classifies the limiter as a
+  load-conditioned physical constraint, not a second loading-clock scale or
+  demonstrated saturation. The immutable `e7aa16e` process remains live.
+- Front: source/tools `e2fcd65`, evidence `de46924`. The rejected near-equal
+  trial is an unresolved Allen-Cahn zero-level filament; the accepted physical
+  state remains bitwise pretrial. Classification:
+  `GRID_SCALE_PHASE_REPRESENTATION_BREAKDOWN`.
+- ASB: source/tools `833ad72`, reconciliation `5ec3eb5`. Anchor and 900 K
+  no-conduction cases are validity-limited negatives. The finite-bath Tier-1
+  partner remains live. Prepared causal ablations are not reported as run.
