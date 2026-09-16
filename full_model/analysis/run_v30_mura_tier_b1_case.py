@@ -30,7 +30,7 @@ from full_model.production.tensorial_nye import (
     divergence_of_nye, nye_from_plastic_distortion,
 )
 from full_model.production.v24_mechanical_wall import (
-    V24MechanicalWallState, accepted_v24_mechanical_step,
+    MuraWorkBudgetError, V24MechanicalWallState, accepted_v24_mechanical_step,
     mechanical_checkpoint_arrays, mechanical_from_checkpoint_arrays,
     synchronize_common,
 )
@@ -165,6 +165,7 @@ def compact_metrics(state, ledger, systems, topologies, spacing):
     frequency = np.hypot(np.fft.fftfreq(power.shape[0], d=spacing)[index[0]],
                          np.fft.fftfreq(power.shape[1], d=spacing)[index[1]])
     balance = ledger["mura_balance_ledger"]
+    budget = ledger["mura_work_budget"]
     return {
         "dual_nye_relative_rms": float(
             np.sqrt(np.mean((reservoir-alpha)**2))/scale),
@@ -189,6 +190,9 @@ def compact_metrics(state, ledger, systems, topologies, spacing):
                 balance["plastic_work_increment_J_m3"]))), 1.0)),
         "minimum_heat_increment_J_m3": float(np.min(
             balance["deposited_heat_increment_J_m3"])),
+        "mura_event_scale": float(ledger["mura_event_scale"]),
+        "mura_work_budget_trial_count": int(budget["trial_count"]),
+        "mura_physical_stall": bool(budget["physical_stall"]),
         "accepted_step_hard_invariant_passed": bool(
             ledger["nye_suboperator_audit"][
                 "accepted_step_hard_invariant_passed"]),
@@ -216,6 +220,8 @@ def main():
     parser.add_argument("--history-interval", type=int, default=25)
     parser.add_argument("--max-steps", type=int, default=2000000)
     parser.add_argument("--max-wall-s", type=float, default=54000.0)
+    parser.add_argument("--mura-work-budget-mode", choices=(
+        "energy_limited", "legacy_reject"), default="energy_limited")
     args = parser.parse_args()
     args.case_dir.mkdir(parents=True, exist_ok=True)
     signal.signal(signal.SIGTERM, _request_stop)
@@ -236,7 +242,9 @@ def main():
         "strain_rate_s": args.strain_rate_s,
         "initial_strain": args.initial_strain,
         "target_strain": args.target_strain, "trial_dt_s": args.trial_dt_s,
-        "source_sha": os.environ.get("V30_SOURCE_SHA", "UNRECORDED"),
+        "mura_work_budget_mode": args.mura_work_budget_mode,
+        "source_sha": os.environ.get(
+            "V32_SOURCE_SHA", os.environ.get("V30_SOURCE_SHA", "UNRECORDED")),
         "rng_state": {"ongoing_stochastic_evolution": False,
                       "initialization_seed": args.seed},
     }
@@ -279,7 +287,8 @@ def main():
             state, ledger = accepted_v24_mechanical_step(
                 state, driving, support, systems, topologies, common,
                 extensive, kinetics, args.trial_dt_s,
-                topology_route_enabled=False)
+                topology_route_enabled=False,
+                mura_work_budget_mode=args.mura_work_budget_mode)
             last_ledger = ledger
             physical_time += ledger["accepted_dt_s"]
             applied_strain = args.strain_rate_s*physical_time
@@ -337,10 +346,13 @@ def main():
             terminal = "PARTIAL_STEP_LIMIT"
     except Exception as error:
         terminal = "FAILED_SCIENTIFIC_OR_APPLICATION"
-        atomic_json(args.case_dir/"failure.json", {
+        failure = {
             "type": type(error).__name__, "message": str(error),
             "step": step, "physical_time_s": physical_time,
-            "applied_strain": applied_strain})
+            "applied_strain": applied_strain}
+        if isinstance(error, MuraWorkBudgetError):
+            failure["mura_work_budget_audit"] = error.audit
+        atomic_json(args.case_dir/"failure.json", failure)
         raise
     finally:
         if last_ledger is not None:

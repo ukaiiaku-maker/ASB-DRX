@@ -1,0 +1,127 @@
+{
+  "authorization_reason": "The local repair is admissible and timestep stable, but V31 matched-horizon spatial convergence remains false. The only justified continuation is a repaired 64/128 matched-horizon mechanical pair before temperature/rate/seed expansion.",
+  "b2_temperature_rate_seed_matrix_authorized": false,
+  "cases": [
+    {
+      "checkpoint": "checkpoint_step_000001641_strain_0.04054978.npz",
+      "coarse": {
+        "all_hard_invariants_passed": true,
+        "full_physical_stall_count": 0,
+        "maximum_first_law_relative": 7.081235050322447e-17,
+        "metrics": {
+          "alpha_rms_m1": 5982.87061515811,
+          "maximum_signed_density_m2": 6428933009446637.0,
+          "mean_total_density_m2": 1045302702395540.9,
+          "orientation_span_deg": 0.5462005220457016,
+          "slip_rms": 0.007162875479286965
+        },
+        "minimum_event_scale": 1.0,
+        "physical_horizon_s": 8.367281034695062e-10,
+        "post_step_projection_used": false,
+        "requested_dt_s": 2e-09,
+        "stalled_families_seen": [
+          2
+        ],
+        "steps": 1
+      },
+      "grid": 64,
+      "passed": true,
+      "refined": {
+        "all_hard_invariants_passed": true,
+        "full_physical_stall_count": 0,
+        "maximum_first_law_relative": 3.5537272759878244e-16,
+        "metrics": {
+          "alpha_rms_m1": 5982.570584005093,
+          "maximum_signed_density_m2": 6428907673533168.0,
+          "mean_total_density_m2": 1045299319763340.0,
+          "orientation_span_deg": 0.5462005116237193,
+          "slip_rms": 0.0071628573519121694
+        },
+        "minimum_event_scale": 1.0,
+        "physical_horizon_s": 8.367281034695062e-10,
+        "post_step_projection_used": false,
+        "requested_dt_s": 1e-10,
+        "stalled_families_seen": [
+          2
+        ],
+        "steps": 9
+      },
+      "timestep_relative_differences": {
+        "alpha_rms_m1": 5.0148360597442106e-05,
+        "maximum_signed_density_m2": 3.940920434506248e-06,
+        "mean_total_density_m2": 3.2360312406377165e-06,
+        "orientation_span_deg": 1.9080872054374727e-08,
+        "slip_rms": 2.530739903003018e-06
+      }
+    },
+    {
+      "checkpoint": "checkpoint_step_000001133_strain_0.03188658.npz",
+      "coarse": {
+        "all_hard_invariants_passed": true,
+        "full_physical_stall_count": 0,
+        "maximum_first_law_relative": 2.633622265650075e-16,
+        "metrics": {
+          "alpha_rms_m1": 4636.159921746237,
+          "maximum_signed_density_m2": 9117721911584124.0,
+          "mean_total_density_m2": 984337052862289.2,
+          "orientation_span_deg": 0.5792974761301167,
+          "slip_rms": 0.001212887453612002
+        },
+        "minimum_event_scale": 1.0,
+        "physical_horizon_s": 3.816350795727609e-10,
+        "post_step_projection_used": false,
+        "requested_dt_s": 2e-09,
+        "stalled_families_seen": [
+          3
+        ],
+        "steps": 1
+      },
+      "grid": 128,
+      "passed": true,
+      "refined": {
+        "all_hard_invariants_passed": true,
+        "full_physical_stall_count": 0,
+        "maximum_first_law_relative": 2.6582989056853584e-16,
+        "metrics": {
+          "alpha_rms_m1": 4636.077036574492,
+          "maximum_signed_density_m2": 9117721911583790.0,
+          "mean_total_density_m2": 984336958622622.8,
+          "orientation_span_deg": 0.5792971025504143,
+          "slip_rms": 0.0012128867854098054
+        },
+        "minimum_event_scale": 1.0,
+        "physical_horizon_s": 3.816350795727609e-10,
+        "post_step_projection_used": false,
+        "requested_dt_s": 4.5e-11,
+        "stalled_families_seen": [
+          3
+        ],
+        "steps": 9
+      },
+      "timestep_relative_differences": {
+        "alpha_rms_m1": 1.7877979436466008e-05,
+        "maximum_signed_density_m2": 3.6631957328688746e-14,
+        "mean_total_density_m2": 9.57392249189103e-08,
+        "orientation_span_deg": 6.448840497127327e-07,
+        "slip_rms": 5.509185495399797e-07
+      }
+    }
+  ],
+  "justified_next_cases": [
+    {
+      "condition": "mechanical_heterogeneity",
+      "grids": [
+        64,
+        128
+      ],
+      "purpose": "matched-horizon convergence of repaired family-wise stall",
+      "seed": 42,
+      "start_strain": 0.03,
+      "strain_rate_s": 10000.0,
+      "target_strain": 0.05,
+      "temperature_K": 1100.0
+    }
+  ],
+  "local_repair_gate_passed": true,
+  "schema": "asb-drx/v32-mura-repair-screen/v1"
+}

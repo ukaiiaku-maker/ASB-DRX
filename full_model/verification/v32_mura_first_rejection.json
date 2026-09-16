@@ -1,0 +1,746 @@
+{
+  "cases": [
+    {
+      "applied_strain": 0.04054977958626303,
+      "checkpoint": "checkpoint_step_000001641_strain_0.04054978.npz",
+      "checkpoint_sha256": "2c277988a1810b2bf22ecaa0ebdb7c5697c2c7500c41195d6df52ff0bd62c7d3",
+      "energy_limited_replay": {
+        "accepted_budget": {
+          "accepted_dt_s": 2e-09,
+          "active_cell_ij": [
+            28,
+            32
+          ],
+          "active_cell_line_creation_energy_J_m3": 156193.70957361895,
+          "admissibility_tolerance_J_m3_cells": 0.00011781876014559937,
+          "admissible": true,
+          "dissipative_drag_and_heat_J_m3_cells": 116642273.57443829,
+          "event_scale": 1.0,
+          "existing_defect_energy_release_J_m3_cells": 0.0,
+          "external_work_J_m3_cells": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.11990780463281253,
+            0.13858276495312477,
+            9.281250000000026e-09,
+            1049383.151119481
+          ],
+          "family_plastic_work_J_m3_cells": [
+            0.9926356093145307,
+            0.9926356147942953,
+            0.0,
+            118129050.12762338
+          ],
+          "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+          "plastic_work_J_m3_cells": 118129052.11289456,
+          "plastic_work_not_double_counted": true,
+          "proposed_defect_energy_change_J_m3_cells": 1176486.5711610715,
+          "proposed_family_work_before_stall_J_m3_cells": [
+            0.9926356093145307,
+            0.9926356147942959,
+            -120076804.91431235,
+            118129050.12762326
+          ],
+          "proposed_line_creation_energy_J_m3_cells": 1049383.4096100575,
+          "reaction_extents": {
+            "captured_line_m2_cells": 56166815613192.5,
+            "mura_line_stretching_m2_cells": 699588939740038.4
+          },
+          "recoverable_elastic_energy_release_J_m3_cells": 117818760.14559937
+        },
+        "event_scale": 1.0,
+        "family_event_scales": [
+          1.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        "first_law_residual_J_m3_cells": 1.979060471057892e-08,
+        "hard_invariant_passed": true,
+        "maximum_alignment_balance_residual_m": 6.058992105990003e-15,
+        "maximum_scalar_line_balance_residual_m": 3.309249877929688e-14,
+        "post_step_projection_used": false,
+        "result": "ACCEPTED",
+        "stalled_families": [
+          2
+        ],
+        "trial_count": 1
+      },
+      "grid": 64,
+      "legacy_timestep_audit": [
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 2.0918202586737654e-10,
+                "active_cell_ij": [
+                  37,
+                  33
+                ],
+                "active_cell_line_creation_energy_J_m3": 247323.10967715815,
+                "admissibility_tolerance_J_m3_cells": 3.557259387575358e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -4490130.548860759,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.01245655012500002,
+                  0.014393529328124991,
+                  3015614.6464805305,
+                  104879.4323296749
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.10382076385225525,
+                  0.10382076442538969,
+                  -12558954.655828798,
+                  12355237.009742567
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": -203717.4384447001,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 3557259.387575358,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.10382076385225561,
+                  0.1038207644253898,
+                  -12558954.655828806,
+                  12355237.009742554
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3120494.105660283,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 45684144454491.67,
+                  "mura_line_stretching_m2_cells": 2080329403773521.8
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": -932871.1612854004
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 2e-09,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 2.0918202586737654e-10,
+                "active_cell_ij": [
+                  37,
+                  33
+                ],
+                "active_cell_line_creation_energy_J_m3": 247323.10967715815,
+                "admissibility_tolerance_J_m3_cells": 3.557259387575358e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -4490130.548860759,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.01245655012500002,
+                  0.014393529328124991,
+                  3015614.6464805305,
+                  104879.4323296749
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.10382076385225525,
+                  0.10382076442538969,
+                  -12558954.655828798,
+                  12355237.009742567
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": -203717.4384447001,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 3557259.387575358,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.10382076385225561,
+                  0.1038207644253898,
+                  -12558954.655828806,
+                  12355237.009742554
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3120494.105660283,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 45684144454491.67,
+                  "mura_line_stretching_m2_cells": 2080329403773521.8
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": -932871.1612854004
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 1e-09,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 2.0918202586737654e-10,
+                "active_cell_ij": [
+                  37,
+                  33
+                ],
+                "active_cell_line_creation_energy_J_m3": 247323.10967715815,
+                "admissibility_tolerance_J_m3_cells": 3.557259387575358e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -4490130.548860759,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.01245655012500002,
+                  0.014393529328124991,
+                  3015614.6464805305,
+                  104879.4323296749
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.10382076385225525,
+                  0.10382076442538969,
+                  -12558954.655828798,
+                  12355237.009742567
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": -203717.4384447001,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 3557259.387575358,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.10382076385225561,
+                  0.1038207644253898,
+                  -12558954.655828806,
+                  12355237.009742554
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3120494.105660283,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 45684144454491.67,
+                  "mura_line_stretching_m2_cells": 2080329403773521.8
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": -932871.1612854004
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 5e-10,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 2.0918202586737654e-10,
+                "active_cell_ij": [
+                  37,
+                  33
+                ],
+                "active_cell_line_creation_energy_J_m3": 247323.10967715815,
+                "admissibility_tolerance_J_m3_cells": 3.557259387575358e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -4490130.548860759,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.01245655012500002,
+                  0.014393529328124991,
+                  3015614.6464805305,
+                  104879.4323296749
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.10382076385225525,
+                  0.10382076442538969,
+                  -12558954.655828798,
+                  12355237.009742567
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": -203717.4384447001,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 3557259.387575358,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.10382076385225561,
+                  0.1038207644253898,
+                  -12558954.655828806,
+                  12355237.009742554
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3120494.105660283,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 45684144454491.67,
+                  "mura_line_stretching_m2_cells": 2080329403773521.8
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": -932871.1612854004
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 2.5e-10,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 1.25e-10,
+                "active_cell_ij": [
+                  37,
+                  33
+                ],
+                "active_cell_line_creation_energy_J_m3": 145810.17371485007,
+                "admissibility_tolerance_J_m3_cells": 2.0935429815206e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -2498453.364241547,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.00743984976562499,
+                  0.00860106735937499,
+                  1774389.8908782064,
+                  62615.43267721355
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.062039725582158166,
+                  0.062039725924643456,
+                  -7504800.307144531,
+                  7383065.632976461
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": -121734.55008860119,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 2093542.9815206,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.062039725582158166,
+                  0.06203972592464349,
+                  -7504800.307144522,
+                  7383065.632976454
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 1837005.339596335,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 27299276948546.17,
+                  "mura_line_stretching_m2_cells": 1224670226397556.5
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": -404910.38272094727
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 1.25e-10,
+          "result": "REJECTED"
+        }
+      ],
+      "step": 1641
+    },
+    {
+      "applied_strain": 0.031886580091330455,
+      "checkpoint": "checkpoint_step_000001133_strain_0.03188658.npz",
+      "checkpoint_sha256": "c3c11d8107d2c3476d9816fd7b295d1a947382861f27a6636da04be2a97b4a83",
+      "energy_limited_replay": {
+        "accepted_budget": {
+          "accepted_dt_s": 2e-09,
+          "active_cell_ij": [
+            70,
+            67
+          ],
+          "active_cell_line_creation_energy_J_m3": 84568.99820157047,
+          "admissibility_tolerance_J_m3_cells": 0.00019452625308581542,
+          "admissible": true,
+          "dissipative_drag_and_heat_J_m3_cells": 192876358.80615476,
+          "event_scale": 1.0,
+          "existing_defect_energy_release_J_m3_cells": 0.0,
+          "external_work_J_m3_cells": 0.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "family_line_creation_energy_J_m3_cells": [
+            0.26883590179687444,
+            0.2670499128281255,
+            1399944.8352698388,
+            3.78749999999987e-08
+          ],
+          "family_plastic_work_J_m3_cells": [
+            1.3731268949042885,
+            1.373126889913765,
+            194566102.60968137,
+            0.0
+          ],
+          "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+          "plastic_work_J_m3_cells": 194566105.35593477,
+          "plastic_work_not_double_counted": true,
+          "proposed_defect_energy_change_J_m3_cells": 1649894.279660684,
+          "proposed_family_work_before_stall_J_m3_cells": [
+            1.3731268949042685,
+            1.373126889913748,
+            194566102.60968068,
+            -132523899.89447697
+          ],
+          "proposed_line_creation_energy_J_m3_cells": 1399945.3711556979,
+          "reaction_extents": {
+            "captured_line_m2_cells": 145305424475371.22,
+            "mura_line_stretching_m2_cells": 933296914103798.6
+          },
+          "recoverable_elastic_energy_release_J_m3_cells": 194526253.08581543
+        },
+        "event_scale": 1.0,
+        "family_event_scales": [
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        "first_law_residual_J_m3_cells": -1.210719347000122e-08,
+        "hard_invariant_passed": true,
+        "maximum_alignment_balance_residual_m": 2.2532207880007088e-15,
+        "maximum_scalar_line_balance_residual_m": 4.673004150390626e-15,
+        "post_step_projection_used": false,
+        "result": "ACCEPTED",
+        "stalled_families": [
+          3
+        ],
+        "trial_count": 1
+      },
+      "grid": 128,
+      "legacy_timestep_audit": [
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 9.540876989319022e-11,
+                "active_cell_ij": [
+                  71,
+                  62
+                ],
+                "active_cell_line_creation_energy_J_m3": 885238.620858213,
+                "admissibility_tolerance_J_m3_cells": 4.4072069130194994e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -2007605.3289130544,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.011398511671875052,
+                  0.012425465999999979,
+                  55479.53434425822,
+                  3433313.4683172344
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.06550417397503695,
+                  0.06550417373696733,
+                  9281656.256450916,
+                  -6321971.135190188
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": 2959685.2522691414,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 4407206.9130195,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.06550417397503608,
+                  0.06550417373696636,
+                  9281656.25645093,
+                  -6321971.135190164
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3488793.026485469,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 406824636916405.5,
+                  "mura_line_stretching_m2_cells": 2325862017656980.0
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": 2399601.5841064453
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 2e-09,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 9.540876989319022e-11,
+                "active_cell_ij": [
+                  71,
+                  62
+                ],
+                "active_cell_line_creation_energy_J_m3": 885238.620858213,
+                "admissibility_tolerance_J_m3_cells": 4.4072069130194994e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -2007605.3289130544,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.011398511671875052,
+                  0.012425465999999979,
+                  55479.53434425822,
+                  3433313.4683172344
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.06550417397503695,
+                  0.06550417373696733,
+                  9281656.256450916,
+                  -6321971.135190188
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": 2959685.2522691414,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 4407206.9130195,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.06550417397503608,
+                  0.06550417373696636,
+                  9281656.25645093,
+                  -6321971.135190164
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3488793.026485469,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 406824636916405.5,
+                  "mura_line_stretching_m2_cells": 2325862017656980.0
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": 2399601.5841064453
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 1e-09,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 9.540876989319022e-11,
+                "active_cell_ij": [
+                  71,
+                  62
+                ],
+                "active_cell_line_creation_energy_J_m3": 885238.620858213,
+                "admissibility_tolerance_J_m3_cells": 4.4072069130194994e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -2007605.3289130544,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.011398511671875052,
+                  0.012425465999999979,
+                  55479.53434425822,
+                  3433313.4683172344
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.06550417397503695,
+                  0.06550417373696733,
+                  9281656.256450916,
+                  -6321971.135190188
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": 2959685.2522691414,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 4407206.9130195,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.06550417397503608,
+                  0.06550417373696636,
+                  9281656.25645093,
+                  -6321971.135190164
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3488793.026485469,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 406824636916405.5,
+                  "mura_line_stretching_m2_cells": 2325862017656980.0
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": 2399601.5841064453
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 5e-10,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 9.540876989319022e-11,
+                "active_cell_ij": [
+                  71,
+                  62
+                ],
+                "active_cell_line_creation_energy_J_m3": 885238.620858213,
+                "admissibility_tolerance_J_m3_cells": 4.4072069130194994e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -2007605.3289130544,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.011398511671875052,
+                  0.012425465999999979,
+                  55479.53434425822,
+                  3433313.4683172344
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.06550417397503695,
+                  0.06550417373696733,
+                  9281656.256450916,
+                  -6321971.135190188
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": 2959685.2522691414,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 4407206.9130195,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.06550417397503608,
+                  0.06550417373696636,
+                  9281656.25645093,
+                  -6321971.135190164
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3488793.026485469,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 406824636916405.5,
+                  "mura_line_stretching_m2_cells": 2325862017656980.0
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": 2399601.5841064453
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 2.5e-10,
+          "result": "REJECTED"
+        },
+        {
+          "audit": {
+            "mode": "legacy_reject",
+            "trials": [
+              {
+                "accepted_dt_s": 9.540876989319022e-11,
+                "active_cell_ij": [
+                  71,
+                  62
+                ],
+                "active_cell_line_creation_energy_J_m3": 885238.620858213,
+                "admissibility_tolerance_J_m3_cells": 4.4072069130194994e-06,
+                "admissible": false,
+                "dissipative_drag_and_heat_J_m3_cells": -2007605.3289130544,
+                "event_scale": 1.0,
+                "existing_defect_energy_release_J_m3_cells": 0.0,
+                "external_work_J_m3_cells": 0.0,
+                "family_event_scales": [
+                  1.0,
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "family_line_creation_energy_J_m3_cells": [
+                  0.011398511671875052,
+                  0.012425465999999979,
+                  55479.53434425822,
+                  3433313.4683172344
+                ],
+                "family_plastic_work_J_m3_cells": [
+                  0.06550417397503695,
+                  0.06550417373696733,
+                  9281656.256450916,
+                  -6321971.135190188
+                ],
+                "mechanical_source_ownership": "fixed_total_strain_recoverable_elastic_release",
+                "plastic_work_J_m3_cells": 2959685.2522691414,
+                "plastic_work_not_double_counted": true,
+                "proposed_defect_energy_change_J_m3_cells": 4407206.9130195,
+                "proposed_family_work_before_stall_J_m3_cells": [
+                  0.06550417397503608,
+                  0.06550417373696636,
+                  9281656.25645093,
+                  -6321971.135190164
+                ],
+                "proposed_line_creation_energy_J_m3_cells": 3488793.026485469,
+                "reaction_extents": {
+                  "captured_line_m2_cells": 406824636916405.5,
+                  "mura_line_stretching_m2_cells": 2325862017656980.0
+                },
+                "recoverable_elastic_energy_release_J_m3_cells": 2399601.5841064453
+              }
+            ]
+          },
+          "message": "Mura line storage exceeds available plastic work",
+          "requested_dt_s": 1.25e-10,
+          "result": "REJECTED"
+        }
+      ],
+      "step": 1133
+    }
+  ],
+  "exact_off_control": "mura_work_budget_mode=legacy_reject",
+  "hypothesis_decisions": {
+    "B1_event_extent_too_large": "REJECTED AS A SCALAR TIMESTEP EXPLANATION: every tested interval remains inadmissible; family-wise constrained extent remains necessary and leaves its remainder unreacted",
+    "B2_omitted_physical_energy_source": "REJECTED AT FIRST FAILURE: independently recomputed elastic release plus complete defect free-energy change remains inadmissible for the unpartitioned event",
+    "B3_missing_reverse_or_saturation": "NOT REQUIRED FOR THIS FIRST FAILURE: existing reverse routes cannot be spent prospectively; retain for later exposure tests",
+    "B4_physical_stall": "SUPPORTED PER BURGERS FAMILY: the negative-work family stalls while positive-work families advance conservatively"
+  },
+  "immutable_v31_source_sha": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+  "promoted_repair": "family-wise dissipation complementarity followed by atomic event backtracking against recoverable elastic release and exact defect free-energy change",
+  "schema": "asb-drx/v32-mura-first-rejection/v1"
+}

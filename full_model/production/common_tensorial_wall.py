@@ -479,6 +479,9 @@ def taylor_resistance_Pa(state, systems, topologies, parameters):
 def resolved_driving_components(state, driving, systems, topologies, parameters):
     """Return raw/effective stress, Taylor resistance, and glide speed."""
     family_shape = state.mobile_plus_m2.shape
+    stress_tensor = None
+    compatible_strain = None
+    eigenstrain = None
     if driving.resolved_stress_Pa is None:
         if driving.mean_strain is None:
             raise ValueError("mean strain is required when stress is not prescribed")
@@ -486,7 +489,7 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
         eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
         if driving.fixed_eigenstrain is not None:
             eigenstrain = eigenstrain+np.asarray(driving.fixed_eigenstrain)
-        stress_tensor, _ = solve_periodic_eigenstrain(
+        stress_tensor, compatible_strain = solve_periodic_eigenstrain(
             eigenstrain, driving.mean_strain, parameters.spacing_m,
             parameters.c11_Pa, parameters.c12_Pa, parameters.c44_Pa,
             iterations=parameters.elastic_iterations)
@@ -519,7 +522,10 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
         raise ValueError("glide speed requires grid x family layout")
     return {"speed_m_s": speed, "raw_stress_Pa": raw,
             "effective_stress_Pa": effective,
-            "taylor_resistance_Pa": resistance}
+            "taylor_resistance_Pa": resistance,
+            "stress_tensor_Pa": stress_tensor,
+            "compatible_strain": compatible_strain,
+            "eigenstrain": eigenstrain}
 
 
 def resolved_driving_fields(state, driving, systems, parameters):

@@ -1,0 +1,46 @@
+{
+  "schema": "asb-drx/v32-mura-matched-continuation/v1",
+  "status": "PREPARED_NOT_LAUNCHED",
+  "authorization": "ONLY_MATCHED_64_128_CONTINUATION",
+  "source_requirement": "commit containing the qualified V32 work-budget repair",
+  "immutable_input_root": "/Users/sdillon/HPC3/v31-evidence/mura-b1-56070295/raw/cases",
+  "output_root": "full_model/production/output/v32-mura-matched-continuation",
+  "estimated_sequential_local_runtime_hours": [4.0, 5.0],
+  "recovery_checkpoint_max_seconds": 840,
+  "common": {
+    "condition": "mechanical_heterogeneity",
+    "seed": 42,
+    "temperature_K": 1100.0,
+    "strain_rate_s": 10000.0,
+    "initial_strain": 0.03,
+    "target_strain": 0.05,
+    "trial_dt_s": 2e-9,
+    "mura_work_budget_mode": "energy_limited",
+    "progress_checkpoint_strain": 0.002,
+    "wall_checkpoint_s": 840,
+    "history_interval": 25
+  },
+  "cases": [
+    {
+      "grid": 64,
+      "input_checkpoint": "mechanical_heterogeneity_64/checkpoint_step_000001000_strain_0.03000000.npz",
+      "input_checkpoint_sha256": "deb10fdeb921770b54e5fa4136f4e4b4e2689269b4a5cb2604029367512d02d0"
+    },
+    {
+      "grid": 128,
+      "input_checkpoint": "mechanical_heterogeneity_128/checkpoint_step_000001000_strain_0.03000000.npz",
+      "input_checkpoint_sha256": "fff0212845fb9d9017454edb4d9e5b1c7eb2e6c4650263c4a29688c3c6a48b17"
+    }
+  ],
+  "promotion_rule": {
+    "required": [
+      "all hard invariants pass",
+      "nonnegative physical heat",
+      "first-law relative residual below 2e-11",
+      "no post-step projection",
+      "matched 5% physical horizon",
+      "declared organization observables agree within 5%"
+    ],
+    "temperature_rate_seed_matrix_authorized_now": false
+  }
+}
