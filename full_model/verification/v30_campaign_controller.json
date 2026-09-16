@@ -5,24 +5,28 @@
   "states": ["BLOCKED_BY_DEPENDENCY", "READY", "RUNNING", "PASSED", "FAILED_SCIENTIFIC", "FAILED_INFRASTRUCTURE", "SUPERSEDED"],
   "branches": {
     "front": {
-      "state": "RUNNING",
+      "state": "PASSED",
       "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v30-front",
       "branch": "exp/v30-front-integration",
       "local_hard_gate": "production atomic front adapter",
-      "long_run": "BLOCKED_BY_DEPENDENCY"
+      "classification": "PRODUCTION_COUPLED_BIDIRECTIONAL_FRONT_QUALIFIED_LOCAL",
+      "long_run": "READY"
     },
     "mura_nye": {
-      "state": "RUNNING",
+      "state": "PASSED",
       "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v30-nye",
       "branch": "exp/v30-mura-integration",
       "local_hard_gate": "one authoritative accepted Mura face flux",
-      "long_run": "BLOCKED_BY_DEPENDENCY"
+      "classification": "PRODUCTION_MURA_NYE_KINEMATICS_QUALIFIED",
+      "long_run": "READY"
     },
     "asb_energy": {
       "state": "RUNNING",
       "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v30-asb",
       "branch": "exp/v30-asb-ledger",
       "local_hard_gate": "all production dissipation channels independently populated",
+      "last_gate_state": "FAILED_SCIENTIFIC",
+      "classification": "ASB_DISSIPATION_CHANNEL_MISSING",
       "long_run": "BLOCKED_BY_DEPENDENCY"
     },
     "fully_integrated": {

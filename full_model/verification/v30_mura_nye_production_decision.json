@@ -1,8 +1,8 @@
 {
   "canonical_regression": {
-    "duration_s": 69.37,
+    "duration_s": 63.56,
     "failed": 0,
-    "passed": 524
+    "passed": 565
   },
   "classification": "PRODUCTION_MURA_NYE_KINEMATICS_QUALIFIED",
   "controls": {
@@ -146,7 +146,7 @@
   ],
   "schema": "asb-drx/v30-mura-nye-production-decision/v1",
   "scientific_gate_passed": true,
-  "source_sha": "cbded2c430bc057ea37d0c416f0b8195869f94d7",
+  "source_sha": "3809ecfeb3c3887a0b1a4341f490d3860d57038e",
   "transition_band_records": [
     {
       "accepted_time_s": 6.449393933145736e-09,
