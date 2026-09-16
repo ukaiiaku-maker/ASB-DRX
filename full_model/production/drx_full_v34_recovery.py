@@ -100,6 +100,7 @@ from common_tensorial_wall import (
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, canonicalize_normal_sweep,
+    complete_front_state_is_exactly_equal,
     initialize_sparse_front,
     initialize_existing_boundary_front,
     front_feasibility_fields,
@@ -7771,10 +7772,31 @@ for n in range(_restart_step_offset, _restart_end_step):
                     and float(sibm_experiment_state.get(
                         'parent_mean_density_m2', np.nan))
                     == float(sibm_experiment_state.get(
-                        'child_mean_density_m2', np.nan))):
+                        'child_mean_density_m2', np.nan))
+                    and complete_front_state_is_exactly_equal(
+                        sparse_front_state)):
                 # Exact label symmetry forbids an irreversible material sweep.
                 # The diffuse eta profile may still relax toward its discrete
                 # stationary shape; that relaxation is not front passage.
+                _suppressed_sweep = _newly_swept_geometry.copy()
+                _represented_thickness = max(
+                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                    1e-30)
+                sibm_experiment_state['equal_state_projection_activations'] = (
+                    int(sibm_experiment_state.get(
+                        'equal_state_projection_activations', 0))+1)
+                sibm_experiment_state['equal_state_suppressed_abs_volume_m3'] = (
+                    float(sibm_experiment_state.get(
+                        'equal_state_suppressed_abs_volume_m3', 0.0))
+                    +float(np.sum(np.abs(_suppressed_sweep),
+                                  dtype=np.longdouble))*dx*dy
+                    *_represented_thickness)
+                sibm_experiment_state['equal_state_suppressed_signed_volume_m3'] = (
+                    float(sibm_experiment_state.get(
+                        'equal_state_suppressed_signed_volume_m3', 0.0))
+                    +float(np.sum(_suppressed_sweep,
+                                  dtype=np.longdouble))*dx*dy
+                    *_represented_thickness)
                 _newly_swept_geometry = np.zeros_like(
                     _newly_swept_geometry)
             if (not P.get('sibm_front_processing_enabled', True)

@@ -845,7 +845,10 @@ def advance_front(state, new_child_fraction, *, cell_area_m2,
         old.heat_released_J+energy,
         old.swept_volume_m3+swept_volume,
         old.requested_swept_volume_m3+requested_volume,
-        old.capacity_limited_volume_m3+(requested_volume-swept_volume))
+        old.capacity_limited_volume_m3+(requested_volume-swept_volume),
+        old.boundary_line_recovered_m,
+        old.boundary_signed_released_m,
+        old.boundary_neutral_recovered_m)
     return replace(candidate, ledger=ledger), mixture
 
 

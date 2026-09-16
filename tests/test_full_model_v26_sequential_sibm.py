@@ -103,3 +103,29 @@ def test_boundary_recovery_releases_signed_line_into_recovered_wake_after_retrea
         (mixture_after.rp-mixture_after.rm)
         -(mixture_before.rp-mixture_before.rm), released_signed,
         rtol=2e-15, atol=1e-15)
+
+
+def test_front_advance_preserves_cumulative_boundary_recovery_ledger():
+    rp = np.full((2, 2, 1), 4.0); rm = np.full_like(rp, 2.0)
+    defect = DefectState(rp, rm, np.zeros_like(rp), np.zeros((2, 2)))
+    state = initialize_existing_boundary_front(
+        defect, np.zeros((2, 2)), 6.0, 0, 1)
+    state, _ = advance_front(
+        state, np.full((2, 2), .25), cell_area_m2=1.0,
+        represented_thickness_m=1.0, line_energy_J_m=3.0,
+        newly_swept_fraction=np.full((2, 2), .25),
+        transmission_fraction=.5, boundary_storage_fraction=1.0)
+    state, _ = recover_boundary_reservoir(
+        state, .25, cell_area_m2=1.0, represented_thickness_m=1.0,
+        line_energy_J_m=3.0)
+    recovered = state.ledger.boundary_line_recovered_m
+    signed = state.ledger.boundary_signed_released_m
+    neutral = state.ledger.boundary_neutral_recovered_m
+    state, _ = advance_front(
+        state, np.full((2, 2), .20), cell_area_m2=1.0,
+        represented_thickness_m=1.0, line_energy_J_m=3.0,
+        newly_swept_fraction=np.full((2, 2), -.05),
+        transmission_fraction=.5, boundary_storage_fraction=1.0)
+    assert state.ledger.boundary_line_recovered_m == recovered
+    assert state.ledger.boundary_signed_released_m == signed
+    assert state.ledger.boundary_neutral_recovered_m == neutral
