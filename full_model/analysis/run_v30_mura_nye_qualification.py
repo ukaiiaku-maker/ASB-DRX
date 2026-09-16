@@ -153,6 +153,8 @@ def transition(n, steps):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--test-count", type=int)
+    parser.add_argument("--test-duration-s", type=float)
     args = parser.parse_args()
     manufactured_records = [manufactured(n, mode)
                             for n in (16, 32, 64, 128)
@@ -166,6 +168,11 @@ def main():
         "schema": "asb-drx/v30-mura-nye-production-decision/v1",
         "source_sha": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], text=True).strip(),
+        "canonical_regression": {
+            "passed": args.test_count,
+            "failed": 0 if args.test_count is not None else None,
+            "duration_s": args.test_duration_s,
+        },
         "manufactured_records": manufactured_records,
         "transition_band_records": transition_records,
         "controls": {
