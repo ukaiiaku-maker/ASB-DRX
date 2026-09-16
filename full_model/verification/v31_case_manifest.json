@@ -1,0 +1,38 @@
+{
+  "schema": "asb-drx/v31-case-manifest/v1",
+  "branch": "exp/full-v34-recovery-v1",
+  "immutable_run_source_sha": "c643afe00b4ea6f7f30e021675d7648ecdb6422c",
+  "remote_branch_verified": true,
+  "v30_reconciliation": "full_model/verification/v31_v30_run_reconciliation.json",
+  "tests": {"canonical_passed": 599, "canonical_failed": 0, "front_focused_passed": 80, "mura_postprocess_passed": 3, "asb_expanded_passed": 68},
+  "branches": {
+    "front": {
+      "local_gate": "TOPOLOGY_AWARE_FRONT_ADAPTER_QUALIFIED",
+      "long_state": "RUNNING_LOCAL",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916",
+      "case_count": 10,
+      "maximum_concurrency": 4,
+      "checkpoint_wallclock_seconds": 840,
+      "completed_v30_controls_replayed": false,
+      "a2_authorized": false
+    },
+    "mura_nye": {
+      "state": "FAILED_SCIENTIFIC",
+      "classification": "TIER_B1_MECHANICAL_HETEROGENEITY_THERMODYNAMIC_ADMISSIBILITY_FAILURE",
+      "b2_authorized": false,
+      "resubmitted": false
+    },
+    "asb": {
+      "local_gate": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+      "secondary_classification": "ASB_ORIENTATION_NUMERICAL_CONSTRAINT_CONTAMINATION_REMOVED",
+      "anchor_state": "RUNNING_LOCAL",
+      "output_root": "/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916",
+      "case_count": 4,
+      "maximum_concurrency": 4,
+      "grid": 128,
+      "resolved_classification": "PENDING"
+    },
+    "integrated": {"state": "BLOCKED_BY_MURA_B1_SCIENTIFIC_GATE"}
+  },
+  "slurm": {"v31_jobs": [], "unrelated_job_untouched": "55950433"}
+}

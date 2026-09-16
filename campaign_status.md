@@ -1,6 +1,27 @@
 # Campaign status
 
-Updated: 2026-09-15 (America/Los_Angeles)
+Updated: 2026-09-16 (America/Los_Angeles)
+
+## Directive v31 production repair and bounded continuations
+
+- V30 jobs are closed and their 408-file, 577 MiB front/Mura evidence archive
+  is frozen locally with a matching remote/local aggregate SHA-256. The stale
+  Mura planning manifest was preserved and reconciled separately.
+- A periodic contour-component tracker replaces fixed ray-crossing identity.
+  The old 64/128 favorable failure states now replay with one persistent
+  component and closed ledgers. Focused front tests pass 80/80.
+- Mura B1 is a decision-grade negative: four cases reach 20% strain with the
+  kinematic invariants intact, while both heterogeneous cases stop below 5%
+  strain because proposed line storage exceeds available plastic work. The
+  common 3% horizon is not grid-converged; B2 is not authorized.
+- The common-Mura ASB path removes numerical-penalty-driven orientation,
+  disables the unaffined legacy junction transfer, and closes seven physical
+  dissipation channels. Local 32/64/128 gates and exact restart pass.
+- Immutable source `c643afe` is pushed. Ten failed front cases and four
+  128-square ASB anchors are running locally in restartable, bounded bundles.
+  No V31 Slurm job was submitted; unrelated job `55950433` remains untouched.
+- The canonical suite passes 599 tests. Generic SIBM, physical LAGB, resolved
+  strict ASB, full DRX, and a fully integrated mechanism remain unqualified.
 
 ## Directive v26 local qualification and HPC continuation
 

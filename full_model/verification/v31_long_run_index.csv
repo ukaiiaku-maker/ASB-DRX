@@ -1,0 +1,15 @@
+branch,case,grid,condition,state,source_sha,input_checkpoint_or_seed,output_root,classifier
+front,a1_n64_favorable,64,favorable,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000000,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n64_reversed,64,reversed,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000000,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n64_label_swap_favorable,64,label_swap_favorable,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000000,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n64_delta_p1e-6,64,near_equal_plus,PASSED_TERMINAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000100,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,SIBM_PHYSICAL_TOPOLOGY_TERMINAL
+front,a1_n64_delta_m1e-6,64,near_equal_minus,QUEUED_LOCAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000100,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n128_favorable,128,favorable,QUEUED_LOCAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000000,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n128_reversed,128,reversed,QUEUED_LOCAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000000,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n128_label_swap_favorable,128,label_swap_favorable,QUEUED_LOCAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000000,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n128_delta_p1e-6,128,near_equal_plus,QUEUED_LOCAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000100,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+front,a1_n128_delta_m1e-6,128,near_equal_minus,QUEUED_LOCAL,c643afe00b4ea6f7f30e021675d7648ecdb6422c,v30_restart_000100,/Users/sdillon/HPC3/local-results/asb-drx-v31-front-continuation-20260916,PENDING
+asb,heterogeneous_adiabatic,128,T1100_rate3e4_seed43,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,seed43,/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916,PENDING
+asb,heterogeneous_isothermal,128,T1100_rate3e4_seed43,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,seed43,/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916,PENDING
+asb,homogeneous_adiabatic,128,T1100_rate3e4_seed43,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,seed43,/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916,PENDING
+asb,homogeneous_isothermal,128,T1100_rate3e4_seed43,RUNNING,c643afe00b4ea6f7f30e021675d7648ecdb6422c,seed43,/Users/sdillon/HPC3/local-results/asb-drx-v31-asb-anchor-20260916,PENDING
