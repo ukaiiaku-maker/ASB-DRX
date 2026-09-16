@@ -122,6 +122,31 @@ def canonicalize_normal_sweep(increment, *, roundoff_factor=4096.0):
     return np.where(np.abs(value) <= tolerance, 0.0, value)
 
 
+def translation_sweep_from_profile_change(increment, normal_axis):
+    """Remove paired diffuse-width relaxation from a contour-fraction change.
+
+    Along every ray normal to the selected interface, only the signed integral
+    is physical translation.  Simultaneous positive and negative changes on
+    that ray are profile broadening/sharpening and cannot process virgin
+    material in both directions.  The retained one-sign field has exactly the
+    same ray-wise signed integral as the input.
+    """
+    value = np.asarray(increment, dtype=float)
+    axis = int(normal_axis)
+    if value.ndim != 2 or axis not in (0, 1) or not np.all(np.isfinite(value)):
+        raise ValueError("profile change requires a finite 2-D field and axis 0 or 1")
+    positive = np.maximum(value, 0.0)
+    negative = np.maximum(-value, 0.0)
+    ptotal = np.sum(positive, axis=axis, keepdims=True)
+    ntotal = np.sum(negative, axis=axis, keepdims=True)
+    net = ptotal-ntotal
+    pscale = np.divide(
+        np.maximum(net, 0.0), ptotal, out=np.zeros_like(net), where=ptotal > 0.0)
+    nscale = np.divide(
+        np.maximum(-net, 0.0), ntotal, out=np.zeros_like(net), where=ntotal > 0.0)
+    return positive*pscale-negative*nscale
+
+
 def complete_front_state_is_exactly_equal(state):
     """True only for the label-symmetric, reservoir-free complete state."""
     reservoirs = ("rp", "rm", "forest", "wall")
@@ -133,6 +158,53 @@ def complete_front_state_is_exactly_equal(state):
             for name in reservoirs)
         and not np.any(state.boundary_line_density_m2)
         and not np.any(state.boundary_signed_density_m2))
+
+
+def supported_front_state_is_exactly_equal(state):
+    """Test physical owner equality to a machine-roundoff tolerance.
+
+    The parent field is the common reference.  Child and recovered-wake
+    intensities must equal it wherever those owners have nonzero support.  The
+    tolerance is eight machine epsilons of the compared scale, which absorbs
+    only weighted-mixture roundoff.  A zero-support latent slot has no
+    extensive content and therefore cannot break physical label symmetry.
+    """
+    if (np.any(state.boundary_line_density_m2)
+            or np.any(state.boundary_signed_density_m2)):
+        return False
+    child_mask = state.chi > 0.0
+    wake_mask = state.processed_max-state.chi > 0.0
+    for name in ("rp", "rm", "forest", "wall"):
+        parent = np.asarray(getattr(state.parent, name))
+        child = np.asarray(getattr(state.child, name))
+        wake = np.asarray(getattr(state.recovered_wake, name))
+        cmask = (np.broadcast_to(child_mask[:, :, None], parent.shape)
+                 if parent.ndim == 3 else child_mask)
+        wmask = (np.broadcast_to(wake_mask[:, :, None], parent.shape)
+                 if parent.ndim == 3 else wake_mask)
+        for candidate, mask in ((child, cmask), (wake, wmask)):
+            if not np.any(mask):
+                continue
+            scale = max(float(np.max(np.abs(parent[mask]))),
+                        float(np.max(np.abs(candidate[mask]))), 1.0)
+            if float(np.max(np.abs(candidate[mask]-parent[mask]))) > (
+                    8.0*np.finfo(float).eps*scale):
+                return False
+    return True
+
+
+def front_is_unprocessed_and_reservoir_free(state):
+    """Return whether no irreversible front event has ever been accepted."""
+    ledger = state.ledger
+    irreversible = (
+        ledger.parent_line_processed_m, ledger.child_line_transmitted_m,
+        ledger.boundary_line_stored_m, ledger.neutral_pair_annihilated_m,
+        ledger.sink_line_m, ledger.swept_volume_m3,
+        ledger.boundary_line_recovered_m, ledger.boundary_signed_released_m,
+        ledger.boundary_neutral_recovered_m)
+    return bool(all(value == 0.0 for value in irreversible)
+                and not np.any(state.boundary_line_density_m2)
+                and not np.any(state.boundary_signed_density_m2))
 
 
 def _validate_defect(state):

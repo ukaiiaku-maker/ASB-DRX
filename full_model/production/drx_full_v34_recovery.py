@@ -100,7 +100,7 @@ from common_tensorial_wall import (
 from moving_front import (
     DefectState, FrontAdmissibilityError, activated_front_fraction, advance_front,
     apply_common_constitutive_increment, canonicalize_normal_sweep,
-    complete_front_state_is_exactly_equal,
+    front_is_unprocessed_and_reservoir_free,
     initialize_sparse_front,
     initialize_existing_boundary_front,
     front_feasibility_fields,
@@ -109,6 +109,7 @@ from moving_front import (
     state_from_checkpoint as sparse_front_from_checkpoint,
     state_metadata_json as sparse_front_metadata_json,
     phase_total_line_densities as sparse_phase_total_line_densities,
+    translation_sweep_from_profile_change,
     total_line_density as sparse_total_line_density,
 )
 
@@ -7759,6 +7760,10 @@ for n in range(_restart_step_offset, _restart_end_step):
             _contour1 = _subcell_contour_fraction(_phi1)
             _newly_swept_geometry = np.where(
                 sibm_active_mask, _contour1-_contour0, 0.0)
+            _advance_axis = (0 if abs(int(sibm_experiment_state[
+                'advance_direction_index'][0])) > 0 else 1)
+            _newly_swept_geometry = translation_sweep_from_profile_change(
+                _newly_swept_geometry, _advance_axis)
             # Exact equal-state symmetry can leave O(eps) differences after
             # the phase simplex projection.  Allowing those roundoff cells to
             # process finite defect content creates a false autocatalytic SIBM
@@ -7773,7 +7778,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                         'parent_mean_density_m2', np.nan))
                     == float(sibm_experiment_state.get(
                         'child_mean_density_m2', np.nan))
-                    and complete_front_state_is_exactly_equal(
+                    and front_is_unprocessed_and_reservoir_free(
                         sparse_front_state)):
                 # Exact label symmetry forbids an irreversible material sweep.
                 # The diffuse eta profile may still relax toward its discrete

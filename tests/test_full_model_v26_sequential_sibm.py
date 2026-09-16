@@ -4,7 +4,9 @@ from full_model.production.symmetric_sibm import (
 from full_model.production.moving_front import (
     DefectState, complete_front_state_is_exactly_equal,
     advance_front, canonicalize_normal_sweep, initialize_existing_boundary_front,
-    recover_boundary_reservoir,
+    front_is_unprocessed_and_reservoir_free, recover_boundary_reservoir,
+    supported_front_state_is_exactly_equal,
+    translation_sweep_from_profile_change,
 )
 import numpy as np
 
@@ -44,6 +46,26 @@ def test_contour_canonicalization_removes_only_machine_roundoff():
     np.testing.assert_array_equal(result[2:], [-1e-9, 1e-9])
 
 
+def test_translation_sweep_removes_width_change_and_preserves_ray_integral():
+    profile_change = np.array([
+        [-.2, -.1, .0], [-.1, .0, .2], [.1, .2, .3], [.2, -.1, .1]])
+    result = translation_sweep_from_profile_change(profile_change, 0)
+    np.testing.assert_allclose(np.sum(result, axis=0),
+                               np.sum(profile_change, axis=0), atol=1e-16)
+    ray_net = np.sum(profile_change, axis=0)
+    for column, net in enumerate(ray_net):
+        if net > 0.0:
+            assert np.all(result[:, column] >= 0.0)
+        elif net < 0.0:
+            assert np.all(result[:, column] <= 0.0)
+
+
+def test_translation_sweep_rejects_pure_profile_broadening():
+    change = np.array([[-.2, -.1], [-.1, -.2], [.1, .2], [.2, .1]])
+    np.testing.assert_allclose(
+        translation_sweep_from_profile_change(change, 0), 0.0, atol=1e-16)
+
+
 def test_exact_equal_front_state_loses_symmetry_when_boundary_content_appears():
     rp = np.ones((2, 2, 1)); rm = np.ones_like(rp)
     defect = DefectState(rp, rm, np.zeros_like(rp), np.zeros((2, 2)))
@@ -52,6 +74,32 @@ def test_exact_equal_front_state_loses_symmetry_when_boundary_content_appears():
     assert complete_front_state_is_exactly_equal(state)
     state.boundary_line_density_m2[0, 0] = 1.0
     assert not complete_front_state_is_exactly_equal(state)
+
+
+def test_supported_equality_ignores_only_zero_support_latent_wake():
+    rp = np.ones((2, 2, 1)); rm = np.ones_like(rp)
+    defect = DefectState(rp, rm, np.zeros_like(rp), np.zeros((2, 2)))
+    state = initialize_existing_boundary_front(
+        defect, np.full((2, 2), .5), 2.0, 0, 1)
+    state.recovered_wake.rp[:] = 0.0
+    assert not complete_front_state_is_exactly_equal(state)
+    assert supported_front_state_is_exactly_equal(state)
+    state.child.rp[0, 0, 0] += 1.0
+    assert not supported_front_state_is_exactly_equal(state)
+
+
+def test_unprocessed_invariant_is_permanently_retired_by_first_sweep():
+    rp = np.ones((2, 2, 1)); rm = np.ones_like(rp)
+    defect = DefectState(rp, rm, np.zeros_like(rp), np.zeros((2, 2)))
+    state = initialize_existing_boundary_front(
+        defect, np.full((2, 2), .5), 2.0, 0, 1)
+    assert front_is_unprocessed_and_reservoir_free(state)
+    state, _ = advance_front(
+        state, np.full((2, 2), .6), cell_area_m2=1.0,
+        represented_thickness_m=1.0, line_energy_J_m=3.0,
+        newly_swept_fraction=np.full((2, 2), .1),
+        transmission_fraction=.5, boundary_storage_fraction=1.0)
+    assert not front_is_unprocessed_and_reservoir_free(state)
 
 
 def test_boundary_recovery_releases_signed_line_and_heats_only_neutral_line():
