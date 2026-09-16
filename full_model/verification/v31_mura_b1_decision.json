@@ -1,0 +1,317 @@
+{
+  "cases": [
+    {
+      "all_recorded_hard_invariants_passed": true,
+      "applied_strain": 0.20000000000000107,
+      "case": "broadband_noise_128",
+      "checkpoint_count": 24,
+      "common_checkpoint": {
+        "alpha_rms_m1": 4.871530887606463,
+        "applied_strain": 0.030000000000000544,
+        "authoritative_source_offset_relative_rms": 3.386608009655723e-13,
+        "dominant_signed_wavelength_m": 2.23606797749979e-06,
+        "dual_nye_relative_rms": 4.235788393588537e-06,
+        "filename": "checkpoint_step_000001000_strain_0.03000000.npz",
+        "maximum_signed_density_m2": 39176257948.327126,
+        "mean_total_density_m2": 960053248473933.6,
+        "normalized_line_continuity_residual": 1.0718267327272372e-15,
+        "orientation_span_deg": 0.00021206989127557378,
+        "sha256": "fcfbf0c210a3a88dc6623c1b801b2d86f87d748ce4e859f372bccbc3969f2f4e",
+        "slip_rms": 0.00032713521844123054,
+        "step": 1000,
+        "structure_factor_peak_fraction": 0.002607436737039749
+      },
+      "condition": "broadband_noise",
+      "failure": null,
+      "grid": 128,
+      "latest_checkpoint": "checkpoint_step_000009500_strain_0.20000000.npz",
+      "latest_checkpoint_sha256": "8ed7720e9f5e820103742bb6a607552a857466366bab057624160d0c25c2715d",
+      "maximum_dual_nye_relative_rms": 0.012473612042563692,
+      "maximum_normalized_line_continuity_residual": 1.0518490884081599e-14,
+      "process_failure_marker": {
+        "case": "broadband_noise_128",
+        "exit": 1
+      },
+      "process_failure_marker_is_stale": true,
+      "process_failure_marker_mtime_utc": "2026-09-16T05:28:02+00:00",
+      "status": "COMPLETED",
+      "status_mtime_utc": "2026-09-16T09:44:21+00:00",
+      "step": 9500
+    },
+    {
+      "all_recorded_hard_invariants_passed": true,
+      "applied_strain": 0.20000000000000107,
+      "case": "broadband_noise_64",
+      "checkpoint_count": 21,
+      "common_checkpoint": {
+        "alpha_rms_m1": 2.420853975598435,
+        "applied_strain": 0.030000000000000544,
+        "authoritative_source_offset_relative_rms": 3.412739348589483e-13,
+        "dominant_signed_wavelength_m": 4.47213595499958e-06,
+        "dual_nye_relative_rms": 4.282548628256766e-06,
+        "filename": "checkpoint_step_000001000_strain_0.03000000.npz",
+        "maximum_signed_density_m2": 20818922940.29991,
+        "mean_total_density_m2": 960026555513101.0,
+        "normalized_line_continuity_residual": 1.0598047153275456e-15,
+        "orientation_span_deg": 0.00018236662683645177,
+        "sha256": "1cccd120ae2ad23df101db094ca1512fdafccf1d3eb8e7a42e81ae91f192ce79",
+        "slip_rms": 0.0003271355255563557,
+        "step": 1000,
+        "structure_factor_peak_fraction": 0.009241751914228574
+      },
+      "condition": "broadband_noise",
+      "failure": null,
+      "grid": 64,
+      "latest_checkpoint": "checkpoint_step_000009500_strain_0.20000000.npz",
+      "latest_checkpoint_sha256": "945a7e809fc3e60dae2659ceb56d51dc425bce48820f6c3c5838fb4955c85c14",
+      "maximum_dual_nye_relative_rms": 0.009093118695033453,
+      "maximum_normalized_line_continuity_residual": 1.0765681120241007e-14,
+      "process_failure_marker": {
+        "case": "broadband_noise_64",
+        "exit": 1
+      },
+      "process_failure_marker_is_stale": true,
+      "process_failure_marker_mtime_utc": "2026-09-16T05:28:02+00:00",
+      "status": "COMPLETED",
+      "status_mtime_utc": "2026-09-16T06:47:37+00:00",
+      "step": 9500
+    },
+    {
+      "all_recorded_hard_invariants_passed": true,
+      "applied_strain": 0.20000000000000107,
+      "case": "homogeneous_128",
+      "checkpoint_count": 22,
+      "common_checkpoint": {
+        "alpha_rms_m1": 0.0,
+        "applied_strain": 0.030000000000000544,
+        "authoritative_source_offset_relative_rms": 0.0,
+        "dominant_signed_wavelength_m": null,
+        "dual_nye_relative_rms": 0.0,
+        "filename": "checkpoint_step_000001000_strain_0.03000000.npz",
+        "maximum_signed_density_m2": 0.0,
+        "mean_total_density_m2": 960000000000001.9,
+        "normalized_line_continuity_residual": 0.0,
+        "orientation_span_deg": 0.0,
+        "sha256": "8ac2180ba9bba99e680a7dfef51e06fda357df48a0f0aa0a201020e1adb36dca",
+        "slip_rms": 0.0003271430402309801,
+        "step": 1000,
+        "structure_factor_peak_fraction": 0.0
+      },
+      "condition": "homogeneous",
+      "failure": null,
+      "grid": 128,
+      "latest_checkpoint": "checkpoint_step_000009500_strain_0.20000000.npz",
+      "latest_checkpoint_sha256": "882675704402dfecd4b9861794c9556dff57e699e37d230b5e35f208d0d42688",
+      "maximum_dual_nye_relative_rms": 0.0,
+      "maximum_normalized_line_continuity_residual": 0.0,
+      "process_failure_marker": {
+        "case": "homogeneous_128",
+        "exit": 1
+      },
+      "process_failure_marker_is_stale": true,
+      "process_failure_marker_mtime_utc": "2026-09-16T05:28:02+00:00",
+      "status": "COMPLETED",
+      "status_mtime_utc": "2026-09-16T09:40:54+00:00",
+      "step": 9500
+    },
+    {
+      "all_recorded_hard_invariants_passed": true,
+      "applied_strain": 0.20000000000000107,
+      "case": "homogeneous_64",
+      "checkpoint_count": 21,
+      "common_checkpoint": {
+        "alpha_rms_m1": 0.0,
+        "applied_strain": 0.030000000000000544,
+        "authoritative_source_offset_relative_rms": 0.0,
+        "dominant_signed_wavelength_m": null,
+        "dual_nye_relative_rms": 0.0,
+        "filename": "checkpoint_step_000001000_strain_0.03000000.npz",
+        "maximum_signed_density_m2": 0.0,
+        "mean_total_density_m2": 960000000000001.9,
+        "normalized_line_continuity_residual": 0.0,
+        "orientation_span_deg": 0.0,
+        "sha256": "137386540833f0657d1ba1421b959a32f57f389c8745f0b292daa5f8d5222955",
+        "slip_rms": 0.0003271430402309801,
+        "step": 1000,
+        "structure_factor_peak_fraction": 0.0
+      },
+      "condition": "homogeneous",
+      "failure": null,
+      "grid": 64,
+      "latest_checkpoint": "checkpoint_step_000009500_strain_0.20000000.npz",
+      "latest_checkpoint_sha256": "e4ae14f51522ad10e94adbadab10d4fcd2bf678c7b5fa9e193a6e3ad6adaab78",
+      "maximum_dual_nye_relative_rms": 0.0,
+      "maximum_normalized_line_continuity_residual": 0.0,
+      "process_failure_marker": {
+        "case": "homogeneous_64",
+        "exit": 1
+      },
+      "process_failure_marker_is_stale": true,
+      "process_failure_marker_mtime_utc": "2026-09-16T05:28:02+00:00",
+      "status": "COMPLETED",
+      "status_mtime_utc": "2026-09-16T06:48:04+00:00",
+      "step": 9500
+    },
+    {
+      "all_recorded_hard_invariants_passed": true,
+      "applied_strain": 0.031886580091330455,
+      "case": "mechanical_heterogeneity_128",
+      "checkpoint_count": 4,
+      "common_checkpoint": {
+        "alpha_rms_m1": 2093.602444623397,
+        "applied_strain": 0.030000000000000544,
+        "authoritative_source_offset_relative_rms": 3.760363452339695e-15,
+        "dominant_signed_wavelength_m": 1e-05,
+        "dual_nye_relative_rms": 0.0005911239267770045,
+        "filename": "checkpoint_step_000001000_strain_0.03000000.npz",
+        "maximum_signed_density_m2": 1326554246326415.5,
+        "mean_total_density_m2": 968964208224321.1,
+        "normalized_line_continuity_residual": 1.9038851224284045e-15,
+        "orientation_span_deg": 0.1644770218021484,
+        "sha256": "fff0212845fb9d9017454edb4d9e5b1c7eb2e6c4650263c4a29688c3c6a48b17",
+        "slip_rms": 0.000711699405882811,
+        "step": 1000,
+        "structure_factor_peak_fraction": 0.0072546178416535295
+      },
+      "condition": "mechanical_heterogeneity",
+      "failure": {
+        "applied_strain": 0.031886580091330455,
+        "message": "Mura line storage exceeds available plastic work",
+        "physical_time_s": 3.1886580091330453e-06,
+        "step": 1133,
+        "type": "RuntimeError"
+      },
+      "grid": 128,
+      "latest_checkpoint": "checkpoint_step_000001133_strain_0.03188658.npz",
+      "latest_checkpoint_sha256": "c3c11d8107d2c3476d9816fd7b295d1a947382861f27a6636da04be2a97b4a83",
+      "maximum_dual_nye_relative_rms": 0.0017927102870773802,
+      "maximum_normalized_line_continuity_residual": 1.984992949975447e-15,
+      "process_failure_marker": {
+        "case": "mechanical_heterogeneity_128",
+        "exit": 1
+      },
+      "process_failure_marker_is_stale": false,
+      "process_failure_marker_mtime_utc": "2026-09-16T09:44:21+00:00",
+      "status": "FAILED_SCIENTIFIC_OR_APPLICATION",
+      "status_mtime_utc": "2026-09-16T05:57:36+00:00",
+      "step": 1133
+    },
+    {
+      "all_recorded_hard_invariants_passed": true,
+      "applied_strain": 0.04054977958626303,
+      "case": "mechanical_heterogeneity_64",
+      "checkpoint_count": 5,
+      "common_checkpoint": {
+        "alpha_rms_m1": 1994.2800943572827,
+        "applied_strain": 0.030000000000000544,
+        "authoritative_source_offset_relative_rms": 2.0804261287059874e-15,
+        "dominant_signed_wavelength_m": 1e-05,
+        "dual_nye_relative_rms": 0.0005221463162359784,
+        "filename": "checkpoint_step_000001000_strain_0.03000000.npz",
+        "maximum_signed_density_m2": 186354585316164.2,
+        "mean_total_density_m2": 967770157065843.1,
+        "normalized_line_continuity_residual": 2.054996204447422e-15,
+        "orientation_span_deg": 0.15177086691064084,
+        "sha256": "deb10fdeb921770b54e5fa4136f4e4b4e2689269b4a5cb2604029367512d02d0",
+        "slip_rms": 0.0007146611918746805,
+        "step": 1000,
+        "structure_factor_peak_fraction": 0.02603169629159524
+      },
+      "condition": "mechanical_heterogeneity",
+      "failure": {
+        "applied_strain": 0.04054977958626303,
+        "message": "Mura line storage exceeds available plastic work",
+        "physical_time_s": 4.054977958626303e-06,
+        "step": 1641,
+        "type": "RuntimeError"
+      },
+      "grid": 64,
+      "latest_checkpoint": "checkpoint_step_000001641_strain_0.04054978.npz",
+      "latest_checkpoint_sha256": "2c277988a1810b2bf22ecaa0ebdb7c5697c2c7500c41195d6df52ff0bd62c7d3",
+      "maximum_dual_nye_relative_rms": 0.0027080125475310224,
+      "maximum_normalized_line_continuity_residual": 2.6035242978161157e-15,
+      "process_failure_marker": {
+        "case": "mechanical_heterogeneity_64",
+        "exit": 1
+      },
+      "process_failure_marker_is_stale": false,
+      "process_failure_marker_mtime_utc": "2026-09-16T06:48:05+00:00",
+      "status": "FAILED_SCIENTIFIC_OR_APPLICATION",
+      "status_mtime_utc": "2026-09-16T05:39:36+00:00",
+      "step": 1641
+    }
+  ],
+  "classification": "TIER_B1_MECHANICAL_HETEROGENEITY_THERMODYNAMIC_ADMISSIBILITY_FAILURE",
+  "external_full_file_manifest": {
+    "input_file_count": 140,
+    "path": "/Users/sdillon/HPC3/v31-evidence/mura-b1-56070295/derived/evidence_manifest.json",
+    "remote_local_sha256sum_stream_digest": "27e2ede728b8f5cdd62ad7edf7e222cdb190ffe0aeac62ebdc3421055cc63fa5",
+    "remote_local_stream_digest_matched": true,
+    "sha256": "64d2e76a5e97a87edf158b904668c3be0598365084efd1b5669a87468576690f"
+  },
+  "fixture_passed": true,
+  "grid_pair_convergence": {
+    "broadband_noise": {
+      "all_declared_observables_below_5_percent": false,
+      "relative_pair_differences": {
+        "alpha_rms_m1": 0.5030609409134061,
+        "dual_nye_relative_rms": 0.010918786621522389,
+        "maximum_signed_density_m2": 0.4685831666781512,
+        "mean_total_density_m2": 2.7803625345839074e-05,
+        "orientation_span_deg": 0.14006356234947168,
+        "slip_rms": 9.388008980013328e-07,
+        "structure_factor_peak_fraction": 0.7178633703610516
+      }
+    },
+    "homogeneous": {
+      "all_declared_observables_below_5_percent": true,
+      "relative_pair_differences": {
+        "alpha_rms_m1": 0.0,
+        "dual_nye_relative_rms": 0.0,
+        "maximum_signed_density_m2": 0.0,
+        "mean_total_density_m2": 0.0,
+        "orientation_span_deg": 0.0,
+        "slip_rms": 0.0,
+        "structure_factor_peak_fraction": 0.0
+      }
+    },
+    "mechanical_heterogeneity": {
+      "all_declared_observables_below_5_percent": false,
+      "relative_pair_differences": {
+        "alpha_rms_m1": 0.04744088378439995,
+        "dual_nye_relative_rms": 0.11668891651385847,
+        "maximum_signed_density_m2": 0.8595198154676071,
+        "mean_total_density_m2": 0.0012322964546504383,
+        "orientation_span_deg": 0.07725185410270842,
+        "slip_rms": 0.0041443218486515165,
+        "structure_factor_peak_fraction": 0.7213159772459469
+      }
+    }
+  },
+  "interpretation": "Four controls completed 20% strain. Both mechanical-heterogeneity cases independently rejected a step because Mura line storage exceeded available plastic work; the 4:15:49 batch duration is the time required for the slow completed controls, not the onset of a scheduler or memory failure.",
+  "matched_horizon": {
+    "applied_strain": 0.03,
+    "selection": "latest exact checkpoint shared by all six cases",
+    "step": 1000
+  },
+  "resubmission_performed": false,
+  "schema": "asb-drx/v31-mura-b1-decision/v1",
+  "scientific_gate_passed": false,
+  "slurm_job_id": "56070295",
+  "slurm_terminal": {
+    "allocated_cpus": 8,
+    "batch_max_rss": "1188720K",
+    "classification": "APPLICATION_SCIENTIFIC_FAILURE_NOT_RESOURCE_EXHAUSTION",
+    "elapsed": "04:15:49",
+    "ended_local": "2026-09-16T02:44:28-07:00",
+    "exit_code": "1:0",
+    "node": "hpc3-15-16",
+    "requested_memory": "32G",
+    "started_local": "2026-09-15T22:28:39-07:00",
+    "state": "FAILED",
+    "time_limit": "16:00:00"
+  },
+  "source_sha": "675d74183baf2043ad0f7c055fe6e3370435ae65",
+  "tier_b2_authorized": false,
+  "tier_b2_decision": "NOT_AUTHORIZED_FROM_V30_B1_EVIDENCE"
+}
