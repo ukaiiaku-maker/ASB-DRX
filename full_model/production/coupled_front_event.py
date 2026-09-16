@@ -13,10 +13,16 @@ import math
 
 import numpy as np
 
-from .arrhenius_kinetics import (
-    ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j)
-from .moving_front import (
-    DefectState, conservative_front_transfer, total_line_density)
+try:
+    from .arrhenius_kinetics import (
+        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j)
+    from .moving_front import (
+        DefectState, conservative_front_transfer, total_line_density)
+except ImportError:  # pragma: no cover - direct production-script execution
+    from arrhenius_kinetics import (
+        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j)
+    from moving_front import (
+        DefectState, conservative_front_transfer, total_line_density)
 
 
 @dataclass(frozen=True)
@@ -146,7 +152,12 @@ def propose_bidirectional_front_event(
     base = activated_rate_s(process, enthalpy, temperature) if mobility_enabled else 0.0
     delta = ab.full_free_energy_change_J-ba.full_free_energy_change_J
     rate_ab, rate_ba = _metropolis_pair(base, delta, temperature)
-    expected_log_ratio = -delta/(KB_J_K*temperature)
+    # The public rates are explicitly bounded to the representable EXP-floor
+    # pair.  Audit detailed balance against that same bounded affinity; using
+    # the unbounded exponent here reports a fictitious residual after the rate
+    # pair has correctly saturated at exp(±700).
+    expected_log_ratio = float(np.clip(
+        -delta/(KB_J_K*temperature), -700.0, 700.0))
     if rate_ab == 0.0 and rate_ba == 0.0:
         residual = 0.0
     else:

@@ -1,0 +1,449 @@
+"""Production adapter for an atomic, bidirectional SIBM front event.
+
+The phase solver supplies a *trial* profile.  This module measures its signed
+zero-contour motion, constructs both thermodynamic transactions, limits the
+motion by their net EXP-floor rate, and commits phase and material state
+together.  The legacy phase-first ``advance_front`` operator is deliberately
+not called here.
+"""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass, replace
+import json
+import math
+
+import numpy as np
+
+try:
+    from .arrhenius_kinetics import ActivatedProcess
+    from .coupled_front_event import FrontEnergyTerms, propose_bidirectional_front_event
+    from .moving_front import (
+        DefectState, FrontLedger, SparseFrontState, conservative_front_transfer,
+        reconstruct_mixture, supported_front_state_is_exactly_equal,
+        total_line_density)
+    from .signed_front_geometry import measure_signed_front_motion
+except ImportError:  # pragma: no cover - direct production-script execution
+    from arrhenius_kinetics import ActivatedProcess
+    from coupled_front_event import FrontEnergyTerms, propose_bidirectional_front_event
+    from moving_front import (
+        DefectState, FrontLedger, SparseFrontState, conservative_front_transfer,
+        reconstruct_mixture, supported_front_state_is_exactly_equal,
+        total_line_density)
+    from signed_front_geometry import measure_signed_front_motion
+
+
+SCHEMA = "full-v34-coupled-front-production/v1"
+
+
+@dataclass(frozen=True)
+class CoupledFrontLedger:
+    attempts: int = 0
+    accepted: int = 0
+    rejected_direction: int = 0
+    stationary_trials: int = 0
+    a_to_b_swept_volume_m3: float = 0.0
+    b_to_a_swept_volume_m3: float = 0.0
+    revisit_volume_m3: float = 0.0
+    a_to_b_line_processed_m: float = 0.0
+    b_to_a_line_processed_m: float = 0.0
+    transmitted_line_m: float = 0.0
+    boundary_line_m: float = 0.0
+    annihilated_line_m: float = 0.0
+    sink_line_m: float = 0.0
+    heat_J: float = 0.0
+    maximum_abs_line_closure_m: float = 0.0
+    maximum_abs_signed_closure_m2: float = 0.0
+
+
+@dataclass(frozen=True)
+class CoupledFrontRuntime:
+    material_a_label: int
+    material_b_label: int
+    normal_axis: int
+    normal_orientation: int
+    reference_b_fraction: np.ndarray
+    maximum_b_fraction: np.ndarray
+    minimum_b_fraction: np.ndarray
+    previous_phi: np.ndarray
+    ledger: CoupledFrontLedger = CoupledFrontLedger()
+
+
+@dataclass(frozen=True)
+class CoupledFrontDecision:
+    accepted: bool
+    classification: str
+    proposed_signed_volume_m3: float
+    accepted_signed_volume_m3: float
+    rate_a_to_b_s: float
+    rate_b_to_a_s: float
+    net_velocity_a_to_b_m_s: float
+    detailed_balance_log_residual: float
+    maximum_abs_line_closure_m: float
+    maximum_abs_signed_closure_m2: float
+    heat_increment_J: float
+
+
+def initialize_coupled_front_runtime(state: SparseFrontState, phi,
+                                     *, normal_axis: int):
+    value = np.asarray(phi, dtype=float)
+    if value.shape != state.chi.shape or not np.all(np.isfinite(value)):
+        raise ValueError("front phi is not finite and grid matched")
+    axis = int(normal_axis)
+    if axis not in (0, 1):
+        raise ValueError("normal axis must be 0 or 1")
+    return CoupledFrontRuntime(
+        state.parent_label, state.child_label, axis, 1,
+        state.chi.copy(), state.chi.copy(), state.chi.copy(), value.copy())
+
+
+def runtime_metadata_json(runtime: CoupledFrontRuntime):
+    return json.dumps({
+        "schema": SCHEMA,
+        "material_a_label": runtime.material_a_label,
+        "material_b_label": runtime.material_b_label,
+        "normal_axis": runtime.normal_axis,
+        "normal_orientation": runtime.normal_orientation,
+        "ledger": asdict(runtime.ledger),
+    }, sort_keys=True)
+
+
+def runtime_arrays(runtime: CoupledFrontRuntime):
+    return {
+        "reference_b_fraction": runtime.reference_b_fraction,
+        "maximum_b_fraction": runtime.maximum_b_fraction,
+        "minimum_b_fraction": runtime.minimum_b_fraction,
+        "previous_phi": runtime.previous_phi,
+    }
+
+
+def runtime_from_checkpoint(metadata_json, arrays, *, fallback_state=None,
+                            fallback_phi=None, normal_axis=None):
+    """Load v1 state or migrate a legacy sparse-front checkpoint explicitly."""
+    if metadata_json is None:
+        if fallback_state is None or fallback_phi is None or normal_axis is None:
+            raise ValueError("legacy front migration requires sparse state, phi, and axis")
+        return initialize_coupled_front_runtime(
+            fallback_state, fallback_phi, normal_axis=normal_axis)
+    metadata = json.loads(str(metadata_json))
+    if metadata.get("schema") != SCHEMA:
+        raise ValueError("unsupported coupled-front checkpoint schema")
+    required = ("reference_b_fraction", "maximum_b_fraction",
+                "minimum_b_fraction", "previous_phi")
+    if not all(name in arrays for name in required):
+        raise ValueError("partial coupled-front checkpoint")
+    values = [np.asarray(arrays[name], dtype=float) for name in required]
+    if len({value.shape for value in values}) != 1 or not all(
+            np.all(np.isfinite(value)) for value in values):
+        raise ValueError("invalid coupled-front checkpoint arrays")
+    return CoupledFrontRuntime(
+        int(metadata["material_a_label"]), int(metadata["material_b_label"]),
+        int(metadata["normal_axis"]), int(metadata["normal_orientation"]),
+        *[value.copy() for value in values],
+        CoupledFrontLedger(**metadata.get("ledger", {})))
+
+
+def _blend(old, old_weight, incoming, increment):
+    w = old_weight[:, :, None] if old.ndim == 3 else old_weight
+    q = increment[:, :, None] if old.ndim == 3 else increment
+    return np.divide(w*old + q*incoming, w+q, out=np.asarray(old).copy(),
+                     where=(w+q) > 0.0)
+
+
+def _blend_state(old, old_weight, incoming, increment):
+    return DefectState(*(
+        _blend(a, old_weight, b, increment)
+        for a, b in zip((old.rp, old.rm, old.forest, old.wall),
+                        (incoming.rp, incoming.rm, incoming.forest, incoming.wall))))
+
+
+def _non_b_state(state):
+    weight = 1.0-state.chi
+    virgin = 1.0-state.processed_max
+    wake = state.processed_max-state.chi
+    return DefectState(*(
+        np.divide(
+            (virgin[:, :, None] if a.ndim == 3 else virgin)*a
+            +(wake[:, :, None] if a.ndim == 3 else wake)*b,
+            weight[:, :, None] if a.ndim == 3 else weight,
+            out=np.asarray(a).copy(),
+            where=(weight[:, :, None] if a.ndim == 3 else weight) > 0.0)
+        for a, b in zip((state.parent.rp, state.parent.rm,
+                         state.parent.forest, state.parent.wall),
+                        (state.recovered_wake.rp, state.recovered_wake.rm,
+                         state.recovered_wake.forest, state.recovered_wake.wall))))
+
+
+def _transaction(state, signed_sweep, *, cell_volume_m3, line_energy_J_m,
+                 transmission_fraction, boundary_storage_fraction,
+                 neutral_sink_fraction, signed_sink_fraction,
+                 boundary_capacity_density_m2):
+    """Commit both signs from one accepted field and return exact audit data."""
+    signed = np.asarray(signed_sweep, dtype=float)
+    if signed.shape != state.chi.shape or not np.all(np.isfinite(signed)):
+        raise ValueError("signed sweep is invalid")
+    positive = np.minimum(np.maximum(signed, 0.0), 1.0-state.chi)
+    negative = np.minimum(np.maximum(-signed, 0.0), state.chi)
+    state0 = state
+    boundary0 = state.boundary_line_density_m2
+    boundary_signed0 = state.boundary_signed_density_m2
+    annihilated_density = np.zeros_like(state.chi)
+    sink_density = np.zeros_like(state.chi)
+    transmitted_density = np.zeros_like(state.chi)
+    processed_a_density = np.zeros_like(state.chi)
+    processed_b_density = np.zeros_like(state.chi)
+    max_signed_closure = 0.0
+
+    if np.any(positive):
+        # Draw revisited material from the explicit A-wake first and virgin
+        # material from A second.  A phase-average donor would be conservative
+        # only on first passage and fails an advance/retreat/re-advance cycle.
+        revisit = np.minimum(positive, state.processed_max-state.chi)
+        virgin = positive-revisit
+        donor = DefectState(*(
+            np.divide(
+                (revisit[:, :, None] if a.ndim == 3 else revisit)*a
+                +(virgin[:, :, None] if a.ndim == 3 else virgin)*b,
+                positive[:, :, None] if a.ndim == 3 else positive,
+                out=np.asarray(b).copy(),
+                where=(positive[:, :, None] if a.ndim == 3 else positive) > 0.0)
+            for a, b in zip((state.recovered_wake.rp, state.recovered_wake.rm,
+                             state.recovered_wake.forest, state.recovered_wake.wall),
+                            (state.parent.rp, state.parent.rm,
+                             state.parent.forest, state.parent.wall))))
+        transfer = conservative_front_transfer(
+            donor, transmission_fraction=transmission_fraction,
+            boundary_storage_fraction=boundary_storage_fraction,
+            neutral_sink_fraction=neutral_sink_fraction,
+            signed_sink_fraction=signed_sink_fraction)
+        if boundary_capacity_density_m2 is not None:
+            capacity = np.broadcast_to(
+                np.asarray(boundary_capacity_density_m2, dtype=float), state.chi.shape)
+            available = np.maximum(capacity-state.boundary_line_density_m2, 0.0)
+            demand = positive*transfer.boundary_excess_line_density_m2
+            positive *= np.clip(np.divide(
+                available, demand, out=np.ones_like(demand), where=demand > 0.0),
+                0.0, 1.0)
+            revisit = np.minimum(positive, state.processed_max-state.chi)
+            virgin = positive-revisit
+        child = _blend_state(state.child, state.chi, transfer.child, positive)
+        processed_a_density += positive*total_line_density(donor)
+        transmitted_density += positive*total_line_density(transfer.child)
+        annihilated_density += positive*transfer.annihilated_line_density_m2
+        sink_density += positive*transfer.sink_line_density_m2
+        max_signed_closure = max(max_signed_closure, float(np.max(np.abs(
+            positive[:, :, None]*transfer.signed_closure_density_m2))))
+        state = replace(
+            state, child=child, chi=state.chi+positive,
+            processed_max=state.processed_max+virgin,
+            cleanup_max=np.maximum(state.cleanup_max, state.processed_max+virgin),
+            boundary_line_density_m2=(state.boundary_line_density_m2
+                +positive*transfer.boundary_excess_line_density_m2),
+            boundary_signed_density_m2=(state.boundary_signed_density_m2
+                +positive[:, :, None]*transfer.boundary_excess_signed_density_m2))
+
+    if np.any(negative):
+        # Recompute the available child after any simultaneous positive part.
+        negative = np.minimum(negative, state.chi)
+        donor = state.child
+        transfer = conservative_front_transfer(
+            donor, transmission_fraction=transmission_fraction,
+            boundary_storage_fraction=boundary_storage_fraction,
+            neutral_sink_fraction=neutral_sink_fraction,
+            signed_sink_fraction=signed_sink_fraction)
+        if boundary_capacity_density_m2 is not None:
+            capacity = np.broadcast_to(
+                np.asarray(boundary_capacity_density_m2, dtype=float), state.chi.shape)
+            available = np.maximum(capacity-state.boundary_line_density_m2, 0.0)
+            demand = negative*transfer.boundary_excess_line_density_m2
+            negative *= np.clip(np.divide(
+                available, demand, out=np.ones_like(demand), where=demand > 0.0),
+                0.0, 1.0)
+        wake_weight = state.processed_max-state.chi
+        wake = _blend_state(state.recovered_wake, wake_weight,
+                            transfer.child, negative)
+        processed_b_density += negative*total_line_density(donor)
+        transmitted_density += negative*total_line_density(transfer.child)
+        annihilated_density += negative*transfer.annihilated_line_density_m2
+        sink_density += negative*transfer.sink_line_density_m2
+        max_signed_closure = max(max_signed_closure, float(np.max(np.abs(
+            negative[:, :, None]*transfer.signed_closure_density_m2))))
+        state = replace(
+            state, recovered_wake=wake, chi=state.chi-negative,
+            boundary_line_density_m2=(state.boundary_line_density_m2
+                +negative*transfer.boundary_excess_line_density_m2),
+            boundary_signed_density_m2=(state.boundary_signed_density_m2
+                +negative[:, :, None]*transfer.boundary_excess_signed_density_m2))
+
+    before = total_line_density(reconstruct_mixture(state0))
+    after = total_line_density(reconstruct_mixture(state))
+    boundary_added = state.boundary_line_density_m2-boundary0
+    closure_density = before-after-boundary_added-annihilated_density-sink_density
+    closure_m = float(np.sum(closure_density, dtype=np.longdouble)*cell_volume_m3)
+    scale = max(float(np.sum(np.abs(before), dtype=np.longdouble)*cell_volume_m3), 1e-300)
+    if abs(closure_m) > 65536.0*math.ulp(scale):
+        raise RuntimeError(f"coupled front line balance failed: {closure_m:.17g} m")
+    heat = float(np.sum(annihilated_density, dtype=np.longdouble)
+                 *cell_volume_m3*line_energy_J_m)
+    audit = dict(
+        positive=positive, negative=negative,
+        volume_ab=float(np.sum(positive, dtype=np.longdouble)*cell_volume_m3),
+        volume_ba=float(np.sum(negative, dtype=np.longdouble)*cell_volume_m3),
+        processed_a_m=float(np.sum(processed_a_density, dtype=np.longdouble)*cell_volume_m3),
+        processed_b_m=float(np.sum(processed_b_density, dtype=np.longdouble)*cell_volume_m3),
+        transmitted_m=float(np.sum(transmitted_density, dtype=np.longdouble)*cell_volume_m3),
+        boundary_m=float(np.sum(boundary_added, dtype=np.longdouble)*cell_volume_m3),
+        annihilated_m=float(np.sum(annihilated_density, dtype=np.longdouble)*cell_volume_m3),
+        sink_m=float(np.sum(sink_density, dtype=np.longdouble)*cell_volume_m3),
+        line_closure_m=closure_m, signed_closure_m2=max_signed_closure,
+        heat_J=heat)
+    old = state.ledger
+    state = replace(state, ledger=replace(
+        old,
+        parent_line_processed_m=old.parent_line_processed_m
+            +audit["processed_a_m"]+audit["processed_b_m"],
+        child_line_transmitted_m=old.child_line_transmitted_m+audit["transmitted_m"],
+        boundary_line_stored_m=old.boundary_line_stored_m+audit["boundary_m"],
+        neutral_pair_annihilated_m=old.neutral_pair_annihilated_m+audit["annihilated_m"],
+        sink_line_m=old.sink_line_m+audit["sink_m"],
+        line_closure_m=old.line_closure_m+closure_m,
+        signed_burgers_change_m2=max(old.signed_burgers_change_m2, max_signed_closure),
+        line_energy_released_J=old.line_energy_released_J+heat,
+        heat_released_J=old.heat_released_J+heat,
+        swept_volume_m3=old.swept_volume_m3+audit["volume_ab"]+audit["volume_ba"],
+        requested_swept_volume_m3=old.requested_swept_volume_m3
+            +float(np.sum(np.abs(signed), dtype=np.longdouble)*cell_volume_m3),
+        capacity_limited_volume_m3=old.capacity_limited_volume_m3
+            +float(np.sum(np.abs(signed)-positive-negative,
+                          dtype=np.longdouble)*cell_volume_m3)))
+    return state, audit
+
+
+def accept_coupled_front_candidate(
+        state: SparseFrontState, runtime: CoupledFrontRuntime,
+        eta_before, eta_trial, *, spacing_m, represented_thickness_m, dt_s,
+        temperature_K, line_energy_J_m, process: ActivatedProcess,
+        h0_J, critical_pressure_Pa, exp_a, exp_n, exp_floor,
+        driving_pressure_a_to_b_Pa=0.0, applied_pressure_a_to_b_Pa=0.0,
+        mobility_enabled=True,
+        active_mask=None, periodic=True, transmission_fraction=0.0,
+        boundary_storage_fraction=0.0, neutral_sink_fraction=0.0,
+        signed_sink_fraction=0.0, boundary_capacity_density_m2=None):
+    """Atomically accept a trial two-phase update and its material transaction."""
+    before = np.asarray(eta_before, dtype=float)
+    trial = np.asarray(eta_trial, dtype=float)
+    if before.shape != trial.shape or before.ndim != 3:
+        raise ValueError("phase trial must be matching 3-D arrays")
+    a, b = runtime.material_a_label, runtime.material_b_label
+    phi0 = before[:, :, b]-before[:, :, a]
+    phi1 = trial[:, :, b]-trial[:, :, a]
+    measure = measure_signed_front_motion(
+        phi0, phi1, normal_axis=runtime.normal_axis, spacing_m=spacing_m,
+        represented_thickness_m=represented_thickness_m,
+        active_mask=active_mask, periodic=periodic)
+    event_volume = float(spacing_m)**2*float(represented_thickness_m)
+    pressure = float(driving_pressure_a_to_b_Pa)
+    state_a = _non_b_state(state)
+    state_b = state.child
+    # Algebraic exchange symmetry, not a finite pressure cutoff: an exactly
+    # equal supported pair with no external pressure defines identical trials.
+    if (float(applied_pressure_a_to_b_Pa) == 0.0
+            and supported_front_state_is_exactly_equal(state)):
+        pressure = 0.0
+        state_b = state_a
+    event = propose_bidirectional_front_event(
+        state_a, state_b, event_volume_m3=event_volume,
+        event_length_m=float(spacing_m), line_energy_J_m=line_energy_J_m,
+        temperature_K=float(np.mean(np.asarray(temperature_K, dtype=float))),
+        process=process, h0_J=h0_J, critical_pressure_Pa=critical_pressure_Pa,
+        exp_a=exp_a, exp_n=exp_n, exp_floor=exp_floor,
+        energy_a_to_b=FrontEnergyTerms(phase_J=-pressure*event_volume),
+        energy_b_to_a=FrontEnergyTerms(phase_J=pressure*event_volume),
+        mobility_enabled=mobility_enabled,
+        transmission_fraction=transmission_fraction,
+        boundary_storage_fraction=boundary_storage_fraction,
+        neutral_sink_fraction=neutral_sink_fraction,
+        signed_sink_fraction=signed_sink_fraction)
+    proposed = measure.signed_receiver_volume_m3
+    velocity = event.net_velocity_a_to_b_m_s
+    interface_length = measure.crossing_count*float(spacing_m)
+    allowed = velocity*float(dt_s)*interface_length*float(represented_thickness_m)
+    tolerance = 8192.0*np.finfo(float).eps*max(event_volume, abs(proposed), 1e-300)
+    if abs(proposed) <= tolerance:
+        ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
+                         stationary_trials=runtime.ledger.stationary_trials+1)
+        return state, replace(runtime, previous_phi=phi1.copy(), ledger=ledger), trial.copy(), CoupledFrontDecision(
+            False, "STATIONARY_GEOMETRY", proposed, 0.0,
+            event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
+            event.detailed_balance_log_residual, 0.0, 0.0, 0.0)
+    if abs(velocity) <= 0.0 or proposed*velocity <= 0.0:
+        ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
+                         rejected_direction=runtime.ledger.rejected_direction+1)
+        return state, replace(runtime, ledger=ledger), before.copy(), CoupledFrontDecision(
+            False, "REJECTED_BY_BIDIRECTIONAL_RATE", proposed, 0.0,
+            event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
+            event.detailed_balance_log_residual, 0.0, 0.0, 0.0)
+    fraction = min(1.0, abs(allowed)/abs(proposed))
+    accepted_eta = before+fraction*(trial-before)
+    phi_accept = accepted_eta[:, :, b]-accepted_eta[:, :, a]
+    accepted_measure = measure_signed_front_motion(
+        phi0, phi_accept, normal_axis=runtime.normal_axis, spacing_m=spacing_m,
+        represented_thickness_m=represented_thickness_m,
+        active_mask=active_mask, periodic=periodic)
+    chi_trial = accepted_eta[:, :, b]**2*(3.0-2.0*accepted_eta[:, :, b])
+    pair_h = (accepted_eta[:, :, a]**2*(3.0-2.0*accepted_eta[:, :, a])
+              +chi_trial)
+    chi_trial = np.divide(chi_trial, pair_h, out=state.chi.copy(), where=pair_h > 0.0)
+    raw = chi_trial-state.chi
+    raw = np.maximum(raw, 0.0) if accepted_measure.signed_receiver_volume_m3 > 0.0 else -np.maximum(-raw, 0.0)
+    target_fraction_sum = (abs(accepted_measure.signed_receiver_volume_m3)
+                           / event_volume)
+    raw_sum = float(np.sum(np.abs(raw), dtype=np.longdouble))
+    signed_sweep = raw*(target_fraction_sum/raw_sum if raw_sum > 0.0 else 0.0)
+    signed_sweep = np.clip(signed_sweep, -state.chi, 1.0-state.chi)
+    new_state, audit = _transaction(
+        state, signed_sweep, cell_volume_m3=event_volume,
+        line_energy_J_m=line_energy_J_m,
+        transmission_fraction=transmission_fraction,
+        boundary_storage_fraction=boundary_storage_fraction,
+        neutral_sink_fraction=neutral_sink_fraction,
+        signed_sink_fraction=signed_sink_fraction,
+        boundary_capacity_density_m2=boundary_capacity_density_m2)
+    actual_signed = audit["volume_ab"]-audit["volume_ba"]
+    # Capacity limiting is an atomic partial acceptance; scale phase motion by
+    # the accepted geometric fraction so state and contour cannot diverge.
+    requested_abs = max(abs(accepted_measure.signed_receiver_volume_m3), 1e-300)
+    capacity_scale = min(1.0, abs(actual_signed)/requested_abs)
+    if capacity_scale < 1.0:
+        accepted_eta = before+capacity_scale*(accepted_eta-before)
+    old = runtime.ledger
+    revisit = np.minimum(np.maximum(signed_sweep, 0.0),
+                         np.maximum(runtime.maximum_b_fraction-state.chi, 0.0))
+    revisit += np.minimum(np.maximum(-signed_sweep, 0.0),
+                          np.maximum(state.chi-runtime.minimum_b_fraction, 0.0))
+    ledger = replace(
+        old, attempts=old.attempts+1, accepted=old.accepted+1,
+        a_to_b_swept_volume_m3=old.a_to_b_swept_volume_m3+audit["volume_ab"],
+        b_to_a_swept_volume_m3=old.b_to_a_swept_volume_m3+audit["volume_ba"],
+        revisit_volume_m3=old.revisit_volume_m3
+            +float(np.sum(revisit, dtype=np.longdouble)*event_volume),
+        a_to_b_line_processed_m=old.a_to_b_line_processed_m+audit["processed_a_m"],
+        b_to_a_line_processed_m=old.b_to_a_line_processed_m+audit["processed_b_m"],
+        transmitted_line_m=old.transmitted_line_m+audit["transmitted_m"],
+        boundary_line_m=old.boundary_line_m+audit["boundary_m"],
+        annihilated_line_m=old.annihilated_line_m+audit["annihilated_m"],
+        sink_line_m=old.sink_line_m+audit["sink_m"], heat_J=old.heat_J+audit["heat_J"],
+        maximum_abs_line_closure_m=max(old.maximum_abs_line_closure_m,
+                                       abs(audit["line_closure_m"])),
+        maximum_abs_signed_closure_m2=max(old.maximum_abs_signed_closure_m2,
+                                          audit["signed_closure_m2"]))
+    runtime = replace(
+        runtime, maximum_b_fraction=np.maximum(runtime.maximum_b_fraction, new_state.chi),
+        minimum_b_fraction=np.minimum(runtime.minimum_b_fraction, new_state.chi),
+        previous_phi=(accepted_eta[:, :, b]-accepted_eta[:, :, a]).copy(),
+        ledger=ledger)
+    return new_state, runtime, accepted_eta, CoupledFrontDecision(
+        True, "ACCEPTED_ATOMIC_COUPLED_FRONT", proposed, actual_signed,
+        event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
+        event.detailed_balance_log_residual, abs(audit["line_closure_m"]),
+        audit["signed_closure_m2"], audit["heat_J"])

@@ -116,6 +116,13 @@ from moving_front import (
     translation_sweep_from_profile_change,
     total_line_density as sparse_total_line_density,
 )
+from coupled_front_production import (
+    accept_coupled_front_candidate,
+    initialize_coupled_front_runtime,
+    runtime_arrays as coupled_front_runtime_arrays,
+    runtime_from_checkpoint as coupled_front_runtime_from_checkpoint,
+    runtime_metadata_json as coupled_front_runtime_metadata_json,
+)
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -829,6 +836,10 @@ P = dict(
     moving_front_signed_sink_fraction=0.0,
     sibm_front_processing_enabled=True,
     sibm_front_processing_override=None,
+    # V30 scientific default.  The former phase-first processing route is
+    # available only for frozen reproduction and must be requested explicitly.
+    sibm_front_operator='coupled_bidirectional_v30',
+    sibm_legacy_afterburner_reproduction=False,
     # v10 deterministic existing-HAGB SIBM pathway.  It perturbs only two
     # existing labels and never allocates an orientation or grain identity.
     use_sibm_existing_boundary=False,
@@ -1113,6 +1124,16 @@ if P.get('sibm_sequential_stage') is not None:
 if P.get('sibm_front_processing_override') is not None:
     P['sibm_front_processing_enabled'] = bool(
         P['sibm_front_processing_override'])
+_front_operator = str(P.get(
+    'sibm_front_operator', 'coupled_bidirectional_v30')).lower()
+if _front_operator not in ('coupled_bidirectional_v30',
+                            'legacy_phase_first_reproduction'):
+    raise SystemExit('unknown sibm_front_operator')
+if (_front_operator == 'legacy_phase_first_reproduction'
+        and not P.get('sibm_legacy_afterburner_reproduction', False)):
+    raise SystemExit(
+        'legacy phase-first SIBM is reproduction-only; set the explicit '
+        'sibm_legacy_afterburner_reproduction switch')
 
 if P.get('v19_one_grain_mode', False):
     # Qualification policy: one physical crystal and no route capable of
@@ -3949,6 +3970,7 @@ if P.get('v21_common_tensorial_wall_enabled', False):
 # v9 sparse material state exists only for an actually promoted parent/child
 # pair. Initial orientation labels remain one common deformed material class.
 sparse_front_state = None
+coupled_front_runtime = None
 sibm_experiment_state = {}
 sibm_reference_parent_mask = None
 sibm_reference_child_fraction = None
@@ -4246,6 +4268,33 @@ def _update_sibm_geometry_metrics(child_fraction_now, dt_metric):
 
 
 if sibm_experiment_state:
+    _coupled_axis = (0 if abs(int(sibm_experiment_state[
+        'advance_direction_index'][0])) > 0 else 1)
+    _coupled_phi = (
+        eta[:, :, sparse_front_state.child_label]
+        -eta[:, :, sparse_front_state.parent_label])
+    if (_front_operator == 'coupled_bidirectional_v30'
+            and P.get('sibm_front_processing_enabled', True)):
+        if _restart_loaded and not P.get('restart_reset_clock', True):
+            with np.load(Path(P.get('restart_file')).expanduser(),
+                         allow_pickle=True) as _restart_npz:
+                if 'coupled_front_metadata_json' in _restart_npz.files:
+                    _coupled_keys = (
+                        'reference_b_fraction', 'maximum_b_fraction',
+                        'minimum_b_fraction', 'previous_phi')
+                    coupled_front_runtime = coupled_front_runtime_from_checkpoint(
+                        str(_restart_npz['coupled_front_metadata_json'].item()),
+                        {key: _restart_npz[f'coupled_front__{key}']
+                         for key in _coupled_keys})
+                else:
+                    # Explicit schema migration: pre-V30 checkpoints begin with
+                    # zero V30 attempts and envelopes at the saved physical state.
+                    coupled_front_runtime = coupled_front_runtime_from_checkpoint(
+                        None, {}, fallback_state=sparse_front_state,
+                        fallback_phi=_coupled_phi, normal_axis=_coupled_axis)
+        else:
+            coupled_front_runtime = initialize_coupled_front_runtime(
+                sparse_front_state, _coupled_phi, normal_axis=_coupled_axis)
     _update_sibm_geometry_metrics(
         sparse_front_state.chi, max(float(P.get('dt', 0.0)), 1e-300))
 
@@ -6573,6 +6622,18 @@ def _sparse_front_checkpoint_state():
     return payload
 
 
+def _coupled_front_checkpoint_state():
+    runtime = globals().get('coupled_front_runtime', None)
+    if runtime is None:
+        return {}
+    payload = {
+        f'coupled_front__{key}': value
+        for key, value in coupled_front_runtime_arrays(runtime).items()}
+    payload['coupled_front_metadata_json'] = np.array(
+        coupled_front_runtime_metadata_json(runtime))
+    return payload
+
+
 def _save_restart_checkpoint(step_local, sim_time_value=None):
     """Save exact continuation checkpoint for branch/sweep workflows."""
     if not P.get('write_restart_npz', True):
@@ -6721,6 +6782,7 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
             } if globals().get('sibm_experiment_state', {}) else {}),
             **_potential_checkpoint_state(),
             **_sparse_front_checkpoint_state(),
+            **_coupled_front_checkpoint_state(),
         )
         return fname
     except OSError as exc:
@@ -7906,7 +7968,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                 # support only where high density coincides with GND/grad-r/GB
                 # structure.  Existing W_eta and kappa_eta then sharpen it.
                 dFdei += -float(P.get('rho_eta_ac_strength', 0.0))*rho_eta_drive_ac*(1.0 - 2.0*eta[:,:,i])
-            if P.get('use_sibm_existing_boundary', False):
+            if (P.get('use_sibm_existing_boundary', False)
+                    and _front_operator == 'legacy_phase_first_reproduction'):
                 _sibm_process = ActivatedProcess(
                     'existing-HAGB-SIBM',
                     float(P.get('moving_front_attempt_frequency_s', 1.0e8)),
@@ -7950,7 +8013,86 @@ for n in range(_restart_step_offset, _restart_end_step):
 
     ac_eta_delta_mean = float(np.nanmean(np.abs(eta[:, :, :Ng] - eta_before_ac))) if Ng > 0 else 0.0
 
-    if sparse_front_state is not None:
+    if (sparse_front_state is not None
+            and _front_operator == 'coupled_bidirectional_v30'):
+        if coupled_front_runtime is None:
+            raise RuntimeError('V30 production front lacks coupled runtime state')
+        _boundary0 = sparse_front_state.boundary_line_density_m2.copy()
+        _chi0 = sparse_front_state.chi.copy()
+        _front_heat0_J = sparse_front_state.ledger.heat_released_J
+        _sibm_process = ActivatedProcess(
+            'existing-HAGB-SIBM-coupled-v30',
+            float(P.get('moving_front_attempt_frequency_s', 1.0e8)),
+            float(P.get('boundary_activation_entropy_kB', 0.0)),
+            float(P.get('moving_front_drag_rate_s', 1.0e8)))
+        sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
+            accept_coupled_front_candidate(
+                sparse_front_state, coupled_front_runtime,
+                eta_before_ac[:, :, :Ng], eta[:, :, :Ng],
+                spacing_m=dx,
+                represented_thickness_m=max(
+                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                    1e-30),
+                dt_s=P['dt'], temperature_K=T,
+                line_energy_J_m=float(np.nanmean(A_E_field)),
+                process=_sibm_process,
+                h0_J=float(P.get('sibm_activation_h0_eV', 0.35))*eV_J,
+                critical_pressure_Pa=float(P.get(
+                    'sibm_activation_critical_pressure_Pa', 1.0e9)),
+                exp_a=float(P.get('sibm_activation_exp_a', 2.0)),
+                exp_n=float(P.get('sibm_activation_exp_n', 1.5)),
+                exp_floor=float(P.get('sibm_activation_exp_floor', 0.10)),
+                driving_pressure_a_to_b_Pa=float(sibm_experiment_state.get(
+                    'net_flat_boundary_drive_Pa', 0.0)),
+                applied_pressure_a_to_b_Pa=float(P.get(
+                    'sibm_applied_pressure_Pa', 0.0)),
+                mobility_enabled=(
+                    P.get('sibm_front_processing_enabled', True)
+                    and float(P.get('sibm_mobility_multiplier', 1.0)) > 0.0),
+                active_mask=sibm_active_mask, periodic=True,
+                transmission_fraction=float(P.get(
+                    'moving_front_fixture_transmission_fraction', 0.50)),
+                boundary_storage_fraction=float(P.get(
+                    'moving_front_boundary_storage_fraction', 0.05)),
+                neutral_sink_fraction=float(P.get(
+                    'moving_front_sink_fraction', 0.02)),
+                signed_sink_fraction=float(P.get(
+                    'moving_front_signed_sink_fraction', 0.0)),
+                boundary_capacity_density_m2=(
+                    float(P.get('moving_front_boundary_capacity_density_m2'))
+                    if P.get('moving_front_boundary_capacity_density_m2')
+                    is not None else None)))
+        eta[:, :, :Ng] = _eta_accepted
+        _front_mixture = reconstruct_mixture(sparse_front_state)
+        rp, rm = _front_mixture.rp, _front_mixture.rm
+        rho_forest, rho_wall = _front_mixture.forest, _front_mixture.wall
+        rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
+        rho_GB = np.clip(
+            rho_GB+sparse_front_state.boundary_line_density_m2-_boundary0,
+            0.0, P['rho_max'])
+        _front_heat_increment_J = (
+            sparse_front_state.ledger.heat_released_J-_front_heat0_J)
+        _heat_weight = np.abs(sparse_front_state.chi-_chi0)
+        _heat_weight_volume = float(np.sum(_heat_weight)*dx*dy*max(
+            float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30))
+        if _heat_weight_volume > 0.0:
+            _front_heat_density = (_front_heat_increment_J*_heat_weight
+                                   / _heat_weight_volume)
+            T = T+_front_heat_density/max(float(P['cp_rho_vol']), 1e-300)
+        sibm_experiment_state.update(
+            front_operator='coupled_bidirectional_v30',
+            front_last_decision=_front_decision.__dict__,
+            front_attempts=int(coupled_front_runtime.ledger.attempts),
+            front_accepts=int(coupled_front_runtime.ledger.accepted),
+            front_rejects=int(
+                coupled_front_runtime.ledger.rejected_direction))
+        _update_sibm_geometry_metrics(
+            sparse_front_state.chi, P['dt'])
+
+    if (sparse_front_state is not None
+            and _front_operator == 'legacy_phase_first_reproduction'):
+        sibm_experiment_state['legacy_afterburner_calls'] = (
+            int(sibm_experiment_state.get('legacy_afterburner_calls', 0))+1)
         _h_phase = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
         _chi_new = (_h_phase[:, :, sparse_front_state.child_label]
                     / np.maximum(np.sum(_h_phase, axis=2), 1e-300))
@@ -8676,8 +8818,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                 sim_time += P['dt']
                 _stop_run = True
                 break
-            _current_child_area = float(np.sum(_h_phase[:, :, sparse_front_state.child_label]
-                / np.maximum(np.sum(_h_phase, axis=2), 1e-300))*dx*dy)
+            _h_phase_diag = eta[:, :, :Ng]**2*(3.0-2.0*eta[:, :, :Ng])
+            _current_child_area = float(np.sum(
+                _h_phase_diag[:, :, sparse_front_state.child_label]
+                / np.maximum(np.sum(_h_phase_diag, axis=2), 1e-300))*dx*dy)
             _previous_child_area = float(sibm_experiment_state.get(
                 'last_contour_child_area_m2', _current_child_area))
             _contour_area_delta = (0.0 if _previous_excess is None else
