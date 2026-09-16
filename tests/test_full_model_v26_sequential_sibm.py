@@ -74,3 +74,32 @@ def test_boundary_recovery_releases_signed_line_and_heats_only_neutral_line():
     assert recovered.ledger.boundary_signed_released_m > 0.0
     assert recovered.ledger.heat_released_J == (
         3.0*recovered.ledger.boundary_neutral_recovered_m)
+
+
+def test_boundary_recovery_releases_signed_line_into_recovered_wake_after_retreat():
+    rp = np.full((2, 2, 1), 4.0); rm = np.full_like(rp, 2.0)
+    defect = DefectState(rp, rm, np.zeros_like(rp), np.zeros((2, 2)))
+    state = initialize_existing_boundary_front(
+        defect, np.zeros((2, 2)), 6.0, 0, 1)
+    state, _ = advance_front(
+        state, np.full((2, 2), .25), cell_area_m2=1.0,
+        represented_thickness_m=1.0, line_energy_J_m=3.0,
+        newly_swept_fraction=np.full((2, 2), .25),
+        transmission_fraction=.5, boundary_storage_fraction=1.0)
+    state, mixture_before = advance_front(
+        state, np.zeros((2, 2)), cell_area_m2=1.0,
+        represented_thickness_m=1.0, line_energy_J_m=3.0,
+        newly_swept_fraction=np.full((2, 2), -.25),
+        transmission_fraction=.5, boundary_storage_fraction=1.0)
+    assert not np.any(state.chi)
+    assert np.all(state.recovered_wake_fraction > 0.0)
+    released_signed = .25*state.boundary_signed_density_m2.copy()
+    recovered, mixture_after = recover_boundary_reservoir(
+        state, .25, cell_area_m2=1.0, represented_thickness_m=1.0,
+        line_energy_J_m=3.0)
+    np.testing.assert_allclose(recovered.child.rp, state.child.rp)
+    np.testing.assert_allclose(recovered.child.rm, state.child.rm)
+    np.testing.assert_allclose(
+        (mixture_after.rp-mixture_after.rm)
+        -(mixture_before.rp-mixture_before.rm), released_signed,
+        rtol=2e-15, atol=1e-15)

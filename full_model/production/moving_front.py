@@ -853,9 +853,12 @@ def recover_boundary_reservoir(state, recovery_fraction, *, cell_area_m2,
                                represented_thickness_m, line_energy_J_m):
     """Recover boundary excess while conserving signed Burgers content.
 
-    Signed excess is released into the active child mobile populations;
-    neutral excess annihilates and its exact line energy is deposited as heat.
-    Intrinsic HAGB content is absent from this excess-only reservoir.
+    Signed excess is released into the processed material populations.  The
+    active child and recovered wake receive the same intensive increment, so
+    their support-weighted extensive increment is exactly the released signed
+    reservoir even after complete front retreat.  Neutral excess annihilates
+    and its exact line energy is deposited as heat.  Intrinsic HAGB content is
+    absent from this excess-only reservoir.
     """
     fraction = float(recovery_fraction)
     if not math.isfinite(fraction) or fraction < 0.0 or fraction > 1.0:
@@ -871,17 +874,30 @@ def recover_boundary_reservoir(state, recovery_fraction, *, cell_area_m2,
     released_signed_line = np.sum(np.abs(released_signed), axis=2)
     released_total = fraction*state.boundary_line_density_m2
     released_neutral = np.maximum(released_total-released_signed_line, 0.0)
-    support = state.chi[:, :, None]
+    processed_support = state.processed_max
+    unsupported = ((released_signed_line > 0.0)
+                   & (processed_support <= 64.0*np.finfo(float).eps))
+    if np.any(unsupported):
+        raise RuntimeError(
+            "signed boundary content has no processed-material support "
+            "for release")
+    support = processed_support[:, :, None]
     plus = np.maximum(released_signed, 0.0)
     minus = np.maximum(-released_signed, 0.0)
+    plus_increment = np.divide(
+        plus, support, out=np.zeros_like(plus), where=support > 0.0)
+    minus_increment = np.divide(
+        minus, support, out=np.zeros_like(minus), where=support > 0.0)
+    child_support = state.chi[:, :, None] > 0.0
+    wake_support = (state.processed_max-state.chi)[:, :, None] > 0.0
     child = DefectState(
-        state.child.rp+np.divide(
-            plus, support, out=np.zeros_like(plus), where=support > 0.0),
-        state.child.rm+np.divide(
-            minus, support, out=np.zeros_like(minus), where=support > 0.0),
+        state.child.rp+np.where(child_support, plus_increment, 0.0),
+        state.child.rm+np.where(child_support, minus_increment, 0.0),
         state.child.forest.copy(), state.child.wall.copy())
-    if np.any((released_signed_line > 0.0) & (state.chi <= 0.0)):
-        raise RuntimeError("signed boundary content has no child support for release")
+    wake = DefectState(
+        state.recovered_wake.rp+np.where(wake_support, plus_increment, 0.0),
+        state.recovered_wake.rm+np.where(wake_support, minus_increment, 0.0),
+        state.recovered_wake.forest.copy(), state.recovered_wake.wall.copy())
     volume = float(cell_area_m2)*float(represented_thickness_m)
     total_m = float(np.sum(released_total, dtype=np.longdouble)*volume)
     signed_m = float(np.sum(released_signed_line, dtype=np.longdouble)*volume)
@@ -901,7 +917,7 @@ def recover_boundary_reservoir(state, recovery_fraction, *, cell_area_m2,
         boundary_signed_released_m=old.boundary_signed_released_m+signed_m,
         boundary_neutral_recovered_m=old.boundary_neutral_recovered_m+neutral_m)
     candidate = replace(
-        state, child=child,
+        state, child=child, recovered_wake=wake,
         boundary_line_density_m2=(1.0-fraction)
         *state.boundary_line_density_m2,
         boundary_signed_density_m2=(1.0-fraction)
