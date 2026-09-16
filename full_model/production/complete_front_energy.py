@@ -315,6 +315,19 @@ def evaluate_common_front_transaction(
         generated_heat_J=heat, thermostat_export_J=thermostat,
         material_sink_export_J=sink_export)
     if decision.accepted:
+        ledger = candidate_state.ledger
+        candidate_state = replace(candidate_state, ledger=replace(
+            ledger,
+            complete_energy_accepted=ledger.complete_energy_accepted+1,
+            generated_heat_J=ledger.generated_heat_J+decision.generated_heat_J,
+            thermostat_export_J=(ledger.thermostat_export_J
+                                 +decision.thermostat_export_J),
+            material_sink_export_J=(ledger.material_sink_export_J
+                                    +decision.material_sink_export_J),
+            maximum_abs_first_law_residual_J=max(
+                ledger.maximum_abs_first_law_residual_J,
+                abs(decision.first_law_residual_J))))
+        candidate_mixture, _ = reconstruct_common(candidate_state, spacing_m)
         return CommonFrontTransactionResult(
             candidate_state, candidate_mixture, candidate_state,
             candidate_mixture, decision)

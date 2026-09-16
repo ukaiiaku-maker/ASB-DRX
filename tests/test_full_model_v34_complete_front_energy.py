@@ -109,6 +109,9 @@ def test_complete_trial_accepts_downhill_and_prices_junction_and_beta():
     assert result.decision.accepted
     assert abs(result.decision.first_law_residual_J) < 1e-27
     assert result.published_state is result.candidate_state
+    assert result.published_state.ledger.complete_energy_accepted == 1
+    assert result.published_state.ledger.generated_heat_J > 0.0
+    assert result.published_state.ledger.maximum_abs_first_law_residual_J < 1e-27
     assert result.decision.before.signed_junction_storage_J != 0.0
     assert (result.decision.candidate.signed_junction_storage_J
             != result.decision.before.signed_junction_storage_J)

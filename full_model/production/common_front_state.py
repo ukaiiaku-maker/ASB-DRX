@@ -50,6 +50,11 @@ class CommonFrontLedger:
     maximum_line_closure_m: float = 0.0
     maximum_signed_closure_m2: float = 0.0
     interface_nye_norm_m1: float = 0.0
+    complete_energy_accepted: int = 0
+    generated_heat_J: float = 0.0
+    thermostat_export_J: float = 0.0
+    material_sink_export_J: float = 0.0
+    maximum_abs_first_law_residual_J: float = 0.0
 
 
 @dataclass(frozen=True)

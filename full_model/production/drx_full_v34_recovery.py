@@ -8352,6 +8352,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                     and _complete_front_trial.decision.accepted):
                 common_front_state = _complete_front_trial.published_state
                 _common_after_front = _complete_front_trial.published_mixture
+                _front_decision = replace(
+                    _front_decision,
+                    heat_increment_J=(
+                        _complete_front_trial.decision.generated_heat_J))
             elif (_front_decision.classification == 'STATIONARY_GEOMETRY'
                   and _complete_front_trial.decision.accepted):
                 # A width/profile relaxation can be energetically admissible
