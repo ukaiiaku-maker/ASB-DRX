@@ -99,6 +99,15 @@ def test_both_geometric_directions_require_matching_thermodynamic_sign(n, shift)
     assert np.sign(decision.accepted_signed_volume_m3) == -np.sign(shift)
     assert decision.maximum_abs_line_closure_m < 1e-20
     assert decision.maximum_abs_signed_closure_m2 < 1.0
+    assert decision.absolute_swept_volume_m3 == (
+        decision.positive_swept_volume_m3+decision.negative_swept_volume_m3)
+    assert decision.maximum_abs_phase_change > 0.0
+    assert decision.rms_phase_change > 0.0
+    assert decision.interface_area_m2 > 0.0
+    assert decision.cell_volume_m3 == 2e-9*2e-9*5e-10
+    assert decision.component_motion
+    assert all(np.isfinite(item["normal_displacement_m"])
+               for item in decision.component_motion)
     assert run.ledger.accepted == 1
     assert run.ledger.heat_J >= 0.0
     assert np.all(total_line_density(reconstruct_mixture(new)) >= 0.0)

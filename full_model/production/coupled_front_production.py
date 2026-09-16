@@ -98,6 +98,15 @@ class CoupledFrontDecision:
     maximum_component_distance_cells: float = 0.0
     filtered_subcell_components_after: int = 0
     topology_backtrack_fraction: float = 1.0
+    positive_swept_volume_m3: float = 0.0
+    negative_swept_volume_m3: float = 0.0
+    absolute_swept_volume_m3: float = 0.0
+    interface_area_m2: float = 0.0
+    represented_thickness_m: float = 0.0
+    cell_volume_m3: float = 0.0
+    maximum_abs_phase_change: float = 0.0
+    rms_phase_change: float = 0.0
+    component_motion: tuple = ()
 
 
 def initialize_coupled_front_runtime(state: SparseFrontState, phi,
@@ -610,6 +619,17 @@ def accept_coupled_front_candidate(
         topology_event_count=(runtime.topology_event_count
                               +int(accepted_topology.event_record is not None)),
         ledger=ledger)
+    phase_change = accepted_eta-before
+    component_motion = tuple({
+        "component_id": int(component.component_id),
+        "signed_area_m2": float(
+            component.signed_receiver_swept_area_cells2*float(spacing_m)**2),
+        "interface_length_m": float(
+            component.interface_length_cells*float(spacing_m)),
+        "normal_displacement_m": float(
+            component.signed_receiver_swept_area_cells2*float(spacing_m)
+            /max(component.interface_length_cells, 1e-300)),
+    } for component in accepted_topology.snapshot.components)
     return new_state, runtime, accepted_eta, CoupledFrontDecision(
         True, "ACCEPTED_ATOMIC_COUPLED_FRONT", proposed, actual_signed,
         event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
@@ -623,4 +643,16 @@ def accept_coupled_front_candidate(
         filtered_subcell_components_after=(
             accepted_topology.snapshot.filtered_subcell_component_count),
         topology_event=accepted_topology.event_record,
-        topology_backtrack_fraction=topology_backtrack_fraction)
+        topology_backtrack_fraction=topology_backtrack_fraction,
+        positive_swept_volume_m3=audit["volume_ab"],
+        negative_swept_volume_m3=audit["volume_ba"],
+        absolute_swept_volume_m3=audit["volume_ab"]+audit["volume_ba"],
+        interface_area_m2=(sum(
+            item.interface_length_cells
+            for item in accepted_topology.snapshot.components)
+            *float(spacing_m)*float(represented_thickness_m)),
+        represented_thickness_m=float(represented_thickness_m),
+        cell_volume_m3=event_volume,
+        maximum_abs_phase_change=float(np.max(np.abs(phase_change))),
+        rms_phase_change=float(np.sqrt(np.mean(phase_change*phase_change))),
+        component_motion=component_motion)

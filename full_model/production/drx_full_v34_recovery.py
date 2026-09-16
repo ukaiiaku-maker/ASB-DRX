@@ -135,6 +135,7 @@ from common_front_state import (
     state_from_checkpoint as common_front_from_checkpoint,
     state_metadata_json as common_front_metadata_json,
 )
+from complete_front_energy import evaluate_common_front_transaction
 
 # ================================================================
 # 1. PHYSICAL PARAMETERS — no gates, no sigmoid floors/caps
@@ -8260,6 +8261,9 @@ for n in range(_restart_step_offset, _restart_end_step):
         _front_trial_diagnostic = (
             eta[:, :, :Ng].copy()
             if P.get('diagnostic_write_front_terminal_trial', False) else None)
+        _front_sparse_before = sparse_front_state
+        _front_runtime_before = coupled_front_runtime
+        _front_common_before = common_front_state
         sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
             accept_coupled_front_candidate(
                 sparse_front_state, coupled_front_runtime,
@@ -8308,10 +8312,15 @@ for n in range(_restart_step_offset, _restart_end_step):
                     'moving_front_topology_backtracking_bisections', 12))))
         eta[:, :, :Ng] = _eta_accepted
         if common_front_state is not None:
-            common_front_state, _common_after_front = commit_common_front_result(
-                common_front_state, sparse_front_state,
+            _front_volume = dx*dy*max(
+                float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                1e-30)
+            _complete_front_trial = evaluate_common_front_transaction(
+                _front_common_before, sparse_front_state,
+                eta_before_ac[:, :, :Ng], _eta_accepted,
                 spacing_m=dx,
-                cell_volume_m3=dx*dy*max(
+                cell_volume_m3=_front_volume,
+                represented_thickness_m=max(
                     float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
                     1e-30),
                 transmission_fraction=float(P.get(
@@ -8321,7 +8330,44 @@ for n in range(_restart_step_offset, _restart_end_step):
                 neutral_sink_fraction=float(P.get(
                     'moving_front_sink_fraction', 0.02)),
                 signed_sink_fraction=float(P.get(
-                    'moving_front_signed_sink_fraction', 0.0)))
+                    'moving_front_signed_sink_fraction', 0.0)),
+                energy_kwargs=dict(
+                    wall_parameters=v21_common_parameters,
+                    mean_strain=ebar,
+                    topologies=v21_topologies,
+                    systems=V20_SYSTEMS,
+                    phase_barrier_J_m3=float(P['W_eta']),
+                    phase_gradient_J_m=float(P['kappa_eta']),
+                    boundary_line_energy_J_m=float(np.nanmean(A_E_field)),
+                    boundary_junction_energy_J_m=(
+                        v21_common_parameters.junction_energy_J_m),
+                    reference_temperature_K=float(P['T0'])),
+                external_work_J=(float(P.get('sibm_applied_pressure_Pa', 0.0))
+                                 *_front_decision.accepted_signed_volume_m3),
+                prescribed_temperature=bool(P.get(
+                    'v33_prescribed_temperature_control', False)))
+            _last_complete_front_energy_decision = (
+                _complete_front_trial.decision.as_dict())
+            if (_front_decision.accepted
+                    and _complete_front_trial.decision.accepted):
+                common_front_state = _complete_front_trial.published_state
+                _common_after_front = _complete_front_trial.published_mixture
+            else:
+                # Neither geometry/history nor any material owner is published
+                # when the complete common-state event is uphill.
+                sparse_front_state = _front_sparse_before
+                coupled_front_runtime = _front_runtime_before
+                common_front_state = _front_common_before
+                eta[:, :, :Ng] = eta_before_ac[:, :, :Ng]
+                _common_after_front, _ = reconstruct_common_front(
+                    common_front_state, dx)
+                if _front_decision.accepted:
+                    _front_decision = replace(
+                        _front_decision, accepted=False,
+                        classification=(
+                            _complete_front_trial.decision.classification),
+                        accepted_signed_volume_m3=0.0,
+                        heat_increment_J=0.0)
             sparse_front_state = common_front_state.front
             rp = _common_after_front.mobile_plus_m2.copy()
             rm = _common_after_front.mobile_minus_m2.copy()
@@ -8354,7 +8400,7 @@ for n in range(_restart_step_offset, _restart_end_step):
         rho_GB = np.clip(
             rho_GB+sparse_front_state.boundary_line_density_m2-_boundary0,
             0.0, P['rho_max'])
-        _front_heat_increment_J = (
+        _front_heat_increment_J = (0.0 if common_front_state is not None else
             sparse_front_state.ledger.heat_released_J-_front_heat0_J)
         _heat_weight = np.abs(sparse_front_state.chi-_chi0)
         _heat_weight_volume = float(np.sum(_heat_weight)*dx*dy*max(
@@ -8378,6 +8424,8 @@ for n in range(_restart_step_offset, _restart_end_step):
         sibm_experiment_state.update(
             front_operator='coupled_bidirectional_v30',
             front_last_decision=_front_decision.__dict__,
+            complete_front_energy_last_decision=globals().get(
+                '_last_complete_front_energy_decision'),
             front_attempts=int(coupled_front_runtime.ledger.attempts),
             front_accepts=int(coupled_front_runtime.ledger.accepted),
             front_rejects=int(
