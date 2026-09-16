@@ -4054,6 +4054,14 @@ if P.get('v21_common_tensorial_wall_enabled', False):
         glide_barrier_eV=float(P.get('v21_glide_barrier_eV', 1.90)),
         glide_speed_attempt_m_s=float(P.get(
             'v21_glide_speed_attempt_m_s', 2.0e3)),
+        flow_temperature_override_K=(
+            float(P.get('causal_reference_temperature_K', P['T0']))
+            if str(P.get('causal_temperature_ablation', 'none')).lower()
+            in ('freeze_flow', 'freeze_flow_and_recovery') else None),
+        recovery_temperature_override_K=(
+            float(P.get('causal_reference_temperature_K', P['T0']))
+            if str(P.get('causal_temperature_ablation', 'none')).lower()
+            in ('freeze_recovery', 'freeze_flow_and_recovery') else None),
         maximum_fraction_per_step=float(P.get(
             'v21_maximum_fraction_per_step', 0.15)),
         c11_Pa=P['C11'], c12_Pa=P['C12'], c44_Pa=P['C44'],

@@ -146,6 +146,11 @@ class CommonWallParameters:
     elastic_iterations: int = 3
     glide_barrier_eV: float = 1.90
     glide_speed_attempt_m_s: float = 2.0e3
+    # Optional causal controls.  They alter only the named accepted
+    # constitutive channel; the physical temperature state and heat equation
+    # continue to evolve.  None means use state.temperature_K.
+    flow_temperature_override_K: float | None = None
+    recovery_temperature_override_K: float | None = None
     volumetric_heat_capacity_J_m3_K: float = 3.5e6
     thermal_diffusivity_m2_s: float = 0.0
     bath_rate_s: float = 0.0
@@ -204,6 +209,25 @@ class CommonWallParameters:
                 self.multi_hit_junction_log_factor,
                 self.multi_hit_annihilation_log_factor)):
             raise ValueError("multi-hit rate modifiers must remain bounded")
+        for value in (self.flow_temperature_override_K,
+                      self.recovery_temperature_override_K):
+            if value is not None and (
+                    not math.isfinite(float(value)) or float(value) <= 0.0):
+                raise ValueError("temperature overrides must be finite and positive")
+
+
+def channel_temperature_K(state: CommonWallState,
+                          parameters: CommonWallParameters,
+                          channel: str) -> np.ndarray:
+    """Temperature consumed by one accepted constitutive channel."""
+    if channel == "flow":
+        override = parameters.flow_temperature_override_K
+    elif channel == "recovery":
+        override = parameters.recovery_temperature_override_K
+    else:
+        raise ValueError(f"unknown temperature channel {channel!r}")
+    physical = np.asarray(state.temperature_K, dtype=float)
+    return physical if override is None else np.full_like(physical, float(override))
 
 
 @dataclass(frozen=True)
@@ -512,7 +536,8 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
         effective = raw*(1.0-resistance/smooth)
     if driving.glide_speed_m_s is None:
         activation = exp_floor_rate(
-            effective, state.temperature_K[..., None],
+            effective, channel_temperature_K(
+                state, parameters, "flow")[..., None],
             parameters.glide_barrier_eV, parameters)/parameters.attempt_frequency_s
         speed = (parameters.glide_speed_attempt_m_s*activation
                  *np.tanh(effective/parameters.critical_stress_Pa))
@@ -584,7 +609,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
 
     chemical = wall_free_energy_derivatives(
         state, parameters, topologies, systems)
-    temperature = state.temperature_K[..., None]
+    temperature = channel_temperature_K(
+        state, parameters, "recovery")[..., None]
     coordination = state.multi_hit_coordination[..., None]
 
     def coordinated(base, log_factor):
@@ -670,7 +696,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         source_second = (state.forest_plus_m2[..., second]
                          if topology.sign_b > 0 else state.forest_minus_m2[..., second])
         pair_stress = np.maximum(np.abs(stress[..., first]), np.abs(stress[..., second]))
-        kf = exp_floor_rate(pair_stress, state.temperature_K,
+        kf = exp_floor_rate(pair_stress, temperature[..., 0],
                             parameters.junction_barrier_eV, parameters)
         if parameters.multi_hit_enabled:
             kf = kf*np.exp(parameters.multi_hit_junction_log_factor
@@ -726,7 +752,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         beta_rate[..., 1, 0]-beta_rate[..., 0, 1])
 
     k_order = exp_floor_rate(
-        np.max(np.abs(stress), axis=2), state.temperature_K,
+        np.max(np.abs(stress), axis=2), temperature[..., 0],
         parameters.order_barrier_eV, parameters)
     qx, qy = _spectral_gradient(state.wall_order,
                                 parameters.spacing_m)

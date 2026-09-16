@@ -95,6 +95,7 @@ def main() -> None:
         "prescribed_temperature_K": 900.0,
         "causal_temperature_ablation": case["causal_temperature_ablation"],
         "causal_reference_temperature_K": 900.0,
+        "v34_authoritative_common_temperature_routing": True,
         "use_hazard_nucleation": False, "use_component_relabel": False,
         "disable_nucleation": True,
         "diag_interval": 10, "save_interval": 100, "restart_interval": 100,
@@ -118,6 +119,7 @@ def main() -> None:
         "restart_file": str(restart), "completed_steps_before_run": completed,
         "requested_steps_this_run": remaining, "target_step": int(args.target_step),
         "preflight": bool(args.preflight),
+        "authoritative_common_temperature_routing": True,
     }
     (output/"v34_thermal_run_record.json").write_text(
         json.dumps(record, indent=2, sort_keys=True)+"\n")

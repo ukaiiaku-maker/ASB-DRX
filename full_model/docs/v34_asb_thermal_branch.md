@@ -30,3 +30,21 @@ The shared prefix must be generated and verified before branching. Each branch
 verifies the prefix SHA-256 and source commit. The common comparison horizon is
 step 2500, immediately before the prior 900 K local-adiabatic validity stop.
 Concurrency is capped at two and unrelated source-frozen runs remain untouched.
+
+## Routing audit and invalidated launch
+
+The first long launch from source `0c45d03` exposed a routing defect: its
+selective flow/recovery temperatures reached the legacy shadow operators and
+diagnostics, but not the authoritative common-Mura residual. The nominal
+frozen-flow trajectory therefore remained bitwise identical to the full law
+through step 1220 despite a physical mean temperature above 1023 K. Those
+source-frozen files are retained, but the selective cases are classified
+`INVALID_CAUSAL_ABLATION_ROUTING` and cannot support a causal conclusion.
+
+The repaired operator carries independent optional flow and recovery
+temperature inputs inside `CommonWallParameters`. Flow temperature controls
+the accepted EXP-floor glide speed. Recovery temperature controls the accepted
+lock, wall exchange, annihilation, junction, and wall-order reaction rates.
+Neither override changes the physical temperature state or suppresses heat
+recording. Direct cold/hot fixtures verify selective invariance and sensitivity
+at the authoritative residual.

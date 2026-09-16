@@ -112,6 +112,8 @@ def summarize_checkpoint(path: Path, peak_stress: float) -> dict[str, object]:
             "thermal_semantics": actual_semantics(parameters),
             "causal_temperature_ablation": parameters.get(
                 "causal_temperature_ablation", "none"),
+            "authoritative_common_temperature_routing": bool(parameters.get(
+                "v34_authoritative_common_temperature_routing", False)),
             "physical_heat_deposited_J_m3": float(ledger["deposited_heat_J_m3"]),
             "heat_exported_J_m3": float(ledger["exported_heat_J_m3"]),
             "thermostat_export_J_m3": float(ledger.get(
@@ -164,6 +166,13 @@ def main() -> None:
             flow_operator_T_mean_K=float(diag.get("flow_operator_T_mean_K", "nan")),
             recovery_operator_T_mean_K=float(diag.get(
                 "recovery_operator_T_mean_K", "nan")))
+        selective = summary["causal_temperature_ablation"] in (
+            "freeze_flow", "freeze_recovery", "freeze_flow_and_recovery")
+        summary["causal_interpretation_valid"] = bool(
+            not selective or summary["authoritative_common_temperature_routing"])
+        summary["causal_classification"] = (
+            "VALID_CAUSAL_ROUTING" if summary["causal_interpretation_valid"]
+            else "INVALID_CAUSAL_ABLATION_ROUTING")
         available[name] = summary
     all_terminal = len(available) == len(CASES) and all(
         item["terminal"] for item in available.values())
@@ -173,7 +182,11 @@ def main() -> None:
         and item["maximum_relative_line_residual"] < 1e-10
         and item["maximum_relative_energy_residual"] < 1e-10
         and item["terminal_reason"] != "DRIVER_FAILURE"
+        and item["causal_interpretation_valid"]
         for item in available.values())
+    invalid_causal_cases = sorted(
+        name for name, item in available.items()
+        if not item["causal_interpretation_valid"])
     effects = {}
     reference = available.get("full_law_local_adiabatic")
     if reference:
@@ -215,6 +228,7 @@ def main() -> None:
         "latest_common_step": common_step,
         "strict_asb_thresholds_changed": False,
         "strict_asb_claimed_from_causal_matrix": False,
+        "invalid_causal_cases": invalid_causal_cases,
         "classification": classification,
         "all_cases_terminal": all_terminal, "all_cases_valid": all_valid,
         "cases": available, "causal_effects_relative_to_full_law": effects,
