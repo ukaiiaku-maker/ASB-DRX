@@ -96,6 +96,8 @@ class CoupledFrontDecision:
     ray_crossing_count_before: int = 0
     ray_crossing_count_after: int = 0
     maximum_component_distance_cells: float = 0.0
+    filtered_subcell_components_after: int = 0
+    topology_backtrack_fraction: float = 1.0
 
 
 def initialize_coupled_front_runtime(state: SparseFrontState, phi,
@@ -363,7 +365,11 @@ def accept_coupled_front_candidate(
         mobility_enabled=True,
         active_mask=None, periodic=True, transmission_fraction=0.0,
         boundary_storage_fraction=0.0, neutral_sink_fraction=0.0,
-        signed_sink_fraction=0.0, boundary_capacity_density_m2=None):
+        signed_sink_fraction=0.0, boundary_capacity_density_m2=None,
+        support_component_reconnection=False,
+        topology_backtracking_enabled=False,
+        minimum_topology_backtrack_fraction=2.0**-12,
+        topology_backtracking_bisections=12):
     """Atomically accept a trial two-phase update and its material transaction."""
     before = np.asarray(eta_before, dtype=float)
     trial = np.asarray(eta_trial, dtype=float)
@@ -390,7 +396,56 @@ def accept_coupled_front_candidate(
         periodic=periodic)
     topology = match_front_topology(
         runtime.topology, phi0, phi1, active_mask=active_mask,
-        periodic=periodic, ray_crossing_count=ray_after)
+        periodic=periodic, ray_crossing_count=ray_after,
+        support_component_reconnection=support_component_reconnection)
+    topology_backtrack_fraction = 1.0
+    if (topology.event == "PAIR_IDENTITY_LOST"
+            and topology_backtracking_enabled):
+        # A diffuse phase update can be much larger than the distance for
+        # which component identity is well posed.  Find the largest admissible
+        # prefix of that same update.  This changes neither direction nor the
+        # cut-cell transaction: the accepted prefix is subsequently processed
+        # by the ordinary rate and capacity limits.
+        unsafe = 1.0
+        safe = None
+        candidate = 0.5
+        minimum = float(minimum_topology_backtrack_fraction)
+        while candidate >= minimum:
+            candidate_eta = before+candidate*(trial-before)
+            candidate_phi = candidate_eta[:, :, b]-candidate_eta[:, :, a]
+            candidate_match = match_front_topology(
+                runtime.topology, phi0, candidate_phi,
+                active_mask=active_mask, periodic=periodic,
+                ray_crossing_count=diagnostic_ray_crossing_count(
+                    candidate_phi, normal_axis=runtime.normal_axis,
+                    active_mask=active_mask, periodic=periodic),
+                support_component_reconnection=support_component_reconnection)
+            if candidate_match.event is None:
+                safe = (candidate, candidate_eta, candidate_phi, candidate_match)
+                break
+            unsafe = candidate
+            candidate *= 0.5
+        if safe is not None:
+            lower, best_eta, best_phi, best_match = safe
+            for _ in range(max(0, int(topology_backtracking_bisections))):
+                middle = 0.5*(lower+unsafe)
+                candidate_eta = before+middle*(trial-before)
+                candidate_phi = candidate_eta[:, :, b]-candidate_eta[:, :, a]
+                candidate_match = match_front_topology(
+                    runtime.topology, phi0, candidate_phi,
+                    active_mask=active_mask, periodic=periodic,
+                    ray_crossing_count=diagnostic_ray_crossing_count(
+                        candidate_phi, normal_axis=runtime.normal_axis,
+                        active_mask=active_mask, periodic=periodic),
+                    support_component_reconnection=support_component_reconnection)
+                if candidate_match.event is None:
+                    lower, best_eta, best_phi, best_match = (
+                        middle, candidate_eta, candidate_phi, candidate_match)
+                else:
+                    unsafe = middle
+            topology_backtrack_fraction = lower
+            trial, phi1, topology = best_eta, best_phi, best_match
+            ray_after = topology.snapshot.ray_crossing_count
     event_volume = float(spacing_m)**2*float(represented_thickness_m)
     pressure = float(driving_pressure_a_to_b_Pa)
     state_a = _non_b_state(state)
@@ -436,7 +491,9 @@ def accept_coupled_front_candidate(
             ray_crossing_count_before=ray_before,
             ray_crossing_count_after=ray_after,
             maximum_component_distance_cells=(
-                topology.maximum_component_distance_cells))
+                topology.maximum_component_distance_cells),
+            filtered_subcell_components_after=(
+                topology.snapshot.filtered_subcell_component_count))
     if abs(proposed) <= tolerance:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          stationary_trials=runtime.ledger.stationary_trials+1)
@@ -450,7 +507,9 @@ def accept_coupled_front_candidate(
             ray_crossing_count_before=ray_before,
             ray_crossing_count_after=ray_after,
             maximum_component_distance_cells=(
-                topology.maximum_component_distance_cells))
+                topology.maximum_component_distance_cells),
+            filtered_subcell_components_after=(
+                topology.snapshot.filtered_subcell_component_count))
     if abs(velocity) <= 0.0 or proposed*velocity <= 0.0:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          rejected_direction=runtime.ledger.rejected_direction+1)
@@ -462,7 +521,9 @@ def accept_coupled_front_candidate(
             ray_crossing_count_before=ray_before,
             ray_crossing_count_after=ray_after,
             maximum_component_distance_cells=(
-                topology.maximum_component_distance_cells))
+                topology.maximum_component_distance_cells),
+            filtered_subcell_components_after=(
+                topology.snapshot.filtered_subcell_component_count))
     fraction = min(1.0, abs(allowed)/abs(proposed))
     accepted_eta = before+fraction*(trial-before)
     phi_accept = accepted_eta[:, :, b]-accepted_eta[:, :, a]
@@ -470,7 +531,8 @@ def accept_coupled_front_candidate(
         runtime.topology, phi0, phi_accept, active_mask=active_mask,
         periodic=periodic, ray_crossing_count=diagnostic_ray_crossing_count(
             phi_accept, normal_axis=runtime.normal_axis,
-            active_mask=active_mask, periodic=periodic))
+            active_mask=active_mask, periodic=periodic),
+        support_component_reconnection=support_component_reconnection)
     if accepted_topology.event is not None:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1)
         stopped = replace(
@@ -485,7 +547,9 @@ def accept_coupled_front_candidate(
             ray_crossing_count_before=ray_before,
             ray_crossing_count_after=ray_after,
             maximum_component_distance_cells=(
-                accepted_topology.maximum_component_distance_cells))
+                accepted_topology.maximum_component_distance_cells),
+            filtered_subcell_components_after=(
+                accepted_topology.snapshot.filtered_subcell_component_count))
     signed_sweep = (accepted_topology.receiver_fraction_after
                     -accepted_topology.receiver_fraction_before)
     if accepted_topology.signed_receiver_area_cells2 > 0.0:
@@ -515,7 +579,8 @@ def accept_coupled_front_candidate(
             periodic=periodic,
             ray_crossing_count=diagnostic_ray_crossing_count(
                 phi_accept, normal_axis=runtime.normal_axis,
-                active_mask=active_mask, periodic=periodic))
+                active_mask=active_mask, periodic=periodic),
+            support_component_reconnection=support_component_reconnection)
     old = runtime.ledger
     revisit = np.minimum(np.maximum(signed_sweep, 0.0),
                          np.maximum(runtime.maximum_b_fraction-state.chi, 0.0))
@@ -542,6 +607,8 @@ def accept_coupled_front_candidate(
         minimum_b_fraction=np.minimum(runtime.minimum_b_fraction, new_state.chi),
         previous_phi=(accepted_eta[:, :, b]-accepted_eta[:, :, a]).copy(),
         topology=accepted_topology.snapshot,
+        topology_event_count=(runtime.topology_event_count
+                              +int(accepted_topology.event_record is not None)),
         ledger=ledger)
     return new_state, runtime, accepted_eta, CoupledFrontDecision(
         True, "ACCEPTED_ATOMIC_COUPLED_FRONT", proposed, actual_signed,
@@ -552,4 +619,8 @@ def accept_coupled_front_candidate(
         ray_crossing_count_before=ray_before,
         ray_crossing_count_after=accepted_topology.snapshot.ray_crossing_count,
         maximum_component_distance_cells=(
-            accepted_topology.maximum_component_distance_cells))
+            accepted_topology.maximum_component_distance_cells),
+        filtered_subcell_components_after=(
+            accepted_topology.snapshot.filtered_subcell_component_count),
+        topology_event=accepted_topology.event_record,
+        topology_backtrack_fraction=topology_backtrack_fraction)

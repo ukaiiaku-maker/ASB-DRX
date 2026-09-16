@@ -39,6 +39,8 @@ class TopologySnapshot:
     components: tuple[FrontComponent, ...]
     next_component_id: int
     ray_crossing_count: int = 0
+    filtered_subcell_component_count: int = 0
+    filtered_subcell_area_cells2: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -76,6 +78,9 @@ def snapshot_to_dict(snapshot):
         "shape": list(snapshot.shape),
         "next_component_id": snapshot.next_component_id,
         "ray_crossing_count": snapshot.ray_crossing_count,
+        "filtered_subcell_component_count": (
+            snapshot.filtered_subcell_component_count),
+        "filtered_subcell_area_cells2": snapshot.filtered_subcell_area_cells2,
         "components": [component_to_dict(item) for item in snapshot.components],
     }
 
@@ -84,7 +89,9 @@ def snapshot_from_dict(value):
     return TopologySnapshot(
         tuple(map(int, value["shape"])),
         tuple(component_from_dict(item) for item in value["components"]),
-        int(value["next_component_id"]), int(value.get("ray_crossing_count", 0)))
+        int(value["next_component_id"]), int(value.get("ray_crossing_count", 0)),
+        int(value.get("filtered_subcell_component_count", 0)),
+        float(value.get("filtered_subcell_area_cells2", 0.0)))
 
 
 def _profile_coordinate(phi):
@@ -248,8 +255,17 @@ def _oriented_frame(q, point, tangent, periodic):
 
 
 def extract_front_components(phi, *, active_mask=None, periodic=True,
-                             first_component_id=0):
-    """Extract connected zero-contour components from a periodic cut-cell graph."""
+                             first_component_id=0,
+                             minimum_resolved_loop_area_cells2=1.0,
+                             minimum_resolved_loop_length_cells=4.0):
+    """Extract connected zero-contour components from a periodic cut-cell graph.
+
+    A closed, non-winding contour smaller than both one primal cell and four
+    edge lengths has no grid-resolved interior.  It remains present in the
+    cut-cell receiver fraction (and therefore in the conservative sweep), but
+    is excluded from component ownership and recorded on the snapshot.  Once
+    either measure is resolved the loop becomes an explicit topology event.
+    """
     value = np.asarray(phi, dtype=float)
     if (value.ndim != 2 or not np.all(np.isfinite(value))
             or np.max(np.abs(value)) > 1.0+32.0*np.finfo(float).eps):
@@ -350,13 +366,27 @@ def extract_front_components(phi, *, active_mask=None, periodic=True,
             _circular_centroid(points, value.shape, periodic), float(length),
             enclosed, endpoint_count, closed, relationship, tangent, normal,
             0.0, points))
+    # A sign excursion whose entire closed contour is sub-cell in both area
+    # and perimeter is not a resolved material component.  It is retained by
+    # the cut-cell receiver-area ledger, but cannot own a persistent topology
+    # ID.  Either threshold being resolved is sufficient to keep the loop.
+    filtered = [item for item in descriptors
+                if (item.closed and not any(item.winding)
+                    and item.enclosed_area_cells2 is not None
+                    and item.enclosed_area_cells2
+                    < float(minimum_resolved_loop_area_cells2)
+                    and item.interface_length_cells
+                    < float(minimum_resolved_loop_length_cells))]
+    descriptors = [item for item in descriptors if item not in filtered]
     descriptors.sort(key=lambda item: (
         item.winding, item.active_window_relationship,
         item.centroid_grid, item.interface_length_cells))
     assigned = tuple(replace(item, component_id=first_component_id+index)
                      for index, item in enumerate(descriptors))
     return TopologySnapshot(
-        tuple(value.shape), assigned, first_component_id+len(assigned), 0)
+        tuple(value.shape), assigned, first_component_id+len(assigned), 0,
+        len(filtered), float(sum(
+            item.enclosed_area_cells2 or 0.0 for item in filtered)))
 
 
 def _component_distance(a, b, shape, periodic):
@@ -425,6 +455,18 @@ def _topology_event(previous, current, phi):
             return "INTERFACE_PAIR_ANNIHILATED"
         return "GRAIN_CONSUMED"
     if new_count > old_count:
+        # A closed island appearing alongside an existing component that
+        # intersects the active window is not an ordinary split of that
+        # component.  With nucleation disabled it is an unauthorized phase
+        # island and must remain a named scientific terminal.  Sub-cell loops
+        # have already been handled, conservatively, by extraction.
+        if (any(item.active_window_relationship == "INTERSECTS_ACTIVE_WINDOW"
+                for item in previous.components)
+                and any(item.closed and not any(item.winding)
+                        and item.active_window_relationship
+                        != "INTERSECTS_ACTIVE_WINDOW"
+                        for item in current.components)):
+            return "UNAUTHORIZED_PHASE_ISLAND"
         return "FRONT_COMPONENT_SPLIT"
     if new_count < old_count:
         return "FRONT_COMPONENT_MERGE"
@@ -433,7 +475,8 @@ def _topology_event(previous, current, phi):
 
 def match_front_topology(previous, phi_before, phi_after, *, active_mask=None,
                          periodic=True, maximum_match_distance_cells=4.0,
-                         ray_crossing_count=0):
+                         ray_crossing_count=0,
+                         support_component_reconnection=False):
     """Match persistent components and classify every non-bijective event."""
     before = np.asarray(phi_before, dtype=float)
     after = np.asarray(phi_after, dtype=float)
@@ -444,9 +487,14 @@ def match_front_topology(previous, phi_before, phi_after, *, active_mask=None,
         first_component_id=previous.next_component_id)
     old = previous.components; new = current.components
     event = None; record = None; maximum_distance = 0.0
-    if len(old) != len(new):
-        event = _topology_event(previous, current, after)
-    elif not old:
+    count_event = (None if len(old) == len(new)
+                   else _topology_event(previous, current, after))
+    supported_count_event = bool(
+        support_component_reconnection
+        and count_event in {"FRONT_COMPONENT_SPLIT", "FRONT_COMPONENT_MERGE"})
+    if count_event is not None and not supported_count_event:
+        event = count_event
+    elif not old or not new:
         matched = current.components
     else:
         cost = np.full((len(old), len(new)), 1e12, dtype=float)
@@ -466,16 +514,35 @@ def match_front_topology(previous, phi_before, phi_after, *, active_mask=None,
                 geometric_distance[i, j] = distance
         rows, columns = linear_sum_assignment(cost)
         distances = [geometric_distance[i, j] for i, j in zip(rows, columns)]
-        if (len(rows) != len(old) or any(not np.isfinite(item)
-                or item > float(maximum_match_distance_cells) for item in distances)):
+        match_limit = float(maximum_match_distance_cells)
+        if supported_count_event:
+            # Hausdorff distance necessarily jumps at a pinch-off/reconnection.
+            # Bound persistence by half the larger participating contour,
+            # rather than making such events unmatchable by the translation
+            # threshold used for bijective motion.
+            match_limit = max(match_limit, 0.5*max(
+                [item.interface_length_cells for item in old+new]))
+        required_matches = min(len(old), len(new))
+        if (len(rows) != required_matches or any(not np.isfinite(item)
+                or item > match_limit for item in distances)):
             event = "PAIR_IDENTITY_LOST"
         else:
             maximum_distance = max(distances, default=0.0)
-            assigned = [None]*len(new)
+            assigned = list(new)
             for i, j in zip(rows, columns):
                 assigned[j] = replace(new[j], component_id=old[i].component_id)
             matched = tuple(assigned)
             current = replace(current, components=matched)
+            if supported_count_event:
+                record = {
+                    "classification": "SUPPORTED_"+count_event,
+                    "old_component_count": len(old),
+                    "new_component_count": len(new),
+                    "old_components": [component_to_dict(item) for item in old],
+                    "new_components": [component_to_dict(item) for item in new],
+                    "receiver_all_positive": bool(np.all(after > 0.0)),
+                    "receiver_all_negative": bool(np.all(after < 0.0)),
+                }
     if event is not None:
         record = {
             "classification": event,

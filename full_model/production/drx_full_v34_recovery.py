@@ -8148,7 +8148,16 @@ for n in range(_restart_step_offset, _restart_end_step):
                 boundary_capacity_density_m2=(
                     float(P.get('moving_front_boundary_capacity_density_m2'))
                     if P.get('moving_front_boundary_capacity_density_m2')
-                    is not None else None)))
+                    is not None else None),
+                support_component_reconnection=bool(P.get(
+                    'moving_front_support_component_reconnection', True)),
+                topology_backtracking_enabled=bool(P.get(
+                    'moving_front_topology_backtracking_enabled', True)),
+                minimum_topology_backtrack_fraction=float(P.get(
+                    'moving_front_minimum_topology_backtrack_fraction',
+                    2.0**-12)),
+                topology_backtracking_bisections=int(P.get(
+                    'moving_front_topology_backtracking_bisections', 12))))
         eta[:, :, :Ng] = _eta_accepted
         _front_mixture = reconstruct_mixture(sparse_front_state)
         rp, rm = _front_mixture.rp, _front_mixture.rm
@@ -8175,6 +8184,7 @@ for n in range(_restart_step_offset, _restart_end_step):
                 coupled_front_runtime.ledger.rejected_direction))
         _front_topology_terminals = {
             'FRONT_COMPONENT_SPLIT', 'FRONT_COMPONENT_MERGE',
+            'UNAUTHORIZED_PHASE_ISLAND',
             'GRAIN_CONSUMED', 'INTERFACE_PAIR_ANNIHILATED',
             'PAIR_LEFT_ACTIVE_WINDOW', 'PAIR_IDENTITY_LOST',
             'PAIR_ENTERED_ACTIVE_WINDOW'}
