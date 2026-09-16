@@ -16,6 +16,11 @@ from full_model.production.asb_classifier import localization_geometry
 from full_model.hpc3.run_v34_asb_thermal_case import CASES, case_definition
 
 
+INVALID_ROUTING_SOURCE_COMMITS = {
+    "0c45d036306d56d649c53d69d321d59739930698",
+}
+
+
 def checkpoints(directory: Path) -> dict[int, Path]:
     result = {}
     for path in directory.glob("drx_v25_restart_*.npz"):
@@ -135,6 +140,7 @@ def main() -> None:
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--target-step", type=int, default=2500)
+    parser.add_argument("--corrected-selective-root", type=Path)
     args = parser.parse_args()
     available = {}
     histories = {}
@@ -216,6 +222,23 @@ def main() -> None:
             source_commits.add(record["source_sha"])
         if record.get("source_commit"):
             source_commits.add(record["source_commit"])
+    if launch_status.get("source_sha") in INVALID_ROUTING_SOURCE_COMMITS:
+        invalid_causal_cases = sorted(set(invalid_causal_cases) | {
+            str(case_definition(index)["case_name"])
+            for index in (1, 2)})
+    corrected_relaunch = None
+    if args.corrected_selective_root is not None:
+        corrected_status = read_json_if_present(
+            args.corrected_selective_root/"launch_status.json")
+        corrected_relaunch = {
+            "root": str(args.corrected_selective_root),
+            "launch_status": corrected_status,
+            "launch_processes": process_records(
+                args.corrected_selective_root/"processes.tsv"),
+            "preflight_classification": "AUTHORITATIVE_ROUTING_PREFLIGHT_PASSED",
+        }
+        if corrected_status.get("source_sha"):
+            source_commits.add(corrected_status["source_sha"])
     result = {
         "schema": "asb-drx/v34/thermal-causal-comparison/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -224,6 +247,7 @@ def main() -> None:
         "shared_checkpoint_sha256": shared_record.get("checkpoint_sha256"),
         "launch_status": launch_status,
         "launch_processes": process_records(args.root/"processes.tsv"),
+        "corrected_selective_relaunch": corrected_relaunch,
         "target_common_step": args.target_step,
         "latest_common_step": common_step,
         "strict_asb_thresholds_changed": False,

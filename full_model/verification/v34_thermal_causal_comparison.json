@@ -82,9 +82,28 @@
     }
   },
   "classification": "V34_THERMAL_CAUSAL_RUNNING",
-  "generated_utc": "2026-09-16T23:02:29.552322+00:00",
+  "corrected_selective_relaunch": {
+    "launch_processes": [
+      {
+        "case_id": 1,
+        "launched_utc": "2026-09-16T23:04:19Z",
+        "pid": 32081
+      }
+    ],
+    "launch_status": {
+      "cases": 2,
+      "maximum_concurrency": 1,
+      "source_sha": "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
+      "state": "RUNNING",
+      "target_step": 2500
+    },
+    "preflight_classification": "AUTHORITATIVE_ROUTING_PREFLIGHT_PASSED",
+    "root": "/Users/sdillon/HPC3/local-results/asb-drx-v34-thermal-corrected-20260916"
+  },
+  "generated_utc": "2026-09-16T23:05:08.470878+00:00",
   "invalid_causal_cases": [
-    "frozen_flow_T_local_adiabatic"
+    "frozen_flow_T_local_adiabatic",
+    "frozen_recovery_T_local_adiabatic"
   ],
   "latest_common_step": null,
   "launch_processes": [
@@ -110,6 +129,7 @@
   "shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
   "shared_checkpoint_step": 100,
   "source_commits": [
+    "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
     "0c45d036306d56d649c53d69d321d59739930698"
   ],
   "strict_asb_claimed_from_causal_matrix": false,
