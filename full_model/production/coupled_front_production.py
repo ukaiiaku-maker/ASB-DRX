@@ -383,7 +383,9 @@ def accept_coupled_front_candidate(
         minimum_topology_backtrack_fraction=2.0**-12,
         topology_backtracking_bisections=12,
         kinetic_free_energy_a_to_b_J=None,
-        kinetic_free_energy_b_to_a_J=None):
+        kinetic_free_energy_b_to_a_J=None,
+        kinetic_event_volume_m3=None,
+        kinetic_event_length_m=None):
     """Atomically accept a trial two-phase update and its material transaction."""
     before = np.asarray(eta_before, dtype=float)
     trial = np.asarray(eta_trial, dtype=float)
@@ -461,6 +463,14 @@ def accept_coupled_front_candidate(
             trial, phi1, topology = best_eta, best_phi, best_match
             ray_after = topology.snapshot.ray_crossing_count
     event_volume = float(spacing_m)**2*float(represented_thickness_m)
+    activation_volume = (event_volume if kinetic_event_volume_m3 is None
+                         else float(kinetic_event_volume_m3))
+    activation_length = (float(spacing_m) if kinetic_event_length_m is None
+                         else float(kinetic_event_length_m))
+    if (not math.isfinite(activation_volume) or activation_volume <= 0.0
+            or not math.isfinite(activation_length)
+            or activation_length <= 0.0):
+        raise ValueError("kinetic event volume and length must be positive")
     pressure = float(driving_pressure_a_to_b_Pa)
     state_a = _non_b_state(state)
     state_b = state.child
@@ -471,8 +481,8 @@ def accept_coupled_front_candidate(
         pressure = 0.0
         state_b = state_a
     event = propose_bidirectional_front_event(
-        state_a, state_b, event_volume_m3=event_volume,
-        event_length_m=float(spacing_m), line_energy_J_m=line_energy_J_m,
+        state_a, state_b, event_volume_m3=activation_volume,
+        event_length_m=activation_length, line_energy_J_m=line_energy_J_m,
         temperature_K=float(np.mean(np.asarray(temperature_K, dtype=float))),
         process=process, h0_J=h0_J, critical_pressure_Pa=critical_pressure_Pa,
         exp_a=exp_a, exp_n=exp_n, exp_floor=exp_floor,

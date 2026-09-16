@@ -50,6 +50,11 @@ def test_response_family_is_same_state_and_reports_finite_reciprocal_metrics():
     assert cases["front_only"]["maximum_abs_slip"] == 0.0
     assert cases["mura_only"]["sweep"]["absolute_m3"] == 0.0
     assert cases["combined"]["maximum_abs_slip"] > 0.0
+    assert cases["combined"]["kinetic_normalization_is_grid_independent"]
+    assert cases["combined"]["kinetic_event_volume_m3"] == (
+        context["wall_parameters"].burgers_m**3)
+    assert cases["combined"]["kinetic_event_length_m"] == (
+        context["wall_parameters"].burgers_m)
     assert cases["combined"]["maximum_abs_beta_p"] > 0.0
     assert cases["combined"]["sweep"]["positive_m3"] > 0.0
     assert cases["combined"]["sweep"]["negative_m3"] == 0.0

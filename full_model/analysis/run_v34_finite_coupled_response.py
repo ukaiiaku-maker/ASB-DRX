@@ -250,6 +250,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     front_published = False
     before_front = front_state
     if controls.front_enabled:
+        burgers = float(context["wall_parameters"].burgers_m)
+        kinetic_event_volume = burgers**3
         process = ActivatedProcess(
             "v34-i3-existing-boundary", 1.0e8,
             negative_barrier_mode="drag")
@@ -273,11 +275,13 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 neutral_sink_fraction=controls.neutral_sink_fraction,
                 signed_sink_fraction=controls.signed_sink_fraction,
                 support_component_reconnection=True,
-                topology_backtracking_enabled=True))
+                topology_backtracking_enabled=True,
+                kinetic_event_volume_m3=kinetic_event_volume,
+                kinetic_event_length_m=burgers))
         if front_decision.accepted:
             directional_kinetics = evaluate_complete_directional_kinetics(
                 front_state, sparse_candidate, state.eta, accepted_eta,
-                event_volume_m3=cell_volume, spacing_m=spacing,
+                event_volume_m3=kinetic_event_volume, spacing_m=spacing,
                 cell_volume_m3=cell_volume,
                 represented_thickness_m=thickness,
                 transmission_fraction=controls.transmission_fraction,
@@ -312,7 +316,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                     kinetic_free_energy_a_to_b_J=(
                         directional_kinetics.a_to_b_event_J),
                     kinetic_free_energy_b_to_a_J=(
-                        directional_kinetics.b_to_a_event_J)))
+                        directional_kinetics.b_to_a_event_J),
+                    kinetic_event_volume_m3=kinetic_event_volume,
+                    kinetic_event_length_m=burgers))
         transaction = evaluate_common_front_transaction(
             front_state, sparse_candidate, state.eta, accepted_eta,
             spacing_m=spacing, cell_volume_m3=cell_volume,
@@ -371,6 +377,11 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         "mura_enabled": controls.mura_enabled,
         "front_enabled": controls.front_enabled,
         "prescribed_temperature": controls.prescribed_temperature,
+        "kinetic_event_volume_m3": (
+            float(context["wall_parameters"].burgers_m)**3),
+        "kinetic_event_length_m": float(
+            context["wall_parameters"].burgers_m),
+        "kinetic_normalization_is_grid_independent": True,
         "sweep": ({
             "positive_m3": front_decision.positive_swept_volume_m3,
             "negative_m3": front_decision.negative_swept_volume_m3,

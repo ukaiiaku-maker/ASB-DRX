@@ -805,6 +805,7 @@ P = dict(
     nuc_rs_theta_m_deg=15.0,         # Read-Shockley saturation angle
     nuc_min_field_mis_deg=3.0,      # v27c: sub-degree changes are wall recovery, not new eta fields      # numerical: below this, treat as recovery/subgrain, not new eta field
     nuc_barrier_thickness_b=2.0,     # converts 2-D barrier per-depth to event energy
+    moving_front_activation_volume_b3=1.0,
     nuc_comp_relief_factor=0.05,
     nuc_comp_relief_cap_factor=0.25, # v27c: compatibility relief cannot dominate stored-energy relief  # cap compatibility relief to O(stored-energy relief)
     nuc_gnd_feed_efficiency=0.50,    # fraction of residual GND available to feed new GB
@@ -8486,7 +8487,10 @@ for n in range(_restart_step_offset, _restart_end_step):
             minimum_topology_backtrack_fraction=float(P.get(
                 'moving_front_minimum_topology_backtrack_fraction', 2.0**-12)),
             topology_backtracking_bisections=int(P.get(
-                'moving_front_topology_backtracking_bisections', 12)))
+                'moving_front_topology_backtracking_bisections', 12)),
+            kinetic_event_volume_m3=(float(P.get(
+                'moving_front_activation_volume_b3', 1.0))*P['b']**3),
+            kinetic_event_length_m=P['b'])
         sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
             accept_coupled_front_candidate(
                 sparse_front_state, coupled_front_runtime,
@@ -8541,7 +8545,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                 _complete_directional = evaluate_complete_directional_kinetics(
                     _front_common_before, sparse_front_state,
                     eta_before_ac[:, :, :Ng], _eta_accepted,
-                    event_volume_m3=_front_volume,
+                    event_volume_m3=(float(P.get(
+                        'moving_front_activation_volume_b3', 1.0))*P['b']**3),
                     spacing_m=dx, cell_volume_m3=_front_volume,
                     represented_thickness_m=_front_thickness,
                     transmission_fraction=_front_accept_kwargs[
