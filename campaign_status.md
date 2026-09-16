@@ -1366,3 +1366,25 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `full_model/docs/v27_decision_report.md`.
 - No V27 HPC job is active. Queue audit shows only unrelated job `55950433`,
   observed and untouched.
+
+## Directive v28 discrete symmetry, Nye, and ASB energy audit (local checkpoint 2026-09-15)
+
+- V27 evidence is frozen at `1a41057` with per-file SHA-256 values in
+  `full_model/verification/v28_frozen_v27_evidence.json`.
+- The clean SIBM initializer now solves the exact production clip/normalize
+  map and preserves explicitly declared parent/child material states. With the
+  V27 projection disabled, the phase-only equal state is stationary, all
+  near-equal perturbations from `1e-10` to `1e-2` are odd, and label/contrast
+  signs pass. Enabling irreversible processing amplifies neutral contour noise
+  to 0.675 interface widths. Decision: `SIBM_FRONT_FIRST_PASSAGE_ASYMMETRY`.
+- Periodically balancing the initially uniform signed populations lowers the
+  step-1 dual-Nye mismatch to `3.94e-12`, but the accepted dynamics regenerate
+  a 1.413 nonzero-mode mismatch at step 2. Decision:
+  `DUAL_NYE_STATE_STILL_INCONSISTENT`; no cone rerun is authorized.
+- The exact-common-time ASB audit finds 21.28% fine-grid disagreement in
+  temperature excess and 19--79% disagreement in threshold-free localization
+  measures. Compatibility-energy increments remain of order `1e23 J/m3`, up
+  to `4.8e15` times external work, and no independent other-dissipation channel
+  exists. Decision: `ASB_ENERGY_GAUGE_OR_DISSIPATION_FAILURE`.
+- The canonical suite passes 462 tests. No V28 HPC3 job was launched. Full
+  report: `full_model/docs/v28_decision_report.md`.

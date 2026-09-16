@@ -1,0 +1,274 @@
+{
+  "classification": "ASB_ENERGY_GAUGE_OR_DISSIPATION_FAILURE",
+  "common_time_s": 5.842589456267958e-06,
+  "energy_ledger_physically_conditioned": false,
+  "fine_128_192_relative_differences": {
+    "connected_band_fwhm_m": 0.7896971263857014,
+    "entropy_effective_fraction": 0.20138068700247022,
+    "inverse_participation_effective_fraction": 0.19485887884965705,
+    "minor_second_moment_m2": 0.34207333591178796,
+    "temperature_excess_from_T0": 0.21275697516565475
+  },
+  "fixture_passed": true,
+  "matched_128_adiabatic_minus_homogeneous_maximum_K": 215.23584965419604,
+  "records": {
+    "128": {
+      "defect_energy_change_J_m3": -7.77892990279683e+21,
+      "deposited_heat_J_m3": 54850264.11529269,
+      "directory": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_128",
+      "energy_components": {
+        "F_bulk": {
+          "change_J_m3": -6558071918.660063,
+          "final_J_m3": 2528303699.0314236,
+          "initial_J_m3": 9086375617.691486
+        },
+        "F_comp_GB": {
+          "change_J_m3": -1.4285490680579101e+23,
+          "final_J_m3": 7.093742853837764e+22,
+          "initial_J_m3": 2.1379233534416864e+23
+        },
+        "F_comp_alpha": {
+          "change_J_m3": 1.3507597690300074e+23,
+          "final_J_m3": 1.8993672573778073e+23,
+          "initial_J_m3": 5.486074883477997e+22
+        },
+        "F_eta_barrier": {
+          "change_J_m3": 30238.268093130704,
+          "final_J_m3": 43371.536789216814,
+          "initial_J_m3": 13133.268696086108
+        },
+        "F_eta_grad": {
+          "change_J_m3": -1766502.5129243676,
+          "final_J_m3": 705309.460024632,
+          "initial_J_m3": 2471811.9729489996
+        },
+        "F_r_grad": {
+          "change_J_m3": 0.2847614296281717,
+          "final_J_m3": 0.2938545970932679,
+          "initial_J_m3": 0.009093167465096199
+        }
+      },
+      "external_work_J_m3": 54841823.368754596,
+      "field_interpolation": {
+        "interpolation_weight": 0.08014252343317475,
+        "lower_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_128/drx_v25_restart_004750.npz",
+        "lower_time_s": 5.813141983820586e-06,
+        "upper_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_128/drx_v25_restart_004999.npz",
+        "upper_time_s": 6.180580781426279e-06
+      },
+      "grid": 128,
+      "independent_other_dissipation_available": false,
+      "localization": {
+        "connected_band_count": 5,
+        "connected_band_fwhm_m": 7.52337879106601e-07,
+        "entropy_effective_fraction": 0.0388330592122765,
+        "inverse_participation_effective_fraction": 0.019241755177482084,
+        "minor_second_moment_m2": 1.5306990494149983e-12
+      },
+      "maximum_internal_to_external_scale_ratio": 2604853340583506.5,
+      "maximum_temperature_K": 1329.1650077830423,
+      "maximum_temperature_excess_from_T0_K": 229.16500778304226,
+      "physical_lengths_m": {
+        "cell_size": 7.8125e-08,
+        "phase_interface": 3.162277660168379e-07,
+        "process_zone_sigma": 3e-07,
+        "thermal_diffusion": 1.5186458809362766e-07
+      },
+      "plastic_work_J_m3": 2857371486.7368474
+    },
+    "192": {
+      "defect_energy_change_J_m3": -1.4480227700802848e+23,
+      "deposited_heat_J_m3": 47031577.82242072,
+      "directory": "results-local/v27-asb-resolution/seed43_192_assembled",
+      "energy_components": {
+        "F_bulk": {
+          "change_J_m3": -6565549859.347229,
+          "final_J_m3": 2521002253.29404,
+          "initial_J_m3": 9086552112.64127
+        },
+        "F_comp_GB": {
+          "change_J_m3": -2.4674408953652706e+23,
+          "final_J_m3": 6.010900352334942e+22,
+          "initial_J_m3": 3.068530930598765e+23
+        },
+        "F_comp_alpha": {
+          "change_J_m3": 1.0194181252850515e+23,
+          "final_J_m3": 1.8072325126107995e+23,
+          "initial_J_m3": 7.87814387325748e+22
+        },
+        "F_eta_barrier": {
+          "change_J_m3": 32892.39734317023,
+          "final_J_m3": 42268.955274158514,
+          "initial_J_m3": 9376.557930988278
+        },
+        "F_eta_grad": {
+          "change_J_m3": -2831843.4195586713,
+          "final_J_m3": 726253.744328328,
+          "initial_J_m3": 3558097.1638869992
+        },
+        "F_r_grad": {
+          "change_J_m3": 0.3391632000359954,
+          "final_J_m3": 0.3522269532336224,
+          "initial_J_m3": 0.013063753197626987
+        }
+      },
+      "external_work_J_m3": 51401055.28242187,
+      "field_interpolation": {
+        "interpolation_weight": 0.3677399155325078,
+        "lower_checkpoint": "results-local/v27-asb-resolution/seed43_192_assembled/drx_v25_restart_004750.npz",
+        "lower_time_s": 5.707025838489038e-06,
+        "upper_checkpoint": "results-local/v27-asb-resolution/seed43_192_assembled/drx_v25_restart_004999.npz",
+        "upper_time_s": 6.0756657713682736e-06
+      },
+      "grid": 192,
+      "independent_other_dissipation_available": false,
+      "localization": {
+        "connected_band_count": 3,
+        "connected_band_fwhm_m": 3.577401802347267e-06,
+        "entropy_effective_fraction": 0.04862524431887438,
+        "inverse_participation_effective_fraction": 0.015492328336498341,
+        "minor_second_moment_m2": 2.326549649019497e-12
+      },
+      "maximum_internal_to_external_scale_ratio": 4800370112652309.0,
+      "maximum_temperature_K": 1391.0981749647945,
+      "maximum_temperature_excess_from_T0_K": 291.09817496479445,
+      "physical_lengths_m": {
+        "cell_size": 5.208333333333334e-08,
+        "phase_interface": 3.162277660168379e-07,
+        "process_zone_sigma": 3e-07,
+        "thermal_diffusion": 1.5186458809362766e-07
+      },
+      "plastic_work_J_m3": 3181272513.260476
+    },
+    "96": {
+      "defect_energy_change_J_m3": 3.219664244514729e+22,
+      "deposited_heat_J_m3": 52223258.292579696,
+      "directory": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_96",
+      "energy_components": {
+        "F_bulk": {
+          "change_J_m3": -6598765580.834154,
+          "final_J_m3": 2487809495.2986865,
+          "initial_J_m3": 9086575076.132841
+        },
+        "F_comp_GB": {
+          "change_J_m3": -9.175247339951582e+22,
+          "final_J_m3": 6.971761557617306e+22,
+          "initial_J_m3": 1.614700889756889e+23
+        },
+        "F_comp_alpha": {
+          "change_J_m3": 1.2394911584466971e+23,
+          "final_J_m3": 1.6543346940335103e+23,
+          "initial_J_m3": 4.148435355868131e+22
+        },
+        "F_eta_barrier": {
+          "change_J_m3": 27780.823317535967,
+          "final_J_m3": 44757.129265333795,
+          "initial_J_m3": 16976.305947797828
+        },
+        "F_eta_grad": {
+          "change_J_m3": -1193345.8992780817,
+          "final_J_m3": 678989.3228499179,
+          "initial_J_m3": 1872335.2221279996
+        },
+        "F_r_grad": {
+          "change_J_m3": 0.25106114409177366,
+          "final_J_m3": 0.25816046966267436,
+          "initial_J_m3": 0.007099325570900712
+        }
+      },
+      "external_work_J_m3": 58331586.61725299,
+      "field_interpolation": {
+        "interpolation_weight": 0.9957828241732831,
+        "lower_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_96/drx_v25_restart_004750.npz",
+        "lower_time_s": 5.534175480041952e-06,
+        "upper_checkpoint": "hpc3-results/asb-drx-full-v34-recovery/20260915T232425Z-bf150ca-5e84d7/work/full_model/production/output/v26-asb-resolution/seed43_96/drx_v25_restart_004999.npz",
+        "upper_time_s": 5.843895600472887e-06
+      },
+      "grid": 96,
+      "independent_other_dissipation_available": false,
+      "localization": {
+        "connected_band_count": 4,
+        "connected_band_fwhm_m": 1.2037441331904487e-06,
+        "entropy_effective_fraction": 0.03599862722855206,
+        "inverse_participation_effective_fraction": 0.01647663430675377,
+        "minor_second_moment_m2": 2.0827850335364124e-12
+      },
+      "maximum_internal_to_external_scale_ratio": 2124905613453839.0,
+      "maximum_temperature_K": 1331.568206492332,
+      "maximum_temperature_excess_from_T0_K": 231.5682064923319,
+      "physical_lengths_m": {
+        "cell_size": 1.0416666666666668e-07,
+        "phase_interface": 3.162277660168379e-07,
+        "process_zone_sigma": 3e-07,
+        "thermal_diffusion": 1.5186458809362766e-07
+      },
+      "plastic_work_J_m3": 3716344983.194071
+    },
+    "homogeneous": {
+      "defect_energy_change_J_m3": -6471941927.403243,
+      "deposited_heat_J_m3": 53053258.68398133,
+      "directory": "results-local/v27-asb-resolution/homogeneous_128_matched",
+      "energy_components": {
+        "F_bulk": {
+          "change_J_m3": -6471941927.403243,
+          "final_J_m3": 2518904524.80684,
+          "initial_J_m3": 8990846452.210083
+        },
+        "F_comp_GB": {
+          "change_J_m3": 0.0,
+          "final_J_m3": 0.0,
+          "initial_J_m3": 0.0
+        },
+        "F_comp_alpha": {
+          "change_J_m3": 0.0,
+          "final_J_m3": 0.0,
+          "initial_J_m3": 0.0
+        },
+        "F_eta_barrier": {
+          "change_J_m3": 0.0,
+          "final_J_m3": 0.0,
+          "initial_J_m3": 0.0
+        },
+        "F_eta_grad": {
+          "change_J_m3": 0.0,
+          "final_J_m3": 0.0,
+          "initial_J_m3": 0.0
+        },
+        "F_r_grad": {
+          "change_J_m3": 0.0,
+          "final_J_m3": 0.0,
+          "initial_J_m3": 0.0
+        }
+      },
+      "external_work_J_m3": 40141913.3030102,
+      "field_interpolation": {
+        "interpolation_weight": 0.42776836880385566,
+        "lower_checkpoint": "results-local/v27-asb-resolution/homogeneous_128_matched/drx_v25_restart_000170.npz",
+        "lower_time_s": 5.700000000000005e-06,
+        "upper_checkpoint": "results-local/v27-asb-resolution/homogeneous_128_matched/drx_v25_restart_000180.npz",
+        "upper_time_s": 6.0333333333333405e-06
+      },
+      "grid": 128,
+      "independent_other_dissipation_available": false,
+      "localization": {
+        "connected_band_count": 1,
+        "connected_band_fwhm_m": 9.921875e-06,
+        "entropy_effective_fraction": 0.9999999999999977,
+        "inverse_participation_effective_fraction": 1.0000000000000002,
+        "minor_second_moment_m2": 8.332824707031249e-12
+      },
+      "maximum_internal_to_external_scale_ratio": 161.22654340240226,
+      "maximum_temperature_K": 1113.9291581288462,
+      "maximum_temperature_excess_from_T0_K": 13.929158128846211,
+      "physical_lengths_m": {
+        "cell_size": 7.8125e-08,
+        "phase_interface": 3.162277660168379e-07,
+        "process_zone_sigma": 3e-07,
+        "thermal_diffusion": 1.5186458809362766e-07
+      },
+      "plastic_work_J_m3": 92027676.1819095
+    }
+  },
+  "schema": "asb-drx/v28-conditioned-energy-localization/v1",
+  "scientific_gate_passed": false
+}

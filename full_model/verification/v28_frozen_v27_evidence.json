@@ -1,0 +1,16 @@
+{
+  "schema": "asb-drx/v28-frozen-v27-evidence/v1",
+  "frozen_checkpoint": "1a410576a2f560bc57baafc7034a142eec9932e8",
+  "files_sha256": {
+    "full_model/docs/v27_decision_report.md": "3fd898319b43329970e465bc66767284bf2ba9f9b4724cdcc13e196c0433da75",
+    "full_model/verification/v27_asb_decision.png": "15993bce6add90513a9c0667998329c3d86cbdd6f806c01715b8d6a8b8e04f15",
+    "full_model/verification/v27_asb_local_decision.json": "3879d6a6dfcdab2eb25bd1bc07d883cfd7832ac23436532621fa86f4263d380b",
+    "full_model/verification/v27_current_capacity_wall.json": "64dd607165b916f24dfd0e515950fc1c6abcd2719858761af6a688979d183a03",
+    "full_model/verification/v27_sibm_128_local.json": "cef90b8897956bb641463e765b4ea3475dfd0cef8c8200b05f47210daedbca90",
+    "full_model/verification/v27_sibm_64_local.json": "4ffeb97d3d0e1a3dfff3c9a7e6e90e86ffff7d98fb16569e865faa025254a054",
+    "full_model/verification/v27_sibm_decision.png": "5d7e62c8c015016ba1cd7943135af3c0beda4289ac4038c105d8fd0b62b72028",
+    "full_model/verification/v27_sibm_local_decision.json": "34a39721e4788b0bbaa2724f88e00002a800db683598621992b11b1c76a5d47a",
+    "full_model/verification/v27_sibm_symmetry.json": "1b767a6c93b3a5cc3691bd650d69c91cc7ee1c02d8cd3beb0603371ea8bb461d"
+  },
+  "immutable": true
+}
