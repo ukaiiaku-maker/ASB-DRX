@@ -1,0 +1,28 @@
+{
+  "schema": "asb-drx/v31/asb-anchor-preflight/v1",
+  "date": "2026-09-16",
+  "grid": 128,
+  "steps_per_case": 2,
+  "temperature_K": 1100.0,
+  "strain_rate_s-1": 30000.0,
+  "seed": 43,
+  "cases": {
+    "heterogeneous_adiabatic": {"exit_code": 0, "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 1.834412129417496e-09, "relative_dissipation_heat_residual": 0.0, "minimum_channel_W_m3": 0.0},
+    "heterogeneous_isothermal": {"exit_code": 0, "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 1.803206978686752e-09, "relative_dissipation_heat_residual": 0.0, "minimum_channel_W_m3": 0.0},
+    "homogeneous_adiabatic": {"exit_code": 0, "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 8.528256605943046e-09, "relative_dissipation_heat_residual": 3.6051262724476384e-16, "minimum_channel_W_m3": 0.0},
+    "homogeneous_isothermal": {"exit_code": 0, "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 6.397559570865687e-09, "relative_dissipation_heat_residual": 3.6051262724476384e-16, "minimum_channel_W_m3": 0.0}
+  },
+  "fixture_passed": true,
+  "scientific_gate_passed": true,
+  "resolved_anchor_authorized": true,
+  "bundle_restart_preflight": {
+    "case": "heterogeneous_adiabatic",
+    "segments": [1, 1],
+    "resumed_checkpoint_step": 0,
+    "final_accepted_steps": 2,
+    "classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
+    "relative_first_law_residual": 1.834412129417496e-09,
+    "passed": true
+  },
+  "submission_state": "PREFLIGHT_PASSED_NOT_SUBMITTED"
+}

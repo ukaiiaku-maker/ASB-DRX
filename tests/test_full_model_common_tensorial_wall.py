@@ -440,3 +440,25 @@ def test_v31_conduction_only_is_conservative_and_smooths_temperature():
         np.mean(quiet.temperature_K), abs=2e-13)
     assert np.std(updated.temperature_K) < np.std(quiet.temperature_K)
     assert np.max(np.abs(residual.heat_rate_W_m3)) == 0.0
+
+
+def test_v31_multiplication_is_limited_by_independent_storage_work_budget():
+    systems, topologies, p, state, _ = fixture(n=16)
+    low_stress = np.full_like(state.mobile_plus_m2, 2.0e6)
+    driving = CommonWallDriving(
+        glide_speed_m_s=np.full_like(state.mobile_plus_m2, 2.0e-4),
+        resolved_stress_Pa=low_stress)
+    aggressive = replace(p, multiplication_coefficient=1.0e8)
+    residual = wall_residual(state, driving, systems, topologies, aggressive)
+    scale = residual.channel_rates_m2_s[
+        "multiplication_energy_budget_scale"]
+    assert np.max(scale) < 1.0
+    assert np.min(residual.channel_rates_m2_s[
+        "plastic_drag_dissipation_W_m3"]) >= -1e-8
+
+    unaffordable = replace(
+        aggressive, enforce_multiplication_energy_budget=False)
+    rejected = wall_residual(
+        state, driving, systems, topologies, unaffordable)
+    assert np.min(rejected.channel_rates_m2_s[
+        "plastic_drag_dissipation_W_m3"]) < 0.0

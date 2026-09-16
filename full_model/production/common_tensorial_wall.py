@@ -153,6 +153,7 @@ class CommonWallParameters:
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
     transport_scheme: str = "spectral"
     multiplication_coefficient: float = 10.0
+    enforce_multiplication_energy_budget: bool = True
     taylor_alpha: float = 0.30
     taylor_wall_weight: float = 2.0
     taylor_junction_weight: float = 1.0
@@ -634,6 +635,24 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                     +state.wall_plus_m2+state.wall_minus_m2)
     multiplication = (0.5*parameters.multiplication_coefficient
                       *np.sqrt(np.maximum(family_total, 0.0))*np.abs(slip_rate))
+    # Multiplication stores line energy and therefore cannot consume more
+    # power than the mechanical/transport transaction supplies locally.  This
+    # is an a-priori constitutive admissibility bound evaluated from the
+    # declared chemical potential and unconstrained accepted extent, not a
+    # posteriori first-law residual correction.
+    plastic_power = np.sum(drive["raw_stress_Pa"]*slip_rate, axis=2)
+    transport_free_energy_rate = chemical["mobile_mu_J_m"]*np.sum(
+        transport_mp_rate+transport_mm_rate, axis=2)
+    multiplication_cost = (2.0*np.maximum(chemical["mobile_mu_J_m"], 0.0)
+                           *np.sum(multiplication, axis=2))
+    multiplication_power_available = np.maximum(
+        plastic_power-transport_free_energy_rate, 0.0)
+    multiplication_budget_scale = np.ones(grid)
+    if parameters.enforce_multiplication_energy_budget:
+        multiplication_budget_scale = np.minimum(
+            1.0, multiplication_power_available
+            /np.maximum(multiplication_cost, 1e-300))
+        multiplication *= multiplication_budget_scale[..., None]
     mp_rate += multiplication; mm_rate += multiplication
 
     junction_extents = []
@@ -733,14 +752,11 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # Raw mechanical work includes the smooth Taylor-friction loss; the
     # effective drive controls kinetics and has the same sign, so both raw and
     # effective stress powers are nonnegative.
-    plastic_power = np.sum(drive["raw_stress_Pa"]*slip_rate, axis=2)
     # V31 physical-channel decomposition.  Each contribution is evaluated
     # directly from the declared chemical potential and the accepted process
     # rate.  Their algebraic sum is identically plastic_power-dF/dt, but no
     # individual term is defined by that residual.  A negative contribution
     # is intentionally retained so the thermodynamic hard gate fails loudly.
-    transport_free_energy_rate = chemical["mobile_mu_J_m"]*np.sum(
-        transport_mp_rate+transport_mm_rate, axis=2)
     multiplication_free_energy_rate = chemical["mobile_mu_J_m"]*2.0*np.sum(
         multiplication, axis=2)
     plastic_drag_dissipation = (plastic_power-transport_free_energy_rate
@@ -799,6 +815,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "wall_order_dissipation_W_m3": order_dissipation,
         "transport_free_energy_rate_W_m3": transport_free_energy_rate,
         "multiplication_free_energy_rate_W_m3": multiplication_free_energy_rate,
+        "multiplication_energy_budget_scale": multiplication_budget_scale,
         "physical_channel_sum_W_m3": physical_channel_sum,
         "physical_channel_closure_W_m3": heat_rate-physical_channel_sum,
         "junction_line_sink": (np.stack([

@@ -1,0 +1,26 @@
+{
+  "schema": "asb-drx/v31/asb-anchor-bundle/v1",
+  "source_commit": null,
+  "source_commit_policy": "fill with the pushed immutable bundle commit before submission and require runtime equality",
+  "grid": 128,
+  "temperature_K": 1100.0,
+  "strain_rate_s-1": 30000.0,
+  "strain_increment_per_step": 0.0001,
+  "target_steps": 5000,
+  "target_nominal_strain": 0.5,
+  "seed": 43,
+  "cases": [
+    {"id": 0, "name": "heterogeneous_adiabatic", "heterogeneous": true, "thermal_control": "adiabatic"},
+    {"id": 1, "name": "heterogeneous_isothermal", "heterogeneous": true, "thermal_control": "isothermal"},
+    {"id": 2, "name": "homogeneous_adiabatic", "heterogeneous": false, "thermal_control": "adiabatic"},
+    {"id": 3, "name": "homogeneous_isothermal", "heterogeneous": false, "thermal_control": "isothermal"}
+  ],
+  "production_owner": "v31_asb_common_mura_ledger",
+  "restart_policy": {
+    "physical_step_interval": 100,
+    "wallclock_interval_s": 900.0,
+    "resume_highest_valid_checkpoint": true,
+    "partial_results_retained": true
+  },
+  "submission_state": "PREFLIGHT_PASSED_NOT_SUBMITTED"
+}

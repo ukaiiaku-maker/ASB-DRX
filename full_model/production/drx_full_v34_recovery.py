@@ -78,6 +78,7 @@ from phase_promotion import (
 from compatibility_energy import decompose_compatibility_energy
 from asb_physical_ledger import (
     CHANNEL_NAMES, PhysicalEnergyState, accepted_channel,
+    accepted_periodic_power_channel,
     build_production_step_ledger, unavailable_channel,
 )
 from stored_energy_coupling import (
@@ -8861,10 +8862,16 @@ for n in range(_restart_step_offset, _restart_end_step):
             if _v31_physical_channel_fields is None:
                 raise RuntimeError('V31 common-Mura channel ownership was not evaluated')
             for _v31_name, _v31_field in _v31_physical_channel_fields.items():
-                _v30_channels[_v31_name] = accepted_channel(
-                    _v31_name, _v31_field, np.ones_like(_v31_field),
-                    source=('accepted common-Mura termwise chemical affinity '
-                            'times accepted process extent'))
+                if _v31_name == 'plastic_drag':
+                    _v30_channels[_v31_name] = accepted_periodic_power_channel(
+                        _v31_name, _v31_field,
+                        source=('periodic integral of accepted mechanical work '
+                                'minus transport and multiplication storage'))
+                else:
+                    _v30_channels[_v31_name] = accepted_channel(
+                        _v31_name, _v31_field, np.ones_like(_v31_field),
+                        source=('accepted common-Mura termwise chemical affinity '
+                                'times accepted process extent'))
         _v30_qdot = np.asarray(
             heat_diag.get('_qdot_field', np.zeros_like(T)), dtype=float)
         _v30_deposited = float(P['dt']*np.mean(np.maximum(_v30_qdot, 0.0)))
@@ -8948,8 +8955,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                 float(np.max(np.abs(_v31_channel_closure_W_m3))))
             v30_asb_cumulative['v31_minimum_physical_channel_W_m3'] = min(
                 float(v30_asb_cumulative['v31_minimum_physical_channel_W_m3']),
-                min(float(np.min(field))
-                    for field in _v31_physical_channel_fields.values()))
+                min(float(_v30_channels[name].dissipation_W_m3)
+                    for name in CHANNEL_NAMES[:5]))
 
     # --- DIAGNOSTICS ---
     if n%P['diag_interval']==0 or n==_restart_end_step-1:

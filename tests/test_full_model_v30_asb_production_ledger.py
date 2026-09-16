@@ -5,6 +5,7 @@ import pytest
 
 from full_model.production.asb_physical_ledger import (
     CHANNEL_NAMES, PhysicalEnergyState, accepted_channel,
+    accepted_periodic_power_channel,
     build_production_step_ledger, unavailable_channel,
 )
 
@@ -102,6 +103,17 @@ def test_conduction_and_bath_exergy_are_not_counted_as_deposited_heat():
         exported_heat_J_m3=0.0, dt_s=1.0)
     assert ledger.dissipation_J_m3 == 14.0
     assert ledger.dissipation_heat_residual_J_m3 == 0.0
+
+
+def test_periodic_transport_power_may_be_local_signed_but_not_globally_negative():
+    channel = accepted_periodic_power_channel(
+        "plastic_drag", np.array([-2.0, 4.0, 7.0]),
+        source="manufactured periodic chemical-energy transport")
+    assert channel.dissipation_W_m3 == pytest.approx(3.0)
+    with pytest.raises(ValueError):
+        accepted_periodic_power_channel(
+            "plastic_drag", np.array([-4.0, 1.0]),
+            source="globally inadmissible periodic transport")
 
 
 def test_homogeneous_zero_process_and_json_restart_payload_are_exact():

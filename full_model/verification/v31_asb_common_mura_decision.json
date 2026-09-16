@@ -5,7 +5,12 @@
   "source_checkpoint_before_workstream": "512b8f0bf00ff901aa34ed636345283c08bd48c2",
   "working_patch_sha256_before_evidence": "00550a00122d9ded7d052d8b1ce084a0a79706066b241849f4713c8063a0517d",
   "execution_date": "2026-09-16",
-  "long_run_authorized": false,
+  "long_run_authorized": true,
+  "resolved_asb_anchor_authorized": true,
+  "authorization_scope": "only the four matched 128-square anchor controls; no grid continuation or condition bracket",
+  "independent_branch_rationale": "V31 section 4 directs wall/cone promotion to stop after a B1 kinematic failure while independent ASB work continues; section 5.5 authorizes the resolved ASB anchor after the ASB local gate passes.",
+  "anchor_dependency_on_mura_b1_response": false,
+  "anchor_dependency": "the invariant-qualified authoritative common Mura state and accepted-step ownership, not a persistent wall outcome from B1",
   "production_grid_smokes": {
     "parameters": {
       "v31_asb_common_mura_ledger": true,
@@ -43,6 +48,26 @@
     "segmented_classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED",
     "relative_first_law_residual": 1.6847905905788782e-05
   },
+  "resolved_anchor_preflight": {
+    "grid": 128,
+    "steps_per_case": 2,
+    "temperature_K": 1100.0,
+    "strain_rate_s-1": 30000.0,
+    "seed": 43,
+    "cases": {
+      "heterogeneous_adiabatic": {"classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 1.834412129417496e-09, "relative_dissipation_heat_residual": 0.0},
+      "heterogeneous_isothermal": {"classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 1.803206978686752e-09, "relative_dissipation_heat_residual": 0.0},
+      "homogeneous_adiabatic": {"classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 8.528256605943046e-09, "relative_dissipation_heat_residual": 3.6051262724476384e-16},
+      "homogeneous_isothermal": {"classification": "ASB_COMMON_MURA_LEDGER_QUALIFIED", "relative_first_law_residual": 6.397559570865687e-09, "relative_dissipation_heat_residual": 3.6051262724476384e-16}
+    },
+    "bundle": "full_model/hpc3/submit_v31_asb_anchor.sbatch",
+    "submission_state": "PREFLIGHT_PASSED_NOT_SUBMITTED"
+  },
+  "execution_recommendation": {
+    "local": "use only for short preflight/restart checks; the 5000-step four-case anchor exceeds the 30-minute local threshold",
+    "hpc3": "recommended as the prepared four-task fault-isolated Slurm array after commit, push, manifest SHA fill, and coordinator approval",
+    "estimated_walltime_per_case": "several hours; request 12 hours with 8 GiB and one CPU per task"
+  },
   "channel_ownership": {
     "plastic_drag": "raw plastic work minus independently evaluated transport and multiplication defect-energy rates",
     "mobile_forest_recovery": "negative mobile-to-forest chemical-potential jump times accepted Onsager extent",
@@ -65,8 +90,8 @@
     "restart_bitwise_passed": true
   },
   "tests": {
-    "focused": "41 passed in 6.72s (including exact wall-order-gradient energy derivative)",
-    "expanded_workstream_regression": "68 passed in 18.48s",
+    "focused": "43 passed in 8.41s (including work-budget and periodic transport checks)",
+    "expanded_workstream_regression": "68 passed in 17.36s after anchor repair",
     "full_repository_tests": "599 passed in 215.75s with PYTHONPATH=src and tests/ scope"
   },
   "fixture_passed": true,

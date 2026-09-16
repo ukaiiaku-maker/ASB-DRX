@@ -93,6 +93,30 @@ def unavailable_channel(name, source):
     return AcceptedDissipationChannel(name, 0.0, 0.0, 0.0, False, source)
 
 
+def accepted_periodic_power_channel(name, power_density_W_m3, *, source):
+    """Accept a periodic spatial channel after its conservative-flux integral.
+
+    A local ``mu*(-div J)`` contribution may have either sign because it also
+    contains divergence of transported free energy.  Only its periodic volume
+    integral is a dissipation.  This constructor is restricted to an already
+    derived termwise power field and rejects a negative integrated value; it
+    cannot be used to hide a first-law remainder.
+    """
+    power = np.asarray(power_density_W_m3, dtype=float)
+    if not np.all(np.isfinite(power)):
+        raise ValueError(f"non-finite periodic power in channel {name}")
+    mean = float(np.mean(power))
+    tolerance = 128.0*np.finfo(float).eps*max(
+        float(np.max(np.abs(power), initial=0.0)), 1.0)
+    if mean < -tolerance:
+        raise ValueError(f"negative periodic integrated dissipation in channel {name}")
+    mean = max(mean, 0.0)
+    return AcceptedDissipationChannel(
+        name=name, affinity_J_per_extent=mean,
+        extent_rate_per_m3_s=1.0, dissipation_W_m3=mean,
+        available=True, source=str(source))
+
+
 @dataclass(frozen=True)
 class PhysicalEnergyState:
     """Volume-averaged physical and numerical energies [J m^-3]."""
