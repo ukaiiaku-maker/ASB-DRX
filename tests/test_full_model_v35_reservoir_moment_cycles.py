@@ -172,3 +172,23 @@ def test_zero_applied_pressure_complete_energy_benchmark_arrests_without_probe_w
         context, initial, initial.eta, driving,
         replace(zero_external, front_enabled=False))
     _assert_state_exact(result, mura_only)
+
+
+def test_two_recurrent_cycles_share_one_accepted_physical_interval_each():
+    context, initial, _, _, driving, controls = _fixture()
+    common_clock = replace(
+        controls, driving_pressure_a_to_b_Pa=2.0e8,
+        applied_pressure_a_to_b_Pa=2.0e8,
+        trial_dt_s=2.0e-9, front_dt_s=2.0e-9)
+    first, audit1 = run_i3_cycle(
+        context, initial, _trial(context, .05), driving, common_clock)
+    second, audit2 = run_i3_cycle(
+        context, first, _trial(context, .10), driving, common_clock)
+    assert audit1["mura"]["accepted_dt_s"] == common_clock.front_dt_s
+    assert audit2["mura"]["accepted_dt_s"] == common_clock.front_dt_s
+    assert audit1["candidate_sweep_published"]
+    assert audit2["candidate_sweep_published"]
+    assert audit1["sweep"]["net_m3"] != 0.0
+    assert audit2["sweep"]["net_m3"] != 0.0
+    assert audit2["next_mura_state_from_owned_reservoir_moments"]
+    assert second.common_front.ledger.accepted_commits == 2
