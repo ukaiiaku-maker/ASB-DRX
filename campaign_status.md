@@ -1578,3 +1578,49 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   Integrated source, reports, and tests are pending the final V36 evidence
   commit and push on `exp/full-v34-recovery-v1`. Current report:
   `full_model/docs/v36_decision_report.md`.
+
+## Directive v38 informative horizons and common-state response (active 2026-09-17)
+
+- The final V37 transcript `9b9c684` and earlier manifest `bd366c7` retain
+  their chronological roles. Infrastructure repair `1388e8f` corrected the
+  actual HPC3 submission parser, archive extraction, Python path, output-root
+  mismatch, and missing front bundle dependency.
+- The original V37 conduction run completed but lost its checkpoint output
+  because its frozen finalizer searched a nested nonexistent path. It is an
+  infrastructure-invalid record, not a thermal negative. Exact-source rerun
+  `20260917T210450Z-1388e8f-96f14d` / Slurm `56129085` is active with two
+  concurrent tasks; completed task archives contain the declared checkpoints.
+- V37 Mura run `20260917T192050Z-50dbde9-bf00af` / Slurm `56126506` remains
+  active and untouched. Because its frozen finalizer has the same path defect,
+  a bounded allocation-local rescue updates a checksummed persistent archive
+  every 15 minutes. A locally verified rescue already contains strain 0.04194.
+- Front diagnostics now distinguish event volume, jump length, channel
+  pressure, and the analytical barrier activation volume. The raw ranking
+  proves `availability_mid` is a half-speed control; `shape_a_high` is the
+  selected existing intermediate and `shape_n_low` is the fast
+  pressure-sensitivity hypothesis.
+- The bounded owner-moment map is mathematically unchanged to `2.22e-16` and
+  2.69 times faster at n128. A front-only matched 1 ms overlap passes at every
+  tested macro interval through 1 ms; the maximum physical error at 1 ms is
+  0.285%. This makes a 25-step quarter-width `shape_n_low` hold affordable.
+- The legacy ordered-line discrepancy is localized to the reversible ordering
+  integrator: net transfer differs by 93.1% while capture, Mura stretching,
+  locking, and gross turnover differ by at most `9.73e-5`. Complete-time
+  conservative subcycling reduces transfer disagreement to `7.18e-5` and the
+  final ordered-inventory difference to 0.88%.
+- At fixed resolution/interface width, the equal-owner residual plateaus with
+  slab separation, identifying a local diffuse-interface/phase-energy
+  residual rather than periodic-interface interaction or stale wake history.
+- Current-source checkpoints now save work-conjugate plastic power and actual
+  irreversible heat-production fields. Thermal localization uses declared
+  `T-T0` positive-excess weights plus signed statistics; a uniform field is
+  `NO_LOCALIZED_COMPONENT`, not a zero-width band.
+- A monolithic 1 ms common-state trial correctly failed clock closure. The new
+  Strang multirate driver closes Mura/thermal half-clocks around a full front
+  step, but its first post-front trial reached a declared ordered-reaction
+  stiffness terminal rather than silently discarding reaction time. An
+  implicit or qualified asymptotic ordering solve is still required before an
+  informative integrated trajectory can be promoted.
+- Current report: `full_model/docs/v38_decision_report.md`. DRX, persistent
+  LAGB formation, strict ASB, and material calibration are not claimed. The
+  merged current-source regression boundary passes 729 tests in 178.06 s.

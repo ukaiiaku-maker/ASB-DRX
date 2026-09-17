@@ -19,23 +19,23 @@
       "relative_difference_to_coarse": 1.9832107724852977e-08
     },
     "ordering_tangle_to_ordered_line_m_per_m_thickness": {
-      "absolute_difference": 0.00036762030231773934,
-      "coarse": -5.118014928584166,
-      "fine": -5.117647308281848,
-      "relative_difference_to_coarse": 7.182868894433586e-05
+      "absolute_difference": 1.6318541181850543,
+      "coarse": -1.7530717871816068,
+      "fine": -3.384925905366661,
+      "relative_difference_to_coarse": 0.9308541327954215
     },
     "ordering_turnover_exposure_m_per_m_thickness": {
-      "absolute_difference": 0.0019236370919060164,
-      "coarse": 19.77541928141879,
-      "fine": 19.773495644326886,
-      "relative_difference_to_coarse": 9.727414951517553e-05
+      "absolute_difference": 0.001923637091874042,
+      "coarse": 19.77541928141875,
+      "fine": 19.773495644326875,
+      "relative_difference_to_coarse": 9.727414951355886e-05
     }
   },
   "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v35-mura-feasible-fe4f446-20260916/cases/mechanical_heterogeneity_64/checkpoint_step_000002971_strain_0.04200103.npz",
   "checkpoint_sha256": "7ca24609de5b299290ee75a098b97c8b1912d8f743a4405792330e3fda1c26b0",
   "diagnostic_scope": "matched production trajectories plus a frozen-field reaction-only diagnostic; the latter is not a promoted physical trajectory",
-  "generated_utc": "2026-09-17T21:59:41.151393+00:00",
-  "ordering_integration": "resolved_complete-time_conservative_subcycling",
+  "generated_utc": "2026-09-17T21:54:22.404082+00:00",
+  "ordering_integration": "legacy_outer_step_capped_extent",
   "records": [
     {
       "accepted_intervals": 4,
@@ -43,15 +43,15 @@
         "captured_line_m_per_m_thickness": 0.604852739562192,
         "locking_mobile_to_forest_line_m_per_m_thickness": -0.5631927889533668,
         "mura_stretching_line_m_per_m_thickness": 9.15190248848107,
-        "ordering_tangle_to_ordered_line_m_per_m_thickness": -5.118014928584166,
-        "ordering_turnover_exposure_m_per_m_thickness": 19.77541928141879
+        "ordering_tangle_to_ordered_line_m_per_m_thickness": -1.7530717871816068,
+        "ordering_turnover_exposure_m_per_m_thickness": 19.77541928141875
       },
       "dt_s": 1e-10,
       "elapsed_physical_time_s": 4.0000000000003005e-10,
       "final": {
         "rho_wall_m2_line_m_per_m_thickness": 1085.014897165793,
-        "rho_wall_ordered_m2_line_m_per_m_thickness": 0.04144405907685574,
-        "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.973453106716
+        "rho_wall_ordered_m2_line_m_per_m_thickness": 3.4063872004794153,
+        "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.6085099653135
       },
       "initial": {
         "rho_wall_m2_line_m_per_m_thickness": 1084.4100444262308,
@@ -59,16 +59,16 @@
         "rho_wall_tangle_m2_line_m_per_m_thickness": 1079.2505854385697
       },
       "reaction_only_frozen_fields": {
-        "final_ordered_line_m_per_m_thickness": 0.048963610799597435,
-        "net_ordering_transfer_m_per_m_thickness": -5.110495376861425
+        "final_ordered_line_m_per_m_thickness": 3.4042118992605808,
+        "net_ordering_transfer_m_per_m_thickness": -1.7552470884004412
       },
       "steps": [
         {
           "accepted_dt_s": 1e-10,
           "after": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971147069,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.4579968805592984,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.5569002341476
+            "rho_wall_m2_line_m_per_m_thickness": 1085.014897114707,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 5.339996489724238,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1079.674900624983
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1084.4100444262308,
@@ -84,20 +84,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.14075749176814545,
           "mura_stretching_line_m_per_m_thickness": 9.151895594971037,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -2.7014621071017233,
-          "ordering_turnover_exposure_m_per_m_thickness": 4.946740277943404
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": 0.1805375020632162,
+          "ordering_turnover_exposure_m_per_m_thickness": 4.946740277943395
         },
         {
           "accepted_dt_s": 1e-10,
           "after": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971317356,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.7072021640635768,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.307694967672
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 4.629567884463158,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1080.3853292472725
           },
           "before": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971147069,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.4579968805592984,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.5569002341476
+            "rho_wall_m2_line_m_per_m_thickness": 1085.014897114707,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 5.339996489724238,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1079.674900624983
           },
           "captured_line_m_per_m_thickness": 1.702853866653614e-08,
           "family_event_scales": [
@@ -108,20 +108,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.14078129298567763,
           "mura_stretching_line_m_per_m_thickness": 2.2977675613403326e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -1.7507947164957218,
-          "ordering_turnover_exposure_m_per_m_thickness": 4.942608610619386
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.7104286052610811,
+          "ordering_turnover_exposure_m_per_m_thickness": 4.942608610619375
         },
         {
           "accepted_dt_s": 1e-10,
           "after": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971487642,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.20078359689247516,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.8141135518717
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.9902926225430413,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.024604526221
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971317356,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.7072021640635768,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.307694967672
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 4.629567884463158,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1080.3853292472725
           },
           "captured_line_m_per_m_thickness": 1.7028604437465107e-08,
           "family_event_scales": [
@@ -132,20 +132,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.14081176400628162,
           "mura_stretching_line_m_per_m_thickness": 2.297855285263062e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.5064185671711017,
-          "ordering_turnover_exposure_m_per_m_thickness": 4.942892999247094
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.6392752619201161,
+          "ordering_turnover_exposure_m_per_m_thickness": 4.94289299924708
         },
         {
           "accepted_dt_s": 9.999999999937224e-11,
           "after": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.014897165793,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.04144405907685574,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.973453106716
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.4063872004794153,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.6085099653135
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971487642,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.20078359689247516,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.8141135518717
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.9902926225430413,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.024604526221
           },
           "captured_line_m_per_m_thickness": 1.7028670209275762e-08,
           "family_event_scales": [
@@ -156,8 +156,8 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.14084224019326202,
           "mura_stretching_line_m_per_m_thickness": 2.2978871860504153e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.15933953781561944,
-          "ordering_turnover_exposure_m_per_m_thickness": 4.94317739360891
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.5839054220636258,
+          "ordering_turnover_exposure_m_per_m_thickness": 4.9431773936089005
         }
       ]
     },
@@ -167,15 +167,15 @@
         "captured_line_m_per_m_thickness": 0.6048527395575574,
         "locking_mobile_to_forest_line_m_per_m_thickness": -0.5632199279722028,
         "mura_stretching_line_m_per_m_thickness": 9.151902669982587,
-        "ordering_tangle_to_ordered_line_m_per_m_thickness": -5.117647308281848,
-        "ordering_turnover_exposure_m_per_m_thickness": 19.773495644326886
+        "ordering_tangle_to_ordered_line_m_per_m_thickness": -3.384925905366661,
+        "ordering_turnover_exposure_m_per_m_thickness": 19.773495644326875
       },
       "dt_s": 5e-11,
       "elapsed_physical_time_s": 4.0000000000003005e-10,
       "final": {
-        "rho_wall_m2_line_m_per_m_thickness": 1085.014897165788,
-        "rho_wall_ordered_m2_line_m_per_m_thickness": 0.041811679379173905,
-        "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.9730854864088
+        "rho_wall_m2_line_m_per_m_thickness": 1085.0148971657882,
+        "rho_wall_ordered_m2_line_m_per_m_thickness": 1.7745330822943612,
+        "rho_wall_tangle_m2_line_m_per_m_thickness": 1083.240364083494
       },
       "initial": {
         "rho_wall_m2_line_m_per_m_thickness": 1084.4100444262308,
@@ -183,16 +183,16 @@
         "rho_wall_tangle_m2_line_m_per_m_thickness": 1079.2505854385697
       },
       "reaction_only_frozen_fields": {
-        "final_ordered_line_m_per_m_thickness": 0.048963610799597435,
-        "net_ordering_transfer_m_per_m_thickness": -5.110495376861425
+        "final_ordered_line_m_per_m_thickness": 1.7753183258732044,
+        "net_ordering_transfer_m_per_m_thickness": -3.384140661787818
       },
       "steps": [
         {
           "accepted_dt_s": 5e-11,
           "after": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.014897106188,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.786110820827703,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.2287862853605
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 4.9240536906607195,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1080.0908434155274
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1084.4100444262308,
@@ -208,20 +208,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07037874588407272,
           "mura_stretching_line_m_per_m_thickness": 9.15189462766513,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -1.373348166833319,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.47337013895284
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.2354052970003026,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.4733701389528377
         },
         {
           "accepted_dt_s": 5e-11,
           "after": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971147023,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.458784007970242,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.556113106732
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 4.4315269628510725,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1080.5833701518513
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.014897106188,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.786110820827703,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.2287862853605
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 4.9240536906607195,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1080.0908434155274
           },
           "captured_line_m_per_m_thickness": 8.514252890888733e-09,
           "family_event_scales": [
@@ -232,20 +232,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07038302957631282,
           "mura_stretching_line_m_per_m_thickness": 1.1487783111572268e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -1.3273268128574613,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.471233208888241
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.4925267278096469,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.4712332088882407
         },
         {
           "accepted_dt_s": 5e-11,
           "after": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971232165,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 1.4085457403377313,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1083.6063513828788
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.8317952540406246,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.183101869176
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971147023,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.458784007970242,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.556113106732
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 4.4315269628510725,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1080.5833701518513
           },
           "captured_line_m_per_m_thickness": 8.514269333435626e-09,
           "family_event_scales": [
@@ -256,20 +256,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07039064635959628,
           "mura_stretching_line_m_per_m_thickness": 1.1488611465454105e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -1.0502382676325104,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.471304304981853
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.5997317088104479,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.471304304981852
         },
         {
           "accepted_dt_s": 5e-11,
           "after": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971317308,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.7094740003434811,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.3054231313874
+            "rho_wall_m2_line_m_per_m_thickness": 1085.014897131731,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.2991195334380023,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.715777598293
           },
           "before": {
             "rho_wall_m2_line_m_per_m_thickness": 1085.0148971232165,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 1.4085457403377313,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1083.6063513828788
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.8317952540406246,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.183101869176
           },
           "captured_line_m_per_m_thickness": 8.514285776106095e-09,
           "family_event_scales": [
@@ -280,20 +280,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07039826378874647,
           "mura_stretching_line_m_per_m_thickness": 1.1489196701049805e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.6990717399942503,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.4713754017963616
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.5326757206026222,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.471375401796359
         },
         {
           "accepted_dt_s": 5e-11,
           "after": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.014897140245,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.3771608701611558,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.637736270084
+            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971402452,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.836989871230296,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.177907269015
           },
           "before": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971317308,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.7094740003434811,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.3054231313874
+            "rho_wall_m2_line_m_per_m_thickness": 1085.014897131731,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 3.2991195334380023,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1081.715777598293
           },
           "captured_line_m_per_m_thickness": 8.514302218900134e-09,
           "family_event_scales": [
@@ -304,20 +304,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07040588186378313,
           "mura_stretching_line_m_per_m_thickness": 1.1489276279449464e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.3323131301823252,
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.46212966220770657,
           "ordering_turnover_exposure_m_per_m_thickness": 2.4714464993316367
         },
         {
           "accepted_dt_s": 5e-11,
           "after": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971487592,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.20037042198390456,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.8145267267753
+            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971487595,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.417114880897583,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.597782267862
           },
           "before": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.014897140245,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.3771608701611558,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.637736270084
+            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971402452,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.836989871230296,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.177907269015
           },
           "captured_line_m_per_m_thickness": 8.51431866181774e-09,
           "family_event_scales": [
@@ -328,20 +328,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07041350058472598,
           "mura_stretching_line_m_per_m_thickness": 1.1489356044769288e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.1767904481772512,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.4715175975875603
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.4198749903327129,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.4715175975875594
         },
         {
           "accepted_dt_s": 5e-11,
           "after": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971572737,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.07022238095273031,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.9446747763209
+            "rho_wall_m2_line_m_per_m_thickness": 1085.014897157274,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.0691280452110172,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.9457691120629
           },
           "before": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971487592,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.20037042198390456,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.8145267267753
+            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971487595,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.417114880897583,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.597782267862
           },
           "captured_line_m_per_m_thickness": 8.514335104858924e-09,
           "family_event_scales": [
@@ -352,20 +352,20 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07042111995159477,
           "mura_stretching_line_m_per_m_thickness": 1.1489435684204104e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.13014804103117425,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.4715886965640053
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.34798683568656574,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.4715886965640026
         },
         {
           "accepted_dt_s": 4.99999999992626e-11,
           "after": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.014897165788,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.041811679379173905,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.9730854864088
+            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971657882,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 1.7745330822943612,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1083.240364083494
           },
           "before": {
-            "rho_wall_m2_line_m_per_m_thickness": 1085.0148971572737,
-            "rho_wall_ordered_m2_line_m_per_m_thickness": 0.07022238095273031,
-            "rho_wall_tangle_m2_line_m_per_m_thickness": 1084.9446747763209
+            "rho_wall_m2_line_m_per_m_thickness": 1085.014897157274,
+            "rho_wall_ordered_m2_line_m_per_m_thickness": 2.0691280452110172,
+            "rho_wall_tangle_m2_line_m_per_m_thickness": 1082.9457691120629
           },
           "captured_line_m_per_m_thickness": 8.514351547898099e-09,
           "family_event_scales": [
@@ -376,8 +376,8 @@
           ],
           "locking_mobile_to_forest_line_m_per_m_thickness": -0.07042873996337054,
           "mura_stretching_line_m_per_m_thickness": 1.1489515281677249e-06,
-          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.028410701573556407,
-          "ordering_turnover_exposure_m_per_m_thickness": 2.471659796224387
+          "ordering_tangle_to_ordered_line_m_per_m_thickness": -0.2945949629166561,
+          "ordering_turnover_exposure_m_per_m_thickness": 2.471659796224386
         }
       ]
     }
