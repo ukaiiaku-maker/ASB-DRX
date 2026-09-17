@@ -92,6 +92,37 @@ class MuraWorkBudgetError(RuntimeError):
         self.audit = audit
 
 
+def select_feasible_family_extent(extent_curve):
+    """Classify and select a connected finite-event family extent.
+
+    ``extent_curve`` is ordered from the full proposal toward zero.  The
+    kinetic proposal fixes that ray; this routine only finds its largest
+    thermodynamically admissible sampled extent.  It therefore does not
+    maximize energy release or create event debt.
+    """
+    if not extent_curve or float(extent_curve[0]["extent"]) != 1.0:
+        raise ValueError("family extent curve must begin with the full event")
+    feasible = [row for row in extent_curve
+                if row["result"] == "EVALUATED" and row["admissible"]]
+    selected_extent = max(
+        (float(row["extent"]) for row in feasible), default=0.0)
+    full = extent_curve[0]
+    if selected_extent == 1.0:
+        classification = "FULL_EVENT_ADMISSIBLE"
+    elif selected_extent > 0.0 and full["result"] != "EVALUATED":
+        classification = "CAPACITY_LIMITED_EVENT"
+    elif selected_extent > 0.0:
+        classification = "INITIAL_DIRECTION_DOWNHILL_FULL_EVENT_OVERSHOOTS"
+    elif any(row.get("result") == "INADMISSIBLE_KINEMATICS"
+             for row in extent_curve):
+        classification = "CAPACITY_LIMITED_NO_RESOLVED_FEASIBLE_EXTENT"
+    elif any(not row.get("sign_resolved", False) for row in extent_curve):
+        classification = "UNRESOLVED_SUBTRACTIVE_CANCELLATION"
+    else:
+        classification = "GENUINELY_UPHILL_SCREENED_DIRECTION"
+    return selected_extent, classification
+
+
 def _elastic_energy_sum_J_m3_cells(common, beta_p, driving, parameters):
     """Recoverable elastic energy at the fixed total-strain substep state."""
     if driving.mean_strain is None:
@@ -250,7 +281,8 @@ def accepted_v24_mechanical_step(
         common_parameters, extensive_parameters, topology_kinetics, dt_s, *,
         topology_route_enabled=False, maximum_orientation_increment_rad=0.02,
         mura_work_budget_mode="energy_limited",
-        maximum_work_budget_backtracks=20):
+        maximum_work_budget_backtracks=20,
+        feasible_family_extent_levels=12):
     """Advance mechanics, line transport/capture, ordering, and topology once."""
     state.validate(systems, topologies)
     _nye_reservoir_initial = reservoir_nye_m1(
@@ -291,10 +323,14 @@ def accepted_v24_mechanical_step(
     # One accepted Mura face event owns scalar population motion, line moments,
     # plastic distortion, and family Nye.  An inadmissible positivity trial is
     # rejected by reducing its extent; no population or alignment is clipped.
-    if mura_work_budget_mode not in ("energy_limited", "legacy_reject"):
+    if mura_work_budget_mode not in (
+            "energy_limited", "energy_limited_feasible_extents",
+            "legacy_reject"):
         raise ValueError("unknown Mura work-budget mode")
     if int(maximum_work_budget_backtracks) < 0:
         raise ValueError("Mura work-budget backtracks cannot be negative")
+    if int(feasible_family_extent_levels) < 2:
+        raise ValueError("feasible-family screen requires at least two levels")
     proposed_velocity_plus_3d = velocity_plus_3d
     proposed_velocity_minus_3d = velocity_minus_3d
     proposed_family_flow_rate = family_plastic_flow_from_signed_alignment(
@@ -367,28 +403,57 @@ def accepted_v24_mechanical_step(
                 plastic_work, defect_delta, line_creation, audit)
 
     family_candidate_audits = []
-    if mura_work_budget_mode == "energy_limited":
+    if mura_work_budget_mode in (
+            "energy_limited", "energy_limited_feasible_extents"):
         family_event_scales = np.zeros(len(systems))
         for family in range(len(systems)):
-            scales = np.zeros(len(systems)); scales[family] = 1.0
-            try:
-                candidate = _candidate_trial(
-                    scales, 1.0, _candidate_model(scales))
-                audit = candidate[-1]
-                selected = bool(audit["admissible"])
-                family_candidate_audits.append({
-                    "family": int(family), "result": "EVALUATED",
-                    "selected": selected, "audit": audit})
-                family_event_scales[family] = float(selected)
-            except (ValueError, RuntimeError) as error:
-                if ("alignment magnitude exceeds" not in str(error)
-                        and "negative mobile density" not in str(error)):
-                    raise
-                family_candidate_audits.append({
-                    "family": int(family),
-                    "result": "INADMISSIBLE_KINEMATICS",
-                    "selected": False,
-                    "error": f"{type(error).__name__}: {error}"})
+            extent_curve = []
+            extents = ([1.0] if mura_work_budget_mode == "energy_limited"
+                       else [2.0**(-level) for level in range(
+                           int(feasible_family_extent_levels))])
+            for extent in extents:
+                scales = np.zeros(len(systems)); scales[family] = extent
+                try:
+                    candidate = _candidate_trial(
+                        scales, 1.0, _candidate_model(scales))
+                    audit = candidate[-1]
+                    heat = float(audit[
+                        "dissipative_drag_and_heat_J_m3_cells"])
+                    tolerance = float(audit[
+                        "admissibility_tolerance_J_m3_cells"])
+                    extent_curve.append({
+                        "extent": float(extent), "result": "EVALUATED",
+                        "admissible": bool(audit["admissible"]),
+                        "complete_affinity_J_m3_cells": heat,
+                        "sign_resolved": bool(abs(heat) > tolerance),
+                        "audit": audit})
+                except (ValueError, RuntimeError) as error:
+                    if ("alignment magnitude exceeds" not in str(error)
+                            and "negative mobile density" not in str(error)):
+                        raise
+                    extent_curve.append({
+                        "extent": float(extent),
+                        "result": "INADMISSIBLE_KINEMATICS",
+                        "admissible": False,
+                        "error": f"{type(error).__name__}: {error}"})
+            selected_extent, classification = select_feasible_family_extent(
+                extent_curve)
+            full = extent_curve[0]
+            family_event_scales[family] = selected_extent
+            selected_row = next((row for row in extent_curve
+                                 if row["extent"] == selected_extent), None)
+            family_candidate_audits.append({
+                "family": int(family),
+                "result": full["result"],
+                "selected": bool(selected_extent > 0.0),
+                "selected_extent": float(selected_extent),
+                "classification": classification,
+                "extent_curve": extent_curve,
+                **({"audit": selected_row["audit"]}
+                   if selected_row is not None else {}),
+                **({"error": full["error"]}
+                   if full["result"] != "EVALUATED" else {}),
+            })
 
     selected_model = _candidate_model(family_event_scales)
 
@@ -663,7 +728,9 @@ def accepted_v24_mechanical_step(
             "trials": budget_trials,
             "family_selection_rule": (
                 "complete_discrete_full_event_affinity_then_joint_backtrack"
-                if mura_work_budget_mode == "energy_limited"
+                if mura_work_budget_mode == "energy_limited" else
+                "complete_affinity_feasible_family_extent_then_joint_backtrack"
+                if mura_work_budget_mode == "energy_limited_feasible_extents"
                 else "legacy_no_family_selection"),
             "family_candidate_audits": family_candidate_audits,
             "joint_selected_family_candidate": budget_trials[0],

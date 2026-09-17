@@ -221,7 +221,8 @@ def main():
     parser.add_argument("--max-steps", type=int, default=2000000)
     parser.add_argument("--max-wall-s", type=float, default=54000.0)
     parser.add_argument("--mura-work-budget-mode", choices=(
-        "energy_limited", "legacy_reject"), default="energy_limited")
+        "energy_limited", "energy_limited_feasible_extents",
+        "legacy_reject"), default="energy_limited")
     args = parser.parse_args()
     args.case_dir.mkdir(parents=True, exist_ok=True)
     signal.signal(signal.SIGTERM, _request_stop)
@@ -244,7 +245,9 @@ def main():
         "target_strain": args.target_strain, "trial_dt_s": args.trial_dt_s,
         "mura_work_budget_mode": args.mura_work_budget_mode,
         "source_sha": os.environ.get(
-            "V32_SOURCE_SHA", os.environ.get("V30_SOURCE_SHA", "UNRECORDED")),
+            "V35_SOURCE_SHA", os.environ.get(
+                "V32_SOURCE_SHA", os.environ.get(
+                    "V30_SOURCE_SHA", "UNRECORDED"))),
         "rng_state": {"ongoing_stochastic_evolution": False,
                       "initialization_seed": args.seed},
     }
