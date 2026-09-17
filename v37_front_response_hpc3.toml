@@ -2,7 +2,7 @@ name = "full-v37-front-response"
 entrypoint = ["bash", "../hpc3/run_v37_front_response_array.sh"]
 working_directory = "full_model/production"
 modules = ["anaconda/2025.12"]
-environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_FRONT_SOURCE_SHA = "SOURCE_SHA_PENDING" }
+environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_FRONT_SOURCE_SHA = "cba7813665abd764046e8f10d3495c6670275e7b" }
 input_mode = "archive"
 result_mode = "archive"
 scratch_mode = "local"
