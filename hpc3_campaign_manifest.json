@@ -2359,6 +2359,71 @@
       ],
       "asb_job_submitted": false,
       "unrelated_jobs_observed_and_not_touched": ["55950433"]
+    },
+    {
+      "run_id": "v38-informative-horizons-20260917",
+      "purpose": "front_physical_horizon_ordered_accuracy_thermal_diagnostics_and_common_state",
+      "source_checkpoints": {
+        "v37_final_transcript": "9b9c684d3723449f46143b92a70c82c18ce63ec4",
+        "v37_earlier_manifest": "bd366c756f7ab2bf4ef112f2a603c674833344d0",
+        "archive_retrieval_repair": "1388e8f6e5fe662570ad588b713773f1e30df499",
+        "v38_production_repair": "4b4a4af929edd3aba98ba3d9a5abaad80bf98534",
+        "front_overlap_driver": "1f568c1ff2474f4e21b8ea0721821e18403ddd40",
+        "common_multirate_driver": "ea06103",
+        "current_pushed_checkpoint": "b344aeb3d84b7c1a5d3648b8fad3cc5fbb76a5af"
+      },
+      "hpc3_runs": [
+        {
+          "run_id": "20260917T191904Z-cf6c444-6d82ab",
+          "job_id": "56126299",
+          "purpose": "original_v37_finite_conduction_array",
+          "scheduler_state": "COMPLETED",
+          "classification": "INFRASTRUCTURE_INVALID_OUTPUT_PATH_FINALIZER",
+          "scientific_classification_permitted": false
+        },
+        {
+          "run_id": "20260917T210450Z-1388e8f-96f14d",
+          "job_id": "56129085",
+          "purpose": "exact_scientific_rerun_after_output_path_repair",
+          "scheduler_state_at_checkpoint": "RUNNING_FINAL_TWO_OF_SIX",
+          "maximum_array_concurrency": 2,
+          "completed_archives_verified_present": true,
+          "durable_finalize_controller": "tmux:v38_conduction_finalize"
+        },
+        {
+          "run_id": "20260917T192050Z-50dbde9-bf00af",
+          "job_id": "56126506",
+          "purpose": "source_frozen_n64_one_grain_mura_to_5pct_strain",
+          "scheduler_state_at_checkpoint": "RUNNING",
+          "frozen_finalizer_path_defect": true,
+          "durable_rescue_controller": "tmux:v38_mura_rescue",
+          "latest_verified_rescue_sha256": "73ae6c918b1fc69ad486a8c8f5cd9b342a52b4c0d170d330c00b45e1935d4b85",
+          "latest_rescued_strain": 0.04362975
+        }
+      ],
+      "local_followups": [
+        {
+          "controller": "tmux:v38_front_physical",
+          "state": "WAITING_FOR_CONDUCTION_SLOT_RELEASE",
+          "case": "n64_shape_n_low_zero_work_hold",
+          "macro_dt_s": 0.001,
+          "intervals": 30,
+          "physical_horizon_s": 0.03
+        }
+      ],
+      "verification": {
+        "front_rate_ranking_sha256": "6b55ed371ceb43b74ee727b6c8ecb60c396c2309ab16185e9790cdef7e0a77f0",
+        "projection_benchmark_sha256": "e7cd37a56aef9075f7b503ee1d6ca77a900fc7cf7252ac6284bcbcf3ab6902d5",
+        "front_macro_overlap_sha256": "0d3c4b721e0e5112dc2e20eeaaa4b5832e5f745d3d97daf26e7683681d1dc6b2",
+        "equal_slab_residual_sha256": "c62c3693f09a480e222a68e59bfe0f0c31c9d25f88b04138cbe41227eadefea2",
+        "ordered_legacy_sha256": "6ceb06dc5eacd1a187901839c296fda553d8e64f5babf752d62f3bc1b91be81e",
+        "ordered_repaired_sha256": "86d6bd8a9fd59b83adc8fd1f268dfff3c23580986206e503fde41dbac82f2b4b",
+        "configured_regression_tests_passed": 729,
+        "regression_wall_seconds": 178.06
+      },
+      "common_state_decision": "ORDERING_STIFFNESS_TERMINAL_AFTER_VALID_MULTIRATE_CLOCK_IMPLEMENTATION",
+      "drx_claimed": false,
+      "strict_asb_claimed": false
     }
   ]
 }
