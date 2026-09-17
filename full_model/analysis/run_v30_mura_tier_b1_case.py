@@ -281,20 +281,28 @@ def main():
     terminal = "RUNNING"
     last_ledger = None
     try:
-        while (applied_strain < args.target_strain
+        target_tolerance = 64*np.finfo(float).eps*max(
+            abs(args.target_strain), 1.0)
+        while (applied_strain < args.target_strain-target_tolerance
                and step < args.max_steps and not STOP_REQUESTED):
             mean = np.array([[0.0, .5*applied_strain],
                              [.5*applied_strain, 0.0]])
             driving = CommonWallDriving(mean_strain=mean,
                                         fixed_eigenstrain=fixed)
+            remaining_time = max(
+                (args.target_strain-applied_strain)/args.strain_rate_s, 0.0)
+            requested_dt = min(args.trial_dt_s, remaining_time)
             state, ledger = accepted_v24_mechanical_step(
                 state, driving, support, systems, topologies, common,
-                extensive, kinetics, args.trial_dt_s,
+                extensive, kinetics, requested_dt,
                 topology_route_enabled=False,
                 mura_work_budget_mode=args.mura_work_budget_mode)
             last_ledger = ledger
             physical_time += ledger["accepted_dt_s"]
             applied_strain = args.strain_rate_s*physical_time
+            if abs(applied_strain-args.target_strain) <= target_tolerance:
+                applied_strain = float(args.target_strain)
+                physical_time = applied_strain/args.strain_rate_s
             step += 1
             balance = ledger["mura_balance_ledger"]
             cumulative["plastic_work_J_m3_cells"] += float(np.sum(
