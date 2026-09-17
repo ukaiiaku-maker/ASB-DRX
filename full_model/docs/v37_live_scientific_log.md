@@ -94,6 +94,9 @@ comparator rather than a global organization veto.
   the preregistered n128 continued-loading front array (baseline,
   `availability_mid`, and `shape_n_low`) with one case active at a time. This
   follow-up does not wait for the independent Mura continuation.
+  Retrieved conduction, Mura, and front bundles each invoke their scoped
+  classifier automatically and write machine-readable decisions and plots
+  under the manager's external `postprocessed` directory.
 
 Earlier conduction submissions that failed before physics are retained in the
 case manifest. Invalid QoS, shared array extraction, and missing archive Git
