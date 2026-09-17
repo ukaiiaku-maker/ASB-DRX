@@ -2,6 +2,7 @@ import json
 
 from full_model.analysis.manage_v37_hpc import (
     ACTIVE_MARKERS, atomic_json, parse_submission, read_record,
+    run_postprocessor,
 )
 
 
@@ -24,3 +25,12 @@ def test_parse_followup_submission_identity():
         "Run ID: 20260917T000000Z-abcd123-123456\nJob ID: 98765\n")
     assert run_id == "20260917T000000Z-abcd123-123456"
     assert job_id == "98765"
+
+
+def test_postprocessor_records_artifact(tmp_path):
+    output = tmp_path/"artifact.txt"
+    result = run_postprocessor([
+        "python", "-c", f"from pathlib import Path; Path({str(output)!r}).write_text('ok')"
+    ], output)
+    assert result["returncode"] == 0
+    assert result["artifact_exists"]

@@ -39,6 +39,17 @@ def read_record(project: Path, run_id: str) -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
 
 
+def run_postprocessor(command: list[str], output: Path) -> dict:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    process = subprocess.run(command, text=True, capture_output=True, timeout=900)
+    return {
+        "returncode": process.returncode,
+        "output": (process.stdout+process.stderr)[-8000:],
+        "artifact": str(output),
+        "artifact_exists": output.exists(),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", type=Path, required=True)
@@ -48,11 +59,15 @@ def main() -> None:
     parser.add_argument("--poll-s", type=float, default=300.0)
     parser.add_argument("--followup-config", type=Path)
     parser.add_argument("--followup-trigger-run-id")
+    parser.add_argument("--conduction-run-id")
+    parser.add_argument("--mura-run-id")
+    parser.add_argument("--postprocess-root", type=Path)
     args = parser.parse_args()
     if bool(args.followup_config) != bool(args.followup_trigger_run_id):
         parser.error("follow-up config and trigger run id must be supplied together")
     run_ids = list(dict.fromkeys(args.run_id))
     followup = {"state": "NOT_REQUESTED", "run_id": None, "job_id": None}
+    postprocessing = {}
     if args.followup_config:
         followup["state"] = "WAITING_FOR_TRIGGER"
     if args.state_file.exists():
@@ -61,6 +76,7 @@ def main() -> None:
         if saved.get("run_id"):
             followup = saved
             run_ids.append(saved["run_id"])
+        postprocessing = previous.get("postprocessing", {})
     iteration = 0
     while True:
         iteration += 1; statuses = {}
@@ -101,6 +117,46 @@ def main() -> None:
                 item["record_state"] = record.get("state")
                 item["fetch_status"] = record.get("fetch_status")
 
+        if args.postprocess_root:
+            project_results = (args.project/"hpc3-results"/args.project.name)
+            for run_id, item in statuses.items():
+                if (item["record_state"] != "RETRIEVED"
+                        or postprocessing.get(run_id, {}).get("returncode") == 0):
+                    continue
+                fetched_root = project_results/run_id
+                artifact_dir = args.postprocess_root/run_id
+                try:
+                    if run_id == args.conduction_run_id:
+                        command = [
+                            "python", "full_model/analysis/postprocess_v37_conduction_results.py",
+                            "--root", str(fetched_root), "--output",
+                            str(artifact_dir/"v37_conduction_results.json"),
+                            "--figure", str(artifact_dir/"v37_conduction_results.png")]
+                        output = artifact_dir/"v37_conduction_results.json"
+                    elif run_id == args.mura_run_id:
+                        configs = list(fetched_root.rglob("case_config.json"))
+                        if len(configs) != 1:
+                            raise ValueError("expected one fetched Mura case")
+                        command = [
+                            "python", "full_model/analysis/postprocess_v37_mura_long.py",
+                            "--case-dir", str(configs[0].parent), "--output",
+                            str(artifact_dir/"v37_mura_long.json"), "--figure",
+                            str(artifact_dir/"v37_mura_long.png")]
+                        output = artifact_dir/"v37_mura_long.json"
+                    elif run_id == followup.get("run_id"):
+                        command = [
+                            "python", "full_model/analysis/postprocess_v37_front_response.py",
+                            "--root", str(fetched_root), "--output",
+                            str(artifact_dir/"v37_front_response.json"), "--figure",
+                            str(artifact_dir/"v37_front_response.png")]
+                        output = artifact_dir/"v37_front_response.json"
+                    else:
+                        continue
+                    postprocessing[run_id] = run_postprocessor(command, output)
+                except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+                    postprocessing[run_id] = {
+                        "returncode": 125, "error": str(error)}
+
         trigger = statuses.get(args.followup_trigger_run_id, {})
         if (args.followup_config and followup["state"] == "WAITING_FOR_TRIGGER"
                 and trigger.get("returncode") == 0
@@ -129,6 +185,7 @@ def main() -> None:
             "updated_utc": datetime.now(timezone.utc).isoformat(),
             "iteration": iteration, "terminal": done, "runs": statuses,
             "followup": followup,
+            "postprocessing": postprocessing,
         })
         if done:
             return

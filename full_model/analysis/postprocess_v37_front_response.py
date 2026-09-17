@@ -79,9 +79,11 @@ def main() -> None:
     args = parser.parse_args()
     cases = {}
     for name in CASES:
-        path = args.root/name/"result.json"
-        if path.exists():
-            cases[name] = summarize(path)
+        paths = list(args.root.rglob(f"{name}/result.json"))
+        if len(paths) > 1:
+            raise ValueError(f"multiple attributable results for {name}")
+        if paths:
+            cases[name] = summarize(paths[0])
     complete = set(cases) == set(CASES) and all(
         row["completed_intervals"] >= 40 for row in cases.values())
     valid = complete and all(
