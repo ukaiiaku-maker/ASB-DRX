@@ -92,3 +92,27 @@ def test_registered_screen_is_bounded_and_preserves_event_geometry():
         .1*baseline["net_velocity_m_s"])
     assert high["net_velocity_m_s"] == pytest.approx(
         10.0*baseline["net_velocity_m_s"])
+
+
+def test_n128_v37_control_and_acceptance_evidence_is_decision_grade():
+    root = Path(__file__).parents[1]/"full_model"/"verification"
+    controls = json.loads((root/"v37_current_source_controls.json").read_text())
+    acceptance = json.loads((root/"v37_front_acceptance_audit.json").read_text())
+    assert controls["fixture_passed"]
+    assert controls["scientific_gate_passed"]
+    assert controls["source_equivalence"][
+        "local_n128_and_hpc_n192_production_modules_bitwise_equivalent"]
+    assert controls["source_equivalence"][
+        "v37_current_diagnostic_only_changed_modules"] == [
+            "full_model/production/complete_front_energy.py"]
+    assert controls["complete_material_exchange"][
+        "velocity_exchange_residual_m_s"] == 0.0
+    accepted = acceptance["representative_accepted_interval"]
+    rejected = acceptance["representative_nonpublished_interval"]
+    assert accepted["accepted_contour_displacement_m"] != 0.0
+    assert accepted["processed_line_m"] > 0.0
+    assert rejected["raw_constitutive_net_velocity_m_s"] > 0.0
+    assert rejected["proposed_signed_volume_m3"] < 0.0
+    assert rejected["accepted_signed_volume_m3"] == 0.0
+    assert rejected["processed_line_m"] == 0.0
+    assert not acceptance["positive_rejected_rate_is_physical_motion"]

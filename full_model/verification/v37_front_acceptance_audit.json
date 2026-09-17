@@ -1,0 +1,248 @@
+{
+  "capacity_limit_identified": false,
+  "diagnosis": "The reversed proposal has negative proposed volume but a positive current constitutive velocity. It is rejected before publication; complete publication is exact identity, with zero processed line and zero contour displacement. This is neither physical arrest nor an energy-guard failure.",
+  "energy_rejection_identified": false,
+  "first_nonpublished_classification": "DIRECTION_MISMATCH",
+  "positive_rejected_rate_is_physical_motion": false,
+  "proposal_overshoot_identified": false,
+  "representation_terminal_identified": false,
+  "representative_accepted_interval": {
+    "accepted_absolute_volume_m3": 1.1735249408820892e-27,
+    "accepted_contour_displacement_cells": 1.4787360646195681e-05,
+    "accepted_contour_displacement_interface_widths": 9.242100403872301e-07,
+    "accepted_contour_displacement_m": 3.69684016154892e-13,
+    "accepted_negative_volume_m3": 0.0,
+    "accepted_positive_volume_m3": 1.1735249408820892e-27,
+    "accepted_signed_volume_m3": 1.1735249408820892e-27,
+    "actual_inventory_change": {
+      "junction_extent_m": [
+        0.0
+      ],
+      "signed_family_line_m": [
+        0.0,
+        0.0,
+        -9.125310156249999e-21,
+        9.125310156249999e-21
+      ],
+      "total_line_m": 1.3903640712717723e-10
+    },
+    "annihilated_line_m": 5.236511444685956e-13,
+    "boundary_storage_line_m": 2.815355232875368e-14,
+    "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+    "complete_energy_decision": {
+      "accepted": true,
+      "available_change_J": -8.98347352018743e-22,
+      "before": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 6.0535456695236044e-15,
+        "helmholtz_J": 9.824042479156372e-14,
+        "internal_J": 9.84001521240705e-14,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054954886005945e-15,
+        "phase_local_J": 5.328403888465495e-16,
+        "recoverable_elastic_J": 9.034854324459298e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.5972733250678023e-16
+      },
+      "candidate": {
+        "boundary_excess_J": 4.223032849313052e-23,
+        "defect_storage_J": 6.053544747821429e-15,
+        "helmholtz_J": 9.824042389321637e-14,
+        "internal_J": 9.84001521071774e-14,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054954205124224e-15,
+        "phase_local_J": 5.328404191492877e-16,
+        "recoverable_elastic_J": 9.034854326350291e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.5972821396101863e-16
+      },
+      "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+      "delta_helmholtz_J": -8.98347352018743e-22,
+      "external_work_J": 0.0,
+      "first_law_residual_J": -1.1367842969067977e-27,
+      "generated_heat_J": 8.814553796165301e-22,
+      "material_sink_export_J": 1.6891972402212764e-23,
+      "thermostat_export_J": 0.0,
+      "tolerance_J": 1.7869829169569807e-25
+    },
+    "component_contour_displacements_m": [
+      3.6968401615489197e-13,
+      3.6968401615489197e-13
+    ],
+    "endpoint_component_changes_J": {
+      "a_to_b": {
+        "boundary_excess_J": 1.782696884053669e-19,
+        "defect_storage_J": -3.892424223503412e-18,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -2.7071355285495483e-19,
+        "phase_local_J": 1.2125928670739403e-19,
+        "recoverable_elastic_J": 8.07084721527998e-20,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 3.711593230318082e-18
+      },
+      "b_to_a": {
+        "boundary_excess_J": 6.250992968904982e-20,
+        "defect_storage_J": -1.3655055221204893e-18,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 3.0410711279617886e-19,
+        "phase_local_J": -1.3455872478369808e-19,
+        "recoverable_elastic_J": 8.07084721527998e-20,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.0277355365900435e-18
+      }
+    },
+    "endpoint_event_energy_J": {
+      "a_to_b": -1.1647839597798089e-23,
+      "b_to_a": -3.241463116937192e-24
+    },
+    "first_passage_volume_m3": 1.1735249408820892e-27,
+    "front_clock_s": 5e-06,
+    "front_published": true,
+    "gross_directional_activity_s": 4983244.936992291,
+    "interface_area_m2": 3.1744e-15,
+    "mura_clock": {
+      "accepted_dt_s": 5e-06,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": 0.0,
+      "minimum_heat_increment_J_m3": 23956.37733236796,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "processed_line_m": 1.1261320234643155e-12,
+    "proposed_signed_volume_m3": 4.9537554129290316e-24,
+    "raw_constitutive_net_velocity_m_s": 7.39397845456265e-08,
+    "represented_thickness_m": 4.96e-10,
+    "revisit_volume_m3": 0.0,
+    "sink_line_m": 1.126131493480851e-14,
+    "temperature_range_K": [
+      1100.006844728823,
+      1100.010770516558
+    ],
+    "wall_seconds": 86.98220462398604
+  },
+  "representative_nonpublished_interval": {
+    "accepted_absolute_volume_m3": 0.0,
+    "accepted_contour_displacement_cells": 0.0,
+    "accepted_contour_displacement_interface_widths": 0.0,
+    "accepted_contour_displacement_m": 0.0,
+    "accepted_negative_volume_m3": 0.0,
+    "accepted_positive_volume_m3": 0.0,
+    "accepted_signed_volume_m3": 0.0,
+    "actual_inventory_change": {
+      "junction_extent_m": [
+        0.0
+      ],
+      "signed_family_line_m": [
+        0.0,
+        0.0,
+        -7.7015625e-25,
+        7.7015625e-25
+      ],
+      "total_line_m": 1.3959947313902648e-10
+    },
+    "annihilated_line_m": 0.0,
+    "boundary_storage_line_m": 0.0,
+    "classification": "REJECTED_BY_BIDIRECTIONAL_RATE",
+    "complete_energy_decision": {
+      "accepted": true,
+      "available_change_J": 0.0,
+      "before": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 6.0535456695236044e-15,
+        "helmholtz_J": 9.824042479156372e-14,
+        "internal_J": 9.84001521240705e-14,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054954886005945e-15,
+        "phase_local_J": 5.328403888465495e-16,
+        "recoverable_elastic_J": 9.034854324459298e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.5972733250678023e-16
+      },
+      "candidate": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 6.0535456695236044e-15,
+        "helmholtz_J": 9.824042479156372e-14,
+        "internal_J": 9.84001521240705e-14,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054954886005945e-15,
+        "phase_local_J": 5.328403888465495e-16,
+        "recoverable_elastic_J": 9.034854324459298e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.5972733250678023e-16
+      },
+      "classification": "EXACT_ZERO_EVENT_IDENTITY",
+      "delta_helmholtz_J": 0.0,
+      "external_work_J": 0.0,
+      "first_law_residual_J": 0.0,
+      "generated_heat_J": 0.0,
+      "material_sink_export_J": 0.0,
+      "thermostat_export_J": 0.0,
+      "tolerance_J": 1.7869829169569807e-25
+    },
+    "component_contour_displacements_m": [],
+    "endpoint_component_changes_J": {
+      "a_to_b": {
+        "boundary_excess_J": 1.7834181135045977e-19,
+        "defect_storage_J": -3.88788198113003e-18,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 3.220571270145315e-19,
+        "phase_local_J": -9.130423866879145e-20,
+        "recoverable_elastic_J": 7.98579522510178e-20,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 3.3275932741707734e-18
+      },
+      "b_to_a": {
+        "boundary_excess_J": 6.253314077411314e-20,
+        "defect_storage_J": -1.3641930566621836e-18,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -2.8447441584540296e-19,
+        "phase_local_J": 7.796309760115013e-20,
+        "recoverable_elastic_J": 7.98579522510178e-20,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.4033006954452102e-18
+      }
+    },
+    "endpoint_event_energy_J": {
+      "a_to_b": -1.0461070755494187e-23,
+      "b_to_a": -4.395997932206792e-24
+    },
+    "first_passage_volume_m3": 0.0,
+    "front_clock_s": 5e-06,
+    "front_published": false,
+    "gross_directional_activity_s": 4983222.632663084,
+    "interface_area_m2": 0.0,
+    "mura_clock": {
+      "accepted_dt_s": 5e-06,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": 0.0,
+      "minimum_heat_increment_J_m3": 23956.37733236796,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "processed_line_m": 0.0,
+    "proposed_signed_volume_m3": -4.9558829185024535e-24,
+    "raw_constitutive_net_velocity_m_s": 5.3667607256378985e-08,
+    "represented_thickness_m": 4.96e-10,
+    "revisit_volume_m3": 0.0,
+    "sink_line_m": 0.0,
+    "temperature_range_K": [
+      1100.006844679238,
+      1100.010770466973
+    ],
+    "wall_seconds": 70.68624967103824
+  },
+  "schema": "asb-drx/v37/front-acceptance-audit/v1",
+  "source_commit": "0c34e6f2b85b7301967c9db023fdb3281a14e804"
+}
