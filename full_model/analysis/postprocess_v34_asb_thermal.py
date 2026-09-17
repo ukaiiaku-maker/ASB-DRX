@@ -20,6 +20,14 @@ INVALID_ROUTING_SOURCE_COMMITS = {
     "0c45d036306d56d649c53d69d321d59739930698",
 }
 
+EFFECT_UNITS = {
+    "delta_stress_Pa": "Pa",
+    "delta_active_fraction": "1",
+    "delta_temperature_max_K": "K",
+    "delta_softening_fraction": "1",
+    "delta_effective_width_m": "m",
+}
+
 
 def checkpoints(directory: Path) -> dict[int, Path]:
     result = {}
@@ -87,6 +95,91 @@ def process_records(path: Path) -> list[dict[str, object]]:
             records.append({"case_id": int(fields[0]), "pid": int(fields[1]),
                             "launched_utc": fields[2]})
     return records
+
+
+def matched_causal_effect(subject: dict, reference: dict,
+                          subject_record: dict, reference_record: dict) -> dict:
+    """Return a causal contrast only for exact, attributable common states.
+
+    No temporal interpolation is currently admitted.  Every rejected contrast
+    therefore retains the same typed keys with null numeric values and an
+    explicit reason, preventing consumers from subtracting unmatched states.
+    """
+    time_tolerance_s = 1e-15
+    strain_tolerance = 1e-14
+    subject_time = float(subject["sim_time_s"])
+    reference_time = float(reference["sim_time_s"])
+    subject_strain = float(subject["nominal_strain"])
+    reference_strain = float(reference["nominal_strain"])
+    time_difference = abs(subject_time-reference_time)
+    strain_difference = abs(subject_strain-reference_strain)
+    matched_time = time_difference <= time_tolerance_s
+    matched_strain = strain_difference <= strain_tolerance
+    subject_source = subject_record.get("source_commit")
+    reference_source = reference_record.get("source_commit")
+    subject_prefix = subject_record.get("shared_checkpoint_sha256")
+    reference_prefix = reference_record.get("shared_checkpoint_sha256")
+    attributable = bool(subject_source and reference_source
+                        and subject_prefix and reference_prefix)
+    common_prefix = bool(attributable and subject_prefix == reference_prefix)
+    routing_valid = bool(subject.get("causal_interpretation_valid", False)
+                         and reference.get("causal_interpretation_valid", False))
+    if not routing_valid:
+        status = "INVALID_CAUSAL_ROUTING"
+    elif not attributable:
+        status = "PROVENANCE_UNATTRIBUTABLE"
+    elif not common_prefix:
+        status = "COMMON_PREFIX_MISMATCH"
+    elif not (matched_time and matched_strain):
+        status = "UNMATCHED_TIME_OR_STRAIN"
+    else:
+        status = "MATCHED_EXACT"
+    values = {name: None for name in EFFECT_UNITS}
+    if status == "MATCHED_EXACT":
+        values = {
+            "delta_stress_Pa": subject["stress_Pa"]-reference["stress_Pa"],
+            "delta_active_fraction": (subject["active_fraction"]
+                                      -reference["active_fraction"]),
+            "delta_temperature_max_K": (subject["temperature_max_K"]
+                                         -reference["temperature_max_K"]),
+            "delta_softening_fraction": (subject["softening_fraction"]
+                                          -reference["softening_fraction"]),
+            "delta_effective_width_m": (subject["effective_width_m"]
+                                         -reference["effective_width_m"]),
+        }
+    return {
+        "status": status,
+        "numeric_effects": values,
+        "units": EFFECT_UNITS,
+        "matching": {
+            "subject_step": int(subject["step"]),
+            "reference_step": int(reference["step"]),
+            "subject_time_s": subject_time,
+            "reference_time_s": reference_time,
+            "absolute_time_difference_s": time_difference,
+            "time_tolerance_s": time_tolerance_s,
+            "matched_time": matched_time,
+            "subject_nominal_strain": subject_strain,
+            "reference_nominal_strain": reference_strain,
+            "absolute_nominal_strain_difference": strain_difference,
+            "nominal_strain_tolerance": strain_tolerance,
+            "matched_nominal_strain": matched_strain,
+        },
+        "interpolation": {
+            "used": False,
+            "method": "none",
+            "status": ("NOT_REQUIRED_EXACT_MATCH" if status == "MATCHED_EXACT"
+                       else "NOT_PERMITTED_FOR_THIS_EVIDENCE"),
+        },
+        "provenance": {
+            "attributable": attributable,
+            "common_prefix": common_prefix,
+            "subject_source_commit": subject_source,
+            "reference_source_commit": reference_source,
+            "subject_shared_checkpoint_sha256": subject_prefix,
+            "reference_shared_checkpoint_sha256": reference_prefix,
+        },
+    }
 
 
 def summarize_checkpoint(path: Path, peak_stress: float) -> dict[str, object]:
@@ -196,13 +289,13 @@ def main() -> None:
     effects = {}
     reference = available.get("full_law_local_adiabatic")
     if reference:
+        reference_record = read_json_if_present(
+            args.root/"full_law_local_adiabatic"/"v34_thermal_run_record.json")
         for name, item in available.items():
-            effects[name] = {
-                "delta_active_fraction": item["active_fraction"]-reference["active_fraction"],
-                "delta_temperature_max_K": item["temperature_max_K"]-reference["temperature_max_K"],
-                "delta_softening_fraction": item["softening_fraction"]-reference["softening_fraction"],
-                "delta_effective_width_m": item["effective_width_m"]-reference["effective_width_m"],
-            }
+            subject_record = read_json_if_present(
+                args.root/name/"v34_thermal_run_record.json")
+            effects[name] = matched_causal_effect(
+                item, reference, subject_record, reference_record)
     if not all_terminal:
         classification = "V34_THERMAL_CAUSAL_RUNNING"
     elif not all_valid:
@@ -278,25 +371,20 @@ def main() -> None:
                         full_stresses.append(abs(float(data["sigma_bar"])))
                 matched_full = summarize_checkpoint(
                     full_history[selected], max(full_stresses))
-                corrected_effects[name] = {
-                    "matched_step": selected,
-                    "delta_stress_Pa": summary["stress_Pa"]-matched_full["stress_Pa"],
-                    "delta_active_fraction": (summary["active_fraction"]
-                                              -matched_full["active_fraction"]),
-                    "delta_temperature_max_K": (summary["temperature_max_K"]
-                                                 -matched_full["temperature_max_K"]),
-                    "delta_softening_fraction": (summary["softening_fraction"]
-                                                  -matched_full["softening_fraction"]),
-                    "delta_effective_width_m": (summary["effective_width_m"]
-                                                 -matched_full["effective_width_m"]),
-                }
+                matched_full["causal_interpretation_valid"] = True
+                corrected_effects[name] = matched_causal_effect(
+                    summary, matched_full,
+                    read_json_if_present(args.corrected_selective_root/name/
+                                         "v34_thermal_run_record.json"),
+                    read_json_if_present(args.root/"full_law_local_adiabatic"/
+                                         "v34_thermal_run_record.json"))
         corrected_relaunch["cases"] = corrected_cases
         corrected_relaunch[
             "causal_effects_relative_to_full_law_at_matched_step"] = corrected_effects
         if corrected_status.get("source_sha"):
             source_commits.add(corrected_status["source_sha"])
     result = {
-        "schema": "asb-drx/v34/thermal-causal-comparison/v1",
+        "schema": "asb-drx/v36/thermal-matched-causality/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_commits": sorted(source_commits),
         "shared_checkpoint_step": 100,
