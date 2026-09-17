@@ -53,7 +53,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import copy
 import os, json, time as _wtime, csv, tempfile
-from dataclasses import fields, replace
+from dataclasses import asdict, fields, replace
 from arrhenius_kinetics import (
     ActivatedProcess, KB_J_K as ARRHENIUS_KB_J_K, exp_floor_enthalpy_j,
 )
@@ -8526,37 +8526,8 @@ for n in range(_restart_step_offset, _restart_end_step):
             accept_coupled_front_candidate(
                 sparse_front_state, coupled_front_runtime,
                 eta_before_ac[:, :, :Ng], _front_eta_trial,
+                proposal_probe_only=(common_front_state is not None),
                 **_front_accept_kwargs))
-        if (common_front_state is not None
-                and not _front_decision.accepted
-                and _front_decision.classification
-                == 'REJECTED_BY_BIDIRECTIONAL_RATE'
-                and abs(_front_decision.proposed_signed_volume_m3)
-                >= 1.0e-6*dx*dy*max(
-                    float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
-                    1e-30)):
-            # Obtain a finite geometric candidate for the non-mutating common
-            # energy trial when the legacy scalar bias is exactly neutral.
-            # The probe is never published; its only role is to define the
-            # actual signed support transaction subsequently priced in both
-            # directions by the complete functional.
-            _probe_J = 50.0*ARRHENIUS_KB_J_K*float(np.mean(T))
-            _probe_positive = _front_decision.proposed_signed_volume_m3 > 0.0
-            _probe_kwargs = dict(_front_accept_kwargs)
-            _probe_kwargs.update(
-                kinetic_free_energy_a_to_b_J=(
-                    -_probe_J if _probe_positive else _probe_J),
-                kinetic_free_energy_b_to_a_J=(
-                    _probe_J if _probe_positive else -_probe_J))
-            (_probe_state, _probe_runtime, _probe_eta,
-             _probe_decision) = accept_coupled_front_candidate(
-                _front_sparse_before, _front_runtime_before,
-                eta_before_ac[:, :, :Ng], _front_eta_trial,
-                **_probe_kwargs)
-            if _probe_decision.accepted:
-                sparse_front_state, coupled_front_runtime = (
-                    _probe_state, _probe_runtime)
-                _eta_accepted, _front_decision = _probe_eta, _probe_decision
         eta[:, :, :Ng] = _eta_accepted
         if common_front_state is not None:
             _front_volume = dx*dy*_front_thickness
@@ -8599,13 +8570,23 @@ for n in range(_restart_step_offset, _restart_end_step):
                     forward_signed_volume_m3=(
                         _complete_directional.forward_signed_volume_m3),
                     opposite_signed_volume_m3=(
-                        _complete_directional.opposite_signed_volume_m3))
+                        _complete_directional.opposite_signed_volume_m3),
+                    a_to_b_endpoint=asdict(
+                        _complete_directional.a_to_b_endpoint),
+                    b_to_a_endpoint=asdict(
+                        _complete_directional.b_to_a_endpoint),
+                    actual_reverse_edge=(
+                        _complete_directional.actual_reverse_edge),
+                    reverse_edge_status=(
+                        _complete_directional.reverse_edge_status))
                 _complete_rate_kwargs = dict(_front_accept_kwargs)
                 _complete_rate_kwargs.update(
                     kinetic_free_energy_a_to_b_J=(
                         _complete_directional.a_to_b_event_J),
                     kinetic_free_energy_b_to_a_J=(
-                        _complete_directional.b_to_a_event_J))
+                        _complete_directional.b_to_a_event_J),
+                    actual_reverse_edge=(
+                        _complete_directional.actual_reverse_edge))
                 (sparse_front_state, coupled_front_runtime, _eta_accepted,
                  _front_decision) = accept_coupled_front_candidate(
                     _front_sparse_before, _front_runtime_before,

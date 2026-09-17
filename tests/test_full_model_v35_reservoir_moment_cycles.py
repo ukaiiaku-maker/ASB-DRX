@@ -153,7 +153,7 @@ def test_vanishing_support_retains_inactive_owner_history_exactly():
     rebuilt.validate(context["systems"], context["topologies"])
 
 
-def test_zero_applied_pressure_complete_energy_benchmark_arrests_without_probe_work():
+def test_zero_applied_pressure_uses_nonreverse_channels_without_probe_work():
     context, initial, _, _, driving, controls = _fixture()
     zero_external = replace(
         controls, driving_pressure_a_to_b_Pa=0.0,
@@ -164,14 +164,31 @@ def test_zero_applied_pressure_complete_energy_benchmark_arrests_without_probe_w
     assert audit["geometric_probe_is_nonphysical_and_unledgered"]
     assert audit["complete_directional_kinetics"]["a_to_b_event_J"] < 0.0
     assert audit["complete_directional_kinetics"]["b_to_a_event_J"] < 0.0
-    assert audit["front_decision"]["net_velocity_a_to_b_m_s"] == 0.0
-    assert audit["front_decision"]["accepted_signed_volume_m3"] == 0.0
+    assert audit["complete_directional_kinetics"]["actual_reverse_edge"] is False
+    assert audit["complete_directional_kinetics"]["reverse_edge_status"] == (
+        "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE")
+    assert audit["front_decision"]["channel_a_to_b"][
+        "acceptance_probability"] == 1.0
+    assert audit["front_decision"]["channel_b_to_a"][
+        "acceptance_probability"] == 1.0
+    assert audit["front_decision"]["channel_a_to_b"][
+        "transition_state_rate_s"] != audit["front_decision"][
+            "channel_b_to_a"]["transition_state_rate_s"]
+    assert audit["front_decision"]["net_velocity_a_to_b_m_s"] > 0.0
+    assert audit["front_decision"]["accepted_signed_volume_m3"] > 0.0
     assert audit["complete_energy"]["front_decision"]["external_work_J"] == 0.0
-    assert not audit["candidate_sweep_published"]
-    mura_only, _ = run_i3_cycle(
-        context, initial, initial.eta, driving,
-        replace(zero_external, front_enabled=False))
-    _assert_state_exact(result, mura_only)
+    assert audit["candidate_sweep_published"]
+    assert audit["actual_inventory_change"]["total_line_m"] != 0.0
+
+    # The nonphysical proposal probe cannot choose a direction or do work:
+    # changing its legacy diagnostic pressure leaves the physical result exact.
+    alternate, alternate_audit = run_i3_cycle(
+        context, initial, _trial(context, .05), driving,
+        replace(zero_external, geometric_probe_pressure_Pa=-9.0e8))
+    _assert_state_exact(result, alternate)
+    assert audit["front_decision"] == alternate_audit["front_decision"]
+    assert audit["complete_directional_kinetics"] == alternate_audit[
+        "complete_directional_kinetics"]
 
 
 def test_two_recurrent_cycles_share_one_accepted_physical_interval_each():

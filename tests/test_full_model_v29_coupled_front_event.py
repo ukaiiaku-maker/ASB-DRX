@@ -83,5 +83,51 @@ def test_true_reverse_pair_uses_one_delta_f_not_difference_of_opposites():
         kinetic_free_energy_a_to_b_J=delta,
         kinetic_free_energy_b_to_a_J=-delta)
     assert event.microscopic_reverse_pair
+    assert event.actual_reverse_edge
+    assert event.detailed_balance_applicable
     assert np.log(event.rate_a_to_b_s/event.rate_b_to_a_s) == pytest.approx(-.25)
     assert np.log(event.rate_a_to_b_s/event.rate_b_to_a_s) != pytest.approx(-.5)
+
+
+def test_distinct_downhill_outgoing_channels_do_not_cancel_at_unit_acceptance():
+    thermal = 1.380649e-23*900.0
+    event = propose_bidirectional_front_event(
+        _state(1.4e14), _state(.7e14), event_volume_m3=2e-27,
+        event_length_m=2.8e-10, line_energy_J_m=1.1e-9,
+        temperature_K=900.0,
+        process=ActivatedProcess("front", 2e10, 0.2, 1e9),
+        h0_J=.3*EV_J, critical_pressure_Pa=1e9, exp_a=2.0,
+        exp_n=1.5, exp_floor=.1, transmission_fraction=.5,
+        neutral_sink_fraction=.05,
+        kinetic_free_energy_a_to_b_J=-2.0*thermal,
+        kinetic_free_energy_b_to_a_J=-.5*thermal,
+        actual_reverse_edge=False)
+    assert event.a_to_b_channel.acceptance_probability == 1.0
+    assert event.b_to_a_channel.acceptance_probability == 1.0
+    assert event.a_to_b_channel.transition_state_rate_s > (
+        event.b_to_a_channel.transition_state_rate_s)
+    assert event.rate_a_to_b_s > event.rate_b_to_a_s
+    assert event.net_velocity_a_to_b_m_s > 0.0
+    assert not event.actual_reverse_edge
+    assert not event.detailed_balance_applicable
+    assert event.a_to_b_channel.gross_activity_s == event.rate_a_to_b_s
+    assert event.b_to_a_channel.gross_activity_s == event.rate_b_to_a_s
+
+
+def test_channel_availability_and_mobility_are_exposed_separately():
+    event = propose_bidirectional_front_event(
+        _state(1e14), _state(1e14), event_volume_m3=2e-27,
+        event_length_m=2.8e-10, line_energy_J_m=1.1e-9,
+        temperature_K=900.0,
+        process=ActivatedProcess("front", 2e10, .2, 1e9),
+        h0_J=.3*EV_J, critical_pressure_Pa=1e9, exp_a=2.0,
+        exp_n=1.5, exp_floor=.1, transmission_fraction=1.0,
+        availability_a_to_b=.25, availability_b_to_a=.75)
+    assert event.a_to_b_channel.availability_factor == .25
+    assert event.b_to_a_channel.availability_factor == .75
+    assert event.actual_reverse_edge
+    assert not event.detailed_balance_applicable
+    assert event.rate_a_to_b_s/event.rate_b_to_a_s == pytest.approx(1.0/3.0)
+    assert event.a_to_b_channel.activation_entropy_over_kB == .2
+    assert event.a_to_b_channel.identifiable_prefactor_s == pytest.approx(
+        2e10*np.exp(.2))

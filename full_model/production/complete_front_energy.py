@@ -95,6 +95,35 @@ class CommonFrontTransactionResult:
 
 
 @dataclass(frozen=True)
+class CompleteDirectionalEndpoint:
+    """Auditable endpoint and internal increments for one outgoing channel."""
+
+    direction: str
+    signed_volume_m3: float
+    before_helmholtz_J: float
+    endpoint_helmholtz_J: float
+    endpoint_internal_J: float
+    delta_helmholtz_J: float
+    external_work_J: float
+    available_change_J: float
+    energy_accepted: bool
+    energy_classification: str
+    generated_heat_J: float
+    thermostat_export_J: float
+    material_sink_export_J: float
+    processed_line_increment_m: float
+    transmitted_line_increment_m: float
+    boundary_line_increment_m: float
+    annihilated_line_increment_m: float
+    sink_line_increment_m: float
+    maximum_abs_line_density_increment_m2: float
+    maximum_abs_slip_increment: float
+    maximum_abs_beta_p_increment: float
+    maximum_abs_temperature_increment_K: float
+    actual_reverse_edge: bool = False
+
+
+@dataclass(frozen=True)
 class CompleteDirectionalKinetics:
     a_to_b_event_J: float
     b_to_a_event_J: float
@@ -102,6 +131,10 @@ class CompleteDirectionalKinetics:
     opposite: CommonFrontTransactionResult
     forward_signed_volume_m3: float
     opposite_signed_volume_m3: float
+    a_to_b_endpoint: CompleteDirectionalEndpoint | None = None
+    b_to_a_endpoint: CompleteDirectionalEndpoint | None = None
+    actual_reverse_edge: bool = False
+    reverse_edge_status: str = "DISTINCT_OUTGOING_ENDPOINTS"
 
 
 def _curl_from_derivatives(dx, dy):
@@ -405,6 +438,56 @@ def evaluate_complete_directional_kinetics(
         external_work_J=(float(external_work_density_Pa)*opposite_volume),
         **common)
 
+    before_mixture, _ = reconstruct_common(state, spacing_m)
+
+    def endpoint(result, volume, direction):
+        before_ledger = state.ledger
+        after_ledger = result.candidate_state.ledger
+        decision = result.decision
+        candidate_mixture = result.candidate_mixture
+        line_fields = (
+            "mobile_plus_m2", "mobile_minus_m2", "forest_plus_m2",
+            "forest_minus_m2", "wall_plus_m2", "wall_minus_m2",
+            "junction_m2")
+        maximum_line_increment = max(float(np.max(np.abs(
+            np.asarray(getattr(candidate_mixture, name))
+            -np.asarray(getattr(before_mixture, name)))))
+            for name in line_fields)
+        return CompleteDirectionalEndpoint(
+            direction=str(direction), signed_volume_m3=float(volume),
+            before_helmholtz_J=decision.before.helmholtz_J,
+            endpoint_helmholtz_J=decision.candidate.helmholtz_J,
+            endpoint_internal_J=decision.candidate.internal_J,
+            delta_helmholtz_J=decision.delta_helmholtz_J,
+            external_work_J=decision.external_work_J,
+            available_change_J=decision.available_change_J,
+            energy_accepted=decision.accepted,
+            energy_classification=decision.classification,
+            generated_heat_J=decision.generated_heat_J,
+            thermostat_export_J=decision.thermostat_export_J,
+            material_sink_export_J=decision.material_sink_export_J,
+            processed_line_increment_m=(after_ledger.processed_line_m
+                                        -before_ledger.processed_line_m),
+            transmitted_line_increment_m=(after_ledger.transmitted_line_m
+                                          -before_ledger.transmitted_line_m),
+            boundary_line_increment_m=(after_ledger.boundary_line_m
+                                       -before_ledger.boundary_line_m),
+            annihilated_line_increment_m=(after_ledger.annihilated_line_m
+                                          -before_ledger.annihilated_line_m),
+            sink_line_increment_m=(after_ledger.sink_line_m
+                                   -before_ledger.sink_line_m),
+            maximum_abs_line_density_increment_m2=maximum_line_increment,
+            maximum_abs_slip_increment=float(np.max(np.abs(
+                np.asarray(candidate_mixture.slip)
+                -np.asarray(before_mixture.slip)))),
+            maximum_abs_beta_p_increment=float(np.max(np.abs(
+                np.asarray(candidate_mixture.beta_p)
+                -np.asarray(before_mixture.beta_p)))),
+            maximum_abs_temperature_increment_K=float(np.max(np.abs(
+                np.asarray(candidate_mixture.temperature_K)
+                -np.asarray(before_mixture.temperature_K)))),
+            actual_reverse_edge=False)
+
     def normalized(result, volume):
         if abs(volume) <= 0.0:
             return 0.0
@@ -415,7 +498,13 @@ def evaluate_complete_directional_kinetics(
     opposite_event = normalized(opposite, opposite_volume)
     if forward_volume >= 0.0:
         ab, ba = forward_event, opposite_event
+        endpoint_ab = endpoint(forward, forward_volume, "a_to_b")
+        endpoint_ba = endpoint(opposite, opposite_volume, "b_to_a")
     else:
         ab, ba = opposite_event, forward_event
+        endpoint_ab = endpoint(opposite, opposite_volume, "a_to_b")
+        endpoint_ba = endpoint(forward, forward_volume, "b_to_a")
     return CompleteDirectionalKinetics(
-        ab, ba, forward, opposite, forward_volume, opposite_volume)
+        ab, ba, forward, opposite, forward_volume, opposite_volume,
+        endpoint_ab, endpoint_ba, False,
+        "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE")

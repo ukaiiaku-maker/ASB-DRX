@@ -15,12 +15,14 @@ import numpy as np
 
 try:
     from .arrhenius_kinetics import (
-        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j)
+        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j,
+        free_barrier_j)
     from .moving_front import (
         DefectState, conservative_front_transfer, total_line_density)
 except ImportError:  # pragma: no cover - direct production-script execution
     from arrhenius_kinetics import (
-        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j)
+        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j,
+        free_barrier_j)
     from moving_front import (
         DefectState, conservative_front_transfer, total_line_density)
 
@@ -59,6 +61,30 @@ class DirectionalFrontTrial:
 
 
 @dataclass(frozen=True)
+class DirectionalRateChannel:
+    """One physical outgoing channel from the currently accepted state.
+
+    ``acceptance_probability`` is the thermodynamic uphill acceptance.  It is
+    distinct from ``availability_factor`` (whether the channel exists) and
+    from the EXP-floor transition-state rate.  Keeping these factors separate
+    prevents two different downhill endpoints from inheriting one shared rate
+    merely because both acceptances saturate at unity.
+    """
+
+    endpoint_free_energy_change_J: float
+    driving_pressure_magnitude_Pa: float
+    activation_enthalpy_J: float
+    activation_entropy_over_kB: float
+    activation_free_barrier_J: float
+    attempt_frequency_s: float
+    identifiable_prefactor_s: float
+    transition_state_rate_s: float
+    acceptance_probability: float
+    availability_factor: float
+    gross_activity_s: float
+
+
+@dataclass(frozen=True)
 class BidirectionalFrontEvent:
     a_to_b: DirectionalFrontTrial
     b_to_a: DirectionalFrontTrial
@@ -69,6 +95,10 @@ class BidirectionalFrontEvent:
     kinetic_free_energy_a_to_b_J: float = 0.0
     kinetic_free_energy_b_to_a_J: float = 0.0
     microscopic_reverse_pair: bool = False
+    actual_reverse_edge: bool = False
+    detailed_balance_applicable: bool = False
+    a_to_b_channel: DirectionalRateChannel | None = None
+    b_to_a_channel: DirectionalRateChannel | None = None
 
 
 def _mean_density(field):
@@ -114,22 +144,42 @@ def directional_front_trial(donor: DefectState, *, donor_name: str,
         defect_delta, full_delta, heat, sink_export, closure)
 
 
-def _directional_metropolis_pair(base_rate_s, delta_f_ab_J, delta_f_ba_J,
-                                 temperature_K):
-    """Evaluate two actual directional trials without a factor-two bias.
+def _directional_rate_channel(process, *, delta_f_J, event_volume_m3,
+                              temperature_K, h0_J, critical_pressure_Pa,
+                              exp_a, exp_n, exp_floor, availability_factor):
+    """Evaluate one outgoing channel without reference to its competitor."""
+    delta_f = float(delta_f_J)
+    temperature = float(temperature_K)
+    availability = float(availability_factor)
+    if (not math.isfinite(delta_f) or not math.isfinite(availability)
+            or availability < 0.0 or availability > 1.0):
+        raise ValueError("channel energy and availability must be finite")
+    pressure = abs(delta_f)/float(event_volume_m3)
+    enthalpy = exp_floor_enthalpy_j(
+        pressure, h0_J, critical_pressure_Pa, exp_a, exp_n, exp_floor)
+    barrier = free_barrier_j(
+        enthalpy, temperature, process.entropy_over_kB)
+    transition_rate = activated_rate_s(process, enthalpy, temperature)
+    acceptance = math.exp(-min(max(
+        delta_f/(KB_J_K*temperature), 0.0), 700.0))
+    gross = availability*transition_rate*acceptance
+    return DirectionalRateChannel(
+        delta_f, pressure, enthalpy, process.entropy_over_kB, barrier,
+        process.attempt_frequency_s, process.identifiable_prefactor_s,
+        transition_rate, acceptance, availability, gross)
+
+
+def _directional_metropolis_pair(channel_ab, channel_ba):
+    """Return gross activities for two independently priced channels.
 
     When the second trial is the microscopic reverse of the first,
     ``delta_f_ba = -delta_f_ab`` and this construction gives the required
     ratio ``exp(-delta_f_ab/kT)``.  Subtracting the two directional energies
     would instead double the exponent.  Irreversible line removal can make the
-    two trials non-reverses; their rates then remain separately meaningful but
-    are not presented as a microscopic reverse pair.
+    two trials distinct outgoing channels; their EXP-floor transition states
+    must then be evaluated separately rather than assigned one shared base.
     """
-    thermal = KB_J_K * float(temperature_K)
-    ab_penalty = max(float(delta_f_ab_J)/thermal, 0.0)
-    ba_penalty = max(float(delta_f_ba_J)/thermal, 0.0)
-    return (base_rate_s*math.exp(-min(ab_penalty, 700.0)),
-            base_rate_s*math.exp(-min(ba_penalty, 700.0)))
+    return channel_ab.gross_activity_s, channel_ba.gross_activity_s
 
 
 def propose_bidirectional_front_event(
@@ -141,7 +191,9 @@ def propose_bidirectional_front_event(
         transmission_fraction=0.0, boundary_storage_fraction=0.0,
         neutral_sink_fraction=0.0, signed_sink_fraction=0.0,
         kinetic_free_energy_a_to_b_J=None,
-        kinetic_free_energy_b_to_a_J=None):
+        kinetic_free_energy_b_to_a_J=None,
+        availability_a_to_b=1.0, availability_b_to_a=1.0,
+        actual_reverse_edge=None):
     """Construct both transactions and then evaluate their detailed-balance rate."""
     common = dict(
         event_volume_m3=event_volume_m3, line_energy_J_m=line_energy_J_m,
@@ -166,22 +218,48 @@ def propose_bidirectional_front_event(
     kinetic_ba = (ba.full_free_energy_change_J
                   if kinetic_free_energy_b_to_a_J is None
                   else float(kinetic_free_energy_b_to_a_J))
-    pressure = max(abs(kinetic_ab), abs(kinetic_ba))/float(event_volume_m3)
-    enthalpy = exp_floor_enthalpy_j(
-        pressure, h0_J, critical_pressure_Pa, exp_a, exp_n, exp_floor)
-    base = activated_rate_s(process, enthalpy, temperature) if mobility_enabled else 0.0
-    rate_ab, rate_ba = _directional_metropolis_pair(
-        base, kinetic_ab, kinetic_ba, temperature)
-    expected_log_ratio = float(np.clip(
-        (-max(kinetic_ab, 0.0)+max(kinetic_ba, 0.0))
-        /(KB_J_K*temperature), -700.0, 700.0))
-    if rate_ab == 0.0 and rate_ba == 0.0:
+    mobility = 1.0 if mobility_enabled else 0.0
+    channel_ab = _directional_rate_channel(
+        process, delta_f_J=kinetic_ab, event_volume_m3=event_volume_m3,
+        temperature_K=temperature, h0_J=h0_J,
+        critical_pressure_Pa=critical_pressure_Pa, exp_a=exp_a,
+        exp_n=exp_n, exp_floor=exp_floor,
+        availability_factor=mobility*float(availability_a_to_b))
+    channel_ba = _directional_rate_channel(
+        process, delta_f_J=kinetic_ba, event_volume_m3=event_volume_m3,
+        temperature_K=temperature, h0_J=h0_J,
+        critical_pressure_Pa=critical_pressure_Pa, exp_a=exp_a,
+        exp_n=exp_n, exp_floor=exp_floor,
+        availability_factor=mobility*float(availability_b_to_a))
+    rate_ab, rate_ba = _directional_metropolis_pair(channel_ab, channel_ba)
+    expected_log_ratio = (
+        math.log(channel_ab.transition_state_rate_s
+                 /channel_ba.transition_state_rate_s)
+        +math.log(max(channel_ab.availability_factor, 1e-300)
+                  /max(channel_ba.availability_factor, 1e-300))
+        +math.log(channel_ab.acceptance_probability
+                  /channel_ba.acceptance_probability))
+    if rate_ab <= 0.0 or rate_ba <= 0.0:
         residual = 0.0
     else:
         residual = math.log(rate_ab/rate_ba)-expected_log_ratio
     reverse_scale = max(abs(kinetic_ab), abs(kinetic_ba), 1e-300)
-    microscopic_reverse = bool(abs(kinetic_ab+kinetic_ba) <= (
+    energy_reverse = bool(abs(kinetic_ab+kinetic_ba) <= (
         4096.0*np.finfo(float).eps*reverse_scale))
+    transaction_reverse = bool(
+        float(transmission_fraction) == 1.0
+        and float(boundary_storage_fraction) == 0.0
+        and float(neutral_sink_fraction) == 0.0
+        and float(signed_sink_fraction) == 0.0)
+    reverse_edge = (energy_reverse and transaction_reverse
+                    if actual_reverse_edge is None
+                    else bool(actual_reverse_edge))
+    detailed_balance_applicable = bool(
+        reverse_edge
+        and channel_ab.availability_factor > 0.0
+        and channel_ba.availability_factor > 0.0
+        and channel_ab.availability_factor == channel_ba.availability_factor)
     return BidirectionalFrontEvent(
         ab, ba, rate_ab, rate_ba, length*(rate_ab-rate_ba), residual,
-        kinetic_ab, kinetic_ba, microscopic_reverse)
+        kinetic_ab, kinetic_ba, energy_reverse, reverse_edge,
+        detailed_balance_applicable, channel_ab, channel_ba)

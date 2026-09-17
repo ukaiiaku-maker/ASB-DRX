@@ -192,6 +192,23 @@ def test_directional_kinetics_prices_actual_opposite_not_negated_forward():
     assert kinetics.opposite_signed_volume_m3 < 0.0
     assert np.isfinite(kinetics.a_to_b_event_J)
     assert np.isfinite(kinetics.b_to_a_event_J)
+    assert not kinetics.actual_reverse_edge
+    assert kinetics.reverse_edge_status == (
+        "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE")
+    assert kinetics.a_to_b_endpoint.before_helmholtz_J == (
+        kinetics.b_to_a_endpoint.before_helmholtz_J)
+    assert kinetics.a_to_b_endpoint.endpoint_helmholtz_J == (
+        kinetics.forward.decision.candidate.helmholtz_J)
+    assert kinetics.b_to_a_endpoint.endpoint_helmholtz_J == (
+        kinetics.opposite.decision.candidate.helmholtz_J)
+    assert kinetics.a_to_b_endpoint.processed_line_increment_m >= 0.0
+    assert kinetics.b_to_a_endpoint.processed_line_increment_m >= 0.0
+    assert kinetics.a_to_b_endpoint.generated_heat_J >= 0.0
+    assert kinetics.b_to_a_endpoint.generated_heat_J >= 0.0
+    assert kinetics.a_to_b_endpoint.maximum_abs_line_density_increment_m2 >= 0.0
+    assert kinetics.b_to_a_endpoint.maximum_abs_line_density_increment_m2 >= 0.0
+    assert kinetics.a_to_b_endpoint.maximum_abs_temperature_increment_K >= 0.0
+    assert kinetics.b_to_a_endpoint.maximum_abs_temperature_increment_K >= 0.0
     # Irreversible processing means the independently evaluated opposite need
     # not be the algebraic negative of the forward trial.
     assert kinetics.a_to_b_event_J != -kinetics.b_to_a_event_J

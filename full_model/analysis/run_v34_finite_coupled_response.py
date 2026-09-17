@@ -267,14 +267,10 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         process = ActivatedProcess(
             "v34-i3-existing-boundary", 1.0e8,
             negative_barrier_mode="drag")
-        # The first call constructs and topology-checks a finite geometric
-        # candidate.  Its probe pressure is not physical work and never enters
-        # the published rate or energy ledger.  The second call below replaces
-        # it with rates derived from the complete candidate energies.
-        geometric_probe_pressure = (
-            controls.driving_pressure_a_to_b_Pa
-            if controls.geometric_probe_pressure_Pa is None else
-            controls.geometric_probe_pressure_Pa)
+        # The first call only constructs and topology-checks the supplied
+        # geometric candidate. It has zero channel availability and applies
+        # no pressure, work, or direction selection. The second call below
+        # uses rates derived from the complete candidate endpoint energies.
         sparse_candidate, runtime_candidate, accepted_eta, front_decision = (
             accept_coupled_front_candidate(
                 front_state.front, runtime, state.eta, eta_trial,
@@ -285,9 +281,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 process=process, h0_J=.35*EV_J,
                 critical_pressure_Pa=1.0e9, exp_a=2.0, exp_n=1.5,
                 exp_floor=.10,
-                driving_pressure_a_to_b_Pa=geometric_probe_pressure,
-                applied_pressure_a_to_b_Pa=(
-                    controls.applied_pressure_a_to_b_Pa),
+                driving_pressure_a_to_b_Pa=0.0,
+                applied_pressure_a_to_b_Pa=0.0,
                 mobility_enabled=True, periodic=True,
                 transmission_fraction=controls.transmission_fraction,
                 boundary_storage_fraction=controls.boundary_storage_fraction,
@@ -296,7 +291,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 support_component_reconnection=True,
                 topology_backtracking_enabled=True,
                 kinetic_event_volume_m3=kinetic_event_volume,
-                kinetic_event_length_m=burgers))
+                kinetic_event_length_m=burgers,
+                proposal_probe_only=True))
         if front_decision.accepted:
             directional_kinetics = evaluate_complete_directional_kinetics(
                 front_state, sparse_candidate, state.eta, accepted_eta,
@@ -337,7 +333,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                     kinetic_free_energy_b_to_a_J=(
                         directional_kinetics.b_to_a_event_J),
                     kinetic_event_volume_m3=kinetic_event_volume,
-                    kinetic_event_length_m=burgers))
+                    kinetic_event_length_m=burgers,
+                    actual_reverse_edge=directional_kinetics.actual_reverse_edge))
         transaction = evaluate_common_front_transaction(
             front_state, sparse_candidate, state.eta, accepted_eta,
             spacing_m=spacing, cell_volume_m3=cell_volume,
@@ -473,6 +470,14 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                     directional_kinetics.forward_signed_volume_m3),
                 "opposite_signed_volume_m3": (
                     directional_kinetics.opposite_signed_volume_m3),
+                "a_to_b_endpoint": asdict(
+                    directional_kinetics.a_to_b_endpoint),
+                "b_to_a_endpoint": asdict(
+                    directional_kinetics.b_to_a_endpoint),
+                "actual_reverse_edge": (
+                    directional_kinetics.actual_reverse_edge),
+                "reverse_edge_status": (
+                    directional_kinetics.reverse_edge_status),
                 "opposite_evaluated_from_actual_state": True,
             }),
         "mura": (None if mura_ledger is None else {

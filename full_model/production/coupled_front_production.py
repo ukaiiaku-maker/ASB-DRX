@@ -112,6 +112,14 @@ class CoupledFrontDecision:
     kinetic_free_energy_a_to_b_J: float = 0.0
     kinetic_free_energy_b_to_a_J: float = 0.0
     microscopic_reverse_pair: bool = False
+    actual_reverse_edge: bool = False
+    detailed_balance_applicable: bool = False
+    gross_channel_activity_s: float = 0.0
+    channel_a_to_b: dict | None = None
+    channel_b_to_a: dict | None = None
+    proposal_probe_only: bool = False
+    proposal_probe_external_work_J: float = 0.0
+    proposal_probe_selected_direction: bool = False
     kinetic_event_volume_m3: float = 0.0
     kinetic_event_length_m: float = 0.0
     physical_site_count: float = 0.0
@@ -397,7 +405,8 @@ def accept_coupled_front_candidate(
         kinetic_free_energy_a_to_b_J=None,
         kinetic_free_energy_b_to_a_J=None,
         kinetic_event_volume_m3=None,
-        kinetic_event_length_m=None):
+        kinetic_event_length_m=None, proposal_probe_only=False,
+        actual_reverse_edge=None):
     """Atomically accept a trial two-phase update and its material transaction."""
     before = np.asarray(eta_before, dtype=float)
     trial = np.asarray(eta_trial, dtype=float)
@@ -500,13 +509,14 @@ def accept_coupled_front_candidate(
         exp_a=exp_a, exp_n=exp_n, exp_floor=exp_floor,
         energy_a_to_b=FrontEnergyTerms(phase_J=-pressure*event_volume),
         energy_b_to_a=FrontEnergyTerms(phase_J=pressure*event_volume),
-        mobility_enabled=mobility_enabled,
+        mobility_enabled=(mobility_enabled and not proposal_probe_only),
         transmission_fraction=transmission_fraction,
         boundary_storage_fraction=boundary_storage_fraction,
         neutral_sink_fraction=neutral_sink_fraction,
         signed_sink_fraction=signed_sink_fraction,
         kinetic_free_energy_a_to_b_J=kinetic_free_energy_a_to_b_J,
-        kinetic_free_energy_b_to_a_J=kinetic_free_energy_b_to_a_J)
+        kinetic_free_energy_b_to_a_J=kinetic_free_energy_b_to_a_J,
+        actual_reverse_edge=actual_reverse_edge)
     proposed = (topology.signed_receiver_area_cells2*float(spacing_m)**2
                 *float(represented_thickness_m))
     velocity = event.net_velocity_a_to_b_m_s
@@ -522,6 +532,18 @@ def accept_coupled_front_candidate(
         dt_s=float(dt_s), event_volume_m3=activation_volume,
         event_length_m=activation_length)
     _site_diagnostics = dict(
+        kinetic_free_energy_a_to_b_J=event.kinetic_free_energy_a_to_b_J,
+        kinetic_free_energy_b_to_a_J=event.kinetic_free_energy_b_to_a_J,
+        microscopic_reverse_pair=event.microscopic_reverse_pair,
+        actual_reverse_edge=event.actual_reverse_edge,
+        detailed_balance_applicable=event.detailed_balance_applicable,
+        gross_channel_activity_s=(event.rate_a_to_b_s
+                                  +event.rate_b_to_a_s),
+        channel_a_to_b=asdict(event.a_to_b_channel),
+        channel_b_to_a=asdict(event.b_to_a_channel),
+        proposal_probe_only=bool(proposal_probe_only),
+        proposal_probe_external_work_J=0.0,
+        proposal_probe_selected_direction=False,
         kinetic_event_volume_m3=_event_measure.event_volume_m3,
         kinetic_event_length_m=_event_measure.event_length_m,
         physical_site_count=_event_measure.physical_site_count,
@@ -574,7 +596,8 @@ def accept_coupled_front_candidate(
             filtered_subcell_components_after=(
                 topology.snapshot.filtered_subcell_component_count),
             **_site_diagnostics)
-    if abs(velocity) <= 0.0 or proposed*velocity <= 0.0:
+    if (not proposal_probe_only
+            and (abs(velocity) <= 0.0 or proposed*velocity <= 0.0)):
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          rejected_direction=runtime.ledger.rejected_direction+1)
         return state, replace(runtime, ledger=ledger), before.copy(), CoupledFrontDecision(
@@ -589,7 +612,13 @@ def accept_coupled_front_candidate(
             filtered_subcell_components_after=(
                 topology.snapshot.filtered_subcell_component_count),
             **_site_diagnostics)
-    fraction = min(1.0, abs(allowed)/abs(proposed))
+    # A proposal probe only materializes the already supplied geometric trial
+    # so the complete common functional can price both outgoing endpoints. It
+    # applies no pressure/work, evaluates no direction preference, and is
+    # never a publishable physical acceptance. The later ordinary call uses
+    # the independently computed channel kinetics.
+    fraction = (1.0 if proposal_probe_only
+                else min(1.0, abs(allowed)/abs(proposed)))
     accepted_eta = before+fraction*(trial-before)
     phi_accept = accepted_eta[:, :, b]-accepted_eta[:, :, a]
     accepted_topology = match_front_topology(
@@ -688,8 +717,12 @@ def accept_coupled_front_candidate(
             /max(component.interface_length_cells, 1e-300)),
     } for component in accepted_topology.snapshot.components)
     return new_state, runtime, accepted_eta, CoupledFrontDecision(
-        True, "ACCEPTED_ATOMIC_COUPLED_FRONT", proposed, actual_signed,
-        event.rate_a_to_b_s, event.rate_b_to_a_s, velocity,
+        True, ("GEOMETRY_PROBE_ONLY_NOT_PHYSICAL_ACCEPTANCE"
+               if proposal_probe_only else "ACCEPTED_ATOMIC_COUPLED_FRONT"),
+        proposed, actual_signed,
+        (0.0 if proposal_probe_only else event.rate_a_to_b_s),
+        (0.0 if proposal_probe_only else event.rate_b_to_a_s),
+        (0.0 if proposal_probe_only else velocity),
         event.detailed_balance_log_residual, abs(audit["line_closure_m"]),
         audit["signed_closure_m2"], audit["heat_J"],
         component_count=len(accepted_topology.snapshot.components),
@@ -713,7 +746,4 @@ def accept_coupled_front_candidate(
         maximum_abs_phase_change=float(np.max(np.abs(phase_change))),
         rms_phase_change=float(np.sqrt(np.mean(phase_change*phase_change))),
         component_motion=component_motion,
-        kinetic_free_energy_a_to_b_J=event.kinetic_free_energy_a_to_b_J,
-        kinetic_free_energy_b_to_a_J=event.kinetic_free_energy_b_to_a_J,
-        microscopic_reverse_pair=event.microscopic_reverse_pair,
         **_site_diagnostics)

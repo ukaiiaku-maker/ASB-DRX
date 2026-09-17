@@ -150,6 +150,46 @@ def test_finite_boundary_capacity_limits_phase_and_transaction_atomically():
     assert run.ledger.maximum_abs_line_closure_m < 1e-20
 
 
+def test_geometry_probe_applies_no_work_rate_or_direction_selection():
+    eta, state, runtime = _fixture(32, 1.3e14, .7e14)
+    trial = _phase(32, location=.45*32+.25-.5)
+
+    def probe(pressure):
+        return accept_coupled_front_candidate(
+            state, runtime, eta, trial, spacing_m=2e-9,
+            represented_thickness_m=5e-10, dt_s=1e-8,
+            temperature_K=1100.0, line_energy_J_m=1e-9,
+            process=ActivatedProcess("probe", 1e9, .3, 1e9),
+            h0_J=.35*EV_J, critical_pressure_Pa=1e9, exp_a=2.0,
+            exp_n=1.5, exp_floor=.1,
+            driving_pressure_a_to_b_Pa=pressure,
+            applied_pressure_a_to_b_Pa=pressure,
+            mobility_enabled=True, periodic=False,
+            transmission_fraction=.5, boundary_storage_fraction=.1,
+            neutral_sink_fraction=.05, proposal_probe_only=True)
+
+    positive = probe(1e9)
+    negative = probe(-3e9)
+    for left, right in zip(state_arrays(positive[0]).values(),
+                           state_arrays(negative[0]).values()):
+        np.testing.assert_array_equal(left, right)
+    np.testing.assert_array_equal(positive[2], negative[2])
+    for result in (positive, negative):
+        decision = result[3]
+        assert decision.accepted
+        assert decision.classification == (
+            "GEOMETRY_PROBE_ONLY_NOT_PHYSICAL_ACCEPTANCE")
+        assert decision.proposal_probe_only
+        assert decision.proposal_probe_external_work_J == 0.0
+        assert not decision.proposal_probe_selected_direction
+        assert decision.rate_a_to_b_s == 0.0
+        assert decision.rate_b_to_a_s == 0.0
+        assert decision.net_velocity_a_to_b_m_s == 0.0
+        assert decision.gross_channel_activity_s == 0.0
+        assert decision.channel_a_to_b["availability_factor"] == 0.0
+        assert decision.channel_b_to_a["availability_factor"] == 0.0
+
+
 def test_runtime_restart_roundtrip_is_bitwise_and_schema_rejects_partial_state():
     eta, state, runtime = _fixture(32, 1.2e14, .8e14)
     state, runtime, accepted, _ = _step(
