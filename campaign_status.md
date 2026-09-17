@@ -1568,7 +1568,10 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Thermal postprocessing now emits numeric effects only for exact matched,
   attributable pairs. Corrected frozen-flow and exact-temperature thermostat
   comparisons are valid; invalid legacy freezes remain null. Corrected
-  recovery and finite conduction continue locally without interference.
+  frozen-recovery is now exactly matched and valid: versus full law, peak
+  temperature changes -90.741 K, stress +18.973 MPa, and active fraction
+  +0.057223. Finite conduction continues locally without interference, so the
+  thermal matrix remains `RUNNING`.
 - The final merged local validation boundary passes 705 tests in 435.00 s.
   Integrated source, reports, and tests are pending the final V36 evidence
   commit and push on `exp/full-v34-recovery-v1`. Current report:

@@ -127,8 +127,16 @@ and nominal strain 0.2501.  It exports `1.0593932949e9 J/m3`, equal to
 deposited heat within roundoff; thermal change is zero.  Relative to full law,
 maximum temperature falls 909.16 K, stress rises 300.934 MPa, and the
 participation measure broadens.  First law and Burgers/line/energy invariants
-remain within their fixed tolerances.  Corrected recovery-temperature and
-finite-conduction cases remain active.  No strict-ASB claim is made.
+remain within their fixed tolerances.
+
+The corrected frozen-recovery intervention is exactly matched at the same
+step, time, and strain.  Relative to full law, maximum temperature falls
+90.741 K, stress rises 18.973 MPa, active fraction rises 0.057223, softening
+falls 0.006136, and effective width rises `2.084e-8 m`.  Its flow input evolves
+to 1166.84 K while its recovery input remains at 900 K, confirming selective
+accepted-channel routing.  Endpoint first-law, Burgers, line, and energy
+residuals pass their fixed limits.  Finite conduction remains active, so the
+overall thermal matrix remains `RUNNING`.  No strict-ASB claim is made.
 
 ## Decision boundaries
 
