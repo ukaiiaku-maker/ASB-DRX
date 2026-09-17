@@ -237,6 +237,62 @@ def main() -> None:
                 args.corrected_selective_root/"processes.tsv"),
             "preflight_classification": "AUTHORITATIVE_ROUTING_PREFLIGHT_PASSED",
         }
+        corrected_cases = {}
+        corrected_effects = {}
+        full_history = histories.get("full_law_local_adiabatic", {})
+        for case_id in (1, 2):
+            case = case_definition(case_id)
+            name = str(case["case_name"])
+            found = checkpoints(args.corrected_selective_root/name)
+            if not found:
+                continue
+            selected = min(max(found), args.target_step)
+            stresses = []
+            for path in found.values():
+                with np.load(path, allow_pickle=True) as data:
+                    stresses.append(abs(float(data["sigma_bar"])))
+            summary = summarize_checkpoint(found[selected], max(stresses))
+            diag = diagnostic_at_or_before(
+                args.corrected_selective_root/name, selected)
+            summary.update(
+                terminal_reason=terminal_reason(
+                    args.corrected_selective_root/name),
+                terminal=(args.corrected_selective_root/name/
+                          "v34_thermal_run_record.json").exists(),
+                latest_available_step=max(found),
+                flow_operator_T_mean_K=float(diag.get(
+                    "flow_operator_T_mean_K", "nan")),
+                recovery_operator_T_mean_K=float(diag.get(
+                    "recovery_operator_T_mean_K", "nan")),
+                causal_interpretation_valid=bool(
+                    summary["authoritative_common_temperature_routing"]),
+                causal_classification=(
+                    "VALID_CAUSAL_ROUTING" if summary[
+                        "authoritative_common_temperature_routing"]
+                    else "INVALID_CAUSAL_ABLATION_ROUTING"))
+            corrected_cases[name] = summary
+            if selected in full_history:
+                full_stresses = []
+                for path in full_history.values():
+                    with np.load(path, allow_pickle=True) as data:
+                        full_stresses.append(abs(float(data["sigma_bar"])))
+                matched_full = summarize_checkpoint(
+                    full_history[selected], max(full_stresses))
+                corrected_effects[name] = {
+                    "matched_step": selected,
+                    "delta_stress_Pa": summary["stress_Pa"]-matched_full["stress_Pa"],
+                    "delta_active_fraction": (summary["active_fraction"]
+                                              -matched_full["active_fraction"]),
+                    "delta_temperature_max_K": (summary["temperature_max_K"]
+                                                 -matched_full["temperature_max_K"]),
+                    "delta_softening_fraction": (summary["softening_fraction"]
+                                                  -matched_full["softening_fraction"]),
+                    "delta_effective_width_m": (summary["effective_width_m"]
+                                                 -matched_full["effective_width_m"]),
+                }
+        corrected_relaunch["cases"] = corrected_cases
+        corrected_relaunch[
+            "causal_effects_relative_to_full_law_at_matched_step"] = corrected_effects
         if corrected_status.get("source_sha"):
             source_commits.add(corrected_status["source_sha"])
     result = {
