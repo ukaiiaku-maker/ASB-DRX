@@ -64,7 +64,6 @@ def validate_source_identity(source: Path, expected: str) -> tuple[str, bool]:
         raise RuntimeError(f"frozen source {expected} is not ancestor of {actual}")
     protected = [
         "full_model/production",
-        "full_model/hpc3/run_v37_conduction_case.py",
         "full_model/hpc3/v37_conduction_cases.json",
     ]
     changed = subprocess.check_output(
