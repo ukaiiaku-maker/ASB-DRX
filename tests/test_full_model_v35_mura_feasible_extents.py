@@ -3,7 +3,8 @@ import numpy as np
 
 from full_model.production.v24_mechanical_wall import (
     accepted_v24_mechanical_step, mechanical_checkpoint_arrays,
-    mechanical_from_checkpoint_arrays, select_feasible_family_extent,
+    adaptive_connected_feasible_extent, mechanical_from_checkpoint_arrays,
+    select_feasible_family_extent,
 )
 from tests.test_full_model_v24_mechanical_wall import mechanical_fixture
 
@@ -49,7 +50,10 @@ def test_feasible_extent_mode_is_complete_and_restart_exact():
     assert budget["family_selection_rule"] == (
         "complete_affinity_feasible_family_extent_then_joint_backtrack")
     for candidate in budget["family_candidate_audits"]:
-        assert len(candidate["extent_curve"]) == 5
+        assert 2 <= len(candidate["extent_curve"]) <= 5
+        assert candidate["adaptive_search"]["dyadic_levels_available"] == 5
+        assert candidate["adaptive_search"]["dyadic_levels_evaluated"] == len(
+            candidate["extent_curve"])
         assert candidate["extent_curve"][0]["extent"] == 1.0
         assert candidate["selected_extent"] in (
             0.0, 1.0, .5, .25, .125, .0625)
@@ -68,3 +72,31 @@ def test_feasible_extent_mode_is_complete_and_restart_exact():
         for name in left.__dict__:
             np.testing.assert_array_equal(getattr(left, name),
                                           getattr(right, name))
+
+
+def test_adaptive_bracket_preserves_dyadic_boundary_and_zero_connection():
+    calls = []
+    def evaluate(extent):
+        calls.append(extent)
+        return row(extent, extent*(0.08-extent))
+    selected, classification, curve, audit = (
+        adaptive_connected_feasible_extent(evaluate, 12))
+    assert selected == .0625
+    assert classification == (
+        "INITIAL_DIRECTION_DOWNHILL_FULL_EVENT_OVERSHOOTS")
+    assert audit["connected_to_zero_verified_on_sampled_bracket"]
+    assert audit["directional_classification"] == "DOWNHILL_FROM_ZERO"
+    assert len(curve) < 12
+    assert len(calls) == len(set(calls))
+
+
+def test_adaptive_bracket_rejects_disconnected_positive_island():
+    def evaluate(extent):
+        affinity = 1.0 if extent > .4 else -extent
+        return row(extent, affinity)
+    selected, classification, _, audit = (
+        adaptive_connected_feasible_extent(evaluate, 12))
+    assert selected == 0.0
+    assert classification == "GENUINELY_UPHILL_SCREENED_DIRECTION"
+    assert audit["directional_classification"] == "UPHILL_FROM_ZERO"
+    assert not audit["connected_to_zero_verified_on_sampled_bracket"]

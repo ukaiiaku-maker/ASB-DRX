@@ -123,6 +123,108 @@ def select_feasible_family_extent(extent_curve):
     return selected_extent, classification
 
 
+def adaptive_connected_feasible_extent(evaluate, levels):
+    """Find the largest feasible dyadic extent connected to zero.
+
+    The complete affinity along a fixed Mura family ray is screened on the
+    same dyadic set used by the exhaustive V35 implementation.  The zero
+    event is an exact admissible identity.  Two smallest nonzero extents give
+    a one-sided directional-affinity estimate and distinguish a physically
+    uphill direction from subtraction at the zero endpoint.  When that
+    endpoint is downhill, a binary bracket locates the first admissible
+    dyadic extent.  No new extent and no altered constitutive state is used.
+
+    ``evaluate`` must return the same row accepted by
+    :func:`select_feasible_family_extent`.  The returned curve contains only
+    evaluated points, ordered from full extent toward zero.
+    """
+    levels = int(levels)
+    if levels < 2:
+        raise ValueError("feasible-family screen requires at least two levels")
+    extents = [2.0**(-level) for level in range(levels)]
+    rows = {}
+
+    def at(index):
+        if index not in rows:
+            rows[index] = evaluate(extents[index])
+        return rows[index]
+
+    full = at(0)
+    near = at(levels-1)
+    near2 = at(levels-2) if levels > 2 else full
+
+    def resolved_admissible(row):
+        return (row["result"] == "EVALUATED" and row["admissible"]
+                and row.get("sign_resolved", False))
+
+    derivative = None
+    derivative_classification = "UNRESOLVED_ROUNDOFF"
+    if (near["result"] == "EVALUATED"
+            and near2["result"] == "EVALUATED"):
+        e1, h1 = float(near["extent"]), float(
+            near["complete_affinity_J_m3_cells"])
+        e2, h2 = float(near2["extent"]), float(
+            near2["complete_affinity_J_m3_cells"])
+        # Exact for a quadratic affinity H(e)=a*e+b*e^2 and a more stable
+        # zero-endpoint classifier than H(e) itself.
+        derivative = (h1*e2*e2-h2*e1*e1)/(e1*e2*(e2-e1))
+        derivative_tolerance = max(
+            float(near.get("affinity_tolerance_J_m3_cells", 0.0))/e1,
+            float(near2.get("affinity_tolerance_J_m3_cells", 0.0))/e2)
+        if derivative > derivative_tolerance:
+            derivative_classification = "DOWNHILL_FROM_ZERO"
+        elif derivative < -derivative_tolerance:
+            derivative_classification = "UPHILL_FROM_ZERO"
+    else:
+        derivative_tolerance = None
+
+    connected = (resolved_admissible(near)
+                 and (levels == 2 or resolved_admissible(near2)))
+    selected_index = None
+    if connected:
+        if resolved_admissible(full):
+            selected_index = 0
+        else:
+            # Predicate is false at the full event and true at the near-zero
+            # endpoint. Locate the first true member of the preserved dyadic
+            # set. Sampled points on the zero side remain admissible, which is
+            # the discrete connected-to-zero invariant.
+            lo, hi = 0, levels-1
+            while hi-lo > 1:
+                middle = (lo+hi)//2
+                if resolved_admissible(at(middle)):
+                    hi = middle
+                else:
+                    lo = middle
+            selected_index = hi
+    curve = [rows[index] for index in sorted(rows)]
+    selected_extent = (extents[selected_index]
+                       if selected_index is not None else 0.0)
+    if selected_extent == 1.0:
+        classification = "FULL_EVENT_ADMISSIBLE"
+    elif selected_extent > 0.0 and full["result"] != "EVALUATED":
+        classification = "CAPACITY_LIMITED_EVENT"
+    elif selected_extent > 0.0:
+        classification = "INITIAL_DIRECTION_DOWNHILL_FULL_EVENT_OVERSHOOTS"
+    elif any(row.get("result") == "INADMISSIBLE_KINEMATICS"
+             for row in curve):
+        classification = "CAPACITY_LIMITED_NO_RESOLVED_FEASIBLE_EXTENT"
+    elif derivative_classification == "UPHILL_FROM_ZERO":
+        classification = "GENUINELY_UPHILL_SCREENED_DIRECTION"
+    else:
+        classification = "UNRESOLVED_SUBTRACTIVE_CANCELLATION"
+    return selected_extent, classification, curve, {
+        "zero_extent_is_exact_identity": True,
+        "connected_to_zero_verified_on_sampled_bracket": bool(connected),
+        "directional_affinity_J_m3_cells_per_extent": derivative,
+        "directional_affinity_tolerance_J_m3_cells_per_extent": (
+            derivative_tolerance),
+        "directional_classification": derivative_classification,
+        "dyadic_levels_available": levels,
+        "dyadic_levels_evaluated": len(curve),
+    }
+
+
 def _elastic_energy_sum_J_m3_cells(common, beta_p, driving, parameters):
     """Recoverable elastic energy at the fixed total-strain substep state."""
     if driving.mean_strain is None:
@@ -354,8 +456,12 @@ def accepted_v24_mechanical_step(
     # constitutive rate over this interval, not a hidden timestep subdivision.
     family_event_scales = np.ones(len(systems))
     elastic_before = _resolved_elastic_energy_sum_J_m3_cells(drive)
+    candidate_model_cache = {}
 
     def _candidate_model(scales):
+        key = tuple(float(value) for value in np.asarray(scales))
+        if key in candidate_model_cache:
+            return candidate_model_cache[key]
         scaled_flow = (proposed_family_flow_rate
                        *scales[None, None, :, None, None])
         scaled_slip = proposed_mura_slip_rate*scales[None, None, :]
@@ -368,7 +474,9 @@ def accepted_v24_mechanical_step(
                 state.common, full_beta, driving, common_parameters)
             elastic_quadratic = (
                 full_plastic_work-(elastic_before-elastic_after))
-        return scaled_flow, full_plastic_work, elastic_quadratic
+        model = scaled_flow, full_plastic_work, elastic_quadratic
+        candidate_model_cache[key] = model
+        return model
 
     def _candidate_trial(scales, event_scale, model):
         scaled_flow, full_plastic_work, elastic_quadratic = model
@@ -407,37 +515,48 @@ def accepted_v24_mechanical_step(
             "energy_limited", "energy_limited_feasible_extents"):
         family_event_scales = np.zeros(len(systems))
         for family in range(len(systems)):
-            extent_curve = []
-            extents = ([1.0] if mura_work_budget_mode == "energy_limited"
-                       else [2.0**(-level) for level in range(
-                           int(feasible_family_extent_levels))])
-            for extent in extents:
-                scales = np.zeros(len(systems)); scales[family] = extent
+            unit_scales = np.zeros(len(systems)); unit_scales[family] = 1.0
+            unit_model = _candidate_model(unit_scales)
+
+            def _evaluate_extent(extent):
                 try:
                     candidate = _candidate_trial(
-                        scales, 1.0, _candidate_model(scales))
+                        unit_scales, extent, unit_model)
                     audit = candidate[-1]
+                    # Preserve the V35 per-family audit semantics: this is the
+                    # actual family extent, not the cached unit-ray model.
+                    audit["family_event_scales"] = [
+                        float(extent*value) for value in unit_scales]
                     heat = float(audit[
                         "dissipative_drag_and_heat_J_m3_cells"])
                     tolerance = float(audit[
                         "admissibility_tolerance_J_m3_cells"])
-                    extent_curve.append({
+                    return {
                         "extent": float(extent), "result": "EVALUATED",
                         "admissible": bool(audit["admissible"]),
                         "complete_affinity_J_m3_cells": heat,
                         "sign_resolved": bool(abs(heat) > tolerance),
-                        "audit": audit})
+                        "affinity_tolerance_J_m3_cells": tolerance,
+                        "audit": audit}
                 except (ValueError, RuntimeError) as error:
                     if ("alignment magnitude exceeds" not in str(error)
                             and "negative mobile density" not in str(error)):
                         raise
-                    extent_curve.append({
+                    return {
                         "extent": float(extent),
                         "result": "INADMISSIBLE_KINEMATICS",
                         "admissible": False,
-                        "error": f"{type(error).__name__}: {error}"})
-            selected_extent, classification = select_feasible_family_extent(
-                extent_curve)
+                        "error": f"{type(error).__name__}: {error}"}
+
+            if mura_work_budget_mode == "energy_limited":
+                extent_curve = [_evaluate_extent(1.0)]
+                selected_extent, classification = (
+                    select_feasible_family_extent(extent_curve))
+                search_audit = None
+            else:
+                (selected_extent, classification, extent_curve,
+                 search_audit) = adaptive_connected_feasible_extent(
+                    _evaluate_extent, feasible_family_extent_levels)
             full = extent_curve[0]
             family_event_scales[family] = selected_extent
             selected_row = next((row for row in extent_curve
@@ -449,6 +568,8 @@ def accepted_v24_mechanical_step(
                 "selected_extent": float(selected_extent),
                 "classification": classification,
                 "extent_curve": extent_curve,
+                **({"adaptive_search": search_audit}
+                   if search_audit is not None else {}),
                 **({"audit": selected_row["audit"]}
                    if selected_row is not None else {}),
                 **({"error": full["error"]}
@@ -733,6 +854,7 @@ def accepted_v24_mechanical_step(
                 if mura_work_budget_mode == "energy_limited_feasible_extents"
                 else "legacy_no_family_selection"),
             "family_candidate_audits": family_candidate_audits,
+            "candidate_model_cache_entries": len(candidate_model_cache),
             "joint_selected_family_candidate": budget_trials[0],
             "remainder_fraction_unreacted": float(1.0-event_scale),
             "unreacted_remainder_semantics": (
