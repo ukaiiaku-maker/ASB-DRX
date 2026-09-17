@@ -14,6 +14,7 @@ from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import time
@@ -35,6 +36,9 @@ def _utc_now():
 
 
 def _source_commit():
+    frozen = os.environ.get("V36_SOURCE_SHA", "").strip()
+    if frozen:
+        return frozen
     return subprocess.check_output(
         ["git", "rev-parse", "HEAD"], text=True).strip()
 
