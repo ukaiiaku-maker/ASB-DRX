@@ -1,0 +1,542 @@
+{
+  "all_cases_terminal": false,
+  "all_cases_valid": false,
+  "cases": {
+    "exact_prescribed_T_thermostat": {
+      "active_fraction": 0.9889611768825204,
+      "authoritative_common_temperature_routing": false,
+      "causal_classification": "VALID_CAUSAL_ROUTING",
+      "causal_interpretation_valid": true,
+      "causal_temperature_ablation": "none",
+      "effective_width_m": 9.999929782852304e-06,
+      "entropy_effective_fraction": 0.9944541231142405,
+      "flow_operator_T_mean_K": 900.0,
+      "heat_exported_J_m3": 1059393294.8744925,
+      "inverse_participation_fraction": 0.9889611768825202,
+      "latest_available_step": 2500,
+      "maximum_relative_burgers_residual": 6.658326432527227e-17,
+      "maximum_relative_energy_residual": 1.4108614468079872e-18,
+      "maximum_relative_line_residual": 5.190216841436041e-17,
+      "nominal_strain": 0.2501,
+      "physical_heat_deposited_J_m3": 1059393294.8744913,
+      "recovery_operator_T_mean_K": 900.0,
+      "relative_first_law_residual": 2.2456331921458428e-12,
+      "sim_time_s": 8.336666666666454e-06,
+      "softening_fraction": 0.04681734358122208,
+      "step": 2500,
+      "stress_Pa": 2953363461.011781,
+      "temperature_max_K": 900.0,
+      "temperature_mean_K": 900.0,
+      "temperature_min_K": 900.0,
+      "terminal": true,
+      "terminal_reason": "REQUESTED_HORIZON",
+      "thermal_change_J_m3": 0.0,
+      "thermal_semantics": "EXACT_PRESCRIBED_TEMPERATURE_WITH_THERMOSTAT_EXPORT",
+      "thermostat_export_J_m3": 1059393294.8744925
+    },
+    "frozen_flow_T_local_adiabatic": {
+      "active_fraction": 0.4304260216712904,
+      "authoritative_common_temperature_routing": false,
+      "causal_classification": "INVALID_CAUSAL_ABLATION_ROUTING",
+      "causal_interpretation_valid": false,
+      "causal_temperature_ablation": "freeze_flow",
+      "effective_width_m": 9.962654067119544e-06,
+      "entropy_effective_fraction": 0.603356136580597,
+      "flow_operator_T_mean_K": 900.0,
+      "heat_exported_J_m3": 0.0,
+      "inverse_participation_fraction": 0.4304260216712904,
+      "latest_available_step": 2500,
+      "maximum_relative_burgers_residual": 8.58805867881212e-17,
+      "maximum_relative_energy_residual": 1.533226189843437e-18,
+      "maximum_relative_line_residual": 1.9432134379348014e-16,
+      "nominal_strain": 0.2501,
+      "physical_heat_deposited_J_m3": 1012719871.0169287,
+      "recovery_operator_T_mean_K": 1166.3983188708173,
+      "relative_first_law_residual": 4.747613750796695e-10,
+      "sim_time_s": 8.336666666666454e-06,
+      "softening_fraction": 0.14052676361116354,
+      "step": 2500,
+      "stress_Pa": 2652429437.157819,
+      "temperature_max_K": 1809.1600200938308,
+      "temperature_mean_K": 1166.5052292149815,
+      "temperature_min_K": 965.0597716706145,
+      "terminal": true,
+      "terminal_reason": "REQUESTED_HORIZON",
+      "thermal_change_J_m3": 1012719871.0169291,
+      "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+      "thermostat_export_J_m3": 0.0
+    },
+    "frozen_recovery_T_local_adiabatic": {
+      "active_fraction": 0.4304260216712904,
+      "authoritative_common_temperature_routing": false,
+      "causal_classification": "INVALID_CAUSAL_ABLATION_ROUTING",
+      "causal_interpretation_valid": false,
+      "causal_temperature_ablation": "freeze_recovery",
+      "effective_width_m": 9.962654067119544e-06,
+      "entropy_effective_fraction": 0.603356136580597,
+      "flow_operator_T_mean_K": 1166.3983188708173,
+      "heat_exported_J_m3": 0.0,
+      "inverse_participation_fraction": 0.4304260216712904,
+      "latest_available_step": 2500,
+      "maximum_relative_burgers_residual": 8.58805867881212e-17,
+      "maximum_relative_energy_residual": 1.533226189843437e-18,
+      "maximum_relative_line_residual": 1.9432134379348014e-16,
+      "nominal_strain": 0.2501,
+      "physical_heat_deposited_J_m3": 1012719871.0169287,
+      "recovery_operator_T_mean_K": 900.0,
+      "relative_first_law_residual": 4.747613750796695e-10,
+      "sim_time_s": 8.336666666666454e-06,
+      "softening_fraction": 0.14052676361116354,
+      "step": 2500,
+      "stress_Pa": 2652429437.157819,
+      "temperature_max_K": 1809.1600200938308,
+      "temperature_mean_K": 1166.5052292149815,
+      "temperature_min_K": 965.0597716706145,
+      "terminal": true,
+      "terminal_reason": "REQUESTED_HORIZON",
+      "thermal_change_J_m3": 1012719871.0169291,
+      "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+      "thermostat_export_J_m3": 0.0
+    },
+    "full_law_local_adiabatic": {
+      "active_fraction": 0.4304260216712904,
+      "authoritative_common_temperature_routing": false,
+      "causal_classification": "VALID_CAUSAL_ROUTING",
+      "causal_interpretation_valid": true,
+      "causal_temperature_ablation": "none",
+      "effective_width_m": 9.962654067119544e-06,
+      "entropy_effective_fraction": 0.603356136580597,
+      "flow_operator_T_mean_K": 1166.3983188708173,
+      "heat_exported_J_m3": 0.0,
+      "inverse_participation_fraction": 0.4304260216712904,
+      "latest_available_step": 2500,
+      "maximum_relative_burgers_residual": 8.58805867881212e-17,
+      "maximum_relative_energy_residual": 1.533226189843437e-18,
+      "maximum_relative_line_residual": 1.9432134379348014e-16,
+      "nominal_strain": 0.2501,
+      "physical_heat_deposited_J_m3": 1012719871.0169287,
+      "recovery_operator_T_mean_K": 1166.3983188708173,
+      "relative_first_law_residual": 4.747613750796695e-10,
+      "sim_time_s": 8.336666666666454e-06,
+      "softening_fraction": 0.14052676361116354,
+      "step": 2500,
+      "stress_Pa": 2652429437.157819,
+      "temperature_max_K": 1809.1600200938308,
+      "temperature_mean_K": 1166.5052292149815,
+      "temperature_min_K": 965.0597716706145,
+      "terminal": true,
+      "terminal_reason": "REQUESTED_HORIZON",
+      "thermal_change_J_m3": 1012719871.0169291,
+      "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+      "thermostat_export_J_m3": 0.0
+    }
+  },
+  "causal_effects_relative_to_full_law": {
+    "exact_prescribed_T_thermostat": {
+      "interpolation": {
+        "method": "none",
+        "status": "NOT_REQUIRED_EXACT_MATCH",
+        "used": false
+      },
+      "matching": {
+        "absolute_nominal_strain_difference": 0.0,
+        "absolute_time_difference_s": 0.0,
+        "matched_nominal_strain": true,
+        "matched_time": true,
+        "nominal_strain_tolerance": 1e-14,
+        "reference_nominal_strain": 0.2501,
+        "reference_step": 2500,
+        "reference_time_s": 8.336666666666454e-06,
+        "subject_nominal_strain": 0.2501,
+        "subject_step": 2500,
+        "subject_time_s": 8.336666666666454e-06,
+        "time_tolerance_s": 1e-15
+      },
+      "numeric_effects": {
+        "delta_active_fraction": 0.55853515521123,
+        "delta_effective_width_m": 3.727571573275946e-08,
+        "delta_softening_fraction": -0.09370942002994145,
+        "delta_stress_Pa": 300934023.8539624,
+        "delta_temperature_max_K": -909.1600200938308
+      },
+      "provenance": {
+        "attributable": true,
+        "common_prefix": true,
+        "reference_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "reference_source_commit": "0c45d036306d56d649c53d69d321d59739930698",
+        "subject_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "subject_source_commit": "0c45d036306d56d649c53d69d321d59739930698"
+      },
+      "status": "MATCHED_EXACT",
+      "units": {
+        "delta_active_fraction": "1",
+        "delta_effective_width_m": "m",
+        "delta_softening_fraction": "1",
+        "delta_stress_Pa": "Pa",
+        "delta_temperature_max_K": "K"
+      }
+    },
+    "frozen_flow_T_local_adiabatic": {
+      "interpolation": {
+        "method": "none",
+        "status": "NOT_PERMITTED_FOR_THIS_EVIDENCE",
+        "used": false
+      },
+      "matching": {
+        "absolute_nominal_strain_difference": 0.0,
+        "absolute_time_difference_s": 0.0,
+        "matched_nominal_strain": true,
+        "matched_time": true,
+        "nominal_strain_tolerance": 1e-14,
+        "reference_nominal_strain": 0.2501,
+        "reference_step": 2500,
+        "reference_time_s": 8.336666666666454e-06,
+        "subject_nominal_strain": 0.2501,
+        "subject_step": 2500,
+        "subject_time_s": 8.336666666666454e-06,
+        "time_tolerance_s": 1e-15
+      },
+      "numeric_effects": {
+        "delta_active_fraction": null,
+        "delta_effective_width_m": null,
+        "delta_softening_fraction": null,
+        "delta_stress_Pa": null,
+        "delta_temperature_max_K": null
+      },
+      "provenance": {
+        "attributable": true,
+        "common_prefix": true,
+        "reference_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "reference_source_commit": "0c45d036306d56d649c53d69d321d59739930698",
+        "subject_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "subject_source_commit": "0c45d036306d56d649c53d69d321d59739930698"
+      },
+      "status": "INVALID_CAUSAL_ROUTING",
+      "units": {
+        "delta_active_fraction": "1",
+        "delta_effective_width_m": "m",
+        "delta_softening_fraction": "1",
+        "delta_stress_Pa": "Pa",
+        "delta_temperature_max_K": "K"
+      }
+    },
+    "frozen_recovery_T_local_adiabatic": {
+      "interpolation": {
+        "method": "none",
+        "status": "NOT_PERMITTED_FOR_THIS_EVIDENCE",
+        "used": false
+      },
+      "matching": {
+        "absolute_nominal_strain_difference": 0.0,
+        "absolute_time_difference_s": 0.0,
+        "matched_nominal_strain": true,
+        "matched_time": true,
+        "nominal_strain_tolerance": 1e-14,
+        "reference_nominal_strain": 0.2501,
+        "reference_step": 2500,
+        "reference_time_s": 8.336666666666454e-06,
+        "subject_nominal_strain": 0.2501,
+        "subject_step": 2500,
+        "subject_time_s": 8.336666666666454e-06,
+        "time_tolerance_s": 1e-15
+      },
+      "numeric_effects": {
+        "delta_active_fraction": null,
+        "delta_effective_width_m": null,
+        "delta_softening_fraction": null,
+        "delta_stress_Pa": null,
+        "delta_temperature_max_K": null
+      },
+      "provenance": {
+        "attributable": true,
+        "common_prefix": true,
+        "reference_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "reference_source_commit": "0c45d036306d56d649c53d69d321d59739930698",
+        "subject_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "subject_source_commit": "0c45d036306d56d649c53d69d321d59739930698"
+      },
+      "status": "INVALID_CAUSAL_ROUTING",
+      "units": {
+        "delta_active_fraction": "1",
+        "delta_effective_width_m": "m",
+        "delta_softening_fraction": "1",
+        "delta_stress_Pa": "Pa",
+        "delta_temperature_max_K": "K"
+      }
+    },
+    "full_law_local_adiabatic": {
+      "interpolation": {
+        "method": "none",
+        "status": "NOT_REQUIRED_EXACT_MATCH",
+        "used": false
+      },
+      "matching": {
+        "absolute_nominal_strain_difference": 0.0,
+        "absolute_time_difference_s": 0.0,
+        "matched_nominal_strain": true,
+        "matched_time": true,
+        "nominal_strain_tolerance": 1e-14,
+        "reference_nominal_strain": 0.2501,
+        "reference_step": 2500,
+        "reference_time_s": 8.336666666666454e-06,
+        "subject_nominal_strain": 0.2501,
+        "subject_step": 2500,
+        "subject_time_s": 8.336666666666454e-06,
+        "time_tolerance_s": 1e-15
+      },
+      "numeric_effects": {
+        "delta_active_fraction": 0.0,
+        "delta_effective_width_m": 0.0,
+        "delta_softening_fraction": 0.0,
+        "delta_stress_Pa": 0.0,
+        "delta_temperature_max_K": 0.0
+      },
+      "provenance": {
+        "attributable": true,
+        "common_prefix": true,
+        "reference_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "reference_source_commit": "0c45d036306d56d649c53d69d321d59739930698",
+        "subject_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+        "subject_source_commit": "0c45d036306d56d649c53d69d321d59739930698"
+      },
+      "status": "MATCHED_EXACT",
+      "units": {
+        "delta_active_fraction": "1",
+        "delta_effective_width_m": "m",
+        "delta_softening_fraction": "1",
+        "delta_stress_Pa": "Pa",
+        "delta_temperature_max_K": "K"
+      }
+    }
+  },
+  "classification": "V34_THERMAL_CAUSAL_RUNNING",
+  "corrected_selective_relaunch": {
+    "cases": {
+      "frozen_flow_T_local_adiabatic": {
+        "active_fraction": 0.9728199174014833,
+        "authoritative_common_temperature_routing": true,
+        "causal_classification": "VALID_CAUSAL_ROUTING",
+        "causal_interpretation_valid": true,
+        "causal_temperature_ablation": "freeze_flow",
+        "effective_width_m": 9.999920754066394e-06,
+        "entropy_effective_fraction": 0.986172171438025,
+        "flow_operator_T_mean_K": 900.0,
+        "heat_exported_J_m3": 0.0,
+        "inverse_participation_fraction": 0.9728199174014833,
+        "latest_available_step": 2500,
+        "maximum_relative_burgers_residual": 7.762938085919418e-17,
+        "maximum_relative_energy_residual": 1.4034967278405164e-18,
+        "maximum_relative_line_residual": 4.780071402185667e-17,
+        "nominal_strain": 0.2501,
+        "physical_heat_deposited_J_m3": 1057703647.15516,
+        "recovery_operator_T_mean_K": 1178.225001346024,
+        "relative_first_law_residual": 1.5444774701719053e-11,
+        "sim_time_s": 8.336666666666454e-06,
+        "softening_fraction": 0.057544150020850046,
+        "step": 2500,
+        "stress_Pa": 2920088216.571055,
+        "temperature_max_K": 1281.0983862401486,
+        "temperature_mean_K": 1178.3430650408318,
+        "temperature_min_K": 1084.8024987046122,
+        "terminal": true,
+        "terminal_reason": "REQUESTED_HORIZON",
+        "thermal_change_J_m3": 1057703647.15516,
+        "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+        "thermostat_export_J_m3": 0.0
+      },
+      "frozen_recovery_T_local_adiabatic": {
+        "active_fraction": 0.872208465838804,
+        "authoritative_common_temperature_routing": true,
+        "causal_classification": "VALID_CAUSAL_ROUTING",
+        "causal_interpretation_valid": true,
+        "causal_temperature_ablation": "freeze_recovery",
+        "effective_width_m": 9.99872927865572e-06,
+        "entropy_effective_fraction": 0.9319125183634551,
+        "flow_operator_T_mean_K": 1032.5448939216178,
+        "heat_exported_J_m3": 0.0,
+        "inverse_participation_fraction": 0.872208465838804,
+        "latest_available_step": 1300,
+        "maximum_relative_burgers_residual": 8.343620839739675e-17,
+        "maximum_relative_energy_residual": 1.4581007703607272e-18,
+        "maximum_relative_line_residual": 1.246792276517638e-16,
+        "nominal_strain": 0.1301,
+        "physical_heat_deposited_J_m3": 504114046.5766656,
+        "recovery_operator_T_mean_K": 900.0,
+        "relative_first_law_residual": 2.3608371245436938e-12,
+        "sim_time_s": 4.336666666666652e-06,
+        "softening_fraction": 0.06600224753861018,
+        "step": 1300,
+        "stress_Pa": 2882458583.7011237,
+        "temperature_max_K": 1145.051887136829,
+        "temperature_mean_K": 1032.6615912043858,
+        "temperature_min_K": 961.9122593270721,
+        "terminal": false,
+        "terminal_reason": "RUNNING",
+        "thermal_change_J_m3": 504114046.5766661,
+        "thermal_semantics": "NO_CONDUCTION_LOCAL_ADIABATIC",
+        "thermostat_export_J_m3": 0.0
+      }
+    },
+    "causal_effects_relative_to_full_law_at_matched_step": {
+      "frozen_flow_T_local_adiabatic": {
+        "interpolation": {
+          "method": "none",
+          "status": "NOT_REQUIRED_EXACT_MATCH",
+          "used": false
+        },
+        "matching": {
+          "absolute_nominal_strain_difference": 0.0,
+          "absolute_time_difference_s": 0.0,
+          "matched_nominal_strain": true,
+          "matched_time": true,
+          "nominal_strain_tolerance": 1e-14,
+          "reference_nominal_strain": 0.2501,
+          "reference_step": 2500,
+          "reference_time_s": 8.336666666666454e-06,
+          "subject_nominal_strain": 0.2501,
+          "subject_step": 2500,
+          "subject_time_s": 8.336666666666454e-06,
+          "time_tolerance_s": 1e-15
+        },
+        "numeric_effects": {
+          "delta_active_fraction": 0.5423938957301929,
+          "delta_effective_width_m": 3.726668694684997e-08,
+          "delta_softening_fraction": -0.08298261359031349,
+          "delta_stress_Pa": 267658779.41323614,
+          "delta_temperature_max_K": -528.0616338536822
+        },
+        "provenance": {
+          "attributable": true,
+          "common_prefix": true,
+          "reference_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+          "reference_source_commit": "0c45d036306d56d649c53d69d321d59739930698",
+          "subject_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+          "subject_source_commit": "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3"
+        },
+        "status": "MATCHED_EXACT",
+        "units": {
+          "delta_active_fraction": "1",
+          "delta_effective_width_m": "m",
+          "delta_softening_fraction": "1",
+          "delta_stress_Pa": "Pa",
+          "delta_temperature_max_K": "K"
+        }
+      },
+      "frozen_recovery_T_local_adiabatic": {
+        "interpolation": {
+          "method": "none",
+          "status": "NOT_PERMITTED_FOR_THIS_EVIDENCE",
+          "used": false
+        },
+        "matching": {
+          "absolute_nominal_strain_difference": 0.0,
+          "absolute_time_difference_s": 0.0,
+          "matched_nominal_strain": true,
+          "matched_time": true,
+          "nominal_strain_tolerance": 1e-14,
+          "reference_nominal_strain": 0.1301,
+          "reference_step": 1300,
+          "reference_time_s": 4.336666666666652e-06,
+          "subject_nominal_strain": 0.1301,
+          "subject_step": 1300,
+          "subject_time_s": 4.336666666666652e-06,
+          "time_tolerance_s": 1e-15
+        },
+        "numeric_effects": {
+          "delta_active_fraction": null,
+          "delta_effective_width_m": null,
+          "delta_softening_fraction": null,
+          "delta_stress_Pa": null,
+          "delta_temperature_max_K": null
+        },
+        "provenance": {
+          "attributable": false,
+          "common_prefix": false,
+          "reference_shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+          "reference_source_commit": "0c45d036306d56d649c53d69d321d59739930698",
+          "subject_shared_checkpoint_sha256": null,
+          "subject_source_commit": null
+        },
+        "status": "PROVENANCE_UNATTRIBUTABLE",
+        "units": {
+          "delta_active_fraction": "1",
+          "delta_effective_width_m": "m",
+          "delta_softening_fraction": "1",
+          "delta_stress_Pa": "Pa",
+          "delta_temperature_max_K": "K"
+        }
+      }
+    },
+    "launch_processes": [
+      {
+        "case_id": 1,
+        "launched_utc": "2026-09-16T23:04:19Z",
+        "pid": 32081
+      },
+      {
+        "case_id": 2,
+        "launched_utc": "2026-09-17T00:55:46Z",
+        "pid": 40725
+      }
+    ],
+    "launch_status": {
+      "cases": 2,
+      "maximum_concurrency": 1,
+      "source_sha": "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
+      "state": "RUNNING",
+      "target_step": 2500
+    },
+    "preflight_classification": "AUTHORITATIVE_ROUTING_PREFLIGHT_PASSED",
+    "root": "/Users/sdillon/HPC3/local-results/asb-drx-v34-thermal-corrected-20260916"
+  },
+  "generated_utc": "2026-09-17T01:55:07.108857+00:00",
+  "invalid_causal_cases": [
+    "frozen_flow_T_local_adiabatic",
+    "frozen_recovery_T_local_adiabatic"
+  ],
+  "latest_common_step": null,
+  "launch_processes": [
+    {
+      "case_id": 0,
+      "launched_utc": "2026-09-16T22:04:29Z",
+      "pid": 24419
+    },
+    {
+      "case_id": 1,
+      "launched_utc": "2026-09-16T22:04:29Z",
+      "pid": 24421
+    },
+    {
+      "case_id": 2,
+      "launched_utc": "2026-09-16T23:55:36Z",
+      "pid": 34082
+    },
+    {
+      "case_id": 3,
+      "launched_utc": "2026-09-16T23:55:36Z",
+      "pid": 34084
+    },
+    {
+      "case_id": 4,
+      "launched_utc": "2026-09-17T01:53:30Z",
+      "pid": 48655
+    }
+  ],
+  "launch_status": {
+    "cases": 5,
+    "maximum_concurrency": 2,
+    "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
+    "state": "RUNNING",
+    "target_step": 2500
+  },
+  "schema": "asb-drx/v36/thermal-matched-causality/v1",
+  "shared_checkpoint_sha256": "69c9a79773e32d7014a24ea0232922738781a29b5fa00fb14095339b809e6c0c",
+  "shared_checkpoint_step": 100,
+  "source_commits": [
+    "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
+    "0c45d036306d56d649c53d69d321d59739930698"
+  ],
+  "strict_asb_claimed_from_causal_matrix": false,
+  "strict_asb_thresholds_changed": false,
+  "target_common_step": 2500
+}
