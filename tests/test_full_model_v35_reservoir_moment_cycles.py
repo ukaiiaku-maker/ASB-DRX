@@ -151,3 +151,24 @@ def test_vanishing_support_retains_inactive_owner_history_exactly():
         projected, context["spacing_m"], context["systems"],
         context["topologies"])
     rebuilt.validate(context["systems"], context["topologies"])
+
+
+def test_zero_applied_pressure_complete_energy_benchmark_arrests_without_probe_work():
+    context, initial, _, _, driving, controls = _fixture()
+    zero_external = replace(
+        controls, driving_pressure_a_to_b_Pa=0.0,
+        applied_pressure_a_to_b_Pa=0.0,
+        geometric_probe_pressure_Pa=1.0e8)
+    result, audit = run_i3_cycle(
+        context, initial, _trial(context, .05), driving, zero_external)
+    assert audit["geometric_probe_is_nonphysical_and_unledgered"]
+    assert audit["complete_directional_kinetics"]["a_to_b_event_J"] < 0.0
+    assert audit["complete_directional_kinetics"]["b_to_a_event_J"] < 0.0
+    assert audit["front_decision"]["net_velocity_a_to_b_m_s"] == 0.0
+    assert audit["front_decision"]["accepted_signed_volume_m3"] == 0.0
+    assert audit["complete_energy"]["front_decision"]["external_work_J"] == 0.0
+    assert not audit["candidate_sweep_published"]
+    mura_only, _ = run_i3_cycle(
+        context, initial, initial.eta, driving,
+        replace(zero_external, front_enabled=False))
+    _assert_state_exact(result, mura_only)

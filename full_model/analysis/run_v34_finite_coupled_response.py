@@ -10,12 +10,12 @@ model.  It composes three production transactions:
 * ``evaluate_common_front_transaction`` for complete-energy acceptance before
   publication of any phase-supported material owner.
 
-The current checkpoint schema does not carry reservoir-resolved line moments
-through a front transaction.  Consequently this runner executes one complete
-Mura/front cycle from a resolved bicrystal and stops.  It must not be used to
-claim multi-cycle continuation until that owner field is added.  Phase trials
-are supplied by the production phase proposer; this file never manufactures
-or translates a front on its own.
+The V35 checkpoint schema carries reservoir-resolved scalar inventories and
+line moments for parent, child, and processed wake owners.  Accepted front
+partitions transfer both from the same event, so the next Mura step consumes
+the actual post-front state and repeated cycles are representable.  Phase
+trials are supplied by the production phase proposer; this file never
+manufactures or translates a front on its own.
 """
 
 from __future__ import annotations
@@ -89,6 +89,7 @@ class I3Controls:
     prescribed_temperature: bool = False
     driving_pressure_a_to_b_Pa: float = 0.0
     applied_pressure_a_to_b_Pa: float = 0.0
+    geometric_probe_pressure_Pa: float | None = None
     trial_dt_s: float = 2.0e-9
     front_dt_s: float = 1.0e-6
     transmission_fraction: float = 0.5
@@ -266,6 +267,14 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         process = ActivatedProcess(
             "v34-i3-existing-boundary", 1.0e8,
             negative_barrier_mode="drag")
+        # The first call constructs and topology-checks a finite geometric
+        # candidate.  Its probe pressure is not physical work and never enters
+        # the published rate or energy ledger.  The second call below replaces
+        # it with rates derived from the complete candidate energies.
+        geometric_probe_pressure = (
+            controls.driving_pressure_a_to_b_Pa
+            if controls.geometric_probe_pressure_Pa is None else
+            controls.geometric_probe_pressure_Pa)
         sparse_candidate, runtime_candidate, accepted_eta, front_decision = (
             accept_coupled_front_candidate(
                 front_state.front, runtime, state.eta, eta_trial,
@@ -276,8 +285,7 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 process=process, h0_J=.35*EV_J,
                 critical_pressure_Pa=1.0e9, exp_a=2.0, exp_n=1.5,
                 exp_floor=.10,
-                driving_pressure_a_to_b_Pa=(
-                    controls.driving_pressure_a_to_b_Pa),
+                driving_pressure_a_to_b_Pa=geometric_probe_pressure,
                 applied_pressure_a_to_b_Pa=(
                     controls.applied_pressure_a_to_b_Pa),
                 mobility_enabled=True, periodic=True,
@@ -395,6 +403,10 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         "mura_enabled": controls.mura_enabled,
         "front_enabled": controls.front_enabled,
         "prescribed_temperature": controls.prescribed_temperature,
+        "geometric_probe_pressure_Pa": (
+            None if controls.geometric_probe_pressure_Pa is None else
+            float(controls.geometric_probe_pressure_Pa)),
+        "geometric_probe_is_nonphysical_and_unledgered": True,
         "kinetic_event_volume_m3": (
             float(context["wall_parameters"].burgers_m)**3),
         "kinetic_event_length_m": float(
@@ -628,6 +640,9 @@ def main():
     parser.add_argument("--driving-pressure-Pa", type=float, required=True)
     parser.add_argument("--applied-pressure-Pa", type=float, default=0.0,
                         help="external front work density; ledgered separately")
+    parser.add_argument("--geometric-probe-pressure-Pa", type=float,
+                        help=("unledgered proposal-only pressure; final rate "
+                              "is recomputed from complete event energies"))
     args = parser.parse_args()
     context = resolved_bicrystal(
         args.grid, args.length_m, args.interface_width_m,
@@ -645,6 +660,7 @@ def main():
     controls = I3Controls(
         driving_pressure_a_to_b_Pa=args.driving_pressure_Pa,
         applied_pressure_a_to_b_Pa=args.applied_pressure_Pa,
+        geometric_probe_pressure_Pa=args.geometric_probe_pressure_Pa,
         trial_dt_s=args.trial_dt_s, front_dt_s=args.front_dt_s)
     _, result = compare_response_family(
         context, context["state"], forward, reverse, driving, controls)
@@ -657,6 +673,7 @@ def main():
         "trial_dt_s": args.trial_dt_s, "front_dt_s": args.front_dt_s,
         "driving_pressure_Pa": args.driving_pressure_Pa,
         "applied_pressure_Pa": args.applied_pressure_Pa,
+        "geometric_probe_pressure_Pa": args.geometric_probe_pressure_Pa,
         "phase_trials_npz": str(args.phase_trials_npz.resolve()),
     }
     write_result(args.output, result)
