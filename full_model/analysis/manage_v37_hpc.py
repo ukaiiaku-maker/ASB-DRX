@@ -13,6 +13,7 @@ import time
 
 TERMINAL = {"RETRIEVED", "COMPLETED", "FAILED", "CANCELLED", "TIMEOUT",
             "OUT_OF_MEMORY", "NODE_FAIL"}
+ACTIVE_MARKERS = ("|RUNNING|", "|PENDING|", "|CONFIGURING|")
 
 
 def atomic_json(path: Path, value: dict) -> None:
@@ -41,23 +42,28 @@ def main() -> None:
         for run_id in args.run_id:
             process = subprocess.run(
                 [str(args.runner), "status", run_id], cwd=args.project,
-                text=True, capture_output=True)
+                text=True, capture_output=True, timeout=60)
             record = read_record(args.project, run_id)
+            output = process.stdout+process.stderr
             statuses[run_id] = {
                 "returncode": process.returncode,
-                "status_output": (process.stdout+process.stderr)[-8000:],
+                "status_output": output[-8000:],
+                "scheduler_active": any(marker in output for marker in ACTIVE_MARKERS),
                 "record_state": record.get("state"),
                 "job_id": record.get("job_id"),
                 "fetch_status": record.get("fetch_status"),
             }
-        subprocess.run(
-            [str(args.runner), "reconcile", "--fetch-completed"],
-            cwd=args.project, text=True, capture_output=True)
-        # Re-read after reconciliation because it can atomically fetch results.
-        for run_id in args.run_id:
-            record = read_record(args.project, run_id)
-            statuses[run_id]["record_state"] = record.get("state")
-            statuses[run_id]["fetch_status"] = record.get("fetch_status")
+        # Reconciliation contacts every historical run in the project and can be
+        # slow.  It is unnecessary while either scoped scheduler job is active.
+        if not any(item["scheduler_active"] for item in statuses.values()):
+            subprocess.run(
+                [str(args.runner), "reconcile", "--fetch-completed"],
+                cwd=args.project, text=True, capture_output=True, timeout=300)
+            # Re-read after reconciliation because it can atomically fetch results.
+            for run_id in args.run_id:
+                record = read_record(args.project, run_id)
+                statuses[run_id]["record_state"] = record.get("state")
+                statuses[run_id]["fetch_status"] = record.get("fetch_status")
         done = all(item["record_state"] in TERMINAL for item in statuses.values())
         atomic_json(args.state_file, {
             "schema": "asb-drx/v37/hpc-manager-state/v1",
