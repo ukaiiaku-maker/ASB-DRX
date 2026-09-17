@@ -2,6 +2,40 @@
 
 Updated: 2026-09-16 (America/Los_Angeles)
 
+## Directive v35 recurrent state and physical-time completion
+
+- Parent, child, and processed-wake owners now persist signed scalar line
+  inventories and reservoir-resolved alignment moments. Two consecutive
+  production Mura/front cycles, midpoint restart, rejected-event rollback,
+  retreat/revisit, and vanishing-support ownership pass. A forced two-cycle
+  calculation uses one common accepted 2 ns interval per cycle.
+- The frozen V34 full-event Mura screen hid a feasible partial event at the
+  later step-2971 checkpoint: family 3 is admissible at extent 0.0625 while
+  its full event is uphill. A 13-interval exact-time comparison from the same
+  checkpoint remains invariant-clean and produces a measurably different
+  signed-density/orientation state.
+- The phase integrator and topology active set are independently switchable.
+  The active set is inert in smooth migration but prevents the archived n128
+  unauthorized island. Its scope remains topology-preserving existing-boundary
+  evolution, not general grain topology or nucleation.
+- Physical front event counting is derived from real interface area with
+  `V_e=b^3`, `l_e=b`, and `A_site=b^2`. A 15-case zero-applied-pressure screen
+  passes sign symmetry, detailed balance, patch additivity, and normalized
+  thickness invariance. These remain generic hypotheses, not calibration.
+- A full complete-state zero-applied-pressure control arrests: both actual
+  irreversible directional events are downhill and receive equal barrierless
+  rates, so net drift is zero. The geometric proposal probe is separately
+  declared and contributes no work, stored energy, or final rate.
+- The corrected authoritative frozen-flow thermal case completed step 2500.
+  Relative to the full law at common time it gives +267.66 MPa stress,
+  -528.06 K Tmax, and much broader activity. Flow-temperature feedback is
+  causally important, but the full law still fails strict ASB. Corrected
+  recovery-group, thermostat, and conduction controls remain active.
+- No V35 HPC3 job was launched; local development and bounded runs were used.
+  Historical V34 flags and source identities remain frozen. Full DRX, material
+  calibration, a long pressure-free response, and strict ASB remain open. The
+  final merged local suite passes 693 tests in 370.81 s.
+
 ## Directive v31 production repair and bounded continuations
 
 - V30 jobs are closed and their 408-file, 577 MiB front/Mura evidence archive

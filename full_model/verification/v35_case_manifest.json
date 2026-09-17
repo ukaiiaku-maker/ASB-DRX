@@ -1,0 +1,101 @@
+{
+  "schema": "asb-drx/v35-case-manifest/v1",
+  "date": "2026-09-16",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "v34_remote_start_sha": "ae8644a85a0020202d5d12c1849c879d03688914",
+  "cases": [
+    {
+      "id": "mura_feasible_extent_forks",
+      "source_sha": "fe4f44686e7ba41abbfd21a6db6817b6b3c0a455",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "scientific_outcome": "STEP2971_FAMILY3_FULL_EVENT_OVERSHOOT_PARTIAL_EXTENT_0.0625_ADMISSIBLE",
+      "record": "full_model/verification/v35_mura_feasible_extent.json",
+      "record_sha256": "2da894107f8ca4350ebd137adc888ac34f795ce66c2df09a7a040583b2ee675f"
+    },
+    {
+      "id": "mura_exact_matched_time",
+      "source_sha": "0067da2d6b9db31a78cd5f58d33b43b68c829fc4",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "physical_exposure": "13 accepted intervals ending at 4.202103e-6 s",
+      "scientific_outcome": "DISCRIMINATING_SHORT_TRAJECTORY_LONG_TIME_CONVERGENCE_OPEN",
+      "record": "full_model/verification/v35_mura_matched_time_comparison.json",
+      "record_sha256": "8e9642452fe2b37be7ea59cf76d9e61cfac50f7132a84e05e24d29676e8d9f61"
+    },
+    {
+      "id": "recurrent_common_state",
+      "source_sha": "0bb5471",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "physical_exposure": "two forced common-clock 2 ns intervals; separate 100-cycle schema endurance",
+      "scientific_outcome": "RECURRENT_STATE_PASSED_PHYSICAL_HORIZON_INSUFFICIENT",
+      "record": "full_model/verification/v35_recurrent_state_decision.json",
+      "record_sha256": "1b18029cd76e2bb7ff145c69ff07a9bd4bbc5fa430dad6c9b0c4b59a430085ef"
+    },
+    {
+      "id": "phase_switch_and_kinetic_measure",
+      "source_sha": "9b7caeb925d3e53ae34707463208c8c9b969162d",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "scientific_outcome": "SEPARATED_PHASE_CONTROL_AND_GENERIC_EVENT_MEASURE_QUALIFIED_NOT_CALIBRATED",
+      "record": "full_model/verification/v35_phase_kinetic_decision.json",
+      "record_sha256": "83b55e6ad6a0ba367b7e0a2e9983252e62e6ebb72bfcf49ee2f8436cd27f60a1"
+    },
+    {
+      "id": "front_kinetic_screen",
+      "source_sha": "9b7caeb925d3e53ae34707463208c8c9b969162d",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "physical_exposure": "15 rate-evaluator cases, zero applied pressure",
+      "scientific_outcome": "BOUNDED_HYPOTHESIS_SCREEN_NOT_CALIBRATION",
+      "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v35-front-kinetics-9b7caeb-20260916/screen.json",
+      "artifact_sha256": "0bc9c980725f00347743b5121f4d40e22cda55994a9285e56383ef0280bd90f4"
+    },
+    {
+      "id": "thermal_full_law",
+      "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "scientific_outcome": "HEATING_AND_SOFTENING_WITHOUT_STRICT_ASB_CLAIM"
+    },
+    {
+      "id": "thermal_nominal_selective_controls",
+      "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
+      "execution": "PRESERVED",
+      "implementation_valid": false,
+      "scientific_outcome": "INVALID_CAUSAL_ABLATION_ROUTING"
+    },
+    {
+      "id": "thermal_corrected_flow_temperature",
+      "source_sha": "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
+      "execution": "COMPLETED",
+      "implementation_valid": true,
+      "physical_exposure": "step 2500, 8.336666666666454e-6 s, nominal strain 0.2501",
+      "scientific_outcome": "AUTHORITATIVE_FLOW_TEMPERATURE_FEEDBACK_CAUSALLY_REQUIRED_STRICT_ASB_NOT_MET",
+      "record": "full_model/verification/v34_thermal_causal_comparison.json"
+    },
+    {
+      "id": "thermal_corrected_recovery_group_temperature",
+      "source_sha": "06de4496ca34053c1bbb4aaa11e7ce29ad84f2b3",
+      "execution": "RUNNING_PHYSICAL_HORIZON",
+      "implementation_valid": true,
+      "scientific_outcome": "PENDING"
+    },
+    {
+      "id": "thermal_exact_thermostat_and_conduction",
+      "source_sha": "0c45d036306d56d649c53d69d321d59739930698",
+      "execution": "RUNNING_PHYSICAL_HORIZON",
+      "implementation_valid": true,
+      "scientific_outcome": "PENDING_COMMON_TIME_POSTPROCESS"
+    }
+  ],
+  "quarantined": [
+    {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v35-mura-exact-0067da2-20260916",
+      "reason": "Configured full source SHA was mistyped; stopped immediately and excluded from evidence."
+    }
+  ],
+  "hpc3_jobs_launched": 0,
+  "unrelated_jobs_modified": false
+}

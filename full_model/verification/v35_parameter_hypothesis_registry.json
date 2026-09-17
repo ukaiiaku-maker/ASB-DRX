@@ -1,0 +1,61 @@
+{
+  "schema": "asb-drx/v35-parameter-hypothesis-registry/v1",
+  "material_calibration_claimed": false,
+  "entries": [
+    {
+      "name": "front_event_volume",
+      "baseline": "b^3",
+      "value_m3": 1.5252992000000005e-29,
+      "status": "GENERIC_DIMENSIONAL_HYPOTHESIS",
+      "identification": "not independently calibrated"
+    },
+    {
+      "name": "front_event_length",
+      "baseline": "b",
+      "value_m": 2.48e-10,
+      "status": "GENERIC_DIMENSIONAL_HYPOTHESIS",
+      "identification": "not independently calibrated"
+    },
+    {
+      "name": "front_site_area",
+      "baseline": "b^2",
+      "value_m2": 6.150400000000002e-20,
+      "status": "DERIVED_FROM_GENERIC_EVENT_HYPOTHESIS",
+      "identification": "not independently calibrated"
+    },
+    {
+      "name": "stored_energy_pressure_screen",
+      "values_Pa": [-600000000.0, -200000000.0, 0.0, 200000000.0, 600000000.0],
+      "temperatures_K": [900.0, 1100.0, 1300.0],
+      "case_count": 15,
+      "status": "BOUNDED_HYPOTHESIS_SCREEN",
+      "applied_pressure_Pa": 0.0
+    },
+    {
+      "name": "mura_family_extent_screen",
+      "values": [1.0, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125, 0.00390625, 0.001953125, 0.0009765625, 0.00048828125],
+      "status": "NUMERICAL_RESOLUTION_OF_CONSTITUTIVELY_PROPOSED_RAY",
+      "selection": "largest admissible sampled extent followed by joint complete-energy reevaluation",
+      "energy_tolerance_changed": false,
+      "rejected_event_debt_carried": false
+    },
+    {
+      "name": "geometric_proposal_probe",
+      "value_Pa": 100000000.0,
+      "status": "SOURCE_FROZEN_NONPHYSICAL_PROPOSAL_DEVICE",
+      "enters_final_rate": false,
+      "enters_external_work": false,
+      "enters_stored_energy": false,
+      "purpose": "construct and topology-check a finite candidate before complete event energies are available"
+    },
+    {
+      "name": "forced_recurrence_pressure",
+      "value_Pa": 200000000.0,
+      "status": "FORCED_VERIFICATION_ONLY",
+      "material_calibration": false
+    }
+  ],
+  "unchanged_classifier_and_energy_tolerances": true,
+  "ddd_collective_kernel_enabled": false,
+  "activation_entropy_identification": "No new independent entropy/attempt-frequency calibration is claimed from this screen."
+}

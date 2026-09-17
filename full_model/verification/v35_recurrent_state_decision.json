@@ -1,0 +1,72 @@
+{
+  "schema": "asb-drx/v35-recurrent-common-state/v1",
+  "source_commit": "0bb5471",
+  "decision": "RECURRENT_OWNER_STATE_IMPLEMENTED_AND_COMMON_CLOCK_TWO_CYCLE_VERIFIED",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "scientific_gate_not_passed_reason": "Recurrent state and a two-cycle common-clock response are verified, but the 100-cycle test is a forced schema endurance run and the pressure-free complete-energy control arrests; a calibrated long physical horizon is not established.",
+  "state_ownership": {
+    "parent_child_wake_scalar_inventories_persisted": true,
+    "parent_child_wake_reservoir_alignment_moments_persisted": true,
+    "boundary_excess_and_geometry_persisted": true,
+    "front_first_passage_and_revisit_history_persisted": true,
+    "reconstruction_from_target_nye_used": false,
+    "missing_moments_silently_zeroed": false,
+    "transfer_uses_same_accepted_partition_as_scalar_line": true
+  },
+  "two_cycle_common_clock": {
+    "grid": 16,
+    "mura_interval_s": 2e-09,
+    "front_interval_s": 2e-09,
+    "accepted_cycles": 2,
+    "first_signed_sweep_m3": 1.2349289400276576e-27,
+    "second_signed_sweep_m3": 1.234358531610269e-27,
+    "second_mura_consumed_post_front_owned_moments": true,
+    "accepted_common_state_commits": 2,
+    "applied_pressure_Pa": 200000000.0,
+    "classification": "FORCED_COMMON_CLOCK_RECURRENCE_VERIFICATION"
+  },
+  "rollback_restart_and_support": {
+    "midpoint_checkpoint_restart_bitwise_exact": true,
+    "rejected_second_front_matches_mura_only_state_exactly": true,
+    "advance_retreat_revisit_passed": true,
+    "vanishing_support_preserves_inactive_owner_history": true,
+    "grain_label_allocation_enabled": false
+  },
+  "schema_endurance": {
+    "classification": "NUMERICAL_PRESSURE_PROBE_SCHEMA_ENDURANCE_NOT_PHYSICAL_TIME_EVIDENCE",
+    "grid": 16,
+    "attempted_intervals": 100,
+    "accepted_front_events": 100,
+    "accepted_common_state_commits": 100,
+    "revisit_volume_m3": 3.1491196929541293e-21,
+    "wall_seconds": 186.949705,
+    "advance_retreat_alternated": true,
+    "one_thousand_intervals_run": false,
+    "one_thousand_intervals_not_run_reason": "Measured local projection exceeded the 30-minute local-computation boundary."
+  },
+  "zero_applied_pressure_complete_energy_control": {
+    "applied_pressure_Pa": 0.0,
+    "geometric_probe_pressure_Pa": 100000000.0,
+    "probe_is_nonphysical_and_unledgered": true,
+    "external_work_J": 0.0,
+    "a_to_b_complete_event_energy_J": -1.1070243913967536e-23,
+    "b_to_a_complete_event_energy_J": -4.08838548397469e-24,
+    "net_velocity_m_s": 0.0,
+    "accepted_signed_volume_m3": 0.0,
+    "published": false,
+    "classification": "VALID_PHYSICAL_ARREST_BOTH_ACTUAL_DIRECTIONAL_TRIALS_DOWNHILL_WITH_EQUAL_BARRIERLESS_RATE",
+    "interpretation": "The two transactions include irreversible line processing and are not microscopic reverses. Both are downhill, so the retained Metropolis pair assigns the same barrierless rate and no directional drift. The pressure-free state therefore arrests under the current generic kinetics; this is not a failed conservation test."
+  },
+  "tests": {
+    "merged_targeted_passed": 26,
+    "merged_targeted_runtime_s": 36.58,
+    "zero_pressure_and_recurrence_file_passed": 5,
+    "zero_pressure_and_recurrence_file_runtime_s": 21.11,
+    "common_clock_test_passed": 1,
+    "common_clock_test_runtime_s": 8.10,
+    "final_merged_suite_passed": 693,
+    "final_merged_suite_runtime_s": 370.81
+  },
+  "broad_long_horizon_authorized": false
+}

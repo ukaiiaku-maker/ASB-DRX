@@ -56,3 +56,38 @@ its partial directory quarantined; no result from it is used.
 - `GENERIC_KINETICS_NOT_MATERIAL_CALIBRATED`
 - `SCREENING_BOUNDED_KINETICS`
 - `RUNNING_PHYSICAL_HORIZON`
+
+## Recurrent-state closure
+
+Source merged as `f7b31e5` carries parent/child/wake density inventories and
+full reservoir alignment moments through the accepted front partition. Two
+cycles, midpoint restart, rejected-second-event rollback, retreat/revisit, and
+vanishing-support tests pass. A 100-cycle forced schema endurance test accepted
+100/100 events in 186.95 s. Its 1000-cycle projection exceeded 30 minutes, so
+it was not launched locally.
+
+Source `0bb5471` verifies two consecutive forced cycles with both Mura and
+front covering the same accepted 2 ns interval. This closes
+`RECURRENT_STATE_REPRESENTATION_INCOMPLETE` as an implementation flag, but not
+the physical-horizon or calibration limitations.
+
+## Zero-applied-pressure complete-state control
+
+The source-frozen geometric probe is now explicitly nonphysical and
+unledgered; complete directional event energies replace it before final rate
+and publication. At zero external pressure/work the present A→B and B→A
+events are both downhill (`-1.1070e-23 J`, `-4.0884e-24 J`) because both
+include irreversible line processing. They receive equal barrierless rates,
+giving exactly zero net velocity and no publication. Classification:
+`VALID_PHYSICAL_ARREST`, with the generic kinetic closure—not conservation or
+state recurrence—now the limiting hypothesis.
+
+## Corrected flow-temperature terminal
+
+The source-`06de449` frozen-flow case completed step 2500 invariant-clean. At
+the same step as the valid full law it has `+267.66 MPa` stress, `-528.06 K`
+Tmax, `-0.08298` softening fraction, and `+0.54239` activity fraction. Thus
+authoritative temperature-dependent flow feedback is causally necessary for
+the broad-to-more-localized response in this run. The full law still fails the
+unchanged strict-ASB threshold. Corrected recovery-group worker PID 40725
+started automatically and remains managed by the source-frozen launcher.
