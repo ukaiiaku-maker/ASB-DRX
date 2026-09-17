@@ -25,7 +25,9 @@ if str(ROOT) not in sys.path:
 
 from full_model.analysis.run_v24_mechanical_supply import build_case
 from full_model.production.common_tensorial_wall import CommonWallDriving
-from full_model.production.density_state_map import SIGNED_RESERVOIRS
+from full_model.production.density_state_map import (
+    SIGNED_RESERVOIRS, derived_density_fields,
+)
 from full_model.production.tensorial_nye import (
     divergence_of_nye, nye_from_plastic_distortion,
 )
@@ -166,6 +168,20 @@ def compact_metrics(state, ledger, systems, topologies, spacing):
                          np.fft.fftfreq(power.shape[1], d=spacing)[index[1]])
     balance = ledger["mura_balance_ledger"]
     budget = ledger["mura_work_budget"]
+    density_fields = derived_density_fields(state.density, topologies)
+    wall = density_fields["rho_wall_m2"]
+    ordered = density_fields["rho_wall_ordered_m2"]
+    wall_threshold = max(float(np.quantile(wall, .9)), 1e12)
+    wall_local = wall >= wall_threshold
+    # ``reservoir`` above is the total tensor for legacy metric compatibility;
+    # obtain the component dictionary once for V37 organization diagnostics.
+    reservoir_components = reservoir_nye_m1(
+        state.reservoir_alignment, systems,
+        state.common.orientation_rad, topologies)
+    ordered_alpha = reservoir_components["wall_ordered"]
+    bmean = float(np.mean([item.burgers_m for item in systems]))
+    polarization = np.linalg.norm(ordered_alpha, axis=(-2, -1))/np.maximum(
+        bmean*ordered, 1e-300)
     return {
         "dual_nye_relative_rms": float(
             np.sqrt(np.mean((reservoir-alpha)**2))/scale),
@@ -180,6 +196,17 @@ def compact_metrics(state, ledger, systems, topologies, spacing):
             None if frequency == 0.0 else float(1.0/frequency)),
         "structure_factor_peak_fraction": float(
             np.max(power)/max(float(np.sum(power)), 1e-300)),
+        "ordered_line_m2_cells": float(np.sum(ordered)),
+        "total_wall_line_m2_cells": float(np.sum(wall)),
+        "ordered_fraction_global": float(
+            np.sum(ordered)/max(float(np.sum(wall)), 1e-300)),
+        "ordered_fraction_wall_local": float(
+            np.sum(ordered[wall_local])/max(
+                float(np.sum(wall[wall_local])), 1e-300)),
+        "ordered_polarization_maximum": float(np.max(polarization)),
+        "ordered_polarization_wall_local_mean": float(
+            np.mean(polarization[wall_local]) if np.any(wall_local) else 0.0),
+        "junction_line_m2_cells": float(np.sum(state.density.junction_m2)),
         "maximum_scalar_line_balance_residual_m": float(
             balance["maximum_scalar_line_balance_residual_m"]),
         "maximum_alignment_balance_residual_m": float(
@@ -223,6 +250,8 @@ def main():
     parser.add_argument("--mura-work-budget-mode", choices=(
         "energy_limited", "energy_limited_feasible_extents",
         "legacy_reject"), default="energy_limited")
+    parser.add_argument("--topology-route-enabled", action="store_true",
+                        help="use explicit reorientation/junction comparator")
     args = parser.parse_args()
     args.case_dir.mkdir(parents=True, exist_ok=True)
     signal.signal(signal.SIGTERM, _request_stop)
@@ -244,6 +273,7 @@ def main():
         "initial_strain": args.initial_strain,
         "target_strain": args.target_strain, "trial_dt_s": args.trial_dt_s,
         "mura_work_budget_mode": args.mura_work_budget_mode,
+        "topology_route_enabled": bool(args.topology_route_enabled),
         "source_sha": os.environ.get(
             "V35_SOURCE_SHA", os.environ.get(
                 "V32_SOURCE_SHA", os.environ.get(
@@ -295,7 +325,7 @@ def main():
             state, ledger = accepted_v24_mechanical_step(
                 state, driving, support, systems, topologies, common,
                 extensive, kinetics, requested_dt,
-                topology_route_enabled=False,
+                topology_route_enabled=args.topology_route_enabled,
                 mura_work_budget_mode=args.mura_work_budget_mode)
             last_ledger = ledger
             physical_time += ledger["accepted_dt_s"]

@@ -1,0 +1,519 @@
+{
+  "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v35-mura-feasible-fe4f446-20260916/cases/mechanical_heterogeneity_64/checkpoint_step_000002971_strain_0.04200103.npz",
+  "checkpoint_sha256": "7ca24609de5b299290ee75a098b97c8b1912d8f743a4405792330e3fda1c26b0",
+  "checkpoint_source_sha": "e7aa16e70703bcf74df47da8c5669ec052a446c7",
+  "comparisons": [
+    {
+      "all_state_error": {
+        "inventory_normalized_physical_differences": {
+          "beta_p_relative_l2": 0.0013101278959787995,
+          "density_inventory_relative_l1": 0.0001842509337767141,
+          "family_nye_m1_relative_l2": 0.008352508804018312,
+          "orientation_maximum_absolute_rad": 0.00017227270400109029,
+          "reservoir_alignment_relative_l1": 0.00021541420290775663,
+          "slip_relative_l2": 0.0013098774423418243,
+          "temperature_maximum_absolute_K": 0.00045584132476506056
+        },
+        "maximum_relative_l2": 0.41181404615721834,
+        "per_field_relative_l2": {
+          "common.alignment_m2": 0.008352475447910667,
+          "common.beta_p": 0.0013101278959787995,
+          "common.family_nye_m1": 0.008352508804018312,
+          "common.forest_minus_m2": 4.047309398756081e-08,
+          "common.forest_plus_m2": 4.0613446354426515e-08,
+          "common.junction_m2": 0.0,
+          "common.mobile_minus_m2": 0.0033742021670441556,
+          "common.mobile_plus_m2": 0.0032554016745979224,
+          "common.multi_hit_coordination": 0.0,
+          "common.orientation_rad": 0.0002720568547945866,
+          "common.slip": 0.0013098774423418243,
+          "common.temperature_K": 1.075771939533669e-08,
+          "common.wall_minus_m2": 0.0006622101456428182,
+          "common.wall_order": 0.022004771345928795,
+          "common.wall_plus_m2": 0.0008093026042328279,
+          "density.forest_minus_m2": 4.047309398756081e-08,
+          "density.forest_plus_m2": 4.0613446354426515e-08,
+          "density.junction_m2": 0.0,
+          "density.mobile_minus_m2": 0.0033742021670441556,
+          "density.mobile_plus_m2": 0.0032554016745979224,
+          "density.wall_ordered_minus_m2": 0.18335111630760442,
+          "density.wall_ordered_plus_m2": 0.41181404615721834,
+          "density.wall_tangle_minus_m2": 0.0006636081431365218,
+          "density.wall_tangle_plus_m2": 0.001641014473014707,
+          "reservoir_alignment.forest_minus_m2": 3.843291836111864e-08,
+          "reservoir_alignment.forest_plus_m2": 3.853569715399079e-08,
+          "reservoir_alignment.junction_alignment_m2": 0.0,
+          "reservoir_alignment.mobile_minus_m2": 0.003204928756725611,
+          "reservoir_alignment.mobile_plus_m2": 0.0032609173284485855,
+          "reservoir_alignment.wall_curvature_minus_m3": 0.0,
+          "reservoir_alignment.wall_curvature_plus_m3": 0.0,
+          "reservoir_alignment.wall_ordered_minus_m2": 0.2299134502498404,
+          "reservoir_alignment.wall_ordered_plus_m2": 0.40644732817922297,
+          "reservoir_alignment.wall_tangle_minus_m2": 0.001779347562012248,
+          "reservoir_alignment.wall_tangle_plus_m2": 0.0026058884063878246,
+          "reservoir_alignment.wall_turning_nodes_minus_m3": 0.0,
+          "reservoir_alignment.wall_turning_nodes_plus_m3": 0.0
+        }
+      },
+      "coarser_dt_s": 2e-09,
+      "finer_dt_s": 1e-10,
+      "ordered_reservoir_error": {
+        "absolute_ordered_line_error_m_per_m_thickness": 1.2251109319640063,
+        "absolute_ordered_moment_error_m_per_m_thickness": 0.5129376000413199,
+        "coarser": {
+          "complete_extensive_defect_energy_J_per_m_thickness": 0.0001725306569065672,
+          "ordered_boundary_energy_J_m3_cells": 18945.180264230912,
+          "ordered_boundary_energy_J_per_m_thickness": 4.6252881504470006e-10,
+          "ordered_energy_fraction_absolute": 2.6808500201513716e-06,
+          "ordered_fraction_global": 0.004261461992636692,
+          "ordered_fraction_wall_local": 0.004261461992636691,
+          "ordered_line_integral_m_per_m_thickness": 4.625288150447001,
+          "ordered_moment_absolute_integral_m_per_m_thickness": 1.9680173025138652,
+          "ordered_polarization_maximum": 0.7766118408238245,
+          "ordered_polarization_wall_local_mean": 0.5677722432993682,
+          "total_wall_line_integral_m_per_m_thickness": 1085.3759011435413,
+          "wall_local_cell_count": 128,
+          "wall_local_threshold_m2": 1000000000000.0
+        },
+        "finer": {
+          "complete_extensive_defect_energy_J_per_m_thickness": 0.00017158944348388895,
+          "ordered_boundary_energy_J_m3_cells": 13952.561973163683,
+          "ordered_boundary_energy_J_per_m_thickness": 3.4063872004794154e-10,
+          "ordered_energy_fraction_absolute": 1.985196251772477e-06,
+          "ordered_fraction_global": 0.003139484268259693,
+          "ordered_fraction_wall_local": 0.003139484268259693,
+          "ordered_line_integral_m_per_m_thickness": 3.406387200479416,
+          "ordered_moment_absolute_integral_m_per_m_thickness": 1.4556987935557983,
+          "ordered_polarization_maximum": 0.7694996938926396,
+          "ordered_polarization_wall_local_mean": 0.5578817818501633,
+          "total_wall_line_integral_m_per_m_thickness": 1085.014897165793,
+          "wall_local_cell_count": 128,
+          "wall_local_threshold_m2": 1000000000000.0
+        },
+        "ordered_energy_difference_J_per_m_thickness": 1.2189009499675853e-10,
+        "wall_local_ordered_error_over_total_wall_line": 0.0011230219398490084
+      }
+    },
+    {
+      "all_state_error": {
+        "inventory_normalized_physical_differences": {
+          "beta_p_relative_l2": 3.703438532266575e-11,
+          "density_inventory_relative_l1": 3.0882387809400404e-05,
+          "family_nye_m1_relative_l2": 1.9642606457037354e-10,
+          "orientation_maximum_absolute_rad": 8.673617379884035e-19,
+          "reservoir_alignment_relative_l1": 1.4801682879265892e-05,
+          "slip_relative_l2": 3.703415695501362e-11,
+          "temperature_maximum_absolute_K": 4.0466147765982896e-08
+        },
+        "maximum_relative_l2": 0.5864154943858866,
+        "per_field_relative_l2": {
+          "common.alignment_m2": 1.9642547137270922e-10,
+          "common.beta_p": 3.703438532266575e-11,
+          "common.family_nye_m1": 1.9642606457037354e-10,
+          "common.forest_minus_m2": 2.4387922825645754e-08,
+          "common.forest_plus_m2": 2.4498818083176304e-08,
+          "common.junction_m2": 0.0,
+          "common.mobile_minus_m2": 7.054393570739031e-09,
+          "common.mobile_plus_m2": 7.079741418437094e-09,
+          "common.multi_hit_coordination": 0.0,
+          "common.orientation_rad": 9.69739903612216e-19,
+          "common.slip": 3.703415695501362e-11,
+          "common.temperature_K": 6.107974451605165e-13,
+          "common.wall_minus_m2": 1.1906011569990156e-13,
+          "common.wall_order": 0.022585299941113787,
+          "common.wall_plus_m2": 1.9582606969826126e-13,
+          "density.forest_minus_m2": 2.4387922825645754e-08,
+          "density.forest_plus_m2": 2.4498818083176304e-08,
+          "density.junction_m2": 0.0,
+          "density.mobile_minus_m2": 7.054393570739031e-09,
+          "density.mobile_plus_m2": 7.079741418437094e-09,
+          "density.wall_ordered_minus_m2": 0.47336107762017643,
+          "density.wall_ordered_plus_m2": 0.5697896471099286,
+          "density.wall_tangle_minus_m2": 0.0014408129452826253,
+          "density.wall_tangle_plus_m2": 0.001572973124258834,
+          "reservoir_alignment.forest_minus_m2": 2.3172196420238754e-08,
+          "reservoir_alignment.forest_plus_m2": 2.3266630363771035e-08,
+          "reservoir_alignment.junction_alignment_m2": 0.0,
+          "reservoir_alignment.mobile_minus_m2": 9.900802418848996e-09,
+          "reservoir_alignment.mobile_plus_m2": 1.0161937935733935e-08,
+          "reservoir_alignment.wall_curvature_minus_m3": 0.0,
+          "reservoir_alignment.wall_curvature_plus_m3": 0.0,
+          "reservoir_alignment.wall_ordered_minus_m2": 0.48610163619087127,
+          "reservoir_alignment.wall_ordered_plus_m2": 0.5864154943858866,
+          "reservoir_alignment.wall_tangle_minus_m2": 0.00170720647565061,
+          "reservoir_alignment.wall_tangle_plus_m2": 0.0017119982454021038,
+          "reservoir_alignment.wall_turning_nodes_minus_m3": 0.0,
+          "reservoir_alignment.wall_turning_nodes_plus_m3": 0.0
+        }
+      },
+      "coarser_dt_s": 1e-10,
+      "finer_dt_s": 5e-11,
+      "ordered_reservoir_error": {
+        "absolute_ordered_line_error_m_per_m_thickness": 1.6746672930781972,
+        "absolute_ordered_moment_error_m_per_m_thickness": 0.713766661845409,
+        "coarser": {
+          "complete_extensive_defect_energy_J_per_m_thickness": 0.00017158944348388895,
+          "ordered_boundary_energy_J_m3_cells": 13952.561973163683,
+          "ordered_boundary_energy_J_per_m_thickness": 3.4063872004794154e-10,
+          "ordered_energy_fraction_absolute": 1.985196251772477e-06,
+          "ordered_fraction_global": 0.003139484268259693,
+          "ordered_fraction_wall_local": 0.003139484268259693,
+          "ordered_line_integral_m_per_m_thickness": 3.406387200479416,
+          "ordered_moment_absolute_integral_m_per_m_thickness": 1.4556987935557983,
+          "ordered_polarization_maximum": 0.7694996938926396,
+          "ordered_polarization_wall_local_mean": 0.5578817818501633,
+          "total_wall_line_integral_m_per_m_thickness": 1085.014897165793,
+          "wall_local_cell_count": 128,
+          "wall_local_threshold_m2": 1000000000000.0
+        },
+        "finer": {
+          "complete_extensive_defect_energy_J_per_m_thickness": 0.00017070371183966197,
+          "ordered_boundary_energy_J_m3_cells": 7268.487505077703,
+          "ordered_boundary_energy_J_per_m_thickness": 1.7745330822943614e-10,
+          "ordered_energy_fraction_absolute": 1.0395398337683126e-06,
+          "ordered_fraction_global": 0.001635491906083218,
+          "ordered_fraction_wall_local": 0.0016354919060832176,
+          "ordered_line_integral_m_per_m_thickness": 1.7745330822943615,
+          "ordered_moment_absolute_integral_m_per_m_thickness": 0.7623969570313609,
+          "ordered_polarization_maximum": 0.7758823092477857,
+          "ordered_polarization_wall_local_mean": 0.5570600980630505,
+          "total_wall_line_integral_m_per_m_thickness": 1085.0148971657882,
+          "wall_local_cell_count": 128,
+          "wall_local_threshold_m2": 1000000000000.0
+        },
+        "ordered_energy_difference_J_per_m_thickness": 1.631854118185054e-10,
+        "wall_local_ordered_error_over_total_wall_line": 0.0015039923621764002
+      }
+    }
+  ],
+  "hard_invariants_passed": true,
+  "ordered_reservoir_physically_negligible_for_total_energy": true,
+  "records": [
+    {
+      "accepted_intervals": 3,
+      "elapsed_physical_time_s": 4.0000000000003005e-10,
+      "extent_levels": 12,
+      "family_event_scales": [
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0625
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "family_trial_counts": [
+        [
+          3,
+          3,
+          3,
+          7
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ]
+      ],
+      "final_metrics": {
+        "accepted_step_hard_invariant_passed": true,
+        "authoritative_source_offset_relative_rms": 7.219851713293738e-15,
+        "dominant_signed_wavelength_m": 1e-05,
+        "dual_nye_relative_rms": 0.005596343810651764,
+        "energy_balance_relative": 1.1102230246251565e-16,
+        "maximum_alignment_balance_residual_m": 3.1947174585869596e-15,
+        "maximum_scalar_line_balance_residual_m": 1.9958877084746978e-14,
+        "maximum_signed_density_m2": 5435891542981835.0,
+        "minimum_heat_increment_J_m3": 0.0,
+        "mura_event_scale": 1.0,
+        "mura_physical_stall": false,
+        "mura_work_budget_trial_count": 1,
+        "normalized_line_continuity_residual": 3.3199128916089613e-15,
+        "orientation_span_deg": 1.0311943419005372,
+        "post_step_projection_used": false,
+        "structure_factor_peak_fraction": 0.019766358190381698
+      },
+      "hard_invariants_passed": true,
+      "horizon_s": 4e-10,
+      "minimum_heat_increment_J_m3": 0.0,
+      "ordered_observables": {
+        "complete_extensive_defect_energy_J_per_m_thickness": 0.0001725306569065672,
+        "ordered_boundary_energy_J_m3_cells": 18945.180264230912,
+        "ordered_boundary_energy_J_per_m_thickness": 4.6252881504470006e-10,
+        "ordered_energy_fraction_absolute": 2.6808500201513716e-06,
+        "ordered_fraction_global": 0.004261461992636692,
+        "ordered_fraction_wall_local": 0.004261461992636691,
+        "ordered_line_integral_m_per_m_thickness": 4.625288150447001,
+        "ordered_moment_absolute_integral_m_per_m_thickness": 1.9680173025138652,
+        "ordered_polarization_maximum": 0.7766118408238245,
+        "ordered_polarization_wall_local_mean": 0.5677722432993682,
+        "total_wall_line_integral_m_per_m_thickness": 1085.3759011435413,
+        "wall_local_cell_count": 128,
+        "wall_local_threshold_m2": 1000000000000.0
+      },
+      "trial_dt_s": 2e-09,
+      "wall_seconds": 6.999725335976109
+    },
+    {
+      "accepted_intervals": 4,
+      "elapsed_physical_time_s": 4.0000000000003005e-10,
+      "extent_levels": 12,
+      "family_event_scales": [
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0625
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "family_trial_counts": [
+        [
+          3,
+          3,
+          3,
+          7
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ]
+      ],
+      "final_metrics": {
+        "accepted_step_hard_invariant_passed": true,
+        "authoritative_source_offset_relative_rms": 7.22612070601093e-15,
+        "dominant_signed_wavelength_m": 1e-05,
+        "dual_nye_relative_rms": 0.005602000425519047,
+        "energy_balance_relative": 0.0,
+        "maximum_alignment_balance_residual_m": 6.4899950385597745e-15,
+        "maximum_scalar_line_balance_residual_m": 1.5702497979930287e-14,
+        "maximum_signed_density_m2": 5440688383236088.0,
+        "minimum_heat_increment_J_m3": 0.0,
+        "mura_event_scale": 1.0,
+        "mura_physical_stall": false,
+        "mura_work_budget_trial_count": 1,
+        "normalized_line_continuity_residual": 3.3305238230468554e-15,
+        "orientation_span_deg": 1.0334472594981556,
+        "post_step_projection_used": false,
+        "structure_factor_peak_fraction": 0.019762723543693607
+      },
+      "hard_invariants_passed": true,
+      "horizon_s": 4e-10,
+      "minimum_heat_increment_J_m3": 0.0,
+      "ordered_observables": {
+        "complete_extensive_defect_energy_J_per_m_thickness": 0.00017158944348388895,
+        "ordered_boundary_energy_J_m3_cells": 13952.561973163683,
+        "ordered_boundary_energy_J_per_m_thickness": 3.4063872004794154e-10,
+        "ordered_energy_fraction_absolute": 1.985196251772477e-06,
+        "ordered_fraction_global": 0.003139484268259693,
+        "ordered_fraction_wall_local": 0.003139484268259693,
+        "ordered_line_integral_m_per_m_thickness": 3.406387200479416,
+        "ordered_moment_absolute_integral_m_per_m_thickness": 1.4556987935557983,
+        "ordered_polarization_maximum": 0.7694996938926396,
+        "ordered_polarization_wall_local_mean": 0.5578817818501633,
+        "total_wall_line_integral_m_per_m_thickness": 1085.014897165793,
+        "wall_local_cell_count": 128,
+        "wall_local_threshold_m2": 1000000000000.0
+      },
+      "trial_dt_s": 1e-10,
+      "wall_seconds": 9.99368987197522
+    },
+    {
+      "accepted_intervals": 8,
+      "elapsed_physical_time_s": 4.0000000000003005e-10,
+      "extent_levels": 12,
+      "family_event_scales": [
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.125
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "family_trial_counts": [
+        [
+          3,
+          3,
+          3,
+          6
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ]
+      ],
+      "final_metrics": {
+        "accepted_step_hard_invariant_passed": true,
+        "authoritative_source_offset_relative_rms": 7.30406873861332e-15,
+        "dominant_signed_wavelength_m": 1e-05,
+        "dual_nye_relative_rms": 0.0056020004254945886,
+        "energy_balance_relative": 8.326672684688674e-17,
+        "maximum_alignment_balance_residual_m": 9.133221013939256e-15,
+        "maximum_scalar_line_balance_residual_m": 1.5328190810492974e-14,
+        "maximum_signed_density_m2": 5440688383236088.0,
+        "minimum_heat_increment_J_m3": 0.0,
+        "mura_event_scale": 1.0,
+        "mura_physical_stall": false,
+        "mura_work_budget_trial_count": 1,
+        "normalized_line_continuity_residual": 3.3233135610647407e-15,
+        "orientation_span_deg": 1.0334472594981556,
+        "post_step_projection_used": false,
+        "structure_factor_peak_fraction": 0.0197627235436936
+      },
+      "hard_invariants_passed": true,
+      "horizon_s": 4e-10,
+      "minimum_heat_increment_J_m3": 0.0,
+      "ordered_observables": {
+        "complete_extensive_defect_energy_J_per_m_thickness": 0.00017070371183966197,
+        "ordered_boundary_energy_J_m3_cells": 7268.487505077703,
+        "ordered_boundary_energy_J_per_m_thickness": 1.7745330822943614e-10,
+        "ordered_energy_fraction_absolute": 1.0395398337683126e-06,
+        "ordered_fraction_global": 0.001635491906083218,
+        "ordered_fraction_wall_local": 0.0016354919060832176,
+        "ordered_line_integral_m_per_m_thickness": 1.7745330822943615,
+        "ordered_moment_absolute_integral_m_per_m_thickness": 0.7623969570313609,
+        "ordered_polarization_maximum": 0.7758823092477857,
+        "ordered_polarization_wall_local_mean": 0.5570600980630505,
+        "total_wall_line_integral_m_per_m_thickness": 1085.0148971657882,
+        "wall_local_cell_count": 128,
+        "wall_local_threshold_m2": 1000000000000.0
+      },
+      "trial_dt_s": 5e-11,
+      "wall_seconds": 18.810655562905595
+    }
+  ],
+  "schema": "asb-drx/v37-mura-ordered-audit/v1",
+  "script_sha256": "c103c9513729d9d1bcb18d847c307777c5a0ca7215fe7b0ccd12f1efd35c955c",
+  "source_sha": "e1795173471ea3deea1f44fe68e4be2de384fab0",
+  "wall_formation_not_supported_reason": "short rate-limit audit does not establish a persistent, polarized, orientation-compatible wall",
+  "wall_formation_supported": false
+}
