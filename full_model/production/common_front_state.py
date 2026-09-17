@@ -20,15 +20,24 @@ import numpy as np
 
 try:
     from .common_tensorial_wall import CommonWallState
+    from .density_state_map import DensityInventory, SIGNED_RESERVOIRS
     from .moving_front import DefectState, SparseFrontState
     from .tensorial_nye import nye_from_plastic_distortion
+    from .wall_topology_supply import (
+        ReservoirAlignmentState, TOPOLOGY_MOMENT_FIELDS,
+    )
 except ImportError:  # pragma: no cover - production script execution
     from common_tensorial_wall import CommonWallState
+    from density_state_map import DensityInventory, SIGNED_RESERVOIRS
     from moving_front import DefectState, SparseFrontState
     from tensorial_nye import nye_from_plastic_distortion
+    from wall_topology_supply import (
+        ReservoirAlignmentState, TOPOLOGY_MOMENT_FIELDS,
+    )
 
 
-SCHEMA = "full-v34-common-front-authoritative-state/v1"
+LEGACY_SCHEMA = "full-v34-common-front-authoritative-state/v1"
+SCHEMA = "full-v35-common-front-authoritative-state/v2"
 
 LINE_FIELDS = (
     "mobile_plus_m2", "mobile_minus_m2", "forest_plus_m2",
@@ -68,6 +77,66 @@ class CommonFrontState:
     boundary_junction_m2: np.ndarray
     interface_nye_m1: np.ndarray
     ledger: CommonFrontLedger = CommonFrontLedger()
+    parent_density: DensityInventory | None = None
+    child_density: DensityInventory | None = None
+    wake_density: DensityInventory | None = None
+    parent_alignment: ReservoirAlignmentState | None = None
+    child_alignment: ReservoirAlignmentState | None = None
+    wake_alignment: ReservoirAlignmentState | None = None
+
+
+def has_reservoir_moment_owners(state):
+    values = (
+        state.parent_density, state.child_density, state.wake_density,
+        state.parent_alignment, state.child_alignment, state.wake_alignment)
+    if any(value is None for value in values):
+        if not all(value is None for value in values):
+            raise ValueError("partial reservoir-moment owner state")
+        return False
+    return True
+
+
+def attach_reservoir_moment_owners(
+        state, parent_density, child_density, wake_density,
+        parent_alignment, child_alignment, wake_alignment,
+        systems, topologies):
+    """Attach a declared initialization map for all V24 reservoir moments."""
+    owners = ((parent_density, parent_alignment),
+              (child_density, child_alignment),
+              (wake_density, wake_alignment))
+    for density, alignment in owners:
+        density.validate(len(systems), len(topologies))
+        alignment.validate(density, len(systems))
+    candidate = replace(
+        state, parent_density=parent_density, child_density=child_density,
+        wake_density=wake_density, parent_alignment=parent_alignment,
+        child_alignment=child_alignment, wake_alignment=wake_alignment)
+    _validate_owner_density_common(candidate)
+    return candidate
+
+
+def _validate_owner_density_common(state, tolerance=64*np.finfo(float).eps):
+    if not has_reservoir_moment_owners(state):
+        return True
+    for common, density in zip(
+            (state.parent, state.child, state.wake),
+            (state.parent_density, state.child_density, state.wake_density)):
+        pairs = (
+            (common.mobile_plus_m2, density.mobile_plus_m2),
+            (common.mobile_minus_m2, density.mobile_minus_m2),
+            (common.forest_plus_m2, density.forest_plus_m2),
+            (common.forest_minus_m2, density.forest_minus_m2),
+            (common.wall_plus_m2,
+             density.wall_tangle_plus_m2+density.wall_ordered_plus_m2),
+            (common.wall_minus_m2,
+             density.wall_tangle_minus_m2+density.wall_ordered_minus_m2),
+            (common.junction_m2, density.junction_m2))
+        for left, right in pairs:
+            scale = max(float(np.max(np.abs(left))),
+                        float(np.max(np.abs(right))), 1.0)
+            if float(np.max(np.abs(left-right))) > tolerance*scale:
+                raise RuntimeError("common and reservoir owner densities diverged")
+    return True
 
 
 def _copy_state(state):
@@ -174,6 +243,56 @@ def reconstruct_common(state, spacing_m):
     return CommonWallState(**values), correction
 
 
+def _weighted_dataclass(values, weights, cls):
+    return cls(**{
+        item.name: _weighted(
+            [np.asarray(getattr(value, item.name)) for value in values],
+            weights)
+        for item in fields(cls)})
+
+
+def reconstruct_reservoir_moments(state):
+    """Support-weight the owned scalar reservoirs and first moments exactly."""
+    if not has_reservoir_moment_owners(state):
+        raise RuntimeError("reservoir-resolved moment owners are not initialized")
+    weights = state.front.material_support_weights()
+    density = _weighted_dataclass(
+        (state.parent_density, state.child_density, state.wake_density),
+        weights, DensityInventory)
+    alignment = _weighted_dataclass(
+        (state.parent_alignment, state.child_alignment, state.wake_alignment),
+        weights, ReservoirAlignmentState)
+    return density, alignment
+
+
+def reconstruct_mechanical_state(state, spacing_m, systems, topologies):
+    """Return the next Mura state without Nye inversion or moment reset."""
+    try:
+        from .v24_mechanical_wall import V24MechanicalWallState
+    except ImportError:  # pragma: no cover - direct script execution
+        from v24_mechanical_wall import V24MechanicalWallState
+    common, _ = reconstruct_common(state, spacing_m)
+    density, alignment = reconstruct_reservoir_moments(state)
+    # The scalar common reservoirs are compatibility views of the authoritative
+    # split inventory.  Build those views in the same floating-point order as
+    # V24 validation rather than relying on distributivity across two weighted
+    # sums (which can differ by one ulp after repeated cycles).
+    common = replace(
+        common,
+        mobile_plus_m2=density.mobile_plus_m2,
+        mobile_minus_m2=density.mobile_minus_m2,
+        forest_plus_m2=density.forest_plus_m2,
+        forest_minus_m2=density.forest_minus_m2,
+        wall_plus_m2=(density.wall_tangle_plus_m2
+                      +density.wall_ordered_plus_m2),
+        wall_minus_m2=(density.wall_tangle_minus_m2
+                       +density.wall_ordered_minus_m2),
+        junction_m2=density.junction_m2)
+    result = V24MechanicalWallState(common, density, alignment)
+    result.validate(systems, topologies)
+    return result
+
+
 def _support_delta(owner, old_mix, new_mix, support, name):
     value = np.asarray(getattr(owner, name))
     old = np.asarray(getattr(old_mix, name)); new = np.asarray(getattr(new_mix, name))
@@ -182,7 +301,10 @@ def _support_delta(owner, old_mix, new_mix, support, name):
     if name in LINE_FIELDS:
         ratio = np.divide(new, old, out=np.zeros_like(new), where=old > 0.0)
         candidate = np.where(new < old, value*ratio, value+np.maximum(new-old, 0.0))
-        return np.where(active, np.maximum(candidate, 0.0), 0.0)
+        # Once initialized, a temporarily vanishing support retains its
+        # intensive owner history for a later retreat/revisit.  Its extensive
+        # contribution remains exactly zero because its support weight is zero.
+        return np.where(active, np.maximum(candidate, 0.0), value)
     candidate = value+(new-old)
     if name in BOUNDED_FIELDS:
         candidate = np.clip(candidate, 0.0, 1.0)
@@ -228,6 +350,177 @@ def apply_common_increment(state, updated, spacing_m):
         if float(np.max(np.abs(actual-expected))) > 1024*np.finfo(float).eps*scale:
             raise RuntimeError(f"common-front projection failed for {item.name}")
     return _sync_front_views(replace(candidate, interface_nye_m1=correction))
+
+
+def _density_support_delta(owner, old_mix, new_mix, support, name):
+    value = np.asarray(getattr(owner, name))
+    old = np.asarray(getattr(old_mix, name))
+    new = np.asarray(getattr(new_mix, name))
+    weight = support[(...,)+(None,)*(value.ndim-support.ndim)]
+    active = weight > 64.0*np.finfo(float).eps
+    ratio = np.divide(new, old, out=np.zeros_like(new), where=old > 0.0)
+    candidate = np.where(new < old, value*ratio,
+                         value+np.maximum(new-old, 0.0))
+    return np.where(active, np.maximum(candidate, 0.0), value)
+
+
+def _moment_support_delta(owner, old_mix, new_mix, support, name,
+                          nonnegative=False):
+    value = np.asarray(getattr(owner, name))
+    old = np.asarray(getattr(old_mix, name))
+    new = np.asarray(getattr(new_mix, name))
+    weight = support[(...,)+(None,)*(value.ndim-support.ndim)]
+    active = weight > 64.0*np.finfo(float).eps
+    candidate = value+(new-old)
+    if nonnegative:
+        candidate = np.maximum(candidate, 0.0)
+    return np.where(active, candidate, value)
+
+
+def _minimum_change_bounded_moments(baselines, bounds, weights, target):
+    """Project owner moments onto exact mixture and line-length constraints.
+
+    This alternating projection starts from each owner's density-scaled prior
+    moment.  It therefore preserves owner history whenever the accepted common
+    moment leaves freedom, while handling the unique fully polarized limit
+    without clipping or manufacturing a direction from Nye.
+    """
+    kappa = np.stack(baselines, axis=0)
+    radius = np.stack(bounds, axis=0)[..., None]
+    weight = np.stack(weights, axis=0)
+    w = weight[(...,)+(None,)*(kappa.ndim-weight.ndim)]
+    active = w > 64.0*np.finfo(float).eps
+    denominator = np.sum(w*w, axis=0)
+    scale = max(float(np.max(np.abs(target))), 1.0)
+    for _ in range(256):
+        residual = target-np.sum(w*kappa, axis=0)
+        if float(np.max(np.abs(residual))) <= 256*np.finfo(float).eps*scale:
+            break
+        correction = np.divide(
+            w*residual[None, ...], denominator[None, ...],
+            out=np.zeros_like(kappa), where=denominator[None, ...] > 0.0)
+        trial = np.where(active, kappa+correction, kappa)
+        norm = np.linalg.norm(trial, axis=-1, keepdims=True)
+        factor = np.minimum(
+            1.0, np.divide(radius, norm, out=np.ones_like(norm),
+                           where=norm > 0.0))
+        kappa = np.where(active, trial*factor, kappa)
+    residual = target-np.sum(w*kappa, axis=0)
+    unresolved = np.max(np.abs(residual), axis=-1, keepdims=True) > (
+        2048*np.finfo(float).eps*scale)
+    if np.any(unresolved):
+        # At full polarization the feasible owner moments are unique and an
+        # alternating projection approaches them only asymptotically.  Use
+        # that analytical limit locally: every active owner carries the
+        # accepted common direction at its own line-length bound.  The target
+        # is the accepted reservoir moment itself, never a Nye-derived field.
+        total_radius = np.sum(w*radius, axis=0)
+        direction = np.divide(
+            target, total_radius,
+            out=np.zeros_like(target), where=total_radius > 0.0)
+        analytical = radius*direction[None, ...]
+        mask = unresolved[None, ...]
+        kappa = np.where(mask&active, analytical, kappa)
+        residual = target-np.sum(w*kappa, axis=0)
+    if float(np.max(np.abs(residual))) > 2048*np.finfo(float).eps*scale:
+        raise RuntimeError("bounded owner-moment projection did not converge")
+    return tuple(kappa[index] for index in range(len(baselines)))
+
+
+def apply_mechanical_increment(state, updated, spacing_m, systems, topologies):
+    """Project one accepted V24/Mura transaction into every active owner.
+
+    Scalar density and every reservoir-resolved first moment are advanced from
+    the accepted mechanical state.  Inactive owners retain their intensive
+    history for later retreat/revisit; they contribute zero extensive content
+    while their support is zero.
+    """
+    old_mechanical = reconstruct_mechanical_state(
+        state, spacing_m, systems, topologies)
+    common_candidate = apply_common_increment(state, updated.common, spacing_m)
+    weights = state.front.material_support_weights()
+    density_owners = []
+    old_alignment_owners = (
+        state.parent_alignment, state.child_alignment, state.wake_alignment)
+    for density_owner, support in zip(
+            (state.parent_density, state.child_density, state.wake_density),
+            weights):
+        density_owners.append(DensityInventory(**{
+            item.name: _density_support_delta(
+                density_owner, old_mechanical.density, updated.density,
+                support, item.name)
+            for item in fields(DensityInventory)}))
+    # Preserve each owner's polarization while matching the accepted common
+    # first moment exactly.  Scaling by its own accepted scalar-density change
+    # respects |kappa|<=rho; the small common residual carries genuine line
+    # turning/advection from the accepted Mura face flux.  It is applied to
+    # every active co-located owner, whose support weights sum to one.
+    alignment_arrays = [dict() for _ in range(3)]
+    density_by_alignment = {
+        name: name for name in SIGNED_RESERVOIRS}
+    density_by_alignment["junction_alignment_m2"] = "junction_m2"
+    for item in fields(ReservoirAlignmentState):
+        name = item.name
+        if name in TOPOLOGY_MOMENT_FIELDS:
+            for index, (owner, support) in enumerate(zip(
+                    old_alignment_owners, weights)):
+                alignment_arrays[index][name] = _moment_support_delta(
+                    owner, old_mechanical.reservoir_alignment,
+                    updated.reservoir_alignment, support, name,
+                    nonnegative=True)
+            continue
+        density_name = density_by_alignment[name]
+        baselines = []
+        for old_owner, old_density, new_density in zip(
+                old_alignment_owners,
+                (state.parent_density, state.child_density,
+                 state.wake_density), density_owners):
+            old_moment = np.asarray(getattr(old_owner, name))
+            old_rho = np.asarray(getattr(old_density, density_name))
+            new_rho = np.asarray(getattr(new_density, density_name))
+            ratio = np.divide(new_rho, old_rho, out=np.zeros_like(new_rho),
+                              where=old_rho > 0.0)
+            baselines.append(
+                old_moment*ratio[(...,)+(None,)*(old_moment.ndim-ratio.ndim)])
+        target = np.asarray(getattr(updated.reservoir_alignment, name))
+        if name == "junction_alignment_m2":
+            multiplicity = np.asarray([
+                topology.product_line_multiplicity for topology in topologies])
+            bounds = [density.junction_m2*multiplicity
+                      for density in density_owners]
+        else:
+            bounds = [np.asarray(getattr(density, density_name))
+                      for density in density_owners]
+        projected = _minimum_change_bounded_moments(
+            baselines, bounds, weights, target)
+        for index, value in enumerate(projected):
+            alignment_arrays[index][name] = value
+    alignment_owners = [
+        ReservoirAlignmentState(**arrays) for arrays in alignment_arrays]
+    for density, alignment in zip(density_owners, alignment_owners):
+        alignment.validate(density, len(systems))
+    candidate = replace(
+        common_candidate,
+        parent_density=density_owners[0], child_density=density_owners[1],
+        wake_density=density_owners[2],
+        parent_alignment=alignment_owners[0],
+        child_alignment=alignment_owners[1],
+        wake_alignment=alignment_owners[2])
+    check = reconstruct_mechanical_state(
+        candidate, spacing_m, systems, topologies)
+    for group in ("density", "reservoir_alignment"):
+        actual_group = getattr(check, group)
+        expected_group = getattr(updated, group)
+        for item in fields(type(actual_group)):
+            actual = np.asarray(getattr(actual_group, item.name))
+            expected = np.asarray(getattr(expected_group, item.name))
+            scale = max(float(np.max(np.abs(expected))), 1.0)
+            if float(np.max(np.abs(actual-expected))) > (
+                    2048*np.finfo(float).eps*scale):
+                raise RuntimeError(
+                    f"reservoir owner projection failed for {item.name}")
+    _validate_owner_density_common(candidate)
+    return candidate
 
 
 def _line_total(owner):
@@ -281,6 +574,50 @@ def _transmitted_state(donor, transmission):
     return CommonWallState(**arrays)
 
 
+def _mixed_dataclass(a, wa, b, wb, total, cls):
+    arrays = {}
+    for item in fields(cls):
+        av = np.asarray(getattr(a, item.name))
+        bv = np.asarray(getattr(b, item.name))
+        aw = wa[(...,)+(None,)*(av.ndim-wa.ndim)]
+        bw = wb[(...,)+(None,)*(av.ndim-wb.ndim)]
+        tw = total[(...,)+(None,)*(av.ndim-total.ndim)]
+        arrays[item.name] = np.divide(
+            aw*av+bw*bv, tw, out=av.copy(), where=tw > 0.0)
+    return cls(**arrays)
+
+
+def _blend_dataclass(old, old_weight, incoming, increment, cls):
+    return cls(**{
+        item.name: _blend(np.asarray(getattr(old, item.name)), old_weight,
+                          np.asarray(getattr(incoming, item.name)), increment)
+        for item in fields(cls)})
+
+
+def _transmitted_density(donor, transmission):
+    tf = np.mean(transmission, axis=2)
+    return DensityInventory(**{
+        item.name: ((tf[..., None]*np.asarray(getattr(donor, item.name)))
+                    if item.name == "junction_m2" else
+                    transmission*np.asarray(getattr(donor, item.name)))
+        for item in fields(DensityInventory)})
+
+
+def _transmitted_alignment(donor, transmission):
+    tf = np.mean(transmission, axis=2)
+    arrays = {}
+    for item in fields(ReservoirAlignmentState):
+        value = np.asarray(getattr(donor, item.name))
+        if item.name == "junction_alignment_m2":
+            factor = tf[..., None, None]
+        elif item.name in TOPOLOGY_MOMENT_FIELDS:
+            factor = transmission
+        else:
+            factor = transmission[..., None]
+        arrays[item.name] = factor*value
+    return ReservoirAlignmentState(**arrays)
+
+
 def _pair_partition(plus, minus, transmission, boundary_fraction,
                     sink_fraction, signed_sink_fraction):
     blocked_p = (1.0-transmission)*plus
@@ -327,12 +664,19 @@ def commit_front_result(state, accepted_front, *, spacing_m, cell_volume_m3,
                                    old_front.parent.rp.shape)
     tf = np.mean(transmission, axis=2)
     parent, child, wake = state.parent, state.child, state.wake
+    moments_active = has_reservoir_moment_owners(state)
+    parent_density, child_density, wake_density = (
+        state.parent_density, state.child_density, state.wake_density)
+    parent_alignment, child_alignment, wake_alignment = (
+        state.parent_alignment, state.child_alignment, state.wake_alignment)
     boundary_p = state.boundary_plus_m2.copy(); boundary_m = state.boundary_minus_m2.copy()
     boundary_j = state.boundary_junction_m2.copy()
     processed = transmitted = annihilated = sink = 0.0
     signed_closure = 0.0
 
-    def transfer(donor, sweep, recipient, recipient_weight):
+    def transfer(donor, sweep, recipient, recipient_weight,
+                 donor_density=None, donor_alignment=None,
+                 recipient_density=None, recipient_alignment=None):
         nonlocal boundary_p, boundary_m, boundary_j
         nonlocal processed, transmitted, annihilated, sink, signed_closure
         incoming = _transmitted_state(donor, transmission)
@@ -363,16 +707,43 @@ def commit_front_result(state, accepted_front, *, spacing_m, cell_volume_m3,
                              dtype=np.longdouble)*cell_volume_m3)
         processed += float(np.sum(sweep*_line_total(donor), dtype=np.longdouble)*cell_volume_m3)
         transmitted += float(np.sum(sweep*_line_total(incoming), dtype=np.longdouble)*cell_volume_m3)
-        return _blend_common(recipient, recipient_weight, incoming, sweep)
+        common_result = _blend_common(
+            recipient, recipient_weight, incoming, sweep)
+        if donor_density is None:
+            return common_result, None, None
+        incoming_density = _transmitted_density(donor_density, transmission)
+        incoming_alignment = _transmitted_alignment(
+            donor_alignment, transmission)
+        return (
+            common_result,
+            _blend_dataclass(recipient_density, recipient_weight,
+                             incoming_density, sweep, DensityInventory),
+            _blend_dataclass(recipient_alignment, recipient_weight,
+                             incoming_alignment, sweep,
+                             ReservoirAlignmentState))
 
     if np.any(positive):
         revisit = np.minimum(positive, old_front.processed_max-old_front.chi)
         virgin = positive-revisit
         donor = _mixed_donor(wake, revisit, parent, virgin, positive)
-        child = transfer(donor, positive, child, old_front.chi)
+        donor_density = donor_alignment = None
+        if moments_active:
+            donor_density = _mixed_dataclass(
+                wake_density, revisit, parent_density, virgin, positive,
+                DensityInventory)
+            donor_alignment = _mixed_dataclass(
+                wake_alignment, revisit, parent_alignment, virgin, positive,
+                ReservoirAlignmentState)
+        child, child_density, child_alignment = transfer(
+            donor, positive, child, old_front.chi,
+            donor_density, donor_alignment, child_density, child_alignment)
     if np.any(negative):
         wake_weight = old_front.processed_max-old_front.chi
-        wake = transfer(child, negative, wake, wake_weight)
+        wake, wake_density, wake_alignment = transfer(
+            child, negative, wake, wake_weight,
+            child_density if moments_active else None,
+            child_alignment if moments_active else None,
+            wake_density, wake_alignment)
 
     common_boundary = np.sum(boundary_p+boundary_m, axis=(2, 3))+np.sum(boundary_j, axis=2)
     common_signed = np.sum(boundary_p-boundary_m, axis=2)
@@ -384,7 +755,10 @@ def commit_front_result(state, accepted_front, *, spacing_m, cell_volume_m3,
     candidate = replace(
         state, front=rebuilt_front, parent=parent, child=child, wake=wake,
         boundary_plus_m2=boundary_p, boundary_minus_m2=boundary_m,
-        boundary_junction_m2=boundary_j)
+        boundary_junction_m2=boundary_j,
+        parent_density=parent_density, child_density=child_density,
+        wake_density=wake_density, parent_alignment=parent_alignment,
+        child_alignment=child_alignment, wake_alignment=wake_alignment)
     mixture, correction = reconstruct_common(candidate, spacing_m)
     boundary_added = float(np.sum(
         common_boundary-(np.sum(state.boundary_plus_m2+state.boundary_minus_m2, axis=(2, 3))
@@ -397,6 +771,7 @@ def commit_front_result(state, accepted_front, *, spacing_m, cell_volume_m3,
     scale = max(abs(processed), abs(transmitted), abs(boundary_added), 1e-300)
     if abs(closure) > 32768*np.finfo(float).eps*scale:
         raise RuntimeError(f"common-front line balance failed: {closure:.17g} m")
+    _validate_owner_density_common(candidate)
     old = state.ledger
     ledger = replace(
         old, attempted_commits=old.attempted_commits+1,
@@ -422,25 +797,55 @@ def state_arrays(state):
                    boundary_minus_m2=state.boundary_minus_m2,
                    boundary_junction_m2=state.boundary_junction_m2,
                    interface_nye_m1=state.interface_nye_m1)
+    if has_reservoir_moment_owners(state):
+        for owner_name in ("parent", "child", "wake"):
+            density = getattr(state, owner_name+"_density")
+            alignment = getattr(state, owner_name+"_alignment")
+            for item in fields(DensityInventory):
+                payload[f"{owner_name}__density__{item.name}"] = np.asarray(
+                    getattr(density, item.name))
+            for item in fields(ReservoirAlignmentState):
+                payload[f"{owner_name}__alignment__{item.name}"] = np.asarray(
+                    getattr(alignment, item.name))
     return payload
 
 
 def state_metadata_json(state):
-    return json.dumps({"schema": SCHEMA, "ledger": state.ledger.__dict__}, sort_keys=True)
+    moments = has_reservoir_moment_owners(state)
+    return json.dumps({
+        "schema": SCHEMA if moments else LEGACY_SCHEMA,
+        "ledger": state.ledger.__dict__,
+        "reservoir_moment_owners": moments},
+        sort_keys=True)
 
 
 def state_from_checkpoint(metadata_json, arrays, front):
     metadata = json.loads(str(metadata_json))
-    if metadata.get("schema") != SCHEMA:
+    if metadata.get("schema") not in (LEGACY_SCHEMA, SCHEMA):
         raise ValueError("unsupported common-front checkpoint schema")
     owners = []
     for owner_name in ("parent", "child", "wake"):
         owners.append(CommonWallState(**{
             item.name: np.asarray(arrays[f"{owner_name}__{item.name}"]).copy()
             for item in fields(CommonWallState)}))
-    return CommonFrontState(
-        front, *owners, np.asarray(arrays["boundary_plus_m2"]).copy(),
-        np.asarray(arrays["boundary_minus_m2"]).copy(),
-        np.asarray(arrays["boundary_junction_m2"]).copy(),
-        np.asarray(arrays["interface_nye_m1"]).copy(),
-        CommonFrontLedger(**metadata.get("ledger", {})))
+    kwargs = {}
+    if metadata.get("reservoir_moment_owners", False):
+        for owner_name in ("parent", "child", "wake"):
+            kwargs[owner_name+"_density"] = DensityInventory(**{
+                item.name: np.asarray(arrays[
+                    f"{owner_name}__density__{item.name}"]).copy()
+                for item in fields(DensityInventory)})
+            kwargs[owner_name+"_alignment"] = ReservoirAlignmentState(**{
+                item.name: np.asarray(arrays[
+                    f"{owner_name}__alignment__{item.name}"]).copy()
+                for item in fields(ReservoirAlignmentState)})
+    result = CommonFrontState(
+        front=front, parent=owners[0], child=owners[1], wake=owners[2],
+        boundary_plus_m2=np.asarray(arrays["boundary_plus_m2"]).copy(),
+        boundary_minus_m2=np.asarray(arrays["boundary_minus_m2"]).copy(),
+        boundary_junction_m2=np.asarray(
+            arrays["boundary_junction_m2"]).copy(),
+        interface_nye_m1=np.asarray(arrays["interface_nye_m1"]).copy(),
+        ledger=CommonFrontLedger(**metadata.get("ledger", {})), **kwargs)
+    _validate_owner_density_common(result)
+    return result

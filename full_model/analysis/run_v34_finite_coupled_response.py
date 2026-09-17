@@ -35,7 +35,8 @@ if str(ROOT) not in sys.path:
 from full_model.analysis.run_v24_mechanical_supply import build_case
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.common_front_state import (
-    apply_common_increment, initialize_common_front, reconstruct_common,
+    apply_mechanical_increment, attach_reservoir_moment_owners,
+    initialize_common_front, reconstruct_common, reconstruct_mechanical_state,
     state_arrays as common_front_arrays,
     state_from_checkpoint as common_front_from_checkpoint,
     state_metadata_json as common_front_metadata_json,
@@ -70,7 +71,7 @@ from full_model.production.wall_topology_supply import (
 )
 
 
-SCHEMA = "asb-drx/v34-finite-common-state-i3/v1"
+SCHEMA = "asb-drx/v35-finite-common-state-multicycle/v2"
 
 
 @dataclass(frozen=True)
@@ -147,14 +148,21 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
         adapter.child,
         temperature_K=child.temperature_K.copy(),
         orientation_rad=child.orientation_rad.copy()))
-    mixture, _ = reconstruct_common(adapter, spacing)
-    density = from_v22_common_state(mixture, ordered_fraction=0.0)
-    _, slip_direction, plane_normal = rotated_system_fields(
-        systems, mixture.orientation_rad)
-    alignment = aligned_state_from_directions(
-        density, np.cross(plane_normal, slip_direction))
-    mechanical = V24MechanicalWallState(mixture, density, alignment)
-    mechanical.validate(systems, topologies)
+    owner_densities = []
+    owner_alignments = []
+    for owner in (adapter.parent, adapter.child, adapter.wake):
+        density = from_v22_common_state(
+            owner, ordered_fraction=owner.wall_order)
+        _, slip_direction, plane_normal = rotated_system_fields(
+            systems, owner.orientation_rad)
+        alignment = aligned_state_from_directions(
+            density, np.cross(plane_normal, slip_direction))
+        owner_densities.append(density)
+        owner_alignments.append(alignment)
+    adapter = attach_reservoir_moment_owners(
+        adapter, *owner_densities, *owner_alignments, systems, topologies)
+    mechanical = reconstruct_mechanical_state(
+        adapter, spacing, systems, topologies)
     runtime = initialize_coupled_front_runtime(
         adapter.front, eta[..., 1]-eta[..., 0], normal_axis=0,
         periodic=True)
@@ -220,7 +228,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     common0, _ = reconstruct_common(state.common_front, spacing)
     inventory0 = _inventory(common0, context["topologies"], cell_volume)
     front_state = state.common_front
-    mechanical = state.mechanical
+    mechanical = reconstruct_mechanical_state(
+        state.common_front, spacing, context["systems"],
+        context["topologies"])
     mura_ledger = None
     if controls.mura_enabled:
         mechanical, mura_ledger = accepted_v24_mechanical_step(
@@ -239,8 +249,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             mechanical = replace(mechanical, common=replace(
                 mechanical.common,
                 temperature_K=state.mechanical.common.temperature_K.copy()))
-        front_state = apply_common_increment(
-            front_state, mechanical.common, spacing)
+        front_state = apply_mechanical_increment(
+            front_state, mechanical, spacing, context["systems"],
+            context["topologies"])
 
     runtime = state.front_runtime
     accepted_eta = state.eta.copy()
@@ -345,6 +356,12 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             runtime = state.front_runtime
             accepted_eta = state.eta.copy()
 
+    # The next Mura interval is reconstructed only from evolved owner
+    # inventories and moments.  This is an exact support-weighted read, not a
+    # Nye inversion or a manufactured realignment.
+    mechanical = reconstruct_mechanical_state(
+        front_state, spacing, context["systems"], context["topologies"])
+
     common1, _ = reconstruct_common(front_state, spacing)
     inventory1 = _inventory(common1, context["topologies"], cell_volume)
     boundary0 = float(np.sum(
@@ -373,7 +390,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     mura_balance = None if mura_ledger is None else mura_ledger["mura_balance_ledger"]
     diagnostics = {
         "schema": SCHEMA,
-        "single_cycle_only": True,
+        "single_cycle_only": False,
+        "next_mura_state_from_owned_reservoir_moments": True,
         "mura_enabled": controls.mura_enabled,
         "front_enabled": controls.front_enabled,
         "prescribed_temperature": controls.prescribed_temperature,
@@ -503,10 +521,45 @@ def compare_response_family(context, initial, forward_trial, reverse_trial,
              -mura_only_drive["raw_stress_Pa"])**2))),
         "front_to_next_mura_speed_rms_change_m_s": float(np.sqrt(np.mean(
             (combined_drive["speed_m_s"]-mura_only_drive["speed_m_s"])**2))),
-        "next_mura_extent_not_executed": True,
+        "next_mura_extent_not_executed": False,
     }
     return states, {"schema": SCHEMA, "cases": cases,
                     "reciprocal_interactions": interactions}
+
+
+def run_i3_intervals(context, initial, phase_trials, driving,
+                     controls=I3Controls()):
+    """Execute a declared sequence of production Mura/front intervals."""
+    state = initial
+    records = []
+    for index, trial in enumerate(phase_trials):
+        if callable(trial):
+            eta_trial, interval_controls = trial(index, state, controls)
+        elif isinstance(trial, tuple):
+            eta_trial, interval_controls = trial
+        else:
+            eta_trial, interval_controls = trial, controls
+        state, audit = run_i3_cycle(
+            context, state, eta_trial, driving, interval_controls)
+        records.append({
+            "interval": index,
+            "front_classification": audit["front_decision"]["classification"],
+            "front_published": audit["candidate_sweep_published"],
+            "signed_sweep_m3": audit["sweep"]["net_m3"],
+            "mura_event_scale": audit["mura"]["event_scale"],
+            "mura_family_event_scales": audit["mura"][
+                "family_event_scales"],
+            "maximum_abs_slip_increment": audit["maximum_abs_slip"],
+            "maximum_abs_beta_increment": audit["maximum_abs_beta_p"],
+        })
+    return state, {
+        "schema": SCHEMA, "interval_count": len(records),
+        "accepted_front_intervals": sum(
+            record["front_published"] for record in records),
+        "cumulative_signed_sweep_m3": float(sum(
+            record["signed_sweep_m3"] for record in records)),
+        "records": records,
+    }
 
 
 def checkpoint_payload(state, context):

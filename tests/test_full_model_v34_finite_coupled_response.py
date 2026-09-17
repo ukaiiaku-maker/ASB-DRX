@@ -86,7 +86,7 @@ def test_response_family_is_same_state_and_reports_finite_reciprocal_metrics():
     assert np.isfinite(interaction["mura_to_front_net_sweep_change_m3"])
     assert interaction["front_to_next_mura_raw_stress_rms_change_Pa"] > 0.0
     assert interaction["front_to_next_mura_speed_rms_change_m_s"] > 0.0
-    assert interaction["next_mura_extent_not_executed"]
+    assert not interaction["next_mura_extent_not_executed"]
     np.testing.assert_array_equal(
         states["prescribed_temperature"].mechanical.common.temperature_K,
         initial.mechanical.common.temperature_K)

@@ -12,8 +12,14 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .tensorial_nye import (
-    divergence_of_nye, nye_from_plastic_distortion, rotated_system_fields)
+try:
+    from .tensorial_nye import (
+        divergence_of_nye, nye_from_plastic_distortion,
+        rotated_system_fields)
+except ImportError:  # pragma: no cover - direct production-script execution
+    from tensorial_nye import (
+        divergence_of_nye, nye_from_plastic_distortion,
+        rotated_system_fields)
 
 
 @dataclass(frozen=True)
