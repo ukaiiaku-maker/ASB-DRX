@@ -1,0 +1,37 @@
+name = "full-v37-conduction-response"
+entrypoint = ["bash", "../hpc3/run_v37_conduction_array.sh"]
+working_directory = "full_model/production"
+modules = ["anaconda/2025.12"]
+environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_SOURCE_SHA = "SET_AFTER_PUSH" }
+input_mode = "archive"
+result_mode = "archive"
+scratch_mode = "none"
+output_paths = ["full_model/production/output/v37-conduction"]
+contains_sensitive_data = false
+
+input_paths = [
+  "full_model/production",
+  "full_model/hpc3/run_v37_conduction_case.py",
+  "full_model/hpc3/run_v37_conduction_array.sh",
+  "full_model/hpc3/v37_conduction_cases.json",
+]
+
+[resources]
+account = "SDILLON1"
+partition = "standard"
+qos = "standard"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "24G"
+time = "08:00:00"
+
+[sweep]
+table = "full_model/hpc3/v37_conduction_cases.json"
+format = "json"
+max_concurrent = 2
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]

@@ -1,0 +1,37 @@
+{
+  "schema": "asb-drx/v37/parameter-hypotheses/v1",
+  "registration_status": "REGISTERED_BEFORE_V37_TRAJECTORY_OUTCOMES",
+  "fixed_physics": {
+    "arrhenius_free_barrier": "DeltaG*=DeltaH_EXP-floor-TDeltaS with entropy included once",
+    "front_work_Pa": 0.0,
+    "finite_conductivity_primary_W_m_K": 0.15,
+    "thermal_boundary": "periodic insulated; no bath",
+    "density_free_energy": "frozen V36 logarithmic and organization terms",
+    "nucleation_enabled": false,
+    "component_relabel_enabled": false
+  },
+  "uncertain_physical_inputs": {
+    "initial_temperature_K": [800.0, 900.0, 1000.0],
+    "strain_rate_s-1": [10000.0, 30000.0, 100000.0],
+    "heterogeneity_radius_um": [0.375, 0.75, 1.5]
+  },
+  "numerical_controls": {
+    "screen_grid": 128,
+    "promotion_grid": 192,
+    "nominal_strain_target": 0.2501,
+    "seed": 43,
+    "array_max_concurrent": 2
+  },
+  "structural_hypotheses": {
+    "thermal": "competition between loading amplification and finite diffusion controls concentration",
+    "front": "pending bounded current-source screen from V37 Priority A",
+    "organization": "pending ordered-reservoir and one-grain evidence from V37 Priority B"
+  },
+  "selection_rule": "promote strongest valid concentration, broad-heating negative, and stable or intermediate control",
+  "forbidden_selection": [
+    "reduce conductivity solely to create ASB",
+    "move strict-ASB thresholds",
+    "use a cell volume as an atomic event volume",
+    "fit a DDD crossover to a phase-field outcome"
+  ]
+}

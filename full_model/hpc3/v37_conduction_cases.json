@@ -1,0 +1,8 @@
+[
+  {"id":"rate_low","T0_K":900.0,"strain_rate_s":10000.0,"particle_radius_um":0.75,"conductivity_W_m_K":0.15},
+  {"id":"rate_high","T0_K":900.0,"strain_rate_s":100000.0,"particle_radius_um":0.75,"conductivity_W_m_K":0.15},
+  {"id":"temperature_low","T0_K":800.0,"strain_rate_s":30000.0,"particle_radius_um":0.75,"conductivity_W_m_K":0.15},
+  {"id":"temperature_high","T0_K":1000.0,"strain_rate_s":30000.0,"particle_radius_um":0.75,"conductivity_W_m_K":0.15},
+  {"id":"heterogeneity_short","T0_K":900.0,"strain_rate_s":30000.0,"particle_radius_um":0.375,"conductivity_W_m_K":0.15},
+  {"id":"heterogeneity_long","T0_K":900.0,"strain_rate_s":30000.0,"particle_radius_um":1.5,"conductivity_W_m_K":0.15}
+]

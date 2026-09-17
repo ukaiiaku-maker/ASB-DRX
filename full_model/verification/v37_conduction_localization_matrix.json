@@ -1,0 +1,246 @@
+{
+  "classification": "TRANSPORT_INFORMED_V37_SCREEN_REGISTERED",
+  "finite_conduction": {
+    "absolute_shear_rate": {
+      "connected_component_count": 23,
+      "effective_support_width_m": 9.66427078669674e-06,
+      "entropy_effective_fraction": 0.9828070085200157,
+      "inverse_participation_fraction": 0.9664270786696739,
+      "largest_connected_area_fraction": 0.0560302734375,
+      "maximum": 106415.42380924265,
+      "mean": 62205.48090279412,
+      "mean_plus_std_threshold": 73799.62445497846,
+      "minimum": 29898.753614321413,
+      "peak_minus_mean": 44209.94290644853,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 6.824205606575038e-06,
+        "major_rms_width_m": 2.8979732956940404e-06,
+        "minor_gaussian_fwhm_m": 6.748482770414904e-06,
+        "minor_rms_width_m": 2.8658167679283978e-06
+      },
+      "standard_deviation": 11594.14355218434,
+      "threshold_area_fraction": 0.1614990234375
+    },
+    "activity_field_semantics": "absolute shear-rate diagnostic; not independently ledgered plastic power",
+    "nominal_strain": 0.2501,
+    "parameters": {
+      "conductivity_W_m_K": 0.15,
+      "domain_length_m": 1e-05,
+      "grid": 128,
+      "heat_process_zone_sigma_m": 3e-07,
+      "initial_temperature_K": 900.0,
+      "particle_radius_m": 7.5e-07,
+      "strain_rate_s": 30000.0,
+      "thermal_boundary": "periodic_insulated_no_bath",
+      "volumetric_heat_capacity_J_m3_K": 3800000.0
+    },
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v34-thermal-20260916/finite_conduction_periodic_insulated/drx_v25_restart_002500.npz",
+    "physical_time_s": 8.336666666666454e-06,
+    "sha256": "5a0135b73779c553cf0f01f6544caa20f3824e52d421aa99dda98a2114883827",
+    "step": 2500,
+    "temperature": {
+      "connected_component_count": 12,
+      "effective_support_width_m": 9.998745035455337e-06,
+      "entropy_effective_fraction": 0.9999372627528265,
+      "inverse_participation_fraction": 0.9998745035455335,
+      "largest_connected_area_fraction": 0.03717041015625,
+      "maximum": 1204.7271732009642,
+      "mean": 1167.7027004019271,
+      "mean_plus_std_threshold": 1180.7847341634667,
+      "minimum": 1133.242536090049,
+      "peak_minus_mean": 37.024472799037085,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 6.929219434565665e-06,
+        "major_rms_width_m": 2.9425685624166946e-06,
+        "minor_gaussian_fwhm_m": 6.731649144121282e-06,
+        "minor_rms_width_m": 2.8586681850337665e-06
+      },
+      "standard_deviation": 13.082033761539646,
+      "threshold_area_fraction": 0.17681884765625
+    }
+  },
+  "frozen_v36_thermal_evidence": {
+    "classification": "V36_THERMAL_VALID_MATRIX_COMPLETE_WITH_QUARANTINED_LEGACY",
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v36_thermal_matched_causality.json",
+    "sha256": "408463d14e3a5694604bbfb6dd176e733f3df0238de684348e2616d924b59578"
+  },
+  "full_local_adiabatic": {
+    "absolute_shear_rate": {
+      "connected_component_count": 114,
+      "effective_support_width_m": 4.3042602167129046e-06,
+      "entropy_effective_fraction": 0.603356136580597,
+      "inverse_participation_fraction": 0.4304260216712904,
+      "largest_connected_area_fraction": 0.01824951171875,
+      "maximum": 739787.0748554774,
+      "mean": 63240.99729090906,
+      "mean_plus_std_threshold": 135989.57725584926,
+      "minimum": 151.4860881904142,
+      "peak_minus_mean": 676546.0775645684,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 6.953415201126962e-06,
+        "major_rms_width_m": 2.9528435584244242e-06,
+        "minor_gaussian_fwhm_m": 6.7083848170695e-06,
+        "minor_rms_width_m": 2.8487887349665825e-06
+      },
+      "standard_deviation": 72748.57996494022,
+      "threshold_area_fraction": 0.1241455078125
+    },
+    "activity_field_semantics": "absolute shear-rate diagnostic; not independently ledgered plastic power",
+    "nominal_strain": 0.2501,
+    "parameters": {
+      "conductivity_W_m_K": 0.0,
+      "domain_length_m": 1e-05,
+      "grid": 128,
+      "heat_process_zone_sigma_m": 3e-07,
+      "initial_temperature_K": 900.0,
+      "particle_radius_m": 7.5e-07,
+      "strain_rate_s": 30000.0,
+      "thermal_boundary": "periodic_insulated_no_bath",
+      "volumetric_heat_capacity_J_m3_K": 3800000.0
+    },
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v34-thermal-20260916/full_law_local_adiabatic/drx_v25_restart_002500.npz",
+    "physical_time_s": 8.336666666666454e-06,
+    "sha256": "0b69252df95609395ed70e15c80061e1b30af82c9b889dd61daed0fc3a857981",
+    "step": 2500,
+    "temperature": {
+      "connected_component_count": 99,
+      "effective_support_width_m": 9.900707040092172e-06,
+      "entropy_effective_fraction": 0.9951636581393152,
+      "inverse_participation_fraction": 0.9900707040092172,
+      "largest_connected_area_fraction": 0.021240234375,
+      "maximum": 1809.1600200938308,
+      "mean": 1166.5052292149815,
+      "mean_plus_std_threshold": 1283.3240488074096,
+      "minimum": 965.0597716706145,
+      "peak_minus_mean": 642.6547908788493,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 6.898366676974717e-06,
+        "major_rms_width_m": 2.9294666026060252e-06,
+        "minor_gaussian_fwhm_m": 6.7090246245525814e-06,
+        "minor_rms_width_m": 2.84906043618827e-06
+      },
+      "standard_deviation": 116.81881959242806,
+      "threshold_area_fraction": 0.14923095703125
+    }
+  },
+  "generated_utc": "2026-09-17T19:06:34.385652+00:00",
+  "manufactured_metric_qualification": {
+    "broad_uniform": {
+      "connected_component_count": 0,
+      "effective_support_width_m": 1e-05,
+      "entropy_effective_fraction": 0.9999999999999994,
+      "inverse_participation_fraction": 1.0,
+      "largest_connected_area_fraction": 0.0,
+      "maximum": 1.0,
+      "mean": 1.0,
+      "mean_plus_std_threshold": 1.0,
+      "minimum": 1.0,
+      "peak_minus_mean": 0.0,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 0.0,
+        "major_rms_width_m": 0.0,
+        "minor_gaussian_fwhm_m": 0.0,
+        "minor_rms_width_m": 0.0
+      },
+      "standard_deviation": 0.0,
+      "threshold_area_fraction": 0.0
+    },
+    "narrow_gaussian_sigma_0p25um": {
+      "connected_component_count": 1,
+      "effective_support_width_m": 8.862269254527579e-07,
+      "entropy_effective_fraction": 0.10331828385306227,
+      "inverse_participation_fraction": 0.08862269254527579,
+      "largest_connected_area_fraction": 0.078125,
+      "maximum": 0.9878671723140003,
+      "mean": 0.06266570686577501,
+      "mean_plus_std_threshold": 0.263624298261243,
+      "minimum": 3.1115187972839857e-86,
+      "peak_minus_mean": 0.9252014654482253,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 6.797572479423599e-06,
+        "major_rms_width_m": 2.886663247944112e-06,
+        "minor_gaussian_fwhm_m": 5.887050112499998e-07,
+        "minor_rms_width_m": 2.4999999999999994e-07
+      },
+      "standard_deviation": 0.200958591395468,
+      "threshold_area_fraction": 0.078125
+    },
+    "purpose": "distinguish broad support from a narrow band without changing frozen thresholds"
+  },
+  "registered_screen": {
+    "fixed": {
+      "conductivity_W_m_K": 0.15,
+      "grid": 128,
+      "nominal_strain_target": 0.2501,
+      "seed": 43,
+      "thermal_boundary": "periodic_insulated_no_bath"
+    },
+    "selection_rule": "promote strongest valid concentration, broad-heating negative, and intermediate control",
+    "uncertain_physical_inputs": [
+      {
+        "T0_K": 900.0,
+        "conductivity_W_m_K": 0.15,
+        "id": "rate_low",
+        "particle_radius_um": 0.75,
+        "strain_rate_s": 10000.0
+      },
+      {
+        "T0_K": 900.0,
+        "conductivity_W_m_K": 0.15,
+        "id": "rate_high",
+        "particle_radius_um": 0.75,
+        "strain_rate_s": 100000.0
+      },
+      {
+        "T0_K": 800.0,
+        "conductivity_W_m_K": 0.15,
+        "id": "temperature_low",
+        "particle_radius_um": 0.75,
+        "strain_rate_s": 30000.0
+      },
+      {
+        "T0_K": 1000.0,
+        "conductivity_W_m_K": 0.15,
+        "id": "temperature_high",
+        "particle_radius_um": 0.75,
+        "strain_rate_s": 30000.0
+      },
+      {
+        "T0_K": 900.0,
+        "conductivity_W_m_K": 0.15,
+        "id": "heterogeneity_short",
+        "particle_radius_um": 0.375,
+        "strain_rate_s": 30000.0
+      },
+      {
+        "T0_K": 900.0,
+        "conductivity_W_m_K": 0.15,
+        "id": "heterogeneity_long",
+        "particle_radius_um": 1.5,
+        "strain_rate_s": 30000.0
+      }
+    ],
+    "zero_conductivity_role": "frozen V36 limiting ablation only"
+  },
+  "schema": "asb-drx/v37/conduction-localization/v1",
+  "strict_asb_claimed": false,
+  "transport_scales": {
+    "diffusion_times_s": {
+      "domain": 0.0025333333333333336,
+      "heat_process_zone_sigma": 2.2799999999999998e-06,
+      "heterogeneity_radius": 1.4250000000000002e-05
+    },
+    "formula": "tau_diff=C_vol*ell^2/k",
+    "lengths_m": {
+      "domain": 1e-05,
+      "heat_process_zone_sigma": 3e-07,
+      "heterogeneity_radius": 7.5e-07
+    },
+    "loading_time_s": 8.336666666666454e-06,
+    "ratios_tau_diff_to_loading": {
+      "domain": 303.87844862055954,
+      "heat_process_zone_sigma": 0.27349060375850354,
+      "heterogeneity_radius": 1.7093162734906475
+    }
+  }
+}
