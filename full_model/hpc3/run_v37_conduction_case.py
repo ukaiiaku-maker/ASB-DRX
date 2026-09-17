@@ -50,6 +50,12 @@ def load_cases(path: Path) -> list[dict[str, object]]:
 
 def validate_source_identity(source: Path, expected: str) -> tuple[str, bool]:
     """Allow a configuration-only descendant of the frozen physics source."""
+    if not (source/".git").exists():
+        run_id = os.environ.get("HPC3_RUN_ID")
+        input_dir = os.environ.get("HPC3_INPUT_DIR")
+        if not run_id or not input_dir:
+            raise RuntimeError("non-Git source requires HPC3 archive provenance")
+        return f"HPC3_ARCHIVE:{run_id}", False
     actual = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
     dirty = subprocess.check_output(
@@ -146,6 +152,8 @@ def main() -> None:
         "case_index": args.case_id, "case": case,
         "archive_commit": actual, "production_source_commit": args.expected_source_sha,
         "exact_source_head": exact_source, "source_dirty": False,
+        "archive_provenance": ("git" if exact_source or not actual.startswith(
+            "HPC3_ARCHIVE:") else "hpc3_input_manifest_and_run_record"),
         "case_table": str(args.case_table.resolve()),
         "case_table_sha256": digest(args.case_table),
         "grid": args.grid, "target_step": args.target_step,

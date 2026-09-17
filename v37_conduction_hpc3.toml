@@ -5,7 +5,7 @@ modules = ["anaconda/2025.12"]
 environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_SOURCE_SHA = "0effd7a1dd8a6449810577289a5a52c55be62e66" }
 input_mode = "archive"
 result_mode = "archive"
-scratch_mode = "none"
+scratch_mode = "local"
 output_paths = ["full_model/production/output/v37-conduction"]
 contains_sensitive_data = false
 

@@ -35,3 +35,11 @@ def test_exact_frozen_source_identity_does_not_require_descendant_diff():
             side_effect=[head+"\n", ""]):
         actual, exact = validate_source_identity(Path("."), head)
     assert actual == head and exact
+
+
+def test_archive_source_requires_hpc3_provenance(tmp_path, monkeypatch):
+    monkeypatch.setenv("HPC3_RUN_ID", "frozen-run")
+    monkeypatch.setenv("HPC3_INPUT_DIR", "/immutable/input")
+    actual, exact = validate_source_identity(tmp_path, "a"*40)
+    assert actual == "HPC3_ARCHIVE:frozen-run"
+    assert not exact
