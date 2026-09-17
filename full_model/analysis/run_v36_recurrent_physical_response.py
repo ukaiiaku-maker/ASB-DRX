@@ -83,6 +83,7 @@ def _record(index, time_s, driving, audit):
         "physical_time_end_s": float(time_s),
         "mean_shear_strain": float(driving.mean_strain[0, 1]),
         "front_classification": None if front is None else front["classification"],
+        "front_channel_diagnostics": front,
         "front_published": bool(audit["candidate_sweep_published"]),
         "signed_sweep_m3": float(audit["sweep"]["net_m3"]),
         "absolute_sweep_m3": float(audit["sweep"]["absolute_m3"]),
@@ -136,7 +137,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  dt_s=2.0e-9, initial_shear=0.01, strain_rate_s=1.0e3,
                  temperature_K=1100.0, child_line_fraction=0.35,
                  length_m=3.2e-6, interface_width_m=4.0e-7,
-                 proposal_fraction=0.125, checkpoint_every=10,
+                 proposal_fraction=0.125, proposal_direction=1,
+                 checkpoint_every=10,
                  resume=None):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -163,6 +165,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
             "length_m": float(length_m),
             "interface_width_m": float(interface_width_m),
             "proposal_fraction": float(proposal_fraction),
+            "proposal_direction": int(proposal_direction),
         }
         if immutable != requested:
             raise ValueError("restart configuration differs from checkpoint")
@@ -178,6 +181,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         "length_m": float(length_m),
         "interface_width_m": float(interface_width_m),
         "proposal_fraction": float(proposal_fraction),
+        "proposal_direction": int(proposal_direction),
     }
     controls = I3Controls(
         driving_pressure_a_to_b_Pa=0.0,
@@ -189,7 +193,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         driving = driving_at_time(
             grid, initial_shear, protocol, strain_rate_s, physical_time)
         envelope = geometric_envelope(
-            state.eta, proposal_fraction, direction=1)
+            state.eta, proposal_fraction, direction=proposal_direction)
         state, audit = run_i3_cycle(
             context, state, envelope, driving, controls)
         accepted_dt = float(audit["mura"]["accepted_dt_s"])
@@ -255,6 +259,8 @@ def main():
     parser.add_argument("--length-m", type=float, default=3.2e-6)
     parser.add_argument("--interface-width-m", type=float, default=4.0e-7)
     parser.add_argument("--proposal-fraction", type=float, default=0.125)
+    parser.add_argument("--proposal-direction", type=int, choices=(-1, 1),
+                        default=1)
     parser.add_argument("--checkpoint-every", type=int, default=10)
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
