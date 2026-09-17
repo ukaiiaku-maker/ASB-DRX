@@ -87,8 +87,13 @@ comparator rather than a global organization veto.
 - Mura mechanical-heterogeneity n64 continuation: run
   `20260917T192050Z-50dbde9-bf00af`, Slurm `56126506`, running toward 5% strain.
 - A durable scoped manager records scheduler state every 300 s and fetches after
-  both scoped bundles leave active scheduler states. Its state is external at
+  each scoped bundle leaves active scheduler state. It runs in detached tmux
+  session `v37_manager`; its state is external at
   `/Users/sdillon/HPC3/local-results/asb-drx-v37-manager/v37_manager_state.json`.
+  When the conduction array releases its two slots, the same controller submits
+  the preregistered n128 continued-loading front array (baseline,
+  `availability_mid`, and `shape_n_low`) with one case active at a time. This
+  follow-up does not wait for the independent Mura continuation.
 
 Earlier conduction submissions that failed before physics are retained in the
 case manifest. Invalid QoS, shared array extraction, and missing archive Git
