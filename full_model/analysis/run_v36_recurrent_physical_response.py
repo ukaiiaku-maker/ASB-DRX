@@ -78,7 +78,7 @@ def _record(index, time_s, driving, audit):
     front = audit["front_decision"]
     kinetic = audit["complete_directional_kinetics"]
     measure = audit["physical_site_event_measure"]
-    return {
+    record = {
         "interval": int(index),
         "physical_time_end_s": float(time_s),
         "mean_shear_strain": float(driving.mean_strain[0, 1]),
@@ -111,6 +111,9 @@ def _record(index, time_s, driving, audit):
         "complete_energy_delta_J": float(
             audit["complete_energy"]["delta_helmholtz_J"]),
     }
+    # Checkpoint metadata is JSON.  Normalize tuples and NumPy scalar subclasses
+    # immediately so continuous and restarted records have identical semantics.
+    return json.loads(json.dumps(record, sort_keys=True))
 
 
 def _write_checkpoint(path, state, context, metadata):
