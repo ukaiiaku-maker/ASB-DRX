@@ -1,0 +1,55 @@
+name = "full-v36-recurrent-n192"
+entrypoint = ["bash", "../hpc3/run_v36_recurrent_n192.sh"]
+working_directory = "full_model/production"
+modules = ["anaconda/2025.12"]
+environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V36_SOURCE_SHA = "890cb8906a9772d8bd5c5eb43164ecd44ad2720f" }
+input_mode = "archive"
+result_mode = "archive"
+scratch_mode = "none"
+output_paths = ["output/v36-recurrent-n192"]
+contains_sensitive_data = false
+
+input_paths = [
+  "full_model/analysis/run_v36_recurrent_physical_response.py",
+  "full_model/analysis/run_v34_finite_coupled_response.py",
+  "full_model/analysis/run_v24_mechanical_supply.py",
+  "full_model/production/arrhenius_kinetics.py",
+  "full_model/production/common_front_state.py",
+  "full_model/production/common_tensorial_wall.py",
+  "full_model/production/compatibility_energy.py",
+  "full_model/production/complete_front_energy.py",
+  "full_model/production/coupled_front_event.py",
+  "full_model/production/coupled_front_production.py",
+  "full_model/production/density_state_map.py",
+  "full_model/production/dislocation_free_energy.py",
+  "full_model/production/extensive_wall.py",
+  "full_model/production/front_event_measure.py",
+  "full_model/production/front_topology.py",
+  "full_model/production/moving_front.py",
+  "full_model/production/mura_kinematics.py",
+  "full_model/production/nonlocal_elasticity.py",
+  "full_model/production/reaction_cone.py",
+  "full_model/production/signed_front_geometry.py",
+  "full_model/production/tensorial_nye.py",
+  "full_model/production/v23_coupled_wall.py",
+  "full_model/production/v24_mechanical_wall.py",
+  "full_model/production/wall_circuit_diagnostics.py",
+  "full_model/production/wall_ordering_energy.py",
+  "full_model/production/wall_topology_supply.py",
+  "full_model/hpc3/run_v36_recurrent_n192.sh",
+]
+
+[resources]
+account = "SDILLON1"
+partition = "free"
+qos = "low"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "24G"
+time = "08:00:00"
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
