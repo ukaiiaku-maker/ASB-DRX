@@ -141,6 +141,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  temperature_K=1100.0, child_line_fraction=0.35,
                  length_m=3.2e-6, interface_width_m=4.0e-7,
                  proposal_fraction=0.125, proposal_direction=1,
+                 front_enabled=True, mura_enabled=True,
                  checkpoint_every=10,
                  resume=None):
     output_dir = Path(output_dir)
@@ -169,6 +170,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
             "interface_width_m": float(interface_width_m),
             "proposal_fraction": float(proposal_fraction),
             "proposal_direction": int(proposal_direction),
+            "front_enabled": bool(front_enabled),
+            "mura_enabled": bool(mura_enabled),
         }
         if immutable != requested:
             raise ValueError("restart configuration differs from checkpoint")
@@ -185,8 +188,11 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         "interface_width_m": float(interface_width_m),
         "proposal_fraction": float(proposal_fraction),
         "proposal_direction": int(proposal_direction),
+        "front_enabled": bool(front_enabled),
+        "mura_enabled": bool(mura_enabled),
     }
     controls = I3Controls(
+        mura_enabled=bool(mura_enabled), front_enabled=bool(front_enabled),
         driving_pressure_a_to_b_Pa=0.0,
         applied_pressure_a_to_b_Pa=0.0,
         geometric_probe_pressure_Pa=1.0e8,
@@ -199,10 +205,11 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
             state.eta, proposal_fraction, direction=proposal_direction)
         state, audit = run_i3_cycle(
             context, state, envelope, driving, controls)
-        accepted_dt = float(audit["mura"]["accepted_dt_s"])
-        if not np.isclose(accepted_dt, dt_s, rtol=0.0,
-                          atol=32*np.finfo(float).eps*max(dt_s, 1e-300)):
-            raise RuntimeError("Mura and front failed the declared common clock")
+        if mura_enabled:
+            accepted_dt = float(audit["mura"]["accepted_dt_s"])
+            if not np.isclose(accepted_dt, dt_s, rtol=0.0,
+                              atol=32*np.finfo(float).eps*max(dt_s, 1e-300)):
+                raise RuntimeError("Mura and front failed the declared common clock")
         physical_time += float(dt_s)
         records.append(_record(index, physical_time, driving, audit))
         if ((index+1) % int(checkpoint_every) == 0
@@ -264,6 +271,10 @@ def main():
     parser.add_argument("--proposal-fraction", type=float, default=0.125)
     parser.add_argument("--proposal-direction", type=int, choices=(-1, 1),
                         default=1)
+    parser.add_argument("--disable-front", action="store_false",
+                        dest="front_enabled")
+    parser.add_argument("--disable-mura", action="store_false",
+                        dest="mura_enabled")
     parser.add_argument("--checkpoint-every", type=int, default=10)
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
