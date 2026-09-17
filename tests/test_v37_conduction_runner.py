@@ -2,7 +2,10 @@ import json
 
 import pytest
 
-from full_model.hpc3.run_v37_conduction_case import load_cases
+from full_model.hpc3.run_v37_conduction_case import (
+    load_cases,
+    validate_source_identity,
+)
 
 
 def test_registered_v37_cases_are_positive_conduction_and_unique():
@@ -21,3 +24,14 @@ def test_case_table_rejects_zero_conductivity(tmp_path):
         "particle_radius_um": 0.75, "conductivity_W_m_K": 0.0}]))
     with pytest.raises(ValueError, match="positive conductivity"):
         load_cases(path)
+
+
+def test_exact_frozen_source_identity_does_not_require_descendant_diff():
+    from pathlib import Path
+    from unittest.mock import patch
+    head = "a"*40
+    with patch(
+            "full_model.hpc3.run_v37_conduction_case.subprocess.check_output",
+            side_effect=[head+"\n", ""]):
+        actual, exact = validate_source_identity(Path("."), head)
+    assert actual == head and exact

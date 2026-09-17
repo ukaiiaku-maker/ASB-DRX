@@ -2,7 +2,7 @@ name = "full-v37-conduction-response"
 entrypoint = ["bash", "../hpc3/run_v37_conduction_array.sh"]
 working_directory = "full_model/production"
 modules = ["anaconda/2025.12"]
-environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_SOURCE_SHA = "SET_AFTER_PUSH" }
+environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_SOURCE_SHA = "0effd7a1dd8a6449810577289a5a52c55be62e66" }
 input_mode = "archive"
 result_mode = "archive"
 scratch_mode = "none"

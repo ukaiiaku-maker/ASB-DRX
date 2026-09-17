@@ -48,6 +48,33 @@ def load_cases(path: Path) -> list[dict[str, object]]:
     return cases
 
 
+def validate_source_identity(source: Path, expected: str) -> tuple[str, bool]:
+    """Allow a configuration-only descendant of the frozen physics source."""
+    actual = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
+    dirty = subprocess.check_output(
+        ["git", "status", "--porcelain"], cwd=source, text=True).strip()
+    if dirty:
+        raise RuntimeError(f"source dirty: {bool(dirty)}")
+    if actual == expected:
+        return actual, True
+    ancestor = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", expected, actual], cwd=source)
+    if ancestor.returncode != 0:
+        raise RuntimeError(f"frozen source {expected} is not ancestor of {actual}")
+    protected = [
+        "full_model/production",
+        "full_model/hpc3/run_v37_conduction_case.py",
+        "full_model/hpc3/v37_conduction_cases.json",
+    ]
+    changed = subprocess.check_output(
+        ["git", "diff", "--name-only", f"{expected}..{actual}", "--", *protected],
+        cwd=source, text=True).strip()
+    if changed:
+        raise RuntimeError(f"protected executable inputs changed:\n{changed}")
+    return actual, False
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--case-id", type=int, required=True)
@@ -64,12 +91,8 @@ def main() -> None:
         raise ValueError("case-id outside case table")
     case = cases[args.case_id]
     source = args.source_root.resolve()
-    actual = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
-    dirty = subprocess.check_output(
-        ["git", "status", "--porcelain"], cwd=source, text=True).strip()
-    if actual != args.expected_source_sha or dirty:
-        raise RuntimeError(f"source mismatch/dirty: {actual}, {bool(dirty)}")
+    actual, exact_source = validate_source_identity(
+        source, args.expected_source_sha)
     output = (args.run_root/str(case["id"])).resolve()
     output.mkdir(parents=True, exist_ok=True)
     existing = list(output.glob("drx_v25_restart_*.npz"))
@@ -122,7 +145,8 @@ def main() -> None:
     record = {
         "schema": "asb-drx/v37/conduction-case/v1",
         "case_index": args.case_id, "case": case,
-        "source_commit": actual, "source_dirty": False,
+        "archive_commit": actual, "production_source_commit": args.expected_source_sha,
+        "exact_source_head": exact_source, "source_dirty": False,
         "case_table": str(args.case_table.resolve()),
         "case_table_sha256": digest(args.case_table),
         "grid": args.grid, "target_step": args.target_step,
