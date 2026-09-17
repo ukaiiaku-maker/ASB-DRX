@@ -1544,3 +1544,31 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `v33_asb_reconciliation.json`.
 - The final merged V33 worktree passes 643 tests (`PYTHONPATH=.:src pytest -q
   tests`); detached branch test counts remain separate evidence scopes.
+
+## Directive v36 channel-resolved kinetics and physical response (active 2026-09-16/17)
+
+- The V35 shared-rate zero drift is preserved as a frozen comparator and
+  reclassified `ZERO_DRIFT_UNDER_SATURATED_DIRECTIONAL_CLOSURE_PHYSICAL_ARREST_UNRESOLVED`.
+  It is not promoted to physical equilibrium or pinning.
+- Production now prices each actual nonreverse outgoing endpoint with its own
+  EXP-floor activation enthalpy/free barrier, signed entropy, prefactor,
+  acceptance, and availability. The V35 discriminator changes from false
+  cancellation to `+6.22739e-8 m/s` at exactly zero applied front work. True
+  reverse-edge detailed balance, probe neutrality, energy accounting, and
+  exact restart remain intact.
+- The feasible Mura extent search retains the exact accepted result while
+  reducing family trials 48 to 16 and audit runtime 27.21 to 13.25 seconds.
+  Timestep/extent refinement and hard invariants pass; long-time organization
+  remains scientifically open.
+- Recurrent fixed-strain and continued-deformation protocols run on a common
+  clock. n16 timestep and proposal controls pass, but n16/n32/n64 are not
+  spatially promoted. The n128/n192 initial velocity differs by 3.79%; the
+  matched 0.05 ms trajectories are active. Local n128 is checkpointed, and
+  source-frozen HPC3 n192 is Slurm job `56099919`.
+- Thermal postprocessing now emits numeric effects only for exact matched,
+  attributable pairs. Corrected frozen-flow and exact-temperature thermostat
+  comparisons are valid; invalid legacy freezes remain null. Corrected
+  recovery and finite conduction continue locally without interference.
+- Integrated source, reports, and tests are pushed through `a7d1a8e` on
+  `exp/full-v34-recovery-v1`. Current report:
+  `full_model/docs/v36_decision_report.md`.
