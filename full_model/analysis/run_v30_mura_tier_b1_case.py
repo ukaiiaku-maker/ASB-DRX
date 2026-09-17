@@ -171,7 +171,8 @@ def compact_metrics(state, ledger, systems, topologies, spacing):
     density_fields = derived_density_fields(state.density, topologies)
     wall = density_fields["rho_wall_m2"]
     ordered = density_fields["rho_wall_ordered_m2"]
-    wall_threshold = max(float(np.quantile(wall, .9)), 1e12)
+    wall_threshold = max(float(np.quantile(wall, .9)),
+                         .1*float(np.max(wall)), np.finfo(float).tiny)
     wall_local = wall >= wall_threshold
     # ``reservoir`` above is the total tensor for legacy metric compatibility;
     # obtain the component dictionary once for V37 organization diagnostics.
@@ -275,9 +276,10 @@ def main():
         "mura_work_budget_mode": args.mura_work_budget_mode,
         "topology_route_enabled": bool(args.topology_route_enabled),
         "source_sha": os.environ.get(
+            "V37_SOURCE_SHA", os.environ.get(
             "V35_SOURCE_SHA", os.environ.get(
                 "V32_SOURCE_SHA", os.environ.get(
-                    "V30_SOURCE_SHA", "UNRECORDED"))),
+                    "V30_SOURCE_SHA", "UNRECORDED")))),
         "rng_state": {"ongoing_stochastic_evolution": False,
                       "initialization_seed": args.seed},
     }
