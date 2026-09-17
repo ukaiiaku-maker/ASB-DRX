@@ -19,15 +19,26 @@ def sha256(path: Path) -> str:
 
 
 def weighted_width(field: np.ndarray, dx: float) -> dict[str, float]:
-    """Return coordinate-invariant second-moment widths of a nonnegative field."""
+    """Return periodic-translation-invariant widths of a nonnegative field."""
     value = np.maximum(np.asarray(field, dtype=float), 0.0)
     weight = value / max(float(value.sum()), 1e-300)
     ny, nx = value.shape
     yy, xx = np.indices((ny, nx), dtype=float)
-    xx = (xx-(nx-1)/2.0)*dx
-    yy = (yy-(ny-1)/2.0)*dx
-    mx = float(np.sum(weight*xx)); my = float(np.sum(weight*yy))
-    x = xx-mx; y = yy-my
+
+    def wrapped_coordinate(index, count):
+        angle = 2.0*np.pi*index/count
+        cosine = float(np.sum(weight*np.cos(angle)))
+        sine = float(np.sum(weight*np.sin(angle)))
+        resultant = np.hypot(cosine, sine)
+        if resultant <= 1e-12:
+            # A uniform/broad direction has no unique circular centroid.
+            return (index-(count-1)/2.0)*dx
+        center_angle = np.arctan2(sine, cosine) % (2.0*np.pi)
+        center_index = center_angle*count/(2.0*np.pi)
+        return ((index-center_index+0.5*count) % count-0.5*count)*dx
+
+    x = wrapped_coordinate(xx, nx)
+    y = wrapped_coordinate(yy, ny)
     covariance = np.array([
         [np.sum(weight*x*x), np.sum(weight*x*y)],
         [np.sum(weight*x*y), np.sum(weight*y*y)]], dtype=float)
@@ -60,6 +71,8 @@ def field_metrics(field: np.ndarray, dx: float) -> dict[str, object]:
                         and mask[ni, nj] and not seen[ni, nj]):
                     seen[ni, nj] = True; stack.append((ni, nj))
         sizes.append(size)
+    localized_mass = float(shifted.sum())
+    widths = (weighted_width(shifted, dx) if localized_mass > 0.0 else None)
     return {
         "minimum": float(value.min()), "mean": float(value.mean()),
         "maximum": float(value.max()), "standard_deviation": float(value.std()),
@@ -73,8 +86,38 @@ def field_metrics(field: np.ndarray, dx: float) -> dict[str, object]:
         "connected_component_count": len(sizes),
         "largest_connected_area_fraction": (
             float(max(sizes)/value.size) if sizes else 0.0),
-        "second_moment_widths": weighted_width(shifted, dx),
+        "localized_component_status": (
+            "DEFINED_ABOVE_MINIMUM" if localized_mass > 0.0
+            else "NO_LOCALIZED_COMPONENT"),
+        "second_moment_widths": widths,
+        "axis_profiles": {
+            "axis0_mean": np.mean(value, axis=1).tolist(),
+            "axis1_mean": np.mean(value, axis=0).tolist(),
+        },
     }
+
+
+def signed_temperature_rise_metrics(temperature: np.ndarray, baseline_K: float,
+                                    dx: float) -> dict[str, object]:
+    """Diagnose ``T-T0`` without hiding negative thermal anomalies.
+
+    Participation, connected support, and widths use the explicitly declared
+    positive-excess weight ``max(T-T0, 0)``. Signed moments and the negative
+    fraction are reported separately.
+    """
+    anomaly = np.asarray(temperature, dtype=float)-float(baseline_K)
+    positive = np.maximum(anomaly, 0.0)
+    result = field_metrics(positive, dx)
+    result.update({
+        "baseline_K": float(baseline_K),
+        "weighting_convention": "positive_excess=max(T-T0,0)",
+        "signed_minimum_K": float(anomaly.min()),
+        "signed_mean_K": float(anomaly.mean()),
+        "signed_maximum_K": float(anomaly.max()),
+        "signed_variance_K2": float(anomaly.var()),
+        "negative_area_fraction": float(np.mean(anomaly < 0.0)),
+    })
+    return result
 
 
 def endpoint(path: Path) -> dict[str, object]:
@@ -84,6 +127,20 @@ def endpoint(path: Path) -> dict[str, object]:
         activity = np.asarray(data["asb_last_gdot_abs"], dtype=float)
         nx = int(parameters["Nx"]); length = float(parameters["L_phys"])
         dx = length/nx
+        initial_temperature = float(parameters["T0"])
+        plastic_power = (np.asarray(data["asb_last_plastic_power_W_m3"], dtype=float)
+                         if "asb_last_plastic_power_W_m3" in data else None)
+        heat_production = (np.asarray(data["asb_last_heat_production_W_m3"], dtype=float)
+                           if "asb_last_heat_production_W_m3" in data else None)
+        last_ledger = (json.loads(str(data["v30_asb_last_step_json"].item()))
+                       if "v30_asb_last_step_json" in data else {})
+        field_area = length*length
+        def power_record(value):
+            if value is None:
+                return {"status": "NOT_SAVED_BY_SOURCE_CHECKPOINT"}
+            metrics = field_metrics(value, dx)
+            metrics["spatial_integral_W_per_m"] = float(np.mean(value)*field_area)
+            return metrics
         return {
             "path": str(path.resolve()), "sha256": sha256(path),
             "step": int(data["step"]), "physical_time_s": float(data["sim_time"]),
@@ -94,14 +151,19 @@ def endpoint(path: Path) -> dict[str, object]:
                 "conductivity_W_m_K": float(parameters["k_thermal"]),
                 "volumetric_heat_capacity_J_m3_K": float(parameters["cp_rho_vol"]),
                 "strain_rate_s": float(parameters["edot_app"]),
-                "initial_temperature_K": float(parameters["T0"]),
+                "initial_temperature_K": initial_temperature,
                 "particle_radius_m": float(parameters["v19_particle_radius_um"])*1e-6,
                 "heat_process_zone_sigma_m": (
                     float(parameters["heat_process_zone_sigma_um"])*1e-6),
                 "thermal_boundary": "periodic_insulated_no_bath",
             },
             "temperature": field_metrics(temperature, dx),
+            "temperature_rise": signed_temperature_rise_metrics(
+                temperature, initial_temperature, dx),
             "absolute_shear_rate": field_metrics(activity, dx),
+            "work_conjugate_plastic_power": power_record(plastic_power),
+            "irreversible_heat_production": power_record(heat_production),
+            "last_step_energy_ledger": last_ledger,
             "activity_field_semantics": (
                 "absolute shear-rate diagnostic; not independently ledgered plastic power"),
         }
@@ -147,6 +209,8 @@ def main() -> None:
     yy, xx = np.indices((manufactured_n, manufactured_n), dtype=float)
     broad = np.ones((manufactured_n, manufactured_n), dtype=float)
     narrow = np.exp(-0.5*((yy-(manufactured_n-1)/2.0)*dx/(0.25e-6))**2)
+    background = 900.0
+    shifted_narrow = np.roll(np.rot90(narrow), (17, -23), axis=(0, 1))
     thermal = json.loads(args.thermal_evidence.read_text())
     result = {
         "schema": "asb-drx/v37/conduction-localization/v1",
@@ -168,6 +232,13 @@ def main() -> None:
         "manufactured_metric_qualification": {
             "broad_uniform": field_metrics(broad, dx),
             "narrow_gaussian_sigma_0p25um": field_metrics(narrow, dx),
+            "uniform_temperature": signed_temperature_rise_metrics(
+                np.full_like(narrow, background), background, dx),
+            "gaussian_on_900K_background": signed_temperature_rise_metrics(
+                background+narrow, background, dx),
+            "translated_rotated_gaussian_on_900K_background": (
+                signed_temperature_rise_metrics(
+                    background+shifted_narrow, background, dx)),
             "purpose": "distinguish broad support from a narrow band without changing frozen thresholds",
         },
         "registered_screen": {

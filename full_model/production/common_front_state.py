@@ -377,7 +377,8 @@ def _moment_support_delta(owner, old_mix, new_mix, support, name,
     return np.where(active, candidate, value)
 
 
-def _minimum_change_bounded_moments(baselines, bounds, weights, target):
+def _reference_minimum_change_bounded_moments(baselines, bounds, weights,
+                                               target):
     """Project owner moments onto exact mixture and line-length constraints.
 
     This alternating projection starts from each owner's density-scaled prior
@@ -425,6 +426,83 @@ def _minimum_change_bounded_moments(baselines, bounds, weights, target):
     if float(np.max(np.abs(residual))) > 2048*np.finfo(float).eps*scale:
         raise RuntimeError("bounded owner-moment projection did not converge")
     return tuple(kappa[index] for index in range(len(baselines)))
+
+
+def _minimum_change_bounded_moments(baselines, bounds, weights, target):
+    """Equivalent compact solve for exact mixture and line-length constraints.
+
+    The V35 reference map above updates every grid/reservoir point until the
+    slowest active constraint converges.  This implementation applies the same
+    affine correction and Euclidean-ball projection, but removes converged
+    points from subsequent iterations.  It changes neither the admissible set
+    nor the full-polarization analytical limit.
+    """
+    kappa = np.stack(baselines, axis=0).copy()
+    radius = np.stack(bounds, axis=0)[..., None]
+    weight = np.stack(weights, axis=0)
+    w = weight[(...,)+(None,)*(kappa.ndim-weight.ndim)]
+    active = w > 64.0*np.finfo(float).eps
+    scalar_shape = kappa.shape[:-1]
+    w_scalar = np.broadcast_to(w[..., 0], scalar_shape)
+    radius_scalar = np.broadcast_to(radius[..., 0], scalar_shape)
+    active_scalar = np.broadcast_to(active[..., 0], scalar_shape)
+    owners = kappa.shape[0]
+    vector_size = kappa.shape[-1]
+    flat = kappa.reshape(owners, -1, vector_size)
+    flat_w = w_scalar.reshape(owners, -1)
+    flat_radius = radius_scalar.reshape(owners, -1)
+    flat_active = active_scalar.reshape(owners, -1)
+    flat_target = np.asarray(target).reshape(-1, vector_size)
+    denominator = np.sum(flat_w*flat_w, axis=0)
+    scale = max(float(np.max(np.abs(target))), 1.0)
+    tolerance = 256*np.finfo(float).eps*scale
+    unresolved = np.arange(flat_target.shape[0])
+    for _ in range(256):
+        if unresolved.size == 0:
+            break
+        index = unresolved
+        residual = (flat_target[index]
+                    -np.sum(flat_w[:, index, None]*flat[:, index, :], axis=0))
+        keep = np.max(np.abs(residual), axis=-1) > tolerance
+        if not np.any(keep):
+            unresolved = np.empty(0, dtype=int)
+            break
+        index = index[keep]
+        residual = residual[keep]
+        correction = np.divide(
+            flat_w[:, index, None]*residual[None, ...],
+            denominator[index][None, :, None],
+            out=np.zeros((owners, index.size, vector_size), dtype=flat.dtype),
+            where=denominator[index][None, :, None] > 0.0)
+        trial = np.where(flat_active[:, index, None],
+                         flat[:, index, :]+correction, flat[:, index, :])
+        norm = np.linalg.norm(trial, axis=-1)
+        factor = np.minimum(
+            1.0, np.divide(flat_radius[:, index], norm,
+                           out=np.ones_like(norm), where=norm > 0.0))
+        flat[:, index, :] = np.where(
+            flat_active[:, index, None], trial*factor[..., None],
+            flat[:, index, :])
+        unresolved = index
+    residual = flat_target-np.sum(flat_w[..., None]*flat, axis=0)
+    analytical_mask = np.max(np.abs(residual), axis=-1) > (
+        2048*np.finfo(float).eps*scale)
+    if np.any(analytical_mask):
+        index = np.flatnonzero(analytical_mask)
+        total_radius = np.sum(
+            flat_w[:, index]*flat_radius[:, index], axis=0)
+        direction = np.divide(
+            flat_target[index], total_radius[:, None],
+            out=np.zeros_like(flat_target[index]),
+            where=total_radius[:, None] > 0.0)
+        analytical = flat_radius[:, index, None]*direction[None, ...]
+        flat[:, index, :] = np.where(
+            flat_active[:, index, None], analytical, flat[:, index, :])
+        residual = flat_target-np.sum(flat_w[..., None]*flat, axis=0)
+    if float(np.max(np.abs(residual))) > 2048*np.finfo(float).eps*scale:
+        raise RuntimeError("bounded owner-moment projection did not converge")
+    result = flat.reshape(kappa.shape)
+    return tuple(result[index] for index in range(len(baselines)))
 
 
 def apply_mechanical_increment(state, updated, spacing_m, systems, topologies):

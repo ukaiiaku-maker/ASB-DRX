@@ -767,19 +767,12 @@ def accepted_v24_mechanical_step(
         # Shared EXP-floor/signed-entropy ordering law. With C_FB=0 and a zero
         # target, only the declared extensive free-energy affinity selects direction.
         zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
-        ordered_density, ordering_thermo, _ = accepted_ordering_step(
+        (ordered_density, ordered_alignment,
+         ordering_thermo, _) = accepted_ordering_step(
             working_density, systems, topologies, common.orientation_rad,
             zero_target, drive["effective_stress_Pa"], common.temperature_K,
-            extensive_parameters, accepted_dt)
-        extent_plus = (ordered_density.wall_ordered_plus_m2
-                       -working_density.wall_ordered_plus_m2)
-        extent_minus = (ordered_density.wall_ordered_minus_m2
-                        -working_density.wall_ordered_minus_m2)
-        ordered_density, ordered_alignment, ordering_topology = (
-            apply_signed_ordering_extent(
-                working_density, working_alignment,
-                extent_plus, extent_minus, systems, common.orientation_rad,
-                topologies))
+            extensive_parameters, accepted_dt, alignment=working_alignment)
+        ordering_topology = ordering_thermo.pop("topology_ledger")
     result = synchronize_common(V24MechanicalWallState(
         common, ordered_density, ordered_alignment), topologies)
     result.validate(systems, topologies)

@@ -49,6 +49,11 @@ class ExtensiveWallParameters:
     exp_n: float = 2.5
     critical_stress_Pa: float = 1.5e9
     maximum_fraction_per_step: float = 0.15
+    # Generic fixtures retain one-step behavior unless a production campaign
+    # explicitly qualifies an internal physical-time resolution.
+    ordering_internal_substep_s: float = 1.0
+    ordering_internal_max_substeps: int = 8192
+    ordering_stationary_remainder_relative_tolerance: float = 1e-8
 
     def __post_init__(self):
         positive = (
@@ -58,6 +63,7 @@ class ExtensiveWallParameters:
             self.ordering_attempt_frequency_s, self.ordering_barrier_eV,
             self.event_length_m, self.exp_a, self.exp_n,
             self.critical_stress_Pa, self.maximum_fraction_per_step,
+            self.ordering_internal_substep_s,
         )
         if any((not np.isfinite(x)) or x <= 0 for x in positive):
             raise ValueError("V23 wall parameters must be finite and positive")
@@ -67,6 +73,11 @@ class ExtensiveWallParameters:
             raise ValueError("invalid gradient coefficient or EXP floor")
         if self.maximum_fraction_per_step > 1:
             raise ValueError("step fraction cannot exceed one")
+        if int(self.ordering_internal_max_substeps) <= 0:
+            raise ValueError("ordering internal substep limit must be positive")
+        if (not np.isfinite(self.ordering_stationary_remainder_relative_tolerance)
+                or self.ordering_stationary_remainder_relative_tolerance <= 0.0):
+            raise ValueError("ordering stationary tolerance must be positive")
         # Validate entropy, drag limit, and negative-barrier validity policy in
         # the campaign-wide Arrhenius representation.
         ActivatedProcess(
@@ -286,9 +297,9 @@ def ordering_residual(inventory, systems, topologies, orientation_rad,
     return result, turnover, mu
 
 
-def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
-                           target_nye_m1, stress_Pa, temperature_K, parameters,
-                           dt_s):
+def _accepted_ordering_substep(inventory, systems, topologies, orientation_rad,
+                               target_nye_m1, stress_Pa, temperature_K,
+                               parameters, dt_s):
     transfer, turnover, mu = ordering_residual(
         inventory, systems, topologies, orientation_rad, target_nye_m1,
         stress_Pa, temperature_K, parameters)
@@ -324,6 +335,140 @@ def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
                      "accepted_transfer_m2_s": effective_rates,
                      "chemical_potential_J_m": mu,
                      "free_energy_rate_W_m3": dissipation_W_m3}, scale
+
+
+def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
+                           target_nye_m1, stress_Pa, temperature_K, parameters,
+                           dt_s, alignment=None):
+    """Advance the reversible ordering channel on its own physical clock.
+
+    Before V38, a capped ordering extent was accepted once per outer Mura
+    interval and the unconsumed reaction time was discarded.  The cap then
+    acted as an outer-timestep-dependent kinetic coefficient.  Here the same
+    conservative map is subcycled over the complete elapsed time and all
+    reported rates are actual time averages.
+    """
+    total_dt = float(dt_s)
+    if not np.isfinite(total_dt) or total_dt <= 0.0:
+        raise ValueError("ordering timestep must be finite and positive")
+    maximum_substep = float(parameters.ordering_internal_substep_s)
+    requested_count = max(1, int(np.ceil(total_dt/maximum_substep)))
+    count = min(requested_count, int(parameters.ordering_internal_max_substeps))
+    current = inventory
+    current_alignment = alignment
+    topology_totals = None
+    transfer_integral = turnover_integral = mu_integral = None
+    accepted_extent = None
+    energy_integral = None
+    minimum_scale = 1.0
+    executed = 0
+    advanced_time = 0.0
+    last_substep = 0.0
+    stationary_remainder = 0.0
+    for index in range(count):
+        substep = min(maximum_substep, total_dt-advanced_time)
+        last_substep = substep
+        updated, ledger, scale = _accepted_ordering_substep(
+            current, systems, topologies, orientation_rad, target_nye_m1,
+            stress_Pa, temperature_K, parameters, substep)
+        if current_alignment is not None:
+            from .wall_topology_supply import apply_signed_ordering_extent
+            extent_plus = (updated.wall_ordered_plus_m2
+                           -current.wall_ordered_plus_m2)
+            extent_minus = (updated.wall_ordered_minus_m2
+                            -current.wall_ordered_minus_m2)
+            updated, current_alignment, topology = apply_signed_ordering_extent(
+                current, current_alignment, extent_plus, extent_minus, systems,
+                orientation_rad, topologies)
+            if topology_totals is None:
+                topology_totals = {
+                    "operator": "subcycled_signed_topology_ordering_extent",
+                    "sign": {sign: {
+                        name: np.zeros_like(value)
+                        for name, value in topology["sign"][sign].items()}
+                        for sign in ("plus", "minus")},
+                    "total_nye_residual_m1": np.zeros_like(
+                        topology["total_nye_residual_m1"]),
+                }
+            for sign in ("plus", "minus"):
+                for name, value in topology["sign"][sign].items():
+                    topology_totals["sign"][sign][name] += value
+            topology_totals["total_nye_residual_m1"] += topology[
+                "total_nye_residual_m1"]
+        if transfer_integral is None:
+            transfer_integral = {sign: np.zeros_like(ledger["transfer_m2_s"][sign])
+                                 for sign in ("plus", "minus")}
+            turnover_integral = {sign: np.zeros_like(ledger["turnover_m2_s"][sign])
+                                 for sign in ("plus", "minus")}
+            accepted_extent = {sign: np.zeros_like(
+                ledger["accepted_transfer_m2_s"][sign])
+                               for sign in ("plus", "minus")}
+            mu_integral = {name: np.zeros_like(value)
+                           for name, value in ledger["chemical_potential_J_m"].items()}
+            energy_integral = np.zeros_like(ledger["free_energy_rate_W_m3"])
+        for sign in ("plus", "minus"):
+            transfer_integral[sign] += substep*ledger["transfer_m2_s"][sign]
+            turnover_integral[sign] += substep*ledger["turnover_m2_s"][sign]
+            accepted_extent[sign] += (
+                substep*ledger["accepted_transfer_m2_s"][sign])
+        for name in mu_integral:
+            mu_integral[name] += substep*ledger["chemical_potential_J_m"][name]
+        energy_integral += substep*ledger["free_energy_rate_W_m3"]
+        minimum_scale = min(minimum_scale, float(scale))
+        current = updated
+        executed = index+1
+        advanced_time += substep
+        remaining = total_dt-advanced_time
+        if remaining > 0.0:
+            absolute_rate = sum(float(np.sum(np.abs(
+                ledger["accepted_transfer_m2_s"][sign]),
+                dtype=np.longdouble)) for sign in ("plus", "minus"))
+            line_scale = sum(float(np.sum(
+                getattr(current, f"wall_{kind}_{sign}_m2"),
+                dtype=np.longdouble))
+                for kind in ("tangle", "ordered")
+                for sign in ("plus", "minus"))
+            if (remaining*absolute_rate <=
+                    parameters.ordering_stationary_remainder_relative_tolerance
+                    *max(line_scale, 1.0)):
+                stationary_remainder = remaining
+                for sign in ("plus", "minus"):
+                    transfer_integral[sign] += (
+                        remaining*ledger["transfer_m2_s"][sign])
+                    turnover_integral[sign] += (
+                        remaining*ledger["turnover_m2_s"][sign])
+                for name in mu_integral:
+                    mu_integral[name] += (
+                        remaining*ledger["chemical_potential_J_m"][name])
+                break
+    if advanced_time+stationary_remainder < total_dt-64*np.finfo(float).eps*total_dt:
+        raise RuntimeError(
+            "ordering reaction did not reach the declared stationary tolerance "
+            "within the internal substep limit")
+    aggregate = {
+        "transfer_m2_s": {key: value/total_dt
+                          for key, value in transfer_integral.items()},
+        "turnover_m2_s": {key: value/total_dt
+                          for key, value in turnover_integral.items()},
+        "accepted_transfer_m2_s": {key: value/total_dt
+                                   for key, value in accepted_extent.items()},
+        "chemical_potential_J_m": {key: value/total_dt
+                                   for key, value in mu_integral.items()},
+        "free_energy_rate_W_m3": energy_integral/total_dt,
+        "internal_substeps": executed,
+        "maximum_internal_substep_s": maximum_substep,
+        "last_internal_substep_s": last_substep,
+        "complete_elapsed_time_s": total_dt,
+        "discarded_reaction_time_s": 0.0,
+        "stationary_remainder_s": stationary_remainder,
+        "requested_internal_substeps": requested_count,
+        "internal_resolution_limit_active": bool(count < requested_count),
+    }
+    if alignment is not None:
+        aggregate["topology_subcycled"] = True
+        aggregate["topology_ledger"] = topology_totals
+        return current, current_alignment, aggregate, minimum_scale
+    return current, aggregate, minimum_scale
 
 
 def accepted_ordering_step_jvp(inventory, direction, systems, topologies,

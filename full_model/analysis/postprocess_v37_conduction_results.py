@@ -51,9 +51,14 @@ def summarize_case(directory: Path) -> dict[str, object]:
             "nominal_strain": item["nominal_strain"],
             "temperature_peak_minus_mean_K": item["temperature"]["peak_minus_mean"],
             "temperature_ipr_fraction": item["temperature"]["inverse_participation_fraction"],
+            "temperature_rise_ipr_fraction": item["temperature_rise"][
+                "inverse_participation_fraction"],
             "activity_ipr_fraction": item["absolute_shear_rate"]["inverse_participation_fraction"],
-            "activity_minor_fwhm_m": item["absolute_shear_rate"][
-                "second_moment_widths"]["minor_gaussian_fwhm_m"],
+            "activity_minor_fwhm_m": (
+                item["absolute_shear_rate"]["second_moment_widths"][
+                    "minor_gaussian_fwhm_m"]
+                if item["absolute_shear_rate"]["second_moment_widths"]
+                is not None else None),
         })
     record = json.loads((directory/"v37_conduction_run_record.json").read_text())
     terminal = bool(record.get("terminal", False))

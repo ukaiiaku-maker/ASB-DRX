@@ -73,7 +73,9 @@ class DirectionalRateChannel:
 
     endpoint_free_energy_change_J: float
     temperature_K: float
-    driving_pressure_magnitude_Pa: float
+    front_channel_pressure_Pa: float
+    front_event_volume_m3: float
+    front_activation_volume_m3: float
     activation_enthalpy_J: float
     activation_entropy_over_kB: float
     activation_free_barrier_J: float
@@ -83,6 +85,38 @@ class DirectionalRateChannel:
     acceptance_probability: float
     availability_factor: float
     gross_activity_s: float
+
+    @property
+    def driving_pressure_magnitude_Pa(self):
+        """Deprecated compatibility spelling for archived V36/V37 readers."""
+        return self.front_channel_pressure_Pa
+
+
+def front_barrier_activation_volume_m3(pressure_Pa, h0_J,
+                                       critical_pressure_Pa, exp_a, exp_n,
+                                       exp_floor):
+    """Return ``-dH_front*/dP`` for the retained EXP-floor barrier.
+
+    This barrier sensitivity is not the geometric volume used to count front
+    events.  At zero pressure the right-hand limit is used; it is finite for
+    ``n=1`` and zero for ``n>1``.
+    """
+    pressure = abs(float(pressure_Pa))
+    critical = float(critical_pressure_Pa)
+    a = float(exp_a); n = float(exp_n); floor = float(exp_floor)
+    h0 = float(h0_J)
+    if (critical <= 0.0 or h0 < 0.0 or a < 0.0 or n <= 0.0
+            or not 0.0 <= floor <= 1.0):
+        raise ValueError("invalid front EXP-floor activation-volume parameters")
+    ratio = pressure/critical
+    if ratio == 0.0:
+        if n < 1.0:
+            return math.inf
+        power = 1.0 if n == 1.0 else 0.0
+    else:
+        power = ratio**(n-1.0)
+    return (h0*(1.0-floor)*a*n/critical*power
+            *math.exp(-a*ratio**n))
 
 
 @dataclass(frozen=True)
@@ -164,8 +198,11 @@ def _directional_rate_channel(process, *, delta_f_J, event_volume_m3,
     acceptance = math.exp(-min(max(
         delta_f/(KB_J_K*temperature), 0.0), 700.0))
     gross = availability*transition_rate*acceptance
+    activation_volume = front_barrier_activation_volume_m3(
+        pressure, h0_J, critical_pressure_Pa, exp_a, exp_n, exp_floor)
     return DirectionalRateChannel(
-        delta_f, temperature, pressure, enthalpy, process.entropy_over_kB, barrier,
+        delta_f, temperature, pressure, float(event_volume_m3),
+        activation_volume, enthalpy, process.entropy_over_kB, barrier,
         process.attempt_frequency_s, process.identifiable_prefactor_s,
         transition_rate, acceptance, availability, gross)
 

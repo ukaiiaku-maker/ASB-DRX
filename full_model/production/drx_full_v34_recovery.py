@@ -810,6 +810,9 @@ P = dict(
     nuc_min_field_mis_deg=3.0,      # v27c: sub-degree changes are wall recovery, not new eta fields      # numerical: below this, treat as recovery/subgrain, not new eta field
     nuc_barrier_thickness_b=2.0,     # converts 2-D barrier per-depth to event energy
     moving_front_activation_volume_b3=1.0,
+    # V38 canonical spelling.  ``None`` explicitly selects the archived
+    # ``moving_front_activation_volume_b3`` compatibility key below.
+    front_event_volume_b3=None,
     nuc_comp_relief_factor=0.05,
     nuc_comp_relief_cap_factor=0.25, # v27c: compatibility relief cannot dominate stored-energy relief  # cap compatibility relief to O(stored-energy relief)
     nuc_gnd_feed_efficiency=0.50,    # fraction of residual GND available to feed new GB
@@ -6905,6 +6908,10 @@ def _save_restart_checkpoint(step_local, sim_time_value=None):
                 'v20_last_gdot', np.zeros((Nx, Ny, nSlip))),
             asb_last_gdot_abs=globals().get(
                 'asb_last_gdot_abs', np.zeros((Nx, Ny))),
+            asb_last_plastic_power_W_m3=globals().get(
+                'asb_last_plastic_power_W_m3', np.zeros((Nx, Ny))),
+            asb_last_heat_production_W_m3=globals().get(
+                'asb_last_heat_production_W_m3', np.zeros((Nx, Ny))),
             v20_last_wall_order_target=globals().get(
                 'v20_last_wall_order_target', np.zeros((Nx, Ny))),
             v20_last_wall_order_rate_s=globals().get(
@@ -8519,8 +8526,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                 'moving_front_minimum_topology_backtrack_fraction', 2.0**-12)),
             topology_backtracking_bisections=int(P.get(
                 'moving_front_topology_backtracking_bisections', 12)),
-            kinetic_event_volume_m3=(float(P.get(
-                'moving_front_activation_volume_b3', 1.0))*P['b']**3),
+            kinetic_event_volume_m3=(float(
+                P.get('front_event_volume_b3')
+                if P.get('front_event_volume_b3') is not None
+                else P.get('moving_front_activation_volume_b3', 1.0))*P['b']**3),
             kinetic_event_length_m=P['b'])
         sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
             accept_coupled_front_candidate(
@@ -8547,8 +8556,10 @@ for n in range(_restart_step_offset, _restart_end_step):
                 _complete_directional = evaluate_complete_directional_kinetics(
                     _front_common_before, sparse_front_state,
                     eta_before_ac[:, :, :Ng], _eta_accepted,
-                    event_volume_m3=(float(P.get(
-                        'moving_front_activation_volume_b3', 1.0))*P['b']**3),
+                    event_volume_m3=(float(
+                        P.get('front_event_volume_b3')
+                        if P.get('front_event_volume_b3') is not None
+                        else P.get('moving_front_activation_volume_b3', 1.0))*P['b']**3),
                     spacing_m=dx, cell_volume_m3=_front_volume,
                     represented_thickness_m=_front_thickness,
                     transmission_fraction=_front_accept_kwargs[
@@ -9177,6 +9188,9 @@ for n in range(_restart_step_offset, _restart_end_step):
     # Plastic power per volume is sum_s τ_s γdot_s.  By default use the effective
     # thermodynamic driving stress τ - τ_backstress; set local_heat_stress='resolved'
     # to use the resolved shear stress itself.
+    # V38: retain the signed, work-conjugate field independently of any heat
+    # partition, clipping, or process-zone smoothing.
+    asb_last_plastic_power_W_m3 = np.sum(tau_resolved*gdot, axis=2)
     if P.get('use_local_heat_source', True):
         if str(P.get('local_heat_stress', 'effective')).lower().startswith('res'):
             tau_heat = tau_resolved
@@ -9277,6 +9291,9 @@ for n in range(_restart_step_offset, _restart_end_step):
         heat_pz_diag = dict(active=0.0, sigma_px=0.0,
                             raw_max=float(np.nanmax(qdot_field)),
                             smooth_max=float(np.nanmax(qdot_field)))
+    # This is the actual irreversible source supplied to the heat equation.
+    # It is intentionally distinct from both |gdot| and signed plastic power.
+    asb_last_heat_production_W_m3 = np.asarray(qdot_field, dtype=float).copy()
     dT_heat = P['dt'] * qdot_field / max(P['cp_rho_vol'], 1.0)
     heat_diag = {
         'qdot_mean': float(np.nanmean(qdot_field)),

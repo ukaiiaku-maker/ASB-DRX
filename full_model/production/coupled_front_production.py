@@ -122,6 +122,8 @@ class CoupledFrontDecision:
     proposal_probe_selected_direction: bool = False
     kinetic_event_volume_m3: float = 0.0
     kinetic_event_length_m: float = 0.0
+    front_event_volume_m3: float = 0.0
+    front_jump_length_m: float = 0.0
     physical_site_count: float = 0.0
     expected_events_a_to_b: float = 0.0
     expected_events_b_to_a: float = 0.0
@@ -484,13 +486,13 @@ def accept_coupled_front_candidate(
             trial, phi1, topology = best_eta, best_phi, best_match
             ray_after = topology.snapshot.ray_crossing_count
     event_volume = float(spacing_m)**2*float(represented_thickness_m)
-    activation_volume = (event_volume if kinetic_event_volume_m3 is None
-                         else float(kinetic_event_volume_m3))
-    activation_length = (float(spacing_m) if kinetic_event_length_m is None
+    front_event_volume = (event_volume if kinetic_event_volume_m3 is None
+                          else float(kinetic_event_volume_m3))
+    front_jump_length = (float(spacing_m) if kinetic_event_length_m is None
                          else float(kinetic_event_length_m))
-    if (not math.isfinite(activation_volume) or activation_volume <= 0.0
-            or not math.isfinite(activation_length)
-            or activation_length <= 0.0):
+    if (not math.isfinite(front_event_volume) or front_event_volume <= 0.0
+            or not math.isfinite(front_jump_length)
+            or front_jump_length <= 0.0):
         raise ValueError("kinetic event volume and length must be positive")
     pressure = float(driving_pressure_a_to_b_Pa)
     state_a = _non_b_state(state)
@@ -502,8 +504,8 @@ def accept_coupled_front_candidate(
         pressure = 0.0
         state_b = state_a
     event = propose_bidirectional_front_event(
-        state_a, state_b, event_volume_m3=activation_volume,
-        event_length_m=activation_length, line_energy_J_m=line_energy_J_m,
+        state_a, state_b, event_volume_m3=front_event_volume,
+        event_length_m=front_jump_length, line_energy_J_m=line_energy_J_m,
         temperature_K=float(np.mean(np.asarray(temperature_K, dtype=float))),
         process=process, h0_J=h0_J, critical_pressure_Pa=critical_pressure_Pa,
         exp_a=exp_a, exp_n=exp_n, exp_floor=exp_floor,
@@ -526,11 +528,11 @@ def accept_coupled_front_candidate(
     _event_measure = physical_front_event_measure(
         interface_length_m=interface_length,
         represented_thickness_m=float(represented_thickness_m),
-        burgers_m=activation_length,
+        burgers_m=front_jump_length,
         rate_a_to_b_per_site_s=event.rate_a_to_b_s,
         rate_b_to_a_per_site_s=event.rate_b_to_a_s,
-        dt_s=float(dt_s), event_volume_m3=activation_volume,
-        event_length_m=activation_length)
+        dt_s=float(dt_s), event_volume_m3=front_event_volume,
+        event_length_m=front_jump_length)
     _site_diagnostics = dict(
         kinetic_free_energy_a_to_b_J=event.kinetic_free_energy_a_to_b_J,
         kinetic_free_energy_b_to_a_J=event.kinetic_free_energy_b_to_a_J,
@@ -546,6 +548,8 @@ def accept_coupled_front_candidate(
         proposal_probe_selected_direction=False,
         kinetic_event_volume_m3=_event_measure.event_volume_m3,
         kinetic_event_length_m=_event_measure.event_length_m,
+        front_event_volume_m3=_event_measure.event_volume_m3,
+        front_jump_length_m=_event_measure.event_length_m,
         physical_site_count=_event_measure.physical_site_count,
         expected_events_a_to_b=_event_measure.expected_events_a_to_b,
         expected_events_b_to_a=_event_measure.expected_events_b_to_a,

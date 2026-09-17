@@ -1,4 +1,22 @@
 import numpy as np
+
+from full_model.production.coupled_front_event import (
+    front_barrier_activation_volume_m3,
+)
+
+
+def test_front_activation_volume_is_barrier_derivative_not_event_volume():
+    h0 = 1.7e-19; pressure = 2.3e8; critical = 1.1e9
+    a = 1.4; n = 1.5; floor = 0.08
+    analytic = front_barrier_activation_volume_m3(
+        pressure, h0, critical, a, n, floor)
+    dp = pressure*1e-5
+    from full_model.production.arrhenius_kinetics import exp_floor_enthalpy_j
+    numerical = -(exp_floor_enthalpy_j(
+        pressure+dp, h0, critical, a, n, floor)-exp_floor_enthalpy_j(
+        pressure-dp, h0, critical, a, n, floor))/(2.0*dp)
+    assert np.isclose(analytic, numerical, rtol=2e-10)
+    assert analytic != 1.0e-29
 import pytest
 
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
