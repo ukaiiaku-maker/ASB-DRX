@@ -1,0 +1,2370 @@
+{
+  "blocked_family_classifications": [
+    "GENUINELY_UPHILL_SCREENED_DIRECTION"
+  ],
+  "cases": [
+    {
+      "applied_strain": 0.03841278100648024,
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-20260916/cases/mechanical_heterogeneity_64/checkpoint_step_000001451_strain_0.03841278.npz",
+      "checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672",
+      "checkpoint_source_sha": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+      "comparisons": [
+        {
+          "accepted_complete_budget": {
+            "admissibility_tolerance_J_m3_cells": 1e-12,
+            "admissible": true,
+            "dissipative_drag_and_heat_J_m3_cells": 0.16159137059003115,
+            "plastic_work_J_m3_cells": 0.19517294227250698,
+            "proposed_defect_energy_change_J_m3_cells": 0.031249205581843853,
+            "proposed_line_creation_energy_J_m3_cells": 0.027224397773437502,
+            "reaction_extents": {
+              "captured_line_m2_cells": 1394396.564300355,
+              "mura_line_stretching_m2_cells": 18149598.515625
+            },
+            "recoverable_elastic_energy_release_J_m3_cells": 0.192840576171875
+          },
+          "accepted_dt_s": 2.2964669928050311e-10,
+          "event_scale": 1.0,
+          "families": [
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.07877538772299886,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.07877538772299886,
+                    "plastic_work_J_m3_cells": 0.09758647124071707,
+                    "proposed_defect_energy_change_J_m3_cells": 0.017629641573876143,
+                    "proposed_line_creation_energy_J_m3_cells": 0.015383645203124999,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 695382.8982803125,
+                      "mura_line_stretching_m2_cells": 10255763.46875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.096405029296875
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 0,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.08281596261076629,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.08281596261076629,
+                    "plastic_work_J_m3_cells": 0.09758647103178988,
+                    "proposed_defect_energy_change_J_m3_cells": 0.013619584264233708,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0118407653203125,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 699013.6660200425,
+                      "mura_line_stretching_m2_cells": 7893843.546875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.096435546875
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 1,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1695939.538332906,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.6307666284513142e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1695939.538332906,
+                    "plastic_work_J_m3_cells": 79481.7917631953,
+                    "proposed_defect_energy_change_J_m3_cells": 1630766.6284513143,
+                    "proposed_line_creation_energy_J_m3_cells": 1388893.618060282,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 70504152161430.08,
+                      "mura_line_stretching_m2_cells": 925929078706854.9
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -65172.9098815918
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 2,
+              "selected": false,
+              "selected_extent": 0.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -4992477.348375544,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.308733960100397e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -4992477.348375544,
+                    "plastic_work_J_m3_cells": -1275041.967463647,
+                    "proposed_defect_energy_change_J_m3_cells": 3308733.960100397,
+                    "proposed_line_creation_energy_J_m3_cells": 2871100.282227858,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 86581228669807.56,
+                      "mura_line_stretching_m2_cells": 1914066854818572.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -1683743.3882751465
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 3,
+              "selected": false,
+              "selected_extent": 0.0
+            }
+          ],
+          "family_event_scales": [
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "minimum_local_heat_increment_J_m3": 0.0,
+          "mode": "energy_limited",
+          "post_step_projection_used": false
+        },
+        {
+          "accepted_complete_budget": {
+            "admissibility_tolerance_J_m3_cells": 1e-12,
+            "admissible": true,
+            "dissipative_drag_and_heat_J_m3_cells": 0.16159137059003115,
+            "plastic_work_J_m3_cells": 0.19517294227250698,
+            "proposed_defect_energy_change_J_m3_cells": 0.031249205581843853,
+            "proposed_line_creation_energy_J_m3_cells": 0.027224397773437502,
+            "reaction_extents": {
+              "captured_line_m2_cells": 1394396.564300355,
+              "mura_line_stretching_m2_cells": 18149598.515625
+            },
+            "recoverable_elastic_energy_release_J_m3_cells": 0.192840576171875
+          },
+          "accepted_dt_s": 2.2964669928050311e-10,
+          "event_scale": 1.0,
+          "families": [
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.07877538772299886,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.07877538772299886,
+                    "plastic_work_J_m3_cells": 0.09758647124071707,
+                    "proposed_defect_energy_change_J_m3_cells": 0.017629641573876143,
+                    "proposed_line_creation_energy_J_m3_cells": 0.015383645203124999,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 695382.8982803125,
+                      "mura_line_stretching_m2_cells": 10255763.46875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.096405029296875
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.03940878203138709,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.03940878203138709,
+                    "plastic_work_J_m3_cells": 0.04879323562035853,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00880899140611291,
+                    "proposed_line_creation_energy_J_m3_cells": 0.007686470062499999,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 347691.44914015627,
+                      "mura_line_stretching_m2_cells": 5124313.375
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0482177734375
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.019705876940861344,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.019705876940861344,
+                    "plastic_work_J_m3_cells": 0.024396617810179266,
+                    "proposed_defect_energy_change_J_m3_cells": 0.004403009777888656,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0038418691171875,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 173845.72457007814,
+                      "mura_line_stretching_m2_cells": 2561246.078125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.02410888671875
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00985356792807579,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00985356792807579,
+                    "plastic_work_J_m3_cells": 0.012198308905089633,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0022008754312992096,
+                    "proposed_line_creation_energy_J_m3_cells": 0.001920349078125,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 86922.86228503907,
+                      "mura_line_stretching_m2_cells": 1280232.71875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.012054443359375
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.004942097933962941,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.004942097933962941,
+                    "plastic_work_J_m3_cells": 0.006099154452544817,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0011003825347870588,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00096011971875,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 43461.431142519534,
+                      "mura_line_stretching_m2_cells": 640079.8125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00604248046875
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0024405280128121376,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0024405280128121376,
+                    "plastic_work_J_m3_cells": 0.0030495772262724083,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0005501946434378624,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00048006412500000003,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 21730.715571259767,
+                      "mura_line_stretching_m2_cells": 320042.75
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00299072265625
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.001220241654664278,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.001220241654664278,
+                    "plastic_work_J_m3_cells": 0.0015247886131362041,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00027511967346072197,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00024003428906249998,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 10865.357785629883,
+                      "mura_line_stretching_m2_cells": 160022.859375
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.001495361328125
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0005948618054389954,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0005948618054389954,
+                    "plastic_work_J_m3_cells": 0.0007623943065681021,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00013756006956100464,
+                    "proposed_line_creation_energy_J_m3_cells": 0.000120021609375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 5432.678892814942,
+                      "mura_line_stretching_m2_cells": 80014.40625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.000732421875
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00029742252081632614,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00029742252081632614,
+                    "plastic_work_J_m3_cells": 0.00038119715328405104,
+                    "proposed_defect_energy_change_J_m3_cells": 6.878841668367386e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 6.001453125e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2716.339446407471,
+                      "mura_line_stretching_m2_cells": 40009.6875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0003662109375
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00014870846644043922,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00014870846644043922,
+                    "plastic_work_J_m3_cells": 0.00019059857664202552,
+                    "proposed_defect_energy_change_J_m3_cells": 3.4397002309560776e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 3.0010921874999998e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1358.1697232037354,
+                      "mura_line_stretching_m2_cells": 20007.28125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00018310546875
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00010486505925655365,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00010486505925655365,
+                    "plastic_work_J_m3_cells": 9.529928832101276e-05,
+                    "proposed_defect_energy_change_J_m3_cells": 1.720525324344635e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 1.50111328125e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 679.0848616018677,
+                      "mura_line_stretching_m2_cells": 10007.421875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0001220703125
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 5.243299528956413e-05,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 5.243299528956413e-05,
+                    "plastic_work_J_m3_cells": 4.764964416050638e-05,
+                    "proposed_defect_energy_change_J_m3_cells": 8.602160960435867e-06,
+                    "proposed_line_creation_energy_J_m3_cells": 7.50853125e-06,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 339.54243080093386,
+                      "mura_line_stretching_m2_cells": 5005.6875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 6.103515625e-05
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 0,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.08281596261076629,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.08281596261076629,
+                    "plastic_work_J_m3_cells": 0.09758647103178988,
+                    "proposed_defect_energy_change_J_m3_cells": 0.013619584264233708,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0118407653203125,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 699013.6660200425,
+                      "mura_line_stretching_m2_cells": 7893843.546875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.096435546875
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.04141331324353814,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.04141331324353814,
+                    "plastic_work_J_m3_cells": 0.04879323551589494,
+                    "proposed_defect_energy_change_J_m3_cells": 0.006804460193961859,
+                    "proposed_line_creation_energy_J_m3_cells": 0.005915491218749999,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 349506.83301002125,
+                      "mura_line_stretching_m2_cells": 3943660.8125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0482177734375
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.020706959534436464,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.020706959534436464,
+                    "plastic_work_J_m3_cells": 0.02439661775794747,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0034019271843135357,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0029574652265624995,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 174753.41650501062,
+                      "mura_line_stretching_m2_cells": 1971643.484375
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.02410888671875
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.010353457182645798,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.010353457182645798,
+                    "plastic_work_J_m3_cells": 0.012198308878973736,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0017009861767292023,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0014787365859375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 87376.70825250531,
+                      "mura_line_stretching_m2_cells": 985824.390625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.012054443359375
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.005191981792449951,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.005191981792449951,
+                    "plastic_work_J_m3_cells": 0.006099154439486868,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0008504986763000488,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0007393719140624999,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 43688.354126252656,
+                      "mura_line_stretching_m2_cells": 492914.609375
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00604248046875
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.002595994621515274,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.002595994621515274,
+                    "plastic_work_J_m3_cells": 0.003049577219743434,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00042524561285972595,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00036968985937499996,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 21844.177063126328,
+                      "mura_line_stretching_m2_cells": 246459.90625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.003021240234375
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0013132356107234955,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0013132356107234955,
+                    "plastic_work_J_m3_cells": 0.001524788609871717,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00021264329552650452,
+                    "proposed_line_creation_energy_J_m3_cells": 0.000184847625,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 10922.088531563164,
+                      "mura_line_stretching_m2_cells": 123231.75
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00152587890625
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0006261009257286787,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0006261009257286787,
+                    "plastic_work_J_m3_cells": 0.0007623943049358585,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0001063209492713213,
+                    "proposed_line_creation_energy_J_m3_cells": 9.24274453125e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 5461.044265781582,
+                      "mura_line_stretching_m2_cells": 61618.296875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.000732421875
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00031305523589253426,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00031305523589253426,
+                    "plastic_work_J_m3_cells": 0.00038119715246792924,
+                    "proposed_defect_energy_change_J_m3_cells": 5.3155701607465744e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 4.62175078125e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2730.522132890791,
+                      "mura_line_stretching_m2_cells": 30811.671875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0003662109375
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00015652296133339405,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00015652296133339405,
+                    "plastic_work_J_m3_cells": 0.00019059857623396462,
+                    "proposed_defect_energy_change_J_m3_cells": 2.658250741660595e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 2.3113031249999998e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1365.2610664453955,
+                      "mura_line_stretching_m2_cells": 15408.6875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00018310546875
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00010877521708607674,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00010877521708607674,
+                    "plastic_work_J_m3_cells": 9.529928811698231e-05,
+                    "proposed_defect_energy_change_J_m3_cells": 1.3295095413923264e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 1.1561906249999999e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 682.6305332226977,
+                      "mura_line_stretching_m2_cells": 7707.9375
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0001220703125
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 5.43743371963501e-05,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 5.43743371963501e-05,
+                    "plastic_work_J_m3_cells": 4.7649644058491154e-05,
+                    "proposed_defect_energy_change_J_m3_cells": 6.660819053649902e-06,
+                    "proposed_line_creation_energy_J_m3_cells": 5.786109375e-06,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 341.3152666113489,
+                      "mura_line_stretching_m2_cells": 3857.40625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 6.103515625e-05
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 1,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1695939.538332906,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.6307666284513142e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1695939.538332906,
+                    "plastic_work_J_m3_cells": 79481.7917631953,
+                    "proposed_defect_energy_change_J_m3_cells": 1630766.6284513143,
+                    "proposed_line_creation_energy_J_m3_cells": 1388893.618060282,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 70504152161430.08,
+                      "mura_line_stretching_m2_cells": 925929078706854.9
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -65172.9098815918
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -799386.1030602681,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 8.108036637292134e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -799386.1030602681,
+                    "plastic_work_J_m3_cells": 39740.89588159765,
+                    "proposed_defect_energy_change_J_m3_cells": 810803.6637292134,
+                    "proposed_line_creation_energy_J_m3_cells": 690535.3398700454,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 35252076080715.04,
+                      "mura_line_stretching_m2_cells": 460356893246696.94
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 11417.560668945312
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -386497.6189180503,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 4.0320740312825537e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -386497.6189180503,
+                    "plastic_work_J_m3_cells": 19870.447940798826,
+                    "proposed_defect_energy_change_J_m3_cells": 403207.4031282554,
+                    "proposed_line_creation_energy_J_m3_cells": 343333.11944672774,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 17626038040357.52,
+                      "mura_line_stretching_m2_cells": 228888746297818.47
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 16709.784210205078
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -189660.69827000098,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.0076584133640723e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -189660.69827000098,
+                    "plastic_work_J_m3_cells": 9935.223970399413,
+                    "proposed_defect_energy_change_J_m3_cells": 200765.84133640723,
+                    "proposed_line_creation_energy_J_m3_cells": 170920.20242941362,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 8813019020178.76,
+                      "mura_line_stretching_m2_cells": 113946801619609.08
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 11105.14306640625
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -93808.39977165288,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.0004853404899664e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -93808.39977165288,
+                    "plastic_work_J_m3_cells": 4967.611985199706,
+                    "proposed_defect_energy_change_J_m3_cells": 100048.53404899663,
+                    "proposed_line_creation_energy_J_m3_cells": 85158.80153351027,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 4406509510089.38,
+                      "mura_line_stretching_m2_cells": 56772534355673.516
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 6240.13427734375
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -46598.77618893911,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 4.989073401364614e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -46598.77618893911,
+                    "plastic_work_J_m3_cells": 2483.805992599853,
+                    "proposed_defect_energy_change_J_m3_cells": 49890.73401364614,
+                    "proposed_line_creation_energy_J_m3_cells": 42459.12753923603,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2203254755044.69,
+                      "mura_line_stretching_m2_cells": 28306085026157.35
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 3291.9578247070312
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -23149.090088920202,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.4838041688041297e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -23149.090088920202,
+                    "plastic_work_J_m3_cells": 1241.9029962999266,
+                    "proposed_defect_energy_change_J_m3_cells": 24838.041688041296,
+                    "proposed_line_creation_energy_J_m3_cells": 21132.521888213472,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1101627377522.345,
+                      "mura_line_stretching_m2_cells": 14088347925475.648
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 1688.9515991210938
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -11457.51319573517,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.2312732159358216e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -11457.51319573517,
+                    "plastic_work_J_m3_cells": 620.9514981499633,
+                    "proposed_defect_energy_change_J_m3_cells": 12312.732159358216,
+                    "proposed_line_creation_energy_J_m3_cells": 10469.966026306956,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 550813688761.1725,
+                      "mura_line_stretching_m2_cells": 6979977350871.305
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 855.2189636230469
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -5621.303928313311,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 6.051599216399248e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -5621.303928313311,
+                    "plastic_work_J_m3_cells": 310.47574907498165,
+                    "proposed_defect_energy_change_J_m3_cells": 6051.599216399249,
+                    "proposed_line_creation_energy_J_m3_cells": 5140.028467287598,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 275406844380.58624,
+                      "mura_line_stretching_m2_cells": 3426685644858.3984
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 430.2952880859375
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -2708.0864692870528,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.9239055610839277e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -2708.0864692870528,
+                    "plastic_work_J_m3_cells": 155.23787453749082,
+                    "proposed_defect_energy_change_J_m3_cells": 2923.9055610839278,
+                    "proposed_line_creation_energy_J_m3_cells": 2477.629482452086,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 137703422190.29312,
+                      "mura_line_stretching_m2_cells": 1651752988301.3906
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 215.819091796875
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1256.6154125279281,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.3646928051060532e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1256.6154125279281,
+                    "plastic_work_J_m3_cells": 77.61893726874541,
+                    "proposed_defect_energy_change_J_m3_cells": 1364.6928051060531,
+                    "proposed_line_creation_energy_J_m3_cells": 1150.6465273657032,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 68851711095.14656,
+                      "mura_line_stretching_m2_cells": 767097684910.4688
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 108.077392578125
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -542.115993704414,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 5.961966821809765e-10,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -542.115993704414,
+                    "plastic_work_J_m3_cells": 38.809468634372706,
+                    "proposed_defect_energy_change_J_m3_cells": 596.1966821809765,
+                    "proposed_line_creation_energy_J_m3_cells": 497.09922438766404,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 34425855547.57328,
+                      "mura_line_stretching_m2_cells": 331399482925.1094
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 54.0806884765625
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 2,
+              "selected": false,
+              "selected_extent": 0.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -4992477.348375544,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.308733960100397e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -4992477.348375544,
+                    "plastic_work_J_m3_cells": -1275041.967463647,
+                    "proposed_defect_energy_change_J_m3_cells": 3308733.960100397,
+                    "proposed_line_creation_energy_J_m3_cells": 2871100.282227858,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 86581228669807.56,
+                      "mura_line_stretching_m2_cells": 1914066854818572.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -1683743.3882751465
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -2304823.793795223,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.5943833209863849e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -2304823.793795223,
+                    "plastic_work_J_m3_cells": -637520.9837318235,
+                    "proposed_defect_energy_change_J_m3_cells": 1594383.320986385,
+                    "proposed_line_creation_energy_J_m3_cells": 1382555.626896581,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 43290614334903.78,
+                      "mura_line_stretching_m2_cells": 921703751264387.4
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -710440.4728088379
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1086052.2875202517,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 7.636898564594607e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1086052.2875202517,
+                    "plastic_work_J_m3_cells": -318760.49186591175,
+                    "proposed_defect_energy_change_J_m3_cells": 763689.8564594607,
+                    "proposed_line_creation_energy_J_m3_cells": 661759.1101708767,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 21645307167451.89,
+                      "mura_line_stretching_m2_cells": 441172740113917.75
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -322362.431060791
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -525738.3890675919,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.7277162487691805e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -525738.3890675919,
+                    "plastic_work_J_m3_cells": -159380.24593295588,
+                    "proposed_defect_energy_change_J_m3_cells": 372771.62487691804,
+                    "proposed_line_creation_energy_J_m3_cells": 322806.6484312541,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 10822653583725.945,
+                      "mura_line_stretching_m2_cells": 215204432287502.72
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -152966.76419067383
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -256372.20233570156,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.8194243307910977e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -256372.20233570156,
+                    "plastic_work_J_m3_cells": -79690.12296647794,
+                    "proposed_defect_energy_change_J_m3_cells": 181942.43307910976,
+                    "proposed_line_creation_energy_J_m3_cells": 157497.30947494542,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 5411326791862.973,
+                      "mura_line_stretching_m2_cells": 104998206316630.3
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -74429.7692565918
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -123726.61847287766,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 8.702513705808274e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -123726.61847287766,
+                    "plastic_work_J_m3_cells": -39845.06148323897,
+                    "proposed_defect_energy_change_J_m3_cells": 87025.13705808274,
+                    "proposed_line_creation_energy_J_m3_cells": 75282.797525552,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2705663395931.4863,
+                      "mura_line_stretching_m2_cells": 50188531683701.33
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -36701.48141479492
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -57930.58538151998,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.9708195488941854e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -57930.58538151998,
+                    "plastic_work_J_m3_cells": -19922.530741619485,
+                    "proposed_defect_energy_change_J_m3_cells": 39708.195488941856,
+                    "proposed_line_creation_energy_J_m3_cells": 34302.51839971838,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1352831697965.7432,
+                      "mura_line_stretching_m2_cells": 22868345599812.25
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -18222.389892578125
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -26382.479322011815,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.7303372083242284e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -26382.479322011815,
+                    "plastic_work_J_m3_cells": -9961.265370809742,
+                    "proposed_defect_energy_change_J_m3_cells": 17303.372083242284,
+                    "proposed_line_creation_energy_J_m3_cells": 14911.706309722056,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 676415848982.8716,
+                      "mura_line_stretching_m2_cells": 9941137539814.703
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -9079.107238769531
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -11521.90616370365,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 6.9903744864575565e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -11521.90616370365,
+                    "plastic_work_J_m3_cells": -4980.632685404871,
+                    "proposed_defect_energy_change_J_m3_cells": 6990.3744864575565,
+                    "proposed_line_creation_energy_J_m3_cells": 5998.246355226422,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 338207924491.4358,
+                      "mura_line_stretching_m2_cells": 3998830903484.2812
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -4531.531677246094
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -5174.735814224696,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.9109754382481334e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -5174.735814224696,
+                    "plastic_work_J_m3_cells": -2490.3163427024356,
+                    "proposed_defect_energy_change_J_m3_cells": 2910.9754382481333,
+                    "proposed_line_creation_energy_J_m3_cells": 2483.445516046054,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 169103962245.7179,
+                      "mura_line_stretching_m2_cells": 1655630344030.7031
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -2263.7603759765625
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -2420.539345375495,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.2891605306782294e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -2420.539345375495,
+                    "plastic_work_J_m3_cells": -1245.1581713512178,
+                    "proposed_defect_energy_change_J_m3_cells": 1289.1605306782294,
+                    "proposed_line_creation_energy_J_m3_cells": 1093.7152930423595,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 84551981122.85895,
+                      "mura_line_stretching_m2_cells": 729143528694.9062
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -1131.3788146972656
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1101.4071061981376,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 5.655640563964844e-10,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1101.4071061981376,
+                    "plastic_work_J_m3_cells": -622.5790856756089,
+                    "proposed_defect_energy_change_J_m3_cells": 535.8430498016533,
+                    "proposed_line_creation_energy_J_m3_cells": 450.37151402273435,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 42275990561.429474,
+                      "mura_line_stretching_m2_cells": 300247676015.15625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -565.5640563964844
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 3,
+              "selected": false,
+              "selected_extent": 0.0
+            }
+          ],
+          "family_event_scales": [
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "family_selection_rule": "complete_affinity_feasible_family_extent_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "minimum_local_heat_increment_J_m3": 0.0,
+          "mode": "energy_limited_feasible_extents",
+          "post_step_projection_used": false
+        }
+      ],
+      "grid": 64,
+      "operator_changes_accepted_state": false,
+      "spacing_m": 1.5625e-07,
+      "step": 1451
+    },
+    {
+      "applied_strain": 0.042001034780099734,
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916/cases/mechanical_heterogeneity_64/checkpoint_step_000002971_strain_0.04200103.npz",
+      "checkpoint_sha256": "7ca24609de5b299290ee75a098b97c8b1912d8f743a4405792330e3fda1c26b0",
+      "checkpoint_source_sha": "e7aa16e70703bcf74df47da8c5669ec052a446c7",
+      "comparisons": [
+        {
+          "accepted_complete_budget": {
+            "admissibility_tolerance_J_m3_cells": 1e-12,
+            "admissible": true,
+            "dissipative_drag_and_heat_J_m3_cells": 0.6016587337944657,
+            "plastic_work_J_m3_cells": 0.8313584566444978,
+            "proposed_defect_energy_change_J_m3_cells": 0.21593770175240934,
+            "proposed_line_creation_energy_J_m3_cells": 0.189699813234375,
+            "reaction_extents": {
+              "captured_line_m2_cells": 1114393.1001566187,
+              "mura_line_stretching_m2_cells": 126466542.15625
+            },
+            "recoverable_elastic_energy_release_J_m3_cells": 0.817596435546875
+          },
+          "accepted_dt_s": 1.596846132612783e-10,
+          "event_scale": 1.0,
+          "families": [
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.3031454826705158,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.3031454826705158,
+                    "plastic_work_J_m3_cells": 0.4156792283166915,
+                    "proposed_defect_energy_change_J_m3_cells": 0.10463039623573422,
+                    "proposed_line_creation_energy_J_m3_cells": 0.091935379359375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 556273.7197413484,
+                      "mura_line_stretching_m2_cells": 61290252.90625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.40777587890625
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 0,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.2984827412292361,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.2984827412292361,
+                    "plastic_work_J_m3_cells": 0.41567922832780624,
+                    "proposed_defect_energy_change_J_m3_cells": 0.11130729783326387,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0977644440234375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 558119.3804152706,
+                      "mura_line_stretching_m2_cells": 65176296.015625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.4097900390625
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 1,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -9539890.326704156,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 8.960445153608452e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -9539890.326704156,
+                    "plastic_work_J_m3_cells": 3143479.8573098555,
+                    "proposed_defect_energy_change_J_m3_cells": 8960445.153608453,
+                    "proposed_line_creation_energy_J_m3_cells": 7633682.676635295,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 268892484498296.2,
+                      "mura_line_stretching_m2_cells": 5089121784423532.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -579445.1730957031
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 2,
+              "selected": false,
+              "selected_extent": 0.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -31875898.559495475,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.9008384928452995e-05,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -31875898.559495475,
+                    "plastic_work_J_m3_cells": 19099132.68518876,
+                    "proposed_defect_energy_change_J_m3_cells": 19008384.928452995,
+                    "proposed_line_creation_energy_J_m3_cells": 16184299.378856886,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 632983813611249.0,
+                      "mura_line_stretching_m2_cells": 1.0789532919237924e+16
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -12867513.63104248
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 3,
+              "selected": false,
+              "selected_extent": 0.0
+            }
+          ],
+          "family_event_scales": [
+            1.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "minimum_local_heat_increment_J_m3": 0.0,
+          "mode": "energy_limited",
+          "post_step_projection_used": false
+        },
+        {
+          "accepted_complete_budget": {
+            "admissibility_tolerance_J_m3_cells": 1.1308680195617675e-06,
+            "admissible": true,
+            "dissipative_drag_and_heat_J_m3_cells": 68066.7285321476,
+            "plastic_work_J_m3_cells": 1193696.6241827519,
+            "proposed_defect_energy_change_J_m3_cells": 1062801.29102962,
+            "proposed_line_creation_energy_J_m3_cells": 909947.7577238379,
+            "reaction_extents": {
+              "captured_line_m2_cells": 39561489465096.164,
+              "mura_line_stretching_m2_cells": 606631838482558.5
+            },
+            "recoverable_elastic_energy_release_J_m3_cells": 1130868.0195617676
+          },
+          "accepted_dt_s": 1.596846132612783e-10,
+          "event_scale": 1.0,
+          "families": [
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.3031454826705158,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.3031454826705158,
+                    "plastic_work_J_m3_cells": 0.4156792283166915,
+                    "proposed_defect_energy_change_J_m3_cells": 0.10463039623573422,
+                    "proposed_line_creation_energy_J_m3_cells": 0.091935379359375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 556273.7197413484,
+                      "mura_line_stretching_m2_cells": 61290252.90625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.40777587890625
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.15154471853747964,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.15154471853747964,
+                    "plastic_work_J_m3_cells": 0.20783961415834576,
+                    "proposed_defect_energy_change_J_m3_cells": 0.05231270333752036,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0459654116953125,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 278136.8598706742,
+                      "mura_line_stretching_m2_cells": 30643607.796875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.203857421875
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.07586394087411463,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.07586394087411463,
+                    "plastic_work_J_m3_cells": 0.10391980707917288,
+                    "proposed_defect_energy_change_J_m3_cells": 0.026156322797760367,
+                    "proposed_line_creation_energy_J_m3_cells": 0.022982675625,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 139068.4299353371,
+                      "mura_line_stretching_m2_cells": 15321783.75
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.102020263671875
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.03785569709725678,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.03785569709725678,
+                    "plastic_work_J_m3_cells": 0.05195990353958644,
+                    "proposed_defect_energy_change_J_m3_cells": 0.01307814079336822,
+                    "proposed_line_creation_energy_J_m3_cells": 0.011491309453125001,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 69534.21496766855,
+                      "mura_line_stretching_m2_cells": 7660872.96875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.050933837890625
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.01909573469310999,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.01909573469310999,
+                    "plastic_work_J_m3_cells": 0.02597995176979322,
+                    "proposed_defect_energy_change_J_m3_cells": 0.006539030931890011,
+                    "proposed_line_creation_energy_J_m3_cells": 0.005745629929687499,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 34767.107483834276,
+                      "mura_line_stretching_m2_cells": 3830419.953125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.025634765625
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00954790459945798,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00954790459945798,
+                    "plastic_work_J_m3_cells": 0.01298997588489661,
+                    "proposed_defect_energy_change_J_m3_cells": 0.003269478213042021,
+                    "proposed_line_creation_energy_J_m3_cells": 0.002872793484375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 17383.553741917138,
+                      "mura_line_stretching_m2_cells": 1915195.65625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0128173828125
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00480447756126523,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00480447756126523,
+                    "plastic_work_J_m3_cells": 0.006494987942448305,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0016347314231097698,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0014363856093750002,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 8691.776870958569,
+                      "mura_line_stretching_m2_cells": 957590.40625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.006439208984375
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0025395932607352734,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0025395932607352734,
+                    "plastic_work_J_m3_cells": 0.0032474939712241525,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0008173403330147266,
+                    "proposed_line_creation_energy_J_m3_cells": 0.000718184765625,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 4345.888435479284,
+                      "mura_line_stretching_m2_cells": 478789.84375
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00335693359375
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.001239272067323327,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.001239272067323327,
+                    "plastic_work_J_m3_cells": 0.0016237469856120762,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00040867715142667294,
+                    "proposed_line_creation_energy_J_m3_cells": 0.000359090109375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2172.944217739642,
+                      "mura_line_stretching_m2_cells": 239393.40625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00164794921875
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0006501437164843082,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0006501437164843082,
+                    "plastic_work_J_m3_cells": 0.0008118734928060381,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00020434847101569176,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00017954643750000003,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1086.472108869821,
+                      "mura_line_stretching_m2_cells": 119697.625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0008544921875
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0003555966541171074,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0003555966541171074,
+                    "plastic_work_J_m3_cells": 0.00040593674640301906,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00010216701775789261,
+                    "proposed_line_creation_energy_J_m3_cells": 8.977481249999999e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 543.2360544349106,
+                      "mura_line_stretching_m2_cells": 59849.875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.000457763671875
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00022358866408467293,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00022358866408467293,
+                    "plastic_work_J_m3_cells": 0.00020296837320150953,
+                    "proposed_defect_energy_change_J_m3_cells": 5.106953904032707e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 4.4889468749999994e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 271.6180272174553,
+                      "mura_line_stretching_m2_cells": 29926.3125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.000274658203125
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 0,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "FULL_EVENT_ADMISSIBLE",
+              "extent_curve": [
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.2984827412292361,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.2984827412292361,
+                    "plastic_work_J_m3_cells": 0.41567922832780624,
+                    "proposed_defect_energy_change_J_m3_cells": 0.11130729783326387,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0977644440234375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 558119.3804152706,
+                      "mura_line_stretching_m2_cells": 65176296.015625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.4097900390625
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.14933770638890564,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.14933770638890564,
+                    "plastic_work_J_m3_cells": 0.20783961416390312,
+                    "proposed_defect_energy_change_J_m3_cells": 0.055587830720469356,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0488264298046875,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 279059.6902076353,
+                      "mura_line_stretching_m2_cells": 32550953.203125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.204925537109375
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.07474949373863637,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.07474949373863637,
+                    "plastic_work_J_m3_cells": 0.10391980708195156,
+                    "proposed_defect_energy_change_J_m3_cells": 0.027728533605113626,
+                    "proposed_line_creation_energy_J_m3_cells": 0.024357864375,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 139529.84510381764,
+                      "mura_line_stretching_m2_cells": 16238576.25
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.10247802734375
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.03746932209469378,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.03746932209469378,
+                    "plastic_work_J_m3_cells": 0.05195990354097578,
+                    "proposed_defect_energy_change_J_m3_cells": 0.01386124431155622,
+                    "proposed_line_creation_energy_J_m3_cells": 0.012176376398437497,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 69764.92255190882,
+                      "mura_line_stretching_m2_cells": 8117584.265625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.05133056640625
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.018795726587995887,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.018795726587995887,
+                    "plastic_work_J_m3_cells": 0.02597995177048789,
+                    "proposed_defect_energy_change_J_m3_cells": 0.006930591771379113,
+                    "proposed_line_creation_energy_J_m3_cells": 0.006088166578125,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 34882.46127595441,
+                      "mura_line_stretching_m2_cells": 4058777.71875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.025726318359375
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.009413141757249832,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.009413141757249832,
+                    "plastic_work_J_m3_cells": 0.012989975885243945,
+                    "proposed_defect_energy_change_J_m3_cells": 0.003465276211500168,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0030440638359375003,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 17441.230637977205,
+                      "mura_line_stretching_m2_cells": 2029375.890625
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.01287841796875
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.004737119888886809,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.004737119888886809,
+                    "plastic_work_J_m3_cells": 0.0064949879426219725,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0017326066736131907,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0015220159453125002,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 8720.615318988603,
+                      "mura_line_stretching_m2_cells": 1014677.296875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0064697265625
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00249065482057631,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00249065482057631,
+                    "plastic_work_J_m3_cells": 0.0032474939713109862,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0008662787731736898,
+                    "proposed_line_creation_energy_J_m3_cells": 0.0007609978828125,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 4360.307659494301,
+                      "mura_line_stretching_m2_cells": 507331.921875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00335693359375
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.001214809250086546,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.001214809250086546,
+                    "plastic_work_J_m3_cells": 0.0016237469856554931,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00043313996866345406,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00038049525,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2180.1538297471507,
+                      "mura_line_stretching_m2_cells": 253663.5
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.00164794921875
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0006379114929586649,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0006379114929586649,
+                    "plastic_work_J_m3_cells": 0.0008118734928277466,
+                    "proposed_defect_energy_change_J_m3_cells": 0.0002165806945413351,
+                    "proposed_line_creation_energy_J_m3_cells": 0.00019024788281250002,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1090.0769148735753,
+                      "mura_line_stretching_m2_cells": 126831.921875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.0008544921875
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.00034947367385029793,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.00034947367385029793,
+                    "plastic_work_J_m3_cells": 0.0004059367464138733,
+                    "proposed_defect_energy_change_J_m3_cells": 0.00010828999802470207,
+                    "proposed_line_creation_energy_J_m3_cells": 9.51258046875e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 545.0384574367877,
+                      "mura_line_stretching_m2_cells": 63417.203125
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.000457763671875
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 0.0002205029595643282,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1e-12,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 0.0002205029595643282,
+                    "plastic_work_J_m3_cells": 0.00020296837320693664,
+                    "proposed_defect_energy_change_J_m3_cells": 5.4155243560671806e-05,
+                    "proposed_line_creation_energy_J_m3_cells": 4.7564882812500004e-05,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 272.51922871839383,
+                      "mura_line_stretching_m2_cells": 31709.921875
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 0.000274658203125
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 1,
+              "selected": true,
+              "selected_extent": 1.0
+            },
+            {
+              "classification": "GENUINELY_UPHILL_SCREENED_DIRECTION",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -9539890.326704156,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 8.960445153608452e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -9539890.326704156,
+                    "plastic_work_J_m3_cells": 3143479.8573098555,
+                    "proposed_defect_energy_change_J_m3_cells": 8960445.153608453,
+                    "proposed_line_creation_energy_J_m3_cells": 7633682.676635295,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 268892484498296.2,
+                      "mura_line_stretching_m2_cells": 5089121784423532.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -579445.1730957031
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -3610886.098279167,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 4.336885584454704e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -3610886.098279167,
+                    "plastic_work_J_m3_cells": 1571739.9286549278,
+                    "proposed_defect_energy_change_J_m3_cells": 4336885.584454704,
+                    "proposed_line_creation_energy_J_m3_cells": 3696048.411251011,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 134446242249148.1,
+                      "mura_line_stretching_m2_cells": 2464032274167340.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 725999.4861755371
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1498655.4578303872,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.115585719121891e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1498655.4578303872,
+                    "plastic_work_J_m3_cells": 785869.9643274639,
+                    "proposed_defect_energy_change_J_m3_cells": 2115585.719121891,
+                    "proposed_line_creation_energy_J_m3_cells": 1802683.2098478964,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 67223121124574.05,
+                      "mura_line_stretching_m2_cells": 1201788806565264.2
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 616930.2612915039
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -650703.5083072903,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.0226512686222317e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -650703.5083072903,
+                    "plastic_work_J_m3_cells": 392934.98216373194,
+                    "proposed_defect_energy_change_J_m3_cells": 1022651.2686222317,
+                    "proposed_line_creation_energy_J_m3_cells": 870747.7664496929,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 33611560562287.023,
+                      "mura_line_stretching_m2_cells": 580498510966462.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 371947.7603149414
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -280625.69457982155,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 4.824702321164426e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -280625.69457982155,
+                    "plastic_work_J_m3_cells": 196467.49108186597,
+                    "proposed_defect_energy_change_J_m3_cells": 482470.23211644264,
+                    "proposed_line_creation_energy_J_m3_cells": 410127.1815894259,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 16805780281143.512,
+                      "mura_line_stretching_m2_cells": 273418121059617.3
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 201844.5375366211
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -114705.35551501904,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.1959528865100537e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -114705.35551501904,
+                    "plastic_work_J_m3_cells": 98233.74554093299,
+                    "proposed_defect_energy_change_J_m3_cells": 219595.28865100536,
+                    "proposed_line_creation_energy_J_m3_cells": 186137.94527263875,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 8402890140571.756,
+                      "mura_line_stretching_m2_cells": 124091963515092.5
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 104889.93313598633
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -51170.49942168244,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.0460738211211213e-07,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -51170.49942168244,
+                    "plastic_work_J_m3_cells": 49116.87277046649,
+                    "proposed_defect_energy_change_J_m3_cells": 104607.38211211213,
+                    "proposed_line_creation_energy_J_m3_cells": 88515.74809975916,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 4201445070285.878,
+                      "mura_line_stretching_m2_cells": 59010498733172.766
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 53436.88269042969
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -24458.657309007598,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 5.142507771916385e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -24458.657309007598,
+                    "plastic_work_J_m3_cells": 24558.436385233246,
+                    "proposed_defect_energy_change_J_m3_cells": 51425.07771916385,
+                    "proposed_line_creation_energy_J_m3_cells": 43477.45551704742,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2100722535142.939,
+                      "mura_line_stretching_m2_cells": 28984970344698.28
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 26966.42041015625
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -11887.648549814709,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.5432853536386975e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -11887.648549814709,
+                    "plastic_work_J_m3_cells": 12279.218192616623,
+                    "proposed_defect_energy_change_J_m3_cells": 25432.853536386974,
+                    "proposed_line_creation_energy_J_m3_cells": 21484.54220959678,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1050361267571.4695,
+                      "mura_line_stretching_m2_cells": 14323028139731.188
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 13545.204986572266
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -5881.729616941651,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.2669830813230713e-08,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -5881.729616941651,
+                    "plastic_work_J_m3_cells": 6139.609096308312,
+                    "proposed_defect_energy_change_J_m3_cells": 12669.830813230714,
+                    "proposed_line_creation_energy_J_m3_cells": 10700.043396651705,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 525180633785.73474,
+                      "mura_line_stretching_m2_cells": 7133362264434.469
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 6788.1011962890625
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -2920.7705030236393,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 6.318695918062701e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -2920.7705030236393,
+                    "plastic_work_J_m3_cells": 3069.804548154156,
+                    "proposed_defect_energy_change_J_m3_cells": 6318.695918062702,
+                    "proposed_line_creation_energy_J_m3_cells": 5335.5199129979765,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 262590316892.86737,
+                      "mura_line_stretching_m2_cells": 3557013275331.9844
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 3397.9254150390625
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1444.8501883994322,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.144781584883807e-09,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1444.8501883994322,
+                    "plastic_work_J_m3_cells": 1534.902274077078,
+                    "proposed_defect_energy_change_J_m3_cells": 3144.781584883807,
+                    "proposed_line_creation_energy_J_m3_cells": 2654.7477942565783,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 131295158446.43369,
+                      "mura_line_stretching_m2_cells": 1769831862837.7188
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 1699.931396484375
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 2,
+              "selected": false,
+              "selected_extent": 0.0
+            },
+            {
+              "classification": "INITIAL_DIRECTION_DOWNHILL_FULL_EVENT_OVERSHOOTS",
+              "extent_curve": [
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -31875898.559495475,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.9008384928452995e-05,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -31875898.559495475,
+                    "plastic_work_J_m3_cells": 19099132.68518876,
+                    "proposed_defect_energy_change_J_m3_cells": 19008384.928452995,
+                    "proposed_line_creation_energy_J_m3_cells": 16184299.378856886,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 632983813611249.0,
+                      "mura_line_stretching_m2_cells": 1.0789532919237924e+16
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": -12867513.63104248
+                  },
+                  "extent": 1.0,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -7223790.232690133,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 9.04640368319062e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -7223790.232690133,
+                    "plastic_work_J_m3_cells": 9549566.34259438,
+                    "proposed_defect_energy_change_J_m3_cells": 9046403.683190621,
+                    "proposed_line_creation_energy_J_m3_cells": 7725319.200556738,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 316491906805624.5,
+                      "mura_line_stretching_m2_cells": 5150212800371160.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 1822613.4505004883
+                  },
+                  "extent": 0.5,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -1431735.2135487683,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 4.407134505449403e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -1431735.2135487683,
+                    "plastic_work_J_m3_cells": 4774783.17129719,
+                    "proposed_defect_energy_change_J_m3_cells": 4407134.505449403,
+                    "proposed_line_creation_energy_J_m3_cells": 3769282.8967513554,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 158245953402812.25,
+                      "mura_line_stretching_m2_cells": 2512855264500904.0
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 2975399.2919006348
+                  },
+                  "extent": 0.25,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": false,
+                  "complete_affinity_J_m3_cells": -156971.73041163152,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 2.160694518070323e-06,
+                    "admissible": false,
+                    "dissipative_drag_and_heat_J_m3_cells": -156971.73041163152,
+                    "plastic_work_J_m3_cells": 2387391.585648595,
+                    "proposed_defect_energy_change_J_m3_cells": 2160694.518070323,
+                    "proposed_line_creation_energy_J_m3_cells": 1849187.433792523,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 79122976701406.12,
+                      "mura_line_stretching_m2_cells": 1232791622528348.8
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 2003722.7876586914
+                  },
+                  "extent": 0.125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 68066.1042613138,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.130867179321289e-06,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 68066.1042613138,
+                    "plastic_work_J_m3_cells": 1193695.7928242974,
+                    "proposed_defect_energy_change_J_m3_cells": 1062801.0750599753,
+                    "proposed_line_creation_energy_J_m3_cells": 909947.5680240347,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 39561488350703.06,
+                      "mura_line_stretching_m2_cells": 606631712016023.2
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 1130867.179321289
+                  },
+                  "extent": 0.0625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 77690.84213454113,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 5.976850359191894e-07,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 77690.84213454113,
+                    "plastic_work_J_m3_cells": 596847.8964121487,
+                    "proposed_defect_energy_change_J_m3_cells": 519994.1937846483,
+                    "proposed_line_creation_energy_J_m3_cells": 445360.03011713835,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 19780744175351.53,
+                      "mura_line_stretching_m2_cells": 296906686744758.9
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 597685.0359191895
+                  },
+                  "extent": 0.03125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 54159.74072606675,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.069053795776367e-07,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 54159.74072606675,
+                    "plastic_work_J_m3_cells": 298423.94820607436,
+                    "proposed_defect_energy_change_J_m3_cells": 252745.63885156997,
+                    "proposed_line_creation_energy_J_m3_cells": 216557.47508486538,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 9890372087675.766,
+                      "mura_line_stretching_m2_cells": 144371650056576.9
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 306905.3795776367
+                  },
+                  "extent": 0.015625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 29523.536037093494,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.5546840524291993e-07,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 29523.536037093494,
+                    "plastic_work_J_m3_cells": 149211.97410303718,
+                    "proposed_defect_energy_change_J_m3_cells": 125944.86920582643,
+                    "proposed_line_creation_energy_J_m3_cells": 107911.74974839855,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 4945186043837.883,
+                      "mura_line_stretching_m2_cells": 71941166498932.36
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 155468.40524291992
+                  },
+                  "extent": 0.0078125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 15400.858507770812,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 7.823813146972656e-08,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 15400.858507770812,
+                    "plastic_work_J_m3_cells": 74605.98705151859,
+                    "proposed_defect_energy_change_J_m3_cells": 62837.27296195575,
+                    "proposed_line_creation_energy_J_m3_cells": 53841.606352865245,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 2472593021918.9414,
+                      "mura_line_stretching_m2_cells": 35894404235243.5
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 78238.13146972656
+                  },
+                  "extent": 0.00390625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 7914.067903466523,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 3.924504800415039e-08,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 7914.067903466523,
+                    "plastic_work_J_m3_cells": 37302.993525759295,
+                    "proposed_defect_energy_change_J_m3_cells": 31330.980100683868,
+                    "proposed_line_creation_energy_J_m3_cells": 26845.90153041764,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 1236296510959.4707,
+                      "mura_line_stretching_m2_cells": 17897267686945.094
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 39245.04800415039
+                  },
+                  "extent": 0.001953125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 4073.044070744887,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 1.9654019592285156e-08,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 4073.044070744887,
+                    "plastic_work_J_m3_cells": 18651.496762879648,
+                    "proposed_defect_energy_change_J_m3_cells": 15580.97552154027,
+                    "proposed_line_creation_energy_J_m3_cells": 13350.388430019022,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 618148255479.7354,
+                      "mura_line_stretching_m2_cells": 8900258953346.016
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 19654.019592285156
+                  },
+                  "extent": 0.0009765625,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                },
+                {
+                  "admissible": true,
+                  "complete_affinity_J_m3_cells": 2128.1363272685558,
+                  "complete_budget": {
+                    "admissibility_tolerance_J_m3_cells": 9.834883728027344e-09,
+                    "admissible": true,
+                    "dissipative_drag_and_heat_J_m3_cells": 2128.1363272685558,
+                    "plastic_work_J_m3_cells": 9325.748381439824,
+                    "proposed_defect_energy_change_J_m3_cells": 7706.747400758788,
+                    "proposed_line_creation_energy_J_m3_cells": 6603.20632436461,
+                    "reaction_extents": {
+                      "captured_line_m2_cells": 309074127739.8677,
+                      "mura_line_stretching_m2_cells": 4402137549576.406
+                    },
+                    "recoverable_elastic_energy_release_J_m3_cells": 9834.883728027344
+                  },
+                  "extent": 0.00048828125,
+                  "result": "EVALUATED",
+                  "sign_resolved": true
+                }
+              ],
+              "family": 3,
+              "selected": true,
+              "selected_extent": 0.0625
+            }
+          ],
+          "family_event_scales": [
+            1.0,
+            1.0,
+            0.0,
+            0.0625
+          ],
+          "family_selection_rule": "complete_affinity_feasible_family_extent_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": 0.0,
+          "hard_invariant_passed": true,
+          "minimum_local_heat_increment_J_m3": 0.0,
+          "mode": "energy_limited_feasible_extents",
+          "post_step_projection_used": false
+        }
+      ],
+      "grid": 64,
+      "operator_changes_accepted_state": true,
+      "spacing_m": 1.5625e-07,
+      "step": 2971
+    }
+  ],
+  "fixture_passed": true,
+  "no_debt_policy": "unaccepted instantaneous extent creates no pending line, energy, loading time, event clock, or numerical retry state",
+  "production_source_sha": "fe4f44686e7ba41abbfd21a6db6817b6b3c0a455",
+  "schema": "asb-drx/v35-mura-feasible-extent/v1",
+  "scientific_gate_not_passed_reason": "bounded matched-state forks classify family directions but do not by themselves establish matched-time trajectory convergence",
+  "scientific_gate_passed": false,
+  "script_sha256": "b36616d2c5e11879a1f3a7cd8614d387416ab713d62927c6d4ef9883d9f6f650"
+}

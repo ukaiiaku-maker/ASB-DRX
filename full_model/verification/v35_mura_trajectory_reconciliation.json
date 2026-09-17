@@ -1,0 +1,35 @@
+{
+  "schema": "asb-drx/v35-mura-trajectory-reconciliation/v1",
+  "audit_date": "2026-09-16",
+  "failed_source_sha": "59f4d12d715350867538161f6014e0ed36bbe5d1",
+  "failed_trajectory": {
+    "root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-20260916",
+    "terminal_step": 1451,
+    "terminal_applied_strain": 0.03841278100648024,
+    "terminal_physical_time_s": 3.841278100648024e-06,
+    "classification": "HARD_INVALID_NUMERICAL_ZERO_VELOCITY_ROUNDOFF",
+    "status_file_present": true,
+    "failure_file_present": true,
+    "restart_checkpoint_sha256": "16b3de4f20b67e711d72956e7010e18b999106278980e45b5ca2c896f5826672"
+  },
+  "repair_source_sha": "e7aa16e70703bcf74df47da8c5669ec052a446c7",
+  "repaired_continuation": {
+    "root": "/Users/sdillon/HPC3/local-results/asb-drx-v32-mura-matched-zero-e7aa16e-20260916",
+    "resumed_exactly_from_step": 1451,
+    "latest_durable_checkpoint_step": 4553,
+    "latest_durable_checkpoint_applied_strain": 0.04536408,
+    "latest_durable_checkpoint_sha256": "42cfe5c42552547865ec7179ff0892335d6fdd0eed667d8d95e24e41e52a5ba2",
+    "latest_diagnostic_history_step": 4650,
+    "latest_diagnostic_applied_strain": 0.0455033706117418,
+    "latest_diagnostic_physical_time_s": 4.5503370611741796e-06,
+    "history_sha256": "da70834a190412a5c0ebbb991b87e3cde90ed47e4251725108e748d4cf74c3c8",
+    "latest_hard_invariant_passed": true,
+    "terminal_status_file_present": false,
+    "terminal_failure_file_present": false,
+    "live_process_present_at_audit": false,
+    "classification": "VALID_PARTIAL_INTERRUPTED_WITHOUT_TERMINAL_RECORD"
+  },
+  "decision": "The 59f4d12 trajectory failed at step 1451. The e7aa16e source resumed that exact checkpoint, remained hard-invariant-valid through diagnostic step 4650, and then disappeared without a terminal record. It did not terminate at step 1451 or step 2971. Its scientifically durable endpoint is checkpoint step 4553; later history through step 4650 is valid diagnostic evidence but is not an exact restart boundary.",
+  "scientific_gate_passed": false,
+  "broad_b2_authorized": false
+}
