@@ -150,9 +150,10 @@ finite-conduction cases remain active.  No strict-ASB claim is made.
 
 ## Validation and provenance
 
-The core kinetic commit passed 696 tests; the front evidence tests passed 13;
-the merged Mura tests passed 12; thermal postprocessing/routing tests passed 9;
-and recurrent restart tests pass.  The selected HPC production source is
+The final merged V36 branch passed 705 tests in 435.00 seconds.  The core
+kinetic commit independently passed 696 tests; the front evidence tests passed
+13; the merged Mura tests passed 12; thermal postprocessing/routing tests
+passed 9; and recurrent restart tests pass.  The selected HPC production source is
 `890cb8906a9772d8bd5c5eb43164ecd44ad2720f`; n192 Slurm job `56099919`
 completed in 8m41s, was fetched with verified checksums, and agrees with the
 local n128 trajectory. Live and final identities, hashes, and terminal states

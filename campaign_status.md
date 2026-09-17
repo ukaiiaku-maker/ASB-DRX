@@ -1569,6 +1569,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   attributable pairs. Corrected frozen-flow and exact-temperature thermostat
   comparisons are valid; invalid legacy freezes remain null. Corrected
   recovery and finite conduction continue locally without interference.
-- Integrated source, reports, and tests are pushed through `a7d1a8e` on
-  `exp/full-v34-recovery-v1`. Current report:
+- The final merged local validation boundary passes 705 tests in 435.00 s.
+  Integrated source, reports, and tests are pending the final V36 evidence
+  commit and push on `exp/full-v34-recovery-v1`. Current report:
   `full_model/docs/v36_decision_report.md`.
