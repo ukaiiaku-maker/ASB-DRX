@@ -72,6 +72,7 @@ class DirectionalRateChannel:
     """
 
     endpoint_free_energy_change_J: float
+    temperature_K: float
     driving_pressure_magnitude_Pa: float
     activation_enthalpy_J: float
     activation_entropy_over_kB: float
@@ -164,7 +165,7 @@ def _directional_rate_channel(process, *, delta_f_J, event_volume_m3,
         delta_f/(KB_J_K*temperature), 0.0), 700.0))
     gross = availability*transition_rate*acceptance
     return DirectionalRateChannel(
-        delta_f, pressure, enthalpy, process.entropy_over_kB, barrier,
+        delta_f, temperature, pressure, enthalpy, process.entropy_over_kB, barrier,
         process.attempt_frequency_s, process.identifiable_prefactor_s,
         transition_rate, acceptance, availability, gross)
 

@@ -1,0 +1,193 @@
+{
+  "actual_reverse_edge": false,
+  "applied_pressure_Pa": 0.0,
+  "calibration_claimed": false,
+  "classification": "CHANNEL_RESOLVED_NONREVERSE_OUTGOING_KINETICS",
+  "corrected_rate_channels": {
+    "a_to_b": {
+      "acceptance_probability": 1.0,
+      "activation_enthalpy_J": 5.607420865118306e-20,
+      "activation_entropy_over_kB": 0.0,
+      "activation_free_barrier_J": 5.607420865118306e-20,
+      "attempt_frequency_s": 100000000.0,
+      "availability_factor": 1.0,
+      "driving_pressure_magnitude_Pa": 725775.238980492,
+      "endpoint_free_energy_change_J": -1.1070243913967536e-23,
+      "gross_activity_s": 2491670.7255345862,
+      "identifiable_prefactor_s": 100000000.0,
+      "temperature_K": 1100.0000001797944,
+      "transition_state_rate_s": 2491670.7255345862
+    },
+    "b_to_a": {
+      "acceptance_probability": 1.0,
+      "activation_enthalpy_J": 5.607573925068456e-20,
+      "activation_entropy_over_kB": 0.0,
+      "activation_free_barrier_J": 5.607573925068456e-20,
+      "attempt_frequency_s": 100000000.0,
+      "availability_factor": 1.0,
+      "driving_pressure_magnitude_Pa": 268038.2631797544,
+      "endpoint_free_energy_change_J": -4.08838548397469e-24,
+      "gross_activity_s": 2491419.6211102176,
+      "identifiable_prefactor_s": 100000000.0,
+      "temperature_K": 1100.0000001797944,
+      "transition_state_rate_s": 2491419.6211102176
+    },
+    "gross_channel_activity_s": 4983090.346644804,
+    "net_velocity_m_s": 6.227389724341035e-08
+  },
+  "endpoint_channels": {
+    "a_to_b": {
+      "actual_reverse_edge": false,
+      "annihilated_line_increment_m": 1.4199666892292875e-08,
+      "available_change_J": -2.3086394926585453e-17,
+      "before_helmholtz_J": 9.750477626702665e-14,
+      "boundary_line_increment_m": 7.634229527789895e-10,
+      "delta_helmholtz_J": -2.3086394926585453e-17,
+      "direction": "a_to_b",
+      "endpoint_helmholtz_J": 9.748168987210007e-14,
+      "endpoint_internal_J": 9.750432140939878e-14,
+      "energy_accepted": true,
+      "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+      "external_work_J": 0.0,
+      "generated_heat_J": 2.262834115586633e-17,
+      "material_sink_export_J": 4.58053770719125e-19,
+      "maximum_abs_beta_p_increment": 9.661265526059e-12,
+      "maximum_abs_line_density_increment_m2": 1828388106204.5312,
+      "maximum_abs_slip_increment": 1.1832585404193107e-11,
+      "maximum_abs_temperature_increment_K": 0.001272925657531232,
+      "processed_line_increment_m": 3.053691805110257e-08,
+      "signed_volume_m3": 3.180928982781953e-23,
+      "sink_line_increment_m": 3.053691804794167e-10,
+      "thermostat_export_J": 0.0,
+      "transmitted_line_increment_m": 1.5268459025551284e-08
+    },
+    "b_to_a": {
+      "actual_reverse_edge": false,
+      "annihilated_line_increment_m": 4.969883603181256e-09,
+      "available_change_J": -8.526106798430176e-18,
+      "before_helmholtz_J": 9.750477626702665e-14,
+      "boundary_line_increment_m": 2.671980447622357e-10,
+      "delta_helmholtz_J": -8.526106798430176e-18,
+      "direction": "b_to_a",
+      "endpoint_helmholtz_J": 9.749625016022822e-14,
+      "endpoint_internal_J": 9.750461914434398e-14,
+      "energy_accepted": true,
+      "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+      "external_work_J": -0.0,
+      "generated_heat_J": 8.365787972521103e-18,
+      "material_sink_export_J": 1.6031882590907277e-19,
+      "maximum_abs_beta_p_increment": 9.661265526059e-12,
+      "maximum_abs_line_density_increment_m2": 639935912727.6094,
+      "maximum_abs_slip_increment": 1.1832585404193107e-11,
+      "maximum_abs_temperature_increment_K": 0.00047060569249879336,
+      "processed_line_increment_m": 1.0687921730432412e-08,
+      "signed_volume_m3": -3.180928982781953e-23,
+      "sink_line_increment_m": 1.0687921727271518e-10,
+      "thermostat_export_J": 0.0,
+      "transmitted_line_increment_m": 5.343960865216206e-09
+    }
+  },
+  "equal_control": {
+    "net_velocity_m_s": 0.0,
+    "rate_a_to_b_s": 2491346.9588656244,
+    "rate_b_to_a_s": 2491346.9588656244
+  },
+  "exchange_control": {
+    "exchanged_net_velocity_m_s": -6.227389724341035e-08,
+    "odd_residual_m_s": 0.0,
+    "original_net_velocity_m_s": 6.227389724341035e-08
+  },
+  "frozen_v35_comparator": {
+    "acceptance_a_to_b": 1.0,
+    "acceptance_b_to_a": 1.0,
+    "classification": "FROZEN_V35_COMPARATOR_NOT_PRODUCTION",
+    "net_velocity_m_s": 0.0,
+    "rate_a_to_b_s": 2491670.7255345862,
+    "rate_b_to_a_s": 2491670.7255345862,
+    "shared_activation_enthalpy_J": 5.607420865118306e-20,
+    "shared_pressure_Pa": 725775.238980492,
+    "shared_transition_state_rate_s": 2491670.7255345862
+  },
+  "hard_checks": {
+    "all_amplitudes_publish_same_direction": true,
+    "corrected_nonzero_direction": true,
+    "equal_control_stationary": true,
+    "exchange_is_odd": true,
+    "first_law_closed": true,
+    "frozen_comparator_cancels": true,
+    "probe_is_invariant": true,
+    "zero_external_work": true
+  },
+  "proposal_amplitude_control": [
+    {
+      "a_to_b_event_J": -1.1060829390458546e-23,
+      "accepted_signed_volume_m3": 1.938149370642759e-25,
+      "b_to_a_event_J": -4.2771517761598544e-24,
+      "gross_channel_activity_s": 4983095.023775339,
+      "net_velocity_m_s": 6.090914830068872e-08,
+      "proposal_displacement_cells": 0.025,
+      "published": true,
+      "rate_a_to_b_s": 2491670.3125898885,
+      "rate_b_to_a_s": 2491424.71118545
+    },
+    {
+      "a_to_b_event_J": -1.1070243913967536e-23,
+      "accepted_signed_volume_m3": 1.9814281143160314e-25,
+      "b_to_a_event_J": -4.08838548397469e-24,
+      "gross_channel_activity_s": 4983090.346644804,
+      "net_velocity_m_s": 6.227389724341035e-08,
+      "proposal_displacement_cells": 0.05,
+      "published": true,
+      "rate_a_to_b_s": 2491670.7255345862,
+      "rate_b_to_a_s": 2491419.6211102176
+    },
+    {
+      "a_to_b_event_J": -1.1082951502008187e-23,
+      "accepted_signed_volume_m3": 2.062902407818433e-25,
+      "b_to_a_event_J": -3.7074338308262074e-24,
+      "gross_channel_activity_s": 4983080.988718137,
+      "net_velocity_m_s": 6.487126508510113e-08,
+      "proposal_displacement_cells": 0.1,
+      "published": true,
+      "rate_a_to_b_s": 2491671.283199966,
+      "rate_b_to_a_s": 2491409.705518171
+    }
+  ],
+  "proposal_probe_control": {
+    "alternate_state_sha256": "024569693075862deee6743e5cbf59cb03f6d47fa2eefd35ddbd7c6dc62c0b0b",
+    "base_state_sha256": "024569693075862deee6743e5cbf59cb03f6d47fa2eefd35ddbd7c6dc62c0b0b",
+    "physical_decisions_identical": true,
+    "probe_external_work_J": 0.0,
+    "probe_pressures_Pa": [
+      100000000.0,
+      -900000000.0
+    ],
+    "probe_selected_direction": false,
+    "states_bitwise_identical": true
+  },
+  "publication_accounting": {
+    "accepted_signed_volume_m3": 1.9814281143160314e-25,
+    "candidate_sweep_published": true,
+    "external_work_J": 0.0,
+    "first_law_residual_J": -1.323331973956278e-27,
+    "generated_heat_J": 1.4171178298908216e-19,
+    "inventory_change": {
+      "junction_extent_m": [
+        0.0
+      ],
+      "signed_family_line_m": [
+        0.0,
+        0.0,
+        -2.8817600022172926e-21,
+        2.8817600022172926e-21
+      ],
+      "total_line_m": -9.510576797611866e-11
+    },
+    "material_sink_change_m": 1.902170970363722e-12,
+    "material_sink_export_J": 2.8532564555455832e-21,
+    "thermostat_export_J": 0.0
+  },
+  "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE",
+  "schema": "asb-drx/v36-front-channel-kinetics/v1",
+  "source_commit": "6682200c6bfb3cf7ca9cac8eadab6faae041a8ae"
+}
