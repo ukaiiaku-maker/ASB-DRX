@@ -16,11 +16,10 @@ nonphysical geometry probe has no rate, work, or directional effect.  The
 current generic parameters are a physical-response hypothesis, not a material
 calibration or a DRX prediction.
 
-The recurrent response is timestep-qualified locally and its initial rate is
-spatially qualified at n128/n192.  The matched n128/n192 0.05 ms trajectory is
-running; until it is fetched and compared, long-horizon spatial qualification
-remains pending.  Lower grids are retained as fixtures and convergence
-evidence only.
+The recurrent response is timestep-qualified locally, and both its initial
+rate and matched 0.05 ms trajectory are spatially qualified at n128/n192.
+Their cumulative sweeps differ by 3.72%, below the unchanged provisional 5%
+threshold. Lower grids are retained as fixtures and convergence evidence only.
 
 ## Production kinetic object
 
@@ -89,6 +88,8 @@ Local controls show:
 - n16 to n32 and n32 to n64 do not converge and are not promoted;
 - the n128/n192 initial velocity differs by 3.79%, below the provisional 5%
   threshold;
+- the matched n128/n192 0.05 ms cumulative sweeps are `1.06925e-26` and
+  `1.02952e-26 m3`, a 3.72% difference;
 - exchanging the line-density contrast reverses the signed sweep;
 - the front-disabled control has zero sweep;
 - fixed-strain and continued-deformation responses diverge as their common
@@ -138,8 +139,9 @@ finite-conduction cases remain active.  No strict-ASB claim is made.
    force/capacity arrest only after timestep and grid qualification.
 4. The V36 compact and recurrent calculations demonstrate zero-work
    stored-energy-driven migration in the generic bicrystal.
-5. Unfinished n128/n192 trajectory comparison is insufficient exposure, not
-   an invariant failure.
+5. The qualified 0.05 ms trajectory remains a bounded exposure, not evidence
+   of one-interface-width migration or an independently stable long-time
+   arrest.
 6. No hard invariant has been relaxed or tuned around.
 7. Thermal interventions distinguish broad heating/localization measures from
    strict ASB, which remains unqualified.
@@ -151,6 +153,7 @@ finite-conduction cases remain active.  No strict-ASB claim is made.
 The core kinetic commit passed 696 tests; the front evidence tests passed 13;
 the merged Mura tests passed 12; thermal postprocessing/routing tests passed 9;
 and recurrent restart tests pass.  The selected HPC production source is
-`890cb8906a9772d8bd5c5eb43164ecd44ad2720f`; its archive plan is recorded at
-the later job-wrapper commit.  Live and final identities, hashes, and terminal
-states are recorded in `v36_case_manifest.json`.
+`890cb8906a9772d8bd5c5eb43164ecd44ad2720f`; n192 Slurm job `56099919`
+completed in 8m41s, was fetched with verified checksums, and agrees with the
+local n128 trajectory. Live and final identities, hashes, and terminal states
+are recorded in `v36_case_manifest.json`.

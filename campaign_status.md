@@ -1562,9 +1562,9 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   remains scientifically open.
 - Recurrent fixed-strain and continued-deformation protocols run on a common
   clock. n16 timestep and proposal controls pass, but n16/n32/n64 are not
-  spatially promoted. The n128/n192 initial velocity differs by 3.79%; the
-  matched 0.05 ms trajectories are active. Local n128 is checkpointed, and
-  source-frozen HPC3 n192 is Slurm job `56099919`.
+  spatially promoted. The n128/n192 initial velocity differs by 3.79%; their
+  matched 0.05 ms sweep differs by 3.72% and passes the provisional threshold.
+  Source-frozen HPC3 job `56099919` completed and was checksum-verified.
 - Thermal postprocessing now emits numeric effects only for exact matched,
   attributable pairs. Corrected frozen-flow and exact-temperature thermostat
   comparisons are valid; invalid legacy freezes remain null. Corrected
