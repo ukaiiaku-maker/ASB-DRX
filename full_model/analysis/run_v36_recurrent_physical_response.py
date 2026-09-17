@@ -130,6 +130,7 @@ def _record(index, time_s, driving, audit):
         "mura": audit["mura"],
         "complete_energy_delta_J": float(
             audit["complete_energy"]["delta_helmholtz_J"]),
+        "complete_energy_decision": audit["complete_energy"]["front_decision"],
     }
     # Checkpoint metadata is JSON.  Normalize tuples and NumPy scalar subclasses
     # immediately so continuous and restarted records have identical semantics.
