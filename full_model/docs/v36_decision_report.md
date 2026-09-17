@@ -135,8 +135,19 @@ step, time, and strain.  Relative to full law, maximum temperature falls
 falls 0.006136, and effective width rises `2.084e-8 m`.  Its flow input evolves
 to 1166.84 K while its recovery input remains at 900 K, confirming selective
 accepted-channel routing.  Endpoint first-law, Burgers, line, and energy
-residuals pass their fixed limits.  Finite conduction remains active, so the
-overall thermal matrix remains `RUNNING`.  No strict-ASB claim is made.
+residuals pass their fixed limits.
+
+The finite-conduction/no-bath case is exactly matched and terminal.  Relative
+to local adiabatic full law, maximum temperature falls 604.433 K, stress rises
+25.261 MPa, active fraction rises 0.536001, softening falls 0.008175, and
+effective width rises `3.690e-8 m`.  Its first-law residual is `2.52e-12`; its
+maximum Burgers, line, and energy residuals are below `8.0e-17`, `4.8e-17`,
+and `1.5e-18`, respectively.  The selected production matrix is therefore
+`V36_THERMAL_VALID_MATRIX_COMPLETE_WITH_QUARANTINED_LEGACY`: all selected
+comparisons are exact and valid, while the two old misrouted selective rows
+remain explicitly invalid and are replaced only in the production selection
+by their corrected reruns.  The result distinguishes localized adiabatic
+heating from broad conductive heating; no strict-ASB claim is made.
 
 ## Decision boundaries
 
@@ -158,7 +169,7 @@ overall thermal matrix remains `RUNNING`.  No strict-ASB claim is made.
 
 ## Validation and provenance
 
-The final merged V36 branch passed 705 tests in 435.00 seconds.  The core
+The final merged V36 branch passed 706 tests in 279.88 seconds.  The core
 kinetic commit independently passed 696 tests; the front evidence tests passed
 13; the merged Mura tests passed 12; thermal postprocessing/routing tests
 passed 9; and recurrent restart tests pass.  The selected HPC production source is

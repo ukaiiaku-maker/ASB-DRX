@@ -97,6 +97,65 @@ def process_records(path: Path) -> list[dict[str, object]]:
     return records
 
 
+def case_passes_hard_gates(item: dict) -> bool:
+    """Apply the unchanged per-case conservation and routing gates."""
+    return bool(
+        item.get("terminal", False)
+        and float(item.get("relative_first_law_residual", float("inf"))) < 0.05
+        and float(item.get("maximum_relative_burgers_residual", float("inf"))) < 1e-10
+        and float(item.get("maximum_relative_line_residual", float("inf"))) < 1e-10
+        and float(item.get("maximum_relative_energy_residual", float("inf"))) < 1e-10
+        and item.get("terminal_reason") != "DRIVER_FAILURE"
+        and item.get("causal_interpretation_valid", False))
+
+
+def classify_selected_matrix(available: dict, effects: dict,
+                             corrected_cases: dict,
+                             corrected_effects: dict,
+                             invalid_legacy_cases: list[str]) -> dict:
+    """Classify production selections while retaining legacy quarantines."""
+    expected = {str(case_definition(index)["case_name"])
+                for index in range(len(CASES))}
+    selected_cases = dict(available)
+    selected_effects = dict(effects)
+    selected_cases.update(corrected_cases)
+    selected_effects.update(corrected_effects)
+    complete = (expected <= set(selected_cases)
+                and all(selected_cases[name].get("terminal", False)
+                        for name in expected))
+    valid = bool(complete and all(
+        case_passes_hard_gates(selected_cases[name]) for name in expected))
+    reference = "full_law_local_adiabatic"
+    comparisons_valid = bool(complete and all(
+        selected_effects.get(name, {}).get("status") == "MATCHED_EXACT"
+        for name in expected-{reference}))
+    corrected_quarantines = sorted(
+        name for name in invalid_legacy_cases
+        if name in corrected_cases
+        and case_passes_hard_gates(corrected_cases[name])
+        and corrected_effects.get(name, {}).get("status") == "MATCHED_EXACT")
+    if not complete:
+        classification = "V34_THERMAL_CAUSAL_RUNNING"
+    elif not (valid and comparisons_valid):
+        classification = "V34_THERMAL_CAUSAL_HARD_INVALID"
+    elif corrected_quarantines:
+        classification = (
+            "V36_THERMAL_VALID_MATRIX_COMPLETE_WITH_QUARANTINED_LEGACY")
+    else:
+        classification = "V34_THERMAL_CAUSAL_COMPLETE"
+    return {
+        "classification": classification,
+        "complete": complete,
+        "valid": valid,
+        "comparisons_valid": comparisons_valid,
+        "selected_case_sources": {
+            name: ("corrected_selective_relaunch"
+                   if name in corrected_cases else "original_matrix")
+            for name in sorted(expected)},
+        "quarantined_legacy_cases_with_valid_replacements": corrected_quarantines,
+    }
+
+
 def matched_causal_effect(subject: dict, reference: dict,
                           subject_record: dict, reference_record: dict) -> dict:
     """Return a causal contrast only for exact, attributable common states.
@@ -296,12 +355,6 @@ def main() -> None:
                 args.root/name/"v34_thermal_run_record.json")
             effects[name] = matched_causal_effect(
                 item, reference, subject_record, reference_record)
-    if not all_terminal:
-        classification = "V34_THERMAL_CAUSAL_RUNNING"
-    elif not all_valid:
-        classification = "V34_THERMAL_CAUSAL_HARD_INVALID"
-    else:
-        classification = "V34_THERMAL_CAUSAL_COMPLETE"
     source_commits = set()
     for case_id in range(len(CASES)):
         path = args.root/str(case_definition(case_id)["case_name"])/"v34_thermal_run_record.json"
@@ -320,6 +373,8 @@ def main() -> None:
             str(case_definition(index)["case_name"])
             for index in (1, 2)})
     corrected_relaunch = None
+    corrected_cases = {}
+    corrected_effects = {}
     if args.corrected_selective_root is not None:
         corrected_status = read_json_if_present(
             args.corrected_selective_root/"launch_status.json")
@@ -330,8 +385,6 @@ def main() -> None:
                 args.corrected_selective_root/"processes.tsv"),
             "preflight_classification": "AUTHORITATIVE_ROUTING_PREFLIGHT_PASSED",
         }
-        corrected_cases = {}
-        corrected_effects = {}
         full_history = histories.get("full_law_local_adiabatic", {})
         for case_id in (1, 2):
             case = case_definition(case_id)
@@ -383,6 +436,10 @@ def main() -> None:
             "causal_effects_relative_to_full_law_at_matched_step"] = corrected_effects
         if corrected_status.get("source_sha"):
             source_commits.add(corrected_status["source_sha"])
+    selected_matrix = classify_selected_matrix(
+        available, effects, corrected_cases, corrected_effects,
+        invalid_causal_cases)
+    classification = selected_matrix["classification"]
     result = {
         "schema": "asb-drx/v36/thermal-matched-causality/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -399,6 +456,7 @@ def main() -> None:
         "invalid_causal_cases": invalid_causal_cases,
         "classification": classification,
         "all_cases_terminal": all_terminal, "all_cases_valid": all_valid,
+        "selected_production_matrix": selected_matrix,
         "cases": available, "causal_effects_relative_to_full_law": effects,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

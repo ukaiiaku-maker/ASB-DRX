@@ -1,5 +1,6 @@
 from full_model.analysis.postprocess_v34_asb_thermal import (
     actual_semantics,
+    classify_selected_matrix,
     matched_causal_effect,
     process_records,
     read_json_if_present,
@@ -18,6 +19,18 @@ def summary(**updates):
 
 def record(source="a"*40, prefix="b"*64):
     return {"source_commit": source, "shared_checkpoint_sha256": prefix}
+
+
+def valid_case(**updates):
+    return {
+        "terminal": True,
+        "terminal_reason": "REQUESTED_HORIZON",
+        "relative_first_law_residual": 1e-12,
+        "maximum_relative_burgers_residual": 1e-15,
+        "maximum_relative_line_residual": 1e-15,
+        "maximum_relative_energy_residual": 1e-15,
+        "causal_interpretation_valid": True,
+    } | updates
 
 
 def test_actual_semantics_distinguishes_all_boundary_operators():
@@ -76,3 +89,28 @@ def test_unmatched_invalid_and_unattributed_effects_are_null():
         assert effect["status"] == expected
         assert all(value is None for value in effect["numeric_effects"].values())
         assert effect["interpolation"]["used"] is False
+
+
+def test_selected_matrix_uses_valid_corrected_rows_without_erasing_legacy():
+    names = ["full_law_local_adiabatic", "frozen_flow_T_local_adiabatic",
+             "frozen_recovery_T_local_adiabatic",
+             "exact_prescribed_T_thermostat",
+             "finite_conduction_periodic_insulated"]
+    available = {name: valid_case() for name in names}
+    for name in names[1:3]:
+        available[name] = valid_case(causal_interpretation_valid=False)
+    effects = {name: {"status": "MATCHED_EXACT"} for name in names}
+    for name in names[1:3]:
+        effects[name] = {"status": "INVALID_CAUSAL_ROUTING"}
+    corrected = {name: valid_case() for name in names[1:3]}
+    corrected_effects = {
+        name: {"status": "MATCHED_EXACT"} for name in names[1:3]}
+    decision = classify_selected_matrix(
+        available, effects, corrected, corrected_effects, names[1:3])
+    assert decision["classification"] == (
+        "V36_THERMAL_VALID_MATRIX_COMPLETE_WITH_QUARANTINED_LEGACY")
+    assert decision["complete"] and decision["valid"]
+    assert decision["comparisons_valid"]
+    assert decision["quarantined_legacy_cases_with_valid_replacements"] == sorted(
+        names[1:3])
+    assert not available[names[1]]["causal_interpretation_valid"]

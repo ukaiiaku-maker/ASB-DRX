@@ -10,11 +10,11 @@
       "sha256": "63c453515577a1d5ba7dbc22d6b1dccbb796fcad39a022916df6b841828ee9ab"
     },
     "full_model/verification/v36_thermal_matched_causality.json": {
-      "sha256": "fd241b222067168e06cf6cdb8afe37f39ab1df56b56e5e17ce9d031b48988761"
+      "sha256": "408463d14e3a5694604bbfb6dd176e733f3df0238de684348e2616d924b59578"
     }
   },
-  "branch_head": "76444d313642cc1ab02597a2a382240f6da74e7e",
-  "generated_utc": "2026-09-17T02:58:03.075395+00:00",
+  "branch_head": "71312b9969c9d99a9034a3f7765f8ed591bb36d9",
+  "generated_utc": "2026-09-17T03:49:18.869873+00:00",
   "hpc_n192": {
     "fetch_status": "verified",
     "git_commit": "e625a60dc01a119a7c041af3efdb771a30d01246",
