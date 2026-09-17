@@ -1,0 +1,135 @@
+{
+  "schema": "asb-drx/v35-phase-kinetic-decision/v1",
+  "authority": {
+    "canonical_parent_commit": "ae8644a",
+    "source_commit": "9b7caeb925d3e53ae34707463208c8c9b969162d"
+  },
+  "decision": "QUALIFIED_SEPARATED_PHASE_CONTROL_AND_PHYSICAL_EVENT_MEASURE",
+  "fixture_passed": true,
+  "scientific_gate_passed": true,
+  "calibration_claimed": false,
+  "long_production_run_launched": false,
+  "phase_switch_separation": {
+    "integrator_switch": "ac_phase_proposal_mode",
+    "topology_switch": "ac_topology_active_set_enabled",
+    "scope": "existing-boundary, no-nucleation, no-label-allocation mode only",
+    "inactive_control": {
+      "case": "n64 favorable continuation, one physical step",
+      "on_off_arrays_bitwise_identical": [
+        "eta",
+        "rho",
+        "T"
+      ],
+      "on_activation_count": 0,
+      "on_projected_pixel_updates": 0,
+      "energy_change_J_m": -0.0009346400812524913,
+      "phase_child_support_signed_volume_change_m3": 6.935651340535421e-22,
+      "phase_child_support_absolute_volume_change_m3": 7.906537052480246e-22,
+      "sign_flip_pixel_count": 57,
+      "contour_proposed_signed_volume_m3": 6.642101630961326e-22,
+      "on_artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v35-phase-switch-9b7caeb-20260916/n64_favorable_on/v34_phase_replay_result.json",
+      "on_sha256": "713895b91a1440dc6a98ebdfb0056e2c38ed0c99fbdbb87fc25a58e47623e4fc",
+      "off_artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v35-phase-switch-9b7caeb-20260916/n64_favorable_off/v34_phase_replay_result.json",
+      "off_sha256": "69a7b127db3f6b0138c45e19d5f0a440cc1a09811b4495b4e7d25da2eb0e6f39"
+    },
+    "active_discriminator": {
+      "case": "archived n128 +1e-6 preterminal checkpoint, one physical step",
+      "active_set_on": {
+        "terminal": null,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "activation_count": 48,
+        "projected_pixel_updates": 596,
+        "energy_change_J_m": -2.2691795526948166e-05,
+        "phase_child_support_signed_volume_change_m3": 3.637270730804308e-23,
+        "phase_child_support_absolute_volume_change_m3": 4.2602984240449666e-23,
+        "sign_flip_pixel_count": 1,
+        "contour_proposed_signed_volume_m3": 3.471393563226866e-23,
+        "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v35-phase-switch-9b7caeb-20260916/n128_preterminal_on/v34_phase_replay_result.json",
+        "sha256": "1f809f222669b08b6807894525604c7eb4f49ad7409e8d4a5719401e79a7ae37"
+      },
+      "active_set_off": {
+        "terminal": "UNAUTHORIZED_PHASE_ISLAND",
+        "classification": "UNAUTHORIZED_PHASE_ISLAND",
+        "activation_count": 0,
+        "projected_pixel_updates": 0,
+        "energy_change_J_m": -2.2943204081589397e-05,
+        "phase_child_support_signed_volume_change_m3": 3.649091106330526e-23,
+        "phase_child_support_absolute_volume_change_m3": 4.3077977611781645e-23,
+        "sign_flip_pixel_count": 104,
+        "contour_proposed_signed_volume_m3": 4.261196980191924e-23,
+        "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v35-phase-switch-9b7caeb-20260916/n128_preterminal_off/v34_phase_replay_result.json",
+        "sha256": "81e6dbfb43f818e91d38917bd22743c69cdd17f8e76a375b59956ab86e12fa5a"
+      },
+      "interpretation": "The active set enforces the declared existing-boundary topology contract. It is independent of IMEX integration and is not a general nucleation or multiphase constraint."
+    }
+  },
+  "physical_event_measure": {
+    "baseline": {
+      "burgers_m": 2.48e-10,
+      "event_volume_m3": 1.5252992000000005e-29,
+      "event_length_m": 2.48e-10,
+      "site_area_m2": 6.150400000000002e-20
+    },
+    "definitions": {
+      "event_volume": "V_e=b^3",
+      "event_length": "l_e=b",
+      "site_area": "A_site=V_e/l_e=b^2",
+      "physical_site_count": "N_site=A_front/b^2",
+      "directional_event_count": "N_pm=N_site*r_pm*dt",
+      "signed_swept_volume": "DeltaV=(N_plus-N_minus)*b^3",
+      "normal_velocity": "v_n=b*(r_plus-r_minus)"
+    },
+    "units": {
+      "N_site": "dimensionless physical sites",
+      "r_pm": "site^-1 s^-1",
+      "DeltaV": "m^3",
+      "v_n": "m s^-1"
+    },
+    "invariance_and_extensivity": {
+      "patch_site_count_relative_residual": 0.0,
+      "patch_swept_volume_relative_residual": 0.0,
+      "four_x_physical_thickness_site_count_ratio": 4.0,
+      "thickness_velocity_relative_residual": 0.0,
+      "thickness_areal_site_density_relative_residual": 0.0,
+      "interpretation": "Counts and swept volume are extensive in real interface area and represented thickness; site density, event measure per area, and normal velocity are independent of patch partition, mesh, and represented thickness."
+    }
+  },
+  "bounded_kinetic_screen": {
+    "classification": "BOUNDED_HYPOTHESIS_SCREEN_NOT_CALIBRATION",
+    "case_count": 15,
+    "temperature_K": [900.0, 1100.0, 1300.0],
+    "stored_energy_pressure_Pa": [-600000000.0, -200000000.0, 0.0, 200000000.0, 600000000.0],
+    "applied_pressure_Pa": 0.0,
+    "equal_defect_states": true,
+    "transmission": 1.0,
+    "maximum_detailed_balance_log_residual": 1.1102230246251565e-16,
+    "rate_range_per_site_s": [1096696.0045355866, 24113512.88167496],
+    "maximum_absolute_velocity_m_s": 0.0023887151420634587,
+    "zero_pressure_equal_directional_rates_per_site_s": {
+      "900_K": 1096696.0045355866,
+      "1100_K": 2491346.9573620646,
+      "1300_K": 4396799.30515143
+    },
+    "physical_site_count_for_10um_by_2b_interface": 80645.16129032258,
+    "site_count_per_interface_area_m2": 1.6259105098855354e19,
+    "sign_symmetry": "exact for paired positive and negative stored-energy pressures",
+    "artifact": "/Users/sdillon/HPC3/local-results/asb-drx-v35-front-kinetics-9b7caeb-20260916/screen.json",
+    "sha256": "0bc9c980725f00347743b5121f4d40e22cda55994a9285e56383ef0280bd90f4"
+  },
+  "tests": {
+    "focused_passed": 45,
+    "focused_runtime_s": 41.79,
+    "additional_unit_passed": 12,
+    "additional_unit_runtime_s": 3.03,
+    "full_suite_passed": 680,
+    "full_suite_runtime_s": 441.12,
+    "full_suite_environment": "PYTHONPATH=src:."
+  },
+  "limitations": [
+    "The topology active set is qualified only for existing-boundary, no-nucleation, no-label-allocation evolution; it must not be used as a general grain-topology model.",
+    "The 15-case kinetic matrix tests hypotheses and dimensional consistency; it is not a fit or material calibration.",
+    "Physical counts correctly scale with real interface area and represented thickness. Only normalized event density and normal velocity are thickness independent.",
+    "A phase proposal accepted by the topology adapter can still be rejected by the downstream complete common-state energy transaction.",
+    "No long-horizon or production matrix was launched in this workstream."
+  ]
+}
