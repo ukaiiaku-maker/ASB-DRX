@@ -6,8 +6,11 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
+import re
 import subprocess
+import tarfile
 import time
 
 
@@ -24,6 +27,10 @@ def parse_submission(output: str) -> tuple[str | None, str | None]:
             run_id = line.split(":", 1)[1].strip()
         elif line.startswith("Job ID:"):
             job_id = line.split(":", 1)[1].strip()
+        else:
+            match = re.search(r"Submitted run (\S+) as Slurm job (\d+)", line)
+            if match:
+                run_id, job_id = match.groups()
     return run_id, job_id
 
 
@@ -39,9 +46,32 @@ def read_record(project: Path, run_id: str) -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
 
 
-def run_postprocessor(command: list[str], output: Path) -> dict:
+def extract_result_archives(fetched_root: Path, staging: Path) -> list[str]:
+    """Safely unpack runner-owned per-task archives for local classification."""
+    extracted = []
+    for archive in sorted((fetched_root/"results").glob("results-*.tar.gz")):
+        task = archive.name.removeprefix("results-").removesuffix(".tar.gz")
+        target = staging/task
+        target.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(archive, "r:gz") as stream:
+            base = target.resolve()
+            for member in stream.getmembers():
+                destination = (target/member.name).resolve()
+                if destination != base and base not in destination.parents:
+                    raise ValueError(f"unsafe archive member {member.name}")
+            stream.extractall(target, filter="data")
+        extracted.append(str(archive))
+    return extracted
+
+
+def run_postprocessor(command: list[str], output: Path, project: Path) -> dict:
     output.parent.mkdir(parents=True, exist_ok=True)
-    process = subprocess.run(command, text=True, capture_output=True, timeout=900)
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = os.pathsep.join((
+        str(project), str(project/"src"), environment.get("PYTHONPATH", "")))
+    process = subprocess.run(
+        command, cwd=project, env=environment,
+        text=True, capture_output=True, timeout=900)
     return {
         "returncode": process.returncode,
         "output": (process.stdout+process.stderr)[-8000:],
@@ -125,16 +155,20 @@ def main() -> None:
                     continue
                 fetched_root = project_results/run_id
                 artifact_dir = args.postprocess_root/run_id
+                extracted_root = artifact_dir/"extracted"
                 try:
+                    archives = extract_result_archives(fetched_root, extracted_root)
+                    if not archives:
+                        raise ValueError("no fetched result archives")
                     if run_id == args.conduction_run_id:
                         command = [
                             "python", "full_model/analysis/postprocess_v37_conduction_results.py",
-                            "--root", str(fetched_root), "--output",
+                            "--root", str(extracted_root), "--output",
                             str(artifact_dir/"v37_conduction_results.json"),
                             "--figure", str(artifact_dir/"v37_conduction_results.png")]
                         output = artifact_dir/"v37_conduction_results.json"
                     elif run_id == args.mura_run_id:
-                        configs = list(fetched_root.rglob("case_config.json"))
+                        configs = list(extracted_root.rglob("case_config.json"))
                         if len(configs) != 1:
                             raise ValueError("expected one fetched Mura case")
                         command = [
@@ -146,13 +180,15 @@ def main() -> None:
                     elif run_id == followup.get("run_id"):
                         command = [
                             "python", "full_model/analysis/postprocess_v37_front_response.py",
-                            "--root", str(fetched_root), "--output",
+                            "--root", str(extracted_root), "--output",
                             str(artifact_dir/"v37_front_response.json"), "--figure",
                             str(artifact_dir/"v37_front_response.png")]
                         output = artifact_dir/"v37_front_response.json"
                     else:
                         continue
-                    postprocessing[run_id] = run_postprocessor(command, output)
+                    postprocessing[run_id] = run_postprocessor(
+                        command, output, args.project)
+                    postprocessing[run_id]["archives"] = archives
                 except (OSError, ValueError, subprocess.TimeoutExpired) as error:
                     postprocessing[run_id] = {
                         "returncode": 125, "error": str(error)}

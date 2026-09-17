@@ -6,7 +6,7 @@ environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREA
 input_mode = "archive"
 result_mode = "archive"
 scratch_mode = "local"
-output_paths = ["full_model/production/output/v37-conduction"]
+output_paths = ["output/v37-conduction"]
 contains_sensitive_data = false
 
 input_paths = [

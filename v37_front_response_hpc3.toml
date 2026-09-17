@@ -6,7 +6,7 @@ environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREA
 input_mode = "archive"
 result_mode = "archive"
 scratch_mode = "local"
-output_paths = ["full_model/production/output/v37-front-response"]
+output_paths = ["output/v37-front-response"]
 contains_sensitive_data = false
 
 input_paths = [
@@ -31,6 +31,7 @@ input_paths = [
   "full_model/production/tensorial_nye.py",
   "full_model/production/v23_coupled_wall.py",
   "full_model/production/v24_mechanical_wall.py",
+  "full_model/production/wall_circuit_diagnostics.py",
   "full_model/production/wall_topology_supply.py",
   "full_model/hpc3/run_v37_front_response_case.py",
   "full_model/hpc3/run_v37_front_response_array.sh",

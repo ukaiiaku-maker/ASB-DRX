@@ -13,6 +13,8 @@ python3 -m py_compile \
   full_model/analysis/run_v36_recurrent_physical_response.py \
   full_model/hpc3/run_v37_front_response_case.py \
   >"$out/preflight-${index}.log" 2>&1 || exit $?
+python3 -c 'from full_model.analysis.run_v36_recurrent_physical_response import run_response' \
+  >>"$out/preflight-${index}.log" 2>&1 || exit $?
 python3 full_model/hpc3/run_v37_front_response_case.py \
   --case-index "$index" \
   --case-table full_model/hpc3/v37_front_response_cases.json \
