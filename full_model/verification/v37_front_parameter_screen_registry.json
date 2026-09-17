@@ -1,0 +1,50 @@
+{
+  "schema": "asb-drx/v37/front-parameter-screen-registry/v1",
+  "registered_before_response_evaluation": true,
+  "classification": "BOUNDED_GENERIC_RESPONSE_FAMILY_NOT_CALIBRATION",
+  "fixed": {
+    "temperature_K": 1100.0,
+    "burgers_m": 2.48e-10,
+    "critical_pressure_Pa": 1000000000.0,
+    "exp_floor": 0.1,
+    "negative_free_barrier_policy": "drag",
+    "applied_front_pressure_Pa": 0.0
+  },
+  "registered_bounds": {
+    "activation_h0_eV": [0.25, 0.45],
+    "exp_a": [1.0, 3.0],
+    "exp_n": [1.0, 2.0],
+    "activation_entropy_kB": [-1.0, 1.0],
+    "attempt_frequency_s": [10000000.0, 1000000000.0],
+    "event_volume_b3": [0.5, 2.0],
+    "jump_length_b": [0.5, 2.0],
+    "symmetric_availability": [0.25, 1.0]
+  },
+  "constraints": [
+    "event_volume_m3 = site_area_m2 * jump_length_m",
+    "event volume is never replaced by cell volume",
+    "both nonreverse outgoing endpoints are evaluated independently",
+    "activation entropy enters exactly once",
+    "zero applied pressure is retained"
+  ],
+  "cases": [
+    {"name": "baseline", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "h0_low", "activation_h0_eV": 0.25, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "h0_high", "activation_h0_eV": 0.45, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "shape_a_low", "activation_h0_eV": 0.35, "exp_a": 1.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "shape_a_high", "activation_h0_eV": 0.35, "exp_a": 3.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "shape_n_low", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.0, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "shape_n_high", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 2.0, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "entropy_negative", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": -1.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "entropy_positive", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 1.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "prefactor_low", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 10000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "prefactor_high", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 1000000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "event_volume_low", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 0.5, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "event_volume_high", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 2.0, "jump_length_b": 1.0, "availability": 1.0},
+    {"name": "jump_low", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 0.5, "availability": 1.0},
+    {"name": "jump_high", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 2.0, "availability": 1.0},
+    {"name": "availability_low", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 0.25},
+    {"name": "availability_mid", "activation_h0_eV": 0.35, "exp_a": 2.0, "exp_n": 1.5, "activation_entropy_kB": 0.0, "attempt_frequency_s": 100000000.0, "event_volume_b3": 1.0, "jump_length_b": 1.0, "availability": 0.5}
+  ],
+  "selection_rule": "retain the unchanged slow baseline; select an intermediate and a measurable candidate by predicted time to 0.25 interface width, then require full-solver energy and state acceptance without retuning"
+}

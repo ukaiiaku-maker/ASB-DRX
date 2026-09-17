@@ -103,6 +103,8 @@ class CompleteDirectionalEndpoint:
     before_helmholtz_J: float
     endpoint_helmholtz_J: float
     endpoint_internal_J: float
+    before_energy_components: dict
+    endpoint_energy_components: dict
     delta_helmholtz_J: float
     external_work_J: float
     available_change_J: float
@@ -458,6 +460,8 @@ def evaluate_complete_directional_kinetics(
             before_helmholtz_J=decision.before.helmholtz_J,
             endpoint_helmholtz_J=decision.candidate.helmholtz_J,
             endpoint_internal_J=decision.candidate.internal_J,
+            before_energy_components=asdict(decision.before),
+            endpoint_energy_components=asdict(decision.candidate),
             delta_helmholtz_J=decision.delta_helmholtz_J,
             external_work_J=decision.external_work_J,
             available_change_J=decision.available_change_J,
