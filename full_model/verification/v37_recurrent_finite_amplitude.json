@@ -1,0 +1,56 @@
+{
+  "schema": "asb-drx/v37/recurrent-finite-amplitude/v1",
+  "generated_utc": "2026-09-17T19:32:00Z",
+  "source_commit": "4fc98a7",
+  "status": "CONTROL_RECONCILIATION_COMPLETE_LONG_TRAJECTORY_NOT_YET_RUN",
+  "protocol": {
+    "grid": 128,
+    "temperature_K": 1100.0,
+    "front_interval_s": 5e-6,
+    "interface_width_m": 4e-7,
+    "applied_front_pressure_Pa": 0.0,
+    "mechanism": "one recurrent interval of stored-energy migration for an existing boundary"
+  },
+  "direct_accepted_observables": {
+    "contour_displacement_m": 3.69684016154892e-13,
+    "contour_displacement_cells": 1.4787360646195681e-5,
+    "contour_displacement_interface_widths": 9.242100403872301e-7,
+    "transformed_volume_m3": 1.1735249408820892e-27,
+    "processed_line_m": 1.1261320234643155e-12,
+    "raw_constitutive_velocity_m_s": 7.39397845456265e-8,
+    "front_published": true,
+    "complete_energy_accepted": true,
+    "first_law_residual_J": -1.1367842969067977e-27
+  },
+  "equalized_owner_state_observables": {
+    "contour_displacement_m": 5.4097156798604826e-14,
+    "contour_displacement_interface_widths": 1.3524289199651207e-7,
+    "raw_constitutive_velocity_m_s": 1.0819868199929597e-8,
+    "interpretation": "finite diffuse-interface and recurrent-history response; not a label-symmetry failure"
+  },
+  "material_exchange": {
+    "original_velocity_m_s": 7.39397845456265e-8,
+    "exchanged_velocity_m_s": -7.39397845456265e-8,
+    "velocity_oddness_residual_m_s": 0.0,
+    "accepted_displacements_are_opposite": true
+  },
+  "bounded_rate_screen": {
+    "case_count": 17,
+    "classification": "PREREGISTERED_RATE_SCREEN_NOT_TRAJECTORY_OR_CALIBRATION",
+    "baseline_time_to_quarter_width_s": 1.352481614169219,
+    "minimum_time_to_quarter_width_s": 0.04408604302681126,
+    "slow_reference": "baseline",
+    "intermediate_candidate": "availability_mid",
+    "measurable_candidate": "shape_n_low",
+    "full_solver_verification_required": true
+  },
+  "target_quarter_width_reached": false,
+  "finite_amplitude_migration_claimed": false,
+  "drx_claimed": false,
+  "next_selected_action": "run invariant-consistent full-solver slow/intermediate/measurable trajectories when one authorized compute slot becomes free",
+  "evidence": [
+    "v37_current_source_controls.json",
+    "v37_front_acceptance_audit.json",
+    "v37_front_parameter_screen_registry.json"
+  ]
+}

@@ -82,6 +82,9 @@ def _record(index, time_s, driving, audit):
     front = audit["front_decision"]
     kinetic = audit["complete_directional_kinetics"]
     measure = audit["physical_site_event_measure"]
+    signed_sweep = float(audit["sweep"]["net_m3"])
+    interface_area = (None if front is None else
+                      float(front["interface_area_m2"]))
     record = {
         "interval": int(index),
         "physical_time_end_s": float(time_s),
@@ -89,8 +92,18 @@ def _record(index, time_s, driving, audit):
         "front_classification": None if front is None else front["classification"],
         "front_channel_diagnostics": front,
         "front_published": bool(audit["candidate_sweep_published"]),
-        "signed_sweep_m3": float(audit["sweep"]["net_m3"]),
+        "signed_sweep_m3": signed_sweep,
         "absolute_sweep_m3": float(audit["sweep"]["absolute_m3"]),
+        "positive_sweep_m3": float(audit["sweep"]["positive_m3"]),
+        "negative_sweep_m3": float(audit["sweep"]["negative_m3"]),
+        "proposed_signed_volume_m3": (None if front is None else float(
+            front["proposed_signed_volume_m3"])),
+        "interface_area_m2": interface_area,
+        "accepted_contour_displacement_m": (
+            0.0 if not interface_area else signed_sweep/interface_area),
+        "component_contour_displacements_m": [float(
+            row["normal_displacement_m"])
+            for row in audit["sweep"]["components"]],
         "child_fraction_change": float(audit["phase"]["child_fraction_change"]),
         "rate_a_to_b_per_site_s": None if front is None else float(
             front["rate_a_to_b_s"]),
@@ -110,6 +123,8 @@ def _record(index, time_s, driving, audit):
         "boundary_inventory_change_m": float(
             audit["actual_boundary_inventory_change_m"]),
         "material_sink_change_m": float(audit["actual_material_sink_change_m"]),
+        "processed_line_change_m": float(
+            audit["actual_processed_line_change_m"]),
         "temperature_range_K": audit["temperature_range_K"],
         "mura": audit["mura"],
         "complete_energy_delta_J": float(
@@ -147,6 +162,12 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  proposal_fraction=0.125, proposal_direction=1,
                  front_enabled=True, mura_enabled=True,
                  checkpoint_every=10,
+                 front_activation_h0_eV=.35, front_exp_a=2.0,
+                 front_exp_n=1.5, front_exp_floor=.10,
+                 front_attempt_frequency_s=1.0e8,
+                 front_activation_entropy_kB=0.0,
+                 front_event_volume_b3=1.0, front_jump_length_b=1.0,
+                 front_symmetric_availability=1.0,
                  resume=None):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -164,6 +185,19 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         if saved.get("source_commit") != source:
             raise ValueError("restart source differs from the frozen checkpoint source")
         immutable = saved["configuration"]
+        # V36 checkpoints predate the explicit V37 kinetic-family controls.
+        # Their implicit values are exactly the defaults below, so schema
+        # migration preserves the frozen trajectory rather than invalidating it.
+        immutable = dict(immutable)
+        immutable.setdefault("front_activation_h0_eV", .35)
+        immutable.setdefault("front_exp_a", 2.0)
+        immutable.setdefault("front_exp_n", 1.5)
+        immutable.setdefault("front_exp_floor", .10)
+        immutable.setdefault("front_attempt_frequency_s", 1.0e8)
+        immutable.setdefault("front_activation_entropy_kB", 0.0)
+        immutable.setdefault("front_event_volume_b3", 1.0)
+        immutable.setdefault("front_jump_length_b", 1.0)
+        immutable.setdefault("front_symmetric_availability", 1.0)
         requested = {
             "protocol": protocol, "grid": int(grid), "dt_s": float(dt_s),
             "initial_shear": float(initial_shear),
@@ -176,6 +210,15 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
             "proposal_direction": int(proposal_direction),
             "front_enabled": bool(front_enabled),
             "mura_enabled": bool(mura_enabled),
+            "front_activation_h0_eV": float(front_activation_h0_eV),
+            "front_exp_a": float(front_exp_a),
+            "front_exp_n": float(front_exp_n),
+            "front_exp_floor": float(front_exp_floor),
+            "front_attempt_frequency_s": float(front_attempt_frequency_s),
+            "front_activation_entropy_kB": float(front_activation_entropy_kB),
+            "front_event_volume_b3": float(front_event_volume_b3),
+            "front_jump_length_b": float(front_jump_length_b),
+            "front_symmetric_availability": float(front_symmetric_availability),
         }
         if immutable != requested:
             raise ValueError("restart configuration differs from checkpoint")
@@ -194,13 +237,30 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         "proposal_direction": int(proposal_direction),
         "front_enabled": bool(front_enabled),
         "mura_enabled": bool(mura_enabled),
+        "front_activation_h0_eV": float(front_activation_h0_eV),
+        "front_exp_a": float(front_exp_a),
+        "front_exp_n": float(front_exp_n),
+        "front_exp_floor": float(front_exp_floor),
+        "front_attempt_frequency_s": float(front_attempt_frequency_s),
+        "front_activation_entropy_kB": float(front_activation_entropy_kB),
+        "front_event_volume_b3": float(front_event_volume_b3),
+        "front_jump_length_b": float(front_jump_length_b),
+        "front_symmetric_availability": float(front_symmetric_availability),
     }
     controls = I3Controls(
         mura_enabled=bool(mura_enabled), front_enabled=bool(front_enabled),
         driving_pressure_a_to_b_Pa=0.0,
         applied_pressure_a_to_b_Pa=0.0,
         geometric_probe_pressure_Pa=1.0e8,
-        trial_dt_s=dt_s, front_dt_s=dt_s)
+        trial_dt_s=dt_s, front_dt_s=dt_s,
+        front_activation_h0_eV=front_activation_h0_eV,
+        front_exp_a=front_exp_a, front_exp_n=front_exp_n,
+        front_exp_floor=front_exp_floor,
+        front_attempt_frequency_s=front_attempt_frequency_s,
+        front_activation_entropy_kB=front_activation_entropy_kB,
+        front_event_volume_b3=front_event_volume_b3,
+        front_jump_length_b=front_jump_length_b,
+        front_symmetric_availability=front_symmetric_availability)
     wall_start = time.monotonic()
     for index in range(start, int(intervals)):
         driving = driving_at_time(
@@ -280,6 +340,15 @@ def main():
     parser.add_argument("--disable-mura", action="store_false",
                         dest="mura_enabled")
     parser.add_argument("--checkpoint-every", type=int, default=10)
+    parser.add_argument("--front-activation-h0-eV", type=float, default=.35)
+    parser.add_argument("--front-exp-a", type=float, default=2.0)
+    parser.add_argument("--front-exp-n", type=float, default=1.5)
+    parser.add_argument("--front-exp-floor", type=float, default=.10)
+    parser.add_argument("--front-attempt-frequency-s", type=float, default=1.0e8)
+    parser.add_argument("--front-activation-entropy-kB", type=float, default=0.0)
+    parser.add_argument("--front-event-volume-b3", type=float, default=1.0)
+    parser.add_argument("--front-jump-length-b", type=float, default=1.0)
+    parser.add_argument("--front-symmetric-availability", type=float, default=1.0)
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
     result = run_response(**vars(args))

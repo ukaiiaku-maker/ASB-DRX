@@ -1,0 +1,91 @@
+{
+  "schema": "asb-drx/v37/case-manifest/v1",
+  "updated_utc": "2026-09-17T19:32:00Z",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "v36_start_commit": "e1795173471ea3deea1f44fe68e4be2de384fab0",
+  "v36_recurrent_physics_commit": "890cb8906a9772d8bd5c5eb43164ecd44ad2720f",
+  "v36_n192_configuration_commit": "e625a60dc01a119a7c041af3efdb771a30d01246",
+  "v36_n192_job_id": "56099919",
+  "current_campaign_checkpoint": "bd366c756f7ab2bf4ef112f2a603c674833344d0",
+  "local_cases": [
+    {
+      "id": "front_current_source_n128_controls",
+      "status": "COMPLETED",
+      "source_commit": "0b9c973",
+      "evidence_commit": "4fc98a7",
+      "classification": "CONTROL_RECONCILIATION_NOT_FINITE_AMPLITUDE"
+    },
+    {
+      "id": "mura_topology_pairs_n16",
+      "status": "COMPLETED",
+      "source_commit": "98d927948a705ee0a445a62edd61d95cfc8c425b",
+      "evidence_commit": "6b49863a6f34a110f7b025651bac5b6c7555556a",
+      "classification": "SHORT_ORGANIZATION_CONTROLS"
+    },
+    {
+      "id": "conduction_preflight_n16",
+      "status": "COMPLETED",
+      "source_commit": "0effd7a1dd8a6449810577289a5a52c55be62e66",
+      "classification": "STARTUP_AND_CHECKPOINT_PREFLIGHT"
+    }
+  ],
+  "hpc_runs": [
+    {
+      "run_id": "20260917T191053Z-7839f61-3553fd",
+      "job_id": null,
+      "status": "NOT_SUBMITTED",
+      "classification": "PACKAGING_SCOPE_REJECTED_BEFORE_SUBMISSION"
+    },
+    {
+      "run_id": "20260917T191129Z-e06148a-23a632",
+      "job_id": null,
+      "status": "UPLOAD_ONLY",
+      "classification": "INVALID_QOS_INFRASTRUCTURE_ATTEMPT"
+    },
+    {
+      "run_id": "20260917T191317Z-e06148a-ac82b2",
+      "job_id": null,
+      "status": "UPLOAD_ONLY",
+      "classification": "INVALID_QOS_INFRASTRUCTURE_ATTEMPT"
+    },
+    {
+      "run_id": "20260917T191730Z-bb465d3-4efc10",
+      "job_id": "56126186",
+      "status": "FAILED_INFRASTRUCTURE",
+      "classification": "SHARED_ARRAY_EXTRACTION_AND_MISSING_GIT_METADATA",
+      "physics_result": false
+    },
+    {
+      "run_id": "20260917T191904Z-cf6c444-6d82ab",
+      "job_id": "56126299",
+      "status": "RUNNING",
+      "source_commit": "cf6c444",
+      "configuration_sha256": "61f8f24eec06dd5009ae6d23405b68446e78edd31171066dd09ec8180eb9b75a",
+      "cases": 6,
+      "array_concurrency": 2,
+      "classification": "V37_FINITE_CONDUCTION_N128_SCREEN"
+    },
+    {
+      "run_id": "20260917T192050Z-50dbde9-bf00af",
+      "job_id": "56126506",
+      "status": "RUNNING",
+      "physics_source_commit": "6b49863a6f34a110f7b025651bac5b6c7555556a",
+      "submission_commit": "50dbde9",
+      "configuration_sha256": "dad32fe2f269c0d21e749cf83282f9be4a451fa2a169c5a38a3317878119c8f8",
+      "classification": "V37_MURA_MECHANICAL_HETEROGENEITY_N64_TO_5_PERCENT_STRAIN"
+    }
+  ],
+  "manager": {
+    "source_commit": "bd366c756f7ab2bf4ef112f2a603c674833344d0",
+    "state_path": "/Users/sdillon/HPC3/local-results/asb-drx-v37-manager/v37_manager_state.json",
+    "poll_seconds": 300,
+    "terminal_fetch_enabled": true
+  },
+  "evidence_sha256": {
+    "v37_current_source_controls.json": "97fa1a5527806a255b5b5e38256ab2c5639b5f2bbfa5f7ea9c1deb23702ef941",
+    "v37_front_acceptance_audit.json": "ea8a5595b74285dc3c36775c4a7b02e70958566b6b912926f86a89cde14db023",
+    "v37_parameter_hypotheses.json": "eeb21f542c9e9d94e63a4c4d7bca66e7cf78bb922d3632512f30e27cb7c8598c",
+    "v37_mura_organization.json": "0be1aa80499ab933b6365442142dcee669e2f7c9c3a8f87606ce4f7eb59dd2fc",
+    "v37_conduction_localization_matrix.json": "b86d0bafb1a80f1df88b2540c50920cacaae8b30f93ee04c0894612341a38343"
+  }
+}

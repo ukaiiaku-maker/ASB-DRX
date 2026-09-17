@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 
 from full_model.analysis.run_v34_finite_coupled_response import (
@@ -121,3 +123,28 @@ def test_resolved_bicrystal_is_an_existing_two_owner_state_not_nucleation():
     assert initial.common_front.ledger.attempted_commits == 0
     assert np.ptp(common.mobile_plus_m2) > 0.0
     assert context["interface_width_m"] >= 2.0*context["spacing_m"]
+
+
+def test_v37_front_kinetic_family_controls_enter_production_event():
+    context, initial, forward, _, driving, controls = _fixture()
+    baseline_controls = replace(
+        controls, mura_enabled=False, front_dt_s=5.0e-6,
+        applied_pressure_a_to_b_Pa=0.0,
+        driving_pressure_a_to_b_Pa=0.0)
+    _, baseline = run_i3_cycle(
+        context, initial, forward, driving, baseline_controls)
+    _, half_available = run_i3_cycle(
+        context, initial, forward, driving, replace(
+            baseline_controls, front_symmetric_availability=.5))
+    assert np.isclose(
+        half_available["front_decision"]["net_velocity_a_to_b_m_s"],
+        .5*baseline["front_decision"]["net_velocity_a_to_b_m_s"],
+        rtol=2e-14, atol=0.0)
+
+    _, altered_event = run_i3_cycle(
+        context, initial, forward, driving, replace(
+            baseline_controls, front_event_volume_b3=2.0,
+            front_jump_length_b=.5))
+    b = context["wall_parameters"].burgers_m
+    assert altered_event["kinetic_event_volume_m3"] == 2.0*b**3
+    assert altered_event["kinetic_event_length_m"] == .5*b

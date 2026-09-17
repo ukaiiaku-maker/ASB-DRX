@@ -1,0 +1,25 @@
+{
+  "schema": "asb-drx/v37/integrated-response/v1",
+  "generated_utc": "2026-09-17T19:32:00Z",
+  "status": "BRANCH_EVIDENCE_ACTIVE_INTEGRATED_TRAJECTORY_DEFERRED",
+  "common_state_integrated_calculation_completed": false,
+  "reason": "front controls are qualified, while the selected resolved Mura and finite-conductivity production continuations are still running; mixing partial branch states would not be an attributable common-state calculation",
+  "branch_status": {
+    "front": "CURRENT_SOURCE_CONTROLS_COMPLETE_FINITE_AMPLITUDE_TRAJECTORY_PENDING",
+    "mura": "LOCAL_ORGANIZATION_CONTROLS_COMPLETE_N64_LONG_CONTINUATION_RUNNING",
+    "thermal": "TRANSPORT_METRICS_QUALIFIED_N128_SIX_CASE_ARRAY_RUNNING"
+  },
+  "current_observation_classification": [
+    "stored-energy migration of an existing boundary at sub-finite amplitude",
+    "captured ordered line without an orientation-compatible wall in short Mura controls",
+    "broad heating in the frozen finite-conduction baseline"
+  ],
+  "not_supported": [
+    "independently recognized DRX grain",
+    "persistent compatible LAGB precursor",
+    "strict ASB",
+    "coupled DRX/ASB",
+    "material calibration"
+  ],
+  "integration_policy": "postprocess both active branches, promote only valid current-source results, then run one controlled continued-loading common-state example if branch invariants remain qualified"
+}

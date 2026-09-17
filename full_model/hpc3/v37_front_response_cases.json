@@ -1,0 +1,26 @@
+[
+  {
+    "id": "slow_reference",
+    "front_activation_h0_eV": 0.35,
+    "front_exp_a": 2.0,
+    "front_exp_n": 1.5,
+    "front_attempt_frequency_s": 100000000.0,
+    "front_symmetric_availability": 1.0
+  },
+  {
+    "id": "availability_mid",
+    "front_activation_h0_eV": 0.35,
+    "front_exp_a": 2.0,
+    "front_exp_n": 1.5,
+    "front_attempt_frequency_s": 100000000.0,
+    "front_symmetric_availability": 0.5
+  },
+  {
+    "id": "shape_n_low",
+    "front_activation_h0_eV": 0.35,
+    "front_exp_a": 2.0,
+    "front_exp_n": 1.0,
+    "front_attempt_frequency_s": 100000000.0,
+    "front_symmetric_availability": 1.0
+  }
+]

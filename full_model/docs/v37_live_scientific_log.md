@@ -36,3 +36,61 @@ from a narrow band without changing the frozen strict-ASB thresholds. The actual
 V36 finite-conduction temperature field is broad: its peak-minus-mean is 37.02 K
 and its temperature inverse-participation fraction is 0.99987. These temperature
 metrics are distinct from the shear-rate participation reported by V36.
+
+## Current-source front reconciliation
+
+The n128 current-source controls separate complete material exchange from scalar
+or proposal reversal. Complete material exchange is exactly odd: the two raw
+velocities are `+/-7.39397845456265e-8 m/s`, and accepted displacements are
+opposite. Reversing only the proposal produces no publication, processed line,
+heat, or displacement. It is a direction mismatch, not physical motion or an
+energy-guard arrest.
+
+The historical case named `equal_state` equalized only a scalar and retained
+different wake history. Explicit owner equality before Mura does not remain a
+complete equality after the recurrent Mura update. Its residual accepted
+displacement is `5.409715679860483e-14 m`; endpoint defect and boundary terms
+match, while diffuse-slab phase-gradient/local and thermal-history terms do not.
+This is finite-interface/history response, not broken material-label symmetry.
+
+The ordinary accepted current-source interval moves the contour
+`3.69684016154892e-13 m` (`9.242100403872301e-7` interface widths), transforms
+`1.1735249408820892e-27 m3`, and processes `1.1261320234643155e-12 m` of line.
+This is direct accepted geometry but is not finite-amplitude migration or DRX.
+The preregistered 17-case generic rate screen selects the unchanged baseline,
+`availability_mid`, and `shape_n_low` for later full-solver trajectories. Its
+minimum estimated quarter-width time is 0.04409 s; no rate-screen row is promoted
+to a trajectory claim.
+
+## Mura organization selection
+
+The ordered-reservoir audit finds a large relative timestep difference only in
+small reservoirs: absolute ordered-line difference `1.675 m/m`, ordered-moment
+difference `0.714 m/m`, wall-local line error `0.1504%`, and energy difference
+`1.63e-10 J/m` (`1.04e-6` of defect energy). This does not block bulk or thermal
+evolution, but it cannot support a resolved wall claim.
+
+Matched short topology controls preserve all hard invariants and allocate no
+phase or grain. Homogeneous and broadband-noise cases capture no wall line.
+Mechanical heterogeneity captures ordered line, but its orientation span is only
+`6.57e-7 deg`; it is therefore classified as captured ordered line without an
+orientation-compatible wall. The topology-off one-grain route is selected for a
+long n64 calculation to 5% strain; topology-on remains an existing-boundary
+comparator rather than a global organization veto.
+
+## Long-run execution
+
+- Finite-conduction n128 six-case array: run
+  `20260917T191904Z-cf6c444-6d82ab`, Slurm `56126299`, at most two concurrent
+  array tasks. Two tasks were running and four were queued at the first manager
+  record.
+- Mura mechanical-heterogeneity n64 continuation: run
+  `20260917T192050Z-50dbde9-bf00af`, Slurm `56126506`, running toward 5% strain.
+- A durable scoped manager records scheduler state every 300 s and fetches after
+  both scoped bundles leave active scheduler states. Its state is external at
+  `/Users/sdillon/HPC3/local-results/asb-drx-v37-manager/v37_manager_state.json`.
+
+Earlier conduction submissions that failed before physics are retained in the
+case manifest. Invalid QoS, shared array extraction, and missing archive Git
+metadata were repaired without changing the registered scientific cases. They
+are infrastructure evidence, not negative physics.

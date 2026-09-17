@@ -96,6 +96,15 @@ class I3Controls:
     boundary_storage_fraction: float = 0.05
     neutral_sink_fraction: float = 0.02
     signed_sink_fraction: float = 0.0
+    front_activation_h0_eV: float = 0.35
+    front_exp_a: float = 2.0
+    front_exp_n: float = 1.5
+    front_exp_floor: float = 0.10
+    front_attempt_frequency_s: float = 1.0e8
+    front_activation_entropy_kB: float = 0.0
+    front_event_volume_b3: float = 1.0
+    front_jump_length_b: float = 1.0
+    front_symmetric_availability: float = 1.0
 
 
 def _owner_with_line_scale(state, factor):
@@ -261,11 +270,14 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     directional_kinetics = None
     front_published = False
     before_front = front_state
+    burgers = float(context["wall_parameters"].burgers_m)
+    kinetic_event_volume = controls.front_event_volume_b3*burgers**3
+    kinetic_event_length = controls.front_jump_length_b*burgers
     if controls.front_enabled:
-        burgers = float(context["wall_parameters"].burgers_m)
-        kinetic_event_volume = burgers**3
         process = ActivatedProcess(
-            "v34-i3-existing-boundary", 1.0e8,
+            "v34-i3-existing-boundary",
+            controls.front_attempt_frequency_s*controls.front_symmetric_availability,
+            entropy_over_kB=controls.front_activation_entropy_kB,
             negative_barrier_mode="drag")
         # The first call only constructs and topology-checks the supplied
         # geometric candidate. It has zero channel availability and applies
@@ -278,9 +290,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 dt_s=controls.front_dt_s,
                 temperature_K=mechanical.common.temperature_K,
                 line_energy_J_m=context["wall_parameters"].line_energy_J_m,
-                process=process, h0_J=.35*EV_J,
-                critical_pressure_Pa=1.0e9, exp_a=2.0, exp_n=1.5,
-                exp_floor=.10,
+                process=process, h0_J=controls.front_activation_h0_eV*EV_J,
+                critical_pressure_Pa=1.0e9, exp_a=controls.front_exp_a,
+                exp_n=controls.front_exp_n, exp_floor=controls.front_exp_floor,
                 driving_pressure_a_to_b_Pa=0.0,
                 applied_pressure_a_to_b_Pa=0.0,
                 mobility_enabled=True, periodic=True,
@@ -291,7 +303,7 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 support_component_reconnection=True,
                 topology_backtracking_enabled=True,
                 kinetic_event_volume_m3=kinetic_event_volume,
-                kinetic_event_length_m=burgers,
+                kinetic_event_length_m=kinetic_event_length,
                 proposal_probe_only=True))
         if front_decision.accepted:
             directional_kinetics = evaluate_complete_directional_kinetics(
@@ -314,9 +326,10 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                     dt_s=controls.front_dt_s,
                     temperature_K=mechanical.common.temperature_K,
                     line_energy_J_m=context["wall_parameters"].line_energy_J_m,
-                    process=process, h0_J=.35*EV_J,
-                    critical_pressure_Pa=1.0e9, exp_a=2.0, exp_n=1.5,
-                    exp_floor=.10,
+                    process=process, h0_J=controls.front_activation_h0_eV*EV_J,
+                    critical_pressure_Pa=1.0e9, exp_a=controls.front_exp_a,
+                    exp_n=controls.front_exp_n,
+                    exp_floor=controls.front_exp_floor,
                     driving_pressure_a_to_b_Pa=(
                         controls.driving_pressure_a_to_b_Pa),
                     applied_pressure_a_to_b_Pa=(
@@ -333,7 +346,7 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                     kinetic_free_energy_b_to_a_J=(
                         directional_kinetics.b_to_a_event_J),
                     kinetic_event_volume_m3=kinetic_event_volume,
-                    kinetic_event_length_m=burgers,
+                    kinetic_event_length_m=kinetic_event_length,
                     actual_reverse_edge=directional_kinetics.actual_reverse_edge))
         transaction = evaluate_common_front_transaction(
             front_state, sparse_candidate, state.eta, accepted_eta,
@@ -404,10 +417,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             None if controls.geometric_probe_pressure_Pa is None else
             float(controls.geometric_probe_pressure_Pa)),
         "geometric_probe_is_nonphysical_and_unledgered": True,
-        "kinetic_event_volume_m3": (
-            float(context["wall_parameters"].burgers_m)**3),
-        "kinetic_event_length_m": float(
-            context["wall_parameters"].burgers_m),
+        "kinetic_event_volume_m3": float(kinetic_event_volume),
+        "kinetic_event_length_m": float(kinetic_event_length),
         "kinetic_normalization_is_grid_independent": True,
         "physical_site_event_measure": ({
             "physical_site_count": front_decision.physical_site_count,
@@ -448,6 +459,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         "actual_material_sink_change_m": (
             front_state.ledger.sink_line_m
             -state.common_front.ledger.sink_line_m),
+        "actual_processed_line_change_m": (
+            front_state.ledger.processed_line_m
+            -state.common_front.ledger.processed_line_m),
         "maximum_abs_slip": float(np.max(np.abs(
             common1.slip-common0.slip))),
         "maximum_abs_beta_p": float(np.max(np.abs(

@@ -1,0 +1,58 @@
+name = "full-v37-front-response"
+entrypoint = ["bash", "../hpc3/run_v37_front_response_array.sh"]
+working_directory = "full_model/production"
+modules = ["anaconda/2025.12"]
+environment = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", V37_FRONT_SOURCE_SHA = "SOURCE_SHA_PENDING" }
+input_mode = "archive"
+result_mode = "archive"
+scratch_mode = "local"
+output_paths = ["full_model/production/output/v37-front-response"]
+contains_sensitive_data = false
+
+input_paths = [
+  "full_model/analysis/run_v24_mechanical_supply.py",
+  "full_model/analysis/run_v34_finite_coupled_response.py",
+  "full_model/analysis/run_v36_recurrent_physical_response.py",
+  "full_model/production/arrhenius_kinetics.py",
+  "full_model/production/common_front_state.py",
+  "full_model/production/common_tensorial_wall.py",
+  "full_model/production/complete_front_energy.py",
+  "full_model/production/coupled_front_event.py",
+  "full_model/production/coupled_front_production.py",
+  "full_model/production/density_state_map.py",
+  "full_model/production/dislocation_free_energy.py",
+  "full_model/production/extensive_wall.py",
+  "full_model/production/front_event_measure.py",
+  "full_model/production/front_topology.py",
+  "full_model/production/moving_front.py",
+  "full_model/production/mura_kinematics.py",
+  "full_model/production/nonlocal_elasticity.py",
+  "full_model/production/signed_front_geometry.py",
+  "full_model/production/tensorial_nye.py",
+  "full_model/production/v23_coupled_wall.py",
+  "full_model/production/v24_mechanical_wall.py",
+  "full_model/production/wall_topology_supply.py",
+  "full_model/hpc3/run_v37_front_response_case.py",
+  "full_model/hpc3/run_v37_front_response_array.sh",
+  "full_model/hpc3/v37_front_response_cases.json",
+]
+
+[resources]
+account = "SDILLON1"
+partition = "standard"
+qos = "normal"
+nodes = 1
+ntasks = 1
+cpus_per_task = 1
+memory = "16G"
+time = "08:00:00"
+
+[sweep]
+table = "full_model/hpc3/v37_front_response_cases.json"
+format = "json"
+max_concurrent = 1
+
+[notifications]
+enabled = false
+email = "sdillon1@uci.edu"
+events = ["FAIL", "END"]
