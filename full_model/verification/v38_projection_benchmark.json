@@ -1,0 +1,24 @@
+{
+  "compact_median_s": 4.496109121537302,
+  "constraint_role": "minimum-change owner-history projection onto exact common first moment and per-owner |kappa|<=rho balls; target is never reconstructed from Nye",
+  "diffuse_interface_points": 23,
+  "families": 4,
+  "generated_utc": "2026-09-17T21:45:12.634536+00:00",
+  "grid": 128,
+  "map_equivalent": true,
+  "maximum_abs_state_difference": 2.220446049250313e-16,
+  "reference_median_s": 12.07382872904418,
+  "schema": "asb-drx/v38/bounded-moment-projection-benchmark/v1",
+  "source_sha": "4b4a4af929edd3aba98ba3d9a5abaad80bf98534",
+  "speedup": 2.6853949498707714,
+  "timings": {
+    "compact_s": [
+      4.56240971502848,
+      4.429808528046124
+    ],
+    "reference_s": [
+      11.7408508870285,
+      12.40680657105986
+    ]
+  }
+}

@@ -34,12 +34,13 @@ def inventories(state, topologies, area):
             for name, value in fields.items() if name.startswith("rho_wall")}
 
 
-def advance_trace(checkpoint, dt_s, horizon_s):
+def advance_trace(checkpoint, dt_s, horizon_s, *, resolved_ordering=True):
     (state, metadata, fixed, support, systems, topologies, common, extensive,
      kinetics, spacing) = context(checkpoint)
-    extensive = replace(
-        extensive, ordering_internal_substep_s=5e-13,
-        ordering_internal_max_substeps=8192)
+    if resolved_ordering:
+        extensive = replace(
+            extensive, ordering_internal_substep_s=5e-13,
+            ordering_internal_max_substeps=8192)
     initial = state
     rate = float(metadata.get("strain_rate_s", 1e4))
     physical_time = float(metadata["physical_time_s"])
@@ -137,8 +138,11 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--horizon-s", type=float, default=4e-10)
     parser.add_argument("--dt-s", type=float, nargs="+", default=(1e-10, 5e-11))
+    parser.add_argument("--legacy-single-step", action="store_true")
     args = parser.parse_args()
-    records = [advance_trace(args.checkpoint, dt, args.horizon_s)
+    records = [advance_trace(
+        args.checkpoint, dt, args.horizon_s,
+        resolved_ordering=not args.legacy_single_step)
                for dt in args.dt_s]
     coarse, fine = records[0], records[-1]
     comparisons = {}
@@ -157,6 +161,9 @@ def main():
         "checkpoint": str(args.checkpoint.resolve()),
         "checkpoint_sha256": sha256(args.checkpoint),
         "records": records, "channel_comparisons": comparisons,
+        "ordering_integration": (
+            "legacy_outer_step_capped_extent" if args.legacy_single_step else
+            "resolved_complete-time_conservative_subcycling"),
         "diagnostic_scope": (
             "matched production trajectories plus a frozen-field reaction-only "
             "diagnostic; the latter is not a promoted physical trajectory"),

@@ -1,0 +1,3142 @@
+{
+  "equal_state_projection_used": false,
+  "fitted_drift_subtracted": false,
+  "generated_utc": "2026-09-17T21:48:58.093764+00:00",
+  "interpretation_rule": "decay with slab separation supports finite-interface interaction; a persistent Mura-off residual indicates representation/capillarity; a recurrent-only residual identifies supported history evolution",
+  "rows": [
+    {
+      "accepted_displacement_difference_recurrent_minus_off_m": -2.789409225822938e-15,
+      "equalized_recurrent_state": {
+        "exact_complete_recurrent_state_equal": true,
+        "parent_child": {
+          "exact_complete_state_equal": true,
+          "fields": [
+            {
+              "exact": true,
+              "field": "common.alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.beta_p",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.family_nye_m1",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.multi_hit_coordination",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.orientation_rad",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.slip",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.temperature_K",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_order",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.junction_alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            }
+          ],
+          "maximum_abs_difference": 0.0,
+          "maximum_relative_difference": 0.0
+        },
+        "parent_wake": {
+          "exact_complete_state_equal": true,
+          "fields": [
+            {
+              "exact": true,
+              "field": "common.alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.beta_p",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.family_nye_m1",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.multi_hit_coordination",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.orientation_rad",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.slip",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.temperature_K",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_order",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.junction_alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            }
+          ],
+          "maximum_abs_difference": 0.0,
+          "maximum_relative_difference": 0.0
+        }
+      },
+      "grid": 32,
+      "interface_width_m": 4e-07,
+      "length_m": 3.2e-06,
+      "mura_off": {
+        "accepted_absolute_volume_m3": 6.993967570929272e-28,
+        "accepted_contour_displacement_cells": 2.2032407922534247e-06,
+        "accepted_contour_displacement_interface_widths": 5.508101980633562e-07,
+        "accepted_contour_displacement_m": 2.2032407922534247e-13,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 6.993967570929272e-28,
+        "accepted_signed_volume_m3": 6.993967570929272e-28,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": -3.35710443005819e-13
+        },
+        "annihilated_line_m": 3.1221071236628265e-13,
+        "boundary_storage_line_m": 1.678552217023025e-14,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "common_ledger_increment": {
+          "accepted_commits": 1.0,
+          "annihilated_line_m": 3.1221071236628265e-13,
+          "attempted_commits": 1.0,
+          "boundary_line_m": 1.678552217023025e-14,
+          "complete_energy_accepted": 1.0,
+          "generated_heat_J": 6.168170862749422e-22,
+          "interface_nye_norm_m1": 0.0,
+          "material_sink_export_J": 1.007131330213815e-23,
+          "maximum_abs_first_law_residual_J": 8.753574982117928e-28,
+          "maximum_line_closure_m": 5.36425415550288e-29,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 6.714208868092101e-13,
+          "rejected_commits": 0.0,
+          "sink_line_m": 6.7142088680921006e-15,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 3.3571044340460503e-13
+        },
+        "complete_candidate_endpoints": {
+          "a_to_b_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 8.701236963642834e-09,
+            "available_change_J": -1.7290924331324186e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 7.751115702750953e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.3058208419108712e-15,
+              "phase_local_J": 5.328036840755768e-16,
+              "recoverable_elastic_J": 9.05084928e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 0.0
+            },
+            "before_helmholtz_J": 1.0009823302873741e-13,
+            "boundary_line_increment_m": 4.678084389055287e-10,
+            "delta_helmholtz_J": -1.7290924331324186e-17,
+            "direction": "a_to_b",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 7.017126583582931e-19,
+              "defect_storage_J": 7.735504471013494e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.3017869116521895e-15,
+              "phase_local_J": 5.344562090820504e-16,
+              "recoverable_elastic_J": 9.05084928e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.7010239268899313e-17
+            },
+            "endpoint_helmholtz_J": 1.0008094210440609e-13,
+            "endpoint_internal_J": 1.0009795234367499e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": 0.0,
+            "generated_heat_J": 1.701023926798087e-17,
+            "material_sink_export_J": 2.8068506334331725e-19,
+            "maximum_abs_beta_p_increment": 0.0,
+            "maximum_abs_line_density_increment_m2": 2201833314206.8594,
+            "maximum_abs_slip_increment": 0.0,
+            "maximum_abs_temperature_increment_K": 0.0009568871996634698,
+            "processed_line_increment_m": 1.8712337556221146e-08,
+            "signed_volume_m3": 1.9492018287730363e-23,
+            "sink_line_increment_m": 1.871233755622115e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 9.356168778110573e-09
+          },
+          "a_to_b_event_J": -1.353058090779181e-23,
+          "actual_reverse_edge": false,
+          "b_to_a_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 8.701236963642834e-09,
+            "available_change_J": -1.2201360294528548e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 7.751115702750953e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.3058208419108712e-15,
+              "phase_local_J": 5.328036840755768e-16,
+              "recoverable_elastic_J": 9.05084928e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 0.0
+            },
+            "before_helmholtz_J": 1.0009823302873741e-13,
+            "boundary_line_increment_m": 4.678084389055287e-10,
+            "delta_helmholtz_J": -1.2201360294528548e-17,
+            "direction": "b_to_a",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 7.017126583582931e-19,
+              "defect_storage_J": 7.735504471013496e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.310380763383479e-15,
+              "phase_local_J": 5.309519213875523e-16,
+              "recoverable_elastic_J": 9.05084928e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.1920675231096101e-17
+            },
+            "endpoint_helmholtz_J": 1.0008603166844289e-13,
+            "endpoint_internal_J": 1.0009795234367398e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": -0.0,
+            "generated_heat_J": 1.1920675231185232e-17,
+            "material_sink_export_J": 2.8068506334331725e-19,
+            "maximum_abs_beta_p_increment": 0.0,
+            "maximum_abs_line_density_increment_m2": 2201833314206.8594,
+            "maximum_abs_slip_increment": 0.0,
+            "maximum_abs_temperature_increment_K": 0.0006705808989408979,
+            "processed_line_increment_m": 1.8712337556221146e-08,
+            "signed_volume_m3": -1.9492018287730363e-23,
+            "sink_line_increment_m": 1.871233755622115e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 9.356168778110573e-09
+          },
+          "b_to_a_event_J": -9.547869708223626e-24,
+          "forward_signed_volume_m3": 1.9492018287730363e-23,
+          "opposite_evaluated_from_actual_state": true,
+          "opposite_signed_volume_m3": -1.9492018287730363e-23,
+          "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE"
+        },
+        "complete_energy_decision": {
+          "accepted": true,
+          "available_change_J": -6.268883995770803e-22,
+          "before": {
+            "boundary_excess_J": 0.0,
+            "defect_storage_J": 7.751115702750953e-15,
+            "helmholtz_J": 1.0009823302873741e-13,
+            "internal_J": 1.0009823302873741e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.3058208419108712e-15,
+            "phase_local_J": 5.328036840755768e-16,
+            "recoverable_elastic_J": 9.05084928e-14,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 0.0
+          },
+          "candidate": {
+            "boundary_excess_J": 2.5178283255345375e-23,
+            "defect_storage_J": 7.751115142219935e-15,
+            "helmholtz_J": 1.0009823240184901e-13,
+            "internal_J": 1.0009823301866523e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.3058206873076215e-15,
+            "phase_local_J": 5.328037471431649e-16,
+            "recoverable_elastic_J": 9.05084928e-14,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 6.168162077665329e-22
+          },
+          "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+          "delta_helmholtz_J": -6.268883995770803e-22,
+          "external_work_J": 0.0,
+          "first_law_residual_J": -8.753574982117928e-28,
+          "generated_heat_J": 6.168170862749422e-22,
+          "material_sink_export_J": 1.007131330213815e-23,
+          "thermostat_export_J": 0.0,
+          "tolerance_J": 1.8207762519293722e-25
+        },
+        "component_contour_displacements_m": [
+          2.2032407922534247e-13,
+          2.2032407922534247e-13
+        ],
+        "direction": 1,
+        "first_passage_volume_m3": 6.993967570929272e-28,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 6.714208868092101e-13,
+          "a_to_b_swept_volume_m3": 6.993967570929272e-28,
+          "accepted": 1.0,
+          "annihilated_line_m": 3.1221071236628265e-13,
+          "attempts": 1.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 1.678552217023025e-14,
+          "heat_J": 4.68316068549424e-22,
+          "maximum_abs_line_closure_m": 9.794977798461914e-24,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 6.7142088680921006e-15,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 3.3571044340460503e-13
+        },
+        "front_published": true,
+        "gross_directional_activity_s": 4983390.74424778,
+        "interface_area_m2": 3.1744e-15,
+        "mura_clock": null,
+        "owner_total_line_density_mean_m2_after": {
+          "child": 959999880718094.8,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 6.714208868092101e-13,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": 1.9492018287730357e-23,
+        "raw_constitutive_net_velocity_m_s": 4.4186221944443884e-08,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 6.7142088680921006e-15,
+        "temperature_range_K": [
+          1100.0000000346981,
+          1100.0000000346981
+        ],
+        "wall_seconds": 0.6264995669480413
+      },
+      "mura_only": {
+        "accepted_absolute_volume_m3": 0.0,
+        "accepted_contour_displacement_cells": 0.0,
+        "accepted_contour_displacement_interface_widths": 0.0,
+        "accepted_contour_displacement_m": 0.0,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 0.0,
+        "accepted_signed_volume_m3": 0.0,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": 8.470329472543003e-22
+        },
+        "annihilated_line_m": 0.0,
+        "boundary_storage_line_m": 0.0,
+        "classification": null,
+        "common_ledger_increment": {
+          "accepted_commits": 0.0,
+          "annihilated_line_m": 0.0,
+          "attempted_commits": 0.0,
+          "boundary_line_m": 0.0,
+          "complete_energy_accepted": 0.0,
+          "generated_heat_J": 0.0,
+          "interface_nye_norm_m1": 0.0,
+          "material_sink_export_J": 0.0,
+          "maximum_abs_first_law_residual_J": 0.0,
+          "maximum_line_closure_m": 0.0,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 0.0,
+          "rejected_commits": 0.0,
+          "sink_line_m": 0.0,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 0.0
+        },
+        "complete_candidate_endpoints": null,
+        "complete_energy_decision": null,
+        "component_contour_displacements_m": [],
+        "direction": 1,
+        "first_passage_volume_m3": 0.0,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 0.0,
+          "a_to_b_swept_volume_m3": 0.0,
+          "accepted": 0.0,
+          "annihilated_line_m": 0.0,
+          "attempts": 0.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 0.0,
+          "heat_J": 0.0,
+          "maximum_abs_line_closure_m": 0.0,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 0.0,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 0.0
+        },
+        "front_published": false,
+        "gross_directional_activity_s": null,
+        "interface_area_m2": null,
+        "mura_clock": {
+          "accepted_dt_s": 5e-06,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": 7.450580596923828e-09,
+          "minimum_heat_increment_J_m3": 37843.15412834244,
+          "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+        },
+        "owner_total_line_density_mean_m2_after": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 0.0,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": null,
+        "raw_constitutive_net_velocity_m_s": null,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 0.0,
+        "temperature_range_K": [
+          1100.010812329751,
+          1100.010812355953
+        ],
+        "wall_seconds": 17.279066641931422
+      },
+      "nominal_interface_separation_m": 1.6e-06,
+      "post_mura_state_retained_for_audit": true,
+      "recurrent_mura_front": {
+        "accepted_absolute_volume_m3": 6.905420564464748e-28,
+        "accepted_contour_displacement_cells": 2.1753466999951954e-06,
+        "accepted_contour_displacement_interface_widths": 5.438366749987988e-07,
+        "accepted_contour_displacement_m": 2.1753466999951953e-13,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 6.905420564464748e-28,
+        "accepted_signed_volume_m3": 6.905420564464748e-28,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": -3.314601866835263e-13
+        },
+        "annihilated_line_m": 3.0825797399770634e-13,
+        "boundary_storage_line_m": 1.65730093547154e-14,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "common_ledger_increment": {
+          "accepted_commits": 1.0,
+          "annihilated_line_m": 3.0825797399770634e-13,
+          "attempted_commits": 1.0,
+          "boundary_line_m": 1.65730093547154e-14,
+          "complete_energy_accepted": 1.0,
+          "generated_heat_J": 5.959070998825234e-22,
+          "interface_nye_norm_m1": 0.0033467777317025085,
+          "material_sink_export_J": 9.943805612829239e-24,
+          "maximum_abs_first_law_residual_J": 2.2154870129669687e-28,
+          "maximum_line_closure_m": 2.3665827156630354e-29,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 6.629203741886158e-13,
+          "rejected_commits": 0.0,
+          "sink_line_m": 6.629203741886159e-15,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 3.314601870943079e-13
+        },
+        "complete_candidate_endpoints": {
+          "a_to_b_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 8.701236963642834e-09,
+            "available_change_J": -1.692112722810694e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 7.750547808025772e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.3058208419108712e-15,
+              "phase_local_J": 5.328036840755768e-16,
+              "recoverable_elastic_J": 9.031628544066098e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.9220733021373918e-16
+            },
+            "before_helmholtz_J": 9.99054577746732e-14,
+            "boundary_line_increment_m": 4.678084389055287e-10,
+            "delta_helmholtz_J": -1.692112722810694e-17,
+            "direction": "a_to_b",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 7.017126583582931e-19,
+              "defect_storage_J": 7.734937748414091e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.3017869116521895e-15,
+              "phase_local_J": 5.344562090820504e-16,
+              "recoverable_elastic_J": 9.031665406563841e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 2.0884777237801231e-16
+            },
+            "endpoint_helmholtz_J": 9.98885366474451e-14,
+            "endpoint_internal_J": 1.000973844198231e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": 0.0,
+            "generated_heat_J": 1.6640442164763625e-17,
+            "material_sink_export_J": 2.8068506334331725e-19,
+            "maximum_abs_beta_p_increment": 6.237845434820331e-07,
+            "maximum_abs_line_density_increment_m2": 2209608107010.672,
+            "maximum_abs_slip_increment": 7.639769204829646e-07,
+            "maximum_abs_temperature_increment_K": 0.0009360847811876738,
+            "processed_line_increment_m": 1.8712337556221146e-08,
+            "signed_volume_m3": 1.9492018287730363e-23,
+            "sink_line_increment_m": 1.871233755622115e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 9.356168778110573e-09
+          },
+          "a_to_b_event_J": -1.3241205422209265e-23,
+          "actual_reverse_edge": false,
+          "b_to_a_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 8.701236963642834e-09,
+            "available_change_J": -1.1831563191311304e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 7.750547808025772e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.3058208419108712e-15,
+              "phase_local_J": 5.328036840755768e-16,
+              "recoverable_elastic_J": 9.031628544066098e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.9220733021373918e-16
+            },
+            "before_helmholtz_J": 9.99054577746732e-14,
+            "boundary_line_increment_m": 4.678084389055287e-10,
+            "delta_helmholtz_J": -1.1831563191311304e-17,
+            "direction": "b_to_a",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 7.017126583582931e-19,
+              "defect_storage_J": 7.734937748414091e-15,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.310380763383479e-15,
+              "phase_local_J": 5.309519213875523e-16,
+              "recoverable_elastic_J": 9.031665406563841e-14,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 2.0375820834058803e-16
+            },
+            "endpoint_helmholtz_J": 9.989362621148189e-14,
+            "endpoint_internal_J": 1.0009738441982247e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": -0.0,
+            "generated_heat_J": 1.1550878127967987e-17,
+            "material_sink_export_J": 2.8068506334331725e-19,
+            "maximum_abs_beta_p_increment": 6.237845434820331e-07,
+            "maximum_abs_line_density_increment_m2": 2209608107010.672,
+            "maximum_abs_slip_increment": 7.639769204829646e-07,
+            "maximum_abs_temperature_increment_K": 0.0006497784806924756,
+            "processed_line_increment_m": 1.8712337556221146e-08,
+            "signed_volume_m3": -1.9492018287730363e-23,
+            "sink_line_increment_m": 1.871233755622115e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 9.356168778110573e-09
+          },
+          "b_to_a_event_J": -9.25849422264108e-24,
+          "forward_signed_volume_m3": 1.9492018287730363e-23,
+          "opposite_evaluated_from_actual_state": true,
+          "opposite_signed_volume_m3": -1.9492018287730363e-23,
+          "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE"
+        },
+        "complete_energy_decision": {
+          "accepted": true,
+          "available_change_J": -6.058509054953526e-22,
+          "before": {
+            "boundary_excess_J": 0.0,
+            "defect_storage_J": 7.750547808025772e-15,
+            "helmholtz_J": 9.99054577746732e-14,
+            "internal_J": 1.0009766510488694e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.3058208419108712e-15,
+            "phase_local_J": 5.328036840755768e-16,
+            "recoverable_elastic_J": 9.031628544066098e-14,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 1.9220733021373918e-16
+          },
+          "candidate": {
+            "boundary_excess_J": 2.4859514032073097e-23,
+            "defect_storage_J": 7.750547254632872e-15,
+            "helmholtz_J": 9.99054571688223e-14,
+            "internal_J": 1.0009766509494291e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.3058206892649689e-15,
+            "phase_local_J": 5.328037463447009e-16,
+            "recoverable_elastic_J": 9.031628545372024e-14,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 1.9220792612061254e-16
+          },
+          "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+          "delta_helmholtz_J": -6.058509054953526e-22,
+          "external_work_J": 0.0,
+          "first_law_residual_J": -2.2154870129669687e-28,
+          "generated_heat_J": 5.959070998825234e-22,
+          "material_sink_export_J": 9.943805612829239e-24,
+          "thermostat_export_J": 0.0,
+          "tolerance_J": 1.8172696904852856e-25
+        },
+        "component_contour_displacements_m": [
+          2.1753466999951953e-13,
+          2.1753466999951953e-13
+        ],
+        "direction": 1,
+        "first_passage_volume_m3": 6.905420564464748e-28,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 6.629203741886158e-13,
+          "a_to_b_swept_volume_m3": 6.905420564464748e-28,
+          "accepted": 1.0,
+          "annihilated_line_m": 3.0825797399770634e-13,
+          "attempts": 1.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 1.65730093547154e-14,
+          "heat_J": 4.623869609965595e-22,
+          "maximum_abs_line_closure_m": 7.320992279052734e-25,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 6.62920374188616e-15,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 3.314601870943079e-13
+        },
+        "front_published": true,
+        "gross_directional_activity_s": 4983545.942619959,
+        "interface_area_m2": 3.1744e-15,
+        "mura_clock": {
+          "accepted_dt_s": 5e-06,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": 7.450580596923828e-09,
+          "minimum_heat_increment_J_m3": 37843.15412834244,
+          "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+        },
+        "owner_total_line_density_mean_m2_after": {
+          "child": 959999882228255.2,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 6.629203741886158e-13,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": 1.9492018287730357e-23,
+        "raw_constitutive_net_velocity_m_s": 4.362680311495811e-08,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 6.629203741886159e-15,
+        "temperature_range_K": [
+          1100.0108123632729,
+          1100.0108123894747
+        ],
+        "wall_seconds": 20.435147186974064
+      },
+      "spacing_m": 1e-07
+    },
+    {
+      "accepted_displacement_difference_recurrent_minus_off_m": -2.676949151236861e-15,
+      "equalized_recurrent_state": {
+        "exact_complete_recurrent_state_equal": true,
+        "parent_child": {
+          "exact_complete_state_equal": true,
+          "fields": [
+            {
+              "exact": true,
+              "field": "common.alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.beta_p",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.family_nye_m1",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.multi_hit_coordination",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.orientation_rad",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.slip",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.temperature_K",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_order",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.junction_alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            }
+          ],
+          "maximum_abs_difference": 0.0,
+          "maximum_relative_difference": 0.0
+        },
+        "parent_wake": {
+          "exact_complete_state_equal": true,
+          "fields": [
+            {
+              "exact": true,
+              "field": "common.alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.beta_p",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.family_nye_m1",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.multi_hit_coordination",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.orientation_rad",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.slip",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.temperature_K",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_order",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.junction_alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            }
+          ],
+          "maximum_abs_difference": 0.0,
+          "maximum_relative_difference": 0.0
+        }
+      },
+      "grid": 48,
+      "interface_width_m": 4e-07,
+      "length_m": 4.8e-06,
+      "mura_off": {
+        "accepted_absolute_volume_m3": 1.0074847196506199e-27,
+        "accepted_contour_displacement_cells": 2.1158533258791583e-06,
+        "accepted_contour_displacement_interface_widths": 5.289633314697896e-07,
+        "accepted_contour_displacement_m": 2.115853325879158e-13,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 1.0074847196506199e-27,
+        "accepted_signed_volume_m3": 1.0074847196506199e-27,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": -4.835926648819218e-13
+        },
+        "annihilated_line_m": 4.4974117885203666e-13,
+        "boundary_storage_line_m": 2.4179633271614876e-14,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "common_ledger_increment": {
+          "accepted_commits": 1.0,
+          "annihilated_line_m": 4.4974117885203666e-13,
+          "attempted_commits": 1.0,
+          "boundary_line_m": 2.4179633271614876e-14,
+          "complete_energy_accepted": 1.0,
+          "generated_heat_J": 8.835125671224546e-22,
+          "interface_nye_norm_m1": 0.0,
+          "material_sink_export_J": 1.4507779962968923e-23,
+          "maximum_abs_first_law_residual_J": 4.281954319579944e-27,
+          "maximum_line_closure_m": 1.8932661725304283e-29,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 9.67185330864595e-13,
+          "rejected_commits": 0.0,
+          "sink_line_m": 9.67185330864595e-15,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 4.835926654322975e-13
+        },
+        "complete_candidate_endpoints": {
+          "a_to_b_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.3063310815240994e-08,
+            "available_change_J": -2.5816497181235836e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 1.7440010331189646e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.9832450618577494e-15,
+              "phase_local_J": 7.938183557815996e-16,
+              "recoverable_elastic_J": 2.036441088e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": -1.8946593627333641e-28
+            },
+            "before_helmholtz_J": 2.2386118254882898e-13,
+            "boundary_line_increment_m": 7.023285384538169e-10,
+            "delta_helmholtz_J": -2.5816497181235836e-17,
+            "direction": "a_to_b",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.0534928076807254e-18,
+              "defect_storage_J": 1.7416574385400127e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.977507765683423e-15,
+              "phase_local_J": 7.961216077565202e-16,
+              "recoverable_elastic_J": 2.036441088e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 2.539510005945631e-17
+            },
+            "endpoint_helmholtz_J": 2.2383536605164774e-13,
+            "endpoint_internal_J": 2.238607611517072e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": 0.0,
+            "generated_heat_J": 2.5395100058163545e-17,
+            "material_sink_export_J": 4.213971230722902e-19,
+            "maximum_abs_beta_p_increment": 0.0,
+            "maximum_abs_line_density_increment_m2": 2302819694545.0,
+            "maximum_abs_slip_increment": 0.0,
+            "maximum_abs_temperature_increment_K": 0.0006349181364839751,
+            "processed_line_increment_m": 2.809314153815268e-08,
+            "signed_volume_m3": 2.9263689102242375e-23,
+            "sink_line_increment_m": 2.809314153815268e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.404657076907634e-08
+          },
+          "a_to_b_event_J": -1.3456226369738156e-23,
+          "actual_reverse_edge": false,
+          "b_to_a_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.3063310815240994e-08,
+            "available_change_J": -1.8473182582979787e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 1.7440010331189646e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.9832450618577494e-15,
+              "phase_local_J": 7.938183557815996e-16,
+              "recoverable_elastic_J": 2.036441088e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": -1.8946593627333641e-28
+            },
+            "before_helmholtz_J": 2.2386118254882898e-13,
+            "boundary_line_increment_m": 7.023285384538169e-10,
+            "delta_helmholtz_J": -1.8473182582979787e-17,
+            "direction": "b_to_a",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.0534928076807254e-18,
+              "defect_storage_J": 1.7416574385400127e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.989746991816982e-15,
+              "phase_local_J": 7.912256962212079e-16,
+              "recoverable_elastic_J": 2.036441088e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.8051785461290856e-17
+            },
+            "endpoint_helmholtz_J": 2.23842709366246e-13,
+            "endpoint_internal_J": 2.238607611517073e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": -0.0,
+            "generated_heat_J": 1.8051785459907496e-17,
+            "material_sink_export_J": 4.213971230722902e-19,
+            "maximum_abs_beta_p_increment": 0.0,
+            "maximum_abs_line_density_increment_m2": 2302819694545.0,
+            "maximum_abs_slip_increment": 0.0,
+            "maximum_abs_temperature_increment_K": 0.0004513235212471045,
+            "processed_line_increment_m": 2.809314153815268e-08,
+            "signed_volume_m3": -2.9263689102242375e-23,
+            "sink_line_increment_m": 2.809314153815268e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.404657076907634e-08
+          },
+          "b_to_a_event_J": -9.628700782333658e-24,
+          "forward_signed_volume_m3": 2.9263689102242375e-23,
+          "opposite_evaluated_from_actual_state": true,
+          "opposite_signed_volume_m3": -2.9263689102242375e-23,
+          "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE"
+        },
+        "complete_energy_decision": {
+          "accepted": true,
+          "available_change_J": -8.980203470854235e-22,
+          "before": {
+            "boundary_excess_J": 0.0,
+            "defect_storage_J": 1.7440010331189646e-14,
+            "helmholtz_J": 2.2386118254882898e-13,
+            "internal_J": 2.2386118254882878e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.9832450618577494e-15,
+            "phase_local_J": 7.938183557815996e-16,
+            "recoverable_elastic_J": 2.036441088e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": -1.8946593627333641e-28
+          },
+          "candidate": {
+            "boundary_excess_J": 3.626944990742231e-23,
+            "defect_storage_J": 1.7440009523741754e-14,
+            "helmholtz_J": 2.2386118165080863e-13,
+            "internal_J": 2.2386118253431671e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.9832448503891472e-15,
+            "phase_local_J": 7.938184404082746e-16,
+            "recoverable_elastic_J": 2.036441088e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 8.835080807330087e-22
+          },
+          "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+          "delta_helmholtz_J": -8.980203470854235e-22,
+          "external_work_J": 0.0,
+          "first_law_residual_J": -4.281954319579944e-27,
+          "generated_heat_J": 8.835125671224546e-22,
+          "material_sink_export_J": 1.4507779962968923e-23,
+          "thermostat_export_J": 0.0,
+          "tolerance_J": 4.072011189215645e-25
+        },
+        "component_contour_displacements_m": [
+          2.1158533258791579e-13,
+          2.1158533258791579e-13
+        ],
+        "direction": 1,
+        "first_passage_volume_m3": 1.0074847196506199e-27,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 9.67185330864595e-13,
+          "a_to_b_swept_volume_m3": 1.0074847196506199e-27,
+          "accepted": 1.0,
+          "annihilated_line_m": 4.4974117885203666e-13,
+          "attempts": 1.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 2.4179633271614876e-14,
+          "heat_J": 6.74611768278055e-22,
+          "maximum_abs_line_closure_m": 2.2377472229003906e-23,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 9.67185330864595e-15,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 4.835926654322975e-13
+        },
+        "front_published": true,
+        "gross_directional_activity_s": 4983390.442961132,
+        "interface_area_m2": 4.7616e-15,
+        "mura_clock": null,
+        "owner_total_line_density_mean_m2_after": {
+          "child": 959999923690322.5,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 9.67185330864595e-13,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": 2.9263689102242375e-23,
+        "raw_constitutive_net_velocity_m_s": 4.247457377566398e-08,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 9.67185330864595e-15,
+        "temperature_range_K": [
+          1100.000000022089,
+          1100.0000000220894
+        ],
+        "wall_seconds": 1.7720083240419626
+      },
+      "mura_only": {
+        "accepted_absolute_volume_m3": 0.0,
+        "accepted_contour_displacement_cells": 0.0,
+        "accepted_contour_displacement_interface_widths": 0.0,
+        "accepted_contour_displacement_m": 0.0,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 0.0,
+        "accepted_signed_volume_m3": 0.0,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": 1.6940658945086007e-21
+        },
+        "annihilated_line_m": 0.0,
+        "boundary_storage_line_m": 0.0,
+        "classification": null,
+        "common_ledger_increment": {
+          "accepted_commits": 0.0,
+          "annihilated_line_m": 0.0,
+          "attempted_commits": 0.0,
+          "boundary_line_m": 0.0,
+          "complete_energy_accepted": 0.0,
+          "generated_heat_J": 0.0,
+          "interface_nye_norm_m1": 0.0,
+          "material_sink_export_J": 0.0,
+          "maximum_abs_first_law_residual_J": 0.0,
+          "maximum_line_closure_m": 0.0,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 0.0,
+          "rejected_commits": 0.0,
+          "sink_line_m": 0.0,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 0.0
+        },
+        "complete_candidate_endpoints": null,
+        "complete_energy_decision": null,
+        "component_contour_displacements_m": [],
+        "direction": 1,
+        "first_passage_volume_m3": 0.0,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 0.0,
+          "a_to_b_swept_volume_m3": 0.0,
+          "accepted": 0.0,
+          "annihilated_line_m": 0.0,
+          "attempts": 0.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 0.0,
+          "heat_J": 0.0,
+          "maximum_abs_line_closure_m": 0.0,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 0.0,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 0.0
+        },
+        "front_published": false,
+        "gross_directional_activity_s": null,
+        "interface_area_m2": null,
+        "mura_clock": {
+          "accepted_dt_s": 5e-06,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": -2.2351741790771484e-08,
+          "minimum_heat_increment_J_m3": 37843.15412935742,
+          "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+        },
+        "owner_total_line_density_mean_m2_after": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 0.0,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": null,
+        "raw_constitutive_net_velocity_m_s": null,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 0.0,
+        "temperature_range_K": [
+          1100.0108123297512,
+          1100.0108123559532
+        ],
+        "wall_seconds": 39.34492099494673
+      },
+      "nominal_interface_separation_m": 2.4e-06,
+      "post_mura_state_retained_for_audit": true,
+      "recurrent_mura_front": {
+        "accepted_absolute_volume_m3": 9.947381585720905e-28,
+        "accepted_contour_displacement_cells": 2.0890838343667895e-06,
+        "accepted_contour_displacement_interface_widths": 5.222709585916974e-07,
+        "accepted_contour_displacement_m": 2.0890838343667895e-13,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 9.947381585720905e-28,
+        "accepted_signed_volume_m3": 9.947381585720905e-28,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": -4.774743138168764e-13
+        },
+        "annihilated_line_m": 4.4405111398658114e-13,
+        "boundary_storage_line_m": 2.3873715805730172e-14,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "common_ledger_increment": {
+          "accepted_commits": 1.0,
+          "annihilated_line_m": 4.4405111398658114e-13,
+          "attempted_commits": 1.0,
+          "boundary_line_m": 2.3873715805730172e-14,
+          "complete_energy_accepted": 1.0,
+          "generated_heat_J": 8.534626005799448e-22,
+          "interface_nye_norm_m1": 0.00394078204754038,
+          "material_sink_export_J": 1.4324229483438102e-23,
+          "maximum_abs_first_law_residual_J": 1.7369908651432684e-27,
+          "maximum_line_closure_m": 4.417621069237666e-29,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 9.549486322292069e-13,
+          "rejected_commits": 0.0,
+          "sink_line_m": 9.549486322292069e-15,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 4.774743161146034e-13
+        },
+        "complete_candidate_endpoints": {
+          "a_to_b_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.3063310815240997e-08,
+            "available_change_J": -2.5261314868329353e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 1.743870058588566e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.9832450618577494e-15,
+              "phase_local_J": 7.938183557815996e-16,
+              "recoverable_elastic_J": 2.032116422414872e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 4.3246651482264103e-16
+            },
+            "before_helmholtz_J": 2.234274062450122e-13,
+            "boundary_line_increment_m": 7.023285384538171e-10,
+            "delta_helmholtz_J": -2.5261314868329353e-17,
+            "direction": "a_to_b",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.0534928076807256e-18,
+              "defect_storage_J": 1.7415266399827937e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.977507765683423e-15,
+              "phase_local_J": 7.961216077565202e-16,
+              "recoverable_elastic_J": 2.0321219566406832e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 4.573064325682592e-16
+            },
+            "endpoint_helmholtz_J": 2.2340214493014388e-13,
+            "endpoint_internal_J": 2.2385945136271213e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": 0.0,
+            "generated_heat_J": 2.4839917745257062e-17,
+            "material_sink_export_J": 4.213971230722902e-19,
+            "maximum_abs_beta_p_increment": 6.523942219489149e-07,
+            "maximum_abs_line_density_increment_m2": 2310951075732.7188,
+            "maximum_abs_slip_increment": 7.990164774574434e-07,
+            "maximum_abs_temperature_increment_K": 0.0006210376902799908,
+            "processed_line_increment_m": 2.809314153815268e-08,
+            "signed_volume_m3": 2.9263689102242375e-23,
+            "sink_line_increment_m": 2.809314153815268e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.404657076907634e-08
+          },
+          "a_to_b_event_J": -1.3166850982112977e-23,
+          "actual_reverse_edge": false,
+          "b_to_a_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.3063310815240997e-08,
+            "available_change_J": -1.7918000270073304e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 1.743870058588566e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.9832450618577494e-15,
+              "phase_local_J": 7.938183557815996e-16,
+              "recoverable_elastic_J": 2.032116422414872e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 4.3246651482264103e-16
+            },
+            "before_helmholtz_J": 2.234274062450122e-13,
+            "boundary_line_increment_m": 7.023285384538171e-10,
+            "delta_helmholtz_J": -1.7918000270073304e-17,
+            "direction": "b_to_a",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.0534928076807256e-18,
+              "defect_storage_J": 1.7415266399827937e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 1.989746991816982e-15,
+              "phase_local_J": 7.912256962212079e-16,
+              "recoverable_elastic_J": 2.0321219566406832e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 4.499631179697148e-16
+            },
+            "endpoint_helmholtz_J": 2.2340948824474213e-13,
+            "endpoint_internal_J": 2.2385945136271185e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": -0.0,
+            "generated_heat_J": 1.7496603147001012e-17,
+            "material_sink_export_J": 4.213971230722902e-19,
+            "maximum_abs_beta_p_increment": 6.523942219489217e-07,
+            "maximum_abs_line_density_increment_m2": 2310951075732.7188,
+            "maximum_abs_slip_increment": 7.990164774574434e-07,
+            "maximum_abs_temperature_increment_K": 0.0004374430750431202,
+            "processed_line_increment_m": 2.809314153815268e-08,
+            "signed_volume_m3": -2.9263689102242375e-23,
+            "sink_line_increment_m": 2.809314153815268e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.404657076907634e-08
+          },
+          "b_to_a_event_J": -9.33932539470848e-24,
+          "forward_signed_volume_m3": 2.9263689102242375e-23,
+          "opposite_evaluated_from_actual_state": true,
+          "opposite_signed_volume_m3": -2.9263689102242375e-23,
+          "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE"
+        },
+        "complete_energy_decision": {
+          "accepted": true,
+          "available_change_J": -8.67786830063383e-22,
+          "before": {
+            "boundary_excess_J": 0.0,
+            "defect_storage_J": 1.743870058588566e-14,
+            "helmholtz_J": 2.234274062450122e-13,
+            "internal_J": 2.2385987275983485e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.9832450618577494e-15,
+            "phase_local_J": 7.938183557815996e-16,
+            "recoverable_elastic_J": 2.032116422414872e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 4.3246651482264103e-16
+          },
+          "candidate": {
+            "boundary_excess_J": 3.5810573708595265e-23,
+            "defect_storage_J": 1.743869978871331e-14,
+            "helmholtz_J": 2.2342740537722538e-13,
+            "internal_J": 2.2385987274550889e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 1.9832448530646128e-15,
+            "phase_local_J": 7.938184393375911e-16,
+            "recoverable_elastic_J": 2.0321164226029928e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 4.324673682835084e-16
+          },
+          "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+          "delta_helmholtz_J": -8.67786830063383e-22,
+          "external_work_J": 0.0,
+          "first_law_residual_J": -1.7369908651432684e-27,
+          "generated_heat_J": 8.534626005799448e-22,
+          "material_sink_export_J": 1.4324229483438102e-23,
+          "thermostat_export_J": 0.0,
+          "tolerance_J": 4.0641208442141252e-25
+        },
+        "component_contour_displacements_m": [
+          2.0890838343667895e-13,
+          2.0890838343667895e-13
+        ],
+        "direction": 1,
+        "first_passage_volume_m3": 9.947381585720905e-28,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 9.549486322292069e-13,
+          "a_to_b_swept_volume_m3": 9.947381585720905e-28,
+          "accepted": 1.0,
+          "annihilated_line_m": 4.440511139865812e-13,
+          "attempts": 1.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 2.3873715805730172e-14,
+          "heat_J": 6.660766709798718e-22,
+          "maximum_abs_line_closure_m": 1.1716344303131102e-22,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 9.54948632229207e-15,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 4.774743161146034e-13
+        },
+        "front_published": true,
+        "gross_directional_activity_s": 4983545.629991466,
+        "interface_area_m2": 4.7616e-15,
+        "mura_clock": {
+          "accepted_dt_s": 5e-06,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": -2.2351741790771484e-08,
+          "minimum_heat_increment_J_m3": 37843.15412935742,
+          "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+        },
+        "owner_total_line_density_mean_m2_after": {
+          "child": 959999924655778.5,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 9.549486322292069e-13,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": 2.9263689102242375e-23,
+        "raw_constitutive_net_velocity_m_s": 4.19371912509203e-08,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 9.549486322292069e-15,
+        "temperature_range_K": [
+          1100.010812351089,
+          1100.0108123772911
+        ],
+        "wall_seconds": 43.66962123091798
+      },
+      "spacing_m": 1e-07
+    },
+    {
+      "accepted_displacement_difference_recurrent_minus_off_m": -2.6730147674474366e-15,
+      "equalized_recurrent_state": {
+        "exact_complete_recurrent_state_equal": true,
+        "parent_child": {
+          "exact_complete_state_equal": true,
+          "fields": [
+            {
+              "exact": true,
+              "field": "common.alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.beta_p",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.family_nye_m1",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.multi_hit_coordination",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.orientation_rad",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.slip",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.temperature_K",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_order",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.junction_alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            }
+          ],
+          "maximum_abs_difference": 0.0,
+          "maximum_relative_difference": 0.0
+        },
+        "parent_wake": {
+          "exact_complete_state_equal": true,
+          "fields": [
+            {
+              "exact": true,
+              "field": "common.alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.beta_p",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.family_nye_m1",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.multi_hit_coordination",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.orientation_rad",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.slip",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.temperature_K",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_order",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "common.wall_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.junction_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "density.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.forest_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.junction_alignment_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.mobile_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_curvature_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_ordered_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_minus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_tangle_plus_m2",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_minus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            },
+            {
+              "exact": true,
+              "field": "alignment.wall_turning_nodes_plus_m3",
+              "maximum_abs_difference": 0.0,
+              "maximum_relative_difference": 0.0
+            }
+          ],
+          "maximum_abs_difference": 0.0,
+          "maximum_relative_difference": 0.0
+        }
+      },
+      "grid": 64,
+      "interface_width_m": 4e-07,
+      "length_m": 6.4e-06,
+      "mura_off": {
+        "accepted_absolute_volume_m3": 1.3413745811318157e-27,
+        "accepted_contour_displacement_cells": 2.112800184494417e-06,
+        "accepted_contour_displacement_interface_widths": 5.282000461236043e-07,
+        "accepted_contour_displacement_m": 2.1128001844944172e-13,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 1.3413745811318157e-27,
+        "accepted_signed_volume_m3": 1.3413745811318157e-27,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": -6.438597993250941e-13
+        },
+        "annihilated_line_m": 5.987896130111148e-13,
+        "boundary_storage_line_m": 3.219298994683413e-14,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "common_ledger_increment": {
+          "accepted_commits": 1.0,
+          "annihilated_line_m": 5.987896130111148e-13,
+          "attempted_commits": 1.0,
+          "boundary_line_m": 3.219298994683413e-14,
+          "complete_energy_accepted": 1.0,
+          "generated_heat_J": 1.176077927083407e-21,
+          "interface_nye_norm_m1": 0.0,
+          "material_sink_export_J": 1.931579396810048e-23,
+          "maximum_abs_first_law_residual_J": 3.7503886731559954e-27,
+          "maximum_line_closure_m": 3.7865323450608567e-29,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 1.2877195978733654e-12,
+          "rejected_commits": 0.0,
+          "sink_line_m": 1.2877195978733652e-14,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 6.438597989366827e-13
+        },
+        "complete_candidate_endpoints": {
+          "a_to_b_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.741804148912668e-08,
+            "available_change_J": -3.4415928696832765e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 3.100446281100381e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.645307756220603e-15,
+              "phase_local_J": 1.058141520765912e-15,
+              "recoverable_elastic_J": 3.620339712e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.0104849934577942e-27
+            },
+            "before_helmholtz_J": 3.9674188328799033e-13,
+            "boundary_line_increment_m": 9.364538435014344e-10,
+            "delta_helmholtz_J": -3.4415928696832765e-17,
+            "direction": "a_to_b",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.4046807652521517e-18,
+              "defect_storage_J": 3.097321439339914e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.6376713937334726e-15,
+              "phase_local_J": 1.0612056913956148e-15,
+              "recoverable_elastic_J": 3.620339712e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 3.385405639577191e-17
+            },
+            "endpoint_helmholtz_J": 3.967074673592935e-13,
+            "endpoint_internal_J": 3.9674132141568927e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": 0.0,
+            "generated_heat_J": 3.3854056390731905e-17,
+            "material_sink_export_J": 5.618723061008606e-19,
+            "maximum_abs_beta_p_increment": 0.0,
+            "maximum_abs_line_density_increment_m2": 2304668120840.6875,
+            "maximum_abs_slip_increment": 0.0,
+            "maximum_abs_temperature_increment_K": 0.00047610313868062804,
+            "processed_line_increment_m": 3.7458153740057374e-08,
+            "signed_volume_m3": 3.90189101458931e-23,
+            "sink_line_increment_m": 3.7458153740057376e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.8729076870028687e-08
+          },
+          "a_to_b_event_J": -1.3453627564751792e-23,
+          "actual_reverse_edge": false,
+          "b_to_a_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.741804148912668e-08,
+            "available_change_J": -2.4638716961390402e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 3.100446281100381e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.645307756220603e-15,
+              "phase_local_J": 1.058141520765912e-15,
+              "recoverable_elastic_J": 3.620339712e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 1.0104849934577942e-27
+            },
+            "before_helmholtz_J": 3.9674188328799033e-13,
+            "boundary_line_increment_m": 9.364538435014344e-10,
+            "delta_helmholtz_J": -2.4638716961390402e-17,
+            "direction": "b_to_a",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.4046807652521517e-18,
+              "defect_storage_J": 3.097321439339914e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.653962292108055e-15,
+              "phase_local_J": 1.0546920047564765e-15,
+              "recoverable_elastic_J": 3.620339712e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 2.4076844661890065e-17
+            },
+            "endpoint_helmholtz_J": 3.9671724457102894e-13,
+            "endpoint_internal_J": 3.9674132141569084e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": -0.0,
+            "generated_heat_J": 2.4076844655289542e-17,
+            "material_sink_export_J": 5.618723061008606e-19,
+            "maximum_abs_beta_p_increment": 0.0,
+            "maximum_abs_line_density_increment_m2": 2304668120840.6875,
+            "maximum_abs_slip_increment": 0.0,
+            "maximum_abs_temperature_increment_K": 0.0003386022985978343,
+            "processed_line_increment_m": 3.7458153740057374e-08,
+            "signed_volume_m3": -3.90189101458931e-23,
+            "sink_line_increment_m": 3.7458153740057376e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.8729076870028687e-08
+          },
+          "b_to_a_event_J": -9.631590203241703e-24,
+          "forward_signed_volume_m3": 3.90189101458931e-23,
+          "opposite_evaluated_from_actual_state": true,
+          "opposite_signed_volume_m3": -3.90189101458931e-23,
+          "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE"
+        },
+        "complete_energy_decision": {
+          "accepted": true,
+          "available_change_J": -1.1953937210515074e-21,
+          "before": {
+            "boundary_excess_J": 0.0,
+            "defect_storage_J": 3.100446281100381e-14,
+            "helmholtz_J": 3.9674188328799033e-13,
+            "internal_J": 3.9674188328799134e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 2.645307756220603e-15,
+            "phase_local_J": 1.058141520765912e-15,
+            "recoverable_elastic_J": 3.620339712e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 1.0104849934577942e-27
+          },
+          "candidate": {
+            "boundary_excess_J": 4.8289484920251195e-23,
+            "defect_storage_J": 3.1004461735960125e-14,
+            "helmholtz_J": 3.967418820925966e-13,
+            "internal_J": 3.967418832686718e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 2.645307475153084e-15,
+            "phase_local_J": 1.058141633193918e-15,
+            "recoverable_elastic_J": 3.620339712e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 1.1760751903057099e-21
+          },
+          "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+          "delta_helmholtz_J": -1.1953937210515074e-21,
+          "external_work_J": 0.0,
+          "first_law_residual_J": -3.7503886731559954e-27,
+          "generated_heat_J": 1.176077927083407e-21,
+          "material_sink_export_J": 1.931579396810048e-23,
+          "thermostat_export_J": 0.0,
+          "tolerance_J": 7.216692816436813e-25
+        },
+        "component_contour_displacements_m": [
+          2.1128001844944174e-13,
+          2.1128001844944174e-13
+        ],
+        "direction": 1,
+        "first_passage_volume_m3": 1.3413745811318157e-27,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 1.287719597886543e-12,
+          "a_to_b_swept_volume_m3": 1.3413745811318157e-27,
+          "accepted": 1.0,
+          "annihilated_line_m": 5.987896130172425e-13,
+          "attempts": 1.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 3.219298994716358e-14,
+          "heat_J": 8.981844195258638e-22,
+          "maximum_abs_line_closure_m": 3.639150291442871e-23,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 1.287719597886543e-14,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 6.438597989432715e-13
+        },
+        "front_published": true,
+        "gross_directional_activity_s": 4983390.435491027,
+        "interface_area_m2": 6.3488e-15,
+        "mura_clock": null,
+        "owner_total_line_density_mean_m2_after": {
+          "child": 959999933373493.2,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 1.2877195978733654e-12,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": 3.90189101458931e-23,
+        "raw_constitutive_net_velocity_m_s": 4.2414079185467215e-08,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 1.2877195978733652e-14,
+        "temperature_range_K": [
+          1100.0000000165394,
+          1100.0000000165398
+        ],
+        "wall_seconds": 2.999730412964709
+      },
+      "mura_only": {
+        "accepted_absolute_volume_m3": 0.0,
+        "accepted_contour_displacement_cells": 0.0,
+        "accepted_contour_displacement_interface_widths": 0.0,
+        "accepted_contour_displacement_m": 0.0,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 0.0,
+        "accepted_signed_volume_m3": 0.0,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": 3.3881317890172014e-21
+        },
+        "annihilated_line_m": 0.0,
+        "boundary_storage_line_m": 0.0,
+        "classification": null,
+        "common_ledger_increment": {
+          "accepted_commits": 0.0,
+          "annihilated_line_m": 0.0,
+          "attempted_commits": 0.0,
+          "boundary_line_m": 0.0,
+          "complete_energy_accepted": 0.0,
+          "generated_heat_J": 0.0,
+          "interface_nye_norm_m1": 0.0,
+          "material_sink_export_J": 0.0,
+          "maximum_abs_first_law_residual_J": 0.0,
+          "maximum_line_closure_m": 0.0,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 0.0,
+          "rejected_commits": 0.0,
+          "sink_line_m": 0.0,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 0.0
+        },
+        "complete_candidate_endpoints": null,
+        "complete_energy_decision": null,
+        "component_contour_displacements_m": [],
+        "direction": 1,
+        "first_passage_volume_m3": 0.0,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 0.0,
+          "a_to_b_swept_volume_m3": 0.0,
+          "accepted": 0.0,
+          "annihilated_line_m": 0.0,
+          "attempts": 0.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 0.0,
+          "heat_J": 0.0,
+          "maximum_abs_line_closure_m": 0.0,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 0.0,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 0.0
+        },
+        "front_published": false,
+        "gross_directional_activity_s": null,
+        "interface_area_m2": null,
+        "mura_clock": {
+          "accepted_dt_s": 5e-06,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": -5.960464477539063e-08,
+          "minimum_heat_increment_J_m3": 37843.15412986555,
+          "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+        },
+        "owner_total_line_density_mean_m2_after": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 0.0,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": null,
+        "raw_constitutive_net_velocity_m_s": null,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 0.0,
+        "temperature_range_K": [
+          1100.0108123297514,
+          1100.0108123559535
+        ],
+        "wall_seconds": 70.51469537499361
+      },
+      "nominal_interface_separation_m": 3.2e-06,
+      "post_mura_state_retained_for_audit": true,
+      "recurrent_mura_front": {
+        "accepted_absolute_volume_m3": 1.3244041449762454e-27,
+        "accepted_contour_displacement_cells": 2.086070036819943e-06,
+        "accepted_contour_displacement_interface_widths": 5.215175092049858e-07,
+        "accepted_contour_displacement_m": 2.0860700368199428e-13,
+        "accepted_negative_volume_m3": 0.0,
+        "accepted_positive_volume_m3": 1.3244041449762454e-27,
+        "accepted_signed_volume_m3": 1.3244041449762454e-27,
+        "actual_inventory_change": {
+          "junction_extent_m": [
+            0.0
+          ],
+          "signed_family_line_m": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "total_line_m": -6.357139851153031e-13
+        },
+        "annihilated_line_m": 5.91214010317959e-13,
+        "boundary_storage_line_m": 3.178569947946016e-14,
+        "classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+        "common_ledger_increment": {
+          "accepted_commits": 1.0,
+          "annihilated_line_m": 5.91214010317959e-13,
+          "attempted_commits": 1.0,
+          "boundary_line_m": 3.178569947946016e-14,
+          "complete_energy_accepted": 1.0,
+          "generated_heat_J": 1.136072472277793e-21,
+          "interface_nye_norm_m1": 0.0020894100802663035,
+          "material_sink_export_J": 1.90714196876761e-23,
+          "maximum_abs_first_law_residual_J": 3.2001044186371408e-27,
+          "maximum_line_closure_m": 1.262177448353619e-29,
+          "maximum_signed_closure_m2": 0.0,
+          "processed_line_m": 1.2714279791784065e-12,
+          "rejected_commits": 0.0,
+          "sink_line_m": 1.2714279791784067e-14,
+          "thermostat_export_J": 0.0,
+          "transmitted_line_m": 6.357139895892033e-13
+        },
+        "complete_candidate_endpoints": {
+          "a_to_b_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.741804148912668e-08,
+            "available_change_J": -3.367567325489391e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 3.100210572274411e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.645307756220603e-15,
+              "phase_local_J": 1.058141520765912e-15,
+              "recoverable_elastic_J": 3.612651417626439e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 7.688293791089113e-16
+            },
+            "before_helmholtz_J": 3.959706967623745e-13,
+            "boundary_line_increment_m": 9.364538435014346e-10,
+            "delta_helmholtz_J": -3.367567325489391e-17,
+            "direction": "a_to_b",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.404680765252152e-18,
+              "defect_storage_J": 3.097085965148807e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.6376713937334726e-15,
+              "phase_local_J": 1.0612056913956148e-15,
+              "recoverable_elastic_J": 3.612658796717372e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 8.01943180050219e-16
+            },
+            "endpoint_helmholtz_J": 3.9593702108911963e-13,
+            "endpoint_internal_J": 3.9673896426916984e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": 0.0,
+            "generated_heat_J": 3.311380094879305e-17,
+            "material_sink_export_J": 5.618723061008607e-19,
+            "maximum_abs_beta_p_increment": 6.529178854549496e-07,
+            "maximum_abs_line_density_increment_m2": 2312806028921.8594,
+            "maximum_abs_slip_increment": 7.996578316507891e-07,
+            "maximum_abs_temperature_increment_K": 0.00046569263031415176,
+            "processed_line_increment_m": 3.7458153740057374e-08,
+            "signed_volume_m3": 3.90189101458931e-23,
+            "sink_line_increment_m": 3.745815374005738e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.8729076870028687e-08
+          },
+          "a_to_b_event_J": -1.3164252226188212e-23,
+          "actual_reverse_edge": false,
+          "b_to_a_endpoint": {
+            "actual_reverse_edge": false,
+            "annihilated_line_increment_m": 1.741804148912668e-08,
+            "available_change_J": -2.389846151945155e-17,
+            "before_energy_components": {
+              "boundary_excess_J": 0.0,
+              "defect_storage_J": 3.100210572274411e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.645307756220603e-15,
+              "phase_local_J": 1.058141520765912e-15,
+              "recoverable_elastic_J": 3.612651417626439e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 7.688293791089113e-16
+            },
+            "before_helmholtz_J": 3.959706967623745e-13,
+            "boundary_line_increment_m": 9.364538435014346e-10,
+            "delta_helmholtz_J": -2.389846151945155e-17,
+            "direction": "b_to_a",
+            "endpoint_energy_components": {
+              "boundary_excess_J": 1.404680765252152e-18,
+              "defect_storage_J": 3.097085965148807e-14,
+              "numerical_constraint_J": 0.0,
+              "phase_gradient_J": 2.653962292108055e-15,
+              "phase_local_J": 1.0546920047564765e-15,
+              "recoverable_elastic_J": 3.612658796717372e-13,
+              "signed_junction_storage_J": 0.0,
+              "thermal_internal_J": 7.921659683155792e-16
+            },
+            "endpoint_helmholtz_J": 3.9594679830085507e-13,
+            "endpoint_internal_J": 3.9673896426917064e-13,
+            "energy_accepted": true,
+            "energy_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+            "external_work_J": -0.0,
+            "generated_heat_J": 2.333658921335069e-17,
+            "material_sink_export_J": 5.618723061008607e-19,
+            "maximum_abs_beta_p_increment": 6.529178854549496e-07,
+            "maximum_abs_line_density_increment_m2": 2312806028921.8594,
+            "maximum_abs_slip_increment": 7.996578316507891e-07,
+            "maximum_abs_temperature_increment_K": 0.000328191790231358,
+            "processed_line_increment_m": 3.7458153740057374e-08,
+            "signed_volume_m3": -3.90189101458931e-23,
+            "sink_line_increment_m": 3.745815374005738e-10,
+            "thermostat_export_J": 0.0,
+            "transmitted_line_increment_m": 1.8729076870028687e-08
+          },
+          "b_to_a_event_J": -9.342214864678121e-24,
+          "forward_signed_volume_m3": 3.90189101458931e-23,
+          "opposite_evaluated_from_actual_state": true,
+          "opposite_signed_volume_m3": -3.90189101458931e-23,
+          "reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE"
+        },
+        "complete_energy_decision": {
+          "accepted": true,
+          "available_change_J": -1.1551438919654692e-21,
+          "before": {
+            "boundary_excess_J": 0.0,
+            "defect_storage_J": 3.100210572274411e-14,
+            "helmholtz_J": 3.959706967623745e-13,
+            "internal_J": 3.967395261414834e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 2.645307756220603e-15,
+            "phase_local_J": 1.058141520765912e-15,
+            "recoverable_elastic_J": 3.612651417626439e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 7.688293791089113e-16
+          },
+          "candidate": {
+            "boundary_excess_J": 4.767854921919024e-23,
+            "defect_storage_J": 3.100210466138101e-14,
+            "helmholtz_J": 3.9597069560723063e-13,
+            "internal_J": 3.967395261224152e-13,
+            "numerical_constraint_J": 0.0,
+            "phase_gradient_J": 2.6453074787090087e-15,
+            "phase_local_J": 1.0581416317715372e-15,
+            "recoverable_elastic_J": 3.612651417876905e-13,
+            "signed_junction_storage_J": 0.0,
+            "thermal_internal_J": 7.688305151845585e-16
+          },
+          "classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+          "delta_helmholtz_J": -1.1551438919654692e-21,
+          "external_work_J": 0.0,
+          "first_law_residual_J": 3.2001044186371408e-27,
+          "generated_heat_J": 1.136072472277793e-21,
+          "material_sink_export_J": 1.90714196876761e-23,
+          "thermostat_export_J": 0.0,
+          "tolerance_J": 7.202665015254288e-25
+        },
+        "component_contour_displacements_m": [
+          2.086070036819943e-13,
+          2.086070036819943e-13
+        ],
+        "direction": 1,
+        "first_passage_volume_m3": 1.3244041449762454e-27,
+        "front_clock_s": 5e-06,
+        "front_ledger_increment": {
+          "a_to_b_line_processed_m": 1.2714279791771957e-12,
+          "a_to_b_swept_volume_m3": 1.3244041449762454e-27,
+          "accepted": 1.0,
+          "annihilated_line_m": 5.91214010317396e-13,
+          "attempts": 1.0,
+          "b_to_a_line_processed_m": 0.0,
+          "b_to_a_swept_volume_m3": 0.0,
+          "boundary_line_m": 3.1785699479429894e-14,
+          "heat_J": 8.86821015476094e-22,
+          "maximum_abs_line_closure_m": 7.051788515090943e-23,
+          "maximum_abs_signed_closure_m2": 0.0,
+          "rejected_direction": 0.0,
+          "revisit_volume_m3": 0.0,
+          "sink_line_m": 1.2714279791771958e-14,
+          "stationary_trials": 0.0,
+          "transmitted_line_m": 6.357139895885978e-13
+        },
+        "front_published": true,
+        "gross_directional_activity_s": 4983545.622099321,
+        "interface_area_m2": 6.3488e-15,
+        "mura_clock": {
+          "accepted_dt_s": 5e-06,
+          "event_scale": 1.0,
+          "family_event_scales": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+          "first_law_residual_J_m3_cells": -5.960464477539063e-08,
+          "minimum_heat_increment_J_m3": 37843.15412986555,
+          "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+        },
+        "owner_total_line_density_mean_m2_after": {
+          "child": 959999934305445.8,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "owner_total_line_density_mean_m2_before": {
+          "child": 960000000000000.0,
+          "parent": 960000000000000.0,
+          "wake": 960000000000000.0
+        },
+        "processed_line_m": 1.2714279791784065e-12,
+        "proposal_fraction": 0.0625,
+        "proposed_signed_volume_m3": 3.90189101458931e-23,
+        "raw_constitutive_net_velocity_m_s": 4.187747632669285e-08,
+        "represented_thickness_m": 4.96e-10,
+        "revisit_volume_m3": 0.0,
+        "sink_line_m": 1.2714279791784067e-14,
+        "temperature_range_K": [
+          1100.0108123457285,
+          1100.0108123719306
+        ],
+        "wall_seconds": 69.75955278100446
+      },
+      "spacing_m": 1e-07
+    }
+  ],
+  "schema": "asb-drx/v38/equal-owner-finite-slab/v1",
+  "source_sha": "1f568c1ff2474f4e21b8ea0721821e18403ddd40"
+}

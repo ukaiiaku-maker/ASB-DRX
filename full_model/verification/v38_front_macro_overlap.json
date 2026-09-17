@@ -1,0 +1,139 @@
+{
+  "common_clock_claimed": false,
+  "front_hypothesis": "shape_n_low_pressure_sensitivity",
+  "generated_utc": "2026-09-17T21:48:27.558562+00:00",
+  "grid": 16,
+  "largest_passing_dt_s": 0.001,
+  "matched_horizon_s": 0.001,
+  "protocol": "predeformed_hold_front_only_zero_applied_work",
+  "purpose": "select an affordable front macro interval; coupled Mura/thermal subcycling requires an independent common-clock qualification",
+  "rows": [
+    {
+      "dt_s": 5e-06,
+      "intervals": 200,
+      "maximum_physical_relative_error": 0.0,
+      "metrics": {
+        "accepted_intervals": 200,
+        "cumulative_boundary_line_m": 3.043722477271127e-10,
+        "cumulative_complete_energy_delta_J": -1.2895322563249612e-17,
+        "cumulative_contour_displacement_m": 3.9951414404705526e-09,
+        "cumulative_processed_line_m": 1.2174889909084517e-08,
+        "cumulative_signed_sweep_m3": 1.2682176988629724e-23,
+        "cumulative_sink_line_m": 1.2174889909084517e-10,
+        "wall_seconds": 95.86622495600022
+      },
+      "overlap_passed_5pct": true,
+      "relative_errors_from_small_step": {
+        "cumulative_boundary_line_m": 0.0,
+        "cumulative_complete_energy_delta_J": 0.0,
+        "cumulative_contour_displacement_m": 0.0,
+        "cumulative_processed_line_m": 0.0,
+        "cumulative_signed_sweep_m3": 0.0,
+        "cumulative_sink_line_m": 0.0
+      },
+      "result_path": "/Users/sdillon/HPC3/local-results/asb-drx-v38-front-macro-overlap-1f568c1/dt_5.000e-06/result.json"
+    },
+    {
+      "dt_s": 2.5e-05,
+      "intervals": 40,
+      "maximum_physical_relative_error": 5.843615475333002e-05,
+      "metrics": {
+        "accepted_intervals": 40,
+        "cumulative_boundary_line_m": 3.043900340708835e-10,
+        "cumulative_complete_energy_delta_J": -1.2894786123849135e-17,
+        "cumulative_contour_displacement_m": 3.995374901174013e-09,
+        "cumulative_processed_line_m": 1.2175601362835337e-08,
+        "cumulative_signed_sweep_m3": 1.2682918086286788e-23,
+        "cumulative_sink_line_m": 1.2175601362835337e-10,
+        "wall_seconds": 19.18668452394195
+      },
+      "overlap_passed_5pct": true,
+      "relative_errors_from_small_step": {
+        "cumulative_boundary_line_m": 5.843615475333002e-05,
+        "cumulative_complete_energy_delta_J": 4.1599533307155476e-05,
+        "cumulative_contour_displacement_m": 5.84361547492982e-05,
+        "cumulative_processed_line_m": 5.8436154752344824e-05,
+        "cumulative_signed_sweep_m3": 5.843615474922195e-05,
+        "cumulative_sink_line_m": 5.843615475235332e-05
+      },
+      "result_path": "/Users/sdillon/HPC3/local-results/asb-drx-v38-front-macro-overlap-1f568c1/dt_2.500e-05/result.json"
+    },
+    {
+      "dt_s": 0.0001,
+      "intervals": 10,
+      "maximum_physical_relative_error": 0.0002775003991135966,
+      "metrics": {
+        "accepted_intervals": 10,
+        "cumulative_boundary_line_m": 3.044567111473361e-10,
+        "cumulative_complete_energy_delta_J": -1.2892770153038614e-17,
+        "cumulative_contour_displacement_m": 3.996250093814787e-09,
+        "cumulative_processed_line_m": 1.2178268445893444e-08,
+        "cumulative_signed_sweep_m3": 1.2685696297805661e-23,
+        "cumulative_sink_line_m": 1.2178268445893443e-10,
+        "wall_seconds": 4.559432604932226
+      },
+      "overlap_passed_5pct": true,
+      "relative_errors_from_small_step": {
+        "cumulative_boundary_line_m": 0.0002775003991135966,
+        "cumulative_complete_energy_delta_J": 0.0001979330255973509,
+        "cumulative_contour_displacement_m": 0.0002775003991107164,
+        "cumulative_processed_line_m": 0.00027750039911291695,
+        "cumulative_signed_sweep_m3": 0.00027750039911069623,
+        "cumulative_sink_line_m": 0.00027750039911278955
+      },
+      "result_path": "/Users/sdillon/HPC3/local-results/asb-drx-v38-front-macro-overlap-1f568c1/dt_1.000e-04/result.json"
+    },
+    {
+      "dt_s": 0.00025,
+      "intervals": 4,
+      "maximum_physical_relative_error": 0.0007151084372974741,
+      "metrics": {
+        "accepted_intervals": 4,
+        "cumulative_boundary_line_m": 3.0458990688954157e-10,
+        "cumulative_complete_energy_delta_J": -1.2888715393521224e-17,
+        "cumulative_contour_displacement_m": 3.997998399822816e-09,
+        "cumulative_processed_line_m": 1.2183596275581664e-08,
+        "cumulative_signed_sweep_m3": 1.269124612039755e-23,
+        "cumulative_sink_line_m": 1.2183596275581664e-10,
+        "wall_seconds": 2.0904607210541144
+      },
+      "overlap_passed_5pct": true,
+      "relative_errors_from_small_step": {
+        "cumulative_boundary_line_m": 0.0007151084372974741,
+        "cumulative_complete_energy_delta_J": 0.000512369480947853,
+        "cumulative_contour_displacement_m": 0.0007151084372940607,
+        "cumulative_processed_line_m": 0.0007151084372968281,
+        "cumulative_signed_sweep_m3": 0.0007151084372941526,
+        "cumulative_sink_line_m": 0.0007151084372968365
+      },
+      "result_path": "/Users/sdillon/HPC3/local-results/asb-drx-v38-front-macro-overlap-1f568c1/dt_2.500e-04/result.json"
+    },
+    {
+      "dt_s": 0.001,
+      "intervals": 1,
+      "maximum_physical_relative_error": 0.002848618117322057,
+      "metrics": {
+        "accepted_intervals": 1,
+        "cumulative_boundary_line_m": 3.052392880263982e-10,
+        "cumulative_complete_energy_delta_J": -1.2867423901449875e-17,
+        "cumulative_contour_displacement_m": 4.006522072759136e-09,
+        "cumulative_processed_line_m": 1.2209571521055928e-08,
+        "cumulative_signed_sweep_m3": 1.27183036677666e-23,
+        "cumulative_sink_line_m": 1.220957152105593e-10,
+        "wall_seconds": 0.6336332890205085
+      },
+      "overlap_passed_5pct": true,
+      "relative_errors_from_small_step": {
+        "cumulative_boundary_line_m": 0.002848618117322057,
+        "cumulative_complete_energy_delta_J": 0.0021634714186401695,
+        "cumulative_contour_displacement_m": 0.0028486181173206834,
+        "cumulative_processed_line_m": 0.0028486181173213074,
+        "cumulative_signed_sweep_m3": 0.0028486181173205294,
+        "cumulative_sink_line_m": 0.0028486181173215026
+      },
+      "result_path": "/Users/sdillon/HPC3/local-results/asb-drx-v38-front-macro-overlap-1f568c1/dt_1.000e-03/result.json"
+    }
+  ],
+  "schema": "asb-drx/v38/front-macro-overlap/v1",
+  "source_sha": "1f568c1ff2474f4e21b8ea0721821e18403ddd40"
+}
