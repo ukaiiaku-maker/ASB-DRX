@@ -382,6 +382,21 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         "kinetic_event_length_m": float(
             context["wall_parameters"].burgers_m),
         "kinetic_normalization_is_grid_independent": True,
+        "physical_site_event_measure": ({
+            "physical_site_count": front_decision.physical_site_count,
+            "expected_events_a_to_b": front_decision.expected_events_a_to_b,
+            "expected_events_b_to_a": front_decision.expected_events_b_to_a,
+            "expected_signed_event_count": (
+                front_decision.expected_signed_event_count),
+            "expected_signed_swept_volume_m3": (
+                front_decision.expected_signed_swept_volume_m3),
+            "expected_normal_velocity_m_s": (
+                front_decision.expected_normal_velocity_m_s),
+            "site_count_per_interface_area_m2": (
+                front_decision.site_count_per_interface_area_m2),
+            "event_count_per_interface_area": (
+                front_decision.event_count_per_interface_area),
+        } if front_decision is not None else None),
         "sweep": ({
             "positive_m3": front_decision.positive_swept_volume_m3,
             "negative_m3": front_decision.negative_swept_volume_m3,

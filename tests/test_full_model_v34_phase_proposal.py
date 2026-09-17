@@ -1,4 +1,5 @@
 import numpy as np
+from pathlib import Path
 
 from full_model.production.phase_proposal import (
     adaptive_phase_proposal, preserve_existing_pair_components,
@@ -74,6 +75,22 @@ def test_label_exchange_and_signed_perturbation_symmetry():
     assert plus_diag.energy_change_J_m == minus_diag.energy_change_J_m
 
 
+def test_inactive_topology_switch_is_bitwise_numerically_identical():
+    eta, dx = _fixture(delta=0.0)
+    force, energy = _operators(dx)
+    kwargs = dict(
+        dt_s=2e-8, spacing_m=dx, mobility=3e-3,
+        kappa_J_m=5e-7, force=force, energy=energy)
+    disabled, disabled_diag = adaptive_phase_proposal(eta, **kwargs)
+    enabled, enabled_diag = adaptive_phase_proposal(
+        eta, admissibility_projector=lambda before, candidate: (candidate, 0),
+        **kwargs)
+    np.testing.assert_array_equal(enabled, disabled)
+    assert enabled_diag.to_dict() == disabled_diag.to_dict()
+    assert enabled_diag.topology_projection_activation_count == 0
+    assert enabled_diag.topology_projected_pixel_updates == 0
+
+
 def test_pair_component_projection_removes_birth_but_allows_attached_advance():
     before = np.zeros((12, 12, 2), dtype=float)
     before[:, :, 0] = 1.0
@@ -102,3 +119,12 @@ def test_pair_component_projection_blocks_bridge_that_splits_opposite_phase():
     assert reverted >= 18
     np.testing.assert_array_equal(repaired[3:, 0, :], before[3:, 0, :])
     np.testing.assert_array_equal(repaired[3:, 6, :], before[3:, 6, :])
+
+
+def test_production_driver_keeps_integrator_and_topology_switches_independent():
+    source = (Path(__file__).resolve().parents[1]/"full_model"/"production"
+              /"drx_full_v34_recovery.py").read_text()
+    assert "ac_phase_proposal_mode='adaptive_simplex_imex'" in source
+    assert "ac_topology_active_set_enabled=True" in source
+    assert "if _topology_active_set_enabled else None" in source
+    assert "admissibility_projector=_topology_projector" in source

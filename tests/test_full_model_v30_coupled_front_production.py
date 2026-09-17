@@ -105,6 +105,15 @@ def test_both_geometric_directions_require_matching_thermodynamic_sign(n, shift)
     assert decision.rms_phase_change > 0.0
     assert decision.interface_area_m2 > 0.0
     assert decision.cell_volume_m3 == 2e-9*2e-9*5e-10
+    assert decision.kinetic_event_volume_m3 == decision.cell_volume_m3
+    assert decision.kinetic_event_length_m == 2e-9
+    np.testing.assert_allclose(
+        decision.expected_normal_velocity_m_s,
+        decision.net_velocity_a_to_b_m_s, rtol=2e-15)
+    np.testing.assert_allclose(
+        decision.expected_signed_swept_volume_m3,
+        decision.expected_signed_event_count
+        *decision.kinetic_event_volume_m3, rtol=2e-15)
     assert decision.component_motion
     assert all(np.isfinite(item["normal_displacement_m"])
                for item in decision.component_motion)

@@ -26,6 +26,7 @@ try:
         TopologySnapshot, diagnostic_ray_crossing_count,
         initialize_front_topology, match_front_topology,
         snapshot_from_dict, snapshot_to_dict)
+    from .front_event_measure import physical_front_event_measure
 except ImportError:  # pragma: no cover - direct production-script execution
     from arrhenius_kinetics import ActivatedProcess
     from coupled_front_event import FrontEnergyTerms, propose_bidirectional_front_event
@@ -37,6 +38,7 @@ except ImportError:  # pragma: no cover - direct production-script execution
         TopologySnapshot, diagnostic_ray_crossing_count,
         initialize_front_topology, match_front_topology,
         snapshot_from_dict, snapshot_to_dict)
+    from front_event_measure import physical_front_event_measure
 
 
 SCHEMA = "full-v34-coupled-front-production/v1"
@@ -110,6 +112,16 @@ class CoupledFrontDecision:
     kinetic_free_energy_a_to_b_J: float = 0.0
     kinetic_free_energy_b_to_a_J: float = 0.0
     microscopic_reverse_pair: bool = False
+    kinetic_event_volume_m3: float = 0.0
+    kinetic_event_length_m: float = 0.0
+    physical_site_count: float = 0.0
+    expected_events_a_to_b: float = 0.0
+    expected_events_b_to_a: float = 0.0
+    expected_signed_event_count: float = 0.0
+    expected_signed_swept_volume_m3: float = 0.0
+    expected_normal_velocity_m_s: float = 0.0
+    site_count_per_interface_area_m2: float = 0.0
+    event_count_per_interface_area: float = 0.0
 
 
 def initialize_coupled_front_runtime(state: SparseFrontState, phi,
@@ -501,6 +513,30 @@ def accept_coupled_front_candidate(
     interface_length = (sum(item.interface_length_cells
                             for item in runtime.topology.components)
                         *float(spacing_m))
+    _event_measure = physical_front_event_measure(
+        interface_length_m=interface_length,
+        represented_thickness_m=float(represented_thickness_m),
+        burgers_m=activation_length,
+        rate_a_to_b_per_site_s=event.rate_a_to_b_s,
+        rate_b_to_a_per_site_s=event.rate_b_to_a_s,
+        dt_s=float(dt_s), event_volume_m3=activation_volume,
+        event_length_m=activation_length)
+    _site_diagnostics = dict(
+        kinetic_event_volume_m3=_event_measure.event_volume_m3,
+        kinetic_event_length_m=_event_measure.event_length_m,
+        physical_site_count=_event_measure.physical_site_count,
+        expected_events_a_to_b=_event_measure.expected_events_a_to_b,
+        expected_events_b_to_a=_event_measure.expected_events_b_to_a,
+        expected_signed_event_count=(
+            _event_measure.expected_signed_event_count),
+        expected_signed_swept_volume_m3=(
+            _event_measure.expected_signed_swept_volume_m3),
+        expected_normal_velocity_m_s=(
+            _event_measure.expected_normal_velocity_m_s),
+        site_count_per_interface_area_m2=(
+            _event_measure.site_count_per_interface_area_m2),
+        event_count_per_interface_area=(
+            _event_measure.event_count_per_interface_area))
     allowed = velocity*float(dt_s)*interface_length*float(represented_thickness_m)
     tolerance = 8192.0*np.finfo(float).eps*max(event_volume, abs(proposed), 1e-300)
     if topology.event is not None:
@@ -519,7 +555,8 @@ def accept_coupled_front_candidate(
             maximum_component_distance_cells=(
                 topology.maximum_component_distance_cells),
             filtered_subcell_components_after=(
-                topology.snapshot.filtered_subcell_component_count))
+                topology.snapshot.filtered_subcell_component_count),
+            **_site_diagnostics)
     if abs(proposed) <= tolerance:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          stationary_trials=runtime.ledger.stationary_trials+1)
@@ -535,7 +572,8 @@ def accept_coupled_front_candidate(
             maximum_component_distance_cells=(
                 topology.maximum_component_distance_cells),
             filtered_subcell_components_after=(
-                topology.snapshot.filtered_subcell_component_count))
+                topology.snapshot.filtered_subcell_component_count),
+            **_site_diagnostics)
     if abs(velocity) <= 0.0 or proposed*velocity <= 0.0:
         ledger = replace(runtime.ledger, attempts=runtime.ledger.attempts+1,
                          rejected_direction=runtime.ledger.rejected_direction+1)
@@ -549,7 +587,8 @@ def accept_coupled_front_candidate(
             maximum_component_distance_cells=(
                 topology.maximum_component_distance_cells),
             filtered_subcell_components_after=(
-                topology.snapshot.filtered_subcell_component_count))
+                topology.snapshot.filtered_subcell_component_count),
+            **_site_diagnostics)
     fraction = min(1.0, abs(allowed)/abs(proposed))
     accepted_eta = before+fraction*(trial-before)
     phi_accept = accepted_eta[:, :, b]-accepted_eta[:, :, a]
@@ -575,7 +614,8 @@ def accept_coupled_front_candidate(
             maximum_component_distance_cells=(
                 accepted_topology.maximum_component_distance_cells),
             filtered_subcell_components_after=(
-                accepted_topology.snapshot.filtered_subcell_component_count))
+                accepted_topology.snapshot.filtered_subcell_component_count),
+            **_site_diagnostics)
     signed_sweep = (accepted_topology.receiver_fraction_after
                     -accepted_topology.receiver_fraction_before)
     if accepted_topology.signed_receiver_area_cells2 > 0.0:
@@ -675,4 +715,5 @@ def accept_coupled_front_candidate(
         component_motion=component_motion,
         kinetic_free_energy_a_to_b_J=event.kinetic_free_energy_a_to_b_J,
         kinetic_free_energy_b_to_a_J=event.kinetic_free_energy_b_to_a_J,
-        microscopic_reverse_pair=event.microscopic_reverse_pair)
+        microscopic_reverse_pair=event.microscopic_reverse_pair,
+        **_site_diagnostics)

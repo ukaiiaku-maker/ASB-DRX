@@ -41,6 +41,8 @@ def main():
     parser.add_argument("--steps", type=int, default=1)
     parser.add_argument("--grid", type=int)
     parser.add_argument("--legacy", action="store_true")
+    parser.add_argument(
+        "--topology-active-set", choices=("on", "off"), default="on")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     parameters = json.loads(args.parameters.read_text())
@@ -52,6 +54,7 @@ def main():
         save_main_panels=False, save_signed_panels=False,
         write_field_npz=False, diagnostic_write_front_terminal_trial=True,
         diagnostic_write_phase_proposal=True,
+        ac_topology_active_set_enabled=(args.topology_active_set == "on"),
         ac_phase_proposal_mode=(
             "legacy_sequential_euler" if args.legacy
             else "adaptive_simplex_imex"))

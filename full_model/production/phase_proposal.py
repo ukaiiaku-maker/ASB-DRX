@@ -38,6 +38,7 @@ class PhaseProposalDiagnostics:
     energy_change_J_m: float
     diffusion_cfl_limit_s: float
     topology_projected_pixel_updates: int = 0
+    topology_projection_activation_count: int = 0
 
     def to_dict(self):
         return asdict(self)
@@ -232,6 +233,7 @@ def adaptive_phase_proposal(
     max_error = 0.0
     max_residual = 0.0
     projected_pixels = 0
+    projection_activations = 0
     energy_before = float(energy(value))
     current_energy = energy_before
 
@@ -270,6 +272,7 @@ def adaptive_phase_proposal(
         if admissibility_projector is not None:
             euler, projected = admissibility_projector(value, euler)
             projected_pixels += int(projected)
+            projection_activations += int(projected > 0)
         if implicit_diffusion:
             half = _implicit_diffuse(value+0.5*h*first_rate, 0.5*h)
             if active_mask is not None:
@@ -278,6 +281,7 @@ def adaptive_phase_proposal(
             if admissibility_projector is not None:
                 half, projected = admissibility_projector(value, half)
                 projected_pixels += int(projected)
+                projection_activations += int(projected > 0)
             half_rate = _constrained_rate(
                 np.asarray(local_force(half), dtype=float), mobility, active_mask)
             candidate = _implicit_diffuse(half+0.5*h*half_rate, 0.5*h)
@@ -291,6 +295,7 @@ def adaptive_phase_proposal(
         if admissibility_projector is not None:
             candidate, projected = admissibility_projector(value, candidate)
             projected_pixels += int(projected)
+            projection_activations += int(projected > 0)
         error = float(np.max(np.abs(candidate-euler)))
         scale = absolute_tolerance+relative_tolerance*max(
             float(np.max(np.abs(value))), float(np.max(np.abs(candidate))))
@@ -331,6 +336,8 @@ def adaptive_phase_proposal(
         energy_change_J_m=current_energy-energy_before,
         diffusion_cfl_limit_s=float(diffusion_limit))
     diagnostics.topology_projected_pixel_updates = int(projected_pixels)
+    diagnostics.topology_projection_activation_count = int(
+        projection_activations)
     return value, diagnostics
 
 

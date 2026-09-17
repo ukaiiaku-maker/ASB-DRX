@@ -55,6 +55,12 @@ def test_response_family_is_same_state_and_reports_finite_reciprocal_metrics():
         context["wall_parameters"].burgers_m**3)
     assert cases["combined"]["kinetic_event_length_m"] == (
         context["wall_parameters"].burgers_m)
+    site_measure = cases["combined"]["physical_site_event_measure"]
+    assert site_measure["physical_site_count"] > 0.0
+    assert site_measure["site_count_per_interface_area_m2"] == (
+        1.0/context["wall_parameters"].burgers_m**2)
+    assert site_measure["expected_normal_velocity_m_s"] == (
+        cases["combined"]["front_decision"]["net_velocity_a_to_b_m_s"])
     assert cases["combined"]["maximum_abs_beta_p"] > 0.0
     assert cases["combined"]["sweep"]["positive_m3"] > 0.0
     assert cases["combined"]["sweep"]["negative_m3"] == 0.0

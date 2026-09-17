@@ -634,6 +634,10 @@ P = dict(
     # embedded Euler/Heun stepping with error, energy, and spectral-CFL checks.
     # The historical sequential clipped Euler proposal remains reproduction-only.
     ac_phase_proposal_mode='adaptive_simplex_imex',
+    # Independent scientific control.  This is valid only for the declared
+    # existing-boundary/no-nucleation branch; disabling it leaves the IMEX
+    # discretization unchanged and exposes unconstrained phase topology.
+    ac_topology_active_set_enabled=True,
     ac_proposal_absolute_tolerance=2.0e-6,
     ac_proposal_relative_tolerance=2.0e-4,
     ac_proposal_max_abs_substep=5.0e-3,
@@ -8310,16 +8314,20 @@ for n in range(_restart_step_offset, _restart_end_step):
                 stored_energy_density=_adaptive_stored_energy,
                 extra_energy_density=_adaptive_extra_energy)
 
+        _topology_active_set_enabled = bool(P.get(
+            'ac_topology_active_set_enabled', True))
+        _topology_projector = (
+            (lambda _before, _candidate: preserve_existing_pair_components(
+                _before, _candidate,
+                parent_label=int(sparse_front_state.parent_label),
+                child_label=int(sparse_front_state.child_label)))
+            if _topology_active_set_enabled else None)
         eta[:, :, :Ng], _ac_integrator_diag = adaptive_phase_proposal(
             eta[:, :, :Ng], dt_s=float(P['dt']), spacing_m=dx,
             mobility=L_ac_eff, kappa_J_m=float(P['kappa_eta']),
             force=_adaptive_ac_force, energy=_adaptive_ac_energy,
             local_force=_adaptive_ac_local_force,
-            admissibility_projector=lambda _before, _candidate: (
-                preserve_existing_pair_components(
-                    _before, _candidate,
-                    parent_label=int(sparse_front_state.parent_label),
-                    child_label=int(sparse_front_state.child_label))),
+            admissibility_projector=_topology_projector,
             active_mask=_adaptive_mask,
             absolute_tolerance=float(P.get(
                 'ac_proposal_absolute_tolerance', 2.0e-6)),
@@ -8350,6 +8358,21 @@ for n in range(_restart_step_offset, _restart_end_step):
             parent_label=_pair_parent, child_label=_pair_child))
         ac_phase_proposal_diagnostics.update(
             mode='adaptive_simplex_imex', step=int(n),
+            topology_active_set_enabled=_topology_active_set_enabled,
+            topology_active_set_activated=bool(
+                _ac_integrator_diag.topology_projection_activation_count),
+            phase_child_support_signed_volume_change_m3=float(
+                np.sum(eta[:, :, _pair_child]
+                       -eta_before_ac[:, :, _pair_child],
+                       dtype=np.longdouble)*dx*dy*max(
+                           float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                           1e-30)),
+            phase_child_support_absolute_volume_change_m3=float(
+                np.sum(np.abs(eta[:, :, _pair_child]
+                              -eta_before_ac[:, :, _pair_child]),
+                       dtype=np.longdouble)*dx*dy*max(
+                           float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'],
+                           1e-30)),
             physical_parameters_changed=False)
         sibm_experiment_state['phase_proposal'] = (
             ac_phase_proposal_diagnostics.copy())
