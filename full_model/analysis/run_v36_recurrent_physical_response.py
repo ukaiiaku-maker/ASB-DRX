@@ -36,7 +36,8 @@ def _utc_now():
 
 
 def _source_commit():
-    frozen = os.environ.get("V36_SOURCE_SHA", "").strip()
+    frozen = (os.environ.get("V37_FRONT_SOURCE_SHA", "").strip()
+              or os.environ.get("V36_SOURCE_SHA", "").strip())
     if frozen:
         return frozen
     return subprocess.check_output(
