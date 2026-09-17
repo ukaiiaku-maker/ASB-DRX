@@ -1,6 +1,8 @@
 import json
 
-from full_model.analysis.manage_v37_hpc import ACTIVE_MARKERS, atomic_json, read_record
+from full_model.analysis.manage_v37_hpc import (
+    ACTIVE_MARKERS, atomic_json, parse_submission, read_record,
+)
 
 
 def test_atomic_manager_state_and_missing_record(tmp_path):
@@ -15,3 +17,10 @@ def test_scheduler_active_markers_cover_array_queue_states():
     assert any(marker in "1_0|RUNNING|node|" for marker in ACTIVE_MARKERS)
     assert any(marker in "1_[2-5]|PENDING|reason|" for marker in ACTIVE_MARKERS)
     assert not any(marker in "1_0|COMPLETED|node|" for marker in ACTIVE_MARKERS)
+
+
+def test_parse_followup_submission_identity():
+    run_id, job_id = parse_submission(
+        "Run ID: 20260917T000000Z-abcd123-123456\nJob ID: 98765\n")
+    assert run_id == "20260917T000000Z-abcd123-123456"
+    assert job_id == "98765"

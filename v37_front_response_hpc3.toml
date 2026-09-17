@@ -45,7 +45,7 @@ nodes = 1
 ntasks = 1
 cpus_per_task = 1
 memory = "16G"
-time = "08:00:00"
+time = "04:00:00"
 
 [sweep]
 table = "full_model/hpc3/v37_front_response_cases.json"
