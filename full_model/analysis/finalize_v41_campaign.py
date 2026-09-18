@@ -170,7 +170,8 @@ def main() -> None:
             {
                 "id": "one_grain_exact_topology_disabling_pair",
                 "status": "COMPLETED",
-                "source_commit": args.source_sha,
+                "source_commit": one["post_endpoint_diagnostic"]["cases"][0][
+                    "source_sha"],
                 "final_strain": 0.0501,
                 "classification": one["post_endpoint_diagnostic"][
                     "classification"],

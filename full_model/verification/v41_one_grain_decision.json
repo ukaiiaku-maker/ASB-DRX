@@ -36,7 +36,7 @@
   },
   "frank_bilby_classification": "NO_QUALIFIED_BOUNDARY_FOR_RELATIVE_CLOSURE",
   "frank_bilby_relative_closure_applicable": false,
-  "generated_utc": "2026-09-18T20:19:26.090401+00:00",
+  "generated_utc": "2026-09-18T20:25:29.673219+00:00",
   "hard_invariants_passed": true,
   "nye_rms_m1": 189351.8424206741,
   "ordered_line_m2_cells": 166235798140050.88,
@@ -55,6 +55,7 @@
         "ordered_line_m2_cells": 59954199617346.33,
         "orientation_span_deg": 9.754442682804132,
         "persistent_last_three_records": true,
+        "source_sha": "d71f642161bc8b2196afd33e4d4b0bcf87319330",
         "topology_route_enabled": false
       },
       {
@@ -66,6 +67,7 @@
         "ordered_line_m2_cells": 1.89651379199587e+17,
         "orientation_span_deg": 9.753502845045643,
         "persistent_last_three_records": true,
+        "source_sha": "d71f642161bc8b2196afd33e4d4b0bcf87319330",
         "topology_route_enabled": true
       }
     ],

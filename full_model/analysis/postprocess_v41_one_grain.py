@@ -46,6 +46,7 @@ def main() -> None:
         for row in raw_diagnostic["cases"]:
             compact_cases.append({
                 "condition": row["summary"]["condition"],
+                "source_sha": row["summary"]["source_sha"],
                 "topology_route_enabled": row["summary"][
                     "topology_route_enabled"],
                 "final_strain": row["summary"]["final_strain"],
