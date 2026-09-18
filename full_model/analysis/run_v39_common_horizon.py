@@ -8,6 +8,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import time
@@ -32,7 +33,16 @@ SCHEMA = "asb-drx/v39/transactional-common-horizon/v1"
 
 
 def source_sha():
-    return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True,
+            stderr=subprocess.DEVNULL).strip()
+    except subprocess.CalledProcessError:
+        staged = os.environ.get("V40_SOURCE_SHA")
+        if not staged:
+            raise RuntimeError(
+                "non-Git staged source requires V40_SOURCE_SHA") from None
+        return staged
 
 
 def atomic_npz(path, payload):
