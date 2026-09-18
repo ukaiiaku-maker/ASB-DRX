@@ -2,7 +2,7 @@
 
 ## Direction–energy consistency
 
-For each signed geometric direction (d\in\{A\to B,B\to A\}), production first
+For each signed geometric direction \(d\in\{A\to B,B\to A\}\), production first
 constructs the complete common-state endpoint without publication.  Its
 available change is
 
@@ -10,7 +10,7 @@ available change is
 \Delta\mathcal A_d=F(q_d)-F(q_0)-W_d+E_{\mathrm{sink},d},
 \]
 
-where the retained zero-applied-work holds have (W_d=0).  The energy contains
+where the retained zero-applied-work holds have \(W_d=0\).  The energy contains
 the declared defect, signed-junction, boundary-excess, recoverable-elastic,
 phase-local, and phase-gradient terms.  Thermal energy, generated heat, and
 exports remain in the separate first-law ledger.
@@ -45,7 +45,7 @@ the selected deterministic law.
 
 ## Declared support-gradient Nye term
 
-For material owners (a) with support weights (w_a), production reconstructs
+For material owners \(a\) with support weights \(w_a\), production reconstructs
 
 \[
 \bar\beta^p=\sum_a w_a\beta_a^p,
