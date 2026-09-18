@@ -126,10 +126,13 @@ def main() -> None:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
-    figure, axes = plt.subplots(len(diagnosed), 4,
-                                figsize=(13, 3.2*len(diagnosed)), squeeze=False)
+    figure, axes = plt.subplots(
+        len(diagnosed), 4, figsize=(14, 3.4*len(diagnosed)), squeeze=False,
+        constrained_layout=True)
     for row_index, row in enumerate(diagnosed):
         condition = row["summary"]["condition"]
+        topology = ("on" if row["summary"]["topology_route_enabled"]
+                    else "off")
         panels = (
             (row["fields"]["wall_total_m2"], "wall total", "viridis"),
             (row["fields"]["wall_ordered_m2"], "wall ordered", "viridis"),
@@ -138,10 +141,10 @@ def main() -> None:
         )
         for axis, (field, title, cmap) in zip(axes[row_index], panels):
             image = axis.imshow(field.T, origin="lower", cmap=cmap)
-            axis.set_title(f"{condition}: {title}")
+            axis.set_title(f"{condition}, topology {topology}: {title}",
+                           fontsize=9)
             axis.set_xticks([]); axis.set_yticks([])
             figure.colorbar(image, ax=axis, shrink=.72)
-    figure.tight_layout()
     args.figure.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(args.figure, dpi=180); plt.close(figure)
 

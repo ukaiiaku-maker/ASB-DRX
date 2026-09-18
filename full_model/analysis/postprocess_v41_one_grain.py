@@ -65,9 +65,14 @@ def main() -> None:
             "sha256": sha256(args.diagnostic_decision),
             "exact_disabling_controls": True,
             "cases": compact_cases,
+            "all_hard_invariants_passed": all(
+                row["hard_invariants_passed"] for row in compact_cases),
             "scientific_gate_passed": raw_diagnostic[
                 "scientific_gate_passed"],
             "classification": (
+                "TOPOLOGY_ROUTE_HARD_INVALID;VALID_CONTROL_NO_QUALIFIED_LAGB"
+                if not all(row["hard_invariants_passed"]
+                           for row in compact_cases) else
                 "COMPACT_CONTROL_HAS_LAGB_CANDIDATE_REQUIRING_RELEASE"
                 if raw_diagnostic["scientific_gate_passed"] else
                 "COMPACT_TOPOLOGY_AND_FORCING_CONTROLS_NO_QUALIFIED_LAGB"),

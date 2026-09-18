@@ -1,7 +1,7 @@
 import numpy as np
 
 from full_model.analysis.postprocess_v37_mura_organization import (
-    checkpoint_scoped_history,
+    checkpoint_scoped_history, history_hard_invariants_pass,
 )
 from full_model.analysis.run_v30_mura_tier_b1_case import compact_metrics
 from full_model.production.v24_mechanical_wall import accepted_v24_mechanical_step
@@ -42,3 +42,18 @@ def test_compact_postprocessing_excludes_history_newer_than_checkpoint():
     scoped = checkpoint_scoped_history(
         history, {"step": 125, "applied_strain": 0.045})
     assert [row["step"] for row in scoped] == [100, 125]
+
+
+def test_organization_hard_gate_includes_authoritative_nye_checks():
+    base = {
+        "accepted_step_hard_invariant_passed": True,
+        "post_step_projection_used": False,
+        "minimum_heat_increment_J_m3": 0.0,
+        "authoritative_source_offset_relative_rms": 1e-12,
+        "normalized_line_continuity_residual": 1e-12,
+    }
+    assert history_hard_invariants_pass([base])
+    assert not history_hard_invariants_pass([
+        {**base, "authoritative_source_offset_relative_rms": 0.69}])
+    assert not history_hard_invariants_pass([
+        {**base, "normalized_line_continuity_residual": 0.66}])

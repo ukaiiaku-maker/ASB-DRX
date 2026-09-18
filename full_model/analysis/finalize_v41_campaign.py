@@ -41,6 +41,7 @@ def main() -> None:
         "gradient_fields": root/"v41_gradient_field_audit.json",
         "ordering": root/"v41_ordering_legacy_current_validity.json",
         "one_grain": root/"v41_one_grain_decision.json",
+        "one_grain_topology": root/"v41_one_grain_topology_pair.json",
         "thermal": root/"v41_thermal_response_decision.json",
     }
     data = {key: load(path) for key, path in paths.items()}
@@ -99,6 +100,8 @@ def main() -> None:
                 "classification": one["classification"],
                 "job_id": args.one_grain_job_id,
                 "final_strain": one["final_strain"],
+                "post_endpoint_diagnostic": one[
+                    "post_endpoint_diagnostic"]["classification"],
                 "artifact": str(paths["one_grain"]),
             },
             "matched_thermal_response": {
@@ -163,6 +166,17 @@ def main() -> None:
                 "status": "COMPLETED",
                 "source_commit": args.thermal_source_sha,
                 "classification": thermal["classification"],
+            },
+            {
+                "id": "one_grain_exact_topology_disabling_pair",
+                "status": "COMPLETED",
+                "source_commit": args.source_sha,
+                "final_strain": 0.0501,
+                "classification": one["post_endpoint_diagnostic"][
+                    "classification"],
+                "all_hard_invariants_passed": one[
+                    "post_endpoint_diagnostic"][
+                        "all_hard_invariants_passed"],
             },
         ],
         "hpc3_runs": [{

@@ -1,0 +1,91 @@
+{
+  "accepted_intervals": 22595,
+  "attempt_history": {
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-mura-chain/v40-mura-resume2-20260918-a23f8c7/attempts.log",
+    "records": [
+      "2026-09-18T14:42:03Z attempt=1 job=56149258 checkpoint=checkpoint_step_000012022_strain_0.04743289.npz strain=0.04743289",
+      "2026-09-18T14:42:07Z submitted_attempt=2 job=56151298 seed_sha256=1465e77e39d17d704fa10d5c22a6998af772358366846b4f37abca92a38d1ed6 remote_root=/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v40-mura-resume2-20260918-a23f8c7-attempt2",
+      "2026-09-18T19:39:07Z attempt=2 job=56151298 checkpoint=checkpoint_step_000022595_strain_0.05000000.npz strain=0.05000000"
+    ],
+    "sha256": "559b0e0041c6edecdf5a365c96eddd63f98b4e246e9e53b1f8535ba210024e44"
+  },
+  "candidate_wall_present": false,
+  "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_RETAINED_ENDPOINT",
+  "drx_claimed": false,
+  "final_strain": 0.05,
+  "frank_bilby": {
+    "absolute_residual": 0.697721621913648,
+    "candidate_wall_present": false,
+    "integrated_nye_closure_vector": [
+      -0.2967050908135151,
+      -0.2177591566551024,
+      0.5930052376171395
+    ],
+    "left_orientation_rad": 0.0032761242093890235,
+    "method": "maximum-orientation-gradient axial section",
+    "normal_axis": 0,
+    "orientation_closure_vector": [
+      -0.0004924055575567174,
+      -1.7344213105729978e-06,
+      0.0
+    ],
+    "relative_residual": 1416.9565776927282,
+    "right_orientation_rad": 0.0037685328265244077,
+    "section_index": 35,
+    "transverse_index": 31
+  },
+  "frank_bilby_classification": "NO_QUALIFIED_BOUNDARY_FOR_RELATIVE_CLOSURE",
+  "frank_bilby_relative_closure_applicable": false,
+  "generated_utc": "2026-09-18T20:19:26.090401+00:00",
+  "hard_invariants_passed": true,
+  "nye_rms_m1": 189351.8424206741,
+  "ordered_line_m2_cells": 166235798140050.88,
+  "orientation_span_deg": 9.779443185337003,
+  "persistent_last_three_records": true,
+  "phase_or_grain_allocation_present": false,
+  "post_endpoint_diagnostic": {
+    "all_hard_invariants_passed": false,
+    "cases": [
+      {
+        "candidate_wall_present": false,
+        "condition": "mechanical_heterogeneity",
+        "final_strain": 0.0501,
+        "hard_invariants_passed": true,
+        "nye_rms_m1": 190110.59413461728,
+        "ordered_line_m2_cells": 59954199617346.33,
+        "orientation_span_deg": 9.754442682804132,
+        "persistent_last_three_records": true,
+        "topology_route_enabled": false
+      },
+      {
+        "candidate_wall_present": false,
+        "condition": "mechanical_heterogeneity",
+        "final_strain": 0.0501,
+        "hard_invariants_passed": false,
+        "nye_rms_m1": 261887.52657606994,
+        "ordered_line_m2_cells": 1.89651379199587e+17,
+        "orientation_span_deg": 9.753502845045643,
+        "persistent_last_three_records": true,
+        "topology_route_enabled": true
+      }
+    ],
+    "classification": "TOPOLOGY_ROUTE_HARD_INVALID;VALID_CONTROL_NO_QUALIFIED_LAGB",
+    "exact_disabling_controls": true,
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v41_one_grain_topology_pair.json",
+    "scientific_gate_passed": false,
+    "sha256": "697faa289a1aa15e78a2a292b70e2d426e8b9de46d148709ecf8d50c6eae5fb0"
+  },
+  "postprocessed_decision": {
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-mura-chain/v40-mura-resume2-20260918-a23f8c7/final/postprocessed/v40_one_grain_current_5pct_decision.json",
+    "sha256": "6a7b6f205268e9cc81f3a08fcc7e6b1d1ea95b9a539d5945e9ec6eab6e07734c"
+  },
+  "schema": "asb-drx/v41/one-grain-decision/v1",
+  "scientific_gate_passed": false,
+  "solver_completed": true,
+  "verified_archive": {
+    "checksum_verified": true,
+    "expected_sha256": "d44e350f3f433b82e4d5ab2ddced828919b8c89eeb092b3c2cca409f41f1884b",
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-mura-chain/v40-mura-resume2-20260918-a23f8c7/final/checkpoints/latest.tar.gz",
+    "sha256": "d44e350f3f433b82e4d5ab2ddced828919b8c89eeb092b3c2cca409f41f1884b"
+  }
+}

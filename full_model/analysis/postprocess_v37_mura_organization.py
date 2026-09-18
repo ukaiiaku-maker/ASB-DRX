@@ -46,6 +46,19 @@ def checkpoint_scoped_history(history, metadata):
     return scoped
 
 
+def history_hard_invariants_pass(history, relative_tolerance=0.05):
+    """Apply the declared Nye/source checks as well as per-step acceptance."""
+    return all(
+        row["accepted_step_hard_invariant_passed"]
+        and not row["post_step_projection_used"]
+        and row["minimum_heat_increment_J_m3"] >= 0.0
+        and row["authoritative_source_offset_relative_rms"]
+        <= relative_tolerance
+        and row["normalized_line_continuity_residual"]
+        <= relative_tolerance
+        for row in history)
+
+
 def summarize(case_dir):
     case_dir = Path(case_dir)
     config = json.loads((case_dir/"case_config.json").read_text())
@@ -69,10 +82,7 @@ def summarize(case_dir):
         name: float(np.sum(getattr(state.density, name))*area)
         for name in SIGNED_RESERVOIRS}
     inventories["junction_m2"] = float(np.sum(state.density.junction_m2)*area)
-    hard = all(row["accepted_step_hard_invariant_passed"]
-               and not row["post_step_projection_used"]
-               and row["minimum_heat_increment_J_m3"] >= 0.0
-               for row in history)
+    hard = history_hard_invariants_pass(history)
     final = history[-1]
     retained_step = int(metadata["step"])
     retained_strain = float(metadata["applied_strain"])

@@ -112,6 +112,16 @@ candidate exists; otherwise the classification is
 `NO_QUALIFIED_BOUNDARY_FOR_RELATIVE_CLOSURE`.  No grain or phase label is
 allocated by this branch.
 
+The bounded retry reaches exactly 5.000% strain after 22,595 accepted
+intervals.  The retained state has a 9.779 degree global orientation span but
+only 0.113 degree between its fifth and ninety-fifth percentiles.  Its selected
+wall support has a 0.045 micrometre participation-equivalent width, below the
+0.156 micrometre cell size.  The independent section has only 0.0282 degree
+between plateaus, reports no candidate wall, and therefore does not admit a
+relative Frank--Bilby closure claim.  The large global outlier is not promoted
+to a LAGB.  Hard balances pass, normalized line continuity is 9.02e-15, and no
+phase or grain state is present.
+
 An interim compact audit exposed a provenance defect in the analysis path,
 not in the retained state: the atomically named checkpoint was newer than the
 copied `status.json`, and the copied history could contain records written
@@ -119,6 +129,16 @@ after that checkpoint.  V41 now treats checkpoint metadata as authoritative,
 truncates history at the retained step and strain, and labels a nonmatching
 status explicitly.  A regression test prevents later-than-checkpoint history
 from entering persistence or invariant decisions.
+
+The exact disabling comparison then advances the retained 5% state to 5.01%
+with the explicit topology route off and on.  The topology-off control remains
+hard-valid and has no qualified boundary.  Enabling the route drives the local
+ordered fraction to about 0.9999, but it also produces an authoritative
+source-offset residual of 0.6887 and normalized line-continuity residual of
+0.6595, both far above the declared 5% tolerance.  It remains without an
+independent boundary candidate and is quarantined as
+`TOPOLOGY_ROUTE_HARD_INVALID`, rather than being used as an apparent ordering
+success or retuned.
 
 ## Matched thermal response
 
