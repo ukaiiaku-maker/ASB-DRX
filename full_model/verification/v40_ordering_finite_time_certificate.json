@@ -2,7 +2,7 @@
   "claim_boundary": "fixed-field ordering-channel certificate; coupled coefficient freezing remains controlled by common macro refinement",
   "endpoint_diagnostic_interpretation": "H times endpoint rate divided by a local inventory floor is a stationary endpoint drift diagnostic, not by itself a bound on finite-time kinetic error",
   "finite_time_fallback": "bounded finite-time scipy BDF integration",
-  "generated_utc": "2026-09-18T05:32:33.932672+00:00",
+  "generated_utc": "2026-09-18T06:17:57.505964+00:00",
   "high_exposure_overlap": {
     "attempt_exposure": 100.0,
     "comparison": {
@@ -33,7 +33,7 @@
   },
   "rate_time_rescaling_passed": true,
   "schema": "asb-drx/v40/ordering-finite-time-certificate/v1",
-  "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+  "source_sha": "0e3ce1ae2192f3f91d802d6f72ba829ff6acfdd4",
   "switch_exposure": 50.0,
   "switch_overlap_passed": true,
   "switch_variants": {
