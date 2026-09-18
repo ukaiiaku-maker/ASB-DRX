@@ -1,0 +1,1187 @@
+{
+  "cases": {
+    "n128_H6p25e-5_1": {
+      "grid": 128,
+      "intervals": 1,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 4.469507912136562e-25,
+        "beta_p_rms": 0.00010447645134416195,
+        "complete_energy_delta_J": -3.035903251280059e-19,
+        "contour_displacement_m": 1.4079851033696327e-10,
+        "deposited_heat_increment_J_m3_cells": 6335519194.513813,
+        "effective_stress_rms_Pa": 463759579.1977109,
+        "family_nye_rms_m1": 33.31273215893669,
+        "maximum_abs_slip": 0.0003212620813619563,
+        "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+        "orientation_range_rad": 4.7858117825391535e-05,
+        "physical_time_s": 6.25e-05,
+        "plastic_work_increment_J_m3_cells": 6365351063.305921,
+        "signed_sweep_m3": 4.469507912136562e-25,
+        "temperature_maximum_K": 1100.1327216863235,
+        "temperature_minimum_K": 1100.0831530212627,
+        "total_line_m_per_m_thickness": 6654.473237399647
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n128_H6p25e-5_1/result.json",
+      "sha256": "f138370f0896900d7e30bca7d7d6d3d025cfcd79e163afd2867077fa3f942fbe",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 46.4356784329284
+    },
+    "n16_H1e-3": {
+      "grid": 16,
+      "intervals": 1,
+      "macro_dt_s": 0.001,
+      "metrics": {
+        "absolute_sweep_m3": 0.0,
+        "beta_p_rms": 0.0014751194832768916,
+        "complete_energy_delta_J": 0.0,
+        "contour_displacement_m": 0.0,
+        "deposited_heat_increment_J_m3_cells": 1290177228.30765,
+        "effective_stress_rms_Pa": 416491286.32866824,
+        "family_nye_rms_m1": 342.81321609563867,
+        "maximum_abs_slip": 0.004652898430717222,
+        "ordered_line_m_per_m_thickness": 0.0076382735696572225,
+        "orientation_range_rad": 0.0008173680420343835,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1347974042.2867208,
+        "signed_sweep_m3": 0.0,
+        "temperature_maximum_K": 1101.7663605125501,
+        "temperature_minimum_K": 1101.0016309668947,
+        "total_line_m_per_m_thickness": 6721.364414787778
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H1e-3/result.json",
+      "sha256": "33317b8178910e4746b23619af69e00813bda7b164ec74e1080da9b001809989",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 1.7823613960063085
+    },
+    "n16_H1p25e-4": {
+      "grid": 16,
+      "intervals": 8,
+      "macro_dt_s": 0.000125,
+      "metrics": {
+        "absolute_sweep_m3": 9.630099004190463e-25,
+        "beta_p_rms": 0.0012648781157052875,
+        "complete_energy_delta_J": -7.844343545744932e-19,
+        "contour_displacement_m": 3.033675341541854e-10,
+        "deposited_heat_increment_J_m3_cells": 1111793495.3841124,
+        "effective_stress_rms_Pa": 420638817.28023994,
+        "family_nye_rms_m1": 399.33098310582477,
+        "maximum_abs_slip": 0.004066354524857413,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008586322023784449,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1119716153.9317532,
+        "signed_sweep_m3": 9.630099004190463e-25,
+        "temperature_maximum_K": 1101.565582556123,
+        "temperature_minimum_K": 1100.748821641014,
+        "total_line_m_per_m_thickness": 6722.642324958693
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H1p25e-4/result.json",
+      "sha256": "3b7bc4b48fb6b8a1f47bca84f7389d6bb5c003e66cb407c91240cd2c6fbc5f91",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 11.155385789927095
+    },
+    "n16_H2p5e-4": {
+      "grid": 16,
+      "intervals": 4,
+      "macro_dt_s": 0.00025,
+      "metrics": {
+        "absolute_sweep_m3": 7.090437346232966e-25,
+        "beta_p_rms": 0.001289287951507901,
+        "complete_energy_delta_J": -4.431847968287572e-19,
+        "contour_displacement_m": 2.2336307164292356e-10,
+        "deposited_heat_increment_J_m3_cells": 1132817153.51993,
+        "effective_stress_rms_Pa": 419997861.55855906,
+        "family_nye_rms_m1": 393.6197317703219,
+        "maximum_abs_slip": 0.004133476685515439,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.00085491621285517,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1146201588.9975035,
+        "signed_sweep_m3": 7.090437346232966e-25,
+        "temperature_maximum_K": 1101.5893532608766,
+        "temperature_minimum_K": 1100.7780844012514,
+        "total_line_m_per_m_thickness": 6722.636604613319
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H2p5e-4/result.json",
+      "sha256": "8d270208ca4a5d937b7eb2a4a8d151c135e9d0930733262f2d0201c32d9d3e5d",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 5.874925512005575
+    },
+    "n16_H3p125e-5": {
+      "grid": 16,
+      "intervals": 32,
+      "macro_dt_s": 3.125e-05,
+      "metrics": {
+        "absolute_sweep_m3": 1.0392145218902663e-24,
+        "beta_p_rms": 0.001247466451355612,
+        "complete_energy_delta_J": -8.68735498511758e-19,
+        "contour_displacement_m": 3.2737352630111717e-10,
+        "deposited_heat_increment_J_m3_cells": 1096764486.3246427,
+        "effective_stress_rms_Pa": 421111609.55091804,
+        "family_nye_rms_m1": 402.82738279813753,
+        "maximum_abs_slip": 0.0040182306303546845,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008607213124428412,
+        "physical_time_s": 0.0010000000000000007,
+        "plastic_work_increment_J_m3_cells": 1100864824.426243,
+        "signed_sweep_m3": 1.0392145218902663e-24,
+        "temperature_maximum_K": 1101.5484831970443,
+        "temperature_minimum_K": 1100.7282985310824,
+        "total_line_m_per_m_thickness": 6722.702957886173
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H3p125e-5/result.json",
+      "sha256": "10359c085c296fe80c1dc36a6e8985284101300ef8d49ceca0c2001cf8cb4969",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 45.77286914899014
+    },
+    "n16_H5e-4": {
+      "grid": 16,
+      "intervals": 2,
+      "macro_dt_s": 0.0005,
+      "metrics": {
+        "absolute_sweep_m3": 0.0,
+        "beta_p_rms": 0.0013428254294597238,
+        "complete_energy_delta_J": 0.0,
+        "contour_displacement_m": 0.0,
+        "deposited_heat_increment_J_m3_cells": 1178658874.6479661,
+        "effective_stress_rms_Pa": 418698878.6923247,
+        "family_nye_rms_m1": 378.9384691175764,
+        "maximum_abs_slip": 0.0042796647418179585,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008445981073233594,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1204392790.1289537,
+        "signed_sweep_m3": 0.0,
+        "temperature_maximum_K": 1101.6409218722938,
+        "temperature_minimum_K": 1100.8433705659545,
+        "total_line_m_per_m_thickness": 6722.589196923761
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H5e-4/result.json",
+      "sha256": "55f4e5c07bf02e5040f0673f0ff72a829b9dd679cc9f3a1d1bc3ca72cecf811a",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 3.0051093079382554
+    },
+    "n16_H6p25e-5": {
+      "grid": 16,
+      "intervals": 16,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 1.0264383475385276e-24,
+        "beta_p_rms": 0.0012531892880269832,
+        "complete_energy_delta_J": -8.504089897436341e-19,
+        "contour_displacement_m": 3.233487737961591e-10,
+        "deposited_heat_increment_J_m3_cells": 1101706988.8693938,
+        "effective_stress_rms_Pa": 420954858.34164,
+        "family_nye_rms_m1": 401.74037343741105,
+        "maximum_abs_slip": 0.004034073988533443,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008600924574751027,
+        "physical_time_s": 0.0010000000000000005,
+        "plastic_work_increment_J_m3_cells": 1107057034.2124372,
+        "signed_sweep_m3": 1.0264383475385276e-24,
+        "temperature_maximum_K": 1101.5541174862506,
+        "temperature_minimum_K": 1100.7350022836117,
+        "total_line_m_per_m_thickness": 6722.67519115634
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H6p25e-5/result.json",
+      "sha256": "a0636ff303f4cd0bcef39fc4f335338087a6d40c40f802fe69079764d012aaeb",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 22.058610536972992
+    },
+    "n64_H6p25e-5_2": {
+      "grid": 64,
+      "intervals": 2,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 8.478005953456243e-25,
+        "beta_p_rms": 0.00020461858730922997,
+        "complete_energy_delta_J": -5.36106088770553e-19,
+        "contour_displacement_m": 2.670742802878101e-10,
+        "deposited_heat_increment_J_m3_cells": 3083149140.5821166,
+        "effective_stress_rms_Pa": 460048309.4985394,
+        "family_nye_rms_m1": 66.68880221601493,
+        "maximum_abs_slip": 0.0006315967807784886,
+        "ordered_line_m_per_m_thickness": 0.00010199977098593308,
+        "orientation_range_rad": 0.00010063094178837731,
+        "physical_time_s": 0.000125,
+        "plastic_work_increment_J_m3_cells": 3097966883.479617,
+        "signed_sweep_m3": 8.478005953456243e-25,
+        "temperature_maximum_K": 1100.2592651276716,
+        "temperature_minimum_K": 1100.1554765673015,
+        "total_line_m_per_m_thickness": 6659.449946311012
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n64_H6p25e-5_2/result.json",
+      "sha256": "1e2f6406995f9461600b2558fad72eab9a9c57d4955b32d0497c07210587526c",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 22.65754071890842
+    }
+  },
+  "generated_utc": "2026-09-18T01:36:26.213735+00:00",
+  "grid_gate_passed": false,
+  "grid_reference": "n128_H6p25e-5_1",
+  "grid_refinement": [
+    {
+      "case": "n16_H6p25e-5",
+      "difference_to_n128": {
+        "absolute_sweep_m3": {
+          "absolute": 1.893821587849622e-25,
+          "normalization_floor": 1e-28,
+          "relative": 0.42372037930777867
+        },
+        "beta_p_rms": {
+          "absolute": 1.679514624287014e-08,
+          "normalization_floor": 1e-14,
+          "relative": 0.0001607553283710247
+        },
+        "complete_energy_delta_J": {
+          "absolute": 2.771732258342645e-19,
+          "normalization_floor": 1e-22,
+          "relative": 0.9129843835352696
+        },
+        "contour_displacement_m": {
+          "absolute": 5.965919820594827e-11,
+          "normalization_floor": 1e-13,
+          "relative": 0.42372037930777867
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 6236490588.2690935,
+          "normalization_floor": 1e-14,
+          "relative": 0.9843692989943946
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 35579.952737271786,
+          "normalization_floor": 1e-14,
+          "relative": 7.67206853146278e-05
+        },
+        "family_nye_rms_m1": {
+          "absolute": 18.014392501885546,
+          "normalization_floor": 1.0,
+          "relative": 0.5407659874890474
+        },
+        "maximum_abs_slip": {
+          "absolute": 2.9836650375847026e-10,
+          "normalization_floor": 1e-14,
+          "relative": 9.287323997079808e-07
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.00757633417040632,
+          "normalization_floor": 1e-12,
+          "relative": 608.5999999999997
+        },
+        "orientation_range_rad": {
+          "absolute": 3.201409055659122e-11,
+          "normalization_floor": 1e-10,
+          "relative": 6.689375180485237e-07
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 6265911976.100953,
+          "normalization_floor": 1e-14,
+          "relative": 0.9843780670985769
+        },
+        "signed_sweep_m3": {
+          "absolute": 1.893821587849622e-25,
+          "normalization_floor": 1e-28,
+          "relative": 0.42372037930777867
+        },
+        "temperature_maximum_K": {
+          "absolute": 2.7400736144045368e-05,
+          "normalization_floor": 0.001,
+          "relative": 2.490675497956694e-08
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.0010927144014658552,
+          "normalization_floor": 0.001,
+          "relative": 9.933016413030506e-07
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.43383094018281554,
+          "normalization_floor": 1e-14,
+          "relative": 6.519388157496636e-05
+        }
+      },
+      "grid": 16,
+      "intervals": 16,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 6.363329499986184e-25,
+        "beta_p_rms": 0.00010445965619791908,
+        "complete_energy_delta_J": -5.807635509622704e-19,
+        "contour_displacement_m": 2.0045770854291154e-10,
+        "deposited_heat_increment_J_m3_cells": 99028606.2447192,
+        "effective_stress_rms_Pa": 463723999.2449736,
+        "family_nye_rms_m1": 15.298339657051146,
+        "maximum_abs_slip": 0.00032126178299545253,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 4.785808581130098e-05,
+        "physical_time_s": 6.25e-05,
+        "plastic_work_increment_J_m3_cells": 99439087.20496781,
+        "signed_sweep_m3": 6.363329499986184e-25,
+        "temperature_maximum_K": 1100.1327490870597,
+        "temperature_minimum_K": 1100.0842457356641,
+        "total_line_m_per_m_thickness": 6654.039406459464
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H6p25e-5/result.json",
+      "provisional_five_percent_passed": false,
+      "sha256": "a0636ff303f4cd0bcef39fc4f335338087a6d40c40f802fe69079764d012aaeb",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 22.058610536972992
+    },
+    {
+      "case": "n64_H6p25e-5_2",
+      "difference_to_n128": {
+        "absolute_sweep_m3": {
+          "absolute": 5.347345024925048e-26,
+          "normalization_floor": 1e-28,
+          "relative": 0.11964057632395717
+        },
+        "beta_p_rms": {
+          "absolute": 9.459157418933647e-09,
+          "normalization_floor": 1e-14,
+          "relative": 9.053865533558072e-05
+        },
+        "complete_energy_delta_J": {
+          "absolute": 5.2743550845921085e-20,
+          "normalization_floor": 1e-22,
+          "relative": 0.1737326471905265
+        },
+        "contour_displacement_m": {
+          "absolute": 1.6845214922268942e-11,
+          "normalization_floor": 1e-13,
+          "relative": 0.11964057632395728
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 4751125000.810368,
+          "normalization_floor": 1e-14,
+          "relative": 0.7499188077473686
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 10882.79191762209,
+          "normalization_floor": 1e-14,
+          "relative": 2.346645202768419e-05
+        },
+        "family_nye_rms_m1": {
+          "absolute": 14.555162601862932,
+          "normalization_floor": 1.0,
+          "relative": 0.43692491304584485
+        },
+        "maximum_abs_slip": {
+          "absolute": 3.534742350165196e-11,
+          "normalization_floor": 1e-14,
+          "relative": 1.1002675246266329e-07
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 8.955098003883101e-05,
+          "normalization_floor": 1e-12,
+          "relative": 7.19354838709677
+        },
+        "orientation_range_rad": {
+          "absolute": 6.383761127679542e-12,
+          "normalization_floor": 1e-10,
+          "relative": 1.3338930609370064e-07
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 4774150044.763436,
+          "normalization_floor": 1e-14,
+          "relative": 0.7500214830702401
+        },
+        "signed_sweep_m3": {
+          "absolute": 5.347345024925048e-26,
+          "normalization_floor": 1e-28,
+          "relative": 0.11964057632395717
+        },
+        "temperature_maximum_K": {
+          "absolute": 2.3843084591135266e-05,
+          "normalization_floor": 0.001,
+          "relative": 2.167291647737531e-08
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.0010829796374309808,
+          "normalization_floor": 0.001,
+          "relative": 9.844525247538708e-07
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 1.0271744343626779,
+          "normalization_floor": 1e-14,
+          "relative": 0.0001543584890521048
+        }
+      },
+      "grid": 64,
+      "intervals": 2,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 5.004242414629067e-25,
+        "beta_p_rms": 0.00010446699218674302,
+        "complete_energy_delta_J": -3.56333875973927e-19,
+        "contour_displacement_m": 1.576437252592322e-10,
+        "deposited_heat_increment_J_m3_cells": 1584394193.703445,
+        "effective_stress_rms_Pa": 463748696.40579325,
+        "family_nye_rms_m1": 18.757569557073758,
+        "maximum_abs_slip": 0.0003212621167093798,
+        "ordered_line_m_per_m_thickness": 0.00010199977098593308,
+        "orientation_range_rad": 4.785812420915266e-05,
+        "physical_time_s": 6.25e-05,
+        "plastic_work_increment_J_m3_cells": 1591201018.5424843,
+        "signed_sweep_m3": 5.004242414629067e-25,
+        "temperature_maximum_K": 1100.132745529408,
+        "temperature_minimum_K": 1100.0842360009,
+        "total_line_m_per_m_thickness": 6653.446062965284
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n64_H6p25e-5_2/result.json",
+      "provisional_five_percent_passed": false,
+      "sha256": "1e2f6406995f9461600b2558fad72eab9a9c57d4955b32d0497c07210587526c",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 22.65754071890842
+    },
+    {
+      "case": "n128_H6p25e-5_1",
+      "difference_to_n128": {
+        "absolute_sweep_m3": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-28,
+          "relative": 0.0
+        },
+        "beta_p_rms": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "complete_energy_delta_J": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-22,
+          "relative": 0.0
+        },
+        "contour_displacement_m": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-13,
+          "relative": 0.0
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "family_nye_rms_m1": {
+          "absolute": 0.0,
+          "normalization_floor": 1.0,
+          "relative": 0.0
+        },
+        "maximum_abs_slip": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-12,
+          "relative": 0.0
+        },
+        "orientation_range_rad": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-10,
+          "relative": 0.0
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "signed_sweep_m3": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-28,
+          "relative": 0.0
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.0,
+          "normalization_floor": 0.001,
+          "relative": 0.0
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.0,
+          "normalization_floor": 0.001,
+          "relative": 0.0
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        }
+      },
+      "grid": 128,
+      "intervals": 1,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 4.469507912136562e-25,
+        "beta_p_rms": 0.00010447645134416195,
+        "complete_energy_delta_J": -3.035903251280059e-19,
+        "contour_displacement_m": 1.4079851033696327e-10,
+        "deposited_heat_increment_J_m3_cells": 6335519194.513813,
+        "effective_stress_rms_Pa": 463759579.1977109,
+        "family_nye_rms_m1": 33.31273215893669,
+        "maximum_abs_slip": 0.0003212620813619563,
+        "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+        "orientation_range_rad": 4.7858117825391535e-05,
+        "physical_time_s": 6.25e-05,
+        "plastic_work_increment_J_m3_cells": 6365351063.305921,
+        "signed_sweep_m3": 4.469507912136562e-25,
+        "temperature_maximum_K": 1100.1327216863235,
+        "temperature_minimum_K": 1100.0831530212627,
+        "total_line_m_per_m_thickness": 6654.473237399647
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n128_H6p25e-5_1/result.json",
+      "provisional_five_percent_passed": true,
+      "sha256": "f138370f0896900d7e30bca7d7d6d3d025cfcd79e163afd2867077fa3f942fbe",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 46.4356784329284
+    }
+  ],
+  "interpretation": "n16 temporal refinement qualifies 62.5 us against 31.25 us; n64/n128 spatial overlap remains unqualified, dominated by the near-extinction ordered reservoir and front displacement.",
+  "root": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a",
+  "schema": "asb-drx/v39/common-refinement/v1",
+  "selected_macro_dt_s": 6.25e-05,
+  "timestep_gate_passed": true,
+  "timestep_reference": "n16_H3p125e-5",
+  "timestep_refinement": [
+    {
+      "case": "n16_H1e-3",
+      "difference_to_reference": {
+        "absolute_sweep_m3": {
+          "absolute": 1.0392145218902663e-24,
+          "normalization_floor": 1e-28,
+          "relative": 1.0
+        },
+        "beta_p_rms": {
+          "absolute": 0.0002276530319212796,
+          "normalization_floor": 1e-14,
+          "relative": 0.1824923080487582
+        },
+        "complete_energy_delta_J": {
+          "absolute": 8.68735498511758e-19,
+          "normalization_floor": 1e-22,
+          "relative": 1.0
+        },
+        "contour_displacement_m": {
+          "absolute": 3.2737352630111717e-10,
+          "normalization_floor": 1e-13,
+          "relative": 1.0
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 193412741.98300743,
+          "normalization_floor": 1e-14,
+          "relative": 0.17634847261616857
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 4620323.222249806,
+          "normalization_floor": 1e-14,
+          "relative": 0.010971730813066427
+        },
+        "family_nye_rms_m1": {
+          "absolute": 60.01416670249887,
+          "normalization_floor": 1.0,
+          "relative": 0.1489823414824131
+        },
+        "maximum_abs_slip": {
+          "absolute": 0.0006346678003625377,
+          "normalization_floor": 1e-14,
+          "relative": 0.15794708137658997
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 4.9490608303800684e-05,
+          "normalization_floor": 1e-12,
+          "relative": 0.006521547467602668
+        },
+        "orientation_range_rad": {
+          "absolute": 4.335327040845766e-05,
+          "normalization_floor": 1e-10,
+          "relative": 0.05036853367254882
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 247109217.8604777,
+          "normalization_floor": 1e-14,
+          "relative": 0.22446826565583827
+        },
+        "signed_sweep_m3": {
+          "absolute": 1.0392145218902663e-24,
+          "normalization_floor": 1e-28,
+          "relative": 1.0
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.21787731550580247,
+          "normalization_floor": 0.001,
+          "relative": 0.0001977918528592161
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.27333243581233546,
+          "normalization_floor": 0.001,
+          "relative": 0.00024831962272351543
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 1.3385430983953484,
+          "normalization_floor": 1e-14,
+          "relative": 0.00019910787473142023
+        }
+      },
+      "grid": 16,
+      "intervals": 1,
+      "macro_dt_s": 0.001,
+      "metrics": {
+        "absolute_sweep_m3": 0.0,
+        "beta_p_rms": 0.0014751194832768916,
+        "complete_energy_delta_J": 0.0,
+        "contour_displacement_m": 0.0,
+        "deposited_heat_increment_J_m3_cells": 1290177228.30765,
+        "effective_stress_rms_Pa": 416491286.32866824,
+        "family_nye_rms_m1": 342.81321609563867,
+        "maximum_abs_slip": 0.004652898430717222,
+        "ordered_line_m_per_m_thickness": 0.0076382735696572225,
+        "orientation_range_rad": 0.0008173680420343835,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1347974042.2867208,
+        "signed_sweep_m3": 0.0,
+        "temperature_maximum_K": 1101.7663605125501,
+        "temperature_minimum_K": 1101.0016309668947,
+        "total_line_m_per_m_thickness": 6721.364414787778
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H1e-3/result.json",
+      "provisional_five_percent_passed": false,
+      "sha256": "33317b8178910e4746b23619af69e00813bda7b164ec74e1080da9b001809989",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 1.7823613960063085
+    },
+    {
+      "case": "n16_H5e-4",
+      "difference_to_reference": {
+        "absolute_sweep_m3": {
+          "absolute": 1.0392145218902663e-24,
+          "normalization_floor": 1e-28,
+          "relative": 1.0
+        },
+        "beta_p_rms": {
+          "absolute": 9.535897810411184e-05,
+          "normalization_floor": 1e-14,
+          "relative": 0.07644211834353219
+        },
+        "complete_energy_delta_J": {
+          "absolute": 8.68735498511758e-19,
+          "normalization_floor": 1e-22,
+          "relative": 1.0
+        },
+        "contour_displacement_m": {
+          "absolute": 3.2737352630111717e-10,
+          "normalization_floor": 1e-13,
+          "relative": 1.0
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 81894388.32332349,
+          "normalization_floor": 1e-14,
+          "relative": 0.07466907375690018
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 2412730.8585933447,
+          "normalization_floor": 1e-14,
+          "relative": 0.005729433252069041
+        },
+        "family_nye_rms_m1": {
+          "absolute": 23.88891368056113,
+          "normalization_floor": 1.0,
+          "relative": 0.059303102769784156
+        },
+        "maximum_abs_slip": {
+          "absolute": 0.000261434111463274,
+          "normalization_floor": 1e-14,
+          "relative": 0.06506199755891003
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-12,
+          "relative": 0.0
+        },
+        "orientation_range_rad": {
+          "absolute": 1.612320511948178e-05,
+          "normalization_floor": 1e-10,
+          "relative": 0.018732201569079295
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 103527965.70271063,
+          "normalization_floor": 1e-14,
+          "relative": 0.09404239594690303
+        },
+        "signed_sweep_m3": {
+          "absolute": 1.0392145218902663e-24,
+          "normalization_floor": 1e-28,
+          "relative": 1.0
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.09243867524946836,
+          "normalization_floor": 0.001,
+          "relative": 8.391702831016743e-05
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.11507203487212792,
+          "normalization_floor": 0.001,
+          "relative": 0.00010454172480683117
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.11376096241201594,
+          "normalization_floor": 1e-14,
+          "relative": 1.692190821529112e-05
+        }
+      },
+      "grid": 16,
+      "intervals": 2,
+      "macro_dt_s": 0.0005,
+      "metrics": {
+        "absolute_sweep_m3": 0.0,
+        "beta_p_rms": 0.0013428254294597238,
+        "complete_energy_delta_J": 0.0,
+        "contour_displacement_m": 0.0,
+        "deposited_heat_increment_J_m3_cells": 1178658874.6479661,
+        "effective_stress_rms_Pa": 418698878.6923247,
+        "family_nye_rms_m1": 378.9384691175764,
+        "maximum_abs_slip": 0.0042796647418179585,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008445981073233594,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1204392790.1289537,
+        "signed_sweep_m3": 0.0,
+        "temperature_maximum_K": 1101.6409218722938,
+        "temperature_minimum_K": 1100.8433705659545,
+        "total_line_m_per_m_thickness": 6722.589196923761
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H5e-4/result.json",
+      "provisional_five_percent_passed": false,
+      "sha256": "55f4e5c07bf02e5040f0673f0ff72a829b9dd679cc9f3a1d1bc3ca72cecf811a",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 3.0051093079382554
+    },
+    {
+      "case": "n16_H2p5e-4",
+      "difference_to_reference": {
+        "absolute_sweep_m3": {
+          "absolute": 3.3017078726696977e-25,
+          "normalization_floor": 1e-28,
+          "relative": 0.31771186825450604
+        },
+        "beta_p_rms": {
+          "absolute": 4.182150015228899e-05,
+          "normalization_floor": 1e-14,
+          "relative": 0.03352515020090672
+        },
+        "complete_energy_delta_J": {
+          "absolute": 4.255507016830007e-19,
+          "normalization_floor": 1e-22,
+          "relative": 0.4898507110760607
+        },
+        "contour_displacement_m": {
+          "absolute": 1.0401045465819361e-10,
+          "normalization_floor": 1e-13,
+          "relative": 0.31771186825450604
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 36052667.19528723,
+          "normalization_floor": 1e-14,
+          "relative": 0.032871840440515165
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 1113747.9923589826,
+          "normalization_floor": 1e-14,
+          "relative": 0.0026447810202779878
+        },
+        "family_nye_rms_m1": {
+          "absolute": 9.207651027815643,
+          "normalization_floor": 1.0,
+          "relative": 0.022857559890435072
+        },
+        "maximum_abs_slip": {
+          "absolute": 0.00011524605516075471,
+          "normalization_floor": 1e-14,
+          "relative": 0.028680796540188156
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-12,
+          "relative": 0.0
+        },
+        "orientation_range_rad": {
+          "absolute": 5.805099587671229e-06,
+          "normalization_floor": 1e-10,
+          "relative": 0.006744458983123802
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 45336764.57126045,
+          "normalization_floor": 1e-14,
+          "relative": 0.0411828623872049
+        },
+        "signed_sweep_m3": {
+          "absolute": 3.3017078726696977e-25,
+          "normalization_floor": 1e-28,
+          "relative": 0.31771186825450604
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.04087006383224434,
+          "normalization_floor": 0.001,
+          "relative": 3.710237402681215e-05
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.04978587016898928,
+          "normalization_floor": 0.001,
+          "relative": 4.5229935702959874e-05
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.06635327285403037,
+          "normalization_floor": 1e-14,
+          "relative": 9.870028955569666e-06
+        }
+      },
+      "grid": 16,
+      "intervals": 4,
+      "macro_dt_s": 0.00025,
+      "metrics": {
+        "absolute_sweep_m3": 7.090437346232966e-25,
+        "beta_p_rms": 0.001289287951507901,
+        "complete_energy_delta_J": -4.431847968287572e-19,
+        "contour_displacement_m": 2.2336307164292356e-10,
+        "deposited_heat_increment_J_m3_cells": 1132817153.51993,
+        "effective_stress_rms_Pa": 419997861.55855906,
+        "family_nye_rms_m1": 393.6197317703219,
+        "maximum_abs_slip": 0.004133476685515439,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.00085491621285517,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1146201588.9975035,
+        "signed_sweep_m3": 7.090437346232966e-25,
+        "temperature_maximum_K": 1101.5893532608766,
+        "temperature_minimum_K": 1100.7780844012514,
+        "total_line_m_per_m_thickness": 6722.636604613319
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H2p5e-4/result.json",
+      "provisional_five_percent_passed": false,
+      "sha256": "8d270208ca4a5d937b7eb2a4a8d151c135e9d0930733262f2d0201c32d9d3e5d",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 5.874925512005575
+    },
+    {
+      "case": "n16_H1p25e-4",
+      "difference_to_reference": {
+        "absolute_sweep_m3": {
+          "absolute": 7.620462147122008e-26,
+          "normalization_floor": 1e-28,
+          "relative": 0.07332905753915817
+        },
+        "beta_p_rms": {
+          "absolute": 1.7411664349675478e-05,
+          "normalization_floor": 1e-14,
+          "relative": 0.01395762132981962
+        },
+        "complete_energy_delta_J": {
+          "absolute": 8.430114393726473e-20,
+          "normalization_floor": 1e-22,
+          "relative": 0.09703890779377856
+        },
+        "contour_displacement_m": {
+          "absolute": 2.4005992146931746e-11,
+          "normalization_floor": 1e-13,
+          "relative": 0.07332905753915821
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 15029009.0594697,
+          "normalization_floor": 1e-14,
+          "relative": 0.013703041306373143
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 472792.27067810297,
+          "normalization_floor": 1e-14,
+          "relative": 0.0011227243798438572
+        },
+        "family_nye_rms_m1": {
+          "absolute": 3.496399692312764,
+          "normalization_floor": 1.0,
+          "relative": 0.008679647515583266
+        },
+        "maximum_abs_slip": {
+          "absolute": 4.8123894502728574e-05,
+          "normalization_floor": 1e-14,
+          "relative": 0.01197638934390402
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-12,
+          "relative": 0.0
+        },
+        "orientation_range_rad": {
+          "absolute": 2.089110064396331e-06,
+          "normalization_floor": 1e-10,
+          "relative": 0.0024271620026082076
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 18851329.50551009,
+          "normalization_floor": 1e-14,
+          "relative": 0.017124109234151585
+        },
+        "signed_sweep_m3": {
+          "absolute": 7.620462147122008e-26,
+          "normalization_floor": 1e-28,
+          "relative": 0.07332905753915817
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.017099359078656562,
+          "normalization_floor": 0.001,
+          "relative": 1.5523019948272072e-05
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.02052310993167339,
+          "normalization_floor": 0.001,
+          "relative": 1.8645027986526195e-05
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.060632927479673526,
+          "normalization_floor": 1e-14,
+          "relative": 9.019129338229516e-06
+        }
+      },
+      "grid": 16,
+      "intervals": 8,
+      "macro_dt_s": 0.000125,
+      "metrics": {
+        "absolute_sweep_m3": 9.630099004190463e-25,
+        "beta_p_rms": 0.0012648781157052875,
+        "complete_energy_delta_J": -7.844343545744932e-19,
+        "contour_displacement_m": 3.033675341541854e-10,
+        "deposited_heat_increment_J_m3_cells": 1111793495.3841124,
+        "effective_stress_rms_Pa": 420638817.28023994,
+        "family_nye_rms_m1": 399.33098310582477,
+        "maximum_abs_slip": 0.004066354524857413,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008586322023784449,
+        "physical_time_s": 0.001,
+        "plastic_work_increment_J_m3_cells": 1119716153.9317532,
+        "signed_sweep_m3": 9.630099004190463e-25,
+        "temperature_maximum_K": 1101.565582556123,
+        "temperature_minimum_K": 1100.748821641014,
+        "total_line_m_per_m_thickness": 6722.642324958693
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H1p25e-4/result.json",
+      "provisional_five_percent_passed": false,
+      "sha256": "3b7bc4b48fb6b8a1f47bca84f7389d6bb5c003e66cb407c91240cd2c6fbc5f91",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 11.155385789927095
+    },
+    {
+      "case": "n16_H6p25e-5",
+      "difference_to_reference": {
+        "absolute_sweep_m3": {
+          "absolute": 1.2776174351738755e-26,
+          "normalization_floor": 1e-28,
+          "relative": 0.012294068339710737
+        },
+        "beta_p_rms": {
+          "absolute": 5.722836671371179e-06,
+          "normalization_floor": 1e-14,
+          "relative": 0.0045875675976313575
+        },
+        "complete_energy_delta_J": {
+          "absolute": 1.8326508768123765e-20,
+          "normalization_floor": 1e-22,
+          "relative": 0.021095614026961192
+        },
+        "contour_displacement_m": {
+          "absolute": 4.024752504958046e-12,
+          "normalization_floor": 1e-13,
+          "relative": 0.012294068339710801
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 4942502.544751167,
+          "normalization_floor": 1e-14,
+          "relative": 0.004506439264197861
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 156751.20927804708,
+          "normalization_floor": 1e-14,
+          "relative": 0.00037223198250271405
+        },
+        "family_nye_rms_m1": {
+          "absolute": 1.0870093607264835,
+          "normalization_floor": 1.0,
+          "relative": 0.0026984495273778327
+        },
+        "maximum_abs_slip": {
+          "absolute": 1.5843358178758114e-05,
+          "normalization_floor": 1e-14,
+          "relative": 0.0039428692965191095
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-12,
+          "relative": 0.0
+        },
+        "orientation_range_rad": {
+          "absolute": 6.288549677384465e-07,
+          "normalization_floor": 1e-10,
+          "relative": 0.0007306139149194212
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 6192209.786194086,
+          "normalization_floor": 1e-14,
+          "relative": 0.005624859336768606
+        },
+        "signed_sweep_m3": {
+          "absolute": 1.2776174351738755e-26,
+          "normalization_floor": 1e-28,
+          "relative": 0.012294068339710737
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.00563428920622755,
+          "normalization_floor": 0.001,
+          "relative": 5.114880817478908e-06
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.0067037525293471845,
+          "normalization_floor": 0.001,
+          "relative": 6.090288164929816e-06
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.02776672983327444,
+          "normalization_floor": 1e-14,
+          "relative": 4.130292533705098e-06
+        }
+      },
+      "grid": 16,
+      "intervals": 16,
+      "macro_dt_s": 6.25e-05,
+      "metrics": {
+        "absolute_sweep_m3": 1.0264383475385276e-24,
+        "beta_p_rms": 0.0012531892880269832,
+        "complete_energy_delta_J": -8.504089897436341e-19,
+        "contour_displacement_m": 3.233487737961591e-10,
+        "deposited_heat_increment_J_m3_cells": 1101706988.8693938,
+        "effective_stress_rms_Pa": 420954858.34164,
+        "family_nye_rms_m1": 401.74037343741105,
+        "maximum_abs_slip": 0.004034073988533443,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008600924574751027,
+        "physical_time_s": 0.0010000000000000005,
+        "plastic_work_increment_J_m3_cells": 1107057034.2124372,
+        "signed_sweep_m3": 1.0264383475385276e-24,
+        "temperature_maximum_K": 1101.5541174862506,
+        "temperature_minimum_K": 1100.7350022836117,
+        "total_line_m_per_m_thickness": 6722.67519115634
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H6p25e-5/result.json",
+      "provisional_five_percent_passed": true,
+      "sha256": "a0636ff303f4cd0bcef39fc4f335338087a6d40c40f802fe69079764d012aaeb",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 22.058610536972992
+    },
+    {
+      "case": "n16_H3p125e-5",
+      "difference_to_reference": {
+        "absolute_sweep_m3": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-28,
+          "relative": 0.0
+        },
+        "beta_p_rms": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "complete_energy_delta_J": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-22,
+          "relative": 0.0
+        },
+        "contour_displacement_m": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-13,
+          "relative": 0.0
+        },
+        "deposited_heat_increment_J_m3_cells": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "effective_stress_rms_Pa": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "family_nye_rms_m1": {
+          "absolute": 0.0,
+          "normalization_floor": 1.0,
+          "relative": 0.0
+        },
+        "maximum_abs_slip": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "ordered_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-12,
+          "relative": 0.0
+        },
+        "orientation_range_rad": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-10,
+          "relative": 0.0
+        },
+        "plastic_work_increment_J_m3_cells": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        },
+        "signed_sweep_m3": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-28,
+          "relative": 0.0
+        },
+        "temperature_maximum_K": {
+          "absolute": 0.0,
+          "normalization_floor": 0.001,
+          "relative": 0.0
+        },
+        "temperature_minimum_K": {
+          "absolute": 0.0,
+          "normalization_floor": 0.001,
+          "relative": 0.0
+        },
+        "total_line_m_per_m_thickness": {
+          "absolute": 0.0,
+          "normalization_floor": 1e-14,
+          "relative": 0.0
+        }
+      },
+      "grid": 16,
+      "intervals": 32,
+      "macro_dt_s": 3.125e-05,
+      "metrics": {
+        "absolute_sweep_m3": 1.0392145218902663e-24,
+        "beta_p_rms": 0.001247466451355612,
+        "complete_energy_delta_J": -8.68735498511758e-19,
+        "contour_displacement_m": 3.2737352630111717e-10,
+        "deposited_heat_increment_J_m3_cells": 1096764486.3246427,
+        "effective_stress_rms_Pa": 421111609.55091804,
+        "family_nye_rms_m1": 402.82738279813753,
+        "maximum_abs_slip": 0.0040182306303546845,
+        "ordered_line_m_per_m_thickness": 0.007588782961353422,
+        "orientation_range_rad": 0.0008607213124428412,
+        "physical_time_s": 0.0010000000000000007,
+        "plastic_work_increment_J_m3_cells": 1100864824.426243,
+        "signed_sweep_m3": 1.0392145218902663e-24,
+        "temperature_maximum_K": 1101.5484831970443,
+        "temperature_minimum_K": 1100.7282985310824,
+        "total_line_m_per_m_thickness": 6722.702957886173
+      },
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n16_H3p125e-5/result.json",
+      "provisional_five_percent_passed": true,
+      "sha256": "10359c085c296fe80c1dc36a6e8985284101300ef8d49ceca0c2001cf8cb4969",
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "wall_seconds": 45.77286914899014
+    }
+  ]
+}

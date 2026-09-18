@@ -1,0 +1,150 @@
+{
+  "artificial_pressure_added": false,
+  "equal_state_projection_used": false,
+  "fitted_drift_subtracted": false,
+  "generated_utc": "2026-09-18T01:35:12.156558+00:00",
+  "interface_width_m": 4e-07,
+  "length_m": 3.2e-06,
+  "phase_barrier_J_m3": 5000000.0,
+  "phase_gradient_J_m": 5e-07,
+  "rows": [
+    {
+      "central_slab_growth_derivative_J_m": 8.752573899387107e-11,
+      "central_translation_derivative_J_m": 3.6501512170166824e-11,
+      "grid": 32,
+      "interface_cells": 4.0,
+      "interface_width_m": 4e-07,
+      "profile_width_energy_J": {
+        "0.95": 1.885101044657828e-15,
+        "1.00": 1.838624525986448e-15,
+        "1.05": 1.798243023033404e-15
+      },
+      "spacing_m": 1e-07,
+      "subcell_offsets": [
+        {
+          "offset_cells": 0.0,
+          "offset_m": 0.0,
+          "phase_gradient_J": 1.3058208419108712e-15,
+          "phase_local_J": 5.328036840755768e-16,
+          "phase_total_J": 1.838624525986448e-15
+        },
+        {
+          "offset_cells": 0.25,
+          "offset_m": 2.5e-08,
+          "phase_gradient_J": 1.3070637151215156e-15,
+          "phase_local_J": 5.327274717077461e-16,
+          "phase_total_J": 1.8397911868292616e-15
+        },
+        {
+          "offset_cells": 0.5,
+          "offset_m": 5e-08,
+          "phase_gradient_J": 1.3088984773972346e-15,
+          "phase_local_J": 5.326150427539982e-16,
+          "phase_total_J": 1.841513520151233e-15
+        },
+        {
+          "offset_cells": 0.75,
+          "offset_m": 7.5e-08,
+          "phase_gradient_J": 1.3114250977262877e-15,
+          "phase_local_J": 5.324603699341295e-16,
+          "phase_total_J": 1.8438854676604173e-15
+        }
+      ],
+      "translation_energy_range_J": 5.2609416739693875e-18,
+      "translation_energy_range_relative": 0.0028577262670779493
+    },
+    {
+      "central_slab_growth_derivative_J_m": 8.565499067207557e-11,
+      "central_translation_derivative_J_m": 3.526249347450477e-11,
+      "grid": 64,
+      "interface_cells": 8.0,
+      "interface_width_m": 4e-07,
+      "profile_width_energy_J": {
+        "0.95": 1.8849530930783994e-15,
+        "1.00": 1.8384298067326906e-15,
+        "1.05": 1.79799563488211e-15
+      },
+      "spacing_m": 5e-08,
+      "subcell_offsets": [
+        {
+          "offset_cells": 0.0,
+          "offset_m": 0.0,
+          "phase_gradient_J": 1.3055968379250666e-15,
+          "phase_local_J": 5.328329688076239e-16,
+          "phase_total_J": 1.8384298067326906e-15
+        },
+        {
+          "offset_cells": 0.25,
+          "offset_m": 1.25e-08,
+          "phase_gradient_J": 1.3061697305778317e-15,
+          "phase_local_J": 5.328142297494988e-16,
+          "phase_total_J": 1.8389839603273306e-15
+        },
+        {
+          "offset_cells": 0.5,
+          "offset_m": 2.5e-08,
+          "phase_gradient_J": 1.3069828678011315e-15,
+          "phase_local_J": 5.327876402966107e-16,
+          "phase_total_J": 1.8397705080977422e-15
+        },
+        {
+          "offset_cells": 0.75,
+          "offset_m": 3.75e-08,
+          "phase_gradient_J": 1.3080474942459346e-15,
+          "phase_local_J": 5.327528410703493e-16,
+          "phase_total_J": 1.8408003353162837e-15
+        }
+      ],
+      "translation_energy_range_J": 2.3705285835931255e-18,
+      "translation_energy_range_relative": 0.0012886836323189328
+    },
+    {
+      "central_slab_growth_derivative_J_m": 8.475079255644841e-11,
+      "central_translation_derivative_J_m": 3.4747362625055855e-11,
+      "grid": 128,
+      "interface_cells": 16.0,
+      "interface_width_m": 4e-07,
+      "profile_width_energy_J": {
+        "0.95": 1.884882746465675e-15,
+        "1.00": 1.838335877447144e-15,
+        "1.05": 1.7978746109446646e-15
+      },
+      "spacing_m": 2.5e-08,
+      "subcell_offsets": [
+        {
+          "offset_cells": 0.0,
+          "offset_m": 0.0,
+          "phase_gradient_J": 1.3054954886005945e-15,
+          "phase_local_J": 5.328403888465495e-16,
+          "phase_total_J": 1.838335877447144e-15
+        },
+        {
+          "offset_cells": 0.25,
+          "offset_m": 6.25e-09,
+          "phase_gradient_J": 1.3057720106566135e-15,
+          "phase_local_J": 5.328357237886014e-16,
+          "phase_total_J": 1.8386077344452148e-15
+        },
+        {
+          "offset_cells": 0.5,
+          "offset_m": 1.25e-08,
+          "phase_gradient_J": 1.3061604873273817e-15,
+          "phase_local_J": 5.328291705882095e-16,
+          "phase_total_J": 1.8389896579155912e-15
+        },
+        {
+          "offset_cells": 0.75,
+          "offset_m": 1.875e-08,
+          "phase_gradient_J": 1.3066622692264322e-15,
+          "phase_local_J": 5.328207070541719e-16,
+          "phase_total_J": 1.839482976280604e-15
+        }
+      ],
+      "translation_energy_range_J": 1.1470988334598653e-18,
+      "translation_energy_range_relative": 0.000623811784449244
+    }
+  ],
+  "schema": "asb-drx/v39/interface-residual-audit/v1",
+  "scope": "phase-only actual discrete production energy",
+  "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268"
+}

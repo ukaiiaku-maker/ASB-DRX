@@ -1,0 +1,85 @@
+{
+  "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v39-mura-rescue/extracted/v37-mura-organization/mechanical_heterogeneity_topology_off_n64/checkpoint_step_000013212_strain_0.04737725.npz",
+  "checkpoint_applied_strain": 0.04737724951710852,
+  "checkpoint_sha256": "1e88915dd38681a718d5925e7a21a80f6a7240516a0b6a8e77118c13be651180",
+  "checkpoint_source_sha": "6b49863a6f34a110f7b025651bac5b6c7555556a",
+  "claim_boundary": "current-source restart from a legacy-prepared valid state; this does not claim current source generated the precursor history",
+  "comparisons": {
+    "nye_rms_m1": {
+      "absolute_difference": 0.0,
+      "current": 41717.12329215199,
+      "legacy": 41717.12329215199,
+      "relative_to_current": 0.0
+    },
+    "ordered_line_m_per_m_thickness": {
+      "absolute_difference": 0.1728673935303333,
+      "current": 2.5835802323291657,
+      "legacy": 2.756447625859499,
+      "relative_to_current": 0.0669100155540704
+    },
+    "orientation_span_deg": {
+      "absolute_difference": 0.0,
+      "current": 4.542459127497875,
+      "legacy": 4.542459127497875,
+      "relative_to_current": 0.0
+    },
+    "tangle_line_m_per_m_thickness": {
+      "absolute_difference": 0.17286739353039593,
+      "current": 2973.233204536587,
+      "legacy": 2973.0603371430566,
+      "relative_to_current": 5.814121585438816e-05
+    },
+    "total_line_m_per_m_thickness": {
+      "absolute_difference": 0.0,
+      "current": 138488.16851326954,
+      "legacy": 138488.16851326954,
+      "relative_to_current": 0.0
+    }
+  },
+  "generated_utc": "2026-09-18T01:39:27.072671+00:00",
+  "initial_observables": {
+    "nye_rms_m1": 41680.51673232971,
+    "ordered_line_m_per_m_thickness": 3.026997037541421,
+    "orientation_span_deg": 4.540722087223232,
+    "tangle_line_m_per_m_thickness": 2971.673004432457,
+    "total_line_m_per_m_thickness": 138471.65174344453
+  },
+  "legacy_ordered_observable_inherits_current_accuracy": false,
+  "records": {
+    "current_v39_complete_time_dispatch": {
+      "accepted_dt_s": 5.2259265930094493e-11,
+      "hard_invariant_passed": true,
+      "observables": {
+        "nye_rms_m1": 41717.12329215199,
+        "ordered_line_m_per_m_thickness": 2.5835802323291657,
+        "orientation_span_deg": 4.542459127497875,
+        "tangle_line_m_per_m_thickness": 2973.233204536587,
+        "total_line_m_per_m_thickness": 138488.16851326954
+      },
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_integration_method": "complete_time_explicit_subcycling",
+      "ordering_internal_substeps": 2,
+      "ordering_stiff_dispatch": "resolved_finite_time_oracle",
+      "wall_seconds": 3.1022045909194276
+    },
+    "legacy_v37_single_capped_extent": {
+      "accepted_dt_s": 5.2259265930094493e-11,
+      "hard_invariant_passed": true,
+      "observables": {
+        "nye_rms_m1": 41717.12329215199,
+        "ordered_line_m_per_m_thickness": 2.756447625859499,
+        "orientation_span_deg": 4.542459127497875,
+        "tangle_line_m_per_m_thickness": 2973.0603371430566,
+        "total_line_m_per_m_thickness": 138488.16851326954
+      },
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_integration_method": "complete_time_explicit_subcycling",
+      "ordering_internal_substeps": 1,
+      "ordering_stiff_dispatch": null,
+      "wall_seconds": 3.0830048519419506
+    }
+  },
+  "requested_dt_s": 1e-06,
+  "schema": "asb-drx/v39/mura-source-pair/v1",
+  "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268"
+}

@@ -20,7 +20,7 @@ while true; do
     "squeue -h -j '$job_id' -o %T | head -n 1" || true)
   [[ "$state" == "RUNNING" || "$state" == "COMPLETING" ]] || break
 
-  ssh -o BatchMode=yes "$login_host" \
+  if ! ssh -o BatchMode=yes "$login_host" \
     "srun --jobid='$job_id' --overlap --ntasks=1 bash -s -- '$run_id' '$scratch_relative_output' '$remote_run_dir'" <<'REMOTE'
 set -Eeuo pipefail
 run_id=$1
@@ -39,5 +39,11 @@ else
   shasum -a 256 "$final" >"$remote_run_dir/results/live-rescue-single.sha256"
 fi
 REMOTE
+  then
+    # A live history file can change while tar is reading it.  That is an
+    # expected snapshot race, not a reason to abandon all future rescues.
+    printf 'rescue attempt failed at %s; retaining previous verified archive\n' \
+      "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >&2
+  fi
   sleep "$poll_seconds"
 done
