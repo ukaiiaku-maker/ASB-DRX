@@ -49,6 +49,7 @@ def run_case(output_dir, *, grid, macro_dt_s, intervals):
         temperature_K=1100.0, child_line_fraction=.35)
     context["extensive_parameters"] = replace(
         context["extensive_parameters"],
+        ordering_integration_method="complete_time_explicit",
         ordering_internal_substep_s=5e-13,
         ordering_internal_max_substeps=8192)
     state = context["state"]

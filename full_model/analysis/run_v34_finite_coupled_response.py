@@ -138,6 +138,15 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
      kinetics, spacing) = build_case(
         grid, length_m=length_m, periodic_nye_consistent=True)
     parameters = replace(parameters, bath_temperature_K=float(temperature_K))
+    # Existing-boundary production trajectories use the V39 bounded stiff
+    # integration of the unchanged ordering law.  The explicit complete-time
+    # implementation remains available as the short-horizon reference oracle.
+    extensive = replace(
+        extensive, ordering_integration_method="implicit_backward_euler",
+        # Low-exposure production calls use a bounded resolved reference; the
+        # dedicated oracle audit below V39 retains the stricter 0.5 ps spacing.
+        ordering_internal_substep_s=5e-11,
+        ordering_internal_max_substeps=8192)
     parent = replace(
         base.common,
         temperature_K=np.full((grid, grid), float(temperature_K)))
@@ -506,6 +515,27 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 "global_work_minus_heat_storage_residual_J_m3_cells"]),
             "minimum_heat_increment_J_m3": float(np.min(
                 mura_balance["deposited_heat_increment_J_m3"])),
+            "plastic_work_increment_J_m3_cells": float(np.sum(
+                mura_balance["plastic_work_increment_J_m3"])),
+            "deposited_heat_increment_J_m3_cells": float(np.sum(
+                mura_balance["deposited_heat_increment_J_m3"])),
+            "stored_line_energy_increment_J_m3_cells": float(np.sum(
+                mura_balance["stored_line_energy_increment_J_m3"])),
+            "ordering_integration_method": mura_ledger[
+                "ordering_thermodynamics"].get("integration_method"),
+            "ordering_stiff_dispatch": mura_ledger[
+                "ordering_thermodynamics"].get("stiff_dispatch"),
+            "ordering_complete_elapsed_time_s": float(mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "complete_elapsed_time_s", mura_ledger["accepted_dt_s"])),
+            "ordering_discarded_reaction_time_s": float(mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "discarded_reaction_time_s", 0.0)),
+            "ordering_endpoint_remainder_relative": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "asymptotic_endpoint_inventory_change_bound_relative"),
+            "ordering_solver_evaluations": int(mura_ledger[
+                "ordering_thermodynamics"].get("implicit_nfev", 0)),
         }),
     }
     return I3State(mechanical, front_state, runtime, accepted_eta), diagnostics

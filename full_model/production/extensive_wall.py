@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 import numpy as np
+from scipy.optimize import least_squares
+from scipy.sparse.linalg import LinearOperator
 
 try:
     from .arrhenius_kinetics import (
@@ -54,6 +56,10 @@ class ExtensiveWallParameters:
     ordering_internal_substep_s: float = 1.0
     ordering_internal_max_substeps: int = 8192
     ordering_stationary_remainder_relative_tolerance: float = 1e-8
+    ordering_integration_method: str = "complete_time_explicit"
+    ordering_implicit_residual_tolerance: float = 2e-9
+    ordering_implicit_max_nfev: int = 100
+    ordering_asymptotic_minimum_attempt_exposure: float = 50.0
 
     def __post_init__(self):
         positive = (
@@ -78,6 +84,17 @@ class ExtensiveWallParameters:
         if (not np.isfinite(self.ordering_stationary_remainder_relative_tolerance)
                 or self.ordering_stationary_remainder_relative_tolerance <= 0.0):
             raise ValueError("ordering stationary tolerance must be positive")
+        if self.ordering_integration_method not in (
+                "complete_time_explicit", "implicit_backward_euler"):
+            raise ValueError("unknown ordering integration method")
+        if (not np.isfinite(self.ordering_implicit_residual_tolerance)
+                or self.ordering_implicit_residual_tolerance <= 0.0):
+            raise ValueError("ordering implicit tolerance must be positive")
+        if int(self.ordering_implicit_max_nfev) <= 0:
+            raise ValueError("ordering implicit evaluation limit must be positive")
+        if (not np.isfinite(self.ordering_asymptotic_minimum_attempt_exposure)
+                or self.ordering_asymptotic_minimum_attempt_exposure <= 1.0):
+            raise ValueError("ordering asymptotic exposure must exceed one")
         # Validate entropy, drag limit, and negative-barrier validity policy in
         # the campaign-wide Arrhenius representation.
         ActivatedProcess(
@@ -262,7 +279,8 @@ def _attempt_rate_s(stress_Pa, temperature_K, parameters):
 
 
 def ordering_residual(inventory, systems, topologies, orientation_rad,
-                      target_nye_m1, stress_Pa, temperature_K, parameters):
+                      target_nye_m1, stress_Pa, temperature_K, parameters,
+                      *, enforce_availability=True):
     """Return conservative tangle->ordered transfer rates [m^-2 s^-1]."""
     mu = extensive_wall_chemical_potentials_J_m(
         inventory, systems, topologies, orientation_rad, target_nye_m1, parameters)
@@ -290,8 +308,9 @@ def ordering_residual(inventory, systems, topologies, orientation_rad,
         # Exact invariant-set projection at an exhausted reservoir.  This is
         # a physical availability condition; no finite pool may transfer out
         # of a state containing zero line.
-        net = np.where((source <= 0) & (net > 0), 0.0, net)
-        net = np.where((target <= 0) & (net < 0), 0.0, net)
+        if enforce_availability:
+            net = np.where((source <= 0) & (net > 0), 0.0, net)
+            net = np.where((target <= 0) & (net < 0), 0.0, net)
         result[sign] = net
         turnover[sign] = forward + reverse
     return result, turnover, mu
@@ -337,6 +356,593 @@ def _accepted_ordering_substep(inventory, systems, topologies, orientation_rad,
                      "free_energy_rate_W_m3": dissipation_W_m3}, scale
 
 
+def _ordering_affinity_linear_action(delta_plus, delta_minus, systems,
+                                     orientation_rad, parameters):
+    """Derivative of ordered-minus-tangle chemical affinity [J/m]."""
+    shape = np.asarray(delta_plus).shape
+    # Only the ordered Nye basis is needed; all density arrays are dummy.
+    # Constructing it through the authoritative routine avoids introducing a
+    # second crystallographic convention in the implicit solver.
+    dummy_inventory = type("_OrderingBasisInventory", (), {})()
+    # ordered_wall_nye_m1 accesses only the two ordered arrays.
+    dummy_inventory.wall_ordered_plus_m2 = np.zeros(shape)
+    dummy_inventory.wall_ordered_minus_m2 = np.zeros(shape)
+    _, basis = ordered_wall_nye_m1(
+        dummy_inventory, systems, orientation_rad)
+    signed_delta = np.asarray(delta_plus)-np.asarray(delta_minus)
+    delta_alpha = np.einsum("...a,...aij->...ij", signed_delta, basis)
+    match = parameters.nye_match_coefficient_J_m*np.einsum(
+        "...ij,...aij->...a", delta_alpha, basis)
+    return (
+        match-parameters.ordered_gradient_J_m3*_laplacian(
+            np.asarray(delta_plus), parameters.spacing_m),
+        -match-parameters.ordered_gradient_J_m3*_laplacian(
+            np.asarray(delta_minus), parameters.spacing_m),
+    )
+
+
+def _accepted_ordering_implicit(inventory, systems, topologies,
+                                orientation_rad, target_nye_m1, stress_Pa,
+                                temperature_K, parameters, dt_s,
+                                alignment=None):
+    """Bounded backward-Euler solve of the declared ordering rate.
+
+    Ordered fractions are the nonlinear coordinates, so every trial state
+    conserves tangle+ordered line and remains inside the physical reservoir
+    bounds.  The matrix-free Jacobian differentiates the existing EXP-floor,
+    tanh-affinity rate; it does not introduce an equilibrium replacement.
+    """
+    total_dt = float(dt_s)
+    if not np.isfinite(total_dt) or total_dt <= 0.0:
+        raise ValueError("ordering timestep must be finite and positive")
+    stress_for_rate = np.asarray(stress_Pa, dtype=float)
+    if stress_for_rate.ndim == 3:
+        stress_for_rate = np.max(np.abs(stress_for_rate), axis=2)
+    attempt_exposure = total_dt*float(np.max(_attempt_rate_s(
+        stress_for_rate, temperature_K, parameters)))
+    if attempt_exposure < parameters.ordering_asymptotic_minimum_attempt_exposure:
+        # The resolved implementation is the oracle and is affordable before
+        # the declared stiff/asymptotic separation.  There is no equilibrium
+        # substitution in this branch.
+        explicit = replace(parameters,
+                           ordering_integration_method="complete_time_explicit")
+        result = accepted_ordering_step(
+            inventory, systems, topologies, orientation_rad, target_nye_m1,
+            stress_Pa, temperature_K, explicit, total_dt, alignment=alignment)
+        ledger_index = 2 if alignment is not None else 1
+        result[ledger_index]["stiff_dispatch"] = "resolved_finite_time_oracle"
+        result[ledger_index]["maximum_attempt_exposure"] = attempt_exposure
+        return result
+    totals = {
+        sign: (np.asarray(getattr(inventory, f"wall_tangle_{sign}_m2"))
+               +np.asarray(getattr(inventory, f"wall_ordered_{sign}_m2")))
+        for sign in ("plus", "minus")}
+    density_scale = max(float(np.max(totals["plus"])),
+                        float(np.max(totals["minus"])), 1.0)
+    diagnostic_density_floor = 1e-12*density_scale
+    active = {sign: totals[sign] > 0.0 for sign in ("plus", "minus")}
+    active_count = sum(int(np.count_nonzero(active[s]))
+                       for s in ("plus", "minus"))
+    if active_count == 0:
+        transfer, turnover, mu = ordering_residual(
+            inventory, systems, topologies, orientation_rad, target_nye_m1,
+            stress_Pa, temperature_K, parameters)
+        aggregate = {
+            "transfer_m2_s": transfer, "turnover_m2_s": turnover,
+            "accepted_transfer_m2_s": {s: np.zeros_like(transfer[s])
+                                        for s in ("plus", "minus")},
+            "chemical_potential_J_m": mu,
+            "free_energy_rate_W_m3": np.zeros_like(np.asarray(temperature_K)),
+            "internal_substeps": 1, "complete_elapsed_time_s": total_dt,
+            "discarded_reaction_time_s": 0.0,
+            "stationary_remainder_s": 0.0,
+            "integration_method": "bounded_backward_euler",
+            "implicit_success": True, "implicit_max_scaled_residual": 0.0,
+            "implicit_nfev": 0, "implicit_njev": 0,
+        }
+        if alignment is not None:
+            from .wall_topology_supply import apply_signed_ordering_extent
+            updated, updated_alignment, topology = apply_signed_ordering_extent(
+                inventory, alignment, np.zeros_like(totals["plus"]),
+                np.zeros_like(totals["minus"]), systems, orientation_rad,
+                topologies)
+            aggregate["topology_subcycled"] = False
+            aggregate["topology_ledger"] = topology
+            return updated, updated_alignment, aggregate, 1.0
+        return inventory, aggregate, 1.0
+
+    shapes = totals["plus"].shape
+    slices = {}; offset = 0
+    for sign in ("plus", "minus"):
+        size = int(np.count_nonzero(active[sign]))
+        slices[sign] = slice(offset, offset+size); offset += size
+
+    def unpack(vector):
+        vector = np.asarray(vector, dtype=float).reshape(-1)
+        result = {}
+        for sign in ("plus", "minus"):
+            q = np.zeros(shapes, dtype=float)
+            q[active[sign]] = vector[slices[sign]]
+            result[sign] = q
+        return result
+
+    q0_fields = {
+        sign: np.divide(
+            getattr(inventory, f"wall_ordered_{sign}_m2"), totals[sign],
+            out=np.zeros_like(totals[sign]), where=active[sign])
+        for sign in ("plus", "minus")}
+    q0 = np.concatenate([q0_fields[s][active[s]]
+                         for s in ("plus", "minus")])
+
+    def state_from_q(vector):
+        q = unpack(vector); updates = {}
+        for sign in ("plus", "minus"):
+            ordered = totals[sign]*q[sign]
+            updates[f"wall_ordered_{sign}_m2"] = ordered
+            updates[f"wall_tangle_{sign}_m2"] = totals[sign]-ordered
+        return replace(inventory, **updates)
+
+    energy_scale = max(
+        sum(float(np.sum(totals[s], dtype=np.longdouble))
+            for s in ("plus", "minus"))
+        *max(abs(parameters.ordered_excess_J_m
+                 -parameters.disordered_excess_J_m), 1e-12), 1.0)
+
+    def equilibrium_objective(vector):
+        candidate = state_from_q(vector)
+        energy = extensive_wall_energy_components_J_m3(
+            candidate, systems, topologies, orientation_rad, target_nye_m1,
+            parameters)["total"]
+        mu = extensive_wall_chemical_potentials_J_m(
+            candidate, systems, topologies, orientation_rad, target_nye_m1,
+            parameters)
+        gradient = []
+        for sign in ("plus", "minus"):
+            affinity = mu[f"ordered_{sign}"]-mu[f"tangle_{sign}"]
+            gradient.append((affinity*totals[sign])[active[sign]]/energy_scale)
+        return (float(np.sum(energy, dtype=np.longdouble))/energy_scale,
+                np.concatenate(gradient))
+
+    if attempt_exposure >= parameters.ordering_asymptotic_minimum_attempt_exposure:
+        # The ordering energy is a convex quadratic in the ordered extents:
+        # linear reservoir excess plus positive Nye-mismatch and spectral
+        # gradient terms.  A projected accelerated-gradient solve therefore
+        # follows the unique constrained basin without selecting an arbitrary
+        # nonconvex stationary root.
+        dummy = type("_OrderingBasisInventory", (), {})()
+        dummy.wall_ordered_plus_m2 = np.zeros(shapes)
+        dummy.wall_ordered_minus_m2 = np.zeros(shapes)
+        _, basis = ordered_wall_nye_m1(dummy, systems, orientation_rad)
+        maximum_gram = 0.0
+        if parameters.nye_match_coefficient_J_m:
+            for index in np.ndindex(shapes[:2]):
+                matrix = basis[index].reshape(shapes[-1], -1)
+                maximum_gram = max(maximum_gram, float(np.linalg.norm(
+                    matrix@matrix.T, ord=2)))
+        spectral_lipschitz = (parameters.ordered_gradient_J_m3*2.0
+                              *(np.pi/parameters.spacing_m)**2)
+        nye_lipschitz = (2.0*parameters.nye_match_coefficient_J_m
+                         *maximum_gram)
+        lipschitz_J_m3 = spectral_lipschitz+nye_lipschitz
+        y = {s: np.asarray(getattr(
+            inventory, f"wall_ordered_{s}_m2"), dtype=float).copy()
+             for s in ("plus", "minus")}
+        z = {s: value.copy() for s, value in y.items()}
+        acceleration = 1.0
+        equilibrium_iterations = 0
+        projected_change = np.inf
+        if lipschitz_J_m3 <= 0.0:
+            delta = (parameters.ordered_excess_J_m
+                     -parameters.disordered_excess_J_m)
+            bound = 1.0 if delta < 0.0 else 0.0
+            y = {s: bound*totals[s] for s in ("plus", "minus")}
+            projected_change = 0.0
+        elif (parameters.nye_match_coefficient_J_m == 0.0
+              and active_count < 0.25*sum(
+                  value.size for value in totals.values())):
+            # Production capture occupies a thin support.  With C_FB=0 every
+            # sign/family is an independent convex spectral obstacle problem.
+            # Solve those O(n_support) KKT systems separately instead of
+            # constructing one dense 8*n_support system.
+            delta_excess = (parameters.ordered_excess_J_m
+                            -parameters.disordered_excess_J_m)
+            y = {s: np.zeros_like(totals[s]) for s in ("plus", "minus")}
+            projected_change = 0.0; equilibrium_iterations = 0
+            for sign in ("plus", "minus"):
+                for family in range(shapes[-1]):
+                    upper_field = totals[sign][..., family]
+                    indices = np.flatnonzero(upper_field.ravel() > 0.0)
+                    if indices.size == 0:
+                        continue
+                    hessian = np.empty((indices.size, indices.size))
+                    for column, flat_index in enumerate(indices):
+                        direction = np.zeros(shapes[:2])
+                        direction.ravel()[flat_index] = 1.0
+                        hessian[:, column] = (
+                            -parameters.ordered_gradient_J_m3
+                            *_laplacian(direction, parameters.spacing_m)
+                        ).ravel()[indices]
+                    hessian = 0.5*(hessian+hessian.T)
+                    upper = upper_field.ravel()[indices]
+                    value = upper.copy()
+                    status = np.ones(indices.size, dtype=np.int8)
+                    kkt_tolerance = max(1e-18, 1e-8*abs(delta_excess))
+                    iterations = 0
+                    for iteration in range(max(4*indices.size, 32)):
+                        gradient = hessian@value+delta_excess
+                        release = (status == 1) & (gradient > kkt_tolerance)
+                        release |= ((status == -1)
+                                    &(gradient < -kkt_tolerance))
+                        if np.any(release):
+                            status[release] = 0
+                        free = status == 0; fixed = ~free
+                        if np.any(free):
+                            rhs = np.full(np.count_nonzero(free), -delta_excess)
+                            if np.any(fixed):
+                                rhs -= hessian[np.ix_(free, fixed)]@value[fixed]
+                            value[free] = np.linalg.lstsq(
+                                hessian[np.ix_(free, free)], rhs,
+                                rcond=1e-13)[0]
+                        below = free & (value < 0.0)
+                        above = free & (value > upper)
+                        if np.any(below) or np.any(above):
+                            value[below] = 0.0; status[below] = -1
+                            value[above] = upper[above]; status[above] = 1
+                            continue
+                        gradient = hessian@value+delta_excess
+                        violation = gradient.copy()
+                        violation[status == -1] = np.minimum(
+                            violation[status == -1], 0.0)
+                        violation[status == 1] = np.maximum(
+                            violation[status == 1], 0.0)
+                        iterations = iteration+1
+                        if float(np.max(np.abs(violation))) <= kkt_tolerance:
+                            break
+                    component = y[sign][..., family].copy().reshape(-1)
+                    component[indices] = value
+                    y[sign][..., family] = component.reshape(shapes[:2])
+                    equilibrium_iterations += iterations
+                    projected_change = max(projected_change, float(
+                        np.max(np.abs(violation))/max(abs(delta_excess), 1e-30)))
+        elif active_count < 0.25*sum(value.size for value in totals.values()):
+            # A front/capture support can leave only a thin set of cells with
+            # any wall line.  In that case optimize only those true degrees of
+            # freedom; the zero-capacity exterior remains exactly zero and the
+            # spectral gradient is still evaluated on the complete grid.
+            # Build the exact small Hessian of the convex quadratic and solve
+            # its box-constrained KKT system by an active set.  This avoids the
+            # false relative-function convergence of a generic optimizer when
+            # the ordered inventory is many decades below the total line.
+            hessian = np.empty((active_count, active_count), dtype=float)
+            for column in range(active_count):
+                direction = np.zeros(active_count); direction[column] = 1.0
+                dq = unpack(direction)
+                dy = {s: totals[s]*dq[s] for s in ("plus", "minus")}
+                dmu_plus, dmu_minus = _ordering_affinity_linear_action(
+                    dy["plus"], dy["minus"], systems, orientation_rad,
+                    parameters)
+                hessian[:, column] = np.concatenate([
+                    (dmu_plus*totals["plus"])[active["plus"]],
+                    (dmu_minus*totals["minus"])[active["minus"]],
+                ])/energy_scale
+            hessian = 0.5*(hessian+hessian.T)
+            linear = equilibrium_objective(np.zeros(active_count))[1]
+            q_sparse = np.zeros(active_count)
+            status = np.zeros(active_count, dtype=np.int8)
+            maximum_iterations = max(4*active_count, 32)
+            projected_change = np.inf
+            for iteration in range(maximum_iterations):
+                free = status == 0
+                fixed = ~free
+                if np.any(free):
+                    rhs = -linear[free]
+                    if np.any(fixed):
+                        rhs -= hessian[np.ix_(free, fixed)]@q_sparse[fixed]
+                    block = hessian[np.ix_(free, free)]
+                    q_sparse[free] = np.linalg.lstsq(
+                        block, rhs, rcond=1e-13)[0]
+                below = free & (q_sparse < 0.0)
+                above = free & (q_sparse > 1.0)
+                if np.any(below) or np.any(above):
+                    q_sparse[below] = 0.0; status[below] = -1
+                    q_sparse[above] = 1.0; status[above] = 1
+                    continue
+                gradient = hessian@q_sparse+linear
+                lower_violation = (status == -1) & (gradient < -1e-13)
+                upper_violation = (status == 1) & (gradient > 1e-13)
+                if np.any(lower_violation) or np.any(upper_violation):
+                    status[lower_violation | upper_violation] = 0
+                    continue
+                kkt = gradient.copy()
+                kkt[status == -1] = np.minimum(kkt[status == -1], 0.0)
+                kkt[status == 1] = np.maximum(kkt[status == 1], 0.0)
+                projected_change = float(np.max(np.abs(kkt)))
+                equilibrium_iterations = iteration+1
+                break
+            else:
+                equilibrium_iterations = maximum_iterations
+            fields = unpack(q_sparse)
+            y = {s: totals[s]*fields[s] for s in ("plus", "minus")}
+        elif parameters.nye_match_coefficient_J_m == 0.0:
+            # With no Frank--Bilby penalty (the production V34/V39 setting),
+            # the convex obstacle problem has a diagonal Fourier solve.  ADMM
+            # treats its spatially varying donor bounds without ill-conditioned
+            # generic optimization.
+            nx, ny = shapes[:2]
+            kx = 2*np.pi*np.fft.fftfreq(nx, d=parameters.spacing_m)
+            ky = 2*np.pi*np.fft.fftfreq(ny, d=parameters.spacing_m)
+            if nx % 2 == 0:
+                kx[nx//2] = 0.0
+            if ny % 2 == 0:
+                ky[ny//2] = 0.0
+            wave_number_squared = (kx[:, None]**2+ky[None, :]**2)[..., None]
+            # A small augmented penalty lets the linear excess term move the
+            # zero Fourier mode on the same iteration scale as the bounded
+            # high modes; rho~lambda_max would require O(10^4) iterations just
+            # to traverse a typical reservoir.
+            rho = max(spectral_lipschitz/2048.0, 1e-40)
+            denominator = (rho+parameters.ordered_gradient_J_m3
+                           *wave_number_squared)
+            dual = {s: np.zeros_like(y[s]) for s in ("plus", "minus")}
+            delta_excess = (parameters.ordered_excess_J_m
+                            -parameters.disordered_excess_J_m)
+            maximum_iterations = max(
+                4000, int(parameters.ordering_implicit_max_nfev)*40)
+            for iteration in range(maximum_iterations):
+                previous_z = {s: z[s].copy() for s in ("plus", "minus")}
+                primal = dual_change = 0.0
+                for sign in ("plus", "minus"):
+                    rhs = rho*(z[sign]-dual[sign])-delta_excess
+                    spectrum = np.fft.fftn(rhs, axes=(0, 1))
+                    y[sign] = np.real(np.fft.ifftn(
+                        spectrum/denominator, axes=(0, 1)))
+                    z[sign] = np.clip(y[sign]+dual[sign], 0.0, totals[sign])
+                    dual[sign] += y[sign]-z[sign]
+                    scale = np.maximum(totals[sign], diagnostic_density_floor)
+                    primal = max(primal, float(np.max(
+                        np.abs(y[sign]-z[sign])/scale)))
+                    dual_change = max(dual_change, float(np.max(
+                        np.abs(z[sign]-previous_z[sign])/scale)))
+                equilibrium_iterations = iteration+1
+                projected_change = max(primal, dual_change)
+                if projected_change <= 2e-12:
+                    break
+            y = z
+        else:
+            step = 0.9/lipschitz_J_m3
+            maximum_iterations = max(
+                4000, int(parameters.ordering_implicit_max_nfev)*40)
+            for iteration in range(maximum_iterations):
+                trial_state = replace(
+                    inventory,
+                    wall_ordered_plus_m2=z["plus"],
+                    wall_tangle_plus_m2=totals["plus"]-z["plus"],
+                    wall_ordered_minus_m2=z["minus"],
+                    wall_tangle_minus_m2=totals["minus"]-z["minus"])
+                mu = extensive_wall_chemical_potentials_J_m(
+                    trial_state, systems, topologies, orientation_rad,
+                    target_nye_m1, parameters)
+                next_y = {}
+                projected_change = 0.0
+                for sign in ("plus", "minus"):
+                    gradient = (mu[f"ordered_{sign}"]
+                                -mu[f"tangle_{sign}"])
+                    next_y[sign] = np.clip(
+                        z[sign]-step*gradient, 0.0, totals[sign])
+                    projected_change = max(projected_change, float(np.max(
+                        np.abs(next_y[sign]-y[sign])
+                        /np.maximum(totals[sign], 1.0))))
+                next_acceleration = 0.5*(1.0+np.sqrt(
+                    1.0+4.0*acceleration*acceleration))
+                factor = (acceleration-1.0)/next_acceleration
+                z = {s: np.clip(next_y[s]+factor*(next_y[s]-y[s]),
+                                0.0, totals[s])
+                     for s in ("plus", "minus")}
+                y = next_y
+                acceleration = next_acceleration
+                equilibrium_iterations = iteration+1
+                if projected_change <= 2e-12:
+                    break
+        equilibrium_vector = np.concatenate([
+            np.divide(y[s], totals[s], out=np.zeros_like(y[s]),
+                      where=active[s])[active[s]]
+            for s in ("plus", "minus")])
+        boundary_tolerance = 128*np.finfo(float).eps
+        equilibrium_vector[equilibrium_vector <= boundary_tolerance] = 0.0
+        equilibrium_vector[equilibrium_vector >= 1.0-boundary_tolerance] = 1.0
+        equilibrium_state = state_from_q(equilibrium_vector)
+        equilibrium_transfer, _, _ = ordering_residual(
+            equilibrium_state, systems, topologies, orientation_rad,
+            target_nye_m1, stress_Pa, temperature_K, parameters)
+        normalized_remainder = 0.0
+        for sign in ("plus", "minus"):
+            value = np.divide(
+                total_dt*np.abs(equilibrium_transfer[sign]),
+                np.maximum(totals[sign], diagnostic_density_floor),
+                out=np.zeros_like(totals[sign]), where=active[sign])
+            normalized_remainder = max(normalized_remainder, float(np.max(value)))
+        asymptotic_tolerance = max(
+            parameters.ordering_implicit_residual_tolerance, 1e-3)
+        if (normalized_remainder > asymptotic_tolerance
+                or projected_change > 2e-10):
+            raise RuntimeError(
+                "bounded asymptotic ordering solve failed: "
+                f"normalized_remainder={normalized_remainder:.6e}, "
+                f"projected_change={projected_change:.6e}")
+        # Reuse the common endpoint ledger below without presenting the
+        # minimization as a backward-Euler root.
+        class _AsymptoticResult:
+            pass
+        solution = _AsymptoticResult()
+        solution.x = equilibrium_vector
+        solution.cost = 0.5*normalized_remainder**2
+        solution.optimality = projected_change
+        solution.nfev = equilibrium_iterations
+        solution.njev = equilibrium_iterations
+        solution.success = True
+        maximum_residual = normalized_remainder
+        integration_method = "bounded_convex_asymptotic"
+        solver_message = "projected convex energy convergence"
+    else:
+        solution = None
+
+    last = {}
+    def residual(vector):
+        candidate = state_from_q(vector)
+        transfer, turnover, mu = ordering_residual(
+            candidate, systems, topologies, orientation_rad, target_nye_m1,
+            stress_Pa, temperature_K, parameters,
+            enforce_availability=False)
+        q = unpack(vector); values = []
+        for sign in ("plus", "minus"):
+            scaled_rate = np.divide(
+                transfer[sign], totals[sign], out=np.zeros_like(totals[sign]),
+                where=active[sign])
+            implicit_trial = q0_fields[sign]+total_dt*scaled_rate
+            field = q[sign]-np.clip(implicit_trial, 0.0, 1.0)
+            values.append(field[active[sign]])
+        last.update(candidate=candidate, transfer=transfer,
+                    turnover=turnover, mu=mu)
+        return np.concatenate(values)
+
+    def jacobian(vector):
+        candidate = state_from_q(vector)
+        mu = extensive_wall_chemical_potentials_J_m(
+            candidate, systems, topologies, orientation_rad, target_nye_m1,
+            parameters)
+        stress = np.asarray(stress_Pa, dtype=float)
+        if stress.ndim == 3:
+            stress = np.max(np.abs(stress), axis=2)
+        attempt = _attempt_rate_s(stress, temperature_K, parameters)[..., None]
+        thermal = (parameters.event_length_m/(2*KB_J_K
+                   *np.asarray(temperature_K)[..., None]))
+        coefficients = {}
+        interior = {}
+        for sign in ("plus", "minus"):
+            affinity = ((mu[f"ordered_{sign}"]-mu[f"tangle_{sign}"])
+                        *thermal)
+            coefficients[sign] = (-attempt*totals[sign]
+                                  *(1.0-np.tanh(affinity)**2)*thermal)
+            raw_rate = (-attempt*totals[sign]*np.tanh(affinity))
+            trial = q0_fields[sign]+total_dt*np.divide(
+                raw_rate, totals[sign], out=np.zeros_like(raw_rate),
+                where=active[sign])
+            interior[sign] = (trial > 0.0) & (trial < 1.0)
+
+        def matvec(direction):
+            dq = unpack(direction)
+            dy = {s: totals[s]*dq[s] for s in ("plus", "minus")}
+            dmu_plus, dmu_minus = _ordering_affinity_linear_action(
+                dy["plus"], dy["minus"], systems, orientation_rad, parameters)
+            dmu = {"plus": dmu_plus, "minus": dmu_minus}
+            output = []
+            for sign in ("plus", "minus"):
+                dr = coefficients[sign]*dmu[sign]
+                scaled = np.divide(dr, totals[sign],
+                                   out=np.zeros_like(dr), where=active[sign])
+                field = dq[sign]-total_dt*interior[sign]*scaled
+                output.append(field[active[sign]])
+            return np.concatenate(output)
+
+        def rmatvec(direction):
+            v = unpack(direction)
+            weighted = {}
+            for sign in ("plus", "minus"):
+                weighted[sign] = np.divide(
+                    coefficients[sign]*interior[sign]*v[sign], totals[sign],
+                    out=np.zeros_like(v[sign]), where=active[sign])
+            lv_plus, lv_minus = _ordering_affinity_linear_action(
+                weighted["plus"], weighted["minus"], systems,
+                orientation_rad, parameters)
+            lv = {"plus": lv_plus, "minus": lv_minus}
+            output = []
+            for sign in ("plus", "minus"):
+                field = v[sign]-total_dt*totals[sign]*lv[sign]
+                output.append(field[active[sign]])
+            return np.concatenate(output)
+        return LinearOperator((active_count, active_count), matvec=matvec,
+                              rmatvec=rmatvec, dtype=float)
+
+    if solution is None:
+        epsilon = 8*np.finfo(float).eps
+        projected_seed = q0-residual(q0)
+        initial = np.minimum(np.maximum(projected_seed, epsilon), 1.0-epsilon)
+        solution = least_squares(
+            residual, initial, jac=jacobian, bounds=(0.0, 1.0),
+            ftol=None, xtol=parameters.ordering_implicit_residual_tolerance,
+            gtol=parameters.ordering_implicit_residual_tolerance,
+            max_nfev=int(parameters.ordering_implicit_max_nfev),
+            tr_solver="lsmr")
+        final_residual = residual(solution.x)
+        maximum_residual = float(np.max(np.abs(final_residual)))
+        integration_method = "bounded_backward_euler"
+        solver_message = str(solution.message)
+        if (not solution.success or maximum_residual
+                > parameters.ordering_implicit_residual_tolerance):
+            raise RuntimeError(
+                "bounded implicit ordering solve failed: "
+                f"success={solution.success}, max_scaled_residual="
+                f"{maximum_residual:.6e}, message={solution.message}")
+    updated = state_from_q(solution.x)
+    endpoint_transfer, endpoint_turnover, endpoint_mu = ordering_residual(
+        updated, systems, topologies, orientation_rad, target_nye_m1,
+        stress_Pa, temperature_K, parameters)
+    extent = {s: (getattr(updated, f"wall_ordered_{s}_m2")
+                  -getattr(inventory, f"wall_ordered_{s}_m2"))
+              for s in ("plus", "minus")}
+    topology = None; updated_alignment = alignment
+    if alignment is not None:
+        from .wall_topology_supply import apply_signed_ordering_extent
+        updated, updated_alignment, topology = apply_signed_ordering_extent(
+            inventory, alignment, extent["plus"], extent["minus"], systems,
+            orientation_rad, topologies)
+    before_energy = extensive_wall_energy_components_J_m3(
+        inventory, systems, topologies, orientation_rad, target_nye_m1,
+        parameters)["total"]
+    after_energy = extensive_wall_energy_components_J_m3(
+        updated, systems, topologies, orientation_rad, target_nye_m1,
+        parameters)["total"]
+    aggregate = {
+        "transfer_m2_s": endpoint_transfer,
+        "turnover_m2_s": endpoint_turnover,
+        "accepted_transfer_m2_s": {s: extent[s]/total_dt
+                                    for s in ("plus", "minus")},
+        "chemical_potential_J_m": endpoint_mu,
+        "free_energy_rate_W_m3": (after_energy-before_energy)/total_dt,
+        "internal_substeps": 1, "maximum_internal_substep_s": total_dt,
+        "last_internal_substep_s": total_dt,
+        "complete_elapsed_time_s": total_dt,
+        "discarded_reaction_time_s": 0.0,
+        "stationary_remainder_s": 0.0,
+        "requested_internal_substeps": 1,
+        "internal_resolution_limit_active": False,
+        "integration_method": integration_method,
+        "stiff_dispatch": "qualified_asymptotic" if integration_method.endswith(
+            "asymptotic") else "finite_time_backward_euler",
+        "maximum_attempt_exposure": attempt_exposure,
+        "implicit_success": True,
+        "implicit_max_scaled_residual": maximum_residual,
+        "implicit_cost": float(solution.cost),
+        "implicit_optimality": float(solution.optimality),
+        "implicit_nfev": int(solution.nfev),
+        "implicit_njev": int(solution.njev or 0),
+        "solver_message": solver_message,
+        "asymptotic_endpoint_inventory_change_bound_relative": (
+            maximum_residual if integration_method.endswith("asymptotic")
+            else None),
+        "asymptotic_relative_diagnostic_density_floor_m2": (
+            diagnostic_density_floor if integration_method.endswith("asymptotic")
+            else None),
+        "turnover_quadrature": "backward_euler_endpoint",
+        "free_energy_rate_source": "exact_discrete_endpoint_difference",
+    }
+    if alignment is not None:
+        aggregate["topology_subcycled"] = False
+        aggregate["topology_ledger"] = topology
+        return updated, updated_alignment, aggregate, 1.0
+    return updated, aggregate, 1.0
+
+
 def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
                            target_nye_m1, stress_Pa, temperature_K, parameters,
                            dt_s, alignment=None):
@@ -348,6 +954,10 @@ def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
     conservative map is subcycled over the complete elapsed time and all
     reported rates are actual time averages.
     """
+    if parameters.ordering_integration_method == "implicit_backward_euler":
+        return _accepted_ordering_implicit(
+            inventory, systems, topologies, orientation_rad, target_nye_m1,
+            stress_Pa, temperature_K, parameters, dt_s, alignment=alignment)
     total_dt = float(dt_s)
     if not np.isfinite(total_dt) or total_dt <= 0.0:
         raise ValueError("ordering timestep must be finite and positive")
@@ -463,6 +1073,7 @@ def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
         "stationary_remainder_s": stationary_remainder,
         "requested_internal_substeps": requested_count,
         "internal_resolution_limit_active": bool(count < requested_count),
+        "integration_method": "complete_time_explicit_subcycling",
     }
     if alignment is not None:
         aggregate["topology_subcycled"] = True
