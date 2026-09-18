@@ -253,6 +253,11 @@ def main():
         "legacy_reject"), default="energy_limited")
     parser.add_argument("--topology-route-enabled", action="store_true",
                         help="use explicit reorientation/junction comparator")
+    parser.add_argument(
+        "--ordering-integration-method",
+        choices=("source_default", "v40_stiff_dispatch"),
+        default="source_default",
+        help="select the historical source method or current V40 finite/stiff dispatch")
     args = parser.parse_args()
     args.case_dir.mkdir(parents=True, exist_ok=True)
     signal.signal(signal.SIGTERM, _request_stop)
@@ -264,6 +269,11 @@ def main():
      kinetics, spacing) = create_case(
         args.grid, args.condition, args.seed, args.length_m)
     common = replace(common, bath_temperature_K=args.temperature_K)
+    if args.ordering_integration_method == "v40_stiff_dispatch":
+        extensive = replace(
+            extensive, ordering_integration_method="implicit_backward_euler",
+            ordering_internal_substep_s=5e-11,
+            ordering_internal_max_substeps=8192)
     initial = replace(initial, common=replace(
         initial.common, temperature_K=np.full((args.grid, args.grid),
                                                args.temperature_K)))
@@ -274,6 +284,7 @@ def main():
         "initial_strain": args.initial_strain,
         "target_strain": args.target_strain, "trial_dt_s": args.trial_dt_s,
         "mura_work_budget_mode": args.mura_work_budget_mode,
+        "ordering_integration_method": args.ordering_integration_method,
         "topology_route_enabled": bool(args.topology_route_enabled),
         "source_sha": os.environ.get(
             "V37_SOURCE_SHA", os.environ.get(
