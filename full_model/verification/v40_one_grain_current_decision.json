@@ -51,6 +51,8 @@
         "wall_tangle_minus_m2": 0.0,
         "wall_tangle_plus_m2": 0.0
       },
+      "frank_bilby_closed": true,
+      "frank_bilby_relative_tolerance": 0.2,
       "independent_frank_bilby": {
         "absolute_residual": 0.0,
         "candidate_wall_present": false,
@@ -345,6 +347,8 @@
         "wall_tangle_minus_m2": 1.5884828574061087,
         "wall_tangle_plus_m2": 1.5880781209415287
       },
+      "frank_bilby_closed": false,
+      "frank_bilby_relative_tolerance": 0.2,
       "independent_frank_bilby": {
         "absolute_residual": 2.8462719505568666e-07,
         "candidate_wall_present": false,
@@ -598,7 +602,7 @@
   "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_EXPOSURE",
   "drx_claimed": false,
   "fixture_passed": true,
-  "generated_utc": "2026-09-18T06:34:40.225974+00:00",
+  "generated_utc": "2026-09-18T07:11:49.437101+00:00",
   "phase_or_grain_allocation_present": false,
   "schema": "asb-drx/v40/current-one-grain-decision/v1",
   "scientific_gate_passed": false

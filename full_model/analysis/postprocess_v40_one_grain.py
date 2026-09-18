@@ -23,6 +23,18 @@ from full_model.production.density_state_map import derived_density_fields
 from full_model.production.wall_topology_supply import reservoir_nye_m1
 
 
+FRANK_BILBY_RELATIVE_TOLERANCE = 0.20
+
+
+def qualified_lagb_candidate(row: dict) -> bool:
+    """Require persistence, an angle-bearing section, and independent closure."""
+    frank = row["independent_frank_bilby"]
+    return bool(
+        row["persistent_last_three_records"]
+        and frank["candidate_wall_present"]
+        and frank["relative_residual"] <= FRANK_BILBY_RELATIVE_TOLERANCE)
+
+
 def diagnose(directory: Path) -> dict:
     summary = summarize(directory)
     config = json.loads((directory/"case_config.json").read_text())
@@ -64,6 +76,9 @@ def diagnose(directory: Path) -> dict:
             "maximum_m1": float(np.max(nye_norm)),
         },
         "independent_frank_bilby": frank,
+        "frank_bilby_relative_tolerance": FRANK_BILBY_RELATIVE_TOLERANCE,
+        "frank_bilby_closed": bool(
+            frank["relative_residual"] <= FRANK_BILBY_RELATIVE_TOLERANCE),
         "wall_geometry": wall_metrics,
         "persistent_last_three_records": persistent,
         "donor_capacity": summary["integrated_inventory_m_per_m_thickness"],
@@ -92,9 +107,7 @@ def main() -> None:
         serial.append({key: value for key, value in row.items()
                        if key != "fields"})
     hard = all(row["summary"]["hard_invariants_passed"] for row in diagnosed)
-    candidates = [row for row in diagnosed if
-                  row["persistent_last_three_records"] and
-                  row["independent_frank_bilby"]["candidate_wall_present"]]
+    candidates = [row for row in diagnosed if qualified_lagb_candidate(row)]
     result = {
         "schema": "asb-drx/v40/current-one-grain-decision/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
