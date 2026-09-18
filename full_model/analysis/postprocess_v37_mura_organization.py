@@ -33,6 +33,19 @@ def last_checkpoint(case_dir):
     return sorted(Path(case_dir).glob("checkpoint_step_*.npz"))[-1]
 
 
+def checkpoint_scoped_history(history, metadata):
+    """Discard records that are newer than the atomically retained state."""
+    step = int(metadata["step"])
+    strain = float(metadata["applied_strain"])
+    tolerance = 64*np.finfo(float).eps*max(abs(strain), 1.0)
+    scoped = [row for row in history
+              if int(row["step"]) <= step
+              and float(row["applied_strain"]) <= strain+tolerance]
+    if not scoped:
+        raise ValueError("no history record belongs to retained checkpoint")
+    return scoped
+
+
 def summarize(case_dir):
     case_dir = Path(case_dir)
     config = json.loads((case_dir/"case_config.json").read_text())
@@ -43,6 +56,7 @@ def summarize(case_dir):
         config["grid"], config["condition"], config["seed"], config["length_m"])
     checkpoint = last_checkpoint(case_dir)
     state, metadata = load_checkpoint(checkpoint, systems, topologies)
+    history = checkpoint_scoped_history(history, metadata)
     fields = derived_density_fields(state.density, topologies)
     nye = reservoir_nye_m1(
         state.reservoir_alignment, systems, state.common.orientation_rad,
@@ -60,6 +74,22 @@ def summarize(case_dir):
                and row["minimum_heat_increment_J_m3"] >= 0.0
                for row in history)
     final = history[-1]
+    retained_step = int(metadata["step"])
+    retained_strain = float(metadata["applied_strain"])
+    tolerance = 64*np.finfo(float).eps*max(abs(retained_strain), 1.0)
+    status_matches_checkpoint = bool(
+        int(status.get("step", -1)) == retained_step
+        and abs(float(status.get("applied_strain", float("nan")))
+                -retained_strain) <= tolerance)
+    target = float(config["target_strain"])
+    reached_target = retained_strain >= target-(
+        64*np.finfo(float).eps*max(abs(target), 1.0))
+    retained_status = (
+        "COMPLETED" if reached_target else
+        status["status"] if status_matches_checkpoint else
+        "RETAINED_CHECKPOINT_PARTIAL")
+    wall_seconds = (float(status["wall_seconds_this_invocation"])
+                    if status_matches_checkpoint else None)
     orientation_span = final["orientation_span_deg"]
     ordered = final["ordered_line_m2_cells"]
     wall = final["total_wall_line_m2_cells"]
@@ -74,15 +104,17 @@ def summarize(case_dir):
         "condition": config["condition"],
         "topology_route_enabled": config["topology_route_enabled"],
         "source_sha": config["source_sha"],
-        "status": status["status"],
+        "status": retained_status,
+        "status_matches_checkpoint": status_matches_checkpoint,
         "grid": config["grid"], "spacing_m": spacing,
         "initial_strain": config["initial_strain"],
-        "final_strain": status["applied_strain"],
-        "strain_exposure": status["applied_strain"]-config["initial_strain"],
-        "accepted_intervals": status["step"],
-        "wall_seconds": status["wall_seconds_this_invocation"],
+        "final_strain": retained_strain,
+        "strain_exposure": retained_strain-config["initial_strain"],
+        "accepted_intervals": retained_step,
+        "wall_seconds": wall_seconds,
         "seconds_per_accepted_interval": (
-            status["wall_seconds_this_invocation"]/max(status["step"], 1)),
+            wall_seconds/max(retained_step, 1)
+            if wall_seconds is not None else None),
         "checkpoint": checkpoint.name,
         "checkpoint_sha256": sha256(checkpoint),
         "history_sha256": sha256(case_dir/"history.jsonl"),

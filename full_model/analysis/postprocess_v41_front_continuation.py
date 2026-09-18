@@ -15,6 +15,8 @@ def main():
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--switch-after-intervals", type=int, default=15)
+    parser.add_argument("--execution-source-sha", required=True,
+                        help="HEAD at process launch; later analysis-only commits may change reported HEAD")
     args = parser.parse_args()
     raw = json.loads(args.input.read_text())
     records = raw["records"]
@@ -27,7 +29,11 @@ def main():
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "input": {"path": str(args.input.resolve()),
                   "sha256": hashlib.sha256(args.input.read_bytes()).hexdigest()},
-        "source_sha": raw["source_sha"],
+        "source_sha": args.execution_source_sha,
+        "completion_worktree_head": raw["source_sha"],
+        "source_scope_note": (
+            "The worktree HEAD changed during execution only through "
+            "analysis/report additions; production operators are identical."),
         "protocol": raw["protocol"],
         "zero_applied_front_work": True,
         "physical_time_s": raw["physical_time_s"],

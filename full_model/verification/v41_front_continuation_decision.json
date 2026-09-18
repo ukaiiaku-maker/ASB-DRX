@@ -1,0 +1,1956 @@
+{
+  "all_common_clocks_closed": true,
+  "classification": "REPAIRED_DOWNHILL_ADVANCE_THEN_COMPLETE_ENERGY_STATIONARITY",
+  "completion_worktree_head": "4844eff4878a4156da748aeafd33bdeaeabf4153",
+  "drx_claimed": false,
+  "first_stationary_after_last_publication": {
+    "common_clock_closed": true,
+    "external_clock_increment_s": 1.5625e-05,
+    "front_a_to_b_event_J": 3.472279385270607e-25,
+    "front_absolute_sweep_m3": 0.0,
+    "front_b_to_a_event_J": 8.253958535287364e-24,
+    "front_candidate_available_change_J": 0.0,
+    "front_candidate_delta_helmholtz_J": 0.0,
+    "front_classification": "REJECTED_BY_BIDIRECTIONAL_RATE",
+    "front_complete_energy_delta_J": 0.0,
+    "front_contour_displacement_m": 0.0,
+    "front_external_work_J": 0.0,
+    "front_kinetic_accepted": false,
+    "front_operator_exposure_s": 1.5625e-05,
+    "front_proposed_signed_volume_m3": 4.9535540438769315e-24,
+    "front_published": false,
+    "front_rate_m_s": 0.0,
+    "front_reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE",
+    "front_signed_sweep_m3": 0.0,
+    "front_thermodynamic_accepted": true,
+    "front_thermodynamic_classification": "EXACT_ZERO_EVENT_IDENTITY",
+    "interval": 21,
+    "macro_dt_s": 1.5625e-05,
+    "mura_deposited_heat_increment_J_m3_cells": 1272585296.2350655,
+    "mura_operator_exposure_s": 1.5625e-05,
+    "mura_plastic_work_increment_J_m3_cells": 1284051149.8062413,
+    "mura_post_elapsed_s": 7.8125e-06,
+    "mura_pre_elapsed_s": 7.8125e-06,
+    "mura_stored_line_energy_increment_J_m3_cells": 10693430.85599932,
+    "ordering_post": {
+      "accepted_dt_s": 7.8125e-06,
+      "deposited_heat_increment_J_m3_cells": 634210873.1208646,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": -1.341104507446289e-07,
+      "minimum_heat_increment_J_m3": 3815.562422673699,
+      "ordering_complete_elapsed_time_s": 7.8125e-06,
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "ordering_endpoint_remainder_relative": 2.8969853792295948e-11,
+      "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+      "ordering_integration_method": "bounded_convex_asymptotic",
+      "ordering_maximum_attempt_exposure": 153.88921008005747,
+      "ordering_solver_evaluations": 4,
+      "ordering_stiff_dispatch": "qualified_asymptotic",
+      "plastic_work_increment_J_m3_cells": 639942586.8185844,
+      "stored_line_energy_increment_J_m3_cells": 5347538.31681861,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "ordering_pre": {
+      "accepted_dt_s": 7.8125e-06,
+      "deposited_heat_increment_J_m3_cells": 638374423.1142008,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": -1.9371509552001953e-07,
+      "minimum_heat_increment_J_m3": 4055.1173682355247,
+      "ordering_complete_elapsed_time_s": 7.8125e-06,
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "ordering_endpoint_remainder_relative": 3.388376658624799e-11,
+      "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+      "ordering_integration_method": "bounded_convex_asymptotic",
+      "ordering_maximum_attempt_exposure": 154.0349587844497,
+      "ordering_solver_evaluations": 4,
+      "ordering_stiff_dispatch": "qualified_asymptotic",
+      "plastic_work_increment_J_m3_cells": 644108562.9876568,
+      "stored_line_energy_increment_J_m3_cells": 5345892.539180711,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "physical_time_end_s": 0.00028125000000000014,
+    "resumed_without_repeating_front": false,
+    "stage_diagnostics": {
+      "after_first_mura_half_stage": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            298.1981621750592,
+            298.1981621750592,
+            218.35106112867882,
+            218.11461983051066
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            298.1981621750592,
+            298.1981621750592,
+            218.35109130094173,
+            218.1145872297906
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            532.9467837953003,
+            532.9467837953003,
+            623.4156946389661,
+            623.7637401030304
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            532.9467837953003,
+            532.9467837953003,
+            623.4058488548729,
+            623.7735694102056
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.530905445944457,
+            3.5467289104686763
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.5310708700122806,
+            3.5465609238559175
+          ]
+        },
+        "maximum_abs_beta_p": 0.0010723113610206286,
+        "maximum_abs_slip": 0.0013189150173176013,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2591366451080583,
+          "curl_beta_rms_m1": 715.4611942242741,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.005713926441534528,
+          "difference_interface_rms_m1": 0.06934789891912045,
+          "difference_rms_m1": 0.06012495781468149,
+          "interface_product_rule_rms_m1": 3.258398090888116,
+          "reservoir_moment_rms_m1": 715.4327413946007
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.179170748820847e-15,
+          "helmholtz_J": 8.970350267273995e-14,
+          "internal_J": 9.74818792822351e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 8.268599254588647e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.778376609495151e-15
+        },
+        "temperature_maximum_K": 1100.5326349056609,
+        "temperature_minimum_K": 1100.1695546385035
+      },
+      "after_front_transaction": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            298.1981621750592,
+            298.1981621750592,
+            218.35106112867882,
+            218.11461983051066
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            298.1981621750592,
+            298.1981621750592,
+            218.35109130094173,
+            218.1145872297906
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            532.9467837953003,
+            532.9467837953003,
+            623.4156946389661,
+            623.7637401030304
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            532.9467837953003,
+            532.9467837953003,
+            623.4058488548729,
+            623.7735694102056
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.530905445944457,
+            3.5467289104686763
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.5310708700122806,
+            3.5465609238559175
+          ]
+        },
+        "maximum_abs_beta_p": 0.0010723113610206286,
+        "maximum_abs_slip": 0.0013189150173176013,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2591366451080583,
+          "curl_beta_rms_m1": 715.4611942242741,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.005713926441534528,
+          "difference_interface_rms_m1": 0.06934789891912045,
+          "difference_rms_m1": 0.06012495781468149,
+          "interface_product_rule_rms_m1": 3.258398090888116,
+          "reservoir_moment_rms_m1": 715.4327413946007
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.179170748820847e-15,
+          "helmholtz_J": 8.970350267273995e-14,
+          "internal_J": 9.74818792822351e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 8.268599254588647e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.778376609495151e-15
+        },
+        "temperature_maximum_K": 1100.5326349056609,
+        "temperature_minimum_K": 1100.1695546385035
+      },
+      "after_second_mura_half_stage": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            297.81600605903225,
+            297.81600605903225,
+            216.12109492383564,
+            215.87627821978813
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            297.81600605903225,
+            297.81600605903225,
+            216.1211330339933,
+            215.8762377282854
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            533.3289399113274,
+            533.3289399113274,
+            626.0687923550958,
+            626.4295127277126
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            533.3289399113274,
+            533.3289399113274,
+            626.05808199273,
+            626.4405048889907
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.6264305570037605,
+            3.6427610979456655
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.6266082180927732,
+            3.6425807012980687
+          ]
+        },
+        "maximum_abs_beta_p": 0.0011006617149529139,
+        "maximum_abs_slip": 0.0013538899004275182,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.259195096873428,
+          "curl_beta_rms_m1": 732.6894786555832,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.00604067330211659,
+          "difference_interface_rms_m1": 0.07290236103281693,
+          "difference_rms_m1": 0.06320750047743634,
+          "interface_product_rule_rms_m1": 3.2583980908880315,
+          "reservoir_moment_rms_m1": 732.6617116540891
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.18030940979107e-15,
+          "helmholtz_J": 8.950637822616451e-14,
+          "internal_J": 9.748136020632733e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 8.248772943834081e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.97498198016282e-15
+        },
+        "temperature_maximum_K": 1100.5463499749349,
+        "temperature_minimum_K": 1100.1706447991958
+      },
+      "macro_initial": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            298.5804967722703,
+            298.5804967722703,
+            220.60380399122963,
+            220.37581232567734
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            298.5804967722703,
+            298.5804967722703,
+            220.60382685295198,
+            220.37578724820605
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            532.5644491980893,
+            532.5644491980893,
+            620.7398985344803,
+            621.074974903601
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            532.5644491980893,
+            532.5644491980893,
+            620.7310724696246,
+            621.0840512414256
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.435022696252183,
+            3.4503253697392857
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.4351761304333794,
+            3.4501695466861144
+          ]
+        },
+        "maximum_abs_beta_p": 0.0010438449162499849,
+        "maximum_abs_slip": 0.0012838006468454469,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2590809402962995,
+          "curl_beta_rms_m1": 697.6204826172223,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.005390262496413096,
+          "difference_interface_rms_m1": 0.0657814402388499,
+          "difference_rms_m1": 0.05703211500872201,
+          "interface_product_rule_rms_m1": 3.2583980908881105,
+          "reservoir_moment_rms_m1": 697.5913420144628
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.178037159717569e-15,
+          "helmholtz_J": 8.990192238148922e-14,
+          "internal_J": 9.748240291981904e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 8.288554584373902e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.580480538329825e-15
+        },
+        "temperature_maximum_K": 1100.5188462806923,
+        "temperature_minimum_K": 1100.1683960335413
+      }
+    },
+    "state_metrics": {
+      "beta_p_rms": 0.000434523926480599,
+      "effective_stress_rms_Pa": 451710600.0420103,
+      "family_nye_rms_m1": 448.663742486527,
+      "maximum_abs_slip": 0.0013538899004275182,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 0.0003180972070650678,
+      "temperature_maximum_K": 1100.5463499749349,
+      "temperature_minimum_K": 1100.1706447991958,
+      "total_line_m_per_m_thickness": 6708.109812775001
+    },
+    "temperature_range_K": [
+      1100.1706447991958,
+      1100.5463499749349
+    ]
+  },
+  "generated_utc": "2026-09-18T18:01:18.117340+00:00",
+  "input": {
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v41-front-continuation/4fc4978/n128_to_1ms_complete_dissipation/result.json",
+    "sha256": "b4d69e3b13c46ac81c5157b51cac28612915c69caa0a418bea4cb84eaa468c12"
+  },
+  "last_published": {
+    "common_clock_closed": true,
+    "external_clock_increment_s": 1.5625e-05,
+    "front_a_to_b_event_J": -2.673979872485373e-25,
+    "front_absolute_sweep_m3": 5.400444605259511e-28,
+    "front_b_to_a_event_J": 7.66426980457179e-24,
+    "front_candidate_available_change_J": -1.1032958133323137e-23,
+    "front_candidate_delta_helmholtz_J": -1.1032958133323137e-23,
+    "front_classification": "ACCEPTED_ATOMIC_COUPLED_FRONT",
+    "front_complete_energy_delta_J": -1.1032958133323137e-23,
+    "front_contour_displacement_m": 1.7012489305883035e-13,
+    "front_external_work_J": 0.0,
+    "front_kinetic_accepted": true,
+    "front_operator_exposure_s": 1.5625e-05,
+    "front_proposed_signed_volume_m3": 4.953554035519564e-24,
+    "front_published": true,
+    "front_rate_m_s": 1.0890705018818318e-08,
+    "front_reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE",
+    "front_signed_sweep_m3": 5.400444605259511e-28,
+    "front_thermodynamic_accepted": true,
+    "front_thermodynamic_classification": "ACCEPTED_COMPLETE_PHYSICAL_ENERGY",
+    "interval": 20,
+    "macro_dt_s": 1.5625e-05,
+    "mura_deposited_heat_increment_J_m3_cells": 1289329600.9360855,
+    "mura_operator_exposure_s": 1.5625e-05,
+    "mura_plastic_work_increment_J_m3_cells": 1300840224.062522,
+    "mura_post_elapsed_s": 7.8125e-06,
+    "mura_pre_elapsed_s": 7.8125e-06,
+    "mura_stored_line_energy_increment_J_m3_cells": 10721736.154093832,
+    "ordering_post": {
+      "accepted_dt_s": 7.8125e-06,
+      "deposited_heat_increment_J_m3_cells": 642556429.8859313,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": 1.341104507446289e-07,
+      "minimum_heat_increment_J_m3": 4321.131540846046,
+      "ordering_complete_elapsed_time_s": 7.8125e-06,
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "ordering_endpoint_remainder_relative": 2.912038100893894e-11,
+      "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+      "ordering_integration_method": "bounded_convex_asymptotic",
+      "ordering_maximum_attempt_exposure": 154.18164744627057,
+      "ordering_solver_evaluations": 4,
+      "ordering_stiff_dispatch": "qualified_asymptotic",
+      "plastic_work_increment_J_m3_cells": 648305825.7747223,
+      "stored_line_energy_increment_J_m3_cells": 5357032.53975831,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "ordering_pre": {
+      "accepted_dt_s": 7.8125e-06,
+      "deposited_heat_increment_J_m3_cells": 646773171.0501542,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": 1.4901161193847656e-08,
+      "minimum_heat_increment_J_m3": 4615.851244372094,
+      "ordering_complete_elapsed_time_s": 7.8125e-06,
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "ordering_endpoint_remainder_relative": 3.4054203310417856e-11,
+      "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+      "ordering_integration_method": "bounded_convex_asymptotic",
+      "ordering_maximum_attempt_exposure": 154.32928498741396,
+      "ordering_solver_evaluations": 4,
+      "ordering_stiff_dispatch": "qualified_asymptotic",
+      "plastic_work_increment_J_m3_cells": 652534398.2877996,
+      "stored_line_energy_increment_J_m3_cells": 5364703.614335522,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "physical_time_end_s": 0.00026562500000000013,
+    "resumed_without_repeating_front": false,
+    "stage_diagnostics": {
+      "after_first_mura_half_stage": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            298.9630324737991,
+            298.9630324737991,
+            222.87949120753785,
+            222.66001696390336
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            298.9630324737991,
+            298.9630324737991,
+            222.8795076012182,
+            222.6599985562541
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            532.1819785099401,
+            532.1819785099401,
+            618.0399350943911,
+            618.362425114625
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            532.1819785099401,
+            532.1819785099401,
+            618.0323073317186,
+            618.3702849012054
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.3387957090534797,
+            3.353564661022303
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.3389374280795745,
+            3.353420726863659
+          ]
+        },
+        "maximum_abs_beta_p": 0.0010152616694317491,
+        "maximum_abs_slip": 0.001248546051838875,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2634664989161624,
+          "curl_beta_rms_m1": 679.1516572916381,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.005070160352940398,
+          "difference_interface_rms_m1": 0.06221263991028385,
+          "difference_rms_m1": 0.053937334518458675,
+          "interface_product_rule_rms_m1": 3.262839679067572,
+          "reservoir_moment_rms_m1": 679.1217765069499
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.497896857454969,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169540860416e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.246619186237984e-20,
+          "defect_storage_J": 5.1769051247491636e-15,
+          "helmholtz_J": 9.010164311403838e-14,
+          "internal_J": 9.748293115570807e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432911024293e-15,
+          "phase_local_J": 5.328636182712894e-16,
+          "recoverable_elastic_J": 8.308639861372363e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.381288041669693e-15
+        },
+        "temperature_maximum_K": 1100.5049833265857,
+        "temperature_minimum_K": 1100.1671614243387
+      },
+      "after_front_transaction": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            298.9630089752872,
+            298.9630089752872,
+            222.87947378628735,
+            222.6599995727624
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            298.9630089752872,
+            298.9630089752872,
+            222.879490192614,
+            222.65998115232497
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            532.1819369950722,
+            532.1819369950722,
+            618.0398891967471,
+            618.3623786940256
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            532.1819369950722,
+            532.1819369950722,
+            618.0322609310564,
+            618.3702389885241
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.3387957090534797,
+            3.353564661022303
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.3389374280795745,
+            3.353420726863659
+          ]
+        },
+        "maximum_abs_beta_p": 0.0010152616694317491,
+        "maximum_abs_slip": 0.001248546051838875,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.259028155023605,
+          "curl_beta_rms_m1": 679.1516027523643,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.005070160352940398,
+          "difference_interface_rms_m1": 0.062213013366778015,
+          "difference_rms_m1": 0.053937657583846804,
+          "interface_product_rule_rms_m1": 3.2583980908882704,
+          "reservoir_moment_rms_m1": 679.1217714623507
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.176904707881809e-15,
+          "helmholtz_J": 9.010164310300542e-14,
+          "internal_J": 9.748293114807034e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 8.308639901709098e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.381288045064922e-15
+        },
+        "temperature_maximum_K": 1100.5049833267767,
+        "temperature_minimum_K": 1100.1671614245297
+      },
+      "after_second_mura_half_stage": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            298.5804967722703,
+            298.5804967722703,
+            220.60380399122963,
+            220.37581232567734
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            298.5804967722703,
+            298.5804967722703,
+            220.60382685295198,
+            220.37578724820605
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            532.5644491980893,
+            532.5644491980893,
+            620.7398985344803,
+            621.074974903601
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            532.5644491980893,
+            532.5644491980893,
+            620.7310724696246,
+            621.0840512414256
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.435022696252183,
+            3.4503253697392857
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.4351761304333794,
+            3.4501695466861144
+          ]
+        },
+        "maximum_abs_beta_p": 0.0010438449162499849,
+        "maximum_abs_slip": 0.0012838006468454469,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2590809402962995,
+          "curl_beta_rms_m1": 697.6204826172223,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.005390262496413096,
+          "difference_interface_rms_m1": 0.0657814402388499,
+          "difference_rms_m1": 0.05703211500872201,
+          "interface_product_rule_rms_m1": 3.2583980908881105,
+          "reservoir_moment_rms_m1": 697.5913420144628
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.178037159717569e-15,
+          "helmholtz_J": 8.990192238148922e-14,
+          "internal_J": 9.748240291981904e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 8.288554584373902e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.580480538329825e-15
+        },
+        "temperature_maximum_K": 1100.5188462806923,
+        "temperature_minimum_K": 1100.1683960335413
+      },
+      "macro_initial": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            299.34572143368786,
+            299.34572143368786,
+            225.17823588529114,
+            224.96733932963673
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            299.34572143368786,
+            299.34572143368786,
+            225.1782467329565,
+            224.96732665718983
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            531.7992895500513,
+            531.7992895500513,
+            615.3161044719956,
+            615.6258271588039
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            531.7992895500513,
+            531.7992895500513,
+            615.3096657329464,
+            615.6324792919792
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.2422392175294497,
+            3.2564623821039524
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.2423695261153176,
+            3.256330031543428
+          ]
+        },
+        "maximum_abs_beta_p": 0.000986560872977301,
+        "maximum_abs_slip": 0.0012131504567125505,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.26341684918889,
+          "curl_beta_rms_m1": 660.0419890350738,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.004754177415779028,
+          "difference_interface_rms_m1": 0.058652921741371926,
+          "difference_rms_m1": 0.0508505110330742,
+          "interface_product_rule_rms_m1": 3.26283967906759,
+          "reservoir_moment_rms_m1": 660.0114120944969
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.497896857454969,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169540860416e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.246619186237984e-20,
+          "defect_storage_J": 5.175774913980545e-15,
+          "helmholtz_J": 9.030267564441575e-14,
+          "internal_J": 9.748346400306004e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432911024293e-15,
+          "phase_local_J": 5.328636182712894e-16,
+          "recoverable_elastic_J": 8.328856135486963e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 7.18078835864429e-15
+        },
+        "temperature_maximum_K": 1100.491045245858,
+        "temperature_minimum_K": 1100.1658426096974
+      }
+    },
+    "state_metrics": {
+      "beta_p_rms": 0.0004124224001748935,
+      "effective_stress_rms_Pa": 452508743.49682504,
+      "family_nye_rms_m1": 427.18821278453646,
+      "maximum_abs_slip": 0.0012838006468454469,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 0.0002992532130981495,
+      "temperature_maximum_K": 1100.5188462806923,
+      "temperature_minimum_K": 1100.1683960335413,
+      "total_line_m_per_m_thickness": 6703.939717640536
+    },
+    "temperature_range_K": [
+      1100.1683960335413,
+      1100.5188462806923
+    ]
+  },
+  "physical_time_s": 0.0010000000000000007,
+  "protocol": "predeformed_hold_zero_applied_front_work",
+  "repaired_additional_displacement_m": 7.1070460275513564e-12,
+  "repaired_intervals": 53,
+  "repaired_published_intervals": 6,
+  "schema": "asb-drx/v41/front-continuation-decision/v1",
+  "source_scope_note": "The worktree HEAD changed during execution only through analysis/report additions; production operators are identical.",
+  "source_sha": "29068d03dc7e6c305bd983d3bd7765968e642d7b",
+  "stationary_tail_intervals": 47,
+  "terminal_record": {
+    "common_clock_closed": true,
+    "external_clock_increment_s": 1.5625e-05,
+    "front_a_to_b_event_J": 2.085864422796856e-23,
+    "front_absolute_sweep_m3": 0.0,
+    "front_b_to_a_event_J": 2.799223980510865e-23,
+    "front_candidate_available_change_J": 0.0,
+    "front_candidate_delta_helmholtz_J": 0.0,
+    "front_classification": "REJECTED_BY_BIDIRECTIONAL_RATE",
+    "front_complete_energy_delta_J": 0.0,
+    "front_contour_displacement_m": 0.0,
+    "front_external_work_J": 0.0,
+    "front_kinetic_accepted": false,
+    "front_operator_exposure_s": 1.5625e-05,
+    "front_proposed_signed_volume_m3": 4.9535540438769315e-24,
+    "front_published": false,
+    "front_rate_m_s": 0.0,
+    "front_reverse_edge_status": "DISTINCT_OUTGOING_ENDPOINTS_FROM_ONE_ACCEPTED_STATE",
+    "front_signed_sweep_m3": 0.0,
+    "front_thermodynamic_accepted": true,
+    "front_thermodynamic_classification": "EXACT_ZERO_EVENT_IDENTITY",
+    "interval": 67,
+    "macro_dt_s": 1.5625e-05,
+    "mura_deposited_heat_increment_J_m3_cells": 736646515.0030801,
+    "mura_operator_exposure_s": 1.5625e-05,
+    "mura_plastic_work_increment_J_m3_cells": 744562378.2981977,
+    "mura_post_elapsed_s": 7.8125e-06,
+    "mura_pre_elapsed_s": 7.8125e-06,
+    "mura_stored_line_energy_increment_J_m3_cells": 7603629.115877315,
+    "ordering_post": {
+      "accepted_dt_s": 7.8125e-06,
+      "deposited_heat_increment_J_m3_cells": 367343251.9348915,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": 0.0,
+      "minimum_heat_increment_J_m3": 355.7629847950146,
+      "ordering_complete_elapsed_time_s": 7.8125e-06,
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "ordering_endpoint_remainder_relative": 2.4989181321515987e-11,
+      "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+      "ordering_integration_method": "bounded_convex_asymptotic",
+      "ordering_maximum_attempt_exposure": 143.635691413991,
+      "ordering_solver_evaluations": 4,
+      "ordering_stiff_dispatch": "qualified_asymptotic",
+      "plastic_work_increment_J_m3_cells": 371294957.82233465,
+      "stored_line_energy_increment_J_m3_cells": 3796288.784957111,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "ordering_pre": {
+      "accepted_dt_s": 7.8125e-06,
+      "deposited_heat_increment_J_m3_cells": 369303263.06818867,
+      "event_scale": 1.0,
+      "family_event_scales": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "family_selection_rule": "complete_discrete_full_event_affinity_then_joint_backtrack",
+      "first_law_residual_J_m3_cells": 1.4901161193847656e-08,
+      "minimum_heat_increment_J_m3": 395.6627096606133,
+      "ordering_complete_elapsed_time_s": 7.8125e-06,
+      "ordering_discarded_reaction_time_s": 0.0,
+      "ordering_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "ordering_endpoint_remainder_relative": 2.5021288597036556e-11,
+      "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+      "ordering_integration_method": "bounded_convex_asymptotic",
+      "ordering_maximum_attempt_exposure": 143.7213299209398,
+      "ordering_solver_evaluations": 4,
+      "ordering_stiff_dispatch": "qualified_asymptotic",
+      "plastic_work_increment_J_m3_cells": 373267420.47586316,
+      "stored_line_energy_increment_J_m3_cells": 3807340.3309202045,
+      "unreacted_remainder_semantics": "deterministic_constrained_rate_no_debt_recomputed_next_step"
+    },
+    "physical_time_end_s": 0.0010000000000000007,
+    "resumed_without_repeating_front": false,
+    "stage_diagnostics": {
+      "after_first_mura_half_stage": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            263.89029270293577,
+            263.89029270293577,
+            86.8948252275854,
+            86.33901296843187
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            263.89029270293577,
+            263.89029270293577,
+            86.89512257877013,
+            86.33872632484332
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            567.2546532674384,
+            567.2546532674384,
+            784.6662580544715,
+            785.78809457392
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            567.2546532674384,
+            567.2546532674384,
+            784.67574316479,
+            785.7783185413915
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.570481571480629,
+            10.572860383970081
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.5717817490875,
+            10.571549260026954
+          ]
+        },
+        "maximum_abs_beta_p": 0.0032520866035808376,
+        "maximum_abs_slip": 0.004014874917745193,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.294049748199062,
+          "curl_beta_rms_m1": 1445.6752227812572,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.09101069759751089,
+          "difference_interface_rms_m1": 0.5537570948174763,
+          "difference_rms_m1": 0.48172183551798325,
+          "interface_product_rule_rms_m1": 3.2583980908909864,
+          "reservoir_moment_rms_m1": 1445.6737610894993
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.2660506077443685e-15,
+          "helmholtz_J": 7.58137779729714e-14,
+          "internal_J": 9.744896000275568e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 6.87093879871944e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 2.1635182029784282e-14
+        },
+        "temperature_maximum_K": 1101.5436588276891,
+        "temperature_minimum_K": 1100.218059776495
+      },
+      "after_front_transaction": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            263.89029270293577,
+            263.89029270293577,
+            86.8948252275854,
+            86.33901296843187
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            263.89029270293577,
+            263.89029270293577,
+            86.89512257877013,
+            86.33872632484332
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            567.2546532674384,
+            567.2546532674384,
+            784.6662580544715,
+            785.78809457392
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            567.2546532674384,
+            567.2546532674384,
+            784.67574316479,
+            785.7783185413915
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.570481571480629,
+            10.572860383970081
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.5717817490875,
+            10.571549260026954
+          ]
+        },
+        "maximum_abs_beta_p": 0.0032520866035808376,
+        "maximum_abs_slip": 0.004014874917745193,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.294049748199062,
+          "curl_beta_rms_m1": 1445.6752227812572,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.09101069759751089,
+          "difference_interface_rms_m1": 0.5537570948174763,
+          "difference_rms_m1": 0.48172183551798325,
+          "interface_product_rule_rms_m1": 3.2583980908909864,
+          "reservoir_moment_rms_m1": 1445.6737610894993
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.2660506077443685e-15,
+          "helmholtz_J": 7.58137779729714e-14,
+          "internal_J": 9.744896000275568e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 6.87093879871944e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 2.1635182029784282e-14
+        },
+        "temperature_maximum_K": 1101.5436588276891,
+        "temperature_minimum_K": 1100.218059776495
+      },
+      "after_second_mura_half_stage": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            263.52786037176196,
+            263.52786037176196,
+            86.06517528080985,
+            85.5097024998938
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            263.52786037176196,
+            263.52786037176196,
+            86.0654680570101,
+            85.50942041640491
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            567.6170855986123,
+            567.6170855986123,
+            785.7968748858607,
+            786.9201472935257
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            567.6170855986123,
+            567.6170855986123,
+            785.8063630111669,
+            786.9105567510069
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.629949558415671,
+            10.631756034327811
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.631259936474363,
+            10.63043463233296
+          ]
+        },
+        "maximum_abs_beta_p": 0.0032716750643746197,
+        "maximum_abs_slip": 0.004039146730527048,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2954077167091342,
+          "curl_beta_rms_m1": 1451.1347340935263,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.09261749806927173,
+          "difference_interface_rms_m1": 0.5643353463137513,
+          "difference_rms_m1": 0.49091780122689466,
+          "interface_product_rule_rms_m1": 3.2583980908908203,
+          "reservoir_moment_rms_m1": 1451.13326771695
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.266990981819224e-15,
+          "helmholtz_J": 7.569966508942308e-14,
+          "internal_J": 9.744872352730719e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 6.859433472957122e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 2.1749058437884115e-14
+        },
+        "temperature_maximum_K": 1101.5523333911826,
+        "temperature_minimum_K": 1100.2181614230622
+      },
+      "macro_initial": {
+        "line_inventory": {
+          "forest_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_minus_m_per_m_by_family": [
+            264.25297034261513,
+            264.25297034261513,
+            87.73342356747811,
+            87.17731812571704
+          ],
+          "forest_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "forest_plus_m_per_m_by_family": [
+            264.25297034261513,
+            264.25297034261513,
+            87.73372551467813,
+            87.17702685599473
+          ],
+          "junction_extent_m_per_m_by_topology": [
+            0.0
+          ],
+          "mobile_minus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_minus_m_per_m_by_family": [
+            566.8919756277588,
+            566.8919756277588,
+            783.5258063457918,
+            784.6463612135252
+          ],
+          "mobile_plus_active_cells_by_family": [
+            16384,
+            16384,
+            16384,
+            16384
+          ],
+          "mobile_plus_m_per_m_by_family": [
+            566.8919756277588,
+            566.8919756277588,
+            783.5350165147286,
+            784.6364282037337
+          ],
+          "wall_ordered_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.1121977367755195e-06,
+            3.112197736775519e-06
+          ],
+          "wall_ordered_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_ordered_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            3.112197736775519e-06,
+            3.1121977367755195e-06
+          ],
+          "wall_tangle_minus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_minus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.51071715881293,
+            10.51366368865772
+          ],
+          "wall_tangle_plus_active_cells_by_family": [
+            0,
+            0,
+            128,
+            128
+          ],
+          "wall_tangle_plus_m_per_m_by_family": [
+            0.0,
+            0.0,
+            10.512007087374055,
+            10.51236289230829
+          ]
+        },
+        "maximum_abs_beta_p": 0.0032324252343122286,
+        "maximum_abs_slip": 0.003990513417840971,
+        "nye": {
+          "bulk_only_difference_rms_m1": 3.2927264008021284,
+          "curl_beta_rms_m1": 1440.2048535357712,
+          "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+          "difference_bulk_rms_m1": 0.08941499179018243,
+          "difference_interface_rms_m1": 0.5432550215474644,
+          "difference_rms_m1": 0.47259207993428276,
+          "interface_product_rule_rms_m1": 3.2583980908911068,
+          "reservoir_moment_rms_m1": 1440.2033990498521
+        },
+        "owner_support": {
+          "child_fraction_mean": 0.49789695807444834,
+          "child_pure_cells": 1920,
+          "interface_area_proxy_m2_per_m": 6.054169444547157e-06,
+          "interface_cells": 12288,
+          "parent_pure_cells": 2176
+        },
+        "physical_energy": {
+          "boundary_excess_J": 3.248605670242796e-20,
+          "defect_storage_J": 5.265108636310961e-15,
+          "helmholtz_J": 7.592850028859171e-14,
+          "internal_J": 9.744919830682472e-14,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": 1.3054432597592014e-15,
+          "phase_local_J": 5.328636322167253e-16,
+          "recoverable_elastic_J": 6.882505227424813e-14,
+          "signed_junction_storage_J": 0.0,
+          "thermal_internal_J": 2.152069801823301e-14
+        },
+        "temperature_maximum_K": 1101.534944055625,
+        "temperature_minimum_K": 1100.2179467300066
+      }
+    },
+    "state_metrics": {
+      "beta_p_rms": 0.0012489765406234934,
+      "effective_stress_rms_Pa": 422352984.8522204,
+      "family_nye_rms_m1": 888.613725927782,
+      "maximum_abs_slip": 0.004039146730527048,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 0.0010498281374920642,
+      "temperature_maximum_K": 1101.5523333911826,
+      "temperature_minimum_K": 1100.2181614230622,
+      "total_line_m_per_m_thickness": 6855.686904687518
+    },
+    "temperature_range_K": [
+      1100.2181614230622,
+      1101.5523333911826
+    ]
+  },
+  "zero_applied_front_work": true
+}

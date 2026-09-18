@@ -15,7 +15,7 @@ import numpy as np
 
 from full_model.analysis.postprocess_v22_long_wall import axial_frank_bilby_audit
 from full_model.analysis.postprocess_v37_mura_organization import (
-    last_checkpoint, summarize,
+    checkpoint_scoped_history, last_checkpoint, summarize,
 )
 from full_model.analysis.run_v30_mura_tier_b1_case import create_case, load_checkpoint
 from full_model.analysis.run_v37_conduction_localization import field_metrics
@@ -52,6 +52,7 @@ def diagnose(directory: Path) -> dict:
         state.common.orientation_rad-np.mean(state.common.orientation_rad))
     history = [json.loads(line) for line in (
         directory/"history.jsonl").read_text().splitlines() if line.strip()]
+    history = checkpoint_scoped_history(history, metadata)
     persistent = bool(len(history) >= 3 and all(
         row["orientation_span_deg"] >= 1.0
         and row["ordered_fraction_wall_local"] > 0.0

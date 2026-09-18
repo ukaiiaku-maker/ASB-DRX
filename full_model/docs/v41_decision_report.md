@@ -72,7 +72,11 @@ forward/reverse A-to-B endpoint changes are +2.082e-23/+2.156e-23 J.
 The repaired zero-work continuation result is recorded in
 `v41_front_continuation_decision.json`.  It distinguishes additional published
 motion from the later complete-energy stationary tail and reports the actual
-physical horizon reached.
+physical horizon reached.  Starting after the archived interval 15 state, it
+published six additional intervals and advanced 7.107e-12 m.  Its last
+publication ended at 0.265625 ms, followed by 47 stationary intervals through
+the completed 1 ms horizon.  All common clocks close.  At the terminal state,
+the A-to-B and B-to-A channel endpoint changes are +2.086e-23 and +2.799e-23 J.
 
 The V40 interpretation is superseded by
 `NO_PUBLICATION_UNDER_LEGACY_RATE_AND_COMPLETE_ENERGY_GATES;

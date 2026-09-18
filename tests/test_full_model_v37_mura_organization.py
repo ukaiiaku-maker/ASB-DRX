@@ -1,5 +1,8 @@
 import numpy as np
 
+from full_model.analysis.postprocess_v37_mura_organization import (
+    checkpoint_scoped_history,
+)
 from full_model.analysis.run_v30_mura_tier_b1_case import compact_metrics
 from full_model.production.v24_mechanical_wall import accepted_v24_mechanical_step
 from tests.test_full_model_v24_mechanical_wall import mechanical_fixture
@@ -28,3 +31,14 @@ def test_v37_organization_metrics_are_finite_and_topology_separated():
     # physical comparators, not aliases that silently exercise one operator.
     assert records[0]["ordered_line_m2_cells"] != records[1][
         "ordered_line_m2_cells"]
+
+
+def test_compact_postprocessing_excludes_history_newer_than_checkpoint():
+    history = [
+        {"step": 100, "applied_strain": 0.040},
+        {"step": 125, "applied_strain": 0.045},
+        {"step": 150, "applied_strain": 0.050},
+    ]
+    scoped = checkpoint_scoped_history(
+        history, {"step": 125, "applied_strain": 0.045})
+    assert [row["step"] for row in scoped] == [100, 125]
