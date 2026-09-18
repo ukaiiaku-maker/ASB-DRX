@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 import numpy as np
 from scipy.optimize import least_squares
+from scipy.integrate import solve_ivp
 from scipy.sparse.linalg import LinearOperator
 
 try:
@@ -85,7 +86,8 @@ class ExtensiveWallParameters:
                 or self.ordering_stationary_remainder_relative_tolerance <= 0.0):
             raise ValueError("ordering stationary tolerance must be positive")
         if self.ordering_integration_method not in (
-                "complete_time_explicit", "implicit_backward_euler"):
+                "complete_time_explicit", "implicit_backward_euler",
+                "finite_time_bdf"):
             raise ValueError("unknown ordering integration method")
         if (not np.isfinite(self.ordering_implicit_residual_tolerance)
                 or self.ordering_implicit_residual_tolerance <= 0.0):
@@ -384,7 +386,7 @@ def _ordering_affinity_linear_action(delta_plus, delta_minus, systems,
 def _accepted_ordering_implicit(inventory, systems, topologies,
                                 orientation_rad, target_nye_m1, stress_Pa,
                                 temperature_K, parameters, dt_s,
-                                alignment=None):
+                                alignment=None, force_finite_time=False):
     """Bounded backward-Euler solve of the declared ordering rate.
 
     Ordered fractions are the nonlinear coordinates, so every trial state
@@ -400,7 +402,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         stress_for_rate = np.max(np.abs(stress_for_rate), axis=2)
     attempt_exposure = total_dt*float(np.max(_attempt_rate_s(
         stress_for_rate, temperature_K, parameters)))
-    if attempt_exposure < parameters.ordering_asymptotic_minimum_attempt_exposure:
+    if (not force_finite_time and attempt_exposure < 1.0):
         # The resolved implementation is the oracle and is affordable before
         # the declared stiff/asymptotic separation.  There is no equilibrium
         # substitution in this branch.
@@ -503,7 +505,8 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         return (float(np.sum(energy, dtype=np.longdouble))/energy_scale,
                 np.concatenate(gradient))
 
-    if attempt_exposure >= parameters.ordering_asymptotic_minimum_attempt_exposure:
+    if (not force_finite_time and attempt_exposure
+            >= parameters.ordering_asymptotic_minimum_attempt_exposure):
         # The ordering energy is a convex quadratic in the ordered extents:
         # linear reservoir excess plus positive Nye-mismatch and spectral
         # gradient terms.  A projected accelerated-gradient solve therefore
@@ -784,7 +787,55 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         integration_method = "bounded_convex_asymptotic"
         solver_message = "projected convex energy convergence"
     else:
-        solution = None
+        # At intermediate exposure, integrate the actual nonlinear rate law
+        # rather than treating an accurately solved stationary endpoint as a
+        # finite-time certificate.  This branch is also the independently
+        # selectable fallback used to overlap the asymptotic switch.
+        def finite_time_rhs(_, vector):
+            clipped = np.clip(vector, 0.0, 1.0)
+            candidate = state_from_q(clipped)
+            transfer, _, _ = ordering_residual(
+                candidate, systems, topologies, orientation_rad,
+                target_nye_m1, stress_Pa, temperature_K, parameters,
+                enforce_availability=False)
+            output = []
+            q = unpack(clipped)
+            for sign in ("plus", "minus"):
+                rate = np.divide(
+                    transfer[sign], totals[sign],
+                    out=np.zeros_like(totals[sign]), where=active[sign])
+                rate = rate[active[sign]]
+                fraction = q[sign][active[sign]]
+                rate[(fraction <= 0.0) & (rate < 0.0)] = 0.0
+                rate[(fraction >= 1.0) & (rate > 0.0)] = 0.0
+                output.append(rate)
+            return np.concatenate(output)
+
+        finite = solve_ivp(
+            finite_time_rhs, (0.0, total_dt), q0, method="BDF",
+            rtol=max(parameters.ordering_implicit_residual_tolerance, 1e-8),
+            atol=max(parameters.ordering_implicit_residual_tolerance*1e-2,
+                     1e-11),
+            max_step=total_dt/16.0)
+        if not finite.success:
+            raise RuntimeError(
+                "bounded finite-time ordering solve failed: "
+                f"message={finite.message}")
+
+        class _FiniteTimeResult:
+            pass
+        solution = _FiniteTimeResult()
+        solution.x = np.clip(finite.y[:, -1], 0.0, 1.0)
+        endpoint_scaled_rate = finite_time_rhs(total_dt, solution.x)*total_dt
+        solution.cost = 0.5*float(np.dot(
+            endpoint_scaled_rate, endpoint_scaled_rate))
+        solution.optimality = float(np.max(np.abs(endpoint_scaled_rate)))
+        solution.nfev = int(finite.nfev)
+        solution.njev = int(finite.njev)
+        solution.success = True
+        maximum_residual = solution.optimality
+        integration_method = "bounded_finite_time_bdf"
+        solver_message = str(finite.message)
 
     last = {}
     def residual(vector):
@@ -918,7 +969,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "internal_resolution_limit_active": False,
         "integration_method": integration_method,
         "stiff_dispatch": "qualified_asymptotic" if integration_method.endswith(
-            "asymptotic") else "finite_time_backward_euler",
+            "asymptotic") else "finite_time_bdf",
         "maximum_attempt_exposure": attempt_exposure,
         "implicit_success": True,
         "implicit_max_scaled_residual": maximum_residual,
@@ -930,6 +981,15 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "asymptotic_endpoint_inventory_change_bound_relative": (
             maximum_residual if integration_method.endswith("asymptotic")
             else None),
+        "asymptotic_endpoint_drift_over_requested_time_relative": (
+            maximum_residual if integration_method.endswith("asymptotic")
+            else None),
+        "asymptotic_endpoint_diagnostic_semantics": (
+            "H_times_endpoint_rate_over_local_inventory_floor; stationary_"
+            "endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound"
+            if integration_method.endswith("asymptotic") else None),
+        "finite_time_kinetic_accuracy_certified_by_this_solve": bool(
+            not integration_method.endswith("asymptotic")),
         "asymptotic_relative_diagnostic_density_floor_m2": (
             diagnostic_density_floor if integration_method.endswith("asymptotic")
             else None),
@@ -954,10 +1014,13 @@ def accepted_ordering_step(inventory, systems, topologies, orientation_rad,
     conservative map is subcycled over the complete elapsed time and all
     reported rates are actual time averages.
     """
-    if parameters.ordering_integration_method == "implicit_backward_euler":
+    if parameters.ordering_integration_method in (
+            "implicit_backward_euler", "finite_time_bdf"):
         return _accepted_ordering_implicit(
             inventory, systems, topologies, orientation_rad, target_nye_m1,
-            stress_Pa, temperature_K, parameters, dt_s, alignment=alignment)
+            stress_Pa, temperature_K, parameters, dt_s, alignment=alignment,
+            force_finite_time=(parameters.ordering_integration_method
+                               == "finite_time_bdf"))
     total_dt = float(dt_s)
     if not np.isfinite(total_dt) or total_dt <= 0.0:
         raise ValueError("ordering timestep must be finite and positive")

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -14,14 +15,17 @@ import time
 import numpy as np
 
 from full_model.analysis.run_v34_finite_coupled_response import (
-    I3Controls, checkpoint_payload, resolved_bicrystal, run_i3_cycle,
+    I3Controls, _energy_options, checkpoint_payload, resolved_bicrystal, run_i3_cycle,
     state_from_payload,
 )
 from full_model.analysis.run_v36_recurrent_physical_response import (
     driving_at_time, geometric_envelope,
 )
 from full_model.production.density_state_map import derived_density_fields
+from full_model.production.complete_front_energy import evaluate_complete_front_energy
+from full_model.production.tensorial_nye import nye_from_plastic_distortion
 from full_model.production.v24_mechanical_wall import resolved_driving_components
+from full_model.production.wall_topology_supply import reservoir_nye_m1
 
 
 SCHEMA = "asb-drx/v39/transactional-common-horizon/v1"
@@ -135,6 +139,66 @@ def state_metrics(state, context, driving):
     }
 
 
+def stage_diagnostics(state, context, driving):
+    """Grid-aware intensive/extensive diagnostics at a split-stage boundary."""
+    density = state.mechanical.density
+    common = state.mechanical.common
+    spacing = context["spacing_m"]
+    area = spacing**2
+    line = {}
+    for stem in ("mobile", "forest", "wall_tangle", "wall_ordered"):
+        for sign in ("plus", "minus"):
+            value = np.asarray(getattr(density, f"{stem}_{sign}_m2"))
+            line[f"{stem}_{sign}_m_per_m_by_family"] = [float(x) for x in
+                np.sum(value, axis=(0, 1), dtype=np.longdouble)*area]
+            line[f"{stem}_{sign}_active_cells_by_family"] = [int(x) for x in
+                np.count_nonzero(value > 0.0, axis=(0, 1))]
+    line["junction_extent_m_per_m_by_topology"] = [float(x) for x in
+        np.sum(density.junction_m2, axis=(0, 1), dtype=np.longdouble)*area]
+    curl_nye = nye_from_plastic_distortion(common.beta_p, spacing)
+    moment_nye = reservoir_nye_m1(
+        state.mechanical.reservoir_alignment, context["systems"],
+        common.orientation_rad, context["topologies"])["total"]
+    difference = curl_nye-moment_nye
+    child = np.asarray(state.eta[..., 1])
+    interface = (child > 0.05) & (child < 0.95)
+    bulk = ~interface
+    def rms(field, mask=None):
+        selected = field if mask is None else field[mask]
+        return float(np.sqrt(np.mean(selected*selected))) if selected.size else 0.0
+    energy = evaluate_complete_front_energy(
+        state.common_front, state.eta, spacing_m=spacing,
+        represented_thickness_m=context["represented_thickness_m"],
+        **_energy_options(context, driving))
+    components = {key: float(value) for key, value in asdict(energy).items()}
+    components.update(helmholtz_J=float(energy.helmholtz_J),
+                      internal_J=float(energy.internal_J))
+    return {
+        "line_inventory": line,
+        "owner_support": {
+            "child_fraction_mean": float(np.mean(child)),
+            "parent_pure_cells": int(np.count_nonzero(child <= 0.05)),
+            "child_pure_cells": int(np.count_nonzero(child >= 0.95)),
+            "interface_cells": int(np.count_nonzero(interface)),
+            "interface_area_proxy_m2_per_m": float(
+                np.sum(np.sqrt(sum(g*g for g in np.gradient(child, spacing))))
+                *area),
+        },
+        "nye": {
+            "curl_beta_rms_m1": rms(curl_nye),
+            "reservoir_moment_rms_m1": rms(moment_nye),
+            "difference_rms_m1": rms(difference),
+            "difference_interface_rms_m1": rms(difference, interface),
+            "difference_bulk_rms_m1": rms(difference, bulk),
+        },
+        "maximum_abs_beta_p": float(np.max(np.abs(common.beta_p))),
+        "maximum_abs_slip": float(np.max(np.abs(common.slip))),
+        "temperature_minimum_K": float(np.min(common.temperature_K)),
+        "temperature_maximum_K": float(np.max(common.temperature_K)),
+        "physical_energy": components,
+    }
+
+
 def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
              proposal_fraction=.0625, front_exp_n=1.0, restart=None,
              inject_post_front_failure=False):
@@ -163,11 +227,16 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
         driving = driving_at_time(grid, .01, "hold", 0.0, midpoint)
         macro_start = state
         if pending is None:
+            initial_stage = stage_diagnostics(
+                macro_start, context, driving)
             state_after_pre, pre, pre_elapsed = mura_to_time(
                 context, macro_start, 0.5*macro_dt_s, driving)
+            pre_stage = stage_diagnostics(state_after_pre, context, driving)
             state_after_front, front = front_stage(
                 context, state_after_pre, macro_dt_s, driving,
                 proposal_fraction, front_exp_n)
+            front_stage_state = stage_diagnostics(
+                state_after_front, context, driving)
             partial_metadata = {
                 "source_sha": source_sha(), "stage": "POST_MURA_PENDING",
                 "grid": grid, "macro_dt_s": macro_dt_s,
@@ -177,6 +246,9 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
                 "pre_mura_audits": pre,
                 "front_exposure_s": macro_dt_s,
                 "front_metrics": front_metrics(front), "records": records,
+                "initial_stage_diagnostics": initial_stage,
+                "pre_mura_stage_diagnostics": pre_stage,
+                "post_front_stage_diagnostics": front_stage_state,
                 "front_must_not_repeat_on_restart": True,
             }
             partial_path = output_dir/f"partial_{index+1:06d}_post_front.npz"
@@ -197,6 +269,9 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
             pre_elapsed = float(pending["pre_mura_elapsed_s"])
             front = None
             partial_metadata = pending
+            initial_stage = pending.get("initial_stage_diagnostics")
+            pre_stage = pending.get("pre_mura_stage_diagnostics")
+            front_stage_state = pending.get("post_front_stage_diagnostics")
             pending = None
         try:
             state_after_post, post, post_elapsed = mura_to_time(
@@ -215,6 +290,7 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
             state = macro_start
             raise
         state = state_after_post
+        post_stage = stage_diagnostics(state, context, driving)
         physical_time += macro_dt_s
         metrics = (partial_metadata["front_metrics"] if front is None
                    else front_metrics(front))
@@ -246,6 +322,12 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
                 pre_elapsed+post_elapsed, macro_dt_s, rtol=0.0,
                 atol=128*np.finfo(float).eps*macro_dt_s)),
             "resumed_without_repeating_front": front is None,
+            "stage_diagnostics": {
+                "macro_initial": initial_stage,
+                "after_first_mura_half_stage": pre_stage,
+                "after_front_transaction": front_stage_state,
+                "after_second_mura_half_stage": post_stage,
+            },
         }
         records.append(row)
         save_stage(output_dir/f"checkpoint_{index+1:06d}.npz", state, context, {

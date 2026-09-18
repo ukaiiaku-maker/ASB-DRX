@@ -534,6 +534,14 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             "ordering_endpoint_remainder_relative": mura_ledger[
                 "ordering_thermodynamics"].get(
                     "asymptotic_endpoint_inventory_change_bound_relative"),
+            "ordering_endpoint_diagnostic_semantics": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "asymptotic_endpoint_diagnostic_semantics"),
+            "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": (
+                mura_ledger["ordering_thermodynamics"].get(
+                    "finite_time_kinetic_accuracy_certified_by_this_solve")),
+            "ordering_maximum_attempt_exposure": mura_ledger[
+                "ordering_thermodynamics"].get("maximum_attempt_exposure"),
             "ordering_solver_evaluations": int(mura_ledger[
                 "ordering_thermodynamics"].get("implicit_nfev", 0)),
         }),

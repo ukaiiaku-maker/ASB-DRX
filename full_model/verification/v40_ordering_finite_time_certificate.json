@@ -1,0 +1,83 @@
+{
+  "claim_boundary": "fixed-field ordering-channel certificate; coupled coefficient freezing remains controlled by common macro refinement",
+  "endpoint_diagnostic_interpretation": "H times endpoint rate divided by a local inventory floor is a stationary endpoint drift diagnostic, not by itself a bound on finite-time kinetic error",
+  "finite_time_fallback": "bounded finite-time scipy BDF integration",
+  "generated_utc": "2026-09-18T05:32:33.932672+00:00",
+  "high_exposure_overlap": {
+    "attempt_exposure": 100.0,
+    "comparison": {
+      "maximum_absolute_density_difference_m2": 7.152557373046875e-07,
+      "maximum_difference_over_total_capacity": 8.514949253627233e-21,
+      "ordered_inventory_left_m2_cells": 11857473377.114725,
+      "ordered_inventory_relative_difference": 1.6085624417202907e-16,
+      "ordered_inventory_right_m2_cells": 11857473377.114723
+    },
+    "duration_s": 4.713455835221768e-06,
+    "finite_method": "bounded_finite_time_bdf",
+    "selected_method": "bounded_convex_asymptotic"
+  },
+  "high_exposure_overlap_passed": true,
+  "rate_time_rescaling": {
+    "baseline_duration_s": 9.426911670443536e-07,
+    "baseline_method": "bounded_finite_time_bdf",
+    "comparison": {
+      "maximum_absolute_density_difference_m2": 0.0,
+      "maximum_difference_over_total_capacity": 0.0,
+      "ordered_inventory_left_m2_cells": 11857473377.114723,
+      "ordered_inventory_relative_difference": 0.0,
+      "ordered_inventory_right_m2_cells": 11857473377.114723
+    },
+    "rate_multiplier": 4.0,
+    "scaled_duration_s": 2.356727917610884e-07,
+    "scaled_method": "bounded_finite_time_bdf"
+  },
+  "rate_time_rescaling_passed": true,
+  "schema": "asb-drx/v40/ordering-finite-time-certificate/v1",
+  "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+  "switch_exposure": 50.0,
+  "switch_overlap_passed": true,
+  "switch_variants": {
+    "fully_polarized_plus": {
+      "attempt_exposure": 50.0,
+      "comparison": {
+        "maximum_absolute_density_difference_m2": 4.76837158203125e-07,
+        "maximum_difference_over_total_capacity": 9.934107462565104e-21,
+        "ordered_inventory_left_m2_cells": 5928736688.557363,
+        "ordered_inventory_relative_difference": 3.21712488344058e-16,
+        "ordered_inventory_right_m2_cells": 5928736688.557364
+      },
+      "duration_s": 2.356727917610884e-06,
+      "finite_method": "bounded_finite_time_bdf",
+      "selected_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "selected_method": "bounded_convex_asymptotic"
+    },
+    "mixed_sign": {
+      "attempt_exposure": 50.0,
+      "comparison": {
+        "maximum_absolute_density_difference_m2": 4.76837158203125e-07,
+        "maximum_difference_over_total_capacity": 5.676632835751488e-21,
+        "ordered_inventory_left_m2_cells": 11857473377.114725,
+        "ordered_inventory_relative_difference": 1.6085624417202902e-16,
+        "ordered_inventory_right_m2_cells": 11857473377.114727
+      },
+      "duration_s": 2.356727917610884e-06,
+      "finite_method": "bounded_finite_time_bdf",
+      "selected_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "selected_method": "bounded_convex_asymptotic"
+    },
+    "near_empty_mixed": {
+      "attempt_exposure": 50.0,
+      "comparison": {
+        "maximum_absolute_density_difference_m2": 0.0,
+        "maximum_difference_over_total_capacity": 0.0,
+        "ordered_inventory_left_m2_cells": 84000.0,
+        "ordered_inventory_relative_difference": 0.0,
+        "ordered_inventory_right_m2_cells": 84000.0
+      },
+      "duration_s": 2.356727917610884e-06,
+      "finite_method": "bounded_finite_time_bdf",
+      "selected_endpoint_diagnostic_semantics": "H_times_endpoint_rate_over_local_inventory_floor; stationary_endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound",
+      "selected_method": "bounded_convex_asymptotic"
+    }
+  }
+}

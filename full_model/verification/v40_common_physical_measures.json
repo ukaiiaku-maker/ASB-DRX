@@ -1,0 +1,266 @@
+{
+  "cases": {
+    "n128_H6p25e-5_1": {
+      "absolute_sweep_m3": 4.469507912136562e-25,
+      "beta_p_rms": 0.00010447645134416195,
+      "cell_count": 16384,
+      "complete_energy_delta_J": -3.035903251280059e-19,
+      "contour_displacement_m": 1.4079851033696327e-10,
+      "domain_length_m": 3.2e-06,
+      "effective_stress_rms_Pa": 463759579.1977109,
+      "energy_density_sum_quadrature": {
+        "mura_deposited_heat_increment_J_m3_cells": {
+          "per_unit_thickness_integral_J_m": 3.9596994965711326e-06,
+          "physical_volume_integral_J": null,
+          "physical_volume_integral_status": "UNDEFINED_WITHOUT_DECLARED_OUT_OF_PLANE_THICKNESS",
+          "raw_sum_J_m3_cells": 6335519194.513813,
+          "volume_mean_J_m3": 386689.4039620247
+        },
+        "mura_plastic_work_increment_J_m3_cells": {
+          "per_unit_thickness_integral_J_m": 3.9783444145662e-06,
+          "physical_volume_integral_J": null,
+          "physical_volume_integral_status": "UNDEFINED_WITHOUT_DECLARED_OUT_OF_PLANE_THICKNESS",
+          "raw_sum_J_m3_cells": 6365351063.305921,
+          "volume_mean_J_m3": 388510.1967349805
+        },
+        "mura_stored_line_energy_increment_J_m3_cells": {
+          "per_unit_thickness_integral_J_m": 7.74211855978729e-09,
+          "physical_volume_integral_J": null,
+          "physical_volume_integral_status": "UNDEFINED_WITHOUT_DECLARED_OUT_OF_PLANE_THICKNESS",
+          "raw_sum_J_m3_cells": 12387389.695659667,
+          "volume_mean_J_m3": 756.0662656042277
+        }
+      },
+      "family_nye_rms_m1": 33.31273215893669,
+      "grid": 128,
+      "maximum_abs_slip": 0.0003212620813619563,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 4.7858117825391535e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n128_H6p25e-5_1/result.json",
+      "selected_snapshot_inclusive_interval_count": 1,
+      "selected_snapshot_index": 0,
+      "selected_snapshot_time_s": 6.25e-05,
+      "sha256": "f138370f0896900d7e30bca7d7d6d3d025cfcd79e163afd2867077fa3f942fbe",
+      "signed_sweep_m3": 4.469507912136562e-25,
+      "simulation_interval_count": 1,
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "spacing_m": 2.5e-08,
+      "temperature": {
+        "maximum_K": 1100.1327216863235,
+        "maximum_rise_K": 0.13272168632352077,
+        "minimum_K": 1100.0831530212627,
+        "minimum_rise_K": 0.08315302126266033,
+        "range_K": 0.04956866506086044,
+        "reference_temperature_K": 1100.0
+      },
+      "temperature_maximum_K": 1100.1327216863235,
+      "temperature_minimum_K": 1100.0831530212627,
+      "total_line_m_per_m_thickness": 6654.473237399647
+    },
+    "n64_H6p25e-5_2": {
+      "absolute_sweep_m3": 5.004242414629067e-25,
+      "beta_p_rms": 0.00010446699218674302,
+      "cell_count": 4096,
+      "complete_energy_delta_J": -3.56333875973927e-19,
+      "contour_displacement_m": 1.576437252592322e-10,
+      "domain_length_m": 3.2e-06,
+      "effective_stress_rms_Pa": 463748696.40579325,
+      "energy_density_sum_quadrature": {
+        "mura_deposited_heat_increment_J_m3_cells": {
+          "per_unit_thickness_integral_J_m": 3.960985484258612e-06,
+          "physical_volume_integral_J": null,
+          "physical_volume_integral_status": "UNDEFINED_WITHOUT_DECLARED_OUT_OF_PLANE_THICKNESS",
+          "raw_sum_J_m3_cells": 1584394193.703445,
+          "volume_mean_J_m3": 386814.9886971301
+        },
+        "mura_plastic_work_increment_J_m3_cells": {
+          "per_unit_thickness_integral_J_m": 3.97800254635621e-06,
+          "physical_volume_integral_J": null,
+          "physical_volume_integral_status": "UNDEFINED_WITHOUT_DECLARED_OUT_OF_PLANE_THICKNESS",
+          "raw_sum_J_m3_cells": 1591201018.5424843,
+          "volume_mean_J_m3": 388476.8111675987
+        },
+        "mura_stored_line_energy_increment_J_m3_cells": {
+          "per_unit_thickness_integral_J_m": 6.116120589486005e-09,
+          "physical_volume_integral_J": null,
+          "physical_volume_integral_status": "UNDEFINED_WITHOUT_DECLARED_OUT_OF_PLANE_THICKNESS",
+          "raw_sum_J_m3_cells": 2446448.2357944027,
+          "volume_mean_J_m3": 597.2774013169928
+        }
+      },
+      "family_nye_rms_m1": 18.757569557073758,
+      "grid": 64,
+      "maximum_abs_slip": 0.0003212621167093798,
+      "ordered_line_m_per_m_thickness": 0.00010199977098593308,
+      "orientation_range_rad": 4.785812420915266e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v39-common/53cc80a/n64_H6p25e-5_2/result.json",
+      "selected_snapshot_inclusive_interval_count": 1,
+      "selected_snapshot_index": 0,
+      "selected_snapshot_time_s": 6.25e-05,
+      "sha256": "1e2f6406995f9461600b2558fad72eab9a9c57d4955b32d0497c07210587526c",
+      "signed_sweep_m3": 5.004242414629067e-25,
+      "simulation_interval_count": 2,
+      "source_sha": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+      "spacing_m": 5e-08,
+      "temperature": {
+        "maximum_K": 1100.132745529408,
+        "maximum_rise_K": 0.1327455294081119,
+        "minimum_K": 1100.0842360009,
+        "minimum_rise_K": 0.08423600090009131,
+        "range_K": 0.048509528508020594,
+        "reference_temperature_K": 1100.0
+      },
+      "temperature_maximum_K": 1100.132745529408,
+      "temperature_minimum_K": 1100.0842360009,
+      "total_line_m_per_m_thickness": 6653.446062965284
+    }
+  },
+  "generated_utc": "2026-09-18T05:24:10.306112+00:00",
+  "interpretation": "raw energy-density sums are not cross-grid observables; corrected means and per-thickness integrals agree while front, Nye, and near-extinction ordered responses remain unresolved",
+  "n64_n128_first_interval": {
+    "matched_time_s": 6.25e-05,
+    "physical_energy_measures": {
+      "deposited_heat": {
+        "per_unit_thickness_integral_J_m": {
+          "absolute_difference": 1.2859876874794503e-09,
+          "n128": 3.9596994965711326e-06,
+          "n64": 3.960985484258612e-06,
+          "relative_to_n128": 0.00032476901052543006
+        },
+        "raw_sum_J_m3_cells": {
+          "absolute_difference": 4751125000.810368,
+          "n128": 6335519194.513813,
+          "n64": 1584394193.703445,
+          "relative_to_n128": 0.7499188077473686
+        },
+        "volume_mean_J_m3": {
+          "absolute_difference": 125.58473510539625,
+          "n128": 386689.4039620247,
+          "n64": 386814.9886971301,
+          "relative_to_n128": 0.00032476901052538133
+        }
+      },
+      "plastic_work": {
+        "per_unit_thickness_integral_J_m": {
+          "absolute_difference": 3.4186820999012333e-10,
+          "n128": 3.9783444145662e-06,
+          "n64": 3.97800254635621e-06,
+          "relative_to_n128": 8.593228096049616e-05
+        },
+        "raw_sum_J_m3_cells": {
+          "absolute_difference": 4774150044.763436,
+          "n128": 6365351063.305921,
+          "n64": 1591201018.5424843,
+          "relative_to_n128": 0.7500214830702401
+        },
+        "volume_mean_J_m3": {
+          "absolute_difference": 33.38556738180341,
+          "n128": 388510.1967349805,
+          "n64": 388476.8111675987,
+          "relative_to_n128": 8.593228096038144e-05
+        }
+      },
+      "stored_line_energy": {
+        "per_unit_thickness_integral_J_m": {
+          "absolute_difference": 1.6259979703012846e-09,
+          "n128": 7.74211855978729e-09,
+          "n64": 6.116120589486005e-09,
+          "relative_to_n128": 0.21001977142881134
+        },
+        "raw_sum_J_m3_cells": {
+          "absolute_difference": 9940941.459865265,
+          "n128": 12387389.695659667,
+          "n64": 2446448.2357944027,
+          "relative_to_n128": 0.8025049428572029
+        },
+        "volume_mean_J_m3": {
+          "absolute_difference": 158.7888642872349,
+          "n128": 756.0662656042277,
+          "n64": 597.2774013169928,
+          "relative_to_n128": 0.21001977142881137
+        }
+      }
+    },
+    "state_scalar_differences": {
+      "beta_p_rms": {
+        "absolute": 9.459157418933647e-09,
+        "normalization_floor": 1e-14,
+        "relative": 9.053865533558072e-05
+      },
+      "contour_displacement_m": {
+        "absolute": 1.6845214922268942e-11,
+        "normalization_floor": 1e-13,
+        "relative": 0.11964057632395728
+      },
+      "effective_stress_rms_Pa": {
+        "absolute": 10882.79191762209,
+        "normalization_floor": 1e-14,
+        "relative": 2.346645202768419e-05
+      },
+      "family_nye_rms_m1": {
+        "absolute": 14.555162601862932,
+        "normalization_floor": 1.0,
+        "relative": 0.43692491304584485
+      },
+      "ordered_line_m_per_m_thickness": {
+        "absolute": 8.955098003883101e-05,
+        "normalization_floor": 1e-12,
+        "relative": 7.19354838709677
+      },
+      "orientation_range_rad": {
+        "absolute": 6.383761127679542e-12,
+        "normalization_floor": 1e-10,
+        "relative": 1.3338930609370064e-07
+      },
+      "total_line_m_per_m_thickness": {
+        "absolute": 1.0271744343626779,
+        "normalization_floor": 1e-14,
+        "relative": 0.0001543584890521048
+      }
+    },
+    "temperature_rise_differences": {
+      "maximum_rise_K": {
+        "absolute_difference_K": 2.3843084591135266e-05,
+        "n128_K": 0.13272168632352077,
+        "n64_K": 0.1327455294081119
+      },
+      "minimum_rise_K": {
+        "absolute_difference_K": 0.0010829796374309808,
+        "n128_K": 0.08315302126266033,
+        "n64_K": 0.08423600090009131
+      },
+      "range_K": {
+        "absolute_difference_K": 0.0010591365528398455,
+        "n128_K": 0.04956866506086044,
+        "n64_K": 0.048509528508020594
+      }
+    }
+  },
+  "quadrature_interpretation": "named *_J_m3_cells values are reproducible uniform-grid sums of cell energy densities; physical 2-D integration uses dx^2",
+  "schema": "asb-drx/v40/common-physical-measures/v1",
+  "source_evidence": "unaltered V39 result JSON",
+  "uniform_field_fixture": {
+    "cases": {
+      "128": {
+        "per_unit_thickness_integral_J_m": 3.328e-06,
+        "raw_sum_J_m3_cells": 5324800000.0,
+        "volume_mean_J_m3": 325000.0
+      },
+      "192": {
+        "per_unit_thickness_integral_J_m": 3.328e-06,
+        "raw_sum_J_m3_cells": 11980800000.0,
+        "volume_mean_J_m3": 325000.0
+      },
+      "64": {
+        "per_unit_thickness_integral_J_m": 3.328e-06,
+        "raw_sum_J_m3_cells": 1331200000.0,
+        "volume_mean_J_m3": 325000.0
+      }
+    },
+    "domain_length_m": 3.2e-06,
+    "field_J_m3": 325000.0,
+    "passed": true,
+    "per_unit_thickness_integral_spread_J_m": 0.0,
+    "volume_mean_spread_J_m3": 0.0
+  }
+}

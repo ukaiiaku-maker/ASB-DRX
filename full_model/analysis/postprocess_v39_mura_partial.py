@@ -27,6 +27,9 @@ def main():
     parser.add_argument("--archive", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--figure", type=Path, required=True)
+    parser.add_argument(
+        "--scheduler-terminal", action="store_true",
+        help="classify a completed scheduler run rather than a live rescue")
     args = parser.parse_args()
     config = json.loads((args.case_dir/"case_config.json").read_text())
     checkpoints = sorted(args.case_dir.glob("checkpoint_step_*.npz"))
@@ -57,7 +60,9 @@ def main():
     result = {
         "schema": "asb-drx/v39/mura-valid-partial/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
-        "status": "VALID_PARTIAL_ACTIVE_RUN",
+        "status": ("VALID_FINAL_RETAINED_CHECKPOINT_WITH_UNCHECKPOINTED_TAIL"
+                   if args.scheduler_terminal else "VALID_PARTIAL_ACTIVE_RUN"),
+        "scheduler_terminal": bool(args.scheduler_terminal),
         "archive": str(args.archive.resolve()), "archive_sha256": sha256(args.archive),
         "checkpoint": str(checkpoint.resolve()),
         "checkpoint_sha256": sha256(checkpoint),
