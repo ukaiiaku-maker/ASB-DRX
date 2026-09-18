@@ -69,25 +69,32 @@
     },
     "current_one_grain_organization": {
       "state": "RUNNING",
-      "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_2_PERCENT_STRAIN_WITH_5_PERCENT_CONTINUATION_RUNNING",
+      "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_2_PERCENT_STRAIN_WITH_COMPACT_RESTART_CONTINUATION_RUNNING",
       "initial_job_id": "56145983",
-      "continuation_job_id": "56147765",
+      "preempted_continuation_job_id": "56147765",
+      "preempted_valid_progress_strain": 0.04197998680650803,
+      "same_node_rescue_job_id": "56149239",
+      "same_node_rescue_state": "FAILED_INFRASTRUCTURE_SCRATCH_ALREADY_REMOVED",
+      "compact_retry_job_id": "56149258",
+      "compact_retry_source_sha": "a23f8c7da902bde9d7af7e07b14346aea3c5bbe1",
+      "compact_retry_first_durable_snapshot_strain": 0.02,
+      "compact_snapshot_interval_s": 600,
       "artifact": "full_model/verification/v40_one_grain_current_decision.json",
       "phase_or_grain_allocation_present": false,
       "drx_claimed": false,
-      "next_automatic_action": "fetch and classify the source-frozen 5 percent continuation; trigger unloading only if independent persistent Frank--Bilby closure passes"
+      "next_automatic_action": "continue the compact retry after the old scratch rescue failed; fetch and classify the 5 percent or wall-clock endpoint; trigger unloading only if persistent angle and independent Frank--Bilby closure both pass"
     },
     "regression": {
       "state": "PASSED_OPERATOR",
-      "configured_tests_passed": 740,
-      "wall_seconds": 212.18,
+      "configured_tests_passed": 742,
+      "wall_seconds": 144.53,
       "command": "PYTHONPATH=src:. python -m pytest -q tests"
     }
   },
   "controller_has_executed_next_actions": true,
   "prepared_only": false,
   "campaign_terminal": false,
-  "terminal_reason": "promoted current-source one-grain continuation is still running",
+  "terminal_reason": "preemption-safe promoted current-source one-grain continuation is still running",
   "drx_claimed": false,
   "strict_asb_claimed": false,
   "unrelated_jobs_untouched": ["56132213"]

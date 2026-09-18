@@ -5,8 +5,9 @@
 V40 continues the pushed V39 checkpoint `0632526` on
 `exp/full-v34-recovery-v1`. Every long calculation uses an immutable detached
 source: the fine-grid baseline remains attributable to `0632526`, the n256
-discriminator to `b627887`, the current thermal matrix to `62e424f`, and the
-promoted one-grain continuation to `e4e27ce`. Historical V37 Mura evidence is
+discriminator to `b627887`, the current thermal matrix to `62e424f`, the first
+promoted one-grain continuation to `e4e27ce`, and its compact-restart retry to
+`a23f8c7`. Historical V37 Mura evidence is
 retained as a quarantined comparator and is not relabelled as current-source
 formation. The unrelated Slurm job `56132213` was observed and not touched.
 
@@ -98,9 +99,20 @@ close their hard invariants through 2% strain without phase or grain-label
 allocation. The homogeneous state stays at zero Nye and zero orientation span.
 The heterogeneous state reaches 0.05275 degrees global span and 2132 1/m Nye
 RMS, but its independent Frank--Bilby test is negative with a relative residual
-of 59.24. Ordered fraction or global span is not accepted as a boundary. One
-promoted source-frozen continuation tests whether additional exposure changes
-that negative decision.
+of 59.24. Ordered fraction or global span is not accepted as a boundary. The
+promotion classifier now also requires the independent Frank--Bilby residual to
+be at most 20%; angle alone cannot trigger unloading.
+
+The first promoted continuation remained invariant-clean through an observed
+4.198% strain and developed a recurrent, domain-scale response, but
+free-partition job `56147765` was preempted before its full archive finalized.
+Same-node rescue job `56149239` confirmed that the scheduler epilog had already
+removed its scratch checkpoint, so the 4.198% partial is not claimed as archived
+evidence. Retry job `56149258` is advancing from the
+checksum-verified 2% archive with atomic compact restarts every 10 minutes.
+Durable local fetch and closure-aware postprocessing are active. This is an
+infrastructure continuation, not a scientific promotion or a request for user
+action.
 
 ## Decisions and claim boundary
 
@@ -112,7 +124,7 @@ that negative decision.
 - Zero-pressure existing-boundary migration: **pinned critical arrest after a
   small accepted advance**, with continuing internal-state evolution.
 - Current-source one-grain organization at 2% strain: **no physical LAGB
-  precursor**.
+  precursor**; a preemption-safe 5% exposure continuation remains active.
 - Current-source finite-conduction family: **valid broad/nonpersistent heating
   in all three selected cases; no strict ASB**.
 - Full DRX, a current-source persistent LAGB, strict ASB, and material
@@ -121,3 +133,5 @@ that negative decision.
 The executable controller and case manifest contain final process/job states,
 source and archive hashes, physical progress, regression results, and the
 specific claim boundary for every branch.
+
+The configured regression boundary passes 742 tests in 144.53 seconds.

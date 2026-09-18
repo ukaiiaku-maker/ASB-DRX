@@ -93,17 +93,34 @@
     {
       "run_id": "v40-mura-cont-20260917-e4e27ce",
       "job_id": "56147765",
-      "status": "RUNNING",
+      "status": "PREEMPTED_INFRASTRUCTURE",
       "source_commit": "e4e27ce",
       "seed_archive_sha256": "d3fcf37cdf1de6d09997602bd03d62fd35f3b88da288004b9bc830366a902508",
       "target_strain": 0.05,
       "durable_controller": "tmux:v40_mura_cont_manager",
-      "classification": "PROMOTED_CURRENT_SOURCE_ORGANIZATION_CONTINUATION"
+      "last_observed_valid_strain": 0.04197998680650803,
+      "failure": "FREE_PARTITION_PREEMPTION_BEFORE_FULL_ARCHIVE_FINALIZATION",
+      "same_node_rescue_job_id": "56149239",
+      "same_node_rescue_state": "FAILED_SOURCE_SCRATCH_ALREADY_REMOVED",
+      "classification": "VALID_PARTIAL_PROGRESS_WITH_INFRASTRUCTURE_TERMINAL"
+    },
+    {
+      "run_id": "v40-mura-resume2-20260918-a23f8c7",
+      "job_id": "56149258",
+      "status": "RUNNING",
+      "source_commit": "a23f8c7da902bde9d7af7e07b14346aea3c5bbe1",
+      "seed_archive_sha256": "d3fcf37cdf1de6d09997602bd03d62fd35f3b88da288004b9bc830366a902508",
+      "first_compact_checkpoint": "checkpoint_step_000000500_strain_0.02000000.npz",
+      "compact_snapshot_interval_s": 600,
+      "target_strain": 0.05,
+      "durable_controller": "tmux:v40_mura_resume2_manager",
+      "durable_postprocessor": "tmux:v40_mura_resume2_postprocess",
+      "classification": "PREEMPTION_SAFE_CURRENT_SOURCE_ORGANIZATION_CONTINUATION"
     }
   ],
   "verification": {
-    "configured_regression_tests_passed": 740,
-    "regression_wall_seconds": 212.18,
+    "configured_regression_tests_passed": 742,
+    "regression_wall_seconds": 144.53,
     "test_command": "PYTHONPATH=src:. python -m pytest -q tests",
     "drx_claimed": false,
     "strict_asb_claimed": false

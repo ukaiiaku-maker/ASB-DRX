@@ -30,9 +30,16 @@ Updated: 2026-09-18 (America/Los_Angeles)
   Strict ASB is false.
 - Current-source one-grain homogeneous and heterogeneous cases pass their hard
   invariants through 2% strain without label allocation. The heterogeneous case
-  reaches only 0.05275 degrees and fails independent Frank--Bilby closure. One
-  source-frozen continuation to 5% strain is the only remaining V40 calculation.
-- The configured regression suite passes 740 tests in 212.18 s. Full DRX, a
+  reaches only 0.05275 degrees and fails independent Frank--Bilby closure. The
+  first promoted continuation remained hard-valid through an observed 4.198%
+  strain but was preempted before its full archive finalized. Same-node rescue
+  job `56149239` confirmed that the scheduler epilog had already removed the
+  scratch directory; no partial archive was manufactured. Retry job `56149258`
+  starts from the verified 2% archive and publishes an atomic compact restart every 10 minutes; its first
+  2% restart is already durable. Durable fetch and closure-aware postprocessing
+  run in `tmux:v40_mura_resume2_manager` and
+  `tmux:v40_mura_resume2_postprocess`.
+- The configured regression suite passes 742 tests in 144.53 s. Full DRX, a
   current-source persistent LAGB, strict ASB, and material calibration are not
   claimed. Unrelated Slurm job `56132213` remains untouched.
 

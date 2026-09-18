@@ -2552,10 +2552,25 @@
         {
           "run_id": "v40-mura-cont-20260917-e4e27ce",
           "job_id": "56147765",
-          "scheduler_state_at_checkpoint": "RUNNING",
+          "scheduler_state": "PREEMPTED",
           "source_sha": "e4e27ce",
           "target_strain": 0.05,
-          "durable_controller": "tmux:v40_mura_cont_manager"
+          "last_observed_valid_strain": 0.04197998680650803,
+          "classification": "VALID_PARTIAL_PROGRESS_WITH_INFRASTRUCTURE_TERMINAL",
+          "same_node_rescue_job_id": "56149239",
+          "same_node_rescue_state": "FAILED_SOURCE_SCRATCH_ALREADY_REMOVED"
+        },
+        {
+          "run_id": "v40-mura-resume2-20260918-a23f8c7",
+          "job_id": "56149258",
+          "scheduler_state_at_checkpoint": "RUNNING",
+          "source_sha": "a23f8c7da902bde9d7af7e07b14346aea3c5bbe1",
+          "seed_archive_sha256": "d3fcf37cdf1de6d09997602bd03d62fd35f3b88da288004b9bc830366a902508",
+          "first_durable_checkpoint_strain": 0.02,
+          "compact_snapshot_interval_s": 600,
+          "target_strain": 0.05,
+          "durable_controller": "tmux:v40_mura_resume2_manager",
+          "durable_postprocessor": "tmux:v40_mura_resume2_postprocess"
         }
       ],
       "decisions": {
@@ -2565,8 +2580,16 @@
         "one_grain_at_2pct": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_EXPOSURE"
       },
       "verification": {
-        "configured_regression_tests_passed": 740,
-        "regression_wall_seconds": 212.18
+        "physical_measures_sha256": "baf971fa9823cc7163165329363d1e2d5a5e2e9e9503641f9a61507ef8ee7fc4",
+        "ordering_finite_time_sha256": "072db6ed5008f4327e5b5c37e102c12b2cd39fc8448fbb936330a7da733f53d1",
+        "fine_common_refinement_sha256": "8bddc90ddabbec502997274ec4be907e648f418b35c4143eb86c6951c0f674e3",
+        "stage_localization_sha256": "0848d8a4476d50286650d5e346eb3e691da0efbdd6b379e296e209d86c7d0201",
+        "common_arrest_sha256": "b3868bb279756ba6138f9b9eca551ab34bb072772d3869dae2749205f75138ea",
+        "post_arrest_temporal_sha256": "0489c3aad6ab5c30db2992aa38932dfe77067040aa8db8803bf71b8abb0f64b1",
+        "current_thermal_sha256": "bfed9a265a8fe340aabc533da29a99f443f9584f066c34383e742569c4bd9f92",
+        "current_one_grain_2pct_sha256": "cba6c5f34ddf03655b0f317887b78c88d1c28f41ac650ee77706f0854908f0a6",
+        "configured_regression_tests_passed": 742,
+        "regression_wall_seconds": 144.53
       },
       "drx_claimed": false,
       "current_source_lagb_claimed": false,
