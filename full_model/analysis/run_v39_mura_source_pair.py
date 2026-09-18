@@ -17,7 +17,9 @@ import numpy as np
 from full_model.analysis.run_v36_mura_rate_limit import context
 from full_model.production.common_tensorial_wall import CommonWallDriving
 from full_model.production.density_state_map import derived_density_fields
-from full_model.production.extensive_wall import accepted_ordering_step
+from full_model.production.extensive_wall import (
+    accepted_ordering_step, extensive_wall_energy_components_J_m3,
+)
 from full_model.production.v24_mechanical_wall import accepted_v24_mechanical_step
 from full_model.production.v24_mechanical_wall import resolved_driving_components
 from full_model.production.wall_topology_supply import reservoir_nye_m1
@@ -119,6 +121,12 @@ def main():
                 alignment=state.reservoir_alignment)
             isolated_state = replace(
                 state, density=density, reservoir_alignment=alignment)
+            energy_before = extensive_wall_energy_components_J_m3(
+                state.density, systems, topologies,
+                state.common.orientation_rad, zero_target, parameters)["total"]
+            energy_after = extensive_wall_energy_components_J_m3(
+                density, systems, topologies, state.common.orientation_rad,
+                zero_target, parameters)["total"]
             isolated[name] = {
                 "status": "VALID", "integration_method": ledger[
                     "integration_method"],
@@ -126,6 +134,13 @@ def main():
                 "complete_elapsed_time_s": ledger["complete_elapsed_time_s"],
                 "discarded_reaction_time_s": ledger.get(
                     "discarded_reaction_time_s", 0.0),
+                "defect_energy_before_J_per_m_thickness": float(
+                    np.sum(energy_before, dtype=np.longdouble)*spacing**2),
+                "defect_energy_after_J_per_m_thickness": float(
+                    np.sum(energy_after, dtype=np.longdouble)*spacing**2),
+                "defect_energy_change_J_per_m_thickness": float(
+                    np.sum(energy_after-energy_before,
+                           dtype=np.longdouble)*spacing**2),
                 "observables": observables(
                     isolated_state, systems, topologies, spacing),
             }

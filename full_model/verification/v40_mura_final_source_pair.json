@@ -36,7 +36,7 @@
       "relative_to_current": 0.0
     }
   },
-  "generated_utc": "2026-09-18T06:17:04.500255+00:00",
+  "generated_utc": "2026-09-18T06:39:02.816846+00:00",
   "initial_observables": {
     "nye_rms_m1": 56699.09746166812,
     "ordered_line_m_per_m_thickness": 5.157050357118567,
@@ -79,6 +79,9 @@
   "isolated_fixed_state_ordering": {
     "current_v39_complete_time_dispatch": {
       "complete_elapsed_time_s": 1e-06,
+      "defect_energy_after_J_per_m_thickness": 0.00024946776293675226,
+      "defect_energy_before_J_per_m_thickness": 0.0002565581395830391,
+      "defect_energy_change_J_per_m_thickness": -7.090376646286831e-06,
       "discarded_reaction_time_s": 0.0,
       "integration_method": "bounded_convex_asymptotic",
       "observables": {
@@ -93,6 +96,9 @@
     },
     "legacy_v37_single_capped_extent": {
       "complete_elapsed_time_s": 1e-06,
+      "defect_energy_after_J_per_m_thickness": 0.0009817859670894248,
+      "defect_energy_before_J_per_m_thickness": 0.0002565581395830391,
+      "defect_energy_change_J_per_m_thickness": 0.0007252278275063857,
       "discarded_reaction_time_s": 0.0,
       "integration_method": "complete_time_explicit_subcycling",
       "observables": {
@@ -124,7 +130,7 @@
       "ordering_integration_method": "complete_time_explicit_subcycling",
       "ordering_internal_substeps": 1,
       "ordering_stiff_dispatch": "resolved_finite_time_oracle",
-      "wall_seconds": 4.112889816053212
+      "wall_seconds": 4.863701025955379
     },
     "legacy_v37_single_capped_extent": {
       "accepted_dt_s": 3.7615668281849284e-11,
@@ -140,10 +146,10 @@
       "ordering_integration_method": "complete_time_explicit_subcycling",
       "ordering_internal_substeps": 1,
       "ordering_stiff_dispatch": null,
-      "wall_seconds": 4.3016814310103655
+      "wall_seconds": 5.008904236019589
     }
   },
   "requested_dt_s": 1e-06,
   "schema": "asb-drx/v39/mura-source-pair/v1",
-  "source_sha": "ec382e0b3f6b4527b917d96f7edd3d9821c70909"
+  "source_sha": "7f5e9a845910a5967af3949fde5fe1f2ebde8ba3"
 }
