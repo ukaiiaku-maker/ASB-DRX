@@ -20,6 +20,7 @@ def main() -> None:
     parser.add_argument("--archive", type=Path, required=True)
     parser.add_argument("--checksum", type=Path, required=True)
     parser.add_argument("--attempts-log", type=Path, required=True)
+    parser.add_argument("--diagnostic-decision", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
@@ -38,6 +39,39 @@ def main() -> None:
         + abs(frank["orientation_closure_vector"][1])
         + abs(frank["orientation_closure_vector"][2]) > 0.0)
     lagb = bool(source["scientific_gate_passed"] and relative_closure_applicable)
+    diagnostic = None
+    if args.diagnostic_decision is not None:
+        raw_diagnostic = json.loads(args.diagnostic_decision.read_text())
+        compact_cases = []
+        for row in raw_diagnostic["cases"]:
+            compact_cases.append({
+                "condition": row["summary"]["condition"],
+                "topology_route_enabled": row["summary"][
+                    "topology_route_enabled"],
+                "final_strain": row["summary"]["final_strain"],
+                "hard_invariants_passed": row["summary"][
+                    "hard_invariants_passed"],
+                "orientation_span_deg": row["orientation"]["span_deg"],
+                "nye_rms_m1": row["nye"]["rms_m1"],
+                "ordered_line_m2_cells": row["summary"][
+                    "ordered_line_m2_cells"],
+                "candidate_wall_present": row["independent_frank_bilby"][
+                    "candidate_wall_present"],
+                "persistent_last_three_records": row[
+                    "persistent_last_three_records"],
+            })
+        diagnostic = {
+            "path": str(args.diagnostic_decision.resolve()),
+            "sha256": sha256(args.diagnostic_decision),
+            "exact_disabling_controls": True,
+            "cases": compact_cases,
+            "scientific_gate_passed": raw_diagnostic[
+                "scientific_gate_passed"],
+            "classification": (
+                "COMPACT_CONTROL_HAS_LAGB_CANDIDATE_REQUIRING_RELEASE"
+                if raw_diagnostic["scientific_gate_passed"] else
+                "COMPACT_TOPOLOGY_AND_FORCING_CONTROLS_NO_QUALIFIED_LAGB"),
+        }
 
     result = {
         "schema": "asb-drx/v41/one-grain-decision/v1",
@@ -73,6 +107,7 @@ def main() -> None:
             "RELATIVE_CLOSURE_EVALUATED" if relative_closure_applicable else
             "NO_QUALIFIED_BOUNDARY_FOR_RELATIVE_CLOSURE"),
         "scientific_gate_passed": lagb,
+        "post_endpoint_diagnostic": diagnostic,
         "phase_or_grain_allocation_present": bool(
             source["phase_or_grain_allocation_present"]),
         "drx_claimed": False,
