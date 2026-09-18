@@ -124,7 +124,8 @@ def main() -> None:
         "k_thermal": float(case["conductivity_W_m_K"]),
         "T_bath_coupling": 0.0,
         "thermal_control_semantics": "auto",
-        "causal_temperature_ablation": "none",
+        "causal_temperature_ablation": str(case.get(
+            "causal_temperature_ablation", "none")),
         "v34_authoritative_common_temperature_routing": True,
         "use_hazard_nucleation": False, "use_component_relabel": False,
         "disable_nucleation": True,
