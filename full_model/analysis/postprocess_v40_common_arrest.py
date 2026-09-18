@@ -23,6 +23,16 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text())
 
 
+def compact_event(row: dict | None) -> dict | None:
+    if row is None:
+        return None
+    keys = ("interval", "physical_time_end_s", "front_rate_m_s",
+            "front_classification", "front_published",
+            "front_contour_displacement_m", "front_complete_energy_delta_J")
+    return {**{key: row[key] for key in keys},
+            "state_metrics": row["state_metrics"]}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--forward", type=Path, required=True)
@@ -78,9 +88,9 @@ def main() -> None:
         "maximum_accepted_advance_m": float(maximum_advance),
         "quarter_interface_width_target_m": target,
         "target_fraction_reached": float(maximum_advance/target),
-        "first_rate_sign_change": first_negative,
-        "first_unpublished_transaction": first_unpublished,
-        "last_accepted_transaction": last_accepted,
+        "first_rate_sign_change": compact_event(first_negative),
+        "first_unpublished_transaction": compact_event(first_unpublished),
+        "last_accepted_transaction": compact_event(last_accepted),
         "direction_diagnostics": direction_diagnostics,
         "reverse_control_horizon_s": reverse["physical_time_s"],
         "reverse_control_additional_published_events": int(sum(
