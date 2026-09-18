@@ -1,6 +1,40 @@
 # Campaign status
 
-Updated: 2026-09-16 (America/Los_Angeles)
+Updated: 2026-09-18 (America/Los_Angeles)
+
+## Directive v40 numerical completion and physical-response decision
+
+- Cross-grid energy-density sums are now reported as reproducibility fields,
+  physical means, and per-unit-thickness integrals. The corrected n64/n128
+  deposited-heat and plastic-work differences are 0.03248% and 0.008593%; a
+  uniform-field n64/n128/n192 quadrature fixture is exact.
+- The ordering endpoint remainder is explicitly an endpoint-drift diagnostic,
+  not a finite-time error bound. BDF finite-time integration below exposure 50
+  and the asymptotic solver above it pass switch overlap, high-exposure overlap,
+  and complete kinetic-rate/time rescaling.
+- The actual HPC3 archive path passed a 178-field load-and-restart canary. Fine
+  common-state temporal refinement passes independently on n128 and n192, but
+  the n128/n192 gradient state does not: at H=7.8125 us, Nye RMS differs 38.1%,
+  ordered line 240%, and orientation span 10.1%. An n256 discriminator reduces
+  those discrepancies only to 27.7%, 138%, and 5.95%. Classification:
+  `FRONT_QUALIFIED_GRADIENT_STATE_SPATIALLY_UNRESOLVED`.
+- The exploratory zero-pressure n128 common trajectory reaches 1 ms and advances
+  only 0.276676 nm. Forward motion stops at a rate-sign change; the reverse
+  proposal is independently rejected as uphill by 5.403e-21 J. A post-arrest
+  31.25/15.625 us pair passes, while Nye, orientation, and temperature continue
+  to evolve. Classification:
+  `VALID_PINNED_CRITICAL_ARREST_RATE_SIGN_CHANGE_WITH_REVERSE_ENERGY_REJECTION`.
+- Three current-source n128 finite-conduction cases complete 0.2501 strain with
+  hard invariants intact. All remain broad or nonpersistent; the strongest case
+  reaches 58.25 K peak-minus-mean but has 6.46 um activity width and IPR 0.903.
+  Strict ASB is false.
+- Current-source one-grain homogeneous and heterogeneous cases pass their hard
+  invariants through 2% strain without label allocation. The heterogeneous case
+  reaches only 0.05275 degrees and fails independent Frank--Bilby closure. One
+  source-frozen continuation to 5% strain is the only remaining V40 calculation.
+- The configured regression suite passes 740 tests in 212.18 s. Full DRX, a
+  current-source persistent LAGB, strict ASB, and material calibration are not
+  claimed. Unrelated Slurm job `56132213` remains untouched.
 
 ## Directive v35 recurrent state and physical-time completion
 

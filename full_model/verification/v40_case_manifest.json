@@ -1,0 +1,112 @@
+{
+  "schema": "asb-drx/v40/case-manifest/v1",
+  "updated_utc": "2026-09-18T07:00:00Z",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "restart_checkpoint": "0632526",
+  "source_roles": {
+    "v39_baseline": "0632526",
+    "n256_discriminator": "b627887",
+    "current_thermal_and_initial_organization": "62e424f2eb01deced5e14125f4fcff26b869cb9f",
+    "organization_continuation": "e4e27ce",
+    "front_energy_diagnostic": "e6c3f44",
+    "current_common_horizon": "b981f89"
+  },
+  "local_cases": [
+    {
+      "id": "common_fine_refinement_n128_n192",
+      "status": "COMPLETED",
+      "classification": "FRONT_QUALIFIED_GRADIENT_STATE_SPATIALLY_UNRESOLVED",
+      "temporal_passed": {"128": true, "192": true},
+      "artifact": "full_model/verification/v40_fine_common_refinement.json"
+    },
+    {
+      "id": "common_n256_discriminator",
+      "status": "COMPLETED",
+      "source_commit": "b627887",
+      "grid": 256,
+      "macro_dt_s": 7.8125e-6,
+      "intervals": 8,
+      "classification": "GRADIENT_STATE_REMAINS_SPATIALLY_UNRESOLVED"
+    },
+    {
+      "id": "common_n128_zero_pressure_to_1ms",
+      "status": "PHYSICAL_TERMINAL",
+      "source_commit": "b981f89",
+      "physical_time_s": 0.001,
+      "classification": "VALID_PINNED_CRITICAL_ARREST_RATE_SIGN_CHANGE_WITH_REVERSE_ENERGY_REJECTION",
+      "artifact": "full_model/verification/v40_common_arrest_decision.json"
+    },
+    {
+      "id": "common_post_arrest_temporal_pair",
+      "status": "COMPLETED",
+      "source_commit": "e6c3f44",
+      "macro_dt_s": [3.125e-5, 1.5625e-5],
+      "physical_time_s": 0.00103125,
+      "classification": "POST_ARREST_TEMPORAL_PAIR_QUALIFIED",
+      "artifact": "full_model/verification/v40_post_arrest_temporal.json"
+    },
+    {
+      "id": "legacy_mura_final_retained",
+      "status": "COMPLETED_HISTORICAL_SOURCE",
+      "checkpoint_sha256": "1b0e1cbfc0c66e0fc59a2ac1894a0455c6f6bc994b760f30e0f7d77c7e0e3819",
+      "classification": "LEGACY_SOURCE_REFERENCE_NOT_CURRENT_FORMATION",
+      "artifact": "full_model/verification/v40_mura_final_retained.json"
+    }
+  ],
+  "hpc3_runs": [
+    {
+      "run_id": "v40-canary-20260917-4b986bb",
+      "job_id": "56145703",
+      "status": "COMPLETED",
+      "source_commit": "4b986bb7205114e1db0c96b3adcc420be11d5736",
+      "archive_sha256": "d11591b164a1e50ccb9fcb90f7686f8ead0b8139fcc5e2ed936ec8612110ce3c",
+      "classification": "SCIENTIFIC_PAYLOAD_COMPLETE_AND_RESTARTABLE"
+    },
+    {
+      "run_id": "v40-current-20260917-62e424f",
+      "job_id": "56145982",
+      "status": "COMPLETED",
+      "source_commit": "62e424f2eb01deced5e14125f4fcff26b869cb9f",
+      "source_archive_sha256": "000c88ab736c8c5b7034d09cd8435e2ca15f30a29eeceb55db1e9fd33b4c58d9",
+      "array_concurrency": 2,
+      "cases": ["rate_low", "heterogeneity_short", "heterogeneity_long"],
+      "archive_sha256": {
+        "rate_low": "6a6148b3998561f8237cfb52951e54b586add3303c7c04583073847345e0aea2",
+        "heterogeneity_short": "bac06594e1be92c76bd748df42e59e6c5c45551d97dd0c1181710686a1c78c65",
+        "heterogeneity_long": "cafb785363b7d3f5bec2d8395af4f658a971e8bca3d095e0f380e5ad190a583b"
+      },
+      "classification": "VALID_CURRENT_SOURCE_FINITE_CONDUCTION_RESPONSE_FAMILY_BROAD_OR_NONPERSISTENT"
+    },
+    {
+      "run_id": "v40-current-20260917-62e424f",
+      "job_id": "56145983",
+      "status": "COMPLETED",
+      "source_commit": "62e424f2eb01deced5e14125f4fcff26b869cb9f",
+      "source_archive_sha256": "000c88ab736c8c5b7034d09cd8435e2ca15f30a29eeceb55db1e9fd33b4c58d9",
+      "cases": ["homogeneous", "mechanical_heterogeneity"],
+      "archive_sha256": {
+        "homogeneous": "3dbea4f456369a20ae11cef4cdaf44d844b545f608df123939af8a66958734a7",
+        "mechanical_heterogeneity": "d3fcf37cdf1de6d09997602bd03d62fd35f3b88da288004b9bc830366a902508"
+      },
+      "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_2_PERCENT_STRAIN"
+    },
+    {
+      "run_id": "v40-mura-cont-20260917-e4e27ce",
+      "job_id": "56147765",
+      "status": "RUNNING",
+      "source_commit": "e4e27ce",
+      "seed_archive_sha256": "d3fcf37cdf1de6d09997602bd03d62fd35f3b88da288004b9bc830366a902508",
+      "target_strain": 0.05,
+      "durable_controller": "tmux:v40_mura_cont_manager",
+      "classification": "PROMOTED_CURRENT_SOURCE_ORGANIZATION_CONTINUATION"
+    }
+  ],
+  "verification": {
+    "configured_regression_tests_passed": 740,
+    "regression_wall_seconds": 212.18,
+    "test_command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "drx_claimed": false,
+    "strict_asb_claimed": false
+  },
+  "unrelated_jobs_observed_and_not_touched": ["56132213"]
+}

@@ -2510,6 +2510,68 @@
       "current_source_lagb_claimed": false,
       "strict_asb_claimed": false,
       "unrelated_jobs_observed_and_not_touched": ["56132213"]
+    },
+    {
+      "run_id": "v40-numerical-completion-physical-response-20260917",
+      "purpose": "normalize_physical_measures_close_stiff_accuracy_refine_common_state_and_complete_current_thermal_and_organization_responses",
+      "source_checkpoints": {
+        "v39_restart": "0632526",
+        "n256_discriminator": "b627887",
+        "current_thermal_and_initial_organization": "62e424f2eb01deced5e14125f4fcff26b869cb9f",
+        "organization_continuation": "e4e27ce",
+        "common_horizon": "b981f89",
+        "front_energy_diagnostic": "e6c3f44"
+      },
+      "hpc3_runs": [
+        {
+          "run_id": "v40-canary-20260917-4b986bb",
+          "job_id": "56145703",
+          "scheduler_state": "COMPLETED",
+          "source_sha": "4b986bb7205114e1db0c96b3adcc420be11d5736",
+          "archive_sha256": "d11591b164a1e50ccb9fcb90f7686f8ead0b8139fcc5e2ed936ec8612110ce3c",
+          "classification": "SCIENTIFIC_PAYLOAD_COMPLETE_AND_RESTARTABLE"
+        },
+        {
+          "run_id": "v40-current-20260917-62e424f",
+          "job_id": "56145982",
+          "scheduler_state": "COMPLETED",
+          "source_sha": "62e424f2eb01deced5e14125f4fcff26b869cb9f",
+          "cases": ["rate_low", "heterogeneity_short", "heterogeneity_long"],
+          "archives_checksum_verified": true,
+          "classification": "VALID_CURRENT_SOURCE_FINITE_CONDUCTION_RESPONSE_FAMILY_BROAD_OR_NONPERSISTENT"
+        },
+        {
+          "run_id": "v40-current-20260917-62e424f",
+          "job_id": "56145983",
+          "scheduler_state": "COMPLETED",
+          "source_sha": "62e424f2eb01deced5e14125f4fcff26b869cb9f",
+          "cases": ["homogeneous", "mechanical_heterogeneity"],
+          "archives_checksum_verified": true,
+          "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_2_PERCENT_STRAIN"
+        },
+        {
+          "run_id": "v40-mura-cont-20260917-e4e27ce",
+          "job_id": "56147765",
+          "scheduler_state_at_checkpoint": "RUNNING",
+          "source_sha": "e4e27ce",
+          "target_strain": 0.05,
+          "durable_controller": "tmux:v40_mura_cont_manager"
+        }
+      ],
+      "decisions": {
+        "common_spatial": "FRONT_QUALIFIED_GRADIENT_STATE_SPATIALLY_UNRESOLVED",
+        "common_physical": "VALID_PINNED_CRITICAL_ARREST_RATE_SIGN_CHANGE_WITH_REVERSE_ENERGY_REJECTION",
+        "thermal": "VALID_BROAD_OR_NONPERSISTENT_HEATING_NO_STRICT_ASB",
+        "one_grain_at_2pct": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_EXPOSURE"
+      },
+      "verification": {
+        "configured_regression_tests_passed": 740,
+        "regression_wall_seconds": 212.18
+      },
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false,
+      "strict_asb_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": ["56132213"]
     }
   ]
 }

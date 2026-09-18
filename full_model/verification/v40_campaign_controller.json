@@ -1,0 +1,94 @@
+{
+  "schema": "asb-drx/v40/campaign-controller/v1",
+  "campaign": "Twelve-hour autonomous numerical completion and physical-response campaign V40",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "restart_sha": "0632526",
+  "states": [
+    "DIAGNOSING",
+    "REPAIRING",
+    "REFINING",
+    "RUNNING",
+    "EVALUATING",
+    "PASSED_OPERATOR",
+    "PASSED_SCIENTIFIC",
+    "FAILED_SCIENTIFIC",
+    "FAILED_NUMERICAL",
+    "PHYSICAL_TERMINAL",
+    "NUMERICAL_INVALID",
+    "COMPLETED"
+  ],
+  "branches": {
+    "physical_measure_normalization": {
+      "state": "PASSED_OPERATOR",
+      "classification": "GRID_INDEPENDENT_PHYSICAL_QUADRATURE_VERIFIED",
+      "artifact": "full_model/verification/v40_common_physical_measures.json",
+      "next_automatic_action": "retain raw sums only for reproduction and use physical means or integrals for comparisons"
+    },
+    "archive_restart_pipeline": {
+      "state": "PASSED_OPERATOR",
+      "job_id": "56145703",
+      "classification": "SCIENTIFIC_PAYLOAD_COMPLETE_AND_RESTARTABLE",
+      "artifact": "full_model/verification/v40_archive_canary_record.json",
+      "next_automatic_action": "retain the verified atomic finalizer and checksum path"
+    },
+    "stiff_ordering_finite_time": {
+      "state": "PASSED_OPERATOR",
+      "classification": "BOUNDED_FINITE_TIME_AND_ASYMPTOTIC_DISPATCH_CERTIFIED",
+      "artifact": "full_model/verification/v40_ordering_finite_time_certificate.json",
+      "next_automatic_action": "retain switch exposure 50 and control coefficient freezing through macro refinement"
+    },
+    "common_spatial_refinement": {
+      "state": "FAILED_NUMERICAL",
+      "classification": "FRONT_QUALIFIED_GRADIENT_STATE_SPATIALLY_UNRESOLVED",
+      "artifact": "full_model/verification/v40_fine_common_refinement.json",
+      "invariants_passed": true,
+      "n128_temporal_passed": true,
+      "n192_temporal_passed": true,
+      "n256_discriminator_completed": true,
+      "next_automatic_action": "limit the long n128 history to exploratory physical-response evidence and retain stage localization for a future Mura gradient discretization repair"
+    },
+    "common_zero_pressure_horizon": {
+      "state": "PHYSICAL_TERMINAL",
+      "classification": "VALID_PINNED_CRITICAL_ARREST_RATE_SIGN_CHANGE_WITH_REVERSE_ENERGY_REJECTION",
+      "physical_time_s": 0.001,
+      "maximum_accepted_advance_m": 2.766758099725053e-10,
+      "quarter_width_target_fraction": 0.002766758099725053,
+      "post_arrest_temporal_pair_passed": true,
+      "artifact": "full_model/verification/v40_common_arrest_decision.json",
+      "next_automatic_action": "do not spend compute on a 5--30 ms migration extension while both directions are inadmissible; preserve the restart for future changed-physics hypotheses"
+    },
+    "current_thermal_response": {
+      "state": "FAILED_SCIENTIFIC",
+      "classification": "VALID_FINITE_CONDUCTION_RESPONSE_FAMILY_BROAD_OR_NONPERSISTENT_HEATING",
+      "job_id": "56145982",
+      "cases_completed": 3,
+      "hard_invariants_passed": true,
+      "strict_asb_claimed": false,
+      "artifact": "full_model/verification/v40_thermal_current_decision.json",
+      "next_automatic_action": "retain as a current-source causal negative; promote no grid refinement without a localized persistent candidate"
+    },
+    "current_one_grain_organization": {
+      "state": "RUNNING",
+      "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_2_PERCENT_STRAIN_WITH_5_PERCENT_CONTINUATION_RUNNING",
+      "initial_job_id": "56145983",
+      "continuation_job_id": "56147765",
+      "artifact": "full_model/verification/v40_one_grain_current_decision.json",
+      "phase_or_grain_allocation_present": false,
+      "drx_claimed": false,
+      "next_automatic_action": "fetch and classify the source-frozen 5 percent continuation; trigger unloading only if independent persistent Frank--Bilby closure passes"
+    },
+    "regression": {
+      "state": "PASSED_OPERATOR",
+      "configured_tests_passed": 740,
+      "wall_seconds": 212.18,
+      "command": "PYTHONPATH=src:. python -m pytest -q tests"
+    }
+  },
+  "controller_has_executed_next_actions": true,
+  "prepared_only": false,
+  "campaign_terminal": false,
+  "terminal_reason": "promoted current-source one-grain continuation is still running",
+  "drx_claimed": false,
+  "strict_asb_claimed": false,
+  "unrelated_jobs_untouched": ["56132213"]
+}
