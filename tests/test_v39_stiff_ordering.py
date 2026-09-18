@@ -125,3 +125,8 @@ def test_pending_stage_restart_rejects_macro_dt_change(tmp_path):
     with pytest.raises(ValueError, match="requires its original macro dt"):
         run_case(tmp_path/"invalid", grid=16, macro_dt_s=1e-5, intervals=1,
                  restart=failed/"partial_000001_post_front.npz")
+
+
+def test_front_direction_is_explicit_and_bounded(tmp_path):
+    with pytest.raises(ValueError, match="front_direction"):
+        run_case(tmp_path/"invalid-direction", front_direction=0)
