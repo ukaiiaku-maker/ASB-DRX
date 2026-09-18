@@ -1,0 +1,292 @@
+{
+  "cases": [
+    {
+      "beta_p_rms": 0.00010392936146397563,
+      "cumulative_contour_displacement_m": 1.4079669051280386e-10,
+      "cumulative_deposited_heat_mean_J_m3": 384462.29573754437,
+      "cumulative_deposited_heat_raw_J_m3_cells": 6299030253.363927,
+      "cumulative_plastic_work_mean_J_m3": 385882.4824563021,
+      "cumulative_plastic_work_raw_J_m3_cells": 6322298592.564054,
+      "cumulative_stored_line_energy_mean_J_m3": 893.5618304141635,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 14640117.029505655,
+      "family_nye_rms_m1": 45.995215999555,
+      "grid": 128,
+      "intervals": 2,
+      "macro_dt_s": 3.125e-05,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 5.0857696896911236e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n128_H3p125e-5_2/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "7c952cd30250b5b2029fdf7db1721f3710f3a2fe0513ab6a5649cdefe32b32c8",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 102.91836007894017
+    },
+    {
+      "beta_p_rms": 0.00010365713060802857,
+      "cumulative_contour_displacement_m": 1.4079528735530395e-10,
+      "cumulative_deposited_heat_mean_J_m3": 383358.11502547207,
+      "cumulative_deposited_heat_raw_J_m3_cells": 6280939356.577334,
+      "cumulative_plastic_work_mean_J_m3": 384576.5355809643,
+      "cumulative_plastic_work_raw_J_m3_cells": 6300901958.958519,
+      "cumulative_stored_line_energy_mean_J_m3": 956.5307917220525,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 15671800.491574109,
+      "family_nye_rms_m1": 51.709410474657474,
+      "grid": 128,
+      "intervals": 4,
+      "macro_dt_s": 1.5625e-05,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 5.252076755123568e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n128_H1p5625e-5_4/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "e44e9dbcfc5de55ababffd9308fcca1bb8c8a9f5b8772f1ae5e6acd01f5e18b9",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 222.22961218992714
+    },
+    {
+      "beta_p_rms": 0.00010352133221188662,
+      "cumulative_contour_displacement_m": 1.4079446502730934e-10,
+      "cumulative_deposited_heat_mean_J_m3": 382808.34132560634,
+      "cumulative_deposited_heat_raw_J_m3_cells": 6271931864.278734,
+      "cumulative_plastic_work_mean_J_m3": 383925.70181910344,
+      "cumulative_plastic_work_raw_J_m3_cells": 6290238698.604191,
+      "cumulative_stored_line_energy_mean_J_m3": 986.7669786819033,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 16167190.178724304,
+      "family_nye_rms_m1": 54.33104264015536,
+      "grid": 128,
+      "intervals": 8,
+      "macro_dt_s": 7.8125e-06,
+      "ordered_line_m_per_m_thickness": 1.2448790947102076e-05,
+      "orientation_range_rad": 5.329859422251477e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n128_H7p8125e-6_8/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "a793189387a03c26d0a8aea5ba9e5411dbc37364afd0215b50a28022b8d7b26a",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 360.7910106560448
+    },
+    {
+      "beta_p_rms": 0.00010448497917279022,
+      "cumulative_contour_displacement_m": 1.3517731384273813e-10,
+      "cumulative_deposited_heat_mean_J_m3": 386524.91039783426,
+      "cumulative_deposited_heat_raw_J_m3_cells": 14248854296.905762,
+      "cumulative_plastic_work_mean_J_m3": 388538.615689176,
+      "cumulative_plastic_work_raw_J_m3_cells": 14323087528.765785,
+      "cumulative_stored_line_energy_mean_J_m3": 948.8242911199226,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 34977458.667844824,
+      "family_nye_rms_m1": 53.65783695792132,
+      "grid": 192,
+      "intervals": 1,
+      "macro_dt_s": 6.25e-05,
+      "ordered_line_m_per_m_thickness": 3.6595123125843215e-06,
+      "orientation_range_rad": 5.1240313044045835e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n192_H6p25e-5_1/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "c4a10b8a7b76729f571bf93bd2ce442282de11df691b46124ca88eca10b1b0c6",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 118.92775176407304
+    },
+    {
+      "beta_p_rms": 0.0001039431465056599,
+      "cumulative_contour_displacement_m": 1.3515969061157763e-10,
+      "cumulative_deposited_heat_mean_J_m3": 384213.78560032905,
+      "cumulative_deposited_heat_raw_J_m3_cells": 14163656992.370531,
+      "cumulative_plastic_work_mean_J_m3": 385926.682587727,
+      "cumulative_plastic_work_raw_J_m3_cells": 14226801226.913967,
+      "cumulative_stored_line_energy_mean_J_m3": 1186.1522371954427,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 43726316.0719728,
+      "family_nye_rms_m1": 76.03075320982221,
+      "grid": 192,
+      "intervals": 2,
+      "macro_dt_s": 3.125e-05,
+      "ordered_line_m_per_m_thickness": 3.6595123125843215e-06,
+      "orientation_range_rad": 5.630138537223396e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n192_H3p125e-5_2/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "373dc7404abbf58797ac6551e7691082e651452721a4a10027dc087bf005a32b",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 252.7338538939366
+    },
+    {
+      "beta_p_rms": 0.00010367333555945747,
+      "cumulative_contour_displacement_m": 1.351511108386133e-10,
+      "cumulative_deposited_heat_mean_J_m3": 383085.15137367224,
+      "cumulative_deposited_heat_raw_J_m3_cells": 14122051020.239054,
+      "cumulative_plastic_work_mean_J_m3": 384628.7840046604,
+      "cumulative_plastic_work_raw_J_m3_cells": 14178955493.5478,
+      "cumulative_stored_line_energy_mean_J_m3": 1281.6720759459906,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 47247559.407673,
+      "family_nye_rms_m1": 84.3997374880755,
+      "grid": 192,
+      "intervals": 4,
+      "macro_dt_s": 1.5625e-05,
+      "ordered_line_m_per_m_thickness": 3.6595123125843215e-06,
+      "orientation_range_rad": 5.8373296575871736e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n192_H1p5625e-5_4/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "b96557802b70ba59e9496fa6bc3a02d278bd57f81b69fec9067f2816dab48b5e",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 437.3750967649976
+    },
+    {
+      "beta_p_rms": 0.00010353864536037547,
+      "cumulative_contour_displacement_m": 1.3514688049060992e-10,
+      "cumulative_deposited_heat_mean_J_m3": 382531.68592736823,
+      "cumulative_deposited_heat_raw_J_m3_cells": 14101648070.026503,
+      "cumulative_plastic_work_mean_J_m3": 383982.05497243494,
+      "cumulative_plastic_work_raw_J_m3_cells": 14155114474.503841,
+      "cumulative_stored_line_energy_mean_J_m3": 1319.7373625732052,
+      "cumulative_stored_line_energy_raw_J_m3_cells": 48650798.13389864,
+      "family_nye_rms_m1": 87.71654475885602,
+      "grid": 192,
+      "intervals": 8,
+      "macro_dt_s": 7.8125e-06,
+      "ordered_line_m_per_m_thickness": 3.6595123125843215e-06,
+      "orientation_range_rad": 5.927221175661479e-05,
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-fine/0632526/n192_H7p8125e-6_8/result.json",
+      "physical_time_s": 6.25e-05,
+      "sha256": "4c6352c2b90c2e778861ee871ae1e725ef42caa2d2977d946c67d21f6498e34e",
+      "source_sha": "0632526bce245edae9d70d2ebf21dd018b72d68b",
+      "wall_seconds": 845.2128765630769
+    }
+  ],
+  "claim_boundary": "The 5% rule is applied independently to physical observables; solver invariants do not substitute for refinement.",
+  "classification": "FRONT_QUALIFIED_GRADIENT_STATE_SPATIALLY_UNRESOLVED",
+  "generated_utc": "2026-09-18T06:11:27.064579+00:00",
+  "long_horizon_permission": "EXPLORATORY_COARSE_ONLY",
+  "matched_spatial_comparisons": [
+    {
+      "coarse_grid": 128,
+      "coarse_macro_dt_s": 3.125e-05,
+      "fine_grid": 192,
+      "fine_macro_dt_s": 3.125e-05,
+      "relative_differences": {
+        "beta_p_rms": 0.00013262097740638411,
+        "cumulative_contour_displacement_m": 0.04170622080976684,
+        "family_nye_rms_m1": 0.3950445831751539,
+        "ordered_line_m_per_m_thickness": 2.4017622797150335,
+        "orientation_range_rad": 0.09668835747703251
+      }
+    },
+    {
+      "coarse_grid": 128,
+      "coarse_macro_dt_s": 1.5625e-05,
+      "fine_grid": 192,
+      "fine_macro_dt_s": 1.5625e-05,
+      "relative_differences": {
+        "beta_p_rms": 0.00015630780413738074,
+        "cumulative_contour_displacement_m": 0.04176196911492993,
+        "family_nye_rms_m1": 0.3873273541643031,
+        "ordered_line_m_per_m_thickness": 2.4017622797150335,
+        "orientation_range_rad": 0.10026038219426453
+      }
+    },
+    {
+      "coarse_grid": 128,
+      "coarse_macro_dt_s": 7.8125e-06,
+      "fine_grid": 192,
+      "fine_macro_dt_s": 7.8125e-06,
+      "relative_differences": {
+        "beta_p_rms": 0.00016721436163852547,
+        "cumulative_contour_displacement_m": 0.04178849349831508,
+        "family_nye_rms_m1": 0.3806066713010831,
+        "ordered_line_m_per_m_thickness": 2.4017622797150335,
+        "orientation_range_rad": 0.10078276745651157
+      }
+    }
+  ],
+  "physical_normalization": {
+    "cell_sum_to_mean_energy_density": "divide by grid**2",
+    "front_measure": "signed swept volume/interface area; m",
+    "line_measure": "sum(rho_m^-2)*dx*dy; m per represented m"
+  },
+  "schema": "asb-drx/v40/fine-common-refinement/v1",
+  "scientific_spatial_refinement_passed": false,
+  "selected_spatial_comparison": {
+    "coarse_grid": 128,
+    "coarse_macro_dt_s": 7.8125e-06,
+    "fine_grid": 192,
+    "fine_macro_dt_s": 7.8125e-06,
+    "relative_differences": {
+      "beta_p_rms": 0.00016721436163852547,
+      "cumulative_contour_displacement_m": 0.04178849349831508,
+      "family_nye_rms_m1": 0.3806066713010831,
+      "ordered_line_m_per_m_thickness": 2.4017622797150335,
+      "orientation_range_rad": 0.10078276745651157
+    }
+  },
+  "temporal_comparisons": {
+    "128": [
+      {
+        "coarse_grid": 128,
+        "coarse_macro_dt_s": 3.125e-05,
+        "fine_grid": 128,
+        "fine_macro_dt_s": 1.5625e-05,
+        "relative_differences": {
+          "beta_p_rms": 0.0026262627023361934,
+          "cumulative_contour_displacement_m": 9.965940808567804e-06,
+          "family_nye_rms_m1": 0.11050589095195684,
+          "ordered_line_m_per_m_thickness": 0.0,
+          "orientation_range_rad": 0.03166501046851739
+        }
+      },
+      {
+        "coarse_grid": 128,
+        "coarse_macro_dt_s": 1.5625e-05,
+        "fine_grid": 128,
+        "fine_macro_dt_s": 7.8125e-06,
+        "relative_differences": {
+          "beta_p_rms": 0.0013117914273359371,
+          "cumulative_contour_displacement_m": 5.8406272892170274e-06,
+          "family_nye_rms_m1": 0.04825293309501614,
+          "ordered_line_m_per_m_thickness": 0.0,
+          "orientation_range_rad": 0.014593755850890965
+        }
+      }
+    ],
+    "192": [
+      {
+        "coarse_grid": 192,
+        "coarse_macro_dt_s": 6.25e-05,
+        "fine_grid": 192,
+        "fine_macro_dt_s": 3.125e-05,
+        "relative_differences": {
+          "beta_p_rms": 0.005212779152311093,
+          "cumulative_contour_displacement_m": 0.00013038821767614398,
+          "family_nye_rms_m1": 0.2942614048575622,
+          "ordered_line_m_per_m_thickness": 0.0,
+          "orientation_range_rad": 0.08989250077466275
+        }
+      },
+      {
+        "coarse_grid": 192,
+        "coarse_macro_dt_s": 3.125e-05,
+        "fine_grid": 192,
+        "fine_macro_dt_s": 1.5625e-05,
+        "relative_differences": {
+          "beta_p_rms": 0.0026025105177376797,
+          "cumulative_contour_displacement_m": 6.348281498453195e-05,
+          "family_nye_rms_m1": 0.09915888991284734,
+          "ordered_line_m_per_m_thickness": 0.0,
+          "orientation_range_rad": 0.03549416128905396
+        }
+      },
+      {
+        "coarse_grid": 192,
+        "coarse_macro_dt_s": 1.5625e-05,
+        "fine_grid": 192,
+        "fine_macro_dt_s": 7.8125e-06,
+        "relative_differences": {
+          "beta_p_rms": 0.0013008688554229293,
+          "cumulative_contour_displacement_m": 3.1301854604636194e-05,
+          "family_nye_rms_m1": 0.037812789820880904,
+          "ordered_line_m_per_m_thickness": 0.0,
+          "orientation_range_rad": 0.015165878817449997
+        }
+      }
+    ]
+  },
+  "temporal_passed": {
+    "128": true,
+    "192": true
+  },
+  "threshold_relative": 0.05
+}
