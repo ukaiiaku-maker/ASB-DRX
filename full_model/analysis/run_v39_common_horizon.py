@@ -125,9 +125,24 @@ def front_metrics(audit):
                 "classification"]),
         "front_thermodynamic_accepted": bool(
             energy_decision is not None and energy_decision["accepted"]),
+        "front_candidate_delta_helmholtz_J": (
+            None if energy_decision is None else float(
+                energy_decision["delta_helmholtz_J"])),
+        "front_candidate_available_change_J": (
+            None if energy_decision is None else float(
+                energy_decision["available_change_J"])),
+        "front_external_work_J": (
+            None if energy_decision is None else float(
+                energy_decision["external_work_J"])),
         "front_reverse_edge_status": (
             None if directional is None else directional[
                 "reverse_edge_status"]),
+        "front_a_to_b_event_J": (
+            None if directional is None else float(
+                directional["a_to_b_event_J"])),
+        "front_b_to_a_event_J": (
+            None if directional is None else float(
+                directional["b_to_a_event_J"])),
         "front_published": bool(audit["candidate_sweep_published"]),
         "front_signed_sweep_m3": sweep,
         "front_absolute_sweep_m3": float(audit["sweep"]["absolute_m3"]),
