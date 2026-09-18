@@ -1313,6 +1313,10 @@ def _causal_channel_temperature(Tfield, channel):
     reference = float(P.get('T0', 1300.0) if reference is None else reference)
     return np.full_like(np.asarray(Tfield, dtype=float), reference, dtype=float)
 
+def _causal_reference_temperature_K():
+    reference = P.get('causal_reference_temperature_K', None)
+    return float(P.get('T0', 1300.0) if reference is None else reference)
+
 def _thermal_control_semantics():
     declared = str(P.get('thermal_control_semantics', 'auto')).lower()
     if declared == 'exact_prescribed_temperature':
@@ -4062,11 +4066,11 @@ if P.get('v21_common_tensorial_wall_enabled', False):
         glide_speed_attempt_m_s=float(P.get(
             'v21_glide_speed_attempt_m_s', 2.0e3)),
         flow_temperature_override_K=(
-            float(P.get('causal_reference_temperature_K', P['T0']))
+            _causal_reference_temperature_K()
             if str(P.get('causal_temperature_ablation', 'none')).lower()
             in ('freeze_flow', 'freeze_flow_and_recovery') else None),
         recovery_temperature_override_K=(
-            float(P.get('causal_reference_temperature_K', P['T0']))
+            _causal_reference_temperature_K()
             if str(P.get('causal_temperature_ablation', 'none')).lower()
             in ('freeze_recovery', 'freeze_flow_and_recovery') else None),
         maximum_fraction_per_step=float(P.get(
