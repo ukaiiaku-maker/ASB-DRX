@@ -163,7 +163,8 @@ it is not inferred from peak-minus-mean temperature alone.
 Machine-readable controller and case records separate solver completion,
 invariants, temporal/spatial accuracy, constitutive interpretation, and
 scientific qualification.  The final merged regression result is recorded in
-`v41_campaign_controller.json`.
+`v41_campaign_controller.json`.  Scientific checkpoint
+`25d4906957342dee93c25f131e5d90c7bc57b839` passes 747 tests in 148.58 s.
 
 The front constitutive repair and declared gradient ownership pass their
 operator-level decisions.  Strong wall-scale refinement remains unresolved.

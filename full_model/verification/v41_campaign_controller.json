@@ -1,0 +1,71 @@
+{
+  "branches": {
+    "current_one_grain_organization": {
+      "artifact": "full_model/verification/v41_one_grain_decision.json",
+      "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_RETAINED_ENDPOINT",
+      "final_strain": 0.05,
+      "job_id": "56151298",
+      "post_endpoint_diagnostic": "TOPOLOGY_ROUTE_HARD_INVALID;VALID_CONTROL_NO_QUALIFIED_LAGB",
+      "state": "FAILED_SCIENTIFIC"
+    },
+    "front_direction_energy": {
+      "artifact": "full_model/verification/v41_front_direction_energy_summary.json",
+      "classification": "COMPLETE_DISSIPATION_REPAIR_PASSED;PHYSICAL_STATIONARITY_SUPPORTED",
+      "state": "PASSED_OPERATOR",
+      "zero_applied_front_work": true
+    },
+    "gradient_transfer": {
+      "artifact": "full_model/verification/v41_gradient_transfer_decision.json",
+      "classification": "FRONT_TRANSFER_DECLARED_INTERFACE_TERM_CLOSED",
+      "declared_identity_passed": true,
+      "state": "PASSED_OPERATOR"
+    },
+    "matched_thermal_response": {
+      "artifact": "full_model/verification/v41_thermal_response_decision.json",
+      "classification": "MATCHED_CAUSAL_CONTROL_COMPLETE_BROAD_OR_NONPERSISTENT",
+      "same_geometry_and_transport": true,
+      "state": "FAILED_SCIENTIFIC",
+      "strict_asb_claimed": false
+    },
+    "ordering_comparator": {
+      "artifact": "full_model/verification/v41_ordering_legacy_current_validity.json",
+      "classification": "LEGACY_EXECUTED_BUT_UNFORCED_ENERGY_INADMISSIBLE;CURRENT_COMPLETE_TIME_ENERGY_ADMISSIBLE",
+      "state": "PASSED_OPERATOR"
+    },
+    "regression": {
+      "command": "PYTHONPATH=src:. python -m pytest -q tests",
+      "configured_tests_passed": 747,
+      "state": "PASSED_OPERATOR",
+      "wall_seconds": 148.58
+    },
+    "repaired_front_continuation": {
+      "artifact": "full_model/verification/v41_front_continuation_decision.json",
+      "classification": "REPAIRED_DOWNHILL_ADVANCE_THEN_COMPLETE_ENERGY_STATIONARITY",
+      "physical_time_s": 0.0010000000000000007,
+      "repaired_published_intervals": 6,
+      "state": "PHYSICAL_TERMINAL"
+    },
+    "wall_scale_spatial_accuracy": {
+      "artifact": "full_model/verification/v41_gradient_field_audit.json",
+      "classification": "SECOND_MURA_STRONG_NORM_REFINEMENT_UNRESOLVED",
+      "common_mode_relative_difference": 0.04300173481517436,
+      "cross_grid_strong_relative_difference": 0.07313987024636323,
+      "state": "FAILED_NUMERICAL"
+    }
+  },
+  "campaign": "Direction-energy consistency, gradient transfer, and physical response campaign V41",
+  "campaign_terminal": true,
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "controller_has_executed_next_actions": true,
+  "drx_claimed": false,
+  "final_source_sha": "25d4906957342dee93c25f131e5d90c7bc57b839",
+  "generated_utc": "2026-09-18T20:28:58.539338+00:00",
+  "material_calibration_claimed": false,
+  "persistent_lagb_claimed": false,
+  "prepared_only": false,
+  "schema": "asb-drx/v41/campaign-controller/v1",
+  "strict_asb_claimed": false,
+  "unrelated_jobs_untouched": [
+    "56132213"
+  ]
+}

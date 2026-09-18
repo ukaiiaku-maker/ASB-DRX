@@ -2597,6 +2597,75 @@
       "current_source_lagb_claimed": false,
       "strict_asb_claimed": false,
       "unrelated_jobs_observed_and_not_touched": ["56132213"]
+    },
+    {
+      "run_id": "v41-direction-energy-gradient-response-20260918",
+      "purpose": "directive_v41_direction_energy_gradient_transfer_and_physical_response",
+      "scientific_source_sha": "25d4906957342dee93c25f131e5d90c7bc57b839",
+      "front_decision": {
+        "classification": "COMPLETE_DISSIPATION_REPAIR_PASSED;PHYSICAL_STATIONARITY_SUPPORTED",
+        "physical_time_s": 0.0010000000000000007,
+        "zero_applied_front_work": true,
+        "mobility_multiplier_fitted": false,
+        "artifact": "full_model/verification/v41_front_continuation_decision.json"
+      },
+      "gradient_decision": {
+        "classification": "FRONT_TRANSFER_DECLARED_INTERFACE_TERM_CLOSED",
+        "declared_identity_passed": true,
+        "second_mura_strong_relative_difference": 0.07313987024636323,
+        "strong_refinement_passed": false,
+        "artifact": "full_model/verification/v41_gradient_transfer_decision.json"
+      },
+      "hpc3_runs": [
+        {
+          "run_id": "v40-mura-resume2-20260918-a23f8c7-attempt2",
+          "job_id": "56151298",
+          "scheduler_state": "COMPLETED",
+          "elapsed": "04:56:43",
+          "source_sha": "a23f8c7da902bde9d7af7e07b14346aea3c5bbe1",
+          "remote_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v40-mura-resume2-20260918-a23f8c7-attempt2",
+          "final_strain": 0.05,
+          "checkpoint": "checkpoint_step_000022595_strain_0.05000000.npz",
+          "archive_sha256": "d44e350f3f433b82e4d5ab2ddced828919b8c89eeb092b3c2cca409f41f1884b",
+          "checksum_verified": true,
+          "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_RETAINED_ENDPOINT"
+        }
+      ],
+      "local_controls": [
+        {
+          "id": "heterogeneity_long_freeze_flow",
+          "source_sha": "29068d03dc7e6c305bd983d3bd7765968e642d7b",
+          "grid": 128,
+          "final_strain": 0.2501,
+          "classification": "MATCHED_CAUSAL_CONTROL_COMPLETE_BROAD_OR_NONPERSISTENT"
+        },
+        {
+          "id": "one_grain_exact_topology_disabling_pair",
+          "source_sha": "d71f642161bc8b2196afd33e4d4b0bcf87319330",
+          "grid": 64,
+          "final_strain": 0.0501,
+          "classification": "TOPOLOGY_ROUTE_HARD_INVALID;VALID_CONTROL_NO_QUALIFIED_LAGB"
+        }
+      ],
+      "verification": {
+        "front_summary_sha256": "c2f55a9d41300f113e5bb2d351a3985036d1422a7d0011312b1ed8db3e6f3af3",
+        "front_continuation_sha256": "87af5f7ddf18f488152ea1f241c834fa692c14f50666ae24993116697a290c5f",
+        "gradient_transfer_sha256": "856f5c88b61a4c30b89193a7e1487ee0d06260abbfbee71aa6c13d8c9eb68e2a",
+        "gradient_fields_sha256": "e0335120c2a9b3e114765809601f675ebf8e32f15fc193cc96ca217d3f8c6104",
+        "ordering_validity_sha256": "c3196d1d2b103c723a04ee064de13cec7e1d8ee6333d2967dd55a3037aea4d5d",
+        "one_grain_sha256": "73dea5dad154dd8979c3e5894b0265a69b97aaa83d2e1bcd9acf459b797d12d7",
+        "one_grain_topology_sha256": "697faa289a1aa15e78a2a292b70e2d426e8b9de46d148709ecf8d50c6eae5fb0",
+        "thermal_sha256": "cce6ddc2a9ab482e88c87fd5292e468c0b925010305e7fc9b1761adeca844729",
+        "campaign_controller_sha256": "242f98c3e0ba1029adec3c7a9f6b3ca813f6ee3f3e33c38d2e377cb22527c93b",
+        "case_manifest_sha256": "00b980c703357529b8927ea9e85d3d381929d4a0985266b51694dd034cd1679e",
+        "configured_regression_tests_passed": 747,
+        "regression_wall_seconds": 148.58
+      },
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false,
+      "strict_asb_claimed": false,
+      "material_calibration_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": ["56132213"]
     }
   ]
 }

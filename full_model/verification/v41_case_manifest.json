@@ -1,0 +1,100 @@
+{
+  "artifacts": {
+    "front": {
+      "path": "full_model/verification/v41_front_direction_energy_summary.json",
+      "sha256": "c2f55a9d41300f113e5bb2d351a3985036d1422a7d0011312b1ed8db3e6f3af3"
+    },
+    "front_continuation": {
+      "path": "full_model/verification/v41_front_continuation_decision.json",
+      "sha256": "87af5f7ddf18f488152ea1f241c834fa692c14f50666ae24993116697a290c5f"
+    },
+    "gradient": {
+      "path": "full_model/verification/v41_gradient_transfer_decision.json",
+      "sha256": "856f5c88b61a4c30b89193a7e1487ee0d06260abbfbee71aa6c13d8c9eb68e2a"
+    },
+    "gradient_fields": {
+      "path": "full_model/verification/v41_gradient_field_audit.json",
+      "sha256": "e0335120c2a9b3e114765809601f675ebf8e32f15fc193cc96ca217d3f8c6104"
+    },
+    "one_grain": {
+      "path": "full_model/verification/v41_one_grain_decision.json",
+      "sha256": "73dea5dad154dd8979c3e5894b0265a69b97aaa83d2e1bcd9acf459b797d12d7"
+    },
+    "one_grain_topology": {
+      "path": "full_model/verification/v41_one_grain_topology_pair.json",
+      "sha256": "697faa289a1aa15e78a2a292b70e2d426e8b9de46d148709ecf8d50c6eae5fb0"
+    },
+    "ordering": {
+      "path": "full_model/verification/v41_ordering_legacy_current_validity.json",
+      "sha256": "c3196d1d2b103c723a04ee064de13cec7e1d8ee6333d2967dd55a3037aea4d5d"
+    },
+    "thermal": {
+      "path": "full_model/verification/v41_thermal_response_decision.json",
+      "sha256": "cce6ddc2a9ab482e88c87fd5292e468c0b925010305e7fc9b1761adeca844729"
+    }
+  },
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "final_source_sha": "25d4906957342dee93c25f131e5d90c7bc57b839",
+  "generated_utc": "2026-09-18T20:28:58.539338+00:00",
+  "hpc3_runs": [
+    {
+      "archive_sha256": "d44e350f3f433b82e4d5ab2ddced828919b8c89eeb092b3c2cca409f41f1884b",
+      "checksum_verified": true,
+      "classification": "NO_CURRENT_SOURCE_PHYSICAL_LAGB_PRECURSOR_AT_RETAINED_ENDPOINT",
+      "job_id": "56151298",
+      "remote_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v40-mura-resume2-20260918-a23f8c7-attempt2",
+      "run_id": "v40-mura-resume2-20260918-a23f8c7-attempt2",
+      "source_commit": "a23f8c7da902bde9d7af7e07b14346aea3c5bbe1",
+      "status": "COMPLETED"
+    }
+  ],
+  "local_cases": [
+    {
+      "classification": "COMPLETE_DISSIPATION_REPAIR_PASSED;PHYSICAL_STATIONARITY_SUPPORTED",
+      "id": "matched_directional_trials",
+      "source_commit": "69c1fcadcaefd4d26e75aeaf7fe175b2b5e12688",
+      "status": "COMPLETED"
+    },
+    {
+      "classification": "REPAIRED_DOWNHILL_ADVANCE_THEN_COMPLETE_ENERGY_STATIONARITY",
+      "completion_worktree_head": "4844eff4878a4156da748aeafd33bdeaeabf4153",
+      "id": "repaired_zero_work_front_continuation",
+      "physical_time_s": 0.0010000000000000007,
+      "source_commit": "29068d03dc7e6c305bd983d3bd7765968e642d7b",
+      "source_scope_equivalence": "intervening commit changed analysis and documentation only; production operator files are identical",
+      "status": "PHYSICAL_TERMINAL"
+    },
+    {
+      "classification": "FRONT_TRANSFER_DECLARED_INTERFACE_TERM_CLOSED",
+      "id": "matched_gradient_transfer_n128_n192",
+      "source_commit": "4fc497872ffc95afff1c3b39de718e16482ce613",
+      "status": "COMPLETED",
+      "strong_refinement_passed": false
+    },
+    {
+      "classification": "MATCHED_CAUSAL_CONTROL_COMPLETE_BROAD_OR_NONPERSISTENT",
+      "id": "matched_frozen_flow_thermal_control",
+      "source_commit": "29068d03dc7e6c305bd983d3bd7765968e642d7b",
+      "status": "COMPLETED"
+    },
+    {
+      "all_hard_invariants_passed": false,
+      "classification": "TOPOLOGY_ROUTE_HARD_INVALID;VALID_CONTROL_NO_QUALIFIED_LAGB",
+      "final_strain": 0.0501,
+      "id": "one_grain_exact_topology_disabling_pair",
+      "source_commit": "d71f642161bc8b2196afd33e4d4b0bcf87319330",
+      "status": "COMPLETED"
+    }
+  ],
+  "schema": "asb-drx/v41/case-manifest/v1",
+  "unrelated_jobs_observed_and_not_touched": [
+    "56132213"
+  ],
+  "verification": {
+    "configured_regression_tests_passed": 747,
+    "drx_claimed": false,
+    "persistent_lagb_claimed": false,
+    "regression_wall_seconds": 148.58,
+    "strict_asb_claimed": false
+  }
+}

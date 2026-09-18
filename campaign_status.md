@@ -1701,3 +1701,32 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Regression boundary: 732 tests pass in 197.51 s. Report:
   `full_model/docs/v39_decision_report.md`. DRX, current-source LAGB formation,
   strict ASB, and calibrated material response remain unclaimed.
+
+## Directive v41 direction-energy, gradient transfer, and response decisions (2026-09-18)
+
+- Production front kinetics now use the complete-dissipation EXP-floor law.
+  The archived first-sign-change state advances downhill with zero rate/energy
+  conflicts; the repaired zero-work continuation publishes six more intervals
+  and then remains stationary through 1 ms because both complete directional
+  events are uphill. The complete-energy guard remains active and no mobility
+  or pressure was fitted.
+- The post-front Nye discrepancy was the separately owned support-gradient
+  product-rule term. Including it closes the declared identity to about
+  7.1e-6 on n128/n192. Strong second-Mura spatial refinement remains failed at
+  7.31%, although common modes differ by 4.30%; wall-scale accuracy is not
+  promoted.
+- The protected one-grain retry completed at exactly 5% strain in Slurm job
+  `56151298`; archive SHA-256
+  `d44e350f3f433b82e4d5ab2ddced828919b8c89eeb092b3c2cca409f41f1884b`
+  is verified. No independent Frank--Bilby boundary exists. The exact 5.01%
+  topology-on comparator is hard-invalid (source offset 0.6887 and line
+  continuity 0.6595); its apparent near-total ordering is quarantined.
+- A same-geometry frozen-flow thermal control completes at 25.01% strain. Full
+  feedback increases temperature contrast from 18.16 K to 58.25 K and
+  localizes plastic power, but both paths remain broad/nonpersistent. Strict
+  ASB is not claimed.
+- Compact evidence postprocessing now uses retained-checkpoint metadata and
+  excludes later history. The final merged boundary passes 747 tests in
+  148.58 s. Report: `full_model/docs/v41_decision_report.md`; controller:
+  `full_model/verification/v41_campaign_controller.json`. DRX, a persistent
+  LAGB, strict ASB, and material calibration remain unclaimed.
