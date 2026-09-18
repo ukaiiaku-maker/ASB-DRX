@@ -69,11 +69,12 @@ def compare(coarse: dict, fine: dict) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--root", type=Path, action="append", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--figure", type=Path)
     args = parser.parse_args()
-    paths = [Path(value) for value in glob.glob(str(args.root/"*"/"result.json"))]
+    paths = [Path(value) for root in args.root
+             for value in glob.glob(str(root/"*"/"result.json"))]
     rows = sorted((load(path) for path in paths),
                   key=lambda x: (x["grid"], -x["macro_dt_s"]))
     by_grid = {}
@@ -91,12 +92,17 @@ def main() -> None:
                 "cumulative_contour_displacement_m", "family_nye_rms_m1",
                 "orientation_range_rad", "beta_p_rms")))
     matched = []
-    for left in by_grid.get(128, []):
-        for right in by_grid.get(192, []):
-            if math.isclose(left["macro_dt_s"], right["macro_dt_s"],
-                            rel_tol=0.0, abs_tol=1e-15):
-                matched.append(compare(left, right))
-    selected = matched[-1] if matched else None
+    grids = sorted(by_grid)
+    for coarse_grid, fine_grid in zip(grids, grids[1:]):
+        for left in by_grid[coarse_grid]:
+            for right in by_grid[fine_grid]:
+                if math.isclose(left["macro_dt_s"], right["macro_dt_s"],
+                                rel_tol=0.0, abs_tol=1e-15):
+                    matched.append(compare(left, right))
+    qualified_pairs = [pair for pair in matched
+                       if temporal_pass.get(str(pair["coarse_grid"]), False)
+                       and temporal_pass.get(str(pair["fine_grid"]), False)]
+    selected = qualified_pairs[-1] if qualified_pairs else None
     spatial_pass = bool(selected and all(
         selected["relative_differences"][key] <= .05 for key in METRICS))
     result = {
@@ -111,6 +117,7 @@ def main() -> None:
         "cases": rows, "temporal_comparisons": temporal,
         "temporal_passed": temporal_pass,
         "matched_spatial_comparisons": matched,
+        "temporally_qualified_spatial_comparisons": qualified_pairs,
         "selected_spatial_comparison": selected,
         "scientific_spatial_refinement_passed": spatial_pass,
         "classification": (
