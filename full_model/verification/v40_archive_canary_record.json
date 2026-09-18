@@ -1,0 +1,20 @@
+{
+  "checkpoint": "/tmp/sdillon1/56145703/v40-canary-56145703/output/initial/checkpoint_000001.npz",
+  "checkpoint_field_count": 178,
+  "checkpoint_sha256": "d3991688187d914dd62e08a43e0b450996d3221a1599118363652cec5b743c3e",
+  "checkpoint_source_sha": "4b986bb7205114e1db0c96b3adcc420be11d5736",
+  "checkpoint_stage": "MACRO_COMPLETE",
+  "generated_utc": "2026-09-18T05:44:50.491923+00:00",
+  "initial_physical_time_s": 1e-08,
+  "initial_status": "HORIZON_COMPLETE",
+  "ledger_present": true,
+  "missing_required_fields": [],
+  "parameters_present": true,
+  "restart_load_and_advance_passed": true,
+  "restart_physical_time_s": 2e-08,
+  "restart_status": "HORIZON_COMPLETE",
+  "schema": "asb-drx/v40/archive-restart-canary/v1",
+  "source_sha": "4b986bb7205114e1db0c96b3adcc420be11d5736",
+  "state_arrays_present": true,
+  "status": "SCIENTIFIC_PAYLOAD_COMPLETE"
+}
