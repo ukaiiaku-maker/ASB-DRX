@@ -79,10 +79,12 @@
       "compact_retry_source_sha": "a23f8c7da902bde9d7af7e07b14346aea3c5bbe1",
       "compact_retry_first_durable_snapshot_strain": 0.02,
       "compact_snapshot_interval_s": 600,
+      "bounded_retry_controller": "tmux:v40_mura_compact_chain",
+      "maximum_compact_attempts": 2,
       "artifact": "full_model/verification/v40_one_grain_current_decision.json",
       "phase_or_grain_allocation_present": false,
       "drx_claimed": false,
-      "next_automatic_action": "continue the compact retry after the old scratch rescue failed; fetch and classify the 5 percent or wall-clock endpoint; trigger unloading only if persistent angle and independent Frank--Bilby closure both pass"
+      "next_automatic_action": "the bounded chain controller may resubmit once from the latest verified compact restart, then fetch and classify the 5 percent or wall-clock endpoint; trigger unloading only if persistent angle and independent Frank--Bilby closure both pass"
     },
     "regression": {
       "state": "PASSED_OPERATOR",

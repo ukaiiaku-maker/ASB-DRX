@@ -2570,7 +2570,9 @@
           "compact_snapshot_interval_s": 600,
           "target_strain": 0.05,
           "durable_controller": "tmux:v40_mura_resume2_manager",
-          "durable_postprocessor": "tmux:v40_mura_resume2_postprocess"
+          "durable_postprocessor": "tmux:v40_mura_resume2_postprocess",
+          "bounded_retry_controller": "tmux:v40_mura_compact_chain",
+          "maximum_compact_attempts": 2
         }
       ],
       "decisions": {

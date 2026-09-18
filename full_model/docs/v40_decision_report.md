@@ -112,7 +112,8 @@ evidence. Retry job `56149258` is advancing from the
 checksum-verified 2% archive with atomic compact restarts every 10 minutes.
 Durable local fetch and closure-aware postprocessing are active. This is an
 infrastructure continuation, not a scientific promotion or a request for user
-action.
+action. A bounded chain controller may resubmit once from the latest verified
+compact checkpoint and then retains the terminal exposure classification.
 
 ## Decisions and claim boundary
 

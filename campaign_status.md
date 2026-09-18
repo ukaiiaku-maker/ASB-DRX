@@ -35,10 +35,13 @@ Updated: 2026-09-18 (America/Los_Angeles)
   strain but was preempted before its full archive finalized. Same-node rescue
   job `56149239` confirmed that the scheduler epilog had already removed the
   scratch directory; no partial archive was manufactured. Retry job `56149258`
-  starts from the verified 2% archive and publishes an atomic compact restart every 10 minutes; its first
+  starts from the verified 2% archive and publishes an atomic compact restart
+  every 10 minutes; its first
   2% restart is already durable. Durable fetch and closure-aware postprocessing
   run in `tmux:v40_mura_resume2_manager` and
-  `tmux:v40_mura_resume2_postprocess`.
+  `tmux:v40_mura_resume2_postprocess`. The bounded
+  `tmux:v40_mura_compact_chain` controller may resubmit once from the latest
+  verified compact checkpoint and then retains the terminal classification.
 - The configured regression suite passes 742 tests in 144.53 s. Full DRX, a
   current-source persistent LAGB, strict ASB, and material calibration are not
   claimed. Unrelated Slurm job `56132213` remains untouched.
