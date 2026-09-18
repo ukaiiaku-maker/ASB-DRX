@@ -107,12 +107,27 @@ def front_stage(context, state, duration_s, driving, proposal_fraction,
 
 def front_metrics(audit):
     decision = audit["front_decision"]
+    energy_decision = audit["complete_energy"].get("front_decision")
+    directional = audit.get("complete_directional_kinetics")
     interface_area = (None if decision is None else float(
         decision["interface_area_m2"]))
     sweep = float(audit["sweep"]["net_m3"])
     return {
         "front_classification": (None if decision is None
                                  else decision["classification"]),
+        "front_kinetic_accepted": bool(
+            decision is not None and decision["accepted"]),
+        "front_proposed_signed_volume_m3": (
+            None if decision is None else float(
+                decision["proposed_signed_volume_m3"])),
+        "front_thermodynamic_classification": (
+            None if energy_decision is None else energy_decision[
+                "classification"]),
+        "front_thermodynamic_accepted": bool(
+            energy_decision is not None and energy_decision["accepted"]),
+        "front_reverse_edge_status": (
+            None if directional is None else directional[
+                "reverse_edge_status"]),
         "front_published": bool(audit["candidate_sweep_published"]),
         "front_signed_sweep_m3": sweep,
         "front_absolute_sweep_m3": float(audit["sweep"]["absolute_m3"]),
