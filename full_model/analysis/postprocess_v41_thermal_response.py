@@ -110,7 +110,8 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
 
-    figure, axes = plt.subplots(2, 3, figsize=(11, 7))
+    figure, axes = plt.subplots(2, 3, figsize=(13, 7.5),
+                                constrained_layout=True)
     rows = ((args.baseline, "full thermal feedback"),
             (args.control, "flow evaluated at T0"))
     extent = (0.0, baseline["parameters"]["domain_length_m"]*1e6,
@@ -127,11 +128,11 @@ def main():
             for axis, (field, name, cmap, unit) in zip(axes[row_index], fields):
                 image = axis.imshow(field.T, origin="lower", extent=extent,
                                     cmap=cmap)
-                axis.set_title(f"{label}: {name}")
+                axis.set_title(f"{label}: {name}", fontsize=10, pad=8)
                 axis.set_xlabel("x (µm)")
-                figure.colorbar(image, ax=axis, shrink=.75, label=unit)
+                figure.colorbar(image, ax=axis, shrink=.72, label=unit,
+                                pad=.03)
         axes[row_index, 0].set_ylabel("y (µm)")
-    figure.tight_layout()
     args.figure.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(args.figure, dpi=180)
     plt.close(figure)

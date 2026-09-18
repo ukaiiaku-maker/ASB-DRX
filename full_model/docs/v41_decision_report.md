@@ -112,6 +112,14 @@ candidate exists; otherwise the classification is
 `NO_QUALIFIED_BOUNDARY_FOR_RELATIVE_CLOSURE`.  No grain or phase label is
 allocated by this branch.
 
+An interim compact audit exposed a provenance defect in the analysis path,
+not in the retained state: the atomically named checkpoint was newer than the
+copied `status.json`, and the copied history could contain records written
+after that checkpoint.  V41 now treats checkpoint metadata as authoritative,
+truncates history at the retained step and strain, and labels a nonmatching
+status explicitly.  A regression test prevents later-than-checkpoint history
+from entering persistence or invariant decisions.
+
 ## Matched thermal response
 
 The V40 strongest finite-conduction case is retained as the baseline.  V41
@@ -120,6 +128,13 @@ temperature while heat and recovery temperature still evolve.  The result and
 trajectory first-law ledger are recorded in
 `v41_thermal_response_decision.json`.  This is a causal flow-temperature
 feedback test, not a zero-conduction or changed-source-geometry comparison.
+Both trajectories reach 0.2501 nominal strain and pass their hard ledgers.  The
+full-feedback endpoint has 58.253 K peak-minus-mean temperature and 0.90178
+plastic-power participation; the frozen-flow control has 18.159 K and 0.98361.
+Thus freezing flow temperature lowers the peak by 29.430 K and the temperature
+contrast by 40.094 K while making plastic power substantially broader.  The
+control first-law residual is 1.40e-11, all channels are available, and no
+numerical constraint enters physical energy or drives state.
 Strict ASB requires localized connected structure, persistence, and refinement;
 it is not inferred from peak-minus-mean temperature alone.
 
