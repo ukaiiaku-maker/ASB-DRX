@@ -6,8 +6,8 @@ set -Eeuo pipefail
 : "${V40_HOMOGENEOUS_CASE:?current-source homogeneous case required}"
 : "${V40_ANALYSIS_SOURCE:?analysis source worktree required}"
 poll_s="${V40_POLL_SECONDS:-60}"
-archive="$V40_FETCH_ROOT/results/mechanical_heterogeneity_to_5pct.tar.gz"
-checksum="$V40_FETCH_ROOT/results/mechanical_heterogeneity_to_5pct.sha256"
+archive="${V40_ARCHIVE_PATH:-$V40_FETCH_ROOT/results/mechanical_heterogeneity_to_5pct.tar.gz}"
+checksum="${V40_CHECKSUM_PATH:-$V40_FETCH_ROOT/results/mechanical_heterogeneity_to_5pct.sha256}"
 decision_root="$V40_FETCH_ROOT/postprocessed"
 
 while [[ ! -s "$archive" || ! -s "$checksum" ]]; do
