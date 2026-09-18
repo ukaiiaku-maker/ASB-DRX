@@ -1,0 +1,31 @@
+{
+  "claim_boundary": "This pair tests time integration after the observed arrest; it does not repair the failed n128/n192 gradient-state spatial gate.",
+  "classification": "POST_ARREST_TEMPORAL_PAIR_QUALIFIED",
+  "coarse_macro_dt_s": 3.125e-05,
+  "fine_macro_dt_s": 1.5625e-05,
+  "generated_utc": "2026-09-18T06:52:59.463601+00:00",
+  "incremental_front_displacement_difference_m": 0.0,
+  "inputs": {
+    "coarse": {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-common-current/e6c3f44/post1ms/coarse_H3p125e-5_1/result.json",
+      "sha256": "26323dc6c4cfb43edb82cd71283d4d29ab34ef168b6618650270ffa87d57934b"
+    },
+    "fine": {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-common-current/e6c3f44/post1ms/fine_H1p5625e-5_2/result.json",
+      "sha256": "8afc9f43c0461b7b54840dd04b55218a5107a0569d9142c1274efd06d125d03a"
+    }
+  },
+  "near_zero_front_absolute_tolerance_m": 1e-12,
+  "physical_time_s": 0.0010312500000000007,
+  "relative_differences": {
+    "beta_p_rms": 4.7470270102902384e-05,
+    "family_nye_rms_m1": 0.00011815922266955648,
+    "orientation_range_rad": 3.3983605822081726e-05,
+    "temperature_maximum_K": 5.824211678045633e-08,
+    "total_line_m_per_m_thickness": 2.7243561078708395e-06
+  },
+  "relative_threshold": 0.05,
+  "same_physical_horizon": true,
+  "schema": "asb-drx/v40/post-arrest-temporal/v1",
+  "temporal_refinement_passed": true
+}
