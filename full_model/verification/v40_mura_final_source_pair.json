@@ -36,7 +36,7 @@
       "relative_to_current": 0.0
     }
   },
-  "generated_utc": "2026-09-18T06:39:02.816846+00:00",
+  "generated_utc": "2026-09-18T06:39:28.770899+00:00",
   "initial_observables": {
     "nye_rms_m1": 56699.09746166812,
     "ordered_line_m_per_m_thickness": 5.157050357118567,
@@ -130,7 +130,7 @@
       "ordering_integration_method": "complete_time_explicit_subcycling",
       "ordering_internal_substeps": 1,
       "ordering_stiff_dispatch": "resolved_finite_time_oracle",
-      "wall_seconds": 4.863701025955379
+      "wall_seconds": 4.791099576978013
     },
     "legacy_v37_single_capped_extent": {
       "accepted_dt_s": 3.7615668281849284e-11,
@@ -146,10 +146,10 @@
       "ordering_integration_method": "complete_time_explicit_subcycling",
       "ordering_internal_substeps": 1,
       "ordering_stiff_dispatch": null,
-      "wall_seconds": 5.008904236019589
+      "wall_seconds": 4.727837991085835
     }
   },
   "requested_dt_s": 1e-06,
   "schema": "asb-drx/v39/mura-source-pair/v1",
-  "source_sha": "7f5e9a845910a5967af3949fde5fe1f2ebde8ba3"
+  "source_sha": "2e0981e0dee807fb2351812e4b385803323cfbbc"
 }
