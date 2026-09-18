@@ -150,7 +150,7 @@
   ],
   "claim_boundary": "The 5% rule is applied independently to physical observables; solver invariants do not substitute for refinement.",
   "classification": "FRONT_QUALIFIED_GRADIENT_STATE_SPATIALLY_UNRESOLVED",
-  "generated_utc": "2026-09-18T06:11:27.064579+00:00",
+  "generated_utc": "2026-09-18T06:13:20.612273+00:00",
   "long_horizon_permission": "EXPLORATORY_COARSE_ONLY",
   "matched_spatial_comparisons": [
     {

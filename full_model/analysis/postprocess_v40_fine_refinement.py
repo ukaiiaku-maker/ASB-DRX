@@ -11,6 +11,10 @@ import json
 import math
 from pathlib import Path
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 
 METRICS = (
     "cumulative_contour_displacement_m",
@@ -67,6 +71,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--figure", type=Path)
     args = parser.parse_args()
     paths = [Path(value) for value in glob.glob(str(args.root/"*"/"result.json"))]
     rows = sorted((load(path) for path in paths),
@@ -119,6 +124,26 @@ def main() -> None:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
+    if args.figure is not None:
+        figure, axes = plt.subplots(2, 2, figsize=(9, 7))
+        plotted = (
+            ("family_nye_rms_m1", "family Nye RMS (m$^{-1}$)"),
+            ("orientation_range_rad", "orientation range (rad)"),
+            ("cumulative_contour_displacement_m", "front displacement (m)"),
+            ("ordered_line_m_per_m_thickness", "ordered line (m/m)"),
+        )
+        for grid, group in sorted(by_grid.items()):
+            x = [row["macro_dt_s"] for row in group]
+            for axis, (key, label) in zip(axes.flat, plotted):
+                axis.plot(x, [row[key] for row in group], "o-", label=f"n{grid}")
+                axis.set(xscale="log", xlabel="macro H (s)", ylabel=label)
+                axis.grid(alpha=.25)
+        for axis in axes.flat:
+            axis.legend()
+        figure.tight_layout()
+        args.figure.parent.mkdir(parents=True, exist_ok=True)
+        figure.savefig(args.figure, dpi=180)
+        plt.close(figure)
 
 
 if __name__ == "__main__":
