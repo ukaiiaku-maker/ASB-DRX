@@ -221,9 +221,13 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
     partial_path = None
     if restart is not None:
         state, metadata = load_stage(restart, context)
-        if (int(metadata["grid"]) != grid
-                or float(metadata["macro_dt_s"]) != macro_dt_s):
-            raise ValueError("restart configuration differs from requested case")
+        if int(metadata["grid"]) != grid:
+            raise ValueError("restart grid differs from requested case")
+        stored_macro_dt = float(metadata["macro_dt_s"])
+        if (metadata["stage"] == "POST_MURA_PENDING"
+                and stored_macro_dt != macro_dt_s):
+            raise ValueError(
+                "pending split-stage restart requires its original macro dt")
         completed = int(metadata["completed_intervals"])
         physical_time = float(metadata["physical_time_s"])
         records = list(metadata.get("records", []))
@@ -350,6 +354,8 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
         "schema": SCHEMA, "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_sha": source_sha(), "status": "HORIZON_COMPLETE",
         "grid": grid, "macro_dt_s": macro_dt_s,
+        "macro_dt_values_s": sorted({float(
+            record["macro_dt_s"]) for record in records}),
         "completed_intervals": intervals, "physical_time_s": physical_time,
         "protocol": "predeformed_hold_zero_applied_front_work",
         "composition": "A(H/2)-B(H)-A(H/2); external clock H",

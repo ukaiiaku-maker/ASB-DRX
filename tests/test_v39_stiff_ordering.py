@@ -102,3 +102,26 @@ def test_post_front_partial_restart_does_not_repeat_front(tmp_path):
             "v39_stage_metadata_json"})
         for key in shared:
             assert np.array_equal(left[key], right[key]), key
+
+
+def test_completed_macro_restart_can_adapt_macro_dt(tmp_path):
+    first = run_case(tmp_path/"first", grid=16, macro_dt_s=2e-5,
+                     intervals=1)
+    continued = run_case(
+        tmp_path/"continued", grid=16, macro_dt_s=1e-5, intervals=3,
+        restart=tmp_path/"first"/"checkpoint_000001.npz")
+    assert first["physical_time_s"] == 2e-5
+    assert continued["physical_time_s"] == 4e-5
+    assert continued["macro_dt_values_s"] == [1e-5, 2e-5]
+    assert [row["macro_dt_s"] for row in continued["records"]] == [
+        2e-5, 1e-5, 1e-5]
+
+
+def test_pending_stage_restart_rejects_macro_dt_change(tmp_path):
+    failed = tmp_path/"failed-adaptive"
+    with pytest.raises(RuntimeError, match="injected post-front failure"):
+        run_case(failed, grid=16, macro_dt_s=2e-5, intervals=1,
+                 inject_post_front_failure=True)
+    with pytest.raises(ValueError, match="requires its original macro dt"):
+        run_case(tmp_path/"invalid", grid=16, macro_dt_s=1e-5, intervals=1,
+                 restart=failed/"partial_000001_post_front.npz")
