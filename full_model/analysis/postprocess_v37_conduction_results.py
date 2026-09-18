@@ -96,10 +96,15 @@ def main() -> None:
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--figure", type=Path, required=True)
+    parser.add_argument(
+        "--expected-case", action="append", choices=CASE_IDS,
+        help=("case required for completeness; repeat for a declared subset "
+              "comparison (default: the full six-case V37 matrix)"))
     args = parser.parse_args()
+    expected_cases = tuple(args.expected_case) if args.expected_case else CASE_IDS
     cases = {}
     errors = {}
-    for name in CASE_IDS:
+    for name in expected_cases:
         directory = locate_case(args.root, name)
         if directory is None:
             continue
@@ -117,14 +122,15 @@ def main() -> None:
         promotion["strongest_concentration"] = ranked[0]
         promotion["broad_heating_negative"] = ranked[-1]
         promotion["intermediate"] = ranked[len(ranked)//2]
-    complete = len(cases) == len(CASE_IDS) and not errors
+    complete = len(cases) == len(expected_cases) and not errors
     result = {
         "schema": "asb-drx/v37/conduction-localization-results/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "expected_cases": list(expected_cases),
         "status": "COMPLETE" if complete else "PARTIAL",
         "classification": (
             "VALID_FINITE_CONDUCTION_RESPONSE_FAMILY" if complete and
-            len(valid_names) == len(CASE_IDS) else
+            len(valid_names) == len(expected_cases) else
             "RUNNING_OR_PARTIAL_FINITE_CONDUCTION_RESPONSE_FAMILY"),
         "cases": cases, "errors": errors, "promotion_selection": promotion,
         "strict_asb_claimed": False,

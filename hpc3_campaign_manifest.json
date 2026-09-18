@@ -2424,6 +2424,92 @@
       "common_state_decision": "ORDERING_STIFFNESS_TERMINAL_AFTER_VALID_MULTIRATE_CLOCK_IMPLEMENTATION",
       "drx_claimed": false,
       "strict_asb_claimed": false
+    },
+    {
+      "run_id": "v39-stiff-ordering-coupled-horizon-20260917",
+      "purpose": "close_ordering_stiffness_replay_common_refinement_and_recover_independent_evidence",
+      "source_checkpoints": {
+        "v38_start": "5a4b9922",
+        "stiff_ordering_implementation": "53cc80a30e8cb64aab9c672547d0f981b872c268",
+        "first_evidence_checkpoint": "90bdd45"
+      },
+      "hpc3_runs": [
+        {
+          "run_id": "20260917T210450Z-1388e8f-96f14d",
+          "job_id": "56129085",
+          "purpose": "exact_source_v37_finite_conduction_rerun",
+          "scheduler_state": "COMPLETED",
+          "retained_case_archives": 6,
+          "checksums_verified": true,
+          "classification": "VALID_FINITE_CONDUCTION_RESPONSE_FAMILY_BROAD_OR_NONPERSISTENT_HEATING"
+        },
+        {
+          "run_id": "20260917T192050Z-50dbde9-bf00af",
+          "job_id": "56126506",
+          "purpose": "source_frozen_n64_one_grain_mura_to_5pct_strain",
+          "scheduler_state_at_checkpoint": "RUNNING",
+          "durable_rescue_controller": "tmux:v39_mura_rescue",
+          "latest_verified_rescue_sha256": "7e9b1f3efa712bb37332f5151fad0c2de9e1598b58963dcb4e4827b361c639ed",
+          "latest_verified_checkpoint_sha256": "1e88915dd38681a718d5925e7a21a80f6a7240516a0b6a8e77118c13be651180",
+          "latest_verified_checkpoint_strain": 0.04737724951710852,
+          "classification": "VALID_PARTIAL_ACTIVE_RUN_LEGACY_ORDERING"
+        },
+        {
+          "job_id": "56129035",
+          "purpose": "v38_front_physical_followup",
+          "scheduler_state": "FAILED",
+          "classification": "INFRASTRUCTURE_INVALID_MISSING_PYTHONPATH",
+          "duplicate_resubmitted": false
+        }
+      ],
+      "local_controllers": [
+        {
+          "controller": "tmux:v39_thermal_broad",
+          "source_sha": "90bdd45",
+          "case": "rate_low",
+          "target_step": 500,
+          "grid": 64,
+          "state": "COMPLETED"
+        },
+        {
+          "controller": "tmux:v39_thermal_strong",
+          "source_sha": "90bdd45",
+          "case": "heterogeneity_long",
+          "target_step": 500,
+          "grid": 64,
+          "state": "COMPLETED"
+        },
+        {
+          "controller": "tmux:v39_thermal_intermediate",
+          "source_sha": "90bdd45",
+          "case": "heterogeneity_short",
+          "target_step": 500,
+          "grid": 64,
+          "state": "COMPLETED"
+        }
+      ],
+      "verification": {
+        "common_refinement_sha256": "d8bc85f84dd47ab6fb67513a78f924b0ac223a44ec773650703aa417385221f9",
+        "common_refinement_figure_sha256": "7cb8f9fb84f3b217f605e97ca7d0afda1ee7e6555eff51619f75b5db3e54baea",
+        "interface_residual_sha256": "76ba10774096d0a5c31bc9272f75d84caf66288751d6313791054d5a93ce5ed7",
+        "mura_valid_partial_sha256": "0569eab4703aeb17d69f6d49193ce69151a242f9301892f7eb3af330c1937f50",
+        "mura_source_pair_sha256": "3bf633f1d1240a34741606a618a684a4f45df765a2010b0f15110802fd5e18fd",
+        "retained_conduction_sha256": "d8315839223d53ad9bdd41fdff36283f65bd89b0bbeb4b2e015b88ae06bb09ae",
+        "current_selected_conduction_sha256": "59358e4a6656983190d64f3e8bbbed14ebcc85666e89bcd5bf31488f4b47bedb",
+        "current_selected_conduction_figure_sha256": "2219bc045dcaca12baffc31e0047e307233464828d0f0044168c659a7797e670",
+        "stiff_post_front_replay_sha256": "487993e86c0a6bb3f61609f73d5c142ff9d8907131e94baccd29747e4edbbaff",
+        "configured_regression_tests_passed": 732,
+        "regression_wall_seconds": 197.51
+      },
+      "ordering_stiffness_terminal_closed": true,
+      "common_timestep_gate_passed": true,
+      "common_grid_gate_passed": false,
+      "coupled_30ms_run_launched": false,
+      "coupled_decision": "NUMERICAL_SPATIAL_PROMOTION_FAILURE_NOT_PHYSICAL_NO_GO",
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false,
+      "strict_asb_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": ["56132213"]
     }
   ]
 }

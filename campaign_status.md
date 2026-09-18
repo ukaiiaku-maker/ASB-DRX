@@ -1624,3 +1624,36 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Current report: `full_model/docs/v38_decision_report.md`. DRX, persistent
   LAGB formation, strict ASB, and material calibration are not claimed. The
   merged current-source regression boundary passes 729 tests in 178.06 s.
+
+## Directive v39 stiff ordering and coupled physical horizon (2026-09-17)
+
+- Production stiff ordering now uses the exact complete-time oracle at low
+  exposure and a conservative bounded-convex asymptotic solve at stiff
+  exposure. It consumes the complete requested time, conserves signed/family
+  inventory and alignment, descends the declared energy, and records zero
+  discarded reaction time.
+- The exact post-front V38 terminal was reproduced and recovered from a typed
+  `POST_MURA_PENDING` checkpoint. The second 0.5 ms stage completed without
+  repeating the front; continuous and restarted endpoints are byte-identical.
+- The n16 common map passes temporal refinement at H = 62.5 us (1.23% front
+  displacement difference from H = 31.25 us). Spatial promotion fails: n64
+  versus n128 front displacement differs by 12.0%, and the near-extinction
+  ordered reservoir remains strongly grid dependent. The 30 ms coupled hold
+  was therefore not launched and this is not classified as a physical no-go.
+- The interface residual audit shows decreasing subcell energy modulation with
+  grid refinement, but a nonstationary discrete profile and finite translation
+  and growth derivatives remain. No artificial pressure, projection, or drift
+  subtraction was introduced.
+- All six repaired V37 conduction archives were retained and verified. They
+  form a valid finite-conduction response family but remain broad/nonpersistent
+  heating negatives. Frozen source lacks the new power/heat fields by
+  provenance. The three selected current-source n64 transfer cases complete at
+  0.0501 strain, retain independent power/heat fields and complete channel
+  ledgers, and remain broad/nonpersistent at that shorter horizon.
+- The latest verified Mura rescue reaches strain 0.04737725 with a persistent
+  4.54072 degree legacy-source orientation gradient. A matched continuation
+  changes ordered line by 6.69% under current ordering, so the legacy ordered
+  observable is not promoted to current-source accuracy or a LAGB claim.
+- Regression boundary: 732 tests pass in 197.51 s. Report:
+  `full_model/docs/v39_decision_report.md`. DRX, current-source LAGB formation,
+  strict ASB, and calibrated material response remain unclaimed.
