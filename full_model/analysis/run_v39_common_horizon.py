@@ -200,7 +200,13 @@ def stage_diagnostics(state, context, driving):
     moment_nye = reservoir_nye_m1(
         state.mechanical.reservoir_alignment, context["systems"],
         common.orientation_rad, context["topologies"])["total"]
-    difference = curl_nye-moment_nye
+    # The reservoir first moments are a bulk line representation.  A moving
+    # material support also contributes the separately owned product-rule
+    # interface term.  The old curl-minus-reservoir diagnostic incorrectly
+    # classified that declared surface contribution as a transfer error.
+    interface_nye = np.asarray(state.common_front.interface_nye_m1)
+    bulk_only_difference = curl_nye-moment_nye
+    declared_difference = curl_nye-(moment_nye+interface_nye)
     child = np.asarray(state.eta[..., 1])
     interface = (child > 0.05) & (child < 0.95)
     bulk = ~interface
@@ -228,9 +234,14 @@ def stage_diagnostics(state, context, driving):
         "nye": {
             "curl_beta_rms_m1": rms(curl_nye),
             "reservoir_moment_rms_m1": rms(moment_nye),
-            "difference_rms_m1": rms(difference),
-            "difference_interface_rms_m1": rms(difference, interface),
-            "difference_bulk_rms_m1": rms(difference, bulk),
+            "interface_product_rule_rms_m1": rms(interface_nye),
+            "bulk_only_difference_rms_m1": rms(bulk_only_difference),
+            "difference_rms_m1": rms(declared_difference),
+            "difference_interface_rms_m1": rms(declared_difference, interface),
+            "difference_bulk_rms_m1": rms(declared_difference, bulk),
+            "declared_nye_identity": (
+                "curl_beta = reservoir_first_moment + interface_product_rule "
+                "+ representation_residual"),
         },
         "maximum_abs_beta_p": float(np.max(np.abs(common.beta_p))),
         "maximum_abs_slip": float(np.max(np.abs(common.slip))),

@@ -1,0 +1,176 @@
+{
+  "authoritative_state_filtered": false,
+  "classification": "FRONT_TRANSFER_DECLARED_INTERFACE_TERM_CLOSED",
+  "diagnosis": "The V40 post-front curl-minus-reservoir jump was the separately owned support-gradient/product-rule Nye term, not lost Burgers content. The corrected declared identity includes that term. Any remaining second-half grid sensitivity is a physical/numerical Mura accuracy question and is not repaired by target-Nye projection.",
+  "front_transfer_identity_passed": true,
+  "generated_utc": "2026-09-18T17:34:00.538614+00:00",
+  "inputs": {
+    "n128": {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v41-gradient-current/4fc4978/n128_H7p8125e-6_1/result.json",
+      "sha256": "c790f14b04176e6c7fd14983cb08ae87055b1b4b2c904ac574a9d9e5e1e769a5"
+    },
+    "n192": {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v41-gradient-current/4fc4978/n192_H7p8125e-6_1/result.json",
+      "sha256": "87694e274228e20230c29e1fd98e7d376feb391ae701b37db3ae0017eaa6614f"
+    }
+  },
+  "one_current_source": true,
+  "ordered_line_h_exponent_n128_n192": 3.0194795814060784,
+  "ordered_line_scaling_stage": "after_first_mura_half_stage_before_front",
+  "ordered_trace_front_transfer_causal": false,
+  "post_front_declared_identity_residual_fraction": {
+    "128": 7.076473189141997e-06,
+    "192": 7.171692237528961e-06
+  },
+  "schema": "asb-drx/v41/gradient-transfer-decision/v1",
+  "second_mura_cross_grid_curl_nye_relative_difference": 0.07313987024636323,
+  "second_mura_five_percent_passed": false,
+  "source_sha": "4fc497872ffc95afff1c3b39de718e16482ce613",
+  "stages": {
+    "after_first_mura_half_stage": {
+      "cross_grid_relative": {
+        "curl_beta_rms_m1": 4.045998330907085e-06,
+        "declared_identity_residual_bulk_rms_m1": 0.0437614524410934,
+        "declared_identity_residual_interface_rms_m1": 0.006458166579942268,
+        "declared_identity_residual_rms_m1": 5.989991902007585e-06,
+        "interface_area_proxy_m2_per_m": 3.30360504191247e-05,
+        "interface_product_rule_rms_m1": 0.7120180699446275,
+        "ordered_line_m_per_m": 0.7060347203086248,
+        "reservoir_bulk_rms_m1": 4.0459993406874626e-06
+      },
+      "grids": {
+        "128": {
+          "curl_beta_rms_m1": 1.5435506612507797,
+          "declared_identity_residual_bulk_rms_m1": 1.7193523470640076e-06,
+          "declared_identity_residual_interface_rms_m1": 1.1993046460436374e-05,
+          "declared_identity_residual_rms_m1": 1.0421800020868646e-05,
+          "interface_area_proxy_m2_per_m": 6.054329873847744e-06,
+          "interface_cells": 12288,
+          "interface_product_rule_rms_m1": 3.737423138252655e-14,
+          "ordered_line_m_per_m": 1.2448790947102078e-05,
+          "reservoir_bulk_rms_m1": 1.5435506612220877
+        },
+        "192": {
+          "curl_beta_rms_m1": 1.5435444160473806,
+          "declared_identity_residual_bulk_rms_m1": 1.6441109910984837e-06,
+          "declared_identity_residual_interface_rms_m1": 1.1915593368593889e-05,
+          "declared_identity_residual_rms_m1": 1.0421737594370917e-05,
+          "interface_area_proxy_m2_per_m": 6.054529891602507e-06,
+          "interface_cells": 28032,
+          "interface_product_rule_rms_m1": 1.297797794998468e-13,
+          "ordered_line_m_per_m": 3.6595123125843215e-06,
+          "reservoir_bulk_rms_m1": 1.54354441601713
+        }
+      }
+    },
+    "after_front_transaction": {
+      "cross_grid_relative": {
+        "curl_beta_rms_m1": 1.6882014233880855e-06,
+        "declared_identity_residual_bulk_rms_m1": 0.0437614524410934,
+        "declared_identity_residual_interface_rms_m1": 0.006901077246592679,
+        "declared_identity_residual_rms_m1": 0.013275402610903113,
+        "interface_area_proxy_m2_per_m": 3.304591189115747e-05,
+        "interface_product_rule_rms_m1": 0.43452246415343887,
+        "ordered_line_m_per_m": 0.7060347203086248,
+        "reservoir_bulk_rms_m1": 3.945586142794776e-06
+      },
+      "grids": {
+        "128": {
+          "curl_beta_rms_m1": 1.543544506009653,
+          "declared_identity_residual_bulk_rms_m1": 1.7193523470640076e-06,
+          "declared_identity_residual_interface_rms_m1": 1.2573497931925844e-05,
+          "declared_identity_residual_rms_m1": 1.0922851313024738e-05,
+          "interface_area_proxy_m2_per_m": 6.054328355453023e-06,
+          "interface_cells": 12288,
+          "interface_product_rule_rms_m1": 0.002298629928171513,
+          "ordered_line_m_per_m": 1.2448790947102078e-05,
+          "reservoir_bulk_rms_m1": 1.5435468755185684
+        },
+        "192": {
+          "curl_beta_rms_m1": 1.543541900195621,
+          "declared_identity_residual_bulk_rms_m1": 1.6441109910984837e-06,
+          "declared_identity_residual_interface_rms_m1": 1.2660871584741335e-05,
+          "declared_identity_residual_rms_m1": 1.1069807463933638e-05,
+          "interface_area_proxy_m2_per_m": 6.054528432866158e-06,
+          "interface_cells": 28032,
+          "interface_product_rule_rms_m1": 0.004064935885968125,
+          "ordered_line_m_per_m": 3.6595123125843215e-06,
+          "reservoir_bulk_rms_m1": 1.5435407853214056
+        }
+      }
+    },
+    "after_second_mura_half_stage": {
+      "cross_grid_relative": {
+        "curl_beta_rms_m1": 0.07313987024636323,
+        "declared_identity_residual_bulk_rms_m1": 0.0042884320557884026,
+        "declared_identity_residual_interface_rms_m1": 0.0523455954115853,
+        "declared_identity_residual_rms_m1": 0.0584476066479223,
+        "interface_area_proxy_m2_per_m": 3.304591189115747e-05,
+        "interface_product_rule_rms_m1": 0.4345224641545858,
+        "ordered_line_m_per_m": 0.7060347203086248,
+        "reservoir_bulk_rms_m1": 0.07313881247166197
+      },
+      "grids": {
+        "128": {
+          "curl_beta_rms_m1": 3.2056790148702556,
+          "declared_identity_residual_bulk_rms_m1": 3.3803003344864364e-06,
+          "declared_identity_residual_interface_rms_m1": 2.4971919080112877e-05,
+          "declared_identity_residual_rms_m1": 2.16922604745474e-05,
+          "interface_area_proxy_m2_per_m": 6.054328355453023e-06,
+          "interface_cells": 12288,
+          "interface_product_rule_rms_m1": 0.0022986299281684557,
+          "ordered_line_m_per_m": 1.2448790947102078e-05,
+          "reservoir_bulk_rms_m1": 3.205681342566088
+        },
+        "192": {
+          "curl_beta_rms_m1": 3.4586437715498004,
+          "declared_identity_residual_bulk_rms_m1": 3.3948589564602007e-06,
+          "declared_identity_residual_interface_rms_m1": 2.6351293213224373e-05,
+          "declared_identity_residual_rms_m1": 2.303882463440985e-05,
+          "interface_area_proxy_m2_per_m": 6.054528432866158e-06,
+          "interface_cells": 28032,
+          "interface_product_rule_rms_m1": 0.004064935885970963,
+          "ordered_line_m_per_m": 3.6595123125843215e-06,
+          "reservoir_bulk_rms_m1": 3.4586423357684044
+        }
+      }
+    },
+    "macro_initial": {
+      "cross_grid_relative": {
+        "curl_beta_rms_m1": 0.0,
+        "declared_identity_residual_bulk_rms_m1": 0.0,
+        "declared_identity_residual_interface_rms_m1": 0.0,
+        "declared_identity_residual_rms_m1": 0.0,
+        "interface_area_proxy_m2_per_m": 3.30360504191247e-05,
+        "interface_product_rule_rms_m1": 0.0,
+        "ordered_line_m_per_m": 0.0,
+        "reservoir_bulk_rms_m1": 0.0
+      },
+      "grids": {
+        "128": {
+          "curl_beta_rms_m1": 0.0,
+          "declared_identity_residual_bulk_rms_m1": 0.0,
+          "declared_identity_residual_interface_rms_m1": 0.0,
+          "declared_identity_residual_rms_m1": 0.0,
+          "interface_area_proxy_m2_per_m": 6.054329873847744e-06,
+          "interface_cells": 12288,
+          "interface_product_rule_rms_m1": 0.0,
+          "ordered_line_m_per_m": 0.0,
+          "reservoir_bulk_rms_m1": 0.0
+        },
+        "192": {
+          "curl_beta_rms_m1": 0.0,
+          "declared_identity_residual_bulk_rms_m1": 0.0,
+          "declared_identity_residual_interface_rms_m1": 0.0,
+          "declared_identity_residual_rms_m1": 0.0,
+          "interface_area_proxy_m2_per_m": 6.054529891602507e-06,
+          "interface_cells": 28032,
+          "interface_product_rule_rms_m1": 0.0,
+          "ordered_line_m_per_m": 0.0,
+          "reservoir_bulk_rms_m1": 0.0
+        }
+      }
+    }
+  },
+  "target_nye_projection_used": false
+}

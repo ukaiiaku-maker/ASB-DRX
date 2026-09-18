@@ -1,0 +1,117 @@
+{
+  "classification": "COMPLETE_DISSIPATION_REPAIR_PASSED;PHYSICAL_STATIONARITY_SUPPORTED",
+  "complete_energy_guard_removed": false,
+  "constitutive_statement": "Each distinct outgoing channel receives a nonnegative EXP-floor coefficient multiplied by max(1-exp(DeltaF/kT),0); therefore only its own downhill complete transaction generates deterministic activity. The complete candidate energy guard remains active.",
+  "generated_utc": "2026-09-18T17:40:14.404904+00:00",
+  "mobility_multiplier_fitted": false,
+  "physical_pinning_checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v40-common-current/b981f89/n128_to_1ms_H1p5625e-5/partial_000068_post_front.npz",
+  "physical_pinning_supported": true,
+  "raw_input": {
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v41_front_direction_energy_decision.json",
+    "sha256": "9fb17753e02f41e6c2a752281ef831fb948cea4b8e598d98cf5d730d14659b1a"
+  },
+  "retained_comparator": "legacy_independent_metropolis",
+  "schema": "asb-drx/v41/front-direction-energy-summary/v1",
+  "selected_production_law": "complete_dissipation",
+  "state_decisions": [
+    {
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v40-common-current/b981f89/n128_to_1ms_H1p5625e-5/partial_000016_post_front.npz",
+      "checkpoint_sha256": "80e3f082a61be1fa05138a5c1a855b484a8f2dd2acbe89415af5a2e69958ec60",
+      "complete_dissipation_rate_energy_conflict_count": 0,
+      "extent_sequence": [
+        0.0625,
+        0.03125,
+        0.015625,
+        0.0078125
+      ],
+      "legacy_rate_energy_conflict_count": 4,
+      "matched_proposal_diagnostics": {
+        "0.0078125": {
+          "forward_proposal_a_to_b_event_J": -3.525524907072055e-24,
+          "forward_proposal_b_to_a_event_J": 4.550732239178045e-24,
+          "forward_published": true,
+          "reverse_proposal_a_to_b_event_J": -2.453408481968029e-24,
+          "reverse_proposal_b_to_a_event_J": 3.2226949193791056e-24,
+          "reverse_published": false
+        },
+        "0.015625": {
+          "forward_proposal_a_to_b_event_J": -3.520002866113075e-24,
+          "forward_proposal_b_to_a_event_J": 4.5548166718383524e-24,
+          "forward_published": true,
+          "reverse_proposal_a_to_b_event_J": -2.4490593649788108e-24,
+          "reverse_proposal_b_to_a_event_J": 3.2241135279587445e-24,
+          "reverse_published": false
+        },
+        "0.03125": {
+          "forward_proposal_a_to_b_event_J": -3.508942000926411e-24,
+          "forward_proposal_b_to_a_event_J": 4.5629872108917505e-24,
+          "forward_published": true,
+          "reverse_proposal_a_to_b_event_J": -2.437344595633805e-24,
+          "reverse_proposal_b_to_a_event_J": 3.2322134079267043e-24,
+          "reverse_published": false
+        },
+        "0.0625": {
+          "forward_proposal_a_to_b_event_J": -3.486751452973443e-24,
+          "forward_proposal_b_to_a_event_J": 4.5793351870362115e-24,
+          "forward_published": true,
+          "reverse_proposal_a_to_b_event_J": -2.4123321926030094e-24,
+          "reverse_proposal_b_to_a_event_J": 3.2510414310680656e-24,
+          "reverse_published": false
+        }
+      },
+      "name": "first_sign_change",
+      "physical_stationarity_supported": false,
+      "smallest_extent_both_complete_directions_uphill": false
+    },
+    {
+      "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v40-common-current/b981f89/n128_to_1ms_H1p5625e-5/partial_000068_post_front.npz",
+      "checkpoint_sha256": "1d01871c4cfecc8e0a27070b133d473a249e4fc1e768dc8d04d8145291f96af6",
+      "complete_dissipation_rate_energy_conflict_count": 0,
+      "extent_sequence": [
+        0.0625,
+        0.03125,
+        0.015625,
+        0.0078125
+      ],
+      "legacy_rate_energy_conflict_count": 4,
+      "matched_proposal_diagnostics": {
+        "0.0078125": {
+          "forward_proposal_a_to_b_event_J": 2.0820426747210692e-23,
+          "forward_proposal_b_to_a_event_J": 2.7966166493356995e-23,
+          "forward_published": false,
+          "reverse_proposal_a_to_b_event_J": 2.156206247646708e-23,
+          "reverse_proposal_b_to_a_event_J": 2.631459256470449e-23,
+          "reverse_published": false
+        },
+        "0.015625": {
+          "forward_proposal_a_to_b_event_J": 2.0825978140784312e-23,
+          "forward_proposal_b_to_a_event_J": 2.797045579051855e-23,
+          "forward_published": false,
+          "reverse_proposal_a_to_b_event_J": 2.1559358000105107e-23,
+          "reverse_proposal_b_to_a_event_J": 2.630929432465503e-23,
+          "reverse_published": false
+        },
+        "0.03125": {
+          "forward_proposal_a_to_b_event_J": 2.083709567628822e-23,
+          "forward_proposal_b_to_a_event_J": 2.7979036491693117e-23,
+          "forward_published": false,
+          "reverse_proposal_a_to_b_event_J": 2.1567559333988012e-23,
+          "reverse_proposal_b_to_a_event_J": 2.6314334817110035e-23,
+          "reverse_published": false
+        },
+        "0.0625": {
+          "forward_proposal_a_to_b_event_J": 2.0859391194372386e-23,
+          "forward_proposal_b_to_a_event_J": 2.799620654150874e-23,
+          "forward_published": false,
+          "reverse_proposal_a_to_b_event_J": 2.1590833061698417e-23,
+          "reverse_proposal_b_to_a_event_J": 2.633223270445343e-23,
+          "reverse_published": false
+        }
+      },
+      "name": "stationary_1ms",
+      "physical_stationarity_supported": true,
+      "smallest_extent_both_complete_directions_uphill": true
+    }
+  ],
+  "zero_applied_front_work": true
+}

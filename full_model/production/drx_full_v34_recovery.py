@@ -8531,6 +8531,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                 if P.get('front_event_volume_b3') is not None
                 else P.get('moving_front_activation_volume_b3', 1.0))*P['b']**3),
             kinetic_event_length_m=P['b'])
+        _front_accept_kwargs['deterministic_rate_law'] = str(P.get(
+            'sibm_deterministic_rate_law', 'complete_dissipation'))
         sparse_front_state, coupled_front_runtime, _eta_accepted, _front_decision = (
             accept_coupled_front_candidate(
                 sparse_front_state, coupled_front_runtime,

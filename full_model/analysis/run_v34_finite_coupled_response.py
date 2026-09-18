@@ -105,6 +105,7 @@ class I3Controls:
     front_event_volume_b3: float = 1.0
     front_jump_length_b: float = 1.0
     front_symmetric_availability: float = 1.0
+    deterministic_front_rate_law: str = "complete_dissipation"
 
 
 def _owner_with_line_scale(state, factor):
@@ -313,7 +314,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 topology_backtracking_enabled=True,
                 kinetic_event_volume_m3=kinetic_event_volume,
                 kinetic_event_length_m=kinetic_event_length,
-                proposal_probe_only=True))
+                proposal_probe_only=True,
+                deterministic_rate_law=(
+                    controls.deterministic_front_rate_law)))
         if front_decision.accepted:
             directional_kinetics = evaluate_complete_directional_kinetics(
                 front_state, sparse_candidate, state.eta, accepted_eta,
@@ -356,7 +359,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                         directional_kinetics.b_to_a_event_J),
                     kinetic_event_volume_m3=kinetic_event_volume,
                     kinetic_event_length_m=kinetic_event_length,
-                    actual_reverse_edge=directional_kinetics.actual_reverse_edge))
+                    actual_reverse_edge=directional_kinetics.actual_reverse_edge,
+                    deterministic_rate_law=(
+                        controls.deterministic_front_rate_law)))
         transaction = evaluate_common_front_transaction(
             front_state, sparse_candidate, state.eta, accepted_eta,
             spacing_m=spacing, cell_volume_m3=cell_volume,

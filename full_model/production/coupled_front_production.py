@@ -132,6 +132,7 @@ class CoupledFrontDecision:
     expected_normal_velocity_m_s: float = 0.0
     site_count_per_interface_area_m2: float = 0.0
     event_count_per_interface_area: float = 0.0
+    deterministic_rate_law: str = "legacy_independent_metropolis"
 
 
 def initialize_coupled_front_runtime(state: SparseFrontState, phi,
@@ -408,7 +409,8 @@ def accept_coupled_front_candidate(
         kinetic_free_energy_b_to_a_J=None,
         kinetic_event_volume_m3=None,
         kinetic_event_length_m=None, proposal_probe_only=False,
-        actual_reverse_edge=None):
+        actual_reverse_edge=None,
+        deterministic_rate_law="legacy_independent_metropolis"):
     """Atomically accept a trial two-phase update and its material transaction."""
     before = np.asarray(eta_before, dtype=float)
     trial = np.asarray(eta_trial, dtype=float)
@@ -518,7 +520,8 @@ def accept_coupled_front_candidate(
         signed_sink_fraction=signed_sink_fraction,
         kinetic_free_energy_a_to_b_J=kinetic_free_energy_a_to_b_J,
         kinetic_free_energy_b_to_a_J=kinetic_free_energy_b_to_a_J,
-        actual_reverse_edge=actual_reverse_edge)
+        actual_reverse_edge=actual_reverse_edge,
+        deterministic_rate_law=deterministic_rate_law)
     proposed = (topology.signed_receiver_area_cells2*float(spacing_m)**2
                 *float(represented_thickness_m))
     velocity = event.net_velocity_a_to_b_m_s
@@ -546,6 +549,7 @@ def accept_coupled_front_candidate(
         proposal_probe_only=bool(proposal_probe_only),
         proposal_probe_external_work_J=0.0,
         proposal_probe_selected_direction=False,
+        deterministic_rate_law=event.deterministic_rate_law,
         kinetic_event_volume_m3=_event_measure.event_volume_m3,
         kinetic_event_length_m=_event_measure.event_length_m,
         front_event_volume_m3=_event_measure.event_volume_m3,

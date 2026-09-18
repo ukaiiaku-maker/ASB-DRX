@@ -1,0 +1,36 @@
+{
+  "claim_boundary": "The exact coupled agreement covers 37.616 ps, not the requested 1 microsecond. The isolated legacy endpoint is retained as a failed thermodynamic comparator and does not invalidate unrelated legacy trajectory intervals without their own energy audit.",
+  "classification": "LEGACY_EXECUTED_BUT_UNFORCED_ENERGY_INADMISSIBLE;CURRENT_COMPLETE_TIME_ENERGY_ADMISSIBLE",
+  "coupled_actual_accepted_dt_s": 3.7615668281849284e-11,
+  "coupled_horizon_fraction": 3.7615668281849284e-05,
+  "coupled_one_microsecond_overlap_qualified": false,
+  "coupled_requested_dt_s": 1e-06,
+  "coupled_short_interval_states_agree": true,
+  "generated_utc": "2026-09-18T17:29:19.175086+00:00",
+  "input": {
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v40_mura_final_source_pair.json",
+    "sha256": "1dea0122c18032e70c5f9071a07daae09cf180cdb69079ff618a0cdc774030d6"
+  },
+  "isolated_fixed_state": {
+    "current": {
+      "accurate_comparator_qualified": true,
+      "conservation_or_execution_status": "VALID",
+      "energy_change_J_per_m_thickness": -7.090376646286831e-06,
+      "integration_method": "bounded_convex_asymptotic",
+      "ordered_line_m_per_m_thickness": 0.011018778060883845,
+      "solver_completed_requested_horizon": true,
+      "unforced_energy_admissible": true
+    },
+    "legacy": {
+      "accurate_comparator_qualified": false,
+      "conservation_or_execution_status": "VALID",
+      "energy_change_J_per_m_thickness": 0.0007252278275063857,
+      "integration_method": "complete_time_explicit_subcycling",
+      "ordered_line_m_per_m_thickness": 38.864642514472465,
+      "solver_completed_requested_horizon": true,
+      "unforced_energy_admissible": false
+    }
+  },
+  "isolated_legacy_current_accurate_overlap_qualified": false,
+  "schema": "asb-drx/v41/ordering-legacy-current-validity/v1"
+}
