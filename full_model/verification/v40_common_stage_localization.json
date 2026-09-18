@@ -1,0 +1,189 @@
+{
+  "claim_boundary": "One 7.8125 us interval; localization evidence, not long-horizon spatial convergence.",
+  "classification": {
+    "first_nye_state_cross_grid_violation": "after_second_mura_half_stage",
+    "first_ordered_line_cross_grid_violation": "after_first_mura_half_stage",
+    "front_transaction_curl_nye_cross_grid_passed": true,
+    "interpretation": "The physical energies, interface measure, and curl/reservoir Nye agree through the first half-stage. The front keeps curl Nye grid-consistent but introduces a small representation mismatch; the following Mura half-stage is the first >5% cross-grid Nye-state disagreement. Trace ordered-line seeding is already grid-dependent in the first half-stage and is a separate discrete-selection issue.",
+    "ordered_line_is_trace_at_first_half": true
+  },
+  "comparison_threshold_relative": 0.05,
+  "comparisons": {
+    "after_first_mura_half_stage": {
+      "curl_beta_nye_rms_m1": {
+        "n128": 1.5435506612507797,
+        "n192": 1.5435444160473806,
+        "relative_difference": 4.046014701075812e-06
+      },
+      "helmholtz_J": {
+        "n128": 9.737796165070499e-14,
+        "n192": 9.737792229796874e-14,
+        "relative_difference": 4.0412380261754263e-07
+      },
+      "interface_area_proxy_m2_per_m": {
+        "n128": 6.054329873847744e-06,
+        "n192": 6.054529891602507e-06,
+        "relative_difference": 3.30360504191247e-05
+      },
+      "nye_representation_difference_rms_m1": {
+        "n128": 1.0421800020868753e-05,
+        "n192": 1.0421737594371118e-05,
+        "relative_difference": 5.990027773122511e-06
+      },
+      "ordered_plus_line_m_per_m": {
+        "n128": 6.224395473551039e-06,
+        "n192": 1.8297561562921607e-06,
+        "relative_difference": 2.401762279715034
+      },
+      "ordered_to_tangle_ratio": {
+        "n128": 5.795305943139759e-05,
+        "n192": 1.725014435803439e-05
+      },
+      "reservoir_nye_rms_m1": {
+        "n128": 1.5435506612220877,
+        "n192": 1.54354441601713,
+        "relative_difference": 4.046015710864361e-06
+      },
+      "tangle_plus_line_m_per_m": {
+        "n128": 0.10740408762921685,
+        "n192": 0.10607193298298037,
+        "relative_difference": 0.012558973979009434
+      }
+    },
+    "after_front_transaction": {
+      "curl_beta_nye_rms_m1": {
+        "n128": 1.5435731849668453,
+        "n192": 1.543725169270392,
+        "relative_difference": 9.84529543030731e-05
+      },
+      "helmholtz_J": {
+        "n128": 9.737791837550365e-14,
+        "n192": 9.737788131902581e-14,
+        "relative_difference": 3.805430693725428e-07
+      },
+      "interface_area_proxy_m2_per_m": {
+        "n128": 6.054319863436314e-06,
+        "n192": 6.054520274549413e-06,
+        "relative_difference": 3.3101072258690785e-05
+      },
+      "nye_representation_difference_rms_m1": {
+        "n128": 0.015154421700196284,
+        "n192": 0.026799121661717076,
+        "relative_difference": 0.4345179707197423
+      },
+      "ordered_plus_line_m_per_m": {
+        "n128": 6.224395473551039e-06,
+        "n192": 1.8297561562921607e-06,
+        "relative_difference": 2.401762279715034
+      },
+      "ordered_to_tangle_ratio": {
+        "n128": 5.795305943139759e-05,
+        "n192": 1.725014435803439e-05
+      },
+      "reservoir_nye_rms_m1": {
+        "n128": 1.5435257068355692,
+        "n192": 1.5435204852945386,
+        "relative_difference": 3.3828777009512924e-06
+      },
+      "tangle_plus_line_m_per_m": {
+        "n128": 0.10740408762921685,
+        "n192": 0.10607193298298037,
+        "relative_difference": 0.012558973979009434
+      }
+    },
+    "after_second_mura_half_stage": {
+      "curl_beta_nye_rms_m1": {
+        "n128": 3.2057054074781095,
+        "n192": 3.4588600139444012,
+        "relative_difference": 0.07319018562349977
+      },
+      "helmholtz_J": {
+        "n128": 9.72532079030409e-14,
+        "n192": 9.725318089526836e-14,
+        "relative_difference": 2.7770580141484956e-07
+      },
+      "interface_area_proxy_m2_per_m": {
+        "n128": 6.054319863436314e-06,
+        "n192": 6.054520274549413e-06,
+        "relative_difference": 3.3101072258690785e-05
+      },
+      "nye_representation_difference_rms_m1": {
+        "n128": 0.015154433279708937,
+        "n192": 0.026799129260280382,
+        "relative_difference": 0.4345176989698065
+      },
+      "ordered_plus_line_m_per_m": {
+        "n128": 6.224395473551039e-06,
+        "n192": 1.8297561562921607e-06,
+        "relative_difference": 2.401762279715034
+      },
+      "ordered_to_tangle_ratio": {
+        "n128": 2.9008646480299216e-05,
+        "n192": 8.634899333260146e-06
+      },
+      "reservoir_nye_rms_m1": {
+        "n128": 3.2056495707293853,
+        "n192": 3.458645118080147,
+        "relative_difference": 0.07314874429533745
+      },
+      "tangle_plus_line_m_per_m": {
+        "n128": 0.21457035155977522,
+        "n192": 0.21190243055228855,
+        "relative_difference": 0.012590327541468846
+      }
+    },
+    "macro_initial": {
+      "curl_beta_nye_rms_m1": {
+        "n128": 0.0,
+        "n192": 0.0,
+        "relative_difference": 0.0
+      },
+      "helmholtz_J": {
+        "n128": 9.750310739743315e-14,
+        "n192": 9.750306805688538e-14,
+        "relative_difference": 4.03480101216008e-07
+      },
+      "interface_area_proxy_m2_per_m": {
+        "n128": 6.054329873847744e-06,
+        "n192": 6.054529891602507e-06,
+        "relative_difference": 3.30360504191247e-05
+      },
+      "nye_representation_difference_rms_m1": {
+        "n128": 0.0,
+        "n192": 0.0,
+        "relative_difference": 0.0
+      },
+      "ordered_plus_line_m_per_m": {
+        "n128": 0.0,
+        "n192": 0.0,
+        "relative_difference": 0.0
+      },
+      "ordered_to_tangle_ratio": {
+        "n128": 0.0,
+        "n192": 0.0
+      },
+      "reservoir_nye_rms_m1": {
+        "n128": 0.0,
+        "n192": 0.0,
+        "relative_difference": 0.0
+      },
+      "tangle_plus_line_m_per_m": {
+        "n128": 0.0,
+        "n192": 0.0,
+        "relative_difference": 0.0
+      }
+    }
+  },
+  "generated_utc": "2026-09-18T05:58:04.909077+00:00",
+  "inputs": {
+    "n128": {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-stage/c1e1b2a/n128_H7p8125e-6_1/result.json",
+      "sha256": "e1190a7cec670b4623d491d49a4e55109ec5b8a57e1213ca261477ed52a80b17"
+    },
+    "n192": {
+      "path": "/Users/sdillon/HPC3/local-results/asb-drx-v40-stage/c1e1b2a/n192_H7p8125e-6_1/result.json",
+      "sha256": "50b9f5609192656d95abbc5a501b321940f3d377f0d0d0fcfbc9e56718cb4db7"
+    }
+  },
+  "schema": "asb-drx/v40/common-stage-localization/v1"
+}
