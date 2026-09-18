@@ -92,8 +92,9 @@ def mura_to_time(context, state, duration_s, driving):
 
 
 def front_stage(context, state, duration_s, driving, proposal_fraction,
-                front_exp_n):
-    envelope = geometric_envelope(state.eta, proposal_fraction, direction=1)
+                front_exp_n, front_direction):
+    envelope = geometric_envelope(
+        state.eta, proposal_fraction, direction=front_direction)
     controls = I3Controls(
         mura_enabled=False, front_enabled=True,
         driving_pressure_a_to_b_Pa=0.0,
@@ -211,7 +212,9 @@ def stage_diagnostics(state, context, driving):
 
 def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
              proposal_fraction=.0625, front_exp_n=1.0, restart=None,
-             inject_post_front_failure=False):
+             inject_post_front_failure=False, front_direction=1):
+    if front_direction not in (-1, 1):
+        raise ValueError("front_direction must be -1 or +1")
     output_dir = Path(output_dir); output_dir.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
@@ -248,7 +251,7 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
             pre_stage = stage_diagnostics(state_after_pre, context, driving)
             state_after_front, front = front_stage(
                 context, state_after_pre, macro_dt_s, driving,
-                proposal_fraction, front_exp_n)
+                proposal_fraction, front_exp_n, front_direction)
             front_stage_state = stage_diagnostics(
                 state_after_front, context, driving)
             partial_metadata = {
@@ -259,6 +262,7 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
                 "pre_mura_elapsed_s": pre_elapsed,
                 "pre_mura_audits": pre,
                 "front_exposure_s": macro_dt_s,
+                "front_direction": front_direction,
                 "front_metrics": front_metrics(front), "records": records,
                 "initial_stage_diagnostics": initial_stage,
                 "pre_mura_stage_diagnostics": pre_stage,
@@ -354,6 +358,7 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
         "schema": SCHEMA, "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_sha": source_sha(), "status": "HORIZON_COMPLETE",
         "grid": grid, "macro_dt_s": macro_dt_s,
+        "front_direction": front_direction,
         "macro_dt_values_s": sorted({float(
             record["macro_dt_s"]) for record in records}),
         "completed_intervals": intervals, "physical_time_s": physical_time,
@@ -380,6 +385,8 @@ def main():
     parser.add_argument("--intervals", type=int, default=1)
     parser.add_argument("--proposal-fraction", type=float, default=.0625)
     parser.add_argument("--front-exp-n", type=float, default=1.0)
+    parser.add_argument("--front-direction", type=int, choices=(-1, 1),
+                        default=1)
     parser.add_argument("--restart", type=Path)
     parser.add_argument("--inject-post-front-failure", action="store_true")
     args = parser.parse_args()
