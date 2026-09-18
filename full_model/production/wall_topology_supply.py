@@ -530,13 +530,25 @@ def apply_signed_ordering_extent(inventory, alignments, extent_plus_m2,
         donor = np.where(accepted >= 0.0, tangle, ordered)
         fraction = np.divide(np.abs(accepted), donor,
                              out=np.zeros_like(accepted), where=donor > 0.0)
-        moved = np.where((accepted >= 0.0)[..., None],
-                         fraction[..., None]*atangle,
-                         -fraction[..., None]*aordered)
-        density_updates[tname] = tangle-accepted
-        density_updates[oname] = ordered+accepted
-        alignment_updates[tname] = atangle-moved
-        alignment_updates[oname] = aordered+moved
+        forward = accepted >= 0.0
+        remainder = 1.0-fraction
+        moved_forward = fraction[..., None]*atangle
+        moved_reverse = fraction[..., None]*aordered
+        moved = np.where(forward[..., None], moved_forward, -moved_reverse)
+        # Form a nearly exhausted donor as a multiplicative remainder.  The
+        # algebra is identical to donor-transfer subtraction, but avoids a
+        # small absolute cancellation residue in |kappa| after rho approaches
+        # zero.  Receiver inventory and moment still receive the same extent.
+        density_updates[tname] = np.where(
+            forward, remainder*tangle, tangle-accepted)
+        density_updates[oname] = np.where(
+            forward, ordered+accepted, remainder*ordered)
+        alignment_updates[tname] = np.where(
+            forward[..., None], remainder[..., None]*atangle,
+            atangle+moved_reverse)
+        alignment_updates[oname] = np.where(
+            forward[..., None], aordered+moved_forward,
+            remainder[..., None]*aordered)
         sign_ledger[sign] = {
             "accepted_tangle_to_ordered_m2": accepted,
             "accepted_alignment_m2": moved,

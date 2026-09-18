@@ -17,7 +17,9 @@ import numpy as np
 from full_model.analysis.run_v36_mura_rate_limit import context
 from full_model.production.common_tensorial_wall import CommonWallDriving
 from full_model.production.density_state_map import derived_density_fields
+from full_model.production.extensive_wall import accepted_ordering_step
 from full_model.production.v24_mechanical_wall import accepted_v24_mechanical_step
+from full_model.production.v24_mechanical_wall import resolved_driving_components
 from full_model.production.wall_topology_supply import reservoir_nye_m1
 
 
@@ -50,6 +52,7 @@ def main():
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--requested-dt-s", type=float, default=1e-6)
+    parser.add_argument("--ordering-horizon-s", type=float, default=1e-6)
     args = parser.parse_args()
     (state, metadata, fixed, support, systems, topologies, common, extensive,
      kinetics, spacing) = context(args.checkpoint)
@@ -102,6 +105,46 @@ def main():
         comparisons[key] = {"legacy": a, "current": b,
                             "absolute_difference": abs(a-b),
                             "relative_to_current": abs(a-b)/max(abs(b), 1e-30)}
+    drive = resolved_driving_components(
+        state.common, driving, systems, topologies, common)
+    zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
+    isolated = {}
+    for name, parameters in variants.items():
+        try:
+            density, alignment, ledger, _ = accepted_ordering_step(
+                state.density, systems, topologies,
+                state.common.orientation_rad, zero_target,
+                drive["effective_stress_Pa"], state.common.temperature_K,
+                parameters, args.ordering_horizon_s,
+                alignment=state.reservoir_alignment)
+            isolated_state = replace(
+                state, density=density, reservoir_alignment=alignment)
+            isolated[name] = {
+                "status": "VALID", "integration_method": ledger[
+                    "integration_method"],
+                "stiff_dispatch": ledger.get("stiff_dispatch"),
+                "complete_elapsed_time_s": ledger["complete_elapsed_time_s"],
+                "discarded_reaction_time_s": ledger.get(
+                    "discarded_reaction_time_s", 0.0),
+                "observables": observables(
+                    isolated_state, systems, topologies, spacing),
+            }
+        except (ValueError, RuntimeError) as error:
+            isolated[name] = {
+                "status": "NUMERICAL_INVALID", "error_type": type(error).__name__,
+                "error": str(error), "observables": None,
+            }
+    isolated_comparisons = {}
+    if all(row["status"] == "VALID" for row in isolated.values()):
+        isolated_old = isolated[
+            "legacy_v37_single_capped_extent"]["observables"]
+        isolated_new = isolated[
+            "current_v39_complete_time_dispatch"]["observables"]
+        for key in initial:
+            a, b = isolated_old[key], isolated_new[key]
+            isolated_comparisons[key] = {
+                "legacy": a, "current": b, "absolute_difference": abs(a-b),
+                "relative_to_current": abs(a-b)/max(abs(b), 1e-30)}
     result = {
         "schema": "asb-drx/v39/mura-source-pair/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -112,8 +155,13 @@ def main():
         "checkpoint_source_sha": metadata.get("source_sha"),
         "checkpoint_applied_strain": strain,
         "requested_dt_s": args.requested_dt_s,
+        "isolated_ordering_horizon_s": args.ordering_horizon_s,
         "initial_observables": initial, "records": records,
         "comparisons": comparisons,
+        "isolated_fixed_state_ordering": isolated,
+        "isolated_fixed_state_comparisons": isolated_comparisons,
+        "isolated_fixed_state_overlap_qualified": bool(
+            isolated_comparisons),
         "legacy_ordered_observable_inherits_current_accuracy": False,
         "claim_boundary": (
             "current-source restart from a legacy-prepared valid state; this "

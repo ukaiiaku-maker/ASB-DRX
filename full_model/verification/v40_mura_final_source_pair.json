@@ -36,7 +36,7 @@
       "relative_to_current": 0.0
     }
   },
-  "generated_utc": "2026-09-18T05:47:54.992131+00:00",
+  "generated_utc": "2026-09-18T06:11:02.115952+00:00",
   "initial_observables": {
     "nye_rms_m1": 56699.09746166812,
     "ordered_line_m_per_m_thickness": 5.157050357118567,
@@ -44,6 +44,70 @@
     "tangle_line_m_per_m_thickness": 3957.3415380683114,
     "total_line_m_per_m_thickness": 152519.7438852273
   },
+  "isolated_fixed_state_comparisons": {
+    "nye_rms_m1": {
+      "absolute_difference": 0.0,
+      "current": 56699.09746166812,
+      "legacy": 56699.09746166812,
+      "relative_to_current": 0.0
+    },
+    "ordered_line_m_per_m_thickness": {
+      "absolute_difference": 38.85362373641158,
+      "current": 0.011018778060883845,
+      "legacy": 38.864642514472465,
+      "relative_to_current": 3526.1281715383807
+    },
+    "orientation_span_deg": {
+      "absolute_difference": 0.0,
+      "current": 6.953606113875319,
+      "legacy": 6.953606113875319,
+      "relative_to_current": 0.0
+    },
+    "tangle_line_m_per_m_thickness": {
+      "absolute_difference": 38.853623736411464,
+      "current": 3962.487569647369,
+      "legacy": 3923.6339459109577,
+      "relative_to_current": 0.009805361670792354
+    },
+    "total_line_m_per_m_thickness": {
+      "absolute_difference": 0.0,
+      "current": 152519.7438852273,
+      "legacy": 152519.7438852273,
+      "relative_to_current": 0.0
+    }
+  },
+  "isolated_fixed_state_ordering": {
+    "current_v39_complete_time_dispatch": {
+      "complete_elapsed_time_s": 1e-06,
+      "discarded_reaction_time_s": 0.0,
+      "integration_method": "bounded_convex_asymptotic",
+      "observables": {
+        "nye_rms_m1": 56699.09746166812,
+        "ordered_line_m_per_m_thickness": 0.011018778060883845,
+        "orientation_span_deg": 6.953606113875319,
+        "tangle_line_m_per_m_thickness": 3962.487569647369,
+        "total_line_m_per_m_thickness": 152519.7438852273
+      },
+      "status": "VALID",
+      "stiff_dispatch": "qualified_asymptotic"
+    },
+    "legacy_v37_single_capped_extent": {
+      "complete_elapsed_time_s": 1e-06,
+      "discarded_reaction_time_s": 0.0,
+      "integration_method": "complete_time_explicit_subcycling",
+      "observables": {
+        "nye_rms_m1": 56699.09746166812,
+        "ordered_line_m_per_m_thickness": 38.864642514472465,
+        "orientation_span_deg": 6.953606113875319,
+        "tangle_line_m_per_m_thickness": 3923.6339459109577,
+        "total_line_m_per_m_thickness": 152519.7438852273
+      },
+      "status": "VALID",
+      "stiff_dispatch": null
+    }
+  },
+  "isolated_fixed_state_overlap_qualified": true,
+  "isolated_ordering_horizon_s": 1e-06,
   "legacy_ordered_observable_inherits_current_accuracy": false,
   "records": {
     "current_v39_complete_time_dispatch": {
@@ -60,7 +124,7 @@
       "ordering_integration_method": "complete_time_explicit_subcycling",
       "ordering_internal_substeps": 1,
       "ordering_stiff_dispatch": "resolved_finite_time_oracle",
-      "wall_seconds": 3.2748870060313493
+      "wall_seconds": 3.844520179904066
     },
     "legacy_v37_single_capped_extent": {
       "accepted_dt_s": 3.7615668281849284e-11,
@@ -76,10 +140,10 @@
       "ordering_integration_method": "complete_time_explicit_subcycling",
       "ordering_internal_substeps": 1,
       "ordering_stiff_dispatch": null,
-      "wall_seconds": 3.529996742028743
+      "wall_seconds": 4.159615810029209
     }
   },
   "requested_dt_s": 1e-06,
   "schema": "asb-drx/v39/mura-source-pair/v1",
-  "source_sha": "600518e6dc6be36fcc72d089c3193164497be7f9"
+  "source_sha": "b981f8914a5fb03c18489000a8ed6f39052cedbf"
 }
