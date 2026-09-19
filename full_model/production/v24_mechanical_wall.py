@@ -30,6 +30,7 @@ from .extensive_wall import (
 from .tensorial_nye import rotated_system_fields
 from .mura_kinematics import (
     accept_family_mura_step, family_plastic_flow_from_signed_alignment,
+    family_plastic_flow_from_swept_products, dealiased_signed_mura_products,
 )
 from .lattice_line_geometry import (
     LatticeLineGeometry, geometry_checkpoint_arrays,
@@ -40,6 +41,7 @@ from .wall_topology_supply import (
     ReservoirAlignmentState,
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
     apply_signed_ordering_extent, apply_signed_reservoir_exchange,
+    accepted_compatible_mura_transport_capture_step,
     accepted_mura_transport_capture_step,
     validate_junction_alignment,
     reservoir_nye_m1,
@@ -106,12 +108,17 @@ class V43GeometryKinetics:
     exp_n: float = 2.5
     exp_floor: float = 0.05
     maximum_extent_per_step: float = 1.0
+    material_exchange_model: str = "equilibrated_point_defect_reservoir"
+    chemical_work_J_m3_cells_per_extent: float = 0.0
 
     def __post_init__(self):
         if (self.enthalpy_J < 0.0 or self.critical_stress_Pa <= 0.0
                 or self.exp_a < 0.0 or self.exp_n < 1.0
                 or not 0.0 <= self.exp_floor <= 1.0
-                or not 0.0 < self.maximum_extent_per_step <= 1.0):
+                or not 0.0 < self.maximum_extent_per_step <= 1.0
+                or self.material_exchange_model not in (
+                    "equilibrated_point_defect_reservoir", "glide_no_exchange")
+                or not np.isfinite(self.chemical_work_J_m3_cells_per_extent)):
             raise ValueError("invalid V43 geometry kinetics")
 
 
@@ -556,6 +563,9 @@ def accepted_geometry_plaquette_transaction(
             "irreversible_heat_increment_J_m3": np.zeros_like(
                 state.common.orientation_rad), "event_rate_s": rate,
             "kinetic_extent_capacity": kinetic_capacity,
+            "requested_time_s": float(dt_s), "accepted_time_s": 0.0,
+            "remaining_time_s": float(dt_s), "accepted_rate_exposure": 0.0,
+            "event_measure_interpretation": "fractional_plaquette_ensemble_weight",
         }
 
     try:
@@ -593,8 +603,20 @@ def accepted_geometry_plaquette_transaction(
     external_work = float(event.get("external_work_J_m3_cells", 0.0))
     if external_work != 0.0 and not event.get("verification_external_work", False):
         raise ValueError("geometry external work is allowed only in labeled verification")
-    complete_delta = wall_delta+elastic_delta-external_work
-    scale = max(abs(wall_delta), abs(elastic_delta), abs(external_work), 1.0)
+    trace_increment = np.trace(ledger["plastic_distortion_increment"],
+                               axis1=-2, axis2=-1)
+    volumetric_exchange = float(np.sum(trace_increment))
+    mechanism = ("climb_with_material_exchange"
+                 if abs(volumetric_exchange) > 64*np.finfo(float).eps
+                 else "volume_preserving_sweep")
+    if (mechanism == "climb_with_material_exchange"
+            and kinetics.material_exchange_model == "glide_no_exchange"):
+        raise ValueError("non-volume-preserving sweep requires material exchange")
+    chemical_work = (kinetics.chemical_work_J_m3_cells_per_extent
+                     *abs(extent))
+    complete_delta = wall_delta+elastic_delta-external_work-chemical_work
+    scale = max(abs(wall_delta), abs(elastic_delta), abs(external_work),
+                abs(chemical_work), 1.0)
     tolerance = 2e-12*scale
     heat_total = -complete_delta
     accepted = bool(heat_total >= -tolerance)
@@ -609,12 +631,59 @@ def accepted_geometry_plaquette_transaction(
         "wall_energy_change_J_m3_cells": wall_delta,
         "elastic_energy_change_J_m3_cells": elastic_delta,
         "external_work_J_m3_cells": external_work,
+        "mechanism": mechanism,
+        "material_exchange_model": kinetics.material_exchange_model,
+        "volumetric_plastic_exchange_sum": volumetric_exchange,
+        "chemical_reservoir_work_J_m3_cells": chemical_work,
+        "material_exchange_validity_limit": (
+            "point-defect reservoir treated as spatially equilibrated; no "
+            "vacancy diffusion transient is represented"),
         "complete_energy_change_J_m3_cells": complete_delta,
         "energy_tolerance_J_m3_cells": tolerance,
+        "requested_time_s": float(dt_s),
+        "accepted_time_s": min(abs(extent)/max(rate, 1e-300), float(dt_s)),
+        "remaining_time_s": max(float(dt_s)-abs(extent)/max(rate, 1e-300), 0.0),
+        "accepted_rate_exposure": abs(extent),
+        "active_extent_cap": float(kinetics.maximum_extent_per_step),
+        "event_measure_interpretation": "fractional_plaquette_ensemble_weight",
+        "physical_plaquette_area_m2": float(state.geometry.spacing_m)**2,
     })
     if not accepted:
         ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(
             state.common.orientation_rad)
+        if event.get("search_partial_extent", False):
+            rows = [{
+                "extent": float(extent), "accepted": False,
+                "complete_energy_change_J_m3_cells": complete_delta,
+            }]
+            levels = int(event.get("partial_extent_levels", 16))
+            for level in range(1, levels+1):
+                trial_event = dict(event)
+                trial_event["proposed_extent"] = np.sign(extent)*abs(extent)*2.0**(-level)
+                trial_event["search_partial_extent"] = False
+                candidate, trial = accepted_geometry_plaquette_transaction(
+                    state, trial_event, systems, topologies, driving,
+                    common_parameters, extensive_parameters, kinetics, dt_s)
+                rows.append({
+                    "extent": float(trial.get("accepted_extent",
+                                                trial_event["proposed_extent"])),
+                    "accepted": bool(trial["accepted"]),
+                    "classification": trial["classification"],
+                    "complete_energy_change_J_m3_cells": float(
+                        trial.get("complete_energy_change_J_m3_cells", 0.0)),
+                })
+                if trial["accepted"]:
+                    trial["same_state_partial_extent_search"] = {
+                        "full_extent_rejected": True,
+                        "selection": "largest_tested_connected_dyadic_extent",
+                        "rows": rows,
+                    }
+                    return candidate, trial
+            ledger["same_state_partial_extent_search"] = {
+                "full_extent_rejected": True,
+                "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE",
+                "rows": rows,
+            }
         return state, ledger
     heat = np.zeros_like(state.common.orientation_rad)
     heat[i, j] = max(heat_total, 0.0)
@@ -637,7 +706,8 @@ def accepted_v24_mechanical_step(
         mura_work_budget_mode="energy_limited",
         maximum_work_budget_backtracks=20,
         feasible_family_extent_levels=12, geometry_event=None,
-        geometry_kinetics=None):
+        geometry_kinetics=None,
+        mura_transport_operator="legacy_mixed"):
     """Advance mechanics, line transport/capture, ordering, and topology once."""
     state.validate(systems, topologies)
     _nye_reservoir_initial = reservoir_nye_m1(
@@ -682,17 +752,30 @@ def accepted_v24_mechanical_step(
             "energy_limited", "energy_limited_feasible_extents",
             "legacy_reject"):
         raise ValueError("unknown Mura work-budget mode")
+    if mura_transport_operator not in ("compatible_dealiased", "legacy_mixed"):
+        raise ValueError("unknown Mura transport operator")
     if int(maximum_work_budget_backtracks) < 0:
         raise ValueError("Mura work-budget backtracks cannot be negative")
     if int(feasible_family_extent_levels) < 2:
         raise ValueError("feasible-family screen requires at least two levels")
     proposed_velocity_plus_3d = velocity_plus_3d
     proposed_velocity_minus_3d = velocity_minus_3d
-    proposed_family_flow_rate = family_plastic_flow_from_signed_alignment(
-        state.reservoir_alignment.mobile_plus_m2,
-        state.reservoir_alignment.mobile_minus_m2,
-        proposed_velocity_plus_3d, proposed_velocity_minus_3d, systems,
-        state.common.orientation_rad)
+    if mura_transport_operator == "compatible_dealiased":
+        proposed_swept_plus, proposed_swept_minus, _, _ = (
+            dealiased_signed_mura_products(
+                state.reservoir_alignment.mobile_plus_m2,
+                state.reservoir_alignment.mobile_minus_m2,
+                proposed_velocity_plus_3d, proposed_velocity_minus_3d,
+                common_parameters.spacing_m))
+        proposed_family_flow_rate = family_plastic_flow_from_swept_products(
+            proposed_swept_plus, proposed_swept_minus, systems,
+            state.common.orientation_rad)
+    else:
+        proposed_family_flow_rate = family_plastic_flow_from_signed_alignment(
+            state.reservoir_alignment.mobile_plus_m2,
+            state.reservoir_alignment.mobile_minus_m2,
+            proposed_velocity_plus_3d, proposed_velocity_minus_3d, systems,
+            state.common.orientation_rad)
     schmid_tensors = np.einsum(
         "...ai,...aj->...aij", slip_directions, plane_normals)
     schmid_norm2 = np.sum(schmid_tensors*schmid_tensors, axis=(-2, -1))
@@ -738,11 +821,19 @@ def accepted_v24_mechanical_step(
         velocity_minus = (event_scale*proposed_velocity_minus_3d
                           *scales[None, None, :, None])
         family_flow = event_scale*scaled_flow
-        density, alignment, capture = accepted_mura_transport_capture_step(
+        transport = (accepted_compatible_mura_transport_capture_step
+                     if mura_transport_operator == "compatible_dealiased"
+                     else accepted_mura_transport_capture_step)
+        density, alignment, capture = transport(
             state.density, state.reservoir_alignment,
             velocity_plus, velocity_minus, capture_support, systems,
             state.common.orientation_rad, common_parameters.spacing_m,
             accepted_dt, topologies)
+        if mura_transport_operator == "compatible_dealiased":
+            family_flow = family_plastic_flow_from_swept_products(
+                capture["swept_product_plus_m_s"],
+                capture["swept_product_minus_m_s"], systems,
+                state.common.orientation_rad)
         elastic_release = None
         if elastic_before is not None:
             elastic_release = (event_scale*full_plastic_work
@@ -1063,6 +1154,7 @@ def accepted_v24_mechanical_step(
         "mura_event_scale": event_scale,
         "mura_family_event_scales": family_event_scales,
         "mura_work_budget_mode": mura_work_budget_mode,
+        "mura_transport_operator": mura_transport_operator,
         "mura_work_budget": {
             "accepted": accepted_budget,
             "trial_count": len(budget_trials),

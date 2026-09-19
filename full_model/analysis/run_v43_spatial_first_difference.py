@@ -30,7 +30,8 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def run_grid(output, grid, macro_dt_s, restart=None, mura_substeps=1):
+def run_grid(output, grid, macro_dt_s, restart=None, mura_substeps=1,
+             mura_transport_operator="legacy_mixed"):
     output = Path(output); output.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
@@ -66,7 +67,8 @@ def run_grid(output, grid, macro_dt_s, restart=None, mura_substeps=1):
     retain("initial", state)
     state, pre, pre_elapsed = mura_to_time(
         context, state, .5*macro_dt_s, driving,
-        maximum_substep_s=.5*macro_dt_s/int(mura_substeps))
+        maximum_substep_s=.5*macro_dt_s/int(mura_substeps),
+        mura_transport_operator=mura_transport_operator)
     retain("after_first_mura", state, {
         "operator_exposure_s": pre_elapsed, "subcycle_count": len(pre),
         "accepted_dt_s": [float(row["accepted_dt_s"]) for row in pre],
@@ -81,7 +83,8 @@ def run_grid(output, grid, macro_dt_s, restart=None, mura_substeps=1):
     })
     state, post, post_elapsed = mura_to_time(
         context, state, .5*macro_dt_s, driving,
-        maximum_substep_s=.5*macro_dt_s/int(mura_substeps))
+        maximum_substep_s=.5*macro_dt_s/int(mura_substeps),
+        mura_transport_operator=mura_transport_operator)
     retain("after_second_mura", state, {
         "operator_exposure_s": post_elapsed, "subcycle_count": len(post),
         "accepted_dt_s": [float(row["accepted_dt_s"]) for row in post],
@@ -93,6 +96,7 @@ def run_grid(output, grid, macro_dt_s, restart=None, mura_substeps=1):
         "source_sha": source, "grid": grid, "macro_dt_s": macro_dt_s,
         "restart": None if restart is None else str(Path(restart).resolve()),
         "mura_substeps_per_half": int(mura_substeps),
+        "mura_transport_operator": mura_transport_operator,
         "records": records,
     }
     (output/"stage_run.json").write_text(
@@ -201,12 +205,16 @@ def main():
     run.add_argument("--macro-dt-s", type=float, default=7.8125e-6)
     run.add_argument("--restart", type=Path)
     run.add_argument("--mura-substeps", type=int, default=1)
+    run.add_argument("--mura-transport-operator",
+                     choices=("legacy_mixed", "compatible_dealiased"),
+                     default="legacy_mixed")
     comp = sub.add_parser("compare"); comp.add_argument("--n128", type=Path, required=True)
     comp.add_argument("--n192", type=Path, required=True)
     comp.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = (run_grid(args.output, args.grid, args.macro_dt_s,
-                       args.restart, args.mura_substeps)
+                       args.restart, args.mura_substeps,
+                       args.mura_transport_operator)
               if args.command == "run" else compare(args.n128, args.n192, args.output))
     print(json.dumps({key: result.get(key) for key in
                       ("schema", "classification", "source_sha", "grid")},

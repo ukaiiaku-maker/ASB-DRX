@@ -154,9 +154,84 @@ def geometry_reservoir_fields(state):
         np.abs(qx)+np.roll(np.abs(qx), -1, axis=1)
         +np.abs(qy)+np.roll(np.abs(qy), -1, axis=0))
     moment = np.zeros(qx.shape+(3,))
-    moment[..., 0] = .5*factor*(qx+np.roll(qx, -1, axis=1))
-    moment[..., 1] = .5*factor*(qy+np.roll(qy, -1, axis=0))
+    # alpha=-Curl(beta_p): the dislocation-line orientation is the negative
+    # oriented boundary of the retained positive plastic swept surface.
+    moment[..., 0] = -.5*factor*(qx+np.roll(qx, -1, axis=1))
+    moment[..., 1] = -.5*factor*(qy+np.roll(qy, -1, axis=0))
     return rho, moment
+
+
+def geometry_link_nye_mimetic(state):
+    """Deposit retained Burgers-weighted links onto adjacent cells.
+
+    This assembly uses the stored link state directly; it does not curl the
+    swept surface.  The minus sign is the declared ``alpha=-Curl(beta_p)``
+    convention.  The result is family resolved.
+    """
+    dx = float(state.spacing_m); thickness = float(state.section_thickness_m)
+    factor = 1.0/(dx*thickness)
+    ex = np.sum(np.asarray(state.edge_x_burgers_m), axis=3)
+    ey = np.sum(np.asarray(state.edge_y_burgers_m), axis=3)
+    result = np.zeros(ex.shape[:-1]+(3, 3))
+    result[..., :, 0] = -.5*factor*(ex+np.roll(ex, -1, axis=1))
+    result[..., :, 1] = -.5*factor*(ey+np.roll(ey, -1, axis=0))
+    return result
+
+
+def geometry_surface_nye_mimetic(state):
+    """Apply the staggered surface-to-cell boundary map independently.
+
+    The half-cell averaging is the explicit commuting reconstruction between
+    the plaquette/edge complex and the cell-centered continuum field.  This
+    implementation starts from retained swept Burgers area, not stored links.
+    """
+    dx = float(state.spacing_m); thickness = float(state.section_thickness_m)
+    surface = np.sum(np.asarray(state.swept_burgers_area_m3), axis=3)/dx**2
+    ex, ey = boundary_of_plaquettes(surface)
+    factor = 1.0/(dx*thickness)
+    result = np.zeros(surface.shape[:-1]+(3, 3))
+    result[..., :, 0] = -.5*factor*(ex+np.roll(ex, -1, axis=1))
+    result[..., :, 1] = -.5*factor*(ey+np.roll(ey, -1, axis=0))
+    return result
+
+
+def geometry_link_nye_spectral_transfer(state):
+    """Transfer staggered retained links to the production spectral complex.
+
+    A backward edge incidence has symbol ``(1-exp(-ikh))/h`` whereas the
+    production derivative has symbol ``ik``.  The declared multiplier below
+    maps the *stored links* to that derivative, including their half-cell
+    placement.  Even-grid Nyquist derivatives follow NumPy's real spectral
+    convention and are zero.  This is an explicit transfer between two
+    discrete structures, not a curl of the retained surface.
+    """
+    dx = float(state.spacing_m); thickness = float(state.section_thickness_m)
+    ex = np.sum(np.asarray(state.edge_x_burgers_m), axis=3)
+    ey = np.sum(np.asarray(state.edge_y_burgers_m), axis=3)
+    nx, ny = ex.shape[:2]
+
+    def multiplier(n):
+        kh = 2*np.pi*np.fft.fftfreq(n)
+        denominator = 1.0-np.exp(-1j*kh)
+        value = np.zeros(n, dtype=complex)
+        active = np.abs(denominator) > 1e-14
+        value[active] = 1j*kh[active]/denominator[active]
+        if n % 2 == 0:
+            value[n//2] = 0.0
+        return value
+
+    rx = multiplier(nx).reshape((nx, 1)+(1,)*(ex.ndim-2))
+    ry = multiplier(ny).reshape((1, ny)+(1,)*(ex.ndim-2))
+    base_x = -ex/(dx*thickness)
+    base_y = -ey/(dx*thickness)
+    ax = np.fft.ifftn(np.fft.fftn(base_x, axes=(0, 1))*ry,
+                      axes=(0, 1)).real
+    ay = np.fft.ifftn(np.fft.fftn(base_y, axes=(0, 1))*rx,
+                      axes=(0, 1)).real
+    result = np.zeros(ex.shape[:-1]+(3, 3))
+    result[..., :, 0] = ax
+    result[..., :, 1] = ay
+    return result
 
 
 def geometry_plastic_distortion(state):

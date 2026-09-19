@@ -106,6 +106,7 @@ class I3Controls:
     front_jump_length_b: float = 1.0
     front_symmetric_availability: float = 1.0
     deterministic_front_rate_law: str = "complete_dissipation"
+    mura_transport_operator: str = "legacy_mixed"
 
 
 def _owner_with_line_scale(state, factor):
@@ -251,6 +252,7 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     mechanical = reconstruct_mechanical_state(
         state.common_front, spacing, context["systems"],
         context["topologies"])
+    mechanical_before_mura = mechanical
     mura_ledger = None
     if controls.mura_enabled:
         mechanical, mura_ledger = accepted_v24_mechanical_step(
@@ -259,7 +261,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             context["wall_parameters"], context["extensive_parameters"],
             context["topology_kinetics"], controls.trial_dt_s,
             topology_route_enabled=False,
-            mura_work_budget_mode="energy_limited")
+            mura_work_budget_mode="energy_limited",
+            mura_transport_operator=controls.mura_transport_operator)
         if mura_ledger["mura_work_budget"]["family_selection_rule"] != (
                 "complete_discrete_full_event_affinity_then_joint_backtrack"):
             raise RuntimeError("I3 requires complete-affinity Mura selection")
@@ -549,6 +552,50 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 "ordering_thermodynamics"].get("maximum_attempt_exposure"),
             "ordering_solver_evaluations": int(mura_ledger[
                 "ordering_thermodynamics"].get("implicit_nfev", 0)),
+            "transport_operator": mura_ledger["mura_transport_operator"],
+            "transport_nonlinear_product_rule": mura_ledger[
+                "transport_capture"].get("nonlinear_product_rule"),
+            "transport_maximum_scalar_balance_residual_m": float(max(
+                abs(mura_ledger["transport_capture"]["sign"][sign][
+                    "global_scalar_residual_line_per_thickness"])
+                for sign in ("plus", "minus"))),
+            "transport_maximum_alignment_balance_residual_m": float(max(
+                np.max(np.abs(mura_ledger["transport_capture"]["sign"][sign][
+                    "global_alignment_residual_line_per_thickness"]))
+                for sign in ("plus", "minus"))),
+            "ordering_generation_audit": {
+                "ordered_line_before_m": float(sum(
+                    np.sum(getattr(mechanical_before_mura.density,
+                                   f"wall_ordered_{sign}_m2"))*spacing**2
+                    for sign in ("plus", "minus"))),
+                "ordered_line_after_m": float(sum(
+                    np.sum(getattr(mechanical.density,
+                                   f"wall_ordered_{sign}_m2"))*spacing**2
+                    for sign in ("plus", "minus"))),
+                "active_transfer_cells": int(np.count_nonzero(
+                    np.concatenate([np.ravel(value) for value in
+                        mura_ledger["ordering_thermodynamics"][
+                            "accepted_transfer_m2_s"].values()]))),
+                "transfer_rate_min_m2_s": float(np.min(
+                    np.concatenate([np.ravel(value) for value in
+                        mura_ledger["ordering_thermodynamics"][
+                            "accepted_transfer_m2_s"].values()]))),
+                "transfer_rate_max_m2_s": float(np.max(
+                    np.concatenate([np.ravel(value) for value in
+                        mura_ledger["ordering_thermodynamics"][
+                            "accepted_transfer_m2_s"].values()]))),
+                "chemical_potential_min_J_m": float(np.min(
+                    np.concatenate([np.ravel(value) for value in
+                        mura_ledger["ordering_thermodynamics"][
+                            "chemical_potential_J_m"].values()]))),
+                "chemical_potential_max_J_m": float(np.max(
+                    np.concatenate([np.ravel(value) for value in
+                        mura_ledger["ordering_thermodynamics"][
+                            "chemical_potential_J_m"].values()]))),
+                "free_energy_rate_sum_W_m3_cells": float(np.sum(
+                    mura_ledger["ordering_thermodynamics"][
+                        "free_energy_rate_W_m3"])),
+            },
         }),
     }
     return I3State(mechanical, front_state, runtime, accepted_eta), diagnostics

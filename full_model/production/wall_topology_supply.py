@@ -24,7 +24,10 @@ try:
     from .tensorial_nye import (
         junction_closure_metrics, rotated_system_fields, rotation_z,
     )
-    from .mura_kinematics import signed_alignment_mura_rates
+    from .mura_kinematics import (
+        dealiased_scalar_transport_rate, dealiased_signed_mura_products,
+        signed_alignment_mura_rates,
+    )
 except ImportError:
     from density_state_map import (
         DensityInventory, SIGNED_RESERVOIRS, derived_density_fields,
@@ -32,7 +35,10 @@ except ImportError:
     from tensorial_nye import (
         junction_closure_metrics, rotated_system_fields, rotation_z,
     )
-    from mura_kinematics import signed_alignment_mura_rates
+    from mura_kinematics import (
+        dealiased_scalar_transport_rate, dealiased_signed_mura_products,
+        signed_alignment_mura_rates,
+    )
 
 
 TOPOLOGY_MOMENT_FIELDS = (
@@ -475,6 +481,155 @@ def accepted_mura_transport_capture_step(
         "sign": sign_ledgers,
         "alignment_rate_plus_m2_s": plus_rate,
         "alignment_rate_minus_m2_s": minus_rate,
+        "local_nye_change_m1": after["total"]-before["total"],
+        "post_step_projection_used": False,
+    }
+
+
+def accepted_compatible_mura_transport_capture_step(
+        inventory, alignments, velocity_plus_m_s, velocity_minus_m_s,
+        capture_support, systems, orientation_rad, spacing_m, dt_s,
+        topologies=()):
+    """De-aliased compatible Mura, scalar-flux, and capture transaction.
+
+    The nonlinear swept products are formed once with 3/2 padding.  Those
+    products generate the first-moment rate and are returned to the caller so
+    that the identical fields generate plastic distortion and Nye.  Scalar
+    transport uses the matching declared transport velocity; the only scalar
+    source is the explicitly reported line stretching required by the evolved
+    first moment.  Capture repartitions accepted line and moment locally and
+    therefore cannot create a second total-Nye increment.
+
+    Spectral transport is not positivity preserving for arbitrary steps.  An
+    inadmissible trial raises and the production work/extent controller must
+    reduce the event.  No clipping, smoothing, or post-step projection occurs.
+    """
+    if spacing_m <= 0.0 or dt_s < 0.0:
+        raise ValueError("positive spacing and nonnegative step required")
+    shape = inventory.validate(len(systems), inventory.junction_m2.shape[-1])
+    alignments.validate(inventory, len(systems))
+    support = np.asarray(capture_support, dtype=bool)
+    if support.shape != shape[:2]:
+        raise ValueError("capture support must match spatial grid")
+    velocities = {
+        "plus": np.asarray(velocity_plus_m_s, dtype=float),
+        "minus": np.asarray(velocity_minus_m_s, dtype=float),
+    }
+    for velocity in velocities.values():
+        if velocity.shape != shape+(3,) or np.any(~np.isfinite(velocity)):
+            raise ValueError("Mura velocity requires grid x family x three-vector layout")
+        courant = dt_s*np.sum(np.abs(velocity[..., :2]), axis=-1)/spacing_m
+        if np.any(courant > 1.0+5e-15):
+            raise ValueError("compatible transport violates multidimensional CFL <= 1")
+
+    if not np.any(velocities["plus"]) and not np.any(velocities["minus"]):
+        zero_scalar = np.zeros(shape); zero_vector = np.zeros(shape+(3,))
+        sign_ledgers = {sign: {
+            "captured_line_m2": zero_scalar.copy(),
+            "captured_alignment_m2": zero_vector.copy(),
+            "mura_line_stretching_m2": zero_scalar.copy(),
+            "scalar_transport_integral_residual_m": 0.0,
+            "global_scalar_residual_line_per_thickness": 0.0,
+            "global_alignment_residual_line_per_thickness": np.zeros(3),
+        } for sign in ("plus", "minus")}
+        return inventory, alignments, {
+            "operator": "v44_compatible_dealiased_mura_transport_and_capture",
+            "nonlinear_product_rule": "three_halves_padding_before_multiplication",
+            "sign": sign_ledgers,
+            "alignment_rate_plus_m2_s": zero_vector.copy(),
+            "alignment_rate_minus_m2_s": zero_vector.copy(),
+            "swept_product_plus_m_s": zero_vector.copy(),
+            "swept_product_minus_m_s": zero_vector.copy(),
+            "local_nye_change_m1": np.zeros(shape[:2]+(3, 3)),
+            "post_step_projection_used": False,
+            "exact_zero_flux_identity": True,
+        }
+
+    swept_plus, swept_minus, plus_rate, minus_rate = (
+        dealiased_signed_mura_products(
+            alignments.mobile_plus_m2, alignments.mobile_minus_m2,
+            velocities["plus"], velocities["minus"], spacing_m))
+    rates = {"plus": plus_rate, "minus": minus_rate}
+    swept = {"plus": swept_plus, "minus": swept_minus}
+    density_updates = {}; alignment_updates = {}; sign_ledgers = {}
+    for sign in ("plus", "minus"):
+        mobile_name = f"mobile_{sign}_m2"
+        tangle_name = f"wall_tangle_{sign}_m2"
+        mobile0 = np.asarray(getattr(inventory, mobile_name), dtype=float)
+        tangle0 = np.asarray(getattr(inventory, tangle_name), dtype=float)
+        amobile0 = np.asarray(getattr(alignments, mobile_name), dtype=float)
+        atangle0 = np.asarray(getattr(alignments, tangle_name), dtype=float)
+        scalar_rate = dealiased_scalar_transport_rate(
+            mobile0, velocities[sign], spacing_m)
+        transported = mobile0+dt_s*scalar_rate
+        amobile = amobile0+dt_s*rates[sign]
+        scale = max(float(np.max(mobile0)), 1.0)
+        tolerance = 64*np.finfo(float).eps*scale
+        if np.min(transported) < -tolerance:
+            raise RuntimeError("compatible transport produced negative mobile density")
+        # Values within the stated roundoff tolerance are exact zeros, not a
+        # physical floor. Record their removal in the numerical ledger.
+        roundoff_removed = float(-np.sum(np.minimum(transported, 0.0))*spacing_m**2)
+        transported = np.maximum(transported, 0.0)
+        required = np.linalg.norm(amobile, axis=-1)
+        stretching = np.maximum(required-transported, 0.0)
+        mobile = transported+stretching
+
+        # Capture is a local repartition after the common transport event.
+        # Estimate accepted crossings with the same leading velocity (-v),
+        # then cap them by the published destination inventory.  Moving the
+        # same local fraction of moment leaves total reservoir Nye unchanged.
+        requested_capture = np.zeros_like(mobile)
+        outside = ~support
+        transport_velocity = -velocities[sign][..., :2]
+        for axis in (0, 1):
+            component = transport_velocity[..., axis]
+            for step, speed in ((1, np.maximum(component, 0.0)),
+                                (-1, np.maximum(-component, 0.0))):
+                fraction = dt_s*speed/spacing_m
+                destination_support = np.roll(support, -step, axis=axis)
+                crossing = fraction*mobile0*(outside & destination_support)[..., None]
+                requested_capture += np.roll(crossing, step, axis=axis)
+        captured = np.minimum(requested_capture, mobile)
+        capture_fraction = np.divide(
+            captured, mobile, out=np.zeros_like(captured), where=mobile > 0.0)
+        captured_alignment = capture_fraction[..., None]*amobile
+        mobile_after = mobile-captured
+        amobile_after = amobile-captured_alignment
+        tangle = tangle0+captured
+        atangle = atangle0+captured_alignment
+        density_updates[mobile_name] = mobile_after
+        density_updates[tangle_name] = tangle
+        alignment_updates[mobile_name] = amobile_after
+        alignment_updates[tangle_name] = atangle
+        sign_ledgers[sign] = {
+            "captured_line_m2": captured,
+            "captured_alignment_m2": captured_alignment,
+            "mura_line_stretching_m2": stretching,
+            "scalar_transport_integral_residual_m": float(
+                np.sum(dt_s*scalar_rate)*spacing_m**2),
+            "roundoff_negative_line_removed_m": roundoff_removed,
+            "global_scalar_residual_line_per_thickness": float(
+                np.sum(mobile_after+tangle-mobile0-tangle0-stretching)
+                *spacing_m**2),
+            "global_alignment_residual_line_per_thickness": np.sum(
+                amobile_after+atangle-amobile0-dt_s*rates[sign]-atangle0,
+                axis=(0, 1, 2))*spacing_m**2,
+        }
+    updated = replace(inventory, **density_updates)
+    aligned = replace(alignments, **alignment_updates)
+    aligned.validate(updated, len(systems))
+    before = reservoir_nye_m1(alignments, systems, orientation_rad, topologies)
+    after = reservoir_nye_m1(aligned, systems, orientation_rad, topologies)
+    return updated, aligned, {
+        "operator": "v44_compatible_dealiased_mura_transport_and_capture",
+        "nonlinear_product_rule": "three_halves_padding_before_multiplication",
+        "capture_semantics": "local_repartition_of_common_accepted_motion",
+        "sign": sign_ledgers,
+        "alignment_rate_plus_m2_s": plus_rate,
+        "alignment_rate_minus_m2_s": minus_rate,
+        "swept_product_plus_m_s": swept_plus,
+        "swept_product_minus_m_s": swept_minus,
         "local_nye_change_m1": after["total"]-before["total"],
         "post_step_projection_used": False,
     }
