@@ -29,9 +29,11 @@ Updated: 2026-09-19 (America/Los_Angeles)
   comparison from 12.316%/27.199% to 13.683%/29.235% (common/RMS), while
   ordered inventory is unchanged at each grid.  Time truncation is not the
   repair; the mixed donor-cell scalar/spectral moment Mura seam is next.
-- Canonical remote branch history was externally force-moved to V33.  V43 is
-  preserved non-destructively on `exp/full-v34-recovery-v43-20260919`; no force
-  push will overwrite either lineage.
+- Canonical remote branch history was temporarily force-moved to V33 during
+  the opening audit, so V43 was first preserved on the non-destructive recovery
+  branch.  The canonical branch was later restored to exact V42 ancestor
+  `1de2383` and safely fast-forwarded without force; both branches now retain
+  the V43 checkpoint.
 
 ## Directive v42 topology energy and resolved-organization decision
 

@@ -1,7 +1,10 @@
 {
   "schema": "asb-drx/v43/campaign-controller/v1",
   "campaign": "Geometry-capable organization and spatial repair V43",
-  "branch": "exp/full-v34-recovery-v43-20260919",
+  "branches_published": [
+    "exp/full-v34-recovery-v1",
+    "exp/full-v34-recovery-v43-20260919"
+  ],
   "campaign_terminal": true,
   "controller_has_executed_next_actions": true,
   "branches": {

@@ -6,7 +6,7 @@
   "remote_collision": {
     "observed_remote_sha": "8b2f77c9ee7a800a2f7b108015bd898c9e54b228",
     "retained_local_v42_sha": "1de2383bf858fd4395d1885430028b645fbacb37",
-    "resolution": "preserve both lineages; never force-push canonical branch"
+    "resolution": "canonical was restored to 1de2383 and safely fast-forwarded without force; recovery branch retained"
   },
   "source_checkpoints": [
     "3135e21c288e79cf3aac5d09b89d25300f577099",

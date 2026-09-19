@@ -110,10 +110,11 @@ start, removing the dynamic-HEAD provenance defect that produced that mismatch.
 
 The configured regression command is `PYTHONPATH=src:. python -m pytest -q
 tests`; 755 tests pass in 269.65 seconds.  The requested canonical remote branch
-was externally force-moved to older V33 history.  No force push was performed.
-All V43 work is preserved on pushed branch
-`exp/full-v34-recovery-v43-20260919`, descended from local V42 checkpoint
-`1de2383`.
+was temporarily force-moved to older V33 history during the opening audit, so
+no destructive update was attempted.  After it was restored to exact V42
+ancestor `1de2383`, V43 was safely fast-forwarded without force.  Both
+`exp/full-v34-recovery-v1` and recovery branch
+`exp/full-v34-recovery-v43-20260919` preserve the completed lineage.
 
 V43 claims a qualified represented geometry event and a bounded physical
 response family.  It does not claim a spontaneous persistent LAGB, DRX, strict

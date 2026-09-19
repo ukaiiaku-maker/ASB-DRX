@@ -6,6 +6,9 @@
   been force-moved to unrelated older V33 commit `8b2f77c`.  No destructive
   reset or force push was performed.  V43 continues on recovery branch
   `exp/full-v34-recovery-v43-20260919` from the retained V42 lineage.
+- Before final publication, the canonical branch was restored externally to
+  exact ancestor `1de2383`.  It was then fast-forwarded normally to the V43
+  checkpoint; the recovery branch is retained as an additional anchor.
 - Slurm job `56166842` completed in `00:18:38` with exit `0:0`.  The manager
   fetched archive SHA-256
   `2359d0e3c37cc19f082ab8db88405ef97f3f28961671fcf2c065ba38f6af4659`,
