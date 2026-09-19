@@ -12,9 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 import numpy as np
 
-from .arrhenius_kinetics import (
-    ActivatedProcess, activated_rate_array_s, exp_floor_enthalpy_j,
-)
+from .arrhenius_kinetics import ActivatedProcess
 from .common_tensorial_wall import (
     CommonWallDriving, CommonWallParameters, CommonWallState,
     resolved_driving_components, wall_free_energy_density_J_m3, wall_residual,
@@ -33,8 +31,7 @@ from .mura_kinematics import (
 )
 from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
 from .wall_topology_supply import (
-    ReservoirAlignmentState, accepted_junction_topology_step,
-    accepted_line_reorientation_step,
+    ReservoirAlignmentState,
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
     apply_signed_ordering_extent, apply_signed_reservoir_exchange,
     accepted_mura_transport_capture_step,
