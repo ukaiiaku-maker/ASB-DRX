@@ -2,6 +2,31 @@
 
 Updated: 2026-09-18 (America/Los_Angeles)
 
+## Directive v42 topology energy and resolved-organization decision
+
+- The first invalid topology event is localized to local line reorientation,
+  followed independently by junction creation.  Both changed reservoir Nye
+  without persistent endpoint/swept-area geometry and omitted the dominant
+  ordered-gradient energy from acceptance.
+- Production now uses an atomic complete-energy guard for the representable
+  geometry-neutral reservoir conversion.  The retained-state repair reduces
+  source-offset/line-continuity errors from 0.08146/0.08072 to
+  1.09e-14/9.05e-15 and rejects the legacy apparent-order state.  No boundary
+  is qualified.
+- The original 62.5-us n128/n192 comparison is complete and remains spatially
+  unresolved: curl-Nye RMS differs 38.06%, maximum norm 50.22%, L1 integral
+  29.53%, and ordered line 70.60%.
+- The 5% global orientation span is an adjacent-cell `+5.664/-4.116 deg`
+  dipolar extremum with only 0.1132 deg p95-p05 spread, not a LAGB.
+- A zero-mean-shear prepared-state front comparator reopens four publications
+  while the retained hold remains stationary, identifying elastic mismatch as
+  the controlling physical competition.  The V41 thermal causal result is
+  retained; strict ASB remains false.
+- The configured suite passes 747 tests.  Corrected HPC3 continuation job
+  `56166842` is running from pushed source `bb67429` and an exact verified
+  step-22,620 seed.  `tmux:v42_topology_manager` will checksum and fetch it.
+  Job `56166765` is quarantined as an invalid fresh-start staging attempt.
+
 ## Directive v40 numerical completion and physical-response decision
 
 - Cross-grid energy-density sums are now reported as reproducibility fields,

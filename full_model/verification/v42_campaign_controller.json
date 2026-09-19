@@ -1,0 +1,43 @@
+{
+  "schema": "asb-drx/v42/campaign-controller/v1",
+  "campaign": "Topology energy, resolved organization, and physical response V42",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "checkpoint_source_sha": "0828397",
+  "campaign_terminal": false,
+  "controller_has_executed_next_actions": true,
+  "branches": {
+    "topology_energy_kinematics": {
+      "state": "RUNNING",
+      "operator_gate": "PASSED_OPERATOR",
+      "classification": "VALID_NEGATIVE_AT_FIRST_RETAINED_INCREMENT;NO_QUALIFIED_BOUNDARY",
+      "active_job_id": "56166842"
+    },
+    "mura_spatial_accuracy": {
+      "state": "FAILED_NUMERICAL",
+      "classification": "UNRESOLVED_SPATIAL_SCALE",
+      "curl_nye_rms_relative_difference": 0.3805968166021156
+    },
+    "resolved_organization": {
+      "state": "FAILED_SCIENTIFIC",
+      "classification": "NO_QUALIFIED_BOUNDARY;UNDERRESOLVED_LOCAL_ORIENTATION_EXTREMUM"
+    },
+    "front_physical_alternative": {
+      "state": "COMPLETED",
+      "classification": "BOUNDED_ELASTIC_MISMATCH_COUNTERFACTUAL_COMPLETED"
+    },
+    "thermal_selected_response": {
+      "state": "VALID_RETAINED_EVIDENCE",
+      "classification": "VALID_RETAINED_CAUSAL_RESULT;NO_STRICT_ASB;NO_INFORMATION_GAIN_FROM_BROAD_REPLAY"
+    },
+    "regression": {
+      "state": "PASSED_OPERATOR",
+      "configured_tests_passed": 747,
+      "wall_seconds": 252.37
+    }
+  },
+  "drx_claimed": false,
+  "persistent_lagb_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false,
+  "unrelated_jobs_untouched": ["56132213"]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "asb-drx/v42/case-manifest/v1",
+  "canonical_branch": "exp/full-v34-recovery-v1",
+  "checkpoint_source_sha": "0828397",
+  "artifacts": {
+    "topology_first_failure": {"path": "full_model/verification/v42_topology_first_failure.json", "sha256": "d88411f3ee6b5a0074c9f8a9bc76538d4eb3145c3441d4398e00cb9a69432c55"},
+    "topology_repair": {"path": "full_model/verification/v42_topology_repair_decision.json", "sha256": "517d6b48148a6419e1270c8a13a463a09314559ffcc923e4edf98b0b31c99c45"},
+    "gradient": {"path": "full_model/verification/v42_matched_gradient_refinement.json", "sha256": "f21d57261a6a7787fb4ddce5935197a22c53ebf2ea2ad1b062f644d6f9a14b6c"},
+    "one_grain": {"path": "full_model/verification/v42_one_grain_response.json", "sha256": "e6cd489d473a4392b8faba1ded87f30fb9e4f27d124895ef3fc0e90a7383b605"},
+    "front": {"path": "full_model/verification/v42_front_physical_alternative.json", "sha256": "3a04fe3f08749477a322ac585f4c0443421e5c6d3d20f284dfdf829c5e49c7a8"},
+    "thermal": {"path": "full_model/verification/v42_thermal_selected_response.json", "sha256": "7e8135a21560eaa6f89869f680f52654771d1a9364d6bbb909beda7c519e9c17"},
+    "registry": {"path": "full_model/verification/v42_parameter_and_hypothesis_registry.json", "sha256": "75c80f10af8d4843d17bb44e6ec0ccdf59da35ad250e3d70c24af7553eb986fe"}
+  },
+  "local_cases": [
+    {"id": "first_topology_failure_replay", "status": "COMPLETED", "source_commit": "4b6da0d", "classification": "HARD_INVALID_LEGACY_TOPOLOGY_TRANSACTION"},
+    {"id": "matched_gradient_62p5us_n128_n192", "status": "COMPLETED", "source_commit": "ee4b805", "classification": "UNRESOLVED_SPATIAL_SCALE", "wall_seconds": {"n128": 442.00628770608455, "n192": 949.4433867059415}},
+    {"id": "front_elastic_mismatch_counterfactual", "status": "COMPLETED", "classification": "BOUNDED_ELASTIC_MISMATCH_COUNTERFACTUAL_COMPLETED"}
+  ],
+  "hpc3_runs": [
+    {"job_id": "56166842", "status": "RUNNING", "source_commit": "bb674296526de27cddf32d0708e0439085794b0a", "remote_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v42-topology-20260918-bb67429-attempt2", "source_archive_sha256": "10f83434c6192d47497abcb03ce68204cbb222498c897bc82a465cef35bdefb3", "seed_sha256": "fa004b3d5ca4193349edd1ed22defe9235b59990be913064f720cf2ad2168177"}
+  ],
+  "quarantined_attempts": [
+    {"job_id": "56166765", "classification": "INVALID_SEED_FILENAME_STARTED_FRESH_TRAJECTORY", "used_as_scientific_evidence": false}
+  ],
+  "verification": {"configured_regression_tests_passed": 747, "regression_wall_seconds": 252.37, "drx_claimed": false, "persistent_lagb_claimed": false, "strict_asb_claimed": false},
+  "unrelated_jobs_observed_and_not_touched": ["56132213"]
+}
