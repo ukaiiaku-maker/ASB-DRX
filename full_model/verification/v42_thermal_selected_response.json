@@ -1,0 +1,16 @@
+{
+  "schema": "asb-drx/v42/thermal-selected-response/v1",
+  "selection": "RETAIN_V41_MATCHED_FINITE_CONDUCTION_CAUSAL_PAIR",
+  "new_case_launched": false,
+  "reason": "The valid V41 full-versus-frozen-flow pair already answers the selected temperature-feedback question. V42 topology repair changes the retained-state temperature by only 0.01204 K in one compact increment; repeating a broad thermal matrix would not discriminate topology adequacy or Mura spatial error.",
+  "retained_artifact": "full_model/verification/v41_thermal_response_decision.json",
+  "retained_classification": "MATCHED_CAUSAL_CONTROL_COMPLETE_BROAD_OR_NONPERSISTENT",
+  "retained_observations": {
+    "full_feedback_peak_minus_mean_K": 58.253,
+    "frozen_flow_peak_minus_mean_K": 18.159,
+    "full_feedback_plastic_power_participation": 0.90178,
+    "frozen_flow_plastic_power_participation": 0.98361
+  },
+  "strict_asb_claimed": false,
+  "classification": "VALID_RETAINED_CAUSAL_RESULT;NO_STRICT_ASB;NO_INFORMATION_GAIN_FROM_BROAD_REPLAY"
+}

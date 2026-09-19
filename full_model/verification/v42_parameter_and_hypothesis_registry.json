@@ -1,0 +1,48 @@
+{
+  "schema": "asb-drx/v42/parameter-and-hypothesis-registry/v1",
+  "campaign": "Topology energy, resolved organization, and physical response V42",
+  "material_calibration_claimed": false,
+  "entries": [
+    {
+      "id": "topology_geometry_neutral_conversion",
+      "status": "PRODUCTION_ENABLED",
+      "hypothesis": "Reservoir relabeling carries existing scalar line and first moment without changing geometry, beta-p, or total Nye.",
+      "tuned_against_pf_outcome": false
+    },
+    {
+      "id": "legacy_local_reorientation_and_junction",
+      "status": "AUDIT_ONLY_HARD_INVALID",
+      "hypothesis": "Local moment rotation represents a finite segment event without persistent endpoints or swept surface.",
+      "rejection_reason": "violates plastic-curl/Nye and line continuity and omits dominant ordered-gradient energy",
+      "tuned_against_pf_outcome": false
+    },
+    {
+      "id": "complete_topology_energy_guard",
+      "status": "PRODUCTION_ENABLED",
+      "acceptance": "discrete extensive free-energy change <= 2e-12 relative tolerance with scalar-line and total-Nye closure",
+      "physical_heat": "nonnegative released free energy distributed on accepted reaction extent",
+      "numerical_residual_as_heat": false
+    },
+    {
+      "id": "mura_spatial_threshold",
+      "status": "UNCHANGED",
+      "relative_strong_rms_limit": 0.05,
+      "matched_horizon_s": 6.25e-05,
+      "retrospective_cutoff_selection": false
+    },
+    {
+      "id": "front_elastic_mismatch_alternative",
+      "status": "BOUNDED_COUNTERFACTUAL",
+      "baseline_mean_shear": 0.01,
+      "alternative_mean_shear": 0.0,
+      "external_front_pressure_Pa": 0.0,
+      "complete_energy_guard_removed": false,
+      "interpretation": "prepared-state comparison, not a work-accounted unloading trajectory"
+    },
+    {
+      "id": "dd_multi_hit_collective_law",
+      "status": "DISABLED_BASELINE",
+      "reason": "existing DD data do not identify a signed transfer kernel or memory law"
+    }
+  ]
+}

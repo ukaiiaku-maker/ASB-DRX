@@ -1,0 +1,119 @@
+{
+  "checkpoint": "/Users/sdillon/HPC3/local-results/asb-drx-v41-one-grain-controls/d71f642/mechanical_heterogeneity_topology_off_n64/checkpoint_step_000022595_strain_0.05000000.npz",
+  "checkpoint_sha256": "1b3c4b09e472c6262b8f95ba03c2a19524dfcda249e64807525aa993accd4380",
+  "classification": "NO_QUALIFIED_BOUNDARY;UNDERRESOLVED_LOCAL_ORIENTATION_EXTREMUM",
+  "extrema_patches": {
+    "maximum": {
+      "curl_nye_norm_m1": {
+        "maximum": 3677872.636062178,
+        "mean": 1573959.2370837785,
+        "minimum": 508113.2621109441,
+        "rms": 1712553.4790586461
+      },
+      "defect_energy_J_m3": {
+        "maximum": 108554482.82212849,
+        "mean": 50270990.54558764,
+        "minimum": 12691702.650595846,
+        "rms": 56225435.79615829
+      },
+      "index": [
+        36,
+        31
+      ],
+      "orientation_deg": 5.6636390363242635,
+      "plastic_distortion_norm": {
+        "maximum": 0.32609505143132383,
+        "mean": 0.10487147806739255,
+        "minimum": 0.0001821768220939175,
+        "rms": 0.13251692360635903
+      },
+      "slip_norm": {
+        "maximum": 0.3242352120952781,
+        "mean": 0.10570482956110432,
+        "minimum": 0.00022132751410381345,
+        "rms": 0.13137058287823047
+      },
+      "stress_norm_Pa": {
+        "maximum": 9220412646.115427,
+        "mean": 4480309867.878201,
+        "minimum": 1469501686.976076,
+        "rms": 4898444354.489911
+      },
+      "tangle_donor_m2": {
+        "maximum": 1.937921842825078e+16,
+        "mean": 2759215985575881.5,
+        "minimum": 0.0,
+        "rms": 6644318649928988.0
+      }
+    },
+    "minimum": {
+      "curl_nye_norm_m1": {
+        "maximum": 3677872.636062178,
+        "mean": 1420715.5987392974,
+        "minimum": 189688.85758510602,
+        "rms": 1621609.1638520013
+      },
+      "defect_energy_J_m3": {
+        "maximum": 108554482.82212849,
+        "mean": 48762864.05353709,
+        "minimum": 7916635.734786201,
+        "rms": 55963384.71957756
+      },
+      "index": [
+        35,
+        32
+      ],
+      "orientation_deg": -4.11580414901274,
+      "plastic_distortion_norm": {
+        "maximum": 0.32609505143132383,
+        "mean": 0.09818843501802677,
+        "minimum": 0.0001821768220939175,
+        "rms": 0.12908589559421565
+      },
+      "slip_norm": {
+        "maximum": 0.3242352120952781,
+        "mean": 0.0991986684168087,
+        "minimum": 0.00022132751410381345,
+        "rms": 0.1275646704825486
+      },
+      "stress_norm_Pa": {
+        "maximum": 9220412646.115427,
+        "mean": 4427847767.033562,
+        "minimum": 1891139209.3183947,
+        "rms": 4874321802.311543
+      },
+      "tangle_donor_m2": {
+        "maximum": 1.937921842825078e+16,
+        "mean": 2905610112583204.0,
+        "minimum": 0.0,
+        "rms": 6766622675431548.0
+      }
+    }
+  },
+  "generated_utc": "2026-09-19T04:57:49.864449+00:00",
+  "global": {
+    "curl_nye_rms_m1": 63211.31597907188,
+    "reservoir_nye_rms_m1": 63117.28080689136,
+    "stress_norm_maximum_Pa": 9220412646.115427,
+    "tangle_donor_maximum_m2": 1.937921842825078e+16
+  },
+  "grid": 64,
+  "interpretation": "the global span is localized rather than a pair of resolved plateaus; this diagnostic does not establish that a finer model generated the history",
+  "orientation": {
+    "coordinate_wrapping_detected": false,
+    "p95_minus_p05_deg": 0.11322516918063258,
+    "percentiles_deg": {
+      "p01": -0.27139139971447435,
+      "p05": 0.16488627106155773,
+      "p50": 0.2091839432367699,
+      "p95": 0.2781114402421903,
+      "p99": 0.5650887640973569
+    },
+    "raw_span_deg": 9.779443185337003,
+    "unwrapped_span_deg": 9.779443185337003
+  },
+  "schema": "asb-drx/v42/one-grain-response/v1",
+  "spacing_m": 1.5625e-07,
+  "step": 22595,
+  "strain": 0.05
+}
