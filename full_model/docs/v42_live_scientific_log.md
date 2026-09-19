@@ -30,3 +30,15 @@
 - Matched n128/n192 calculations were launched locally for the original
   `62.5 us` physical horizon.  Both use source commit `ee4b805` and eight
   `7.8125 us` common macros.
+- The matched 62.5-us calculations completed with every common clock closed.
+  Wall times were 442 s (n128) and 949 s (n192).  The n128/n192 differences
+  are 38.06% in curl-Nye RMS, 50.22% in maximum tensor norm, 29.53% in the L1
+  tensor-norm integral, and 70.60% in ordered line.  The mode-24 band differs
+  by 40.89%; the nearly full common coefficient square differs by 132.31%.
+  Classification remains `UNRESOLVED_SPATIAL_SCALE`.  The V41 one-macro
+  7.31% value was a short-window result, not convergence at this horizon.
+- The repaired 5.01% continuation was locally profiled for 114 s.  It reached
+  step 22,620 and strain 5.000604% with hard invariants intact, then stopped
+  on an exact signal checkpoint because projected local runtime exceeded two
+  hours.  Pushed source `17f63ee`, the checkpoint, and matching checksums were
+  staged for HPC3 job `56166765`; no array or broad sweep was submitted.
