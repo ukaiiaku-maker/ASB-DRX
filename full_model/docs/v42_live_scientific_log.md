@@ -2,9 +2,11 @@
 
 - Restart audit: branch `exp/full-v34-recovery-v1` was clean at local and
   remote `4b6da0d`; scientific regression source `25d4906` remains distinct.
-  No local campaign process was active.  The configured `hpc3` hostname did
-  not resolve, so compact development and matched resolved work were placed
-  locally.  No unrelated job or worktree was modified.
+  No local campaign process was active.  The literal `hpc3` hostname did not
+  resolve; the configured alias is `uci-hpc3`.  The corrected scheduler audit
+  showed no live jobs, retained completed job `56151298`, and left unrelated
+  failed job `56132213` untouched.  Compact and sub-30-minute matched work was
+  placed locally.
 - The first retained-state legacy topology increment reproduced the hard
   failure: source offset `0.08146`, line continuity `0.08072`, and an
   ordered-gradient increase of about `0.023596 J/m` relative to its matched
