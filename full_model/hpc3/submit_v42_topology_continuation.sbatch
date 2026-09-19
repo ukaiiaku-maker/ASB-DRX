@@ -28,7 +28,8 @@ tar -xzf "$V42_SOURCE_ARCHIVE" -C "$source_root"
 actual=$(sha256sum "$V42_SEED_CHECKPOINT" | awk '{print $1}')
 test "$actual" = "$V42_SEED_SHA256"
 if ! find "$case_dir" -maxdepth 1 -name 'checkpoint_step_*.npz' | grep -q .; then
-  cp "$V42_SEED_CHECKPOINT" "$case_dir/"
+  cp "$V42_SEED_CHECKPOINT" \
+    "$case_dir/checkpoint_step_000022620_strain_0.05000604.npz"
 fi
 
 export PYTHONPATH="$source_root:$source_root/src"
