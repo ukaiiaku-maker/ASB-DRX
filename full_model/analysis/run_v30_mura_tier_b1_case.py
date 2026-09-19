@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import replace
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -40,6 +41,7 @@ from full_model.production.wall_topology_supply import reservoir_nye_m1
 
 
 STOP_REQUESTED = False
+CHECKPOINT_SCHEMA = "asb-drx/v43/mechanical-checkpoint/v1"
 
 
 def _request_stop(signum, frame):
@@ -112,6 +114,14 @@ def latest_checkpoint(case_dir):
     return checkpoints[-1] if checkpoints else None
 
 
+def sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024*1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def checkpoint_payload(state, metadata):
     payload = mechanical_checkpoint_arrays(state)
     payload["v30_metadata_json"] = np.asarray(json.dumps(metadata, sort_keys=True))
@@ -144,6 +154,47 @@ def load_checkpoint(path, systems, topologies):
         state = mechanical_from_checkpoint_arrays(archive, systems, topologies)
         metadata = json.loads(str(archive["v30_metadata_json"].item()))
     return state, metadata
+
+
+def validated_explicit_restart(path, systems, topologies, *, expected_sha256,
+                               expected_source_sha, expected_step,
+                               expected_time_s, expected_strain,
+                               migration="none"):
+    """Validate a requested restart before any scientific interval executes."""
+    target = Path(path)
+    if not target.is_file():
+        raise FileNotFoundError(f"required restart does not exist: {target}")
+    actual_sha = sha256(target)
+    if actual_sha != str(expected_sha256):
+        raise ValueError("restart checksum does not match configured seed")
+    state, metadata = load_checkpoint(target, systems, topologies)
+    schema = metadata.get("checkpoint_schema")
+    if schema != CHECKPOINT_SCHEMA:
+        if not (migration == "v30_to_v43" and schema is None):
+            raise ValueError(f"unsupported restart schema: {schema!r}")
+    required = ("step", "physical_time_s", "applied_strain",
+                "cumulative_ledger", "rng_state", "source_sha")
+    missing = [name for name in required if name not in metadata]
+    if missing:
+        raise ValueError("restart metadata missing required fields: "+", ".join(missing))
+    if int(metadata["step"]) != int(expected_step):
+        raise ValueError("restart step does not match configured seed")
+    if not np.isclose(float(metadata["physical_time_s"]), float(expected_time_s),
+                      rtol=0.0, atol=2e-15*max(abs(float(expected_time_s)), 1.0)):
+        raise ValueError("restart physical time does not match configured seed")
+    if not np.isclose(float(metadata["applied_strain"]), float(expected_strain),
+                      rtol=0.0, atol=2e-15*max(abs(float(expected_strain)), 1.0)):
+        raise ValueError("restart strain does not match configured seed")
+    if str(metadata["source_sha"]) != str(expected_source_sha):
+        raise ValueError("restart source lineage does not match configured seed")
+    if not isinstance(metadata["rng_state"], dict):
+        raise ValueError("restart RNG state is missing or invalid")
+    state.validate(systems, topologies)
+    return state, metadata, {
+        "path": str(target.resolve()), "sha256": actual_sha,
+        "schema_read": schema, "schema_active": CHECKPOINT_SCHEMA,
+        "migration": migration, "validated_before_step": True,
+    }
 
 
 def compact_metrics(state, ledger, systems, topologies, spacing):
@@ -258,6 +309,16 @@ def main():
         choices=("source_default", "v40_stiff_dispatch"),
         default="source_default",
         help="select the historical source method or current V40 finite/stiff dispatch")
+    parser.add_argument("--start-mode", choices=("initialize", "restart"),
+                        required=True)
+    parser.add_argument("--restart-file", type=Path)
+    parser.add_argument("--expected-restart-sha256")
+    parser.add_argument("--expected-restart-source-sha")
+    parser.add_argument("--expected-restart-step", type=int)
+    parser.add_argument("--expected-restart-time-s", type=float)
+    parser.add_argument("--expected-restart-strain", type=float)
+    parser.add_argument("--restart-migration", choices=("none", "v30_to_v43"),
+                        default="none")
     args = parser.parse_args()
     args.case_dir.mkdir(parents=True, exist_ok=True)
     signal.signal(signal.SIGTERM, _request_stop)
@@ -278,6 +339,7 @@ def main():
         initial.common, temperature_K=np.full((args.grid, args.grid),
                                                args.temperature_K)))
     configuration = {
+        "checkpoint_schema": CHECKPOINT_SCHEMA,
         "grid": args.grid, "condition": args.condition, "seed": args.seed,
         "length_m": args.length_m, "temperature_K": args.temperature_K,
         "strain_rate_s": args.strain_rate_s,
@@ -295,8 +357,14 @@ def main():
                       "initialization_seed": args.seed},
     }
     atomic_json(args.case_dir/"case_config.json", configuration)
-    checkpoint = latest_checkpoint(args.case_dir)
-    if checkpoint is None:
+    existing = latest_checkpoint(args.case_dir)
+    restart_record = None
+    if args.start_mode == "initialize":
+        if args.restart_file is not None:
+            raise ValueError("initialize mode cannot accept a restart file")
+        if existing is not None:
+            raise FileExistsError(
+                "initialize mode refuses a case directory containing checkpoints")
         state = initial; step = 0
         physical_time = args.initial_strain/args.strain_rate_s
         cumulative = {"plastic_work_J_m3_cells": 0.0,
@@ -307,7 +375,25 @@ def main():
                       "locking_unlocking_abs_line_m2_cells": 0.0}
         resumed_from = None
     else:
-        state, metadata = load_checkpoint(checkpoint, systems, topologies)
+        required_restart = {
+            "restart_file": args.restart_file,
+            "expected_restart_sha256": args.expected_restart_sha256,
+            "expected_restart_source_sha": args.expected_restart_source_sha,
+            "expected_restart_step": args.expected_restart_step,
+            "expected_restart_time_s": args.expected_restart_time_s,
+            "expected_restart_strain": args.expected_restart_strain,
+        }
+        absent = [name for name, value in required_restart.items() if value is None]
+        if absent:
+            raise ValueError("restart mode requires explicit seed fields: "+", ".join(absent))
+        state, metadata, restart_record = validated_explicit_restart(
+            args.restart_file, systems, topologies,
+            expected_sha256=args.expected_restart_sha256,
+            expected_source_sha=args.expected_restart_source_sha,
+            expected_step=args.expected_restart_step,
+            expected_time_s=args.expected_restart_time_s,
+            expected_strain=args.expected_restart_strain,
+            migration=args.restart_migration)
         step = int(metadata["step"])
         physical_time = float(metadata["physical_time_s"])
         cumulative = dict(metadata["cumulative_ledger"])
@@ -315,7 +401,7 @@ def main():
                     "mura_line_stretching_m2_cells",
                     "locking_unlocking_abs_line_m2_cells"):
             cumulative.setdefault(key, 0.0)
-        resumed_from = checkpoint.name
+        resumed_from = str(Path(args.restart_file).resolve())
     start_wall = time.monotonic(); last_checkpoint_wall = start_wall
     applied_strain = args.strain_rate_s*physical_time
     next_progress = (np.floor(applied_strain/args.progress_checkpoint_strain)+1
@@ -433,6 +519,7 @@ def main():
             "physical_time_s": physical_time,
             "applied_strain": applied_strain,
             "resumed_from": resumed_from,
+            "restart_validation": restart_record,
             "wall_seconds_this_invocation": time.monotonic()-start_wall,
             "latest_checkpoint": (latest_checkpoint(args.case_dir).name
                                   if latest_checkpoint(args.case_dir) else None),

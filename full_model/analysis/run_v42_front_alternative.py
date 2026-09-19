@@ -53,15 +53,32 @@ def main():
                 # alternative instead of duplicating large field arrays.
                 row.pop("directional_endpoints", None)
                 trials.append(row)
+        def count_energy(kind):
+            values = [row["trial_candidate_delta_helmholtz_J"] for row in trials
+                      if row["trial_candidate_energy_evaluated"]]
+            if kind == "downhill":
+                return sum(value < 0.0 for value in values)
+            if kind == "uphill":
+                return sum(value > 0.0 for value in values)
+            return sum(value == 0.0 for value in values)
         cases.append({
             "name": name, "mean_shear_strain": shear, "trials": trials,
             "published_trial_count": sum(row["state_published"] for row in trials),
-            "downhill_trial_count": sum(
-                row["actual_complete_candidate_delta_helmholtz_J"] <= 0.0
+            "downhill_trial_count": count_energy("downhill"),
+            "uphill_trial_count": count_energy("uphill"),
+            "neutral_trial_count": count_energy("neutral"),
+            "no_op_publication_count": sum(
+                not row["state_published"] for row in trials),
+            "rate_rejected_trial_count": sum(
+                row["kinetic_classification"] == "REJECTED_BY_BIDIRECTIONAL_RATE"
+                for row in trials),
+            "accepted_downhill_publication_count": sum(
+                row["state_published"]
+                and row["accepted_delta_helmholtz_J"] < 0.0
                 for row in trials),
         })
     payload = {
-        "schema": "asb-drx/v42/front-physical-alternative/v1",
+        "schema": "asb-drx/v43/front-physical-alternative-tally/v2",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "checkpoint": str(args.checkpoint.resolve()),
         "checkpoint_sha256": hashlib.sha256(args.checkpoint.read_bytes()).hexdigest(),
@@ -74,7 +91,9 @@ def main():
             "states; this is a low-elastic-mismatch counterfactual, not a free "
             "reset or a work-accounted unloading trajectory"),
         "cases": cases,
-        "classification": "BOUNDED_ELASTIC_MISMATCH_COUNTERFACTUAL_COMPLETED",
+        "classification": (
+            "BOUNDED_ELASTIC_MISMATCH_COUNTERFACTUAL_COMPLETED;"
+            "TRIAL_AND_PUBLICATION_ENERGIES_SEPARATED"),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")

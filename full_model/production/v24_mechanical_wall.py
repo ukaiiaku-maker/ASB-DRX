@@ -12,7 +12,9 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 import numpy as np
 
-from .arrhenius_kinetics import ActivatedProcess
+from .arrhenius_kinetics import (
+    ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j,
+)
 from .common_tensorial_wall import (
     CommonWallDriving, CommonWallParameters, CommonWallState,
     resolved_driving_components, wall_free_energy_density_J_m3, wall_residual,
@@ -28,6 +30,10 @@ from .extensive_wall import (
 from .tensorial_nye import rotated_system_fields
 from .mura_kinematics import (
     accept_family_mura_step, family_plastic_flow_from_signed_alignment,
+)
+from .lattice_line_geometry import (
+    LatticeLineGeometry, geometry_checkpoint_arrays,
+    geometry_from_checkpoint_arrays, propose_plaquette_sweep,
 )
 from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
 from .wall_topology_supply import (
@@ -45,12 +51,17 @@ class V24MechanicalWallState:
     common: CommonWallState
     density: DensityInventory
     reservoir_alignment: ReservoirAlignmentState
+    geometry: LatticeLineGeometry | None = None
 
     def validate(self, systems, topologies):
         self.common.validate(systems, topologies)
         self.reservoir_alignment.validate(self.density, len(systems))
         validate_junction_alignment(
             self.density, self.reservoir_alignment, topologies)
+        if self.geometry is not None:
+            shape = self.geometry.validate(len(systems))
+            if shape != np.asarray(self.common.orientation_rad).shape:
+                raise ValueError("geometry and mechanical grids do not match")
         pairs = (
             (self.common.mobile_plus_m2, self.density.mobile_plus_m2),
             (self.common.mobile_minus_m2, self.density.mobile_minus_m2),
@@ -82,6 +93,26 @@ class V24TopologyKinetics:
                 or not 0.0 <= self.exp_floor <= 1.0
                 or not 0.0 < self.maximum_junction_fraction_per_step <= 1.0):
             raise ValueError("invalid V24 topology kinetics")
+
+
+@dataclass(frozen=True)
+class V43GeometryKinetics:
+    """Finite-rate EXP-floor kinetics for a represented plaquette sweep."""
+
+    process: ActivatedProcess
+    enthalpy_J: float
+    critical_stress_Pa: float
+    exp_a: float = 2.2
+    exp_n: float = 2.5
+    exp_floor: float = 0.05
+    maximum_extent_per_step: float = 1.0
+
+    def __post_init__(self):
+        if (self.enthalpy_J < 0.0 or self.critical_stress_Pa <= 0.0
+                or self.exp_a < 0.0 or self.exp_n < 1.0
+                or not 0.0 <= self.exp_floor <= 1.0
+                or not 0.0 < self.maximum_extent_per_step <= 1.0):
+            raise ValueError("invalid V43 geometry kinetics")
 
 
 class MuraWorkBudgetError(RuntimeError):
@@ -341,6 +372,8 @@ def mechanical_checkpoint_arrays(state):
                for name, value in state.common.__dict__.items()}
     payload.update(checkpoint_arrays(state.density, prefix="v24_density__"))
     payload.update(alignment_checkpoint_arrays(state.reservoir_alignment))
+    if state.geometry is not None:
+        payload.update(geometry_checkpoint_arrays(state.geometry))
     return payload
 
 
@@ -356,7 +389,8 @@ def mechanical_from_checkpoint_arrays(mapping, systems, topologies):
         mapping, len(systems), len(topologies), prefix="v24_density__")
     alignment = alignment_from_checkpoint_arrays(
         mapping, density, len(systems))
-    result = V24MechanicalWallState(common, density, alignment)
+    geometry = geometry_from_checkpoint_arrays(mapping, len(systems))
+    result = V24MechanicalWallState(common, density, alignment, geometry)
     result.validate(systems, topologies)
     return result
 
@@ -482,13 +516,128 @@ def accepted_energy_guarded_reservoir_topology_transaction(
     }
 
 
+def accepted_geometry_plaquette_transaction(
+        state, event, systems, topologies, driving, common_parameters,
+        extensive_parameters, kinetics, dt_s):
+    """Atomically publish one represented geometry event after full audit.
+
+    The constitutive proposal fixes cell, family, Burgers sign, and direction.
+    EXP-floor kinetics only limits its finite extent.  The complete fixed-total-
+    strain energy includes the independently recomputed elastic energy and the
+    production extensive wall energy.  Rejection returns the original state
+    object and zero heat.
+    """
+    if state.geometry is None:
+        raise ValueError("geometry event requires initialized persistent geometry")
+    cell = tuple(event["cell"]); family = int(event["family"])
+    burgers_sign = int(event.get("burgers_sign", 1))
+    proposed = float(event.get("proposed_extent", 1.0))
+    if proposed == 0.0:
+        raise ValueError("zero geometry proposal is a no-op, not an event")
+    i, j = int(cell[0]), int(cell[1])
+    if "resolved_stress_Pa" in event:
+        resolved_stress = abs(float(event["resolved_stress_Pa"]))
+    else:
+        drive = resolved_driving_components(
+            state.common, driving, systems, topologies, common_parameters)
+        resolved_stress = float(np.linalg.norm(drive["effective_stress_Pa"][i, j]))
+    temperature = float(np.asarray(state.common.temperature_K)[i, j])
+    enthalpy = exp_floor_enthalpy_j(
+        resolved_stress, kinetics.enthalpy_J, kinetics.critical_stress_Pa,
+        kinetics.exp_a, kinetics.exp_n, kinetics.exp_floor)
+    rate = activated_rate_s(kinetics.process, enthalpy, temperature)
+    kinetic_capacity = min(
+        kinetics.maximum_extent_per_step, max(rate*float(dt_s), 0.0))
+    extent = np.sign(proposed)*min(abs(proposed), kinetic_capacity)
+    if extent == 0.0:
+        return state, {
+            "operator": "periodic_plaquette_sweep", "accepted": False,
+            "classification": "RATE_LIMITED_ZERO_EVENT", "rejection_is_atomic": True,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad), "event_rate_s": rate,
+            "kinetic_extent_capacity": kinetic_capacity,
+        }
+
+    try:
+        (geometry, inventory, alignment, common, ledger) = propose_plaquette_sweep(
+            state.geometry, state.density, state.reservoir_alignment,
+            state.common, systems, state.common.orientation_rad, cell, family,
+            burgers_sign, extent)
+    except (ValueError, RuntimeError) as error:
+        return state, {
+            "operator": "periodic_plaquette_sweep", "accepted": False,
+            "classification": "INADMISSIBLE_GEOMETRY_OR_CAPACITY",
+            "reason": f"{type(error).__name__}: {error}",
+            "rejection_is_atomic": True,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad), "event_rate_s": rate,
+            "kinetic_extent_capacity": kinetic_capacity,
+        }
+
+    zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
+    before_wall = extensive_wall_energy_components_J_m3(
+        state.density, systems, topologies, state.common.orientation_rad,
+        zero_target, extensive_parameters)
+    after_wall = extensive_wall_energy_components_J_m3(
+        inventory, systems, topologies, common.orientation_rad, zero_target,
+        extensive_parameters)
+    wall_changes = {name: np.asarray(after_wall[name])-np.asarray(before_wall[name])
+                    for name in before_wall}
+    wall_delta = float(np.sum(wall_changes["total"], dtype=np.longdouble))
+    elastic_before = _elastic_energy_sum_J_m3_cells(
+        state.common, state.common.beta_p, driving, common_parameters)
+    elastic_after = _elastic_energy_sum_J_m3_cells(
+        common, common.beta_p, driving, common_parameters)
+    elastic_delta = (0.0 if elastic_before is None
+                     else float(elastic_after-elastic_before))
+    external_work = float(event.get("external_work_J_m3_cells", 0.0))
+    if external_work != 0.0 and not event.get("verification_external_work", False):
+        raise ValueError("geometry external work is allowed only in labeled verification")
+    complete_delta = wall_delta+elastic_delta-external_work
+    scale = max(abs(wall_delta), abs(elastic_delta), abs(external_work), 1.0)
+    tolerance = 2e-12*scale
+    heat_total = -complete_delta
+    accepted = bool(heat_total >= -tolerance)
+    ledger.update({
+        "accepted": accepted, "rejection_is_atomic": True,
+        "classification": ("ADMISSIBLE_NONZERO_GEOMETRY_EVENT" if accepted
+                           else "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT"),
+        "event_rate_s": rate, "activation_enthalpy_J": enthalpy,
+        "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
+        "kinetic_extent_capacity": kinetic_capacity,
+        "wall_energy_component_changes_J_m3": wall_changes,
+        "wall_energy_change_J_m3_cells": wall_delta,
+        "elastic_energy_change_J_m3_cells": elastic_delta,
+        "external_work_J_m3_cells": external_work,
+        "complete_energy_change_J_m3_cells": complete_delta,
+        "energy_tolerance_J_m3_cells": tolerance,
+    })
+    if not accepted:
+        ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(
+            state.common.orientation_rad)
+        return state, ledger
+    heat = np.zeros_like(state.common.orientation_rad)
+    heat[i, j] = max(heat_total, 0.0)
+    common = replace(
+        common, temperature_K=(common.temperature_K+heat
+                               /common_parameters.volumetric_heat_capacity_J_m3_K))
+    result = synchronize_common(V24MechanicalWallState(
+        common, inventory, alignment, geometry), topologies)
+    result.validate(systems, topologies)
+    ledger["irreversible_heat_increment_J_m3"] = heat
+    ledger["heat_plus_complete_energy_residual_J_m3_cells"] = float(
+        np.sum(heat)+complete_delta)
+    return result, ledger
+
+
 def accepted_v24_mechanical_step(
         state, driving, capture_support, systems, topologies,
         common_parameters, extensive_parameters, topology_kinetics, dt_s, *,
         topology_route_enabled=False, maximum_orientation_increment_rad=0.02,
         mura_work_budget_mode="energy_limited",
         maximum_work_budget_backtracks=20,
-        feasible_family_extent_levels=12):
+        feasible_family_extent_levels=12, geometry_event=None,
+        geometry_kinetics=None):
     """Advance mechanics, line transport/capture, ordering, and topology once."""
     state.validate(systems, topologies)
     _nye_reservoir_initial = reservoir_nye_m1(
@@ -831,17 +980,32 @@ def accepted_v24_mechanical_step(
             extensive_parameters, accepted_dt, alignment=working_alignment)
         ordering_topology = ordering_thermo.pop("topology_ledger")
     result = synchronize_common(V24MechanicalWallState(
-        common, ordered_density, ordered_alignment), topologies)
+        common, ordered_density, ordered_alignment, state.geometry), topologies)
     result.validate(systems, topologies)
+    _nye_reservoir_after_ordering = reservoir_nye_m1(
+        result.reservoir_alignment, systems, result.common.orientation_rad,
+        topologies)["total"]
+    geometry_ledger = None
+    _geometry_source = np.zeros_like(_nye_beta_initial)
+    if geometry_event is not None:
+        if geometry_kinetics is None:
+            raise ValueError("geometry event requires explicit V43 kinetics")
+        result, geometry_ledger = accepted_geometry_plaquette_transaction(
+            result, geometry_event, systems, topologies, driving,
+            common_parameters, extensive_parameters, geometry_kinetics,
+            accepted_dt)
+        if geometry_ledger["accepted"]:
+            _geometry_source = np.sum(
+                geometry_ledger["family_nye_increment_m1"], axis=2)
     _nye_reservoir_after_reactions = reservoir_nye_m1(
         result.reservoir_alignment, systems, result.common.orientation_rad,
         topologies)["total"]
-    _declared_reaction_source = np.zeros_like(_nye_beta_initial)
+    _declared_reaction_source = _geometry_source.copy()
     if topology_route_enabled:
         # Geometry-neutral conversion moves each reservoir moment with its
         # line, so its physical source is identically zero.  Never overwrite
         # the plastic-curl Nye field with a measured reservoir residual.
-        _declared_reaction_source = np.zeros_like(_nye_beta_initial)
+        _declared_reaction_source = _geometry_source.copy()
     _reference = max(float(np.sqrt(np.mean(_nye_beta_initial**2))), 1.0)
     def _stage(name, reservoir_increment, beta_increment):
         mismatch = reservoir_increment-beta_increment
@@ -868,9 +1032,20 @@ def accepted_v24_mechanical_step(
     _nye_stages = [
         _mura_stage,
         _stage("ordering_and_topology_reactions",
-               _nye_reservoir_after_reactions-_nye_reservoir_after_transport,
-               _declared_reaction_source),
+               _nye_reservoir_after_ordering-_nye_reservoir_after_transport,
+               _zero),
     ]
+    if geometry_event is not None:
+        _geometry_stage = _stage(
+            "represented_plaquette_sweep", _geometry_source, _geometry_source)
+        _geometry_stage["reservoir_first_moment_increment_rms_m1"] = float(
+            np.sqrt(np.mean((_nye_reservoir_after_reactions
+                             -_nye_reservoir_after_ordering)**2)))
+        _geometry_stage["reservoir_to_geometry_nye_residual_rms_m1"] = float(
+            np.sqrt(np.mean((_nye_reservoir_after_reactions
+                             -_nye_reservoir_after_ordering
+                             -_geometry_source)**2)))
+        _nye_stages.append(_geometry_stage)
     _violating = next((row["operator"] for row in _nye_stages
                        if row["increment_residual_rms_m1"]
                        > 2e-11*_reference), None)
@@ -926,6 +1101,7 @@ def accepted_v24_mechanical_step(
         "line_reorientation_topology": reorientation_ledger,
         "junction_topology": topology_ledger,
         "topology_energy_kinematics": topology_ledger,
+        "geometry_event_energy_kinematics": geometry_ledger,
         "legacy_common_density_rates_accepted": False,
         "legacy_independent_beta_nye_rates_accepted": False,
         "legacy_independent_slip_rate_accepted": False,

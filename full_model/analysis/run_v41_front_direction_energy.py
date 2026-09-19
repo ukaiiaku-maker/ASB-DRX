@@ -37,6 +37,9 @@ def compact(audit, direction, fraction, law):
         key: directional[key]
         for key in ("a_to_b_endpoint", "b_to_a_endpoint")
     }
+    selected_endpoint = endpoints[
+        "a_to_b_endpoint" if int(direction) > 0 else "b_to_a_endpoint"]
+    published = bool(audit["candidate_sweep_published"])
     return {
         "proposal_direction": direction,
         "proposal_fraction": fraction,
@@ -45,7 +48,7 @@ def compact(audit, direction, fraction, law):
         "trial_constructed": directional is not None,
         "kinetic_rule_admitted_trial": bool(decision["accepted"]),
         "complete_physical_energy_admitted_trial": bool(energy["accepted"]),
-        "state_published": bool(audit["candidate_sweep_published"]),
+        "state_published": published,
         "kinetic_classification": decision["classification"],
         "energy_classification": energy["classification"],
         "net_velocity_a_to_b_m_s": decision["net_velocity_a_to_b_m_s"],
@@ -55,6 +58,19 @@ def compact(audit, direction, fraction, law):
         "accepted_signed_volume_m3": decision["accepted_signed_volume_m3"],
         "actual_complete_candidate_delta_helmholtz_J": energy[
             "delta_helmholtz_J"],
+        # A rejected deterministic-rate proposal returns an exact zero state
+        # identity.  That published-state energy is not the nonzero endpoint
+        # energy that was independently evaluated above.  Keep the two values
+        # separate so a no-op cannot be tallied as a downhill trial.
+        "trial_candidate_delta_helmholtz_J": selected_endpoint[
+            "delta_helmholtz_J"],
+        "trial_candidate_energy_classification": selected_endpoint[
+            "energy_classification"],
+        "trial_candidate_energy_evaluated": True,
+        "accepted_delta_helmholtz_J": (
+            energy["delta_helmholtz_J"] if published else None),
+        "accepted_energy_absence_reason": (
+            None if published else "candidate_state_not_published"),
         "external_work_J": energy["external_work_J"],
         "generated_heat_J": energy["generated_heat_J"],
         "material_sink_export_J": energy["material_sink_export_J"],
