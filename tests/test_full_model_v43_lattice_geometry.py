@@ -12,6 +12,7 @@ from full_model.production.v24_mechanical_wall import (
     mechanical_checkpoint_arrays, mechanical_from_checkpoint_arrays,
     synchronize_common,
 )
+from full_model.production.wall_topology_supply import apply_signed_ordering_extent
 from tests.test_full_model_v24_mechanical_wall import mechanical_fixture
 
 
@@ -141,3 +142,44 @@ def test_geometry_density_is_nonnegative_realizable_and_endpoint_free():
     node = link_node_balance(state.geometry.edge_x_quanta,
                              state.geometry.edge_y_quanta)
     assert np.max(np.abs(node)) == 0.0
+
+
+def test_signed_reverse_ordering_uses_polarized_ordered_donor_and_exhausts_it():
+    state, args, _ = prepared_loop()
+    extent = -state.density.wall_ordered_plus_m2
+    zeros = np.zeros_like(extent)
+    inventory, alignment, ledger = apply_signed_ordering_extent(
+        state.density, state.reservoir_alignment, extent, zeros,
+        args[3], state.common.orientation_rad, args[4])
+    assert np.max(np.abs(inventory.wall_ordered_plus_m2)) == 0.0
+    assert np.sum(inventory.wall_tangle_plus_m2) > 0.0
+    assert np.max(np.abs(ledger["total_nye_residual_m1"])) < 1e-12
+    np.testing.assert_allclose(
+        ledger["sign"]["plus"]["accepted_tangle_to_ordered_m2"], extent)
+    same_inventory, same_alignment, zero_ledger = apply_signed_ordering_extent(
+        inventory, alignment, zeros, zeros, args[3],
+        state.common.orientation_rad, args[4])
+    for name in inventory.__dict__:
+        np.testing.assert_array_equal(getattr(same_inventory, name),
+                                      getattr(inventory, name))
+    for name in alignment.__dict__:
+        np.testing.assert_array_equal(getattr(same_alignment, name),
+                                      getattr(alignment, name))
+    assert np.max(np.abs(zero_ledger["total_nye_residual_m1"])) == 0.0
+
+
+def test_shared_geometry_neutral_reaction_has_identical_heat_in_controls():
+    args = mechanical_fixture()
+    off, off_ledger = accepted_v24_mechanical_step(
+        *args, dt_s=1e-9, topology_route_enabled=False)
+    on, on_ledger = accepted_v24_mechanical_step(
+        *args, dt_s=1e-9, topology_route_enabled=True)
+    for group in ("common", "density", "reservoir_alignment"):
+        for name in getattr(off, group).__dict__:
+            np.testing.assert_array_equal(getattr(getattr(off, group), name),
+                                          getattr(getattr(on, group), name))
+    np.testing.assert_array_equal(
+        off_ledger["topology_energy_kinematics"][
+            "irreversible_heat_increment_J_m3"],
+        on_ledger["topology_energy_kinematics"][
+            "irreversible_heat_increment_J_m3"])

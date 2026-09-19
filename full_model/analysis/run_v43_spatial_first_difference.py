@@ -64,7 +64,7 @@ def run_grid(output, grid, macro_dt_s):
     retain("after_first_mura", state, {
         "operator_exposure_s": pre_elapsed, "subcycle_count": len(pre),
         "accepted_dt_s": [float(row["accepted_dt_s"]) for row in pre],
-        "event_scales": [float(row["mura_event_scale"]) for row in pre],
+        "event_scales": [float(row["event_scale"]) for row in pre],
     })
     state, front = front_stage(
         context, state, macro_dt_s, driving, .0625, 1.0, 1)
@@ -78,7 +78,7 @@ def run_grid(output, grid, macro_dt_s):
     retain("after_second_mura", state, {
         "operator_exposure_s": post_elapsed, "subcycle_count": len(post),
         "accepted_dt_s": [float(row["accepted_dt_s"]) for row in post],
-        "event_scales": [float(row["mura_event_scale"]) for row in post],
+        "event_scales": [float(row["event_scale"]) for row in post],
     })
     result = {
         "schema": "asb-drx/v43/spatial-stage-run/v1",

@@ -938,7 +938,21 @@ def accepted_v24_mechanical_step(
             accepted_dt*residual.channel_rates_m2_s["lock_plus"],
             accepted_dt*residual.channel_rates_m2_s["lock_minus"], systems,
             common.orientation_rad, topologies))
-    topology_ledger = None
+    # Geometry-neutral ordering is a shared physical reaction, not a heat
+    # difference between the topology-on and topology-off controls.  Evaluate
+    # and deposit its complete-energy release identically in both branches.
+    (ordered_density, ordered_alignment,
+     topology_ledger) = accepted_energy_guarded_reservoir_topology_transaction(
+        working_density, working_alignment, systems, topologies,
+        common.orientation_rad, drive["effective_stress_Pa"],
+        common.temperature_K, extensive_parameters, accepted_dt)
+    topology_heat = topology_ledger["irreversible_heat_increment_J_m3"]
+    common = replace(
+        common,
+        temperature_K=(common.temperature_K+topology_heat
+                       /common_parameters.volumetric_heat_capacity_J_m3_K))
+    ordering_thermo = topology_ledger["ordering_kinetics"]
+    ordering_topology = ordering_thermo.get("topology_ledger")
     reorientation_ledger = None
     if topology_route_enabled:
         # V41 showed that local line reorientation plus a reconstructed Nye
@@ -950,18 +964,6 @@ def accepted_v24_mechanical_step(
         # junction routines remain available as isolated audit fixtures, but
         # cannot publish through this driver until persistent segment/node and
         # swept-surface geometry exists.
-        (ordered_density, ordered_alignment,
-         topology_ledger) = accepted_energy_guarded_reservoir_topology_transaction(
-            working_density, working_alignment, systems, topologies,
-            common.orientation_rad, drive["effective_stress_Pa"],
-            common.temperature_K, extensive_parameters, accepted_dt)
-        topology_heat = topology_ledger["irreversible_heat_increment_J_m3"]
-        common = replace(
-            common,
-            temperature_K=(common.temperature_K+topology_heat
-                           /common_parameters.volumetric_heat_capacity_J_m3_K))
-        ordering_thermo = topology_ledger["ordering_kinetics"]
-        ordering_topology = ordering_thermo.get("topology_ledger")
         reorientation_ledger = {
             "operator": "unrepresentable_geometry_fail_closed",
             "executed": False,
@@ -970,15 +972,11 @@ def accepted_v24_mechanical_step(
                 "moment rotation cannot update beta_p consistently"),
         }
     else:
-        # Shared EXP-floor/signed-entropy ordering law. With C_FB=0 and a zero
-        # target, only the declared extensive free-energy affinity selects direction.
-        zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
-        (ordered_density, ordered_alignment,
-         ordering_thermo, _) = accepted_ordering_step(
-            working_density, systems, topologies, common.orientation_rad,
-            zero_target, drive["effective_stress_Pa"], common.temperature_K,
-            extensive_parameters, accepted_dt, alignment=working_alignment)
-        ordering_topology = ordering_thermo.pop("topology_ledger")
+        reorientation_ledger = {
+            "operator": "geometry_channel_disabled",
+            "executed": False,
+            "reason": "exact V42 geometry-neutral disabling comparator",
+        }
     result = synchronize_common(V24MechanicalWallState(
         common, ordered_density, ordered_alignment, state.geometry), topologies)
     result.validate(systems, topologies)
