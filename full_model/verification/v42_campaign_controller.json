@@ -3,14 +3,17 @@
   "campaign": "Topology energy, resolved organization, and physical response V42",
   "canonical_branch": "exp/full-v34-recovery-v1",
   "checkpoint_source_sha": "0828397",
-  "campaign_terminal": false,
+  "campaign_terminal": true,
   "controller_has_executed_next_actions": true,
   "branches": {
     "topology_energy_kinematics": {
-      "state": "RUNNING",
+      "state": "FAILED_SCIENTIFIC",
       "operator_gate": "PASSED_OPERATOR",
-      "classification": "VALID_NEGATIVE_AT_FIRST_RETAINED_INCREMENT;NO_QUALIFIED_BOUNDARY",
-      "active_job_id": "56166842"
+      "classification": "VALID_NEGATIVE_AT_TESTED_CONDITION;NO_QUALIFIED_BOUNDARY",
+      "completed_job_id": "56166842",
+      "scheduler_state": "COMPLETED",
+      "archive_sha256": "2359d0e3c37cc19f082ab8db88405ef97f3f28961671fcf2c065ba38f6af4659",
+      "checksum_verified": true
     },
     "mura_spatial_accuracy": {
       "state": "FAILED_NUMERICAL",

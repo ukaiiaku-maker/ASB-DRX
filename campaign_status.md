@@ -1,6 +1,35 @@
 # Campaign status
 
-Updated: 2026-09-18 (America/Los_Angeles)
+Updated: 2026-09-19 (America/Los_Angeles)
+
+## Directive v43 geometry-capable organization and spatial repair
+
+- V43 adds persistent periodic line links generated as the exact boundary of
+  swept plaquettes.  One transaction now owns Burgers family/sign, line
+  length, first moment, swept plastic distortion, family Nye, complete energy,
+  and heat.  Nonzero event, second evolved-state event, exact rollback,
+  checkpoint continuation, endpoint balance, translation symmetry, and
+  segment refinement pass.  The V42 geometry-neutral comparator remains exact.
+- Shared geometry-neutral ordering heat is identical in enabled/disabled
+  controls; rejected geometry emits zero heat.  Signed reverse ordering uses
+  the actual polarized ordered donor and passes exhausted/zero-extent tests.
+- A six-case zero-external-event-work response family accepts physical geometry
+  changes.  Fast/full events advance once and then pin energetically; slower
+  finite-rate hypotheses accept three or four smaller increments.  This is a
+  generic response hypothesis, not material calibration or spontaneous DRX.
+- The front tally now separates evaluated endpoint energy, publication energy,
+  no-op, and rate rejection.  Retained: 8 uphill, 0 published.  Prepared: 8
+  downhill, 4 published, 4 rate-rejected.  Each row is an independent probe.
+- The staged archived restart contract passes under an ordinary seed filename
+  and rejects missing path, bad checksum, and bad source lineage before step
+  one.  Source identity is now frozen when a recurrent trajectory starts.
+- The first macro localizes the spatial error to its second Mura half: selected
+  common-mode complex error is 4.30%, power error 0.124%, and RMS-amplitude
+  difference 7.31%.  A four-substep interval-2 n128/n192 discriminator is
+  active locally; no physical diffusion or coefficient has been changed.
+- Canonical remote branch history was externally force-moved to V33.  V43 is
+  preserved non-destructively on `exp/full-v34-recovery-v43-20260919`; no force
+  push will overwrite either lineage.
 
 ## Directive v42 topology energy and resolved-organization decision
 
@@ -23,9 +52,10 @@ Updated: 2026-09-18 (America/Los_Angeles)
   the controlling physical competition.  The V41 thermal causal result is
   retained; strict ASB remains false.
 - The configured suite passes 747 tests.  Corrected HPC3 continuation job
-  `56166842` is running from pushed source `bb67429` and an exact verified
-  step-22,620 seed.  `tmux:v42_topology_manager` will checksum and fetch it.
-  Job `56166765` is quarantined as an invalid fresh-start staging attempt.
+  `56166842` completed from source `bb67429`; its archive SHA-256
+  `2359d0e3c37cc19f082ab8db88405ef97f3f28961671fcf2c065ba38f6af4659`
+  is verified and the matched result remains `NO_QUALIFIED_BOUNDARY`.  Job
+  `56166765` is quarantined as an invalid fresh-start staging attempt.
 
 ## Directive v40 numerical completion and physical-response decision
 

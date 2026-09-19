@@ -1,0 +1,45 @@
+{
+  "continued_physical_time_s": 1.0019999999999999e-06,
+  "continued_step": 2,
+  "contract_passed": true,
+  "failed_restart_advanced_zero_steps": true,
+  "failure_challenges": {
+    "missing_path": {
+      "checkpoint_created": false,
+      "error_tail": "FileNotFoundError: required restart does not exist: /Users/sdillon/HPC3/local-results/asb-drx-v43-restart/94a1c46/attempt-20260919T162611Z/valid-renamed-seed/absent-seed.npz",
+      "rejected": true,
+      "returncode": 1,
+      "status_created": false
+    },
+    "wrong_checksum": {
+      "checkpoint_created": false,
+      "error_tail": "ValueError: restart checksum does not match configured seed",
+      "rejected": true,
+      "returncode": 1,
+      "status_created": false
+    },
+    "wrong_source_lineage": {
+      "checkpoint_created": false,
+      "error_tail": "ValueError: restart source lineage does not match configured seed",
+      "rejected": true,
+      "returncode": 1,
+      "status_created": false
+    }
+  },
+  "generated_utc": "2026-09-19T16:26:27.919997+00:00",
+  "initial_step": 1,
+  "ordinary_filename_loaded_explicitly": true,
+  "restart_validation": {
+    "migration": "none",
+    "path": "/Users/sdillon/HPC3/local-results/asb-drx-v43-restart/94a1c46/attempt-20260919T162611Z/valid-renamed-seed/seed-with-ordinary-name.npz",
+    "schema_active": "asb-drx/v43/mechanical-checkpoint/v1",
+    "schema_read": "asb-drx/v43/mechanical-checkpoint/v1",
+    "sha256": "724ce244a2329a5ce47b596f043136155f39af220a647c29e4b61aed287ebf99",
+    "validated_before_step": true
+  },
+  "schema": "asb-drx/v43/restart-contract/v1",
+  "source_archive": "/Users/sdillon/HPC3/local-results/asb-drx-v43-restart/94a1c46/attempt-20260919T162611Z/source.tar",
+  "source_archive_sha256": "0921308a75acd07a8688e77d2a5976fe42c2a261d2c0f48bb5aa2c9ea6b8459f",
+  "source_sha": "94a1c46f43551520f0e6e08ce49e419a9730ea25",
+  "staged_archive_execution": true
+}

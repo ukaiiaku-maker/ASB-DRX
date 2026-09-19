@@ -1,0 +1,373 @@
+{
+  "cases": [
+    {
+      "accepted_nonzero_event_count": 0,
+      "attempt_frequency_s": 1000000000000.0,
+      "beta_p_rms": 0.0075593504717369414,
+      "enthalpy_eV": 0.02,
+      "entropy_over_kB": -0.2,
+      "events": [],
+      "geometry_enabled": false,
+      "grain_count": 1,
+      "line_length_m": 8e-07,
+      "loading_history": "fixed_total_strain_heterogeneous_load",
+      "maximum_temperature_K": 1127.0935923623288,
+      "name": "disabled_control",
+      "nye_rms_m1": 5703.272901684234,
+      "orientation_span_deg": 0.190787442916595,
+      "persistent_event_count": 1
+    },
+    {
+      "accepted_nonzero_event_count": 1,
+      "attempt_frequency_s": 1000000000000.0,
+      "beta_p_rms": 0.007525967409587168,
+      "enthalpy_eV": 0.02,
+      "entropy_over_kB": -0.2,
+      "events": [
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            7
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -27519354.45425353,
+          "event_rate_s": 810191441113.22,
+          "extent": 1.0,
+          "heat_J_m3_cells": 27519354.45425353
+        },
+        {
+          "accepted": false,
+          "cell": [
+            8,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 14120464.745377338,
+          "event_rate_s": 810239323256.7839,
+          "extent": 1.0,
+          "heat_J_m3_cells": 0.0
+        },
+        {
+          "accepted": false,
+          "cell": [
+            7,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 18742380.413281415,
+          "event_rate_s": 810286976735.0065,
+          "extent": 1.0,
+          "heat_J_m3_cells": 0.0
+        },
+        {
+          "accepted": false,
+          "cell": [
+            6,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 84387614.06514458,
+          "event_rate_s": 810269297906.8171,
+          "extent": 1.0,
+          "heat_J_m3_cells": 0.0
+        }
+      ],
+      "geometry_enabled": true,
+      "grain_count": 1,
+      "line_length_m": 1.2e-06,
+      "loading_history": "fixed_total_strain_heterogeneous_load",
+      "maximum_temperature_K": 1130.9839538624058,
+      "name": "low_barrier_load",
+      "nye_rms_m1": 5638.989563064389,
+      "orientation_span_deg": 0.189097349552619,
+      "persistent_event_count": 2
+    },
+    {
+      "accepted_nonzero_event_count": 1,
+      "attempt_frequency_s": 1000000000000.0,
+      "beta_p_rms": 0.007654606553429086,
+      "enthalpy_eV": 0.02,
+      "entropy_over_kB": -0.2,
+      "events": [
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            7
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -27780078.462864712,
+          "event_rate_s": 810235936169.624,
+          "extent": 1.0,
+          "heat_J_m3_cells": 27780078.462864712
+        },
+        {
+          "accepted": false,
+          "cell": [
+            8,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 13806192.11388135,
+          "event_rate_s": 810326861612.8291,
+          "extent": 1.0,
+          "heat_J_m3_cells": 0.0
+        },
+        {
+          "accepted": false,
+          "cell": [
+            7,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 17614429.438120976,
+          "event_rate_s": 810421078982.3281,
+          "extent": 1.0,
+          "heat_J_m3_cells": 0.0
+        },
+        {
+          "accepted": false,
+          "cell": [
+            6,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 83620570.92885803,
+          "event_rate_s": 810396915344.4893,
+          "extent": 1.0,
+          "heat_J_m3_cells": 0.0
+        }
+      ],
+      "geometry_enabled": true,
+      "grain_count": 1,
+      "line_length_m": 1.2e-06,
+      "loading_history": "fixed_total_strain_release",
+      "maximum_temperature_K": 1152.5281955134283,
+      "name": "low_barrier_release",
+      "nye_rms_m1": 5573.27733986161,
+      "orientation_span_deg": 0.1840135828957718,
+      "persistent_event_count": 2
+    },
+    {
+      "accepted_nonzero_event_count": 4,
+      "attempt_frequency_s": 1000000000.0,
+      "beta_p_rms": 0.00754070749387929,
+      "enthalpy_eV": 0.2,
+      "entropy_over_kB": -0.2,
+      "events": [
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            7
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -12596748.637442729,
+          "event_rate_s": 737236073.0427079,
+          "extent": 0.15740255958098892,
+          "heat_J_m3_cells": 12596748.637442729
+        },
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -2724748.534401104,
+          "event_rate_s": 737673621.4548149,
+          "extent": 0.16698180269875357,
+          "heat_J_m3_cells": 2724748.534401104
+        },
+        {
+          "accepted": true,
+          "cell": [
+            7,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -11474986.79551442,
+          "event_rate_s": 738114124.7722021,
+          "extent": 0.18908364758445884,
+          "heat_J_m3_cells": 11474986.79551442
+        },
+        {
+          "accepted": true,
+          "cell": [
+            6,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -1603088.0782397613,
+          "event_rate_s": 737946765.6112415,
+          "extent": 0.23893689237329224,
+          "heat_J_m3_cells": 1603088.0782397613
+        }
+      ],
+      "geometry_enabled": true,
+      "grain_count": 1,
+      "line_length_m": 1.0579422349781352e-06,
+      "loading_history": "fixed_total_strain_heterogeneous_load",
+      "maximum_temperature_K": 1129.5571413381026,
+      "name": "mid_barrier_load",
+      "nye_rms_m1": 5666.078341456455,
+      "orientation_span_deg": 0.19018044389651667,
+      "persistent_event_count": 5
+    },
+    {
+      "accepted_nonzero_event_count": 4,
+      "attempt_frequency_s": 100000000.0,
+      "beta_p_rms": 0.007558697139765729,
+      "enthalpy_eV": 0.5,
+      "entropy_over_kB": -0.2,
+      "events": [
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            7
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -1197013.6822893308,
+          "event_rate_s": 62994812.47229114,
+          "extent": 0.013449619580522919,
+          "heat_J_m3_cells": 1197013.6822893308
+        },
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -335772.5921558121,
+          "event_rate_s": 63088607.409367494,
+          "extent": 0.01432600181225793,
+          "heat_J_m3_cells": 335772.5921558121
+        },
+        {
+          "accepted": true,
+          "cell": [
+            7,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -1051227.695625892,
+          "event_rate_s": 63182119.91864745,
+          "extent": 0.016248217155106767,
+          "heat_J_m3_cells": 1051227.695625892
+        },
+        {
+          "accepted": true,
+          "cell": [
+            6,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -509371.01463688165,
+          "event_rate_s": 63147353.8169567,
+          "extent": 0.02056634397196999,
+          "heat_J_m3_cells": 509371.01463688165
+        }
+      ],
+      "geometry_enabled": true,
+      "grain_count": 1,
+      "line_length_m": 8.22183475902479e-07,
+      "loading_history": "fixed_total_strain_heterogeneous_load",
+      "maximum_temperature_K": 1127.0745353181417,
+      "name": "high_barrier_load",
+      "nye_rms_m1": 5701.603992387872,
+      "orientation_span_deg": 0.19075739392027435,
+      "persistent_event_count": 5
+    },
+    {
+      "accepted_nonzero_event_count": 3,
+      "attempt_frequency_s": 1000000000.0,
+      "beta_p_rms": 0.007534520855812158,
+      "enthalpy_eV": 0.2,
+      "entropy_over_kB": 0.5,
+      "events": [
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            7
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -16340013.31707021,
+          "event_rate_s": 1000000000.0,
+          "extent": 0.21350360533954857,
+          "heat_J_m3_cells": 16340013.31707021
+        },
+        {
+          "accepted": true,
+          "cell": [
+            8,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -3127911.283478583,
+          "event_rate_s": 1000000000.0,
+          "extent": 0.22612941307057213,
+          "heat_J_m3_cells": 3127911.283478583
+        },
+        {
+          "accepted": true,
+          "cell": [
+            7,
+            8
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": -15104378.298469838,
+          "event_rate_s": 1000000000.0,
+          "extent": 0.25585191478056646,
+          "heat_J_m3_cells": 15104378.298469838
+        },
+        {
+          "accepted": false,
+          "cell": [
+            6,
+            8
+          ],
+          "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+          "complete_energy_change_J_m3_cells": 46206.4749420702,
+          "event_rate_s": 1000000000.0,
+          "extent": 0.3231297248649001,
+          "heat_J_m3_cells": 0.0
+        }
+      ],
+      "geometry_enabled": true,
+      "grain_count": 1,
+      "line_length_m": 9.927925311404556e-07,
+      "loading_history": "fixed_total_strain_heterogeneous_load",
+      "maximum_temperature_K": 1130.5773907430164,
+      "name": "signed_entropy_hypothesis",
+      "nye_rms_m1": 5659.370498895899,
+      "orientation_span_deg": 0.19001856202765915,
+      "persistent_event_count": 4
+    }
+  ],
+  "classification": "BOUNDED_GEOMETRY_RESPONSE_FAMILY_COMPLETED;FIRST_ADVANCE_ACCEPTED_SUBSEQUENT_PATH_ENERGY_PINNED",
+  "disabled_control_changed_geometry": false,
+  "drx_claimed": false,
+  "generated_utc": "2026-09-19T16:28:52.173284+00:00",
+  "grain_label_allocation_possible": false,
+  "parameter_scope": "generic response hypotheses, not material calibration; EXP-floor enthalpy 0.02-0.5 eV and signed entropy -0.2 to +0.5 kB",
+  "qualified_nonzero_physical_path": true,
+  "schema": "asb-drx/v43/physical-response/v1",
+  "shared_parameters": {
+    "attempt_frequency_range_s": [
+      100000000.0,
+      1000000000000.0
+    ],
+    "critical_stress_Pa": 1000000000.0,
+    "exp_a": 2.2,
+    "exp_floor": 0.05,
+    "exp_n": 2.5,
+    "external_front_pressure_Pa": 0.0,
+    "geometry_external_work_J": 0.0
+  },
+  "source_sha": "fee6b27bae8db57fbf6b6f41db749ad855b4f4b6",
+  "strict_asb_claimed": false
+}

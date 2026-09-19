@@ -1,0 +1,25 @@
+{
+  "geometry_neutral_v42_comparator_retained": true,
+  "material_calibration": false,
+  "not_represented": [
+    "free off-lattice node coordinates",
+    "three-dimensional junction products",
+    "cross-family Burgers reactions",
+    "spontaneous nucleation law"
+  ],
+  "publication_safety": "qualified for represented plaquette events only",
+  "representation": "periodic oriented-link boundary of swept plaquettes",
+  "represented": [
+    "persistent closed line links",
+    "Burgers family and sign",
+    "periodic winding",
+    "swept surface",
+    "scalar line length",
+    "first line moment",
+    "plastic distortion increment",
+    "family-resolved Nye increment",
+    "finite line stretching/shrinkage"
+  ],
+  "schema": "asb-drx/v43/representation-capabilities/v1",
+  "source_sha": "94a1c46f43551520f0e6e08ce49e419a9730ea25"
+}

@@ -69,3 +69,29 @@ report is therefore a decision-grade active-job checkpoint, not a claim that
 the long continuation has already completed.
 
 No material calibration, physical LAGB, DRX, or strict ASB is claimed.
+
+## Versioned closure addendum (V43 audit, 2026-09-19)
+
+Job `56166842` completed in `00:18:38` with exit `0:0`.  The durable manager
+fetched and verified archive SHA-256
+`2359d0e3c37cc19f082ab8db88405ef97f3f28961671fcf2c065ba38f6af4659`.
+The matched 5.01% topology-on/off continuation passes hard invariants and is a
+valid negative at the tested condition: no qualified boundary forms.  The
+topology-enabled ordered fraction is `0.00013597`, orientation span is
+`9.75444 deg`, and the result remains geometry-neutral.  Job `56166765`
+remains quarantined and contributes no evidence.
+
+The earlier front paragraph conflated returned no-op energy with trial endpoint
+energy and incorrectly described sixteen trials per state.  There are eight
+rows per state.  With trial and publication energy separated, the retained hold
+has eight evaluated uphill endpoints, zero publications, and eight
+rate-rejected no-ops.  The prepared zero-mean-shear state has eight evaluated
+downhill endpoints, four publications, and four rate-rejected no-ops.  The
+published-state energy for a rejected proposal is absent, not zero downhill
+work.  All proposals remain independent counterfactual probes.
+
+Finally, the extra first-step heat is assigned to the accepted shared
+geometry-neutral ordering reaction.  V43 applies that same heat ownership to
+both controls; rejected geometry trials contribute exactly zero heat.  This
+addendum freezes V42 history and corrects its selection semantics without
+relabeling the original evidence.
