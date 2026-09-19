@@ -59,5 +59,8 @@
   growing phase/location error rather than a simple amplitude normalization.
 - Both grids previously consumed each half-macro in one large constitutive
   step.  A bounded four-substep repeat from the matched first-macro checkpoint
-  is in progress as the first numerical discriminator.  Physical diffusivity,
-  gradient coefficient, and final outputs are unchanged.
+  completed locally.  It worsens the interval-2 final curl comparison from
+  12.316% to 13.683% in the common complex band and from 27.199% to 29.235% in
+  RMS amplitude.  Ordered inventory is unchanged by the time refinement at
+  either grid.  Time truncation is rejected as the repair; the mixed donor-cell
+  scalar/spectral moment Mura seam is the next concrete discriminator.

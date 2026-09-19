@@ -1,0 +1,94 @@
+{
+  "schema": "asb-drx/v43/case-manifest/v1",
+  "campaign": "Geometry-capable organization and spatial repair V43",
+  "canonical_requested_branch": "exp/full-v34-recovery-v1",
+  "non_destructive_recovery_branch": "exp/full-v34-recovery-v43-20260919",
+  "remote_collision": {
+    "observed_remote_sha": "8b2f77c9ee7a800a2f7b108015bd898c9e54b228",
+    "retained_local_v42_sha": "1de2383bf858fd4395d1885430028b645fbacb37",
+    "resolution": "preserve both lineages; never force-push canonical branch"
+  },
+  "source_checkpoints": [
+    "3135e21c288e79cf3aac5d09b89d25300f577099",
+    "8fa57697a723f419016c3c62b0682bf7e83b6e78",
+    "94a1c46f43551520f0e6e08ce49e419a9730ea25",
+    "fee6b27bae8db57fbf6b6f41db749ad855b4f4b6",
+    "26b96de3ca679ea901f09195bb425fccabdbde17",
+    "47143d9f389f6ff3e1fa92ba7460365625cae065",
+    "d0b1d3ec5527081c137e2de031a6666b16906b22"
+  ],
+  "v42_hpc_closure": {
+    "job_id": "56166842",
+    "scheduler_state": "COMPLETED",
+    "elapsed": "00:18:38",
+    "exit_code": "0:0",
+    "source_sha": "bb674296526de27cddf32d0708e0439085794b0a",
+    "archive_sha256": "2359d0e3c37cc19f082ab8db88405ef97f3f28961671fcf2c065ba38f6af4659",
+    "checksum_verified": true,
+    "local_fetch_root": "/Users/sdillon/HPC3/local-results/asb-drx-v42-topology-hpc/56166842",
+    "classification": "VALID_NEGATIVE_AT_TESTED_CONDITION;NO_QUALIFIED_BOUNDARY"
+  },
+  "local_cases": [
+    {
+      "id": "persistent_geometry_manufactured_verification",
+      "source_sha": "94a1c46f43551520f0e6e08ce49e419a9730ea25",
+      "artifact": "full_model/verification/v43_nonzero_geometry_event.json",
+      "sha256": "eccda07146908b6637f9c3d7463b6a913990ba7009ab6c770948f5e9447282d4",
+      "classification": "MANUFACTURED_NONZERO_GEOMETRY_EVENT_QUALIFIED"
+    },
+    {
+      "id": "bounded_zero_event_work_response_family",
+      "source_sha": "fee6b27bae8db57fbf6b6f41db749ad855b4f4b6",
+      "artifact": "full_model/verification/v43_physical_response.json",
+      "sha256": "b99eb2996eb04a630515d604a3e2080095429e3968cc1d6a0e98cd7bf950564f",
+      "classification": "FIRST_ADVANCE_ACCEPTED_SUBSEQUENT_FULL_PATH_PINNED;FINITE_RATE_SMALL_EVENTS_ACCEPTED"
+    },
+    {
+      "id": "archived_explicit_restart_contract",
+      "source_sha": "94a1c46f43551520f0e6e08ce49e419a9730ea25",
+      "artifact": "full_model/verification/v43_restart_contract.json",
+      "sha256": "3473e201624b013773286f1087826e40fe1780e63e8b144b8c59b2f7eaf2ef93",
+      "classification": "PASSED_STAGED_ARCHIVE_AND_FAILED_RESTART_ZERO_STEP"
+    },
+    {
+      "id": "corrected_front_counterfactual_tally",
+      "source_sha": "26b96de3ca679ea901f09195bb425fccabdbde17",
+      "artifact": "full_model/verification/v43_front_tally_corrected.json",
+      "sha256": "04ae70549fe0b9566deedabaab036d0e1afbc64d3458ac7c5fd0b6d9553b21a4",
+      "classification": "TRIAL_AND_PUBLICATION_ENERGIES_SEPARATED"
+    },
+    {
+      "id": "matched_spatial_first_difference_and_time_refinement",
+      "source_shas": [
+        "94a1c46f43551520f0e6e08ce49e419a9730ea25",
+        "fee6b27bae8db57fbf6b6f41db749ad855b4f4b6",
+        "e40f77dd0549185b5bda19833dcd6ef7be109b8c",
+        "47143d9f389f6ff3e1fa92ba7460365625cae065"
+      ],
+      "roots": {
+        "macro1_baseline": "/Users/sdillon/HPC3/local-results/asb-drx-v43-spatial/94a1c46/baseline",
+        "interval2_one_step": "/Users/sdillon/HPC3/local-results/asb-drx-v43-spatial/79c69fe/one-step-interval2",
+        "interval2_four_substep": "/Users/sdillon/HPC3/local-results/asb-drx-v43-spatial/fee6b27/refined-interval2"
+      },
+      "state": "FAILED_NUMERICAL",
+      "artifact": "full_model/verification/v43_spatial_first_difference_and_repair.json",
+      "sha256": "073c20c0d194798d5134e7ab28b8554ae340cf0ffeb542e018ae9b42eaff7ba5",
+      "classification": "MURA_TIME_REFINEMENT_DID_NOT_REPAIR_SPATIAL_ERROR",
+      "next_action": "implement one compatible conservative scalar/moment face flux and rerun interval-2 pair"
+    }
+  ],
+  "verification": {
+    "configured_command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "tests_passed": 755,
+    "tests_failed": 0,
+    "wall_seconds": 269.65
+  },
+  "claims": {
+    "persistent_geometry_event_qualified": true,
+    "spontaneous_lagb_qualified": false,
+    "drx_claimed": false,
+    "strict_asb_claimed": false,
+    "material_calibration_claimed": false
+  },
+  "unrelated_jobs_observed_and_not_touched": ["56132213"]
+}

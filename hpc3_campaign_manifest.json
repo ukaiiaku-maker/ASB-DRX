@@ -2666,6 +2666,53 @@
       "strict_asb_claimed": false,
       "material_calibration_claimed": false,
       "unrelated_jobs_observed_and_not_touched": ["56132213"]
+    },
+    {
+      "run_id": "v42-topology-continuation-20260918-bb67429-attempt2",
+      "purpose": "directive_v42_corrected_geometry_neutral_topology_continuation",
+      "scientific_source_sha": "bb674296526de27cddf32d0708e0439085794b0a",
+      "job_id": "56166842",
+      "scheduler_state": "COMPLETED",
+      "elapsed": "00:18:38",
+      "exit_code": "0:0",
+      "remote_root": "/pub/sdillon1/codex-runs/asb-drx-full-v34-recovery/v42-topology-20260918-bb67429-attempt2",
+      "local_fetch_root": "/Users/sdillon/HPC3/local-results/asb-drx-v42-topology-hpc/56166842",
+      "archive_sha256": "2359d0e3c37cc19f082ab8db88405ef97f3f28961671fcf2c065ba38f6af4659",
+      "checksum_verified": true,
+      "classification": "VALID_NEGATIVE_AT_TESTED_CONDITION;NO_QUALIFIED_BOUNDARY",
+      "quarantined_attempt": {
+        "job_id": "56166765",
+        "reason": "renamed seed was not recognized and trajectory initialized fresh"
+      },
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false
+    },
+    {
+      "run_id": "v43-geometry-spatial-repair-20260919",
+      "purpose": "directive_v43_persistent_geometry_and_spatial_first_difference",
+      "branch": "exp/full-v34-recovery-v43-20260919",
+      "source_head_before_evidence_commit": "47143d9f389f6ff3e1fa92ba7460365625cae065",
+      "execution_location": "local",
+      "geometry_decision": "MANUFACTURED_NONZERO_GEOMETRY_EVENT_QUALIFIED",
+      "physical_response_decision": "FIRST_FULL_ADVANCE_THEN_PINNED;FINITE_RATE_SMALL_EVENTS_ACCEPTED",
+      "spatial_decision": "MURA_TIME_REFINEMENT_DID_NOT_REPAIR_SPATIAL_ERROR",
+      "restart_contract": "PASSED_STAGED_ARCHIVE_AND_FAILED_RESTART_ZERO_STEP",
+      "verification": {
+        "geometry_sha256": "eccda07146908b6637f9c3d7463b6a913990ba7009ab6c770948f5e9447282d4",
+        "physical_response_sha256": "b99eb2996eb04a630515d604a3e2080095429e3968cc1d6a0e98cd7bf950564f",
+        "restart_contract_sha256": "3473e201624b013773286f1087826e40fe1780e63e8b144b8c59b2f7eaf2ef93",
+        "front_tally_sha256": "04ae70549fe0b9566deedabaab036d0e1afbc64d3458ac7c5fd0b6d9553b21a4",
+        "spatial_repair_sha256": "073c20c0d194798d5134e7ab28b8554ae340cf0ffeb542e018ae9b42eaff7ba5",
+        "campaign_controller_sha256": "6ec433ca11deaf83ec3386c35bbf1e934e21e439262b01ac82aa1ab7b954d2cd",
+        "case_manifest_sha256": "73518e79573483cb85e287238dd37700e18fe58543adc80aa2f2092968e69794",
+        "configured_tests_passed": 755,
+        "regression_wall_seconds": 269.65
+      },
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false,
+      "strict_asb_claimed": false,
+      "material_calibration_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": ["56132213"]
     }
   ]
 }

@@ -1,0 +1,65 @@
+{
+  "schema": "asb-drx/v43/campaign-controller/v1",
+  "campaign": "Geometry-capable organization and spatial repair V43",
+  "branch": "exp/full-v34-recovery-v43-20260919",
+  "campaign_terminal": true,
+  "controller_has_executed_next_actions": true,
+  "branches": {
+    "persistent_geometry": {
+      "state": "PASSED_OPERATOR",
+      "classification": "MANUFACTURED_NONZERO_GEOMETRY_EVENT_QUALIFIED",
+      "actually_accepted_nonzero_operations": true,
+      "second_evolved_state_event_passed": true,
+      "restart_and_rollback_passed": true,
+      "next_action": "extend only when a represented 3D junction or compatible continuum channel is required"
+    },
+    "physical_geometry_response": {
+      "state": "COMPLETED",
+      "classification": "FIRST_FULL_ADVANCE_THEN_PINNED;FINITE_RATE_SMALL_EVENTS_ACCEPTED",
+      "external_event_work_J": 0.0,
+      "grain_count": 1,
+      "next_action": "after spatial repair, promote one finite-rate hypothesis to a longer one-grain continuation"
+    },
+    "mura_spatial_accuracy": {
+      "state": "FAILED_NUMERICAL",
+      "classification": "MURA_TIME_REFINEMENT_DID_NOT_REPAIR_SPATIAL_ERROR",
+      "one_step_interval2_common_relative": 0.12316168873090987,
+      "four_substep_interval2_common_relative": 0.13683187071600572,
+      "one_step_interval2_rms_relative": 0.2719897026637898,
+      "four_substep_interval2_rms_relative": 0.2923484499396685,
+      "first_violating_operator": "Mura evolution",
+      "implicated_suboperator": "mixed donor-cell scalar transport and spectral moment/plastic-curl update",
+      "next_action": "implement one compatible conservative face flux for scalar and moment transport and rerun the exact interval-2 pair"
+    },
+    "front_selection_semantics": {
+      "state": "COMPLETED",
+      "classification": "TRIAL_AND_PUBLICATION_ENERGIES_SEPARATED",
+      "next_action": "work-accounted unloading remains optional; do not reinterpret independent probes as a trajectory"
+    },
+    "restart_contract": {
+      "state": "PASSED_OPERATOR",
+      "classification": "EXPLICIT_RESTART_VALIDATED_BEFORE_STEP_ONE",
+      "next_action": "all future archived runners must use explicit initialize or restart mode"
+    },
+    "v42_hpc_closure": {
+      "state": "FAILED_SCIENTIFIC",
+      "classification": "VALID_NEGATIVE_AT_TESTED_CONDITION;NO_QUALIFIED_BOUNDARY",
+      "job_id": "56166842",
+      "checksum_verified": true,
+      "next_action": "none; frozen historical evidence"
+    },
+    "regression": {
+      "state": "PASSED_OPERATOR",
+      "configured_tests_passed": 755,
+      "wall_seconds": 269.65,
+      "next_action": "preserve as the V43 regression boundary"
+    }
+  },
+  "publication_safety_passed": true,
+  "represented_geometry_operation_qualified": true,
+  "spontaneous_lagb_claimed": false,
+  "drx_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false,
+  "unrelated_jobs_untouched": ["56132213"]
+}

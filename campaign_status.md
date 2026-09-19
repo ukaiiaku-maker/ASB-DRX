@@ -25,8 +25,10 @@ Updated: 2026-09-19 (America/Los_Angeles)
   one.  Source identity is now frozen when a recurrent trajectory starts.
 - The first macro localizes the spatial error to its second Mura half: selected
   common-mode complex error is 4.30%, power error 0.124%, and RMS-amplitude
-  difference 7.31%.  A four-substep interval-2 n128/n192 discriminator is
-  active locally; no physical diffusion or coefficient has been changed.
+  difference 7.31%.  Fourfold time refinement worsens the interval-2 final
+  comparison from 12.316%/27.199% to 13.683%/29.235% (common/RMS), while
+  ordered inventory is unchanged at each grid.  Time truncation is not the
+  repair; the mixed donor-cell scalar/spectral moment Mura seam is next.
 - Canonical remote branch history was externally force-moved to V33.  V43 is
   preserved non-destructively on `exp/full-v34-recovery-v43-20260919`; no force
   push will overwrite either lineage.
