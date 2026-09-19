@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 from full_model.analysis.run_v34_finite_coupled_response import (
     I3Controls, resolved_bicrystal, run_i3_cycle,
@@ -80,6 +81,8 @@ def main():
     payload = {
         "schema": "asb-drx/v43/front-physical-alternative-tally/v2",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "generator_source_sha": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True).strip(),
         "checkpoint": str(args.checkpoint.resolve()),
         "checkpoint_sha256": hashlib.sha256(args.checkpoint.read_bytes()).hexdigest(),
         "stage_metadata": {key: metadata.get(key) for key in (

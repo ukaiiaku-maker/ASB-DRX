@@ -30,13 +30,17 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def run_grid(output, grid, macro_dt_s):
+def run_grid(output, grid, macro_dt_s, restart=None, mura_substeps=1):
     output = Path(output); output.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
         temperature_K=1100.0, child_line_fraction=.35)
-    state = context["state"]
-    midpoint = .5*macro_dt_s
+    if restart is None:
+        state = context["state"]; physical_time = 0.0
+    else:
+        state, restart_metadata = load_stage(restart, context)
+        physical_time = float(restart_metadata["physical_time_s"])
+    midpoint = physical_time+.5*macro_dt_s
     driving = driving_at_time(grid, .01, "hold", 0.0, midpoint)
     source = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], text=True).strip()
@@ -48,9 +52,10 @@ def run_grid(output, grid, macro_dt_s):
         metadata = {
             "source_sha": source, "stage": name, "grid": grid,
             "macro_dt_s": macro_dt_s, "completed_intervals": 0,
-            "physical_time_s": (0.0 if name == "initial" else
-                                  .5*macro_dt_s if name == "after_first_mura"
-                                  else macro_dt_s),
+            "physical_time_s": (physical_time if name == "initial" else
+                                  physical_time+.5*macro_dt_s
+                                  if name == "after_first_mura"
+                                  else physical_time+macro_dt_s),
             "records": [], "v43_stage_diagnostics": diagnostic,
             **(extra or {}),
         }
@@ -60,7 +65,8 @@ def run_grid(output, grid, macro_dt_s):
 
     retain("initial", state)
     state, pre, pre_elapsed = mura_to_time(
-        context, state, .5*macro_dt_s, driving)
+        context, state, .5*macro_dt_s, driving,
+        maximum_substep_s=.5*macro_dt_s/int(mura_substeps))
     retain("after_first_mura", state, {
         "operator_exposure_s": pre_elapsed, "subcycle_count": len(pre),
         "accepted_dt_s": [float(row["accepted_dt_s"]) for row in pre],
@@ -74,7 +80,8 @@ def run_grid(output, grid, macro_dt_s):
         "classification": front["front_decision"]["classification"],
     })
     state, post, post_elapsed = mura_to_time(
-        context, state, .5*macro_dt_s, driving)
+        context, state, .5*macro_dt_s, driving,
+        maximum_substep_s=.5*macro_dt_s/int(mura_substeps))
     retain("after_second_mura", state, {
         "operator_exposure_s": post_elapsed, "subcycle_count": len(post),
         "accepted_dt_s": [float(row["accepted_dt_s"]) for row in post],
@@ -84,6 +91,8 @@ def run_grid(output, grid, macro_dt_s):
         "schema": "asb-drx/v43/spatial-stage-run/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_sha": source, "grid": grid, "macro_dt_s": macro_dt_s,
+        "restart": None if restart is None else str(Path(restart).resolve()),
+        "mura_substeps_per_half": int(mura_substeps),
         "records": records,
     }
     (output/"stage_run.json").write_text(
@@ -190,11 +199,14 @@ def main():
     run = sub.add_parser("run"); run.add_argument("--output", type=Path, required=True)
     run.add_argument("--grid", type=int, choices=(128, 192), required=True)
     run.add_argument("--macro-dt-s", type=float, default=7.8125e-6)
+    run.add_argument("--restart", type=Path)
+    run.add_argument("--mura-substeps", type=int, default=1)
     comp = sub.add_parser("compare"); comp.add_argument("--n128", type=Path, required=True)
     comp.add_argument("--n192", type=Path, required=True)
     comp.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    result = (run_grid(args.output, args.grid, args.macro_dt_s)
+    result = (run_grid(args.output, args.grid, args.macro_dt_s,
+                       args.restart, args.mura_substeps)
               if args.command == "run" else compare(args.n128, args.n192, args.output))
     print(json.dumps({key: result.get(key) for key in
                       ("schema", "classification", "source_sha", "grid")},

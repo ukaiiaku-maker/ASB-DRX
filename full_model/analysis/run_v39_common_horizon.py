@@ -75,11 +75,15 @@ def load_stage(path, context):
     return state_from_payload(payload, context), metadata
 
 
-def mura_to_time(context, state, duration_s, driving):
+def mura_to_time(context, state, duration_s, driving, maximum_substep_s=None):
     elapsed = 0.0; audits = []
     tolerance = 64*np.finfo(float).eps*max(duration_s, 1e-300)
     while elapsed < duration_s-tolerance:
         requested = duration_s-elapsed
+        if maximum_substep_s is not None:
+            if float(maximum_substep_s) <= 0.0:
+                raise ValueError("Mura maximum substep must be positive")
+            requested = min(requested, float(maximum_substep_s))
         state, audit = run_i3_cycle(
             context, state, state.eta.copy(), driving,
             I3Controls(mura_enabled=True, front_enabled=False,
@@ -253,9 +257,12 @@ def stage_diagnostics(state, context, driving):
 
 def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
              proposal_fraction=.0625, front_exp_n=1.0, restart=None,
-             inject_post_front_failure=False, front_direction=1):
+             inject_post_front_failure=False, front_direction=1,
+             mura_substeps_per_half=1):
     if front_direction not in (-1, 1):
         raise ValueError("front_direction must be -1 or +1")
+    if int(mura_substeps_per_half) < 1:
+        raise ValueError("Mura substeps per half must be positive")
     output_dir = Path(output_dir); output_dir.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
@@ -288,7 +295,8 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
             initial_stage = stage_diagnostics(
                 macro_start, context, driving)
             state_after_pre, pre, pre_elapsed = mura_to_time(
-                context, macro_start, 0.5*macro_dt_s, driving)
+                context, macro_start, 0.5*macro_dt_s, driving,
+                maximum_substep_s=.5*macro_dt_s/int(mura_substeps_per_half))
             pre_stage = stage_diagnostics(state_after_pre, context, driving)
             state_after_front, front = front_stage(
                 context, state_after_pre, macro_dt_s, driving,
@@ -334,7 +342,8 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
             pending = None
         try:
             state_after_post, post, post_elapsed = mura_to_time(
-                context, state_after_front, 0.5*macro_dt_s, driving)
+                context, state_after_front, 0.5*macro_dt_s, driving,
+                maximum_substep_s=.5*macro_dt_s/int(mura_substeps_per_half))
         except Exception as error:
             # The completed macro remains macro_start.  The durable typed
             # partial owns the accepted pre/front history and exact next stage.
@@ -430,6 +439,7 @@ def main():
                         default=1)
     parser.add_argument("--restart", type=Path)
     parser.add_argument("--inject-post-front-failure", action="store_true")
+    parser.add_argument("--mura-substeps-per-half", type=int, default=1)
     args = parser.parse_args()
     result = run_case(**vars(args))
     print(json.dumps({key: result[key] for key in (
