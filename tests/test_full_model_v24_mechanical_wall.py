@@ -61,19 +61,25 @@ def test_full_elastic_step_uses_no_target_and_accepts_only_ledgered_density_rout
     assert np.min(state.common.temperature_K) > 0.0
 
 
-def test_topology_on_branch_has_explicit_R_topology_or_zero_physical_supply():
+def test_topology_on_branch_is_energy_guarded_geometry_neutral_conversion():
     args = mechanical_fixture()
     state, ledger = accepted_v24_mechanical_step(
         *args, dt_s=1e-9, topology_route_enabled=True)
-    if ledger["junction_topology"] is not None:
-        source = ledger["junction_topology"]["R_topology_m1_s"]
-        assert np.all(np.isfinite(source))
-    detailed_balance = ledger["line_reorientation_topology"]["thermodynamics"]
-    expected = np.broadcast_to(
-        detailed_balance["expected_ratio"],
-        detailed_balance["detailed_balance_ratio"].shape)
-    np.testing.assert_allclose(
-        detailed_balance["detailed_balance_ratio"], expected, rtol=2e-14)
+    event = ledger["topology_energy_kinematics"]
+    assert event["rejection_is_atomic"]
+    if event["accepted"]:
+        assert event["complete_energy_change_J_m3_cells"] <= event[
+            "energy_tolerance_J_m3_cells"]
+    else:
+        assert event["complete_energy_change_J_m3_cells"] > event[
+            "energy_tolerance_J_m3_cells"]
+        assert np.array_equal(
+            event["irreversible_heat_increment_J_m3"],
+            np.zeros_like(event["irreversible_heat_increment_J_m3"]))
+    assert np.max(np.abs(event["total_nye_residual_m1"])) < 1e-10
+    assert np.max(np.abs(event["scalar_line_residual_m2"])) < 1e-6
+    assert not ledger["line_reorientation_topology"]["executed"]
+    state.validate(args[3], args[4])
 
 
 def test_complete_checkpoint_restart_matches_continuous_accepted_map_bitwise():

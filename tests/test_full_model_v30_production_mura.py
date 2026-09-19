@@ -159,8 +159,9 @@ def test_locking_unlocking_exchange_conserves_tensorial_nye_at_required_grids(
     assert not ledger["post_step_projection_used"]
 
 
-def test_junction_reorientation_is_an_explicit_persistent_source_not_projection():
-    # The topology route can change total Nye only through its declared source.
+def test_topology_route_cannot_inject_unrepresented_reorientation_source():
+    # Without endpoint/swept-surface state, production may relabel reservoirs
+    # but cannot rotate moments and then overwrite the plastic-curl Nye field.
     from tests.test_full_model_v24_mechanical_wall import mechanical_fixture
     args = mechanical_fixture()
     first, ledger1 = accepted_v24_mechanical_step(
@@ -168,8 +169,11 @@ def test_junction_reorientation_is_an_explicit_persistent_source_not_projection(
     second, ledger2 = accepted_v24_mechanical_step(
         first, *args[1:], dt_s=1e-9, topology_route_enabled=True)
     source1 = ledger1["mura_balance_ledger"]["reaction_source_tensor_m1"]
-    assert np.sqrt(np.mean(source1**2)) > 0.0
+    assert np.array_equal(source1, np.zeros_like(source1))
+    assert ledger1["topology_energy_kinematics"]["rejection_is_atomic"]
+    assert not ledger1["line_reorientation_topology"]["executed"]
     assert ledger1["nye_suboperator_audit"]["accepted_step_hard_invariant_passed"]
     assert ledger2["nye_suboperator_audit"]["accepted_step_hard_invariant_passed"]
-    assert ledger2["mura_face_event"]["cumulative_declared_source_rms_m1"] > 0.0
+    assert ledger2["mura_face_event"][
+        "cumulative_declared_source_rms_m1"] < 1e-10
     second.validate(args[3], args[4])

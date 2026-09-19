@@ -23,7 +23,10 @@ from .density_state_map import (
     DensityInventory, checkpoint_arrays, derived_density_fields,
     from_checkpoint_arrays,
 )
-from .extensive_wall import ExtensiveWallParameters, accepted_ordering_step
+from .extensive_wall import (
+    ExtensiveWallParameters, accepted_ordering_step,
+    extensive_wall_energy_components_J_m3,
+)
 from .tensorial_nye import rotated_system_fields
 from .mura_kinematics import (
     accept_family_mura_step, family_plastic_flow_from_signed_alignment,
@@ -378,6 +381,110 @@ def synchronize_common(state, topologies):
     return replace(state, common=common)
 
 
+def accepted_energy_guarded_reservoir_topology_transaction(
+        inventory, alignment, systems, topologies, orientation_rad,
+        stress_Pa, temperature_K, parameters, dt_s):
+    """Accept geometry-neutral ordering only after a complete energy audit.
+
+    The current continuum state has scalar reservoir content and first line
+    moments, but no persistent segment endpoints or swept surface from which a
+    finite line reorientation can update ``beta_p``.  Consequently the only
+    topology operation representable without manufacturing incompatibility is
+    a reservoir conversion which carries the existing moment with the line.
+
+    The candidate is built on copied immutable state by the qualified
+    extensive ordering integrator.  Publication requires exact scalar-line
+    and total reservoir-Nye closure and a non-increasing *discrete* extensive
+    free energy, including the ordered-gradient term.  Rejection returns the
+    original objects and zero heat, so no state or ledger is partly committed.
+    """
+    zero_target = np.zeros(np.asarray(orientation_rad).shape+(3, 3))
+    before_parts = extensive_wall_energy_components_J_m3(
+        inventory, systems, topologies, orientation_rad, zero_target,
+        parameters)
+    before_nye = reservoir_nye_m1(
+        alignment, systems, orientation_rad, topologies)["total"]
+    before_line = derived_density_fields(inventory, topologies)["rho_total_m2"]
+    candidate_inventory, candidate_alignment, kinetics, _ = (
+        accepted_ordering_step(
+            inventory, systems, topologies, orientation_rad, zero_target,
+            stress_Pa, temperature_K, parameters, dt_s,
+            alignment=alignment))
+    after_parts = extensive_wall_energy_components_J_m3(
+        candidate_inventory, systems, topologies, orientation_rad,
+        zero_target, parameters)
+    after_nye = reservoir_nye_m1(
+        candidate_alignment, systems, orientation_rad, topologies)["total"]
+    after_line = derived_density_fields(
+        candidate_inventory, topologies)["rho_total_m2"]
+
+    component_changes = {
+        name: np.asarray(after_parts[name])-np.asarray(before_parts[name])
+        for name in before_parts
+    }
+    delta_total = float(np.sum(component_changes["total"],
+                               dtype=np.longdouble))
+    energy_scale = max(
+        abs(float(np.sum(before_parts["total"], dtype=np.longdouble))),
+        abs(float(np.sum(after_parts["total"], dtype=np.longdouble))), 1.0)
+    energy_tolerance = 2e-12*energy_scale
+    line_residual = after_line-before_line
+    nye_residual = after_nye-before_nye
+    line_scale = max(float(np.max(np.abs(before_line))), 1.0)
+    nye_scale = max(float(np.sqrt(np.mean(before_nye*before_nye))), 1.0)
+    line_closed = bool(np.max(np.abs(line_residual)) <= 2e-12*line_scale)
+    nye_closed = bool(np.sqrt(np.mean(nye_residual*nye_residual))
+                      <= 2e-12*nye_scale)
+    accepted = bool(line_closed and nye_closed
+                    and delta_total <= energy_tolerance)
+
+    if not accepted:
+        return inventory, alignment, {
+            "operator": "energy_guarded_geometry_neutral_topology_transaction",
+            "accepted": False,
+            "rejection_is_atomic": True,
+            "classification": "COMPLETE_TOPOLOGY_CANDIDATE_REJECTED",
+            "scalar_line_residual_m2": line_residual,
+            "total_nye_residual_m1": nye_residual,
+            "component_energy_changes_J_m3": component_changes,
+            "complete_energy_change_J_m3_cells": delta_total,
+            "energy_tolerance_J_m3_cells": energy_tolerance,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                np.asarray(orientation_rad)),
+            "ordering_kinetics": kinetics,
+        }
+
+    released = max(-delta_total, 0.0)
+    extent_weight = sum(np.abs(np.asarray(
+        kinetics["accepted_transfer_m2_s"][sign]))
+        for sign in ("plus", "minus"))
+    extent_weight = np.sum(extent_weight, axis=2)
+    weight_sum = float(np.sum(extent_weight))
+    if released == 0.0:
+        heat = np.zeros_like(np.asarray(orientation_rad))
+    elif weight_sum > 0.0:
+        heat = released*extent_weight/weight_sum
+    else:
+        heat = np.full_like(np.asarray(orientation_rad),
+                            released/np.asarray(orientation_rad).size)
+    return candidate_inventory, candidate_alignment, {
+        "operator": "energy_guarded_geometry_neutral_topology_transaction",
+        "accepted": True,
+        "rejection_is_atomic": True,
+        "classification": "ADMISSIBLE_RESERVOIR_CONVERSION_NO_GEOMETRY_CHANGE",
+        "geometry_scope": (
+            "existing line and first moment relabeling; no reorientation, "
+            "junction creation, swept plastic area, or endpoint creation"),
+        "scalar_line_residual_m2": line_residual,
+        "total_nye_residual_m1": nye_residual,
+        "component_energy_changes_J_m3": component_changes,
+        "complete_energy_change_J_m3_cells": delta_total,
+        "energy_tolerance_J_m3_cells": energy_tolerance,
+        "irreversible_heat_increment_J_m3": heat,
+        "ordering_kinetics": kinetics,
+    }
+
+
 def accepted_v24_mechanical_step(
         state, driving, capture_support, systems, topologies,
         common_parameters, extensive_parameters, topology_kinetics, dt_s, *,
@@ -687,82 +794,35 @@ def accepted_v24_mechanical_step(
             common.orientation_rad, topologies))
     topology_ledger = None
     reorientation_ledger = None
-    if topology_route_enabled and topologies:
-        family_enthalpy = exp_floor_enthalpy_j(
-            np.abs(drive["effective_stress_Pa"]),
-            topology_kinetics.junction_enthalpy_J,
-            topology_kinetics.critical_stress_Pa, topology_kinetics.exp_a,
-            topology_kinetics.exp_n, topology_kinetics.exp_floor)
-        family_rate_s = activated_rate_array_s(
-            topology_kinetics.junction_process, family_enthalpy,
-            common.temperature_K[..., None])
-        delta_free_energy_J = (
-            (extensive_parameters.ordered_excess_J_m
-             -extensive_parameters.disordered_excess_J_m)
-            *extensive_parameters.event_length_m)
-        thermal_energy_J = 1.380649e-23*common.temperature_K[..., None]
-        affinity = delta_free_energy_J/thermal_energy_J
-        # Two stable logistic factors retain k_forward/k_reverse=exp(-Delta F/kT)
-        # without cancellation when one direction is strongly favored.
-        bounded_affinity = np.clip(affinity, -700.0, 700.0)
-        forward_rate_s = family_rate_s*2.0/(1.0+np.exp(bounded_affinity))
-        reverse_rate_s = family_rate_s*2.0/(1.0+np.exp(-bounded_affinity))
-        forward_fraction = np.minimum(
-            -np.expm1(-accepted_dt*forward_rate_s),
-            topology_kinetics.maximum_junction_fraction_per_step)
-        reverse_fraction = np.minimum(
-            -np.expm1(-accepted_dt*reverse_rate_s),
-            topology_kinetics.maximum_junction_fraction_per_step)
-        request_plus = (
-            forward_fraction*working_density.wall_tangle_plus_m2
-            -reverse_fraction*working_density.wall_ordered_plus_m2)
-        request_minus = (
-            forward_fraction*working_density.wall_tangle_minus_m2
-            -reverse_fraction*working_density.wall_ordered_minus_m2)
-        working_density, working_alignment, reorientation_ledger = (
-            accepted_line_reorientation_step(
-                working_density, working_alignment, request_plus,
-                request_minus, (0.0, 0.0, 1.0),
-                disordered_line_directions,
-                extensive_parameters.event_length_m, systems,
-                common.orientation_rad, accepted_dt, topologies))
-        reorientation_ledger["thermodynamics"] = {
-            "delta_free_energy_per_event_J": delta_free_energy_J,
-            "forward_rate_s": forward_rate_s,
-            "reverse_rate_s": reverse_rate_s,
-            "detailed_balance_ratio": np.divide(
-                forward_rate_s, reverse_rate_s,
-                out=np.ones_like(forward_rate_s), where=reverse_rate_s > 0.0),
-            "expected_ratio": np.exp(-bounded_affinity),
-        }
-        pair_stress = np.stack([
-            np.maximum(np.abs(drive["effective_stress_Pa"][..., item.parent_a]),
-                       np.abs(drive["effective_stress_Pa"][..., item.parent_b]))
-            for item in topologies], axis=2)
-        enthalpy = exp_floor_enthalpy_j(
-            pair_stress, topology_kinetics.junction_enthalpy_J,
-            topology_kinetics.critical_stress_Pa, topology_kinetics.exp_a,
-            topology_kinetics.exp_n, topology_kinetics.exp_floor)
-        rate_s = activated_rate_array_s(
-            topology_kinetics.junction_process, enthalpy,
-            common.temperature_K[..., None])
-        requests = []
-        for index, item in enumerate(topologies):
-            first = getattr(working_density,
-                f"wall_tangle_{'plus' if item.sign_a > 0 else 'minus'}_m2")[..., item.parent_a]
-            second = getattr(working_density,
-                f"wall_tangle_{'plus' if item.sign_b > 0 else 'minus'}_m2")[..., item.parent_b]
-            fraction = np.minimum(-np.expm1(-accepted_dt*rate_s[..., index]),
-                                  topology_kinetics.maximum_junction_fraction_per_step)
-            requests.append(fraction*np.minimum(first, second))
-        working_density, working_alignment, topology_ledger = (
-            accepted_junction_topology_step(
-                working_density, working_alignment, np.stack(requests, axis=2),
-                systems, topologies, common.orientation_rad, accepted_dt))
     if topology_route_enabled:
-        ordered_density, ordered_alignment = working_density, working_alignment
-        ordering_thermo = {"disabled_in_explicit_topology_comparator": True}
-        ordering_topology = None
+        # V41 showed that local line reorientation plus a reconstructed Nye
+        # source creates incompatibility without a represented swept surface,
+        # and omits the dominant ordered-gradient energy.  The production
+        # topology flag now selects the strongest event supported by the
+        # persistent state: geometry-neutral reservoir conversion with a
+        # complete copied-state energy guard.  The legacy reorientation and
+        # junction routines remain available as isolated audit fixtures, but
+        # cannot publish through this driver until persistent segment/node and
+        # swept-surface geometry exists.
+        (ordered_density, ordered_alignment,
+         topology_ledger) = accepted_energy_guarded_reservoir_topology_transaction(
+            working_density, working_alignment, systems, topologies,
+            common.orientation_rad, drive["effective_stress_Pa"],
+            common.temperature_K, extensive_parameters, accepted_dt)
+        topology_heat = topology_ledger["irreversible_heat_increment_J_m3"]
+        common = replace(
+            common,
+            temperature_K=(common.temperature_K+topology_heat
+                           /common_parameters.volumetric_heat_capacity_J_m3_K))
+        ordering_thermo = topology_ledger["ordering_kinetics"]
+        ordering_topology = ordering_thermo.get("topology_ledger")
+        reorientation_ledger = {
+            "operator": "unrepresentable_geometry_fail_closed",
+            "executed": False,
+            "reason": (
+                "persistent endpoint/swept-surface state is absent; local "
+                "moment rotation cannot update beta_p consistently"),
+        }
     else:
         # Shared EXP-floor/signed-entropy ordering law. With C_FB=0 and a zero
         # target, only the declared extensive free-energy affinity selects direction.
@@ -781,13 +841,10 @@ def accepted_v24_mechanical_step(
         topologies)["total"]
     _declared_reaction_source = np.zeros_like(_nye_beta_initial)
     if topology_route_enabled:
-        _declared_reaction_source = (
-            _nye_reservoir_after_reactions-_nye_reservoir_after_transport)
-        family_nye_with_source = result.common.family_nye_m1.copy()
-        family_nye_with_source[..., 0, :, :] += _declared_reaction_source
-        result = replace(result, common=replace(
-            result.common, family_nye_m1=family_nye_with_source))
-        result.validate(systems, topologies)
+        # Geometry-neutral conversion moves each reservoir moment with its
+        # line, so its physical source is identically zero.  Never overwrite
+        # the plastic-curl Nye field with a measured reservoir residual.
+        _declared_reaction_source = np.zeros_like(_nye_beta_initial)
     _reference = max(float(np.sqrt(np.mean(_nye_beta_initial**2))), 1.0)
     def _stage(name, reservoir_increment, beta_increment):
         mismatch = reservoir_increment-beta_increment
@@ -871,6 +928,7 @@ def accepted_v24_mechanical_step(
         "ordering_topology": ordering_topology,
         "line_reorientation_topology": reorientation_ledger,
         "junction_topology": topology_ledger,
+        "topology_energy_kinematics": topology_ledger,
         "legacy_common_density_rates_accepted": False,
         "legacy_independent_beta_nye_rates_accepted": False,
         "legacy_independent_slip_rate_accepted": False,
