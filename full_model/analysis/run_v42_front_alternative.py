@@ -27,6 +27,8 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--grid", type=int, default=128)
     args = parser.parse_args()
+    generator_source = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], text=True).strip()
     context = resolved_bicrystal(
         grid=args.grid, length_m=3.2e-6, interface_width_m=4e-7,
         temperature_K=1100.0, child_line_fraction=.35)
@@ -81,8 +83,7 @@ def main():
     payload = {
         "schema": "asb-drx/v43/front-physical-alternative-tally/v2",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
-        "generator_source_sha": subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], text=True).strip(),
+        "generator_source_sha": generator_source,
         "checkpoint": str(args.checkpoint.resolve()),
         "checkpoint_sha256": hashlib.sha256(args.checkpoint.read_bytes()).hexdigest(),
         "stage_metadata": {key: metadata.get(key) for key in (

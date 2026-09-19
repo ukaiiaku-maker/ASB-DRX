@@ -263,6 +263,7 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
         raise ValueError("front_direction must be -1 or +1")
     if int(mura_substeps_per_half) < 1:
         raise ValueError("Mura substeps per half must be positive")
+    frozen_source_sha = source_sha()
     output_dir = Path(output_dir); output_dir.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
@@ -304,7 +305,7 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
             front_stage_state = stage_diagnostics(
                 state_after_front, context, driving)
             partial_metadata = {
-                "source_sha": source_sha(), "stage": "POST_MURA_PENDING",
+                "source_sha": frozen_source_sha, "stage": "POST_MURA_PENDING",
                 "grid": grid, "macro_dt_s": macro_dt_s,
                 "interval_index": index, "completed_intervals": index,
                 "physical_time_s": physical_time,
@@ -399,14 +400,14 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
         }
         records.append(row)
         save_stage(output_dir/f"checkpoint_{index+1:06d}.npz", state, context, {
-            "source_sha": source_sha(), "stage": "MACRO_COMPLETE",
+            "source_sha": frozen_source_sha, "stage": "MACRO_COMPLETE",
             "grid": grid, "macro_dt_s": macro_dt_s,
             "completed_intervals": index+1, "physical_time_s": physical_time,
             "records": records,
         })
     result = {
         "schema": SCHEMA, "generated_utc": datetime.now(timezone.utc).isoformat(),
-        "source_sha": source_sha(), "status": "HORIZON_COMPLETE",
+        "source_sha": frozen_source_sha, "status": "HORIZON_COMPLETE",
         "grid": grid, "macro_dt_s": macro_dt_s,
         "front_direction": front_direction,
         "macro_dt_values_s": sorted({float(
