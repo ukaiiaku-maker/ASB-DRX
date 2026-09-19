@@ -47,7 +47,10 @@ def record(path, grid):
         state.mechanical.density, context["topologies"])
     return alpha, {
         "path": str(Path(path).resolve()), "sha256": digest(path),
-        "grid": grid, "spacing_m": dx, "metadata": metadata,
+        "grid": grid, "spacing_m": dx, "metadata": {
+            key: metadata.get(key) for key in (
+                "source_sha", "stage", "grid", "macro_dt_s",
+                "interval_index", "completed_intervals", "physical_time_s")},
         "physical_time_s": float(metadata["physical_time_s"]),
         "curl_nye_rms_m1": rms(alpha),
         "curl_nye_maximum_tensor_norm_m1": float(np.max(norm)),
