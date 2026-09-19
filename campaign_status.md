@@ -1789,3 +1789,36 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   148.58 s. Report: `full_model/docs/v41_decision_report.md`; controller:
   `full_model/verification/v41_campaign_controller.json`. DRX, a persistent
   LAGB, strict ASB, and material calibration remain unclaimed.
+
+## Directive v44 compatible transport and geometric-rate completion (2026-09-19)
+
+- Production now offers a compatible de-aliased Mura transaction. One 3/2-
+  padded swept product supplies moment evolution, plastic distortion, and Nye;
+  scalar transport is conservative and line stretching/capture are separately
+  ledgered. Atomic nonnegativity, balance, and beta/Nye tests pass without
+  post-step projection.
+- The V43 first-Mura grid discrepancy is repaired. n128/n192 complex curl-Nye
+  error is 0.0264% for one step and 3.260% for four substeps; corresponding RMS
+  amplitude errors are 0.00043% and 4.591%.
+- Full temporal qualification is not passed. The completed n192 final endpoint
+  differs by 15.93% in RMS amplitude between one and four substeps. The n128
+  four-substep second half was stopped after a declared 90-minute local bound;
+  traceback localizes the cost to a dense numerical BDF Jacobian in the
+  spectral ordering subsystem. Initial, first-Mura, and front stages are
+  retained and valid.
+- Independently assembled swept-surface and Burgers-link representations
+  commute exactly. An explicit staggered-edge-to-spectral transfer closes the
+  production spectral curl to at most 5.22e-16 relative RMS on n16/n32/n64.
+  The alpha=-Curl(beta_p) link-orientation sign is now explicit.
+- The physically timed geometry path accepts five updates, including smaller
+  same-state extents after full-event rejection, then reaches represented-path
+  arrest after only 4.012 ps of a requested 1 ns. It is not called horizon
+  completion or general pinning. Non-volume-preserving events use an explicit
+  equilibrated point-defect-reservoir assumption.
+- The ordered near-extinction pool is created on the first operation, is
+  invariant to the tested subdivision, and retains strong approximately cubic
+  grid scaling. It is not promoted to a wall signal.
+- Regression boundary: 759 tests pass in 200.64 s. Report:
+  `full_model/docs/v44_decision_report.md`; controller:
+  `full_model/verification/v44_campaign_controller.json`. DRX, a persistent
+  LAGB, strict ASB, and material calibration remain unclaimed.

@@ -1,0 +1,33 @@
+{
+  "alignment_balance_residual_m": 1.6044821672678285e-18,
+  "generated_utc": "2026-09-19T20:25:54.891184+00:00",
+  "generation": {
+    "active_transfer_cells": 64,
+    "chemical_potential_max_J_m": 1.931245545038902e-09,
+    "chemical_potential_min_J_m": 1.551438194903784e-09,
+    "free_energy_rate_sum_W_m3_cells": -4856821.094512939,
+    "ordered_line_after_m": 0.007588782961353422,
+    "ordered_line_before_m": 0.0,
+    "transfer_rate_max_m2_s": 758878296135343.8,
+    "transfer_rate_min_m2_s": 0.0
+  },
+  "grid": 16,
+  "integration": {
+    "ordering_complete_elapsed_time_s": 3.90625e-06,
+    "ordering_discarded_reaction_time_s": 0.0,
+    "ordering_endpoint_remainder_relative": 5.404467976392125e-12,
+    "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": false,
+    "ordering_integration_method": "bounded_convex_asymptotic",
+    "ordering_maximum_attempt_exposure": 79.80480341487012,
+    "ordering_solver_evaluations": 4,
+    "ordering_stiff_dispatch": "qualified_asymptotic"
+  },
+  "interpretation": "records the creation operation; no wall accuracy claim is made from the near-extinction ordered inventory",
+  "operation": "first Mura half from analytic initial state",
+  "operator_exposure_s": 3.90625e-06,
+  "scalar_balance_residual_m": 0.0,
+  "schema": "asb-drx/v44/ordered-first-generation/v1",
+  "source_sha": "04f6d20608b0cd7032982b403b22aac612bb1116",
+  "transport_nonlinear_product_rule": "three_halves_padding_before_multiplication",
+  "transport_operator": "compatible_dealiased"
+}

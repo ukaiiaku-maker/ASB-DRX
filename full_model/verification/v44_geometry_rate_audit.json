@@ -1,0 +1,1178 @@
+{
+  "drx_claimed": false,
+  "generated_utc": "2026-09-19T20:25:53.476611+00:00",
+  "grain_label_allocation_possible": false,
+  "independent_geometry_connection": [
+    {
+      "explicit_link_to_spectral_relative_rms": 2.645282063994492e-16,
+      "explicit_link_to_spectral_residual_rms_m1": 7.959522253840125e-14,
+      "grid": 16,
+      "line_length_m": 3.2e-06,
+      "link_nye_rms_m1": 182.66925180652484,
+      "link_surface_commuting_relative_rms": 0.0,
+      "link_surface_commuting_residual_rms_m1": 0.0,
+      "spacing_m": 2e-07,
+      "spectral_transfer_relative_rms": 0.9371400982949623,
+      "spectral_transfer_residual_rms_m1": 171.1866805934339
+    },
+    {
+      "explicit_link_to_spectral_relative_rms": 4.272581616110445e-16,
+      "explicit_link_to_spectral_residual_rms_m1": 3.665299071739142e-13,
+      "grid": 32,
+      "line_length_m": 3.2e-06,
+      "link_nye_rms_m1": 516.6666666666669,
+      "link_surface_commuting_relative_rms": 0.0,
+      "link_surface_commuting_residual_rms_m1": 0.0,
+      "spacing_m": 1e-07,
+      "spectral_transfer_relative_rms": 0.9840439912377007,
+      "spectral_transfer_residual_rms_m1": 508.4227288061455
+    },
+    {
+      "explicit_link_to_spectral_relative_rms": 5.216260732503764e-16,
+      "explicit_link_to_spectral_residual_rms_m1": 1.2683656831677022e-12,
+      "grid": 64,
+      "line_length_m": 3.2e-06,
+      "link_nye_rms_m1": 1461.3540144521985,
+      "link_surface_commuting_relative_rms": 0.0,
+      "link_surface_commuting_residual_rms_m1": 0.0,
+      "spacing_m": 5e-08,
+      "spectral_transfer_relative_rms": 0.9959911909892366,
+      "spectral_transfer_residual_rms_m1": 1455.4957253111472
+    }
+  ],
+  "schema": "asb-drx/v44/geometry-rate-audit/v1",
+  "source_sha": "04f6d20608b0cd7032982b403b22aac612bb1116",
+  "strict_asb_claimed": false,
+  "timed_response": {
+    "accepted_time_s": 4.011641738722681e-12,
+    "accepted_updates": 5,
+    "attempted_updates": 12,
+    "clock_classification": "CONSTRAINED_ARREST_NO_REPRESENTED_PATH",
+    "events": [
+      {
+        "accepted": true,
+        "accepted_time_s": 1.234356228781561e-12,
+        "attempt": 0,
+        "cell": [
+          8,
+          7
+        ],
+        "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+        "event_rate_s": 810138902111.8359,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 1e-09,
+        "same_state_partial_search": null,
+        "state_event_count_before": 1,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": true,
+        "accepted_time_s": 6.171781143907805e-13,
+        "attempt": 1,
+        "cell": [
+          8,
+          8
+        ],
+        "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+        "event_rate_s": 810138902111.8359,
+        "extent": 0.5,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 0.5,
+        "requested_remaining_time_s": 9.987656437712184e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 12184782.478022449,
+              "extent": 1.0
+            },
+            {
+              "accepted": true,
+              "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": -9487264.827586055,
+              "extent": 0.5
+            }
+          ],
+          "selection": "largest_tested_connected_dyadic_extent"
+        },
+        "state_event_count_before": 2,
+        "swept_area_m2": 1.9999999999999997e-14
+      },
+      {
+        "accepted": true,
+        "accepted_time_s": 1.234356228781561e-12,
+        "attempt": 2,
+        "cell": [
+          7,
+          8
+        ],
+        "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+        "event_rate_s": 810138902111.8359,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.981484656568277e-10,
+        "same_state_partial_search": null,
+        "state_event_count_before": 3,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": true,
+        "accepted_time_s": 3.0858905719539026e-13,
+        "attempt": 3,
+        "cell": [
+          6,
+          8
+        ],
+        "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+        "event_rate_s": 810138902111.8359,
+        "extent": 0.25,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 0.25,
+        "requested_remaining_time_s": 9.96914109428046e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 36073905.92775507,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2457296.8872782076,
+              "extent": 0.5
+            },
+            {
+              "accepted": true,
+              "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": -2666265.5882479437,
+              "extent": 0.25
+            }
+          ],
+          "selection": "largest_tested_connected_dyadic_extent"
+        },
+        "state_event_count_before": 4,
+        "swept_area_m2": 9.999999999999998e-15
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2342556054266862e-12,
+        "attempt": 4,
+        "cell": [
+          8,
+          7
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810204949123.4004,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.966055203708507e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 218924945.4423491,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 78945929.74967408,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 31843829.05079155,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 14014630.559027188,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 6530494.286613254,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 3146041.8949171556,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1543219.6353406103,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 764159.4896382326,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 380217.1628107829,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 189642.93590326398,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 94705.05657610204,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 47323.42544416734,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 23654.437011113623,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 11825.399577825097,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 5912.245056971209,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2956.0088455085643,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1477.9760020065587,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 738.9808958165813,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 369.48867161385715,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 5,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": true,
+        "accepted_time_s": 6.171621095733886e-13,
+        "attempt": 5,
+        "cell": [
+          8,
+          8
+        ],
+        "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+        "event_rate_s": 810159911381.5063,
+        "extent": 0.5,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 0.5,
+        "requested_remaining_time_s": 9.966055203708507e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 50739132.296326295,
+              "extent": 1.0
+            },
+            {
+              "accepted": true,
+              "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": -9623760.313517027,
+              "extent": 0.5
+            }
+          ],
+          "selection": "largest_tested_connected_dyadic_extent"
+        },
+        "state_event_count_before": 5,
+        "swept_area_m2": 1.9999999999999997e-14
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2343103228566539e-12,
+        "attempt": 6,
+        "cell": [
+          7,
+          8
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810169032440.4219,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.959883582612774e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 160364123.83144015,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 49665518.7252269,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 17203623.4824069,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 6694527.760612121,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2870442.8838268383,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1316016.1926263107,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 628206.7839704056,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 306653.0638968926,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 151463.94992603757,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 75266.32945737871,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 37516.75335226534,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 18729.273832029663,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 9357.361204987857,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 4676.861674739746,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2337.976105427835,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1168.8743697276805,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 584.4087641150691,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 292.19727687118575,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 146.0968621415086,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 6,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2343472169021697e-12,
+        "attempt": 7,
+        "cell": [
+          6,
+          8
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810144816877.1273,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.959883582612774e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 94143633.73939158,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 26501462.155422315,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 9355817.056069106,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 3704180.0210364778,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1608657.8835691724,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 743470.9100223074,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 356520.94706744654,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 174456.8465474099,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 86277.51652707718,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 42901.031576876994,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 21391.084116773214,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 10680.68414046918,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 5336.627590754535,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2667.3851755089127,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1333.4604327860288,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 666.6721776505001,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 333.3215791415423,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 166.657162145013,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 83.32767421938479,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 6,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2342556054266862e-12,
+        "attempt": 8,
+        "cell": [
+          8,
+          7
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810204949123.4004,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.959883582612774e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 185024707.12078738,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 61995810.43661758,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 23368769.35524615,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 9777100.701377772,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 4411729.355303808,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2086659.4286392892,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1013528.4020456432,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 499313.87295170454,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 247794.35445774999,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 123431.53172430582,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 61599.35448600608,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 30770.57439896697,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 15378.011488475837,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 7687.186816489091,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 3843.138676301576,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1921.4556551708374,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 960.6994068406057,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 480.3425982298795,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 240.1695228163153,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 6,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2342919102063385e-12,
+        "attempt": 9,
+        "cell": [
+          8,
+          8
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810181118203.0906,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.959883582612774e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 181758871.47720927,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 60362892.60984332,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 22552310.440604832,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 9368871.243742568,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 4207614.62640744,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1984602.0641714055,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 962499.7198067692,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 473799.5318310424,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 235037.18389710318,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 117052.94644390489,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 58410.06184578966,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 29175.928078850964,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 14580.688328417018,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 7288.525236456888,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 3643.8078862933908,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1821.7902601598762,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 910.8667093368713,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 455.4262494733557,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 227.7113484388683,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 6,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2343103228566539e-12,
+        "attempt": 10,
+        "cell": [
+          7,
+          8
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810169032440.4219,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.959883582612774e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 160364123.83144015,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 49665518.7252269,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 17203623.4824069,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 6694527.760612121,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2870442.8838268383,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1316016.1926263107,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 628206.7839704056,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 306653.0638968926,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 151463.94992603757,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 75266.32945737871,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 37516.75335226534,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 18729.273832029663,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 9357.361204987857,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 4676.861674739746,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2337.976105427835,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1168.8743697276805,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 584.4087641150691,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 292.19727687118575,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 146.0968621415086,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 6,
+        "swept_area_m2": 3.9999999999999994e-14
+      },
+      {
+        "accepted": false,
+        "accepted_time_s": 1.2343472169021697e-12,
+        "attempt": 11,
+        "cell": [
+          6,
+          8
+        ],
+        "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+        "event_rate_s": 810144816877.1273,
+        "extent": 1.0,
+        "material_exchange_model": "equilibrated_point_defect_reservoir",
+        "mechanism": "climb_with_material_exchange",
+        "physical_plaquette_area_m2": 3.9999999999999994e-14,
+        "rate_exposure": 1.0,
+        "requested_remaining_time_s": 9.959883582612774e-10,
+        "same_state_partial_search": {
+          "full_extent_rejected": true,
+          "rows": [
+            {
+              "accepted": false,
+              "complete_energy_change_J_m3_cells": 94143633.73939158,
+              "extent": 1.0
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 26501462.155422315,
+              "extent": 0.5
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 9355817.056069106,
+              "extent": 0.25
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 3704180.0210364778,
+              "extent": 0.125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1608657.8835691724,
+              "extent": 0.0625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 743470.9100223074,
+              "extent": 0.03125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 356520.94706744654,
+              "extent": 0.015625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 174456.8465474099,
+              "extent": 0.0078125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 86277.51652707718,
+              "extent": 0.00390625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 42901.031576876994,
+              "extent": 0.001953125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 21391.084116773214,
+              "extent": 0.0009765625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 10680.68414046918,
+              "extent": 0.00048828125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 5336.627590754535,
+              "extent": 0.000244140625
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 2667.3851755089127,
+              "extent": 0.0001220703125
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 1333.4604327860288,
+              "extent": 6.103515625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 666.6721776505001,
+              "extent": 3.0517578125e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 333.3215791415423,
+              "extent": 1.52587890625e-05
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 166.657162145013,
+              "extent": 7.62939453125e-06
+            },
+            {
+              "accepted": false,
+              "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+              "complete_energy_change_J_m3_cells": 83.32767421938479,
+              "extent": 3.814697265625e-06
+            }
+          ],
+          "selection": "NO_TESTED_PARTIAL_EXTENT_ADMISSIBLE"
+        },
+        "state_event_count_before": 6,
+        "swept_area_m2": 3.9999999999999994e-14
+      }
+    ],
+    "final_event_count": 6,
+    "final_line_length_m": 1.6999999999999998e-06,
+    "requested_time_s": 1e-09,
+    "unintegrated_time_s": 9.959883582612774e-10
+  }
+}

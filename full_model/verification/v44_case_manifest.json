@@ -1,0 +1,18 @@
+{
+  "schema": "asb-drx/v44/case-manifest/v1",
+  "branch": "exp/full-v34-recovery-v44-20260919",
+  "scientific_source_sha": "98ce060eb3ae3379ad0ce32c350e8d1356f79d7e",
+  "classification_source_sha": "04f6d20608b0cd7032982b403b22aac612bb1116",
+  "cases": [
+    {"id": "compatible-one-n128", "grid": 128, "mura_substeps_per_half": 1, "status": "COMPLETE"},
+    {"id": "compatible-one-n192", "grid": 192, "mura_substeps_per_half": 1, "status": "COMPLETE"},
+    {"id": "compatible-sub4-n128", "grid": 128, "mura_substeps_per_half": 4, "status": "PARTIAL_AFTER_FRONT", "retained_stages": ["initial", "after_first_mura", "after_front"]},
+    {"id": "compatible-sub4-n192", "grid": 192, "mura_substeps_per_half": 4, "status": "COMPLETE"},
+    {"id": "geometry-rate-audit", "grids": [16, 32, 64], "status": "COMPLETE"},
+    {"id": "ordered-first-generation-mechanism", "grid": 16, "status": "COMPLETE"}
+  ],
+  "execution_location": "local",
+  "hpc3_jobs_submitted": 0,
+  "raw_stage_root": "full_model/production/results-local/v44-compatible",
+  "partial_results_retained": true
+}

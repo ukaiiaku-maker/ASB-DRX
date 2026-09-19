@@ -2713,6 +2713,35 @@
       "strict_asb_claimed": false,
       "material_calibration_claimed": false,
       "unrelated_jobs_observed_and_not_touched": ["56132213"]
+    },
+    {
+      "run_id": "v44-compatible-transport-geometric-rate-20260919",
+      "purpose": "directive_v44_compatible_transport_and_geometric_rate_completion",
+      "branch": "exp/full-v34-recovery-v44-20260919",
+      "scientific_source_sha": "98ce060eb3ae3379ad0ce32c350e8d1356f79d7e",
+      "classification_source_sha": "04f6d20608b0cd7032982b403b22aac612bb1116",
+      "execution_location": "local",
+      "hpc3_jobs_submitted": 0,
+      "compatible_transport_decision": "FIRST_STAGE_SPATIAL_REPAIR_PASSED;FULL_TEMPORAL_QUALIFICATION_FAILED_OR_INCOMPLETE",
+      "geometry_rate_decision": "CONSTRAINED_ARREST_NO_REPRESENTED_PATH",
+      "ordered_residual_decision": "FIRST_OPERATION_NEAR_EXTINCTION_RESIDUAL_NOT_WALL_SIGNAL",
+      "verification": {
+        "compatible_transport_sha256": "01a9a259e9a1d677b064d617427f1934ad319f5c5e68c35b61934455de4eb6b3",
+        "geometry_rate_sha256": "171f3ba150e29f15f400c874647f8d19810c2cffe15b8cd4412538bd3200aee8",
+        "ordered_generation_sha256": "5003fced600cc446731251111b8361ea8c7a7223f0f888692f5da07d7a9fb8fa",
+        "campaign_controller_sha256": "a3904d44990ff8befa1b4ec910d5d04bb5f7ebd2f72c9e677e6fb10b615e0c24",
+        "case_manifest_sha256": "dd68d1ea155aed5292fee0773b6b0f6511edc1bb1974b3b51fe432f14b066b39",
+        "decision_report_sha256": "d99706dc45a98cae8f4814a2055b98eacc354ad117ff143bbc755aaf27808702",
+        "configured_tests_passed": 759,
+        "regression_wall_seconds": 200.64
+      },
+      "partial_n128_sub4_retained": true,
+      "n192_sub4_complete": true,
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false,
+      "strict_asb_claimed": false,
+      "material_calibration_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": []
     }
   ]
 }

@@ -1,0 +1,69 @@
+{
+  "schema": "asb-drx/v44/campaign-controller/v1",
+  "campaign": "compatible transport and geometric-rate completion",
+  "branch": "exp/full-v34-recovery-v44-20260919",
+  "scientific_source_sha": "98ce060eb3ae3379ad0ce32c350e8d1356f79d7e",
+  "classification_source_sha": "04f6d20608b0cd7032982b403b22aac612bb1116",
+  "execution_location": "local",
+  "branches": {
+    "compatible_transport_atomic": {
+      "state": "PASSED",
+      "classification": "ONE_DEALIASED_SWEPT_PRODUCT_CLOSES_MOMENT_BETA_AND_NYE",
+      "nonnegativity": true,
+      "scalar_and_alignment_balances_closed": true,
+      "post_step_projection_used": false
+    },
+    "spatial_first_stage": {
+      "state": "PASSED",
+      "classification": "V43_FIRST_MURA_SPATIAL_DISCREPANCY_REPAIRED",
+      "one_step_n128_n192_complex_relative_rms": 0.0002638702041757045,
+      "four_substep_n128_n192_complex_relative_rms": 0.03259795907237682
+    },
+    "physical_horizon_temporal": {
+      "state": "FAILED_NUMERICAL",
+      "classification": "TEMPORAL_THRESHOLD_FAILED_AND_N128_ENDPOINT_INCOMPLETE",
+      "n192_final_one_vs_four_rms_amplitude_relative": 0.1592964724211951,
+      "n128_missing_stage": "after_second_mura",
+      "n128_local_bound_s": 5400,
+      "localized_bottleneck": "dense numerical BDF Jacobian for spectral ordering residual"
+    },
+    "ordered_first_generation": {
+      "state": "PASSED_DIAGNOSTIC_NOT_PROMOTED",
+      "classification": "SEPARATE_FIRST_OPERATION_NEAR_EXTINCTION_RESIDUAL_NOT_WALL_SIGNAL",
+      "n128_line_m": 1.2448790947102078e-05,
+      "n192_line_m": 3.659512312584322e-06,
+      "time_subdivision_changes_inventory": false
+    },
+    "geometry_continuum_connection": {
+      "state": "PASSED",
+      "classification": "INDEPENDENT_LINK_SURFACE_COMPLEX_AND_EXPLICIT_SPECTRAL_TRANSFER_CLOSE",
+      "maximum_link_to_spectral_relative_rms": 5.216260732503764e-16
+    },
+    "geometric_rate": {
+      "state": "PASSED_BOUNDED_PATH_NOT_HORIZON",
+      "classification": "CONSTRAINED_ARREST_NO_REPRESENTED_PATH",
+      "requested_time_s": 1e-09,
+      "accepted_time_s": 4.011641738722681e-12,
+      "accepted_updates": 5,
+      "same_state_partial_extent_exercised": true,
+      "material_exchange_model": "equilibrated_point_defect_reservoir"
+    }
+  },
+  "evidence": {
+    "compatible_transport_sha256": "01a9a259e9a1d677b064d617427f1934ad319f5c5e68c35b61934455de4eb6b3",
+    "geometry_rate_sha256": "171f3ba150e29f15f400c874647f8d19810c2cffe15b8cd4412538bd3200aee8",
+    "ordered_generation_sha256": "5003fced600cc446731251111b8361ea8c7a7223f0f888692f5da07d7a9fb8fa"
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 759,
+    "wall_seconds": 200.64
+  },
+  "scientific_gate_passed": false,
+  "fixture_passed": true,
+  "drx_claimed": false,
+  "persistent_lagb_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false,
+  "next_exact_task": "matrix-free or Fourier-diagonal bounded finite-time ordering integrator, then complete retained n128 second half and temporal comparison"
+}

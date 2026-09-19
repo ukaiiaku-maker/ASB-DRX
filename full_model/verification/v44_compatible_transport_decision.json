@@ -1,0 +1,967 @@
+{
+  "classification": "COMPATIBLE_TRANSPORT_FIRST_STAGE_REPAIRED;TEMPORAL_HORIZON_INCOMPLETE_DENSE_BDF_COST",
+  "cross_grid": {
+    "one": {
+      "after_first_mura": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 3.162496995176584e-12,
+          "complex_coefficient_relative_rms": 3.0559300303033586e-06,
+          "n128_rms": 6.5990686107042904e-06,
+          "n192_rms": 6.599065330595071e-06,
+          "power_relative_rms": 8.64358613570631e-07,
+          "rms_relative_difference": 4.970563898268058e-07
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.0611534121798318e-13,
+          "complex_coefficient_relative_rms": 1.8905679931852187e-05,
+          "n128_rms": 0.6126295953591671,
+          "n192_rms": 0.6126296421505814,
+          "power_relative_rms": 7.422318640209275e-06,
+          "rms_relative_difference": 7.637797958077148e-08
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 3.1928449237349326e-12,
+          "complex_coefficient_relative_rms": 0.0002638702041757045,
+          "n128_rms": 1.543551511998661,
+          "n192_rms": 1.5435448115724493,
+          "power_relative_rms": 9.493161875166265e-06,
+          "rms_relative_difference": 4.340915194318111e-06
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.0035449615772467,
+          "complex_coefficient_relative_rms": 0.7524019188591694,
+          "n128_rms": 9725617.9274235,
+          "n192_rms": 3501538.2317437665,
+          "power_relative_rms": 0.9254586417170002,
+          "rms_relative_difference": 0.6399675313307943
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 3.162496995176584e-12,
+          "complex_coefficient_relative_rms": 3.0559300303033586e-06,
+          "n128_rms": 6.9993692462164405e-06,
+          "n192_rms": 6.999365767135231e-06,
+          "power_relative_rms": 8.643586135706311e-07,
+          "rms_relative_difference": 4.970563899894855e-07
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 9.954398582905367e-11,
+          "complex_coefficient_relative_rms": 0.0002638702042027878,
+          "n128_rms": 1.5435515119975136,
+          "n192_rms": 1.5435448115717303,
+          "power_relative_rms": 9.49316125249495e-06,
+          "rms_relative_difference": 4.340914916828788e-06
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.0428335870885447e-10,
+          "complex_coefficient_relative_rms": 2.0977103832563833e-11,
+          "n128_rms": 1100.0070301612313,
+          "n192_rms": 1100.0070301572782,
+          "power_relative_rms": 7.187447825158322e-12,
+          "rms_relative_difference": 3.5937213243779106e-12
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.4987040324802214e-13,
+          "complex_coefficient_relative_rms": 1.0526190010566121e-05,
+          "n128_rms": 686599823808689.4,
+          "n192_rms": 686598447585284.1,
+          "power_relative_rms": 3.231694354866388e-06,
+          "rms_relative_difference": 2.00440395923181e-06
+        }
+      },
+      "after_front": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.006319935748863156,
+          "complex_coefficient_relative_rms": 3.133985393516278e-06,
+          "n128_rms": 6.599062952395943e-06,
+          "n192_rms": 6.5990598718152996e-06,
+          "power_relative_rms": 8.013418315257567e-07,
+          "rms_relative_difference": 4.668209207898551e-07
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.3998950522204044e-13,
+          "complex_coefficient_relative_rms": 1.890277228776733e-05,
+          "n128_rms": 0.612630842868472,
+          "n192_rms": 0.6126308484007638,
+          "power_relative_rms": 7.209504127878574e-06,
+          "rms_relative_difference": 9.030383876806384e-09
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.006385429060264985,
+          "complex_coefficient_relative_rms": 0.0002754408458664275,
+          "n128_rms": 1.5435453486242183,
+          "n192_rms": 1.5435422904308769,
+          "power_relative_rms": 9.561090871134533e-06,
+          "rms_relative_difference": 1.9812785832175205e-06
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.0035449615772467,
+          "complex_coefficient_relative_rms": 0.7524019188591694,
+          "n128_rms": 9725617.9274235,
+          "n192_rms": 3501538.2317437665,
+          "power_relative_rms": 0.9254586417170002,
+          "rms_relative_difference": 0.6399675313307943
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 3.162496995176584e-12,
+          "complex_coefficient_relative_rms": 3.0559300303033586e-06,
+          "n128_rms": 6.9993692462164405e-06,
+          "n192_rms": 6.999365767135231e-06,
+          "power_relative_rms": 8.643586135706311e-07,
+          "rms_relative_difference": 4.970563899894855e-07
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.10232524367386746,
+          "complex_coefficient_relative_rms": 0.00026376733505395093,
+          "n128_rms": 1.5435473267676123,
+          "n192_rms": 1.5435408389649066,
+          "power_relative_rms": 9.343645717405835e-06,
+          "rms_relative_difference": 4.2031770540660896e-06
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 2.7545988438392364e-10,
+          "complex_coefficient_relative_rms": 2.957322269014865e-11,
+          "n128_rms": 1100.007030523551,
+          "n192_rms": 1100.0070305002828,
+          "power_relative_rms": 4.230613411477795e-11,
+          "rms_relative_difference": 2.1152851237149415e-11
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 0.002536725851331069,
+          "complex_coefficient_relative_rms": 1.0572433350141527e-05,
+          "n128_rms": 686599074031949.0,
+          "n192_rms": 686597723883431.1,
+          "power_relative_rms": 3.1415622521101723e-06,
+          "rms_relative_difference": 1.9664292728308786e-06
+        }
+      },
+      "after_second_mura": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.5313961635869833,
+          "complex_coefficient_relative_rms": 0.0003760676031924266,
+          "n128_rms": 1.318046287973121e-05,
+          "n192_rms": 1.3180506598899745e-05,
+          "power_relative_rms": 5.028950010559856e-06,
+          "rms_relative_difference": 3.31695661361549e-06
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.3998950522204044e-13,
+          "complex_coefficient_relative_rms": 1.890277228776733e-05,
+          "n128_rms": 0.612630842868472,
+          "n192_rms": 0.6126308484007638,
+          "power_relative_rms": 7.209504127878574e-06,
+          "rms_relative_difference": 9.030383876806384e-09
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.9093281462173505,
+          "complex_coefficient_relative_rms": 0.04304400535716677,
+          "n128_rms": 3.2076837711206037,
+          "n192_rms": 3.463974887273851,
+          "power_relative_rms": 0.0012390390997378369,
+          "rms_relative_difference": 0.07398757915215391
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.0087112862818504,
+          "complex_coefficient_relative_rms": 0.7522380440404586,
+          "n128_rms": 9725617.9274235,
+          "n192_rms": 3504021.099523666,
+          "power_relative_rms": 0.9253544114536469,
+          "rms_relative_difference": 0.6397122398111781
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.8959037575113579,
+          "complex_coefficient_relative_rms": 0.00037602810885494376,
+          "n128_rms": 1.3979997919883971e-05,
+          "n192_rms": 1.3980044079372818e-05,
+          "power_relative_rms": 4.997152355482592e-06,
+          "rms_relative_difference": 3.3018128258725067e-06
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.6437806710410086,
+          "complex_coefficient_relative_rms": 0.04303633004537795,
+          "n128_rms": 3.2076858496493212,
+          "n192_rms": 3.4639733289938417,
+          "power_relative_rms": 0.0012407373987625321,
+          "rms_relative_difference": 0.07398656254058476
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 2.065654264530986e-06,
+          "complex_coefficient_relative_rms": 4.88808959588481e-09,
+          "n128_rms": 1100.014036486322,
+          "n192_rms": 1100.0140364972888,
+          "power_relative_rms": 1.9938453237570543e-11,
+          "rms_relative_difference": 9.96958834170749e-12
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 0.0025221525159602196,
+          "complex_coefficient_relative_rms": 1.0715481070466208e-05,
+          "n128_rms": 686599075576307.8,
+          "n192_rms": 686597725756672.9,
+          "power_relative_rms": 3.138834677158926e-06,
+          "rms_relative_difference": 1.965950265432571e-06
+        }
+      },
+      "initial": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.0611534121798318e-13,
+          "complex_coefficient_relative_rms": 1.8905679931852187e-05,
+          "n128_rms": 0.6126295953591671,
+          "n192_rms": 0.6126296421505814,
+          "power_relative_rms": 7.422318640209275e-06,
+          "rms_relative_difference": 7.637797958077148e-08
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 1.3647194034303716e-17,
+          "n128_rms": 1100.0,
+          "n192_rms": 1100.0,
+          "power_relative_rms": 3.9015105316309417e-35,
+          "rms_relative_difference": 0.0
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.9491199602858809e-13,
+          "complex_coefficient_relative_rms": 1.0526190022800813e-05,
+          "n128_rms": 686599822996237.2,
+          "n192_rms": 686598446772837.5,
+          "power_relative_rms": 3.23169434359542e-06,
+          "rms_relative_difference": 2.004403953593128e-06
+        }
+      }
+    },
+    "sub4": {
+      "after_first_mura": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.541774707317804,
+          "complex_coefficient_relative_rms": 0.00028439811858961447,
+          "n128_rms": 6.592434420331822e-06,
+          "n192_rms": 6.592447440887337e-06,
+          "power_relative_rms": 2.778837159897098e-06,
+          "rms_relative_difference": 1.9750715696516924e-06
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.0611534121798318e-13,
+          "complex_coefficient_relative_rms": 1.8905679931852187e-05,
+          "n128_rms": 0.6126295953591671,
+          "n192_rms": 0.6126296421505814,
+          "power_relative_rms": 7.422318640209275e-06,
+          "rms_relative_difference": 7.637797958077148e-08
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.8573042259491256,
+          "complex_coefficient_relative_rms": 0.03259795907237682,
+          "n128_rms": 1.5784550488635694,
+          "n192_rms": 1.654413965205688,
+          "power_relative_rms": 0.0007283083304808023,
+          "rms_relative_difference": 0.04591288392121066
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.020399911929995,
+          "complex_coefficient_relative_rms": 0.7524019188591694,
+          "n128_rms": 9725617.927423492,
+          "n192_rms": 3501538.231743765,
+          "power_relative_rms": 0.9254586417170001,
+          "rms_relative_difference": 0.6399675313307942
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.8975979010254497,
+          "complex_coefficient_relative_rms": 0.00028439811506112995,
+          "n128_rms": 6.992332595462009e-06,
+          "n192_rms": 6.992346405846348e-06,
+          "power_relative_rms": 2.7788371598582974e-06,
+          "rms_relative_difference": 1.9750715336225022e-06
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.8573039797692026,
+          "complex_coefficient_relative_rms": 0.03259795907540488,
+          "n128_rms": 1.5784550486908786,
+          "n192_rms": 1.654413965026258,
+          "power_relative_rms": 0.000728308331834993,
+          "rms_relative_difference": 0.04591288392211664
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.1379892135758231e-10,
+          "complex_coefficient_relative_rms": 1.847935282652251e-09,
+          "n128_rms": 1100.0070228956922,
+          "n192_rms": 1100.0070229039586,
+          "power_relative_rms": 1.502931477225093e-11,
+          "rms_relative_difference": 7.514858698439312e-12
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.9867467360009163e-13,
+          "complex_coefficient_relative_rms": 1.0560030561234101e-05,
+          "n128_rms": 686599823407737.6,
+          "n192_rms": 686598447141244.5,
+          "power_relative_rms": 3.231338626563481e-06,
+          "rms_relative_difference": 2.0044667158437406e-06
+        }
+      },
+      "after_front": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.5383032093707188,
+          "complex_coefficient_relative_rms": 0.0002844768131747317,
+          "n128_rms": 6.592428766576215e-06,
+          "n192_rms": 6.5924419865111685e-06,
+          "power_relative_rms": 2.841474801451182e-06,
+          "rms_relative_difference": 2.0053168432799815e-06
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.362834975313123e-13,
+          "complex_coefficient_relative_rms": 1.8902772286255027e-05,
+          "n128_rms": 0.6126308428703469,
+          "n192_rms": 0.6126308484026487,
+          "power_relative_rms": 7.209504091290042e-06,
+          "rms_relative_difference": 9.03040036799766e-09
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.8538641288090786,
+          "complex_coefficient_relative_rms": 0.032613386372687944,
+          "n128_rms": 1.5784486568809661,
+          "n192_rms": 1.654411168288197,
+          "power_relative_rms": 0.0007257052265544551,
+          "rms_relative_difference": 0.045915134558616726
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.020399911929995,
+          "complex_coefficient_relative_rms": 0.7524019188591694,
+          "n128_rms": 9725617.927423492,
+          "n192_rms": 3501538.231743765,
+          "power_relative_rms": 0.9254586417170001,
+          "rms_relative_difference": 0.6399675313307942
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.8975979010254497,
+          "complex_coefficient_relative_rms": 0.00028439811506112995,
+          "n128_rms": 6.992332595462009e-06,
+          "n192_rms": 6.992346405846348e-06,
+          "power_relative_rms": 2.7788371598582974e-06,
+          "rms_relative_difference": 1.9750715336225022e-06
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.6163213583574606,
+          "complex_coefficient_relative_rms": 0.032598124449082236,
+          "n128_rms": 1.578450927705338,
+          "n192_rms": 1.6544102249564827,
+          "power_relative_rms": 0.00072831062183261,
+          "rms_relative_difference": 0.04591321795846778
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.4431574349439552e-10,
+          "complex_coefficient_relative_rms": 1.8479472975381626e-09,
+          "n128_rms": 1100.007023258018,
+          "n192_rms": 1100.0070232469693,
+          "power_relative_rms": 2.0088602317486223e-11,
+          "rms_relative_difference": 1.004427133391254e-11
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 0.002531019138757992,
+          "complex_coefficient_relative_rms": 1.0611794451761113e-05,
+          "n128_rms": 686599073629466.1,
+          "n192_rms": 686597723437881.0,
+          "power_relative_rms": 3.141212363465952e-06,
+          "rms_relative_difference": 1.966491999454185e-06
+        }
+      },
+      "after_second_mura": {
+        "status": "INCOMPLETE_STAGE"
+      },
+      "initial": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.0611534121798318e-13,
+          "complex_coefficient_relative_rms": 1.8905679931852187e-05,
+          "n128_rms": 0.6126295953591671,
+          "n192_rms": 0.6126296421505814,
+          "power_relative_rms": 7.422318640209275e-06,
+          "rms_relative_difference": 7.637797958077148e-08
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 1.3647194034303716e-17,
+          "n128_rms": 1100.0,
+          "n192_rms": 1100.0,
+          "power_relative_rms": 3.9015105316309417e-35,
+          "rms_relative_difference": 0.0
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.9491199602858809e-13,
+          "complex_coefficient_relative_rms": 1.0526190022800813e-05,
+          "n128_rms": 686599822996237.2,
+          "n192_rms": 686598446772837.5,
+          "power_relative_rms": 3.23169434359542e-06,
+          "rms_relative_difference": 2.004403953593128e-06
+        }
+      }
+    }
+  },
+  "drx_claimed": false,
+  "generated_utc": "2026-09-19T20:27:31.348004+00:00",
+  "incomplete_stage_reason": "n128 four-substep second Mura half stopped after 90 minutes; trace localized cost to dense numerical BDF Jacobian for the spectral ordering subsystem; initial, first-Mura, and front stages retained",
+  "operator": "v44_compatible_dealiased_mura_transport_and_capture",
+  "ordered_line_first_generation": {
+    "128": {
+      "one_m": 1.2448790947102078e-05,
+      "sub4_m": 1.2448790947102068e-05
+    },
+    "192": {
+      "one_m": 3.659512312584322e-06,
+      "sub4_m": 3.65951231258432e-06
+    }
+  },
+  "ordered_residual_classification": "SEPARATE_FIRST_OPERATION_NEAR_EXTINCTION_RESIDUAL_NOT_WALL_SIGNAL",
+  "provisional_threshold": 0.05,
+  "same_grid_temporal": {
+    "128": {
+      "after_first_mura": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 1.611603026826089,
+          "complex_coefficient_relative_rms": 0.0011746670545670725,
+          "n128_rms": 6.5990686107042904e-06,
+          "n192_rms": 6.592434420331822e-06,
+          "power_relative_rms": 0.0020663247690301824,
+          "rms_relative_difference": 0.0010053222301260624
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 5.692329435686944e-30,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.6126295953591671,
+          "n192_rms": 0.6126295953591671,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 1.6466419709573379,
+          "complex_coefficient_relative_rms": 0.04940210245600057,
+          "n128_rms": 1.543551511998661,
+          "n192_rms": 1.5784550488635694,
+          "power_relative_rms": 0.0015427235774651583,
+          "rms_relative_difference": 0.022112468068088302
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 9.486033984018807e-16,
+          "complex_coefficient_relative_rms": 2.090524617328939e-15,
+          "n128_rms": 9725617.9274235,
+          "n192_rms": 9725617.927423492,
+          "power_relative_rms": 1.2927967257743147e-15,
+          "rms_relative_difference": 7.66077862869288e-16
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 1.679251908361905,
+          "complex_coefficient_relative_rms": 0.0011711004664062454,
+          "n128_rms": 6.9993692462164405e-06,
+          "n192_rms": 6.992332595462009e-06,
+          "power_relative_rms": 0.002066324754050144,
+          "rms_relative_difference": 0.0010053264096954856
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 2.0658334214401246,
+          "complex_coefficient_relative_rms": 0.049402114156770795,
+          "n128_rms": 1.5435515119975136,
+          "n192_rms": 1.5784550486908786,
+          "power_relative_rms": 0.0015427235971886134,
+          "rms_relative_difference": 0.022112467961829446
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 7.496131725271554e-11,
+          "complex_coefficient_relative_rms": 7.590763430320946e-09,
+          "n128_rms": 1100.0070301612313,
+          "n192_rms": 1100.0070228956922,
+          "power_relative_rms": 1.3209987056737883e-08,
+          "rms_relative_difference": 6.604993355302474e-09
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.4699188754414553e-13,
+          "complex_coefficient_relative_rms": 7.881969963262029e-07,
+          "n128_rms": 686599823808689.4,
+          "n192_rms": 686599823407737.6,
+          "power_relative_rms": 1.1240109493562411e-09,
+          "rms_relative_difference": 5.839671612145929e-10
+        }
+      },
+      "after_front": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 1.6006346681721775,
+          "complex_coefficient_relative_rms": 0.0011746674961102398,
+          "n128_rms": 6.599062952395943e-06,
+          "n192_rms": 6.592428766576215e-06,
+          "power_relative_rms": 0.002066324989491517,
+          "rms_relative_difference": 0.0010053224022237926
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 6.585874409627469e-14,
+          "complex_coefficient_relative_rms": 4.7336724585114435e-12,
+          "n128_rms": 0.612630842868472,
+          "n192_rms": 0.6126308428703469,
+          "power_relative_rms": 9.029342454229572e-12,
+          "rms_relative_difference": 3.060299107534942e-12
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 1.5759582831858956,
+          "complex_coefficient_relative_rms": 0.04940245569622389,
+          "n128_rms": 1.5435453486242183,
+          "n192_rms": 1.5784486568809661,
+          "power_relative_rms": 0.001542372993951761,
+          "rms_relative_difference": 0.022112412782381644
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 9.486033984018807e-16,
+          "complex_coefficient_relative_rms": 2.090524617328939e-15,
+          "n128_rms": 9725617.9274235,
+          "n192_rms": 9725617.927423492,
+          "power_relative_rms": 1.2927967257743147e-15,
+          "rms_relative_difference": 7.66077862869288e-16
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 1.679251908361905,
+          "complex_coefficient_relative_rms": 0.0011711004664062454,
+          "n128_rms": 6.9993692462164405e-06,
+          "n192_rms": 6.992332595462009e-06,
+          "power_relative_rms": 0.002066324754050144,
+          "rms_relative_difference": 0.0010053264096954856
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 1.4791535544883836,
+          "complex_coefficient_relative_rms": 0.04940223478364669,
+          "n128_rms": 1.5435473267676123,
+          "n192_rms": 1.578450927705338,
+          "power_relative_rms": 0.0015426928757716642,
+          "rms_relative_difference": 0.022112566393474503
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 2.1519443368980576e-12,
+          "complex_coefficient_relative_rms": 7.5907585607419e-09,
+          "n128_rms": 1100.007030523551,
+          "n192_rms": 1100.007023258018,
+          "power_relative_rms": 1.320997588770121e-08,
+          "rms_relative_difference": 6.60498777217238e-09
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 4.939597931392543e-05,
+          "complex_coefficient_relative_rms": 7.88197239893663e-07,
+          "n128_rms": 686599074031949.0,
+          "n192_rms": 686599073629466.1,
+          "power_relative_rms": 1.1231066506420185e-09,
+          "rms_relative_difference": 5.861978121183303e-10
+        }
+      },
+      "after_second_mura": {
+        "status": "INCOMPLETE_STAGE"
+      },
+      "initial": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 5.692329435686944e-30,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.6126295953591671,
+          "n192_rms": 0.6126295953591671,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 1100.0,
+          "n192_rms": 1100.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 9.268619170441158e-30,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 686599822996237.2,
+          "n192_rms": 686599822996237.2,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        }
+      }
+    },
+    "192": {
+      "after_first_mura": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 1.6074476188958515,
+          "complex_coefficient_relative_rms": 0.00116807176280269,
+          "n128_rms": 6.599065330595071e-06,
+          "n192_rms": 6.592447440887337e-06,
+          "power_relative_rms": 0.002062766001512448,
+          "rms_relative_difference": 0.0010028525823272292
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 4.9834246974012596e-30,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.6126296421505814,
+          "n192_rms": 0.6126296421505814,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 1.6133730471584242,
+          "complex_coefficient_relative_rms": 0.04831892748416571,
+          "n128_rms": 1.5435448115724493,
+          "n192_rms": 1.654413965205688,
+          "power_relative_rms": 0.0014556451452682083,
+          "rms_relative_difference": 0.06701415483968952
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 4.484345604082858e-16,
+          "complex_coefficient_relative_rms": 1.9469471054397067e-15,
+          "n128_rms": 3501538.2317437665,
+          "n192_rms": 3501538.231743765,
+          "power_relative_rms": 7.013431210675096e-16,
+          "rms_relative_difference": 3.989629041484204e-16
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 1.6792519083615869,
+          "complex_coefficient_relative_rms": 0.0011644849323912477,
+          "n128_rms": 6.999365767135231e-06,
+          "n192_rms": 6.992346405846348e-06,
+          "power_relative_rms": 0.002062765986532615,
+          "rms_relative_difference": 0.0010028567619428156
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 2.118134954705129,
+          "complex_coefficient_relative_rms": 0.04831893947783196,
+          "n128_rms": 1.5435448115717303,
+          "n192_rms": 1.654413965026258,
+          "power_relative_rms": 0.001455645160112767,
+          "rms_relative_difference": 0.06701415473893681
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.4130698177416098e-10,
+          "complex_coefficient_relative_rms": 7.541413360607021e-09,
+          "n128_rms": 1100.0070301572782,
+          "n192_rms": 1100.0070229039586,
+          "power_relative_rms": 1.3187770294433596e-08,
+          "rms_relative_difference": 6.593884775352933e-09
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.662400243004825e-13,
+          "complex_coefficient_relative_rms": 7.850469749804693e-07,
+          "n128_rms": 686598447585284.1,
+          "n192_rms": 686598447141244.5,
+          "power_relative_rms": 1.3908989052319371e-09,
+          "rms_relative_difference": 6.467238988984821e-10
+        }
+      },
+      "after_front": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 1.6115173913223904,
+          "complex_coefficient_relative_rms": 0.0011680722182736177,
+          "n128_rms": 6.5990598718152996e-06,
+          "n192_rms": 6.5924419865111685e-06,
+          "power_relative_rms": 0.0020627662114621787,
+          "rms_relative_difference": 0.0010028527445850495
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 5.733859702625164e-14,
+          "complex_coefficient_relative_rms": 4.724329895744099e-12,
+          "n128_rms": 0.6126308484007638,
+          "n192_rms": 0.6126308484026487,
+          "power_relative_rms": 9.013692107588112e-12,
+          "rms_relative_difference": 3.076790298959489e-12
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 1.5946349293885118,
+          "complex_coefficient_relative_rms": 0.04831931481232917,
+          "n128_rms": 1.5435422904308769,
+          "n192_rms": 1.654411168288197,
+          "power_relative_rms": 0.0014541065753168646,
+          "rms_relative_difference": 0.0670141014413213
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 4.484345604082858e-16,
+          "complex_coefficient_relative_rms": 1.9469471054397067e-15,
+          "n128_rms": 3501538.2317437665,
+          "n192_rms": 3501538.231743765,
+          "power_relative_rms": 7.013431210675096e-16,
+          "rms_relative_difference": 3.989629041484204e-16
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 1.6792519083615869,
+          "complex_coefficient_relative_rms": 0.0011644849323912477,
+          "n128_rms": 6.999365767135231e-06,
+          "n192_rms": 6.992346405846348e-06,
+          "power_relative_rms": 0.002062765986532615,
+          "rms_relative_difference": 0.0010028567619428156
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 1.4982345009633629,
+          "complex_coefficient_relative_rms": 0.04831904675774892,
+          "n128_rms": 1.5435408389649066,
+          "n192_rms": 1.6544102249564827,
+          "power_relative_rms": 0.001455648454599746,
+          "rms_relative_difference": 0.06701444679144945
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.383791760575856e-10,
+          "complex_coefficient_relative_rms": 7.541408115968385e-09,
+          "n128_rms": 1100.0070305002828,
+          "n192_rms": 1100.0070232469693,
+          "power_relative_rms": 1.3187758356196457e-08,
+          "rms_relative_difference": 6.59387919234228e-09
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 4.540706599347289e-05,
+          "complex_coefficient_relative_rms": 7.850479122162947e-07,
+          "n128_rms": 686597723883431.1,
+          "n192_rms": 686597723437881.0,
+          "power_relative_rms": 1.3884504495618474e-09,
+          "rms_relative_difference": 6.489245587357124e-10
+        }
+      },
+      "after_second_mura": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.001209818345351239,
+          "complex_coefficient_relative_rms": 0.0011601137656594158,
+          "n128_rms": 1.3180506598899745e-05,
+          "n192_rms": 1.3167331401013048e-05,
+          "power_relative_rms": 0.002059085900428834,
+          "rms_relative_difference": 0.0009995972300333754
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 5.733859702625164e-14,
+          "complex_coefficient_relative_rms": 4.724329895744099e-12,
+          "n128_rms": 0.6126308484007638,
+          "n192_rms": 0.6126308484026487,
+          "power_relative_rms": 9.013692107588112e-12,
+          "rms_relative_difference": 3.076790298959489e-12
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.001819394758850163,
+          "complex_coefficient_relative_rms": 0.046919930336311796,
+          "n128_rms": 3.463974887273851,
+          "n192_rms": 4.120328717128107,
+          "power_relative_rms": 0.003228080553767486,
+          "rms_relative_difference": 0.1592964724211951
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.5453647009933517e-15,
+          "complex_coefficient_relative_rms": 0.0007085767206825352,
+          "n128_rms": 3504021.099523666,
+          "n192_rms": 3501538.231743763,
+          "power_relative_rms": 0.0014166513603959927,
+          "rms_relative_difference": 0.0007085767206824661
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.0007444371305921377,
+          "complex_coefficient_relative_rms": 0.0011566993383439537,
+          "n128_rms": 1.3980044079372818e-05,
+          "n192_rms": 1.3966069459450532e-05,
+          "power_relative_rms": 0.002059085756204418,
+          "rms_relative_difference": 0.0009996120071542292
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.16191090650644732,
+          "complex_coefficient_relative_rms": 0.04691974579319563,
+          "n128_rms": 3.4639733289938417,
+          "n192_rms": 4.12032774520264,
+          "power_relative_rms": 0.003229406798530535,
+          "rms_relative_difference": 0.15929665230466228
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.7437820724424397e-07,
+          "complex_coefficient_relative_rms": 1.4961082394804367e-08,
+          "n128_rms": 1100.0140364972888,
+          "n192_rms": 1100.0140220451071,
+          "power_relative_rms": 2.6276358970668545e-08,
+          "rms_relative_difference": 1.3138179288152912e-08
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 9.392540693548962e-05,
+          "complex_coefficient_relative_rms": 1.5283171495803015e-06,
+          "n128_rms": 686597725756672.9,
+          "n192_rms": 686597726579320.2,
+          "power_relative_rms": 1.0114004722373214e-08,
+          "rms_relative_difference": 1.1981504498980632e-09
+        }
+      },
+      "initial": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 4.9834246974012596e-30,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.6126296421505814,
+          "n192_rms": 0.6126296421505814,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 0.0,
+          "n192_rms": 0.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 0.0,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 1100.0,
+          "n192_rms": 1100.0,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 6.66139033223359e-30,
+          "complex_coefficient_relative_rms": 0.0,
+          "n128_rms": 686598446772837.5,
+          "n192_rms": 686598446772837.5,
+          "power_relative_rms": 0.0,
+          "rms_relative_difference": 0.0
+        }
+      }
+    }
+  },
+  "schema": "asb-drx/v44/compatible-transport-decision/v1",
+  "source_sha_at_postprocessing": "04f6d20608b0cd7032982b403b22aac612bb1116",
+  "spatial_threshold_passed": null,
+  "strict_asb_claimed": false,
+  "temporal_threshold_passed": null,
+  "trajectory_source_sha": "98ce060eb3ae3379ad0ce32c350e8d1356f79d7e"
+}
