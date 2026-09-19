@@ -114,6 +114,22 @@ def main():
             "one_step": one_metric, "four_substep": refined_metric,
             "five_percent_passed": passes,
         },
+        "implicated_operator": {
+            "name": "accepted_mura_transport_capture_step",
+            "scalar_population_discretization": (
+                "positivity-preserving first-order donor-cell face transport"),
+            "first_moment_and_plastic_nye_discretization": (
+                "spectral curl of local velocity-cross-alignment product"),
+            "nonlinear_dealiasing_declared": False,
+            "evidence_scope": (
+                "Mura is the first evolving stage to exceed tolerance; the "
+                "front adds negligible error; time subdivision does not repair "
+                "the pair. This implicates, but does not uniquely prove, the "
+                "mixed spatial update or an unresolved continuum scale."),
+            "next_executable_discriminator": (
+                "construct one conservative compatible face flux for scalar "
+                "and moment transport, then rerun this exact interval-2 pair"),
+        },
         "classification": classification,
         "original_62p5us_classification_retained": "UNRESOLVED_SPATIAL_SCALE",
     }
