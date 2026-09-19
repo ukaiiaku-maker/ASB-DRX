@@ -18,7 +18,7 @@ from full_model.analysis.run_v36_recurrent_physical_response import driving_at_t
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--grid", type=int, choices=(128, 192), required=True)
+    parser.add_argument("--grid", type=int, choices=(16, 128, 192), required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     duration = .5*7.8125e-6
