@@ -27,9 +27,11 @@ def test_v37_organization_metrics_are_finite_and_topology_separated():
             assert metrics[key] >= 0.0
         assert metrics["accepted_step_hard_invariant_passed"]
         records.append(metrics)
-    # The disabled topology route and explicit topology route are separate
-    # physical comparators, not aliases that silently exercise one operator.
-    assert records[0]["ordered_line_m2_cells"] != records[1][
+    # V43 assigns the geometry-neutral ordering reaction and its heat to both
+    # controls identically.  The topology flag only labels the unavailable
+    # legacy reorientation route; persistent plaquette geometry is exercised
+    # separately by the V43 event tests.
+    assert records[0]["ordered_line_m2_cells"] == records[1][
         "ordered_line_m2_cells"]
 
 
