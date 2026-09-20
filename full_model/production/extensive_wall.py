@@ -431,7 +431,8 @@ def _ordering_affinity_linear_action(delta_plus, delta_minus, systems,
 def _accepted_ordering_implicit(inventory, systems, topologies,
                                 orientation_rad, target_nye_m1, stress_Pa,
                                 temperature_K, parameters, dt_s,
-                                alignment=None, force_finite_time=False):
+                                alignment=None, force_finite_time=False,
+                                finite_time_endpoint=None):
     """Bounded backward-Euler solve of the declared ordering rate.
 
     Ordered fractions are the nonlinear coordinates, so every trial state
@@ -866,7 +867,9 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             result = _accepted_ordering_implicit(
                 inventory, systems, topologies, orientation_rad,
                 target_nye_m1, stress_Pa, temperature_K, parameters,
-                total_dt, alignment=alignment, force_finite_time=True)
+                total_dt, alignment=alignment, force_finite_time=True,
+                finite_time_endpoint=(equilibrium_vector
+                    if projected_change <= 2e-10 else None))
             ledger_index = 2 if alignment is not None else 1
             result[ledger_index].update({
                 "stiff_dispatch": (
@@ -893,7 +896,9 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             result = _accepted_ordering_implicit(
                 inventory, systems, topologies, orientation_rad,
                 target_nye_m1, stress_Pa, temperature_K, parameters,
-                total_dt, alignment=alignment, force_finite_time=True)
+                total_dt, alignment=alignment, force_finite_time=True,
+                finite_time_endpoint=(equilibrium_vector
+                    if projected_change <= 2e-10 else None))
             ledger_index = 2 if alignment is not None else 1
             result[ledger_index].update({
                 "stiff_dispatch": (
@@ -1024,21 +1029,50 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             # ODE.  The rate already contains the exact invariant-set tangent
             # projection at q=0,1; endpoint projection only removes roundoff.
             # Work is O(N log N) per stage and no Jacobian is assembled.
-            internal_steps = max(16, int(np.ceil(
+            requested_finite_steps = max(16, int(np.ceil(
                 attempt_exposure
                 / parameters.ordering_matrix_free_max_attempt_exposure)))
-            step_dt = total_dt/internal_steps
+            internal_steps = requested_finite_steps
+            step_dt = total_dt/requested_finite_steps
             vector = q0.copy(); nfev = njev = 0
             linear_iterations = nonlinear_iterations = 0
-            for _ in range(internal_steps):
+            certified_endpoint_remainder_s = 0.0
+            endpoint_switch_distance_relative = None
+            executed_finite_steps = 0
+            endpoint = (None if finite_time_endpoint is None else
+                        np.asarray(finite_time_endpoint, dtype=float))
+            if endpoint is not None and endpoint.shape != vector.shape:
+                raise ValueError("finite-time endpoint shape mismatch")
+            endpoint_scale = (None if endpoint is None else max(
+                np.linalg.norm(endpoint), np.linalg.norm(q0),
+                np.sqrt(endpoint.size)*1e-30))
+            for index in range(requested_finite_steps):
                 k1 = finite_time_rhs(0.0, vector)
                 predictor = np.clip(vector+step_dt*k1, 0.0, 1.0)
                 k2 = finite_time_rhs(0.0, predictor)
                 vector = np.clip(
                     vector+0.5*step_dt*(k1+k2), 0.0, 1.0)
+                executed_finite_steps = index+1
+                if endpoint is not None:
+                    endpoint_switch_distance_relative = float(
+                        np.linalg.norm(vector-endpoint)/endpoint_scale)
+                    if (endpoint_switch_distance_relative <= parameters.
+                            ordering_asymptotic_maximum_endpoint_distance_relative):
+                        certified_endpoint_remainder_s = (
+                            total_dt-executed_finite_steps*step_dt)
+                        vector = endpoint.copy()
+                        break
+            internal_steps = executed_finite_steps
             final_vector = vector
-            integration_method = "bounded_finite_time_matrix_free_rk2"
-            solver_message = "projected Heun integration completed full clock"
+            if certified_endpoint_remainder_s > 0.0:
+                integration_method = (
+                    "bounded_finite_time_rk2_certified_endpoint_remainder")
+                solver_message = (
+                    "projected Heun reached the convex endpoint-distance "
+                    "certificate; equilibrium represents the remaining clock")
+            else:
+                integration_method = "bounded_finite_time_matrix_free_rk2"
+                solver_message = "projected Heun integration completed full clock"
         else:
             # Backward Euler with the exact global FFT Jacobian-vector action.
             # No Jacobian matrix or physical-space sparsity pattern is formed.
@@ -1363,7 +1397,12 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "complete_elapsed_time_s": total_dt,
         "discarded_reaction_time_s": 0.0,
         "stationary_remainder_s": 0.0,
-        "requested_internal_substeps": 1,
+        "certified_endpoint_remainder_s": float(locals().get(
+            "certified_endpoint_remainder_s", 0.0)),
+        "endpoint_switch_distance_relative": locals().get(
+            "endpoint_switch_distance_relative"),
+        "requested_internal_substeps": int(locals().get(
+            "requested_finite_steps", 1)),
         "internal_resolution_limit_active": False,
         "integration_method": integration_method,
         "stiff_dispatch": "qualified_asymptotic" if integration_method.endswith(

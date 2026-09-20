@@ -52,6 +52,14 @@ The retained long-horizon n128/n192 result remains unchanged: half-width-24
 curl--Nye passes at 1.3765%, while the common half-width-63 strong norm fails at
 6.3213%.  The new short result does not erase that later-time failure.
 
+A source-frozen late-state restart fork advances the same 3.90625 microsecond
+Mura exposure with eight and sixteen accepted substeps.  The half-width-63
+relative differences are 0.00207% for curl--Nye, 0.000501% for plastic
+distortion, 0.00340% for temperature rise, 0.0000368% for ordered density, and
+1.06e-6% for total density.  Both clocks close exactly.  This qualifies the
+late local temporal resolution; it does not qualify the earlier ordered-density
+spatial error.
+
 ## Geometry affinity and chemical reservoir
 
 The V46 geometry artifact actually used a fixed 3.2 micrometre represented
@@ -130,8 +138,8 @@ bulk pair; no existing-boundary migration, DRX, or ASB claim is made.
 
 ## Verification and claim boundary
 
-The local 8-versus-16 late-state temporal result and final merged regression
-are recorded in the V47 controller and manifest.  Large checkpoint arrays stay
+The local 8-versus-16 late-state temporal result passes the 5% threshold.  The
+final merged regression is recorded in the V47 controller and manifest.  Large checkpoint arrays stay
 under `full_model/production/results-local`; tracked evidence records their
 absolute paths and SHA-256 values.
 

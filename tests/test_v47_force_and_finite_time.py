@@ -8,7 +8,7 @@ from full_model.analysis.run_v47_ordering_finite_time import (
 from full_model.analysis.run_v34_finite_coupled_response import resolved_bicrystal
 from full_model.production.arrhenius_kinetics import ActivatedProcess
 from full_model.production.extensive_wall import (
-    extensive_wall_energy_components_J_m3,
+    accepted_ordering_step, extensive_wall_energy_components_J_m3,
     ordered_gradient_increment_J_m3_cells,
 )
 from full_model.production.v24_mechanical_wall import (
@@ -18,6 +18,7 @@ from full_model.production.v24_mechanical_wall import (
 from tests.test_full_model_v43_lattice_geometry import (
     prepared_loop, verification_event,
 )
+from tests.test_v45_matrix_free_ordering import _compact_active_case
 
 
 def test_exact_tanh_counterexample_separates_accessibility_from_finite_time():
@@ -35,6 +36,38 @@ def test_common_state_dispatch_has_finite_endpoint_distance_guard():
             "extensive_parameters"]
     assert parameters.ordering_finite_time_backend == "matrix_free_projected_rk2"
     assert parameters.ordering_asymptotic_maximum_endpoint_distance_relative == .05
+
+
+def test_long_finite_path_switches_only_after_endpoint_error_certificate():
+    state, density, systems, topologies, parameters, target, stress, attempt = (
+        _compact_active_case())
+    totals = {
+        sign: (getattr(density, f"wall_tangle_{sign}_m2")
+               +getattr(density, f"wall_ordered_{sign}_m2"))
+        for sign in ("plus", "minus")}
+    quarter = replace(
+        density,
+        wall_tangle_plus_m2=.75*totals["plus"],
+        wall_ordered_plus_m2=.25*totals["plus"],
+        wall_tangle_minus_m2=.75*totals["minus"],
+        wall_ordered_minus_m2=.25*totals["minus"])
+    guarded = replace(
+        parameters, nye_match_coefficient_J_m=0.0,
+        ordered_gradient_J_m3=0.0,
+        ordered_excess_J_m=parameters.disordered_excess_J_m+1e-10,
+        ordering_integration_method="implicit_backward_euler",
+        ordering_finite_time_backend="matrix_free_projected_rk2",
+        ordering_matrix_free_max_attempt_exposure=.05,
+        ordering_asymptotic_minimum_attempt_exposure=1e-3,
+        ordering_asymptotic_maximum_endpoint_distance_relative=.05)
+    _, ledger, _ = accepted_ordering_step(
+        quarter, systems, topologies, state.common.orientation_rad, target,
+        stress, state.common.temperature_K, guarded, 20.0/attempt)
+    assert ledger["integration_method"] == (
+        "bounded_finite_time_rk2_certified_endpoint_remainder")
+    assert ledger["certified_endpoint_remainder_s"] > 0.0
+    assert ledger["internal_substeps"] < ledger["requested_internal_substeps"]
+    assert ledger["endpoint_switch_distance_relative"] <= .05
 
 
 def test_direct_ordered_gradient_increment_matches_endpoint_difference():

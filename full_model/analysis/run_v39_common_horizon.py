@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -271,6 +271,13 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
         temperature_K=1100.0, child_line_fraction=.35)
+    # V39 is retained as a restart/split-clock regression fixture.  Preserve
+    # its historically qualified equilibrium dispatch so those tests isolate
+    # checkpoint semantics rather than paying for V47 finite kinetics.  New
+    # physical-response drivers use resolved_bicrystal's guarded 5% default.
+    context["extensive_parameters"] = replace(
+        context["extensive_parameters"],
+        ordering_asymptotic_maximum_endpoint_distance_relative=1.0)
     records = []; completed = 0; physical_time = 0.0
     pending = None
     partial_path = None
