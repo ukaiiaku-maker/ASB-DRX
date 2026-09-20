@@ -19,13 +19,19 @@ import math
 import numpy as np
 
 try:
-    from .common_front_state import commit_front_result, reconstruct_common
+    from .common_front_state import (
+        commit_front_result, reconstruct_common, reconstruct_reservoir_moments,
+    )
     from .common_tensorial_wall import wall_total_free_energy_density_J_m3
+    from .extensive_wall import extensive_wall_energy_components_J_m3
     from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
     from .tensorial_nye import nye_from_plastic_distortion, spectral_derivatives
 except ImportError:  # pragma: no cover - direct production-script execution
-    from common_front_state import commit_front_result, reconstruct_common
+    from common_front_state import (
+        commit_front_result, reconstruct_common, reconstruct_reservoir_moments,
+    )
     from common_tensorial_wall import wall_total_free_energy_density_J_m3
+    from extensive_wall import extensive_wall_energy_components_J_m3
     from nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
     from tensorial_nye import nye_from_plastic_distortion, spectral_derivatives
 
@@ -176,6 +182,7 @@ def independently_assemble_product_rule_nye(state, spacing_m):
 def evaluate_complete_front_energy(
         state, eta, *, spacing_m, represented_thickness_m, wall_parameters,
         mean_strain=None, topologies=(), systems=None,
+        extensive_parameters=None,
         phase_barrier_J_m3=0.0, phase_gradient_J_m=0.0,
         boundary_line_energy_J_m=None, boundary_junction_energy_J_m=None,
         reference_temperature_K=0.0):
@@ -192,19 +199,29 @@ def evaluate_complete_front_energy(
     mixture, _ = reconstruct_common(state, spacing)
     area = spacing*spacing
     volume = area*thickness
-    local = wall_total_free_energy_density_J_m3(
-        mixture, wall_parameters, topologies, systems)
-
-    # Junction storage is exposed separately while still using the exact
-    # common functional: subtract its declared contribution from the residual
-    # defect component, so no term is counted twice.
+    # V48 makes the signed reservoir functional authoritative when the front
+    # carries reservoir-resolved owners.  The scalar-q functional remains an
+    # explicit legacy fallback for old fixtures without those owners.
     multiplicity = (np.asarray([t.product_line_multiplicity for t in topologies])
                     if topologies else np.ones(mixture.junction_m2.shape[2]))
     reaction = (np.asarray([t.delta_free_energy_J_m for t in topologies])
                 if topologies else np.zeros(mixture.junction_m2.shape[2]))
+    if extensive_parameters is None:
+        local = wall_total_free_energy_density_J_m3(
+            mixture, wall_parameters, topologies, systems)
+        junction_coefficient = wall_parameters.junction_energy_J_m
+    else:
+        density, _ = reconstruct_reservoir_moments(state)
+        target = np.zeros(mixture.orientation_rad.shape+(3, 3))
+        local = extensive_wall_energy_components_J_m3(
+            density, systems, topologies, mixture.orientation_rad, target,
+            extensive_parameters)["total"]
+        junction_coefficient = extensive_parameters.junction_excess_J_m
+    # Junction storage is exposed separately while remaining in the same
+    # authoritative total; subtract it from the residual defect component.
     junction_density = np.sum(
-        mixture.junction_m2*(multiplicity*wall_parameters.junction_energy_J_m
-                             +reaction), axis=2)
+        mixture.junction_m2*(multiplicity*junction_coefficient+reaction),
+        axis=2)
     junction_J = float(np.sum(junction_density, dtype=np.longdouble)*volume)
     total_defect_J = float(np.sum(local, dtype=np.longdouble)*volume)
 

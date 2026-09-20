@@ -39,6 +39,8 @@ class ExtensiveWallParameters:
     rho_log_coefficient_J_m: float = 8e-11
     disordered_excess_J_m: float = 2e-10
     ordered_excess_J_m: float = 3e-10
+    forest_excess_J_m: float = 1e-10
+    junction_excess_J_m: float = 2e-10
     nye_match_coefficient_J_m: float = 2e-5
     ordered_gradient_J_m3: float = 1e-33
     ordering_attempt_frequency_s: float = 1e7
@@ -60,16 +62,21 @@ class ExtensiveWallParameters:
     ordering_integration_method: str = "complete_time_explicit"
     ordering_finite_time_backend: str = "dense_bdf_oracle"
     ordering_matrix_free_max_attempt_exposure: float = 0.05
+    ordering_finite_relative_tolerance: float = 2e-4
+    ordering_finite_absolute_tolerance: float = 2e-8
+    ordering_finite_max_rejections: int = 24
     ordering_implicit_residual_tolerance: float = 2e-9
     ordering_implicit_max_nfev: int = 100
     ordering_asymptotic_minimum_attempt_exposure: float = 50.0
     ordering_asymptotic_maximum_endpoint_distance_relative: float = 1.0
+    ordering_asymptotic_certificate_mode: str = "legacy_euclidean_heuristic"
 
     def __post_init__(self):
         positive = (
             self.spacing_m, self.rho_reference_m2, self.line_energy_J_m,
             self.rho_log_coefficient_J_m, self.disordered_excess_J_m,
-            self.ordered_excess_J_m,
+            self.ordered_excess_J_m, self.forest_excess_J_m,
+            self.junction_excess_J_m,
             self.ordering_attempt_frequency_s, self.ordering_barrier_eV,
             self.event_length_m, self.exp_a, self.exp_n,
             self.critical_stress_Pa, self.maximum_fraction_per_step,
@@ -96,7 +103,9 @@ class ExtensiveWallParameters:
                 "dense_bdf_oracle", "matrix_free_backward_euler",
                 "matrix_free_projected_rk2", "matrix_free_adaptive_dop853",
                 "matrix_free_rosenbrock_euler",
-                "matrix_free_exponential_rosenbrock"):
+                "matrix_free_exponential_rosenbrock",
+                "matrix_free_adaptive_backward_euler",
+                "matrix_free_adaptive_rosenbrock_euler"):
             raise ValueError("unknown finite-time ordering backend")
         if (not np.isfinite(self.ordering_implicit_residual_tolerance)
                 or self.ordering_implicit_residual_tolerance <= 0.0):
@@ -106,6 +115,13 @@ class ExtensiveWallParameters:
             raise ValueError("matrix-free attempt exposure must be positive")
         if int(self.ordering_implicit_max_nfev) <= 0:
             raise ValueError("ordering implicit evaluation limit must be positive")
+        if (not np.isfinite(self.ordering_finite_relative_tolerance)
+                or self.ordering_finite_relative_tolerance <= 0.0
+                or not np.isfinite(self.ordering_finite_absolute_tolerance)
+                or self.ordering_finite_absolute_tolerance <= 0.0):
+            raise ValueError("finite-time error tolerances must be positive")
+        if int(self.ordering_finite_max_rejections) < 0:
+            raise ValueError("finite-time rejection limit must be nonnegative")
         if (not np.isfinite(self.ordering_asymptotic_minimum_attempt_exposure)
                 or self.ordering_asymptotic_minimum_attempt_exposure <= 0.0):
             raise ValueError("ordering asymptotic exposure must be positive")
@@ -115,6 +131,9 @@ class ExtensiveWallParameters:
                 self.ordering_asymptotic_maximum_endpoint_distance_relative
                 <= 1.0):
             raise ValueError("ordering asymptotic endpoint-distance tolerance invalid")
+        if self.ordering_asymptotic_certificate_mode not in (
+                "disabled", "legacy_euclidean_heuristic"):
+            raise ValueError("unknown asymptotic certificate mode")
         # Validate entropy, drag limit, and negative-barrier validity policy in
         # the campaign-wide Arrhenius representation.
         ActivatedProcess(
@@ -228,6 +247,8 @@ def extensive_wall_energy_components_J_m3(inventory, systems, topologies,
                    * np.log(safe / parameters.rho_reference_m2))
     tangle = parameters.disordered_excess_J_m * fields["rho_wall_tangle_m2"]
     ordered = parameters.ordered_excess_J_m * fields["rho_wall_ordered_m2"]
+    forest = parameters.forest_excess_J_m * np.sum(
+        inventory.forest_plus_m2+inventory.forest_minus_m2, axis=2)
     alpha, _ = ordered_wall_nye_m1(inventory, systems, orientation_rad)
     target = np.asarray(target_nye_m1, dtype=float)
     if target.shape != alpha.shape:
@@ -244,16 +265,18 @@ def extensive_wall_energy_components_J_m3(inventory, systems, topologies,
     topology = np.zeros_like(rho)
     for index, item in enumerate(topologies):
         topology += inventory.junction_m2[..., index] * (
-            item.product_line_multiplicity * parameters.disordered_excess_J_m
+            item.product_line_multiplicity * parameters.junction_excess_J_m
             + item.delta_free_energy_J_m)
     return {
         "common_line": common_line,
         "disordered_wall": tangle,
         "ordered_boundary": ordered,
+        "forest_excess": forest,
         "nye_mismatch": matching,
         "ordered_gradient": gradient,
         "junction_topology": topology,
-        "total": common_line + tangle + ordered + matching + gradient + topology,
+        "total": (common_line+forest+tangle+ordered+matching+gradient
+                  +topology),
     }
 
 
@@ -448,8 +471,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         stress_for_rate = np.max(np.abs(stress_for_rate), axis=2)
     attempt_exposure = total_dt*float(np.max(_attempt_rate_s(
         stress_for_rate, temperature_K, parameters)))
-    if (not force_finite_time and attempt_exposure
-            < parameters.ordering_asymptotic_minimum_attempt_exposure):
+    if (not force_finite_time and (
+            parameters.ordering_asymptotic_certificate_mode == "disabled"
+            or attempt_exposure
+            < parameters.ordering_asymptotic_minimum_attempt_exposure)):
         # Below the independently verified finite/asymptotic overlap, use the
         # selected finite-time backend itself.  The former capped explicit
         # map is not a finite-time oracle for the stiff spectral-gradient
@@ -462,6 +487,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         result[ledger_index]["stiff_dispatch"] = (
             "finite_time_"+parameters.ordering_finite_time_backend)
         result[ledger_index]["maximum_attempt_exposure"] = attempt_exposure
+        if parameters.ordering_asymptotic_certificate_mode == "disabled":
+            result[ledger_index]["asymptotic_dispatch_disabled_reason"] = (
+                "Euclidean endpoint distance is a dispatch heuristic, not a "
+                "proved contraction/error metric for the coupled tanh flow")
         return result
     totals = {
         sign: (np.asarray(getattr(inventory, f"wall_tangle_{sign}_m2"))
@@ -553,7 +582,9 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         return (float(np.sum(energy, dtype=np.longdouble))/energy_scale,
                 np.concatenate(gradient))
 
-    if (not force_finite_time and attempt_exposure
+    if (not force_finite_time
+            and parameters.ordering_asymptotic_certificate_mode != "disabled"
+            and attempt_exposure
             >= parameters.ordering_asymptotic_minimum_attempt_exposure):
         # The ordering energy is a convex quadratic in the ordered extents:
         # linear reservoir excess plus positive Nye-mismatch and spectral
@@ -988,6 +1019,14 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 output.append(rate)
             return np.concatenate(output)
 
+        finite_time_error_control_assessed = False
+        finite_time_error_tolerance_satisfied = False
+        maximum_error_norm = None
+        maximum_accepted_error_norm = None
+        rejected_steps = 0
+        maximum_accepted_step_s = None
+        last_accepted_step_s = None
+
         if parameters.ordering_finite_time_backend == "matrix_free_adaptive_dop853":
             finite = solve_ivp(
                 finite_time_rhs, (0.0, total_dt), q0, method="DOP853",
@@ -1007,6 +1046,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             integration_method = "bounded_finite_time_matrix_free_dop853"
             solver_message = str(finite.message)
             internal_steps = max(int(finite.t.size-1), 1)
+            finite_time_error_control_assessed = True
+            finite_time_error_tolerance_satisfied = True
+            maximum_accepted_step_s = float(np.max(np.diff(finite.t)))
+            last_accepted_step_s = float(finite.t[-1]-finite.t[-2])
         elif parameters.ordering_finite_time_backend == "dense_bdf_oracle":
             finite = solve_ivp(
                 finite_time_rhs, (0.0, total_dt), q0, method="BDF",
@@ -1024,6 +1067,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             integration_method = "bounded_finite_time_bdf"
             solver_message = str(finite.message)
             internal_steps = max(int(finite.t.size-1), 1)
+            finite_time_error_control_assessed = True
+            finite_time_error_tolerance_satisfied = True
+            maximum_accepted_step_s = float(np.max(np.diff(finite.t)))
+            last_accepted_step_s = float(finite.t[-1]-finite.t[-2])
         elif parameters.ordering_finite_time_backend == "matrix_free_projected_rk2":
             # Explicit midpoint/Heun integration of the declared finite-rate
             # ODE.  The rate already contains the exact invariant-set tangent
@@ -1039,6 +1086,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             certified_endpoint_remainder_s = 0.0
             endpoint_switch_distance_relative = None
             executed_finite_steps = 0
+            rk2_min_stage_cancellation_ratio = 1.0
+            rk2_maximum_stage_norm = 0.0
+            rk2_maximum_predictor_projection = 0.0
+            rk2_maximum_corrector_projection = 0.0
             endpoint = (None if finite_time_endpoint is None else
                         np.asarray(finite_time_endpoint, dtype=float))
             if endpoint is not None and endpoint.shape != vector.shape:
@@ -1048,10 +1099,26 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 np.sqrt(endpoint.size)*1e-30))
             for index in range(requested_finite_steps):
                 k1 = finite_time_rhs(0.0, vector)
-                predictor = np.clip(vector+step_dt*k1, 0.0, 1.0)
+                raw_predictor = vector+step_dt*k1
+                predictor = np.clip(raw_predictor, 0.0, 1.0)
                 k2 = finite_time_rhs(0.0, predictor)
-                vector = np.clip(
-                    vector+0.5*step_dt*(k1+k2), 0.0, 1.0)
+                denominator = np.linalg.norm(k1)+np.linalg.norm(k2)
+                if denominator > 0.0:
+                    rk2_min_stage_cancellation_ratio = min(
+                        rk2_min_stage_cancellation_ratio,
+                        float(np.linalg.norm(k1+k2)/denominator))
+                rk2_maximum_stage_norm = max(
+                    rk2_maximum_stage_norm,
+                    float(np.linalg.norm(k1)), float(np.linalg.norm(k2)))
+                rk2_maximum_predictor_projection = max(
+                    rk2_maximum_predictor_projection,
+                    float(np.max(np.abs(predictor-raw_predictor))))
+                raw_corrector = vector+0.5*step_dt*(k1+k2)
+                next_vector = np.clip(raw_corrector, 0.0, 1.0)
+                rk2_maximum_corrector_projection = max(
+                    rk2_maximum_corrector_projection,
+                    float(np.max(np.abs(next_vector-raw_corrector))))
+                vector = next_vector
                 executed_finite_steps = index+1
                 if endpoint is not None:
                     endpoint_switch_distance_relative = float(
@@ -1098,9 +1165,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 predicted = previous+step_dt*rate_value
                 return vector-np.clip(predicted, 0.0, 1.0)
 
-            def exact_jacobian(vector, previous):
+            def exact_jacobian(vector, previous, duration=None):
                 nonlocal njev
                 njev += 1
+                local_dt = step_dt if duration is None else float(duration)
                 candidate = state_from_q(vector)
                 mu = extensive_wall_chemical_potentials_J_m(
                     candidate, systems, topologies, orientation_rad,
@@ -1141,7 +1209,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                     output = []
                     for sign in ("plus", "minus"):
                         drate = coefficients[sign]*dmu[sign]
-                        field = dq[sign]-step_dt*interior[sign]*drate
+                        field = dq[sign]-local_dt*interior[sign]*drate
                         output.append(field[active[sign]])
                     return np.concatenate(output)
                 def rmatvec(direction):
@@ -1162,14 +1230,220 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                     output = []
                     for sign in ("plus", "minus"):
                         field = (value[sign]
-                                 -step_dt*totals[sign]*adjoint[sign])
+                                 -local_dt*totals[sign]*adjoint[sign])
                         output.append(field[active[sign]])
                     return np.concatenate(output)
                 return LinearOperator(
                     (active_count, active_count), matvec=matvec,
                     rmatvec=rmatvec, dtype=float)
 
+            def backward_euler_trial(previous, duration):
+                """One bounded BE trial; caller owns acceptance and the clock."""
+                initial = np.clip(
+                    previous+duration*normalized_rate(previous), 0.0, 1.0)
+
+                def trial_residual(trial):
+                    rate_value = normalized_rate(trial)
+                    return trial-np.clip(
+                        previous+duration*rate_value, 0.0, 1.0)
+
+                def trial_jacobian(trial):
+                    return exact_jacobian(trial, previous, duration)
+
+                local = least_squares(
+                    trial_residual, initial, jac=trial_jacobian,
+                    bounds=(0.0, 1.0), ftol=None, xtol=tolerance,
+                    gtol=tolerance,
+                    max_nfev=int(parameters.ordering_implicit_max_nfev),
+                    tr_solver="lsmr")
+                trial = np.clip(local.x, 0.0, 1.0)
+                local_residual = trial_residual(trial)
+                return trial, local, float(np.max(np.abs(local_residual)))
+
+            def rosenbrock_trial(previous, duration):
+                """One linearly implicit Euler trial with the exact FFT JVP."""
+                rate_value = normalized_rate(previous)
+                counter = [0]
+                def count_iteration(_):
+                    counter[0] += 1
+                delta, info = gmres(
+                    exact_jacobian(previous, previous, duration),
+                    duration*rate_value, rtol=1e-9, atol=1e-12,
+                    restart=30, maxiter=100, callback=count_iteration,
+                    callback_type="pr_norm")
+                if info != 0 or np.any(~np.isfinite(delta)):
+                    return None, counter[0], int(info)
+                return np.clip(previous+delta, 0.0, 1.0), counter[0], 0
+
             if (parameters.ordering_finite_time_backend
+                    == "matrix_free_adaptive_rosenbrock_euler"):
+                requested_finite_steps = internal_steps
+                step_dt = total_dt/requested_finite_steps
+                time = 0.0
+                accepted_steps = 0
+                rejected_steps = 0
+                consecutive_rejections = 0
+                maximum_error_norm = 0.0
+                maximum_accepted_error_norm = 0.0
+                maximum_accepted_step_s = 0.0
+                last_accepted_step_s = 0.0
+                minimum_step = max(
+                    32*np.finfo(float).eps*total_dt,
+                    np.nextafter(0.0, 1.0))
+                relative_tolerance = float(
+                    parameters.ordering_finite_relative_tolerance)
+                absolute_tolerance = float(
+                    parameters.ordering_finite_absolute_tolerance)
+                while time < total_dt:
+                    duration = min(step_dt, total_dt-time)
+                    full, full_iterations, full_info = rosenbrock_trial(
+                        vector, duration)
+                    half, half_iterations, half_info = rosenbrock_trial(
+                        vector, 0.5*duration)
+                    if half is None:
+                        half2 = None; half2_iterations = 0; half2_info = half_info
+                    else:
+                        half2, half2_iterations, half2_info = rosenbrock_trial(
+                            half, 0.5*duration)
+                    linear_iterations += (
+                        full_iterations+half_iterations+half2_iterations)
+                    nonlinear_ok = bool(
+                        full is not None and half is not None
+                        and half2 is not None and full_info == 0
+                        and half_info == 0 and half2_info == 0)
+                    if nonlinear_ok:
+                        scale = (absolute_tolerance
+                                 +relative_tolerance*np.maximum(
+                                     np.maximum(np.abs(half2), np.abs(vector)),
+                                     1e-12))
+                        error_norm = float(np.max(np.abs(half2-full)/scale))
+                    else:
+                        error_norm = np.inf
+                    maximum_error_norm = max(maximum_error_norm, error_norm)
+                    if nonlinear_ok and error_norm <= 1.0:
+                        vector = half2
+                        time += duration
+                        accepted_steps += 1
+                        consecutive_rejections = 0
+                        maximum_accepted_error_norm = max(
+                            maximum_accepted_error_norm, error_norm)
+                        maximum_accepted_step_s = max(
+                            maximum_accepted_step_s, duration)
+                        last_accepted_step_s = duration
+                        factor = (1.5 if error_norm == 0.0 else
+                                  np.clip(0.9/np.sqrt(error_norm), 0.5, 1.5))
+                        step_dt = min(total_dt-time, duration*factor)
+                    else:
+                        rejected_steps += 1
+                        consecutive_rejections += 1
+                        if consecutive_rejections > int(
+                                parameters.ordering_finite_max_rejections):
+                            raise RuntimeError(
+                                "adaptive matrix-free Rosenbrock exceeded the "
+                                "rejected-trial limit")
+                        factor = (0.25 if not nonlinear_ok else
+                                  np.clip(0.8/np.sqrt(max(error_norm, 1e-16)),
+                                          0.1, 0.5))
+                        step_dt = duration*factor
+                        if step_dt < minimum_step:
+                            raise RuntimeError(
+                                "adaptive matrix-free Rosenbrock reached the "
+                                "minimum physical timestep")
+                internal_steps = accepted_steps
+                final_vector = vector
+                finite_time_error_control_assessed = True
+                finite_time_error_tolerance_satisfied = bool(
+                    maximum_accepted_error_norm <= 1.0)
+                integration_method = (
+                    "bounded_finite_time_matrix_free_adaptive_ros1")
+                solver_message = (
+                    "step-doubled exact-FFT-JVP Rosenbrock-Euler completed "
+                    "the full clock with local error control")
+            elif (parameters.ordering_finite_time_backend
+                    == "matrix_free_adaptive_backward_euler"):
+                # L-stable BE with step doubling.  The accepted state is the
+                # two-half-step result; the full step is an independent local
+                # truncation-error estimate.  Failed nonlinear/error trials do
+                # not publish state or advance physical time.
+                requested_finite_steps = internal_steps
+                step_dt = total_dt/requested_finite_steps
+                time = 0.0
+                accepted_steps = 0
+                rejected_steps = 0
+                consecutive_rejections = 0
+                maximum_error_norm = 0.0
+                maximum_accepted_error_norm = 0.0
+                maximum_accepted_step_s = 0.0
+                last_accepted_step_s = 0.0
+                minimum_step = max(
+                    32*np.finfo(float).eps*total_dt,
+                    np.nextafter(0.0, 1.0))
+                relative_tolerance = float(
+                    parameters.ordering_finite_relative_tolerance)
+                absolute_tolerance = float(
+                    parameters.ordering_finite_absolute_tolerance)
+                while time < total_dt:
+                    duration = min(step_dt, total_dt-time)
+                    full, full_solve, full_residual = backward_euler_trial(
+                        vector, duration)
+                    half, half_solve, half_residual = backward_euler_trial(
+                        vector, 0.5*duration)
+                    half2, half2_solve, half2_residual = backward_euler_trial(
+                        half, 0.5*duration)
+                    nonlinear_iterations += int(
+                        full_solve.nfev+half_solve.nfev+half2_solve.nfev)
+                    linear_iterations += int(
+                        (full_solve.njev or 0)+(half_solve.njev or 0)
+                        +(half2_solve.njev or 0))
+                    nonlinear_ok = bool(
+                        full_solve.success and half_solve.success
+                        and half2_solve.success
+                        and max(full_residual, half_residual, half2_residual)
+                        <= tolerance)
+                    scale = (absolute_tolerance+relative_tolerance*np.maximum(
+                        np.maximum(np.abs(half2), np.abs(vector)), 1e-12))
+                    error_norm = float(np.max(np.abs(half2-full)/scale))
+                    maximum_error_norm = max(maximum_error_norm, error_norm)
+                    if nonlinear_ok and error_norm <= 1.0:
+                        vector = half2
+                        time += duration
+                        accepted_steps += 1
+                        consecutive_rejections = 0
+                        maximum_accepted_error_norm = max(
+                            maximum_accepted_error_norm, error_norm)
+                        maximum_accepted_step_s = max(
+                            maximum_accepted_step_s, duration)
+                        last_accepted_step_s = duration
+                        factor = (2.0 if error_norm == 0.0 else
+                                  np.clip(0.9/np.sqrt(error_norm), 0.5, 2.0))
+                        step_dt = min(total_dt-time, duration*factor)
+                    else:
+                        rejected_steps += 1
+                        consecutive_rejections += 1
+                        if consecutive_rejections > int(
+                                parameters.ordering_finite_max_rejections):
+                            raise RuntimeError(
+                                "adaptive matrix-free backward-Euler exceeded "
+                                "the rejected-trial limit")
+                        factor = (0.25 if not nonlinear_ok else
+                                  np.clip(0.8/np.sqrt(max(error_norm, 1e-16)),
+                                          0.1, 0.5))
+                        step_dt = duration*factor
+                        if step_dt < minimum_step:
+                            raise RuntimeError(
+                                "adaptive matrix-free backward-Euler reached "
+                                "the minimum physical timestep")
+                internal_steps = accepted_steps
+                final_vector = vector
+                finite_time_error_control_assessed = True
+                finite_time_error_tolerance_satisfied = bool(
+                    maximum_accepted_error_norm <= 1.0)
+                integration_method = (
+                    "bounded_finite_time_matrix_free_adaptive_be")
+                solver_message = (
+                    "step-doubled exact-FFT-JVP backward Euler completed the "
+                    "full clock with local error control")
+            elif (parameters.ordering_finite_time_backend
                     == "matrix_free_exponential_rosenbrock"):
                 for _ in range(internal_steps):
                     previous = vector.copy()
@@ -1228,26 +1502,15 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             else:
                 for _ in range(internal_steps):
                     previous = vector.copy()
-                    initial = np.clip(
-                        previous+step_dt*normalized_rate(previous), 0.0, 1.0)
-                    local = least_squares(
-                        lambda trial: projected_residual(trial, previous),
-                        initial,
-                        jac=lambda trial: exact_jacobian(trial, previous),
-                        bounds=(0.0, 1.0), ftol=None, xtol=tolerance,
-                        gtol=tolerance,
-                        max_nfev=int(parameters.ordering_implicit_max_nfev),
-                        tr_solver="lsmr")
-                    vector = np.clip(local.x, 0.0, 1.0)
-                    local_residual = projected_residual(vector, previous)
+                    vector, local, local_residual = backward_euler_trial(
+                        previous, step_dt)
                     nonlinear_iterations += int(local.nfev)
                     linear_iterations += int(local.njev or 0)
-                    if (not local.success or float(np.max(np.abs(local_residual)))
-                            > tolerance):
+                    if not local.success or local_residual > tolerance:
                         raise RuntimeError(
                             "matrix-free ordering trust-region solve failed: "
                             f"success={local.success}, "
-                            f"residual={np.max(np.abs(local_residual)):.17g}, "
+                            f"residual={local_residual:.17g}, "
                             f"message={local.message}")
                 final_vector = vector
                 integration_method = "bounded_finite_time_matrix_free_be"
@@ -1391,9 +1654,13 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "free_energy_rate_W_m3": (after_energy-before_energy)/total_dt,
         "internal_substeps": int(locals().get("internal_steps", 1)),
         "maximum_internal_substep_s": (total_dt/max(
-            int(locals().get("internal_steps", 1)), 1)),
+            int(locals().get("internal_steps", 1)), 1)
+            if locals().get("maximum_accepted_step_s") is None
+            else float(locals()["maximum_accepted_step_s"])),
         "last_internal_substep_s": (total_dt/max(
-            int(locals().get("internal_steps", 1)), 1)),
+            int(locals().get("internal_steps", 1)), 1)
+            if locals().get("last_accepted_step_s") is None
+            else float(locals()["last_accepted_step_s"])),
         "complete_elapsed_time_s": total_dt,
         "discarded_reaction_time_s": 0.0,
         "stationary_remainder_s": 0.0,
@@ -1460,8 +1727,35 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             "H_times_endpoint_rate_over_local_inventory_floor; stationary_"
             "endpoint_drift_diagnostic_not_a_finite_time_kinetic_error_bound"
             if integration_method.endswith("asymptotic") else None),
+        "finite_time_error_control_assessed": bool(locals().get(
+            "finite_time_error_control_assessed", False)),
+        "finite_time_error_tolerance_satisfied": bool(locals().get(
+            "finite_time_error_tolerance_satisfied", False)),
+        "finite_time_maximum_trial_error_norm": locals().get(
+            "maximum_error_norm"),
+        "finite_time_maximum_accepted_error_norm": locals().get(
+            "maximum_accepted_error_norm"),
+        "finite_time_rejected_trials": int(locals().get(
+            "rejected_steps", 0)),
+        "rk2_minimum_stage_cancellation_ratio": locals().get(
+            "rk2_min_stage_cancellation_ratio"),
+        "rk2_maximum_stage_norm_s-1": locals().get(
+            "rk2_maximum_stage_norm"),
+        "rk2_maximum_predictor_projection": locals().get(
+            "rk2_maximum_predictor_projection"),
+        "rk2_maximum_corrector_projection": locals().get(
+            "rk2_maximum_corrector_projection"),
+        "finite_time_relative_tolerance": (
+            parameters.ordering_finite_relative_tolerance
+            if locals().get("finite_time_error_control_assessed", False)
+            else None),
+        "finite_time_absolute_tolerance": (
+            parameters.ordering_finite_absolute_tolerance
+            if locals().get("finite_time_error_control_assessed", False)
+            else None),
         "finite_time_kinetic_accuracy_certified_by_this_solve": bool(
-            not integration_method.endswith("asymptotic")),
+            locals().get("finite_time_error_control_assessed", False)
+            and locals().get("finite_time_error_tolerance_satisfied", False)),
         "asymptotic_relative_diagnostic_density_floor_m2": (
             diagnostic_density_floor if integration_method.endswith("asymptotic")
             else None),

@@ -323,7 +323,8 @@ def _common_with_transport_density(common, density, topologies):
 def _mura_budget_audit(state, transported_density, capture_ledger,
                        family_flow_rate, raw_stress_Pa, schmid_tensors,
                        schmid_norm2, event_scale, dt_s, systems, topologies,
-                       parameters, elastic_release_J_m3_cells):
+                       parameters, extensive_parameters,
+                       elastic_release_J_m3_cells):
     """Return the complete fixed-strain Mura event budget.
 
     Plastic work is retained as the conjugate first-order diagnostic.  At
@@ -336,12 +337,14 @@ def _mura_budget_audit(state, transported_density, capture_ledger,
         out=np.zeros_like(schmid_norm2), where=schmid_norm2 > 0.0)
     family_work = float(dt_s)*raw_stress_Pa*slip_rate
     plastic_work = np.sum(family_work, axis=2)
-    before = wall_free_energy_density_J_m3(
-        state.common, parameters, topologies, systems)
-    transported_common = _common_with_transport_density(
-        state.common, transported_density, topologies)
-    after = wall_free_energy_density_J_m3(
-        transported_common, parameters, topologies, systems)
+    zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
+    before = extensive_wall_energy_components_J_m3(
+        state.density, systems, topologies, state.common.orientation_rad,
+        zero_target, extensive_parameters)["total"]
+    after = extensive_wall_energy_components_J_m3(
+        transported_density, systems, topologies,
+        state.common.orientation_rad, zero_target,
+        extensive_parameters)["total"]
     defect_delta = after-before
     line_creation = parameters.line_energy_J_m*sum(
         np.sum(capture_ledger["sign"][sign]["mura_line_stretching_m2"], axis=2)
@@ -390,6 +393,7 @@ def _mura_budget_audit(state, transported_density, capture_ledger,
             if elastic_release_J_m3_cells is not None
             else "prescribed_stress_conjugate_plastic_work"),
         "plastic_work_not_double_counted": True,
+        "defect_energy_functional": "extensive_signed_reservoir_v48",
     }, slip_rate, plastic_work, defect_delta, line_creation
 
 
@@ -938,7 +942,7 @@ def accepted_v24_mechanical_step(
                 state, density, capture, family_flow,
                 drive["raw_stress_Pa"], schmid_tensors, schmid_norm2,
                 event_scale, accepted_dt, systems, topologies,
-                common_parameters, elastic_release))
+                common_parameters, extensive_parameters, elastic_release))
         audit["family_event_scales"] = [float(value) for value in scales]
         audit["proposed_family_work_before_selection_J_m3_cells"] = [
             float(value) for value in proposed_family_work]
@@ -1124,6 +1128,63 @@ def accepted_v24_mechanical_step(
             accepted_dt*residual.channel_rates_m2_s["lock_plus"],
             accepted_dt*residual.channel_rates_m2_s["lock_minus"], systems,
             common.orientation_rad, topologies))
+    zero_target = np.zeros(common.orientation_rad.shape+(3, 3))
+    lock_before_energy = extensive_wall_energy_components_J_m3(
+        transported_density, systems, topologies, common.orientation_rad,
+        zero_target, extensive_parameters)["total"]
+    lock_after_energy = extensive_wall_energy_components_J_m3(
+        working_density, systems, topologies, common.orientation_rad,
+        zero_target, extensive_parameters)["total"]
+    lock_energy_change = float(np.sum(
+        lock_after_energy-lock_before_energy, dtype=np.longdouble))
+    lock_energy_scale = max(
+        abs(float(np.sum(lock_before_energy, dtype=np.longdouble))),
+        abs(float(np.sum(lock_after_energy, dtype=np.longdouble))), 1.0)
+    lock_energy_tolerance = 2e-12*lock_energy_scale
+    if lock_energy_change > lock_energy_tolerance:
+        # Locking has no independent mechanical/chemical work owner.  An
+        # uphill candidate therefore fails atomically rather than borrowing
+        # energy from the subsequent ordering or thermal channels.
+        working_density = transported_density
+        working_alignment = transported_alignment
+        lock_energy_change = 0.0
+        lock_heat = np.zeros_like(common.temperature_K)
+        locking_ledger = {
+            **locking_ledger,
+            "accepted": False,
+            "classification": "UPHILL_LOCKING_REJECTED_ATOMICALLY",
+        }
+    else:
+        released_lock_energy = max(-lock_energy_change, 0.0)
+        lock_support = np.sum(
+            np.abs(working_density.forest_plus_m2
+                   -transported_density.forest_plus_m2)
+            +np.abs(working_density.forest_minus_m2
+                    -transported_density.forest_minus_m2), axis=2)
+        support_sum = float(np.sum(lock_support))
+        if released_lock_energy == 0.0:
+            lock_heat = np.zeros_like(common.temperature_K)
+        elif support_sum > 0.0:
+            lock_heat = released_lock_energy*lock_support/support_sum
+        else:
+            lock_heat = np.full_like(
+                common.temperature_K,
+                released_lock_energy/common.temperature_K.size)
+        common = replace(
+            common,
+            temperature_K=(common.temperature_K+lock_heat
+                           /common_parameters.volumetric_heat_capacity_J_m3_K))
+        locking_ledger = {
+            **locking_ledger,
+            "accepted": True,
+            "classification": "DOWNHILL_LOCKING_ACCEPTED",
+        }
+    locking_ledger.update({
+        "complete_energy_change_J_m3_cells": lock_energy_change,
+        "irreversible_heat_increment_J_m3": lock_heat,
+        "energy_tolerance_J_m3_cells": lock_energy_tolerance,
+        "energy_functional": "extensive_signed_reservoir_v48",
+    })
     # Geometry-neutral ordering is a shared physical reaction, not a heat
     # difference between the topology-on and topology-off controls.  Evaluate
     # and deposit its complete-energy release identically in both branches.
@@ -1299,6 +1360,11 @@ def accepted_v24_mechanical_step(
             "plastic_work_increment_J_m3": _plastic_work_increment,
             "deposited_heat_increment_J_m3": _deposited_heat_increment,
             "stored_line_energy_increment_J_m3": accepted_storage_increment_J_m3,
+            "locking_heat_increment_J_m3": lock_heat,
+            "locking_energy_change_J_m3_cells": lock_energy_change,
+            "ordering_heat_increment_J_m3": topology_heat,
+            "ordering_energy_change_J_m3_cells": topology_ledger[
+                "complete_energy_change_J_m3_cells"],
             "line_creation_energy_increment_J_m3": mura_storage_increment_J_m3,
             "recoverable_elastic_energy_release_J_m3_cells": float(
                 _mechanical_source),

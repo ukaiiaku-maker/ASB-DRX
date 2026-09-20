@@ -30,12 +30,14 @@ def test_exact_tanh_counterexample_separates_accessibility_from_finite_time():
     assert row["equilibrium_absolute_error"] > 0.15
 
 
-def test_common_state_dispatch_has_finite_endpoint_distance_guard():
+def test_common_state_dispatch_uses_v48_error_control_not_unproved_distance():
     parameters = resolved_bicrystal(
         grid=16, length_m=3.2e-6, interface_width_m=4e-7)[
             "extensive_parameters"]
-    assert parameters.ordering_finite_time_backend == "matrix_free_projected_rk2"
+    assert parameters.ordering_finite_time_backend == (
+        "matrix_free_adaptive_rosenbrock_euler")
     assert parameters.ordering_asymptotic_maximum_endpoint_distance_relative == .05
+    assert parameters.ordering_asymptotic_certificate_mode == "disabled"
 
 
 def test_long_finite_path_switches_only_after_endpoint_error_certificate():

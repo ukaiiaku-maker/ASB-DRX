@@ -145,9 +145,10 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
     # implementation remains available as the short-horizon reference oracle.
     extensive = replace(
         extensive, ordering_integration_method="implicit_backward_euler",
-        ordering_finite_time_backend="matrix_free_projected_rk2",
+        ordering_finite_time_backend="matrix_free_adaptive_rosenbrock_euler",
         ordering_asymptotic_minimum_attempt_exposure=1.000001e-3,
         ordering_asymptotic_maximum_endpoint_distance_relative=0.05,
+        ordering_asymptotic_certificate_mode="disabled",
         # Low-exposure production calls use a bounded resolved reference; the
         # dedicated oracle audit below V39 retains the stricter 0.5 ps spacing.
         ordering_internal_substep_s=5e-11,
@@ -234,6 +235,7 @@ def _energy_options(context, driving):
     p = context["wall_parameters"]
     return dict(
         wall_parameters=p, mean_strain=driving.mean_strain,
+        extensive_parameters=context["extensive_parameters"],
         topologies=context["topologies"], systems=context["systems"],
         phase_barrier_J_m3=5.0e6, phase_gradient_J_m=5.0e-7,
         boundary_line_energy_J_m=p.line_energy_J_m,
@@ -423,6 +425,7 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         front_state, accepted_eta, spacing_m=spacing,
         represented_thickness_m=thickness,
         **_energy_options(context, driving))
+    delta_internal_J = after_energy.internal_J-before_energy.internal_J
     phase_change = accepted_eta-state.eta
     mura_budget = None if mura_ledger is None else mura_ledger["mura_work_budget"]
     mura_balance = None if mura_ledger is None else mura_ledger["mura_balance_ledger"]
@@ -491,6 +494,14 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
         "complete_energy": {
             "before": asdict(before_energy), "after": asdict(after_energy),
             "delta_helmholtz_J": after_energy.helmholtz_J-before_energy.helmholtz_J,
+            "delta_internal_J": delta_internal_J,
+            "external_work_J": 0.0,
+            "heat_input_J": 0.0,
+            "material_energy_export_J": 0.0,
+            "first_law_residual_J": delta_internal_J,
+            "first_law_convention": (
+                "fixed mean strain during accepted constitutive interval; "
+                "generated heat is internal conversion, not external input"),
             "front_decision": (None if energy_decision is None
                                else energy_decision.as_dict()),
         },
@@ -532,6 +543,14 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 mura_balance["deposited_heat_increment_J_m3"])),
             "stored_line_energy_increment_J_m3_cells": float(np.sum(
                 mura_balance["stored_line_energy_increment_J_m3"])),
+            "locking_energy_change_J_m3_cells": float(
+                mura_balance["locking_energy_change_J_m3_cells"]),
+            "locking_heat_increment_J_m3_cells": float(np.sum(
+                mura_balance["locking_heat_increment_J_m3"])),
+            "ordering_energy_change_J_m3_cells": float(
+                mura_balance["ordering_energy_change_J_m3_cells"]),
+            "ordering_heat_increment_J_m3_cells": float(np.sum(
+                mura_balance["ordering_heat_increment_J_m3"])),
             "ordering_integration_method": mura_ledger[
                 "ordering_thermodynamics"].get("integration_method"),
             "ordering_stiff_dispatch": mura_ledger[
