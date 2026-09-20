@@ -66,11 +66,16 @@
   },
   "execution_location": "local",
   "fixture_passed": true,
-  "generated_utc": "2026-09-20T04:55:50.672712+00:00",
+  "generated_utc": "2026-09-20T04:59:26.638757+00:00",
   "material_calibration_claimed": false,
   "next_exact_task": "regularize or resolve the high-wave-number Mura wall content and separate geometry-owned line energy from singular continuum gradient energy before any longer physical horizon",
+  "regression": {
+    "command": "PYTHONPATH=src:. pytest -q tests",
+    "passed": 764,
+    "wall_seconds": 193.91
+  },
   "schema": "asb-drx/v45/campaign-controller/v1",
   "scientific_gate_passed": false,
-  "source_sha": "885221a2fda52d113421f60fd519256acf0ecfed",
+  "source_sha": "41be9d7ba2f9e459bf1049ffbb33e7e888f9f007",
   "strict_asb_claimed": false
 }
