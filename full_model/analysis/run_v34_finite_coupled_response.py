@@ -145,7 +145,8 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
     # implementation remains available as the short-horizon reference oracle.
     extensive = replace(
         extensive, ordering_integration_method="implicit_backward_euler",
-        ordering_finite_time_backend="matrix_free_backward_euler",
+        ordering_finite_time_backend="matrix_free_exponential_rosenbrock",
+        ordering_asymptotic_minimum_attempt_exposure=1.000001,
         # Low-exposure production calls use a bounded resolved reference; the
         # dedicated oracle audit below V39 retains the stricter 0.5 ps spacing.
         ordering_internal_substep_s=5e-11,

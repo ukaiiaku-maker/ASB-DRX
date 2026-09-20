@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 import numpy as np
 from scipy.optimize import least_squares
 from scipy.integrate import solve_ivp
-from scipy.sparse.linalg import LinearOperator, gmres
+from scipy.sparse.linalg import LinearOperator, expm_multiply, gmres
 
 try:
     from .arrhenius_kinetics import (
@@ -93,7 +93,9 @@ class ExtensiveWallParameters:
             raise ValueError("unknown ordering integration method")
         if self.ordering_finite_time_backend not in (
                 "dense_bdf_oracle", "matrix_free_backward_euler",
-                "matrix_free_projected_rk2"):
+                "matrix_free_projected_rk2", "matrix_free_adaptive_dop853",
+                "matrix_free_rosenbrock_euler",
+                "matrix_free_exponential_rosenbrock"):
             raise ValueError("unknown finite-time ordering backend")
         if (not np.isfinite(self.ordering_implicit_residual_tolerance)
                 or self.ordering_implicit_residual_tolerance <= 0.0):
@@ -820,7 +822,26 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 output.append(rate)
             return np.concatenate(output)
 
-        if parameters.ordering_finite_time_backend == "dense_bdf_oracle":
+        if parameters.ordering_finite_time_backend == "matrix_free_adaptive_dop853":
+            finite = solve_ivp(
+                finite_time_rhs, (0.0, total_dt), q0, method="DOP853",
+                rtol=max(parameters.ordering_implicit_residual_tolerance, 1e-7),
+                atol=max(parameters.ordering_implicit_residual_tolerance*1e-2,
+                         1e-10),
+                max_step=(total_dt/max(16, int(np.ceil(
+                    attempt_exposure
+                    / parameters.ordering_matrix_free_max_attempt_exposure)))))
+            if not finite.success:
+                raise RuntimeError(
+                    "adaptive matrix-free ordering solve failed: "
+                    f"message={finite.message}")
+            final_vector = np.clip(finite.y[:, -1], 0.0, 1.0)
+            nfev = int(finite.nfev); njev = int(finite.njev)
+            linear_iterations = 0; nonlinear_iterations = 0
+            integration_method = "bounded_finite_time_matrix_free_dop853"
+            solver_message = str(finite.message)
+            internal_steps = max(int(finite.t.size-1), 1)
+        elif parameters.ordering_finite_time_backend == "dense_bdf_oracle":
             finite = solve_ivp(
                 finite_time_rhs, (0.0, total_dt), q0, method="BDF",
                 rtol=max(parameters.ordering_implicit_residual_tolerance, 1e-8),
@@ -953,32 +974,89 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                     (active_count, active_count), matvec=matvec,
                     rmatvec=rmatvec, dtype=float)
 
-            for _ in range(internal_steps):
-                previous = vector.copy()
-                initial = np.clip(
-                    previous+step_dt*normalized_rate(previous), 0.0, 1.0)
-                local = least_squares(
-                    lambda trial: projected_residual(trial, previous),
-                    initial,
-                    jac=lambda trial: exact_jacobian(trial, previous),
-                    bounds=(0.0, 1.0), ftol=None, xtol=tolerance,
-                    gtol=tolerance,
-                    max_nfev=int(parameters.ordering_implicit_max_nfev),
-                    tr_solver="lsmr")
-                vector = np.clip(local.x, 0.0, 1.0)
-                local_residual = projected_residual(vector, previous)
-                nonlinear_iterations += int(local.nfev)
-                linear_iterations += int(local.njev or 0)
-                if (not local.success or float(np.max(np.abs(local_residual)))
-                        > tolerance):
-                    raise RuntimeError(
-                        "matrix-free ordering trust-region solve failed: "
-                        f"success={local.success}, "
-                        f"residual={np.max(np.abs(local_residual)):.17g}, "
-                        f"message={local.message}")
-            final_vector = vector
-            integration_method = "bounded_finite_time_matrix_free_be"
-            solver_message = "exact FFT JVP/JTV trust-region LSMR converged"
+            if (parameters.ordering_finite_time_backend
+                    == "matrix_free_exponential_rosenbrock"):
+                for _ in range(internal_steps):
+                    previous = vector.copy()
+                    rate_value = normalized_rate(previous)
+                    backward = exact_jacobian(previous, previous)
+                    def augmented_matvec(value):
+                        flat = np.asarray(value).reshape(-1)
+                        state_direction = flat[:-1]
+                        top = ((state_direction-backward.matvec(
+                            state_direction))+step_dt*flat[-1]*rate_value)
+                        return np.concatenate([top, [0.0]])
+                    def augmented_rmatvec(value):
+                        flat = np.asarray(value).reshape(-1)
+                        state_direction = flat[:-1]
+                        top = (state_direction-backward.rmatvec(
+                            state_direction))
+                        bottom = step_dt*np.dot(rate_value, state_direction)
+                        return np.concatenate([top, [bottom]])
+                    augmented = LinearOperator(
+                        (active_count+1, active_count+1),
+                        matvec=augmented_matvec,
+                        rmatvec=augmented_rmatvec, dtype=float)
+                    seed = np.zeros(active_count+1); seed[-1] = 1.0
+                    evolved = expm_multiply(augmented, seed, traceA=0.0)
+                    delta = evolved[:-1]
+                    if np.any(~np.isfinite(delta)):
+                        raise RuntimeError(
+                            "matrix-free exponential Rosenbrock action failed")
+                    vector = np.clip(previous+delta, 0.0, 1.0)
+                    linear_iterations += 1
+                final_vector = vector
+                integration_method = "bounded_finite_time_matrix_free_exprb1"
+                solver_message = "FFT-JVP exponential Rosenbrock completed full clock"
+            elif (parameters.ordering_finite_time_backend
+                    == "matrix_free_rosenbrock_euler"):
+                for _ in range(internal_steps):
+                    previous = vector.copy()
+                    rate_value = normalized_rate(previous)
+                    counter = [0]
+                    def count_iteration(_):
+                        counter[0] += 1
+                    delta, info = gmres(
+                        exact_jacobian(previous, previous),
+                        step_dt*rate_value, rtol=1e-8, atol=1e-11,
+                        restart=30, maxiter=80, callback=count_iteration,
+                        callback_type="pr_norm")
+                    linear_iterations += counter[0]
+                    if info != 0 or np.any(~np.isfinite(delta)):
+                        raise RuntimeError(
+                            "matrix-free Rosenbrock linear solve failed: "
+                            f"gmres_info={info}")
+                    vector = np.clip(previous+delta, 0.0, 1.0)
+                final_vector = vector
+                integration_method = "bounded_finite_time_matrix_free_ros1"
+                solver_message = "exact FFT JVP Rosenbrock-Euler completed full clock"
+            else:
+                for _ in range(internal_steps):
+                    previous = vector.copy()
+                    initial = np.clip(
+                        previous+step_dt*normalized_rate(previous), 0.0, 1.0)
+                    local = least_squares(
+                        lambda trial: projected_residual(trial, previous),
+                        initial,
+                        jac=lambda trial: exact_jacobian(trial, previous),
+                        bounds=(0.0, 1.0), ftol=None, xtol=tolerance,
+                        gtol=tolerance,
+                        max_nfev=int(parameters.ordering_implicit_max_nfev),
+                        tr_solver="lsmr")
+                    vector = np.clip(local.x, 0.0, 1.0)
+                    local_residual = projected_residual(vector, previous)
+                    nonlinear_iterations += int(local.nfev)
+                    linear_iterations += int(local.njev or 0)
+                    if (not local.success or float(np.max(np.abs(local_residual)))
+                            > tolerance):
+                        raise RuntimeError(
+                            "matrix-free ordering trust-region solve failed: "
+                            f"success={local.success}, "
+                            f"residual={np.max(np.abs(local_residual)):.17g}, "
+                            f"message={local.message}")
+                final_vector = vector
+                integration_method = "bounded_finite_time_matrix_free_be"
+                solver_message = "exact FFT JVP/JTV trust-region LSMR converged"
 
         class _FiniteTimeResult:
             pass

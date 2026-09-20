@@ -59,6 +59,18 @@
     "passed": 759,
     "wall_seconds": 200.64
   },
+  "v45_interpretation_addendum": {
+    "classification": "COMPATIBLE_TRANSPORT_IMPLEMENTED_MATCHED_SPATIAL_IMPROVEMENT_UNESTABLISHED",
+    "reason": "The previously contrasted 8.415927% V43 value is interval2_one_step.after_first_mura, whereas the 0.0263870% V44 value is a first-macro analytic-start stage. They are not a matched before/after operator comparison.",
+    "matched_first_macro_complex_relative_rms": {
+      "v43_after_first_mura": 0.0002636062097406558,
+      "v44_after_first_mura": 0.0002638702041757045,
+      "v43_final": 0.043001734780054555,
+      "v44_final": 0.04304400535716677
+    },
+    "historical_fields_preserved": true,
+    "solution_level_improvement_claimed": false
+  },
   "scientific_gate_passed": false,
   "fixture_passed": true,
   "drx_claimed": false,

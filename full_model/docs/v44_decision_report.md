@@ -128,3 +128,19 @@ Next: replace the dense-Jacobian finite-time ordering BDF path with a
 matrix-free/FFT-compatible bounded integrator, complete the retained n128
 second half, and repeat the final same-grid temporal comparison.  Broader
 organization, DRX, or ASB campaigns are not justified before that closure.
+
+## V45 interpretation addendum
+
+The V44 compatible transport operator remains an internally conservative,
+de-aliased candidate, but the earlier spatial-improvement wording compared
+different trajectory stages. The V43 value `0.0841592749725368` belongs to
+`interval2_one_step.after_first_mura`; the V44 value
+`0.0002638702041757045` belongs to the analytic-start first macro.
+
+At matched named first-macro stages, V43/V44 cross-grid complex curl errors
+are `0.0002636062097406558`/`0.0002638702041757045` after the first Mura half
+and `0.043001734780054555`/`0.04304400535716677` at the final stage. Therefore the
+current claim is
+`COMPATIBLE_TRANSPORT_IMPLEMENTED_MATCHED_SPATIAL_IMPROVEMENT_UNESTABLISHED`.
+The raw V44 numbers and their original source identities remain unchanged;
+this addendum retracts only the unmatched solution-improvement inference.
