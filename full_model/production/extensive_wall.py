@@ -63,6 +63,7 @@ class ExtensiveWallParameters:
     ordering_implicit_residual_tolerance: float = 2e-9
     ordering_implicit_max_nfev: int = 100
     ordering_asymptotic_minimum_attempt_exposure: float = 50.0
+    ordering_asymptotic_maximum_endpoint_distance_relative: float = 1.0
 
     def __post_init__(self):
         positive = (
@@ -108,6 +109,12 @@ class ExtensiveWallParameters:
         if (not np.isfinite(self.ordering_asymptotic_minimum_attempt_exposure)
                 or self.ordering_asymptotic_minimum_attempt_exposure <= 0.0):
             raise ValueError("ordering asymptotic exposure must be positive")
+        if (not np.isfinite(
+                self.ordering_asymptotic_maximum_endpoint_distance_relative)
+                or not 0.0 <
+                self.ordering_asymptotic_maximum_endpoint_distance_relative
+                <= 1.0):
+            raise ValueError("ordering asymptotic endpoint-distance tolerance invalid")
         # Validate entropy, drag limit, and negative-barrier validity policy in
         # the campaign-wide Arrhenius representation.
         ActivatedProcess(
@@ -877,6 +884,34 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                     "not a sufficient finite-time error certificate"),
             })
             return result
+        endpoint_distance_relative = float(np.linalg.norm(
+            equilibrium_vector-q0)/max(
+                np.linalg.norm(equilibrium_vector), np.linalg.norm(q0),
+                np.sqrt(equilibrium_vector.size)*1e-30))
+        if (endpoint_distance_relative
+                > parameters.ordering_asymptotic_maximum_endpoint_distance_relative):
+            result = _accepted_ordering_implicit(
+                inventory, systems, topologies, orientation_rad,
+                target_nye_m1, stress_Pa, temperature_K, parameters,
+                total_dt, alignment=alignment, force_finite_time=True)
+            ledger_index = 2 if alignment is not None else 1
+            result[ledger_index].update({
+                "stiff_dispatch": (
+                    "finite_time_asymptotic_endpoint_distance_unqualified"),
+                "maximum_attempt_exposure": attempt_exposure,
+                "asymptotic_state_accessibility_passed": True,
+                "asymptotic_accessibility_maximum_violation": 0.0,
+                "asymptotic_endpoint_distance_relative": (
+                    endpoint_distance_relative),
+                "asymptotic_endpoint_distance_tolerance_relative": (
+                    parameters.
+                    ordering_asymptotic_maximum_endpoint_distance_relative),
+                "asymptotic_endpoint_distance_bound_semantics": (
+                    "for the declared convex projected gradient flow, distance "
+                    "to its equilibrium is non-increasing; initial-to-endpoint "
+                    "distance is a conservative finite-horizon error bound"),
+            })
+            return result
         boundary_tolerance = 128*np.finfo(float).eps
         equilibrium_vector[equilibrium_vector <= boundary_tolerance] = 0.0
         equilibrium_vector[equilibrium_vector >= 1.0-boundary_tolerance] = 1.0
@@ -1341,6 +1376,12 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "asymptotic_proposed_maximum_fraction_change": (
             maximum_fraction_change if integration_method.endswith("asymptotic")
             else None),
+        "asymptotic_endpoint_distance_relative": (
+            endpoint_distance_relative if integration_method.endswith(
+                "asymptotic") else None),
+        "asymptotic_endpoint_distance_tolerance_relative": (
+            parameters.ordering_asymptotic_maximum_endpoint_distance_relative
+            if integration_method.endswith("asymptotic") else None),
         "minimum_active_local_attempt_exposure": (
             minimum_active_attempt_exposure
             if integration_method.endswith("asymptotic") else None),

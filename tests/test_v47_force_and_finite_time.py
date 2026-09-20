@@ -5,6 +5,7 @@ import numpy as np
 from full_model.analysis.run_v47_ordering_finite_time import (
     exact_scalar_counterexample,
 )
+from full_model.analysis.run_v34_finite_coupled_response import resolved_bicrystal
 from full_model.production.arrhenius_kinetics import ActivatedProcess
 from full_model.production.extensive_wall import (
     extensive_wall_energy_components_J_m3,
@@ -26,6 +27,14 @@ def test_exact_tanh_counterexample_separates_accessibility_from_finite_time():
     np.testing.assert_allclose(row["exact_finite_time_q"],
                                0.3473761134414577, rtol=0.0, atol=2e-16)
     assert row["equilibrium_absolute_error"] > 0.15
+
+
+def test_common_state_dispatch_has_finite_endpoint_distance_guard():
+    parameters = resolved_bicrystal(
+        grid=16, length_m=3.2e-6, interface_width_m=4e-7)[
+            "extensive_parameters"]
+    assert parameters.ordering_finite_time_backend == "matrix_free_projected_rk2"
+    assert parameters.ordering_asymptotic_maximum_endpoint_distance_relative == .05
 
 
 def test_direct_ordered_gradient_increment_matches_endpoint_difference():

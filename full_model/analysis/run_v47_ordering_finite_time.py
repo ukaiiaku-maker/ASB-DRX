@@ -71,6 +71,7 @@ def main():
         "first_nonzero", "post_front", "late_macro"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--max-attempt-exposure", type=float, default=.05)
+    parser.add_argument("--production-dispatch", action="store_true")
     args = parser.parse_args()
     before_path, reference_path, driving_time = pair_paths(
         args.v46_results, args.stage)
@@ -80,11 +81,18 @@ def main():
     before, before_metadata = load_stage(before_path, context)
     reference, reference_metadata = load_stage(reference_path, context)
     finite_context = dict(context)
-    finite_context["extensive_parameters"] = replace(
-        context["extensive_parameters"],
-        ordering_finite_time_backend="matrix_free_projected_rk2",
-        ordering_matrix_free_max_attempt_exposure=args.max_attempt_exposure,
-        ordering_asymptotic_minimum_attempt_exposure=1e300)
+    if args.production_dispatch:
+        finite_context["extensive_parameters"] = replace(
+            context["extensive_parameters"],
+            ordering_finite_time_backend="matrix_free_projected_rk2",
+            ordering_matrix_free_max_attempt_exposure=(
+                args.max_attempt_exposure))
+    else:
+        finite_context["extensive_parameters"] = replace(
+            context["extensive_parameters"],
+            ordering_finite_time_backend="matrix_free_projected_rk2",
+            ordering_matrix_free_max_attempt_exposure=args.max_attempt_exposure,
+            ordering_asymptotic_minimum_attempt_exposure=1e300)
     driving = driving_at_time(128, .01, "hold", 0.0, driving_time)
     started = time.perf_counter()
     finite, audit = run_i3_cycle(
@@ -127,6 +135,7 @@ def main():
         "reference_physical_time_s": reference_metadata["physical_time_s"],
         "driving_time_s": driving_time,
         "requested_and_accepted_dt_s": DT_S,
+        "production_dispatch_enabled": args.production_dispatch,
         "finite_backend": "matrix_free_projected_rk2",
         "maximum_internal_attempt_exposure": args.max_attempt_exposure,
         "wall_seconds": wall_seconds,
