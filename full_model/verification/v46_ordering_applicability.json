@@ -1,0 +1,59 @@
+{
+  "actual_first_operation": {
+    "accepted_dt_s": 1.0507229179079728e-10,
+    "accessibility_maximum_violation": null,
+    "active_degrees_of_freedom": 0,
+    "complete_elapsed_time_s": 1.0507229179079728e-10,
+    "discarded_reaction_time_s": 0.0,
+    "dispatch": "exact_zero_pool",
+    "grid": 32,
+    "integration_method": "complete_time_explicit_subcycling",
+    "maximum_attempt_exposure": 0.0,
+    "minimum_active_local_attempt_exposure": null,
+    "proposed_maximum_fraction_change": null,
+    "requested_dt_s": 4.8828125e-07,
+    "state_changed": true
+  },
+  "bound_scope": "necessary local sign/family finite-speed accessibility; not a sufficient finite-time endpoint error certificate",
+  "classification": "STATE_INACCESSIBLE_ASYMPTOTIC_ENDPOINT_REJECTED_FINITE_TIME_USED",
+  "counterexample": {
+    "accessibility_passed": false,
+    "dispatch": "finite_time_state_inaccessible_asymptotic_endpoint",
+    "duration_s": 4.7134558352217683e-11,
+    "finite_time_kinetic_accuracy_certified": true,
+    "initial_q": 0.25,
+    "local_attempt_exposure": 0.001,
+    "maximum_violation": 0.2489999999999858,
+    "necessary_lower_bound_on_final_q": 0.249,
+    "signs": {
+      "minus": {
+        "inactive_pool_remains_exact_zero": false,
+        "integrated_abs_line_change_per_thickness": 0.0014399997956653903,
+        "maximum_abs_burgers_moment_change_m1": 2.2319996832813556,
+        "maximum_abs_delta_q": 0.0009999998581009528,
+        "maximum_abs_ordered_density_change_m2": 8999998722.908691,
+        "minimum_final_active_q": 0.24900000014189905
+      },
+      "plus": {
+        "inactive_pool_remains_exact_zero": false,
+        "integrated_abs_line_change_per_thickness": 0.0019199997275538279,
+        "maximum_abs_burgers_moment_change_m1": 2.975999577708434,
+        "maximum_abs_delta_q": 0.0009999998581009528,
+        "maximum_abs_ordered_density_change_m2": 11999998297.211426,
+        "minimum_final_active_q": 0.24900000014189905
+      }
+    },
+    "unreachable_equilibrium_q": 0.0
+  },
+  "generated_utc": "2026-09-20T11:17:42.236730+00:00",
+  "governing_bound": "|q_i(t+H)-q_i(t)| <= integral a_i dt",
+  "material_calibration_claimed": false,
+  "schema": "asb-drx/v46/ordering-applicability/v1",
+  "source_sha": "9ecd31da6a714e94c03b37346ba46b8a6802fa59",
+  "v45_n128_sub4_sub8_scoped_source_equivalent": true,
+  "v45_source_pair": [
+    "a9c4f0b47eca3d261a9c731bdcd0d18410485ab2",
+    "2d3320a71642671397376208c6cfdef17d77b015"
+  ],
+  "zero_pool_semantics": "no fraction coordinate is formed; density and signed moment remain exact zero"
+}
