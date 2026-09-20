@@ -102,9 +102,12 @@ def main():
             curl["common_band_strong_norm"][
                 "complex_difference_relative_rms"] <= .05),
     }
-    classification["original_horizon_spatial_gate_passed"] = bool(
+    classification["original_horizon_selected_observable_passed"] = bool(
         classification["selected_band_passed"]
         and classification["whole_field_rms_amplitude_passed"])
+    classification["all_reported_spatial_observables_passed"] = bool(
+        classification["original_horizon_selected_observable_passed"]
+        and classification["common_band_63_strong_norm_passed"])
     payload = {
         "schema": "asb-drx/v46/original-horizon-accuracy/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
