@@ -164,6 +164,8 @@ def main():
                         "ordering_asymptotic_trial_normalized_remainder"),
                     "asymptotic_trial_projected_change": ledger.get(
                         "ordering_asymptotic_trial_projected_change"),
+                    "asymptotic_projected_kkt_relative": ledger.get(
+                        "ordering_asymptotic_projected_kkt_relative"),
                 },
             }
         checkpoint = output/f"operation_{operation:03d}_{record['kind']}.npz"

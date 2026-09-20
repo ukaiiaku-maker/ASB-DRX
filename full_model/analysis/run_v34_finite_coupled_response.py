@@ -564,6 +564,8 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             "ordering_asymptotic_trial_projected_change": mura_ledger[
                 "ordering_thermodynamics"].get(
                     "asymptotic_trial_projected_change"),
+            "ordering_asymptotic_projected_kkt_relative": mura_ledger[
+                "ordering_thermodynamics"].get("implicit_optimality"),
             "ordering_solver_evaluations": int(mura_ledger[
                 "ordering_thermodynamics"].get("implicit_nfev", 0)),
             "ordering_finite_time_backend": mura_ledger[

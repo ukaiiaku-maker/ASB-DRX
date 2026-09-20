@@ -696,7 +696,12 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             # zero Fourier mode on the same iteration scale as the bounded
             # high modes; rho~lambda_max would require O(10^4) iterations just
             # to traverse a typical reservoir.
-            rho = max(spectral_lipschitz/2048.0, 1e-40)
+            # The former L/2048 penalty left the active capture families far
+            # from their obstacle KKT point at the production iteration cap.
+            # L/128 is selected from the conditioning of this declared
+            # quadratic operator (not from a PF outcome) and resolves both
+            # the bounded interface modes and the zero mode.
+            rho = max(spectral_lipschitz/128.0, 1e-40)
             denominator = (rho+parameters.ordered_gradient_J_m3
                            *wave_number_squared)
             dual = {s: np.zeros_like(y[s]) for s in ("plus", "minus")}
@@ -724,6 +729,35 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 if projected_change <= 2e-12:
                     break
             y = z
+            # ADMM's auxiliary primal residual can be dominated by cells whose
+            # physical capacity is at the diagnostic density floor even after
+            # the returned bounded state satisfies the convex obstacle KKT
+            # conditions.  Qualify the state that will actually be published,
+            # using the projected physical chemical-potential residual.
+            trial_state = replace(
+                inventory,
+                wall_ordered_plus_m2=y["plus"],
+                wall_tangle_plus_m2=totals["plus"]-y["plus"],
+                wall_ordered_minus_m2=y["minus"],
+                wall_tangle_minus_m2=totals["minus"]-y["minus"])
+            mu = extensive_wall_chemical_potentials_J_m(
+                trial_state, systems, topologies, orientation_rad,
+                target_nye_m1, parameters)
+            projected_change = 0.0
+            gradient_scale = max(abs(delta_excess), 1e-30)
+            for sign in ("plus", "minus"):
+                gradient = (mu[f"ordered_{sign}"]
+                            -mu[f"tangle_{sign}"])
+                scale = np.maximum(totals[sign], diagnostic_density_floor)
+                lower = y[sign] <= 64*np.finfo(float).eps*scale
+                upper = y[sign] >= (
+                    totals[sign]-64*np.finfo(float).eps*scale)
+                violation = gradient.copy()
+                violation[lower] = np.minimum(violation[lower], 0.0)
+                violation[upper] = np.maximum(violation[upper], 0.0)
+                projected_change = max(
+                    projected_change,
+                    float(np.max(np.abs(violation)))/gradient_scale)
         else:
             step = 0.9/lipschitz_J_m3
             maximum_iterations = max(

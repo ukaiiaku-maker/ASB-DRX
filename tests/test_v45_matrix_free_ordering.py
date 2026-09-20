@@ -193,3 +193,27 @@ def test_asymptotic_dispatch_records_state_accessibility_when_reachable():
     assert ledger["integration_method"] == "bounded_convex_asymptotic"
     assert ledger["asymptotic_state_accessibility_passed"] is True
     assert ledger["asymptotic_accessibility_maximum_violation"] == 0.0
+
+
+def test_full_support_obstacle_is_qualified_by_projected_physical_kkt():
+    state, density, systems, topologies, parameters, target, stress, attempt = (
+        _compact_active_case())
+    n = density.wall_tangle_plus_m2.shape[0]
+    profile = 1e12*(1.0+.8*np.cos(2*np.pi*np.arange(n)/n)[:, None])
+    total = np.repeat(np.broadcast_to(profile, (n, n))[..., None], 4, axis=2)
+    density = replace(
+        density,
+        wall_tangle_plus_m2=.5*total,
+        wall_ordered_plus_m2=.5*total,
+        wall_tangle_minus_m2=.4*total,
+        wall_ordered_minus_m2=.4*total)
+    qualified = replace(
+        parameters, nye_match_coefficient_J_m=0.0,
+        ordering_integration_method="implicit_backward_euler",
+        ordering_asymptotic_minimum_attempt_exposure=1e-3)
+    _, ledger, _ = accepted_ordering_step(
+        density, systems, topologies, state.common.orientation_rad, target,
+        stress, state.common.temperature_K, qualified, 20.0/attempt)
+    assert ledger["integration_method"] == "bounded_convex_asymptotic"
+    assert ledger["implicit_optimality"] <= 2e-10
+    assert ledger["implicit_max_scaled_residual"] <= 1e-3
