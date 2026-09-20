@@ -115,15 +115,24 @@ def test_finite_rate_and_convex_asymptotic_overlap_before_production_switch():
     dense_parameters = replace(
         parameters, ordering_integration_method="finite_time_bdf",
         ordering_finite_time_backend="dense_bdf_oracle")
+    transient_parameters = replace(
+        parameters, ordering_integration_method="implicit_backward_euler",
+        ordering_finite_time_backend="matrix_free_exponential_rosenbrock",
+        ordering_asymptotic_minimum_attempt_exposure=1.000001e-3)
+    transient_result = accepted_ordering_step(
+        density, systems, topologies, state.common.orientation_rad, target,
+        stress, state.common.temperature_K, transient_parameters, 1e-6/attempt)
+    assert transient_result[1]["stiff_dispatch"] == "matrix_free_finite_time"
     finite = accepted_ordering_step(
         density, systems, topologies, state.common.orientation_rad, target,
-        stress, state.common.temperature_K, dense_parameters, .5/attempt)[0]
+        stress, state.common.temperature_K, dense_parameters, .001/attempt)[0]
     asymptotic_parameters = replace(
         parameters, ordering_integration_method="implicit_backward_euler",
-        ordering_asymptotic_minimum_attempt_exposure=1.000001)
+        ordering_finite_time_backend="matrix_free_exponential_rosenbrock",
+        ordering_asymptotic_minimum_attempt_exposure=1.000001e-3)
     asymptotic_result = accepted_ordering_step(
         density, systems, topologies, state.common.orientation_rad, target,
-        stress, state.common.temperature_K, asymptotic_parameters, 2.0/attempt)
+        stress, state.common.temperature_K, asymptotic_parameters, .002/attempt)
     asymptotic, ledger = asymptotic_result[0], asymptotic_result[1]
     assert ledger["integration_method"] == "bounded_convex_asymptotic"
     assert not ledger["finite_time_kinetic_accuracy_certified_by_this_solve"]

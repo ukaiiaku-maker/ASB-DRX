@@ -106,8 +106,8 @@ class ExtensiveWallParameters:
         if int(self.ordering_implicit_max_nfev) <= 0:
             raise ValueError("ordering implicit evaluation limit must be positive")
         if (not np.isfinite(self.ordering_asymptotic_minimum_attempt_exposure)
-                or self.ordering_asymptotic_minimum_attempt_exposure <= 1.0):
-            raise ValueError("ordering asymptotic exposure must exceed one")
+                or self.ordering_asymptotic_minimum_attempt_exposure <= 0.0):
+            raise ValueError("ordering asymptotic exposure must be positive")
         # Validate entropy, drag limit, and negative-barrier validity policy in
         # the campaign-wide Arrhenius representation.
         ActivatedProcess(
@@ -413,17 +413,18 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         stress_for_rate = np.max(np.abs(stress_for_rate), axis=2)
     attempt_exposure = total_dt*float(np.max(_attempt_rate_s(
         stress_for_rate, temperature_K, parameters)))
-    if (not force_finite_time and attempt_exposure < 1.0):
-        # The resolved implementation is the oracle and is affordable before
-        # the declared stiff/asymptotic separation.  There is no equilibrium
-        # substitution in this branch.
-        explicit = replace(parameters,
-                           ordering_integration_method="complete_time_explicit")
-        result = accepted_ordering_step(
+    if (not force_finite_time and attempt_exposure
+            < parameters.ordering_asymptotic_minimum_attempt_exposure):
+        # Below the independently verified finite/asymptotic overlap, use the
+        # selected finite-time backend itself.  The former capped explicit
+        # map is not a finite-time oracle for the stiff spectral-gradient
+        # fixture and is deliberately not dispatched here.
+        result = _accepted_ordering_implicit(
             inventory, systems, topologies, orientation_rad, target_nye_m1,
-            stress_Pa, temperature_K, explicit, total_dt, alignment=alignment)
+            stress_Pa, temperature_K, parameters, total_dt,
+            alignment=alignment, force_finite_time=True)
         ledger_index = 2 if alignment is not None else 1
-        result[ledger_index]["stiff_dispatch"] = "resolved_finite_time_oracle"
+        result[ledger_index]["stiff_dispatch"] = "matrix_free_finite_time"
         result[ledger_index]["maximum_attempt_exposure"] = attempt_exposure
         return result
     totals = {
