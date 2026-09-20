@@ -838,7 +838,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             # Keep the fastest local reaction exposure below 0.25 per
             # backward-Euler solve. This is a numerical resolution rule, not
             # a kinetic cap; every substep is accumulated on the full clock.
-            internal_steps = max(16, int(np.ceil(attempt_exposure/0.05)))
+            internal_steps = max(16, int(np.ceil(attempt_exposure/0.02)))
             step_dt = total_dt/internal_steps
             vector = q0.copy(); nfev = njev = 0
             linear_iterations = nonlinear_iterations = 0
