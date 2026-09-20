@@ -92,7 +92,8 @@ class ExtensiveWallParameters:
                 "finite_time_bdf"):
             raise ValueError("unknown ordering integration method")
         if self.ordering_finite_time_backend not in (
-                "dense_bdf_oracle", "matrix_free_backward_euler"):
+                "dense_bdf_oracle", "matrix_free_backward_euler",
+                "matrix_free_projected_rk2"):
             raise ValueError("unknown finite-time ordering backend")
         if (not np.isfinite(self.ordering_implicit_residual_tolerance)
                 or self.ordering_implicit_residual_tolerance <= 0.0):
@@ -836,6 +837,26 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             integration_method = "bounded_finite_time_bdf"
             solver_message = str(finite.message)
             internal_steps = max(int(finite.t.size-1), 1)
+        elif parameters.ordering_finite_time_backend == "matrix_free_projected_rk2":
+            # Explicit midpoint/Heun integration of the declared finite-rate
+            # ODE.  The rate already contains the exact invariant-set tangent
+            # projection at q=0,1; endpoint projection only removes roundoff.
+            # Work is O(N log N) per stage and no Jacobian is assembled.
+            internal_steps = max(16, int(np.ceil(
+                attempt_exposure
+                / parameters.ordering_matrix_free_max_attempt_exposure)))
+            step_dt = total_dt/internal_steps
+            vector = q0.copy(); nfev = njev = 0
+            linear_iterations = nonlinear_iterations = 0
+            for _ in range(internal_steps):
+                k1 = finite_time_rhs(0.0, vector)
+                predictor = np.clip(vector+step_dt*k1, 0.0, 1.0)
+                k2 = finite_time_rhs(0.0, predictor)
+                vector = np.clip(
+                    vector+0.5*step_dt*(k1+k2), 0.0, 1.0)
+            final_vector = vector
+            integration_method = "bounded_finite_time_matrix_free_rk2"
+            solver_message = "projected Heun integration completed full clock"
         else:
             # Backward Euler with the exact global FFT Jacobian-vector action.
             # No Jacobian matrix or physical-space sparsity pattern is formed.
@@ -934,75 +955,30 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
 
             for _ in range(internal_steps):
                 previous = vector.copy()
-                vector = np.clip(previous+step_dt*normalized_rate(previous),
-                                 0.0, 1.0)
-                converged = False
-                for _newton in range(24):
-                    residual_value = projected_residual(vector, previous)
-                    residual_norm = float(np.max(np.abs(residual_value)))
-                    nonlinear_iterations += 1
-                    if residual_norm <= tolerance:
-                        converged = True
-                        break
-                    counter = [0]
-                    def count_iteration(_):
-                        counter[0] += 1
-                    delta, info = gmres(
-                        exact_jacobian(vector, previous), -residual_value,
-                        rtol=min(0.1, max(tolerance/residual_norm, 1e-6)),
-                        atol=tolerance*.1, restart=30, maxiter=80,
-                        callback=count_iteration, callback_type="pr_norm")
-                    linear_iterations += counter[0]
-                    if info != 0 or np.any(~np.isfinite(delta)):
-                        raise RuntimeError(
-                            "matrix-free ordering linear solve failed: "
-                            f"gmres_info={info}")
-                    accepted_trial = None
-                    best_trial_norm = np.inf
-                    for backtrack in range(13):
-                        trial = np.clip(
-                            vector+(0.5**backtrack)*delta, 0.0, 1.0)
-                        trial_residual = projected_residual(trial, previous)
-                        trial_norm = float(np.max(np.abs(trial_residual)))
-                        best_trial_norm = min(best_trial_norm, trial_norm)
-                        if trial_norm < residual_norm:
-                            accepted_trial = trial
-                            break
-                    if accepted_trial is None:
-                        # At an active-set kink, neither Newton nor Picard is
-                        # guaranteed to reduce ||F||.  The exact matrix-free
-                        # adjoint supplies the residual-norm gradient and hence
-                        # a globalization direction without inventing a sparse
-                        # or dense Jacobian.
-                        gradient_delta = -exact_jacobian(
-                            vector, previous).rmatvec(residual_value)
-                        gradient_scale = max(
-                            float(np.max(np.abs(gradient_delta))), 1.0)
-                        gradient_delta /= gradient_scale
-                        for backtrack in range(24):
-                            trial = np.clip(
-                                vector+(0.5**backtrack)*gradient_delta,
-                                0.0, 1.0)
-                            trial_residual = projected_residual(
-                                trial, previous)
-                            trial_norm = float(np.max(np.abs(trial_residual)))
-                            best_trial_norm = min(best_trial_norm, trial_norm)
-                            if trial_norm < residual_norm:
-                                accepted_trial = trial
-                                break
-                    if accepted_trial is None:
-                        raise RuntimeError(
-                            "matrix-free ordering active-set descent failed: "
-                            f"residual={residual_norm:.17g}, "
-                            f"best_trial={best_trial_norm:.17g}, "
-                            f"tolerance={tolerance:.17g}")
-                    vector = accepted_trial
-                if not converged:
+                initial = np.clip(
+                    previous+step_dt*normalized_rate(previous), 0.0, 1.0)
+                local = least_squares(
+                    lambda trial: projected_residual(trial, previous),
+                    initial,
+                    jac=lambda trial: exact_jacobian(trial, previous),
+                    bounds=(0.0, 1.0), ftol=None, xtol=tolerance,
+                    gtol=tolerance,
+                    max_nfev=int(parameters.ordering_implicit_max_nfev),
+                    tr_solver="lsmr")
+                vector = np.clip(local.x, 0.0, 1.0)
+                local_residual = projected_residual(vector, previous)
+                nonlinear_iterations += int(local.nfev)
+                linear_iterations += int(local.njev or 0)
+                if (not local.success or float(np.max(np.abs(local_residual)))
+                        > tolerance):
                     raise RuntimeError(
-                        "matrix-free ordering Newton iteration failed")
+                        "matrix-free ordering trust-region solve failed: "
+                        f"success={local.success}, "
+                        f"residual={np.max(np.abs(local_residual)):.17g}, "
+                        f"message={local.message}")
             final_vector = vector
             integration_method = "bounded_finite_time_matrix_free_be"
-            solver_message = "exact FFT JVP Newton-GMRES converged"
+            solver_message = "exact FFT JVP/JTV trust-region LSMR converged"
 
         class _FiniteTimeResult:
             pass
