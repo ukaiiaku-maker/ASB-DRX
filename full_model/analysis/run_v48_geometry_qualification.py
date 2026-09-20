@@ -118,7 +118,10 @@ def affinity_rows(state, data, cell):
                 "arrhenius_unbiased_rate_s", "affinity_biased_rate_s",
                 "available_energy_per_event_J", "physical_event_count",
                 "downhill_activity", "accepted_extent",
-                "observed_accepted_velocity_m_s")})
+                "observed_accepted_velocity_m_s",
+                "affinity_rate_fixed_point_iterations",
+                "affinity_rate_fixed_point_relative_residual",
+                "affinity_rate_raw_endpoint_s")})
             rows[-1].update(temperature_K=temperature,
                             chemical_potential_J_per_defect=mu)
     return rows
@@ -158,6 +161,12 @@ def repeated_geometry_evolution(state, data, start, width):
             "available_energy_per_event_J": ledger.get(
                 "available_energy_per_event_J"),
             "affinity_biased_rate_s": ledger.get("affinity_biased_rate_s"),
+            "affinity_rate_raw_endpoint_s": ledger.get(
+                "affinity_rate_raw_endpoint_s"),
+            "affinity_rate_fixed_point_iterations": ledger.get(
+                "affinity_rate_fixed_point_iterations"),
+            "affinity_rate_fixed_point_relative_residual": ledger.get(
+                "affinity_rate_fixed_point_relative_residual"),
             "accepted_extent": ledger.get("accepted_extent"),
             "consumed_duration_s": consumed,
             "observed_accepted_velocity_m_s": ledger.get(
