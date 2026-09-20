@@ -1,0 +1,441 @@
+{
+  "affinity_rate_rows": [
+    {
+      "accepted": false,
+      "accepted_extent": null,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 0.0,
+      "arrhenius_unbiased_rate_s": 864973441.041954,
+      "available_energy_per_event_J": -3.311669017730277e-20,
+      "chemical_potential_J_per_defect": 1.1e-19,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "downhill_activity": 0.0,
+      "observed_accepted_velocity_m_s": 0.0,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 800.0
+    },
+    {
+      "accepted": false,
+      "accepted_extent": null,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 0.0,
+      "arrhenius_unbiased_rate_s": 864973441.041954,
+      "available_energy_per_event_J": -1.166901773027498e-22,
+      "chemical_potential_J_per_defect": 1.43e-19,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "downhill_activity": 0.0,
+      "observed_accepted_velocity_m_s": 0.0,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 800.0
+    },
+    {
+      "accepted": true,
+      "accepted_extent": 0.1,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 725503197.8651582,
+      "arrhenius_unbiased_rate_s": 864973441.041954,
+      "available_energy_per_event_J": 2.6883309822697244e-20,
+      "chemical_potential_J_per_defect": 1.7e-19,
+      "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+      "downhill_activity": 0.8387577738701563,
+      "observed_accepted_velocity_m_s": 36.275159893257914,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 800.0
+    },
+    {
+      "accepted": true,
+      "accepted_extent": 0.1,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 864972267.7238282,
+      "arrhenius_unbiased_rate_s": 864973441.041954,
+      "available_energy_per_event_J": 1.5688330982269727e-19,
+      "chemical_potential_J_per_defect": 3e-19,
+      "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+      "downhill_activity": 0.9999986435212109,
+      "observed_accepted_velocity_m_s": 43.24861338619141,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 800.0
+    },
+    {
+      "accepted": false,
+      "accepted_extent": null,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 0.0,
+      "arrhenius_unbiased_rate_s": 899878414.9473826,
+      "available_energy_per_event_J": -3.311669017730277e-20,
+      "chemical_potential_J_per_defect": 1.1e-19,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "downhill_activity": 0.0,
+      "observed_accepted_velocity_m_s": 0.0,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1100.0
+    },
+    {
+      "accepted": false,
+      "accepted_extent": null,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 0.0,
+      "arrhenius_unbiased_rate_s": 899878414.9473826,
+      "available_energy_per_event_J": -1.166901773027498e-22,
+      "chemical_potential_J_per_defect": 1.43e-19,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "downhill_activity": 0.0,
+      "observed_accepted_velocity_m_s": 0.0,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1100.0
+    },
+    {
+      "accepted": true,
+      "accepted_extent": 0.1,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 637968175.016924,
+      "arrhenius_unbiased_rate_s": 899878414.9473826,
+      "available_energy_per_event_J": 2.6883309822697244e-20,
+      "chemical_potential_J_per_defect": 1.7e-19,
+      "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+      "downhill_activity": 0.7089493029502515,
+      "observed_accepted_velocity_m_s": 31.8984087508462,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1100.0
+    },
+    {
+      "accepted": true,
+      "accepted_extent": 0.1,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 899819675.0789737,
+      "arrhenius_unbiased_rate_s": 899878414.9473826,
+      "available_energy_per_event_J": 1.5688330982269727e-19,
+      "chemical_potential_J_per_defect": 3e-19,
+      "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+      "downhill_activity": 0.9999347246612061,
+      "observed_accepted_velocity_m_s": 44.99098375394868,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1100.0
+    },
+    {
+      "accepted": false,
+      "accepted_extent": null,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 0.0,
+      "arrhenius_unbiased_rate_s": 920452929.7377695,
+      "available_energy_per_event_J": -3.311669017730277e-20,
+      "chemical_potential_J_per_defect": 1.1e-19,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "downhill_activity": 0.0,
+      "observed_accepted_velocity_m_s": 0.0,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1400.0
+    },
+    {
+      "accepted": false,
+      "accepted_extent": null,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 0.0,
+      "arrhenius_unbiased_rate_s": 920452929.7377695,
+      "available_energy_per_event_J": -1.166901773027498e-22,
+      "chemical_potential_J_per_defect": 1.43e-19,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "downhill_activity": 0.0,
+      "observed_accepted_velocity_m_s": 0.0,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1400.0
+    },
+    {
+      "accepted": true,
+      "accepted_extent": 0.1,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 553603414.7195973,
+      "arrhenius_unbiased_rate_s": 920452929.7377695,
+      "available_energy_per_event_J": 2.6883309822697244e-20,
+      "chemical_potential_J_per_defect": 1.7e-19,
+      "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+      "downhill_activity": 0.601446740874968,
+      "observed_accepted_velocity_m_s": 27.680170735979868,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1400.0
+    },
+    {
+      "accepted": true,
+      "accepted_extent": 0.1,
+      "activation_enthalpy_J": 1.6021766340000002e-21,
+      "affinity_biased_rate_s": 919903416.5771626,
+      "arrhenius_unbiased_rate_s": 920452929.7377695,
+      "available_energy_per_event_J": 1.5688330982269727e-19,
+      "chemical_potential_J_per_defect": 3e-19,
+      "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+      "downhill_activity": 0.9994029969997885,
+      "observed_accepted_velocity_m_s": 45.995170828858136,
+      "physical_event_count": 1988.650927208711,
+      "temperature_K": 1400.0
+    }
+  ],
+  "classification": "AFFINITY_RATE_VERIFIED_MATCHED_STRIP_SIGN_UNRESOLVED",
+  "drx_claimed": false,
+  "generated_utc": "2026-09-20T22:06:46.177915+00:00",
+  "geometry_observable_numerically_qualified": false,
+  "matched_strip_refinement": [
+    {
+      "continuum_representation_length_m": 4e-07,
+      "grid": 32,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7728855511470268,
+      "physical_boundary_length_m": 8e-07,
+      "plastic_increment_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722148e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722148e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722148e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "representation_cells": 4.0,
+      "represented_section_thickness_m": 3.2e-06,
+      "spacing_m": 1e-07,
+      "state_digest": "b8e883ba29d4f4279fca6626c99bf9a8a823e8e6c13fcdf4ed3f000b9dd64bf7",
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_after_J": {
+        "common_line": 4.883280583211758e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.220000000000001e-16,
+        "ordered_gradient": 4.294416328725676e-14,
+        "recoverable_elastic": 6.5642243457227595e-09,
+        "total": 6.613100417718164e-09
+      },
+      "term_energy_before_J": {
+        "common_line": 4.8832773188534164e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2000000000000007e-16,
+        "ordered_gradient": 4.358188627623435e-14,
+        "recoverable_elastic": 6.5642243457227595e-09,
+        "total": 6.61310102079757e-09
+      },
+      "term_energy_change_J": {
+        "common_line": 3.2643583415661835e-17,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 2.0000000000000325e-18,
+        "ordered_gradient": -6.377229889775849e-16,
+        "recoverable_elastic": 0.0,
+        "total": -6.030794058417986e-16
+      }
+    },
+    {
+      "continuum_representation_length_m": 4e-07,
+      "grid": 64,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7665493043197997,
+      "physical_boundary_length_m": 8e-07,
+      "plastic_increment_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722186e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722186e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722186e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "representation_cells": 8.0,
+      "represented_section_thickness_m": 3.2e-06,
+      "spacing_m": 5e-08,
+      "state_digest": "4ebf220a25af2d6a8abeb1c661e771a4a2b9a2cb8f2f438f42d02d2e6fd3a34e",
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_after_J": {
+        "common_line": 4.8832805838502607e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2200000000000006e-16,
+        "ordered_gradient": 5.227539174720124e-14,
+        "recoverable_elastic": 6.5583827999755e-09,
+        "total": 6.6072682032057495e-09
+      },
+      "term_energy_before_J": {
+        "common_line": 4.8832773194541725e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2000000000000007e-16,
+        "ordered_gradient": 5.255376714906356e-14,
+        "recoverable_elastic": 6.5583827999755e-09,
+        "total": 6.6072684469371905e-09
+      },
+      "term_energy_change_J": {
+        "common_line": 3.26439608814398e-17,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 1.9999999999999832e-18,
+        "ordered_gradient": -2.783754018623196e-16,
+        "recoverable_elastic": 0.0,
+        "total": -2.437314409364894e-16
+      }
+    },
+    {
+      "continuum_representation_length_m": 4e-07,
+      "grid": 128,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7656897730003706,
+      "physical_boundary_length_m": 8e-07,
+      "plastic_increment_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722195e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722195e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722195e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "representation_cells": 16.0,
+      "represented_section_thickness_m": 3.2e-06,
+      "spacing_m": 2.5e-08,
+      "state_digest": "81e5f84c1e2191489c53dc1b8ef9622d3644edca070647a102a38afd1cc9dc54",
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_after_J": {
+        "common_line": 4.883280584045705e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2200000000000035e-16,
+        "ordered_gradient": 5.533592996573199e-14,
+        "recoverable_elastic": 6.558384256684248e-09,
+        "total": 6.60727272045467e-09
+      },
+      "term_energy_before_J": {
+        "common_line": 4.8832773196226337e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.200000000000003e-16,
+        "ordered_gradient": 5.5245679220424177e-14,
+        "recoverable_elastic": 6.558384256684248e-09,
+        "total": 6.6072725955596946e-09
+      },
+      "term_energy_change_J": {
+        "common_line": 3.264423071034055e-17,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 2.0000000000000325e-18,
+        "ordered_gradient": 9.025074530781441e-17,
+        "recoverable_elastic": 0.0,
+        "total": 1.248949758126027e-16
+      }
+    }
+  ],
+  "matched_strip_refinement_source": "immutable V47 fixed-400-nm rows; not recomputed because repeated n128 plaquette construction is an avoidable local bottleneck",
+  "matched_strip_sign_converged": false,
+  "rate_implementation_verified": true,
+  "representation_length_m": 4e-07,
+  "same_state_derivative": {
+    "extents": [
+      0.0125,
+      0.025,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "finite_state_derivative_comparisons": [
+      {
+        "centered_same_state_derivative_J_per_extent": 2.8030314308403473e-15,
+        "extent": 0.025,
+        "quadratic_path_derivative_J_per_extent": 2.8030314308665687e-15,
+        "relative_difference": 9.35463718685002e-12
+      },
+      {
+        "centered_same_state_derivative_J_per_extent": 2.846091386386828e-15,
+        "extent": 0.05,
+        "quadratic_path_derivative_J_per_extent": 2.8460913862008855e-15,
+        "relative_difference": 6.533254865217186e-11
+      },
+      {
+        "centered_same_state_derivative_J_per_extent": 2.932211296724948e-15,
+        "extent": 0.1,
+        "quadratic_path_derivative_J_per_extent": 2.932211296869519e-15,
+        "relative_difference": 4.930442372284968e-11
+      }
+    ],
+    "increments_J": [
+      3.463420580457186e-17,
+      6.953753632993829e-17,
+      1.4015157154329403e-16,
+      2.8460913862013497e-16,
+      5.864422593738949e-16
+    ],
+    "path": "same plaquette, family, sign, line shape and thickness",
+    "quadratic_coefficient_J": 8.611991066863353e-16,
+    "quadratic_fit_max_relative_residual": 8.010030137618944e-14,
+    "quadratic_linear_coefficient_J": 2.759971475532252e-15,
+    "secant_constancy_required": false,
+    "zero_extent_one_sided_force_N": -5.519942951064504e-08
+  },
+  "schema": "asb-drx/v48/geometry-qualification/v1",
+  "source_sha": "fdb36e31490e8b402e73a2648bc3f52242e5a404",
+  "subcell_translation": {
+    "integer_shift_energy_change_J": 0.0,
+    "maximum_abs_energy_change_over_stored_energy": 2.852643223714936e-07,
+    "rows": [
+      {
+        "displacement_m": 6.25e-09,
+        "energy_change_J": -8.247550799418252e-16,
+        "fraction_of_cell": 0.125
+      },
+      {
+        "displacement_m": 1.25e-08,
+        "energy_change_J": -1.4138658512106745e-15,
+        "fraction_of_cell": 0.25
+      },
+      {
+        "displacement_m": 2.5e-08,
+        "energy_change_J": -1.8851544677294456e-15,
+        "fraction_of_cell": 0.5
+      },
+      {
+        "displacement_m": 3.75e-08,
+        "energy_change_J": -1.4138658512106745e-15,
+        "fraction_of_cell": 0.75
+      },
+      {
+        "displacement_m": 5e-08,
+        "energy_change_J": 0.0,
+        "fraction_of_cell": 1.0
+      }
+    ],
+    "scope": "fractional occupancy translation path in a homogeneous periodic background; distinct from an exact integer np.roll permutation"
+  }
+}
