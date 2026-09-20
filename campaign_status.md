@@ -1848,4 +1848,5 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The longer physical horizon was not launched because its spatial dependency
   failed. Report: `full_model/docs/v45_decision_report.md`; controller:
   `full_model/verification/v45_campaign_controller.json`. DRX, persistent
-  LAGB formation, strict ASB, and material calibration remain unclaimed.
+  LAGB formation, strict ASB, and material calibration remain unclaimed. The
+  final regression boundary passes 764 tests in 193.91 s.

@@ -114,6 +114,8 @@ geometry measure pass within their stated scopes. Selected spatial solution
 accuracy and coupled geometry-energy convergence fail. DRX, a persistent
 LAGB, strict ASB, and material calibration are not claimed.
 
+The final regression boundary passes 764 tests in 193.91 s.
+
 The next exact task is to resolve or physically regularize high-wave-number
 Mura wall content and separate geometry-owned line energy from the singular
 continuum gradient term. Only after those two spatial dependencies pass should

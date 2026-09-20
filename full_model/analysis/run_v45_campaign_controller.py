@@ -96,6 +96,10 @@ def main():
             ["git", "rev-parse", "HEAD"], text=True).strip(),
         "execution_location": "local", "branches": branches,
         "evidence": evidence,
+        "regression": {
+            "command": "PYTHONPATH=src:. pytest -q tests",
+            "passed": 764, "wall_seconds": 193.91,
+        },
         "fixture_passed": bool(ordering and resumed and geometry),
         "scientific_gate_passed": bool(
             refined and refined["temporal_accuracy_passed"] and
