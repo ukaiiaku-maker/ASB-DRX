@@ -48,7 +48,7 @@
     "name": "matrix_free_exponential_rosenbrock",
     "transient_attempt_exposure": 1e-06
   },
-  "generated_utc": "2026-09-20T04:21:48.843615+00:00",
+  "generated_utc": "2026-09-20T04:47:31.925825+00:00",
   "governing_equation": "qdot_s = -a(x)*tanh(event_length*(mu_ordered_s-mu_tangle_s)/(2*kB*T)); rho_ordered_s=q_s*rho_total_s; 0<=q_s<=1 for each Burgers family and sign",
   "material_calibration_claimed": false,
   "production_dispatch": {
@@ -100,6 +100,6 @@
     "wall_seconds": 153.79523893399164
   },
   "schema": "asb-drx/v45/ordering-qualification/v1",
-  "source_sha": "545bd1f68996247677d6186ecfa8e3f84b684d2d",
+  "source_sha": "059c973f5dd7d20c6d7bf9fca19a2322bd4ffa55",
   "spatial_operator": "chemical-potential Hessian acts globally by exact periodic FFT; no physical-space Jacobian sparsity is asserted"
 }
