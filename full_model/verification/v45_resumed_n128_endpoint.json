@@ -1,0 +1,56 @@
+{
+  "accepted_substeps_s": [
+    9.765625e-07,
+    9.765625e-07,
+    9.765625e-07,
+    9.765625e-07
+  ],
+  "front_heat_redeposited": false,
+  "front_repeated": false,
+  "generated_utc": "2026-09-20T04:08:54.318976+00:00",
+  "operator_exposure_s": 3.90625e-06,
+  "ordering_active_degrees_of_freedom": [
+    1024,
+    1024,
+    1024,
+    1024
+  ],
+  "ordering_dense_jacobian_bytes_avoided": [
+    8388608,
+    8388608,
+    8388608,
+    8388608
+  ],
+  "ordering_dispatches": [
+    "qualified_asymptotic",
+    "qualified_asymptotic",
+    "qualified_asymptotic",
+    "qualified_asymptotic"
+  ],
+  "ordering_linear_iterations": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "ordering_methods": [
+    "bounded_convex_asymptotic",
+    "bounded_convex_asymptotic",
+    "bounded_convex_asymptotic",
+    "bounded_convex_asymptotic"
+  ],
+  "ordering_nonlinear_iterations": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "output": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-resumed/sub4/n128/after_second_mura.npz",
+  "output_sha256": "f5216337fbd4ac1a1b47c18ac02b109e312ed0c246aaf41617fd0a9ecddc4953",
+  "parent_path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v44-compatible/sub4/n128/after_front.npz",
+  "parent_sha256": "2c18aceb3b223d278d13d01c3318bb14e27df87caf9c34fd2121df1dfb08da80",
+  "parent_source_sha": "98ce060eb3ae3379ad0ce32c350e8d1356f79d7e",
+  "schema": "asb-drx/v45/resumed-missing-endpoint/v1",
+  "source_sha": "4924ad4ef65265496847b488e90c9d545f3dbe7f",
+  "wall_seconds": 153.79523893399164
+}

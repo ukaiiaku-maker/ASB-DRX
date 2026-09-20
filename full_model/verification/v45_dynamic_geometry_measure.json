@@ -1,0 +1,433 @@
+{
+  "blocked_channel_continuation": {
+    "continuum": {
+      "accepted_duration_s": 1e-12,
+      "mura_operator": "compatible_dealiased",
+      "state_changed": true
+    },
+    "rejected_geometry": {
+      "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+      "committed_swept_area_m2": 0.0,
+      "consumed_duration_s": 0.0,
+      "exact_rollback": true,
+      "heat_sum_J_m3_cells": 0.0,
+      "proposed_duration_s": 2.5e-13,
+      "proposed_swept_area_m2": 9.999999999999998e-15
+    },
+    "second_geometry_after_continuum": {
+      "accepted": true,
+      "committed_swept_area_m2": 9.999999999999998e-15,
+      "consumed_duration_s": 2.5e-13,
+      "final_state_changed": true
+    }
+  },
+  "drx_claimed": false,
+  "dynamic_refinement": [
+    {
+      "accepted_motion": true,
+      "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+      "elapsed_time_s": 1e-06,
+      "eligible_site_count": 4,
+      "enumeration": "forward",
+      "expected_swept_area_m2": 7.999999999999999e-15,
+      "grid": 16,
+      "integrated_swept_area_m2": 7.999999999999999e-15,
+      "mechanical_plus_line_energy_J": 3.966968271833011e-10,
+      "mechanical_plus_line_energy_change_J": -2.917079174354682e-14,
+      "patch_subdivision": 1,
+      "per_site_fractional_extent": 0.05,
+      "per_site_fractional_rate_s": 50000.00000000001,
+      "physical_boundary_length_m": 8e-07,
+      "physical_velocity_m_s": 0.01,
+      "plastic_distortion_increment_rms": 2.583333333333334e-06,
+      "plastic_distortion_increment_volume_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722175e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722175e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722175e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+      "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+      "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+      "spacing_m": 2e-07,
+      "state_digest": "ab390f71ef2bcf5b348e9265d998a54a58387bc265d16a6af30fc8d69cea05a9",
+      "weighted_line_length_m": 3.22e-06
+    },
+    {
+      "accepted_motion": true,
+      "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+      "elapsed_time_s": 1e-06,
+      "eligible_site_count": 8,
+      "enumeration": "forward",
+      "expected_swept_area_m2": 7.999999999999999e-15,
+      "grid": 32,
+      "integrated_swept_area_m2": 7.999999999999999e-15,
+      "mechanical_plus_line_energy_J": 2.1901525503114293e-10,
+      "mechanical_plus_line_energy_change_J": -7.042319977319694e-13,
+      "patch_subdivision": 1,
+      "per_site_fractional_extent": 0.1,
+      "per_site_fractional_rate_s": 100000.00000000001,
+      "physical_boundary_length_m": 8e-07,
+      "physical_velocity_m_s": 0.01,
+      "plastic_distortion_increment_rms": 7.306770072260993e-06,
+      "plastic_distortion_increment_volume_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722175e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722175e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722175e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+      "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+      "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+      "spacing_m": 1e-07,
+      "state_digest": "e9e0e9c2a722db70e2e66663d9e2c2bdca16f6405cdc8e81311ab253332946c5",
+      "weighted_line_length_m": 3.22e-06
+    },
+    {
+      "accepted_motion": true,
+      "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+      "elapsed_time_s": 1e-06,
+      "eligible_site_count": 16,
+      "enumeration": "forward",
+      "expected_swept_area_m2": 7.999999999999999e-15,
+      "grid": 64,
+      "integrated_swept_area_m2": 8e-15,
+      "mechanical_plus_line_energy_J": 2.733914803139673e-10,
+      "mechanical_plus_line_energy_change_J": -1.7084029407350702e-11,
+      "patch_subdivision": 1,
+      "per_site_fractional_extent": 0.2,
+      "per_site_fractional_rate_s": 200000.00000000003,
+      "physical_boundary_length_m": 8e-07,
+      "physical_velocity_m_s": 0.01,
+      "plastic_distortion_increment_rms": 2.0666666666666673e-05,
+      "plastic_distortion_increment_volume_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.145462934072218e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.145462934072218e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.145462934072218e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+      "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+      "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+      "spacing_m": 5e-08,
+      "state_digest": "f8ca250b75f9561c3539600a12357a830cf7c56e5e2cb5b8b7c6c824b522c3ca",
+      "weighted_line_length_m": 3.22e-06
+    }
+  ],
+  "generated_utc": "2026-09-20T04:12:04.341682+00:00",
+  "material_calibration_claimed": false,
+  "order_and_subdivision_controls": [
+    {
+      "grid": 16,
+      "patch_split_physical_arrays_close": true,
+      "reverse": {
+        "accepted_motion": true,
+        "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+        "elapsed_time_s": 1e-06,
+        "eligible_site_count": 4,
+        "enumeration": "reverse",
+        "expected_swept_area_m2": 7.999999999999999e-15,
+        "grid": 16,
+        "integrated_swept_area_m2": 7.999999999999999e-15,
+        "mechanical_plus_line_energy_J": 3.966968271833011e-10,
+        "mechanical_plus_line_energy_change_J": -2.917079174354682e-14,
+        "patch_subdivision": 1,
+        "per_site_fractional_extent": 0.05,
+        "per_site_fractional_rate_s": 50000.00000000001,
+        "physical_boundary_length_m": 8e-07,
+        "physical_velocity_m_s": 0.01,
+        "plastic_distortion_increment_rms": 2.583333333333334e-06,
+        "plastic_distortion_increment_volume_integral_m3": [
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ]
+        ],
+        "prescribed_displacement_m": 1e-08,
+        "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+        "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+        "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+        "spacing_m": 2e-07,
+        "state_digest": "c784ce0bf93c622353e223f9f6b9caff07d40735feeb4da4ac7d0a0b886a4884",
+        "weighted_line_length_m": 3.22e-06
+      },
+      "site_order_byte_identical": false,
+      "site_order_maximum_absolute_array_difference": 1.4210854715202004e-14,
+      "site_order_physical_arrays_close": true,
+      "split": {
+        "accepted_motion": true,
+        "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+        "elapsed_time_s": 1e-06,
+        "eligible_site_count": 4,
+        "enumeration": "forward",
+        "expected_swept_area_m2": 7.999999999999999e-15,
+        "grid": 16,
+        "integrated_swept_area_m2": 7.999999999999999e-15,
+        "mechanical_plus_line_energy_J": 3.966968271833011e-10,
+        "mechanical_plus_line_energy_change_J": -2.917079174354682e-14,
+        "patch_subdivision": 2,
+        "per_site_fractional_extent": 0.05,
+        "per_site_fractional_rate_s": 50000.00000000001,
+        "physical_boundary_length_m": 8e-07,
+        "physical_velocity_m_s": 0.01,
+        "plastic_distortion_increment_rms": 2.583333333333334e-06,
+        "plastic_distortion_increment_volume_integral_m3": [
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ]
+        ],
+        "prescribed_displacement_m": 1e-08,
+        "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+        "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+        "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+        "spacing_m": 2e-07,
+        "state_digest": "c91b168c374c7b2d15332d50cc096765a5f7c083d90a7677e92febaee8c66412",
+        "weighted_line_length_m": 3.22e-06
+      }
+    },
+    {
+      "grid": 32,
+      "patch_split_physical_arrays_close": true,
+      "reverse": {
+        "accepted_motion": true,
+        "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+        "elapsed_time_s": 1e-06,
+        "eligible_site_count": 8,
+        "enumeration": "reverse",
+        "expected_swept_area_m2": 7.999999999999999e-15,
+        "grid": 32,
+        "integrated_swept_area_m2": 7.999999999999999e-15,
+        "mechanical_plus_line_energy_J": 2.1901525503114293e-10,
+        "mechanical_plus_line_energy_change_J": -7.042319977319694e-13,
+        "patch_subdivision": 1,
+        "per_site_fractional_extent": 0.1,
+        "per_site_fractional_rate_s": 100000.00000000001,
+        "physical_boundary_length_m": 8e-07,
+        "physical_velocity_m_s": 0.01,
+        "plastic_distortion_increment_rms": 7.306770072260993e-06,
+        "plastic_distortion_increment_volume_integral_m3": [
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ]
+        ],
+        "prescribed_displacement_m": 1e-08,
+        "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+        "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+        "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+        "spacing_m": 1e-07,
+        "state_digest": "e9278511d722c6a324f235822efa78eef2ab0b15b833cb2874f8042a911d2b70",
+        "weighted_line_length_m": 3.22e-06
+      },
+      "site_order_byte_identical": false,
+      "site_order_maximum_absolute_array_difference": 1.7053025658242404e-13,
+      "site_order_physical_arrays_close": true,
+      "split": {
+        "accepted_motion": true,
+        "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+        "elapsed_time_s": 1e-06,
+        "eligible_site_count": 8,
+        "enumeration": "forward",
+        "expected_swept_area_m2": 7.999999999999999e-15,
+        "grid": 32,
+        "integrated_swept_area_m2": 8e-15,
+        "mechanical_plus_line_energy_J": 2.1901525503114293e-10,
+        "mechanical_plus_line_energy_change_J": -7.042319977319694e-13,
+        "patch_subdivision": 2,
+        "per_site_fractional_extent": 0.1,
+        "per_site_fractional_rate_s": 100000.00000000001,
+        "physical_boundary_length_m": 8e-07,
+        "physical_velocity_m_s": 0.01,
+        "plastic_distortion_increment_rms": 7.306770072260993e-06,
+        "plastic_distortion_increment_volume_integral_m3": [
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.1454629340722175e-24
+          ]
+        ],
+        "prescribed_displacement_m": 1e-08,
+        "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+        "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+        "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+        "spacing_m": 1e-07,
+        "state_digest": "f4f029021ab126d48451fb3b849ae198c55ece4a3222c00ff5163815d2c1608f",
+        "weighted_line_length_m": 3.22e-06
+      }
+    },
+    {
+      "grid": 64,
+      "patch_split_physical_arrays_close": true,
+      "reverse": {
+        "accepted_motion": true,
+        "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+        "elapsed_time_s": 1e-06,
+        "eligible_site_count": 16,
+        "enumeration": "reverse",
+        "expected_swept_area_m2": 7.999999999999999e-15,
+        "grid": 64,
+        "integrated_swept_area_m2": 8e-15,
+        "mechanical_plus_line_energy_J": 2.733914803139673e-10,
+        "mechanical_plus_line_energy_change_J": -1.7084029407350702e-11,
+        "patch_subdivision": 1,
+        "per_site_fractional_extent": 0.2,
+        "per_site_fractional_rate_s": 200000.00000000003,
+        "physical_boundary_length_m": 8e-07,
+        "physical_velocity_m_s": 0.01,
+        "plastic_distortion_increment_rms": 2.0666666666666673e-05,
+        "plastic_distortion_increment_volume_integral_m3": [
+          [
+            0.0,
+            0.0,
+            1.145462934072218e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.145462934072218e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.145462934072218e-24
+          ]
+        ],
+        "prescribed_displacement_m": 1e-08,
+        "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+        "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+        "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+        "spacing_m": 5e-08,
+        "state_digest": "6f816433c8b8515a984e5d46049b86eb86889d5d1f727f5859010c344ac362b5",
+        "weighted_line_length_m": 3.22e-06
+      },
+      "site_order_byte_identical": false,
+      "site_order_maximum_absolute_array_difference": 3.637978807091713e-12,
+      "site_order_physical_arrays_close": true,
+      "split": {
+        "accepted_motion": true,
+        "chemical_reference": "zero point-defect reservoir work; spatially equilibrated reservoir; no vacancy transient",
+        "elapsed_time_s": 1e-06,
+        "eligible_site_count": 16,
+        "enumeration": "forward",
+        "expected_swept_area_m2": 7.999999999999999e-15,
+        "grid": 64,
+        "integrated_swept_area_m2": 7.999999999999999e-15,
+        "mechanical_plus_line_energy_J": 2.733914803139673e-10,
+        "mechanical_plus_line_energy_change_J": -1.7084029407350702e-11,
+        "patch_subdivision": 2,
+        "per_site_fractional_extent": 0.2,
+        "per_site_fractional_rate_s": 200000.00000000003,
+        "physical_boundary_length_m": 8e-07,
+        "physical_velocity_m_s": 0.01,
+        "plastic_distortion_increment_rms": 2.0666666666666673e-05,
+        "plastic_distortion_increment_volume_integral_m3": [
+          [
+            0.0,
+            0.0,
+            1.145462934072218e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.145462934072218e-24
+          ],
+          [
+            0.0,
+            0.0,
+            1.145462934072218e-24
+          ]
+        ],
+        "prescribed_displacement_m": 1e-08,
+        "signed_exchange_convention": "positive trace(dbeta_p) is positive represented plastic volume exchange with the equilibrated point-defect reservoir",
+        "signed_material_exchange_volume_m3": 1.1454629340722175e-24,
+        "site_population_interpretation": "one numerical patch represents boundary line dx; fractional weight q=displacement/dx and all eligible patches evolve concurrently over one shared deterministic clock",
+        "spacing_m": 5e-08,
+        "state_digest": "8915e7fb21c2a79d5e9613c34708b5d79886c659ed5a07915d1d5d81cbc72832",
+        "weighted_line_length_m": 3.22e-06
+      }
+    }
+  ],
+  "schema": "asb-drx/v45/dynamic-geometry-measure/v1",
+  "scripted_path_is_spontaneous_organization": false,
+  "source_sha": "4924ad4ef65265496847b488e90c9d545f3dbe7f"
+}
