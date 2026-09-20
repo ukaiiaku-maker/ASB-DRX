@@ -907,8 +907,30 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                         field = dq[sign]-step_dt*interior[sign]*drate
                         output.append(field[active[sign]])
                     return np.concatenate(output)
+                def rmatvec(direction):
+                    # H = d(mu_ordered-mu_tangle)/d(rho_ordered)
+                    # is the symmetric Hessian of the quadratic ordering
+                    # energy.  Apply J^T without assembling either H or J:
+                    # J = I-dt*D_active*C*H*T.
+                    value = unpack(direction)
+                    weighted = {
+                        sign: coefficients[sign]*interior[sign]*value[sign]
+                        for sign in ("plus", "minus")}
+                    adjoint_plus, adjoint_minus = (
+                        _ordering_affinity_linear_action(
+                            weighted["plus"], weighted["minus"], systems,
+                            orientation_rad, parameters))
+                    adjoint = {
+                        "plus": adjoint_plus, "minus": adjoint_minus}
+                    output = []
+                    for sign in ("plus", "minus"):
+                        field = (value[sign]
+                                 -step_dt*totals[sign]*adjoint[sign])
+                        output.append(field[active[sign]])
+                    return np.concatenate(output)
                 return LinearOperator(
-                    (active_count, active_count), matvec=matvec, dtype=float)
+                    (active_count, active_count), matvec=matvec,
+                    rmatvec=rmatvec, dtype=float)
 
             for _ in range(internal_steps):
                 previous = vector.copy()
@@ -947,16 +969,19 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                             accepted_trial = trial
                             break
                     if accepted_trial is None:
-                        # The projected residual is nonsmooth where a bound
-                        # changes activity. Newton's direction can cease to be
-                        # a descent direction even though this deliberately
-                        # small-exposure fixed-point map remains contractive.
-                        # A projected Picard direction solves the same
-                        # backward-Euler equation on the same physical clock.
-                        picard_delta = -residual_value
-                        for backtrack in range(13):
+                        # At an active-set kink, neither Newton nor Picard is
+                        # guaranteed to reduce ||F||.  The exact matrix-free
+                        # adjoint supplies the residual-norm gradient and hence
+                        # a globalization direction without inventing a sparse
+                        # or dense Jacobian.
+                        gradient_delta = -exact_jacobian(
+                            vector, previous).rmatvec(residual_value)
+                        gradient_scale = max(
+                            float(np.max(np.abs(gradient_delta))), 1.0)
+                        gradient_delta /= gradient_scale
+                        for backtrack in range(24):
                             trial = np.clip(
-                                vector+(0.5**backtrack)*picard_delta,
+                                vector+(0.5**backtrack)*gradient_delta,
                                 0.0, 1.0)
                             trial_residual = projected_residual(
                                 trial, previous)
