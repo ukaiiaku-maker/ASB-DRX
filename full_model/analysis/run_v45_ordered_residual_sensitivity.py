@@ -21,8 +21,8 @@ def run(tolerance):
     context = resolved_bicrystal(
         grid=grid, length_m=3.2e-6, interface_width_m=4e-7,
         temperature_K=1100.0, child_line_fraction=.35)
-    context["wall_parameters"] = replace(
-        context["wall_parameters"],
+    context["extensive_parameters"] = replace(
+        context["extensive_parameters"],
         ordering_implicit_residual_tolerance=tolerance)
     driving = driving_at_time(grid, .01, "hold", 0.0, duration)
     _, audit = run_i3_cycle(
