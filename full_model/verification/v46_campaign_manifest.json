@@ -1,0 +1,73 @@
+{
+  "schema": "asb-drx/v46/campaign-manifest/v1",
+  "generated_utc": "2026-09-20T13:21:49Z",
+  "execution_location": "local",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920",
+  "branch": "exp/full-v34-recovery-v46-20260920",
+  "restart_checkpoint": "48e5a23a54ab42a30b0a216c48e99db785915784",
+  "source_roles": {
+    "production_scientific_source": "096159de1478bb259e445c15c11765d9149d7fe0",
+    "atomic_continuation_source": "dbed107cbafc470175d1e30b02716576399ac2bc",
+    "final_postprocessor_source": "f792b91ba9f394f12d25a552df5592f3d2fa27b7",
+    "interpretation": "continuation and postprocessor commits add atomic I/O and analysis but do not alter the production equations after the scientific source"
+  },
+  "configuration": {
+    "domain_m": 3.2e-6,
+    "grids": [128, 192],
+    "interface_width_m": 4e-7,
+    "capture_deposition_length_m": 4e-7,
+    "geometry_representation_length_m": 4e-7,
+    "geometry_section_thickness_m": 1e-6,
+    "temperature_K": 1100.0,
+    "macro_dt_s": 7.8125e-6,
+    "mura_substeps_per_half": 8,
+    "total_macros": 8,
+    "total_physical_time_s": 6.25e-5,
+    "mura_transport_operator": "compatible_dealiased"
+  },
+  "clock_and_transaction_summary": {
+    "mura_operations_per_grid": 128,
+    "front_operations_per_grid": 8,
+    "published_front_operations_per_grid": 8,
+    "minimum_event_scale": 1.0,
+    "minimum_family_event_scale": 1.0,
+    "all_ordering_accessibility_checks_passed": true,
+    "maximum_accessibility_violation": 0.0,
+    "maximum_projected_ordering_kkt_relative": 9.299448789656704e-12,
+    "terminal_state": "COMPLETE"
+  },
+  "checkpoint_records": {
+    "n128": {
+      "first_macro_manifest_sha256": "b693c073c4a7ec2a8fc37fa09cc68d38cb18f48df0e855a041e5aed9af7b3427",
+      "continuation_manifest_sha256": "79a7f1d4b9526a62502cd6e4376ed6c87d4a7cb1561fd7849be0d82538be8dca",
+      "final_checkpoint_sha256": "cbc237dea1e05f1e383e8fb0a6709c5de31a913876f34da15d0b631bcd55842a"
+    },
+    "n192": {
+      "first_macro_manifest_sha256": "d30d6612abd07c9212c4c69c9db8cb7376e17f87b556be6dd7e75e642712de21",
+      "continuation_manifest_sha256": "e95bffbbb1b055638a2c146d713976d3476e3963defc419c3a56ebd3ff081a28",
+      "final_checkpoint_sha256": "2a5503ed1c784b7ba12dd71621d6dc7146a21c82e056f46820891e42b6c19787"
+    }
+  },
+  "superseded_attempts_retained": [
+    "full_model/production/results-local/v46-checkpointed/n128-failed-a291b56",
+    "full_model/production/results-local/v46-checkpointed/n128-failed-d245a5e",
+    "full_model/production/results-local/v46-checkpointed/n128-pre-kkt-c00b419"
+  ],
+  "superseded_attempt_interpretation": "ordering asymptotic endpoint was not KKT-qualified and the exponential fallback did not checkpoint promptly; no failed endpoint is used as science",
+  "v45_verified_evidence_sha256": {
+    "v45_ordering_qualification.json": "663751d228d2c8445aee0f4a7e4f8221d00f18c91c8ca5e4448b893aa66ede00",
+    "v45_resumed_n128_endpoint.json": "16d6994327bfc517dcbcfe5aa2acac79eb0ac04d0cbc7485b3ca36b1d9509670",
+    "v45_refined_current_accuracy.json": "abcd6714f908d65f4b4f72bde305514a8095d87e260861bc1f1f1ce5484a073e",
+    "v45_spatial_spectrum.json": "66a4daf3f012a510f0f96d9265db8a1afb78e9e50405a60fb56df32c0acadce1",
+    "v45_ordered_residual_sensitivity.json": "8f1aa7a4651c9c7f4b0d7cc7370c96158360004be0a3517bdc5b618eec578979",
+    "v45_dynamic_geometry_measure.json": "bb5e76a01e200ee85d015199b9b680cab5da0ef76f8d5f157e1d6efccd418ea6",
+    "v45_matched_accuracy.json": "cbe70dd7c121d76d8fe09853b2740d8dbf33ab65d92752ff27395d4f29ab1aab"
+  },
+  "execution_policy": "local_only; no HPC3 job submitted; unrelated DDD processes observed and not modified",
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 772,
+    "wall_seconds": 262.15
+  }
+}

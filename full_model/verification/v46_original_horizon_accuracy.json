@@ -1,0 +1,256 @@
+{
+  "classification": {
+    "all_reported_spatial_observables_passed": false,
+    "common_band_63_strong_norm_passed": false,
+    "original_horizon_selected_observable_passed": true,
+    "selected_band_passed": true,
+    "whole_field_rms_amplitude_passed": true
+  },
+  "continuation_source_sha": "dbed107cbafc470175d1e30b02716576399ac2bc",
+  "coordinate_shift_optimized": false,
+  "curl_nye_band_sweep": {
+    "16": {
+      "active_coefficient_phase_rms_rad": 0.752924069253851,
+      "complex_coefficient_relative_rms": 0.009540106539247452,
+      "n128_rms": 25.58629031375322,
+      "n192_rms": 25.789180698609332,
+      "power_relative_rms": 0.000978946499885072,
+      "rms_relative_difference": 0.007867267565698673
+    },
+    "24": {
+      "active_coefficient_phase_rms_rad": 0.6208893156214808,
+      "complex_coefficient_relative_rms": 0.013764921483836857,
+      "n128_rms": 25.58629031375322,
+      "n192_rms": 25.789180698609332,
+      "power_relative_rms": 0.001096075563465976,
+      "rms_relative_difference": 0.007867267565698673
+    },
+    "32": {
+      "active_coefficient_phase_rms_rad": 0.7113443668161895,
+      "complex_coefficient_relative_rms": 0.02084802238792669,
+      "n128_rms": 25.58629031375322,
+      "n192_rms": 25.789180698609332,
+      "power_relative_rms": 0.001376893919171911,
+      "rms_relative_difference": 0.007867267565698673
+    },
+    "48": {
+      "active_coefficient_phase_rms_rad": 0.8342480022444924,
+      "complex_coefficient_relative_rms": 0.042331322594080595,
+      "n128_rms": 25.58629031375322,
+      "n192_rms": 25.789180698609332,
+      "power_relative_rms": 0.0021320228660033193,
+      "rms_relative_difference": 0.007867267565698673
+    },
+    "63": {
+      "active_coefficient_phase_rms_rad": 0.8684771950112452,
+      "complex_coefficient_relative_rms": 0.0632127060662465,
+      "n128_rms": 25.58629031375322,
+      "n192_rms": 25.789180698609332,
+      "power_relative_rms": 0.0037306345842218194,
+      "rms_relative_difference": 0.007867267565698673
+    },
+    "8": {
+      "active_coefficient_phase_rms_rad": 0.522536445825213,
+      "complex_coefficient_relative_rms": 0.006523612365082875,
+      "n128_rms": 25.58629031375322,
+      "n192_rms": 25.789180698609332,
+      "power_relative_rms": 0.0008584955812337534,
+      "rms_relative_difference": 0.007867267565698673
+    }
+  },
+  "drx_claimed": false,
+  "fields": {
+    "beta_p": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 0.00034465753948590967,
+        "complex_difference_rms": 2.8099481035776875e-10,
+        "half_width": 63,
+        "n128_coefficient_rms": 8.1528034633408e-07,
+        "n192_coefficient_rms": 8.152869969909839e-07,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.4906696186827137,
+        "complex_coefficient_relative_rms": 0.00024749468629668226,
+        "n128_rms": 0.00010354060399138948,
+        "n192_rms": 0.00010354145422167456,
+        "power_relative_rms": 2.153531019054842e-05,
+        "rms_relative_difference": 8.211496462614447e-06
+      }
+    },
+    "child_phase": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 3.977748843864038e-05,
+        "complex_difference_rms": 1.9188394268752232e-07,
+        "half_width": 63,
+        "n128_coefficient_rms": 0.004823933089277797,
+        "n192_coefficient_rms": 0.004823930846009464,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 1.3299264825526024e-13,
+        "complex_coefficient_relative_rms": 1.8907525644281042e-05,
+        "n128_rms": 0.6126395023988145,
+        "n192_rms": 0.6126392184030461,
+        "power_relative_rms": 5.784791591653471e-06,
+        "rms_relative_difference": 4.6356098037178813e-07
+      }
+    },
+    "curl_nye": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 0.0632127060662465,
+        "complex_difference_rms": 0.012735264952196316,
+        "half_width": 63,
+        "n128_coefficient_rms": 0.20146685286419855,
+        "n192_coefficient_rms": 0.20088108728435994,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.6208893156214808,
+        "complex_coefficient_relative_rms": 0.013764921483836857,
+        "n128_rms": 25.58629031375322,
+        "n192_rms": 25.789180698609332,
+        "power_relative_rms": 0.001096075563465976,
+        "rms_relative_difference": 0.007867267565698673
+      }
+    },
+    "ordered_density": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 0.031537694880305875,
+        "complex_difference_rms": 3252114.7476482354,
+        "half_width": 63,
+        "n128_coefficient_rms": 103118340.13205133,
+        "n192_coefficient_rms": 100624548.48559472,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.6326671207524975,
+        "complex_coefficient_relative_rms": 0.031295827578309156,
+        "n128_rms": 13096029196.900139,
+        "n192_rms": 12779329827.553604,
+        "power_relative_rms": 0.0571589668953841,
+        "rms_relative_difference": 0.02418285455728048
+      }
+    },
+    "orientation": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 0.00034502227752626375,
+        "complex_difference_rms": 2.9835598568792454e-10,
+        "half_width": 63,
+        "n128_coefficient_rms": 8.647371739823256e-07,
+        "n192_coefficient_rms": 8.647441197915491e-07,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.002680624997691568,
+        "complex_coefficient_relative_rms": 0.00024820883366227325,
+        "n128_rms": 0.00010982162110310896,
+        "n192_rms": 0.00010982250921421223,
+        "power_relative_rms": 2.1275245003717325e-05,
+        "rms_relative_difference": 8.086785756601688e-06
+      }
+    },
+    "reservoir_nye": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 0.0636404545635558,
+        "complex_difference_rms": 0.012820744940864428,
+        "half_width": 63,
+        "n128_coefficient_rms": 0.20145589827710514,
+        "n192_coefficient_rms": 0.20084964940983205,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.9060422091059988,
+        "complex_coefficient_relative_rms": 0.013874758528840637,
+        "n128_rms": 25.58489908176071,
+        "n192_rms": 25.787502928915654,
+        "power_relative_rms": 0.001102750646295034,
+        "rms_relative_difference": 0.00785666792606595
+      }
+    },
+    "temperature": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 2.877943884524702e-05,
+        "complex_difference_rms": 0.00024934014914023436,
+        "half_width": 63,
+        "n128_coefficient_rms": 8.66382942631327,
+        "n192_coefficient_rms": 8.663827447884474,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.634641419116532,
+        "complex_coefficient_relative_rms": 1.7160297356989846e-05,
+        "n128_rms": 1100.3063371417854,
+        "n192_rms": 1100.306086557537,
+        "power_relative_rms": 4.552790293084226e-07,
+        "rms_relative_difference": 2.2774043925289503e-07
+      }
+    },
+    "total_density": {
+      "common_band_strong_norm": {
+        "complex_difference_relative_rms": 4.068075058584823e-05,
+        "complex_difference_rms": 219930359.14738917,
+        "half_width": 63,
+        "n128_coefficient_rms": 5406251260857.935,
+        "n192_coefficient_rms": 5406242151826.681,
+        "semantics": "strong L2 norm on the shared centered Fourier subspace; no interpolation or optimized shift"
+      },
+      "selected_common_band": {
+        "active_coefficient_phase_rms_rad": 0.020996354516244552,
+        "complex_coefficient_relative_rms": 1.318229087223154e-05,
+        "n128_rms": 686593910150181.5,
+        "n192_rms": 686592755387743.0,
+        "power_relative_rms": 2.5092304477191353e-06,
+        "rms_relative_difference": 1.6818710760883591e-06
+      }
+    }
+  },
+  "generated_utc": "2026-09-20T13:21:59.329914+00:00",
+  "lagb_claimed": false,
+  "material_calibration_claimed": false,
+  "members": {
+    "128": {
+      "latest_checkpoint_sha256": "cbc237dea1e05f1e383e8fb0a6709c5de31a913876f34da15d0b631bcd55842a",
+      "ledger_summary": {
+        "all_ordering_accessibility_checks_passed": true,
+        "front_operations": 8,
+        "maximum_operator_wall_seconds": 147.241538375034,
+        "maximum_ordering_accessibility_violation": 0.0,
+        "maximum_ordering_projected_kkt_relative": 2.828311460077798e-12,
+        "minimum_event_scale": 1.0,
+        "minimum_family_event_scale": 1.0,
+        "minimum_operator_wall_seconds": 4.232500673038885,
+        "mura_operations": 128,
+        "published_front_operations": 8,
+        "total_operations": 136
+      },
+      "manifest": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/run_manifest.json",
+      "manifest_sha256": "79a7f1d4b9526a62502cd6e4376ed6c87d4a7cb1561fd7849be0d82538be8dca"
+    },
+    "192": {
+      "latest_checkpoint_sha256": "2a5503ed1c784b7ba12dd71621d6dc7146a21c82e056f46820891e42b6c19787",
+      "ledger_summary": {
+        "all_ordering_accessibility_checks_passed": true,
+        "front_operations": 8,
+        "maximum_operator_wall_seconds": 543.6301020269748,
+        "maximum_ordering_accessibility_violation": 0.0,
+        "maximum_ordering_projected_kkt_relative": 9.299448789656704e-12,
+        "minimum_event_scale": 1.0,
+        "minimum_family_event_scale": 1.0,
+        "minimum_operator_wall_seconds": 7.992043872014619,
+        "mura_operations": 128,
+        "published_front_operations": 8,
+        "total_operations": 136
+      },
+      "manifest": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n192/run_manifest.json",
+      "manifest_sha256": "e95bffbbb1b055638a2c146d713976d3476e3963defc419c3a56ebd3ff081a28"
+    }
+  },
+  "physical_time_s": 6.25e-05,
+  "postprocessor_source_sha": "f792b91ba9f394f12d25a552df5592f3d2fa27b7",
+  "schema": "asb-drx/v46/original-horizon-accuracy/v1",
+  "scientific_source_sha": "096159de1478bb259e445c15c11765d9149d7fe0",
+  "selected_half_width": 24,
+  "strict_asb_claimed": false,
+  "threshold": 0.05
+}

@@ -1850,3 +1850,37 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `full_model/verification/v45_campaign_controller.json`. DRX, persistent
   LAGB formation, strict ASB, and material calibration remain unclaimed. The
   final regression boundary passes 764 tests in 193.91 s.
+
+## Directive v46 state-qualified ordering and physical representation (2026-09-20)
+
+- Production asymptotic ordering is now guarded by the local componentwise
+  finite-speed bound `|delta q_i| <= integral a_i dt`. Inaccessible endpoints
+  use the finite-time route; inactive and zero pools retain exact semantics.
+  The convex endpoint is qualified by the projected physical KKT residual.
+- Compatible capture now uses fractional physical support and a fixed 400 nm
+  positive periodic deposition map selected from the pre-existing 450 nm trap
+  half-width. No causal audit field exceeds 5% at half-width 24; curl-Nye rate
+  error is 0.0264% and represented captured-line error is 2.6904%. The full
+  pre-registered length sensitivity, including the failing zero-length case,
+  is retained.
+- Exact geometry remains topological while one fixed physical map supplies
+  scalar line, moment, plastic distortion, and compatible Nye to the continuum
+  energy. Stored n32/n64 energy differs by 0.0882%; adjoint and curl identities
+  close near machine precision. Two evolved nonzero updates and exact rejected
+  rollback pass. The tiny incremental translation energy remains unqualified
+  at 59.6% relative difference and is not relabeled.
+- Source-identical n128/n192 first macros pass the selected spatial observable,
+  authorizing atomic continuation through the original 62.5 microsecond
+  horizon. Both grids complete 128 Mura and eight single-published front
+  transactions with unit event scales and exact clock closure.
+- At 62.5 microseconds, curl-Nye differs by 1.3765% in the declared centered
+  half-width-24 observable and 0.7867% in RMS amplitude. The full n128 common
+  half-width-63 strong norm differs by 6.3213% and fails the 5% criterion.
+  Classification is therefore
+  `RESOLVED_REPRESENTATION_PASSED_COMMON_SHORT_WAVE_STRONG_NORM_FAILED`;
+  `scientific_gate_passed` remains false for broad spatial completion.
+- Final merged regression boundary: 772 tests pass in 262.15 s. Report:
+  `full_model/docs/v46_decision_report.md`; controller and provenance:
+  `full_model/verification/v46_campaign_controller.json` and
+  `full_model/verification/v46_campaign_manifest.json`. DRX, a persistent
+  LAGB, strict ASB, and material calibration remain unclaimed.

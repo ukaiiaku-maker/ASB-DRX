@@ -1,0 +1,74 @@
+{
+  "schema": "asb-drx/v46/campaign-controller/v1",
+  "generated_utc": "2026-09-20T13:21:49Z",
+  "source_sha": "f792b91ba9f394f12d25a552df5592f3d2fa27b7",
+  "execution_location": "local",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "classification": "RESOLVED_REPRESENTATION_PASSED_COMMON_SHORT_WAVE_STRONG_NORM_FAILED",
+  "branches": {
+    "state_qualified_ordering": {
+      "state": "PASSED_SCOPED",
+      "classification": "LOCAL_FINITE_SPEED_GUARD_AND_PROJECTED_KKT_QUALIFIED",
+      "necessary_bound_is_sufficient_certificate": false,
+      "all_long_horizon_accessibility_checks_passed": true,
+      "maximum_long_horizon_projected_kkt_relative": 9.299448789656704e-12
+    },
+    "compatible_mura_representation": {
+      "state": "PASSED_DECLARED_RESOLVED_OBSERVABLE",
+      "classification": "FRACTIONAL_CAPTURE_AND_FIXED_PHYSICAL_DEPOSITION_REPAIRED",
+      "curl_nye_rate_halfwidth24_relative_error": 0.00026387020417137033,
+      "captured_line_halfwidth24_relative_error": 0.02690433388451515,
+      "first_causal_field_above_five_percent": null
+    },
+    "geometry_energy_representation": {
+      "state": "PASSED_SCOPED_WITH_RETAINED_NEGATIVE",
+      "representation_resolved_on_finest_pair": true,
+      "stored_total_energy_grid_converged_5pct": true,
+      "incremental_total_energy_grid_converged_5pct": false,
+      "nonzero_repeated_motion": true,
+      "atomic_rejection": true
+    },
+    "original_horizon": {
+      "state": "COMPLETE_SCOPED_MIXED_DECISION",
+      "physical_time_s": 6.25e-5,
+      "selected_halfwidth24_curl_nye_relative_error": 0.013764921483836857,
+      "whole_field_rms_amplitude_relative_difference": 0.007867267565698673,
+      "common_halfwidth63_strong_norm_relative_error": 0.0632127060662465,
+      "selected_resolved_observable_passed": true,
+      "all_reported_spatial_observables_passed": false
+    }
+  },
+  "evidence": {
+    "ordering": {
+      "path": "full_model/verification/v46_ordering_applicability.json",
+      "sha256": "d11612cda33fd5c508e69af8ffdae8c6d90316470c7cfdcd5dfdb6c917ae7cd4"
+    },
+    "mura_suboperator": {
+      "path": "full_model/verification/v46_mura_suboperator_audit.json",
+      "sha256": "8bf8161ebdaa3f723594547231bdd886e51e2bda7f2992e6dfbf5300e95d11ed"
+    },
+    "geometry": {
+      "path": "full_model/verification/v46_geometry_representation.json",
+      "sha256": "7bcda90d6bca1de5a45a724fb85e7f1b76131c80455a1430d933d3ffea9037c8"
+    },
+    "one_macro_accuracy": {
+      "path": "full_model/verification/v46_checkpointed_spatial_accuracy.json",
+      "sha256": "ca277fd1488a36b15b7229d3c3777aaf8c411a0f44c805fa713b6dc2f8ce98f8"
+    },
+    "original_horizon_accuracy": {
+      "path": "full_model/verification/v46_original_horizon_accuracy.json",
+      "sha256": "944c5661950794670cd59b10301957b13eeb43b9d6a92e9d9c7730f58f5c3c2e"
+    }
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 772,
+    "wall_seconds": 262.15
+  },
+  "next_exact_task": "diagnose the residual 6.3213 percent short-wave common-band curl-Nye difference without changing the qualified 400 nm representation or retuning against phase-field outcomes",
+  "drx_claimed": false,
+  "lagb_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false
+}
