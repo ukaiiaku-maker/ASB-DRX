@@ -736,6 +736,8 @@ def accepted_geometry_plaquette_transaction(
             and "_affinity_rate_override_s" not in event):
         probe = {
             "affinity_coupling_mode": kinetics.affinity_coupling_mode,
+            "activation_enthalpy_J": enthalpy,
+            "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
             "arrhenius_unbiased_rate_s": arrhenius_rate,
             "affinity_biased_rate_s": affinity_rate,
             "complete_available_energy_J": event_available_energy_J,
@@ -759,6 +761,8 @@ def accepted_geometry_plaquette_transaction(
             common_parameters, extensive_parameters, kinetics, dt_s)
     affinity_record = event.get("_affinity_probe_ledger", {
         "affinity_coupling_mode": kinetics.affinity_coupling_mode,
+        "activation_enthalpy_J": enthalpy,
+        "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
         "arrhenius_unbiased_rate_s": arrhenius_rate,
         "affinity_biased_rate_s": (
             affinity_rate if kinetics.affinity_coupling_mode == "downhill_tanh"

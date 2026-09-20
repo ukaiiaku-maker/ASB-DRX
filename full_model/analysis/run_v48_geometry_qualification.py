@@ -13,7 +13,6 @@ import numpy as np
 
 from full_model.analysis.run_v46_geometry_representation import (
     REPRESENTATION_LENGTH_M, energy_terms_J, prepare_represented_block,
-    represented_translation,
 )
 from full_model.analysis.run_v47_geometry_force import propose, stable_event
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
@@ -101,7 +100,7 @@ def affinity_rows(state, data, cell):
             local.common,
             temperature_K=np.full_like(local.common.temperature_K,
                                        temperature)))
-        for mu in (-2.03e-18, -2.00e-18, -1.90e-18):
+        for mu in (1.1e-19, 1.43e-19, 1.7e-19, 3.0e-19):
             kinetics = V43GeometryKinetics(
                 ActivatedProcess("v48-geometry-affinity", 1e9),
                 enthalpy_J=.2*EV_J, critical_stress_Pa=1e9,
@@ -129,7 +128,19 @@ def main():
     output = Path("full_model/verification/v48_geometry_qualification.json")
     state, data, start, width = prepare_represented_block(64)
     cell = (start+width, start)
-    refinement = [represented_translation(n)[2] for n in (32, 64, 128)]
+    retained = json.loads(Path(
+        "full_model/verification/v47_geometry_force.json").read_text())
+    refinement = retained["fixed_scale_refinement"]
+    rate_rows = affinity_rows(state, data, cell)
+    rate_verified = bool(
+        any(row["accepted"] for row in rate_rows)
+        and any(not row["accepted"] for row in rate_rows)
+        and any(row["downhill_activity"] is not None
+                and 0.0 < row["downhill_activity"] < .99
+                for row in rate_rows)
+        and all(row["activation_enthalpy_J"] is not None
+                and row["activation_enthalpy_J"] > 0.0
+                for row in rate_rows))
     record = {
         "schema": "asb-drx/v48/geometry-qualification/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -137,14 +148,19 @@ def main():
             ["git", "rev-parse", "HEAD"], text=True).strip(),
         "representation_length_m": REPRESENTATION_LENGTH_M,
         "matched_strip_refinement": refinement,
+        "matched_strip_refinement_source": (
+            "immutable V47 fixed-400-nm rows; not recomputed because repeated "
+            "n128 plaquette construction is an avoidable local bottleneck"),
         "same_state_derivative": derivative_audit(state, data, cell),
         "subcell_translation": subcell_translation(state, data, start, width),
-        "affinity_rate_rows": affinity_rows(state, data, cell),
+        "affinity_rate_rows": rate_rows,
         "matched_strip_sign_converged": False,
-        "rate_implementation_verified": True,
+        "rate_implementation_verified": rate_verified,
         "geometry_observable_numerically_qualified": False,
         "classification": (
-            "AFFINITY_RATE_VERIFIED_MATCHED_STRIP_SIGN_UNRESOLVED"),
+            "AFFINITY_RATE_VERIFIED_MATCHED_STRIP_SIGN_UNRESOLVED"
+            if rate_verified else
+            "AFFINITY_RATE_NOT_DISCRIMINATED_MATCHED_STRIP_SIGN_UNRESOLVED"),
         "drx_claimed": False,
     }
     output.parent.mkdir(parents=True, exist_ok=True)
