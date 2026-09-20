@@ -124,6 +124,73 @@ def affinity_rows(state, data, cell):
     return rows
 
 
+def repeated_geometry_evolution(state, data, start, width):
+    def kinetics(mu, name):
+        return V43GeometryKinetics(
+            ActivatedProcess(name, 1e9), enthalpy_J=.2*EV_J,
+            critical_stress_Pa=1e9, chemical_species="vacancy",
+            chemical_potential_J_per_defect=mu,
+            atomic_volume_m3_per_atom=1.8e-29,
+            exchange_stoichiometry_defects_per_atom=1.0,
+            continuum_representation_length_m=REPRESENTATION_LENGTH_M)
+    intrinsic_event = {
+        "cell": (start+width, start), "family": 0, "burgers_sign": 1,
+        "proposed_extent": .1}
+    intrinsic_state, intrinsic = accepted_geometry_plaquette_transaction(
+        state, intrinsic_event, data[4], data[5], data[1], data[6], data[7],
+        kinetics(0.0, "v48-intrinsic-zero-chemical-work"), 2e-10)
+    current = state
+    elapsed = 0.0
+    rows = []
+    for index in range(4):
+        event = {**intrinsic_event,
+                 "cell": (start+width, start+index)}
+        candidate, ledger = accepted_geometry_plaquette_transaction(
+            current, event, data[4], data[5], data[1], data[6], data[7],
+            kinetics(3e-19, "v48-declared-vacancy-reservoir"), 2e-10)
+        consumed = float(ledger.get("consumed_duration_s", 0.0))
+        rows.append({
+            "index": index,
+            "cell": list(event["cell"]),
+            "accepted": bool(ledger["accepted"]),
+            "classification": ledger["classification"],
+            "available_energy_per_event_J": ledger.get(
+                "available_energy_per_event_J"),
+            "affinity_biased_rate_s": ledger.get("affinity_biased_rate_s"),
+            "accepted_extent": ledger.get("accepted_extent"),
+            "consumed_duration_s": consumed,
+            "observed_accepted_velocity_m_s": ledger.get(
+                "observed_accepted_velocity_m_s"),
+            "state_event_count_before": int(
+                current.geometry.accepted_event_count),
+            "state_event_count_after": int(
+                candidate.geometry.accepted_event_count),
+        })
+        if not ledger["accepted"]:
+            break
+        current = candidate
+        elapsed += consumed
+    return {
+        "intrinsic_zero_chemical_work": {
+            "accepted": bool(intrinsic["accepted"]),
+            "classification": intrinsic["classification"],
+            "state_is_exact_original": intrinsic_state is state,
+            "chemical_potential_J_per_defect": 0.0,
+        },
+        "declared_reservoir_control": {
+            "chemical_potential_J_per_defect": 3e-19,
+            "parameter_scope": (
+                "bounded mechanism hypothesis; not fitted to PF response and "
+                "not a material calibration"),
+            "events": rows,
+            "accepted_events": sum(row["accepted"] for row in rows),
+            "physical_time_advanced_s": elapsed,
+            "final_geometry_event_count": int(
+                current.geometry.accepted_event_count),
+        },
+    }
+
+
 def main():
     output = Path("full_model/verification/v48_geometry_qualification.json")
     state, data, start, width = prepare_represented_block(64)
@@ -154,6 +221,8 @@ def main():
         "same_state_derivative": derivative_audit(state, data, cell),
         "subcell_translation": subcell_translation(state, data, start, width),
         "affinity_rate_rows": rate_rows,
+        "repeated_geometry_evolution": repeated_geometry_evolution(
+            state, data, start, width),
         "matched_strip_sign_converged": False,
         "rate_implementation_verified": rate_verified,
         "geometry_observable_numerically_qualified": False,
