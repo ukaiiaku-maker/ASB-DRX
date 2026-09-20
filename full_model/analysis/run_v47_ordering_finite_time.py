@@ -146,7 +146,10 @@ def main():
                 "ordering_discarded_reaction_time_s",
                 "ordering_maximum_attempt_exposure",
                 "ordering_finite_time_kinetic_accuracy_certified_by_this_solve",
-                "ordering_active_degrees_of_freedom")},
+                "ordering_active_degrees_of_freedom",
+                "ordering_asymptotic_endpoint_distance_relative",
+                "ordering_asymptotic_endpoint_distance_tolerance_relative",
+                "ordering_asymptotic_endpoint_distance_bound_semantics")},
         "comparison_to_retained_asymptotic_endpoint": comparisons,
         "exact_scalar_counterexample": exact_scalar_counterexample(),
     }
