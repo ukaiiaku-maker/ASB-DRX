@@ -145,9 +145,9 @@ def main():
                 "physical_time_s": mura_index*substep_dt,
                 "operator_exposure_s": accepted,
                 "wall_seconds": elapsed,
-                "event_scale": float(ledger["mura_event_scale"]),
+                "event_scale": float(ledger["event_scale"]),
                 "family_event_scales": [float(x) for x in
-                                         ledger["mura_family_event_scales"]],
+                                         ledger["family_event_scales"]],
                 "ordering": {key: ledger["ordering_thermodynamics"].get(key)
                              for key in (
                                  "stiff_dispatch", "integration_method",
