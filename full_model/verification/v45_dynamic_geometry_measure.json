@@ -21,6 +21,13 @@
       "final_state_changed": true
     }
   },
+  "classification": {
+    "continuum_coupled_energy_grid_converged": false,
+    "coupled_energy_interpretation": "a one-cell singular line deposited into the continuum gradient energy is unresolved; geometric event measure qualifies but coupled energetic mesh convergence does not",
+    "geometric_line_energy_grid_invariant": true,
+    "swept_measure_grid_invariant": true,
+    "weighted_line_length_grid_invariant": true
+  },
   "drx_claimed": false,
   "dynamic_refinement": [
     {
@@ -30,6 +37,8 @@
       "eligible_site_count": 4,
       "enumeration": "forward",
       "expected_swept_area_m2": 7.999999999999999e-15,
+      "geometric_line_energy_J": 4.83e-15,
+      "geometric_line_energy_change_J": 3.0000000000000346e-17,
       "grid": 16,
       "integrated_swept_area_m2": 7.999999999999999e-15,
       "mechanical_plus_line_energy_J": 3.966968271833011e-10,
@@ -72,6 +81,8 @@
       "eligible_site_count": 8,
       "enumeration": "forward",
       "expected_swept_area_m2": 7.999999999999999e-15,
+      "geometric_line_energy_J": 4.83e-15,
+      "geometric_line_energy_change_J": 3.0000000000000346e-17,
       "grid": 32,
       "integrated_swept_area_m2": 7.999999999999999e-15,
       "mechanical_plus_line_energy_J": 2.1901525503114293e-10,
@@ -114,6 +125,8 @@
       "eligible_site_count": 16,
       "enumeration": "forward",
       "expected_swept_area_m2": 7.999999999999999e-15,
+      "geometric_line_energy_J": 4.83e-15,
+      "geometric_line_energy_change_J": 3.0000000000000346e-17,
       "grid": 64,
       "integrated_swept_area_m2": 8e-15,
       "mechanical_plus_line_energy_J": 2.733914803139673e-10,
@@ -150,7 +163,7 @@
       "weighted_line_length_m": 3.22e-06
     }
   ],
-  "generated_utc": "2026-09-20T04:12:04.341682+00:00",
+  "generated_utc": "2026-09-20T04:15:11.167462+00:00",
   "material_calibration_claimed": false,
   "order_and_subdivision_controls": [
     {
@@ -163,6 +176,8 @@
         "eligible_site_count": 4,
         "enumeration": "reverse",
         "expected_swept_area_m2": 7.999999999999999e-15,
+        "geometric_line_energy_J": 4.83e-15,
+        "geometric_line_energy_change_J": 3.0000000000000346e-17,
         "grid": 16,
         "integrated_swept_area_m2": 7.999999999999999e-15,
         "mechanical_plus_line_energy_J": 3.966968271833011e-10,
@@ -208,6 +223,8 @@
         "eligible_site_count": 4,
         "enumeration": "forward",
         "expected_swept_area_m2": 7.999999999999999e-15,
+        "geometric_line_energy_J": 4.83e-15,
+        "geometric_line_energy_change_J": 3.0000000000000346e-17,
         "grid": 16,
         "integrated_swept_area_m2": 7.999999999999999e-15,
         "mechanical_plus_line_energy_J": 3.966968271833011e-10,
@@ -254,6 +271,8 @@
         "eligible_site_count": 8,
         "enumeration": "reverse",
         "expected_swept_area_m2": 7.999999999999999e-15,
+        "geometric_line_energy_J": 4.83e-15,
+        "geometric_line_energy_change_J": 3.0000000000000346e-17,
         "grid": 32,
         "integrated_swept_area_m2": 7.999999999999999e-15,
         "mechanical_plus_line_energy_J": 2.1901525503114293e-10,
@@ -299,6 +318,8 @@
         "eligible_site_count": 8,
         "enumeration": "forward",
         "expected_swept_area_m2": 7.999999999999999e-15,
+        "geometric_line_energy_J": 4.83e-15,
+        "geometric_line_energy_change_J": 3.0000000000000346e-17,
         "grid": 32,
         "integrated_swept_area_m2": 8e-15,
         "mechanical_plus_line_energy_J": 2.1901525503114293e-10,
@@ -345,6 +366,8 @@
         "eligible_site_count": 16,
         "enumeration": "reverse",
         "expected_swept_area_m2": 7.999999999999999e-15,
+        "geometric_line_energy_J": 4.83e-15,
+        "geometric_line_energy_change_J": 3.0000000000000346e-17,
         "grid": 64,
         "integrated_swept_area_m2": 8e-15,
         "mechanical_plus_line_energy_J": 2.733914803139673e-10,
@@ -390,6 +413,8 @@
         "eligible_site_count": 16,
         "enumeration": "forward",
         "expected_swept_area_m2": 7.999999999999999e-15,
+        "geometric_line_energy_J": 4.83e-15,
+        "geometric_line_energy_change_J": 3.0000000000000346e-17,
         "grid": 64,
         "integrated_swept_area_m2": 7.999999999999999e-15,
         "mechanical_plus_line_energy_J": 2.733914803139673e-10,
@@ -429,5 +454,5 @@
   ],
   "schema": "asb-drx/v45/dynamic-geometry-measure/v1",
   "scripted_path_is_spontaneous_organization": false,
-  "source_sha": "4924ad4ef65265496847b488e90c9d545f3dbe7f"
+  "source_sha": "795061acb99ac86d6d9c130a2f7084dcff67120d"
 }
