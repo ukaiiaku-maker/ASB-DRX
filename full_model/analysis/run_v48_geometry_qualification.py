@@ -142,6 +142,7 @@ def repeated_geometry_evolution(state, data, start, width):
     current = state
     elapsed = 0.0
     rows = []
+    actual_reverse = None
     for index in range(4):
         event = {**intrinsic_event,
                  "cell": (start+width, start+index)}
@@ -168,6 +169,28 @@ def repeated_geometry_evolution(state, data, start, width):
         })
         if not ledger["accepted"]:
             break
+        if index == 0:
+            reverse_event = dict(event)
+            reverse_event["proposed_extent"] = -.1
+            reverse_state, reverse = accepted_geometry_plaquette_transaction(
+                candidate, reverse_event, data[4], data[5], data[1], data[6],
+                data[7], kinetics(
+                    3e-19, "v48-declared-vacancy-reservoir-reverse"), 2e-10)
+            actual_reverse = {
+                "accepted": bool(reverse["accepted"]),
+                "classification": reverse["classification"],
+                "state_is_forward_state_on_rejection": (
+                    reverse_state is candidate),
+                "forward_available_energy_per_event_J": ledger[
+                    "available_energy_per_event_J"],
+                "reverse_available_energy_per_event_J": reverse[
+                    "available_energy_per_event_J"],
+                "forward_signed_material_exchange_count": ledger[
+                    "signed_material_exchange_count"],
+                "reverse_signed_material_exchange_count": reverse[
+                    "affinity_probe_signed_material_exchange_count"],
+                "edge_is_constructed_from_evolved_forward_state": True,
+            }
         current = candidate
         elapsed += consumed
     return {
@@ -183,6 +206,7 @@ def repeated_geometry_evolution(state, data, start, width):
                 "bounded mechanism hypothesis; not fitted to PF response and "
                 "not a material calibration"),
             "events": rows,
+            "actual_reverse_edge": actual_reverse,
             "accepted_events": sum(row["accepted"] for row in rows),
             "physical_time_advanced_s": elapsed,
             "final_geometry_event_count": int(
