@@ -99,7 +99,8 @@ def actual_production_state():
             "asymptotic_accessibility_maximum_violation"),
         "complete_elapsed_time_s": ordering["complete_elapsed_time_s"],
         "discarded_reaction_time_s": ordering["discarded_reaction_time_s"],
-        "active_degrees_of_freedom": ordering["active_degrees_of_freedom"],
+        "active_degrees_of_freedom": ordering.get(
+            "active_degrees_of_freedom", 0),
         "state_changed": bool(not np.array_equal(
             state.common.beta_p, updated.common.beta_p)),
     }
