@@ -148,15 +148,23 @@ def main():
                 "event_scale": float(ledger["event_scale"]),
                 "family_event_scales": [float(x) for x in
                                          ledger["family_event_scales"]],
-                "ordering": {key: ledger["ordering_thermodynamics"].get(key)
-                             for key in (
-                                 "stiff_dispatch", "integration_method",
-                                 "active_degrees_of_freedom",
-                                 "maximum_attempt_exposure",
-                                 "asymptotic_state_accessibility_passed",
-                                 "asymptotic_accessibility_maximum_violation",
-                                 "asymptotic_trial_normalized_remainder",
-                                 "asymptotic_trial_projected_change")},
+                "ordering": {
+                    "stiff_dispatch": ledger.get("ordering_stiff_dispatch"),
+                    "integration_method": ledger.get(
+                        "ordering_integration_method"),
+                    "active_degrees_of_freedom": ledger.get(
+                        "ordering_active_degrees_of_freedom"),
+                    "maximum_attempt_exposure": ledger.get(
+                        "ordering_maximum_attempt_exposure"),
+                    "asymptotic_state_accessibility_passed": ledger.get(
+                        "ordering_asymptotic_state_accessibility_passed"),
+                    "asymptotic_accessibility_maximum_violation": ledger.get(
+                        "ordering_asymptotic_accessibility_maximum_violation"),
+                    "asymptotic_trial_normalized_remainder": ledger.get(
+                        "ordering_asymptotic_trial_normalized_remainder"),
+                    "asymptotic_trial_projected_change": ledger.get(
+                        "ordering_asymptotic_trial_projected_change"),
+                },
             }
         checkpoint = output/f"operation_{operation:03d}_{record['kind']}.npz"
         save_stage(checkpoint, state, context, {
