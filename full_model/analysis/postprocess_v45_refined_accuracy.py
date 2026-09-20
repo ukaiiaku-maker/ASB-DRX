@@ -34,9 +34,12 @@ def checkpoint_array_equivalence(left, right):
             for key in differences}
         exact = all(np.array_equal(np.asarray(a[key]), np.asarray(b[key]))
                     for key in keys)
-        close = all(np.allclose(
-            np.asarray(a[key]), np.asarray(b[key]),
-            rtol=2e-14, atol=1e-20) for key in keys)
+        close = all(
+            np.allclose(np.asarray(a[key]), np.asarray(b[key]),
+                        rtol=2e-14, atol=1e-20)
+            if np.issubdtype(np.asarray(a[key]).dtype, np.number)
+            else np.array_equal(np.asarray(a[key]), np.asarray(b[key]))
+            for key in keys)
     return {"compared_array_count": len(keys), "all_arrays_exact": exact,
             "all_arrays_roundoff_close": close,
             "maximum_absolute_difference": max(differences.values(), default=0.0),
