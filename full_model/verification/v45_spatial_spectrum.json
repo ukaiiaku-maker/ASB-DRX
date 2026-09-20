@@ -1,0 +1,238 @@
+{
+  "coordinate_domain_m": [
+    0.0,
+    3.2e-06
+  ],
+  "fft_normalization": "complex coefficient divided by n^2",
+  "field": "curl_nye from spectral Curl(beta_p)",
+  "generated_utc": "2026-09-20T04:54:44.638442+00:00",
+  "interpretation": "band growth identifies whether common low modes or unresolved near-grid content dominates; no output filter is applied to the production state or pass/fail strong norm",
+  "schema": "asb-drx/v45/spatial-spectrum/v1",
+  "source_sha": "451f4a3d931ea4bd79daf0381997d61ec311f9f8",
+  "stages": {
+    "after_first_mura": {
+      "bands": [
+        {
+          "complex_relative_rms": 0.002186222334416695,
+          "half_width": 8,
+          "maximum_abs_wave_index": 8,
+          "mode_count_per_axis": 17,
+          "n128_retained_spectral_energy_fraction": 0.9430534377978647,
+          "n192_retained_spectral_energy_fraction": 0.8332126253214202
+        },
+        {
+          "complex_relative_rms": 0.013947629998414616,
+          "half_width": 16,
+          "maximum_abs_wave_index": 16,
+          "mode_count_per_axis": 33,
+          "n128_retained_spectral_energy_fraction": 0.9438873970453479,
+          "n192_retained_spectral_energy_fraction": 0.8340039892974553
+        },
+        {
+          "complex_relative_rms": 0.037975748709886174,
+          "half_width": 24,
+          "maximum_abs_wave_index": 24,
+          "mode_count_per_axis": 49,
+          "n128_retained_spectral_energy_fraction": 0.9461583595787578,
+          "n192_retained_spectral_energy_fraction": 0.835810711558527
+        },
+        {
+          "complex_relative_rms": 0.07169392749248645,
+          "half_width": 32,
+          "maximum_abs_wave_index": 32,
+          "mode_count_per_axis": 65,
+          "n128_retained_spectral_energy_fraction": 0.9510971074618199,
+          "n192_retained_spectral_energy_fraction": 0.8394084712276253
+        },
+        {
+          "complex_relative_rms": 0.1801233005694299,
+          "half_width": 48,
+          "maximum_abs_wave_index": 48,
+          "mode_count_per_axis": 97,
+          "n128_retained_spectral_energy_fraction": 0.9677926381737824,
+          "n192_retained_spectral_energy_fraction": 0.855853904468593
+        },
+        {
+          "complex_relative_rms": 0.33996064702308015,
+          "half_width": 63,
+          "maximum_abs_wave_index": 63,
+          "mode_count_per_axis": 127,
+          "n128_retained_spectral_energy_fraction": 1.0,
+          "n192_retained_spectral_energy_fraction": 0.8839289419518254
+        }
+      ],
+      "whole_field_rms": {
+        "n128": 1.5906079737251795,
+        "n192": 1.6921827197740174
+      }
+    },
+    "after_front": {
+      "bands": [
+        {
+          "complex_relative_rms": 0.0021850589972012904,
+          "half_width": 8,
+          "maximum_abs_wave_index": 8,
+          "mode_count_per_axis": 17,
+          "n128_retained_spectral_energy_fraction": 0.9430512784793967,
+          "n192_retained_spectral_energy_fraction": 0.8332070348467971
+        },
+        {
+          "complex_relative_rms": 0.013957044971677993,
+          "half_width": 16,
+          "maximum_abs_wave_index": 16,
+          "mode_count_per_axis": 33,
+          "n128_retained_spectral_energy_fraction": 0.943882828345852,
+          "n192_retained_spectral_energy_fraction": 0.8339971394032051
+        },
+        {
+          "complex_relative_rms": 0.037991211740868676,
+          "half_width": 24,
+          "maximum_abs_wave_index": 24,
+          "mode_count_per_axis": 49,
+          "n128_retained_spectral_energy_fraction": 0.9461529491407467,
+          "n192_retained_spectral_energy_fraction": 0.8358008655701827
+        },
+        {
+          "complex_relative_rms": 0.07169458354536966,
+          "half_width": 32,
+          "maximum_abs_wave_index": 32,
+          "mode_count_per_axis": 65,
+          "n128_retained_spectral_energy_fraction": 0.9510973322226802,
+          "n192_retained_spectral_energy_fraction": 0.8393967011281466
+        },
+        {
+          "complex_relative_rms": 0.1800912534402734,
+          "half_width": 48,
+          "maximum_abs_wave_index": 48,
+          "mode_count_per_axis": 97,
+          "n128_retained_spectral_energy_fraction": 0.9677949757560009,
+          "n192_retained_spectral_energy_fraction": 0.8558525034686643
+        },
+        {
+          "complex_relative_rms": 0.3400403339613028,
+          "half_width": 63,
+          "maximum_abs_wave_index": 63,
+          "mode_count_per_axis": 127,
+          "n128_retained_spectral_energy_fraction": 1.0,
+          "n192_retained_spectral_energy_fraction": 0.8839450182060121
+        }
+      ],
+      "whole_field_rms": {
+        "n128": 1.5906015681906291,
+        "n192": 1.6921799090946241
+      }
+    },
+    "after_second_mura": {
+      "bands": [
+        {
+          "complex_relative_rms": 0.0045754824205198365,
+          "half_width": 8,
+          "maximum_abs_wave_index": 8,
+          "mode_count_per_axis": 17,
+          "n128_retained_spectral_energy_fraction": 0.7875044060415172,
+          "n192_retained_spectral_energy_fraction": 0.5296262805704184
+        },
+        {
+          "complex_relative_rms": 0.02933799266050471,
+          "half_width": 16,
+          "maximum_abs_wave_index": 16,
+          "mode_count_per_axis": 33,
+          "n128_retained_spectral_energy_fraction": 0.7904200413183669,
+          "n192_retained_spectral_energy_fraction": 0.5317434116356806
+        },
+        {
+          "complex_relative_rms": 0.07975616431052364,
+          "half_width": 24,
+          "maximum_abs_wave_index": 24,
+          "mode_count_per_axis": 49,
+          "n128_retained_spectral_energy_fraction": 0.7987980170100485,
+          "n192_retained_spectral_energy_fraction": 0.5367716299965276
+        },
+        {
+          "complex_relative_rms": 0.14937939099652656,
+          "half_width": 32,
+          "maximum_abs_wave_index": 32,
+          "mode_count_per_axis": 65,
+          "n128_retained_spectral_energy_fraction": 0.8172412511179801,
+          "n192_retained_spectral_energy_fraction": 0.5468681973998843
+        },
+        {
+          "complex_relative_rms": 0.3642458617327406,
+          "half_width": 48,
+          "maximum_abs_wave_index": 48,
+          "mode_count_per_axis": 97,
+          "n128_retained_spectral_energy_fraction": 0.8798771286684361,
+          "n192_retained_spectral_energy_fraction": 0.5932389636866408
+        },
+        {
+          "complex_relative_rms": 0.6559730256483904,
+          "half_width": 63,
+          "maximum_abs_wave_index": 63,
+          "mode_count_per_axis": 127,
+          "n128_retained_spectral_energy_fraction": 1.0,
+          "n192_retained_spectral_energy_fraction": 0.6726281587686447
+        }
+      ],
+      "whole_field_rms": {
+        "n128": 3.4848763200747954,
+        "n192": 4.24925132812522
+      }
+    },
+    "initial": {
+      "bands": [
+        {
+          "complex_relative_rms": 0.0,
+          "half_width": 8,
+          "maximum_abs_wave_index": 8,
+          "mode_count_per_axis": 17,
+          "n128_retained_spectral_energy_fraction": 0.0,
+          "n192_retained_spectral_energy_fraction": 0.0
+        },
+        {
+          "complex_relative_rms": 0.0,
+          "half_width": 16,
+          "maximum_abs_wave_index": 16,
+          "mode_count_per_axis": 33,
+          "n128_retained_spectral_energy_fraction": 0.0,
+          "n192_retained_spectral_energy_fraction": 0.0
+        },
+        {
+          "complex_relative_rms": 0.0,
+          "half_width": 24,
+          "maximum_abs_wave_index": 24,
+          "mode_count_per_axis": 49,
+          "n128_retained_spectral_energy_fraction": 0.0,
+          "n192_retained_spectral_energy_fraction": 0.0
+        },
+        {
+          "complex_relative_rms": 0.0,
+          "half_width": 32,
+          "maximum_abs_wave_index": 32,
+          "mode_count_per_axis": 65,
+          "n128_retained_spectral_energy_fraction": 0.0,
+          "n192_retained_spectral_energy_fraction": 0.0
+        },
+        {
+          "complex_relative_rms": 0.0,
+          "half_width": 48,
+          "maximum_abs_wave_index": 48,
+          "mode_count_per_axis": 97,
+          "n128_retained_spectral_energy_fraction": 0.0,
+          "n192_retained_spectral_energy_fraction": 0.0
+        },
+        {
+          "complex_relative_rms": 0.0,
+          "half_width": 63,
+          "maximum_abs_wave_index": 63,
+          "mode_count_per_axis": 127,
+          "n128_retained_spectral_energy_fraction": 0.0,
+          "n192_retained_spectral_energy_fraction": 0.0
+        }
+      ],
+      "whole_field_rms": {
+        "n128": 0.0,
+        "n192": 0.0
+      }
+    }
+  }
+}
