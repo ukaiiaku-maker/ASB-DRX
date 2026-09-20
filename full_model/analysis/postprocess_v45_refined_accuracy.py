@@ -21,6 +21,18 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def checkpoint_array_equivalence(left, right):
+    with np.load(left, allow_pickle=False) as a, np.load(right, allow_pickle=False) as b:
+        keys = sorted((set(a.files) & set(b.files))-{"v39_stage_metadata_json"})
+        differences = {
+            key: float(np.max(np.abs(np.asarray(a[key])-np.asarray(b[key]))))
+            for key in keys if np.issubdtype(np.asarray(a[key]).dtype, np.number)}
+        exact = all(np.array_equal(np.asarray(a[key]), np.asarray(b[key]))
+                    for key in keys)
+    return {"compared_array_count": len(keys), "all_arrays_exact": exact,
+            "maximum_absolute_difference": max(differences.values(), default=0.0)}
+
+
 def main():
     members = {}
     for substeps in (4, 8):
@@ -72,6 +84,10 @@ def main():
         "drx_claimed": False, "strict_asb_claimed": False,
         "material_calibration_claimed": False,
     }
+    payload["retained_restart_vs_regenerated_sub4_n128"] = (
+        checkpoint_array_equivalence(
+            "full_model/production/results-local/v45-resumed/sub4/n128/after_second_mura.npz",
+            ROOT/"sub4/n128/after_second_mura.npz"))
     payload["classification"] = (
         "CURRENT_SOURCE_TEMPORAL_AND_SPATIAL_THRESHOLDS_PASSED"
         if payload["temporal_accuracy_passed"] and payload[
