@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 import numpy as np
 from scipy.optimize import least_squares
 from scipy.integrate import solve_ivp
-from scipy.sparse.linalg import LinearOperator
+from scipy.sparse.linalg import LinearOperator, gmres
 
 try:
     from .arrhenius_kinetics import (
@@ -58,6 +58,7 @@ class ExtensiveWallParameters:
     ordering_internal_max_substeps: int = 8192
     ordering_stationary_remainder_relative_tolerance: float = 1e-8
     ordering_integration_method: str = "complete_time_explicit"
+    ordering_finite_time_backend: str = "dense_bdf_oracle"
     ordering_implicit_residual_tolerance: float = 2e-9
     ordering_implicit_max_nfev: int = 100
     ordering_asymptotic_minimum_attempt_exposure: float = 50.0
@@ -89,6 +90,9 @@ class ExtensiveWallParameters:
                 "complete_time_explicit", "implicit_backward_euler",
                 "finite_time_bdf"):
             raise ValueError("unknown ordering integration method")
+        if self.ordering_finite_time_backend not in (
+                "dense_bdf_oracle", "matrix_free_backward_euler"):
+            raise ValueError("unknown finite-time ordering backend")
         if (not np.isfinite(self.ordering_implicit_residual_tolerance)
                 or self.ordering_implicit_residual_tolerance <= 0.0):
             raise ValueError("ordering implicit tolerance must be positive")
@@ -811,31 +815,151 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 output.append(rate)
             return np.concatenate(output)
 
-        finite = solve_ivp(
-            finite_time_rhs, (0.0, total_dt), q0, method="BDF",
-            rtol=max(parameters.ordering_implicit_residual_tolerance, 1e-8),
-            atol=max(parameters.ordering_implicit_residual_tolerance*1e-2,
-                     1e-11),
-            max_step=total_dt/16.0)
-        if not finite.success:
-            raise RuntimeError(
-                "bounded finite-time ordering solve failed: "
-                f"message={finite.message}")
+        if parameters.ordering_finite_time_backend == "dense_bdf_oracle":
+            finite = solve_ivp(
+                finite_time_rhs, (0.0, total_dt), q0, method="BDF",
+                rtol=max(parameters.ordering_implicit_residual_tolerance, 1e-8),
+                atol=max(parameters.ordering_implicit_residual_tolerance*1e-2,
+                         1e-11),
+                max_step=total_dt/16.0)
+            if not finite.success:
+                raise RuntimeError(
+                    "bounded finite-time ordering solve failed: "
+                    f"message={finite.message}")
+            final_vector = np.clip(finite.y[:, -1], 0.0, 1.0)
+            nfev = int(finite.nfev); njev = int(finite.njev)
+            linear_iterations = 0; nonlinear_iterations = 0
+            integration_method = "bounded_finite_time_bdf"
+            solver_message = str(finite.message)
+            internal_steps = max(int(finite.t.size-1), 1)
+        else:
+            # Backward Euler with the exact global FFT Jacobian-vector action.
+            # No Jacobian matrix or physical-space sparsity pattern is formed.
+            # Keep the fastest local reaction exposure below 0.25 per
+            # backward-Euler solve. This is a numerical resolution rule, not
+            # a kinetic cap; every substep is accumulated on the full clock.
+            internal_steps = max(16, int(np.ceil(attempt_exposure/0.05)))
+            step_dt = total_dt/internal_steps
+            vector = q0.copy(); nfev = njev = 0
+            linear_iterations = nonlinear_iterations = 0
+            tolerance = max(parameters.ordering_implicit_residual_tolerance,
+                            2e-9)
+
+            def normalized_rate(vector):
+                nonlocal nfev
+                nfev += 1
+                return finite_time_rhs(0.0, vector)
+
+            def projected_residual(vector, previous):
+                rate_value = normalized_rate(vector)
+                predicted = previous+step_dt*rate_value
+                return vector-np.clip(predicted, 0.0, 1.0)
+
+            def exact_jacobian(vector, previous):
+                nonlocal njev
+                njev += 1
+                candidate = state_from_q(vector)
+                mu = extensive_wall_chemical_potentials_J_m(
+                    candidate, systems, topologies, orientation_rad,
+                    target_nye_m1, parameters)
+                stress = np.asarray(stress_Pa, dtype=float)
+                if stress.ndim == 3:
+                    stress = np.max(np.abs(stress), axis=2)
+                attempt = _attempt_rate_s(
+                    stress, temperature_K, parameters)[..., None]
+                thermal = (parameters.event_length_m/(2*KB_J_K
+                           *np.asarray(temperature_K)[..., None]))
+                coefficients = {}; interior = {}
+                fields = unpack(vector)
+                trial_transfer = ordering_residual(
+                    candidate, systems, topologies, orientation_rad,
+                    target_nye_m1, stress_Pa, temperature_K, parameters,
+                    enforce_availability=False)[0]
+                previous_fields = unpack(previous)
+                for sign in ("plus", "minus"):
+                    affinity = ((mu[f"ordered_{sign}"]
+                                 -mu[f"tangle_{sign}"])*thermal)
+                    coefficients[sign] = (-attempt
+                        *(1.0-np.tanh(affinity)**2)*thermal)
+                    rate_value = np.divide(
+                        trial_transfer[sign],
+                        totals[sign], out=np.zeros_like(totals[sign]),
+                        where=active[sign])
+                    predicted = previous_fields[sign]+step_dt*rate_value
+                    interior[sign] = (predicted > 0.0) & (predicted < 1.0)
+
+                def matvec(direction):
+                    dq = unpack(direction)
+                    dy = {s: totals[s]*dq[s] for s in ("plus", "minus")}
+                    dmu_plus, dmu_minus = _ordering_affinity_linear_action(
+                        dy["plus"], dy["minus"], systems, orientation_rad,
+                        parameters)
+                    dmu = {"plus": dmu_plus, "minus": dmu_minus}
+                    output = []
+                    for sign in ("plus", "minus"):
+                        drate = coefficients[sign]*dmu[sign]
+                        field = dq[sign]-step_dt*interior[sign]*drate
+                        output.append(field[active[sign]])
+                    return np.concatenate(output)
+                return LinearOperator(
+                    (active_count, active_count), matvec=matvec, dtype=float)
+
+            for _ in range(internal_steps):
+                previous = vector.copy()
+                vector = np.clip(previous+step_dt*normalized_rate(previous),
+                                 0.0, 1.0)
+                converged = False
+                for _newton in range(24):
+                    residual_value = projected_residual(vector, previous)
+                    residual_norm = float(np.max(np.abs(residual_value)))
+                    nonlinear_iterations += 1
+                    if residual_norm <= tolerance:
+                        converged = True
+                        break
+                    counter = [0]
+                    def count_iteration(_):
+                        counter[0] += 1
+                    delta, info = gmres(
+                        exact_jacobian(vector, previous), -residual_value,
+                        rtol=min(0.1, max(tolerance/residual_norm, 1e-6)),
+                        atol=tolerance*.1, restart=30, maxiter=80,
+                        callback=count_iteration, callback_type="pr_norm")
+                    linear_iterations += counter[0]
+                    if info != 0 or np.any(~np.isfinite(delta)):
+                        raise RuntimeError(
+                            "matrix-free ordering linear solve failed: "
+                            f"gmres_info={info}")
+                    accepted_trial = None
+                    for backtrack in range(13):
+                        trial = np.clip(
+                            vector+(0.5**backtrack)*delta, 0.0, 1.0)
+                        trial_residual = projected_residual(trial, previous)
+                        if float(np.max(np.abs(trial_residual))) < residual_norm:
+                            accepted_trial = trial
+                            break
+                    if accepted_trial is None:
+                        raise RuntimeError(
+                            "matrix-free ordering Newton line search failed")
+                    vector = accepted_trial
+                if not converged:
+                    raise RuntimeError(
+                        "matrix-free ordering Newton iteration failed")
+            final_vector = vector
+            integration_method = "bounded_finite_time_matrix_free_be"
+            solver_message = "exact FFT JVP Newton-GMRES converged"
 
         class _FiniteTimeResult:
             pass
         solution = _FiniteTimeResult()
-        solution.x = np.clip(finite.y[:, -1], 0.0, 1.0)
+        solution.x = final_vector
         endpoint_scaled_rate = finite_time_rhs(total_dt, solution.x)*total_dt
         solution.cost = 0.5*float(np.dot(
             endpoint_scaled_rate, endpoint_scaled_rate))
         solution.optimality = float(np.max(np.abs(endpoint_scaled_rate)))
-        solution.nfev = int(finite.nfev)
-        solution.njev = int(finite.njev)
+        solution.nfev = nfev
+        solution.njev = njev
         solution.success = True
         maximum_residual = solution.optimality
-        integration_method = "bounded_finite_time_bdf"
-        solver_message = str(finite.message)
 
     last = {}
     def residual(vector):
@@ -960,8 +1084,11 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                                     for s in ("plus", "minus")},
         "chemical_potential_J_m": endpoint_mu,
         "free_energy_rate_W_m3": (after_energy-before_energy)/total_dt,
-        "internal_substeps": 1, "maximum_internal_substep_s": total_dt,
-        "last_internal_substep_s": total_dt,
+        "internal_substeps": int(locals().get("internal_steps", 1)),
+        "maximum_internal_substep_s": (total_dt/max(
+            int(locals().get("internal_steps", 1)), 1)),
+        "last_internal_substep_s": (total_dt/max(
+            int(locals().get("internal_steps", 1)), 1)),
         "complete_elapsed_time_s": total_dt,
         "discarded_reaction_time_s": 0.0,
         "stationary_remainder_s": 0.0,
@@ -977,6 +1104,11 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "implicit_optimality": float(solution.optimality),
         "implicit_nfev": int(solution.nfev),
         "implicit_njev": int(solution.njev or 0),
+        "linear_iterations": int(locals().get("linear_iterations", 0)),
+        "nonlinear_iterations": int(locals().get("nonlinear_iterations", 0)),
+        "active_degrees_of_freedom": int(active_count),
+        "dense_jacobian_bytes_avoided": int(8*active_count*active_count),
+        "finite_time_backend": parameters.ordering_finite_time_backend,
         "solver_message": solver_message,
         "asymptotic_endpoint_inventory_change_bound_relative": (
             maximum_residual if integration_method.endswith("asymptotic")

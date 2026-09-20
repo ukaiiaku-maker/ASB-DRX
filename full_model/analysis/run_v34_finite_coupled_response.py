@@ -145,6 +145,7 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
     # implementation remains available as the short-horizon reference oracle.
     extensive = replace(
         extensive, ordering_integration_method="implicit_backward_euler",
+        ordering_finite_time_backend="matrix_free_backward_euler",
         # Low-exposure production calls use a bounded resolved reference; the
         # dedicated oracle audit below V39 retains the stricter 0.5 ps spacing.
         ordering_internal_substep_s=5e-11,
@@ -552,6 +553,18 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
                 "ordering_thermodynamics"].get("maximum_attempt_exposure"),
             "ordering_solver_evaluations": int(mura_ledger[
                 "ordering_thermodynamics"].get("implicit_nfev", 0)),
+            "ordering_finite_time_backend": mura_ledger[
+                "ordering_thermodynamics"].get("finite_time_backend"),
+            "ordering_active_degrees_of_freedom": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "active_degrees_of_freedom"),
+            "ordering_dense_jacobian_bytes_avoided": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "dense_jacobian_bytes_avoided"),
+            "ordering_linear_iterations": mura_ledger[
+                "ordering_thermodynamics"].get("linear_iterations"),
+            "ordering_nonlinear_iterations": mura_ledger[
+                "ordering_thermodynamics"].get("nonlinear_iterations"),
             "transport_operator": mura_ledger["mura_transport_operator"],
             "transport_nonlinear_product_rule": mura_ledger[
                 "transport_capture"].get("nonlinear_product_rule"),
