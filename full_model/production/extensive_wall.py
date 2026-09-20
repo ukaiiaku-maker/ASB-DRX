@@ -1753,9 +1753,18 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             parameters.ordering_finite_absolute_tolerance
             if locals().get("finite_time_error_control_assessed", False)
             else None),
-        "finite_time_kinetic_accuracy_certified_by_this_solve": bool(
+        # An embedded/local controller qualifies accepted local trials.  A
+        # single solve does not independently certify its own global endpoint;
+        # that requires a tighter solve or a distinct stable reference.
+        "finite_time_local_error_control_passed": bool(
             locals().get("finite_time_error_control_assessed", False)
             and locals().get("finite_time_error_tolerance_satisfied", False)),
+        "finite_time_kinetic_accuracy_certified_by_this_solve": False,
+        "finite_time_accuracy_status": (
+            "LOCAL_ERROR_CONTROL_PASSED_INDEPENDENT_ENDPOINT_COMPARISON_REQUIRED"
+            if (locals().get("finite_time_error_control_assessed", False)
+                and locals().get("finite_time_error_tolerance_satisfied", False))
+            else "UNASSESSED_OR_LOCAL_ERROR_CONTROL_FAILED"),
         "asymptotic_relative_diagnostic_density_floor_m2": (
             diagnostic_density_floor if integration_method.endswith("asymptotic")
             else None),

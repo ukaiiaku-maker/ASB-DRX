@@ -42,7 +42,8 @@ def test_asymptotic_switch_overlaps_finite_time_bdf():
         duration)
     assert finite[1]["integration_method"] == "bounded_finite_time_bdf"
     assert selected[1]["integration_method"] == "bounded_convex_asymptotic"
-    assert finite[1]["finite_time_kinetic_accuracy_certified_by_this_solve"] is True
+    assert finite[1]["finite_time_local_error_control_passed"] is True
+    assert finite[1]["finite_time_kinetic_accuracy_certified_by_this_solve"] is False
     assert selected[1]["finite_time_kinetic_accuracy_certified_by_this_solve"] is False
     assert "not_a_finite_time_kinetic_error_bound" in selected[1][
         "asymptotic_endpoint_diagnostic_semantics"]

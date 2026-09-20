@@ -31,7 +31,8 @@ def test_adaptive_rosenbrock_is_error_controlled_and_conservative():
     ledger = result[1]
     assert ledger["finite_time_error_control_assessed"]
     assert ledger["finite_time_error_tolerance_satisfied"]
-    assert ledger["finite_time_kinetic_accuracy_certified_by_this_solve"]
+    assert ledger["finite_time_local_error_control_passed"]
+    assert not ledger["finite_time_kinetic_accuracy_certified_by_this_solve"]
     assert ledger["finite_time_maximum_accepted_error_norm"] <= 1.0
     assert ledger["complete_elapsed_time_s"] > 0.0
     assert ledger["discarded_reaction_time_s"] == 0.0

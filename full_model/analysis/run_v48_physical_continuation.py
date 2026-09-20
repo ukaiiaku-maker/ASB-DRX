@@ -152,6 +152,10 @@ def main():
             "ordering_backend": audit["mura"]["ordering_finite_time_backend"],
             "ordering_accuracy_certified": audit["mura"][
                 "ordering_finite_time_kinetic_accuracy_certified_by_this_solve"],
+            "ordering_local_error_control_passed": bool(
+                audit["mura"]["ordering_finite_time_error_control_assessed"]
+                and audit["mura"][
+                    "ordering_finite_time_error_tolerance_satisfied"]),
             "ordering_maximum_accepted_error_norm": audit["mura"][
                 "ordering_finite_time_maximum_accepted_error_norm"],
             "pre_ordering_density_sha256": audit["mura"][

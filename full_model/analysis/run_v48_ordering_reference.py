@@ -58,6 +58,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--rtol", type=float, default=2e-4)
     parser.add_argument("--atol", type=float, default=2e-8)
+    parser.add_argument("--tightening-factor", type=float, default=4.0)
     parser.add_argument("--include-rk2-diagnostic", action="store_true")
     args = parser.parse_args()
     before_path, old_reference_path, driving_time = pair_paths(
@@ -76,6 +77,18 @@ def main():
         "mura": adaptive_audit["mura"],
         "complete_energy": adaptive_audit["complete_energy"],
     }}
+    tightened, tightened_audit, tightened_seconds = run_backend(
+        context, initial, driving,
+        "matrix_free_adaptive_rosenbrock_euler",
+        args.rtol/args.tightening_factor,
+        args.atol/args.tightening_factor)
+    runs["adaptive_rosenbrock_tightened"] = {
+        "wall_seconds": tightened_seconds,
+        "relative_tolerance": args.rtol/args.tightening_factor,
+        "absolute_tolerance": args.atol/args.tightening_factor,
+        "mura": tightened_audit["mura"],
+        "complete_energy": tightened_audit["complete_energy"],
+    }
     rk2 = None
     if args.include_rk2_diagnostic:
         rk2, rk2_audit, rk2_seconds = run_backend(
@@ -88,6 +101,7 @@ def main():
         }
     initial_fields = ordered(initial)
     adaptive_fields = ordered(adaptive)
+    tightened_fields = ordered(tightened)
     old_fields = ordered(old_reference)
     comparisons = {}
     for sign in ("plus", "minus"):
@@ -97,6 +111,9 @@ def main():
                 adaptive_fields[sign]-initial_fields[sign])/scale),
             "adaptive_vs_old_asymptotic_relative_l2": float(np.linalg.norm(
                 adaptive_fields[sign]-old_fields[sign])/scale),
+            "default_vs_tightened_relative_l2": float(np.linalg.norm(
+                adaptive_fields[sign]-tightened_fields[sign])/max(
+                    np.linalg.norm(tightened_fields[sign]), 1e-300)),
             "adaptive_inventory_m_per_m": float(np.sum(
                 adaptive_fields[sign])*context["spacing_m"]**2),
             "initial_inventory_m_per_m": float(np.sum(
@@ -113,6 +130,9 @@ def main():
         comparisons[sign] = row
     pre_hashes = [row["mura"]["pre_ordering_density_sha256"]
                   for row in runs.values()]
+    tightening_difference = max(
+        row["default_vs_tightened_relative_l2"]
+        for row in comparisons.values())
     payload = {
         "schema": "asb-drx/v48/actual-ordering-reference/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -130,12 +150,16 @@ def main():
         "pre_ordering_density_sha256": pre_hashes[0],
         "runs": runs,
         "comparisons": comparisons,
+        "tightening_factor": args.tightening_factor,
+        "maximum_default_vs_tightened_relative_l2": tightening_difference,
+        "declared_endpoint_tolerance_relative": .01,
         "classification": (
             "FINITE_REFERENCE_ERROR_CONTROLLED"
             if (adaptive_audit["mura"][
-                    "ordering_finite_time_kinetic_accuracy_certified_by_this_solve"]
-                and adaptive_audit["mura"][
-                    "ordering_finite_time_error_tolerance_satisfied"])
+                    "ordering_finite_time_error_tolerance_satisfied"]
+                and tightened_audit["mura"][
+                    "ordering_finite_time_error_tolerance_satisfied"]
+                and tightening_difference <= .01)
             else "FINITE_REFERENCE_UNQUALIFIED"),
         "old_asymptotic_promoted_as_reference": False,
         "projected_rk2_promoted_as_reference": False,
