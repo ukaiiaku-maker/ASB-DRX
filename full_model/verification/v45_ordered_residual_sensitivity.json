@@ -1,0 +1,33 @@
+{
+  "generated_utc": "2026-09-20T04:52:52.041597+00:00",
+  "operation": "first Mura half from analytic n16 state",
+  "physical_wall_signal_claimed": false,
+  "rows": [
+    {
+      "complete_elapsed_time_s": 3.90625e-06,
+      "discarded_reaction_time_s": 0.0,
+      "dispatch": "qualified_asymptotic",
+      "endpoint_remainder_relative": 5.404467976392125e-12,
+      "integration_method": "bounded_convex_asymptotic",
+      "ordered_line_after_m": 0.007588782961353422,
+      "requested_tolerance": 2e-08
+    },
+    {
+      "complete_elapsed_time_s": 3.90625e-06,
+      "discarded_reaction_time_s": 0.0,
+      "dispatch": "qualified_asymptotic",
+      "endpoint_remainder_relative": 5.404467976392125e-12,
+      "integration_method": "bounded_convex_asymptotic",
+      "ordered_line_after_m": 0.007588782961353422,
+      "requested_tolerance": 2e-10
+    }
+  ],
+  "schema": "asb-drx/v45/ordered-residual-sensitivity/v1",
+  "source_sha": "5147a8cac7e9c3cf2c8bf05c4405313963dfc05c",
+  "spatial_observation": {
+    "classification": "TOLERANCE_INSENSITIVE_NEAR_EXTINCTION_SIGNAL_BUT_SPATIALLY_UNRESOLVED_NOT_A_WALL",
+    "selected_sub8_n128_ordered_line_m": 1.2449770168873084e-05,
+    "selected_sub8_n192_ordered_line_m": 3.6616043634772345e-06
+  },
+  "tolerance_relative_change": 0.0
+}
