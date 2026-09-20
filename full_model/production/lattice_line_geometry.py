@@ -215,24 +215,17 @@ def apply_physical_reconstruction(field, spacing_m, length_m):
         axes=(0, 1)).real
     # FFT roundoff would otherwise turn a compact physical map into tiny global
     # tails and activate nonexistent reservoirs. Remove only values at the
-    # floating-point noise scale, then restore each component's exact zero mode
-    # on its largest retained entry. This is numerical cleanup of a compact
-    # convolution, not a physical density floor.
+    # floating-point noise scale. The FFT multiplier retains the zero mode to
+    # roundoff; independently altering scalar and vector maxima to force a
+    # bitwise sum would violate moment realizability. This is numerical cleanup
+    # of a compact convolution, not a physical density floor.
     trailing = int(np.prod(value.shape[2:])) if value.ndim > 2 else 1
-    flat_value = value.reshape(value.shape[:2]+(trailing,))
     flat_result = result.reshape(result.shape[:2]+(trailing,))
     for component in range(trailing):
         scale = max(float(np.max(np.abs(flat_result[..., component]))), 1e-300)
         noise = 256*np.finfo(float).eps*scale
         flat_result[..., component][
             np.abs(flat_result[..., component]) <= noise] = 0.0
-        target = float(np.sum(
-            flat_value[..., component], dtype=np.longdouble))
-        actual = float(np.sum(
-            flat_result[..., component], dtype=np.longdouble))
-        index = np.unravel_index(
-            np.argmax(np.abs(flat_result[..., component])), value.shape[:2])
-        flat_result[index+(component,)] += target-actual
     return result
 
 
@@ -366,6 +359,7 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
     dkappa = apply_physical_reconstruction(
         dkappa_raw, dx, representation_length)
     density_updates = {}; alignment_updates = {}
+    realizability_roundoff_added = {}
     for slot, label in enumerate(("plus", "minus")):
         dline = drho[..., slot]
         dmom = dkappa[..., slot, :]
@@ -374,6 +368,18 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
         old_moment = np.asarray(getattr(alignment, dname))
         density_updates[dname] = old_density+dline
         alignment_updates[dname] = old_moment+dmom
+        excess = (np.linalg.norm(alignment_updates[dname], axis=-1)
+                  -density_updates[dname])
+        numerical_scale = max(
+            float(np.max(np.abs(density_updates[dname]))), 1.0)
+        if np.max(excess) > 256*np.finfo(float).eps*numerical_scale:
+            raise ValueError("reconstructed geometry violates moment realizability")
+        # Preserve the mapped signed moment (and hence Nye) exactly. Add only
+        # the positive scalar ulp deficit caused by independent FFT roundoff.
+        # This is ledgered numerical closure, not a physical density floor.
+        correction = np.maximum(excess, 0.0)
+        density_updates[dname] += correction
+        realizability_roundoff_added[label] = correction
         if np.any(density_updates[dname] < -2e-12*np.maximum(old_density, 1.0)):
             raise ValueError("geometry reverse event exceeds represented ordered line")
         density_updates[dname] = np.maximum(density_updates[dname], 0.0)
@@ -424,5 +430,7 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
                 "family_nye_increment_m1": dnye_family,
                 "density_increment_m2": drho,
                 "alignment_increment_m2": dkappa,
+                "realizability_roundoff_scalar_line_added_m2": (
+                    realizability_roundoff_added),
                 "post_step_projection_used": False,
             })

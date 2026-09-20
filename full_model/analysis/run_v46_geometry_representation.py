@@ -33,6 +33,7 @@ from full_model.production.v24_mechanical_wall import (
 LENGTH_M = 3.2e-6
 THICKNESS_M = 3.2e-6
 REPRESENTATION_LENGTH_M = 4.0e-7
+CHEMICAL_RESERVOIR_WORK_J_M3_CELLS_PER_EXTENT = 2.0e5
 
 
 def digest_state(state):
@@ -160,7 +161,8 @@ def transaction_sequence():
         ActivatedProcess("v46-fixed-scale-geometry", 2e5),
         enthalpy_J=0.0, critical_stress_Pa=1e9,
         material_exchange_model="equilibrated_point_defect_reservoir",
-        chemical_work_J_m3_cells_per_extent=2e4,
+        chemical_work_J_m3_cells_per_extent=(
+            CHEMICAL_RESERVOIR_WORK_J_M3_CELLS_PER_EXTENT),
         continuum_representation_length_m=REPRESENTATION_LENGTH_M)
     favorable = {
         "cell": (start+width, start), "family": 0, "burgers_sign": 1,
@@ -188,7 +190,8 @@ def transaction_sequence():
         "predicted_extent_rate_s": 2e5,
         "predicted_boundary_speed_m_s": 2e5*dx,
         "external_work_J_m3_cells": 0.0,
-        "chemical_reservoir_work_J_m3_cells_per_extent": 2e4,
+        "chemical_reservoir_work_J_m3_cells_per_extent": (
+            CHEMICAL_RESERVOIR_WORK_J_M3_CELLS_PER_EXTENT),
         "chemical_reservoir_scope": (
             "declared equilibrated point-defect reservoir; uncertain fixture "
             "parameter, not material calibration or artificial pressure"),
@@ -217,6 +220,17 @@ def main():
             "n32_n64_relative_difference": abs(values[2]-values[1])/max(
                 abs(values[2]), abs(values[1]), 1e-300),
         }
+    stored_total_values = [row["term_energy_after_J"]["total"]
+                           for row in rows]
+    stored_total_finest_pair = abs(
+        stored_total_values[2]-stored_total_values[1])/max(
+            abs(stored_total_values[2]), abs(stored_total_values[1]), 1e-300)
+    incremental_total_scale = max(
+        abs(rows[2]["term_energy_before_J"]["total"]),
+        abs(rows[1]["term_energy_before_J"]["total"]), 1e-300)
+    incremental_total_absolute_discrepancy = abs(
+        convergence["total"]["values_J"][2]
+        -convergence["total"]["values_J"][1])
     source = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], text=True).strip()
     payload = {
@@ -235,6 +249,21 @@ def main():
                       "domain": LENGTH_M},
         "refinement": rows,
         "term_convergence": convergence,
+        "energy_observable_qualification": {
+            "stored_total_n32_n64_relative_difference": (
+                stored_total_finest_pair),
+            "incremental_total_n32_n64_relative_difference": (
+                convergence["total"]["n32_n64_relative_difference"]),
+            "incremental_total_n32_n64_absolute_discrepancy_J": (
+                incremental_total_absolute_discrepancy),
+            "incremental_discrepancy_over_stored_energy": (
+                incremental_total_absolute_discrepancy
+                /incremental_total_scale),
+            "interpretation": (
+                "stored-energy comparison qualifies; the nearly cancelling "
+                "translation increment does not satisfy a relative 5 percent "
+                "claim and remains separately unqualified"),
+        },
         "variational_map": adjoint_and_commutation_audit(),
         "transaction_sequence": transaction_sequence(),
         "material_calibration_claimed": False,
@@ -244,7 +273,9 @@ def main():
         "representation_resolved_on_finest_pair": bool(
             rows[1]["representation_cells"] >= 4.0
             and rows[2]["representation_cells"] >= 4.0),
-        "total_energy_grid_converged_5pct": bool(
+        "stored_total_energy_grid_converged_5pct": bool(
+            stored_total_finest_pair <= .05),
+        "incremental_total_energy_grid_converged_5pct": bool(
             convergence["total"]["n32_n64_relative_difference"] <= .05),
         "nonzero_repeated_motion": bool(
             payload["transaction_sequence"]["first"]["accepted"]
