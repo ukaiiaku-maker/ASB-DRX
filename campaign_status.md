@@ -1822,3 +1822,30 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `full_model/docs/v44_decision_report.md`; controller:
   `full_model/verification/v44_campaign_controller.json`. DRX, a persistent
   LAGB, strict ASB, and material calibration remain unclaimed.
+
+## Directive v45 scalable ordering and matched horizon (2026-09-20)
+
+- The V44 8.42%-to-0.0264% spatial-improvement inference is retracted because
+  it compared different macro stages. Compatible transport remains internally
+  qualified; matched solution improvement had been unestablished.
+- A matrix-free bounded transient plus measured convex-asymptotic overlap now
+  replaces the dense production Jacobian. Dense finite and asymptotic signed
+  reservoirs agree to `1.55e-12` relative at the `1e-3` exposure switch.
+- The exact retained n128 post-front endpoint completed in 153.80 s through
+  four atomic checkpoints, with no repeated front or heat. Full regeneration
+  agrees with restart completion to `5.87e-16` relative across 177 arrays.
+- Temporal refinement passes: n128 sub4/sub8 curl errors are 0.799% Fourier
+  and 1.374% RMS; n192 errors are 0.777% and 3.034%. Selected n128/n192 sub8
+  spatial refinement fails at 7.976% and 17.989%, respectively.
+- The discrepancy begins in the first Mura half, is unchanged by the front,
+  and grows in the second Mura half. Modes through index 8 agree to 0.458%;
+  error grows rapidly with wave index, identifying unresolved high-frequency
+  Mura/wall content.
+- Dynamic geometry swept measure, weighted line length, explicit line energy,
+  site ordering, patch subdivision, and blocked-channel clock behavior pass.
+  Coupled continuum-gradient energy for a one-cell line is not mesh
+  convergent and is withheld from promotion.
+- The longer physical horizon was not launched because its spatial dependency
+  failed. Report: `full_model/docs/v45_decision_report.md`; controller:
+  `full_model/verification/v45_campaign_controller.json`. DRX, persistent
+  LAGB formation, strict ASB, and material calibration remain unclaimed.

@@ -28,6 +28,8 @@ def main():
     retained_accuracy, retained_accuracy_path = load("v45_matched_accuracy.json")
     refined, refined_path = load("v45_refined_current_accuracy.json")
     geometry, geometry_path = load("v45_dynamic_geometry_measure.json")
+    ordered, ordered_path = load("v45_ordered_residual_sensitivity.json")
+    spectrum, spectrum_path = load("v45_spatial_spectrum.json")
     accuracy_state = (
         "COMPLETE" if refined is not None else
         "PARTIAL_RESTARTABLE" if resumed is not None else "READY")
@@ -48,6 +50,9 @@ def main():
             "state": accuracy_state,
             "classification": (None if refined is None else refined[
                 "classification"]),
+            "spatial_error_localization": (
+                None if spectrum is None else
+                "LOW_MODES_PASS_ERROR_GROWS_WITH_WAVE_INDEX"),
             "retained_cohort_numerical_passed": (None if retained_accuracy is None
                 else bool(retained_accuracy["classification"][
                     "n128_temporal_threshold_passed"] and
@@ -60,6 +65,11 @@ def main():
                 else "PASSED" if geometry else "READY",
             "classification": (None if geometry is None else geometry[
                 "classification"]),
+        },
+        "ordered_residual": {
+            "state": "PASSED_DIAGNOSTIC_NOT_PROMOTED" if ordered else "READY",
+            "classification": (None if ordered is None else ordered[
+                "spatial_observation"]["classification"]),
         },
         "original_horizon_continuation": {
             "state": (
@@ -74,7 +84,9 @@ def main():
     for label, path in (
             ("ordering", ordering_path), ("resumed", resumed_path),
             ("retained_accuracy", retained_accuracy_path),
-            ("refined_accuracy", refined_path), ("geometry", geometry_path)):
+            ("refined_accuracy", refined_path), ("geometry", geometry_path),
+            ("ordered_residual", ordered_path),
+            ("spatial_spectrum", spectrum_path)):
         if path.is_file():
             evidence[label] = {"path": str(path.resolve()), "sha256": digest(path)}
     payload = {
@@ -91,6 +103,10 @@ def main():
                 "classification"]["continuum_coupled_energy_grid_converged"]),
         "drx_claimed": False, "strict_asb_claimed": False,
         "material_calibration_claimed": False,
+        "next_exact_task": (
+            "regularize or resolve the high-wave-number Mura wall content and "
+            "separate geometry-owned line energy from singular continuum "
+            "gradient energy before any longer physical horizon"),
     }
     output = VERIFY/"v45_campaign_controller.json"
     output.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")
