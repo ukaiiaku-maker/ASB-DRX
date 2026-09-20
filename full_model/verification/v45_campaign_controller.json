@@ -1,0 +1,76 @@
+{
+  "branches": {
+    "dynamic_geometry": {
+      "classification": {
+        "continuum_coupled_energy_grid_converged": false,
+        "coupled_energy_interpretation": "a one-cell singular line deposited into the continuum gradient energy is unresolved; geometric event measure qualifies but coupled energetic mesh convergence does not",
+        "geometric_line_energy_grid_invariant": true,
+        "swept_measure_grid_invariant": true,
+        "weighted_line_length_grid_invariant": true
+      },
+      "state": "FAILED_NUMERICAL_SCOPED"
+    },
+    "matched_accuracy": {
+      "classification": "CURRENT_SOURCE_TEMPORAL_PASSED_SPATIAL_FAILED",
+      "retained_cohort_numerical_passed": false,
+      "spatial_error_localization": "LOW_MODES_PASS_ERROR_GROWS_WITH_WAVE_INDEX",
+      "state": "COMPLETE"
+    },
+    "ordered_residual": {
+      "classification": "TOLERANCE_INSENSITIVE_NEAR_EXTINCTION_SIGNAL_BUT_SPATIALLY_UNRESOLVED_NOT_A_WALL",
+      "state": "PASSED_DIAGNOSTIC_NOT_PROMOTED"
+    },
+    "ordering_solver": {
+      "classification": "MATRIX_FREE_TRANSIENT_AND_MEASURED_ASYMPTOTIC_OVERLAP",
+      "state": "PASSED"
+    },
+    "original_horizon_continuation": {
+      "classification": "not launched unless selected temporal and spatial accuracy pass",
+      "state": "FAILED_NUMERICAL_DEPENDENCY"
+    },
+    "retained_n128_completion": {
+      "classification": "EXACT_POST_FRONT_CONTINUATION_COMPLETE_NO_DOUBLE_PUBLICATION",
+      "state": "COMPLETE"
+    }
+  },
+  "drx_claimed": false,
+  "evidence": {
+    "geometry": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_dynamic_geometry_measure.json",
+      "sha256": "bb5e76a01e200ee85d015199b9b680cab5da0ef76f8d5f157e1d6efccd418ea6"
+    },
+    "ordered_residual": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_ordered_residual_sensitivity.json",
+      "sha256": "8f1aa7a4651c9c7f4b0d7cc7370c96158360004be0a3517bdc5b618eec578979"
+    },
+    "ordering": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_ordering_qualification.json",
+      "sha256": "663751d228d2c8445aee0f4a7e4f8221d00f18c91c8ca5e4448b893aa66ede00"
+    },
+    "refined_accuracy": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_refined_current_accuracy.json",
+      "sha256": "abcd6714f908d65f4b4f72bde305514a8095d87e260861bc1f1f1ce5484a073e"
+    },
+    "resumed": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_resumed_n128_endpoint.json",
+      "sha256": "16d6994327bfc517dcbcfe5aa2acac79eb0ac04d0cbc7485b3ca36b1d9509670"
+    },
+    "retained_accuracy": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_matched_accuracy.json",
+      "sha256": "cbe70dd7c121d76d8fe09853b2740d8dbf33ab65d92752ff27395d4f29ab1aab"
+    },
+    "spatial_spectrum": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/verification/v45_spatial_spectrum.json",
+      "sha256": "66a4daf3f012a510f0f96d9265db8a1afb78e9e50405a60fb56df32c0acadce1"
+    }
+  },
+  "execution_location": "local",
+  "fixture_passed": true,
+  "generated_utc": "2026-09-20T04:55:50.672712+00:00",
+  "material_calibration_claimed": false,
+  "next_exact_task": "regularize or resolve the high-wave-number Mura wall content and separate geometry-owned line energy from singular continuum gradient energy before any longer physical horizon",
+  "schema": "asb-drx/v45/campaign-controller/v1",
+  "scientific_gate_passed": false,
+  "source_sha": "885221a2fda52d113421f60fd519256acf0ecfed",
+  "strict_asb_claimed": false
+}
