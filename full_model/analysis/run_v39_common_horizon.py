@@ -277,7 +277,8 @@ def run_case(output_dir, *, grid=16, macro_dt_s=1e-3, intervals=1,
     # physical-response drivers use resolved_bicrystal's guarded 5% default.
     context["extensive_parameters"] = replace(
         context["extensive_parameters"],
-        ordering_asymptotic_maximum_endpoint_distance_relative=1.0)
+        ordering_asymptotic_maximum_endpoint_distance_relative=1.0,
+        ordering_asymptotic_certificate_mode="legacy_euclidean_heuristic")
     records = []; completed = 0; physical_time = 0.0
     pending = None
     partial_path = None
