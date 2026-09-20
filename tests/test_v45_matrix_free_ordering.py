@@ -1,8 +1,11 @@
 from dataclasses import replace
 
 import numpy as np
+import pytest
 
-from full_model.production.extensive_wall import accepted_ordering_step
+from full_model.production.extensive_wall import (
+    ExtensiveWallParameters, accepted_ordering_step,
+)
 from tests.test_v40_ordering_finite_time import _compact_active_case
 
 
@@ -46,3 +49,10 @@ def test_matrix_free_ordering_conserves_each_signed_family_pool():
         np.testing.assert_array_equal(after, before)
         assert np.min(getattr(updated, f"wall_tangle_{sign}_m2")) >= 0.0
         assert np.min(getattr(updated, f"wall_ordered_{sign}_m2")) >= 0.0
+
+
+def test_matrix_free_attempt_exposure_must_be_positive():
+    with pytest.raises(ValueError, match="matrix-free attempt exposure"):
+        ExtensiveWallParameters(
+            spacing_m=1e-8,
+            ordering_matrix_free_max_attempt_exposure=0.0)

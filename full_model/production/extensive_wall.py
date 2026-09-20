@@ -59,6 +59,7 @@ class ExtensiveWallParameters:
     ordering_stationary_remainder_relative_tolerance: float = 1e-8
     ordering_integration_method: str = "complete_time_explicit"
     ordering_finite_time_backend: str = "dense_bdf_oracle"
+    ordering_matrix_free_max_attempt_exposure: float = 0.05
     ordering_implicit_residual_tolerance: float = 2e-9
     ordering_implicit_max_nfev: int = 100
     ordering_asymptotic_minimum_attempt_exposure: float = 50.0
@@ -96,6 +97,9 @@ class ExtensiveWallParameters:
         if (not np.isfinite(self.ordering_implicit_residual_tolerance)
                 or self.ordering_implicit_residual_tolerance <= 0.0):
             raise ValueError("ordering implicit tolerance must be positive")
+        if (not np.isfinite(self.ordering_matrix_free_max_attempt_exposure)
+                or self.ordering_matrix_free_max_attempt_exposure <= 0.0):
+            raise ValueError("matrix-free attempt exposure must be positive")
         if int(self.ordering_implicit_max_nfev) <= 0:
             raise ValueError("ordering implicit evaluation limit must be positive")
         if (not np.isfinite(self.ordering_asymptotic_minimum_attempt_exposure)
@@ -835,10 +839,12 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         else:
             # Backward Euler with the exact global FFT Jacobian-vector action.
             # No Jacobian matrix or physical-space sparsity pattern is formed.
-            # Keep the fastest local reaction exposure below 0.25 per
+            # Keep the fastest local reaction exposure below the declared
             # backward-Euler solve. This is a numerical resolution rule, not
             # a kinetic cap; every substep is accumulated on the full clock.
-            internal_steps = max(16, int(np.ceil(attempt_exposure/0.02)))
+            internal_steps = max(16, int(np.ceil(
+                attempt_exposure
+                / parameters.ordering_matrix_free_max_attempt_exposure)))
             step_dt = total_dt/internal_steps
             vector = q0.copy(); nfev = njev = 0
             linear_iterations = nonlinear_iterations = 0
@@ -938,8 +944,26 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                             accepted_trial = trial
                             break
                     if accepted_trial is None:
+                        # The projected residual is nonsmooth where a bound
+                        # changes activity. Newton's direction can cease to be
+                        # a descent direction even though this deliberately
+                        # small-exposure fixed-point map remains contractive.
+                        # A projected Picard direction solves the same
+                        # backward-Euler equation on the same physical clock.
+                        picard_delta = -residual_value
+                        for backtrack in range(13):
+                            trial = np.clip(
+                                vector+(0.5**backtrack)*picard_delta,
+                                0.0, 1.0)
+                            trial_residual = projected_residual(
+                                trial, previous)
+                            if (float(np.max(np.abs(trial_residual)))
+                                    < residual_norm):
+                                accepted_trial = trial
+                                break
+                    if accepted_trial is None:
                         raise RuntimeError(
-                            "matrix-free ordering Newton line search failed")
+                            "matrix-free ordering active-set descent failed")
                     vector = accepted_trial
                 if not converged:
                     raise RuntimeError(
