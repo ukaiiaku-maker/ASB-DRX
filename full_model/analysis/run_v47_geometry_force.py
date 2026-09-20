@@ -92,8 +92,9 @@ def rigid_translation(state, data, start, width):
         "energy_relative_to_stored": (after["total"]-before["total"])/scale,
         "translated_ordered_density_relative_l2": density_error,
         "a_priori_absolute_tolerance_J": 256*np.finfo(float).eps*scale,
-        "zero_self_force_passed": abs(after["total"]-before["total"])
-                                    <= 256*np.finfo(float).eps*scale,
+        "zero_self_force_passed": bool(
+            abs(after["total"]-before["total"])
+            <= 256*np.finfo(float).eps*scale),
     }
 
 
