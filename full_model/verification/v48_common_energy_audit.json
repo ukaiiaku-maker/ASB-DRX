@@ -1,0 +1,98 @@
+{
+  "classification": "COMMON_ENERGY_STAGE_CLOSURE_VERIFIED",
+  "current_source_stage_trace": {
+    "complete_energy": {
+      "after": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.157179989284507e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3063515235354741e-15,
+        "phase_local_J": 5.326969899421792e-16,
+        "recoverable_elastic_J": 9.04924907159295e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.604407790764817e-17
+      },
+      "before": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.157221983121216e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3063515235354741e-15,
+        "phase_local_J": 5.326969899421792e-16,
+        "recoverable_elastic_J": 9.05084928e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 0.0
+      },
+      "delta_helmholtz_J": -1.6044077907210607e-17,
+      "delta_internal_J": 4.417621069237666e-28,
+      "external_work_J": 0.0,
+      "first_law_convention": "fixed mean strain during accepted constitutive interval; generated heat is internal conversion, not external input",
+      "first_law_residual_J": 4.417621069237666e-28,
+      "front_decision": null,
+      "heat_input_J": 0.0,
+      "material_energy_export_J": 0.0
+    },
+    "grid": 16,
+    "interval_s": 5e-07,
+    "mura": {
+      "deposited_heat_increment_J_m3_cells": 806340.7920943911,
+      "first_law_residual_J_m3_cells": -2.3283064365386963e-10,
+      "locking_energy_change_J_m3_cells": -2237.683998754248,
+      "locking_heat_increment_J_m3_cells": 2237.683998754248,
+      "ordering_energy_change_J_m3_cells": -94.80552026815712,
+      "ordering_heat_increment_J_m3_cells": 94.80552026815712,
+      "plastic_work_increment_J_m3_cells": 806592.3101424093,
+      "stored_line_energy_increment_J_m3_cells": 215.86468489840627
+    },
+    "physical_functional": "extensive_signed_reservoir_v48"
+  },
+  "generated_utc": "2026-09-20T21:56:34.434541+00:00",
+  "retained_v46": {
+    "changes": {
+      "boundary_excess_J": 2.4510010265197923e-21,
+      "defect_storage_J": -4.949962478970367e-18,
+      "helmholtz_J": -1.9551704363506826e-15,
+      "internal_J": 3.4897993761242705e-15,
+      "numerical_constraint_J": 0.0,
+      "phase_gradient_J": -3.932274077220126e-21,
+      "phase_local_J": 1.7500638512698878e-21,
+      "recoverable_elastic_J": -1.950220742662502e-15,
+      "signed_junction_storage_J": 0.0,
+      "thermal_internal_J": 5.444969812474952e-15
+    },
+    "final": {
+      "boundary_excess_J": 2.4510010265197923e-21,
+      "defect_storage_J": 5.1513287575070294e-15,
+      "helmholtz_J": 9.554793696108247e-14,
+      "internal_J": 1.0099290677355742e-13,
+      "numerical_constraint_J": 0.0,
+      "phase_gradient_J": 1.3054915563265173e-15,
+      "phase_local_J": 5.328421389104008e-16,
+      "recoverable_elastic_J": 8.85582720573375e-14,
+      "signed_junction_storage_J": 0.0,
+      "thermal_internal_J": 5.444969812474952e-15
+    },
+    "final_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/continuation_119_mura.npz",
+    "final_checkpoint_sha256": "cbc237dea1e05f1e383e8fb0a6709c5de31a913876f34da15d0b631bcd55842a",
+    "historical_cumulative_first_law_qualified": false,
+    "initial": {
+      "boundary_excess_J": 0.0,
+      "defect_storage_J": 5.156278719986e-15,
+      "helmholtz_J": 9.750310739743315e-14,
+      "internal_J": 9.750310739743315e-14,
+      "numerical_constraint_J": 0.0,
+      "phase_gradient_J": 1.3054954886005945e-15,
+      "phase_local_J": 5.328403888465495e-16,
+      "recoverable_elastic_J": 9.05084928e-14,
+      "signed_junction_storage_J": 0.0,
+      "thermal_internal_J": 0.0
+    },
+    "initial_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-checkpointed/n128/operation_000_initial.npz",
+    "initial_checkpoint_sha256": "4b9805e54d3d06b3004a342254c6ec793e961049cbbab62c5528b596d550d932",
+    "old_v47_reported_defect_change_J": 4.428687545816458e-14,
+    "scope": "endpoint repricing repairs the diagnostic functional; the historical trajectory lacks a complete cumulative external-work ledger and is not retroactively promoted",
+    "v48_repriced_defect_change_J": -4.949962478970367e-18
+  },
+  "retained_v46_physical_response_promoted": false,
+  "schema": "asb-drx/v48/common-energy-audit/v1",
+  "source_sha": "57e277f44d6320023c79b2bbfcaec7c61fbe6b5b"
+}
