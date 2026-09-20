@@ -732,38 +732,7 @@ def accepted_geometry_plaquette_transaction(
     affinity_argument = available_energy_per_event_J/(2*KB_J_K*temperature)
     downhill_bias = max(float(np.tanh(affinity_argument)), 0.0)
     affinity_rate = arrhenius_rate*downhill_bias
-    if (kinetics.affinity_coupling_mode == "downhill_tanh"
-            and "_affinity_rate_override_s" not in event):
-        probe = {
-            "affinity_coupling_mode": kinetics.affinity_coupling_mode,
-            "activation_enthalpy_J": enthalpy,
-            "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
-            "arrhenius_unbiased_rate_s": arrhenius_rate,
-            "affinity_biased_rate_s": affinity_rate,
-            "complete_available_energy_J": event_available_energy_J,
-            "physical_event_count": physical_event_count,
-            "physical_event_count_source": physical_event_count_source,
-            "affinity_probe_signed_material_exchange_count": (
-                signed_exchange_count),
-            "affinity_probe_signed_material_exchange_volume_m3": (
-                signed_exchange_volume_m3),
-            "available_energy_per_event_J": available_energy_per_event_J,
-            "affinity_over_2kBT": affinity_argument,
-            "downhill_activity": downhill_bias,
-            "affinity_probe_extent": extent,
-            "affinity_probe_proposed_duration_s": proposed_duration,
-            "affinity_probe_swept_area_m2": proposed_area,
-            "affinity_sign_convention": (
-                "positive available energy is downhill; deterministic "
-                "directional activity is max(tanh(A_event/(2kBT)),0)"),
-        }
-        resolved_event = dict(event)
-        resolved_event["_affinity_rate_override_s"] = affinity_rate
-        resolved_event["_affinity_probe_ledger"] = probe
-        return accepted_geometry_plaquette_transaction(
-            state, resolved_event, systems, topologies, driving,
-            common_parameters, extensive_parameters, kinetics, dt_s)
-    affinity_record = event.get("_affinity_probe_ledger", {
+    actual_affinity_record = {
         "affinity_coupling_mode": kinetics.affinity_coupling_mode,
         "activation_enthalpy_J": enthalpy,
         "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
@@ -782,7 +751,49 @@ def accepted_geometry_plaquette_transaction(
         "affinity_over_2kBT": affinity_argument,
         "downhill_activity": downhill_bias,
         "affinity_probe_extent": extent,
-    })
+        "affinity_probe_proposed_duration_s": proposed_duration,
+        "affinity_probe_swept_area_m2": proposed_area,
+        "affinity_sign_convention": (
+            "positive available energy is downhill; deterministic directional "
+            "activity is max(tanh(A_event/(2kBT)),0)"),
+    }
+    if (kinetics.affinity_coupling_mode == "downhill_tanh"
+            and "_affinity_rate_override_s" not in event):
+        resolved_event = dict(event)
+        resolved_event["_affinity_rate_override_s"] = affinity_rate
+        resolved_event["_affinity_probe_ledger"] = actual_affinity_record
+        resolved_event["_affinity_iteration"] = 1
+        return accepted_geometry_plaquette_transaction(
+            state, resolved_event, systems, topologies, driving,
+            common_parameters, extensive_parameters, kinetics, dt_s)
+    if (kinetics.affinity_coupling_mode == "downhill_tanh"
+            and "_affinity_rate_override_s" in event):
+        iteration = int(event.get("_affinity_iteration", 1))
+        rate_scale = max(abs(rate), abs(affinity_rate), 1e-300)
+        relative_residual = abs(affinity_rate-rate)/rate_scale
+        if relative_residual > 1e-8:
+            if iteration >= 64:
+                raise RuntimeError(
+                    "geometry affinity/rate fixed point did not converge")
+            resolved_event = dict(event)
+            # The finite-event affinity depends weakly on the extent and hence
+            # on the rate.  Picard substitution can alternate across the steep
+            # part of tanh; under-relaxation gives a reproducible scalar solve.
+            resolved_event["_affinity_rate_override_s"] = 0.8*rate+0.2*affinity_rate
+            resolved_event["_affinity_probe_ledger"] = actual_affinity_record
+            resolved_event["_affinity_iteration"] = iteration+1
+            return accepted_geometry_plaquette_transaction(
+                state, resolved_event, systems, topologies, driving,
+                common_parameters, extensive_parameters, kinetics, dt_s)
+        actual_affinity_record["affinity_rate_fixed_point_iterations"] = iteration
+        actual_affinity_record["affinity_rate_fixed_point_relative_residual"] = (
+            relative_residual)
+        actual_affinity_record["affinity_rate_raw_endpoint_s"] = affinity_rate
+        # The accepted extent was advanced with ``rate``.  Publish that rate as
+        # the constitutive event rate and retain the independently recomputed
+        # endpoint value plus residual above as the fixed-point certificate.
+        actual_affinity_record["affinity_biased_rate_s"] = rate
+    affinity_record = actual_affinity_record
     ledger.update({
         "accepted": accepted, "rejection_is_atomic": True,
         "classification": ("ADMISSIBLE_NONZERO_GEOMETRY_EVENT" if accepted
