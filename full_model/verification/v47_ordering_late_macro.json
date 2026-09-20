@@ -1,0 +1,53 @@
+{
+  "analysis_source_sha": "cd6ed7ebd4ee4dd74be473a2fb9a2954df2bc036",
+  "before_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/continuation_118_mura.npz",
+  "before_checkpoint_sha256": "7b036370d52d4bc76ac49a1020896fdc89a3ab8c911daefefb1264414acb298b",
+  "before_physical_time_s": 6.201171875e-05,
+  "classification": "ACTUAL_STATE_ASYMPTOTIC_FINITE_TIME_AGREE_5PCT",
+  "comparison_to_retained_asymptotic_endpoint": {
+    "minus": {
+      "asymptotic_inventory_m_per_m": 0.041343259087871134,
+      "finite_inventory_m_per_m": 0.04133020454703688,
+      "finite_vs_asymptotic_max_abs_m2": 2807527.1799697876,
+      "finite_vs_asymptotic_relative_l2": 0.0002837308308335198,
+      "initial_inventory_m_per_m": 0.04133020454703688
+    },
+    "plus": {
+      "asymptotic_inventory_m_per_m": 0.04134325920575117,
+      "finite_inventory_m_per_m": 0.04133020466490319,
+      "finite_vs_asymptotic_max_abs_m2": 2807547.8984303474,
+      "finite_vs_asymptotic_relative_l2": 0.0002837308305854905,
+      "initial_inventory_m_per_m": 0.04133020466490319
+    }
+  },
+  "driving_time_s": 6.2255859375e-05,
+  "exact_scalar_counterexample": {
+    "accessibility_passed": true,
+    "attempt_exposure": 0.5,
+    "c": 1.0,
+    "equilibrium_absolute_error": 0.1526238865585423,
+    "equilibrium_kkt_residual": 0.0,
+    "equilibrium_q": 0.5,
+    "exact_finite_time_q": 0.3473761134414577,
+    "q0": 0.25
+  },
+  "finite_backend": "matrix_free_projected_rk2",
+  "generated_utc": "2026-09-20T17:46:26.552869+00:00",
+  "maximum_internal_attempt_exposure": 0.05,
+  "ordering_ledger": {
+    "ordering_active_degrees_of_freedom": 32768,
+    "ordering_complete_elapsed_time_s": 4.8828125e-07,
+    "ordering_discarded_reaction_time_s": 0.0,
+    "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": true,
+    "ordering_integration_method": "bounded_finite_time_matrix_free_rk2",
+    "ordering_maximum_attempt_exposure": 9.899442811010617,
+    "ordering_stiff_dispatch": "finite_time_matrix_free_projected_rk2"
+  },
+  "reference_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/continuation_119_mura.npz",
+  "reference_checkpoint_sha256": "cbc237dea1e05f1e383e8fb0a6709c5de31a913876f34da15d0b631bcd55842a",
+  "reference_physical_time_s": 6.25e-05,
+  "requested_and_accepted_dt_s": 4.8828125e-07,
+  "retained_state_stage": "late_macro",
+  "schema": "asb-drx/v47/actual-ordering-finite-time/v1",
+  "wall_seconds": 61.30544462404214
+}

@@ -1,0 +1,141 @@
+{
+  "checkpoint_records": {
+    "short": {
+      "128": {
+        "accepted_dt_s": 4.8828125e-07,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/n128_one_interval.npz",
+        "checkpoint_sha256": "779d0ddab969aeed67014b3fd641683e71644cf1b7629e2045ed6d09baaa247d",
+        "event_scale": 1.0,
+        "ordering_finite_time_certified": true,
+        "ordering_method": "bounded_finite_time_matrix_free_rk2",
+        "representation_cells": 16.0,
+        "representation_length_m": 4e-07,
+        "spacing_m": 2.5e-08,
+        "wall_seconds": 86.83826579200104
+      },
+      "192": {
+        "accepted_dt_s": 4.8828125e-07,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/n192_one_interval.npz",
+        "checkpoint_sha256": "3c4526c5329f26b991c1e028cfd0496c053bff6b396a604e681b028e9d652d1e",
+        "event_scale": 1.0,
+        "ordering_finite_time_certified": true,
+        "ordering_method": "bounded_finite_time_matrix_free_rk2",
+        "representation_cells": 24.0,
+        "representation_length_m": 4e-07,
+        "spacing_m": 1.6666666666666667e-08,
+        "wall_seconds": 215.2979205470765
+      },
+      "256": {
+        "accepted_dt_s": 4.8828125e-07,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/n256_one_interval.npz",
+        "checkpoint_sha256": "1f3d138dd1a885431842ee5ecd30d0715116eabae29920785b0ae39c01f13658",
+        "event_scale": 1.0,
+        "ordering_finite_time_certified": true,
+        "ordering_method": "bounded_finite_time_matrix_free_rk2",
+        "representation_cells": 32.0,
+        "representation_length_m": 4e-07,
+        "spacing_m": 1.25e-08,
+        "wall_seconds": 370.6730368169956
+      }
+    },
+    "temporal": {
+      "16": {
+        "accepted_exposure_s": 3.90625e-06,
+        "accepted_substeps": 16,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-late-temporal/late_16_substeps.npz",
+        "checkpoint_sha256": "aa98d84b20dd33696216b8cddb860f5f032aeee9e737d29f0b1f436c1ce258cb",
+        "requested_substeps": 16,
+        "wall_seconds": 1228.400502352044
+      },
+      "8": {
+        "accepted_exposure_s": 3.90625e-06,
+        "accepted_substeps": 8,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-late-temporal/late_8_substeps.npz",
+        "checkpoint_sha256": "ba2528848fab47c91ee7ff5d0f4fafa78eb6c8301484f8782964a1b10ebcae8a",
+        "requested_substeps": 8,
+        "wall_seconds": 689.2307309450116
+      }
+    }
+  },
+  "execution_location": "local",
+  "generated_utc": "2026-09-20T18:23:39.615576+00:00",
+  "hpc3_used": false,
+  "local_bundle_manifests": {
+    "short": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/v47_short_refinement.json",
+      "sha256": "6c584018e3ce9904f11f220e932aac61183ea07c43ccf60ce9b19cbaaee60d26"
+    },
+    "temporal": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-late-temporal/v47_late_temporal_refinement.json",
+      "sha256": "9367436b2566a765486cc42939a83b7a432c48eb92fcb9e1307f316abc6aca5a"
+    }
+  },
+  "schema": "asb-drx/v47/local-bundle-summary/v1",
+  "short_refinement": {
+    "classification": "SHORT_CURRENT_SOURCE_FIXED_SCALE_WITHIN_5PCT",
+    "comparisons": {
+      "n128_n192": {
+        "half_width_24": {
+          "curl_nye": 0.00026387020417570453,
+          "ordered_density": 0.06967678715833392,
+          "plastic_distortion": 3.055930030303358e-06,
+          "temperature_rise": 2.8662045650887578e-05,
+          "total_density": 1.0526190022654411e-05
+        },
+        "half_width_63": {
+          "curl_nye": 0.0018324079892776876,
+          "ordered_density": 0.08088570411478904,
+          "plastic_distortion": 6.715156405171313e-06,
+          "temperature_rise": 2.942996118814832e-05,
+          "total_density": 2.2144484777940155e-05
+        }
+      },
+      "n192_n256": {
+        "half_width_24": {
+          "curl_nye": 8.92776240743014e-05,
+          "ordered_density": 0.08130853922223842,
+          "plastic_distortion": 1.0492160859132176e-06,
+          "temperature_rise": 4.045932047059797e-05,
+          "total_density": 3.615322610863522e-06
+        },
+        "half_width_63": {
+          "curl_nye": 0.000449304284958446,
+          "ordered_density": 0.08803526501247892,
+          "plastic_distortion": 1.8858563452765918e-06,
+          "temperature_rise": 4.0574180956970736e-05,
+          "total_density": 6.492593003524849e-06
+        },
+        "half_width_95": {
+          "curl_nye": 0.0012278801339951318,
+          "ordered_density": 0.09953697425323546,
+          "plastic_distortion": 2.9642628408028975e-06,
+          "temperature_rise": 4.072768067075579e-05,
+          "total_density": 9.811065669559873e-06
+        }
+      }
+    },
+    "domain_m": 3.2e-06,
+    "full_62p5us_n256_completed": false,
+    "full_horizon_exclusion": "short profiling/refinement selected because finite-time ordering makes a matched n256 62.5 us run unaffordable alongside active local DDD",
+    "physical_interval_s": 4.8828125e-07,
+    "representation_length_m": 4e-07,
+    "scope": "one finite-time Mura interval from identical declared initial states",
+    "source_sha": "70f9cd94833e5eb1e22fdc0a0b02be9caa602749"
+  },
+  "temporal_refinement": {
+    "classification": "CURRENT_SOURCE_TEMPORAL_REFINEMENT_PASSED_5PCT",
+    "common_band_half_width": 63,
+    "operator_exposure_s": 3.90625e-06,
+    "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/continuation_118_mura.npz",
+    "parent_checkpoint_sha256": "7b036370d52d4bc76ac49a1020896fdc89a3ab8c911daefefb1264414acb298b",
+    "parent_physical_time_s": 6.201171875e-05,
+    "relative_differences": {
+      "curl_nye": 2.0655098517415235e-05,
+      "ordered_density": 3.683085469950602e-07,
+      "plastic_distortion": 5.0108212210942165e-06,
+      "temperature_rise": 3.404495883071137e-05,
+      "total_density": 1.0597869124489956e-08
+    },
+    "source_sha": "70f9cd94833e5eb1e22fdc0a0b02be9caa602749"
+  }
+}

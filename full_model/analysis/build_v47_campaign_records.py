@@ -138,7 +138,7 @@ def main():
             "v46_closing_source": "ea519f0284e2cfdecf8d14ab2d802d6279975657",
             "v46_scientific_source": "096159de1478bb259e445c15c11765d9149d7fe0",
             "v47_geometry_and_analysis_source": "bca1d9288bcdd9acfba688084a213b7def99b4c3",
-            "v47_ordering_dispatch_source": "08bd0b07013bfb10c853c94df0fe81be3f3badef",
+            "v47_ordering_dispatch_source": "eb739b3faf00b37b2ddb5b5c5c9b2e62c6fa5699",
             "v47_evidence_source": source,
         },
         "configuration": {

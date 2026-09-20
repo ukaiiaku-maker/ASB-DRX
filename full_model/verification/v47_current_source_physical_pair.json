@@ -1,0 +1,113 @@
+{
+  "asb_claimed": false,
+  "cases": {
+    "continued_loading": {
+      "accepted_interval_s": 4.8828125e-07,
+      "after": {
+        "maximum_speed_m_s": 0.0002253191533542347,
+        "mean_imposed_shear": 0.0100244140625,
+        "mean_plastic_shear": 6.329996427814415e-12,
+        "mean_speed_m_s": 8.687062926337134e-05,
+        "mean_temperature_K": 1100.3073319417665,
+        "peak_temperature_K": 1101.0323485213496,
+        "rms_effective_resolved_stress_Pa": 464987456.47769266,
+        "rms_raw_resolved_stress_Pa": 510058808.98073435
+      },
+      "before": {
+        "maximum_speed_m_s": 0.00022547897589259973,
+        "mean_imposed_shear": 0.0100244140625,
+        "mean_plastic_shear": 6.188458175162109e-12,
+        "mean_speed_m_s": 8.693335049748652e-05,
+        "mean_temperature_K": 1100.3062991550976,
+        "peak_temperature_K": 1101.029693993376,
+        "rms_effective_resolved_stress_Pa": 465018179.4626139,
+        "rms_raw_resolved_stress_Pa": 510102664.6770491
+      },
+      "change": {
+        "maximum_speed_m_s": -1.5982253836503897e-07,
+        "mean_imposed_shear": 0.0,
+        "mean_plastic_shear": 1.4153825265230619e-13,
+        "mean_speed_m_s": -6.272123411518293e-08,
+        "mean_temperature_K": 0.0010327866689294751,
+        "peak_temperature_K": 0.0026545279736183147,
+        "rms_effective_resolved_stress_Pa": -30722.984921216965,
+        "rms_raw_resolved_stress_Pa": -43855.6963147521
+      },
+      "dissipative_drag_and_heat_J_m3_cells": 59224118.738155134,
+      "front_channel_disabled_for_bounded_bulk_pair": true,
+      "mura_event_scale": 1.0,
+      "ordering_finite_time_kinetic_accuracy_certified": true,
+      "ordering_integration_method": "bounded_finite_time_matrix_free_rk2",
+      "ordering_stiff_dispatch": "finite_time_matrix_free_projected_rk2",
+      "plastic_work_J_m3_cells": 49364296.98376535,
+      "protocol": "continued_deformation",
+      "strain_rate_s": 100.0,
+      "wall_seconds": 64.82260777405463
+    },
+    "hold": {
+      "accepted_interval_s": 4.8828125e-07,
+      "after": {
+        "maximum_speed_m_s": 0.00021867037337556608,
+        "mean_imposed_shear": 0.01,
+        "mean_plastic_shear": 6.325242556553383e-12,
+        "mean_speed_m_s": 8.43404261608787e-05,
+        "mean_temperature_K": 1100.30729989853,
+        "peak_temperature_K": 1101.032269339824,
+        "rms_effective_resolved_stress_Pa": 463733901.43880403,
+        "rms_raw_resolved_stress_Pa": 508804176.382027
+      },
+      "before": {
+        "maximum_speed_m_s": 0.00021881963519741483,
+        "mean_imposed_shear": 0.01,
+        "mean_plastic_shear": 6.188458175162109e-12,
+        "mean_speed_m_s": 8.439897428898833e-05,
+        "mean_temperature_K": 1100.3062991550976,
+        "peak_temperature_K": 1101.029693993376,
+        "rms_effective_resolved_stress_Pa": 463763489.26275206,
+        "rms_raw_resolved_stress_Pa": 508846758.5761653
+      },
+      "change": {
+        "maximum_speed_m_s": -1.4926182184874892e-07,
+        "mean_imposed_shear": 0.0,
+        "mean_plastic_shear": 1.3678438139127386e-13,
+        "mean_speed_m_s": -5.854812810962432e-08,
+        "mean_temperature_K": 0.001000743432314266,
+        "peak_temperature_K": 0.002575346448111304,
+        "rms_effective_resolved_stress_Pa": -29587.823948025703,
+        "rms_raw_resolved_stress_Pa": -42582.1941383481
+      },
+      "dissipative_drag_and_heat_J_m3_cells": 57386631.38420077,
+      "front_channel_disabled_for_bounded_bulk_pair": true,
+      "mura_event_scale": 1.0,
+      "ordering_finite_time_kinetic_accuracy_certified": true,
+      "ordering_integration_method": "bounded_finite_time_matrix_free_rk2",
+      "ordering_stiff_dispatch": "finite_time_matrix_free_projected_rk2",
+      "plastic_work_J_m3_cells": 47812823.14634623,
+      "protocol": "hold",
+      "strain_rate_s": 0.0,
+      "wall_seconds": 64.30490290594753
+    }
+  },
+  "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/continuation_119_mura.npz",
+  "checkpoint_physical_time_s": 6.25e-05,
+  "checkpoint_sha256": "cbc237dea1e05f1e383e8fb0a6709c5de31a913876f34da15d0b631bcd55842a",
+  "classification": "VALID_BOUNDED_BULK_RESPONSE_PAIR",
+  "comparison": "100/s continued loading versus hold over 0.48828125 us",
+  "continued_minus_hold_after": {
+    "maximum_speed_m_s": 6.648779978668615e-06,
+    "mean_imposed_shear": 2.4414062500000347e-05,
+    "mean_plastic_shear": 4.753871261032328e-15,
+    "mean_speed_m_s": 2.530203102492633e-06,
+    "mean_temperature_K": 3.2043236615209025e-05,
+    "peak_temperature_K": 7.918152550701052e-05,
+    "rms_effective_resolved_stress_Pa": 1253555.0388886333,
+    "rms_raw_resolved_stress_Pa": 1254632.598707378
+  },
+  "drx_claimed": false,
+  "existing_boundary_migration_claimed": false,
+  "expected_discriminant": "incremental stress, plastic shear, irreversible heat, and temperature response at bounded accumulated strain",
+  "finite_time_ordering_forced": true,
+  "generated_utc": "2026-09-20T17:48:50.658261+00:00",
+  "schema": "asb-drx/v47/current-source-physical-pair/v1",
+  "source_sha": "70f9cd94833e5eb1e22fdc0a0b02be9caa602749"
+}

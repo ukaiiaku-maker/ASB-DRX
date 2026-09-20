@@ -1,0 +1,332 @@
+{
+  "actual_configuration": {
+    "domain_m": 3.2e-06,
+    "representation_length_m": 4e-07,
+    "section_thickness_m": 3.2e-06,
+    "v46_reported_1um_was_attribution_error": true
+  },
+  "classification": "GEOMETRY_FORCE_AND_RATE_NOT_QUALIFIED",
+  "fixed_scale_refinement": [
+    {
+      "continuum_representation_length_m": 4e-07,
+      "grid": 32,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7728855511470268,
+      "physical_boundary_length_m": 8e-07,
+      "plastic_increment_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722148e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722148e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722148e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "representation_cells": 4.0,
+      "represented_section_thickness_m": 3.2e-06,
+      "spacing_m": 1e-07,
+      "state_digest": "b8e883ba29d4f4279fca6626c99bf9a8a823e8e6c13fcdf4ed3f000b9dd64bf7",
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_after_J": {
+        "common_line": 4.883280583211758e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.220000000000001e-16,
+        "ordered_gradient": 4.294416328725676e-14,
+        "recoverable_elastic": 6.5642243457227595e-09,
+        "total": 6.613100417718164e-09
+      },
+      "term_energy_before_J": {
+        "common_line": 4.8832773188534164e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2000000000000007e-16,
+        "ordered_gradient": 4.358188627623435e-14,
+        "recoverable_elastic": 6.5642243457227595e-09,
+        "total": 6.61310102079757e-09
+      },
+      "term_energy_change_J": {
+        "common_line": 3.2643583415661835e-17,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 2.0000000000000325e-18,
+        "ordered_gradient": -6.377229889775849e-16,
+        "recoverable_elastic": 0.0,
+        "total": -6.030794058417986e-16
+      }
+    },
+    {
+      "continuum_representation_length_m": 4e-07,
+      "grid": 64,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7665493043197997,
+      "physical_boundary_length_m": 8e-07,
+      "plastic_increment_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722186e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722186e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722186e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "representation_cells": 8.0,
+      "represented_section_thickness_m": 3.2e-06,
+      "spacing_m": 5e-08,
+      "state_digest": "4ebf220a25af2d6a8abeb1c661e771a4a2b9a2cb8f2f438f42d02d2e6fd3a34e",
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_after_J": {
+        "common_line": 4.8832805838502607e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2200000000000006e-16,
+        "ordered_gradient": 5.227539174720124e-14,
+        "recoverable_elastic": 6.5583827999755e-09,
+        "total": 6.6072682032057495e-09
+      },
+      "term_energy_before_J": {
+        "common_line": 4.8832773194541725e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2000000000000007e-16,
+        "ordered_gradient": 5.255376714906356e-14,
+        "recoverable_elastic": 6.5583827999755e-09,
+        "total": 6.6072684469371905e-09
+      },
+      "term_energy_change_J": {
+        "common_line": 3.26439608814398e-17,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 1.9999999999999832e-18,
+        "ordered_gradient": -2.783754018623196e-16,
+        "recoverable_elastic": 0.0,
+        "total": -2.437314409364894e-16
+      }
+    },
+    {
+      "continuum_representation_length_m": 4e-07,
+      "grid": 128,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7656897730003706,
+      "physical_boundary_length_m": 8e-07,
+      "plastic_increment_integral_m3": [
+        [
+          0.0,
+          0.0,
+          1.1454629340722195e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722195e-24
+        ],
+        [
+          0.0,
+          0.0,
+          1.1454629340722195e-24
+        ]
+      ],
+      "prescribed_displacement_m": 1e-08,
+      "representation_cells": 16.0,
+      "represented_section_thickness_m": 3.2e-06,
+      "spacing_m": 2.5e-08,
+      "state_digest": "81e5f84c1e2191489c53dc1b8ef9622d3644edca070647a102a38afd1cc9dc54",
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_after_J": {
+        "common_line": 4.883280584045705e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.2200000000000035e-16,
+        "ordered_gradient": 5.533592996573199e-14,
+        "recoverable_elastic": 6.558384256684248e-09,
+        "total": 6.60727272045467e-09
+      },
+      "term_energy_before_J": {
+        "common_line": 4.8832773196226337e-11,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 3.200000000000003e-16,
+        "ordered_gradient": 5.5245679220424177e-14,
+        "recoverable_elastic": 6.558384256684248e-09,
+        "total": 6.6072725955596946e-09
+      },
+      "term_energy_change_J": {
+        "common_line": 3.264423071034055e-17,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 2.0000000000000325e-18,
+        "ordered_gradient": 9.025074530781441e-17,
+        "recoverable_elastic": 0.0,
+        "total": 1.248949758126027e-16
+      }
+    }
+  ],
+  "force_qualified": false,
+  "generated_utc": "2026-09-20T17:48:57.077803+00:00",
+  "n64_complete_loop_rigid_translation": {
+    "a_priori_absolute_tolerance_J": 3.7557972785505117e-22,
+    "displacement_m": 5e-08,
+    "energy_change_J": 0.0,
+    "energy_relative_to_stored": 0.0,
+    "translated_ordered_density_relative_l2": 4.1465917684105627e-16,
+    "zero_self_force_passed": true
+  },
+  "n64_directional_force": [
+    {
+      "direct_gradient_change_J_m3_cells": 8150.864832264164,
+      "directional_force_N": -5.5630029063950625e-08,
+      "displacement_m": 1.25e-09,
+      "endpoint_component_changes_J_m3_cells": {
+        "common_line": 510.07720897812396,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 31.24999999999991,
+        "ordered_gradient": 8150.864832264233
+      },
+      "endpoint_total_change_J": 6.95375363298822e-17,
+      "extent": 0.025,
+      "gradient_endpoint_cancellation_residual_J_m3_cells": -6.912159733474255e-11,
+      "stable_complete_change_J": 6.953753632993829e-17
+    },
+    {
+      "direct_gradient_change_J_m3_cells": 16436.291888417567,
+      "directional_force_N": -5.6060628617317614e-08,
+      "displacement_m": 2.5e-09,
+      "endpoint_component_changes_J_m3_cells": {
+        "common_line": 1020.154554494191,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 62.50000000000008,
+        "ordered_gradient": 16436.29188841793
+      },
+      "endpoint_total_change_J": 1.4015157154324833e-16,
+      "extent": 0.05,
+      "gradient_endpoint_cancellation_residual_J_m3_cells": -3.637978807091713e-10,
+      "stable_complete_change_J": 1.4015157154329403e-16
+    },
+    {
+      "direct_gradient_change_J_m3_cells": 33410.83267239186,
+      "directional_force_N": -5.6921827724026994e-08,
+      "displacement_m": 5e-09,
+      "endpoint_component_changes_J_m3_cells": {
+        "common_line": 2040.30965512502,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 125.00000000000011,
+        "ordered_gradient": 33410.83267239223
+      },
+      "endpoint_total_change_J": 2.8460913862006545e-16,
+      "extent": 0.1,
+      "gradient_endpoint_cancellation_residual_J_m3_cells": -3.710738383233547e-10,
+      "stable_complete_change_J": 2.8460913862013497e-16
+    },
+    {
+      "direct_gradient_change_J_m3_cells": 68974.66092701085,
+      "directional_force_N": -5.864422593738949e-08,
+      "displacement_m": 1e-08,
+      "endpoint_component_changes_J_m3_cells": {
+        "common_line": 4080.621494726045,
+        "disordered_wall": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 250.0000000000001,
+        "ordered_gradient": 68974.66092701168
+      },
+      "endpoint_total_change_J": 5.864422593738528e-16,
+      "extent": 0.2,
+      "gradient_endpoint_cancellation_residual_J_m3_cells": -8.294591680169106e-10,
+      "stable_complete_change_J": 5.864422593738949e-16
+    }
+  ],
+  "n64_directional_force_fractional_extent_spread": 0.05139801617736286,
+  "n64_physical_chemical_controls": {
+    "negative_mu": {
+      "accepted": false,
+      "chemical_reservoir_work_J": -1.988650927208711e-17,
+      "chemical_reservoir_work_J_m3_cells": -2485.8136590108893,
+      "chemical_work_mode": "physical_species_exchange",
+      "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+      "complete_energy_change_J_m3_cells": 38061.95598652777,
+      "event_rate_s": 200000.0,
+      "signed_material_exchange_count": 1988.650927208711,
+      "signed_material_exchange_volume_m3": 3.5795716689756797e-26
+    },
+    "positive_mu": {
+      "accepted": false,
+      "chemical_reservoir_work_J": 1.988650927208711e-17,
+      "chemical_reservoir_work_J_m3_cells": 2485.8136590108893,
+      "chemical_work_mode": "physical_species_exchange",
+      "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+      "complete_energy_change_J_m3_cells": 33090.32866850599,
+      "event_rate_s": 200000.0,
+      "signed_material_exchange_count": 1988.650927208711,
+      "signed_material_exchange_volume_m3": 3.5795716689756797e-26
+    },
+    "zero_mu": {
+      "accepted": false,
+      "chemical_reservoir_work_J": 0.0,
+      "chemical_reservoir_work_J_m3_cells": 0.0,
+      "chemical_work_mode": "physical_species_exchange",
+      "classification": "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT",
+      "complete_energy_change_J_m3_cells": 35576.14232751688,
+      "event_rate_s": 200000.0,
+      "signed_material_exchange_count": 1988.650927208711,
+      "signed_material_exchange_volume_m3": 3.5795716689756797e-26
+    }
+  },
+  "n64_removal_direction": {
+    "direct_gradient_change_J_m3_cells": 6919.408405111484,
+    "directional_force_N": 1.1071066838545477e-08,
+    "displacement_m": -5e-09,
+    "endpoint_component_changes_J_m3_cells": {
+      "common_line": 0.008368979441002011,
+      "disordered_wall": 0.0,
+      "junction_topology": 0.0,
+      "nye_mismatch": 0.0,
+      "ordered_boundary": 9.485988383683974e-14,
+      "ordered_gradient": 6919.408405111252
+    },
+    "endpoint_total_change_J": 5.535533419263361e-17,
+    "extent": -0.1,
+    "gradient_endpoint_cancellation_residual_J_m3_cells": 2.319211489520967e-10,
+    "stable_complete_change_J": 5.5355334192727386e-17
+  },
+  "production_dependency_diff_geometry_artifact_to_scientific_source": "no changes under full_model/production",
+  "rate_limitation": "current EXP-floor proposal rate uses resolved stress and is independent of the complete geometry affinity; energy currently acts as an atomic accept/reject guard",
+  "rate_qualified": false,
+  "schema": "asb-drx/v47/geometry-force/v1",
+  "source_sha": "70f9cd94833e5eb1e22fdc0a0b02be9caa602749"
+}

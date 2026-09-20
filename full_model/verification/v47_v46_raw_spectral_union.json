@@ -1,0 +1,50 @@
+{
+  "analysis_source_sha": "bca1d9288bcdd9acfba688084a213b7def99b4c3",
+  "classification": "RAW_UNION_SHORT_WAVE_DIFFERENCE_CONFIRMED",
+  "component_norm": "Parseval L2 with mean over trailing tensor components",
+  "continuation_source_sha": "dbed107cbafc470175d1e30b02716576399ac2bc",
+  "exact_continuum_error_claimed": false,
+  "fft_normalization": "complex coefficients divided by n^2",
+  "field": "curl_nye from compatible Curl(beta_p)",
+  "generated_utc": "2026-09-20T17:42:20.050794+00:00",
+  "members": {
+    "128": {
+      "checkpoint_sha256": "cbc237dea1e05f1e383e8fb0a6709c5de31a913876f34da15d0b631bcd55842a",
+      "manifest_sha256": "79a7f1d4b9526a62502cd6e4376ed6c87d4a7cb1561fd7849be0d82538be8dca",
+      "metadata_physical_time_s": 6.25e-05
+    },
+    "192": {
+      "checkpoint_sha256": "2a5503ed1c784b7ba12dd71621d6dc7146a21c82e056f46820891e42b6c19787",
+      "manifest_sha256": "e95bffbbb1b055638a2c146d713976d3476e3963defc419c3a56ebd3ff081a28",
+      "metadata_physical_time_s": 6.25e-05
+    }
+  },
+  "physical_time_s": 6.25e-05,
+  "raw_array_comparison": {
+    "coarse_excluded_nyquist_rms_fraction": 6.769230998309523e-14,
+    "coarse_excluded_nyquist_spectral_rms": 1.73199509523605e-12,
+    "coarse_physical_rms": 25.58629031375322,
+    "coarse_spectral_rms": 25.58629031375322,
+    "coordinate_shift_optimized": false,
+    "fine_physical_rms": 25.789180698609332,
+    "fine_shared_spectral_rms": 25.511898085113714,
+    "fine_spectral_rms": 25.78918069860933,
+    "fine_tail_rms_fraction": 0.14624701920812558,
+    "fine_tail_spectral_rms": 3.7715908049913396,
+    "fine_tail_squared_norm_fraction": 0.021388190627261848,
+    "interpretation": "difference between two discrete reconstructions after zero-extending the non-Nyquist n128 spectrum; not error against an exact solution",
+    "pythagorean_union_identity_relative_residual": 3.164378812663006e-16,
+    "shared_difference_relative_to_fine_full_rms": 0.06271539479407148,
+    "shared_difference_spectral_rms": 1.6173786489289323,
+    "shared_mode_indices_per_axis": [
+      -63,
+      63
+    ],
+    "zero_extension_union_difference_relative_to_fine_full_rms": 0.1591270290410718,
+    "zero_extension_union_difference_spectral_rms": 4.103755705973055
+  },
+  "schema": "asb-drx/v47/v46-raw-spectral-union/v1",
+  "scientific_source_sha": "096159de1478bb259e445c15c11765d9149d7fe0",
+  "thermodynamic_energy_fraction_claimed": false,
+  "v46_root": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon"
+}

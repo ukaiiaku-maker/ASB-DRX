@@ -1,0 +1,58 @@
+{
+  "analysis_source_sha": "eb739b3faf00b37b2ddb5b5c5c9b2e62c6fa5699",
+  "before_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-checkpointed/n128/operation_001_mura.npz",
+  "before_checkpoint_sha256": "506f1b3d719f34920ebdab4cb3743f4bbf73a69b03c393fe8a0e803bae3144e8",
+  "before_physical_time_s": 4.8828125e-07,
+  "classification": "ACTUAL_STATE_ASYMPTOTIC_FINITE_TIME_DISAGREE",
+  "comparison_to_retained_asymptotic_endpoint": {
+    "minus": {
+      "asymptotic_inventory_m_per_m": 0.015554505426229803,
+      "finite_inventory_m_per_m": 0.010746107630229281,
+      "finite_vs_asymptotic_max_abs_m2": 1585791863.9971633,
+      "finite_vs_asymptotic_relative_l2": 0.29044730576400674,
+      "initial_inventory_m_per_m": 0.010746107630229281
+    },
+    "plus": {
+      "asymptotic_inventory_m_per_m": 0.015554505426229803,
+      "finite_inventory_m_per_m": 0.010746107630229281,
+      "finite_vs_asymptotic_max_abs_m2": 1585791863.9971461,
+      "finite_vs_asymptotic_relative_l2": 0.290447305764008,
+      "initial_inventory_m_per_m": 0.010746107630229281
+    }
+  },
+  "driving_time_s": 7.32421875e-07,
+  "exact_scalar_counterexample": {
+    "accessibility_passed": true,
+    "attempt_exposure": 0.5,
+    "c": 1.0,
+    "equilibrium_absolute_error": 0.1526238865585423,
+    "equilibrium_kkt_residual": 0.0,
+    "equilibrium_q": 0.5,
+    "exact_finite_time_q": 0.3473761134414577,
+    "q0": 0.25
+  },
+  "finite_backend": "matrix_free_projected_rk2",
+  "generated_utc": "2026-09-20T18:47:11.727556+00:00",
+  "maximum_internal_attempt_exposure": 0.05,
+  "ordering_ledger": {
+    "ordering_active_degrees_of_freedom": 32768,
+    "ordering_asymptotic_endpoint_distance_bound_passed": false,
+    "ordering_asymptotic_endpoint_distance_bound_semantics": "for the declared convex projected gradient flow, distance to its equilibrium is non-increasing; initial-to-endpoint distance is a conservative finite-horizon error bound",
+    "ordering_asymptotic_endpoint_distance_relative": 0.8209618767640674,
+    "ordering_asymptotic_endpoint_distance_tolerance_relative": 0.05,
+    "ordering_complete_elapsed_time_s": 4.8828125e-07,
+    "ordering_discarded_reaction_time_s": 0.0,
+    "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": true,
+    "ordering_integration_method": "bounded_finite_time_matrix_free_rk2",
+    "ordering_maximum_attempt_exposure": 9.975238387575223,
+    "ordering_stiff_dispatch": "finite_time_asymptotic_endpoint_distance_unqualified"
+  },
+  "production_dispatch_enabled": true,
+  "reference_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-checkpointed/n128/operation_002_mura.npz",
+  "reference_checkpoint_sha256": "d448bf062d67fc929c5dc89043026c7a5ac3c92afc819fe0d1d1f5f8c5140cdc",
+  "reference_physical_time_s": 9.765625e-07,
+  "requested_and_accepted_dt_s": 4.8828125e-07,
+  "retained_state_stage": "first_nonzero",
+  "schema": "asb-drx/v47/actual-ordering-finite-time/v1",
+  "wall_seconds": 183.32940881699324
+}

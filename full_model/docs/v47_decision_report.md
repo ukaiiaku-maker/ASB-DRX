@@ -119,6 +119,15 @@ state has a 1.4028% bound and retains the qualified asymptotic route.  The
 accessibility, projected KKT, endpoint-distance, and finite-integration fields
 remain separate in the ledger.
 
+For very long exposures that begin outside the bound, projected RK2 advances
+the physical rate until the evolving state first enters the same 5% contraction
+ball around a KKT-qualified endpoint.  Only then may that endpoint represent
+the remaining clock.  Integrated substeps, requested substeps, switch distance,
+and certified remainder time are separate ledger fields; no reaction time is
+discarded.  The retained V39 restart tests explicitly keep their historical
+equilibrium dispatcher so they remain checkpoint-semantic fixtures rather than
+silently becoming new physical-response evidence.
+
 ## Physical interpretation
 
 Postprocessing the completed V46 n128 trajectory gives 0.000108324 mean

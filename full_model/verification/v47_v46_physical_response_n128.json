@@ -1,0 +1,324 @@
+{
+  "analysis_source_sha": "bca1d9288bcdd9acfba688084a213b7def99b4c3",
+  "changes": {
+    "child_fraction_mean": 1.2625765016260893e-05,
+    "mean_plastic_shear_tensor_component": 0.00010832359449015915,
+    "mean_shear_stress_Pa": -19303264.538146496,
+    "physical_energy_J": {
+      "boundary_excess_J": 2.4510010265197923e-21,
+      "defect_storage_J": 4.428687545816458e-14,
+      "helmholtz_J": 4.23366549842929e-14,
+      "internal_J": 4.778162479676784e-14,
+      "numerical_constraint_J": 0.0,
+      "phase_gradient_J": -3.932274077220126e-21,
+      "phase_local_J": 1.7500638512698878e-21,
+      "recoverable_elastic_J": -1.950220742662502e-15,
+      "signed_junction_storage_J": 0.0,
+      "thermal_internal_J": 5.444969812474952e-15
+    },
+    "thermal_rise_from_temperature_field_J": 5.444969812474954e-15
+  },
+  "classification": "VALID_TINY_EXISTING_BOUNDARY_MIGRATION_WITH_BULK_RECOVERY",
+  "domain_m": 3.2e-06,
+  "drx_claimed": false,
+  "final": {
+    "child_fraction_mean": 0.49774177967897715,
+    "imposed_mean_shear_tensor_component": 0.01,
+    "line_inventory": {
+      "forest_minus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "forest_minus_m_per_m_by_family": [
+        308.61546590154586,
+        308.61546590154586,
+        287.70056188916504,
+        287.67747828755574
+      ],
+      "forest_plus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "forest_plus_m_per_m_by_family": [
+        308.61546590154586,
+        308.61546590154586,
+        287.70056189821554,
+        287.67747827843317
+      ],
+      "junction_extent_m_per_m_by_topology": [
+        0.0
+      ],
+      "mobile_minus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "mobile_minus_m_per_m_by_family": [
+        522.6301101552164,
+        522.6301101552071,
+        542.7269298824021,
+        542.7485765693251
+      ],
+      "mobile_plus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "mobile_plus_m_per_m_by_family": [
+        522.630110155217,
+        522.6301101552076,
+        542.7269282501857,
+        542.7485782256255
+      ],
+      "wall_ordered_minus_active_cells_by_family": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "wall_ordered_minus_m_per_m_by_family": [
+        7.763138437205123e-08,
+        7.76406994577642e-08,
+        0.020670833356033147,
+        0.020672270459754158
+      ],
+      "wall_ordered_plus_active_cells_by_family": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "wall_ordered_plus_m_per_m_by_family": [
+        7.763138236710273e-08,
+        7.764069745264447e-08,
+        0.02067073817591908,
+        0.020672365757752272
+      ],
+      "wall_tangle_minus_active_cells_by_family": [
+        2040,
+        2012,
+        3941,
+        3846
+      ],
+      "wall_tangle_minus_m_per_m_by_family": [
+        1.5846227852272566e-24,
+        1.4965563196914876e-24,
+        0.798128865227325,
+        0.7995685512200071
+      ],
+      "wall_tangle_plus_active_cells_by_family": [
+        2043,
+        2107,
+        3841,
+        3875
+      ],
+      "wall_tangle_plus_m_per_m_by_family": [
+        1.5884254893377864e-24,
+        1.487457536904012e-24,
+        0.7981289219012794,
+        0.7995684948408733
+      ]
+    },
+    "maximum_abs_plastic_distortion": 0.00025968879264340317,
+    "mean_plastic_shear_tensor_component": 0.00010832359449015915,
+    "mean_shear_stress_Pa": 1762696735.4618535,
+    "nye": {
+      "bulk_only_difference_rms_m1": 0.14496007429996063,
+      "curl_beta_rms_m1": 25.58629031375322,
+      "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+      "difference_bulk_rms_m1": 5.755858765864405e-06,
+      "difference_interface_rms_m1": 0.00047348038089606184,
+      "difference_rms_m1": 0.00041005613737346135,
+      "interface_product_rule_rms_m1": 0.14495800778797618,
+      "reservoir_moment_rms_m1": 25.58489908176071
+    },
+    "physical_energy_J": {
+      "boundary_excess_J": 2.4510010265197923e-21,
+      "defect_storage_J": 4.9443154178150574e-14,
+      "helmholtz_J": 1.3983976238172605e-13,
+      "internal_J": 1.45284732194201e-13,
+      "numerical_constraint_J": 0.0,
+      "phase_gradient_J": 1.3054915563265173e-15,
+      "phase_local_J": 5.328421389104008e-16,
+      "recoverable_elastic_J": 8.85582720573375e-14,
+      "signed_junction_storage_J": 0.0,
+      "thermal_internal_J": 5.444969812474952e-15
+    },
+    "physical_time_s": 6.25e-05,
+    "rms_shear_stress_Pa": 1762696735.4618535,
+    "temperature_maximum_K": 1101.029693993376,
+    "temperature_mean_K": 1100.3062991550976,
+    "temperature_minimum_K": 1100.083374064972,
+    "temperature_peak_minus_mean_K": 0.7233948382784092
+  },
+  "front_response": {
+    "a_to_b_swept_volume_m3": 6.777992151305397e-26,
+    "accepted": 8,
+    "annihilated_line_m": 3.0160299219811034e-11,
+    "attempts": 8,
+    "b_to_a_swept_volume_m3": 0.0,
+    "boundary_line_m": 1.6338676744545366e-12,
+    "component_contour_displacements_m": [
+      -2.135204180735428e-11,
+      2.1352041806821376e-11
+    ],
+    "interface_width_m": 4e-07,
+    "irreversible_front_heat_J": 4.524044882971656e-20,
+    "maximum_abs_component_contour_displacement_m": 2.135204180735428e-11,
+    "maximum_abs_line_closure_m": 1.405635222673416e-23,
+    "maximum_displacement_over_interface_width": 5.33801045183857e-05,
+    "processed_line_m": 6.488555095927571e-11,
+    "sink_line_m": 6.486085853722805e-13,
+    "transmitted_line_m": 3.2442775479637853e-11
+  },
+  "generated_utc": "2026-09-20T17:42:26.287119+00:00",
+  "grid": 128,
+  "initial": {
+    "child_fraction_mean": 0.4977291539139609,
+    "imposed_mean_shear_tensor_component": 0.01,
+    "line_inventory": {
+      "forest_minus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "forest_minus_m_per_m_by_family": [
+        311.72016381969036,
+        311.72016381969036,
+        311.72016381969036,
+        311.72016381969036
+      ],
+      "forest_plus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "forest_plus_m_per_m_by_family": [
+        311.72016381969036,
+        311.72016381969036,
+        311.72016381969036,
+        311.72016381969036
+      ],
+      "junction_extent_m_per_m_by_topology": [
+        0.0
+      ],
+      "mobile_minus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "mobile_minus_m_per_m_by_family": [
+        519.5336063661506,
+        519.5336063661506,
+        519.5336063661506,
+        519.5336063661506
+      ],
+      "mobile_plus_active_cells_by_family": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "mobile_plus_m_per_m_by_family": [
+        519.5336063661506,
+        519.5336063661506,
+        519.5336063661506,
+        519.5336063661506
+      ],
+      "wall_ordered_minus_active_cells_by_family": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "wall_ordered_minus_m_per_m_by_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wall_ordered_plus_active_cells_by_family": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "wall_ordered_plus_m_per_m_by_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wall_tangle_minus_active_cells_by_family": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "wall_tangle_minus_m_per_m_by_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wall_tangle_plus_active_cells_by_family": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "wall_tangle_plus_m_per_m_by_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "maximum_abs_plastic_distortion": 0.0,
+    "mean_plastic_shear_tensor_component": 0.0,
+    "mean_shear_stress_Pa": 1782000000.0,
+    "nye": {
+      "bulk_only_difference_rms_m1": 0.0,
+      "curl_beta_rms_m1": 0.0,
+      "declared_nye_identity": "curl_beta = reservoir_first_moment + interface_product_rule + representation_residual",
+      "difference_bulk_rms_m1": 0.0,
+      "difference_interface_rms_m1": 0.0,
+      "difference_rms_m1": 0.0,
+      "interface_product_rule_rms_m1": 0.0,
+      "reservoir_moment_rms_m1": 0.0
+    },
+    "physical_energy_J": {
+      "boundary_excess_J": 0.0,
+      "defect_storage_J": 5.156278719986e-15,
+      "helmholtz_J": 9.750310739743315e-14,
+      "internal_J": 9.750310739743315e-14,
+      "numerical_constraint_J": 0.0,
+      "phase_gradient_J": 1.3054954886005945e-15,
+      "phase_local_J": 5.328403888465495e-16,
+      "recoverable_elastic_J": 9.05084928e-14,
+      "signed_junction_storage_J": 0.0,
+      "thermal_internal_J": 0.0
+    },
+    "physical_time_s": 0.0,
+    "rms_shear_stress_Pa": 1782000000.0,
+    "temperature_maximum_K": 1100.0,
+    "temperature_mean_K": 1100.0,
+    "temperature_minimum_K": 1100.0,
+    "temperature_peak_minus_mean_K": 0.0
+  },
+  "lagb_claimed": false,
+  "represented_thickness_m": 4.96e-10,
+  "retained_scientific_source_sha": "096159de1478bb259e445c15c11765d9149d7fe0",
+  "schema": "asb-drx/v47/v46-physical-response/v1",
+  "spontaneous_nucleation_claimed": false,
+  "strict_asb_claimed": false
+}
