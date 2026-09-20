@@ -57,6 +57,8 @@ def test_nonzero_event_owns_closed_links_swept_beta_nye_and_energy():
     assert ledger["accepted"]
     assert ledger["accepted_extent"] > 0.0
     assert ledger["swept_area_m2"] > 0.0
+    assert ledger["consumed_duration_s"] == ledger["proposed_duration_s"]
+    assert ledger["committed_swept_area_m2"] == ledger["proposed_swept_area_m2"]
     assert ledger["line_length_change_m"] != 0.0
     assert ledger["nye_curl_increment_rms_residual_m1"] < 1e-14
     assert ledger["maximum_node_balance_residual"] < 1e-14
@@ -76,6 +78,10 @@ def test_rejected_event_is_exact_atomic_rollback_and_zero_heat():
         kinetics(), 1e-9)
     assert not ledger["accepted"]
     assert result is state
+    assert ledger["proposed_duration_s"] > 0.0
+    assert ledger["proposed_swept_area_m2"] > 0.0
+    assert ledger["consumed_duration_s"] == 0.0
+    assert ledger["committed_swept_area_m2"] == 0.0
     assert np.array_equal(ledger["irreversible_heat_increment_J_m3"],
                           np.zeros_like(state.common.orientation_rad))
     for name, value in all_state_arrays(state).items():

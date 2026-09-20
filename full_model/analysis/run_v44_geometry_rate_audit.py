@@ -91,7 +91,7 @@ def timed_response():
         candidate, ledger = accepted_geometry_plaquette_transaction(
             state, event, systems, topologies, loading, common, extensive,
             kinetics, remaining)
-        consumed = float(ledger.get("accepted_time_s", 0.0))
+        consumed = float(ledger.get("consumed_duration_s", 0.0))
         rows.append({
             "attempt": attempted, "cell": list(cell),
             "state_event_count_before": int(state.geometry.accepted_event_count),
@@ -101,10 +101,17 @@ def timed_response():
             "event_rate_s": float(ledger["event_rate_s"]),
             "requested_remaining_time_s": remaining,
             "accepted_time_s": consumed,
+            "proposed_duration_s": float(
+                ledger.get("proposed_duration_s", 0.0)),
+            "consumed_duration_s": consumed,
             "rate_exposure": float(ledger.get("accepted_rate_exposure", 0.0)),
             "physical_plaquette_area_m2": float(
                 ledger.get("physical_plaquette_area_m2", 0.0)),
             "swept_area_m2": float(ledger.get("swept_area_m2", 0.0)),
+            "proposed_swept_area_m2": float(
+                ledger.get("proposed_swept_area_m2", 0.0)),
+            "committed_swept_area_m2": float(
+                ledger.get("committed_swept_area_m2", 0.0)),
             "same_state_partial_search": ledger.get(
                 "same_state_partial_extent_search"),
             "mechanism": ledger.get("mechanism"),

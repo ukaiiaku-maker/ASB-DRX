@@ -849,7 +849,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             vector = q0.copy(); nfev = njev = 0
             linear_iterations = nonlinear_iterations = 0
             tolerance = max(parameters.ordering_implicit_residual_tolerance,
-                            2e-9)
+                            1e-8)
 
             def normalized_rate(vector):
                 nonlocal nfev
@@ -936,11 +936,14 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                             "matrix-free ordering linear solve failed: "
                             f"gmres_info={info}")
                     accepted_trial = None
+                    best_trial_norm = np.inf
                     for backtrack in range(13):
                         trial = np.clip(
                             vector+(0.5**backtrack)*delta, 0.0, 1.0)
                         trial_residual = projected_residual(trial, previous)
-                        if float(np.max(np.abs(trial_residual))) < residual_norm:
+                        trial_norm = float(np.max(np.abs(trial_residual)))
+                        best_trial_norm = min(best_trial_norm, trial_norm)
+                        if trial_norm < residual_norm:
                             accepted_trial = trial
                             break
                     if accepted_trial is None:
@@ -957,13 +960,17 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                                 0.0, 1.0)
                             trial_residual = projected_residual(
                                 trial, previous)
-                            if (float(np.max(np.abs(trial_residual)))
-                                    < residual_norm):
+                            trial_norm = float(np.max(np.abs(trial_residual)))
+                            best_trial_norm = min(best_trial_norm, trial_norm)
+                            if trial_norm < residual_norm:
                                 accepted_trial = trial
                                 break
                     if accepted_trial is None:
                         raise RuntimeError(
-                            "matrix-free ordering active-set descent failed")
+                            "matrix-free ordering active-set descent failed: "
+                            f"residual={residual_norm:.17g}, "
+                            f"best_trial={best_trial_norm:.17g}, "
+                            f"tolerance={tolerance:.17g}")
                     vector = accepted_trial
                 if not converged:
                     raise RuntimeError(

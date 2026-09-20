@@ -565,6 +565,9 @@ def accepted_geometry_plaquette_transaction(
             "kinetic_extent_capacity": kinetic_capacity,
             "requested_time_s": float(dt_s), "accepted_time_s": 0.0,
             "remaining_time_s": float(dt_s), "accepted_rate_exposure": 0.0,
+            "proposed_duration_s": 0.0, "consumed_duration_s": 0.0,
+            "proposed_swept_area_m2": 0.0,
+            "committed_swept_area_m2": 0.0,
             "event_measure_interpretation": "fractional_plaquette_ensemble_weight",
         }
 
@@ -582,6 +585,14 @@ def accepted_geometry_plaquette_transaction(
             "irreversible_heat_increment_J_m3": np.zeros_like(
                 state.common.orientation_rad), "event_rate_s": rate,
             "kinetic_extent_capacity": kinetic_capacity,
+            "requested_time_s": float(dt_s), "accepted_time_s": 0.0,
+            "remaining_time_s": float(dt_s), "accepted_rate_exposure": 0.0,
+            "proposed_duration_s": min(
+                abs(extent)/max(rate, 1e-300), float(dt_s)),
+            "consumed_duration_s": 0.0,
+            "proposed_swept_area_m2": (
+                abs(extent)*float(state.geometry.spacing_m)**2),
+            "committed_swept_area_m2": 0.0,
         }
 
     zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
@@ -620,6 +631,8 @@ def accepted_geometry_plaquette_transaction(
     tolerance = 2e-12*scale
     heat_total = -complete_delta
     accepted = bool(heat_total >= -tolerance)
+    proposed_duration = min(abs(extent)/max(rate, 1e-300), float(dt_s))
+    proposed_area = abs(float(ledger["swept_area_m2"]))
     ledger.update({
         "accepted": accepted, "rejection_is_atomic": True,
         "classification": ("ADMISSIBLE_NONZERO_GEOMETRY_EVENT" if accepted
@@ -634,6 +647,10 @@ def accepted_geometry_plaquette_transaction(
         "mechanism": mechanism,
         "material_exchange_model": kinetics.material_exchange_model,
         "volumetric_plastic_exchange_sum": volumetric_exchange,
+        "signed_material_exchange_measure": volumetric_exchange,
+        "signed_material_exchange_convention": (
+            "positive trace(dbeta_p) is positive represented plastic "
+            "volume exchange with the equilibrated point-defect reservoir"),
         "chemical_reservoir_work_J_m3_cells": chemical_work,
         "material_exchange_validity_limit": (
             "point-defect reservoir treated as spatially equilibrated; no "
@@ -641,9 +658,15 @@ def accepted_geometry_plaquette_transaction(
         "complete_energy_change_J_m3_cells": complete_delta,
         "energy_tolerance_J_m3_cells": tolerance,
         "requested_time_s": float(dt_s),
-        "accepted_time_s": min(abs(extent)/max(rate, 1e-300), float(dt_s)),
-        "remaining_time_s": max(float(dt_s)-abs(extent)/max(rate, 1e-300), 0.0),
+        # Legacy names are preserved as prospective event diagnostics.  The
+        # explicit committed/consumed fields below are authoritative clocks.
+        "accepted_time_s": proposed_duration,
+        "remaining_time_s": max(float(dt_s)-proposed_duration, 0.0),
         "accepted_rate_exposure": abs(extent),
+        "proposed_duration_s": proposed_duration,
+        "consumed_duration_s": proposed_duration if accepted else 0.0,
+        "proposed_swept_area_m2": proposed_area,
+        "committed_swept_area_m2": proposed_area if accepted else 0.0,
         "active_extent_cap": float(kinetics.maximum_extent_per_step),
         "event_measure_interpretation": "fractional_plaquette_ensemble_weight",
         "physical_plaquette_area_m2": float(state.geometry.spacing_m)**2,
