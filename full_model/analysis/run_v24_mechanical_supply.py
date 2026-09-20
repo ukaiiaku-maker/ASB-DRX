@@ -64,7 +64,10 @@ def build_case(n, length_m=3.2e-6, *, periodic_nye_consistent=False):
     state = V24MechanicalWallState(old.common, old.density, alignment)
     common = CommonWallParameters(
         spacing_m=dx, wall_order_enabled=False, transport_scheme="upwind",
-        mobile_correlation_diffusivity_m2_s=0.0)
+        mobile_correlation_diffusivity_m2_s=0.0,
+        # Capture is distributed through the declared 0.45-um trap half-width;
+        # this is a separate physical length from the phase interface and mesh.
+        capture_deposition_length_m=4.0e-7)
     extensive = ExtensiveWallParameters(
         spacing_m=dx, nye_match_coefficient_J_m=0.0,
         disordered_excess_J_m=3e-10, ordered_excess_J_m=1e-10,
@@ -75,8 +78,14 @@ def build_case(n, length_m=3.2e-6, *, periodic_nye_consistent=False):
                          negative_barrier_mode="drag"),
         .2*EV_J, 1e9)
     x = (np.arange(n)-n/2)*dx
-    stripe = np.abs(x)[:, None] <= .45e-6
-    support = np.broadcast_to(stripe, (n, n)).copy()
+    # Exact cell coverage of the fixed 0.9-um capture stripe.  A Boolean
+    # center test changes the represented physical width with grid spacing and
+    # injects an O(h) support error into otherwise spectral Mura transport.
+    left_edge = x-.5*dx; right_edge = x+.5*dx
+    stripe_fraction = np.clip(np.maximum(
+        np.minimum(right_edge, .45e-6)-np.maximum(left_edge, -.45e-6),
+        0.0)/dx, 0.0, 1.0)
+    support = np.broadcast_to(stripe_fraction[:, None], (n, n)).copy()
     profile = np.exp(-(x/.45e-6)**8)[:, None]
     fixed = np.zeros((n, n, 2, 2))
     fixed[..., 0, 1] = .1*profile

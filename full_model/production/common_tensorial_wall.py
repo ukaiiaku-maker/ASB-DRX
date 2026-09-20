@@ -156,6 +156,10 @@ class CommonWallParameters:
     bath_rate_s: float = 0.0
     bath_temperature_K: float = 1100.0
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
+    # Physical depth over which a captured line measure enters the continuum
+    # wall reservoir.  This is independent of mesh spacing, interface width,
+    # and atomistic core radius. Zero retains legacy one-cell deposition.
+    capture_deposition_length_m: float = 0.0
     transport_scheme: str = "spectral"
     multiplication_coefficient: float = 10.0
     enforce_multiplication_energy_budget: bool = True
@@ -196,6 +200,9 @@ class CommonWallParameters:
             raise ValueError("bound active tolerance must lie in (0,0.5)")
         if self.mobile_correlation_diffusivity_m2_s < 0.0:
             raise ValueError("mobile correlation diffusivity cannot be negative")
+        if (not math.isfinite(float(self.capture_deposition_length_m))
+                or self.capture_deposition_length_m < 0.0):
+            raise ValueError("capture deposition length must be finite and nonnegative")
         if self.transport_scheme not in ("spectral", "upwind"):
             raise ValueError("transport scheme must be spectral or upwind")
         if self.multiplication_coefficient < 0.0:

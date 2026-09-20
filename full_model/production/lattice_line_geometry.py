@@ -19,7 +19,10 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 import numpy as np
 
-from .tensorial_nye import nye_from_plastic_distortion, rotated_system_fields
+try:
+    from .tensorial_nye import nye_from_plastic_distortion, rotated_system_fields
+except ImportError:  # pragma: no cover - direct production-script execution
+    from tensorial_nye import nye_from_plastic_distortion, rotated_system_fields
 
 
 GEOMETRY_PREFIX = "v43_geometry__"
@@ -161,6 +164,78 @@ def geometry_reservoir_fields(state):
     return rho, moment
 
 
+def physical_reconstruction_kernel(shape, spacing_m, length_m):
+    """Positive normalized periodic coarse-graining kernel on cell centers.
+
+    ``length_m`` is a declared continuum representation length, independent of
+    mesh spacing and of the phase-interface width.  The discrete kernel has an
+    exact unit zero mode, is centrosymmetric/self-adjoint, and is nonnegative.
+    A zero length returns the identity map for legacy checkpoint replay.
+    """
+    nx, ny = map(int, shape)
+    spacing = float(spacing_m); length = float(length_m)
+    if nx <= 0 or ny <= 0 or spacing <= 0.0 or length < 0.0:
+        raise ValueError("reconstruction shape, spacing, and length are invalid")
+    kernel = np.zeros((nx, ny), dtype=float)
+    if length == 0.0:
+        kernel[0, 0] = 1.0
+        return kernel
+    ix = np.minimum(np.arange(nx), nx-np.arange(nx))*spacing
+    iy = np.minimum(np.arange(ny), ny-np.arange(ny))*spacing
+    radius = np.sqrt(ix[:, None]**2+iy[None, :]**2)
+    normalized = radius/length
+    # Compact C2 Wendland reconstruction. Compact support is physical here:
+    # exactly zero line outside the declared averaging radius remains an
+    # inactive reservoir rather than becoming a Gaussian numerical tail.
+    kernel = np.where(
+        normalized < 1.0,
+        (1.0-normalized)**4*(4.0*normalized+1.0), 0.0)
+    kernel /= np.sum(kernel, dtype=np.longdouble)
+    return kernel
+
+
+def apply_physical_reconstruction(field, spacing_m, length_m):
+    """Apply the fixed physical geometry-to-continuum map ``K_ell``.
+
+    The same routine is its discrete adjoint because the kernel is real and
+    centrosymmetric.  Convolution acts only on the periodic spatial axes and
+    preserves every trailing component's integral.
+    """
+    value = np.asarray(field, dtype=float)
+    if value.ndim < 2:
+        raise ValueError("reconstructed field requires two spatial axes")
+    if float(length_m) == 0.0:
+        return value.copy()
+    kernel = physical_reconstruction_kernel(
+        value.shape[:2], spacing_m, length_m)
+    multiplier = np.fft.fftn(kernel, axes=(0, 1)).reshape(
+        kernel.shape+(1,)*(value.ndim-2))
+    result = np.fft.ifftn(
+        np.fft.fftn(value, axes=(0, 1))*multiplier,
+        axes=(0, 1)).real
+    # FFT roundoff would otherwise turn a compact physical map into tiny global
+    # tails and activate nonexistent reservoirs. Remove only values at the
+    # floating-point noise scale, then restore each component's exact zero mode
+    # on its largest retained entry. This is numerical cleanup of a compact
+    # convolution, not a physical density floor.
+    trailing = int(np.prod(value.shape[2:])) if value.ndim > 2 else 1
+    flat_value = value.reshape(value.shape[:2]+(trailing,))
+    flat_result = result.reshape(result.shape[:2]+(trailing,))
+    for component in range(trailing):
+        scale = max(float(np.max(np.abs(flat_result[..., component]))), 1e-300)
+        noise = 256*np.finfo(float).eps*scale
+        flat_result[..., component][
+            np.abs(flat_result[..., component]) <= noise] = 0.0
+        target = float(np.sum(
+            flat_value[..., component], dtype=np.longdouble))
+        actual = float(np.sum(
+            flat_result[..., component], dtype=np.longdouble))
+        index = np.unravel_index(
+            np.argmax(np.abs(flat_result[..., component])), value.shape[:2])
+        flat_result[index+(component,)] += target-actual
+    return result
+
+
 def geometry_link_nye_mimetic(state):
     """Deposit retained Burgers-weighted links onto adjacent cells.
 
@@ -247,7 +322,7 @@ def geometry_plastic_distortion(state):
 
 def propose_plaquette_sweep(state, inventory, alignment, common, systems,
                             orientation_rad, cell, family, burgers_sign,
-                            extent):
+                            extent, *, continuum_representation_length_m=0.0):
     """Build one immutable geometry/plastic candidate and its exact ledger.
 
     The caller owns thermodynamic acceptance.  This routine performs no
@@ -281,7 +356,15 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
 
     before_rho, before_kappa = geometry_reservoir_fields(state)
     after_rho, after_kappa = geometry_reservoir_fields(candidate_geometry)
-    drho = after_rho-before_rho; dkappa = after_kappa-before_kappa
+    representation_length = float(continuum_representation_length_m)
+    if not np.isfinite(representation_length) or representation_length < 0.0:
+        raise ValueError("continuum representation length must be finite and nonnegative")
+    drho_raw = after_rho-before_rho
+    dkappa_raw = after_kappa-before_kappa
+    drho = apply_physical_reconstruction(
+        drho_raw, dx, representation_length)
+    dkappa = apply_physical_reconstruction(
+        dkappa_raw, dx, representation_length)
     density_updates = {}; alignment_updates = {}
     for slot, label in enumerate(("plus", "minus")):
         dline = drho[..., slot]
@@ -300,7 +383,9 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
 
     before_family_beta = geometry_plastic_distortion(state)
     after_family_beta = geometry_plastic_distortion(candidate_geometry)
-    dbeta_family = after_family_beta-before_family_beta
+    dbeta_family_raw = after_family_beta-before_family_beta
+    dbeta_family = apply_physical_reconstruction(
+        dbeta_family_raw, dx, representation_length)
     dbeta = np.sum(dbeta_family, axis=2)
     dnye_family = np.stack([
         nye_from_plastic_distortion(dbeta_family[..., a, :, :], dx)
@@ -320,6 +405,13 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
                 "cell_ij": [i, j], "family": family,
                 "burgers_sign": 1 if sign_slot == 0 else -1,
                 "accepted_extent": value,
+                "continuum_representation": (
+                    "fixed_physical_positive_periodic_kernel" if representation_length
+                    else "legacy_identity"),
+                "continuum_representation_length_m": representation_length,
+                "represented_section_thickness_m": float(
+                    state.section_thickness_m),
+                "raw_geometry_retained_exactly": True,
                 "swept_area_m2": value*dx**2,
                 "line_length_before_m": line_before,
                 "line_length_after_m": line_after,
@@ -328,6 +420,7 @@ def propose_plaquette_sweep(state, inventory, alignment, common, systems,
                 "nye_curl_increment_rms_residual_m1": float(
                     np.sqrt(np.mean(identity*identity))),
                 "plastic_distortion_increment": dbeta,
+                "raw_plastic_distortion_increment": dbeta_family_raw.sum(axis=2),
                 "family_nye_increment_m1": dnye_family,
                 "density_increment_m2": drho,
                 "alignment_increment_m2": dkappa,

@@ -142,3 +142,54 @@ def test_finite_rate_and_convex_asymptotic_overlap_before_production_switch():
         np.testing.assert_allclose(getattr(asymptotic, name),
                                    getattr(finite, name),
                                    atol=1e-2, rtol=2e-8)
+
+
+def test_asymptotic_dispatch_rejects_finite_speed_inaccessible_endpoint():
+    state, density, systems, topologies, parameters, target, stress, attempt = (
+        _compact_active_case())
+    totals = {
+        sign: (getattr(density, f"wall_tangle_{sign}_m2")
+               +getattr(density, f"wall_ordered_{sign}_m2"))
+        for sign in ("plus", "minus")}
+    quarter = replace(
+        density,
+        wall_tangle_plus_m2=.75*totals["plus"],
+        wall_ordered_plus_m2=.25*totals["plus"],
+        wall_tangle_minus_m2=.75*totals["minus"],
+        wall_ordered_minus_m2=.25*totals["minus"])
+    guarded = replace(
+        parameters, nye_match_coefficient_J_m=0.0,
+        ordered_gradient_J_m3=0.0,
+        ordered_excess_J_m=parameters.disordered_excess_J_m+1e-10,
+        ordering_integration_method="implicit_backward_euler",
+        ordering_finite_time_backend="matrix_free_exponential_rosenbrock",
+        ordering_asymptotic_minimum_attempt_exposure=5e-4)
+    updated, ledger, _ = accepted_ordering_step(
+        quarter, systems, topologies, state.common.orientation_rad, target,
+        stress, state.common.temperature_K, guarded, .001/attempt)
+    assert ledger["stiff_dispatch"] == (
+        "finite_time_state_inaccessible_asymptotic_endpoint")
+    assert ledger["asymptotic_state_accessibility_passed"] is False
+    for sign in ("plus", "minus"):
+        active = totals[sign] > 0.0
+        q = np.divide(getattr(updated, f"wall_ordered_{sign}_m2"),
+                      totals[sign], out=np.zeros_like(totals[sign]),
+                      where=active)
+        assert np.min(q[active]) >= .249-2e-12
+        np.testing.assert_array_equal(
+            getattr(updated, f"wall_ordered_{sign}_m2")[~active], 0.0)
+
+
+def test_asymptotic_dispatch_records_state_accessibility_when_reachable():
+    case = _compact_active_case()
+    state, density, systems, topologies, parameters, target, stress, attempt = case
+    qualified = replace(
+        parameters, ordering_integration_method="implicit_backward_euler",
+        ordering_finite_time_backend="matrix_free_exponential_rosenbrock",
+        ordering_asymptotic_minimum_attempt_exposure=1.000001e-3)
+    _, ledger, _ = accepted_ordering_step(
+        density, systems, topologies, state.common.orientation_rad, target,
+        stress, state.common.temperature_K, qualified, .002/attempt)
+    assert ledger["integration_method"] == "bounded_convex_asymptotic"
+    assert ledger["asymptotic_state_accessibility_passed"] is True
+    assert ledger["asymptotic_accessibility_maximum_violation"] == 0.0

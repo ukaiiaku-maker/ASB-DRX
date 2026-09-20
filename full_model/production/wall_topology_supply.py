@@ -28,6 +28,7 @@ try:
         dealiased_scalar_transport_rate, dealiased_signed_mura_products,
         signed_alignment_mura_rates,
     )
+    from .lattice_line_geometry import apply_physical_reconstruction
 except ImportError:
     from density_state_map import (
         DensityInventory, SIGNED_RESERVOIRS, derived_density_fields,
@@ -39,6 +40,7 @@ except ImportError:
         dealiased_scalar_transport_rate, dealiased_signed_mura_products,
         signed_alignment_mura_rates,
     )
+    from lattice_line_geometry import apply_physical_reconstruction
 
 
 TOPOLOGY_MOMENT_FIELDS = (
@@ -489,7 +491,7 @@ def accepted_mura_transport_capture_step(
 def accepted_compatible_mura_transport_capture_step(
         inventory, alignments, velocity_plus_m_s, velocity_minus_m_s,
         capture_support, systems, orientation_rad, spacing_m, dt_s,
-        topologies=()):
+        topologies=(), *, capture_deposition_length_m=0.0):
     """De-aliased compatible Mura, scalar-flux, and capture transaction.
 
     The nonlinear swept products are formed once with 3/2 padding.  Those
@@ -506,11 +508,17 @@ def accepted_compatible_mura_transport_capture_step(
     """
     if spacing_m <= 0.0 or dt_s < 0.0:
         raise ValueError("positive spacing and nonnegative step required")
+    capture_length = float(capture_deposition_length_m)
+    if not np.isfinite(capture_length) or capture_length < 0.0:
+        raise ValueError("capture deposition length must be finite and nonnegative")
     shape = inventory.validate(len(systems), inventory.junction_m2.shape[-1])
     alignments.validate(inventory, len(systems))
-    support = np.asarray(capture_support, dtype=bool)
+    support = np.asarray(capture_support, dtype=float)
     if support.shape != shape[:2]:
         raise ValueError("capture support must match spatial grid")
+    if (np.any(~np.isfinite(support)) or np.min(support) < 0.0
+            or np.max(support) > 1.0):
+        raise ValueError("capture support must be a finite cell fraction in [0,1]")
     velocities = {
         "plus": np.asarray(velocity_plus_m_s, dtype=float),
         "minus": np.asarray(velocity_minus_m_s, dtype=float),
@@ -580,7 +588,6 @@ def accepted_compatible_mura_transport_capture_step(
         # then cap them by the published destination inventory.  Moving the
         # same local fraction of moment leaves total reservoir Nye unchanged.
         requested_capture = np.zeros_like(mobile)
-        outside = ~support
         transport_velocity = -velocities[sign][..., :2]
         for axis in (0, 1):
             component = transport_velocity[..., axis]
@@ -588,9 +595,38 @@ def accepted_compatible_mura_transport_capture_step(
                                 (-1, np.maximum(-component, 0.0))):
                 fraction = dt_s*speed/spacing_m
                 destination_support = np.roll(support, -step, axis=axis)
-                crossing = fraction*mobile0*(outside & destination_support)[..., None]
+                # Capture only the positive increase in exact physical support
+                # coverage along the accepted transport direction.  For a
+                # Boolean support this reduces identically to outside->inside;
+                # fractional boundary cells split one physical crossing without
+                # changing the integrated sink measure under refinement.
+                entry_fraction = np.maximum(
+                    destination_support-support, 0.0)[..., None]
+                crossing = fraction*mobile0*entry_fraction
                 requested_capture += np.roll(crossing, step, axis=axis)
-        captured = np.minimum(requested_capture, mobile)
+        raw_capture_integral = np.sum(
+            requested_capture, axis=(0, 1), dtype=np.longdouble)
+        requested_capture = apply_physical_reconstruction(
+            requested_capture, spacing_m, capture_length)
+        capture_roundoff_negative = float(
+            -np.sum(np.minimum(requested_capture, 0.0), dtype=np.longdouble)
+            *spacing_m**2)
+        requested_capture = np.maximum(requested_capture, 0.0)
+        mapped_capture_integral = np.sum(
+            requested_capture, axis=(0, 1), dtype=np.longdouble)
+        requested_capture *= np.divide(
+            raw_capture_integral, mapped_capture_integral,
+            out=np.ones_like(np.asarray(raw_capture_integral, dtype=float)),
+            where=mapped_capture_integral > 0.0)[None, None, :]
+        # A positive normalized kernel preserves nonnegativity and the exact
+        # zero mode. If an evolved local reservoir cannot supply the mapped
+        # request, reduce the entire capture event by one scalar extent rather
+        # than clipping cells and changing its spatial moment.
+        active_request = requested_capture > 0.0
+        capture_scale = min(1.0, float(np.min(np.divide(
+            mobile, requested_capture, out=np.full_like(mobile, np.inf),
+            where=active_request), initial=np.inf)))
+        captured = capture_scale*requested_capture
         capture_fraction = np.divide(
             captured, mobile, out=np.zeros_like(captured), where=mobile > 0.0)
         captured_alignment = capture_fraction[..., None]*amobile
@@ -609,6 +645,9 @@ def accepted_compatible_mura_transport_capture_step(
             "scalar_transport_integral_residual_m": float(
                 np.sum(dt_s*scalar_rate)*spacing_m**2),
             "roundoff_negative_line_removed_m": roundoff_removed,
+            "capture_capacity_scale": capture_scale,
+            "capture_reconstruction_roundoff_negative_line_m": (
+                capture_roundoff_negative),
             "global_scalar_residual_line_per_thickness": float(
                 np.sum(mobile_after+tangle-mobile0-tangle0-stretching)
                 *spacing_m**2),
@@ -625,6 +664,12 @@ def accepted_compatible_mura_transport_capture_step(
         "operator": "v44_compatible_dealiased_mura_transport_and_capture",
         "nonlinear_product_rule": "three_halves_padding_before_multiplication",
         "capture_semantics": "local_repartition_of_common_accepted_motion",
+        "capture_support_representation": (
+            "exact_physical_cell_fraction; entry=max(w_destination-w_source,0)"),
+        "capture_deposition_representation": (
+            "fixed_physical_positive_periodic_kernel" if capture_length
+            else "legacy_one_cell_identity"),
+        "capture_deposition_length_m": capture_length,
         "sign": sign_ledgers,
         "alignment_rate_plus_m2_s": plus_rate,
         "alignment_rate_minus_m2_s": minus_rate,

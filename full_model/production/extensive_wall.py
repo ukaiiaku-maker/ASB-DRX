@@ -763,6 +763,59 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             np.divide(y[s], totals[s], out=np.zeros_like(y[s]),
                       where=active[s])[active[s]]
             for s in ("plus", "minus")])
+        # An equilibrium endpoint is admissible only if every active local
+        # fraction can reach it on the requested physical clock.  The declared
+        # kinetics has |dq/dt| <= a(x), independently of the affinity, so a
+        # global maximum attempt exposure cannot qualify a slow or inaccessible
+        # pool.  This is a necessary state-dependent guard, not a sufficient
+        # finite-time error estimate; the measured transient/asymptotic overlap
+        # remains a separate qualification.
+        local_attempt_exposure = np.broadcast_to(
+            total_dt*np.asarray(_attempt_rate_s(
+                stress_for_rate, temperature_K, parameters),
+                dtype=float)[..., None], shapes)
+        equilibrium_fields = unpack(equilibrium_vector)
+        accessibility_violation = 0.0
+        maximum_fraction_change = 0.0
+        minimum_active_attempt_exposure = np.inf
+        for sign in ("plus", "minus"):
+            displacement = np.abs(equilibrium_fields[sign]-q0_fields[sign])
+            tolerance = 64*np.finfo(float).eps*np.maximum(
+                np.maximum(np.abs(equilibrium_fields[sign]),
+                           np.abs(q0_fields[sign])), 1.0)
+            violation = displacement-local_attempt_exposure-tolerance
+            accessibility_violation = max(
+                accessibility_violation,
+                float(np.max(violation[active[sign]], initial=0.0)))
+            maximum_fraction_change = max(
+                maximum_fraction_change,
+                float(np.max(displacement[active[sign]], initial=0.0)))
+            minimum_active_attempt_exposure = min(
+                minimum_active_attempt_exposure,
+                float(np.min(local_attempt_exposure[active[sign]],
+                             initial=np.inf)))
+        if accessibility_violation > 0.0:
+            result = _accepted_ordering_implicit(
+                inventory, systems, topologies, orientation_rad,
+                target_nye_m1, stress_Pa, temperature_K, parameters,
+                total_dt, alignment=alignment, force_finite_time=True)
+            ledger_index = 2 if alignment is not None else 1
+            result[ledger_index].update({
+                "stiff_dispatch": (
+                    "finite_time_state_inaccessible_asymptotic_endpoint"),
+                "maximum_attempt_exposure": attempt_exposure,
+                "asymptotic_state_accessibility_passed": False,
+                "asymptotic_accessibility_maximum_violation": (
+                    accessibility_violation),
+                "asymptotic_proposed_maximum_fraction_change": (
+                    maximum_fraction_change),
+                "minimum_active_local_attempt_exposure": (
+                    minimum_active_attempt_exposure),
+                "asymptotic_accessibility_semantics": (
+                    "necessary componentwise |delta_q| <= integral a_i dt; "
+                    "not a sufficient finite-time error certificate"),
+            })
+            return result
         boundary_tolerance = 128*np.finfo(float).eps
         equilibrium_vector[equilibrium_vector <= boundary_tolerance] = 0.0
         equilibrium_vector[equilibrium_vector >= 1.0-boundary_tolerance] = 1.0
@@ -781,10 +834,19 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             parameters.ordering_implicit_residual_tolerance, 1e-3)
         if (normalized_remainder > asymptotic_tolerance
                 or projected_change > 2e-10):
-            raise RuntimeError(
-                "bounded asymptotic ordering solve failed: "
-                f"normalized_remainder={normalized_remainder:.6e}, "
-                f"projected_change={projected_change:.6e}")
+            result = _accepted_ordering_implicit(
+                inventory, systems, topologies, orientation_rad,
+                target_nye_m1, stress_Pa, temperature_K, parameters,
+                total_dt, alignment=alignment, force_finite_time=True)
+            ledger_index = 2 if alignment is not None else 1
+            result[ledger_index].update({
+                "stiff_dispatch": "finite_time_asymptotic_solver_unqualified",
+                "maximum_attempt_exposure": attempt_exposure,
+                "asymptotic_solver_qualified": False,
+                "asymptotic_trial_normalized_remainder": normalized_remainder,
+                "asymptotic_trial_projected_change": projected_change,
+            })
+            return result
         # Reuse the common endpoint ledger below without presenting the
         # minimization as a backward-Euler root.
         class _AsymptoticResult:
@@ -1210,6 +1272,21 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "stiff_dispatch": "qualified_asymptotic" if integration_method.endswith(
             "asymptotic") else "finite_time_bdf",
         "maximum_attempt_exposure": attempt_exposure,
+        "asymptotic_state_accessibility_passed": (
+            True if integration_method.endswith("asymptotic") else None),
+        "asymptotic_accessibility_maximum_violation": (
+            accessibility_violation if integration_method.endswith("asymptotic")
+            else None),
+        "asymptotic_proposed_maximum_fraction_change": (
+            maximum_fraction_change if integration_method.endswith("asymptotic")
+            else None),
+        "minimum_active_local_attempt_exposure": (
+            minimum_active_attempt_exposure
+            if integration_method.endswith("asymptotic") else None),
+        "asymptotic_accessibility_semantics": (
+            "necessary componentwise |delta_q| <= integral a_i dt; not a "
+            "sufficient finite-time error certificate"
+            if integration_method.endswith("asymptotic") else None),
         "implicit_success": True,
         "implicit_max_scaled_residual": maximum_residual,
         "implicit_cost": float(solution.cost),

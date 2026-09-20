@@ -110,6 +110,7 @@ class V43GeometryKinetics:
     maximum_extent_per_step: float = 1.0
     material_exchange_model: str = "equilibrated_point_defect_reservoir"
     chemical_work_J_m3_cells_per_extent: float = 0.0
+    continuum_representation_length_m: float = 0.0
 
     def __post_init__(self):
         if (self.enthalpy_J < 0.0 or self.critical_stress_Pa <= 0.0
@@ -118,7 +119,9 @@ class V43GeometryKinetics:
                 or not 0.0 < self.maximum_extent_per_step <= 1.0
                 or self.material_exchange_model not in (
                     "equilibrated_point_defect_reservoir", "glide_no_exchange")
-                or not np.isfinite(self.chemical_work_J_m3_cells_per_extent)):
+                or not np.isfinite(self.chemical_work_J_m3_cells_per_extent)
+                or not np.isfinite(self.continuum_representation_length_m)
+                or self.continuum_representation_length_m < 0.0):
             raise ValueError("invalid V43 geometry kinetics")
 
 
@@ -575,7 +578,9 @@ def accepted_geometry_plaquette_transaction(
         (geometry, inventory, alignment, common, ledger) = propose_plaquette_sweep(
             state.geometry, state.density, state.reservoir_alignment,
             state.common, systems, state.common.orientation_rad, cell, family,
-            burgers_sign, extent)
+            burgers_sign, extent,
+            continuum_representation_length_m=(
+                kinetics.continuum_representation_length_m))
     except (ValueError, RuntimeError) as error:
         return state, {
             "operator": "periodic_plaquette_sweep", "accepted": False,
@@ -670,6 +675,10 @@ def accepted_geometry_plaquette_transaction(
         "active_extent_cap": float(kinetics.maximum_extent_per_step),
         "event_measure_interpretation": "fractional_plaquette_ensemble_weight",
         "physical_plaquette_area_m2": float(state.geometry.spacing_m)**2,
+        "continuum_representation_length_m": (
+            kinetics.continuum_representation_length_m),
+        "represented_section_thickness_m": float(
+            state.geometry.section_thickness_m),
     })
     if not accepted:
         ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(
@@ -851,7 +860,10 @@ def accepted_v24_mechanical_step(
             state.density, state.reservoir_alignment,
             velocity_plus, velocity_minus, capture_support, systems,
             state.common.orientation_rad, common_parameters.spacing_m,
-            accepted_dt, topologies)
+            accepted_dt, topologies, **({
+                "capture_deposition_length_m": (
+                    common_parameters.capture_deposition_length_m)
+            } if mura_transport_operator == "compatible_dealiased" else {}))
         if mura_transport_operator == "compatible_dealiased":
             family_flow = family_plastic_flow_from_swept_products(
                 capture["swept_product_plus_m_s"],
