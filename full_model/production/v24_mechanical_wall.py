@@ -743,6 +743,10 @@ def accepted_geometry_plaquette_transaction(
             "complete_available_energy_J": event_available_energy_J,
             "physical_event_count": physical_event_count,
             "physical_event_count_source": physical_event_count_source,
+            "affinity_probe_signed_material_exchange_count": (
+                signed_exchange_count),
+            "affinity_probe_signed_material_exchange_volume_m3": (
+                signed_exchange_volume_m3),
             "available_energy_per_event_J": available_energy_per_event_J,
             "affinity_over_2kBT": affinity_argument,
             "downhill_activity": downhill_bias,
@@ -770,6 +774,10 @@ def accepted_geometry_plaquette_transaction(
         "complete_available_energy_J": event_available_energy_J,
         "physical_event_count": physical_event_count,
         "physical_event_count_source": physical_event_count_source,
+        "affinity_probe_signed_material_exchange_count": (
+            signed_exchange_count),
+        "affinity_probe_signed_material_exchange_volume_m3": (
+            signed_exchange_volume_m3),
         "available_energy_per_event_J": available_energy_per_event_J,
         "affinity_over_2kBT": affinity_argument,
         "downhill_activity": downhill_bias,

@@ -67,3 +67,24 @@ def test_affinity_blocked_event_is_exact_atomic_rollback():
     assert ledger["physical_event_count"] > 0.0
     assert ledger["physical_event_count_source"] == (
         "absolute_signed_species_exchange_count")
+
+
+def test_actual_reverse_edge_reverses_exchange_and_complete_affinity():
+    state, args, _ = prepared_loop()
+    event = _event(); event["proposed_extent"] = .05
+    forward, first = accepted_geometry_plaquette_transaction(
+        state, event, args[3], args[4], args[1], args[5], args[6],
+        _kinetics(-2e-18), 1e-9)
+    assert first["accepted"]
+    reverse_event = dict(event); reverse_event["proposed_extent"] = -.05
+    restored, reverse = accepted_geometry_plaquette_transaction(
+        forward, reverse_event, args[3], args[4], args[1], args[5], args[6],
+        _kinetics(-2e-18), 1e-9)
+    assert not reverse["accepted"]
+    assert restored is forward
+    np.testing.assert_allclose(
+        reverse["available_energy_per_event_J"],
+        -first["available_energy_per_event_J"], rtol=2e-12, atol=1e-30)
+    np.testing.assert_allclose(
+        reverse["affinity_probe_signed_material_exchange_count"],
+        -first["signed_material_exchange_count"], rtol=2e-12, atol=1e-20)
