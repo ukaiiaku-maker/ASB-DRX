@@ -79,16 +79,18 @@ def actual_production_state():
     (state, driving, _, support, systems, topologies, parameters, extensive,
      kinetics, _) = build_case(
          32, length_m=3.2e-6, periodic_nye_consistent=True)
+    requested_dt = 4.8828125e-7
     updated, ledger = accepted_v24_mechanical_step(
         state, driving, support, systems, topologies, parameters, extensive,
-        kinetics, 1e-9, topology_route_enabled=False,
+        kinetics, requested_dt, topology_route_enabled=False,
         mura_transport_operator="compatible_dealiased")
     ordering = ledger["ordering_thermodynamics"]
     return {
         "grid": 32, "accepted_dt_s": ledger["accepted_dt_s"],
-        "dispatch": ordering["stiff_dispatch"],
+        "requested_dt_s": requested_dt,
+        "dispatch": ordering.get("stiff_dispatch", "exact_zero_pool"),
         "integration_method": ordering["integration_method"],
-        "maximum_attempt_exposure": ordering["maximum_attempt_exposure"],
+        "maximum_attempt_exposure": ordering.get("maximum_attempt_exposure", 0.0),
         "minimum_active_local_attempt_exposure": ordering.get(
             "minimum_active_local_attempt_exposure"),
         "proposed_maximum_fraction_change": ordering.get(
