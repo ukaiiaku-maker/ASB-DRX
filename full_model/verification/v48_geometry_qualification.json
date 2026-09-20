@@ -171,7 +171,7 @@
   ],
   "classification": "AFFINITY_RATE_VERIFIED_MATCHED_STRIP_SIGN_UNRESOLVED",
   "drx_claimed": false,
-  "generated_utc": "2026-09-20T22:06:46.177915+00:00",
+  "generated_utc": "2026-09-20T22:18:23.366718+00:00",
   "geometry_observable_numerically_qualified": false,
   "matched_strip_refinement": [
     {
@@ -361,6 +361,87 @@
   "matched_strip_refinement_source": "immutable V47 fixed-400-nm rows; not recomputed because repeated n128 plaquette construction is an avoidable local bottleneck",
   "matched_strip_sign_converged": false,
   "rate_implementation_verified": true,
+  "repeated_geometry_evolution": {
+    "declared_reservoir_control": {
+      "accepted_events": 4,
+      "chemical_potential_J_per_defect": 3e-19,
+      "events": [
+        {
+          "accepted": true,
+          "accepted_extent": 0.1,
+          "affinity_biased_rate_s": 899819675.0789737,
+          "available_energy_per_event_J": 1.5688330982269727e-19,
+          "cell": [
+            40,
+            24
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "consumed_duration_s": 1.111333779084386e-10,
+          "index": 0,
+          "observed_accepted_velocity_m_s": 44.99098375394868,
+          "state_event_count_after": 257,
+          "state_event_count_before": 256
+        },
+        {
+          "accepted": true,
+          "accepted_extent": 0.1,
+          "affinity_biased_rate_s": 899878413.7416164,
+          "available_energy_per_event_J": 3.208101208827841e-19,
+          "cell": [
+            40,
+            25
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "consumed_duration_s": 1.1112612378844457e-10,
+          "index": 1,
+          "observed_accepted_velocity_m_s": 44.993920687080816,
+          "state_event_count_after": 258,
+          "state_event_count_before": 257
+        },
+        {
+          "accepted": true,
+          "accepted_extent": 0.1,
+          "affinity_biased_rate_s": 899878413.9826574,
+          "available_energy_per_event_J": 3.241972657320574e-19,
+          "cell": [
+            40,
+            26
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "consumed_duration_s": 1.1112612375867837e-10,
+          "index": 2,
+          "observed_accepted_velocity_m_s": 44.99392069913287,
+          "state_event_count_after": 259,
+          "state_event_count_before": 258
+        },
+        {
+          "accepted": true,
+          "accepted_extent": 0.1,
+          "affinity_biased_rate_s": 899878413.816544,
+          "available_energy_per_event_J": 3.217844636806619e-19,
+          "cell": [
+            40,
+            27
+          ],
+          "classification": "ADMISSIBLE_NONZERO_GEOMETRY_EVENT",
+          "consumed_duration_s": 1.1112612377919174e-10,
+          "index": 3,
+          "observed_accepted_velocity_m_s": 44.9939206908272,
+          "state_event_count_after": 260,
+          "state_event_count_before": 259
+        }
+      ],
+      "final_geometry_event_count": 260,
+      "parameter_scope": "bounded mechanism hypothesis; not fitted to PF response and not a material calibration",
+      "physical_time_advanced_s": 4.445117492347533e-10
+    },
+    "intrinsic_zero_chemical_work": {
+      "accepted": false,
+      "chemical_potential_J_per_defect": 0.0,
+      "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+      "state_is_exact_original": true
+    }
+  },
   "representation_length_m": 4e-07,
   "same_state_derivative": {
     "extents": [
@@ -405,7 +486,7 @@
     "zero_extent_one_sided_force_N": -5.519942951064504e-08
   },
   "schema": "asb-drx/v48/geometry-qualification/v1",
-  "source_sha": "fdb36e31490e8b402e73a2648bc3f52242e5a404",
+  "source_sha": "7bafd5c15ca5c025a2a0e34fdf580053cb2ed2af",
   "subcell_translation": {
     "integer_shift_energy_change_J": 0.0,
     "maximum_abs_energy_change_over_stored_energy": 2.852643223714936e-07,
