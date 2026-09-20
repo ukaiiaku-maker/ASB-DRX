@@ -171,7 +171,7 @@
   ],
   "classification": "AFFINITY_RATE_VERIFIED_MATCHED_STRIP_SIGN_UNRESOLVED",
   "drx_claimed": false,
-  "generated_utc": "2026-09-20T22:18:23.366718+00:00",
+  "generated_utc": "2026-09-20T22:21:56.759125+00:00",
   "geometry_observable_numerically_qualified": false,
   "matched_strip_refinement": [
     {
@@ -364,6 +364,16 @@
   "repeated_geometry_evolution": {
     "declared_reservoir_control": {
       "accepted_events": 4,
+      "actual_reverse_edge": {
+        "accepted": false,
+        "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+        "edge_is_constructed_from_evolved_forward_state": true,
+        "forward_available_energy_per_event_J": 1.5688330982269727e-19,
+        "forward_signed_material_exchange_count": 1988.650927208711,
+        "reverse_available_energy_per_event_J": -1.5688330982269725e-19,
+        "reverse_signed_material_exchange_count": -1988.650927208711,
+        "state_is_forward_state_on_rejection": true
+      },
       "chemical_potential_J_per_defect": 3e-19,
       "events": [
         {
@@ -486,7 +496,7 @@
     "zero_extent_one_sided_force_N": -5.519942951064504e-08
   },
   "schema": "asb-drx/v48/geometry-qualification/v1",
-  "source_sha": "7bafd5c15ca5c025a2a0e34fdf580053cb2ed2af",
+  "source_sha": "7083ca42eae8f884c2e4ea2880a69f286ad1a5fb",
   "subcell_translation": {
     "integer_shift_energy_change_J": 0.0,
     "maximum_abs_energy_change_over_stored_energy": 2.852643223714936e-07,
