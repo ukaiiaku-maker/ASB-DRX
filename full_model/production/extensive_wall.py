@@ -906,6 +906,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 "asymptotic_endpoint_distance_tolerance_relative": (
                     parameters.
                     ordering_asymptotic_maximum_endpoint_distance_relative),
+                "asymptotic_endpoint_distance_bound_passed": False,
                 "asymptotic_endpoint_distance_bound_semantics": (
                     "for the declared convex projected gradient flow, distance "
                     "to its equilibrium is non-increasing; initial-to-endpoint "
@@ -1381,6 +1382,15 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 "asymptotic") else None),
         "asymptotic_endpoint_distance_tolerance_relative": (
             parameters.ordering_asymptotic_maximum_endpoint_distance_relative
+            if integration_method.endswith("asymptotic") else None),
+        "asymptotic_endpoint_distance_bound_passed": (
+            bool(endpoint_distance_relative <= parameters.
+                 ordering_asymptotic_maximum_endpoint_distance_relative)
+            if integration_method.endswith("asymptotic") else None),
+        "asymptotic_endpoint_distance_bound_semantics": (
+            "for the declared convex projected gradient flow, distance to its "
+            "equilibrium is non-increasing; initial-to-endpoint distance is a "
+            "conservative finite-horizon error bound"
             if integration_method.endswith("asymptotic") else None),
         "minimum_active_local_attempt_exposure": (
             minimum_active_attempt_exposure

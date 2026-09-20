@@ -149,7 +149,8 @@ def main():
                 "ordering_active_degrees_of_freedom",
                 "ordering_asymptotic_endpoint_distance_relative",
                 "ordering_asymptotic_endpoint_distance_tolerance_relative",
-                "ordering_asymptotic_endpoint_distance_bound_semantics")},
+                "ordering_asymptotic_endpoint_distance_bound_semantics",
+                "ordering_asymptotic_endpoint_distance_bound_passed")},
         "comparison_to_retained_asymptotic_endpoint": comparisons,
         "exact_scalar_counterexample": exact_scalar_counterexample(),
     }

@@ -576,6 +576,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             "ordering_asymptotic_endpoint_distance_bound_semantics": (
                 mura_ledger["ordering_thermodynamics"].get(
                     "asymptotic_endpoint_distance_bound_semantics")),
+            "ordering_asymptotic_endpoint_distance_bound_passed": (
+                mura_ledger["ordering_thermodynamics"].get(
+                    "asymptotic_endpoint_distance_bound_passed")),
             "ordering_solver_evaluations": int(mura_ledger[
                 "ordering_thermodynamics"].get("implicit_nfev", 0)),
             "ordering_finite_time_backend": mura_ledger[
