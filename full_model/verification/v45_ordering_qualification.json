@@ -1,0 +1,105 @@
+{
+  "finite_asymptotic_overlap": {
+    "asymptotic_attempt_exposure": 0.001000001,
+    "asymptotic_endpoint_remainder_relative": 0.0,
+    "dense_attempt_exposure": 0.001,
+    "errors": {
+      "wall_ordered_minus_m2": {
+        "maximum_absolute_m2": 0.0022945404052734375,
+        "maximum_relative_to_pair_peak": 1.548080493909211e-12
+      },
+      "wall_ordered_plus_m2": {
+        "maximum_absolute_m2": 1.1920928955078125e-06,
+        "maximum_relative_to_pair_peak": 8.042812208601452e-16
+      },
+      "wall_tangle_minus_m2": {
+        "maximum_absolute_m2": 0.00390625,
+        "maximum_relative_to_pair_peak": 4.3409926834051904e-16
+      },
+      "wall_tangle_plus_m2": {
+        "maximum_absolute_m2": 0.0,
+        "maximum_relative_to_pair_peak": 0.0
+      }
+    },
+    "finite_time_error_semantics": "overlap error is measured against the dense finite endpoint; stationary remainder is reported separately and is not relabeled as finite-time error"
+  },
+  "finite_backend": {
+    "complete_elapsed_time_s": 4.713455835221768e-14,
+    "dense_oracle_errors": {
+      "wall_ordered_minus_m2": {
+        "maximum_absolute_m2": 0.0,
+        "maximum_relative_to_pair_peak": 0.0
+      },
+      "wall_ordered_plus_m2": {
+        "maximum_absolute_m2": 1.862645149230957e-09,
+        "maximum_relative_to_pair_peak": 1.5522042910258154e-16
+      },
+      "wall_tangle_minus_m2": {
+        "maximum_absolute_m2": 0.0,
+        "maximum_relative_to_pair_peak": 0.0
+      },
+      "wall_tangle_plus_m2": {
+        "maximum_absolute_m2": 0.0,
+        "maximum_relative_to_pair_peak": 0.0
+      }
+    },
+    "discarded_reaction_time_s": 0.0,
+    "integration_method": "bounded_finite_time_matrix_free_exprb1",
+    "name": "matrix_free_exponential_rosenbrock",
+    "transient_attempt_exposure": 1e-06
+  },
+  "generated_utc": "2026-09-20T04:21:48.843615+00:00",
+  "governing_equation": "qdot_s = -a(x)*tanh(event_length*(mu_ordered_s-mu_tangle_s)/(2*kB*T)); rho_ordered_s=q_s*rho_total_s; 0<=q_s<=1 for each Burgers family and sign",
+  "material_calibration_claimed": false,
+  "production_dispatch": {
+    "asymptotic_at_or_above_attempt_exposure": 0.001000001,
+    "finite_below_attempt_exposure": 0.001000001,
+    "no_dense_production_jacobian": true
+  },
+  "quarantined_candidates": [
+    {
+      "backend": "projected Newton/Picard",
+      "best_trial_residual": 0.00028614302163838297,
+      "classification": "FAILED_NUMERICAL_ACTIVE_SET_NONDESCENT",
+      "residual": 0.00020319145066043491,
+      "source": "25fe320"
+    },
+    {
+      "backend": "trust-region backward Euler",
+      "classification": "FAILED_NUMERICAL_NONROOT_XTOL",
+      "residual": 0.00010910270371381611,
+      "source": "05008f3"
+    },
+    {
+      "backend": "adaptive explicit DOP853",
+      "classification": "FAILED_COST_STIFFNESS_LIMITED_COMPACT_FIXTURE"
+    }
+  ],
+  "retained_n128": {
+    "active_degrees_of_freedom": [
+      1024,
+      1024,
+      1024,
+      1024
+    ],
+    "dense_jacobian_bytes_avoided": [
+      8388608,
+      8388608,
+      8388608,
+      8388608
+    ],
+    "dispatches": [
+      "qualified_asymptotic",
+      "qualified_asymptotic",
+      "qualified_asymptotic",
+      "qualified_asymptotic"
+    ],
+    "front_heat_redeposited": false,
+    "front_repeated": false,
+    "source_sha": "4924ad4ef65265496847b488e90c9d545f3dbe7f",
+    "wall_seconds": 153.79523893399164
+  },
+  "schema": "asb-drx/v45/ordering-qualification/v1",
+  "source_sha": "545bd1f68996247677d6186ecfa8e3f84b684d2d",
+  "spatial_operator": "chemical-potential Hessian acts globally by exact periodic FFT; no physical-space Jacobian sparsity is asserted"
+}
