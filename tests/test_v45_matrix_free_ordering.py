@@ -122,7 +122,8 @@ def test_finite_rate_and_convex_asymptotic_overlap_before_production_switch():
     transient_result = accepted_ordering_step(
         density, systems, topologies, state.common.orientation_rad, target,
         stress, state.common.temperature_K, transient_parameters, 1e-6/attempt)
-    assert transient_result[1]["stiff_dispatch"] == "matrix_free_finite_time"
+    assert transient_result[1]["stiff_dispatch"] == (
+        "finite_time_matrix_free_exponential_rosenbrock")
     finite = accepted_ordering_step(
         density, systems, topologies, state.common.orientation_rad, target,
         stress, state.common.temperature_K, dense_parameters, .001/attempt)[0]

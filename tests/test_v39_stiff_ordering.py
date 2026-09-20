@@ -59,21 +59,22 @@ def test_stiff_ordering_asymptote_is_bounded_conservative_and_dissipative():
         "total_nye_residual_m1"])) < 1e-12
 
 
-def test_low_exposure_stiff_dispatch_is_exact_resolved_oracle():
+def test_low_exposure_dispatch_uses_selected_finite_time_backend():
     state, density, systems, topologies, parameters, target, stress = (
         _sparse_wall_case())
-    explicit = replace(
-        parameters, ordering_integration_method="complete_time_explicit",
-        ordering_internal_substep_s=5e-13,
-        ordering_internal_max_substeps=8192)
-    selected = replace(explicit, ordering_integration_method="implicit_backward_euler")
+    reference_parameters = replace(
+        parameters, ordering_integration_method="finite_time_bdf",
+        ordering_finite_time_backend="dense_bdf_oracle")
+    selected = replace(
+        parameters, ordering_integration_method="implicit_backward_euler",
+        ordering_finite_time_backend="dense_bdf_oracle")
     reference = accepted_ordering_step(
         density, systems, topologies, state.common.orientation_rad, target,
-        stress, state.common.temperature_K, explicit, 4e-10)
+        stress, state.common.temperature_K, reference_parameters, 4e-10)
     actual = accepted_ordering_step(
         density, systems, topologies, state.common.orientation_rad, target,
         stress, state.common.temperature_K, selected, 4e-10)
-    assert actual[1]["stiff_dispatch"] == "resolved_finite_time_oracle"
+    assert actual[1]["stiff_dispatch"] == "finite_time_dense_bdf_oracle"
     for name in ("wall_tangle_plus_m2", "wall_tangle_minus_m2",
                  "wall_ordered_plus_m2", "wall_ordered_minus_m2"):
         assert np.array_equal(getattr(actual[0], name),

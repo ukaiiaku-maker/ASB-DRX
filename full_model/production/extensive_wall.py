@@ -424,7 +424,8 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             stress_Pa, temperature_K, parameters, total_dt,
             alignment=alignment, force_finite_time=True)
         ledger_index = 2 if alignment is not None else 1
-        result[ledger_index]["stiff_dispatch"] = "matrix_free_finite_time"
+        result[ledger_index]["stiff_dispatch"] = (
+            "finite_time_"+parameters.ordering_finite_time_backend)
         result[ledger_index]["maximum_attempt_exposure"] = attempt_exposure
         return result
     totals = {
