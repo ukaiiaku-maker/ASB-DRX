@@ -10,6 +10,7 @@ ledgered junction topology route can operate on captured tangle parents.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import hashlib
 import numpy as np
 
 from .arrhenius_kinetics import (
@@ -24,7 +25,7 @@ from .density_state_map import (
     from_checkpoint_arrays,
 )
 from .extensive_wall import (
-    ExtensiveWallParameters, accepted_ordering_step,
+    KB_J_K, ExtensiveWallParameters, accepted_ordering_step,
     extensive_wall_energy_components_J_m3,
     ordered_gradient_increment_J_m3_cells,
 )
@@ -116,6 +117,7 @@ class V43GeometryKinetics:
     atomic_volume_m3_per_atom: float = 0.0
     exchange_stoichiometry_defects_per_atom: float = 0.0
     continuum_representation_length_m: float = 0.0
+    affinity_coupling_mode: str = "downhill_tanh"
 
     def __post_init__(self):
         if (self.enthalpy_J < 0.0 or self.critical_stress_Pa <= 0.0
@@ -131,6 +133,9 @@ class V43GeometryKinetics:
                 or not np.isfinite(self.continuum_representation_length_m)
                 or self.continuum_representation_length_m < 0.0):
             raise ValueError("invalid V43 geometry kinetics")
+        if self.affinity_coupling_mode not in (
+                "downhill_tanh", "legacy_energy_guard_only"):
+            raise ValueError("unknown geometry affinity coupling mode")
         physical = self.atomic_volume_m3_per_atom > 0.0
         if physical != (self.exchange_stoichiometry_defects_per_atom != 0.0):
             raise ValueError("physical chemical work requires atomic volume and stoichiometry")
@@ -148,6 +153,17 @@ class MuraWorkBudgetError(RuntimeError):
     def __init__(self, message, audit):
         super().__init__(message)
         self.audit = audit
+
+
+def _density_state_sha256(inventory):
+    digest = hashlib.sha256()
+    for name in sorted(inventory.__dataclass_fields__):
+        value = np.ascontiguousarray(getattr(inventory, name))
+        digest.update(name.encode())
+        digest.update(value.dtype.str.encode())
+        digest.update(str(value.shape).encode())
+        digest.update(value.tobytes())
+    return digest.hexdigest()
 
 
 def select_feasible_family_extent(extent_curve):
@@ -576,16 +592,22 @@ def accepted_geometry_plaquette_transaction(
     enthalpy = exp_floor_enthalpy_j(
         resolved_stress, kinetics.enthalpy_J, kinetics.critical_stress_Pa,
         kinetics.exp_a, kinetics.exp_n, kinetics.exp_floor)
-    rate = activated_rate_s(kinetics.process, enthalpy, temperature)
+    arrhenius_rate = activated_rate_s(kinetics.process, enthalpy, temperature)
+    rate = float(event.get("_affinity_rate_override_s", arrhenius_rate))
     kinetic_capacity = min(
         kinetics.maximum_extent_per_step, max(rate*float(dt_s), 0.0))
     extent = np.sign(proposed)*min(abs(proposed), kinetic_capacity)
     if extent == 0.0:
-        return state, {
+        zero_ledger = {
             "operator": "periodic_plaquette_sweep", "accepted": False,
-            "classification": "RATE_LIMITED_ZERO_EVENT", "rejection_is_atomic": True,
+            "classification": (
+                "AFFINITY_BLOCKED_ZERO_EVENT"
+                if event.get("_affinity_probe_ledger") is not None
+                else "RATE_LIMITED_ZERO_EVENT"),
+            "rejection_is_atomic": True,
             "irreversible_heat_increment_J_m3": np.zeros_like(
                 state.common.orientation_rad), "event_rate_s": rate,
+            "arrhenius_unbiased_rate_s": arrhenius_rate,
             "kinetic_extent_capacity": kinetic_capacity,
             "requested_time_s": float(dt_s), "accepted_time_s": 0.0,
             "remaining_time_s": float(dt_s), "accepted_rate_exposure": 0.0,
@@ -594,6 +616,14 @@ def accepted_geometry_plaquette_transaction(
             "committed_swept_area_m2": 0.0,
             "event_measure_interpretation": "fractional_plaquette_ensemble_weight",
         }
+        if event.get("_affinity_probe_ledger") is not None:
+            zero_ledger.update(event["_affinity_probe_ledger"])
+            zero_ledger["proposed_duration_s"] = float(
+                zero_ledger["affinity_probe_proposed_duration_s"])
+            zero_ledger["proposed_swept_area_m2"] = float(
+                zero_ledger["affinity_probe_swept_area_m2"])
+            zero_ledger["observed_accepted_velocity_m_s"] = 0.0
+        return state, zero_ledger
 
     try:
         (geometry, inventory, alignment, common, ledger) = propose_plaquette_sweep(
@@ -684,11 +714,69 @@ def accepted_geometry_plaquette_transaction(
     accepted = bool(heat_total >= -tolerance)
     proposed_duration = min(abs(extent)/max(rate, 1e-300), float(dt_s))
     proposed_area = abs(float(ledger["swept_area_m2"]))
+    # The represented patch is a coarse-grained ensemble of atomic events.
+    # Normalize its complete energy by the physical sites swept, never by one
+    # mesh patch.  Climb uses the actual exchanged species count; a
+    # volume-preserving sweep uses swept area / b^2.
+    if abs(signed_exchange_count) > 0.0:
+        physical_event_count = abs(float(signed_exchange_count))
+        physical_event_count_source = "absolute_signed_species_exchange_count"
+    else:
+        physical_event_count = proposed_area/max(
+            float(common_parameters.burgers_m)**2, 1e-300)
+        physical_event_count_source = "swept_area_over_burgers_squared"
+    physical_event_count = max(physical_event_count, 1e-300)
+    event_available_energy_J = -complete_delta*cell_volume_m3
+    available_energy_per_event_J = (
+        event_available_energy_J/physical_event_count)
+    affinity_argument = available_energy_per_event_J/(2*KB_J_K*temperature)
+    downhill_bias = max(float(np.tanh(affinity_argument)), 0.0)
+    affinity_rate = arrhenius_rate*downhill_bias
+    if (kinetics.affinity_coupling_mode == "downhill_tanh"
+            and "_affinity_rate_override_s" not in event):
+        probe = {
+            "affinity_coupling_mode": kinetics.affinity_coupling_mode,
+            "arrhenius_unbiased_rate_s": arrhenius_rate,
+            "affinity_biased_rate_s": affinity_rate,
+            "complete_available_energy_J": event_available_energy_J,
+            "physical_event_count": physical_event_count,
+            "physical_event_count_source": physical_event_count_source,
+            "available_energy_per_event_J": available_energy_per_event_J,
+            "affinity_over_2kBT": affinity_argument,
+            "downhill_activity": downhill_bias,
+            "affinity_probe_extent": extent,
+            "affinity_probe_proposed_duration_s": proposed_duration,
+            "affinity_probe_swept_area_m2": proposed_area,
+            "affinity_sign_convention": (
+                "positive available energy is downhill; deterministic "
+                "directional activity is max(tanh(A_event/(2kBT)),0)"),
+        }
+        resolved_event = dict(event)
+        resolved_event["_affinity_rate_override_s"] = affinity_rate
+        resolved_event["_affinity_probe_ledger"] = probe
+        return accepted_geometry_plaquette_transaction(
+            state, resolved_event, systems, topologies, driving,
+            common_parameters, extensive_parameters, kinetics, dt_s)
+    affinity_record = event.get("_affinity_probe_ledger", {
+        "affinity_coupling_mode": kinetics.affinity_coupling_mode,
+        "arrhenius_unbiased_rate_s": arrhenius_rate,
+        "affinity_biased_rate_s": (
+            affinity_rate if kinetics.affinity_coupling_mode == "downhill_tanh"
+            else arrhenius_rate),
+        "complete_available_energy_J": event_available_energy_J,
+        "physical_event_count": physical_event_count,
+        "physical_event_count_source": physical_event_count_source,
+        "available_energy_per_event_J": available_energy_per_event_J,
+        "affinity_over_2kBT": affinity_argument,
+        "downhill_activity": downhill_bias,
+        "affinity_probe_extent": extent,
+    })
     ledger.update({
         "accepted": accepted, "rejection_is_atomic": True,
         "classification": ("ADMISSIBLE_NONZERO_GEOMETRY_EVENT" if accepted
                            else "COMPLETE_ENERGY_REJECTED_GEOMETRY_EVENT"),
         "event_rate_s": rate, "activation_enthalpy_J": enthalpy,
+        **affinity_record,
         "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
         "kinetic_extent_capacity": kinetic_capacity,
         "wall_energy_component_changes_J_m3": wall_changes,
@@ -788,6 +876,9 @@ def accepted_geometry_plaquette_transaction(
                                /common_parameters.volumetric_heat_capacity_J_m3_K))
     result = synchronize_common(V24MechanicalWallState(
         common, inventory, alignment, geometry), topologies)
+    ledger["observed_accepted_velocity_m_s"] = (
+        abs(extent)*float(state.geometry.spacing_m)
+        /max(proposed_duration, 1e-300))
     result.validate(systems, topologies)
     ledger["irreversible_heat_increment_J_m3"] = heat
     ledger["heat_plus_complete_energy_residual_J_m3_cells"] = float(
@@ -1341,6 +1432,10 @@ def accepted_v24_mechanical_step(
         "effective_stress_Pa": drive["effective_stress_Pa"],
         "plastic_power_W_m3": mura_plastic_power_W_m3,
         "transport_capture": capture_ledger,
+        "post_transport_capture_density_sha256": _density_state_sha256(
+            transported_density),
+        "pre_ordering_density_sha256": _density_state_sha256(
+            working_density),
         "locking_unlocking": locking_ledger,
         "ordering_thermodynamics": ordering_thermo,
         "ordering_topology": ordering_topology,

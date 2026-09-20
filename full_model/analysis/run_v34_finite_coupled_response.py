@@ -527,6 +527,10 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             }),
         "mura": (None if mura_ledger is None else {
             "accepted_dt_s": float(mura_ledger["accepted_dt_s"]),
+            "post_transport_capture_density_sha256": mura_ledger[
+                "post_transport_capture_density_sha256"],
+            "pre_ordering_density_sha256": mura_ledger[
+                "pre_ordering_density_sha256"],
             "event_scale": float(mura_ledger["mura_event_scale"]),
             "family_event_scales": [float(x) for x in
                                      mura_ledger["mura_family_event_scales"]],
@@ -570,6 +574,27 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             "ordering_finite_time_kinetic_accuracy_certified_by_this_solve": (
                 mura_ledger["ordering_thermodynamics"].get(
                     "finite_time_kinetic_accuracy_certified_by_this_solve")),
+            "ordering_finite_time_error_control_assessed": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "finite_time_error_control_assessed"),
+            "ordering_finite_time_error_tolerance_satisfied": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "finite_time_error_tolerance_satisfied"),
+            "ordering_finite_time_maximum_trial_error_norm": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "finite_time_maximum_trial_error_norm"),
+            "ordering_finite_time_maximum_accepted_error_norm": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "finite_time_maximum_accepted_error_norm"),
+            "ordering_finite_time_rejected_trials": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "finite_time_rejected_trials"),
+            "ordering_rk2_minimum_stage_cancellation_ratio": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "rk2_minimum_stage_cancellation_ratio"),
+            "ordering_rk2_maximum_stage_norm_s-1": mura_ledger[
+                "ordering_thermodynamics"].get(
+                    "rk2_maximum_stage_norm_s-1"),
             "ordering_maximum_attempt_exposure": mura_ledger[
                 "ordering_thermodynamics"].get("maximum_attempt_exposure"),
             "ordering_asymptotic_state_accessibility_passed": mura_ledger[
