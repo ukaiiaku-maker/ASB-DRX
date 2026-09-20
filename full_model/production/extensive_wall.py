@@ -250,6 +250,33 @@ def extensive_wall_energy_components_J_m3(inventory, systems, topologies,
     }
 
 
+def ordered_gradient_increment_J_m3_cells(before_inventory, after_inventory,
+                                           parameters):
+    """Evaluate the quadratic ordered-gradient increment without subtraction.
+
+    This is the exact discrete polarization identity for the same spectral
+    derivative used by :func:`extensive_wall_energy_components_J_m3`.  Its
+    units are the historical ledger units, J m^-3 summed over grid cells;
+    callers apply their physical cell volume exactly once.
+    """
+    kappa = float(parameters.ordered_gradient_J_m3)
+    if kappa == 0.0:
+        return 0.0
+    result = np.longdouble(0.0)
+    for name in ("wall_ordered_plus_m2", "wall_ordered_minus_m2"):
+        before = np.asarray(getattr(before_inventory, name), dtype=float)
+        delta = np.asarray(getattr(after_inventory, name), dtype=float)-before
+        before_x, before_y = spectral_derivatives(
+            before, parameters.spacing_m)
+        delta_x, delta_y = spectral_derivatives(
+            delta, parameters.spacing_m)
+        cross = before_x*delta_x+before_y*delta_y
+        quadratic = delta_x*delta_x+delta_y*delta_y
+        result += np.sum(kappa*(cross+0.5*quadratic),
+                         dtype=np.longdouble)
+    return float(result)
+
+
 def extensive_wall_chemical_potentials_J_m(inventory, systems, topologies,
                                             orientation_rad, target_nye_m1,
                                             parameters):

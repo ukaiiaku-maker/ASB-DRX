@@ -26,6 +26,7 @@ from .density_state_map import (
 from .extensive_wall import (
     ExtensiveWallParameters, accepted_ordering_step,
     extensive_wall_energy_components_J_m3,
+    ordered_gradient_increment_J_m3_cells,
 )
 from .tensorial_nye import rotated_system_fields
 from .mura_kinematics import (
@@ -110,6 +111,10 @@ class V43GeometryKinetics:
     maximum_extent_per_step: float = 1.0
     material_exchange_model: str = "equilibrated_point_defect_reservoir"
     chemical_work_J_m3_cells_per_extent: float = 0.0
+    chemical_species: str = "none"
+    chemical_potential_J_per_defect: float = 0.0
+    atomic_volume_m3_per_atom: float = 0.0
+    exchange_stoichiometry_defects_per_atom: float = 0.0
     continuum_representation_length_m: float = 0.0
 
     def __post_init__(self):
@@ -120,9 +125,21 @@ class V43GeometryKinetics:
                 or self.material_exchange_model not in (
                     "equilibrated_point_defect_reservoir", "glide_no_exchange")
                 or not np.isfinite(self.chemical_work_J_m3_cells_per_extent)
+                or not np.isfinite(self.chemical_potential_J_per_defect)
+                or not np.isfinite(self.atomic_volume_m3_per_atom)
+                or not np.isfinite(self.exchange_stoichiometry_defects_per_atom)
                 or not np.isfinite(self.continuum_representation_length_m)
                 or self.continuum_representation_length_m < 0.0):
             raise ValueError("invalid V43 geometry kinetics")
+        physical = self.atomic_volume_m3_per_atom > 0.0
+        if physical != (self.exchange_stoichiometry_defects_per_atom != 0.0):
+            raise ValueError("physical chemical work requires atomic volume and stoichiometry")
+        if self.atomic_volume_m3_per_atom < 0.0:
+            raise ValueError("atomic volume cannot be negative")
+        if physical and self.chemical_species == "none":
+            raise ValueError("physical chemical work requires a named species")
+        if physical and self.chemical_work_J_m3_cells_per_extent != 0.0:
+            raise ValueError("legacy and physical chemical work cannot be combined")
 
 
 class MuraWorkBudgetError(RuntimeError):
@@ -609,7 +626,16 @@ def accepted_geometry_plaquette_transaction(
         extensive_parameters)
     wall_changes = {name: np.asarray(after_wall[name])-np.asarray(before_wall[name])
                     for name in before_wall}
-    wall_delta = float(np.sum(wall_changes["total"], dtype=np.longdouble))
+    gradient_endpoint_delta = float(np.sum(
+        wall_changes["ordered_gradient"], dtype=np.longdouble))
+    gradient_direct_delta = ordered_gradient_increment_J_m3_cells(
+        state.density, inventory, extensive_parameters)
+    component_deltas = {
+        name: float(np.sum(value, dtype=np.longdouble))
+        for name, value in wall_changes.items() if name != "total"
+    }
+    component_deltas["ordered_gradient"] = gradient_direct_delta
+    wall_delta = float(sum(component_deltas.values()))
     elastic_before = _elastic_energy_sum_J_m3_cells(
         state.common, state.common.beta_p, driving, common_parameters)
     elastic_after = _elastic_energy_sum_J_m3_cells(
@@ -628,8 +654,24 @@ def accepted_geometry_plaquette_transaction(
     if (mechanism == "climb_with_material_exchange"
             and kinetics.material_exchange_model == "glide_no_exchange"):
         raise ValueError("non-volume-preserving sweep requires material exchange")
-    chemical_work = (kinetics.chemical_work_J_m3_cells_per_extent
-                     *abs(extent))
+    cell_volume_m3 = (float(state.geometry.spacing_m)**2
+                      *float(state.geometry.section_thickness_m))
+    signed_exchange_volume_m3 = volumetric_exchange*cell_volume_m3
+    if kinetics.atomic_volume_m3_per_atom > 0.0:
+        signed_exchange_count = (
+            signed_exchange_volume_m3/kinetics.atomic_volume_m3_per_atom
+            *kinetics.exchange_stoichiometry_defects_per_atom)
+        chemical_work_J = (kinetics.chemical_potential_J_per_defect
+                           *signed_exchange_count)
+        chemical_work = chemical_work_J/cell_volume_m3
+        chemical_work_mode = "physical_species_exchange"
+    else:
+        signed_exchange_count = 0.0
+        chemical_work = (kinetics.chemical_work_J_m3_cells_per_extent
+                         *abs(extent))
+        chemical_work_J = chemical_work*cell_volume_m3
+        chemical_work_mode = (
+            "legacy_fixture_per_extent" if chemical_work != 0.0 else "zero")
     complete_delta = wall_delta+elastic_delta-external_work-chemical_work
     scale = max(abs(wall_delta), abs(elastic_delta), abs(external_work),
                 abs(chemical_work), 1.0)
@@ -647,6 +689,11 @@ def accepted_geometry_plaquette_transaction(
         "kinetic_extent_capacity": kinetic_capacity,
         "wall_energy_component_changes_J_m3": wall_changes,
         "wall_energy_change_J_m3_cells": wall_delta,
+        "wall_energy_component_scalar_changes_J_m3_cells": component_deltas,
+        "ordered_gradient_endpoint_difference_J_m3_cells": gradient_endpoint_delta,
+        "ordered_gradient_direct_increment_J_m3_cells": gradient_direct_delta,
+        "ordered_gradient_increment_identity_residual_J_m3_cells": (
+            gradient_direct_delta-gradient_endpoint_delta),
         "elastic_energy_change_J_m3_cells": elastic_delta,
         "external_work_J_m3_cells": external_work,
         "mechanism": mechanism,
@@ -657,6 +704,19 @@ def accepted_geometry_plaquette_transaction(
             "positive trace(dbeta_p) is positive represented plastic "
             "volume exchange with the equilibrated point-defect reservoir"),
         "chemical_reservoir_work_J_m3_cells": chemical_work,
+        "chemical_reservoir_work_J": chemical_work_J,
+        "chemical_work_mode": chemical_work_mode,
+        "chemical_species": kinetics.chemical_species,
+        "chemical_potential_J_per_defect": (
+            kinetics.chemical_potential_J_per_defect),
+        "atomic_volume_m3_per_atom": kinetics.atomic_volume_m3_per_atom,
+        "exchange_stoichiometry_defects_per_atom": (
+            kinetics.exchange_stoichiometry_defects_per_atom),
+        "signed_material_exchange_volume_m3": signed_exchange_volume_m3,
+        "signed_material_exchange_count": signed_exchange_count,
+        "chemical_work_sign_convention": (
+            "positive mu times positive exchanged defect count is work on "
+            "the represented system and is subtracted from its energy cost"),
         "material_exchange_validity_limit": (
             "point-defect reservoir treated as spatially equilibrated; no "
             "vacancy diffusion transient is represented"),
