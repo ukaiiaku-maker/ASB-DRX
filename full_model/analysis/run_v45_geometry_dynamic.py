@@ -49,9 +49,12 @@ def scripted_path(n, reverse=False, split=False):
     cells = [(i, j) for i in range(start, start+width)
              for j in range(start, start+width)]
     state, data, _ = prepare_block(n, cells)
+    _, _, _, _, systems, topologies, _, extensive, _, dx = data
     initial = state
     initial_energy = energy_J(initial, data)
-    _, _, _, _, systems, topologies, _, _, _, dx = data
+    initial_line_length = float(np.sum(
+        np.abs(initial.geometry.edge_x_quanta)
+        +np.abs(initial.geometry.edge_y_quanta))*dx)
     displacement_m = 1e-8
     elapsed_s = 1e-6
     extent = displacement_m/dx
@@ -102,6 +105,9 @@ def scripted_path(n, reverse=False, split=False):
             "zero point-defect reservoir work; spatially equilibrated "
             "reservoir; no vacancy transient"),
         "weighted_line_length_m": line_length,
+        "geometric_line_energy_J": extensive.line_energy_J_m*line_length,
+        "geometric_line_energy_change_J": (
+            extensive.line_energy_J_m*(line_length-initial_line_length)),
         "mechanical_plus_line_energy_J": energy_J(state, data),
         "mechanical_plus_line_energy_change_J": energy_J(state, data)-initial_energy,
         "accepted_motion": True,
@@ -202,6 +208,25 @@ def main():
         "blocked_channel_continuation": blocked_channel_continuation(),
         "scripted_path_is_spontaneous_organization": False,
         "drx_claimed": False, "material_calibration_claimed": False,
+    }
+    swept = [row["integrated_swept_area_m2"] for row in rows]
+    line = [row["weighted_line_length_m"] for row in rows]
+    geometric_energy = [row["geometric_line_energy_change_J"] for row in rows]
+    coupled_energy = [row["mechanical_plus_line_energy_change_J"] for row in rows]
+    payload["classification"] = {
+        "swept_measure_grid_invariant": bool(np.allclose(
+            swept, swept[0], rtol=2e-14, atol=1e-30)),
+        "weighted_line_length_grid_invariant": bool(np.allclose(
+            line, line[0], rtol=2e-14, atol=1e-30)),
+        "geometric_line_energy_grid_invariant": bool(np.allclose(
+            geometric_energy, geometric_energy[0], rtol=2e-14, atol=1e-30)),
+        "continuum_coupled_energy_grid_converged": bool(
+            abs(coupled_energy[-1]-coupled_energy[-2])
+            <= .05*max(abs(coupled_energy[-1]), abs(coupled_energy[-2]), 1e-300)),
+        "coupled_energy_interpretation": (
+            "a one-cell singular line deposited into the continuum gradient "
+            "energy is unresolved; geometric event measure qualifies but "
+            "coupled energetic mesh convergence does not"),
     }
     output = Path("full_model/verification/v45_dynamic_geometry_measure.json")
     output.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")
