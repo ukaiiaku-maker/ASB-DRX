@@ -1,0 +1,32 @@
+{
+  "accepted_intervals": 8,
+  "achieved_physical_time_s": 3.90625e-06,
+  "additional_engineering_shear_gamma": 0.0007812500000000007,
+  "additional_tensor_shear_e12": 0.00039062500000000035,
+  "all_ordering_local_error_controls_passed": true,
+  "classification": "CONTROLLED_PHYSICAL_RESPONSE_N16_SHORT_HORIZON",
+  "drx_claimed": false,
+  "final_loading_minus_hold": {
+    "engineering_plastic_shear_gamma_p": 3.877065557264334e-06,
+    "mean_shear_stress_sigma_12_Pa": 69263928.458848,
+    "plastic_tensor_strain_e_p12": 1.938532778632167e-06,
+    "temperature_mean_K": 0.002163144253700011,
+    "temperature_peak_K": 0.00255593370616225
+  },
+  "generated_utc": "2026-09-20T22:16:23.871918+00:00",
+  "grid": 16,
+  "hold_manifest": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v48-20260920/full_model/production/results-local/v48-physical/n16/hold/run_manifest.json",
+  "hold_manifest_sha256": "57006bd40fe050794bab9183e6be170f7215bfa65ee5d6a5fc08ad734c7f3251",
+  "lagb_claimed": false,
+  "loading_engineering_shear_rate_s-1": 200.0,
+  "loading_manifest": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v48-20260920/full_model/production/results-local/v48-physical/n16/loading/run_manifest.json",
+  "loading_manifest_sha256": "d7c09c3f47c600768f34ce904fe2b214db8b6ad40c9de7108f0977222ea966e5",
+  "loading_tensor_shear_rate_s-1": 100.0,
+  "maximum_first_law_relative_residual": 9.061344122850155e-15,
+  "ordering_global_endpoint_qualified_by_n128_tightening": false,
+  "postprocessor_source_sha": "c456dcbee0b8d4ec5bf628126dae2d80ee4266af",
+  "schema": "asb-drx/v48/physical-pair/v1",
+  "scope": "Eight current-source intervals with exact endpoint load/work clock; numerical capability evidence, not spatial refinement or an original-horizon DRX/ASB claim",
+  "simulation_source_sha": "2fcb8a83f272c8a6a3371c8fbc001f49d22b1512",
+  "strict_asb_claimed": false
+}
