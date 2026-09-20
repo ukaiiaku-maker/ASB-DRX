@@ -1,0 +1,711 @@
+{
+  "classification": "CURRENT_SOURCE_TEMPORAL_PASSED_SPATIAL_FAILED",
+  "comparisons": [
+    {
+      "comparison": "n128_sub4_vs_sub8",
+      "fields": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 7.836757465991498e-05,
+          "complex_coefficient_relative_rms": 0.00019475974555744106,
+          "current_sub4_n128_whole_field_rms": 1.31672394328393e-05,
+          "current_sub8_n128_whole_field_rms": 1.3165037507054613e-05,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0003444161613744608,
+          "strong_norms": {
+            "difference_maximum_absolute": 3.9163986891503866e-08,
+            "difference_rms": 3.04994018984337e-09,
+            "difference_rms_relative": 0.0002316309508458373,
+            "integral_difference_grid_units": 0.0001558865146698891,
+            "member_a_maximum": 3.300595627002748e-05,
+            "member_a_minimum": -5.719944101423291e-09,
+            "member_b_maximum": 3.300151914630043e-05,
+            "member_b_minimum": -6.117113028255086e-09
+          },
+          "whole_field_rms_relative_difference": 0.00016722759511720017
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 6.618713490573053e-14,
+          "complex_coefficient_relative_rms": 7.880604543958456e-13,
+          "current_sub4_n128_whole_field_rms": 0.6126308428703469,
+          "current_sub8_n128_whole_field_rms": 0.6126308428706588,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 1.5031857264042352e-12,
+          "strong_norms": {
+            "difference_maximum_absolute": 8.397726958264684e-13,
+            "difference_rms": 4.828151626558783e-13,
+            "difference_rms_relative": 7.881012983177738e-13,
+            "integral_difference_grid_units": -6.517025585850433e-09,
+            "member_a_maximum": 0.9640275800758169,
+            "member_a_minimum": 0.017980318347372248,
+            "member_b_maximum": 0.9640275800758169,
+            "member_b_minimum": 0.017980318347435437
+          },
+          "whole_field_rms_relative_difference": 5.092343514045602e-13
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 9.485792125339147e-05,
+          "complex_coefficient_relative_rms": 0.007994093653106667,
+          "current_sub4_n128_whole_field_rms": 3.437003910499287,
+          "current_sub8_n128_whole_field_rms": 3.4848763200747954,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0007114276193032616,
+          "strong_norms": {
+            "difference_maximum_absolute": 1.4313564213908254,
+            "difference_rms": 0.10597343943443908,
+            "difference_rms_relative": 0.030409526680753075,
+            "integral_difference_grid_units": 1.0815792705898275e-12,
+            "member_a_maximum": 32.65571581202475,
+            "member_a_minimum": -32.646835773060225,
+            "member_b_maximum": 34.07775787992337,
+            "member_b_minimum": -34.068880059839316
+          },
+          "whole_field_rms_relative_difference": 0.013737190413254337
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 6.5878854677722266e-12,
+          "complex_coefficient_relative_rms": 0.00021004376546621248,
+          "current_sub4_n128_whole_field_rms": 9728426.339732556,
+          "current_sub8_n128_whole_field_rms": 9726382.944432098,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0004200434125490014,
+          "strong_norms": {
+            "difference_maximum_absolute": 16347.162555024028,
+            "difference_rms": 2043.3953004575671,
+            "difference_rms_relative": 0.0002100437654661568,
+            "integral_difference_grid_units": 4184873.575337097,
+            "member_a_maximum": 77827410.71808934,
+            "member_a_minimum": 0.0,
+            "member_b_maximum": 77811063.55553432,
+            "member_b_minimum": 0.0
+          },
+          "whole_field_rms_relative_difference": 0.0002100437654661246
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 4.551179814193043e-05,
+          "complex_coefficient_relative_rms": 0.00019421140406362074,
+          "current_sub4_n128_whole_field_rms": 1.396597212402113e-05,
+          "current_sub8_n128_whole_field_rms": 1.3963636583582036e-05,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.00034441613499749425,
+          "strong_norms": {
+            "difference_maximum_absolute": 1.958199309827869e-08,
+            "difference_rms": 3.228514136696286e-09,
+            "difference_rms_relative": 0.00023117002583324082,
+            "integral_difference_grid_units": 3.8888131993828354e-05,
+            "member_a_maximum": 1.6502978125533733e-05,
+            "member_a_minimum": 1.0485330041983989e-05,
+            "member_b_maximum": 1.6500759562680847e-05,
+            "member_b_minimum": 1.0483489815810278e-05
+          },
+          "whole_field_rms_relative_difference": 0.00016723078195736484
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.012189018587395222,
+          "complex_coefficient_relative_rms": 0.007994068480294905,
+          "current_sub4_n128_whole_field_rms": 3.4370061641518728,
+          "current_sub8_n128_whole_field_rms": 3.4848785947495258,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0007115110525704716,
+          "strong_norms": {
+            "difference_maximum_absolute": 1.431356048329782,
+            "difference_rms": 0.10597343348734262,
+            "difference_rms_relative": 0.030409505125087267,
+            "integral_difference_grid_units": 0.0010420973083875573,
+            "member_a_maximum": 32.65302578499336,
+            "member_a_minimum": -32.64937412918304,
+            "member_b_maximum": 34.075068277389484,
+            "member_b_minimum": -34.0714180493073
+          },
+          "whole_field_rms_relative_difference": 0.013737187479007089
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 4.164307828557535e-08,
+          "complex_coefficient_relative_rms": 2.5108766407941197e-09,
+          "current_sub4_n128_whole_field_rms": 1100.0140219988423,
+          "current_sub8_n128_whole_field_rms": 1100.0140195856038,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 4.3876508897348786e-09,
+          "strong_norms": {
+            "difference_maximum_absolute": 2.0319289660619688e-05,
+            "difference_rms": 3.3298749955041135e-06,
+            "difference_rms_relative": 3.0271204992945245e-09,
+            "integral_difference_grid_units": 0.03953850135440007,
+            "member_a_maximum": 1100.016794165579,
+            "member_a_minimum": 1100.0106682780636,
+            "member_b_maximum": 1100.0167919677613,
+            "member_b_minimum": 1100.0106665390797
+          },
+          "whole_field_rms_relative_difference": 2.193825182346561e-09
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.7097295192525814e-05,
+          "complex_coefficient_relative_rms": 2.587873515524094e-07,
+          "current_sub4_n128_whole_field_rms": 686599075245489.6,
+          "current_sub8_n128_whole_field_rms": 686599075216982.5,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 7.111013254151121e-10,
+          "strong_norms": {
+            "difference_maximum_absolute": 3786575864.625,
+            "difference_rms": 746134619.5042951,
+            "difference_rms_relative": 1.0867107842193333e-06,
+            "integral_difference_grid_units": -3235636568.0,
+            "member_a_maximum": 948779072961268.4,
+            "member_a_minimum": 358451369988765.5,
+            "member_b_maximum": 948778949036741.9,
+            "member_b_minimum": 358451660738821.1
+          },
+          "whole_field_rms_relative_difference": 4.151931749952829e-11
+        }
+      },
+      "interpretation": "current-source temporal refinement",
+      "member_a": {
+        "accepted_second_half_substeps_s": [
+          9.765625e-07,
+          9.765625e-07,
+          9.765625e-07,
+          9.765625e-07
+        ],
+        "domain_length_m": 3.2e-06,
+        "grid": 128,
+        "interface_width_m": 4e-07,
+        "macro_dt_s": 7.8125e-06,
+        "macro_index": 1,
+        "member": "current_sub4_n128",
+        "operator": "compatible_dealiased",
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-current-final/sub4/n128/after_second_mura.npz",
+        "physical_time_s": 7.8125e-06,
+        "requested_substeps_per_half": 4,
+        "sha256": "9968c0d63d35ce6e1c0553662f0a43b3c2e5a9ac6ce6ec8581426f686e3b5919",
+        "source_sha": "a9c4f0b47eca3d261a9c731bdcd0d18410485ab2",
+        "spacing_m": 2.5e-08,
+        "start_checkpoint": null,
+        "substage": "after_second_mura"
+      },
+      "member_b": {
+        "accepted_second_half_substeps_s": [
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07
+        ],
+        "domain_length_m": 3.2e-06,
+        "grid": 128,
+        "interface_width_m": 4e-07,
+        "macro_dt_s": 7.8125e-06,
+        "macro_index": 1,
+        "member": "current_sub8_n128",
+        "operator": "compatible_dealiased",
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-current-final/sub8/n128/after_second_mura.npz",
+        "physical_time_s": 7.8125e-06,
+        "requested_substeps_per_half": 8,
+        "sha256": "616a89a147964bef84a85b1b5697ebc192c9970933a5dff84051d773a2bb4377",
+        "source_sha": "2d3320a71642671397376208c6cfdef17d77b015",
+        "spacing_m": 2.5e-08,
+        "start_checkpoint": null,
+        "substage": "after_second_mura"
+      },
+      "same_grid": true
+    },
+    {
+      "comparison": "n192_sub4_vs_sub8",
+      "fields": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.0003851892385883239,
+          "complex_coefficient_relative_rms": 0.0001931969739658968,
+          "current_sub4_n192_whole_field_rms": 1.3167331401013048e-05,
+          "current_sub8_n192_whole_field_rms": 1.3165138237048895e-05,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0003435008061199921,
+          "strong_norms": {
+            "difference_maximum_absolute": 5.571990685503757e-08,
+            "difference_rms": 3.344226332079027e-09,
+            "difference_rms_relative": 0.0002539790508972634,
+            "integral_difference_grid_units": 0.0003498047621281023,
+            "member_a_maximum": 3.300584573548547e-05,
+            "member_a_minimum": -5.720169467387897e-09,
+            "member_b_maximum": 3.3001394853031935e-05,
+            "member_b_minimum": -6.1169362371579166e-09
+          },
+          "whole_field_rms_relative_difference": 0.00016656100597452238
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 5.6017226956787145e-14,
+          "complex_coefficient_relative_rms": 7.862409525236979e-13,
+          "current_sub4_n192_whole_field_rms": 0.6126308484026487,
+          "current_sub8_n192_whole_field_rms": 0.6126308484029624,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 1.4998589317555374e-12,
+          "strong_norms": {
+            "difference_maximum_absolute": 8.385514504993807e-13,
+            "difference_rms": 4.818225384697468e-13,
+            "difference_rms_relative": 7.864810264220069e-13,
+            "integral_difference_grid_units": -1.4637991485599855e-08,
+            "member_a_maximum": 0.9640275800758169,
+            "member_a_minimum": 0.01798030327702365,
+            "member_b_maximum": 0.9640275800758169,
+            "member_b_minimum": 0.01798030327708543
+          },
+          "whole_field_rms_relative_difference": 5.121339018055756e-13
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.0005264110410615067,
+          "complex_coefficient_relative_rms": 0.007768409626289386,
+          "current_sub4_n192_whole_field_rms": 4.120328717128107,
+          "current_sub8_n192_whole_field_rms": 4.24925132812522,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0006844698912554179,
+          "strong_norms": {
+            "difference_maximum_absolute": 3.212102324030802,
+            "difference_rms": 0.1911393440505306,
+            "difference_rms_relative": 0.04498188722926439,
+            "integral_difference_grid_units": 1.6973089600469393e-12,
+            "member_a_maximum": 56.17874067881119,
+            "member_a_minimum": -56.16694934867221,
+            "member_b_maximum": 59.23679262100974,
+            "member_b_minimum": -59.22500529681105
+          },
+          "whole_field_rms_relative_difference": 0.0303400766492187
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 2.743133061072805e-11,
+          "complex_coefficient_relative_rms": 0.000571348153771273,
+          "current_sub4_n192_whole_field_rms": 3501538.2317437665,
+          "current_sub8_n192_whole_field_rms": 3503539.972838911,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.001142369868829682,
+          "strong_norms": {
+            "difference_maximum_absolute": 19612.977361537516,
+            "difference_rms": 2001.7410951447084,
+            "difference_rms_relative": 0.0005713481537710848,
+            "integral_difference_grid_units": -7531383.214486316,
+            "member_a_maximum": 34307927.93047826,
+            "member_a_minimum": 0.0,
+            "member_b_maximum": 34327540.90783979,
+            "member_b_minimum": 0.0
+          },
+          "whole_field_rms_relative_difference": 0.0005713481537711016
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.00023382181669480588,
+          "complex_coefficient_relative_rms": 0.00019264416370110755,
+          "current_sub4_n192_whole_field_rms": 1.3966069459450532e-05,
+          "current_sub8_n192_whole_field_rms": 1.3963743212346133e-05,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.00034350078101384534,
+          "strong_norms": {
+            "difference_maximum_absolute": 2.785995311634429e-08,
+            "difference_rms": 3.541218454588071e-09,
+            "difference_rms_relative": 0.00025355870274523134,
+            "integral_difference_grid_units": 8.726619608732478e-05,
+            "member_a_maximum": 1.6502922858265737e-05,
+            "member_a_minimum": 1.048371309529759e-05,
+            "member_b_maximum": 1.6500697416045946e-05,
+            "member_b_minimum": 1.0481862339965042e-05
+          },
+          "whole_field_rms_relative_difference": 0.00016656419411012008
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.01932899701104389,
+          "complex_coefficient_relative_rms": 0.007768377879283164,
+          "current_sub4_n192_whole_field_rms": 4.12032774520264,
+          "current_sub8_n192_whole_field_rms": 4.249250441227544,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0006846981559165133,
+          "strong_norms": {
+            "difference_maximum_absolute": 3.21210181327249,
+            "difference_rms": 0.1911393378894359,
+            "difference_rms_relative": 0.044981895167896635,
+            "integral_difference_grid_units": 0.0031623772564645103,
+            "member_a_maximum": 56.17519554026247,
+            "member_a_minimum": -56.17037641233023,
+            "member_b_maximum": 59.233248039162696,
+            "member_b_minimum": -59.22843186364725
+          },
+          "whole_field_rms_relative_difference": 0.030340102991825723
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 2.7261902075959593e-08,
+          "complex_coefficient_relative_rms": 2.4898880752342755e-09,
+          "current_sub4_n192_whole_field_rms": 1100.0140220451071,
+          "current_sub8_n192_whole_field_rms": 1100.01401963763,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 4.377175894101357e-09,
+          "strong_norms": {
+            "difference_maximum_absolute": 2.972008360302425e-05,
+            "difference_rms": 3.7428446955540083e-06,
+            "difference_rms_relative": 3.4025427135878177e-09,
+            "integral_difference_grid_units": 0.0887492412730353,
+            "member_a_maximum": 1100.016794420028,
+            "member_a_minimum": 1100.010667273239,
+            "member_b_maximum": 1100.0167922539822,
+            "member_b_minimum": 1100.0106654911012
+          },
+          "whole_field_rms_relative_difference": 2.1885875930539794e-09
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 1.5913516798991397e-05,
+          "complex_coefficient_relative_rms": 2.5301207950064596e-07,
+          "current_sub4_n192_whole_field_rms": 686597726579320.2,
+          "current_sub8_n192_whole_field_rms": 686597726822035.9,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 2.1855958309783944e-09,
+          "strong_norms": {
+            "difference_maximum_absolute": 8948966500.3125,
+            "difference_rms": 1382405240.6960778,
+            "difference_rms_relative": 2.013413657942962e-06,
+            "integral_difference_grid_units": -25049212932.0,
+            "member_a_maximum": 948778364815619.2,
+            "member_a_minimum": 358453722658594.8,
+            "member_b_maximum": 948778157724809.8,
+            "member_b_minimum": 358454134908439.6
+          },
+          "whole_field_rms_relative_difference": 3.535048479164441e-10
+        }
+      },
+      "interpretation": "current-source temporal refinement",
+      "member_a": {
+        "accepted_second_half_substeps_s": [
+          9.765625e-07,
+          9.765625e-07,
+          9.765625e-07,
+          9.765625e-07
+        ],
+        "domain_length_m": 3.2e-06,
+        "grid": 192,
+        "interface_width_m": 4e-07,
+        "macro_dt_s": 7.8125e-06,
+        "macro_index": 1,
+        "member": "current_sub4_n192",
+        "operator": "compatible_dealiased",
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-current-final/sub4/n192/after_second_mura.npz",
+        "physical_time_s": 7.8125e-06,
+        "requested_substeps_per_half": 4,
+        "sha256": "5b8f5eb596fabea9babc9b5999c7d3f9de6c951222b13c31f5c08814d314da17",
+        "source_sha": "2d3320a71642671397376208c6cfdef17d77b015",
+        "spacing_m": 1.6666666666666667e-08,
+        "start_checkpoint": null,
+        "substage": "after_second_mura"
+      },
+      "member_b": {
+        "accepted_second_half_substeps_s": [
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07
+        ],
+        "domain_length_m": 3.2e-06,
+        "grid": 192,
+        "interface_width_m": 4e-07,
+        "macro_dt_s": 7.8125e-06,
+        "macro_index": 1,
+        "member": "current_sub8_n192",
+        "operator": "compatible_dealiased",
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-current-final/sub8/n192/after_second_mura.npz",
+        "physical_time_s": 7.8125e-06,
+        "requested_substeps_per_half": 8,
+        "sha256": "ba772c4507653308f10575e1cab1ae699fca0d2d51e642072f2c6c88114b5757",
+        "source_sha": "2d3320a71642671397376208c6cfdef17d77b015",
+        "spacing_m": 1.6666666666666667e-08,
+        "start_checkpoint": null,
+        "substage": "after_second_mura"
+      },
+      "same_grid": true
+    },
+    {
+      "comparison": "selected_sub8_n128_vs_n192",
+      "fields": {
+        "beta_p": {
+          "active_coefficient_phase_rms_rad": 0.8848153563907223,
+          "complex_coefficient_relative_rms": 0.0007018969315428253,
+          "current_sub8_n128_whole_field_rms": 1.3165037507054613e-05,
+          "current_sub8_n192_whole_field_rms": 1.3165138237048895e-05,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 1.1192507658935465e-05,
+          "whole_field_rms_relative_difference": 7.651267496631675e-06
+        },
+        "child_phase": {
+          "active_coefficient_phase_rms_rad": 1.0449979329086693e-13,
+          "complex_coefficient_relative_rms": 1.8902772285973547e-05,
+          "current_sub8_n128_whole_field_rms": 0.6126308428706588,
+          "current_sub8_n192_whole_field_rms": 0.6126308484029624,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 7.2095040846434725e-06,
+          "whole_field_rms_relative_difference": 9.030403267548034e-09
+        },
+        "curl_nye": {
+          "active_coefficient_phase_rms_rad": 0.9046994333968054,
+          "complex_coefficient_relative_rms": 0.07975616431052364,
+          "current_sub8_n128_whole_field_rms": 3.4848763200747954,
+          "current_sub8_n192_whole_field_rms": 4.24925132812522,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.0041675777693443525,
+          "whole_field_rms_relative_difference": 0.1798846312034146
+        },
+        "ordered_density": {
+          "active_coefficient_phase_rms_rad": 1.003545291474215,
+          "complex_coefficient_relative_rms": 0.7522879851825662,
+          "current_sub8_n128_whole_field_rms": 9726382.944432098,
+          "current_sub8_n192_whole_field_rms": 3503539.972838911,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.925386184618136,
+          "whole_field_rms_relative_difference": 0.639790043960327
+        },
+        "orientation": {
+          "active_coefficient_phase_rms_rad": 0.8961761890191401,
+          "complex_coefficient_relative_rms": 0.0007018571409996862,
+          "current_sub8_n128_whole_field_rms": 1.3963636583582036e-05,
+          "current_sub8_n192_whole_field_rms": 1.3963743212346133e-05,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 1.1160586058100278e-05,
+          "whole_field_rms_relative_difference": 7.636116081138518e-06
+        },
+        "reservoir_nye": {
+          "active_coefficient_phase_rms_rad": 0.6539039280011865,
+          "complex_coefficient_relative_rms": 0.07974837589509431,
+          "current_sub8_n128_whole_field_rms": 3.4848785947495258,
+          "current_sub8_n192_whole_field_rms": 4.249250441227544,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 0.00417063968623553,
+          "whole_field_rms_relative_difference": 0.17988392471807405
+        },
+        "temperature": {
+          "active_coefficient_phase_rms_rad": 1.9618514874062697e-06,
+          "complex_coefficient_relative_rms": 9.112506405311929e-09,
+          "current_sub8_n128_whole_field_rms": 1100.0140195856038,
+          "current_sub8_n192_whole_field_rms": 1100.01401963763,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 9.459090669546088e-11,
+          "whole_field_rms_relative_difference": 4.729601554533492e-11
+        },
+        "total_density": {
+          "active_coefficient_phase_rms_rad": 0.0025131175920066117,
+          "complex_coefficient_relative_rms": 1.0931085734554863e-05,
+          "current_sub8_n128_whole_field_rms": 686599075216982.5,
+          "current_sub8_n192_whole_field_rms": 686597726822035.9,
+          "fourier_mask": {
+            "active_phase_threshold_relative_to_pair_max": 1e-08,
+            "centered_common_mode_half_width": 24,
+            "fft_normalization": "complex coefficient divided by n^2",
+            "mode_count_per_axis": 49
+          },
+          "power_relative_rms": 3.1319472112317413e-06,
+          "whole_field_rms_relative_difference": 1.9638752734976716e-06
+        }
+      },
+      "interpretation": "current-source selected spatial refinement",
+      "member_a": {
+        "accepted_second_half_substeps_s": [
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07
+        ],
+        "domain_length_m": 3.2e-06,
+        "grid": 128,
+        "interface_width_m": 4e-07,
+        "macro_dt_s": 7.8125e-06,
+        "macro_index": 1,
+        "member": "current_sub8_n128",
+        "operator": "compatible_dealiased",
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-current-final/sub8/n128/after_second_mura.npz",
+        "physical_time_s": 7.8125e-06,
+        "requested_substeps_per_half": 8,
+        "sha256": "616a89a147964bef84a85b1b5697ebc192c9970933a5dff84051d773a2bb4377",
+        "source_sha": "2d3320a71642671397376208c6cfdef17d77b015",
+        "spacing_m": 2.5e-08,
+        "start_checkpoint": null,
+        "substage": "after_second_mura"
+      },
+      "member_b": {
+        "accepted_second_half_substeps_s": [
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07,
+          4.8828125e-07
+        ],
+        "domain_length_m": 3.2e-06,
+        "grid": 192,
+        "interface_width_m": 4e-07,
+        "macro_dt_s": 7.8125e-06,
+        "macro_index": 1,
+        "member": "current_sub8_n192",
+        "operator": "compatible_dealiased",
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v34-recovery/full_model/production/results-local/v45-current-final/sub8/n192/after_second_mura.npz",
+        "physical_time_s": 7.8125e-06,
+        "requested_substeps_per_half": 8,
+        "sha256": "ba772c4507653308f10575e1cab1ae699fca0d2d51e642072f2c6c88114b5757",
+        "source_sha": "2d3320a71642671397376208c6cfdef17d77b015",
+        "spacing_m": 1.6666666666666667e-08,
+        "start_checkpoint": null,
+        "substage": "after_second_mura"
+      },
+      "same_grid": false
+    }
+  ],
+  "decisions": {
+    "n128_sub4_vs_sub8": {
+      "complex_fourier_passed": true,
+      "passed": true,
+      "whole_field_rms_passed": true
+    },
+    "n192_sub4_vs_sub8": {
+      "complex_fourier_passed": true,
+      "passed": true,
+      "whole_field_rms_passed": true
+    },
+    "selected_sub8_n128_vs_n192": {
+      "complex_fourier_passed": false,
+      "passed": false,
+      "whole_field_rms_passed": false
+    }
+  },
+  "drx_claimed": false,
+  "full_current_source_trajectory_regenerated": true,
+  "generated_utc": "2026-09-20T04:51:19.039987+00:00",
+  "material_calibration_claimed": false,
+  "retained_restart_vs_regenerated_sub4_n128": {
+    "all_arrays_exact": false,
+    "all_arrays_roundoff_close": true,
+    "compared_array_count": 177,
+    "maximum_absolute_difference": 1.862645149230957e-08,
+    "maximum_relative_to_pair_peak": 5.863886086553389e-16
+  },
+  "schema": "asb-drx/v45/refined-current-accuracy/v1",
+  "selected_substeps_per_half": 8,
+  "source_sha_at_postprocessing": "c19e76cbb722a2242fbb5ab8bfd3e1daef2073f0",
+  "spatial_accuracy_passed": false,
+  "strict_asb_claimed": false,
+  "temporal_accuracy_passed": true,
+  "threshold": 0.05
+}
