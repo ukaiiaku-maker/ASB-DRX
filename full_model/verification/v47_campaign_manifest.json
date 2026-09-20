@@ -1,0 +1,136 @@
+{
+  "branch": "exp/full-v34-recovery-v47-20260920",
+  "configuration": {
+    "common_state_represented_thickness_m": 4.96e-10,
+    "domain_m": 3.2e-06,
+    "geometry_fixture_section_thickness_m": 3.2e-06,
+    "representation_length_m": 4e-07,
+    "short_refinement_grids": [
+      128,
+      192,
+      256
+    ],
+    "temperature_K": 1100.0
+  },
+  "controller": {
+    "path": "full_model/verification/v47_campaign_controller.json",
+    "sha256": "90b3216d11759d28579ffa5b610d0fe4c92dd7ce0a36062802052cbd40b73736"
+  },
+  "evidence": {
+    "current_source_physical_pair": {
+      "path": "full_model/verification/v47_current_source_physical_pair.json",
+      "sha256": "001eb0ca63bddd793a12efe507269c1f9ebc6b16cc5ac3f7ffd148f44a9ec7af"
+    },
+    "geometry_force": {
+      "path": "full_model/verification/v47_geometry_force.json",
+      "sha256": "7ab114a059cc9535a4fc8f862b396b13df074817e174b20ad861bfc5fb46e38f"
+    },
+    "local_bundle_summary": {
+      "path": "full_model/verification/v47_local_bundle_summary.json",
+      "sha256": "0c3c30959ddb9b101dd5b7d3356c1ef01455e4d6c3342e01b489ffdb724b8e5a"
+    },
+    "ordering_first_nonzero": {
+      "path": "full_model/verification/v47_ordering_first_nonzero.json",
+      "sha256": "7b4ce03ef9e54268d4a184205a4201181ba1c835e43e3ed6a1aea2095ae106f9"
+    },
+    "ordering_late": {
+      "path": "full_model/verification/v47_ordering_late_macro.json",
+      "sha256": "5a2b8d0c7040b106bdf7367d541e1a82bde50f1cf71d5bae55a1a1c9e6235c27"
+    },
+    "ordering_post_front": {
+      "path": "full_model/verification/v47_ordering_post_front.json",
+      "sha256": "860d324bfa6863a6c25e67bc50de59d65da0b476f9e3623aefc423621b3be7d0"
+    },
+    "ordering_production_first": {
+      "path": "full_model/verification/v47_ordering_production_dispatch_first_nonzero.json",
+      "sha256": "6a16ac4368f4e79b80acaaa46465619ab4726544412f846af63101605991be8b"
+    },
+    "ordering_production_late": {
+      "path": "full_model/verification/v47_ordering_production_dispatch_late_macro.json",
+      "sha256": "c405d87fa1e1f45ab34bb9ff91cfc65c602e0aa060fb1c6d626545a90a0b6485"
+    },
+    "raw_spectral_union": {
+      "path": "full_model/verification/v47_v46_raw_spectral_union.json",
+      "sha256": "9fc206ea932e52578fbf16cb351ca1772115f8285f03a75dd0be140467540295"
+    },
+    "v46_physical_response": {
+      "path": "full_model/verification/v47_v46_physical_response_n128.json",
+      "sha256": "d043b8a4513bac2801706fac4423092d37ef4419e84bd943c819f03ec5dfc243"
+    }
+  },
+  "execution_policy": "local_only; no HPC3 jobs submitted; unrelated DDD workers preserved",
+  "generated_utc": "2026-09-20T18:49:34.690963+00:00",
+  "local_checkpoint_records": {
+    "short": {
+      "128": {
+        "accepted_dt_s": 4.8828125e-07,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/n128_one_interval.npz",
+        "checkpoint_sha256": "779d0ddab969aeed67014b3fd641683e71644cf1b7629e2045ed6d09baaa247d",
+        "event_scale": 1.0,
+        "ordering_finite_time_certified": true,
+        "ordering_method": "bounded_finite_time_matrix_free_rk2",
+        "representation_cells": 16.0,
+        "representation_length_m": 4e-07,
+        "spacing_m": 2.5e-08,
+        "wall_seconds": 86.83826579200104
+      },
+      "192": {
+        "accepted_dt_s": 4.8828125e-07,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/n192_one_interval.npz",
+        "checkpoint_sha256": "3c4526c5329f26b991c1e028cfd0496c053bff6b396a604e681b028e9d652d1e",
+        "event_scale": 1.0,
+        "ordering_finite_time_certified": true,
+        "ordering_method": "bounded_finite_time_matrix_free_rk2",
+        "representation_cells": 24.0,
+        "representation_length_m": 4e-07,
+        "spacing_m": 1.6666666666666667e-08,
+        "wall_seconds": 215.2979205470765
+      },
+      "256": {
+        "accepted_dt_s": 4.8828125e-07,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-short-refinement/n256_one_interval.npz",
+        "checkpoint_sha256": "1f3d138dd1a885431842ee5ecd30d0715116eabae29920785b0ae39c01f13658",
+        "event_scale": 1.0,
+        "ordering_finite_time_certified": true,
+        "ordering_method": "bounded_finite_time_matrix_free_rk2",
+        "representation_cells": 32.0,
+        "representation_length_m": 4e-07,
+        "spacing_m": 1.25e-08,
+        "wall_seconds": 370.6730368169956
+      }
+    },
+    "temporal": {
+      "16": {
+        "accepted_exposure_s": 3.90625e-06,
+        "accepted_substeps": 16,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-late-temporal/late_16_substeps.npz",
+        "checkpoint_sha256": "aa98d84b20dd33696216b8cddb860f5f032aeee9e737d29f0b1f436c1ce258cb",
+        "requested_substeps": 16,
+        "wall_seconds": 1228.400502352044
+      },
+      "8": {
+        "accepted_exposure_s": 3.90625e-06,
+        "accepted_substeps": 8,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920/full_model/production/results-local/v47-late-temporal/late_8_substeps.npz",
+        "checkpoint_sha256": "ba2528848fab47c91ee7ff5d0f4fafa78eb6c8301484f8782964a1b10ebcae8a",
+        "requested_substeps": 8,
+        "wall_seconds": 689.2307309450116
+      }
+    }
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. pytest -q tests",
+    "passed": 778,
+    "wall_seconds": 301.28
+  },
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "schema": "asb-drx/v47/campaign-manifest/v1",
+  "source_roles": {
+    "v46_closing_source": "ea519f0284e2cfdecf8d14ab2d802d6279975657",
+    "v46_scientific_source": "096159de1478bb259e445c15c11765d9149d7fe0",
+    "v47_evidence_source": "c80e2cdaecaf9ef328e0517a51198b0e94a0d38f",
+    "v47_geometry_and_analysis_source": "bca1d9288bcdd9acfba688084a213b7def99b4c3",
+    "v47_ordering_dispatch_source": "eb739b3faf00b37b2ddb5b5c5c9b2e62c6fa5699"
+  },
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v47-20260920"
+}

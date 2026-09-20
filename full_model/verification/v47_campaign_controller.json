@@ -1,0 +1,108 @@
+{
+  "branches": {
+    "fixed_scale_refinement": {
+      "classification": "SHORT_CURRENT_SOURCE_FIXED_SCALE_WITHIN_5PCT",
+      "curl_n192_n256_half63": 0.000449304284958446,
+      "full_horizon_n256_completed": false,
+      "ordered_n192_n256_half63": 0.08803526501247892,
+      "state": "MIXED_SCOPED"
+    },
+    "geometry_affinity": {
+      "classification": "GEOMETRY_FORCE_AND_RATE_NOT_QUALIFIED",
+      "force_fractional_extent_spread": 0.05139801617736286,
+      "physical_chemical_work_enabled": true,
+      "rate_qualified": false,
+      "rigid_translation_zero_force_passed": true,
+      "state": "FAILED_SCIENTIFIC"
+    },
+    "ordering_finite_time": {
+      "first_dispatch": "finite_time_asymptotic_endpoint_distance_unqualified",
+      "first_endpoint_distance_relative": 0.8209618767640674,
+      "late_dispatch": "qualified_asymptotic",
+      "late_endpoint_distance_relative": 0.0140280076068161,
+      "state": "PASSED_STATE_QUALIFIED"
+    },
+    "physical_response": {
+      "contour_displacement_m": 2.135204180735428e-11,
+      "displacement_over_interface_width": 5.33801045183857e-05,
+      "pair_classification": "VALID_BOUNDED_BULK_RESPONSE_PAIR",
+      "state": "VALID_SCOPED",
+      "v46_classification": "VALID_TINY_EXISTING_BOUNDARY_MIGRATION_WITH_BULK_RECOVERY"
+    },
+    "raw_union": {
+      "fine_tail_squared_norm_fraction": 0.021388190627261848,
+      "state": "PASSED_ACCOUNTING",
+      "union_relative_difference": 0.1591270290410718
+    },
+    "temporal_refinement": {
+      "classification": "CURRENT_SOURCE_TEMPORAL_REFINEMENT_PASSED_5PCT",
+      "relative_differences": {
+        "curl_nye": 2.0655098517415235e-05,
+        "ordered_density": 3.683085469950602e-07,
+        "plastic_distortion": 5.0108212210942165e-06,
+        "temperature_rise": 3.404495883071137e-05,
+        "total_density": 1.0597869124489956e-08
+      },
+      "state": "PASSED"
+    }
+  },
+  "classification": "KINEMATICS_REFINED_ORDERING_REPAIRED_GEOMETRY_RATE_UNQUALIFIED",
+  "drx_claimed": false,
+  "evidence": {
+    "current_source_physical_pair": {
+      "path": "full_model/verification/v47_current_source_physical_pair.json",
+      "sha256": "001eb0ca63bddd793a12efe507269c1f9ebc6b16cc5ac3f7ffd148f44a9ec7af"
+    },
+    "geometry_force": {
+      "path": "full_model/verification/v47_geometry_force.json",
+      "sha256": "7ab114a059cc9535a4fc8f862b396b13df074817e174b20ad861bfc5fb46e38f"
+    },
+    "local_bundle_summary": {
+      "path": "full_model/verification/v47_local_bundle_summary.json",
+      "sha256": "0c3c30959ddb9b101dd5b7d3356c1ef01455e4d6c3342e01b489ffdb724b8e5a"
+    },
+    "ordering_first_nonzero": {
+      "path": "full_model/verification/v47_ordering_first_nonzero.json",
+      "sha256": "7b4ce03ef9e54268d4a184205a4201181ba1c835e43e3ed6a1aea2095ae106f9"
+    },
+    "ordering_late": {
+      "path": "full_model/verification/v47_ordering_late_macro.json",
+      "sha256": "5a2b8d0c7040b106bdf7367d541e1a82bde50f1cf71d5bae55a1a1c9e6235c27"
+    },
+    "ordering_post_front": {
+      "path": "full_model/verification/v47_ordering_post_front.json",
+      "sha256": "860d324bfa6863a6c25e67bc50de59d65da0b476f9e3623aefc423621b3be7d0"
+    },
+    "ordering_production_first": {
+      "path": "full_model/verification/v47_ordering_production_dispatch_first_nonzero.json",
+      "sha256": "6a16ac4368f4e79b80acaaa46465619ab4726544412f846af63101605991be8b"
+    },
+    "ordering_production_late": {
+      "path": "full_model/verification/v47_ordering_production_dispatch_late_macro.json",
+      "sha256": "c405d87fa1e1f45ab34bb9ff91cfc65c602e0aa060fb1c6d626545a90a0b6485"
+    },
+    "raw_spectral_union": {
+      "path": "full_model/verification/v47_v46_raw_spectral_union.json",
+      "sha256": "9fc206ea932e52578fbf16cb351ca1772115f8285f03a75dd0be140467540295"
+    },
+    "v46_physical_response": {
+      "path": "full_model/verification/v47_v46_physical_response_n128.json",
+      "sha256": "d043b8a4513bac2801706fac4423092d37ef4419e84bd943c819f03ec5dfc243"
+    }
+  },
+  "execution_location": "local",
+  "fixture_passed": true,
+  "generated_utc": "2026-09-20T18:49:34.690963+00:00",
+  "lagb_claimed": false,
+  "material_calibration_claimed": false,
+  "next_exact_task": "derive an affinity-coupled geometry EXP-floor rate and resolve the n64-to-n128 active-increment sign change without changing the fixed 400 nm representation",
+  "regression": {
+    "command": "PYTHONPATH=src:. pytest -q tests",
+    "passed": 778,
+    "wall_seconds": 301.28
+  },
+  "schema": "asb-drx/v47/campaign-controller/v1",
+  "scientific_gate_passed": false,
+  "source_sha": "c80e2cdaecaf9ef328e0517a51198b0e94a0d38f",
+  "strict_asb_claimed": false
+}

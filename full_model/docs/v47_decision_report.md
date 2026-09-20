@@ -148,9 +148,10 @@ bulk pair; no existing-boundary migration, DRX, or ASB claim is made.
 ## Verification and claim boundary
 
 The local 8-versus-16 late-state temporal result passes the 5% threshold.  The
-final merged regression is recorded in the V47 controller and manifest.  Large checkpoint arrays stay
-under `full_model/production/results-local`; tracked evidence records their
-absolute paths and SHA-256 values.
+final merged regression passes 778 tests in 301.28 seconds and is recorded in
+the V47 controller and manifest.  Large checkpoint arrays stay under
+`full_model/production/results-local`; tracked evidence records their absolute
+paths and SHA-256 values.
 
 Qualified scopes are raw-union accounting, short-horizon curl/kinematic
 refinement, rigid-translation symmetry, physical chemical-work normalization,

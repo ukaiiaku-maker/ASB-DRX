@@ -1884,3 +1884,37 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `full_model/verification/v46_campaign_controller.json` and
   `full_model/verification/v46_campaign_manifest.json`. DRX, a persistent
   LAGB, strict ASB, and material calibration remain unclaimed.
+
+## Directive v47 force accuracy and physical response (2026-09-20)
+
+- Raw-array Fourier reconstruction confirms a 2.138819% fine-only curl--Nye
+  squared-norm tail and 15.912703% zero-extension union difference. These are
+  discrete-reconstruction diagnostics, not exact error or energy fractions.
+- A fixed-400-nm one-interval n128/n192/n256 refinement passes curl--Nye at
+  0.04493% on the n192/n256 half-width-63 band, while ordered density remains
+  failed at 8.8035%. Late n128 8/16-substep refinement passes with 0.00340%
+  maximum reported difference. The full 62.5 microsecond n256 horizon was not
+  run.
+- The V46 geometry fixture actually used 3.2 micrometres section thickness;
+  its reported 1 micrometre value was an attribution error. Direct quadratic
+  gradient increments and a rigid-translation zero-force control pass, but the
+  nonzero n64 force varies by 5.1398% and the active increment changes sign at
+  n128. Geometry force/rate remains unqualified.
+- New chemical work is `mu*Delta N`, with signed exchange volume, atomic
+  volume, stoichiometry, species, and sign convention ledgered. The existing
+  EXP-floor proposal rate remains affinity-independent, which is now recorded
+  as the next constitutive repair rather than hidden by chemical credit.
+- Production ordering now rejects a first-state equilibrium shortcut at an
+  82.096% endpoint-distance bound and uses finite RK2; the late 1.4028% state
+  retains the asymptotic route. Long finite paths may hand off only after
+  entering the same certified 5% contraction ball.
+- V46 physical postprocessing finds only 2.1352e-11 m contour motion
+  (5.338e-5 interface widths), alongside 0.3063 K mean heating and bulk
+  recovery. A bounded 100/s-versus-hold pair gives a valid bulk response but
+  no migration, DRX, or ASB claim.
+- Classification:
+  `KINEMATICS_REFINED_ORDERING_REPAIRED_GEOMETRY_RATE_UNQUALIFIED`.
+  The final merged suite passes 778 tests in 301.28 s. Report, controller, and
+  manifest are `full_model/docs/v47_decision_report.md`,
+  `full_model/verification/v47_campaign_controller.json`, and
+  `full_model/verification/v47_campaign_manifest.json`.
