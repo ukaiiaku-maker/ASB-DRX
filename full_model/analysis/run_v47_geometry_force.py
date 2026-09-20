@@ -114,12 +114,22 @@ def reservoir_controls(state, data, cell):
             state, {"cell": cell, "family": 0, "burgers_sign": 1,
                     "proposed_extent": .1},
             systems, topologies, data[1], common, extensive, kinetics, 1e-6)
-        rows[label] = {key: ledger[key] for key in (
-            "accepted", "classification", "event_rate_s",
-            "signed_material_exchange_volume_m3",
-            "signed_material_exchange_count", "chemical_reservoir_work_J",
-            "chemical_reservoir_work_J_m3_cells",
-            "complete_energy_change_J_m3_cells", "chemical_work_mode")}
+        rows[label] = {
+            "accepted": bool(ledger["accepted"]),
+            "classification": ledger["classification"],
+            "event_rate_s": float(ledger["event_rate_s"]),
+            "signed_material_exchange_volume_m3": float(
+                ledger["signed_material_exchange_volume_m3"]),
+            "signed_material_exchange_count": float(
+                ledger["signed_material_exchange_count"]),
+            "chemical_reservoir_work_J": float(
+                ledger["chemical_reservoir_work_J"]),
+            "chemical_reservoir_work_J_m3_cells": float(
+                ledger["chemical_reservoir_work_J_m3_cells"]),
+            "complete_energy_change_J_m3_cells": float(
+                ledger["complete_energy_change_J_m3_cells"]),
+            "chemical_work_mode": ledger["chemical_work_mode"],
+        }
     return rows
 
 
@@ -165,7 +175,7 @@ def main():
             "current EXP-floor proposal rate uses resolved stress and is "
             "independent of the complete geometry affinity; energy currently "
             "acts as an atomic accept/reject guard"),
-        "force_qualified": force_spread <= .05,
+        "force_qualified": bool(force_spread <= .05),
         "rate_qualified": False,
     }
     payload["classification"] = (
