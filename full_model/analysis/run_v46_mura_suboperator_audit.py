@@ -19,6 +19,9 @@ from full_model.production.tensorial_nye import (
     nye_from_plastic_distortion, rotated_system_fields,
 )
 from full_model.production.v24_mechanical_wall import accepted_v24_mechanical_step
+from full_model.production.wall_topology_supply import (
+    accepted_compatible_mura_transport_capture_step,
+)
 
 
 LENGTH_M = 3.2e-6
@@ -115,6 +118,7 @@ def run_grid(n):
             state1.common.orientation_rad-state0.common.orientation_rad)
             /accepted_dt,
     }
+    ordering = ledger["ordering_thermodynamics"]
     return fields, {
         "grid": n, "spacing_m": context["spacing_m"],
         "requested_dt_s": DT_S, "accepted_dt_s": accepted_dt,
@@ -123,7 +127,61 @@ def run_grid(n):
         "family_event_scales": [float(x) for x in
                                  ledger["mura_family_event_scales"]],
         "operator": ledger["mura_transport_operator"],
+        "ordering_dispatch": ordering["stiff_dispatch"],
+        "ordering_integration_method": ordering["integration_method"],
+        "ordering_active_degrees_of_freedom": ordering[
+            "active_degrees_of_freedom"],
+        "ordering_maximum_attempt_exposure": ordering[
+            "maximum_attempt_exposure"],
+        "ordering_accessibility_passed": ordering.get(
+            "asymptotic_state_accessibility_passed"),
         "field_spectra": {name: spectrum(value) for name, value in fields.items()},
+    }
+
+
+def capture_length_sensitivity():
+    prepared = {}
+    for n in (128, 192):
+        context = resolved_bicrystal(
+            grid=n, length_m=LENGTH_M, interface_width_m=4e-7,
+            temperature_K=1100.0, child_line_fraction=.35)
+        state = context["state"].mechanical
+        driving = driving_at_time(n, .01, "hold", 0.0, .5*DT_S)
+        drive = resolved_driving_components(
+            state.common, driving, context["systems"], context["topologies"],
+            context["wall_parameters"])
+        _, slip_directions, _ = rotated_system_fields(
+            context["systems"], state.common.orientation_rad)
+        velocity = drive["speed_m_s"][..., None]*slip_directions
+        prepared[n] = context, state, velocity
+    rows = []
+    for length in (0.0, 5e-8, 1e-7, 2e-7, 4e-7, 8e-7):
+        captured = {}
+        for n, (context, state, velocity) in prepared.items():
+            _, _, ledger = accepted_compatible_mura_transport_capture_step(
+                state.density, state.reservoir_alignment, velocity, -velocity,
+                context["capture_support"], context["systems"],
+                state.common.orientation_rad, context["spacing_m"], DT_S,
+                context["topologies"],
+                capture_deposition_length_m=length)
+            captured[n] = sum(
+                ledger["sign"][sign]["captured_line_m2"]
+                for sign in ("plus", "minus"))
+        rows.append({
+            "capture_deposition_length_m": length,
+            "halfwidth8_error": compare(
+                captured[128], captured[192], 8)[
+                    "complex_coefficient_relative_rms"],
+            "halfwidth24_error": compare(
+                captured[128], captured[192], 24)[
+                    "complex_coefficient_relative_rms"],
+        })
+    return {
+        "registered_before_outcomes_m": [0.0, 5e-8, 1e-7, 2e-7, 4e-7, 8e-7],
+        "selection_basis": (
+            "400 nm resolves the pre-existing 450 nm trap half-width; the "
+            "capture depth is distinct from mesh and atomistic core radius"),
+        "rows": rows,
     }
 
 
@@ -180,6 +238,7 @@ def main():
         "physical_domain_m": LENGTH_M,
         "grids": {"128": row128, "192": row192},
         "coordinate_and_symbol_audit": manufactured_origin_audit(),
+        "capture_length_sensitivity": capture_length_sensitivity(),
         "comparisons": comparisons,
         "causal_order_for_diagnosis": list(ordered),
         "first_field_above_five_percent_at_halfwidth24": first,
