@@ -1,0 +1,28 @@
+{
+  "schema": "asb-drx/v48/ordering-reference-summary/v1",
+  "classification": "NUMERICAL_ACCURACY_QUALIFIED_FOR_OBSERVABLE_WITH_SCALABILITY_LIMIT",
+  "stage": "late_macro",
+  "frozen_source_sha": "2fcb8a83f272c8a6a3371c8fbc001f49d22b1512",
+  "raw_result": "full_model/production/results-local/v48-ordering-reference/late_macro_frozen_2fcb8a8.json",
+  "raw_result_sha256": "540c8f78eb9eb00992735d1d6012abb8ae9ed9c164d384b3fc62e0b8bbff5784",
+  "before_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-original-horizon/n128/continuation_118_mura.npz",
+  "before_checkpoint_sha256": "7b036370d52d4bc76ac49a1020896fdc89a3ab8c911daefefb1264414acb298b",
+  "pre_ordering_density_sha256": "067704f848c258256a9a9d4581d4d971dd713dad99b4d4b20954250ffd0820d9",
+  "same_pre_ordering_fork_verified": true,
+  "before_physical_time_s": 6.201171875e-05,
+  "requested_interval_s": 4.8828125e-07,
+  "default_vs_four_times_tighter_max_relative_l2": 2.6218672080089525e-16,
+  "declared_endpoint_tolerance_relative": 0.01,
+  "default_local_error_control_passed": true,
+  "tightened_local_error_control_passed": true,
+  "per_solve_global_self_certificate": false,
+  "independent_endpoint_comparison_passed": true,
+  "adaptive_change_from_initial_max_relative_l2": 0.0002837308308318093,
+  "projected_rk2_promoted_as_reference": false,
+  "old_asymptotic_promoted_as_reference": false,
+  "scalability_qualified_for_broad_sweeps": false,
+  "run_wall_seconds": {
+    "adaptive_default": 7594.5554482860025,
+    "adaptive_tightened": 6417.363432215992
+  }
+}
