@@ -1,0 +1,81 @@
+{
+  "schema": "asb-drx/v48/campaign-manifest/v1",
+  "generated_utc": "2026-09-21T04:17:39Z",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v34-recovery-v48-20260920",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v48-20260920",
+  "execution_policy": "local only; no HPC3 jobs submitted; unrelated DDD and legacy Python processes preserved",
+  "source_roles": {
+    "v47_start": "929b726e9c86f73ba1759d20cffe5d9efaf0fdae",
+    "frozen_simulation_and_ordering_source": "2fcb8a83f272c8a6a3371c8fbc001f49d22b1512",
+    "final_production_geometry_rate_source": "53e7496f1dcf5531e9acbb0a709aaa57ea87b7be",
+    "geometry_evidence_driver_source": "e4046f5b623033748405633406ee549c90a1157e",
+    "decision_and_controller_checkpoint": "a24d232fc0dcdcea138646b1efb747fabe7f2cee"
+  },
+  "configuration": {
+    "ordering_grid": 128,
+    "ordering_interval_s": 4.8828125e-07,
+    "ordering_default_rtol": 0.0002,
+    "ordering_default_atol": 2e-08,
+    "ordering_tightening_factor": 4.0,
+    "ordering_endpoint_tolerance_relative": 0.01,
+    "physical_response_grid": 16,
+    "physical_response_intervals": 8,
+    "physical_response_tensor_shear_rate_s-1": 100.0,
+    "fixed_representation_length_m": 4e-07,
+    "temperature_K": 1100.0
+  },
+  "controller": {
+    "path": "full_model/verification/v48_campaign_controller.json",
+    "sha256": "9f1293182a12c92f651a661df39f7da7da53d96a7a93f6d96a04a2c5ae80e314"
+  },
+  "decision_report": {
+    "path": "full_model/docs/v48_decision_report.md",
+    "sha256": "9e1074586dd0d2fa539932949878634b1922b89337bbe5463e707fba1333766c"
+  },
+  "local_raw_records": {
+    "ordering_first_nonzero": {
+      "path": "full_model/production/results-local/v48-ordering-reference/first_nonzero_frozen_2fcb8a8.json",
+      "sha256": "3caae6ffdf393a805b99ab4d3e4c0a78ba535ffd051f844c7d444303e1dd1bcd",
+      "classification": "FINITE_REFERENCE_ERROR_CONTROLLED"
+    },
+    "ordering_post_front": {
+      "path": "full_model/production/results-local/v48-ordering-reference/post_front_frozen_2fcb8a8.json",
+      "sha256": "086f7dd6f9ac9451d8c76d09151e017ab160a8e4516ed8c1238dd1091d445354",
+      "classification": "FINITE_REFERENCE_ERROR_CONTROLLED"
+    },
+    "ordering_late_macro": {
+      "path": "full_model/production/results-local/v48-ordering-reference/late_macro_frozen_2fcb8a8.json",
+      "sha256": "540c8f78eb9eb00992735d1d6012abb8ae9ed9c164d384b3fc62e0b8bbff5784",
+      "classification": "FINITE_REFERENCE_ERROR_CONTROLLED"
+    },
+    "physical_loading": {
+      "path": "full_model/production/results-local/v48-physical/n16/loading/run_manifest.json",
+      "sha256": "d7c09c3f47c600768f34ce904fe2b214db8b6ad40c9de7108f0977222ea966e5",
+      "status": "COMPLETE"
+    },
+    "physical_hold": {
+      "path": "full_model/production/results-local/v48-physical/n16/hold/run_manifest.json",
+      "sha256": "57006bd40fe050794bab9183e6be170f7215bfa65ee5d6a5fc08ad734c7f3251",
+      "status": "COMPLETE"
+    }
+  },
+  "evidence": {
+    "common_energy": {"path": "full_model/verification/v48_common_energy_audit.json", "sha256": "2e228f4aa755ba1848d328b9efa05575854544d263e246bddfbf05107bc04b7e"},
+    "geometry": {"path": "full_model/verification/v48_geometry_qualification.json", "sha256": "8d3b6a81c1a7e00eeb9f97765136d08ae433bc14f23386ceac86dabf3d2ecc20"},
+    "physical_pair": {"path": "full_model/verification/v48_physical_pair_n16.json", "sha256": "956b7b84e8f1e7491fda84b916d9ee2e46f864961d6d0ddfc42fbae3079a89f9"},
+    "physical_plot": {"path": "full_model/verification/v48_physical_pair_n16.png", "sha256": "6bf97332e5ca7fd1c47f5932c2ca1bc7a219967dfca0e88d2a903cd10df1056c"},
+    "ordering_first_nonzero": {"path": "full_model/verification/v48_ordering_first_nonzero.json", "sha256": "b33421e26a21bc9feacdb4246d43c3028efe336c166a258a6cb868459aaf7509"},
+    "ordering_post_front": {"path": "full_model/verification/v48_ordering_post_front.json", "sha256": "0357747599fdb09791866eb5918ae2edf0edf3e8d9d7e679fb169e1da7a26e22"},
+    "ordering_late_macro": {"path": "full_model/verification/v48_ordering_late_macro.json", "sha256": "bfc39166cdc7f626cbe90c1979cab666c3fd82001ad43d5ec8bdd9d2379053cf"}
+  },
+  "excluded_record": {
+    "path": "full_model/production/results-local/v48-ordering-reference/PROVENANCE_INVALID_first_nonzero_source_changed_during_run.json",
+    "reason": "source worktree changed while the calculation was live"
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 789,
+    "wall_seconds": 221.90
+  }
+}
