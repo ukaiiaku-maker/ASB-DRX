@@ -1,0 +1,71 @@
+{
+  "schema": "asb-drx/v48/campaign-controller/v1",
+  "generated_utc": "2026-09-21T04:17:39Z",
+  "execution_location": "local",
+  "classification": "FINITE_RATE_AND_COMMON_ENERGY_REPAIRED_GEOMETRY_RATE_VERIFIED_MATCHED_FORCE_UNRESOLVED",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "drx_claimed": false,
+  "lagb_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false,
+  "source_roles": {
+    "frozen_simulation_and_ordering_reference_source": "2fcb8a83f272c8a6a3371c8fbc001f49d22b1512",
+    "final_geometry_rate_closure_source": "53e7496f1dcf5531e9acbb0a709aaa57ea87b7be",
+    "geometry_evidence_driver_source": "e4046f5b623033748405633406ee549c90a1157e",
+    "ordering_evidence_checkpoint": "e881dfa680f33007698d639ef5978feb11b18f88"
+  },
+  "branches": {
+    "finite_ordering": {
+      "state": "PASSED_OBSERVABLE_ACCURACY_SCALABILITY_LIMITED",
+      "tested_grid": 128,
+      "retained_states_qualified": ["first_nonzero", "post_front", "late_macro"],
+      "maximum_default_vs_four_times_tighter_relative_l2": 2.6218672080089525e-16,
+      "declared_tolerance_relative": 0.01,
+      "late_default_wall_seconds": 7594.5554482860025,
+      "late_tightened_wall_seconds": 6417.363432215992,
+      "broad_sweep_scalability_qualified": false,
+      "projected_rk2_promoted_as_reference": false,
+      "legacy_asymptotic_promoted_as_reference": false
+    },
+    "common_energy_and_loading": {
+      "state": "IMPLEMENTATION_VERIFIED",
+      "compact_total_internal_energy_residual_J": 4.4176e-28,
+      "v46_repriced_defect_increment_J": -4.94996247897e-18,
+      "historical_v46_cumulative_first_law_retroactively_qualified": false
+    },
+    "geometry_affinity": {
+      "state": "IMPLEMENTATION_VERIFIED_FORCE_OBSERVABLE_UNRESOLVED",
+      "same_path_quadratic_fit_max_relative_residual": 8.010030137618944e-14,
+      "matched_strip_increment_J_n32_n64_n128": [-6.0308e-16, -2.4373e-16, 1.24895e-16],
+      "matched_strip_sign_converged": false,
+      "repeated_accepted_events": 4,
+      "actual_reverse_edge_atomic_rejection_passed": true
+    },
+    "physical_response": {
+      "state": "CONTROLLED_PHYSICAL_RESPONSE",
+      "grid": 16,
+      "accepted_intervals": 8,
+      "achieved_physical_time_s": 3.90625e-06,
+      "additional_engineering_shear": 0.0007812500000000007,
+      "maximum_first_law_relative_residual": 9.061344122850155e-15,
+      "spatially_refined_prediction": false
+    }
+  },
+  "evidence": {
+    "common_energy": {"path": "full_model/verification/v48_common_energy_audit.json", "sha256": "2e228f4aa755ba1848d328b9efa05575854544d263e246bddfbf05107bc04b7e"},
+    "geometry": {"path": "full_model/verification/v48_geometry_qualification.json", "sha256": "8d3b6a81c1a7e00eeb9f97765136d08ae433bc14f23386ceac86dabf3d2ecc20"},
+    "physical_pair": {"path": "full_model/verification/v48_physical_pair_n16.json", "sha256": "956b7b84e8f1e7491fda84b916d9ee2e46f864961d6d0ddfc42fbae3079a89f9"},
+    "physical_plot": {"path": "full_model/verification/v48_physical_pair_n16.png", "sha256": "6bf97332e5ca7fd1c47f5932c2ca1bc7a219967dfca0e88d2a903cd10df1056c"},
+    "ordering_first_nonzero": {"path": "full_model/verification/v48_ordering_first_nonzero.json", "sha256": "b33421e26a21bc9feacdb4246d43c3028efe336c166a258a6cb868459aaf7509"},
+    "ordering_post_front": {"path": "full_model/verification/v48_ordering_post_front.json", "sha256": "0357747599fdb09791866eb5918ae2edf0edf3e8d9d7e679fb169e1da7a26e22"},
+    "ordering_late_macro": {"path": "full_model/verification/v48_ordering_late_macro.json", "sha256": "bfc39166cdc7f626cbe90c1979cab666c3fd82001ad43d5ec8bdd9d2379053cf"}
+  },
+  "invalid_evidence_excluded": "full_model/production/results-local/v48-ordering-reference/PROVENANCE_INVALID_first_nonzero_source_changed_during_run.json",
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 789,
+    "wall_seconds": 221.90
+  },
+  "next_exact_task": "optimize the evolved-state matrix-free finite ordering solve without changing kinetics, then resolve the fixed-scale matched-strip force sign before a broader physical campaign"
+}

@@ -1918,3 +1918,31 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   manifest are `full_model/docs/v47_decision_report.md`,
   `full_model/verification/v47_campaign_controller.json`, and
   `full_model/verification/v47_campaign_manifest.json`.
+
+## Directive v48 reliable finite rate and common energy (2026-09-20/21)
+
+- Production ordering now uses an adaptive matrix-free Rosenbrock-Euler route;
+  projected RK2 is diagnostic only and the unproved Euclidean asymptotic
+  handoff is disabled.  Frozen-source n128 default/4x-tighter comparisons pass
+  at first-nonzero, post-front, and late-macro states with maximum relative L2
+  difference `2.622e-16`.
+- The first state evolves `29.0%` while the rejected RK2 reference remains
+  unchanged.  The late default/tightened solves cost `7594.6/6417.4 s`, so
+  endpoint accuracy is qualified for the tested observable but broad-sweep
+  scalability is not.
+- Transport, locking, ordering, front diagnostics, and endpoint repricing now
+  use one signed-reservoir energy functional.  A compact current transaction
+  closes total internal energy to `4.42e-28 J`; the historical V46 trajectory
+  is not retroactively promoted because its full work history was not retained.
+- Geometry uses an event-normalized complete affinity multiplying the EXP-floor
+  Arrhenius rate, with a finite extent/rate closure certificate.  Repeated
+  evolved-state events and an actual reverse-edge rollback pass.  The fixed
+  10 nm matched-strip increment still changes sign across n32/n64/n128, so that
+  force observable remains unresolved.
+- An eight-interval n16 loading/hold pair reaches `3.90625 us` and engineering
+  shear `7.8125e-4`, with maximum first-law residual `9.06e-15`.  It is a
+  controlled short-horizon response, not a spatially refined prediction.
+- Final regression: 789 tests pass in 221.90 s.  Classification:
+  `FINITE_RATE_AND_COMMON_ENERGY_REPAIRED_GEOMETRY_RATE_VERIFIED_MATCHED_FORCE_UNRESOLVED`.
+  DRX, persistent LAGB formation, strict ASB, and material calibration remain
+  unclaimed.
