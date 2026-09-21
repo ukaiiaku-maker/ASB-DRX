@@ -1,0 +1,27 @@
+{
+  "schema": "asb-drx/v48/ordering-reference-summary/v1",
+  "classification": "NUMERICAL_ACCURACY_QUALIFIED_FOR_OBSERVABLE",
+  "stage": "post_front",
+  "frozen_source_sha": "2fcb8a83f272c8a6a3371c8fbc001f49d22b1512",
+  "raw_result": "full_model/production/results-local/v48-ordering-reference/post_front_frozen_2fcb8a8.json",
+  "raw_result_sha256": "086f7dd6f9ac9451d8c76d09151e017ab160a8e4516ed8c1238dd1091d445354",
+  "before_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v46-20260920/full_model/production/results-local/v46-checkpointed/n128/operation_009_front.npz",
+  "before_checkpoint_sha256": "13a1075807199ba1861944ee121ae5c9adbb21c9ea5fc0317df046dcc40eead5",
+  "pre_ordering_density_sha256": "89f75710b7d47f63511ed543a7bea4d0a172482a925de62cd3a8274ff6330d9c",
+  "same_pre_ordering_fork_verified": true,
+  "before_physical_time_s": 3.90625e-06,
+  "requested_interval_s": 4.8828125e-07,
+  "default_vs_four_times_tighter_max_relative_l2": 2.1477916942066858e-16,
+  "declared_endpoint_tolerance_relative": 0.01,
+  "default_local_error_control_passed": true,
+  "tightened_local_error_control_passed": true,
+  "per_solve_global_self_certificate": false,
+  "independent_endpoint_comparison_passed": true,
+  "adaptive_change_from_initial_max_relative_l2": 0.02467669687163473,
+  "projected_rk2_promoted_as_reference": false,
+  "old_asymptotic_promoted_as_reference": false,
+  "run_wall_seconds": {
+    "adaptive_default": 2673.2440053678583,
+    "adaptive_tightened": 2542.3725133549888
+  }
+}
