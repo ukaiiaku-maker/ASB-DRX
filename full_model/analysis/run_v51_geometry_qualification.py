@@ -23,7 +23,8 @@ from full_model.production.subcell_segment_geometry import (
 )
 from full_model.production.v24_mechanical_wall import (
     V24MechanicalWallState, accepted_subcell_face_transaction,
-    accepted_subcell_x_faces_shared_clock, synchronize_common,
+    accepted_subcell_x_faces_shared_clock, accepted_v24_mechanical_step,
+    synchronize_common,
 )
 from tests.test_v50_production_subcell_geometry import intrinsic_kinetics
 
@@ -190,6 +191,35 @@ def translation_record():
             "no_fitted_mesh_potential_subtracted": True}
 
 
+def integrated_audit_record():
+    records = []
+    for n in (16, 32):
+        state, data = fixture(n)
+        result, ledger = accepted_v24_mechanical_step(
+            state, data[1], data[3], data[4], data[5], data[6], data[7], data[8],
+            1e-9, topology_route_enabled=False,
+            mura_transport_operator="compatible_dealiased",
+            subcell_geometry_event={"proposed_displacement_m": -1e-8},
+            subcell_geometry_kinetics=intrinsic_kinetics())
+        event = ledger["subcell_geometry_event_energy_kinematics"]
+        stage = ledger["nye_suboperator_audit"]["stages"][-1]
+        records.append({
+            "grid": n, "event_accepted": event["accepted"],
+            "event_classification": event["classification"],
+            "published_event_count": int(
+                result.subcell_geometry.accepted_event_count),
+            "candidate_line_surface_event_residual_relative": event[
+                "line_surface_event_residual_relative"],
+            "independent_increment_residual_relative": stage[
+                "increment_residual_relative_to_event"],
+            "independent_compatibility_passed": stage[
+                "independent_compatibility_passed"],
+            "accepted_step_hard_invariant_passed": ledger[
+                "nye_suboperator_audit"]["accepted_step_hard_invariant_passed"],
+        })
+    return records
+
+
 def main():
     compatibility = compatibility_rows()
     forces = force_records()
@@ -204,6 +234,7 @@ def main():
         "shared_clock_two_faces": shared_clock_record(),
         "finite_proposal_overshoot": overshoot_record(),
         "noninteger_translation": translation_record(),
+        "integrated_production_audit": integrated_audit_record(),
         "energy_map_retained": all(row(n)[
             "ordered_gradient_increment_J"] > 0.0 for n in (32, 64, 128)),
         "scientific_compatibility_passed": all(
