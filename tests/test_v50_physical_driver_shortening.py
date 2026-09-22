@@ -5,6 +5,7 @@ import numpy as np
 
 from full_model.analysis.run_v49_physical_continuation import (
     advance_consistent_midpoint_segment,
+    configure_restart_protocol,
 )
 
 
@@ -119,3 +120,43 @@ def test_repricing_old_candidate_has_manufactured_nonzero_residual():
     H = 1e-6; h = .5e-6; delta_p = 1e-5
     residual_J_m3 = .5*G*engineering_rate*(H-h)*delta_p
     np.testing.assert_allclose(residual_J_m3, 44.55, rtol=1e-15)
+
+
+def test_declared_protocol_transition_inherits_exact_endpoint_load():
+    metadata = {
+        "grid": 128, "macro_dt_s": 4.8828125e-7,
+        "protocol": "continued_deformation", "strain_rate_s": 100.0,
+        "initial_tensor_shear": .01, "load_origin_time_s": 0.0,
+        "physical_time_s": 2e-6, "completed_intervals": 4,
+        "records": [{"endpoint_load": {
+            "mean_strain": [[0.0, .0102], [.0102, 0.0]],
+            "fixed_eigenstrain_present": True}}],
+    }
+    result = configure_restart_protocol(
+        metadata, grid=128, macro_dt_s=4.8828125e-7,
+        protocol="hold", strain_rate_s=0.0, initial_tensor_shear=None,
+        protocol_transition=True, restart_checkpoint="parent.npz")
+    assert result["restart_mode"] == "DECLARED_PROTOCOL_TRANSITION"
+    assert result["initial_tensor_shear"] == .0102
+    assert result["load_origin_time_s"] == 2e-6
+    assert result["completed_intervals"] == 0
+    assert result["records"] == []
+    transition = result["protocol_transitions"][-1]
+    assert transition["inherited_completed_intervals"] == 4
+    assert not transition["intentional_load_jump"]
+
+
+def test_exact_restart_inherits_initial_shear_when_argument_is_omitted():
+    metadata = {
+        "grid": 16, "macro_dt_s": 1e-7, "protocol": "hold",
+        "strain_rate_s": 0.0, "initial_tensor_shear": .012,
+        "load_origin_time_s": 3e-6, "completed_intervals": 2,
+        "records": [{"interval": 1}, {"interval": 2}],
+    }
+    result = configure_restart_protocol(
+        metadata, grid=16, macro_dt_s=1e-7, protocol="hold",
+        strain_rate_s=0.0, initial_tensor_shear=None,
+        protocol_transition=False, restart_checkpoint="exact.npz")
+    assert result["restart_mode"] == "EXACT_RESTART"
+    assert result["initial_tensor_shear"] == .012
+    assert result["completed_intervals"] == 2

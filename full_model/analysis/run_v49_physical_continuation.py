@@ -131,6 +131,85 @@ def advance_consistent_midpoint_segment(
     raise RuntimeError("midpoint/duration selection exceeded retry limit")
 
 
+def configure_restart_protocol(metadata, *, grid, macro_dt_s, protocol,
+                               strain_rate_s, initial_tensor_shear,
+                               protocol_transition, restart_checkpoint):
+    """Resolve an exact restart or a declared no-jump protocol transition."""
+    structural = {
+        "grid": int(grid), "macro_dt_s": float(macro_dt_s),
+    }
+    mismatch = {key: (metadata.get(key), value)
+                for key, value in structural.items()
+                if metadata.get(key) != value}
+    if mismatch:
+        raise ValueError(f"restart structural mismatch: {mismatch}")
+    if not protocol_transition:
+        resolved_initial = (float(metadata["initial_tensor_shear"])
+                            if initial_tensor_shear is None
+                            else float(initial_tensor_shear))
+        required = {
+            "protocol": protocol, "strain_rate_s": float(strain_rate_s),
+            "initial_tensor_shear": resolved_initial,
+        }
+        mismatch = {key: (metadata.get(key), value)
+                    for key, value in required.items()
+                    if metadata.get(key) != value}
+        if mismatch:
+            raise ValueError(
+                f"restart protocol/configuration mismatch: {mismatch}")
+        return {
+            "initial_tensor_shear": resolved_initial,
+            "load_origin_time_s": float(metadata["load_origin_time_s"]),
+            "completed_intervals": int(metadata["completed_intervals"]),
+            "records": list(metadata["records"]),
+            "protocol_transitions": list(
+                metadata.get("protocol_transitions", [])),
+            "restart_mode": "EXACT_RESTART",
+        }
+
+    records = list(metadata.get("records", []))
+    if not records:
+        raise ValueError("protocol transition requires a recorded endpoint load")
+    endpoint = records[-1].get("endpoint_load", {})
+    mean = np.asarray(endpoint.get("mean_strain"), dtype=float)
+    if mean.shape != (2, 2) or not np.all(np.isfinite(mean)):
+        raise ValueError("protocol transition lacks the full endpoint mean strain")
+    if not np.allclose(mean, mean.T, rtol=0.0, atol=2e-15):
+        raise ValueError("protocol transition endpoint strain is not symmetric")
+    if max(abs(mean[0, 0]), abs(mean[1, 1])) > 2e-15:
+        raise ValueError("driver cannot preserve a non-shear endpoint load")
+    endpoint_shear = .5*(float(mean[0, 1])+float(mean[1, 0]))
+    if (initial_tensor_shear is not None
+            and not np.isclose(float(initial_tensor_shear), endpoint_shear,
+                               rtol=0.0, atol=2e-15)):
+        raise ValueError(
+            "declared transition initial shear differs from checkpoint endpoint")
+    if not endpoint.get("fixed_eigenstrain_present", False):
+        raise ValueError("transition cannot discard the checkpoint load owner")
+    physical_time = float(metadata["physical_time_s"])
+    transitions = list(metadata.get("protocol_transitions", []))
+    transitions.append({
+        "classification": "DECLARED_NO_LOAD_JUMP_PROTOCOL_TRANSITION",
+        "parent_checkpoint": str(Path(restart_checkpoint).resolve()),
+        "physical_time_s": physical_time,
+        "inherited_completed_intervals": int(metadata["completed_intervals"]),
+        "from_protocol": metadata["protocol"],
+        "from_strain_rate_s": float(metadata["strain_rate_s"]),
+        "to_protocol": protocol,
+        "to_strain_rate_s": float(strain_rate_s),
+        "endpoint_mean_strain": mean.tolist(),
+        "intentional_load_jump": False,
+    })
+    return {
+        "initial_tensor_shear": endpoint_shear,
+        "load_origin_time_s": physical_time,
+        "completed_intervals": 0,
+        "records": [],
+        "protocol_transitions": transitions,
+        "restart_mode": "DECLARED_PROTOCOL_TRANSITION",
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--initial-checkpoint", type=Path)
@@ -142,7 +221,9 @@ def main():
     parser.add_argument("--protocol", choices=("hold", "continued_deformation"),
                         required=True)
     parser.add_argument("--strain-rate-s", type=float, default=100.0)
-    parser.add_argument("--initial-tensor-shear", type=float, default=.01)
+    parser.add_argument("--initial-tensor-shear", type=float)
+    parser.add_argument("--protocol-transition", action="store_true",
+                        help="start a no-load-jump protocol at a restart endpoint")
     args = parser.parse_args()
     if (args.initial_checkpoint is None) == (args.restart is None):
         raise ValueError("select exactly one initial checkpoint or restart")
@@ -152,31 +233,36 @@ def main():
         temperature_K=1100.0, child_line_fraction=.35)
     rate = 0.0 if args.protocol == "hold" else float(args.strain_rate_s)
     if args.restart is None:
+        if args.protocol_transition:
+            raise ValueError("protocol transition requires --restart")
+        initial_tensor_shear = (.01 if args.initial_tensor_shear is None
+                                else float(args.initial_tensor_shear))
         state, source_metadata = load_stage(args.initial_checkpoint, context)
         physical_time = float(source_metadata.get("physical_time_s", 0.0))
         load_origin = physical_time
         completed = 0; records = []
         cumulative_work = 0.0
-        d0 = driving(args.grid, args.initial_tensor_shear,
+        d0 = driving(args.grid, initial_tensor_shear,
                      args.protocol, rate, 0.0)
         initial_internal = energy(context, state, d0).internal_J
         source_checkpoint = args.initial_checkpoint.resolve()
+        protocol_transitions = []
+        restart_mode = "FRESH_PROTOCOL_FROM_INITIAL_CHECKPOINT"
     else:
         state, metadata = load_stage(args.restart, context)
-        required = {
-            "grid": args.grid, "protocol": args.protocol,
-            "strain_rate_s": rate, "macro_dt_s": args.dt_s,
-            "initial_tensor_shear": args.initial_tensor_shear,
-        }
-        mismatch = {key: (metadata.get(key), value)
-                    for key, value in required.items()
-                    if metadata.get(key) != value}
-        if mismatch:
-            raise ValueError(f"restart protocol/configuration mismatch: {mismatch}")
+        configuration = configure_restart_protocol(
+            metadata, grid=args.grid, macro_dt_s=args.dt_s,
+            protocol=args.protocol, strain_rate_s=rate,
+            initial_tensor_shear=args.initial_tensor_shear,
+            protocol_transition=args.protocol_transition,
+            restart_checkpoint=args.restart)
+        initial_tensor_shear = configuration["initial_tensor_shear"]
         physical_time = float(metadata["physical_time_s"])
-        load_origin = float(metadata["load_origin_time_s"])
-        completed = int(metadata["completed_intervals"])
-        records = list(metadata["records"])
+        load_origin = configuration["load_origin_time_s"]
+        completed = configuration["completed_intervals"]
+        records = configuration["records"]
+        protocol_transitions = configuration["protocol_transitions"]
+        restart_mode = configuration["restart_mode"]
         cumulative_work = float(metadata["cumulative_external_work_J"])
         initial_internal = float(metadata["initial_internal_energy_J"])
         source_checkpoint = Path(metadata["source_checkpoint"])
@@ -188,7 +274,7 @@ def main():
             segment_started = time.perf_counter()
             transaction = advance_consistent_midpoint_segment(
                 context, state, grid=args.grid,
-                initial_tensor_shear=args.initial_tensor_shear,
+                initial_tensor_shear=initial_tensor_shear,
                 protocol=args.protocol, rate=rate, physical_time=t0,
                 load_origin=load_origin, requested_duration=requested)
             candidate = transaction["candidate"]
@@ -225,7 +311,7 @@ def main():
                 "wall_seconds": time.perf_counter()-segment_started,
             })
         endpoint_drive = driving(
-            args.grid, args.initial_tensor_shear, args.protocol, rate,
+            args.grid, initial_tensor_shear, args.protocol, rate,
             physical_time-load_origin)
         endpoint_energy = energy(context, state, endpoint_drive)
         records.append({
@@ -248,8 +334,10 @@ def main():
             "macro_dt_s": args.dt_s, "completed_intervals": interval+1,
             "physical_time_s": physical_time,
             "load_origin_time_s": load_origin,
-            "initial_tensor_shear": args.initial_tensor_shear,
+            "initial_tensor_shear": initial_tensor_shear,
             "protocol": args.protocol, "strain_rate_s": rate,
+            "restart_mode": restart_mode,
+            "protocol_transitions": protocol_transitions,
             "source_checkpoint": str(source_checkpoint), "records": records,
             "cumulative_external_work_J": cumulative_work,
             "initial_internal_energy_J": initial_internal,
