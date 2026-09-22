@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
@@ -17,7 +18,9 @@ from full_model.analysis.run_v24_mechanical_supply import build_case
 from full_model.analysis.run_v46_geometry_representation import (
     LENGTH_M, REPRESENTATION_LENGTH_M, THICKNESS_M, energy_terms_J,
 )
-from full_model.production.arrhenius_kinetics import ActivatedProcess
+from full_model.production.arrhenius_kinetics import (
+    ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j,
+)
 from full_model.production.subcell_segment_geometry import (
     initialize_subcell_rectangle, propose_subcell_face_extension,
     subcell_face_field_derivative,
@@ -131,6 +134,82 @@ def transaction_record():
     }
 
 
+def clock_records():
+    subdivision = []
+    for parts in (1, 2, 4, 8):
+        state, data = fixture(32)
+        kinetics = V43GeometryKinetics(
+            ActivatedProcess("v50-physical-subcell", 1e9), enthalpy_J=0.0,
+            critical_stress_Pa=1e9, chemical_species="vacancy",
+            atomic_volume_m3_per_atom=1.8e-29,
+            exchange_stoichiometry_defects_per_atom=1.0,
+            continuum_representation_length_m=REPRESENTATION_LENGTH_M)
+        args = (data[4], data[5], data[1], data[6], data[7], kinetics)
+        elapsed = energy = 0.0
+        for _ in range(parts):
+            state, ledger = accepted_subcell_face_transaction(
+                state, {"proposed_displacement_m": -1e-8/parts},
+                *args, 1e-5)
+            if not ledger["accepted"]:
+                raise RuntimeError("subdivision qualification event rejected")
+            elapsed += ledger["consumed_duration_s"]
+            energy += ledger["complete_energy_change_J_m3_cells"]
+        subdivision.append({
+            "parts": parts, "elapsed_time_s": elapsed,
+            "summed_complete_energy_change_J_m3_cells": energy,
+            "endpoint_upper_x_m": float(state.subcell_geometry.upper_right_m[0]),
+            "accepted_event_count": int(state.subcell_geometry.accepted_event_count),
+        })
+
+    state, data = fixture(32)
+    fixed_rate = 2.5e8
+    fixed_kinetics = V43GeometryKinetics(
+        ActivatedProcess("v50-fixed-rate", 1e9), enthalpy_J=0.0,
+        critical_stress_Pa=1e9, chemical_species="vacancy",
+        atomic_volume_m3_per_atom=1.8e-29,
+        exchange_stoichiometry_defects_per_atom=1.0,
+        continuum_representation_length_m=REPRESENTATION_LENGTH_M,
+        affinity_coupling_mode="legacy_energy_guard_only")
+    _, fixed = accepted_subcell_face_transaction(
+        state, {"proposed_displacement_m": -1e-8,
+                "_affinity_rate_override_s": fixed_rate},
+        data[4], data[5], data[1], data[6], data[7], fixed_kinetics, 1e-5)
+
+    process = ActivatedProcess("v50-nonzero-barrier", 1e9)
+    barrier_kinetics = replace(
+        fixed_kinetics, process=process, enthalpy_J=1e-19)
+    barrier = []
+    for stress in (.25e9, 1e9, 100e9):
+        enthalpy = exp_floor_enthalpy_j(
+            stress, barrier_kinetics.enthalpy_J,
+            barrier_kinetics.critical_stress_Pa, barrier_kinetics.exp_a,
+            barrier_kinetics.exp_n, barrier_kinetics.exp_floor)
+        _, ledger = accepted_subcell_face_transaction(
+            state, {"proposed_displacement_m": -1e-12,
+                    "resolved_stress_Pa": stress},
+            data[4], data[5], data[1], data[6], data[7],
+            barrier_kinetics, 1.0)
+        barrier.append({
+            "resolved_stress_Pa": stress,
+            "activation_enthalpy_J": enthalpy,
+            "independent_rate_s": activated_rate_s(process, enthalpy, 1100.0),
+            "ledger_rate_s": ledger["event_rate_s"],
+        })
+    return {
+        "fixed_rate_normalization": {
+            "site_rate_s": fixed_rate,
+            "event_jump_m": fixed["physical_event_jump_m"],
+            "observed_velocity_m_s": fixed["observed_accepted_velocity_m_s"],
+            "elapsed_time_s": fixed["consumed_duration_s"],
+        },
+        "segment_subdivision": subdivision,
+        "nonzero_exp_floor_barrier": barrier,
+        "subdivision_time_last_pair_relative_change": abs(
+            subdivision[-1]["elapsed_time_s"]-subdivision[-2]["elapsed_time_s"]
+        )/subdivision[-1]["elapsed_time_s"],
+    }
+
+
 def main():
     reference_integral, reference_energy = dimensionless_reference()
     refinement = [row(n) for n in (32, 64, 128)]
@@ -151,6 +230,8 @@ def main():
         item["gradient_relative_error_to_continuous_reference"] = abs(
             item["ordered_gradient_increment_J"]-reference_energy
             )/reference_energy
+        item["ordered_gradient_force_N"] = -(
+            item["ordered_gradient_increment_J"]/1e-8)
     payload = {
         "schema": "asb-drx/v50/production-subcell-qualification/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -165,7 +246,15 @@ def main():
         "production_refinement": refinement,
         "offset_and_quadrature_sensitivity": sensitivities,
         "shape_derivative_closure": derivative_closure,
+        "component_force_comparison": {
+            "continuous_ordered_gradient_force_N": -reference_energy/1e-8,
+            "production_force_N_by_grid": [
+                x["ordered_gradient_force_N"] for x in refinement],
+            "n128_relative_error": refinement[-1][
+                "gradient_relative_error_to_continuous_reference"],
+        },
         "production_transaction": transaction_record(),
+        "physical_clock": clock_records(),
         "production_segment_map_passed": bool(
             all(x["ordered_gradient_increment_J"] > 0.0 for x in refinement)
             and refinement[-1][

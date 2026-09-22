@@ -1,10 +1,14 @@
+from dataclasses import replace
+
 import numpy as np
 
 from full_model.analysis.run_v24_mechanical_supply import build_case
 from full_model.analysis.run_v46_geometry_representation import (
     LENGTH_M, REPRESENTATION_LENGTH_M, THICKNESS_M, energy_terms_J,
 )
-from full_model.production.arrhenius_kinetics import ActivatedProcess
+from full_model.production.arrhenius_kinetics import (
+    ActivatedProcess, activated_rate_s, exp_floor_enthalpy_j,
+)
 from full_model.production.subcell_segment_geometry import (
     initialize_subcell_rectangle, propose_subcell_face_extension,
     subcell_line_fields, subcell_face_field_derivative,
@@ -150,3 +154,76 @@ def test_full_production_step_publishes_subcell_transaction():
     assert int(result.subcell_geometry.accepted_event_count) == 1
     assert ledger["nye_suboperator_audit"][
         "accepted_step_hard_invariant_passed"]
+
+
+def test_fixed_rate_clock_uses_physical_jump_and_not_grid_extent():
+    rate = 2.5e8
+    rows = []
+    for n in (32, 64):
+        state, data = physical_rectangle(n)
+        kinetics = replace(
+            intrinsic_kinetics(),
+            affinity_coupling_mode="legacy_energy_guard_only")
+        result, ledger = accepted_subcell_face_transaction(
+            state, {
+                "proposed_displacement_m": -1e-8,
+                "_affinity_rate_override_s": rate,
+            }, data[4], data[5], data[1], data[6], data[7], kinetics, 1e-5)
+        assert ledger["accepted"] and result is not state
+        jump = ledger["physical_event_jump_m"]
+        np.testing.assert_allclose(
+            ledger["observed_accepted_velocity_m_s"], rate*jump, rtol=2e-14)
+        np.testing.assert_allclose(
+            ledger["consumed_duration_s"], 1e-8/(rate*jump), rtol=2e-14)
+        rows.append(ledger["consumed_duration_s"])
+    np.testing.assert_allclose(rows[0], rows[1], rtol=2e-14)
+
+
+def test_physical_clock_converges_under_segment_subdivision():
+    rows = []
+    for parts in (1, 2, 4, 8):
+        state, data = physical_rectangle(32)
+        args = (data[4], data[5], data[1], data[6], data[7],
+                intrinsic_kinetics())
+        elapsed = energy = 0.0
+        for _ in range(parts):
+            state, ledger = accepted_subcell_face_transaction(
+                state, {"proposed_displacement_m": -1e-8/parts},
+                *args, 1e-5)
+            assert ledger["accepted"]
+            elapsed += ledger["consumed_duration_s"]
+            energy += ledger["complete_energy_change_J_m3_cells"]
+        rows.append((elapsed, energy,
+                     float(state.subcell_geometry.upper_right_m[0])))
+    np.testing.assert_allclose([row[2] for row in rows], rows[0][2],
+                               rtol=0.0, atol=2e-21)
+    np.testing.assert_allclose([row[1] for row in rows], rows[0][1],
+                               rtol=2e-13)
+    assert abs(rows[-1][0]-rows[-2][0])/rows[-1][0] < 5e-5
+
+
+def test_exp_floor_clock_covers_nonzero_barrier_and_floor_limit():
+    state, data = physical_rectangle(32)
+    process = ActivatedProcess("v50-barrier-clock", 1e9)
+    kinetics = replace(
+        intrinsic_kinetics(), process=process, enthalpy_J=1.0e-19,
+        affinity_coupling_mode="legacy_energy_guard_only")
+    records = []
+    for stress in (0.25e9, 1.0e9, 100.0e9):
+        result, ledger = accepted_subcell_face_transaction(
+            state, {"proposed_displacement_m": -1e-12,
+                    "resolved_stress_Pa": stress},
+            data[4], data[5], data[1], data[6], data[7], kinetics, 1.0)
+        assert ledger["accepted"] and result is not state
+        expected_h = exp_floor_enthalpy_j(
+            stress, kinetics.enthalpy_J, kinetics.critical_stress_Pa,
+            kinetics.exp_a, kinetics.exp_n, kinetics.exp_floor)
+        np.testing.assert_allclose(ledger["activation_enthalpy_J"], expected_h)
+        np.testing.assert_allclose(
+            ledger["event_rate_s"],
+            activated_rate_s(process, expected_h, 1100.0), rtol=2e-14)
+        records.append(ledger)
+    assert records[1]["event_rate_s"] > records[0]["event_rate_s"]
+    np.testing.assert_allclose(
+        records[-1]["activation_enthalpy_J"],
+        kinetics.enthalpy_J*kinetics.exp_floor, rtol=1e-14)
