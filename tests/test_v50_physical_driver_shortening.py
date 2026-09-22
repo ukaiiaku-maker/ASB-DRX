@@ -160,3 +160,30 @@ def test_exact_restart_inherits_initial_shear_when_argument_is_omitted():
     assert result["restart_mode"] == "EXACT_RESTART"
     assert result["initial_tensor_shear"] == .012
     assert result["completed_intervals"] == 2
+
+
+def test_full_duration_v49_direct_path_and_repaired_driver_are_identical():
+    """Cheap overlap for the mixed-source loading/hold interpretation."""
+    H = 4.8828125e-7
+    initial = ToyState(np.zeros((1, 1, 2)), plastic_shear=1e-4)
+    context = {"G": 89.1e9, "plastic_rate": 8.0}
+    midpoint_log = []; state_log = []
+    direct_runner = scripted_runner((H,), midpoint_log, state_log)
+    midpoint_gamma = .01+100.0*H/2
+    direct_drive = SimpleNamespace(
+        mean_strain=np.asarray(((0.0, midpoint_gamma),
+                                (midpoint_gamma, 0.0))))
+    direct, direct_audit = direct_runner(
+        context, initial, initial.eta.copy(), direct_drive, None)
+    repaired = advance_consistent_midpoint_segment(
+        context, initial, grid=1, initial_tensor_shear=.01,
+        protocol="continued_deformation", rate=100.0,
+        physical_time=0.0, load_origin=0.0, requested_duration=H,
+        cycle_runner=scripted_runner((H,), [], []),
+        energy_evaluator=toy_energy)
+    assert direct_audit["mura"]["accepted_dt_s"] == H
+    assert repaired["discarded_shortened_candidates"] == 0
+    assert repaired["accepted_duration_s"] == H
+    assert direct.plastic_shear == repaired["candidate"].plastic_shear
+    assert direct.heat == repaired["candidate"].heat
+    np.testing.assert_array_equal(direct.eta, repaired["candidate"].eta)
