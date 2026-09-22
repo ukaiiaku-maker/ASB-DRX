@@ -12,7 +12,9 @@ import subprocess
 
 import numpy as np
 
-from full_model.analysis.run_v34_finite_coupled_response import resolved_bicrystal
+from full_model.analysis.run_v34_finite_coupled_response import (
+    checkpoint_payload, resolved_bicrystal,
+)
 from full_model.analysis.run_v39_common_horizon import load_stage, save_stage
 
 
@@ -52,6 +54,38 @@ def main():
     }
     if any(value != 0.0 for value in checks.values()):
         raise RuntimeError("retained n128 checkpoint is not the analytic initializer")
+    # Audit the complete restart state, not a hand-selected field subset.  This
+    # covers every scalar reservoir, alignment moment, parent/child/wake owner,
+    # phase field, sparse-front owner, runtime/history array, and its metadata.
+    retained_payload = checkpoint_payload(retained, reference_context)
+    analytic_payload = checkpoint_payload(analytic_reference, reference_context)
+    payload_identity = {}
+    for name in sorted(set(retained_payload) | set(analytic_payload)):
+        if name not in retained_payload or name not in analytic_payload:
+            payload_identity[name] = {"present_in_both": False, "exact": False}
+            continue
+        left = np.asarray(retained_payload[name])
+        right = np.asarray(analytic_payload[name])
+        exact = bool(left.shape == right.shape and np.array_equal(left, right))
+        row = {"present_in_both": True, "shape": list(left.shape),
+               "dtype": str(left.dtype), "exact": exact}
+        if (left.shape == right.shape and np.issubdtype(left.dtype, np.number)
+                and np.issubdtype(right.dtype, np.number)):
+            row["maximum_absolute_difference"] = float(
+                np.max(np.abs(left-right))) if left.size else 0.0
+        payload_identity[name] = row
+    complete_payload_exact = bool(all(
+        row["exact"] for row in payload_identity.values()))
+    metadata_identity = {
+        "completed_intervals_zero": retained_metadata.get(
+            "completed_intervals") == 0,
+        "physical_time_zero": retained_metadata.get("physical_time_s") == 0.0,
+        "grid_128": retained_metadata.get("grid") == 128,
+        "macro_dt_exact": retained_metadata.get("macro_dt_s") == args.dt_s,
+        "records_empty_or_absent": not retained_metadata.get("records", []),
+    }
+    if not complete_payload_exact or not all(metadata_identity.values()):
+        raise RuntimeError("retained n128 complete restart state is not the analytic initializer")
     companion_context = resolved_bicrystal(grid=args.grid, **kwargs)
     metadata = {
         "schema": "asb-drx/v52/analytic-common-physical-initial/v1",
@@ -77,6 +111,12 @@ def main():
         "retained_n128_sha256": digest(args.retained_n128),
         "retained_metadata": retained_metadata,
         "n128_initializer_identity": checks,
+        "n128_complete_restart_payload_identity": {
+            "all_arrays_and_owner_metadata_exact": complete_payload_exact,
+            "field_count": len(payload_identity),
+            "fields": payload_identity,
+        },
+        "n128_stage_metadata_identity": metadata_identity,
         "companion_grid": int(args.grid),
         "companion_checkpoint": str(args.companion_checkpoint.resolve()),
         "companion_checkpoint_sha256": digest(args.companion_checkpoint),
