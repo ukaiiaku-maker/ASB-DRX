@@ -1105,6 +1105,34 @@ def accepted_subcell_face_transaction(
     trace_increment = np.trace(
         geometry_ledger["plastic_distortion_increment"], axis1=-2, axis2=-1)
     signed_exchange_volume = float(np.sum(trace_increment)*cell_volume)
+    if kinetics.material_exchange_model == "glide_no_exchange":
+        burgers = np.asarray(geometry.burgers_vector_m, dtype=float)
+        normal_coupling = float(burgers[2])
+        burgers_tolerance = 256*np.finfo(float).eps*max(
+            float(np.linalg.norm(burgers)), 1e-300)
+        volume_tolerance = 256*np.finfo(float).eps*max(
+            abs(float(geometry_ledger["signed_swept_area_m2"]))
+            *max(float(np.linalg.norm(burgers)), 1e-300), 1e-300)
+        if (abs(normal_coupling) > burgers_tolerance
+                or abs(signed_exchange_volume) > volume_tolerance):
+            return state, {
+                **geometry_ledger,
+                "operator": "physical_subcell_rectangle_face_extension",
+                "accepted": False,
+                "classification": "MECHANISM_GEOMETRY_MISMATCH",
+                "reason": (
+                    "glide_no_exchange requires b dot swept_surface_normal "
+                    "and the integrated plastic-volume increment to vanish"),
+                "swept_surface_normal": [0.0, 0.0, 1.0],
+                "burgers_dot_surface_normal_m": normal_coupling,
+                "burgers_normal_tolerance_m": burgers_tolerance,
+                "signed_plastic_volume_increment_m3": signed_exchange_volume,
+                "plastic_volume_tolerance_m3": volume_tolerance,
+                "rejection_is_atomic": True,
+                "consumed_duration_s": 0.0,
+                "irreversible_heat_increment_J_m3": np.zeros_like(
+                    state.common.orientation_rad),
+            }
     if kinetics.atomic_volume_m3_per_atom > 0.0:
         signed_exchange_count = (
             signed_exchange_volume/kinetics.atomic_volume_m3_per_atom
@@ -1346,6 +1374,47 @@ def accepted_subcell_x_faces_shared_clock(
         geometry_ledger["plastic_distortion_increment"], axis1=-2, axis2=-1)
     signed_exchange_volume = float(np.sum(trace_increment)*cell_volume)
     height = float(geometry.upper_right_m[1]-geometry.lower_left_m[1])
+    if kinetics.material_exchange_model == "glide_no_exchange":
+        burgers = np.asarray(geometry.burgers_vector_m, dtype=float)
+        normal_coupling = float(burgers[2])
+        burgers_tolerance = 256*np.finfo(float).eps*max(
+            float(np.linalg.norm(burgers)), 1e-300)
+        # Check each active face kinematically.  Opposite signed face sweeps
+        # must not masquerade as glide merely because their global volumes
+        # cancel.
+        face_volumes = {
+            "lower_x": -normal_coupling*height*displacements["lower_x"],
+            "upper_x": normal_coupling*height*displacements["upper_x"],
+        }
+        face_tolerances = {
+            key: 256*np.finfo(float).eps*max(
+                abs(height*displacements[key])
+                *max(float(np.linalg.norm(burgers)), 1e-300), 1e-300)
+            for key in face_volumes
+        }
+        if (abs(normal_coupling) > burgers_tolerance or any(
+                abs(face_volumes[key]) > face_tolerances[key]
+                for key in face_volumes)):
+            return state, {
+                **geometry_ledger,
+                "operator": "physical_subcell_shared_x_faces",
+                "accepted": False,
+                "classification": "MECHANISM_GEOMETRY_MISMATCH",
+                "reason": (
+                    "every glide_no_exchange face requires b dot its swept "
+                    "surface normal and its plastic-volume increment to vanish"),
+                "swept_surface_normal": [0.0, 0.0, 1.0],
+                "burgers_dot_surface_normal_m": normal_coupling,
+                "burgers_normal_tolerance_m": burgers_tolerance,
+                "face_signed_plastic_volume_increments_m3": face_volumes,
+                "face_plastic_volume_tolerances_m3": face_tolerances,
+                "global_signed_plastic_volume_increment_m3": (
+                    signed_exchange_volume),
+                "rejection_is_atomic": True,
+                "consumed_duration_s": 0.0,
+                "irreversible_heat_increment_J_m3": np.zeros_like(
+                    state.common.orientation_rad),
+            }
     face_signed_counts = {}
     if kinetics.atomic_volume_m3_per_atom > 0.0:
         coefficient = (kinetics.exchange_stoichiometry_defects_per_atom

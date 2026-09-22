@@ -9,6 +9,7 @@ content.  ``q = rho_ordered/rho_w`` is a derived diagnostic only.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from functools import lru_cache
 import numpy as np
 from scipy.optimize import least_squares
 from scipy.integrate import solve_ivp
@@ -143,11 +144,50 @@ class ExtensiveWallParameters:
             self.negative_barrier_mode)
 
 
-def _laplacian(field, spacing_m):
+def _laplacian_composed_oracle(field, spacing_m):
+    """Historical D_x D_x + D_y D_y implementation retained as an oracle."""
     gx, gy = spectral_derivatives(field, spacing_m)
     gxx, _ = spectral_derivatives(gx, spacing_m)
     _, gyy = spectral_derivatives(gy, spacing_m)
     return gxx + gyy
+
+
+@lru_cache(maxsize=32)
+def _composed_laplacian_multiplier(shape, spacing_m):
+    """Fourier multiplier exactly matching the real first-derivative pair.
+
+    ``spectral_derivatives`` takes the real part after each first derivative.
+    On an even grid that convention removes the self-conjugate Nyquist first
+    derivative.  Zeroing that entry here is therefore required to fuse the
+    composed operator without replacing it by the conventional spectral
+    ``-k**2`` Laplacian.
+    """
+    nx, ny = map(int, shape)
+    spacing = float(spacing_m)
+    if nx <= 0 or ny <= 0 or not np.isfinite(spacing) or spacing <= 0.0:
+        raise ValueError("periodic shape and positive spacing required")
+    kx = 2*np.pi*np.fft.fftfreq(nx, d=spacing)
+    ky = 2*np.pi*np.fft.fftfreq(ny, d=spacing)
+    if nx % 2 == 0:
+        kx[nx//2] = 0.0
+    if ny % 2 == 0:
+        ky[ny//2] = 0.0
+    multiplier = -(kx[:, None]**2+ky[None, :]**2)
+    multiplier.setflags(write=False)
+    return multiplier
+
+
+def _laplacian(field, spacing_m):
+    """Fused FFT form of the source-defined composed real derivative."""
+    value = np.asarray(field, dtype=float)
+    if value.ndim < 2:
+        raise ValueError("periodic field and positive spacing required")
+    multiplier = _composed_laplacian_multiplier(value.shape[:2], spacing_m)
+    trailing = (1,)*(value.ndim-2)
+    spectrum = np.fft.fftn(value, axes=(0, 1))
+    return np.real(np.fft.ifftn(
+        multiplier.reshape(multiplier.shape+trailing)*spectrum,
+        axes=(0, 1)))
 
 
 def ordered_wall_nye_m1(inventory, systems, orientation_rad,

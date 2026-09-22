@@ -79,7 +79,7 @@ def test_undefined_event_measure_fails_atomically_without_a_tiny_floor():
     assert np.all(ledger["irreversible_heat_increment_J_m3"] == 0.0)
 
 
-def test_declared_volume_preserving_area_event_has_its_own_site_measure():
+def test_declared_no_exchange_rejects_climb_geometry_atomically():
     state, data = physical_rectangle(32)
     area = data[6].burgers_m**2
     kinetics = replace(
@@ -90,15 +90,40 @@ def test_declared_volume_preserving_area_event_has_its_own_site_measure():
     result, ledger = accepted_subcell_face_transaction(
         state, {"proposed_displacement_m": -1e-8},
         data[4], data[5], data[1], data[6], data[7], kinetics, 1e-6)
-    assert ledger["accepted"] and result is not state
-    assert ledger["event_measure_convention"] == (
-        "declared_volume_preserving_area_event")
+    assert result is state and not ledger["accepted"]
+    assert ledger["classification"] == "MECHANISM_GEOMETRY_MISMATCH"
+    assert ledger["burgers_dot_surface_normal_m"] != 0.0
     np.testing.assert_allclose(
-        ledger["physical_event_count"],
-        abs(ledger["signed_swept_area_m2"])/area, rtol=2e-14)
-    np.testing.assert_allclose(
-        ledger["physical_event_count"],
-        ledger["event_count_from_site_jump_identity"], rtol=2e-14)
+        ledger["signed_plastic_volume_increment_m3"],
+        -1.1454629341e-24, rtol=2e-10)
+    assert ledger["consumed_duration_s"] == 0.0
+    assert np.all(ledger["irreversible_heat_increment_J_m3"] == 0.0)
+
+
+def test_shared_no_exchange_rejects_each_climb_face_even_if_global_cancels():
+    state, data = physical_rectangle(32)
+    area = data[6].burgers_m**2
+    kinetics = replace(
+        intrinsic_kinetics(), material_exchange_model="glide_no_exchange",
+        atomic_volume_m3_per_atom=0.0,
+        exchange_stoichiometry_defects_per_atom=0.0,
+        chemical_species="none", physical_event_area_m2=area)
+    # Equal translations make the global swept area and volume vanish, but
+    # each moving face remains climb for this BCC xy geometry.
+    events = [
+        {"face": "lower_x", "proposed_displacement_m": 1e-8,
+         "fixed_rate_s": 1e9},
+        {"face": "upper_x", "proposed_displacement_m": 1e-8,
+         "fixed_rate_s": 1e9},
+    ]
+    result, ledger = accepted_subcell_x_faces_shared_clock(
+        state, events, data[4], data[5], data[1], data[6], data[7],
+        kinetics, 1e-7)
+    assert result is state and not ledger["accepted"]
+    assert ledger["classification"] == "MECHANISM_GEOMETRY_MISMATCH"
+    assert abs(ledger["global_signed_plastic_volume_increment_m3"]) < 1e-38
+    assert all(value != 0.0 for value in ledger[
+        "face_signed_plastic_volume_increments_m3"].values())
 
 
 def test_two_faces_share_elapsed_time_and_are_permutation_invariant():
