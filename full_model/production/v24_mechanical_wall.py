@@ -38,6 +38,10 @@ from .lattice_line_geometry import (
     LatticeLineGeometry, geometry_checkpoint_arrays,
     geometry_from_checkpoint_arrays, propose_plaquette_sweep,
 )
+from .subcell_segment_geometry import (
+    SubcellRectangleGeometry, subcell_checkpoint_arrays,
+    subcell_from_checkpoint_arrays, propose_subcell_face_extension,
+)
 from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
 from .wall_topology_supply import (
     ReservoirAlignmentState,
@@ -56,6 +60,7 @@ class V24MechanicalWallState:
     density: DensityInventory
     reservoir_alignment: ReservoirAlignmentState
     geometry: LatticeLineGeometry | None = None
+    subcell_geometry: SubcellRectangleGeometry | None = None
 
     def validate(self, systems, topologies):
         self.common.validate(systems, topologies)
@@ -66,6 +71,10 @@ class V24MechanicalWallState:
             shape = self.geometry.validate(len(systems))
             if shape != np.asarray(self.common.orientation_rad).shape:
                 raise ValueError("geometry and mechanical grids do not match")
+        if self.subcell_geometry is not None:
+            shape = self.subcell_geometry.validate(len(systems))
+            if shape != np.asarray(self.common.orientation_rad).shape:
+                raise ValueError("subcell geometry and mechanical grids do not match")
         pairs = (
             (self.common.mobile_plus_m2, self.density.mobile_plus_m2),
             (self.common.mobile_minus_m2, self.density.mobile_minus_m2),
@@ -447,6 +456,8 @@ def mechanical_checkpoint_arrays(state):
     payload.update(alignment_checkpoint_arrays(state.reservoir_alignment))
     if state.geometry is not None:
         payload.update(geometry_checkpoint_arrays(state.geometry))
+    if state.subcell_geometry is not None:
+        payload.update(subcell_checkpoint_arrays(state.subcell_geometry))
     return payload
 
 
@@ -463,7 +474,9 @@ def mechanical_from_checkpoint_arrays(mapping, systems, topologies):
     alignment = alignment_from_checkpoint_arrays(
         mapping, density, len(systems))
     geometry = geometry_from_checkpoint_arrays(mapping, len(systems))
-    result = V24MechanicalWallState(common, density, alignment, geometry)
+    subcell_geometry = subcell_from_checkpoint_arrays(mapping, len(systems))
+    result = V24MechanicalWallState(
+        common, density, alignment, geometry, subcell_geometry)
     result.validate(systems, topologies)
     return result
 
@@ -952,9 +965,202 @@ def accepted_geometry_plaquette_transaction(
         common, temperature_K=(common.temperature_K+heat
                                /common_parameters.volumetric_heat_capacity_J_m3_K))
     result = synchronize_common(V24MechanicalWallState(
-        common, inventory, alignment, geometry), topologies)
+        common, inventory, alignment, geometry, state.subcell_geometry),
+        topologies)
     ledger["observed_accepted_velocity_m_s"] = (
         physical_displacement_m/max(proposed_duration, 1e-300))
+    result.validate(systems, topologies)
+    ledger["irreversible_heat_increment_J_m3"] = heat
+    ledger["heat_plus_complete_energy_residual_J_m3_cells"] = float(
+        np.sum(heat)+complete_delta)
+    return result, ledger
+
+
+def accepted_subcell_face_transaction(
+        state, event, systems, topologies, driving, common_parameters,
+        extensive_parameters, kinetics, dt_s):
+    """Atomically move one physical rectangle face using one common map."""
+    geometry = state.subcell_geometry
+    if geometry is None:
+        raise ValueError("subcell face event requires physical segment geometry")
+    proposed = float(event["proposed_displacement_m"])
+    if proposed == 0.0:
+        raise ValueError("zero subcell displacement is not an event")
+    center = .5*(np.asarray(geometry.lower_left_m)
+                +np.asarray(geometry.upper_right_m))
+    cell = tuple(np.floor(center/float(geometry.spacing_m)).astype(int))
+    if "resolved_stress_Pa" in event:
+        resolved_stress = abs(float(event["resolved_stress_Pa"]))
+    else:
+        drive = resolved_driving_components(
+            state.common, driving, systems, topologies, common_parameters)
+        resolved_stress = float(np.linalg.norm(
+            drive["effective_stress_Pa"][cell]))
+    temperature = float(np.asarray(state.common.temperature_K)[cell])
+    enthalpy = exp_floor_enthalpy_j(
+        resolved_stress, kinetics.enthalpy_J, kinetics.critical_stress_Pa,
+        kinetics.exp_a, kinetics.exp_n, kinetics.exp_floor)
+    arrhenius_rate = activated_rate_s(kinetics.process, enthalpy, temperature)
+    rate = float(event.get("_affinity_rate_override_s", arrhenius_rate))
+    event_jump = (float(kinetics.physical_event_jump_m)
+                  if kinetics.physical_event_jump_m > 0.0
+                  else float(common_parameters.burgers_m))
+    velocity = rate*event_jump
+    maximum_displacement = (kinetics.maximum_extent_per_step
+                            *float(geometry.spacing_m))
+    displacement = np.sign(proposed)*min(
+        abs(proposed), maximum_displacement, velocity*float(dt_s))
+    if displacement == 0.0:
+        return state, {
+            "operator": "physical_subcell_rectangle_face_extension",
+            "accepted": False, "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+            "event_rate_s": rate, "physical_event_jump_m": event_jump,
+            "physical_velocity_m_s": velocity, "consumed_duration_s": 0.0,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad),
+            **event.get("_affinity_probe_ledger", {}),
+        }
+    try:
+        candidate_geometry, inventory, alignment, common, geometry_ledger = (
+            propose_subcell_face_extension(
+                geometry, state.density, state.reservoir_alignment,
+                state.common, systems, displacement))
+    except (ValueError, RuntimeError) as error:
+        return state, {
+            "operator": "physical_subcell_rectangle_face_extension",
+            "accepted": False, "classification": "INADMISSIBLE_SUBCELL_GEOMETRY",
+            "reason": f"{type(error).__name__}: {error}",
+            "consumed_duration_s": 0.0,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad),
+        }
+    zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
+    before_wall = extensive_wall_energy_components_J_m3(
+        state.density, systems, topologies, state.common.orientation_rad,
+        zero_target, extensive_parameters)
+    after_wall = extensive_wall_energy_components_J_m3(
+        inventory, systems, topologies, common.orientation_rad,
+        zero_target, extensive_parameters)
+    component_deltas = {
+        name: float(np.sum(np.asarray(after_wall[name])-before_wall[name],
+                           dtype=np.longdouble))
+        for name in before_wall if name != "total"}
+    component_deltas["ordered_gradient"] = (
+        ordered_gradient_increment_J_m3_cells(
+            state.density, inventory, extensive_parameters))
+    wall_delta = float(sum(component_deltas.values()))
+    elastic_before = _elastic_energy_sum_J_m3_cells(
+        state.common, state.common.beta_p, driving, common_parameters)
+    elastic_after = _elastic_energy_sum_J_m3_cells(
+        common, common.beta_p, driving, common_parameters)
+    elastic_delta = (0.0 if elastic_before is None
+                     else float(elastic_after-elastic_before))
+    cell_volume = (float(geometry.spacing_m)**2
+                   *float(geometry.section_thickness_m))
+    trace_increment = np.trace(
+        geometry_ledger["plastic_distortion_increment"], axis1=-2, axis2=-1)
+    signed_exchange_volume = float(np.sum(trace_increment)*cell_volume)
+    if kinetics.atomic_volume_m3_per_atom > 0.0:
+        signed_exchange_count = (
+            signed_exchange_volume/kinetics.atomic_volume_m3_per_atom
+            *kinetics.exchange_stoichiometry_defects_per_atom)
+    else:
+        signed_exchange_count = 0.0
+    height = float(geometry.upper_right_m[1]-geometry.lower_left_m[1])
+    independent_exchange_count = 0.0
+    if kinetics.atomic_volume_m3_per_atom > 0.0:
+        independent_exchange_count = (
+            kinetics.exchange_stoichiometry_defects_per_atom
+            *float(geometry.burgers_vector_m[2])*height*displacement
+            /kinetics.atomic_volume_m3_per_atom)
+    chemical_work_J = (kinetics.chemical_potential_J_per_defect
+                       *signed_exchange_count)
+    chemical_work_cells = chemical_work_J/cell_volume
+    complete_delta = wall_delta+elastic_delta-chemical_work_cells
+    event_count = max(abs(signed_exchange_count),
+                      abs(geometry_ledger["signed_swept_area_m2"])
+                      /max(float(common_parameters.burgers_m)**2, 1e-300),
+                      1e-300)
+    available_energy_J = -complete_delta*cell_volume
+    available_per_event = available_energy_J/event_count
+    downhill = max(float(np.tanh(
+        available_per_event/(2*KB_J_K*temperature))), 0.0)
+    affinity_rate = arrhenius_rate*downhill
+    affinity = {
+        "arrhenius_unbiased_rate_s": arrhenius_rate,
+        "affinity_biased_rate_s": affinity_rate,
+        "available_energy_per_event_J": available_per_event,
+        "downhill_activity": downhill,
+        "physical_event_count": event_count,
+    }
+    if (kinetics.affinity_coupling_mode == "downhill_tanh"
+            and "_affinity_rate_override_s" not in event):
+        retry = dict(event); retry["_affinity_rate_override_s"] = affinity_rate
+        retry["_affinity_probe_ledger"] = affinity; retry["_affinity_iteration"] = 1
+        return accepted_subcell_face_transaction(
+            state, retry, systems, topologies, driving, common_parameters,
+            extensive_parameters, kinetics, dt_s)
+    if (kinetics.affinity_coupling_mode == "downhill_tanh"
+            and "_affinity_rate_override_s" in event):
+        iteration = int(event.get("_affinity_iteration", 1))
+        residual = abs(affinity_rate-rate)/max(abs(rate), abs(affinity_rate), 1e-300)
+        if residual > 1e-8:
+            if iteration >= 64:
+                raise RuntimeError("subcell affinity/rate fixed point did not converge")
+            retry = dict(event)
+            retry["_affinity_rate_override_s"] = .8*rate+.2*affinity_rate
+            retry["_affinity_probe_ledger"] = affinity
+            retry["_affinity_iteration"] = iteration+1
+            return accepted_subcell_face_transaction(
+                state, retry, systems, topologies, driving, common_parameters,
+                extensive_parameters, kinetics, dt_s)
+        affinity["affinity_biased_rate_s"] = rate
+        affinity["affinity_rate_fixed_point_iterations"] = iteration
+        affinity["affinity_rate_fixed_point_relative_residual"] = residual
+    tolerance = 2e-12*max(abs(wall_delta), abs(elastic_delta),
+                          abs(chemical_work_cells), 1.0)
+    accepted = bool(complete_delta <= tolerance and rate > 0.0)
+    duration = abs(displacement)/max(velocity, 1e-300)
+    ledger = {
+        **geometry_ledger, **affinity,
+        "accepted": accepted,
+        "classification": ("ADMISSIBLE_PHYSICAL_SUBCELL_EVENT" if accepted
+                           else "COMPLETE_ENERGY_REJECTED_SUBCELL_EVENT"),
+        "rejection_is_atomic": True,
+        "event_rate_s": rate, "physical_event_jump_m": event_jump,
+        "activation_enthalpy_J": enthalpy,
+        "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
+        "observed_accepted_velocity_m_s": abs(displacement)/duration,
+        "consumed_duration_s": duration if accepted else 0.0,
+        "complete_energy_change_J_m3_cells": complete_delta,
+        "wall_energy_component_changes_J_m3_cells": component_deltas,
+        "wall_energy_change_J_m3_cells": wall_delta,
+        "elastic_energy_change_J_m3_cells": elastic_delta,
+        "chemical_reservoir_work_J": chemical_work_J,
+        "signed_material_exchange_volume_m3": signed_exchange_volume,
+        "signed_material_exchange_count": signed_exchange_count,
+        "independent_geometry_exchange_count": independent_exchange_count,
+        "exchange_count_identity_residual": (
+            signed_exchange_count-independent_exchange_count),
+        "active_site_measure_geometry": abs(
+            kinetics.exchange_stoichiometry_defects_per_atom
+            *float(geometry.burgers_vector_m[2])*height*event_jump
+            /max(kinetics.atomic_volume_m3_per_atom, 1e-300)),
+    }
+    if not accepted:
+        ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(
+            state.common.orientation_rad)
+        return state, ledger
+    heat_total = max(-complete_delta, 0.0)
+    support = np.abs(trace_increment)
+    heat = (heat_total*support/np.sum(support) if np.sum(support) > 0.0
+            else np.full_like(support, heat_total/support.size))
+    common = replace(
+        common, temperature_K=np.asarray(common.temperature_K)
+        +heat/common_parameters.volumetric_heat_capacity_J_m3_K)
+    result = synchronize_common(V24MechanicalWallState(
+        common, inventory, alignment, state.geometry, candidate_geometry),
+        topologies)
     result.validate(systems, topologies)
     ledger["irreversible_heat_increment_J_m3"] = heat
     ledger["heat_plus_complete_energy_residual_J_m3_cells"] = float(
@@ -969,7 +1175,8 @@ def accepted_v24_mechanical_step(
         mura_work_budget_mode="energy_limited",
         maximum_work_budget_backtracks=20,
         feasible_family_extent_levels=12, geometry_event=None,
-        geometry_kinetics=None,
+        geometry_kinetics=None, subcell_geometry_event=None,
+        subcell_geometry_kinetics=None,
         mura_transport_operator="legacy_mixed"):
     """Advance mechanics, line transport/capture, ordering, and topology once."""
     state.validate(systems, topologies)
@@ -1392,7 +1599,8 @@ def accepted_v24_mechanical_step(
             "reason": "exact V42 geometry-neutral disabling comparator",
         }
     result = synchronize_common(V24MechanicalWallState(
-        common, ordered_density, ordered_alignment, state.geometry), topologies)
+        common, ordered_density, ordered_alignment, state.geometry,
+        state.subcell_geometry), topologies)
     result.validate(systems, topologies)
     _nye_reservoir_after_ordering = reservoir_nye_m1(
         result.reservoir_alignment, systems, result.common.orientation_rad,
@@ -1406,6 +1614,20 @@ def accepted_v24_mechanical_step(
             result, geometry_event, systems, topologies, driving,
             common_parameters, extensive_parameters, geometry_kinetics,
             accepted_dt)
+        if geometry_ledger["accepted"]:
+            _geometry_source = np.sum(
+                geometry_ledger["family_nye_increment_m1"], axis=2)
+    subcell_geometry_ledger = None
+    if subcell_geometry_event is not None:
+        if geometry_event is not None:
+            raise ValueError("lattice and subcell geometry events are mutually exclusive")
+        if subcell_geometry_kinetics is None:
+            raise ValueError("subcell event requires explicit geometry kinetics")
+        result, subcell_geometry_ledger = accepted_subcell_face_transaction(
+            result, subcell_geometry_event, systems, topologies, driving,
+            common_parameters, extensive_parameters,
+            subcell_geometry_kinetics, accepted_dt)
+        geometry_ledger = subcell_geometry_ledger
         if geometry_ledger["accepted"]:
             _geometry_source = np.sum(
                 geometry_ledger["family_nye_increment_m1"], axis=2)
@@ -1447,9 +1669,12 @@ def accepted_v24_mechanical_step(
                _nye_reservoir_after_ordering-_nye_reservoir_after_transport,
                _zero),
     ]
-    if geometry_event is not None:
+    if geometry_event is not None or subcell_geometry_event is not None:
         _geometry_stage = _stage(
-            "represented_plaquette_sweep", _geometry_source, _geometry_source)
+            ("physical_subcell_segment_sweep"
+             if subcell_geometry_event is not None
+             else "represented_plaquette_sweep"),
+            _geometry_source, _geometry_source)
         _geometry_stage["reservoir_first_moment_increment_rms_m1"] = float(
             np.sqrt(np.mean((_nye_reservoir_after_reactions
                              -_nye_reservoir_after_ordering)**2)))
@@ -1519,6 +1744,7 @@ def accepted_v24_mechanical_step(
         "junction_topology": topology_ledger,
         "topology_energy_kinematics": topology_ledger,
         "geometry_event_energy_kinematics": geometry_ledger,
+        "subcell_geometry_event_energy_kinematics": subcell_geometry_ledger,
         "legacy_common_density_rates_accepted": False,
         "legacy_independent_beta_nye_rates_accepted": False,
         "legacy_independent_slip_rate_accepted": False,
