@@ -1,6 +1,35 @@
 # Campaign status
 
-Updated: 2026-09-19 (America/Los_Angeles)
+Updated: 2026-09-21 (America/Los_Angeles)
+
+## Directive v50 production subcell geometry and physical horizon
+
+- V50 repairs conditional shortened loading: every shortened probe is
+  discarded and re-evolved from the identical pretrial state at its actual
+  midpoint. Independent incremental first-law acceptance, exact restart, and
+  declared no-jump protocol-transition tests pass; the old manufactured
+  repricing defect is `+44.55 J/m3`.
+- A persistent physical rectangle now owns positive line measure, signed
+  moment, swept plastic distortion, compatible family Nye, matter exchange,
+  complete energy, heat, and restart coordinates through one production map.
+  The n128 10 nm extension force is `-3.5125064e-8 N`, 0.024754% from the
+  independent continuous-kernel reference, with the correct sign at n32/n64/
+  n128. A second evolved event, atomic rollback, and noninteger production-map
+  translation/reversal pass.
+- Fixed-rate normalization gives `0.062 m/s`; 1/2/4/8 event subdivision
+  preserves endpoint and energy, with the final time pair differing by
+  `2.98e-5` relative. Nonzero EXP-floor barriers and the high-stress floor
+  limit match independent rates. Same-state simultaneous multiple segments
+  remain unqualified.
+- The immutable V49 n128 loading worker remains the sole heavy local solve. At
+  the V50 evidence snapshot it has 18/52 full-duration valid intervals,
+  `8.7890625 us`, and `0.0017578125` added engineering shear; the conditional
+  defect has not occurred. The last-four median projects about 4.24 h
+  remaining. No duplicate run was launched.
+- Final-source regression: 811 passed in 568.49 s. Classification:
+  `PRODUCTION_SUBCELL_SINGLE_FACE_QUALIFIED_PHYSICAL_HORIZON_RUNNING`.
+  `scientific_gate_passed=false`; no DRX, LAGB, strict-ASB, or material
+  calibration claim is made.
 
 ## Directive v43 geometry-capable organization and spatial repair
 

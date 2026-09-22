@@ -1,0 +1,47 @@
+{
+  "schema": "asb-drx/v50/evidence-manifest/v1",
+  "generated_utc": "2026-09-22T03:59:56Z",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v34-recovery-v50-20260921",
+  "source_commit": "c7483454712cbbd0a5845a873fb4c003f4d7d1cf",
+  "source_parent_v49": "37065c25e02507da1bc25491574c3ef6fbb01966",
+  "calculation_location": "local",
+  "hpc3_used": false,
+  "evidence": {
+    "decision_report": {
+      "path": "full_model/docs/v50_decision_report.md",
+      "sha256": "76d53b9c0f22fad5b7d4d134e01e770955c012b866e60545efb461c1d002b5e0"
+    },
+    "controller": {
+      "path": "full_model/verification/v50_campaign_controller.json",
+      "sha256": "73971e04d6bfcb52bbc8cd70f54d1640724088d0dbee2912e2d7ab0281bdff3f"
+    },
+    "subcell_qualification": {
+      "path": "full_model/verification/v50_subcell_qualification.json",
+      "sha256": "22c0c646ee4c68c6496d04d29268b0c5b5df8646e67db209f1742c65dcd0aac6"
+    },
+    "subcell_qualification_plot": {
+      "path": "full_model/verification/v50_subcell_qualification.png",
+      "sha256": "0856d544d109102a59c66d30ff872bf49a3b859419b5d8762124e1c208a74378"
+    },
+    "retained_live_progress_snapshot": {
+      "path": "full_model/verification/v50_live_physical_progress.json",
+      "sha256": "e75106e093581083499d9f4a0629e33c0f6d282f1b2c9514e1c8a030988bf44e",
+      "retained_source_commit": "37065c25e02507da1bc25491574c3ef6fbb01966",
+      "published_intervals": 18,
+      "snapshot_only": true
+    }
+  },
+  "regression": {
+    "final_source_command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 811,
+    "failed": 0,
+    "wall_seconds": 568.49,
+    "focused_passed": 15,
+    "focused_failed": 0,
+    "focused_wall_seconds": 84.44
+  },
+  "classification": "PRODUCTION_SUBCELL_SINGLE_FACE_QUALIFIED_PHYSICAL_HORIZON_RUNNING",
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

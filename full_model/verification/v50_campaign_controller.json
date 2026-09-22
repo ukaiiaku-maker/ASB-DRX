@@ -1,0 +1,89 @@
+{
+  "schema": "asb-drx/v50/campaign-controller/v1",
+  "generated_utc": "2026-09-22T03:59:56Z",
+  "execution_location": "local",
+  "classification": "PRODUCTION_SUBCELL_SINGLE_FACE_QUALIFIED_PHYSICAL_HORIZON_RUNNING",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "drx_claimed": false,
+  "lagb_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false,
+  "source_roles": {
+    "v50_final_numerical_source": "c7483454712cbbd0a5845a873fb4c003f4d7d1cf",
+    "retained_live_v49_source": "37065c25e02507da1bc25491574c3ef6fbb01966",
+    "v50_branch": "exp/full-v34-recovery-v50-20260921",
+    "v50_worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v50-20260921"
+  },
+  "branches": {
+    "conditional_loading_clock": {
+      "state": "PASSED",
+      "discard_and_reevolve_at_selected_midpoint": true,
+      "bounded_duration_retries": 16,
+      "driver_balance_absolute_tolerance_J": 1e-26,
+      "driver_balance_relative_tolerance": 1e-9,
+      "manufactured_old_defect_residual_J_m3": 44.55,
+      "exact_restart_and_declared_protocol_transition_distinguished": true
+    },
+    "production_subcell_geometry": {
+      "state": "PASSED_SINGLE_RECTANGLE_SINGLE_MOVING_FACE",
+      "representation_length_m": 4e-7,
+      "n128_ordered_gradient_relative_error": 0.0002475358145129794,
+      "continuous_ordered_gradient_force_N": -3.511637141753552e-8,
+      "production_n128_ordered_gradient_force_N": -3.51250639771371e-8,
+      "positive_extension_increment_all_grids": true,
+      "noninteger_production_translation_and_reverse_passed": true,
+      "second_evolved_event_passed": true,
+      "exact_restart_and_atomic_rollback_passed": true,
+      "same_state_multiple_independent_segments_qualified": false
+    },
+    "physical_event_clock": {
+      "state": "PASSED_SINGLE_ACTIVE_FACE",
+      "fixed_site_rate_s": 2.5e8,
+      "event_jump_m": 2.48e-10,
+      "observed_velocity_m_s": 0.062,
+      "subdivision_time_last_pair_relative_change": 2.9774900376284536e-5,
+      "nonzero_barrier_and_floor_limit_tested": true,
+      "independent_geometry_exchange_identity_passed": true
+    },
+    "retained_bulk_loading": {
+      "state": "RUNNING_VALID_PREFIX",
+      "worker_pid_snapshot": 82602,
+      "published_intervals": 18,
+      "valid_full_duration_prefix_intervals": 18,
+      "target_intervals": 52,
+      "physical_time_s": 8.789062500000004e-6,
+      "additional_engineering_shear": 0.001757812500000001,
+      "target_additional_engineering_shear": 0.005078125,
+      "estimated_remaining_wall_seconds": 15263.81788474624,
+      "conditional_v49_shortening_defect_exposed": false,
+      "front_enabled": false,
+      "common_horizon_hold_complete": false
+    },
+    "evolved_ordering_profile": {
+      "state": "DEFERRED_WHILE_RETAINED_HEAVY_SOLVE_RUNS",
+      "reason": "one-heavy-solver local resource rule",
+      "available_live_interval_cost_and_krylov_histories": true,
+      "component_timing_profile_complete": false
+    }
+  },
+  "regression": {
+    "canonical_command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 811,
+    "wall_seconds": 568.49,
+    "focused_command": "python -m pytest -q tests/test_v50_production_subcell_geometry.py tests/test_v50_physical_driver_shortening.py",
+    "focused_passed": 15,
+    "focused_wall_seconds": 84.44,
+    "bare_command_collection_failure_recorded": true,
+    "bare_command_failure_reason": "src/asb_drx absent from interpreter path"
+  },
+  "unfinished": [
+    "complete the retained 52-interval n128 loading horizon",
+    "run a declared no-jump hold comparator from the completed loading endpoint",
+    "qualify simultaneous independent segments in one common state without serial clocks",
+    "resolve an initially downhill finite proposal that crosses uphill by adaptive same-state subdivision",
+    "profile an evolved ordering interval by constitutive, Krylov, reconstruction, retry, and I/O components",
+    "perform matched timestep and companion-grid refinement for interpreted bulk observables"
+  ],
+  "next_automatic_action": "retain and audit the immutable V49 worker at each published macro; after completion postprocess loading, then start the no-jump hold comparator using the V50 transition path"
+}
