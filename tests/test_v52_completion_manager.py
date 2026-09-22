@@ -49,6 +49,8 @@ def test_completed_stage_resumes_and_early_terminal_is_valid(tmp_path):
     complete = tmp_path/"complete"; write_manifest(complete, "COMPLETE", 8)
     assert inspect_manifest(complete, 8, identities=[])["classification"] == (
         "VALID_COMPLETED")
+    assert inspect_manifest(complete, 16, identities=[])["classification"] == (
+        "VALID_COMPLETED_PREFIX")
     terminal = tmp_path/"terminal"
     write_manifest(terminal, "PHYSICAL_TERMINAL", 5)
     assert inspect_manifest(terminal, 8, identities=[])["classification"] == (

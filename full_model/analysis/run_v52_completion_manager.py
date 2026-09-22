@@ -127,6 +127,8 @@ def inspect_manifest(output_root, expected_intervals, identities=None):
     completed = int(manifest["completed_intervals"])
     if status == "COMPLETE" and completed >= int(expected_intervals) and prefix_ok:
         classification = "VALID_COMPLETED"
+    elif status == "COMPLETE" and completed < int(expected_intervals) and prefix_ok:
+        classification = "VALID_COMPLETED_PREFIX"
     elif status in ("PHYSICAL_TERMINAL", "EARLY_PHYSICAL_TERMINAL") and prefix_ok:
         classification = "VALID_PHYSICAL_TERMINAL"
     elif owners and prefix_ok:
@@ -186,6 +188,11 @@ def new_or_resumed_state(path, primary_output, source):
             raise RuntimeError("manager journal does not own this logical output")
         state["resume_count"] = int(state.get("resume_count", 0))+1
         state["resumed_utc"] = utc()
+        history = list(state.get("manager_source_history", []))
+        history.append(state.get("manager_source_sha"))
+        state["manager_source_history"] = list(dict.fromkeys(
+            value for value in history if value))
+        state["manager_source_sha"] = source
     else:
         state = {"schema": SCHEMA, "created_utc": utc(),
                  "primary_output": primary, "manager_source_sha": source,
@@ -230,9 +237,12 @@ def wait_or_run_continuation(*, output, target, command, cwd, state,
         if audit["classification"] == "HEALTHY_RUNNING":
             time.sleep(poll_s); continue
         actual = list(command)
-        if audit["classification"] == "RESTARTABLE_INFRASTRUCTURE_INTERRUPTION":
+        if audit["classification"] in (
+                "RESTARTABLE_INFRASTRUCTURE_INTERRUPTION",
+                "VALID_COMPLETED_PREFIX"):
             if retries >= infrastructure_retries:
-                raise RuntimeError(f"{stage}: infrastructure retry limit reached")
+                if audit["classification"] == "RESTARTABLE_INFRASTRUCTURE_INTERRUPTION":
+                    raise RuntimeError(f"{stage}: infrastructure retry limit reached")
             manifest = audit["manifest"]
             if "--initial-checkpoint" in actual:
                 index = actual.index("--initial-checkpoint")
@@ -240,7 +250,8 @@ def wait_or_run_continuation(*, output, target, command, cwd, state,
             elif "--restart" in actual:
                 index = actual.index("--restart")
                 actual[index+1] = manifest["latest_checkpoint"]
-            retries += 1
+            if audit["classification"] == "RESTARTABLE_INFRASTRUCTURE_INTERRUPTION":
+                retries += 1
         elif audit["classification"] != "UNKNOWN_OR_CORRUPT":
             raise RuntimeError(f"{stage}: {audit['classification']}")
         elif (output/"run_manifest.json").exists():
@@ -352,11 +363,27 @@ def main():
         targets = sorted(set(int(value) for value in args.n192_targets.split(",")))
         n192_started = time.perf_counter(); last_target = 0
         for target in targets:
-            if last_target and time.perf_counter()-n192_started > args.n192_wall_budget_s:
-                state["history"].append({"stage": "N192_BUDGET_TERMINAL",
-                                         "last_target": last_target})
-                break
             loading = spatial_root/"loading"
+            if last_target:
+                manifest = json.loads((loading/"run_manifest.json").read_text())
+                samples = [segment["wall_seconds"] for row in manifest["records"]
+                           for segment in row.get("segments", [])]
+                observed = (sum(samples)/len(samples)) if samples else None
+                elapsed = time.perf_counter()-n192_started
+                projected = (None if observed is None else
+                             observed*max(target-last_target, 0))
+                if (elapsed >= args.n192_wall_budget_s or
+                        projected is not None
+                        and elapsed+projected > args.n192_wall_budget_s):
+                    state["history"].append({
+                        "stage": "N192_BUDGET_TERMINAL",
+                        "last_target": last_target,
+                        "next_target_not_started": target,
+                        "elapsed_wall_s": elapsed,
+                        "observed_mean_segment_wall_s": observed,
+                        "projected_increment_wall_s": projected,
+                        "budget_s": args.n192_wall_budget_s})
+                    break
             command = [sys.executable,
                 "full_model/analysis/run_v49_physical_continuation.py",
                 "--initial-checkpoint", str(initial), "--output-dir", str(loading),
