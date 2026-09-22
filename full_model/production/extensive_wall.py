@@ -65,6 +65,7 @@ class ExtensiveWallParameters:
     ordering_finite_relative_tolerance: float = 2e-4
     ordering_finite_absolute_tolerance: float = 2e-8
     ordering_finite_max_rejections: int = 24
+    ordering_krylov_diagonal_preconditioner: bool = True
     ordering_implicit_residual_tolerance: float = 2e-9
     ordering_implicit_max_nfev: int = 100
     ordering_asymptotic_minimum_attempt_exposure: float = 50.0
@@ -427,18 +428,21 @@ def _accepted_ordering_substep(inventory, systems, topologies, orientation_rad,
 
 
 def _ordering_affinity_linear_action(delta_plus, delta_minus, systems,
-                                     orientation_rad, parameters):
+                                     orientation_rad, parameters, *,
+                                     ordered_nye_basis=None):
     """Derivative of ordered-minus-tangle chemical affinity [J/m]."""
     shape = np.asarray(delta_plus).shape
     # Only the ordered Nye basis is needed; all density arrays are dummy.
     # Constructing it through the authoritative routine avoids introducing a
     # second crystallographic convention in the implicit solver.
-    dummy_inventory = type("_OrderingBasisInventory", (), {})()
-    # ordered_wall_nye_m1 accesses only the two ordered arrays.
-    dummy_inventory.wall_ordered_plus_m2 = np.zeros(shape)
-    dummy_inventory.wall_ordered_minus_m2 = np.zeros(shape)
-    _, basis = ordered_wall_nye_m1(
-        dummy_inventory, systems, orientation_rad)
+    basis = ordered_nye_basis
+    if basis is None:
+        dummy_inventory = type("_OrderingBasisInventory", (), {})()
+        # ordered_wall_nye_m1 accesses only the two ordered arrays.
+        dummy_inventory.wall_ordered_plus_m2 = np.zeros(shape)
+        dummy_inventory.wall_ordered_minus_m2 = np.zeros(shape)
+        _, basis = ordered_wall_nye_m1(
+            dummy_inventory, systems, orientation_rad)
     signed_delta = np.asarray(delta_plus)-np.asarray(delta_minus)
     delta_alpha = np.einsum("...a,...aij->...ij", signed_delta, basis)
     match = parameters.nye_match_coefficient_J_m*np.einsum(
@@ -449,6 +453,36 @@ def _ordering_affinity_linear_action(delta_plus, delta_minus, systems,
         -match-parameters.ordered_gradient_J_m3*_laplacian(
             np.asarray(delta_minus), parameters.spacing_m),
     )
+
+
+def projected_residual_linear_operator(previous, rate, duration,
+                                       rate_jvp, rate_rjvp):
+    """Exact active-set derivative of ``q-clip(q0+h*f(q),0,1)``.
+
+    The caller supplies the continuous-rate Jacobian actions.  Keeping the
+    trial duration here prevents an enclosing adaptive step from contaminating
+    either half-step mask.
+    """
+    previous = np.asarray(previous, dtype=float).reshape(-1)
+    rate = np.asarray(rate, dtype=float).reshape(-1)
+    dt = float(duration)
+    if previous.shape != rate.shape or dt <= 0.0 or not np.isfinite(dt):
+        raise ValueError("invalid projected-residual linearization")
+    predicted = previous+dt*rate
+    interior = (predicted > 0.0) & (predicted < 1.0)
+
+    def matvec(direction):
+        value = np.asarray(direction, dtype=float).reshape(-1)
+        return value-dt*interior*np.asarray(rate_jvp(value))
+
+    def rmatvec(direction):
+        value = np.asarray(direction, dtype=float).reshape(-1)
+        return value-dt*np.asarray(rate_rjvp(interior*value))
+
+    operator = LinearOperator(
+        (previous.size, previous.size), matvec=matvec,
+        rmatvec=rmatvec, dtype=float)
+    return operator, interior
 
 
 def _accepted_ordering_implicit(inventory, systems, topologies,
@@ -1154,6 +1188,20 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
             linear_iterations = nonlinear_iterations = 0
             tolerance = max(parameters.ordering_implicit_residual_tolerance,
                             1e-8)
+            # Geometry, temperature and stress do not change inside this
+            # ordering-only solve.  Cache their derived fields once rather
+            # than rebuilding crystallographic tensors in every Krylov JVP.
+            _, ordering_nye_basis = ordered_wall_nye_m1(
+                inventory, systems, orientation_rad)
+            jacobian_stress = np.asarray(stress_Pa, dtype=float)
+            if jacobian_stress.ndim == 3:
+                jacobian_stress = np.max(
+                    np.abs(jacobian_stress), axis=2)
+            jacobian_attempt = _attempt_rate_s(
+                jacobian_stress, temperature_K, parameters)[..., None]
+            jacobian_thermal = (
+                parameters.event_length_m
+                /(2*KB_J_K*np.asarray(temperature_K)[..., None]))
 
             def normalized_rate(vector):
                 nonlocal nfev
@@ -1173,69 +1221,89 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 mu = extensive_wall_chemical_potentials_J_m(
                     candidate, systems, topologies, orientation_rad,
                     target_nye_m1, parameters)
-                stress = np.asarray(stress_Pa, dtype=float)
-                if stress.ndim == 3:
-                    stress = np.max(np.abs(stress), axis=2)
-                attempt = _attempt_rate_s(
-                    stress, temperature_K, parameters)[..., None]
-                thermal = (parameters.event_length_m/(2*KB_J_K
-                           *np.asarray(temperature_K)[..., None]))
-                coefficients = {}; interior = {}
+                coefficients = {}
                 fields = unpack(vector)
                 trial_transfer = ordering_residual(
                     candidate, systems, topologies, orientation_rad,
                     target_nye_m1, stress_Pa, temperature_K, parameters,
                     enforce_availability=False)[0]
-                previous_fields = unpack(previous)
                 for sign in ("plus", "minus"):
                     affinity = ((mu[f"ordered_{sign}"]
-                                 -mu[f"tangle_{sign}"])*thermal)
-                    coefficients[sign] = (-attempt
-                        *(1.0-np.tanh(affinity)**2)*thermal)
+                                 -mu[f"tangle_{sign}"])*jacobian_thermal)
+                    coefficients[sign] = (-jacobian_attempt
+                        *(1.0-np.tanh(affinity)**2)*jacobian_thermal)
+                packed_rate = []
+                for sign in ("plus", "minus"):
                     rate_value = np.divide(
-                        trial_transfer[sign],
-                        totals[sign], out=np.zeros_like(totals[sign]),
-                        where=active[sign])
-                    predicted = previous_fields[sign]+step_dt*rate_value
-                    interior[sign] = (predicted > 0.0) & (predicted < 1.0)
+                        trial_transfer[sign], totals[sign],
+                        out=np.zeros_like(totals[sign]), where=active[sign])
+                    packed_rate.append(rate_value[active[sign]])
 
-                def matvec(direction):
+                def continuous_matvec(direction):
                     dq = unpack(direction)
                     dy = {s: totals[s]*dq[s] for s in ("plus", "minus")}
                     dmu_plus, dmu_minus = _ordering_affinity_linear_action(
                         dy["plus"], dy["minus"], systems, orientation_rad,
-                        parameters)
+                        parameters, ordered_nye_basis=ordering_nye_basis)
                     dmu = {"plus": dmu_plus, "minus": dmu_minus}
                     output = []
                     for sign in ("plus", "minus"):
                         drate = coefficients[sign]*dmu[sign]
-                        field = dq[sign]-local_dt*interior[sign]*drate
-                        output.append(field[active[sign]])
+                        output.append(drate[active[sign]])
                     return np.concatenate(output)
-                def rmatvec(direction):
+                def continuous_rmatvec(direction):
                     # H = d(mu_ordered-mu_tangle)/d(rho_ordered)
                     # is the symmetric Hessian of the quadratic ordering
                     # energy.  Apply J^T without assembling either H or J:
                     # J = I-dt*D_active*C*H*T.
                     value = unpack(direction)
                     weighted = {
-                        sign: coefficients[sign]*interior[sign]*value[sign]
+                        sign: coefficients[sign]*value[sign]
                         for sign in ("plus", "minus")}
                     adjoint_plus, adjoint_minus = (
                         _ordering_affinity_linear_action(
                             weighted["plus"], weighted["minus"], systems,
-                            orientation_rad, parameters))
+                            orientation_rad, parameters,
+                            ordered_nye_basis=ordering_nye_basis))
                     adjoint = {
                         "plus": adjoint_plus, "minus": adjoint_minus}
                     output = []
                     for sign in ("plus", "minus"):
-                        field = (value[sign]
-                                 -local_dt*totals[sign]*adjoint[sign])
-                        output.append(field[active[sign]])
+                        output.append(
+                            (totals[sign]*adjoint[sign])[active[sign]])
                     return np.concatenate(output)
+                operator, packed_interior = projected_residual_linear_operator(
+                    previous, np.concatenate(packed_rate), local_dt,
+                    continuous_matvec, continuous_rmatvec)
+                interior = unpack(packed_interior)
+                return operator, coefficients, interior
+
+            def diagonal_preconditioner(coefficients, interior, duration):
+                """Local diagonal of the shifted spectral-gradient operator."""
+                if not parameters.ordering_krylov_diagonal_preconditioner:
+                    return None
+                nx, ny = shapes[:2]
+                kx = 2*np.pi*np.fft.fftfreq(nx, d=parameters.spacing_m)
+                ky = 2*np.pi*np.fft.fftfreq(ny, d=parameters.spacing_m)
+                if nx % 2 == 0:
+                    kx[nx//2] = 0.0
+                if ny % 2 == 0:
+                    ky[ny//2] = 0.0
+                minus_laplacian_diagonal = (
+                    float(np.mean(kx*kx))+float(np.mean(ky*ky)))
+                packed = []
+                for sign in ("plus", "minus"):
+                    diagonal = (1.0+float(duration)*interior[sign]
+                        *np.maximum(-coefficients[sign], 0.0)*totals[sign]
+                        *parameters.ordered_gradient_J_m3
+                        *minus_laplacian_diagonal)
+                    packed.append(diagonal[active[sign]])
+                inverse = 1.0/np.maximum(np.concatenate(packed), 1.0)
                 return LinearOperator(
-                    (active_count, active_count), matvec=matvec,
-                    rmatvec=rmatvec, dtype=float)
+                    (active_count, active_count),
+                    matvec=lambda value: inverse*np.asarray(value),
+                    rmatvec=lambda value: inverse*np.asarray(value),
+                    dtype=float)
 
             def backward_euler_trial(previous, duration):
                 """One bounded BE trial; caller owns acceptance and the clock."""
@@ -1248,7 +1316,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                         previous+duration*rate_value, 0.0, 1.0)
 
                 def trial_jacobian(trial):
-                    return exact_jacobian(trial, previous, duration)
+                    return exact_jacobian(trial, previous, duration)[0]
 
                 local = least_squares(
                     trial_residual, initial, jac=trial_jacobian,
@@ -1266,10 +1334,15 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 counter = [0]
                 def count_iteration(_):
                     counter[0] += 1
+                operator, coefficients, interior = exact_jacobian(
+                    previous, previous, duration)
+                preconditioner = diagonal_preconditioner(
+                    coefficients, interior, duration)
                 delta, info = gmres(
-                    exact_jacobian(previous, previous, duration),
+                    operator,
                     duration*rate_value, rtol=1e-9, atol=1e-12,
-                    restart=30, maxiter=100, callback=count_iteration,
+                    restart=30, maxiter=100, M=preconditioner,
+                    callback=count_iteration,
                     callback_type="pr_norm")
                 if info != 0 or np.any(~np.isfinite(delta)):
                     return None, counter[0], int(info)
@@ -1448,7 +1521,7 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                 for _ in range(internal_steps):
                     previous = vector.copy()
                     rate_value = normalized_rate(previous)
-                    backward = exact_jacobian(previous, previous)
+                    backward = exact_jacobian(previous, previous)[0]
                     def augmented_matvec(value):
                         flat = np.asarray(value).reshape(-1)
                         state_direction = flat[:-1]
@@ -1485,10 +1558,15 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
                     counter = [0]
                     def count_iteration(_):
                         counter[0] += 1
+                    operator, coefficients, interior = exact_jacobian(
+                        previous, previous)
                     delta, info = gmres(
-                        exact_jacobian(previous, previous),
+                        operator,
                         step_dt*rate_value, rtol=1e-8, atol=1e-11,
-                        restart=30, maxiter=80, callback=count_iteration,
+                        restart=30, maxiter=80,
+                        M=diagonal_preconditioner(
+                            coefficients, interior, step_dt),
+                        callback=count_iteration,
                         callback_type="pr_norm")
                     linear_iterations += counter[0]
                     if info != 0 or np.any(~np.isfinite(delta)):
@@ -1716,6 +1794,10 @@ def _accepted_ordering_implicit(inventory, systems, topologies,
         "active_degrees_of_freedom": int(active_count),
         "dense_jacobian_bytes_avoided": int(8*active_count*active_count),
         "finite_time_backend": parameters.ordering_finite_time_backend,
+        "ordering_workspace_cached": bool(
+            parameters.ordering_finite_time_backend.startswith("matrix_free")),
+        "krylov_diagonal_preconditioner_enabled": bool(
+            parameters.ordering_krylov_diagonal_preconditioner),
         "solver_message": solver_message,
         "asymptotic_endpoint_inventory_change_bound_relative": (
             maximum_residual if integration_method.endswith("asymptotic")

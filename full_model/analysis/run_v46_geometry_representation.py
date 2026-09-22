@@ -17,6 +17,7 @@ from full_model.production.extensive_wall import extensive_wall_energy_component
 from full_model.production.lattice_line_geometry import (
     apply_physical_reconstruction,
     empty_lattice_geometry,
+    initialize_closed_swept_surface,
     propose_plaquette_sweep,
 )
 from full_model.production.tensorial_nye import nye_from_plastic_distortion
@@ -66,19 +67,16 @@ def prepare_represented_block(n):
     base, _, _, _, systems, topologies, _, _, _, dx = data
     geometry = empty_lattice_geometry(
         (n, n), len(systems), dx, section_thickness_m=THICKNESS_M)
-    state = V24MechanicalWallState(
-        base.common, base.density, base.reservoir_alignment, geometry)
     width = n//4; start = (n-width)//2
-    for i in range(start, start+width):
-        for j in range(start, start+width):
-            candidate = propose_plaquette_sweep(
-                state.geometry, state.density, state.reservoir_alignment,
-                state.common, systems, state.common.orientation_rad,
-                (i, j), 0, 1, 1.0,
-                continuum_representation_length_m=REPRESENTATION_LENGTH_M)
-            state = synchronize_common(V24MechanicalWallState(
-                candidate[3], candidate[1], candidate[2], candidate[0]),
-                topologies)
+    swept = np.zeros_like(geometry.swept_quanta)
+    swept[start:start+width, start:start+width, 0, 0] = 1.0
+    initialized = initialize_closed_swept_surface(
+        geometry, base.density, base.reservoir_alignment, base.common,
+        systems, base.common.orientation_rad, swept,
+        continuum_representation_length_m=REPRESENTATION_LENGTH_M)
+    state = synchronize_common(V24MechanicalWallState(
+        initialized[3], initialized[1], initialized[2], initialized[0]),
+        topologies)
     return state, data, start, width
 
 

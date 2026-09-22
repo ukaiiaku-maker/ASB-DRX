@@ -34,7 +34,7 @@ def _run(mu, temperature=1100.0):
 
 
 def test_nonzero_exp_floor_geometry_rate_responds_to_complete_affinity():
-    _, _, blocked = _run(-2.03e-18)
+    _, _, blocked = _run(-2.30e-18)
     _, advanced, moderate = _run(-2.00e-18)
     _, _, saturated = _run(-1.90e-18)
     assert blocked["classification"] == "AFFINITY_BLOCKED_ZERO_EVENT"
@@ -57,7 +57,7 @@ def test_affinity_geometry_rate_has_arrhenius_temperature_response():
 
 
 def test_affinity_blocked_event_is_exact_atomic_rollback():
-    state, candidate, ledger = _run(-2.03e-18)
+    state, candidate, ledger = _run(-2.30e-18)
     assert candidate is state
     assert ledger["consumed_duration_s"] == 0.0
     assert ledger["committed_swept_area_m2"] == 0.0
@@ -74,12 +74,12 @@ def test_actual_reverse_edge_reverses_exchange_and_complete_affinity():
     event = _event(); event["proposed_extent"] = .05
     forward, first = accepted_geometry_plaquette_transaction(
         state, event, args[3], args[4], args[1], args[5], args[6],
-        _kinetics(-2e-18), 1e-9)
+        _kinetics(-2e-18), 1e-6)
     assert first["accepted"]
     reverse_event = dict(event); reverse_event["proposed_extent"] = -.05
     restored, reverse = accepted_geometry_plaquette_transaction(
         forward, reverse_event, args[3], args[4], args[1], args[5], args[6],
-        _kinetics(-2e-18), 1e-9)
+        _kinetics(-2e-18), 1e-6)
     assert not reverse["accepted"]
     assert restored is forward
     np.testing.assert_allclose(

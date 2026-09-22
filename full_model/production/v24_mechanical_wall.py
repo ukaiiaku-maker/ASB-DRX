@@ -118,6 +118,7 @@ class V43GeometryKinetics:
     exchange_stoichiometry_defects_per_atom: float = 0.0
     continuum_representation_length_m: float = 0.0
     affinity_coupling_mode: str = "downhill_tanh"
+    physical_event_jump_m: float = 0.0
 
     def __post_init__(self):
         if (self.enthalpy_J < 0.0 or self.critical_stress_Pa <= 0.0
@@ -131,7 +132,9 @@ class V43GeometryKinetics:
                 or not np.isfinite(self.atomic_volume_m3_per_atom)
                 or not np.isfinite(self.exchange_stoichiometry_defects_per_atom)
                 or not np.isfinite(self.continuum_representation_length_m)
-                or self.continuum_representation_length_m < 0.0):
+                or self.continuum_representation_length_m < 0.0
+                or not np.isfinite(self.physical_event_jump_m)
+                or self.physical_event_jump_m < 0.0):
             raise ValueError("invalid V43 geometry kinetics")
         if self.affinity_coupling_mode not in (
                 "downhill_tanh", "legacy_energy_guard_only"):
@@ -153,6 +156,29 @@ class MuraWorkBudgetError(RuntimeError):
     def __init__(self, message, audit):
         super().__init__(message)
         self.audit = audit
+
+
+def geometry_event_clock(rate_s, event_jump_m, spacing_m, dt_s,
+                         maximum_extent):
+    """Map a physical site-event frequency to the numerical front clock.
+
+    The constitutive object is ``velocity = event_jump * event_frequency``.
+    Fractional plaquette extent is only its grid representation.
+    """
+    rate = float(rate_s); jump = float(event_jump_m)
+    spacing = float(spacing_m); duration = float(dt_s)
+    cap = float(maximum_extent)
+    if (rate < 0.0 or jump <= 0.0 or spacing <= 0.0 or duration < 0.0
+            or cap <= 0.0 or not np.isfinite(
+                (rate, jump, spacing, duration, cap)).all()):
+        raise ValueError("invalid physical geometry event clock")
+    velocity = rate*jump
+    extent_rate = velocity/spacing
+    return {
+        "physical_velocity_m_s": velocity,
+        "numerical_extent_rate_s-1": extent_rate,
+        "maximum_extent": min(cap, extent_rate*duration),
+    }
 
 
 def _density_state_sha256(inventory):
@@ -594,8 +620,19 @@ def accepted_geometry_plaquette_transaction(
         kinetics.exp_a, kinetics.exp_n, kinetics.exp_floor)
     arrhenius_rate = activated_rate_s(kinetics.process, enthalpy, temperature)
     rate = float(event.get("_affinity_rate_override_s", arrhenius_rate))
-    kinetic_capacity = min(
-        kinetics.maximum_extent_per_step, max(rate*float(dt_s), 0.0))
+    spacing_m = float(state.geometry.spacing_m)
+    event_jump_m = (float(kinetics.physical_event_jump_m)
+                    if kinetics.physical_event_jump_m > 0.0
+                    else float(common_parameters.burgers_m))
+    # ``rate`` is a microscopic event frequency [s^-1], not a fractional-cell
+    # speed.  One event advances the front by the declared physical jump.
+    # Mapping that displacement to a numerical plaquette fraction is the only
+    # place where mesh spacing enters the clock.
+    event_clock = geometry_event_clock(
+        rate, event_jump_m, spacing_m, dt_s,
+        kinetics.maximum_extent_per_step)
+    extent_rate_s = event_clock["numerical_extent_rate_s-1"]
+    kinetic_capacity = event_clock["maximum_extent"]
     extent = np.sign(proposed)*min(abs(proposed), kinetic_capacity)
     if extent == 0.0:
         zero_ledger = {
@@ -608,6 +645,9 @@ def accepted_geometry_plaquette_transaction(
             "irreversible_heat_increment_J_m3": np.zeros_like(
                 state.common.orientation_rad), "event_rate_s": rate,
             "arrhenius_unbiased_rate_s": arrhenius_rate,
+            "physical_event_jump_m": event_jump_m,
+            "physical_velocity_m_s": rate*event_jump_m,
+            "numerical_extent_rate_s-1": extent_rate_s,
             "kinetic_extent_capacity": kinetic_capacity,
             "requested_time_s": float(dt_s), "accepted_time_s": 0.0,
             "remaining_time_s": float(dt_s), "accepted_rate_exposure": 0.0,
@@ -644,7 +684,7 @@ def accepted_geometry_plaquette_transaction(
             "requested_time_s": float(dt_s), "accepted_time_s": 0.0,
             "remaining_time_s": float(dt_s), "accepted_rate_exposure": 0.0,
             "proposed_duration_s": min(
-                abs(extent)/max(rate, 1e-300), float(dt_s)),
+                abs(extent)/max(extent_rate_s, 1e-300), float(dt_s)),
             "consumed_duration_s": 0.0,
             "proposed_swept_area_m2": (
                 abs(extent)*float(state.geometry.spacing_m)**2),
@@ -712,7 +752,8 @@ def accepted_geometry_plaquette_transaction(
     tolerance = 2e-12*scale
     heat_total = -complete_delta
     accepted = bool(heat_total >= -tolerance)
-    proposed_duration = min(abs(extent)/max(rate, 1e-300), float(dt_s))
+    proposed_duration = min(
+        abs(extent)/max(extent_rate_s, 1e-300), float(dt_s))
     proposed_area = abs(float(ledger["swept_area_m2"]))
     # The represented patch is a coarse-grained ensemble of atomic events.
     # Normalize its complete energy by the physical sites swept, never by one
@@ -726,6 +767,10 @@ def accepted_geometry_plaquette_transaction(
             float(common_parameters.burgers_m)**2, 1e-300)
         physical_event_count_source = "swept_area_over_burgers_squared"
     physical_event_count = max(physical_event_count, 1e-300)
+    physical_displacement_m = abs(extent)*spacing_m
+    microscopic_jumps_per_site = physical_displacement_m/event_jump_m
+    active_site_measure = (
+        physical_event_count/max(microscopic_jumps_per_site, 1e-300))
     event_available_energy_J = -complete_delta*cell_volume_m3
     available_energy_per_event_J = (
         event_available_energy_J/physical_event_count)
@@ -743,6 +788,12 @@ def accepted_geometry_plaquette_transaction(
         "complete_available_energy_J": event_available_energy_J,
         "physical_event_count": physical_event_count,
         "physical_event_count_source": physical_event_count_source,
+        "physical_event_jump_m": event_jump_m,
+        "physical_displacement_m": physical_displacement_m,
+        "microscopic_jumps_per_active_site": microscopic_jumps_per_site,
+        "active_site_measure": active_site_measure,
+        "active_site_measure_definition": (
+            "physical_event_count divided by displacement/event_jump"),
         "affinity_probe_signed_material_exchange_count": (
             signed_exchange_count),
         "affinity_probe_signed_material_exchange_volume_m3": (
@@ -802,6 +853,9 @@ def accepted_geometry_plaquette_transaction(
         **affinity_record,
         "activation_entropy_over_kB": kinetics.process.entropy_over_kB,
         "kinetic_extent_capacity": kinetic_capacity,
+        "physical_event_jump_m": event_jump_m,
+        "physical_velocity_m_s": rate*event_jump_m,
+        "numerical_extent_rate_s-1": extent_rate_s,
         "wall_energy_component_changes_J_m3": wall_changes,
         "wall_energy_change_J_m3_cells": wall_delta,
         "wall_energy_component_scalar_changes_J_m3_cells": component_deltas,
@@ -900,8 +954,7 @@ def accepted_geometry_plaquette_transaction(
     result = synchronize_common(V24MechanicalWallState(
         common, inventory, alignment, geometry), topologies)
     ledger["observed_accepted_velocity_m_s"] = (
-        abs(extent)*float(state.geometry.spacing_m)
-        /max(proposed_duration, 1e-300))
+        physical_displacement_m/max(proposed_duration, 1e-300))
     result.validate(systems, topologies)
     ledger["irreversible_heat_increment_J_m3"] = heat
     ledger["heat_plus_complete_energy_residual_J_m3_cells"] = float(

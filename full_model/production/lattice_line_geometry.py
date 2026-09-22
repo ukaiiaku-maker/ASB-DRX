@@ -124,6 +124,76 @@ def empty_lattice_geometry(shape, family_count, spacing_m,
     return result
 
 
+def initialize_closed_swept_surface(state, inventory, alignment, common,
+                                    systems, orientation_rad, swept_quanta,
+                                    *, continuum_representation_length_m=0.0):
+    """Batch-initialize a closed swept surface without executing an event.
+
+    This is an initial-condition constructor, not nucleation or a kinetic
+    transaction.  It is algebraically the boundary/map of the supplied
+    plaquette chain and deliberately leaves ``accepted_event_count`` at zero.
+    """
+    state.validate(len(systems))
+    if (int(state.accepted_event_count) != 0
+            or np.any(np.asarray(state.swept_quanta) != 0.0)):
+        raise ValueError("batch surface initialization requires empty geometry")
+    q = np.asarray(swept_quanta, dtype=float)
+    if q.shape != state.swept_quanta.shape or not np.isfinite(q).all():
+        raise ValueError("initial swept surface has an invalid layout")
+    dx = float(state.spacing_m)
+    burgers, _, _ = rotated_system_fields(systems, np.asarray(orientation_rad))
+    signed_burgers = np.stack((burgers, -burgers), axis=3)
+    ba = q[..., None]*dx**2*signed_burgers
+    ex, ey = boundary_of_plaquettes(q)
+    ebx, eby = boundary_of_plaquettes(ba/dx**2)
+    geometry = replace(
+        state, swept_quanta=q.copy(), swept_burgers_area_m3=ba,
+        edge_x_quanta=ex, edge_y_quanta=ey,
+        edge_x_burgers_m=ebx, edge_y_burgers_m=eby,
+        accepted_event_count=np.asarray(0))
+    geometry.validate(len(systems))
+    rho_raw, moment_raw = geometry_reservoir_fields(geometry)
+    length = float(continuum_representation_length_m)
+    rho = apply_physical_reconstruction(rho_raw, dx, length)
+    moment = apply_physical_reconstruction(moment_raw, dx, length)
+    density_updates = {}; alignment_updates = {}
+    for slot, sign in enumerate(("plus", "minus")):
+        name = f"wall_ordered_{sign}_m2"
+        density = np.asarray(getattr(inventory, name))+rho[..., slot]
+        moment_value = (
+            np.asarray(getattr(alignment, name))+moment[..., slot, :])
+        # Scalar and vector FFT roundoff are independent. Preserve the mapped
+        # moment exactly and close only its positive ulp-scale realizability
+        # deficit, identically to the physical event path.
+        excess = np.linalg.norm(moment_value, axis=-1)-density
+        scale = max(float(np.max(np.abs(density))), 1.0)
+        if np.max(excess) > 256*np.finfo(float).eps*scale:
+            raise ValueError("initialized geometry violates moment realizability")
+        density_updates[name] = density+np.maximum(excess, 0.0)
+        alignment_updates[name] = moment_value
+    initialized_inventory = replace(inventory, **density_updates)
+    initialized_alignment = replace(alignment, **alignment_updates)
+    initialized_alignment.validate(initialized_inventory, len(systems))
+    beta_family_raw = geometry_plastic_distortion(geometry)
+    beta_family = apply_physical_reconstruction(beta_family_raw, dx, length)
+    beta = np.sum(beta_family, axis=2)
+    family_nye = np.stack([
+        nye_from_plastic_distortion(beta_family[..., family, :, :], dx)
+        for family in range(len(systems))], axis=2)
+    initialized_common = replace(
+        common, beta_p=np.asarray(common.beta_p)+beta,
+        family_nye_m1=np.asarray(common.family_nye_m1)+family_nye)
+    return geometry, initialized_inventory, initialized_alignment, initialized_common, {
+        "operator": "batch_closed_swept_surface_initializer",
+        "initialization_only": True,
+        "accepted_physical_event_count": 0,
+        "nonzero_plaquette_count": int(np.count_nonzero(q)),
+        "maximum_node_balance_residual": float(np.max(np.abs(
+            link_node_balance(ex, ey)))),
+        "continuum_representation_length_m": length,
+    }
+
+
 def geometry_checkpoint_arrays(state, prefix=GEOMETRY_PREFIX):
     return {prefix+name: np.asarray(getattr(state, name))
             for name in state.__dataclass_fields__}
@@ -227,6 +297,52 @@ def apply_physical_reconstruction(field, spacing_m, length_m):
         flat_result[..., component][
             np.abs(flat_result[..., component]) <= noise] = 0.0
     return result
+
+
+def subcell_geometry_to_continuum(field, spacing_m, length_m,
+                                   displacement_m=(0.0, 0.0), *,
+                                   return_displacement_derivative=False):
+    """Reconstruct and rigidly translate a periodic continuum geometry field.
+
+    Fractional values in ``swept_quanta`` are ensemble weights and are *not*
+    coordinates.  This separate map supplies coordinates: it first applies the
+    declared physical reconstruction and then evaluates its band-limited
+    periodic continuation at ``x-displacement``.  When requested, the two
+    returned derivatives are with respect to the physical x/y displacement
+    [field unit per metre].  Even-grid Nyquist modes are removed because a
+    real-valued Nyquist cosine has no uniquely sampled subcell translate.
+    """
+    value = apply_physical_reconstruction(field, spacing_m, length_m)
+    if value.ndim < 2:
+        raise ValueError("subcell geometry requires two spatial axes")
+    spacing = float(spacing_m)
+    displacement = np.asarray(displacement_m, dtype=float)
+    if (spacing <= 0.0 or displacement.shape != (2,)
+            or not np.isfinite(displacement).all()):
+        raise ValueError("invalid subcell displacement or spacing")
+    nx, ny = value.shape[:2]
+    kx = 2*np.pi*np.fft.fftfreq(nx, d=spacing)
+    ky = 2*np.pi*np.fft.fftfreq(ny, d=spacing)
+    spectrum = np.fft.fftn(value, axes=(0, 1))
+    if nx % 2 == 0:
+        spectrum[nx//2, ...] = 0.0
+    if ny % 2 == 0:
+        spectrum[:, ny//2, ...] = 0.0
+    phase2 = np.exp(-1j*(
+        kx[:, None]*displacement[0]+ky[None, :]*displacement[1]))
+    phase = phase2.reshape(phase2.shape+(1,)*(value.ndim-2))
+    translated_spectrum = spectrum*phase
+    translated = np.fft.ifftn(
+        translated_spectrum, axes=(0, 1)).real
+    if not return_displacement_derivative:
+        return translated
+    kx_shape = kx.reshape((nx, 1)+(1,)*(value.ndim-2))
+    ky_shape = ky.reshape((1, ny)+(1,)*(value.ndim-2))
+    derivative_x = np.fft.ifftn(
+        -1j*kx_shape*translated_spectrum, axes=(0, 1)).real
+    derivative_y = np.fft.ifftn(
+        -1j*ky_shape*translated_spectrum, axes=(0, 1)).real
+    return translated, np.stack((derivative_x, derivative_y), axis=0)
 
 
 def geometry_link_nye_mimetic(state):

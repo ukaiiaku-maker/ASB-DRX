@@ -2,7 +2,9 @@ from dataclasses import replace
 
 import numpy as np
 
-from full_model.production.extensive_wall import accepted_ordering_step
+from full_model.production.extensive_wall import (
+    accepted_ordering_step, projected_residual_linear_operator,
+)
 from tests.test_v40_ordering_finite_time import _compact_active_case
 
 
@@ -89,3 +91,24 @@ def test_production_disables_unproved_euclidean_endpoint_handoff():
     assert parameters.ordering_asymptotic_certificate_mode == "disabled"
     assert parameters.ordering_finite_time_backend == (
         "matrix_free_adaptive_rosenbrock_euler")
+
+
+def test_projected_jvp_uses_each_adaptive_trial_duration_for_its_mask():
+    previous = np.asarray((.90, .25))
+    def rate(value):
+        return np.asarray((1.5*(1.0-value[0]), -0.2*value[1]))
+    def jvp(direction):
+        return np.asarray((-1.5*direction[0], -0.2*direction[1]))
+    direction = np.asarray((.3, -.4))
+    for duration, expected_first_interior in ((1.0, False), (.5, True)):
+        operator, interior = projected_residual_linear_operator(
+            previous, rate(previous), duration, jvp, jvp)
+        assert bool(interior[0]) is expected_first_interior
+        h = 1e-7
+        def residual(value):
+            return value-np.clip(
+                previous+duration*rate(value), 0.0, 1.0)
+        numerical = (residual(previous+h*direction)
+                     -residual(previous-h*direction))/(2*h)
+        np.testing.assert_allclose(
+            operator.matvec(direction), numerical, rtol=2e-9, atol=2e-10)
