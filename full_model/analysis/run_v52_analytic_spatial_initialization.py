@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -123,10 +124,22 @@ def main():
         "physical_configuration": {
             "length_m": kwargs["length_m"],
             "interface_width_m": kwargs["interface_width_m"],
+            "spacing_m": companion_context["spacing_m"],
+            "represented_thickness_m": companion_context[
+                "represented_thickness_m"],
+            "continuum_representation_length_m": companion_context[
+                "wall_parameters"].capture_deposition_length_m,
             "temperature_K": kwargs["temperature_K"],
             "child_line_fraction": kwargs["child_line_fraction"],
             "deterministic_physical_fields": True,
             "grid_index_noise_used": False,
+        },
+        "constitutive_and_thermal_parameters": {
+            "wall": asdict(companion_context["wall_parameters"]),
+            "extensive_ordering": asdict(
+                companion_context["extensive_parameters"]),
+            "topology_kinetics": asdict(
+                companion_context["topology_kinetics"]),
         },
         "scope": (
             "same analytic history origin; no evolved-state interpolation "
