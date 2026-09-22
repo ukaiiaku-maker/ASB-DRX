@@ -89,7 +89,9 @@ def main():
         raise RuntimeError("retained n128 complete restart state is not the analytic initializer")
     companion_context = resolved_bicrystal(grid=args.grid, **kwargs)
     metadata = {
-        "schema": "asb-drx/v52/analytic-common-physical-initial/v1",
+        # save_stage owns the loader schema.  Keep campaign provenance in a
+        # distinct field so it cannot override that restart contract.
+        "provenance_schema": "asb-drx/v52/analytic-common-physical-initial/v1",
         "stage": "V52_ANALYTIC_COMMON_PHYSICAL_INITIAL",
         "grid": int(args.grid),
         "macro_dt_s": float(args.dt_s),
