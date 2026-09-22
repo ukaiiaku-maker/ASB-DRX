@@ -75,10 +75,19 @@ midpoint/end loads rather than treated as a fatal clock mismatch. Continuous
 and restarted smoke paths pass. A resolved long-horizon result is a separate
 pending calculation, not inferred from the smoke test.
 
+A matched fresh-source n128 loading/hold partial completes one 0.48828125 us
+interval per branch. Loading minus hold produces `+8.696 MPa` mean shear
+stress, `+5.1922e-8` engineering plastic shear, and `+0.0287 mK` mean
+temperature. Only `0.0532%` of the extra imposed shear is extra plastic shear,
+so this first resolved increment is predominantly elastic. Loading and hold
+cumulative first-law residuals are `2.15e-28 J` and `-1.26e-29 J`. The exact
+restart covers `1.953%` of the unchanged 0.005 additional-engineering-shear
+milestone; its measured-cost projection leaves about 4.98 h of local loading.
+This is a valid durable partial, not completion of the physical horizon.
+
 ## Regression and classification
 
 The canonical suite passes 796 tests in 236.44 s. The present classification
 is:
 
 `ORDERING_CLOCK_AND_SUBCELL_ORACLE_QUALIFIED_PARTIAL_SEGMENT_FORCE_UNRESOLVED`
-

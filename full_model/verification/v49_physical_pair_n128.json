@@ -1,0 +1,80 @@
+{
+  "achieved_additional_engineering_shear": 9.765625000000139e-05,
+  "analysis_source_sha": "dd5b8e3a429774fc7996f0d1e5e39b2bbad737da",
+  "asb_claimed": false,
+  "balances": {
+    "hold": {
+      "cumulative_external_work_J": 0.0,
+      "cumulative_first_law_residual_J": -1.262177448353619e-29,
+      "cumulative_internal_energy_change_J": -1.262177448353619e-29
+    },
+    "loading": {
+      "cumulative_external_work_J": 8.859905915029006e-16,
+      "cumulative_first_law_residual_J": 2.145701662201152e-28,
+      "cumulative_internal_energy_change_J": 8.859905915031152e-16
+    }
+  },
+  "calculation_source_sha": "dd5b8e3a429774fc7996f0d1e5e39b2bbad737da",
+  "classification": "VALID_RESOLVED_FRESH_SOURCE_PHYSICAL_PARTIAL",
+  "domain_m": 3.2e-06,
+  "drx_claimed": false,
+  "durable_partial": true,
+  "endpoints": {
+    "hold": {
+      "engineering_plastic_shear_gamma_p": 1.726576199355054e-06,
+      "engineering_total_shear_gamma": 0.02,
+      "mean_shear_stress_sigma_12_Pa": 1781846162.0606382,
+      "plastic_distortion_beta_01": 0.0,
+      "plastic_distortion_beta_10": 1.726576199355054e-06,
+      "plastic_tensor_strain_e_p12": 8.63288099677527e-07,
+      "temperature_mean_K": 1100.0008813305953,
+      "temperature_peak_K": 1100.0010555498993,
+      "total_strain_tensor_e12": 0.01
+    },
+    "loading": {
+      "engineering_plastic_shear_gamma_p": 1.7784983434289659e-06,
+      "engineering_total_shear_gamma": 0.020097656250000002,
+      "mean_shear_stress_sigma_12_Pa": 1790542707.6726003,
+      "plastic_distortion_beta_01": 0.0,
+      "plastic_distortion_beta_10": 1.7784983434289659e-06,
+      "plastic_tensor_strain_e_p12": 8.892491717144829e-07,
+      "temperature_mean_K": 1100.000909995702,
+      "temperature_peak_K": 1100.0010894541704,
+      "total_strain_tensor_e12": 0.010048828125000001
+    }
+  },
+  "engineering_strain_rate_s-1": 200.0,
+  "front_enabled": false,
+  "generated_utc": "2026-09-22T01:37:50.811155+00:00",
+  "grid": 128,
+  "hold_checkpoint_sha256": "a27f4be947b3c9abd862ae58bbfa976694d0f6f68c9fc8d17e63698c9d4dda5d",
+  "lagb_claimed": false,
+  "loading_checkpoint_sha256": "d591cfa59ec50d76a5313abae25c1815836e56f6f4f8a26a81ccf80d80eec156",
+  "loading_minus_hold": {
+    "engineering_plastic_shear_gamma_p": 5.192214407391183e-08,
+    "engineering_total_shear_gamma": 9.765625000000139e-05,
+    "mean_shear_stress_sigma_12_Pa": 8696545.61196208,
+    "plastic_distortion_beta_01": 0.0,
+    "plastic_distortion_beta_10": 5.192214407391183e-08,
+    "plastic_tensor_strain_e_p12": 2.5961072036955915e-08,
+    "temperature_mean_K": 2.8665106583503075e-05,
+    "temperature_peak_K": 3.390427104932314e-05,
+    "total_strain_tensor_e12": 4.8828125000000694e-05
+  },
+  "manifest_sha256": {
+    "hold": "9f165e88ff1c9ee4931e7b7466b765c3bc32174747d6b80e7e8eb3b436ef50f2",
+    "loading": "3938078ec83997ffd09f69b3b5ed3c07fa941ca93667f3874464b4fb77131606"
+  },
+  "measured_pair_wall_seconds": 699.3342782061081,
+  "ordering_linear_iterations": {
+    "hold": 2450,
+    "loading": 2539
+  },
+  "physical_history": "fresh current-source initial state; no inherited V46 trajectory",
+  "physical_time_s": 4.8828125e-07,
+  "planning_target_additional_engineering_shear": 0.005,
+  "projected_remaining_loading_wall_seconds_at_first_interval_cost": 17935.632887879685,
+  "schema": "asb-drx/v49/fresh-n128-physical-pair/v1",
+  "shared_initial_checkpoint_sha256": "3c8dafd284e88a382b9b6b6a597d580108c29c600b3e740c1ae9c72de4a6ea32",
+  "target_fraction_complete": 0.019531250000000278
+}

@@ -1965,7 +1965,10 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   are separately ledgered.
 - The V49 continuation driver persists and validates load-origin semantics and
   cumulative work, and subcycles shortened accepted intervals. Resolved
-  long-horizon bulk evolution remains pending rather than inferred from smoke.
+  n128 loading/hold branches each close 0.488 us from the same fresh source.
+  Loading-minus-hold is `+8.696 MPa`, `+5.192e-8` plastic shear, and
+  `+0.0287 mK`; the exact restart is 1.953% of the unchanged 0.005-shear target
+  with about 4.98 h projected remaining at the measured first-interval cost.
 - Canonical regression: 796 tests pass in 236.44 s. Classification:
   `ORDERING_CLOCK_AND_SUBCELL_ORACLE_QUALIFIED_PARTIAL_SEGMENT_FORCE_UNRESOLVED`.
   DRX, persistent LAGB, strict ASB, and material calibration remain unclaimed.

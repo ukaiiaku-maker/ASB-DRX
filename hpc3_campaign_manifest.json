@@ -2753,12 +2753,17 @@
       "ordering_decision": "WORKSPACE_AND_PRECONDITIONER_LOCAL_GATE_PASSED",
       "subcell_decision": "RIGID_CONTINUUM_ORACLE_PASSED;PARTIAL_SEGMENT_PRODUCTION_FORCE_FAILED",
       "clock_decision": "PHYSICAL_EVENT_JUMP_NORMALIZATION_PASSED",
-      "physical_response_decision": "RESTART_LOAD_ORIGIN_DRIVER_PASSED;RESOLVED_LONG_HORIZON_PENDING",
+      "physical_response_decision": "VALID_RESOLVED_FRESH_SOURCE_PHYSICAL_PARTIAL;LONG_HORIZON_RESTARTABLE",
       "verification": {
         "qualification_sha256": "9edfdef1fca64856c2e50251e8d51568ca105445da9fcea956fa092965237d25",
         "figure_sha256": "86024477297b4f7d2a91c5433ca3f0ba8394b7d8976fb908334ac19be34c4632",
         "configured_tests_passed": 796,
-        "regression_wall_seconds": 236.44
+        "regression_wall_seconds": 236.44,
+        "physical_pair_sha256": "ff11b7db35369679f0dfe71fc1f86246b115fca6a6cdef9aa46efdf09a289b2f",
+        "physical_pair_figure_sha256": "0909831896cf18a5302c1dd9e47ea5d730acd9c195d267b90eee7e4e76c9118f",
+        "fresh_initial_checkpoint_sha256": "3c8dafd284e88a382b9b6b6a597d580108c29c600b3e740c1ae9c72de4a6ea32",
+        "loading_checkpoint_sha256": "d591cfa59ec50d76a5313abae25c1815836e56f6f4f8a26a81ccf80d80eec156",
+        "hold_checkpoint_sha256": "a27f4be947b3c9abd862ae58bbfa976694d0f6f68c9fc8d17e63698c9d4dda5d"
       },
       "drx_claimed": false,
       "current_source_lagb_claimed": false,
