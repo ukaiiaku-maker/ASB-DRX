@@ -129,8 +129,10 @@ The next automatic sequence is:
 1. Continue read-only audits of each V49 macro and preserve the last valid
    full-duration prefix if shortening ever appears.
 2. Postprocess the completed 52-interval loading horizon.
-3. Start a V50 no-load-jump hold comparator from that evolved endpoint using
-   the declared protocol-transition path.
+3. Continue the valid one-interval hold checkpoint, which shares the loading
+   initial state, to the same 52-interval horizon under the frozen V50 source.
+   The no-load-jump transition path remains available for a separate recovery
+   exposure; it is not substituted for this matched causal control.
 4. Profile one copied evolved ordering interval, then choose a numerical
    optimization only if it preserves overlap.
 5. Add a common-state multi-segment owner/transaction and the finite-proposal

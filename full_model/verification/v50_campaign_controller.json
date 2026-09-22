@@ -85,5 +85,5 @@
     "profile an evolved ordering interval by constitutive, Krylov, reconstruction, retry, and I/O components",
     "perform matched timestep and companion-grid refinement for interpreted bulk observables"
   ],
-  "next_automatic_action": "retain and audit the immutable V49 worker at each published macro; after completion postprocess loading, then start the no-jump hold comparator using the V50 transition path"
+  "next_automatic_action": "retain and audit the immutable V49 worker at each published macro; after completion continue the matched hold from its valid shared-initial-state interval-1 checkpoint to the same 52-interval horizon"
 }

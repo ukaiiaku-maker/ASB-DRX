@@ -10,11 +10,11 @@
   "evidence": {
     "decision_report": {
       "path": "full_model/docs/v50_decision_report.md",
-      "sha256": "76d53b9c0f22fad5b7d4d134e01e770955c012b866e60545efb461c1d002b5e0"
+      "sha256": "c11418f199a48a8291cd2343dc7f1b6b89b9a22220492872869025bc6fafccb3"
     },
     "controller": {
       "path": "full_model/verification/v50_campaign_controller.json",
-      "sha256": "73971e04d6bfcb52bbc8cd70f54d1640724088d0dbee2912e2d7ab0281bdff3f"
+      "sha256": "c96030dd7997a7e268c394ece6aba380374d5fc3423eebe45262511c8bb516b7"
     },
     "subcell_qualification": {
       "path": "full_model/verification/v50_subcell_qualification.json",
