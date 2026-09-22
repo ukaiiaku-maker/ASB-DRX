@@ -171,7 +171,7 @@ def test_noninteger_rigid_translation_uses_production_map_and_reverses():
 
 
 def test_full_production_step_publishes_subcell_transaction():
-    state, data = physical_rectangle(16)
+    state, data = physical_rectangle(32)
     result, ledger = accepted_v24_mechanical_step(
         state, data[1], data[3], data[4], data[5], data[6], data[7], data[8],
         1e-9, topology_route_enabled=False,
@@ -182,6 +182,23 @@ def test_full_production_step_publishes_subcell_transaction():
     assert event["accepted"]
     assert event["operator"] == "physical_subcell_rectangle_face_extension"
     assert int(result.subcell_geometry.accepted_event_count) == 1
+    assert ledger["nye_suboperator_audit"][
+        "accepted_step_hard_invariant_passed"]
+
+
+def test_coarse_subcell_event_fails_closed_on_independent_compatibility():
+    state, data = physical_rectangle(16)
+    result, ledger = accepted_v24_mechanical_step(
+        state, data[1], data[3], data[4], data[5], data[6], data[7], data[8],
+        1e-9, topology_route_enabled=False,
+        mura_transport_operator="compatible_dealiased",
+        subcell_geometry_event={"proposed_displacement_m": -1e-8},
+        subcell_geometry_kinetics=intrinsic_kinetics())
+    event = ledger["subcell_geometry_event_energy_kinematics"]
+    assert not event["accepted"]
+    assert event["classification"] == "LINE_SURFACE_COMPATIBILITY_REJECTED"
+    assert event["publication_rollback_exact"]
+    assert int(result.subcell_geometry.accepted_event_count) == 0
     assert ledger["nye_suboperator_audit"][
         "accepted_step_hard_invariant_passed"]
 

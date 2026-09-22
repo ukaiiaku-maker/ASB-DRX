@@ -12,8 +12,9 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 import numpy as np
 
-from .lattice_line_geometry import apply_physical_reconstruction
-from .tensorial_nye import nye_from_plastic_distortion, rotated_system_fields
+from .tensorial_nye import (
+    nye_from_plastic_distortion, rotated_system_fields, spectral_derivatives,
+)
 
 
 SUBCELL_PREFIX = "v50_subcell_rectangle__"
@@ -164,12 +165,80 @@ def _rectangle_cell_area_fraction(state):
     return overlap_x[:, None]*overlap_y[None, :]/spacing**2
 
 
+def subcell_surface_from_boundary(state, family_count):
+    """Construct a swept surface from the independently integrated boundary.
+
+    The positive scalar line remains the physical Wendland line integral.  Its
+    oriented first moment supplies a periodic streamfunction through the
+    least-squares inverse of ``(-D_y f, D_x f)`` using the same spectral
+    derivative as production Nye.  The zero mode is the exact enclosed area.
+    This is a boundary-to-surface commuting adapter, not a prescribed Nye
+    field.  Nyquist modes are excluded because the real spectral derivative
+    cannot represent their derivative on an even grid.
+    """
+    shape = state.validate(family_count)
+    rho, alignment = subcell_line_fields(state, family_count)
+    family = int(state.family); slot = 0 if int(state.burgers_sign) > 0 else 1
+    thickness = float(state.section_thickness_m)
+    raw_moment = alignment[..., family, slot, :2]*thickness
+    spacing = float(state.spacing_m)
+    kx = 2*np.pi*np.fft.fftfreq(shape[0], d=spacing)
+    ky = 2*np.pi*np.fft.fftfreq(shape[1], d=spacing)
+    if shape[0] % 2 == 0:
+        kx[shape[0]//2] = 0.0
+    if shape[1] % 2 == 0:
+        ky[shape[1]//2] = 0.0
+    KX, KY = np.meshgrid(kx, ky, indexing="ij")
+    denominator = KX*KX+KY*KY
+    qx = np.fft.fftn(raw_moment[..., 0])
+    qy = np.fft.fftn(raw_moment[..., 1])
+    surface_spectrum = np.zeros(shape, dtype=complex)
+    active = denominator > 0.0
+    surface_spectrum[active] = (
+        1j*KY[active]*qx[active]-1j*KX[active]*qy[active]
+    )/denominator[active]
+    area_fraction = (np.prod(np.asarray(state.upper_right_m)
+                             -np.asarray(state.lower_left_m))
+                     /np.prod(np.asarray(state.period_m)))
+    surface_spectrum[0, 0] = np.prod(shape)*area_fraction
+    surface = np.fft.ifftn(surface_spectrum).real
+    # The inverse has only small band-limit ringing.  Apply one affine
+    # zero-mode-preserving contraction toward the exact mean when needed to
+    # retain a physical [0,1] swept fraction.  Its scale is declared below.
+    scale = 1.0
+    minimum = float(np.min(surface)); maximum = float(np.max(surface))
+    if minimum < 0.0:
+        scale = min(scale, area_fraction/(area_fraction-minimum))
+    if maximum > 1.0:
+        scale = min(scale, (1.0-area_fraction)/(maximum-area_fraction))
+    surface = area_fraction+scale*(surface-area_fraction)
+    fx, fy = spectral_derivatives(surface, spacing)
+    surface_moment = np.stack((-fy, fx), axis=-1)
+    absolute = float(np.sqrt(np.mean((raw_moment-surface_moment)**2)))
+    reference = float(np.sqrt(np.mean(surface_moment**2)))
+    scalar = rho[..., family, slot]
+    return surface, {
+        "operator": "boundary_streamfunction_commuting_surface",
+        "exact_area_fraction": float(area_fraction),
+        "observed_area_fraction": float(np.mean(surface)),
+        "positivity_affine_scale": float(scale),
+        "minimum_surface_fraction": float(np.min(surface)),
+        "maximum_surface_fraction": float(np.max(surface)),
+        "line_surface_moment_residual_rms_m-1": absolute/thickness,
+        "line_surface_moment_reference_rms_m-1": reference/thickness,
+        "line_surface_moment_residual_relative": absolute/max(reference, 1e-300),
+        "line_continuity_integral_m": np.sum(raw_moment, axis=(0, 1)).tolist(),
+        "scalar_line_nonnegative": bool(np.min(scalar) >= 0.0),
+        "surface_fraction_bounded": bool(
+            np.min(surface) >= -2e-15 and np.max(surface) <= 1.0+2e-15),
+        "map_error_budget_relative": 0.05,
+    }
+
+
 def subcell_plastic_and_nye(state, family_count):
     """Plastic surface map and compatible family Nye from the same rectangle."""
     shape = state.validate(family_count); spacing = float(state.spacing_m)
-    fraction = apply_physical_reconstruction(
-        _rectangle_cell_area_fraction(state), spacing,
-        state.representation_length_m)
+    fraction, _ = subcell_surface_from_boundary(state, family_count)
     beta_family = np.zeros(shape+(int(family_count), 3, 3))
     beta_family[..., int(state.family), :, 2] = (
         np.asarray(state.burgers_vector_m)
@@ -178,6 +247,32 @@ def subcell_plastic_and_nye(state, family_count):
         nye_from_plastic_distortion(beta_family[..., family, :, :], spacing)
         for family in range(int(family_count))], axis=2)
     return beta_family, family_nye
+
+
+def subcell_line_surface_nye(state, family_count):
+    """Return independent boundary and swept-surface Nye plus their audit."""
+    _, alignment = subcell_line_fields(state, family_count)
+    _, family_nye = subcell_plastic_and_nye(state, family_count)
+    family = int(state.family); slot = 0 if int(state.burgers_sign) > 0 else 1
+    line_nye = np.einsum(
+        "i,...j->...ij", np.asarray(state.burgers_vector_m),
+        alignment[..., family, slot, :])
+    surface_nye = family_nye[..., family, :, :]
+    residual = line_nye-surface_nye
+    absolute = float(np.sqrt(np.mean(residual*residual)))
+    reference = float(np.sqrt(np.mean(surface_nye*surface_nye)))
+    _, surface_audit = subcell_surface_from_boundary(state, family_count)
+    audit = {
+        **surface_audit,
+        "line_nye_rms_m-1": float(np.sqrt(np.mean(line_nye*line_nye))),
+        "surface_nye_rms_m-1": reference,
+        "line_surface_nye_residual_rms_m-1": absolute,
+        "line_surface_nye_residual_relative": absolute/max(reference, 1e-300),
+        "scientific_compatibility_passed": bool(
+            absolute <= surface_audit["map_error_budget_relative"]
+            *max(reference, 1e-300)),
+    }
+    return line_nye, surface_nye, audit
 
 
 def subcell_face_field_derivative(state, family_count, step_m=None):
@@ -249,12 +344,14 @@ def initialize_subcell_rectangle(
     new_alignment = replace(alignment, **alignment_updates)
     new_alignment.validate(new_inventory, len(systems))
     beta_family, family_nye = subcell_plastic_and_nye(geometry, len(systems))
+    _, _, compatibility = subcell_line_surface_nye(geometry, len(systems))
     new_common = replace(
         common, beta_p=np.asarray(common.beta_p)+np.sum(beta_family, axis=2),
         family_nye_m1=np.asarray(common.family_nye_m1)+family_nye)
     return geometry, new_inventory, new_alignment, new_common, {
         "operator": "physical_subcell_rectangle_initializer",
         "initialization_only": True, "accepted_physical_event_count": 0,
+        "independent_line_surface_compatibility": compatibility,
         "line_length_m": float(2*np.sum(
             np.asarray(upper_right_m)-np.asarray(lower_left_m))),
     }
@@ -333,12 +430,32 @@ def _remap_subcell_geometry(
     new_common = replace(
         common, beta_p=np.asarray(common.beta_p)+dbeta,
         family_nye_m1=np.asarray(common.family_nye_m1)+dnye)
+    family = int(state.family); slot = 0 if int(state.burgers_sign) > 0 else 1
+    line_increment = np.einsum(
+        "i,...j->...ij", np.asarray(state.burgers_vector_m),
+        moment1[..., family, slot, :]-moment0[..., family, slot, :])
+    surface_increment = dnye[..., family, :, :]
+    compatibility_residual = line_increment-surface_increment
+    compatibility_absolute = float(np.sqrt(np.mean(
+        compatibility_residual*compatibility_residual)))
+    compatibility_reference = float(np.sqrt(np.mean(
+        surface_increment*surface_increment)))
     return candidate, new_inventory, new_alignment, new_common, {
         **geometry_ledger,
         "plastic_distortion_increment": dbeta,
         "family_nye_increment_m1": dnye,
         "scalar_density_increment_m2": rho1-rho0,
         "alignment_increment_m2": moment1-moment0,
+        "independent_line_nye_increment_m1": line_increment,
+        "independent_surface_nye_increment_m1": surface_increment,
+        "line_surface_event_residual_rms_m-1": compatibility_absolute,
+        "line_surface_event_reference_rms_m-1": compatibility_reference,
+        "line_surface_event_residual_relative": (
+            compatibility_absolute/max(compatibility_reference, 1e-300)),
+        "line_surface_event_compatibility_passed": bool(
+            compatibility_absolute <= .05
+            *max(compatibility_reference, 1e-300)),
+        "line_surface_event_error_budget_relative": 0.05,
         "closed_loop_topology": True,
         "post_step_projection_used": False,
     }

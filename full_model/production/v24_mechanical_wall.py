@@ -128,6 +128,7 @@ class V43GeometryKinetics:
     continuum_representation_length_m: float = 0.0
     affinity_coupling_mode: str = "downhill_tanh"
     physical_event_jump_m: float = 0.0
+    physical_event_area_m2: float = 0.0
 
     def __post_init__(self):
         if (self.enthalpy_J < 0.0 or self.critical_stress_Pa <= 0.0
@@ -143,7 +144,9 @@ class V43GeometryKinetics:
                 or not np.isfinite(self.continuum_representation_length_m)
                 or self.continuum_representation_length_m < 0.0
                 or not np.isfinite(self.physical_event_jump_m)
-                or self.physical_event_jump_m < 0.0):
+                or self.physical_event_jump_m < 0.0
+                or not np.isfinite(self.physical_event_area_m2)
+                or self.physical_event_area_m2 < 0.0):
             raise ValueError("invalid V43 geometry kinetics")
         if self.affinity_coupling_mode not in (
                 "downhill_tanh", "legacy_energy_guard_only"):
@@ -1077,12 +1080,51 @@ def accepted_subcell_face_transaction(
                        *signed_exchange_count)
     chemical_work_cells = chemical_work_J/cell_volume
     complete_delta = wall_delta+elastic_delta-chemical_work_cells
-    event_count = max(abs(signed_exchange_count),
-                      abs(geometry_ledger["signed_swept_area_m2"])
-                      /max(float(common_parameters.burgers_m)**2, 1e-300),
-                      1e-300)
+    legacy_area_event_count = (
+        abs(geometry_ledger["signed_swept_area_m2"])
+        /max(float(common_parameters.burgers_m)**2, 1e-300))
+    legacy_mixed_event_count = max(
+        abs(signed_exchange_count), legacy_area_event_count, 1e-300)
+    if kinetics.atomic_volume_m3_per_atom > 0.0:
+        event_count = abs(signed_exchange_count)
+        event_measure_convention = "one_exchanged_species_per_climb_event"
+    elif (kinetics.material_exchange_model == "glide_no_exchange"
+          and kinetics.physical_event_area_m2 > 0.0):
+        event_count = (abs(geometry_ledger["signed_swept_area_m2"])
+                       /kinetics.physical_event_area_m2)
+        event_measure_convention = "declared_volume_preserving_area_event"
+    else:
+        return state, {
+            **geometry_ledger,
+            "operator": "physical_subcell_rectangle_face_extension",
+            "accepted": False,
+            "classification": "UNDEFINED_PHYSICAL_EVENT_MEASURE",
+            "reason": (
+                "subcell affinity requires either physical species exchange "
+                "or a declared volume-preserving event area"),
+            "rejection_is_atomic": True,
+            "consumed_duration_s": 0.0,
+            "legacy_mixed_event_count_comparator": legacy_mixed_event_count,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad),
+        }
+    if not np.isfinite(event_count) or event_count <= 0.0:
+        raise RuntimeError("physical subcell event count must be positive")
+    if kinetics.atomic_volume_m3_per_atom > 0.0:
+        active_site_measure = abs(
+            kinetics.exchange_stoichiometry_defects_per_atom
+            *float(geometry.burgers_vector_m[2])*height*event_jump
+            /kinetics.atomic_volume_m3_per_atom)
+    else:
+        active_site_measure = (
+            height*event_jump/kinetics.physical_event_area_m2)
+    event_count_from_site_jump = (
+        active_site_measure*abs(displacement)/event_jump)
     available_energy_J = -complete_delta*cell_volume
     available_per_event = available_energy_J/event_count
+    legacy_available_per_event = available_energy_J/legacy_mixed_event_count
+    legacy_affinity_rate = arrhenius_rate*max(float(np.tanh(
+        legacy_available_per_event/(2*KB_J_K*temperature))), 0.0)
     downhill = max(float(np.tanh(
         available_per_event/(2*KB_J_K*temperature))), 0.0)
     affinity_rate = arrhenius_rate*downhill
@@ -1092,6 +1134,13 @@ def accepted_subcell_face_transaction(
         "available_energy_per_event_J": available_per_event,
         "downhill_activity": downhill,
         "physical_event_count": event_count,
+        "event_measure_convention": event_measure_convention,
+        "legacy_area_over_b2_event_count_comparator": legacy_area_event_count,
+        "legacy_mixed_event_count_comparator": legacy_mixed_event_count,
+        "legacy_mixed_count_used_by_affinity": False,
+        "legacy_mixed_available_energy_per_event_J": (
+            legacy_available_per_event),
+        "legacy_mixed_affinity_rate_s_comparator": legacy_affinity_rate,
     }
     if (kinetics.affinity_coupling_mode == "downhill_tanh"
             and "_affinity_rate_override_s" not in event):
@@ -1142,10 +1191,10 @@ def accepted_subcell_face_transaction(
         "independent_geometry_exchange_count": independent_exchange_count,
         "exchange_count_identity_residual": (
             signed_exchange_count-independent_exchange_count),
-        "active_site_measure_geometry": abs(
-            kinetics.exchange_stoichiometry_defects_per_atom
-            *float(geometry.burgers_vector_m[2])*height*event_jump
-            /max(kinetics.atomic_volume_m3_per_atom, 1e-300)),
+        "active_site_measure_geometry": active_site_measure,
+        "event_count_from_site_jump_identity": event_count_from_site_jump,
+        "event_count_site_jump_identity_residual": (
+            event_count-event_count_from_site_jump),
     }
     if not accepted:
         ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(
@@ -1623,10 +1672,25 @@ def accepted_v24_mechanical_step(
             raise ValueError("lattice and subcell geometry events are mutually exclusive")
         if subcell_geometry_kinetics is None:
             raise ValueError("subcell event requires explicit geometry kinetics")
+        _pre_subcell_geometry_state = result
         result, subcell_geometry_ledger = accepted_subcell_face_transaction(
             result, subcell_geometry_event, systems, topologies, driving,
             common_parameters, extensive_parameters,
             subcell_geometry_kinetics, accepted_dt)
+        if (subcell_geometry_ledger["accepted"]
+                and not subcell_geometry_ledger.get(
+                    "line_surface_event_compatibility_passed", False)):
+            subcell_geometry_ledger = {
+                **subcell_geometry_ledger,
+                "candidate_was_energy_admissible": True,
+                "accepted": False,
+                "classification": "LINE_SURFACE_COMPATIBILITY_REJECTED",
+                "consumed_duration_s": 0.0,
+                "irreversible_heat_increment_J_m3": np.zeros_like(
+                    result.common.orientation_rad),
+                "publication_rollback_exact": True,
+            }
+            result = _pre_subcell_geometry_state
         geometry_ledger = subcell_geometry_ledger
         if geometry_ledger["accepted"]:
             _geometry_source = np.sum(
@@ -1670,22 +1734,36 @@ def accepted_v24_mechanical_step(
                _zero),
     ]
     if geometry_event is not None or subcell_geometry_event is not None:
+        _geometry_reservoir_increment = (
+            _nye_reservoir_after_reactions-_nye_reservoir_after_ordering)
         _geometry_stage = _stage(
             ("physical_subcell_segment_sweep"
              if subcell_geometry_event is not None
              else "represented_plaquette_sweep"),
-            _geometry_source, _geometry_source)
+            _geometry_reservoir_increment, _geometry_source)
         _geometry_stage["reservoir_first_moment_increment_rms_m1"] = float(
-            np.sqrt(np.mean((_nye_reservoir_after_reactions
-                             -_nye_reservoir_after_ordering)**2)))
+            np.sqrt(np.mean(_geometry_reservoir_increment**2)))
         _geometry_stage["reservoir_to_geometry_nye_residual_rms_m1"] = float(
-            np.sqrt(np.mean((_nye_reservoir_after_reactions
-                             -_nye_reservoir_after_ordering
+            np.sqrt(np.mean((_geometry_reservoir_increment
                              -_geometry_source)**2)))
+        _geometry_event_reference = max(float(np.sqrt(np.mean(
+            _geometry_source**2))), 1e-300)
+        _geometry_stage["increment_residual_relative_to_event"] = (
+            _geometry_stage["increment_residual_rms_m1"]
+            /_geometry_event_reference)
+        _geometry_stage["independent_line_surface_comparison"] = True
+        _geometry_stage["scientific_error_budget_relative"] = (
+            0.05 if subcell_geometry_event is not None else 2e-11)
+        _geometry_stage["independent_compatibility_passed"] = bool(
+            _geometry_stage["increment_residual_relative_to_event"]
+            <=_geometry_stage["scientific_error_budget_relative"])
         _nye_stages.append(_geometry_stage)
-    _violating = next((row["operator"] for row in _nye_stages
-                       if row["increment_residual_rms_m1"]
-                       > 2e-11*_reference), None)
+    _violating = next((
+        row["operator"] for row in _nye_stages
+        if (not row.get("independent_compatibility_passed", True)
+            or ("independent_compatibility_passed" not in row
+                and row["increment_residual_rms_m1"] > 2e-11*_reference))
+    ), None)
     _scalar_balance = max(
         abs(float(capture_ledger["sign"][sign][
             "global_scalar_residual_line_per_thickness"]))
