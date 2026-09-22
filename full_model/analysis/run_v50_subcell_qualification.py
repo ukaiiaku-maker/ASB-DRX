@@ -23,7 +23,7 @@ from full_model.production.arrhenius_kinetics import (
 )
 from full_model.production.subcell_segment_geometry import (
     initialize_subcell_rectangle, propose_subcell_face_extension,
-    subcell_face_field_derivative,
+    propose_subcell_translation, subcell_face_field_derivative,
 )
 from full_model.production.v24_mechanical_wall import (
     V24MechanicalWallState, V43GeometryKinetics,
@@ -210,6 +210,35 @@ def clock_records():
     }
 
 
+def translation_record():
+    state, data = fixture(64)
+    displacement = np.asarray((.37*data[9], -.23*data[9]))
+    before = energy_terms_J(state, data)
+    proposal = propose_subcell_translation(
+        state.subcell_geometry, state.density, state.reservoir_alignment,
+        state.common, data[4], displacement)
+    moved = synchronize_common(V24MechanicalWallState(
+        proposal[3], proposal[1], proposal[2], None, proposal[0]), data[5])
+    after = energy_terms_J(moved, data)
+    reverse = propose_subcell_translation(
+        moved.subcell_geometry, moved.density, moved.reservoir_alignment,
+        moved.common, data[4], -displacement)
+    restored = synchronize_common(V24MechanicalWallState(
+        reverse[3], reverse[1], reverse[2], None, reverse[0]), data[5])
+    return {
+        "displacement_m": displacement.tolist(),
+        "production_operator": proposal[-1]["operator"],
+        "line_length_change_m": proposal[-1]["line_length_change_m"],
+        "signed_swept_area_m2": proposal[-1]["signed_swept_area_m2"],
+        "total_energy_change_J": after["total"]-before["total"],
+        "reverse_density_max_abs": float(np.max(np.abs(
+            restored.density.wall_ordered_plus_m2
+            -state.density.wall_ordered_plus_m2))),
+        "reverse_beta_max_abs": float(np.max(np.abs(
+            restored.common.beta_p-state.common.beta_p))),
+    }
+
+
 def main():
     reference_integral, reference_energy = dimensionless_reference()
     refinement = [row(n) for n in (32, 64, 128)]
@@ -254,6 +283,7 @@ def main():
                 "gradient_relative_error_to_continuous_reference"],
         },
         "production_transaction": transaction_record(),
+        "production_noninteger_translation": translation_record(),
         "physical_clock": clock_records(),
         "production_segment_map_passed": bool(
             all(x["ordered_gradient_increment_J"] > 0.0 for x in refinement)

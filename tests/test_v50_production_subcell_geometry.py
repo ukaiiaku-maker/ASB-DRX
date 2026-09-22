@@ -11,6 +11,7 @@ from full_model.production.arrhenius_kinetics import (
 )
 from full_model.production.subcell_segment_geometry import (
     initialize_subcell_rectangle, propose_subcell_face_extension,
+    propose_subcell_translation,
     subcell_line_fields, subcell_face_field_derivative,
 )
 from full_model.production.v24_mechanical_wall import (
@@ -138,6 +139,35 @@ def test_subcell_restart_and_reverse_proposal_are_exact():
         state.density.wall_ordered_plus_m2, rtol=2e-14, atol=1e-5)
     np.testing.assert_allclose(
         roundtrip.common.beta_p, state.common.beta_p, rtol=2e-14, atol=1e-16)
+
+
+def test_noninteger_rigid_translation_uses_production_map_and_reverses():
+    state, data = physical_rectangle(64)
+    displacement = np.asarray((.37*data[9], -.23*data[9]))
+    proposal = propose_subcell_translation(
+        state.subcell_geometry, state.density, state.reservoir_alignment,
+        state.common, data[4], displacement)
+    moved = synchronize_common(V24MechanicalWallState(
+        proposal[3], proposal[1], proposal[2], None, proposal[0]), data[5])
+    ledger = proposal[-1]
+    assert ledger["operator"] == "physical_subcell_rectangle_rigid_translation"
+    assert ledger["line_length_change_m"] == 0.0
+    assert ledger["signed_swept_area_m2"] == 0.0
+    assert np.min(moved.density.wall_ordered_plus_m2) >= 0.0
+    reverse = propose_subcell_translation(
+        moved.subcell_geometry, moved.density, moved.reservoir_alignment,
+        moved.common, data[4], -displacement)
+    restored = synchronize_common(V24MechanicalWallState(
+        reverse[3], reverse[1], reverse[2], None, reverse[0]), data[5])
+    np.testing.assert_allclose(
+        restored.density.wall_ordered_plus_m2,
+        state.density.wall_ordered_plus_m2, rtol=2e-14, atol=1e-5)
+    np.testing.assert_allclose(
+        restored.reservoir_alignment.wall_ordered_plus_m2,
+        state.reservoir_alignment.wall_ordered_plus_m2,
+        rtol=2e-14, atol=1e-5)
+    np.testing.assert_allclose(
+        restored.common.beta_p, state.common.beta_p, rtol=2e-14, atol=1e-16)
 
 
 def test_full_production_step_publishes_subcell_transaction():

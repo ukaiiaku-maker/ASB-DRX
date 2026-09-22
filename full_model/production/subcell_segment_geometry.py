@@ -271,6 +271,42 @@ def propose_subcell_face_extension(
         +np.asarray((displacement, 0.0)),
         accepted_event_count=np.asarray(int(state.accepted_event_count)+1))
     candidate.validate(len(systems))
+    height = float(state.upper_right_m[1]-state.lower_left_m[1])
+    return _remap_subcell_geometry(
+        state, candidate, inventory, alignment, common, systems, {
+            "operator": "physical_subcell_rectangle_face_extension",
+            "physical_displacement_m": displacement,
+            "signed_swept_area_m2": height*displacement,
+            "line_length_change_m": 2.0*displacement,
+        })
+
+
+def propose_subcell_translation(
+        state, inventory, alignment, common, systems, displacement_m):
+    """Rigidly translate the persistent loop through the production map."""
+    state.validate(len(systems))
+    displacement = np.asarray(displacement_m, dtype=float)
+    if (displacement.shape != (2,) or np.any(~np.isfinite(displacement))
+            or not np.any(displacement != 0.0)):
+        raise ValueError("subcell translation must be a finite nonzero 2-vector")
+    candidate = replace(
+        state, lower_left_m=np.asarray(state.lower_left_m)+displacement,
+        upper_right_m=np.asarray(state.upper_right_m)+displacement,
+        accepted_event_count=np.asarray(int(state.accepted_event_count)+1))
+    candidate.validate(len(systems))
+    return _remap_subcell_geometry(
+        state, candidate, inventory, alignment, common, systems, {
+            "operator": "physical_subcell_rectangle_rigid_translation",
+            "physical_displacement_vector_m": displacement,
+            "signed_swept_area_m2": 0.0,
+            "line_length_change_m": 0.0,
+        })
+
+
+def _remap_subcell_geometry(
+        state, candidate, inventory, alignment, common, systems,
+        geometry_ledger):
+    """Apply one candidate geometry through all common state owners."""
     rho0, moment0 = subcell_line_fields(state, len(systems))
     rho1, moment1 = subcell_line_fields(candidate, len(systems))
     density_updates = {}; alignment_updates = {}
@@ -297,13 +333,8 @@ def propose_subcell_face_extension(
     new_common = replace(
         common, beta_p=np.asarray(common.beta_p)+dbeta,
         family_nye_m1=np.asarray(common.family_nye_m1)+dnye)
-    height = float(state.upper_right_m[1]-state.lower_left_m[1])
-    swept_area = height*displacement
     return candidate, new_inventory, new_alignment, new_common, {
-        "operator": "physical_subcell_rectangle_face_extension",
-        "physical_displacement_m": displacement,
-        "signed_swept_area_m2": swept_area,
-        "line_length_change_m": 2.0*displacement,
+        **geometry_ledger,
         "plastic_distortion_increment": dbeta,
         "family_nye_increment_m1": dnye,
         "scalar_density_increment_m2": rho1-rho0,
