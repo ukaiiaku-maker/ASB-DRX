@@ -1,0 +1,361 @@
+{
+  "drx_claimed": false,
+  "fork_is_read_only_from_checkpoint": true,
+  "front_enabled": false,
+  "full_step": {
+    "accepted_duration_s": 4.8828125e-07,
+    "discarded_shortened_candidates": 0,
+    "external_work_J": 1.0836525217892112e-15,
+    "first_law_residual_J": -5.806016262426647e-28,
+    "observables": {
+      "engineering_plastic_shear_gamma_p": 0.000623504413488673,
+      "engineering_total_shear_gamma": 0.025175781250000005,
+      "mean_shear_stress_sigma_12_Pa": 2187607866.1331596,
+      "plastic_distortion_beta_01": 1.4513477886512628e-10,
+      "plastic_distortion_beta_10": 0.0006235042683538941,
+      "plastic_tensor_strain_e_p12": 0.0003117522067443365,
+      "temperature_mean_K": 1100.371686598126,
+      "temperature_peak_K": 1100.4398731511958,
+      "total_strain_tensor_e12": 0.012587890625000002
+    },
+    "ordering_linear_iterations": 6041,
+    "requested_duration_s": 4.8828125e-07,
+    "wall_seconds": 502.20203402708285
+  },
+  "full_vs_two_half": {
+    "beta_p_relative_l2": 0.00027569328803322914,
+    "eta_relative_l2": 0.0,
+    "family_nye_relative_l2": 0.0002814150209863085,
+    "observable_differences": {
+      "engineering_plastic_shear_gamma_p": 1.7274411776783526e-07,
+      "engineering_total_shear_gamma": 0.0,
+      "mean_shear_stress_sigma_12_Pa": -15391.50089263916,
+      "plastic_distortion_beta_01": -3.3076080074967136e-13,
+      "plastic_distortion_beta_10": 1.7274444852864463e-07,
+      "plastic_tensor_strain_e_p12": 8.637205888391763e-08,
+      "temperature_mean_K": 0.00010751018044174998,
+      "temperature_peak_K": 0.0001221058155351784,
+      "total_strain_tensor_e12": 0.0
+    },
+    "temperature_relative_l2": 9.840216090553458e-08
+  },
+  "generated_utc": "2026-09-22T17:25:33.317010+00:00",
+  "physical_time_end_s": 2.587890625000002e-05,
+  "physical_time_start_s": 2.539062500000002e-05,
+  "profile": {
+    "energy_reconstruction": {
+      "interpretation": "overlapping cumulative call-stack exposure; categories are not additive",
+      "maximum_cumulative_seconds": 485.15473557,
+      "top_rows": [
+        {
+          "calls": 1,
+          "cumulative_seconds": 485.15473557,
+          "function": "v24_mechanical_wall.py:505:accepted_energy_guarded_reservoir_topology_transaction",
+          "self_seconds": 0.004534922
+        },
+        {
+          "calls": 22,
+          "cumulative_seconds": 0.910485698,
+          "function": "extensive_wall.py:239:extensive_wall_energy_components_J_m3",
+          "self_seconds": 0.037153455
+        },
+        {
+          "calls": 6,
+          "cumulative_seconds": 0.801935817,
+          "function": "complete_front_energy.py:182:evaluate_complete_front_energy",
+          "self_seconds": 0.026467277
+        },
+        {
+          "calls": 4,
+          "cumulative_seconds": 0.529920311,
+          "function": "run_v48_physical_continuation.py:33:energy",
+          "self_seconds": 0.009252628
+        },
+        {
+          "calls": 5,
+          "cumulative_seconds": 0.114600618,
+          "function": "v24_mechanical_wall.py:341:_elastic_energy_sum_J_m3_cells",
+          "self_seconds": 0.0038712150000000003
+        },
+        {
+          "calls": 1,
+          "cumulative_seconds": 0.033071356,
+          "function": "common_tensorial_wall.py:358:wall_free_energy_derivatives",
+          "self_seconds": 0.0031804700000000003
+        },
+        {
+          "calls": 12,
+          "cumulative_seconds": 0.002878326,
+          "function": "nonlocal_elasticity.py:91:elastic_energy_density",
+          "self_seconds": 0.001081099
+        },
+        {
+          "calls": 1,
+          "cumulative_seconds": 0.00027071800000000003,
+          "function": "v24_mechanical_wall.py:356:_resolved_elastic_energy_sum_J_m3_cells",
+          "self_seconds": 7.2950000000000005e-06
+        },
+        {
+          "calls": 6,
+          "cumulative_seconds": 3.3876e-05,
+          "function": "run_v34_finite_coupled_response.py:234:_energy_options",
+          "self_seconds": 3.3876e-05
+        },
+        {
+          "calls": 4,
+          "cumulative_seconds": 7.563e-06,
+          "function": "complete_front_energy.py:56:internal_J",
+          "self_seconds": 4.111e-06
+        },
+        {
+          "calls": 6,
+          "cumulative_seconds": 4.381e-06,
+          "function": "complete_front_energy.py:50:helmholtz_J",
+          "self_seconds": 4.381e-06
+        }
+      ]
+    },
+    "fft_jvp_and_matvec": {
+      "interpretation": "overlapping cumulative call-stack exposure; categories are not additive",
+      "maximum_cumulative_seconds": 442.70215380200005,
+      "top_rows": [
+        {
+          "calls": 12698,
+          "cumulative_seconds": 442.70215380200005,
+          "function": "_interface.py:227:matvec",
+          "self_seconds": 0.14034537
+        },
+        {
+          "calls": 12698,
+          "cumulative_seconds": 442.48398415900004,
+          "function": "_interface.py:616:_matvec",
+          "self_seconds": 0.030627362
+        },
+        {
+          "calls": 6307,
+          "cumulative_seconds": 442.12318399500003,
+          "function": "extensive_wall.py:474:matvec",
+          "self_seconds": 9.152314683
+        },
+        {
+          "calls": 6307,
+          "cumulative_seconds": 432.935173808,
+          "function": "extensive_wall.py:1242:continuous_matvec",
+          "self_seconds": 10.024169568000001
+        },
+        {
+          "calls": 119331,
+          "cumulative_seconds": 325.978434741,
+          "function": "_pocketfft.py:747:_raw_fftnd",
+          "self_seconds": 5.6913212810000005
+        },
+        {
+          "calls": 238662,
+          "cumulative_seconds": 312.331494435,
+          "function": "_pocketfft.py:51:_raw_fft",
+          "self_seconds": 311.775593205
+        },
+        {
+          "calls": 79260,
+          "cumulative_seconds": 211.355447289,
+          "function": "_pocketfft.py:895:ifftn",
+          "self_seconds": 0.29253561
+        },
+        {
+          "calls": 158808,
+          "cumulative_seconds": 204.74681236900003,
+          "function": "_pocketfft.py:215:ifft",
+          "self_seconds": 0.5417583650000001
+        },
+        {
+          "calls": 39783,
+          "cumulative_seconds": 114.97027718800001,
+          "function": "_pocketfft.py:761:fftn",
+          "self_seconds": 0.14611501400000002
+        },
+        {
+          "calls": 79854,
+          "cumulative_seconds": 108.519047932,
+          "function": "_pocketfft.py:113:fft",
+          "self_seconds": 0.247853696
+        },
+        {
+          "calls": 119331,
+          "cumulative_seconds": 6.700746373,
+          "function": "_pocketfft.py:710:_cook_nd_args",
+          "self_seconds": 2.578582721
+        },
+        {
+          "calls": 79166,
+          "cumulative_seconds": 2.0806236240000002,
+          "function": "_helper.py:125:fftfreq",
+          "self_seconds": 1.3899128060000001
+        }
+      ]
+    },
+    "io": {
+      "interpretation": "overlapping cumulative call-stack exposure; categories are not additive",
+      "maximum_cumulative_seconds": 0.0,
+      "top_rows": []
+    },
+    "krylov_and_linear_solve": {
+      "interpretation": "overlapping cumulative call-stack exposure; categories are not additive",
+      "maximum_cumulative_seconds": 456.11758355,
+      "top_rows": [
+        {
+          "calls": 84,
+          "cumulative_seconds": 456.11758355,
+          "function": "iterative.py:582:gmres",
+          "self_seconds": 12.592847890000002
+        },
+        {
+          "calls": 84,
+          "cumulative_seconds": 0.00045162500000000004,
+          "function": "iterative.py:10:_get_atol_rtol",
+          "self_seconds": 0.00037522600000000004
+        }
+      ]
+    },
+    "ordering_and_chemical_potential": {
+      "interpretation": "overlapping cumulative call-stack exposure; categories are not additive",
+      "maximum_cumulative_seconds": 484.93590330100005,
+      "top_rows": [
+        {
+          "calls": 1,
+          "cumulative_seconds": 484.93590330100005,
+          "function": "extensive_wall.py:1863:accepted_ordering_step",
+          "self_seconds": 6.0592000000000005e-05
+        },
+        {
+          "calls": 1,
+          "cumulative_seconds": 484.93584270900004,
+          "function": "extensive_wall.py:488:_accepted_ordering_implicit",
+          "self_seconds": 0.135451398
+        },
+        {
+          "calls": 6307,
+          "cumulative_seconds": 419.80935663900004,
+          "function": "extensive_wall.py:430:_ordering_affinity_linear_action",
+          "self_seconds": 17.882804149000002
+        },
+        {
+          "calls": 254,
+          "cumulative_seconds": 23.688015506000003,
+          "function": "extensive_wall.py:311:extensive_wall_chemical_potentials_J_m",
+          "self_seconds": 0.7637834990000001
+        },
+        {
+          "calls": 170,
+          "cumulative_seconds": 19.553840853,
+          "function": "extensive_wall.py:352:ordering_residual",
+          "self_seconds": 2.366658344
+        },
+        {
+          "calls": 1,
+          "cumulative_seconds": 0.17232302200000002,
+          "function": "wall_topology_supply.py:707:apply_signed_ordering_extent",
+          "self_seconds": 0.018104437
+        }
+      ]
+    },
+    "state_construction_validation": {
+      "interpretation": "overlapping cumulative call-stack exposure; categories are not additive",
+      "maximum_cumulative_seconds": 0.335259505,
+      "top_rows": [
+        {
+          "calls": 21,
+          "cumulative_seconds": 0.335259505,
+          "function": "wall_topology_supply.py:70:validate",
+          "self_seconds": 0.08902568300000001
+        },
+        {
+          "calls": 6,
+          "cumulative_seconds": 0.126519042,
+          "function": "v24_mechanical_wall.py:66:validate",
+          "self_seconds": 0.0011283600000000001
+        },
+        {
+          "calls": 48,
+          "cumulative_seconds": 0.046966914000000005,
+          "function": "density_state_map.py:36:validate",
+          "self_seconds": 0.037115043
+        },
+        {
+          "calls": 7,
+          "cumulative_seconds": 0.014586556,
+          "function": "common_tensorial_wall.py:59:validate",
+          "self_seconds": 0.011894795000000001
+        },
+        {
+          "calls": 203,
+          "cumulative_seconds": 0.007987531,
+          "function": "dataclasses.py:1580:replace",
+          "self_seconds": 0.001003345
+        },
+        {
+          "calls": 203,
+          "cumulative_seconds": 0.006122668,
+          "function": "dataclasses.py:1599:_replace",
+          "self_seconds": 0.0034697540000000002
+        },
+        {
+          "calls": 1,
+          "cumulative_seconds": 0.0053045010000000005,
+          "function": "common_front_state.py:118:_validate_owner_density_common",
+          "self_seconds": 0.0038231550000000004
+        },
+        {
+          "calls": 6,
+          "cumulative_seconds": 0.004751423,
+          "function": "wall_topology_supply.py:172:validate_junction_alignment",
+          "self_seconds": 0.0025665
+        },
+        {
+          "calls": 1,
+          "cumulative_seconds": 0.002304524,
+          "function": "v24_mechanical_wall.py:488:synchronize_common",
+          "self_seconds": 0.000215813
+        }
+      ]
+    }
+  },
+  "profile_scope": "one copied evolved n128 full macro; cumulative categories overlap",
+  "schema": "asb-drx/v51/evolved-timestep-profile/v1",
+  "source_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v49-20260921/full_model/production/results-local/v49-physical/n128/loading/checkpoint_000052.npz",
+  "source_checkpoint_sha256": "6c38c6a4ac4cad833b10e1420c7f8b734e622c8a1f6cf5dbb7fe55d51feb9470",
+  "source_sha": "243a6d15400df10c578d89d40e1108ff8cef5f04",
+  "strict_asb_claimed": false,
+  "subcell_geometry_enabled": false,
+  "two_half_steps": {
+    "observables": {
+      "engineering_plastic_shear_gamma_p": 0.0006233316693709051,
+      "engineering_total_shear_gamma": 0.025175781250000005,
+      "mean_shear_stress_sigma_12_Pa": 2187623257.6340523,
+      "plastic_distortion_beta_01": 1.4546553966587595e-10,
+      "plastic_distortion_beta_10": 0.0006233315239053655,
+      "plastic_tensor_strain_e_p12": 0.00031166583468545257,
+      "temperature_mean_K": 1100.3715790879455,
+      "temperature_peak_K": 1100.4397510453803,
+      "total_strain_tensor_e12": 0.012587890625000002
+    },
+    "rows": [
+      {
+        "accepted_duration_s": 2.44140625e-07,
+        "discarded_shortened_candidates": 0,
+        "first_law_residual_J": -3.0292258760486853e-28,
+        "half": 1,
+        "ordering_linear_iterations": 7072
+      },
+      {
+        "accepted_duration_s": 2.44140625e-07,
+        "discarded_shortened_candidates": 0,
+        "first_law_residual_J": 2.524354896707238e-29,
+        "half": 2,
+        "ordering_linear_iterations": 7152
+      }
+    ],
+    "summed_external_work_J": 1.0836605531482104e-15,
+    "summed_first_law_residual_J": -2.7767903863779616e-28,
+    "wall_seconds": 1216.2872679380234
+  }
+}

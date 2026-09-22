@@ -1,0 +1,79 @@
+{
+  "schema": "asb-drx/v51/campaign-controller/v1",
+  "generated_utc": "2026-09-22T18:15:00Z",
+  "execution_location": "local",
+  "classification": "EVENT_MEASURE_AND_GEOMETRY_QUALIFIED_BULK_PAIR_COMPLETE_SPATIAL_REFINEMENT_OPEN",
+  "fixture_passed": true,
+  "scientific_gate_passed": false,
+  "drx_claimed": false,
+  "lagb_claimed": false,
+  "strict_asb_claimed": false,
+  "material_calibration_claimed": false,
+  "source_roles": {
+    "v51_final_numerical_source": "243a6d15400df10c578d89d40e1108ff8cef5f04",
+    "loading_source": "37065c25e02507da1bc25491574c3ef6fbb01966",
+    "hold_source": "181b28b5a3bb46a92571aa8c07d0a97646679390",
+    "branch": "exp/full-v34-recovery-v51-20260922",
+    "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v51-20260922"
+  },
+  "branches": {
+    "event_measure": {
+      "state": "PASSED_ONE_DEFECT_CLIMB_AND_DECLARED_AREA_EVENT",
+      "event_count": 63636.829670677,
+      "event_rate_s-1": 185112559.33593896,
+      "velocity_m_s": 0.045907914715312866,
+      "undefined_measure_fails_closed": true
+    },
+    "line_surface_compatibility": {
+      "state": "PASSED_N32_N64_N128",
+      "event_relative_mismatch": {"n32": 0.02434005303857613, "n64": 0.001511048000059288, "n128": 0.00010517247615962882},
+      "n16_candidate_rolled_back": true,
+      "production_publication_audit_enabled": true
+    },
+    "shared_clock": {
+      "state": "PASSED_FIXED_SYNTHETIC_RATES",
+      "common_elapsed_time_s": 1e-7,
+      "sum_face_active_durations_s": 2e-7,
+      "state_dependent_heterogeneous_sampling_qualified": false
+    },
+    "bulk_pair": {
+      "state": "COMPLETE_VALID_COMMON_HORIZON",
+      "intervals_each": 52,
+      "physical_time_s": 2.5390625e-5,
+      "additional_engineering_shear": 0.005078125,
+      "loading_minus_hold_stress_Pa": 407888346.2179978,
+      "loading_minus_hold_plastic_shear": 0.0005002535497418833,
+      "plastic_fraction_of_added_shear": 0.09851146825686312,
+      "loading_last_interval_plastic_rate_s-1": 67.03996372902465,
+      "stress_peak_observed": false,
+      "front_enabled": false
+    },
+    "temporal_and_profile": {
+      "state": "PASSED_SELECTED_OBSERVABLES",
+      "beta_p_full_half_relative_l2": 0.00027569328803322914,
+      "nye_full_half_relative_l2": 0.0002814150209863085,
+      "full_step_wall_seconds": 502.20203402708285,
+      "two_half_wall_seconds": 1216.287,
+      "dominant_component": "ordering GMRES matvec/FFT"
+    },
+    "bulk_spatial_refinement": {
+      "state": "OPEN_NO_QUALIFIED_EVOLVED_STATE_RESTRICTION",
+      "spatial_convergence_claimed": false
+    }
+  },
+  "regression": {
+    "canonical_command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 823,
+    "failed": 0,
+    "wall_seconds": 410.80,
+    "focused_passed": 9,
+    "focused_failed": 0,
+    "focused_wall_seconds": 82.31
+  },
+  "unfinished": [
+    "qualify a conservative evolved-state restriction/prolongation and run the matched bulk companion grid",
+    "qualify state-dependent segment stress and temperature sampling for shared-clock geometry",
+    "optimize the measured ordering GMRES/FFT bottleneck without changing physical tolerances"
+  ],
+  "next_automatic_action": "implement and verify common-physical-field evolved-state restriction before any bulk spatial-convergence claim"
+}

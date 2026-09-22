@@ -1,0 +1,40 @@
+{
+  "schema": "asb-drx/v51/evidence-manifest/v1",
+  "generated_utc": "2026-09-22T18:30:00Z",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v34-recovery-v51-20260922",
+  "numerical_source_commit": "243a6d15400df10c578d89d40e1108ff8cef5f04",
+  "parent_v50_checkpoint": "181b28b5a3bb46a92571aa8c07d0a97646679390",
+  "loading_source_commit": "37065c25e02507da1bc25491574c3ef6fbb01966",
+  "calculation_location": "local",
+  "hpc3_used": false,
+  "evidence": {
+    "v50_scope_addendum": {"path": "full_model/docs/v50_scope_addendum_v51.md", "sha256": "5d0d7ea3dcffe035fdafee1605586c319b4a75afdbfac1addb2df512ff69dab9"},
+    "decision_report": {"path": "full_model/docs/v51_decision_report.md", "sha256": "222378a4623e6be3aa2de7905ab0941f9cbeec658f89efccb77fef1ec783df40"},
+    "controller": {"path": "full_model/verification/v51_campaign_controller.json", "sha256": "f5bc013903f8b3d0d067ab5d1896bfc1076eb8b923f2938eacca3aa759ba6db1"},
+    "bulk_pair": {"path": "full_model/verification/v51_completed_bulk_pair.json", "sha256": "4815cf1d94ed02dc1f08d1c16e2282beae6185b16608da6dcce4b706f4913e51"},
+    "bulk_pair_plot": {"path": "full_model/verification/v51_completed_bulk_pair.png", "sha256": "c491b995afcacb4b13ec78b87705922866f214adffb29f0b3e1336587a5d0f6b"},
+    "geometry_qualification": {"path": "full_model/verification/v51_geometry_qualification.json", "sha256": "47b179e2ed965d78ca74be69a35d7a28c3792a871fb1b448996273b67999fc33"},
+    "geometry_qualification_plot": {"path": "full_model/verification/v51_geometry_qualification.png", "sha256": "02bd3293f3a7ee937a455fb69a4342c1c9378621258d84bca3f224c0104abe01"},
+    "evolved_timestep_profile": {"path": "full_model/verification/v51_evolved_timestep_profile.json", "sha256": "b5568bddbf157993ef94e996681978293bab93da61d188b4ccf37180162866fb"}
+  },
+  "raw_production_checksums": {
+    "loading_checkpoint_52_sha256": "6c38c6a4ac4cad833b10e1420c7f8b734e622c8a1f6cf5dbb7fe55d51feb9470",
+    "hold_checkpoint_52_sha256": "07a85279d0c2d589e37919d18822bd32f607c3491eed0695ac7a1e48d3c26d89",
+    "loading_manifest_sha256": "746bae526171e237a5503c05eb59c790178dafcee8bebe9bf4e49c6032aec2b2",
+    "hold_manifest_sha256": "46cf7fd1166f148610cd76f51541c9747c97b8cc9680aa79c069d354971871fe",
+    "manager_pair_sha256": "73113568ff077c78952bca67711806ddc13a2055e3f9cf7e17c794d6a21afb9b"
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 823,
+    "failed": 0,
+    "wall_seconds": 410.80,
+    "focused_passed": 9,
+    "focused_failed": 0,
+    "focused_wall_seconds": 82.31
+  },
+  "classification": "EVENT_MEASURE_AND_GEOMETRY_QUALIFIED_BULK_PAIR_COMPLETE_SPATIAL_REFINEMENT_OPEN",
+  "fixture_passed": true,
+  "scientific_gate_passed": false
+}

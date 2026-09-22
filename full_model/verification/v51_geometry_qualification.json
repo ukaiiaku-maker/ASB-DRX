@@ -1,0 +1,191 @@
+{
+  "compatibility": [
+    {
+      "event_line_surface_relative": 0.02434005303857613,
+      "event_reference_rms_m-1": 0.7664847168646952,
+      "event_residual_rms_m-1": 0.01865627866174469,
+      "grid": 32,
+      "initial_line_surface_relative": 0.0045895901571895,
+      "scientific_compatibility_passed": true,
+      "spacing_m": 1e-07,
+      "surface_affine_scale": 0.995565106276271,
+      "surface_maximum": 0.9960221434331806,
+      "surface_minimum": 0.0
+    },
+    {
+      "event_line_surface_relative": 0.001511048000059288,
+      "event_reference_rms_m-1": 0.7651137262725981,
+      "event_residual_rms_m-1": 0.0011561235659021188,
+      "grid": 64,
+      "initial_line_surface_relative": 6.150473553217992e-05,
+      "scientific_compatibility_passed": true,
+      "spacing_m": 5e-08,
+      "surface_affine_scale": 0.9999491917530408,
+      "surface_maximum": 0.9999490369598848,
+      "surface_minimum": 0.0
+    },
+    {
+      "event_line_surface_relative": 0.00010517247615962882,
+      "event_reference_rms_m-1": 0.7650642132966746,
+      "event_residual_rms_m-1": 8.046369773352969e-05,
+      "grid": 128,
+      "initial_line_surface_relative": 1.6224308340682505e-06,
+      "scientific_compatibility_passed": true,
+      "spacing_m": 2.5e-08,
+      "surface_affine_scale": 0.9999987889506654,
+      "surface_maximum": 0.9999986377828362,
+      "surface_minimum": 0.0
+    }
+  ],
+  "drx_claimed": false,
+  "energy_map_retained": true,
+  "event_measure": {
+    "complete_energy_change_J_m3_cells": -11311.918254672077,
+    "consumed_duration_s": 2.1782736292886853e-07,
+    "event_count_from_site_jump_identity": 63636.8296706778,
+    "event_count_site_jump_identity_residual": -8.076312951743603e-10,
+    "event_measure_convention": "one_exchanged_species_per_climb_event",
+    "event_rate_s": 185112559.33593896,
+    "heat_plus_complete_energy_residual_J_m3_cells": 0.0,
+    "independent_geometry_exchange_count": -63636.8296706778,
+    "legacy_area_over_b2_event_count_comparator": 130072.84079084282,
+    "legacy_mixed_affinity_rate_s_comparator": 91365201.1867049,
+    "legacy_mixed_event_count_comparator": 130072.84079084282,
+    "observed_accepted_velocity_m_s": 0.045907914715312866,
+    "physical_event_count": 63636.82967067699,
+    "signed_material_exchange_count": -63636.82967067699
+  },
+  "finite_proposal_overshoot": {
+    "capability_control_chemical_potential_J_per_defect": 6e-21,
+    "full_proposal_affinity_blocked": true,
+    "rows": [
+      {
+        "accepted": false,
+        "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+        "complete_energy_change_J_m3_cells": 6217.888637418007,
+        "proposed_displacement_m": 5e-08
+      },
+      {
+        "accepted": false,
+        "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+        "complete_energy_change_J_m3_cells": 2713.82558020384,
+        "proposed_displacement_m": 2.5e-08
+      },
+      {
+        "accepted": false,
+        "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+        "complete_energy_change_J_m3_cells": 700.6153842684253,
+        "proposed_displacement_m": 1.25e-08
+      },
+      {
+        "accepted": false,
+        "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+        "complete_energy_change_J_m3_cells": 146.7724514475549,
+        "proposed_displacement_m": 6.25e-09
+      },
+      {
+        "accepted": false,
+        "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
+        "complete_energy_change_J_m3_cells": 20.4502410302498,
+        "proposed_displacement_m": 3.125e-09
+      },
+      {
+        "accepted": true,
+        "classification": "ADMISSIBLE_PHYSICAL_SUBCELL_EVENT",
+        "complete_energy_change_J_m3_cells": -3.0725148008223186,
+        "proposed_displacement_m": 1.5625e-09
+      }
+    ],
+    "selected_complete_energy_change_J_m3_cells": -3.0725148008223186,
+    "selected_displacement_m": 1.5625e-09,
+    "selection": "largest_tested_connected_dyadic_displacement"
+  },
+  "force_and_secant": {
+    "complete_10nm_secant_N": -3.858962083783711e-08,
+    "continuous_dimensionless_integral": 7.191832866311272,
+    "continuous_ordered_gradient_force_N": -3.511637141753552e-08,
+    "label_correction": "finite 10 nm quotient is a secant; centered values are local derivatives",
+    "local_centered_derivatives": [
+      {
+        "complete_local_force_N": -3.8580376267311216e-08,
+        "ordered_gradient_local_force_N": -3.5115938027337745e-08,
+        "shape_step_m": 1e-09
+      },
+      {
+        "complete_local_force_N": -3.858037378576938e-08,
+        "ordered_gradient_local_force_N": -3.511593497660752e-08,
+        "shape_step_m": 5e-10
+      }
+    ],
+    "ordered_gradient_10nm_secant_N": -3.51250639771371e-08
+  },
+  "generated_utc": "2026-09-22T16:55:18.781656+00:00",
+  "integrated_production_audit": [
+    {
+      "accepted_step_hard_invariant_passed": true,
+      "candidate_line_surface_event_residual_relative": 0.5247193519517096,
+      "event_accepted": false,
+      "event_classification": "LINE_SURFACE_COMPATIBILITY_REJECTED",
+      "grid": 16,
+      "independent_compatibility_passed": true,
+      "independent_increment_residual_relative": 0.0,
+      "published_event_count": 0
+    },
+    {
+      "accepted_step_hard_invariant_passed": true,
+      "candidate_line_surface_event_residual_relative": 0.02449036038384804,
+      "event_accepted": true,
+      "event_classification": "ADMISSIBLE_PHYSICAL_SUBCELL_EVENT",
+      "grid": 32,
+      "independent_compatibility_passed": true,
+      "independent_increment_residual_relative": 0.024505488003495526,
+      "published_event_count": 1
+    }
+  ],
+  "lagb_claimed": false,
+  "noninteger_translation": {
+    "displacement_m": [
+      1.85e-08,
+      -1.15e-08
+    ],
+    "no_fitted_mesh_potential_subtracted": true,
+    "sampled_complete_energy_change_J": 1.1860827825292719e-17
+  },
+  "schema": "asb-drx/v51/event-measure-commuting-geometry/v1",
+  "scientific_compatibility_passed": true,
+  "shared_clock_two_faces": {
+    "accepted_event_count": 2,
+    "clock_combination_rule": "maximum_concurrent_face_exposure_not_sum",
+    "common_elapsed_time_s": 1e-07,
+    "complete_energy_change_J_m3_cells": -8630.546481637366,
+    "face_ledgers": {
+      "lower_x": {
+        "active_duration_s": 1e-07,
+        "committed_displacement_m": 2.48e-09,
+        "fixed_site_rate_s": 100000000.0,
+        "physical_event_jump_m": 2.48e-10,
+        "physical_velocity_m_s": 0.024800000000000003,
+        "proposed_displacement_m": 1e-07
+      },
+      "upper_x": {
+        "active_duration_s": 1e-07,
+        "committed_displacement_m": -4.96e-09,
+        "fixed_site_rate_s": 200000000.0,
+        "physical_event_jump_m": 2.48e-10,
+        "physical_velocity_m_s": 0.049600000000000005,
+        "proposed_displacement_m": -1e-07
+      }
+    },
+    "face_physical_event_counts": {
+      "lower_x": 15781.933758328094,
+      "upper_x": 31563.867516656188
+    },
+    "heat_plus_complete_energy_residual_J_m3_cells": -1.8189894035458565e-12,
+    "independent_trace_exchange_count": -47345.801274985024,
+    "signed_material_exchange_count": -47345.80127498428,
+    "sum_of_face_active_durations_s": 2e-07,
+    "total_nonnegative_physical_event_count": 47345.80127498428
+  },
+  "source_sha": "243a6d15400df10c578d89d40e1108ff8cef5f04",
+  "strict_asb_claimed": false
+}

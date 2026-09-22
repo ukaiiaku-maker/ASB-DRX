@@ -2001,3 +2001,29 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Canonical regression: 796 tests pass in 236.44 s. Classification:
   `ORDERING_CLOCK_AND_SUBCELL_ORACLE_QUALIFIED_PARTIAL_SEGMENT_FORCE_UNRESOLVED`.
   DRX, persistent LAGB, strict ASB, and material calibration remain unclaimed.
+
+## Directive v51 consistent events and completed horizon (2026-09-22)
+
+- One-defect climb now uses the same exchanged-species count in site/jump
+  identity, affinity, rate, and ledger. The former mixed maximum remains only
+  as a comparator; undefined event measures fail closed.
+- A boundary-derived swept-surface map retains the V50 positive line-energy
+  benchmark while reducing event line/surface mismatch to 2.434%, 0.1511%,
+  and 0.01052% on n32/n64/n128. The production audit rolls back an unresolved
+  n16 event atomically.
+- A scoped two-face synthetic-rate transaction uses one common clock, joint
+  energy, signed per-face exchange, nonnegative event counts, permutation
+  symmetry, and temporal splitting. State-dependent heterogeneous sampling
+  remains open.
+- Loading and shared-initial-state hold both complete 52 full-duration
+  intervals at 25.390625 microseconds. Loading minus hold is +407.888 MPa,
+  +0.000500254 plastic shear, and +0.304976 K mean temperature. Plasticity is
+  9.851% of added shear and reaches 67.040/s in the last loading interval;
+  stress is still rising and no peak occurs.
+- Evolved full/half-macro differences are 0.02757% in beta_p and 0.02814% in
+  family Nye. Ordering GMRES/FFT dominates runtime. A bulk companion grid is
+  withheld because no qualified evolved-state restriction exists, so no bulk
+  spatial-convergence claim is made.
+- Canonical regression: 823 tests pass. Classification:
+  `EVENT_MEASURE_AND_GEOMETRY_QUALIFIED_BULK_PAIR_COMPLETE_SPATIAL_REFINEMENT_OPEN`.
+  DRX, persistent LAGB, strict ASB, and material calibration remain unclaimed.

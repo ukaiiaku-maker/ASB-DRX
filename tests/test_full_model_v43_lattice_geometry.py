@@ -125,7 +125,7 @@ def test_translation_symmetry_and_geometry_checkpoint_contract():
                                   first.geometry.swept_quanta)
 
 
-def test_full_production_step_exercises_enabled_and_disabled_paths():
+def test_full_production_step_exercises_enabled_and_quarantined_legacy_paths():
     state, args, _ = prepared_loop()
     disabled, off = accepted_v24_mechanical_step(
         state, *args[1:], dt_s=1e-9, topology_route_enabled=False)
@@ -136,7 +136,16 @@ def test_full_production_step_exercises_enabled_and_disabled_paths():
     assert on["geometry_event_energy_kinematics"]["accepted"]
     assert int(disabled.geometry.accepted_event_count) == 1
     assert int(enabled.geometry.accepted_event_count) == 2
-    assert on["nye_suboperator_audit"]["accepted_step_hard_invariant_passed"]
+    # This historical represented-plaquette fixture remains executable for
+    # regression/provenance, but V51's independent line/surface audit must not
+    # promote its by-construction Curl identity to a production hard pass.
+    assert not on["nye_suboperator_audit"][
+        "accepted_step_hard_invariant_passed"]
+    assert on["nye_suboperator_audit"][
+        "first_violating_suboperator"] == "represented_plaquette_sweep"
+    geometry_stage = on["nye_suboperator_audit"]["stages"][-1]
+    assert geometry_stage["independent_line_surface_comparison"]
+    assert not geometry_stage["independent_compatibility_passed"]
     assert not np.array_equal(disabled.common.beta_p, enabled.common.beta_p)
 
 
