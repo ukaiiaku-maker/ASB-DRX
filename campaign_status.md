@@ -1946,3 +1946,26 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `FINITE_RATE_AND_COMMON_ENERGY_REPAIRED_GEOMETRY_RATE_VERIFIED_MATCHED_FORCE_UNRESOLVED`.
   DRX, persistent LAGB formation, strict ASB, and material calibration remain
   unclaimed.
+
+## Directive v49 subcell geometry and physical clocks (2026-09-21)
+
+- The full/half adaptive Jacobian uses its own trial duration for the active
+  projection mask. Frozen ordering fields are cached and a diagonal
+  spectral-gradient GMRES preconditioner reduces compact-fixture iterations
+  from 290 to 154 with `1.83e-15` relative endpoint difference.
+- Fractional plaquette content is explicitly an ensemble weight. A separate
+  rigid continuum subcell map and analytic displacement derivative pass
+  integer-shift, invariant, and finite-difference tests, with its Fourier
+  positivity limitation retained.
+- Batch closed-surface initialization matches the sequential fixture while
+  recording zero physical events. Actual n32/n64/n128 10 nm strip energies
+  remain `-6.03e-16/-2.44e-16/+1.25e-16 J`; the partial-segment force fails.
+- Geometry velocity is now `event_jump * event_frequency`, independent of grid;
+  numerical extent alone scales with spacing. Event/site/sweep/time measures
+  are separately ledgered.
+- The V49 continuation driver persists and validates load-origin semantics and
+  cumulative work, and subcycles shortened accepted intervals. Resolved
+  long-horizon bulk evolution remains pending rather than inferred from smoke.
+- Canonical regression: 796 tests pass in 236.44 s. Classification:
+  `ORDERING_CLOCK_AND_SUBCELL_ORACLE_QUALIFIED_PARTIAL_SEGMENT_FORCE_UNRESOLVED`.
+  DRX, persistent LAGB, strict ASB, and material calibration remain unclaimed.

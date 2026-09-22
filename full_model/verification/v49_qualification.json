@@ -1,0 +1,152 @@
+{
+  "actual_current_source_matched_strip": [
+    {
+      "grid": 32,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7728855511470267,
+      "physical_boundary_length_m": 8e-07,
+      "prescribed_displacement_m": 1e-08,
+      "spacing_m": 1e-07,
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_change_J": {
+        "common_line": 3.2643583415661835e-17,
+        "disordered_wall": 0.0,
+        "forest_excess": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 1.9999999999999832e-18,
+        "ordered_gradient": -6.377229889775849e-16,
+        "recoverable_elastic": 0.0,
+        "total": -6.030794058417986e-16
+      }
+    },
+    {
+      "grid": 64,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7665493043197997,
+      "physical_boundary_length_m": 8e-07,
+      "prescribed_displacement_m": 1e-08,
+      "spacing_m": 5e-08,
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_change_J": {
+        "common_line": 3.26439608814398e-17,
+        "disordered_wall": 0.0,
+        "forest_excess": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 2.0000000000000325e-18,
+        "ordered_gradient": -2.783754018623196e-16,
+        "recoverable_elastic": 0.0,
+        "total": -2.437314409364894e-16
+      }
+    },
+    {
+      "grid": 128,
+      "line_length_after_m": 3.22e-06,
+      "line_length_before_m": 3.2e-06,
+      "nye_increment_rms_m1": 0.7656897730003706,
+      "physical_boundary_length_m": 8e-07,
+      "prescribed_displacement_m": 1e-08,
+      "spacing_m": 2.5e-08,
+      "swept_area_m2": 7.999999999999999e-15,
+      "term_energy_change_J": {
+        "common_line": 3.264423071034055e-17,
+        "disordered_wall": 0.0,
+        "forest_excess": 0.0,
+        "junction_topology": 0.0,
+        "nye_mismatch": 0.0,
+        "ordered_boundary": 1.9999999999999832e-18,
+        "ordered_gradient": 9.025074530782072e-17,
+        "recoverable_elastic": 0.0,
+        "total": 1.248949758126027e-16
+      }
+    }
+  ],
+  "asb_claimed": false,
+  "drx_claimed": false,
+  "generated_utc": "2026-09-22T01:22:51.569667+00:00",
+  "inherited_v48_raw_records": [
+    {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v48-20260920/full_model/production/results-local/v48-ordering-reference/first_nonzero_frozen_2fcb8a8.json",
+      "present": true,
+      "sha256": "3caae6ffdf393a805b99ab4d3e4c0a78ba535ffd051f844c7d444303e1dd1bcd"
+    },
+    {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v48-20260920/full_model/production/results-local/v48-ordering-reference/post_front_frozen_2fcb8a8.json",
+      "present": true,
+      "sha256": "086f7dd6f9ac9451d8c76d09151e017ab160a8e4516ed8c1238dd1091d445354"
+    },
+    {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v48-20260920/full_model/production/results-local/v48-ordering-reference/late_macro_frozen_2fcb8a8.json",
+      "present": true,
+      "sha256": "540c8f78eb9eb00992735d1d6012abb8ae9ed9c164d384b3fc62e0b8bbff5784"
+    }
+  ],
+  "ordering_local_gate_passed": true,
+  "ordering_short_prefix": {
+    "endpoint_relative_l2_difference": 1.8340433657948794e-15,
+    "iteration_reduction_fraction": 0.46896551724137936,
+    "wall_time_reduction_fraction": 0.13485295119940421,
+    "with_preconditioner": {
+      "accepted_internal_steps": 48,
+      "complete_elapsed_time_s": 4.713455835221768e-10,
+      "linear_iterations": 154,
+      "maximum_accepted_error_norm": 0.8192384199577698,
+      "preconditioner_enabled": true,
+      "wall_seconds": 3.3180539859458804,
+      "workspace_cached": true
+    },
+    "without_preconditioner": {
+      "accepted_internal_steps": 48,
+      "complete_elapsed_time_s": 4.713455835221768e-10,
+      "linear_iterations": 290,
+      "maximum_accepted_error_norm": 0.8192384202049268,
+      "preconditioner_enabled": false,
+      "wall_seconds": 3.8352485748473555,
+      "workspace_cached": true
+    }
+  },
+  "physical_clock_local_gate_passed": true,
+  "physical_event_clock": {
+    "law": "v = physical_event_jump * per_site_event_frequency",
+    "rows": [
+      {
+        "maximum_extent": 6.200000000000002e-05,
+        "numerical_extent_rate_s-1": 620000.0000000001,
+        "physical_velocity_m_s": 0.062000000000000006,
+        "spacing_m": 1e-07
+      },
+      {
+        "maximum_extent": 0.00012400000000000003,
+        "numerical_extent_rate_s-1": 1240000.0000000002,
+        "physical_velocity_m_s": 0.062000000000000006,
+        "spacing_m": 5e-08
+      },
+      {
+        "maximum_extent": 0.00024800000000000007,
+        "numerical_extent_rate_s-1": 2480000.0000000005,
+        "physical_velocity_m_s": 0.062000000000000006,
+        "spacing_m": 2.5e-08
+      }
+    ],
+    "velocity_grid_independent": true
+  },
+  "review_json_available": false,
+  "review_json_provenance_gap": "directive references an accompanying review JSON/script, but neither was attached; no content was inferred",
+  "schema": "asb-drx/v49/qualification/v1",
+  "scientific_geometry_force_gate_passed": false,
+  "source_sha": "adb36a9f50b8398632a94356301adcbd2e77dece",
+  "strip_force_failure_reason": "same physical 10 nm extension changes energy sign between n64 and n128; partial-segment production path remains a fractional occupancy ensemble rather than the new rigid-coordinate map",
+  "strip_force_scientifically_qualified": false,
+  "subcell_geometry_map": {
+    "fractional_plaquette_interpretation": "ensemble event weight",
+    "integer_shift_relative_l2_error": 2.663651612440311e-16,
+    "integral_relative_change": 0.0,
+    "interpretation": "band-limited rigid continuum translation",
+    "maximum_derivative_relative_l2_error": 5.5706935923823253e-11,
+    "positivity_qualification": "read-only symmetry/shape-derivative oracle; Fourier interpolation is not claimed positivity preserving"
+  },
+  "subcell_rigid_map_local_gate_passed": true
+}

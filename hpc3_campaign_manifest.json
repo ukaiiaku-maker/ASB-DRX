@@ -2742,6 +2742,29 @@
       "strict_asb_claimed": false,
       "material_calibration_claimed": false,
       "unrelated_jobs_observed_and_not_touched": []
+    },
+    {
+      "run_id": "v49-subcell-clock-ordering-20260921",
+      "purpose": "directive_v49_subcell_geometry_physical_clock_and_scalable_finite_ordering",
+      "branch": "exp/full-v34-recovery-v49-20260921",
+      "scientific_source_sha": "adb36a9",
+      "execution_location": "local",
+      "hpc3_jobs_submitted": 0,
+      "ordering_decision": "WORKSPACE_AND_PRECONDITIONER_LOCAL_GATE_PASSED",
+      "subcell_decision": "RIGID_CONTINUUM_ORACLE_PASSED;PARTIAL_SEGMENT_PRODUCTION_FORCE_FAILED",
+      "clock_decision": "PHYSICAL_EVENT_JUMP_NORMALIZATION_PASSED",
+      "physical_response_decision": "RESTART_LOAD_ORIGIN_DRIVER_PASSED;RESOLVED_LONG_HORIZON_PENDING",
+      "verification": {
+        "qualification_sha256": "9edfdef1fca64856c2e50251e8d51568ca105445da9fcea956fa092965237d25",
+        "figure_sha256": "86024477297b4f7d2a91c5433ca3f0ba8394b7d8976fb908334ac19be34c4632",
+        "configured_tests_passed": 796,
+        "regression_wall_seconds": 236.44
+      },
+      "drx_claimed": false,
+      "current_source_lagb_claimed": false,
+      "strict_asb_claimed": false,
+      "material_calibration_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": [41849, 76011, 76012, 45582]
     }
   ]
 }
