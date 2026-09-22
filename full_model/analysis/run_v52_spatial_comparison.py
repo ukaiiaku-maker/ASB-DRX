@@ -72,7 +72,7 @@ def main():
     kwargs = dict(length_m=3.2e-6, interface_width_m=4e-7,
                   temperature_K=1100.0, child_line_fraction=.35)
     contexts = {n: resolved_bicrystal(grid=n, **kwargs) for n in (128, 192)}
-    states = {}; manifests = {}; observations = {}; initials = {}
+    states = {}; manifests = {}; metadatas = {}; observations = {}; initials = {}
     for n, checkpoint, manifest_path in (
             (128, args.n128_checkpoint, args.n128_manifest),
             (192, args.n192_checkpoint, args.n192_manifest)):
@@ -83,7 +83,7 @@ def main():
         endpoint_drive = driving(n, .01, "continued_deformation", 100.0,
                                  metadata["physical_time_s"])
         initial_drive = driving(n, .01, "continued_deformation", 100.0, 0.0)
-        states[n] = state; manifests[n] = manifest
+        states[n] = state; manifests[n] = manifest; metadatas[n] = metadata
         observations[n] = observables(contexts[n], state, endpoint_drive)
         initials[n] = observables(contexts[n], contexts[n]["state"], initial_drive)
     increments = {}
@@ -136,7 +136,10 @@ def main():
             "a convergence certificate for the 25.39 us history"),
         "route": audit["route"],
         "initialization_audit_sha256": digest(args.initialization_audit),
-        "physical_time_s": manifests[128]["physical_time_s"],
+        "physical_time_s": metadatas[128]["physical_time_s"],
+        "common_checkpoint_time_exact": bool(
+            metadatas[128]["physical_time_s"]
+            ==metadatas[192]["physical_time_s"]),
         "source_shas": {str(n): manifests[n]["source_sha"] for n in (128, 192)},
         "checkpoint_sha256": {
             "128": digest(args.n128_checkpoint), "192": digest(args.n192_checkpoint)},
