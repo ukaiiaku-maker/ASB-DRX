@@ -22,7 +22,7 @@ from full_model.production.v24_mechanical_wall import (
 )
 
 
-def physical_rectangle(n=32, offset=(0.0, 0.0)):
+def physical_rectangle(n=32, offset=(0.0, 0.0), burgers_sign=1):
     data = build_case(n, length_m=LENGTH_M, periodic_nye_consistent=True)
     base = data[0]; dx = data[9]
     lower = np.asarray((1.2e-6, 1.2e-6))+np.asarray(offset)
@@ -30,7 +30,7 @@ def physical_rectangle(n=32, offset=(0.0, 0.0)):
         base.density, base.reservoir_alignment, base.common, data[4],
         base.common.orientation_rad, lower_left_m=lower,
         upper_right_m=lower+np.asarray((.8e-6, .8e-6)), family=0,
-        burgers_sign=1, spacing_m=dx, section_thickness_m=THICKNESS_M,
+        burgers_sign=burgers_sign, spacing_m=dx, section_thickness_m=THICKNESS_M,
         representation_length_m=REPRESENTATION_LENGTH_M)
     state = synchronize_common(V24MechanicalWallState(
         initialized[3], initialized[1], initialized[2], None,

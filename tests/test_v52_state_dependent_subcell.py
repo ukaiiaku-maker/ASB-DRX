@@ -1,3 +1,6 @@
+from dataclasses import replace
+from unittest.mock import patch
+
 import numpy as np
 
 from tests.test_v50_production_subcell_geometry import (
@@ -38,7 +41,6 @@ def test_heterogeneous_temperature_averages_local_rates_not_mean_inputs():
     state, data = physical_rectangle(32)
     x, y = np.indices(state.common.temperature_K.shape)
     temperature = 900.0+400.0*(y/(y.shape[1]-1))**2
-    from dataclasses import replace
     state = replace(state, common=replace(
         state.common, temperature_K=temperature))
     directions = {"lower_x": 1.0, "upper_x": -1.0}
@@ -99,3 +101,59 @@ def test_state_dependent_multiple_cycles_restart_exactly():
     for name, value in mechanical_checkpoint_arrays(continuous).items():
         np.testing.assert_array_equal(
             mechanical_checkpoint_arrays(restarted)[name], value)
+
+
+def test_signed_affinity_matches_shared_ledger_for_both_burgers_signs():
+    from full_model.production.state_dependent_subcell import (
+        _face_complete_affinity,
+    )
+    from full_model.production.v24_mechanical_wall import (
+        accepted_subcell_x_faces_shared_clock,
+    )
+    for burgers_sign in (1.0, -1.0):
+        state, data = physical_rectangle(32, burgers_sign=int(burgers_sign))
+        kinetics = replace(
+            intrinsic_kinetics(), chemical_potential_J_per_defect=2.5e-21)
+        direction = -1.0
+        probe = 1e-10
+        local = _face_complete_affinity(
+            state, "upper_x", direction, probe, data[4], data[5], data[1],
+            data[6], data[7], kinetics)
+        events = [
+            {"face": "lower_x", "proposed_displacement_m": 0.0,
+             "fixed_rate_s": 0.0},
+            {"face": "upper_x", "proposed_displacement_m": direction*probe,
+             "fixed_rate_s": 1.0},
+        ]
+        _, ledger = accepted_subcell_x_faces_shared_clock(
+            state, events, data[4], data[5], data[1], data[6], data[7],
+            kinetics, probe/data[6].burgers_m)
+        np.testing.assert_allclose(
+            local["signed_material_exchange_count"],
+            ledger["signed_material_exchange_count"], rtol=2e-14)
+        np.testing.assert_allclose(
+            local["chemical_reservoir_work_J"],
+            ledger["chemical_reservoir_work_J"], rtol=2e-14)
+        assert np.sign(local["chemical_reservoir_work_J"]) == -burgers_sign
+
+
+def test_one_stalled_face_advances_other_on_same_clock():
+    state, data = physical_rectangle(32)
+    directions = {"lower_x": 1.0, "upper_x": -1.0}
+    args = fixture_args(state, data)
+    actual = state_dependent_face_rates(
+        state, directions, *args, quadrature_order=8)
+    actual["lower_x"]["generalized_rate_s"] = 0.0
+    actual["lower_x"]["generalized_velocity_m_s"] = 0.0
+    with patch(
+            "full_model.production.state_dependent_subcell."
+            "state_dependent_face_rates", return_value=actual):
+        result, ledger = accepted_state_dependent_subcell_x_faces(
+            state, directions, *args, 1e-8, quadrature_order=8)
+    assert ledger["accepted"]
+    assert ledger["consumed_duration_s"] == 1e-8
+    assert result.subcell_geometry.lower_left_m[0] == (
+        state.subcell_geometry.lower_left_m[0])
+    assert result.subcell_geometry.upper_right_m[0] < (
+        state.subcell_geometry.upper_right_m[0])
+    assert ledger["substeps"][0]["face_displacements_m"]["lower_x"] == 0.0

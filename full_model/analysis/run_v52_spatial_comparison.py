@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare one common-history macro from analytic n128/n192 initial states."""
+"""Compare selected common-history states from analytic n128/n192 origins."""
 
 from __future__ import annotations
 
@@ -78,8 +78,8 @@ def main():
             (192, args.n192_checkpoint, args.n192_manifest)):
         state, metadata = load_stage(checkpoint, contexts[n])
         manifest = json.loads(manifest_path.read_text())
-        if metadata["completed_intervals"] != 1:
-            raise RuntimeError("spatial comparison requires the first common macro")
+        if metadata["completed_intervals"] <= 0:
+            raise RuntimeError("spatial comparison requires an evolved checkpoint")
         endpoint_drive = driving(n, .01, "continued_deformation", 100.0,
                                  metadata["physical_time_s"])
         initial_drive = driving(n, .01, "continued_deformation", 100.0, 0.0)
@@ -127,25 +127,54 @@ def main():
         "n192_rms": float(np.sqrt(np.mean(np.asarray(pair[1])**2))),
     } for name, pair in fields.items()}
     audit = json.loads(args.initialization_audit.read_text())
+    configuration = {
+        "completed_intervals_equal": bool(
+            metadatas[128]["completed_intervals"]
+            == metadatas[192]["completed_intervals"]),
+        "physical_time_exact": bool(
+            metadatas[128]["physical_time_s"]
+            == metadatas[192]["physical_time_s"]),
+        "load_elapsed_time_exact": bool(
+            manifests[128]["records"][-1]["load_elapsed_time_s"]
+            == manifests[192]["records"][-1]["load_elapsed_time_s"]),
+        "protocol_equal": bool(
+            metadatas[128]["protocol"] == metadatas[192]["protocol"]),
+        "strain_rate_exact": bool(
+            metadatas[128]["strain_rate_s"]
+            == metadatas[192]["strain_rate_s"]),
+        "macro_dt_exact": bool(
+            metadatas[128]["macro_dt_s"] == metadatas[192]["macro_dt_s"]),
+        "n128_initial_origin_checksum_matches_audit": bool(
+            manifests[128]["source_checkpoint_sha256"]
+            == audit["retained_n128_sha256"]),
+        "n192_initial_origin_checksum_matches_audit": bool(
+            manifests[192]["source_checkpoint_sha256"]
+            == audit["companion_checkpoint_sha256"]),
+    }
+    configuration["all_preconditions_passed"] = bool(all(
+        configuration.values()))
+    if not configuration["all_preconditions_passed"]:
+        raise RuntimeError(f"common-state comparison precondition failed: {configuration}")
     payload = {
         "schema": "asb-drx/v52/analytic-common-history-spatial-estimate/v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "scope": (
-            "one first macro from independently evaluated common analytic "
-            "physical initial fields; not an evolved-state transfer and not "
-            "a convergence certificate for the 25.39 us history"),
+            "selected matched macro from independently evaluated common "
+            "analytic physical initial fields; not an evolved-state transfer "
+            "and not a full-history convergence certificate"),
         "route": audit["route"],
         "initialization_audit_sha256": digest(args.initialization_audit),
         "physical_time_s": metadatas[128]["physical_time_s"],
-        "common_checkpoint_time_exact": bool(
-            metadatas[128]["physical_time_s"]
-            ==metadatas[192]["physical_time_s"]),
+        "common_checkpoint_time_exact": configuration["physical_time_exact"],
+        "comparison_interval": int(metadatas[128]["completed_intervals"]),
+        "comparison_preconditions": configuration,
         "source_shas": {str(n): manifests[n]["source_sha"] for n in (128, 192)},
         "checkpoint_sha256": {
             "128": digest(args.n128_checkpoint), "192": digest(args.n192_checkpoint)},
         "primary_increment_comparison": primary,
-        "primary_all_below_5_percent": bool(all(
-            row["relative_difference"] < .05 for row in primary.values())),
+        "primary_all_below_5_percent": bool(
+            configuration["all_preconditions_passed"] and all(
+                row["relative_difference"] < .05 for row in primary.values())),
         "integrated_signed_reservoir_relative_differences": inventory_relative,
         "spatial_structure": structure,
         "interpretation": (

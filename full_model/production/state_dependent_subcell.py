@@ -98,15 +98,20 @@ def _face_complete_affinity(
     elastic_delta = (0.0 if elastic_before is None
                      else float(elastic_after-elastic_before))
     height = float(geometry.upper_right_m[1]-geometry.lower_left_m[1])
-    coefficient = (abs(kinetics.exchange_stoichiometry_defects_per_atom
-                       *float(geometry.burgers_vector_m[2])*height)
+    # Retain the orientation sign.  The shared production ledger defines the
+    # signed species exchange as -c*dx on the lower face and +c*dx on the
+    # upper face, with c=z*b_z*height/Omega.  Only the physical event count is
+    # an absolute value.  Dropping sign(b_z) here would reverse the chemical
+    # work for the negative-Burgers representation while appearing harmless
+    # in the default mu=0 fixture.
+    coefficient = (kinetics.exchange_stoichiometry_defects_per_atom
+                   *float(geometry.burgers_vector_m[2])*height
                    /kinetics.atomic_volume_m3_per_atom)
-    event_count = coefficient*probe_m
-    if event_count <= 0.0:
-        raise ValueError("state-dependent climb requires a species event measure")
-    # The sign convention follows the existing shared-face exchange ledger.
     signed_count = ((-1.0 if face == "lower_x" else 1.0)
                     *coefficient*direction*probe_m)
+    event_count = abs(signed_count)
+    if event_count <= 0.0:
+        raise ValueError("state-dependent climb requires a species event measure")
     chemical_work_J = kinetics.chemical_potential_J_per_defect*signed_count
     cell_volume = (float(geometry.spacing_m)**2
                    *float(geometry.section_thickness_m))
@@ -115,6 +120,7 @@ def _face_complete_affinity(
     return {
         "probe_displacement_m": float(direction*probe_m),
         "physical_event_count": event_count,
+        "signed_material_exchange_count": signed_count,
         "complete_energy_change_J_m3_cells": complete_delta,
         "available_energy_per_event_J": available_per_event,
         "wall_energy_change_J_m3_cells": wall_delta,
@@ -230,20 +236,12 @@ def accepted_state_dependent_subcell_x_faces(
                 "substeps": substeps,
                 "last_face_rates": rates,
             }
-        if any(row["generalized_rate_s"] <= 0.0 for row in rates.values()):
-            return current, {
-                "operator": "state_dependent_shared_x_faces",
-                "accepted": False,
-                "classification": "PARTIAL_FACE_STALL_REQUIRES_ONE_FACE_OWNER",
-                "requested_duration_s": float(dt_s),
-                "consumed_duration_s": elapsed,
-                "substeps": substeps,
-                "last_face_rates": rates,
-            }
         sub_dt = min(remaining, maximum/(maximum_rate*event_jump))
         events = [{
             "face": face,
-            "proposed_displacement_m": float(np.sign(directions[face]))*maximum,
+            "proposed_displacement_m": (
+                float(np.sign(directions[face]))*maximum
+                if rates[face]["generalized_rate_s"] > 0.0 else 0.0),
             "fixed_rate_s": rates[face]["generalized_rate_s"],
         } for face in ("lower_x", "upper_x")]
         candidate, ledger = accepted_subcell_x_faces_shared_clock(

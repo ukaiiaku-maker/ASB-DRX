@@ -41,12 +41,15 @@ def main():
                                mode="valid") if len(flow_mask) >= 5 else []
     flow_approach = bool(np.any(np.asarray(flow_windows) == 5))
     ds = np.diff(stress)
-    uncertainty_pa = 15391.50089263916
+    # This scale came from one earlier near-state fork.  It is a local
+    # candidate resolution only, not a global uncertainty bound for a later
+    # peak on this trajectory.
+    candidate_resolution_pa = 15391.50089263916
     peak_index = int(np.argmax(stress))
     peak_resolved = bool(
         peak_index < len(stress)-3
-        and np.all(ds[peak_index:peak_index+3] < -uncertainty_pa)
-        and stress[peak_index]-stress[-1] > uncertainty_pa)
+        and np.all(ds[peak_index:peak_index+3] < -candidate_resolution_pa)
+        and stress[peak_index]-stress[-1] > candidate_resolution_pa)
     new = [row for row in records if row["interval"] > 52]
     wall = [sum(segment["wall_seconds"] for segment in row["segments"])
             for row in new]
@@ -90,7 +93,9 @@ def main():
             "observed_maximum_interval": int(records[peak_index]["interval"]),
             "observed_maximum_stress_Pa": float(stress[peak_index]),
             "endpoint_is_maximum": bool(peak_index == len(stress)-1),
-            "resolution_scale_Pa": uncertainty_pa,
+            "candidate_local_resolution_scale_Pa": candidate_resolution_pa,
+            "candidate_scale_is_global_bound": False,
+            "later_peak_requires_new_near_state_check": True,
             "resolved_peak": peak_resolved,
         },
         "new_source_performance": {

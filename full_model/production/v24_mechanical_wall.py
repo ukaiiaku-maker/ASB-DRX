@@ -1317,11 +1317,17 @@ def accepted_subcell_x_faces_shared_clock(
         row = by_face[face]
         proposed = float(row["proposed_displacement_m"])
         rate = float(row["fixed_rate_s"])
-        if proposed == 0.0 or rate <= 0.0 or not np.isfinite(rate):
-            raise ValueError("each shared face requires nonzero proposal and positive rate")
-        displacement = np.sign(proposed)*min(
-            abs(proposed), maximum, rate*event_jump*float(dt_s))
-        duration = abs(displacement)/(rate*event_jump)
+        if not np.isfinite(rate) or rate < 0.0:
+            raise ValueError("each shared face requires a finite nonnegative rate")
+        if (proposed == 0.0) != (rate == 0.0):
+            raise ValueError("a stalled shared face requires both zero proposal and rate")
+        if rate == 0.0:
+            displacement = 0.0
+            duration = 0.0
+        else:
+            displacement = np.sign(proposed)*min(
+                abs(proposed), maximum, rate*event_jump*float(dt_s))
+            duration = abs(displacement)/(rate*event_jump)
         displacements[face] = displacement; durations.append(duration)
         face_ledgers[face] = {
             "fixed_site_rate_s": rate,
