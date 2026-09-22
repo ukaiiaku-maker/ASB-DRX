@@ -400,6 +400,37 @@ def propose_subcell_translation(
         })
 
 
+def propose_subcell_x_face_moves(
+        state, inventory, alignment, common, systems, *,
+        lower_displacement_m, upper_displacement_m):
+    """Move two named x faces in one common geometric transaction."""
+    state.validate(len(systems))
+    lower = float(lower_displacement_m); upper = float(upper_displacement_m)
+    if (not np.isfinite(lower) or not np.isfinite(upper)
+            or (lower == 0.0 and upper == 0.0)):
+        raise ValueError("shared x-face move requires a finite nonzero displacement")
+    active_faces = int(lower != 0.0)+int(upper != 0.0)
+    candidate = replace(
+        state,
+        lower_left_m=np.asarray(state.lower_left_m)+np.asarray((lower, 0.0)),
+        upper_right_m=np.asarray(state.upper_right_m)+np.asarray((upper, 0.0)),
+        accepted_event_count=np.asarray(
+            int(state.accepted_event_count)+active_faces))
+    candidate.validate(len(systems))
+    height = float(state.upper_right_m[1]-state.lower_left_m[1])
+    return _remap_subcell_geometry(
+        state, candidate, inventory, alignment, common, systems, {
+            "operator": "physical_subcell_rectangle_shared_x_faces",
+            "face_displacements_m": {
+                "lower_x": lower, "upper_x": upper,
+            },
+            "active_face_count": active_faces,
+            "signed_swept_area_m2": height*(upper-lower),
+            "line_length_change_m": 2.0*(upper-lower),
+            "common_clock_transaction": True,
+        })
+
+
 def _remap_subcell_geometry(
         state, candidate, inventory, alignment, common, systems,
         geometry_ledger):

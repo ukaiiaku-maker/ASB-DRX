@@ -41,6 +41,7 @@ from .lattice_line_geometry import (
 from .subcell_segment_geometry import (
     SubcellRectangleGeometry, subcell_checkpoint_arrays,
     subcell_from_checkpoint_arrays, propose_subcell_face_extension,
+    propose_subcell_x_face_moves,
 )
 from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
 from .wall_topology_supply import (
@@ -1014,7 +1015,7 @@ def accepted_subcell_face_transaction(
     displacement = np.sign(proposed)*min(
         abs(proposed), maximum_displacement, velocity*float(dt_s))
     if displacement == 0.0:
-        return state, {
+        ledger = {
             "operator": "physical_subcell_rectangle_face_extension",
             "accepted": False, "classification": "AFFINITY_BLOCKED_ZERO_EVENT",
             "event_rate_s": rate, "physical_event_jump_m": event_jump,
@@ -1023,6 +1024,47 @@ def accepted_subcell_face_transaction(
                 state.common.orientation_rad),
             **event.get("_affinity_probe_ledger", {}),
         }
+        if (event.get("search_partial_displacement", False)
+                and "_affinity_rate_override_s" in event):
+            rows = [{
+                "proposed_displacement_m": proposed, "accepted": False,
+                "classification": ledger["classification"],
+                "complete_energy_change_J_m3_cells": event.get(
+                    "_affinity_probe_ledger", {}).get(
+                        "complete_energy_change_J_m3_cells"),
+            }]
+            for level in range(1, int(event.get(
+                    "partial_displacement_levels", 16))+1):
+                trial_event = {
+                    key: value for key, value in event.items()
+                    if not key.startswith("_affinity_")
+                }
+                trial_event["proposed_displacement_m"] = proposed*2.0**(-level)
+                trial_event["search_partial_displacement"] = False
+                candidate, trial = accepted_subcell_face_transaction(
+                    state, trial_event, systems, topologies, driving,
+                    common_parameters, extensive_parameters, kinetics, dt_s)
+                rows.append({
+                    "proposed_displacement_m": trial_event[
+                        "proposed_displacement_m"],
+                    "accepted": bool(trial["accepted"]),
+                    "classification": trial["classification"],
+                    "complete_energy_change_J_m3_cells": trial.get(
+                        "complete_energy_change_J_m3_cells"),
+                })
+                if trial["accepted"]:
+                    trial["same_state_partial_displacement_search"] = {
+                        "full_proposal_affinity_blocked": True,
+                        "selection": "largest_tested_connected_dyadic_displacement",
+                        "rows": rows,
+                    }
+                    return candidate, trial
+            ledger["same_state_partial_displacement_search"] = {
+                "full_proposal_affinity_blocked": True,
+                "selection": "NO_TESTED_PARTIAL_DISPLACEMENT_ADMISSIBLE",
+                "rows": rows,
+            }
+        return state, ledger
     try:
         candidate_geometry, inventory, alignment, common, geometry_ledger = (
             propose_subcell_face_extension(
@@ -1141,6 +1183,7 @@ def accepted_subcell_face_transaction(
         "legacy_mixed_available_energy_per_event_J": (
             legacy_available_per_event),
         "legacy_mixed_affinity_rate_s_comparator": legacy_affinity_rate,
+        "complete_energy_change_J_m3_cells": complete_delta,
     }
     if (kinetics.affinity_coupling_mode == "downhill_tanh"
             and "_affinity_rate_override_s" not in event):
@@ -1195,6 +1238,185 @@ def accepted_subcell_face_transaction(
         "event_count_from_site_jump_identity": event_count_from_site_jump,
         "event_count_site_jump_identity_residual": (
             event_count-event_count_from_site_jump),
+    }
+    if not accepted:
+        ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(
+            state.common.orientation_rad)
+        return state, ledger
+    heat_total = max(-complete_delta, 0.0)
+    support = np.abs(trace_increment)
+    heat = (heat_total*support/np.sum(support) if np.sum(support) > 0.0
+            else np.full_like(support, heat_total/support.size))
+    common = replace(
+        common, temperature_K=np.asarray(common.temperature_K)
+        +heat/common_parameters.volumetric_heat_capacity_J_m3_K)
+    result = synchronize_common(V24MechanicalWallState(
+        common, inventory, alignment, state.geometry, candidate_geometry),
+        topologies)
+    result.validate(systems, topologies)
+    ledger["irreversible_heat_increment_J_m3"] = heat
+    ledger["heat_plus_complete_energy_residual_J_m3_cells"] = float(
+        np.sum(heat)+complete_delta)
+    return result, ledger
+
+
+def accepted_subcell_x_faces_shared_clock(
+        state, face_events, systems, topologies, driving, common_parameters,
+        extensive_parameters, kinetics, dt_s):
+    """Move two named physical faces over one common synthetic-rate clock.
+
+    This scoped production transaction isolates simultaneous-clock accounting:
+    both faces are proposed from one immutable state, one joint candidate owns
+    all interaction energy, and elapsed time is the maximum face exposure—not
+    their sum.  State-dependent affinity integration remains the responsibility
+    of the single-face/adaptive path; every face here requires an explicit
+    fixed rate.
+    """
+    geometry = state.subcell_geometry
+    if geometry is None:
+        raise ValueError("shared face event requires physical segment geometry")
+    rows = list(face_events)
+    if {row.get("face") for row in rows} != {"lower_x", "upper_x"} \
+            or len(rows) != 2:
+        raise ValueError("shared transaction requires one lower_x and one upper_x face")
+    by_face = {row["face"]: row for row in rows}
+    event_jump = (float(kinetics.physical_event_jump_m)
+                  if kinetics.physical_event_jump_m > 0.0
+                  else float(common_parameters.burgers_m))
+    maximum = kinetics.maximum_extent_per_step*float(geometry.spacing_m)
+    displacements = {}; face_ledgers = {}; durations = []
+    for face in ("lower_x", "upper_x"):
+        row = by_face[face]
+        proposed = float(row["proposed_displacement_m"])
+        rate = float(row["fixed_rate_s"])
+        if proposed == 0.0 or rate <= 0.0 or not np.isfinite(rate):
+            raise ValueError("each shared face requires nonzero proposal and positive rate")
+        displacement = np.sign(proposed)*min(
+            abs(proposed), maximum, rate*event_jump*float(dt_s))
+        duration = abs(displacement)/(rate*event_jump)
+        displacements[face] = displacement; durations.append(duration)
+        face_ledgers[face] = {
+            "fixed_site_rate_s": rate,
+            "physical_event_jump_m": event_jump,
+            "physical_velocity_m_s": rate*event_jump,
+            "proposed_displacement_m": proposed,
+            "committed_displacement_m": displacement,
+            "active_duration_s": duration,
+        }
+    try:
+        candidate_geometry, inventory, alignment, common, geometry_ledger = (
+            propose_subcell_x_face_moves(
+                geometry, state.density, state.reservoir_alignment,
+                state.common, systems,
+                lower_displacement_m=displacements["lower_x"],
+                upper_displacement_m=displacements["upper_x"]))
+    except (ValueError, RuntimeError) as error:
+        return state, {
+            "operator": "physical_subcell_shared_x_faces",
+            "accepted": False, "classification": "INADMISSIBLE_SHARED_GEOMETRY",
+            "reason": f"{type(error).__name__}: {error}",
+            "consumed_duration_s": 0.0,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad),
+        }
+    zero_target = np.zeros(state.common.orientation_rad.shape+(3, 3))
+    before_wall = extensive_wall_energy_components_J_m3(
+        state.density, systems, topologies, state.common.orientation_rad,
+        zero_target, extensive_parameters)
+    after_wall = extensive_wall_energy_components_J_m3(
+        inventory, systems, topologies, common.orientation_rad,
+        zero_target, extensive_parameters)
+    component_deltas = {
+        name: float(np.sum(np.asarray(after_wall[name])-before_wall[name],
+                           dtype=np.longdouble))
+        for name in before_wall if name != "total"}
+    component_deltas["ordered_gradient"] = (
+        ordered_gradient_increment_J_m3_cells(
+            state.density, inventory, extensive_parameters))
+    wall_delta = float(sum(component_deltas.values()))
+    elastic_before = _elastic_energy_sum_J_m3_cells(
+        state.common, state.common.beta_p, driving, common_parameters)
+    elastic_after = _elastic_energy_sum_J_m3_cells(
+        common, common.beta_p, driving, common_parameters)
+    elastic_delta = (0.0 if elastic_before is None
+                     else float(elastic_after-elastic_before))
+    cell_volume = (float(geometry.spacing_m)**2
+                   *float(geometry.section_thickness_m))
+    trace_increment = np.trace(
+        geometry_ledger["plastic_distortion_increment"], axis1=-2, axis2=-1)
+    signed_exchange_volume = float(np.sum(trace_increment)*cell_volume)
+    height = float(geometry.upper_right_m[1]-geometry.lower_left_m[1])
+    face_signed_counts = {}
+    if kinetics.atomic_volume_m3_per_atom > 0.0:
+        coefficient = (kinetics.exchange_stoichiometry_defects_per_atom
+                       *float(geometry.burgers_vector_m[2])*height
+                       /kinetics.atomic_volume_m3_per_atom)
+        face_signed_counts = {
+            "lower_x": -coefficient*displacements["lower_x"],
+            "upper_x": coefficient*displacements["upper_x"],
+        }
+        signed_exchange_count = sum(face_signed_counts.values())
+        face_event_counts = {key: abs(value)
+                             for key, value in face_signed_counts.items()}
+        convention = "one_exchanged_species_per_climb_event_per_face"
+    elif (kinetics.material_exchange_model == "glide_no_exchange"
+          and kinetics.physical_event_area_m2 > 0.0):
+        signed_exchange_count = 0.0
+        face_event_counts = {
+            key: height*abs(value)/kinetics.physical_event_area_m2
+            for key, value in displacements.items()}
+        convention = "declared_volume_preserving_area_event_per_face"
+    else:
+        return state, {
+            **geometry_ledger, "accepted": False,
+            "classification": "UNDEFINED_PHYSICAL_EVENT_MEASURE",
+            "consumed_duration_s": 0.0, "rejection_is_atomic": True,
+            "irreversible_heat_increment_J_m3": np.zeros_like(
+                state.common.orientation_rad),
+        }
+    independent_signed_count = (
+        signed_exchange_volume/kinetics.atomic_volume_m3_per_atom
+        *kinetics.exchange_stoichiometry_defects_per_atom
+        if kinetics.atomic_volume_m3_per_atom > 0.0 else 0.0)
+    chemical_work_J = (kinetics.chemical_potential_J_per_defect
+                       *signed_exchange_count)
+    chemical_work_cells = chemical_work_J/cell_volume
+    complete_delta = wall_delta+elastic_delta-chemical_work_cells
+    tolerance = 2e-12*max(abs(wall_delta), abs(elastic_delta),
+                          abs(chemical_work_cells), 1.0)
+    compatible = geometry_ledger["line_surface_event_compatibility_passed"]
+    accepted = bool(complete_delta <= tolerance and compatible)
+    common_duration = max(durations)
+    ledger = {
+        **geometry_ledger,
+        "operator": "physical_subcell_shared_x_faces",
+        "accepted": accepted,
+        "classification": (
+            "ADMISSIBLE_SHARED_CLOCK_FACE_EVENT" if accepted else
+            "LINE_SURFACE_COMPATIBILITY_REJECTED" if not compatible else
+            "COMPLETE_ENERGY_REJECTED_SHARED_FACE_EVENT"),
+        "rejection_is_atomic": True,
+        "face_ledgers": face_ledgers,
+        "common_elapsed_time_s": common_duration if accepted else 0.0,
+        "sum_of_face_active_durations_s": float(sum(durations)),
+        "consumed_duration_s": common_duration if accepted else 0.0,
+        "clock_combination_rule": "maximum_concurrent_face_exposure_not_sum",
+        "event_measure_convention": convention,
+        "face_physical_event_counts": face_event_counts,
+        "total_nonnegative_physical_event_count": float(sum(
+            face_event_counts.values())),
+        "face_signed_species_exchange_counts": face_signed_counts,
+        "signed_material_exchange_count": signed_exchange_count,
+        "independent_trace_exchange_count": independent_signed_count,
+        "exchange_count_identity_residual": (
+            signed_exchange_count-independent_signed_count),
+        "complete_energy_change_J_m3_cells": complete_delta,
+        "wall_energy_component_changes_J_m3_cells": component_deltas,
+        "wall_energy_change_J_m3_cells": wall_delta,
+        "elastic_energy_change_J_m3_cells": elastic_delta,
+        "chemical_reservoir_work_J": chemical_work_J,
+        "joint_energy_includes_interaction_cross_terms": True,
+        "fixed_synthetic_rates": True,
     }
     if not accepted:
         ledger["irreversible_heat_increment_J_m3"] = np.zeros_like(

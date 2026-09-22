@@ -9,7 +9,9 @@ from full_model.production.subcell_segment_geometry import (
     propose_subcell_face_extension, subcell_line_surface_nye,
 )
 from full_model.production.v24_mechanical_wall import (
-    accepted_subcell_face_transaction,
+    accepted_subcell_face_transaction, accepted_subcell_x_faces_shared_clock,
+    accepted_v24_mechanical_step, mechanical_checkpoint_arrays,
+    mechanical_from_checkpoint_arrays,
 )
 
 
@@ -97,3 +99,129 @@ def test_declared_volume_preserving_area_event_has_its_own_site_measure():
     np.testing.assert_allclose(
         ledger["physical_event_count"],
         ledger["event_count_from_site_jump_identity"], rtol=2e-14)
+
+
+def test_two_faces_share_elapsed_time_and_are_permutation_invariant():
+    state, data = physical_rectangle(32)
+    events = [
+        {"face": "lower_x", "proposed_displacement_m": 1e-7,
+         "fixed_rate_s": 1e8},
+        {"face": "upper_x", "proposed_displacement_m": -1e-7,
+         "fixed_rate_s": 2e8},
+    ]
+    args = (data[4], data[5], data[1], data[6], data[7],
+            intrinsic_kinetics(), 1e-7)
+    first, ledger = accepted_subcell_x_faces_shared_clock(
+        state, events, *args)
+    permuted, permuted_ledger = accepted_subcell_x_faces_shared_clock(
+        state, list(reversed(events)), *args)
+    assert ledger["accepted"] and permuted_ledger["accepted"]
+    assert ledger["common_elapsed_time_s"] == 1e-7
+    assert ledger["sum_of_face_active_durations_s"] == 2e-7
+    assert ledger["clock_combination_rule"] == (
+        "maximum_concurrent_face_exposure_not_sum")
+    assert ledger["total_nonnegative_physical_event_count"] == sum(
+        ledger["face_physical_event_counts"].values())
+    np.testing.assert_allclose(
+        ledger["signed_material_exchange_count"],
+        ledger["independent_trace_exchange_count"], rtol=2e-12)
+    np.testing.assert_array_equal(
+        first.subcell_geometry.lower_left_m,
+        permuted.subcell_geometry.lower_left_m)
+    np.testing.assert_array_equal(
+        first.subcell_geometry.upper_right_m,
+        permuted.subcell_geometry.upper_right_m)
+    np.testing.assert_allclose(
+        first.density.wall_ordered_plus_m2,
+        permuted.density.wall_ordered_plus_m2, rtol=0.0, atol=0.0)
+    assert ledger["complete_energy_change_J_m3_cells"] == permuted_ledger[
+        "complete_energy_change_J_m3_cells"]
+
+
+def test_shared_face_clock_converges_under_common_time_splitting():
+    state, data = physical_rectangle(32)
+    events = [
+        {"face": "lower_x", "proposed_displacement_m": 1e-7,
+         "fixed_rate_s": 1e8},
+        {"face": "upper_x", "proposed_displacement_m": -1e-7,
+         "fixed_rate_s": 2e8},
+    ]
+    args = (data[4], data[5], data[1], data[6], data[7], intrinsic_kinetics())
+    whole, whole_ledger = accepted_subcell_x_faces_shared_clock(
+        state, events, *args, 1e-7)
+    split = state; split_energy = 0.0; split_time = 0.0
+    for _ in range(2):
+        split, ledger = accepted_subcell_x_faces_shared_clock(
+            split, events, *args, .5e-7)
+        assert ledger["accepted"]
+        split_energy += ledger["complete_energy_change_J_m3_cells"]
+        split_time += ledger["common_elapsed_time_s"]
+    assert whole_ledger["accepted"]
+    assert split_time == whole_ledger["common_elapsed_time_s"]
+    np.testing.assert_allclose(
+        split.subcell_geometry.lower_left_m,
+        whole.subcell_geometry.lower_left_m, rtol=0.0, atol=2e-21)
+    np.testing.assert_allclose(
+        split.subcell_geometry.upper_right_m,
+        whole.subcell_geometry.upper_right_m, rtol=0.0, atol=2e-21)
+    np.testing.assert_allclose(
+        split_energy, whole_ledger["complete_energy_change_J_m3_cells"],
+        rtol=2e-12)
+
+
+def test_large_uphill_probe_finds_real_admissible_initial_advance():
+    state, data = physical_rectangle(32)
+    capability = replace(
+        intrinsic_kinetics(), chemical_potential_J_per_defect=6e-21)
+    event = {
+        "proposed_displacement_m": 5e-8,
+        "search_partial_displacement": True,
+        "partial_displacement_levels": 16,
+    }
+    advanced, ledger = accepted_subcell_face_transaction(
+        state, event, data[4], data[5], data[1], data[6], data[7],
+        capability, 1.0)
+    assert ledger["accepted"] and advanced is not state
+    assert 0.0 < ledger["physical_displacement_m"] < event[
+        "proposed_displacement_m"]
+    assert ledger["complete_energy_change_J_m3_cells"] < 0.0
+    search = ledger["same_state_partial_displacement_search"]
+    assert search["full_proposal_affinity_blocked"]
+    assert search["rows"][0]["complete_energy_change_J_m3_cells"] > 0.0
+    assert any(not row["accepted"] for row in search["rows"][:-1])
+    assert search["rows"][-1]["accepted"]
+    # The selected state is exactly a direct production transaction at the
+    # discovered displacement, not a repriced large-proposal candidate.
+    direct, direct_ledger = accepted_subcell_face_transaction(
+        state, {"proposed_displacement_m": ledger["physical_displacement_m"]},
+        data[4], data[5], data[1], data[6], data[7], capability, 1.0)
+    assert direct_ledger["accepted"]
+    np.testing.assert_allclose(
+        direct.subcell_geometry.upper_right_m,
+        advanced.subcell_geometry.upper_right_m, rtol=0.0, atol=0.0)
+    np.testing.assert_allclose(
+        direct.common.beta_p, advanced.common.beta_p, rtol=0.0, atol=0.0)
+
+
+def test_geometry_owner_survives_two_coupled_cycles_and_restart():
+    state, data = physical_rectangle(32)
+    step_args = (data[1], data[3], data[4], data[5], data[6], data[7], data[8])
+    first, ledger1 = accepted_v24_mechanical_step(
+        state, *step_args, 1e-9, topology_route_enabled=False,
+        mura_transport_operator="compatible_dealiased",
+        subcell_geometry_event={"proposed_displacement_m": -1e-8},
+        subcell_geometry_kinetics=intrinsic_kinetics())
+    assert ledger1["subcell_geometry_event_energy_kinematics"]["accepted"]
+    restarted = mechanical_from_checkpoint_arrays(
+        mechanical_checkpoint_arrays(first), data[4], data[5])
+    second, ledger2 = accepted_v24_mechanical_step(
+        restarted, *step_args, 1e-9, topology_route_enabled=False,
+        mura_transport_operator="compatible_dealiased",
+        subcell_geometry_event={"proposed_displacement_m": -1e-8},
+        subcell_geometry_kinetics=intrinsic_kinetics())
+    assert ledger2["subcell_geometry_event_energy_kinematics"]["accepted"]
+    assert int(second.subcell_geometry.accepted_event_count) == 2
+    assert ledger1["nye_suboperator_audit"][
+        "accepted_step_hard_invariant_passed"]
+    assert ledger2["nye_suboperator_audit"][
+        "accepted_step_hard_invariant_passed"]
