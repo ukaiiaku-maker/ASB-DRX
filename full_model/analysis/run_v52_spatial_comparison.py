@@ -73,6 +73,7 @@ def main():
                   temperature_K=1100.0, child_line_fraction=.35)
     contexts = {n: resolved_bicrystal(grid=n, **kwargs) for n in (128, 192)}
     states = {}; manifests = {}; metadatas = {}; observations = {}; initials = {}
+    selected_records = {}
     for n, checkpoint, manifest_path in (
             (128, args.n128_checkpoint, args.n128_manifest),
             (192, args.n192_checkpoint, args.n192_manifest)):
@@ -84,6 +85,11 @@ def main():
                                  metadata["physical_time_s"])
         initial_drive = driving(n, .01, "continued_deformation", 100.0, 0.0)
         states[n] = state; manifests[n] = manifest; metadatas[n] = metadata
+        matches = [row for row in manifest["records"]
+                   if int(row["interval"]) == int(metadata["completed_intervals"])]
+        if len(matches) != 1:
+            raise RuntimeError("selected checkpoint lacks a unique manifest record")
+        selected_records[n] = matches[0]
         observations[n] = observables(contexts[n], state, endpoint_drive)
         initials[n] = observables(contexts[n], contexts[n]["state"], initial_drive)
     increments = {}
@@ -135,8 +141,11 @@ def main():
             metadatas[128]["physical_time_s"]
             == metadatas[192]["physical_time_s"]),
         "load_elapsed_time_exact": bool(
-            manifests[128]["records"][-1]["load_elapsed_time_s"]
-            == manifests[192]["records"][-1]["load_elapsed_time_s"]),
+            selected_records[128]["load_elapsed_time_s"]
+            == selected_records[192]["load_elapsed_time_s"]),
+        "endpoint_load_exact": bool(
+            selected_records[128]["endpoint_load"]
+            == selected_records[192]["endpoint_load"]),
         "protocol_equal": bool(
             metadatas[128]["protocol"] == metadatas[192]["protocol"]),
         "strain_rate_exact": bool(
