@@ -1,0 +1,18 @@
+[
+  {
+    "id": "current_source_thermal_feedback",
+    "T0_K": 900.0,
+    "strain_rate_s": 30000.0,
+    "particle_radius_um": 1.5,
+    "conductivity_W_m_K": 0.15,
+    "causal_temperature_ablation": "none"
+  },
+  {
+    "id": "current_source_freeze_flow_control",
+    "T0_K": 900.0,
+    "strain_rate_s": 30000.0,
+    "particle_radius_um": 1.5,
+    "conductivity_W_m_K": 0.15,
+    "causal_temperature_ablation": "freeze_flow"
+  }
+]

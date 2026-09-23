@@ -1,6 +1,39 @@
 # Campaign status
 
-Updated: 2026-09-21 (America/Los_Angeles)
+Updated: 2026-09-23 (America/Los_Angeles)
+
+## Directive v53 flow regime, conjugate geometry, and mechanism priority
+
+- The attributable n128 continuation completed interval 128 at 62.5 us and
+  total engineering shear 0.0325.  Its endpoint has engineering plastic shear
+  0.0067103485, mean shear stress 2.297857946 GPa, mean temperature
+  1104.347475 K, and last-interval plastic rate 206.9052/s.  All available
+  incremental and cumulative first-law checks pass.  The coarse stress maximum
+  is at interval 107; its exact temporal location remains subject to the
+  prepared local refinement and is not attributed to DRX or ASB.
+- Frozen source `f3e0600` owns the sole heavy local solver.  The n192 companion
+  resumed from the verified interval-32 V52 checkpoint and is advancing toward
+  interval 52.  The durable handoff at source `12742e5` is waiting without
+  launching a duplicate.  All post-32 segment time remains charged against the
+  same eight-hour n192 extension allowance.
+- The retained full/half near-flow branches exactly fill their requested
+  clocks and pass first-law checks.  The interval-104 stress increments are
+  +64.675 kPa and +195.154 kPa; their 130.479 kPa subdivision difference leaves
+  the small tangent sign unresolved under the registered margin.  Quarter-step
+  and interval-106 neighboring refinement remain queued as diagnostic forks.
+- The default-off full-tensor z-invariant elasticity and common-clock
+  `B(H/2) -> G(H) -> B(H/2)` geometry path are implemented and focused tests
+  pass.  Their pending prepared-rectangle run is mechanism verification, not a
+  grain-boundary, spontaneous LAGB, or DRX result.
+- A production-path capability table now separates implementation, enablement,
+  exercise, and physical demonstration.  A budget-aware post-handoff manager
+  stages one current-source 30,000/s ASB thermal-feedback/frozen-flow pair.  It
+  runs sequentially only after V53 closure, retains grain nucleation disabled,
+  requires accepted-trajectory plastic-power/heat fields, and defers the full
+  pair rather than exceeding the original 12-hour campaign budget.
+- Current physical claims remain: near-flow bulk response is attained at n128;
+  the n192 supported horizon is still running; DRX, a persistent LAGB, and
+  strict ASB are not claimed.
 
 ## Directive v50 production subcell geometry and physical horizon
 
