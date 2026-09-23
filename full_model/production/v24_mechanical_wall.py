@@ -43,7 +43,10 @@ from .subcell_segment_geometry import (
     subcell_from_checkpoint_arrays, propose_subcell_face_extension,
     propose_subcell_x_face_moves,
 )
-from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
+from .nonlocal_elasticity import (
+    elastic_energy_density, solve_periodic_eigenstrain,
+    solve_periodic_eigenstrain_3d_z_invariant,
+)
 from .wall_topology_supply import (
     ReservoirAlignmentState,
     alignment_checkpoint_arrays, alignment_from_checkpoint_arrays,
@@ -342,6 +345,24 @@ def _elastic_energy_sum_J_m3_cells(common, beta_p, driving, parameters):
     """Recoverable elastic energy at the fixed total-strain substep state."""
     if driving.mean_strain is None:
         return None
+    if driving.full_tensor_z_invariant_enabled:
+        beta = np.asarray(beta_p)
+        eigenstrain = .5*(beta+np.swapaxes(beta, -1, -2))
+        if driving.fixed_eigenstrain_3d is not None:
+            eigenstrain = eigenstrain+np.asarray(driving.fixed_eigenstrain_3d)
+        elif driving.fixed_eigenstrain is not None:
+            fixed = np.zeros_like(eigenstrain)
+            fixed[..., :2, :2] = np.asarray(driving.fixed_eigenstrain)
+            eigenstrain = eigenstrain+fixed
+        mean = (np.asarray(driving.mean_strain_3d, dtype=float)
+                if driving.mean_strain_3d is not None else np.pad(
+                    np.asarray(driving.mean_strain, dtype=float),
+                    ((0, 1), (0, 1))))
+        stress, strain = solve_periodic_eigenstrain_3d_z_invariant(
+            eigenstrain, mean, parameters.spacing_m,
+            parameters.c11_Pa, parameters.c12_Pa, parameters.c44_Pa)
+        return float(np.sum(elastic_energy_density(
+            stress, strain, eigenstrain)))
     beta2 = np.asarray(beta_p)[..., :2, :2]
     eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
     if driving.fixed_eigenstrain is not None:

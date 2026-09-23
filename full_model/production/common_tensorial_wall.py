@@ -25,14 +25,20 @@ try:
         plastic_distortion_from_slip, rotated_system_fields,
         alignment_increment_from_slip, bcc_four_family_systems,
     )
-    from .nonlocal_elasticity import solve_periodic_eigenstrain
+    from .nonlocal_elasticity import (
+        solve_periodic_eigenstrain,
+        solve_periodic_eigenstrain_3d_z_invariant,
+    )
 except ImportError:  # direct execution by the production driver
     from tensorial_nye import (
         JunctionTopology, SlipSystem3D, nye_from_plastic_distortion,
         plastic_distortion_from_slip, rotated_system_fields,
         alignment_increment_from_slip, bcc_four_family_systems,
     )
-    from nonlocal_elasticity import solve_periodic_eigenstrain
+    from nonlocal_elasticity import (
+        solve_periodic_eigenstrain,
+        solve_periodic_eigenstrain_3d_z_invariant,
+    )
 
 KB_J_K = 1.380649e-23
 EV_J = 1.602176634e-19
@@ -243,6 +249,12 @@ class CommonWallDriving:
     resolved_stress_Pa: np.ndarray | None = None
     mean_strain: np.ndarray | None = None
     fixed_eigenstrain: np.ndarray | None = None
+    # Default-off V53 extension.  The spatial grid remains two dimensional,
+    # but displacement, strain, plastic distortion and stress retain all
+    # three components with partial_z u_fluctuation = 0.
+    full_tensor_z_invariant_enabled: bool = False
+    mean_strain_3d: np.ndarray | None = None
+    fixed_eigenstrain_3d: np.ndarray | None = None
 
 
 @dataclass(frozen=True)
@@ -516,19 +528,42 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
     if driving.resolved_stress_Pa is None:
         if driving.mean_strain is None:
             raise ValueError("mean strain is required when stress is not prescribed")
-        beta2 = state.beta_p[..., :2, :2]
-        eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
-        if driving.fixed_eigenstrain is not None:
-            eigenstrain = eigenstrain+np.asarray(driving.fixed_eigenstrain)
-        stress_tensor, compatible_strain = solve_periodic_eigenstrain(
-            eigenstrain, driving.mean_strain, parameters.spacing_m,
-            parameters.c11_Pa, parameters.c12_Pa, parameters.c44_Pa,
-            iterations=parameters.elastic_iterations)
-        _, directions, normals = rotated_system_fields(
-            systems, state.orientation_rad)
-        schmid = .5*(
-            np.einsum("...si,...sj->...sij", directions[..., :2], normals[..., :2])
-            +np.einsum("...si,...sj->...sij", normals[..., :2], directions[..., :2]))
+        if driving.full_tensor_z_invariant_enabled:
+            eigenstrain = .5*(state.beta_p+np.swapaxes(state.beta_p, -1, -2))
+            if driving.fixed_eigenstrain_3d is not None:
+                eigenstrain = eigenstrain+np.asarray(
+                    driving.fixed_eigenstrain_3d)
+            elif driving.fixed_eigenstrain is not None:
+                fixed = np.zeros(eigenstrain.shape)
+                fixed[..., :2, :2] = np.asarray(driving.fixed_eigenstrain)
+                eigenstrain = eigenstrain+fixed
+            mean = (np.asarray(driving.mean_strain_3d, dtype=float)
+                    if driving.mean_strain_3d is not None else np.pad(
+                        np.asarray(driving.mean_strain, dtype=float), ((0, 1), (0, 1))))
+            stress_tensor, compatible_strain = (
+                solve_periodic_eigenstrain_3d_z_invariant(
+                    eigenstrain, mean, parameters.spacing_m,
+                    parameters.c11_Pa, parameters.c12_Pa,
+                    parameters.c44_Pa))
+            _, directions, normals = rotated_system_fields(
+                systems, state.orientation_rad)
+            schmid = .5*(
+                np.einsum("...si,...sj->...sij", directions, normals)
+                +np.einsum("...si,...sj->...sij", normals, directions))
+        else:
+            beta2 = state.beta_p[..., :2, :2]
+            eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
+            if driving.fixed_eigenstrain is not None:
+                eigenstrain = eigenstrain+np.asarray(driving.fixed_eigenstrain)
+            stress_tensor, compatible_strain = solve_periodic_eigenstrain(
+                eigenstrain, driving.mean_strain, parameters.spacing_m,
+                parameters.c11_Pa, parameters.c12_Pa, parameters.c44_Pa,
+                iterations=parameters.elastic_iterations)
+            _, directions, normals = rotated_system_fields(
+                systems, state.orientation_rad)
+            schmid = .5*(
+                np.einsum("...si,...sj->...sij", directions[..., :2], normals[..., :2])
+                +np.einsum("...si,...sj->...sij", normals[..., :2], directions[..., :2]))
         raw = np.einsum("...ij,...sij->...s", stress_tensor, schmid)
     else:
         raw = np.asarray(driving.resolved_stress_Pa, dtype=float)

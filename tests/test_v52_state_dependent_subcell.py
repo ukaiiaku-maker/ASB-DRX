@@ -157,3 +157,54 @@ def test_one_stalled_face_advances_other_on_same_clock():
     assert result.subcell_geometry.upper_right_m[0] < (
         state.subcell_geometry.upper_right_m[0])
     assert ledger["substeps"][0]["face_displacements_m"]["lower_x"] == 0.0
+
+
+def test_both_stalled_faces_are_identity_over_full_geometry_exposure():
+    state, data = physical_rectangle(32)
+    directions = {"lower_x": 1.0, "upper_x": -1.0}
+    args = fixture_args(state, data)
+    rates = state_dependent_face_rates(
+        state, directions, *args, quadrature_order=8)
+    for row in rates.values():
+        row["generalized_rate_s"] = 0.0
+        row["generalized_velocity_m_s"] = 0.0
+    with patch(
+            "full_model.production.state_dependent_subcell."
+            "state_dependent_face_rates", return_value=rates):
+        result, ledger = accepted_state_dependent_subcell_x_faces(
+            state, directions, *args, 3e-8, quadrature_order=8)
+    assert result is state
+    assert ledger["accepted"] and ledger["macro_complete"]
+    assert ledger["classification"] == (
+        "ALL_FACES_STALLED_IDENTITY_OVER_REMAINDER")
+    assert ledger["consumed_duration_s"] == 3e-8
+
+
+def test_rejected_trial_after_valid_prefix_reports_exact_partial_duration():
+    from full_model.production import state_dependent_subcell as module
+    state, data = physical_rectangle(32)
+    directions = {"lower_x": 1.0, "upper_x": -1.0}
+    args = fixture_args(state, data)
+    original = module.accepted_subcell_x_faces_shared_clock
+    calls = {"count": 0}
+
+    def accept_then_reject(*call_args, **call_kwargs):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            return original(*call_args, **call_kwargs)
+        current = call_args[0]
+        return current, {"accepted": False, "classification": "TEST_REJECTION"}
+
+    with patch(
+            "full_model.production.state_dependent_subcell."
+            "accepted_subcell_x_faces_shared_clock",
+            side_effect=accept_then_reject):
+        result, ledger = accepted_state_dependent_subcell_x_faces(
+            state, directions, *args, 1e-6, quadrature_order=8)
+    assert result is not state
+    assert ledger["accepted"] and ledger["accepted_prefix_valid"]
+    assert not ledger["macro_complete"]
+    assert 0.0 < ledger["consumed_duration_s"] < 1e-6
+    assert ledger["classification"] == (
+        "VALID_PARTIAL_PREFIX_JOINT_SUBSTEP_REJECTED")
+    assert not ledger["state_mutation_beyond_consumed_duration"]

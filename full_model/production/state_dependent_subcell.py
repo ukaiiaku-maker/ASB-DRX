@@ -229,10 +229,13 @@ def accepted_state_dependent_subcell_x_faces(
         if maximum_rate <= 0.0:
             return current, {
                 "operator": "state_dependent_shared_x_faces",
-                "accepted": False,
-                "classification": "STATE_DEPENDENT_ALL_FACES_STALLED",
+                "accepted": True,
+                "classification": "ALL_FACES_STALLED_IDENTITY_OVER_REMAINDER",
                 "requested_duration_s": float(dt_s),
-                "consumed_duration_s": elapsed,
+                "consumed_duration_s": float(dt_s),
+                "stationary_identity_duration_s": remaining,
+                "macro_complete": True,
+                "accepted_prefix_before_stall_s": elapsed,
                 "substeps": substeps,
                 "last_face_rates": rates,
             }
@@ -248,12 +251,18 @@ def accepted_state_dependent_subcell_x_faces(
             current, events, systems, topologies, driving, common_parameters,
             extensive_parameters, kinetics, sub_dt)
         if not ledger["accepted"]:
+            partial = elapsed > 0.0
             return current, {
                 "operator": "state_dependent_shared_x_faces",
-                "accepted": False,
-                "classification": "JOINT_STATE_DEPENDENT_SUBSTEP_REJECTED",
+                "accepted": partial,
+                "classification": (
+                    "VALID_PARTIAL_PREFIX_JOINT_SUBSTEP_REJECTED" if partial
+                    else "ATOMIC_JOINT_SUBSTEP_REJECTED_ROLLED_BACK"),
                 "requested_duration_s": float(dt_s),
                 "consumed_duration_s": elapsed,
+                "accepted_prefix_valid": partial,
+                "macro_complete": False,
+                "state_mutation_beyond_consumed_duration": False,
                 "substeps": substeps,
                 "last_face_rates": rates,
                 "rejected_joint_ledger": ledger,
@@ -264,6 +273,16 @@ def accepted_state_dependent_subcell_x_faces(
             "face_rates": rates,
             "joint_complete_energy_change_J_m3_cells": ledger[
                 "complete_energy_change_J_m3_cells"],
+            "elastic_energy_change_J_m3_cells": ledger[
+                "elastic_energy_change_J_m3_cells"],
+            "wall_energy_change_J_m3_cells": ledger[
+                "wall_energy_change_J_m3_cells"],
+            "chemical_reservoir_work_J": ledger[
+                "chemical_reservoir_work_J"],
+            "face_physical_event_counts": ledger[
+                "face_physical_event_counts"],
+            "signed_material_exchange_count": ledger[
+                "signed_material_exchange_count"],
             "face_displacements_m": ledger["face_displacements_m"],
             "heat_plus_complete_energy_residual_J_m3_cells": ledger[
                 "heat_plus_complete_energy_residual_J_m3_cells"],

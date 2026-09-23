@@ -53,6 +53,31 @@ def exp_floor_enthalpy_j(stress_pa, h0_j, critical_stress_pa, a, n, floor):
     return float(h0_j) * (ff + (1.0 - ff) * np.exp(-float(a) * ratio**float(n)))
 
 
+def exp_floor_activation_volume_m3(
+        stress_pa, h0_j, critical_stress_pa, a, n, floor):
+    """Return ``-d DeltaG*/d stress`` for the declared EXP-floor input.
+
+    Activation entropy is stress independent here, so this is also
+    ``-d DeltaH*/d stress``.  The result is an activation volume [m^3], not
+    the geometric event measure and not the signed complete event affinity.
+    """
+    stress = np.asarray(stress_pa, dtype=float)
+    values = (h0_j, critical_stress_pa, a, n, floor)
+    if (not np.all(np.isfinite(stress))
+            or not all(math.isfinite(float(value)) for value in values)):
+        raise ValueError("EXP-floor activation-volume inputs must be finite")
+    if n < 1.0 or critical_stress_pa <= 0.0 or h0_j < 0.0 or a < 0.0:
+        raise ValueError("invalid EXP-floor activation-volume parameter")
+    ff = min(max(float(floor), 0.0), 1.0)
+    positive = np.maximum(stress, 0.0)
+    ratio = positive/float(critical_stress_pa)
+    result = (float(h0_j)*(1.0-ff)*float(a)*float(n)
+              *np.exp(-float(a)*ratio**float(n))
+              *ratio**(float(n)-1.0)/float(critical_stress_pa))
+    result = np.where(stress > 0.0, result, 0.0)
+    return float(result) if result.ndim == 0 else result
+
+
 def free_barrier_j(enthalpy_j, temperature_k, entropy_over_kB):
     """Return ΔG*=ΔH*-TΔS* [J], with ΔS*/kB dimensionless."""
     values = (enthalpy_j, temperature_k, entropy_over_kB)
