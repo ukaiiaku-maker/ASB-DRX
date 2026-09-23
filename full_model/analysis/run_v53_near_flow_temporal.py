@@ -86,6 +86,7 @@ def main():
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--dt-s", type=float, default=4.8828125e-7)
+    parser.add_argument("--expected-interval", type=int, default=104)
     args = parser.parse_args()
     output = args.output_dir.resolve(); output.mkdir(parents=True, exist_ok=True)
     result_path = output/"near_flow_temporal.json"
@@ -94,8 +95,9 @@ def main():
         grid=128, length_m=3.2e-6, interface_width_m=4e-7,
         temperature_K=1100.0, child_line_fraction=.35)
     initial, metadata = load_stage(args.checkpoint, context)
-    if int(metadata["completed_intervals"]) != 104:
-        raise ValueError("V53 temporal audit requires retained interval 104")
+    if int(metadata["completed_intervals"]) != int(args.expected_interval):
+        raise ValueError(
+            "V53 temporal audit checkpoint interval differs from its declared parent")
     start_time = float(metadata["physical_time_s"])
     endpoint_drive = driving(
         128, float(metadata["initial_tensor_shear"]), metadata["protocol"],
