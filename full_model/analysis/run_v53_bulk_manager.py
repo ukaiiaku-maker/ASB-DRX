@@ -66,10 +66,11 @@ def load_state(path, root, n128_output, n192_output):
     return state
 
 
-def segment_wall_seconds(manifest):
+def segment_wall_seconds(manifest, after_interval=0):
     return float(sum(
         float(segment.get("wall_seconds", 0.0))
         for row in manifest.get("records", [])
+        if int(row.get("interval", 0)) > int(after_interval)
         for segment in row.get("segments", [])))
 
 
@@ -173,7 +174,9 @@ def main():
             if manifest_path.exists():
                 current = json.loads(manifest_path.read_text())
                 maximum = int(current["completed_intervals"])
-                spent = segment_wall_seconds(current)
+                # V52's accepted interval-32 prefix is inherited scientific
+                # history, not wall time spent from the V53 extension budget.
+                spent = segment_wall_seconds(current, after_interval=32)
                 recent = recent_segment_seconds(current)
                 projected = (None if recent is None else
                              recent*max(target-maximum, 0))
