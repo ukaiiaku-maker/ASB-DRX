@@ -1,0 +1,91 @@
+{
+  "checkpoint_sha256": {
+    "128": "4b123ea7e25c9819c7bb8fd339a61f7076ac3fa8493bc12a6959b06f0b20b7fb",
+    "192": "e89784719aace964e358c0b367d72d386b6abfdfa5f0d512d49821acfd7c5b2f"
+  },
+  "common_checkpoint_time_exact": true,
+  "comparison_interval": 32,
+  "comparison_preconditions": {
+    "all_preconditions_passed": true,
+    "completed_intervals_equal": true,
+    "endpoint_load_exact": true,
+    "load_elapsed_time_exact": true,
+    "macro_dt_exact": true,
+    "n128_initial_origin_checksum_matches_audit": true,
+    "n192_initial_origin_checksum_matches_audit": true,
+    "physical_time_exact": true,
+    "protocol_equal": true,
+    "strain_rate_exact": true
+  },
+  "generated_utc": "2026-09-23T05:27:13.236950+00:00",
+  "initialization_audit_sha256": "e3a34bf9e3e9bbab2a17dbf115d83a8f706f762e354ee0356c668c64aa740fba",
+  "integrated_signed_reservoir_relative_differences": {
+    "forest_minus_m2": 1.557889606657179e-06,
+    "forest_plus_m2": 1.557889606657179e-06,
+    "junction_m2": 0.0,
+    "mobile_minus_m2": 1.1942997411583489e-08,
+    "mobile_plus_m2": 1.1942997194746806e-08,
+    "wall_ordered_minus_m2": 0.03263272530226578,
+    "wall_ordered_plus_m2": 0.032632725302266706,
+    "wall_tangle_minus_m2": 0.0015683976795332678,
+    "wall_tangle_plus_m2": 0.001568397679533804
+  },
+  "interpretation": "mean-response increments are judged separately from ordered/Nye full-band structure; a common-band pass cannot hide fine-only content",
+  "physical_time_s": 1.562500000000001e-05,
+  "primary_all_below_5_percent": true,
+  "primary_increment_comparison": {
+    "engineering_plastic_shear_gamma_p": {
+      "n128_increment": 0.00016677148527667878,
+      "n192_increment": 0.00016677240974227912,
+      "relative_difference": 5.5432766233512006e-06
+    },
+    "mean_shear_stress_sigma_12_Pa": {
+      "n128_increment": 263578160.66184902,
+      "n192_increment": 263578078.29196262,
+      "relative_difference": 3.1250658981994393e-07
+    },
+    "temperature_mean_K": {
+      "n128_increment": 0.09327908240993565,
+      "n192_increment": 0.09327965672446226,
+      "relative_difference": 6.156910807453487e-06
+    },
+    "temperature_peak_K": {
+      "n128_increment": 0.11047748446503647,
+      "n192_increment": 0.11047810305308303,
+      "relative_difference": 5.599191418651086e-06
+    }
+  },
+  "route": "A_COMMON_ANALYTIC_PHYSICAL_INITIALIZATION",
+  "schema": "asb-drx/v52/analytic-common-history-spatial-estimate/v1",
+  "scope": "selected matched macro from independently evaluated common analytic physical initial fields; not an evolved-state transfer and not a full-history convergence certificate",
+  "source_shas": {
+    "128": "37065c25e02507da1bc25491574c3ef6fbb01966",
+    "192": "ee6eba55119ad2a282b8d14a17510979349e4909"
+  },
+  "spatial_structure": {
+    "beta_p": {
+      "common_band_half_width_32_relative_l2": 0.00010994423090482849,
+      "n128_rms": 7.957222539782832e-05,
+      "n192_fine_only_above_n128_nyquist_relative_l2": 7.298935611890624e-06,
+      "n192_rms": 7.957234310807765e-05
+    },
+    "family_nye": {
+      "common_band_half_width_32_relative_l2": 0.0038549148049882077,
+      "n128_rms": 10.990877147274883,
+      "n192_fine_only_above_n128_nyquist_relative_l2": 0.0035500414602601307,
+      "n192_rms": 10.989516999551585
+    },
+    "temperature_rise": {
+      "common_band_half_width_32_relative_l2": 0.00012470986427811772,
+      "n128_rms": 0.09441707272753921,
+      "n192_fine_only_above_n128_nyquist_relative_l2": 8.921818643457603e-06,
+      "n192_rms": 0.0944172216676567
+    },
+    "wall_ordered_plus": {
+      "common_band_half_width_32_relative_l2": 0.03443933813434892,
+      "n128_rms": 3181195293.810745,
+      "n192_fine_only_above_n128_nyquist_relative_l2": 0.0006411384814432652,
+      "n192_rms": 3096752576.1610928
+    }
+  }
+}

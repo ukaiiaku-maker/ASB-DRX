@@ -199,6 +199,11 @@ def new_or_resumed_state(path, primary_output, source):
                  "resume_count": 0, "state": "STARTING", "history": [],
                  "stages": {}}
     state["manager"] = process_identity(os.getpid())
+    # A recovered controller retains prior failures as history rather than as
+    # the current terminal status.
+    if state.get("state") == "COMPLETE":
+        state.pop("failure", None)
+        state.pop("failed_utc", None)
     return state
 
 
@@ -409,6 +414,7 @@ def main():
         persist(args.manager_state, state, "RUNNING_CANONICAL_REGRESSION")
         run_short([sys.executable, "-m", "pytest", "-q", "tests"], root, log)
         state["state"] = "COMPLETE"; state["completed_utc"] = utc()
+        state.pop("failure", None); state.pop("failed_utc", None)
         state["outputs"] = {name: {"path": str(path.resolve()),
                                           "sha256": digest(path)}
             for name, path in {"primary_manifest": primary_manifest,

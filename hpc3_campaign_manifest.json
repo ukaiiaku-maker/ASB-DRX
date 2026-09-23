@@ -2770,6 +2770,53 @@
       "strict_asb_claimed": false,
       "material_calibration_claimed": false,
       "unrelated_jobs_observed_and_not_touched": [41849, 76011, 76012, 45582]
+    },
+    {
+      "branch": "exp/full-v34-recovery-v52-manager-fix-20260922",
+      "classification": "PHYSICAL_FLOW_APPROACH_COMPLETE_MATCHED_N192_THROUGH_INTERVAL_32_GEOMETRY_OPTION_QUALIFIED_WITH_CLIMB_STRESS_HYPOTHESIS",
+      "current_source_lagb_claimed": false,
+      "drx_claimed": false,
+      "execution_location": "local",
+      "hpc3_jobs_submitted": 0,
+      "material_calibration_claimed": false,
+      "n128_latest_checkpoint_sha256": "8a6ccdfdbe3e2c8c7abbd952c78e75bbde53930c97117b8c23aaf683bd59c6ba",
+      "n192_latest_checkpoint_sha256": "e89784719aace964e358c0b367d72d386b6abfdfa5f0d512d49821acfd7c5b2f",
+      "purpose": "v52_faster_physical_continuation_and_matched_spatial_completion",
+      "run_id": "v52-local-completion-20260923",
+      "scientific_source_roles": {
+        "finalization_source": "ee6eba55119ad2a282b8d14a17510979349e4909",
+        "manager_sources": [
+          "4d2e29af787436e1ad8ef12973323d8175f5f413",
+          "d4f898249b281a607ca19a73748f5c308c842698",
+          "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00"
+        ],
+        "n128_frozen_numerical_source": "6f8df9b0ef7ba79f381f80eedb39c587fbdcf781",
+        "n192_numerical_paths_unchanged_across_analysis_commit": true,
+        "n192_stage_start_sources": {
+          "N192_TO_001": "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00",
+          "N192_TO_008": "ee6eba55119ad2a282b8d14a17510979349e4909",
+          "N192_TO_016": "ee6eba55119ad2a282b8d14a17510979349e4909",
+          "N192_TO_032": "ee6eba55119ad2a282b8d14a17510979349e4909"
+        }
+      },
+      "strict_asb_claimed": false,
+      "unrelated_jobs_observed_and_not_touched": [],
+      "verification": {
+        "completion_decision_sha256": "81d90926989a0b39071735a7a35213e48bb2680ba5b5d6b15ac07286e24e11fa",
+        "configured_tests_passed": 846,
+        "regression_wall_seconds": 333.47,
+        "v52_completion_manager_v2.json": "719b27047459c9a472e77706ac0240f15175f6869ae2123c0d004e99aad229c9",
+        "v52_continuation.json": "1adafcae9d67775f5e9ae37ab69a9e464bda5946d4c6d1a8684cc76640bb47c5",
+        "v52_laplacian_evolved_overlap.json": "af108bd4ef94bef066ea8c786c8e7f0a71f0642dc9c614b01f4958b30e2df2d2",
+        "v52_n128_loading_manifest.json": "582e9c4c0560225672158b803a884ca63d781cb8f93906c04578dec58899e2b2",
+        "v52_n192_loading_manifest.json": "e316e61612f2701e673bc845efb165de13095f9a7c94f78a408b097b17bc770b",
+        "v52_spatial_comparison_001.json": "f12a2b32394b13259d94f281530bae8e8dc1b49b81d36194c692162ba6d7a3d5",
+        "v52_spatial_comparison_008.json": "8af12c16f8508968faeff43c775e69a121f1c0d916fe591b7b477994a8448c58",
+        "v52_spatial_comparison_016.json": "2185442a43c1b105f1256d9d61fb850e492d3f6762037080ac701521d2f9a080",
+        "v52_spatial_comparison_032.json": "a33669d783f014b79d106cb786949e14c678ca653f32d98066dda998db6fc941",
+        "v52_spatial_initialization.json": "e3a34bf9e3e9bbab2a17dbf115d83a8f706f762e354ee0356c668c64aa740fba",
+        "v52_state_dependent_geometry.json": "2958c5cc89d8c9d8478e88a3791ca3c0af7ec9e8243bd5bd1bcc8e52f8a77423"
+      }
     }
   ]
 }

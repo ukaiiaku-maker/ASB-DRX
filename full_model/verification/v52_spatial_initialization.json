@@ -1,0 +1,2143 @@
+{
+  "companion_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/initial.npz",
+  "companion_checkpoint_sha256": "dc369de068355101b21fcbc796f30dc4469684c76f00fa2be5ff44976c981cc0",
+  "companion_grid": 192,
+  "constitutive_and_thermal_parameters": {
+    "extensive_ordering": {
+      "critical_stress_Pa": 1500000000.0,
+      "disordered_excess_J_m": 3e-10,
+      "event_length_m": 2.5e-09,
+      "exp_a": 2.2,
+      "exp_floor": 0.05,
+      "exp_n": 2.5,
+      "forest_excess_J_m": 1e-10,
+      "junction_excess_J_m": 2e-10,
+      "line_energy_J_m": 1.5e-09,
+      "maximum_fraction_per_step": 0.15,
+      "negative_barrier_mode": "drag",
+      "nye_match_coefficient_J_m": 0.0,
+      "ordered_excess_J_m": 1e-10,
+      "ordered_gradient_J_m3": 1e-33,
+      "ordering_asymptotic_certificate_mode": "disabled",
+      "ordering_asymptotic_maximum_endpoint_distance_relative": 0.05,
+      "ordering_asymptotic_minimum_attempt_exposure": 0.001000001,
+      "ordering_attempt_frequency_s": 100000000.0,
+      "ordering_barrier_eV": 0.2,
+      "ordering_drag_rate_s": Infinity,
+      "ordering_entropy_over_kB": 0.0,
+      "ordering_finite_absolute_tolerance": 2e-08,
+      "ordering_finite_max_rejections": 24,
+      "ordering_finite_relative_tolerance": 0.0002,
+      "ordering_finite_time_backend": "matrix_free_adaptive_rosenbrock_euler",
+      "ordering_implicit_max_nfev": 100,
+      "ordering_implicit_residual_tolerance": 2e-09,
+      "ordering_integration_method": "implicit_backward_euler",
+      "ordering_internal_max_substeps": 8192,
+      "ordering_internal_substep_s": 5e-11,
+      "ordering_krylov_diagonal_preconditioner": true,
+      "ordering_matrix_free_max_attempt_exposure": 0.05,
+      "ordering_stationary_remainder_relative_tolerance": 1e-08,
+      "rho_log_coefficient_J_m": 8e-11,
+      "rho_reference_m2": 500000000000000.0,
+      "spacing_m": 1.6666666666666667e-08
+    },
+    "topology_kinetics": {
+      "critical_stress_Pa": 1000000000.0,
+      "exp_a": 2.2,
+      "exp_floor": 0.05,
+      "exp_n": 2.5,
+      "junction_enthalpy_J": 3.204353268e-20,
+      "junction_process": {
+        "attempt_frequency_s": 10000000000.0,
+        "drag_rate_s": Infinity,
+        "entropy_over_kB": 0.0,
+        "name": "junction",
+        "negative_barrier_mode": "drag"
+      },
+      "maximum_junction_fraction_per_step": 0.1
+    },
+    "wall": {
+      "activation_entropy_kB": 0.0,
+      "annihilation_barrier_eV": 1.2,
+      "attempt_frequency_s": 10000000.0,
+      "bath_rate_s": 0.0,
+      "bath_temperature_K": 1100.0,
+      "bound_active_tolerance": 1e-12,
+      "burgers_m": 2.48e-10,
+      "c11_Pa": 228000000000.0,
+      "c12_Pa": 132000000000.0,
+      "c44_Pa": 116500000000.0,
+      "capture_deposition_length_m": 4e-07,
+      "correlation_energy_J_m": 8e-11,
+      "critical_stress_Pa": 1500000000.0,
+      "elastic_iterations": 3,
+      "enforce_multiplication_energy_budget": true,
+      "exp_a": 2.2,
+      "exp_floor": 0.05,
+      "exp_n": 2.5,
+      "extensive_wall_partition_enabled": false,
+      "flow_temperature_override_K": null,
+      "forest_energy_J_m": 1e-10,
+      "glide_barrier_eV": 1.9,
+      "glide_speed_attempt_m_s": 2000.0,
+      "junction_barrier_eV": 0.85,
+      "junction_energy_J_m": 2e-10,
+      "line_energy_J_m": 1.5e-09,
+      "lock_barrier_eV": 0.85,
+      "maximum_fraction_per_step": 0.15,
+      "mobile_correlation_diffusivity_m2_s": 0.0,
+      "multi_hit_annihilation_log_factor": -0.5,
+      "multi_hit_collision_scale": 1.0,
+      "multi_hit_enabled": false,
+      "multi_hit_junction_log_factor": 1.0,
+      "multi_hit_lock_log_factor": 0.0,
+      "multi_hit_relaxation_s": 1e-05,
+      "multi_hit_wall_log_factor": 1.0,
+      "multiplication_coefficient": 10.0,
+      "order_barrier_eV": 0.7,
+      "orientation_spin_weight": 1.0,
+      "polarization_density_epsilon_ratio": 1e-12,
+      "reaction_energy_scale_J_m": 1e-09,
+      "recovery_temperature_override_K": null,
+      "rho_reference_m2": 500000000000000.0,
+      "spacing_m": 1.6666666666666667e-08,
+      "taylor_alpha": 0.3,
+      "taylor_junction_weight": 1.0,
+      "taylor_regularization_Pa": 20000000.0,
+      "taylor_wall_weight": 2.0,
+      "thermal_diffusivity_m2_s": 0.0,
+      "transport_scheme": "upwind",
+      "unlock_barrier_eV": 1.05,
+      "volumetric_heat_capacity_J_m3_K": 3500000.0,
+      "wall_absent_penalty_J_m3": 400000.0,
+      "wall_barrier_eV": 0.8,
+      "wall_density_center_ratio": 1.3,
+      "wall_density_width_ratio": 0.3,
+      "wall_gate_form": "joint_rational",
+      "wall_gate_half_density_ratio": 0.2,
+      "wall_gate_half_polarization": 0.25,
+      "wall_gate_joint_half": 0.08,
+      "wall_order_amplitude_J_m3": 1000000.0,
+      "wall_order_barrier_J_m3": 200000.0,
+      "wall_order_enabled": false,
+      "wall_order_gradient_J_m": 2e-07,
+      "wall_partition_J_m": 2e-10,
+      "wall_target_m2": 400000000000000.0
+    }
+  },
+  "generated_utc": "2026-09-22T22:56:25.086461+00:00",
+  "n128_complete_restart_payload_identity": {
+    "all_arrays_and_owner_metadata_exact": true,
+    "field_count": 177,
+    "fields": {
+      "common__boundary_junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__boundary_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          4
+        ]
+      },
+      "common__boundary_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          4
+        ]
+      },
+      "common__child__alignment__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__junction_alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1,
+          3
+        ]
+      },
+      "common__child__alignment__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__wall_curvature_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__alignment__wall_curvature_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__alignment__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__alignment__wall_turning_nodes_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__alignment__wall_turning_nodes_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__child__beta_p": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      "common__child__density__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__child__density__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__density__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__family_nye_m1": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3,
+          3
+        ]
+      },
+      "common__child__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__child__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__multi_hit_coordination": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__child__orientation_rad": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__child__slip": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__temperature_K": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__child__wall_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__child__wall_order": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__child__wall_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__interface_nye_m1": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      "common__parent__alignment__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__junction_alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1,
+          3
+        ]
+      },
+      "common__parent__alignment__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__wall_curvature_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__alignment__wall_curvature_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__alignment__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__alignment__wall_turning_nodes_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__alignment__wall_turning_nodes_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__parent__beta_p": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      "common__parent__density__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__parent__density__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__density__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__family_nye_m1": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3,
+          3
+        ]
+      },
+      "common__parent__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__parent__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__multi_hit_coordination": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__parent__orientation_rad": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__parent__slip": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__temperature_K": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__parent__wall_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__parent__wall_order": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__parent__wall_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__alignment__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__junction_alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1,
+          3
+        ]
+      },
+      "common__wake__alignment__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__wall_curvature_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__alignment__wall_curvature_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__alignment__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__alignment__wall_turning_nodes_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__alignment__wall_turning_nodes_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "common__wake__beta_p": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      "common__wake__density__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__wake__density__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__density__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__family_nye_m1": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3,
+          3
+        ]
+      },
+      "common__wake__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "common__wake__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__multi_hit_coordination": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__wake__orientation_rad": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__wake__slip": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__temperature_K": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__wake__wall_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "common__wake__wall_order": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "common__wake__wall_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "eta": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          2
+        ]
+      },
+      "i3_metadata_json": {
+        "dtype": "<U21102",
+        "exact": true,
+        "present_in_both": true,
+        "shape": []
+      },
+      "mechanical__v24_alignment__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__junction_alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__wall_curvature_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_alignment__wall_curvature_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_alignment__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_alignment__wall_turning_nodes_minus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_alignment__wall_turning_nodes_plus_m3": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__alignment_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3
+        ]
+      },
+      "mechanical__v24_common__beta_p": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      "mechanical__v24_common__family_nye_m1": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4,
+          3,
+          3
+        ]
+      },
+      "mechanical__v24_common__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "mechanical__v24_common__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__multi_hit_coordination": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "mechanical__v24_common__orientation_rad": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "mechanical__v24_common__slip": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__temperature_K": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "mechanical__v24_common__wall_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_common__wall_order": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "mechanical__v24_common__wall_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__forest_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__forest_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__junction_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          1
+        ]
+      },
+      "mechanical__v24_density__mobile_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__mobile_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__wall_ordered_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__wall_ordered_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__wall_tangle_minus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "mechanical__v24_density__wall_tangle_plus_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "runtime__maximum_b_fraction": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "runtime__minimum_b_fraction": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "runtime__previous_phi": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "runtime__reference_b_fraction": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__boundary_line_density_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__boundary_signed_density_m2": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__chi": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__child_forest": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__child_rm": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__child_rp": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__child_wall": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__cleanup_max": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__current_child_fraction": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__maximum_swept_fraction": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__parent_forest": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__parent_rm": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__parent_rp": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__parent_wall": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__processed_max": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      },
+      "sparse__wake_forest": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__wake_rm": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__wake_rp": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128,
+          4
+        ]
+      },
+      "sparse__wake_wall": {
+        "dtype": "float64",
+        "exact": true,
+        "maximum_absolute_difference": 0.0,
+        "present_in_both": true,
+        "shape": [
+          128,
+          128
+        ]
+      }
+    }
+  },
+  "n128_initializer_identity": {
+    "beta_p_maximum_absolute": 0.0,
+    "eta_maximum_absolute": 0.0,
+    "mobile_plus_maximum_absolute_m2": 0.0,
+    "orientation_maximum_absolute_rad": 0.0,
+    "temperature_maximum_absolute_K": 0.0
+  },
+  "n128_stage_metadata_identity": {
+    "completed_intervals_zero": true,
+    "grid_128": true,
+    "macro_dt_exact": true,
+    "physical_time_zero": true,
+    "records_empty_or_absent": true
+  },
+  "physical_configuration": {
+    "child_line_fraction": 0.35,
+    "continuum_representation_length_m": 4e-07,
+    "deterministic_physical_fields": true,
+    "grid_index_noise_used": false,
+    "interface_width_m": 4e-07,
+    "length_m": 3.2e-06,
+    "represented_thickness_m": 4.96e-10,
+    "spacing_m": 1.6666666666666667e-08,
+    "temperature_K": 1100.0
+  },
+  "retained_metadata": {
+    "completed_intervals": 0,
+    "grid": 128,
+    "macro_dt_s": 4.8828125e-07,
+    "physical_time_s": 0.0,
+    "schema": "asb-drx/v39/transactional-common-horizon/v1",
+    "source_role": "fresh current-source state; no inherited V46 trajectory",
+    "stage": "V49_FRESH_CURRENT_SOURCE_INITIAL"
+  },
+  "retained_n128_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v49-20260921/full_model/production/results-local/v49-physical/n128/initial.npz",
+  "retained_n128_sha256": "3c8dafd284e88a382b9b6b6a597d580108c29c600b3e740c1ae9c72de4a6ea32",
+  "route": "A_COMMON_ANALYTIC_PHYSICAL_INITIALIZATION",
+  "schema": "asb-drx/v52/analytic-spatial-initialization-audit/v1",
+  "scope": "same analytic history origin; no evolved-state interpolation or remeshing event",
+  "source_sha": "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00"
+}

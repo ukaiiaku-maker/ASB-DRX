@@ -1,0 +1,102 @@
+{
+  "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v49-20260921/full_model/production/results-local/v49-physical/n128/loading/checkpoint_000052.npz",
+  "checkpoint_sha256": "6c38c6a4ac4cad833b10e1420c7f8b734e622c8a1f6cf5dbb7fe55d51feb9470",
+  "front_enabled": false,
+  "fused_vs_composed": {
+    "beta_p_relative_l2": 0.0,
+    "eta_relative_l2": 0.0,
+    "family_nye_relative_l2": 0.0,
+    "inventory_total_relative_differences": {
+      "forest_minus_m2": 0.0,
+      "forest_plus_m2": 0.0,
+      "junction_m2": 0.0,
+      "mobile_minus_m2": 0.0,
+      "mobile_plus_m2": 0.0,
+      "wall_ordered_minus_m2": 0.0,
+      "wall_ordered_plus_m2": 2.1925513017615954e-16,
+      "wall_tangle_minus_m2": 0.0,
+      "wall_tangle_plus_m2": 0.0
+    },
+    "observable_differences": {
+      "engineering_plastic_shear_gamma_p": 0.0,
+      "engineering_total_shear_gamma": 0.0,
+      "mean_shear_stress_sigma_12_Pa": 0.0,
+      "plastic_distortion_beta_01": 0.0,
+      "plastic_distortion_beta_10": 0.0,
+      "plastic_tensor_strain_e_p12": 0.0,
+      "temperature_mean_K": 0.0,
+      "temperature_peak_K": 0.0,
+      "total_strain_tensor_e12": 0.0
+    },
+    "temperature_increment_relative_l2": 0.0,
+    "wall_speedup": 2.702151205965134
+  },
+  "generated_utc": "2026-09-22T19:52:15.252423+00:00",
+  "physical_time_end_s": 2.587890625000002e-05,
+  "physical_time_start_s": 2.539062500000002e-05,
+  "rows": {
+    "composed_oracle": {
+      "accepted_duration_s": 4.8828125e-07,
+      "discarded_shortened_candidates": 0,
+      "first_law_residual_J": -5.806016262426647e-28,
+      "inventory_totals": {
+        "forest_minus_m2": 1.924899630803913e+18,
+        "forest_plus_m2": 1.924899630803913e+18,
+        "junction_m2": 0.0,
+        "mobile_minus_m2": 3.3877095630053924e+18,
+        "mobile_plus_m2": 3.3877095630053924e+18,
+        "wall_ordered_minus_m2": 71264010960410.23,
+        "wall_ordered_plus_m2": 71264010960410.2,
+        "wall_tangle_minus_m2": 7361406101279048.0,
+        "wall_tangle_plus_m2": 7361406101279051.0
+      },
+      "observables": {
+        "engineering_plastic_shear_gamma_p": 0.000623504413488673,
+        "engineering_total_shear_gamma": 0.025175781250000005,
+        "mean_shear_stress_sigma_12_Pa": 2187607866.1331596,
+        "plastic_distortion_beta_01": 1.4513477886512628e-10,
+        "plastic_distortion_beta_10": 0.0006235042683538941,
+        "plastic_tensor_strain_e_p12": 0.0003117522067443365,
+        "temperature_mean_K": 1100.371686598126,
+        "temperature_peak_K": 1100.4398731511958,
+        "total_strain_tensor_e12": 0.012587890625000002
+      },
+      "ordering_internal_substeps": null,
+      "ordering_linear_iterations": 6041,
+      "wall_seconds": 552.5355406398885
+    },
+    "fused": {
+      "accepted_duration_s": 4.8828125e-07,
+      "discarded_shortened_candidates": 0,
+      "first_law_residual_J": -5.806016262426647e-28,
+      "inventory_totals": {
+        "forest_minus_m2": 1.924899630803913e+18,
+        "forest_plus_m2": 1.924899630803913e+18,
+        "junction_m2": 0.0,
+        "mobile_minus_m2": 3.3877095630053924e+18,
+        "mobile_plus_m2": 3.3877095630053924e+18,
+        "wall_ordered_minus_m2": 71264010960410.23,
+        "wall_ordered_plus_m2": 71264010960410.22,
+        "wall_tangle_minus_m2": 7361406101279048.0,
+        "wall_tangle_plus_m2": 7361406101279051.0
+      },
+      "observables": {
+        "engineering_plastic_shear_gamma_p": 0.000623504413488673,
+        "engineering_total_shear_gamma": 0.025175781250000005,
+        "mean_shear_stress_sigma_12_Pa": 2187607866.1331596,
+        "plastic_distortion_beta_01": 1.4513477886512628e-10,
+        "plastic_distortion_beta_10": 0.0006235042683538941,
+        "plastic_tensor_strain_e_p12": 0.0003117522067443365,
+        "temperature_mean_K": 1100.371686598126,
+        "temperature_peak_K": 1100.4398731511958,
+        "total_strain_tensor_e12": 0.012587890625000002
+      },
+      "ordering_internal_substeps": null,
+      "ordering_linear_iterations": 6088,
+      "wall_seconds": 204.47987493081018
+    }
+  },
+  "schema": "asb-drx/v52/fused-laplacian-evolved-overlap/v1",
+  "source_sha": "e05512018701462ba870549b2fc7fda7d3856516",
+  "subcell_geometry_enabled": false
+}

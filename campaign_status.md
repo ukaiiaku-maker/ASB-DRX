@@ -2027,3 +2027,33 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Canonical regression: 823 tests pass. Classification:
   `EVENT_MEASURE_AND_GEOMETRY_QUALIFIED_BULK_PAIR_COMPLETE_SPATIAL_REFINEMENT_OPEN`.
   DRX, persistent LAGB, strict ASB, and material calibration remain unclaimed.
+
+## Directive v52 faster continuation and matched spatial completion (2026-09-23)
+
+- The exact fused ordering Laplacian preserves the historical composed
+  operator and gives a 2.70215x evolved-macro speedup on this host. Selected
+  fields/observables are exact and reservoir totals agree to 2.19e-16; the
+  result is not generalized to every reservoir field or history.
+- Frozen-source n128 loading completes 104 intervals at 50.78125 us. The
+  endpoint has 2.301776 GPa stress, 0.004322625 plastic shear, 2.77858 K mean
+  heating, and 197.768/s last-interval plastic rate. The descriptive
+  five-interval 80%-rate flag passes; stress is still maximal at the endpoint,
+  so no peak is resolved.
+- A direct analytic-origin n192 history reaches interval 32 (15.625 us) through
+  one retained prefix. Matched interval 1/8/16/32 preconditions and selected
+  mean increments pass. At interval 32, common-band differences are 0.0110%
+  beta_p, 0.3855% family Nye, 0.0125% temperature rise, and 3.4439%
+  wall-ordered-plus. Later n128 behavior is not spatially qualified.
+- The initializer is exact across all 177 restart fields and initial clock/load
+  metadata. n128/n192 final checkpoint checksums verify.
+- State-dependent shared-face chemistry retains Burgers sign, supports one
+  stalled face, converges on unequal heterogeneous face rates, and restarts
+  exactly across a minimal geometry--Mura/ordering/thermal alternation. The
+  resolved glide stress remains an explicit climb-activation hypothesis, and
+  the tested elastic geometry increment is zero.
+- Recovery-capable orchestration passed its fake controls and recovered a
+  pre-evolution n192 metadata defect. The final canonical suite passes 846
+  tests in 333.47 s. Classification:
+  `PHYSICAL_FLOW_APPROACH_COMPLETE_MATCHED_N192_THROUGH_INTERVAL_32_GEOMETRY_OPTION_QUALIFIED_WITH_CLIMB_STRESS_HYPOTHESIS`.
+  Report: `full_model/docs/v52_decision_report.md`. DRX, persistent LAGB,
+  strict ASB, and material calibration remain unclaimed.

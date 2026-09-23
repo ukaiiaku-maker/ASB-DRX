@@ -1,0 +1,2298 @@
+{
+  "completed_intervals": 32,
+  "cumulative_external_work_J": 3.041115658104706e-14,
+  "generated_utc": "2026-09-23T05:27:08.322937+00:00",
+  "grid": 192,
+  "initial_internal_energy_J": 9.750306805688536e-14,
+  "initial_tensor_shear": 0.01,
+  "latest_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000032.npz",
+  "latest_checkpoint_sha256": "e89784719aace964e358c0b367d72d386b6abfdfa5f0d512d49821acfd7c5b2f",
+  "load_origin_time_s": 0.0,
+  "macro_dt_s": 4.8828125e-07,
+  "physical_time_s": 1.562500000000001e-05,
+  "protocol": "continued_deformation",
+  "protocol_transitions": [],
+  "records": [
+    {
+      "cumulative_external_work_J": 8.859905915195361e-16,
+      "cumulative_first_law_residual_J": 1.262177448353619e-29,
+      "cumulative_internal_energy_change_J": 8.859905915195488e-16,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.156229117898585e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.137834789450846e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.6176658115886872e-17
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010048828125000001
+          ],
+          [
+            0.010048828125000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 1.7784975879725048e-06,
+        "engineering_total_shear_gamma": 0.020097656250000002,
+        "mean_shear_stress_sigma_12_Pa": 1790542707.739911,
+        "plastic_distortion_beta_01": 0.0,
+        "plastic_distortion_beta_10": 1.7784975879725048e-06,
+        "plastic_tensor_strain_e_p12": 8.892487939862524e-07,
+        "temperature_mean_K": 1100.0009099952588,
+        "temperature_peak_K": 1100.001089453984,
+        "total_strain_tensor_e12": 0.010048828125000001
+      },
+      "interval": 1,
+      "load_elapsed_time_s": 4.8828125e-07,
+      "physical_time_end_s": 4.8828125e-07,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 8.859905915195488e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 2.44140625e-07,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 438.92147595994174
+            }
+          ],
+          "external_work_J": 8.859905915195361e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 8.859905915195488e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 1.262177448353619e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 5077,
+          "physical_time_end_s": 4.8828125e-07,
+          "physical_time_start_s": 0.0,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 440.24785969685763
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.776215976141078e-15,
+      "cumulative_first_law_residual_J": 1.262177448353619e-29,
+      "cumulative_internal_energy_change_J": 1.7762159761410907e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.156188186439484e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.225137470407737e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 3.341616462763176e-17
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.01009765625
+          ],
+          [
+            0.01009765625,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 3.665152781137309e-06,
+        "engineering_total_shear_gamma": 0.0201953125,
+        "mean_shear_stress_sigma_12_Pa": 1799075778.6372004,
+        "plastic_distortion_beta_01": 1.2874225819602037e-17,
+        "plastic_distortion_beta_10": 3.665152781124435e-06,
+        "plastic_tensor_strain_e_p12": 1.8325763905686545e-06,
+        "temperature_mean_K": 1100.0018797795663,
+        "temperature_peak_K": 1100.0022497161285,
+        "total_strain_tensor_e12": 0.01009765625
+      },
+      "interval": 2,
+      "load_elapsed_time_s": 9.765625e-07,
+      "physical_time_end_s": 9.765625e-07,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 8.90225384621542e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 7.32421875e-07,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 657.7853540999349
+            }
+          ],
+          "external_work_J": 8.90225384621542e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 8.90225384621542e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 0.0,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 10083,
+          "physical_time_end_s": 9.765625e-07,
+          "physical_time_start_s": 4.8828125e-07,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 659.0708844040055
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.6706712223054604e-15,
+      "cumulative_first_law_residual_J": -6.310887241768094e-29,
+      "cumulative_internal_energy_change_J": 2.6706712223053973e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.156146755640326e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.312749614332744e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 5.179140234100759e-17
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010146484375
+          ],
+          [
+            0.010146484375,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 5.666830158682741e-06,
+        "engineering_total_shear_gamma": 0.02029296875,
+        "mean_shear_stress_sigma_12_Pa": 1807598601.0578613,
+        "plastic_distortion_beta_01": 7.125055930230734e-17,
+        "plastic_distortion_beta_10": 5.66683015861149e-06,
+        "plastic_tensor_strain_e_p12": 2.8334150793413704e-06,
+        "temperature_mean_K": 1100.0029134528424,
+        "temperature_peak_K": 1100.003485554114,
+        "total_strain_tensor_e12": 0.010146484375
+      },
+      "interval": 3,
+      "load_elapsed_time_s": 1.46484375e-06,
+      "physical_time_end_s": 1.46484375e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 8.944552461643066e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.220703125e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 827.1196100588422
+            }
+          ],
+          "external_work_J": 8.944552461643824e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 8.944552461643824e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -7.573064690121713e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13014,
+          "physical_time_end_s": 1.46484375e-06,
+          "physical_time_start_s": 9.765625e-07,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 828.4739565670025
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 3.5693510854174306e-15,
+      "cumulative_first_law_residual_J": 2.524354896707238e-29,
+      "cumulative_internal_energy_change_J": 3.569351085417456e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.156104700730341e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.400662992071387e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 7.137954297662985e-17
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.0101953125
+          ],
+          [
+            0.0101953125,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 7.790831721966623e-06,
+        "engineering_total_shear_gamma": 0.020390625,
+        "mean_shear_stress_sigma_12_Pa": 1816110524.3935733,
+        "plastic_distortion_beta_01": 2.202363506016782e-16,
+        "plastic_distortion_beta_10": 7.790831721746386e-06,
+        "plastic_tensor_strain_e_p12": 3.895415860983312e-06,
+        "temperature_mean_K": 1100.0040153562752,
+        "temperature_peak_K": 1100.0048020578258,
+        "total_strain_tensor_e12": 0.0101953125
+      },
+      "interval": 4,
+      "load_elapsed_time_s": 1.953125e-06,
+      "physical_time_end_s": 1.953125e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 8.986798631120585e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.708984375e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 786.2859759770799
+            }
+          ],
+          "external_work_J": 8.986798631119702e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 8.986798631120585e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 8.835242138475332e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 12555,
+          "physical_time_end_s": 1.953125e-06,
+          "physical_time_start_s": 1.46484375e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 787.5895493079443
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 4.472249987930281e-15,
+      "cumulative_first_law_residual_J": -2.524354896707238e-29,
+      "cumulative_internal_energy_change_J": 4.4722499879302554e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.156061973492657e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.488868820284619e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 9.226289059479228e-17
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010244140625
+          ],
+          [
+            0.010244140625,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 1.0044923324453377e-05,
+        "engineering_total_shear_gamma": 0.02048828125,
+        "mean_shear_stress_sigma_12_Pa": 1824610856.706791,
+        "plastic_distortion_beta_01": 5.208545501856589e-16,
+        "plastic_distortion_beta_10": 1.0044923323932523e-05,
+        "plastic_tensor_strain_e_p12": 5.022461662226689e-06,
+        "temperature_mean_K": 1100.0051901197635,
+        "temperature_peak_K": 1100.0062046602006,
+        "total_strain_tensor_e12": 0.010244140625
+      },
+      "interval": 5,
+      "load_elapsed_time_s": 2.44140625e-06,
+      "physical_time_end_s": 2.44140625e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.028989025127996e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 2.1972656250000003e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 769.5625220260117
+            }
+          ],
+          "external_work_J": 9.0289890251285e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.0289890251285e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -5.048709793414476e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 11881,
+          "physical_time_end_s": 2.44140625e-06,
+          "physical_time_start_s": 1.953125e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 770.9606652639341
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 5.3793619982338094e-15,
+      "cumulative_first_law_residual_J": -2.271919407036514e-28,
+      "cumulative_internal_energy_change_J": 5.379361998233582e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.156018546130474e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.577357726035624e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.1452927075024764e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010292968750000001
+          ],
+          [
+            0.010292968750000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 1.2437362415893468e-05,
+        "engineering_total_shear_gamma": 0.020585937500000002,
+        "mean_shear_stress_sigma_12_Pa": 1833098862.2587438,
+        "plastic_distortion_beta_01": 1.0542955999505826e-15,
+        "plastic_distortion_beta_10": 1.2437362414839173e-05,
+        "plastic_tensor_strain_e_p12": 6.218681207946734e-06,
+        "temperature_mean_K": 1100.0064426838117,
+        "temperature_peak_K": 1100.0076991592282,
+        "total_strain_tensor_e12": 0.010292968750000001
+      },
+      "interval": 6,
+      "load_elapsed_time_s": 2.9296875e-06,
+      "physical_time_end_s": 2.9296875e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.071120103033268e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 2.685546875e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 680.6880962271243
+            }
+          ],
+          "external_work_J": 9.071120103035287e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.071120103035287e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -2.0194839173657902e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 10223,
+          "physical_time_end_s": 2.9296875e-06,
+          "physical_time_start_s": 2.44140625e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 682.220554941101
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 6.29068080828571e-15,
+      "cumulative_first_law_residual_J": -1.7670484276950664e-28,
+      "cumulative_internal_energy_change_J": 6.290680808285534e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1559744049329555e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.666119709482894e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.3827238752701786e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010341796875
+          ],
+          [
+            0.010341796875,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 1.4976927119748288e-05,
+        "engineering_total_shear_gamma": 0.02068359375,
+        "mean_shear_stress_sigma_12_Pa": 1841573758.9186301,
+        "plastic_distortion_beta_01": 1.9271674458403694e-15,
+        "plastic_distortion_beta_10": 1.497692711782112e-05,
+        "plastic_tensor_strain_e_p12": 7.488463559874144e-06,
+        "temperature_mean_K": 1100.007778319611,
+        "temperature_peak_K": 1100.0092917411416,
+        "total_strain_tensor_e12": 0.010341796875
+      },
+      "interval": 7,
+      "load_elapsed_time_s": 3.41796875e-06,
+      "physical_time_end_s": 3.41796875e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.113188100519514e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 3.1738281250000003e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 968.8537531781476
+            }
+          ],
+          "external_work_J": 9.11318810051901e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.113188100519514e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 5.048709793414476e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13558,
+          "physical_time_end_s": 3.41796875e-06,
+          "physical_time_start_s": 2.9296875e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 970.4554066238925
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 7.206199709929904e-15,
+      "cumulative_first_law_residual_J": -3.155443620884047e-28,
+      "cumulative_internal_energy_change_J": 7.206199709929589e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155929535035642e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.755144104639062e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.635922075067133e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010390625
+          ],
+          [
+            0.010390625,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 1.76729466554097e-05,
+        "engineering_total_shear_gamma": 0.02078125,
+        "mean_shear_stress_sigma_12_Pa": 1850034715.453003,
+        "plastic_distortion_beta_01": 3.27827140792655e-15,
+        "plastic_distortion_beta_10": 1.767294665213143e-05,
+        "plastic_tensor_strain_e_p12": 8.83647332770485e-06,
+        "temperature_mean_K": 1100.009202650642,
+        "temperature_peak_K": 1100.0109890048268,
+        "total_strain_tensor_e12": 0.010390625
+      },
+      "interval": 8,
+      "load_elapsed_time_s": 3.90625e-06,
+      "physical_time_end_s": 3.90625e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.155189016440553e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 3.662109375e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 822.0116412960924
+            }
+          ],
+          "external_work_J": 9.155189016441941e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.155189016441941e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -1.3883951931889808e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 11206,
+          "physical_time_end_s": 3.90625e-06,
+          "physical_time_start_s": 3.41796875e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 823.5209801800083
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 8.125911569838607e-15,
+      "cumulative_first_law_residual_J": -6.310887241768094e-29,
+      "cumulative_internal_energy_change_J": 8.125911569838544e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1558839237018865e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.844419538164244e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.905953434975984e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010439453125
+          ],
+          [
+            0.010439453125,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 2.0535333107318932e-05,
+        "engineering_total_shear_gamma": 0.02087890625,
+        "mean_shear_stress_sigma_12_Pa": 1858480848.6951375,
+        "plastic_distortion_beta_01": 5.285284980317702e-15,
+        "plastic_distortion_beta_10": 2.0535333102033646e-05,
+        "plastic_tensor_strain_e_p12": 1.0267666553659466e-05,
+        "temperature_mean_K": 1100.010721674259,
+        "temperature_peak_K": 1100.0127979874694,
+        "total_strain_tensor_e12": 0.010439453125
+      },
+      "interval": 9,
+      "load_elapsed_time_s": 4.3945312500000005e-06,
+      "physical_time_end_s": 4.3945312500000005e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.19711859908955e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 4.150390625e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 882.1973425990436
+            }
+          ],
+          "external_work_J": 9.197118599087025e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.19711859908955e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 2.524354896707238e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13064,
+          "physical_time_end_s": 4.3945312500000005e-06,
+          "physical_time_start_s": 3.90625e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 883.8710140669718
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 9.04980880302263e-15,
+      "cumulative_first_law_residual_J": -1.3883951931889808e-28,
+      "cumulative_internal_energy_change_J": 9.049808803022492e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155837567558867e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 9.933933886175314e-14,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 2.1939545271386685e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.01048828125
+          ],
+          [
+            0.01048828125,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 2.3574614531725405e-05,
+        "engineering_total_shear_gamma": 0.0209765625,
+        "mean_shear_stress_sigma_12_Pa": 1866911220.595223,
+        "plastic_distortion_beta_01": 8.176348982640081e-15,
+        "plastic_distortion_beta_10": 2.3574614523549057e-05,
+        "plastic_tensor_strain_e_p12": 1.1787307265862702e-05,
+        "temperature_mean_K": 1100.0123417840894,
+        "temperature_peak_K": 1100.0147261914567,
+        "total_strain_tensor_e12": 0.01048828125
+      },
+      "interval": 10,
+      "load_elapsed_time_s": 4.882812500000001e-06,
+      "physical_time_end_s": 4.882812500000001e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.23897233183948e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 4.638671875000001e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 889.9158892999403
+            }
+          ],
+          "external_work_J": 9.238972331840236e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.238972331840236e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -7.573064690121713e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13348,
+          "physical_time_end_s": 4.882812500000001e-06,
+          "physical_time_start_s": 4.3945312500000005e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 891.4115672709886
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 9.97788334484828e-15,
+      "cumulative_first_law_residual_J": -1.6408306828597046e-28,
+      "cumulative_internal_energy_change_J": 9.977883344848116e-15,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155790460560524e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.002367422906679e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 2.501136726230813e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010537109375000001
+          ],
+          [
+            0.010537109375000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 2.6801969378483073e-05,
+        "engineering_total_shear_gamma": 0.021074218750000002,
+        "mean_shear_stress_sigma_12_Pa": 1875324835.1533775,
+        "plastic_distortion_beta_01": 1.2240678392322952e-14,
+        "plastic_distortion_beta_10": 2.6801969366242393e-05,
+        "plastic_tensor_strain_e_p12": 1.3400984689241536e-05,
+        "temperature_mean_K": 1100.014069794552,
+        "temperature_peak_K": 1100.0167816125386,
+        "total_strain_tensor_e12": 0.010537109375000001
+      },
+      "interval": 11,
+      "load_elapsed_time_s": 5.371093750000001e-06,
+      "physical_time_end_s": 5.371093750000001e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.280745418256246e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 5.126953125000001e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 1053.548279331997
+            }
+          ],
+          "external_work_J": 9.280745418256498e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.280745418256498e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -2.524354896707238e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 16165,
+          "physical_time_end_s": 5.371093750000001e-06,
+          "physical_time_start_s": 4.882812500000001e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 1055.0612924159504
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.0910126621505595e-14,
+      "cumulative_first_law_residual_J": 5.048709793414476e-29,
+      "cumulative_internal_energy_change_J": 1.0910126621505645e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155742591481091e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0113626804356552e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 2.8287906546241645e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.0105859375
+          ],
+          [
+            0.0105859375,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 3.0229262189761907e-05,
+        "engineering_total_shear_gamma": 0.021171875,
+        "mean_shear_stress_sigma_12_Pa": 1883720635.238892,
+        "plastic_distortion_beta_01": 1.7843326601620065e-14,
+        "plastic_distortion_beta_10": 3.0229262171918582e-05,
+        "plastic_tensor_strain_e_p12": 1.5114631094880954e-05,
+        "temperature_mean_K": 1100.015912965862,
+        "temperature_peak_K": 1100.0189727692436,
+        "total_strain_tensor_e12": 0.0105859375
+      },
+      "interval": 12,
+      "load_elapsed_time_s": 5.859375000000002e-06,
+      "physical_time_end_s": 5.859375000000002e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.32243276657529e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 5.615234375000002e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 1141.6374032311141
+            }
+          ],
+          "external_work_J": 9.322432766573145e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.32243276657529e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 2.145701662201152e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 17048,
+          "physical_time_end_s": 5.859375000000002e-06,
+          "physical_time_start_s": 5.371093750000001e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 1143.1155034471303
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.184652951887135e-14,
+      "cumulative_first_law_residual_J": -1.0097419586828951e-28,
+      "cumulative_internal_energy_change_J": 1.1846529518871249e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1556939579601746e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0203776957590286e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 3.1782906401160896e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010634765625
+          ],
+          [
+            0.010634765625,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 3.3869080519423164e-05,
+        "engineering_total_shear_gamma": 0.02126953125,
+        "mean_shear_stress_sigma_12_Pa": 1892097499.3007197,
+        "plastic_distortion_beta_01": 2.5442745106829025e-14,
+        "plastic_distortion_beta_10": 3.386908049398042e-05,
+        "plastic_tensor_strain_e_p12": 1.6934540259711582e-05,
+        "temperature_mean_K": 1100.0178790291086,
+        "temperature_peak_K": 1100.0213087335349,
+        "total_strain_tensor_e12": 0.010634765625
+      },
+      "interval": 13,
+      "load_elapsed_time_s": 6.347656250000002e-06,
+      "physical_time_end_s": 6.347656250000002e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.364028973656032e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 6.103515625000002e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 1158.964549828088
+            }
+          ],
+          "external_work_J": 9.364028973657547e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.364028973657547e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -1.5146129380243427e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 16650,
+          "physical_time_end_s": 6.347656250000002e-06,
+          "physical_time_start_s": 5.859375000000002e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 1159.9388230131008
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.2787082349716071e-14,
+      "cumulative_first_law_residual_J": 1.135959703518257e-28,
+      "cumulative_internal_energy_change_J": 1.2787082349716185e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1556445592687925e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0294109091362574e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 3.551099558250289e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010683593750000001
+          ],
+          [
+            0.010683593750000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 3.773477299599703e-05,
+        "engineering_total_shear_gamma": 0.021367187500000002,
+        "mean_shear_stress_sigma_12_Pa": 1900454237.9760566,
+        "plastic_distortion_beta_01": 3.561207887376096e-14,
+        "plastic_distortion_beta_10": 3.773477296038495e-05,
+        "plastic_tensor_strain_e_p12": 1.8867386497998513e-05,
+        "temperature_mean_K": 1100.019976213493,
+        "temperature_peak_K": 1100.0237991626702,
+        "total_strain_tensor_e12": 0.010683593750000001
+      },
+      "interval": 14,
+      "load_elapsed_time_s": 6.835937500000003e-06,
+      "physical_time_end_s": 6.835937500000003e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.405528308449364e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 6.5917968750000025e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 614.8090940120164
+            }
+          ],
+          "external_work_J": 9.405528308447219e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.405528308449364e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 2.145701662201152e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 15722,
+          "physical_time_end_s": 6.835937500000003e-06,
+          "physical_time_start_s": 6.347656250000002e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 615.6600042590871
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.37317748192044e-14,
+      "cumulative_first_law_residual_J": 3.281661365719409e-28,
+      "cumulative_internal_energy_change_J": 1.3731774819204728e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155594396070241e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0384606612540403e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 3.948773767338359e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010732421875
+          ],
+          [
+            0.010732421875,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 4.1840488428520006e-05,
+        "engineering_total_shear_gamma": 0.02146484375,
+        "mean_shear_stress_sigma_12_Pa": 1908789590.6060185,
+        "plastic_distortion_beta_01": 4.9064922455787554e-14,
+        "plastic_distortion_beta_10": 4.184048837945508e-05,
+        "plastic_tensor_strain_e_p12": 2.0920244214260003e-05,
+        "temperature_mean_K": 1100.0222132740907,
+        "temperature_peak_K": 1100.0264543322219,
+        "total_strain_tensor_e12": 0.010732421875
+      },
+      "interval": 15,
+      "load_elapsed_time_s": 7.324218750000003e-06,
+      "physical_time_end_s": 7.324218750000003e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.446924694885431e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 7.080078125000003e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 744.0899755179416
+            }
+          ],
+          "external_work_J": 9.446924694883286e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.446924694885431e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 2.145701662201152e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 16690,
+          "physical_time_end_s": 7.324218750000003e-06,
+          "physical_time_start_s": 6.835937500000003e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 745.094504195964
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.4680595988648872e-14,
+      "cumulative_first_law_residual_J": 4.165185579566942e-28,
+      "cumulative_internal_energy_change_J": 1.468059598864929e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155543469445951e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0475251877807332e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 4.372968201334047e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010781250000000001
+          ],
+          [
+            0.010781250000000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 4.620121582745581e-05,
+        "engineering_total_shear_gamma": 0.021562500000000002,
+        "mean_shear_stress_sigma_12_Pa": 1917102221.6697736,
+        "plastic_distortion_beta_01": 6.668890951887936e-14,
+        "plastic_distortion_beta_10": 4.62012157607669e-05,
+        "plastic_tensor_strain_e_p12": 2.3100607913727904e-05,
+        "temperature_mean_K": 1100.0245995205019,
+        "temperature_peak_K": 1100.0292851701868,
+        "total_strain_tensor_e12": 0.010781250000000001
+      },
+      "interval": 16,
+      "load_elapsed_time_s": 7.812500000000004e-06,
+      "physical_time_end_s": 7.812500000000004e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.488211694445608e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 7.568359375000003e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 641.4519783158321
+            }
+          ],
+          "external_work_J": 9.488211694444724e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.488211694445608e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 8.835242138475332e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 14087,
+          "physical_time_end_s": 7.812500000000004e-06,
+          "physical_time_start_s": 7.324218750000003e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 642.3389988420531
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.5633534237476352e-14,
+      "cumulative_first_law_residual_J": 3.534096855390133e-28,
+      "cumulative_internal_energy_change_J": 1.5633534237476705e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1554917762503865e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0566026137682917e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 4.825441634005355e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010830078125
+          ],
+          [
+            0.010830078125,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 5.083282518246384e-05,
+        "engineering_total_shear_gamma": 0.02166015625,
+        "mean_shear_stress_sigma_12_Pa": 1925390717.1512418,
+        "plastic_distortion_beta_01": 8.957309762409931e-14,
+        "plastic_distortion_beta_10": 5.083282509289074e-05,
+        "plastic_tensor_strain_e_p12": 2.541641259123192e-05,
+        "temperature_mean_K": 1100.0271448464614,
+        "temperature_peak_K": 1100.0323032920946,
+        "total_strain_tensor_e12": 0.010830078125
+      },
+      "interval": 17,
+      "load_elapsed_time_s": 8.300781250000004e-06,
+      "physical_time_end_s": 8.300781250000004e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.529382488274162e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 8.056640625000004e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 541.3217079269234
+            }
+          ],
+          "external_work_J": 9.529382488274793e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.529382488274793e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -6.310887241768094e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13852,
+          "physical_time_end_s": 8.300781250000004e-06,
+          "physical_time_start_s": 7.812500000000004e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 542.3628986119293
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.6590577223382032e-14,
+      "cumulative_first_law_residual_J": 5.174927538249837e-28,
+      "cumulative_internal_energy_change_J": 1.659057722338255e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155439319421306e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0656909479214098e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 5.308061908236479e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.01087890625
+          ],
+          [
+            0.01087890625,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 5.5752108804780314e-05,
+        "engineering_total_shear_gamma": 0.0217578125,
+        "mean_shear_stress_sigma_12_Pa": 1933653580.855495,
+        "plastic_distortion_beta_01": 1.1906796132056094e-13,
+        "plastic_distortion_beta_10": 5.575210868571235e-05,
+        "plastic_tensor_strain_e_p12": 2.7876054402390157e-05,
+        "temperature_mean_K": 1100.0298597592584,
+        "temperature_peak_K": 1100.0355210370008,
+        "total_strain_tensor_e12": 0.01087890625
+      },
+      "interval": 18,
+      "load_elapsed_time_s": 8.789062500000004e-06,
+      "physical_time_end_s": 8.789062500000004e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.57042985905844e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 8.544921875000004e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 536.4177936990745
+            }
+          ],
+          "external_work_J": 9.570429859056799e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.57042985905844e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 1.6408306828597046e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13324,
+          "physical_time_end_s": 8.789062500000004e-06,
+          "physical_time_start_s": 8.300781250000004e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 537.4645840460435
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.7551711840646594e-14,
+      "cumulative_first_law_residual_J": 2.9030081312133234e-28,
+      "cumulative_internal_energy_change_J": 1.7551711840646884e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155386104545334e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0747880767581935e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 5.822811392855611e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.010927734375000001
+          ],
+          [
+            0.010927734375000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 6.097682300374932e-05,
+        "engineering_total_shear_gamma": 0.021855468750000002,
+        "mean_shear_stress_sigma_12_Pa": 1941889230.695366,
+        "plastic_distortion_beta_01": 1.5682918550450824e-13,
+        "plastic_distortion_beta_10": 6.097682284692013e-05,
+        "plastic_tensor_strain_e_p12": 3.048841150187466e-05,
+        "temperature_mean_K": 1100.0327554104308,
+        "temperature_peak_K": 1100.0389515042148,
+        "total_strain_tensor_e12": 0.010927734375000001
+      },
+      "interval": 19,
+      "load_elapsed_time_s": 9.277343750000005e-06,
+      "physical_time_end_s": 9.277343750000005e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.611346172643352e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 9.033203125000005e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 604.5599083597772
+            }
+          ],
+          "external_work_J": 9.611346172645623e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.611346172645623e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -2.271919407036514e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13748,
+          "physical_time_end_s": 9.277343750000005e-06,
+          "physical_time_start_s": 8.789062500000004e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 605.5520761341322
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.8516924176612292e-14,
+      "cumulative_first_law_residual_J": 4.0389678347315804e-28,
+      "cumulative_internal_energy_change_J": 1.8516924176612696e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155332139009341e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0838917586919966e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 6.371792474070583e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.0109765625
+          ],
+          [
+            0.0109765625,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 6.652572982528733e-05,
+        "engineering_total_shear_gamma": 0.021953125,
+        "mean_shear_stress_sigma_12_Pa": 1950095994.9725673,
+        "plastic_distortion_beta_01": 2.0488449495398892e-13,
+        "plastic_distortion_beta_10": 6.652572962040284e-05,
+        "plastic_tensor_strain_e_p12": 3.326286491264366e-05,
+        "temperature_mean_K": 1100.0358436266588,
+        "temperature_peak_K": 1100.042608590591,
+        "total_strain_tensor_e12": 0.0109765625
+      },
+      "interval": 20,
+      "load_elapsed_time_s": 9.765625000000005e-06,
+      "physical_time_end_s": 9.765625000000005e-06,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.652123359658112e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 9.521484375000005e-06,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 615.766270854976
+            }
+          ],
+          "external_work_J": 9.652123359656976e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.652123359658112e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 1.135959703518257e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 14208,
+          "physical_time_end_s": 9.765625000000005e-06,
+          "physical_time_start_s": 9.277343750000005e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 616.7447310800198
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 1.948619946631856e-14,
+      "cumulative_first_law_residual_J": 5.932234007262009e-28,
+      "cumulative_internal_energy_change_J": 1.9486199466319155e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1552774321218916e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.0929996180698438e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 6.957233062162414e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011025390625000001
+          ],
+          [
+            0.011025390625000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 7.241863853376857e-05,
+        "engineering_total_shear_gamma": 0.022050781250000002,
+        "mean_shear_stress_sigma_12_Pa": 1958272108.681641,
+        "plastic_distortion_beta_01": 2.6571030834985096e-13,
+        "plastic_distortion_beta_10": 7.241863826805826e-05,
+        "plastic_tensor_strain_e_p12": 3.6209319266884284e-05,
+        "temperature_mean_K": 1100.0391369407387,
+        "temperature_peak_K": 1100.0465070281653,
+        "total_strain_tensor_e12": 0.011025390625000001
+      },
+      "interval": 21,
+      "load_elapsed_time_s": 1.0253906250000006e-05,
+      "physical_time_end_s": 1.0253906250000006e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.692752897064592e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.0009765625000006e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 599.5484404840972
+            }
+          ],
+          "external_work_J": 9.6927528970627e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.692752897064592e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 1.8932661725304283e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 15003,
+          "physical_time_end_s": 1.0253906250000006e-05,
+          "physical_time_start_s": 9.765625000000005e-06,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 600.4956230011303
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.045952204531922e-14,
+      "cumulative_first_law_residual_J": 6.563322731438818e-28,
+      "cumulative_internal_energy_change_J": 2.0459522045319876e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155221995236579e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1021091392093332e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 7.581492081533441e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.01107421875
+          ],
+          [
+            0.01107421875,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 7.867644646856443e-05,
+        "engineering_total_shear_gamma": 0.0221484375,
+        "mean_shear_stress_sigma_12_Pa": 1966415709.8696513,
+        "plastic_distortion_beta_01": 3.4232283058170967e-13,
+        "plastic_distortion_beta_10": 7.86764461262416e-05,
+        "plastic_tensor_strain_e_p12": 3.933822323428222e-05,
+        "temperature_mean_K": 1100.0426486224706,
+        "temperature_peak_K": 1100.0506624218826,
+        "total_strain_tensor_e12": 0.01107421875
+      },
+      "interval": 22,
+      "load_elapsed_time_s": 1.0742187500000006e-05,
+      "physical_time_end_s": 1.0742187500000006e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.733225790007208e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.0498046875000006e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 608.0854459609836
+            }
+          ],
+          "external_work_J": 9.733225790006577e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.733225790007208e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 6.310887241768094e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 16541,
+          "physical_time_end_s": 1.0742187500000006e-05,
+          "physical_time_start_s": 1.0253906250000006e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 609.0209434041753
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.143687530071699e-14,
+      "cumulative_first_law_residual_J": 4.796274303743752e-28,
+      "cumulative_internal_energy_change_J": 2.143687530071747e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1551658418765e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1112176604829302e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 8.247064895513051e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011123046875
+          ],
+          [
+            0.011123046875,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 8.532117885208942e-05,
+        "engineering_total_shear_gamma": 0.02224609375,
+        "mean_shear_stress_sigma_12_Pa": 1974524836.0892792,
+        "plastic_distortion_beta_01": 4.383859963085406e-13,
+        "plastic_distortion_beta_10": 8.532117841370343e-05,
+        "plastic_tensor_strain_e_p12": 4.266058942604471e-05,
+        "temperature_mean_K": 1100.0463927091705,
+        "temperature_peak_K": 1100.055091287123,
+        "total_strain_tensor_e12": 0.011123046875
+      },
+      "interval": 23,
+      "load_elapsed_time_s": 1.1230468750000007e-05,
+      "physical_time_end_s": 1.1230468750000007e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.773532553975956e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.0986328125000006e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 606.6253764529247
+            }
+          ],
+          "external_work_J": 9.773532553977723e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.773532553977723e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -1.7670484276950664e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 15218,
+          "physical_time_end_s": 1.1230468750000007e-05,
+          "physical_time_start_s": 1.0742187500000006e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 607.6037168030161
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.241824162047221e-14,
+      "cumulative_first_law_residual_J": 5.553580772755923e-28,
+      "cumulative_internal_energy_change_J": 2.2418241620472766e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155108987634181e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.120322368506186e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 8.956588612233336e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011171875000000001
+          ],
+          [
+            0.011171875000000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 9.237602706793108e-05,
+        "engineering_total_shear_gamma": 0.022343750000000002,
+        "mean_shear_stress_sigma_12_Pa": 1982597420.9882474,
+        "plastic_distortion_beta_01": 5.583389931775671e-13,
+        "plastic_distortion_beta_10": 9.237602650959209e-05,
+        "plastic_tensor_strain_e_p12": 4.618801353396554e-05,
+        "temperature_mean_K": 1100.0503840355223,
+        "temperature_peak_K": 1100.0598110866733,
+        "total_strain_tensor_e12": 0.011171875000000001
+      },
+      "interval": 24,
+      "load_elapsed_time_s": 1.1718750000000007e-05,
+      "physical_time_end_s": 1.1718750000000007e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.813663197552948e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.1474609375000007e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 721.2649361568037
+            }
+          ],
+          "external_work_J": 9.813663197552191e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.813663197552948e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 7.573064690121713e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 18053,
+          "physical_time_end_s": 1.1718750000000007e-05,
+          "physical_time_start_s": 1.1230468750000007e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 722.220450341003
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.340360234106602e-14,
+      "cumulative_first_law_residual_J": 7.194411455615628e-28,
+      "cumulative_internal_energy_change_J": 2.340360234106674e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.155051446350521e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1294202924946177e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 9.712847242578174e-16
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011220703125
+          ],
+          [
+            0.011220703125,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 9.986538486579251e-05,
+        "engineering_total_shear_gamma": 0.02244140625,
+        "mean_shear_stress_sigma_12_Pa": 1990631291.083458,
+        "plastic_distortion_beta_01": 7.075464477800829e-13,
+        "plastic_distortion_beta_10": 9.986538415824606e-05,
+        "plastic_tensor_strain_e_p12": 4.9932692432896254e-05,
+        "temperature_mean_K": 1100.0546382625882,
+        "temperature_peak_K": 1100.0648402667543,
+        "total_strain_tensor_e12": 0.011220703125
+      },
+      "interval": 25,
+      "load_elapsed_time_s": 1.2207031250000007e-05,
+      "physical_time_end_s": 1.2207031250000007e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.853607205939742e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.1962890625000007e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 548.4317485089414
+            }
+          ],
+          "external_work_J": 9.8536072059381e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.853607205939742e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 1.6408306828597046e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 13720,
+          "physical_time_end_s": 1.2207031250000007e-05,
+          "physical_time_start_s": 1.1718750000000007e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 549.4471776871942
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.4392937693622705e-14,
+      "cumulative_first_law_residual_J": 9.466330862652142e-28,
+      "cumulative_internal_energy_change_J": 2.4392937693623652e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1549932362191096e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1385082988626855e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.051877650139341e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011269531250000001
+          ],
+          [
+            0.011269531250000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.0001078148818850751,
+        "engineering_total_shear_gamma": 0.022539062500000002,
+        "mean_shear_stress_sigma_12_Pa": 1998624162.7740402,
+        "plastic_distortion_beta_01": 8.924747020650252e-13,
+        "plastic_distortion_beta_10": 0.0001078148809926004,
+        "plastic_tensor_strain_e_p12": 5.390744094253755e-05,
+        "temperature_mean_K": 1100.059171904822,
+        "temperature_peak_K": 1100.0701982916482,
+        "total_strain_tensor_e12": 0.011269531250000001
+      },
+      "interval": 26,
+      "load_elapsed_time_s": 1.2695312500000008e-05,
+      "physical_time_end_s": 1.2695312500000008e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.893353525569116e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.2451171875000008e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 802.4877021280117
+            }
+          ],
+          "external_work_J": 9.893353525566845e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.893353525569116e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 2.271919407036514e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 19404,
+          "physical_time_end_s": 1.2695312500000008e-05,
+          "physical_time_start_s": 1.2207031250000007e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 803.4725214338396
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.5386226748624775e-14,
+      "cumulative_first_law_residual_J": 1.2243121249030103e-27,
+      "cumulative_internal_energy_change_J": 2.5386226748626e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.1549343793884935e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1475830861474677e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.1377468334940868e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011318359375000002
+          ],
+          [
+            0.011318359375000002,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.00011625141382157133,
+        "engineering_total_shear_gamma": 0.022636718750000003,
+        "mean_shear_stress_sigma_12_Pa": 2006573639.6534986,
+        "plastic_distortion_beta_01": 1.1208979874695533e-12,
+        "plastic_distortion_beta_10": 0.00011625141270067334,
+        "plastic_tensor_strain_e_p12": 5.812570691078566e-05,
+        "temperature_mean_K": 1100.0640023555347,
+        "temperature_peak_K": 1100.0759056764161,
+        "total_strain_tensor_e12": 0.011318359375000002
+      },
+      "interval": 27,
+      "load_elapsed_time_s": 1.3183593750000008e-05,
+      "physical_time_end_s": 1.3183593750000008e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.93289055002347e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.2939453125000008e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 677.7472741228994
+            }
+          ],
+          "external_work_J": 9.932890550020694e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.93289055002347e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 2.7767903863779616e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 17468,
+          "physical_time_end_s": 1.3183593750000008e-05,
+          "physical_time_start_s": 1.2695312500000008e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 678.830463944003
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.6383447359385264e-14,
+      "cumulative_first_law_residual_J": 1.1485814780017932e-27,
+      "cumulative_internal_energy_change_J": 2.6383447359386413e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.154874900607664e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1566411803491235e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.2292175028697747e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.0113671875
+          ],
+          [
+            0.0113671875,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.00012520316849307954,
+        "engineering_total_shear_gamma": 0.022734375,
+        "mean_shear_stress_sigma_12_Pa": 2014477210.1872673,
+        "plastic_distortion_beta_01": 1.402138678770156e-12,
+        "plastic_distortion_beta_10": 0.00012520316709094086,
+        "plastic_tensor_strain_e_p12": 6.260158424653977e-05,
+        "temperature_mean_K": 1100.0691479100026,
+        "temperature_peak_K": 1100.0819840171375,
+        "total_strain_tensor_e12": 0.0113671875
+      },
+      "interval": 28,
+      "load_elapsed_time_s": 1.3671875000000009e-05,
+      "physical_time_end_s": 1.3671875000000009e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 9.972206107604137e-16,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.3427734375000009e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 895.8120585822035
+            }
+          ],
+          "external_work_J": 9.972206107604895e-16,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 9.972206107604895e-16,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -7.573064690121713e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 19715,
+          "physical_time_end_s": 1.3671875000000009e-05,
+          "physical_time_start_s": 1.3183593750000008e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 896.7381657520309
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.7384576104477005e-14,
+      "cumulative_first_law_residual_J": 1.072850831100576e-27,
+      "cumulative_internal_energy_change_J": 2.7384576104478078e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.154814827315463e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1656789307899479e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.3266312771712116e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011416015625000001
+          ],
+          [
+            0.011416015625000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.00013469964699080436,
+        "engineering_total_shear_gamma": 0.022832031250000002,
+        "mean_shear_stress_sigma_12_Pa": 2022332245.8281186,
+        "plastic_distortion_beta_01": 1.7473693418059477e-12,
+        "plastic_distortion_beta_10": 0.00013469964524343502,
+        "plastic_tensor_strain_e_p12": 6.734982349540218e-05,
+        "temperature_mean_K": 1100.0746277855192,
+        "temperature_peak_K": 1100.0884560180357,
+        "total_strain_tensor_e12": 0.011416015625000001
+      },
+      "interval": 29,
+      "load_elapsed_time_s": 1.416015625000001e-05,
+      "physical_time_end_s": 1.416015625000001e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 1.0011287450916656e-15,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.3916015625000009e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 580.6953826390672
+            }
+          ],
+          "external_work_J": 1.0011287450917414e-15,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 1.0011287450917414e-15,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": -7.573064690121713e-29,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 14902,
+          "physical_time_end_s": 1.416015625000001e-05,
+          "physical_time_start_s": 1.3671875000000009e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 581.6731096499134
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.8389588229355153e-14,
+      "cumulative_first_law_residual_J": 1.1738250269688656e-27,
+      "cumulative_internal_energy_change_J": 2.8389588229356327e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.154754189719689e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1746925066035794e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.4303464582820725e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011464843750000002
+          ],
+          [
+            0.011464843750000002,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.00014477167903539202,
+        "engineering_total_shear_gamma": 0.022929687500000004,
+        "mean_shear_stress_sigma_12_Pa": 2030135999.6479466,
+        "plastic_distortion_beta_01": 2.1698690688935477e-12,
+        "plastic_distortion_beta_10": 0.00014477167686552294,
+        "plastic_tensor_strain_e_p12": 7.238583951769601e-05,
+        "temperature_mean_K": 1100.080462137855,
+        "temperature_peak_K": 1100.0953455147949,
+        "total_strain_tensor_e12": 0.011464843750000002
+      },
+      "interval": 30,
+      "load_elapsed_time_s": 1.464843750000001e-05,
+      "physical_time_end_s": 1.464843750000001e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 1.0050121248782485e-15,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.440429687500001e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 687.4054189000744
+            }
+          ],
+          "external_work_J": 1.0050121248781476e-15,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 1.0050121248782485e-15,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 1.0097419586828951e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 14188,
+          "physical_time_end_s": 1.464843750000001e-05,
+          "physical_time_start_s": 1.416015625000001e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 688.4773220650386
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 2.9398457587449166e-14,
+      "cumulative_first_law_residual_J": 1.1738250269688656e-27,
+      "cumulative_internal_energy_change_J": 2.939845758745034e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.154693020866236e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1836778939754065e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.5407382480468275e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011513671875000001
+          ],
+          [
+            0.011513671875000001,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.00015545143159248,
+        "engineering_total_shear_gamma": 0.023027343750000002,
+        "mean_shear_stress_sigma_12_Pa": 2037885605.5701103,
+        "plastic_distortion_beta_01": 2.6854571655782223e-12,
+        "plastic_distortion_beta_10": 0.00015545142890702283,
+        "plastic_tensor_strain_e_p12": 7.772571579624e-05,
+        "temperature_mean_K": 1100.0866720734653,
+        "temperature_peak_K": 1100.1026774933107,
+        "total_strain_tensor_e12": 0.011513671875000001
+      },
+      "interval": 31,
+      "load_elapsed_time_s": 1.513671875000001e-05,
+      "physical_time_end_s": 1.513671875000001e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 1.008869358094013e-15,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.489257812500001e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 539.875239355024
+            }
+          ],
+          "external_work_J": 1.008869358094013e-15,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 1.008869358094013e-15,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 0.0,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 12830,
+          "physical_time_end_s": 1.513671875000001e-05,
+          "physical_time_start_s": 1.464843750000001e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 540.9184280699119
+        }
+      ]
+    },
+    {
+      "cumulative_external_work_J": 3.041115658104706e-14,
+      "cumulative_first_law_residual_J": 1.6282089083761684e-27,
+      "cumulative_internal_energy_change_J": 3.041115658104869e-14,
+      "endpoint_energy": {
+        "boundary_excess_J": 0.0,
+        "defect_storage_J": 5.154631356694507e-15,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": 1.3054632105440753e-15,
+        "phase_local_J": 5.328417673379062e-16,
+        "recoverable_elastic_J": 1.1926308942644413e-13,
+        "signed_junction_storage_J": 0.0,
+        "thermal_internal_J": 1.6581988769134186e-15
+      },
+      "endpoint_load": {
+        "fixed_eigenstrain_present": true,
+        "mean_strain": [
+          [
+            0.0,
+            0.011562500000000002
+          ],
+          [
+            0.011562500000000002,
+            0.0
+          ]
+        ]
+      },
+      "endpoint_observables": {
+        "engineering_plastic_shear_gamma_p": 0.00016677240974227912,
+        "engineering_total_shear_gamma": 0.023125000000000003,
+        "mean_shear_stress_sigma_12_Pa": 2045578078.2919626,
+        "plastic_distortion_beta_01": 3.312897839178389e-12,
+        "plastic_distortion_beta_10": 0.0001667724064293813,
+        "plastic_tensor_strain_e_p12": 8.338620487113956e-05,
+        "temperature_mean_K": 1100.0932796567245,
+        "temperature_peak_K": 1100.1104781030533,
+        "total_strain_tensor_e12": 0.011562500000000002
+      },
+      "interval": 32,
+      "load_elapsed_time_s": 1.562500000000001e-05,
+      "physical_time_end_s": 1.562500000000001e-05,
+      "segments": [
+        {
+          "accepted_duration_s": 4.8828125e-07,
+          "delta_internal_energy_J": 1.0126989935983498e-15,
+          "discarded_shortened_candidates": 0,
+          "duration_selection_attempts": [
+            {
+              "accepted_duration_s": 4.8828125e-07,
+              "attempt": 1,
+              "candidate_published": true,
+              "midpoint_physical_time_s": 1.538085937500001e-05,
+              "requested_duration_s": 4.8828125e-07,
+              "wall_seconds": 652.0480304560624
+            }
+          ],
+          "external_work_J": 1.0126989935978954e-15,
+          "first_law_absolute_tolerance_J": 1e-26,
+          "first_law_incremental_scale_J": 1.0126989935983498e-15,
+          "first_law_passed": true,
+          "first_law_relative_tolerance": 1e-09,
+          "first_law_residual_J": 4.543838814073028e-28,
+          "ordering_internal_substeps": null,
+          "ordering_linear_iterations": 15391,
+          "physical_time_end_s": 1.562500000000001e-05,
+          "physical_time_start_s": 1.513671875000001e-05,
+          "requested_duration_s": 4.8828125e-07,
+          "wall_seconds": 653.09824505914
+        }
+      ]
+    }
+  ],
+  "restart_mode": "EXACT_RESTART",
+  "schema": "asb-drx/v49/physical-continuation/v1",
+  "source_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/initial.npz",
+  "source_checkpoint_sha256": "dc369de068355101b21fcbc796f30dc4469684c76f00fa2be5ff44976c981cc0",
+  "source_sha": "ee6eba55119ad2a282b8d14a17510979349e4909",
+  "stage": "V49_COMPLETE_INTERVAL",
+  "status": "COMPLETE",
+  "strain_rate_s": 100.0,
+  "wall_seconds": 10260.743635426043
+}

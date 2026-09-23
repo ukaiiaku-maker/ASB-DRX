@@ -1,0 +1,159 @@
+{
+  "accepted_state_validity": {
+    "first_law_checks_passed": true,
+    "n128_checkpoint_checksum_verified": true,
+    "n192_checkpoint_checksum_verified": true,
+    "passed": true
+  },
+  "artifact_sha256": {
+    "v52_completion_manager_v2.json": "719b27047459c9a472e77706ac0240f15175f6869ae2123c0d004e99aad229c9",
+    "v52_completion_manager_v2.log": "9fe096aa89a0443079c8bb703f3f81368f7cc7ab409899fa36cdc12099a7b94a",
+    "v52_completion_manager_v2_launcher.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v52_continuation.json": "1adafcae9d67775f5e9ae37ab69a9e464bda5946d4c6d1a8684cc76640bb47c5",
+    "v52_continuation.png": "dd10aa2f0246768a42b76871056cee3420608d176d75166cac190e8fb5d8d955",
+    "v52_laplacian_evolved_overlap.json": "af108bd4ef94bef066ea8c786c8e7f0a71f0642dc9c614b01f4958b30e2df2d2",
+    "v52_n128_loading_manifest.json": "582e9c4c0560225672158b803a884ca63d781cb8f93906c04578dec58899e2b2",
+    "v52_n192_loading_manifest.json": "e316e61612f2701e673bc845efb165de13095f9a7c94f78a408b097b17bc770b",
+    "v52_spatial_comparison_001.json": "f12a2b32394b13259d94f281530bae8e8dc1b49b81d36194c692162ba6d7a3d5",
+    "v52_spatial_comparison_008.json": "8af12c16f8508968faeff43c775e69a121f1c0d916fe591b7b477994a8448c58",
+    "v52_spatial_comparison_016.json": "2185442a43c1b105f1256d9d61fb850e492d3f6762037080ac701521d2f9a080",
+    "v52_spatial_comparison_032.json": "a33669d783f014b79d106cb786949e14c678ca653f32d98066dda998db6fc941",
+    "v52_spatial_initialization.json": "e3a34bf9e3e9bbab2a17dbf115d83a8f706f762e354ee0356c668c64aa740fba",
+    "v52_state_dependent_geometry.json": "2958c5cc89d8c9d8478e88a3791ca3c0af7ec9e8243bd5bd1bcc8e52f8a77423"
+  },
+  "canonical_regression": {
+    "passed": true,
+    "tests": 846,
+    "wall_seconds": 333.47
+  },
+  "claims": {
+    "drx": false,
+    "material_calibration": false,
+    "persistent_lagb": false,
+    "strict_asb": false
+  },
+  "classification": "PHYSICAL_FLOW_APPROACH_COMPLETE_MATCHED_N192_THROUGH_INTERVAL_32_GEOMETRY_OPTION_QUALIFIED_WITH_CLIMB_STRESS_HYPOTHESIS",
+  "execution_completion": {
+    "hpc3_jobs_submitted": 0,
+    "location": "local",
+    "n128_intervals": 104,
+    "n128_physical_time_s": 5.078125000000004e-05,
+    "n192_intervals": 32,
+    "n192_physical_time_s": 1.562500000000001e-05,
+    "passed": true
+  },
+  "generated_utc": "2026-09-23T18:59:49.490635+00:00",
+  "geometry_capability": {
+    "coupled_alternation_restart_exact": true,
+    "heterogeneous_face_rates_unequal": true,
+    "one_face_stall_supported": true,
+    "quadrature_reference_order": 128,
+    "resolved_glide_stress_used_as_climb_activation_hypothesis": true,
+    "signed_chemical_affinity_repaired": true,
+    "tested_elastic_work_increment_is_zero": true,
+    "unresolved_geometry_capability": "calibrated climb-resolved activation variable and nonzero conjugate mechanical-work geometry case"
+  },
+  "initialization": {
+    "complete_restart_payload_exact": true,
+    "field_count": 177,
+    "route": "A_COMMON_ANALYTIC_PHYSICAL_INITIALIZATION"
+  },
+  "overlap_scope": {
+    "scope": "beta_p, eta, family Nye, temperature increment, selected observables, and reservoir totals; not every reservoir spatial field or history",
+    "wall_speedup_on_user_host": 2.702151205965134
+  },
+  "physical_response": {
+    "endpoint": {
+      "engineering_plastic_shear_gamma_p": 0.004322625084089252,
+      "engineering_total_shear_gamma": 0.03015625000000001,
+      "last_interval_fraction_of_imposed_rate": 0.9888414194041131,
+      "last_interval_plastic_rate_s-1": 197.76828388082262,
+      "mean_shear_stress_sigma_12_Pa": 2301775980.0076485,
+      "peak_minus_mean_temperature_K": 0.6218779695138892,
+      "plastic_distortion_beta_01": 1.6009778035184608e-08,
+      "plastic_distortion_beta_10": 0.004322609074311217,
+      "plastic_fraction_of_total_added_shear": 0.42561231597186444,
+      "plastic_tensor_strain_e_p12": 0.002161312542044626,
+      "stress_tangent_from_rate_fraction_Pa": 994229531.0935249,
+      "temperature_mean_K": 1102.7785794129484,
+      "temperature_peak_K": 1103.4004573824623,
+      "temperature_rise_K": 2.7785794129483747,
+      "total_strain_tensor_e12": 0.015078125000000005
+    },
+    "flow_approach_is_universal_material_criterion": false,
+    "flow_approach_preregistered_control_passed": true,
+    "resolved_stress_peak": false
+  },
+  "schema": "asb-drx/v52/completion-decision/v1",
+  "selected_observable_resolution": {
+    "all_comparison_preconditions_passed": true,
+    "all_selected_mean_increments_below_5_percent": true,
+    "interval_32_primary": {
+      "engineering_plastic_shear_gamma_p": {
+        "n128_increment": 0.00016677148527667878,
+        "n192_increment": 0.00016677240974227912,
+        "relative_difference": 5.5432766233512006e-06
+      },
+      "mean_shear_stress_sigma_12_Pa": {
+        "n128_increment": 263578160.66184902,
+        "n192_increment": 263578078.29196262,
+        "relative_difference": 3.1250658981994393e-07
+      },
+      "temperature_mean_K": {
+        "n128_increment": 0.09327908240993565,
+        "n192_increment": 0.09327965672446226,
+        "relative_difference": 6.156910807453487e-06
+      },
+      "temperature_peak_K": {
+        "n128_increment": 0.11047748446503647,
+        "n192_increment": 0.11047810305308303,
+        "relative_difference": 5.599191418651086e-06
+      }
+    },
+    "interval_32_spatial_structure": {
+      "beta_p": {
+        "common_band_half_width_32_relative_l2": 0.00010994423090482849,
+        "n128_rms": 7.957222539782832e-05,
+        "n192_fine_only_above_n128_nyquist_relative_l2": 7.298935611890624e-06,
+        "n192_rms": 7.957234310807765e-05
+      },
+      "family_nye": {
+        "common_band_half_width_32_relative_l2": 0.0038549148049882077,
+        "n128_rms": 10.990877147274883,
+        "n192_fine_only_above_n128_nyquist_relative_l2": 0.0035500414602601307,
+        "n192_rms": 10.989516999551585
+      },
+      "temperature_rise": {
+        "common_band_half_width_32_relative_l2": 0.00012470986427811772,
+        "n128_rms": 0.09441707272753921,
+        "n192_fine_only_above_n128_nyquist_relative_l2": 8.921818643457603e-06,
+        "n192_rms": 0.0944172216676567
+      },
+      "wall_ordered_plus": {
+        "common_band_half_width_32_relative_l2": 0.03443933813434892,
+        "n128_rms": 3181195293.810745,
+        "n192_fine_only_above_n128_nyquist_relative_l2": 0.0006411384814432652,
+        "n192_rms": 3096752576.1610928
+      }
+    },
+    "late_n128_beyond_15_625_us_spatially_qualified": false,
+    "passed_through_interval": 32,
+    "passed_through_physical_time_s": 1.562500000000001e-05
+  },
+  "source_roles": {
+    "finalization_source": "ee6eba55119ad2a282b8d14a17510979349e4909",
+    "manager_sources": [
+      "4d2e29af787436e1ad8ef12973323d8175f5f413",
+      "d4f898249b281a607ca19a73748f5c308c842698",
+      "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00"
+    ],
+    "n128_frozen_numerical_source": "6f8df9b0ef7ba79f381f80eedb39c587fbdcf781",
+    "n192_numerical_paths_unchanged_across_analysis_commit": true,
+    "n192_stage_start_sources": {
+      "N192_TO_001": "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00",
+      "N192_TO_008": "ee6eba55119ad2a282b8d14a17510979349e4909",
+      "N192_TO_016": "ee6eba55119ad2a282b8d14a17510979349e4909",
+      "N192_TO_032": "ee6eba55119ad2a282b8d14a17510979349e4909"
+    }
+  }
+}

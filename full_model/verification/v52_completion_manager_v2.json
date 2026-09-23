@@ -1,0 +1,201 @@
+{
+  "completed_utc": "2026-09-23T05:31:21.974100+00:00",
+  "created_utc": "2026-09-22T22:41:59.212936+00:00",
+  "history": [
+    {
+      "stage": "N128_POSTPROCESS",
+      "wall_s": 1.4497618940658867
+    },
+    {
+      "stage": "ANALYTIC_N192_INITIAL",
+      "wall_s": 5.125344325089827
+    }
+  ],
+  "manager": {
+    "command": "python full_model/analysis/run_v52_completion_manager.py --primary-output /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-20260922/full_model/production/results-local/v52-physical/n128/loading --primary-worktree /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-20260922 --manager-state full_model/verification/v52_completion_manager_v2.json --poll-s 30 --n192-targets 1,8,16,32 --n192-wall-budget-s 28800",
+    "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+    "pid": 48180,
+    "ppid": 1786,
+    "start_identity": "Tue Sep 22 15:56:39 2026"
+  },
+  "manager_source_history": [
+    "4d2e29af787436e1ad8ef12973323d8175f5f413",
+    "d4f898249b281a607ca19a73748f5c308c842698"
+  ],
+  "manager_source_sha": "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00",
+  "outputs": {
+    "continuation": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/verification/v52_continuation.json",
+      "sha256": "1adafcae9d67775f5e9ae37ab69a9e464bda5946d4c6d1a8684cc76640bb47c5"
+    },
+    "continuation_plot": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/verification/v52_continuation.png",
+      "sha256": "dd10aa2f0246768a42b76871056cee3420608d176d75166cac190e8fb5d8d955"
+    },
+    "primary_manifest": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-20260922/full_model/production/results-local/v52-physical/n128/loading/run_manifest.json",
+      "sha256": "582e9c4c0560225672158b803a884ca63d781cb8f93906c04578dec58899e2b2"
+    },
+    "spatial_initialization": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/verification/v52_spatial_initialization.json",
+      "sha256": "e3a34bf9e3e9bbab2a17dbf115d83a8f706f762e354ee0356c668c64aa740fba"
+    }
+  },
+  "primary_output": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-20260922/full_model/production/results-local/v52-physical/n128/loading",
+  "recovered_failures": [
+    {
+      "accepted_n192_intervals_before_failure": 0,
+      "classification": "RECOVERED_INITIALIZATION_METADATA_DEFECT",
+      "failed_utc": "2026-09-22T22:55:35.568609+00:00",
+      "failure": "RuntimeError: N192_TO_001: child terminal UNKNOWN_OR_CORRUPT"
+    }
+  ],
+  "resume_count": 3,
+  "resumed_utc": "2026-09-22T22:56:39.777452+00:00",
+  "schema": "asb-drx/v52/completion-manager/v2",
+  "stages": {
+    "N128_CONTINUATION": {
+      "last_classification": "VALID_COMPLETED",
+      "owners": [],
+      "target_intervals": 104
+    },
+    "N192_TO_001": {
+      "argv": [
+        "/opt/anaconda3/bin/python",
+        "full_model/analysis/run_v49_physical_continuation.py",
+        "--initial-checkpoint",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/initial.npz",
+        "--output-dir",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading",
+        "--grid",
+        "192",
+        "--intervals",
+        "1",
+        "--dt-s",
+        "4.8828125e-7",
+        "--protocol",
+        "continued_deformation",
+        "--strain-rate-s",
+        "100"
+      ],
+      "child": {
+        "command": "/opt/anaconda3/bin/python full_model/analysis/run_v49_physical_continuation.py --initial-checkpoint /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/initial.npz --output-dir /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading --grid 192 --intervals 1 --dt-s 4.8828125e-7 --protocol continued_deformation --strain-rate-s 100",
+        "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+        "pid": 48214,
+        "ppid": 48180,
+        "start_identity": "Tue Sep 22 15:56:40 2026"
+      },
+      "child_returncode": 0,
+      "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+      "executable": "/opt/anaconda3/bin/python",
+      "last_classification": "VALID_COMPLETED",
+      "source_sha": "5c9a0fca5233c98aeae37160a3d58ad0d6b95f00",
+      "started_utc": "2026-09-22T22:56:40.259741+00:00",
+      "target_intervals": 1
+    },
+    "N192_TO_008": {
+      "argv": [
+        "/opt/anaconda3/bin/python",
+        "full_model/analysis/run_v49_physical_continuation.py",
+        "--restart",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000001.npz",
+        "--output-dir",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading",
+        "--grid",
+        "192",
+        "--intervals",
+        "8",
+        "--dt-s",
+        "4.8828125e-7",
+        "--protocol",
+        "continued_deformation",
+        "--strain-rate-s",
+        "100"
+      ],
+      "child": {
+        "command": "/opt/anaconda3/bin/python full_model/analysis/run_v49_physical_continuation.py --restart /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000001.npz --output-dir /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading --grid 192 --intervals 8 --dt-s 4.8828125e-7 --protocol continued_deformation --strain-rate-s 100",
+        "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+        "pid": 48691,
+        "ppid": 48180,
+        "start_identity": "Tue Sep 22 16:04:13 2026"
+      },
+      "child_returncode": 0,
+      "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+      "executable": "/opt/anaconda3/bin/python",
+      "last_classification": "VALID_COMPLETED",
+      "source_sha": "ee6eba55119ad2a282b8d14a17510979349e4909",
+      "started_utc": "2026-09-22T23:04:13.475511+00:00",
+      "target_intervals": 8
+    },
+    "N192_TO_016": {
+      "argv": [
+        "/opt/anaconda3/bin/python",
+        "full_model/analysis/run_v49_physical_continuation.py",
+        "--restart",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000008.npz",
+        "--output-dir",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading",
+        "--grid",
+        "192",
+        "--intervals",
+        "16",
+        "--dt-s",
+        "4.8828125e-7",
+        "--protocol",
+        "continued_deformation",
+        "--strain-rate-s",
+        "100"
+      ],
+      "child": {
+        "command": "/opt/anaconda3/bin/python full_model/analysis/run_v49_physical_continuation.py --restart /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000008.npz --output-dir /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading --grid 192 --intervals 16 --dt-s 4.8828125e-7 --protocol continued_deformation --strain-rate-s 100",
+        "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+        "pid": 52428,
+        "ppid": 48180,
+        "start_identity": "Tue Sep 22 17:36:42 2026"
+      },
+      "child_returncode": 0,
+      "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+      "executable": "/opt/anaconda3/bin/python",
+      "last_classification": "VALID_COMPLETED",
+      "source_sha": "ee6eba55119ad2a282b8d14a17510979349e4909",
+      "started_utc": "2026-09-23T00:36:43.075331+00:00",
+      "target_intervals": 16
+    },
+    "N192_TO_032": {
+      "argv": [
+        "/opt/anaconda3/bin/python",
+        "full_model/analysis/run_v49_physical_continuation.py",
+        "--restart",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000016.npz",
+        "--output-dir",
+        "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading",
+        "--grid",
+        "192",
+        "--intervals",
+        "32",
+        "--dt-s",
+        "4.8828125e-7",
+        "--protocol",
+        "continued_deformation",
+        "--strain-rate-s",
+        "100"
+      ],
+      "child": {
+        "command": "/opt/anaconda3/bin/python full_model/analysis/run_v49_physical_continuation.py --restart /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading/checkpoint_000016.npz --output-dir /Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922/full_model/production/results-local/v52-spatial/n192/loading --grid 192 --intervals 32 --dt-s 4.8828125e-7 --protocol continued_deformation --strain-rate-s 100",
+        "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+        "pid": 56432,
+        "ppid": 48180,
+        "start_identity": "Tue Sep 22 19:36:04 2026"
+      },
+      "child_returncode": 0,
+      "cwd": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v52-manager-fix-20260922",
+      "executable": "/opt/anaconda3/bin/python",
+      "last_classification": "VALID_COMPLETED",
+      "source_sha": "ee6eba55119ad2a282b8d14a17510979349e4909",
+      "started_utc": "2026-09-23T02:36:04.815456+00:00",
+      "target_intervals": 32
+    }
+  },
+  "state": "COMPLETE",
+  "updated_utc": "2026-09-23T05:31:21.977746+00:00"
+}
