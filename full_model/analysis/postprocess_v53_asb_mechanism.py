@@ -166,6 +166,42 @@ def physical_parameter_audit(left: dict, right: dict) -> dict:
     }
 
 
+def runtime_routing_audit(directory: Path, intervention: str) -> dict:
+    path = directory/"drx_v25_restart_asb_diagnostics.csv"
+    if not path.is_file():
+        return {"status": "unavailable", "reason": "diagnostics CSV absent"}
+    with path.open(newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    required = {"flow_operator_T_mean_K", "recovery_operator_T_mean_K",
+                "T_mean", "thermal_dt"}
+    if not rows or not required <= set(rows[0]):
+        return {"status": "unavailable",
+                "reason": "runtime temperature-routing columns absent",
+                "path": str(path.resolve())}
+    flow = np.asarray([float(row["flow_operator_T_mean_K"]) for row in rows])
+    recovery = np.asarray([float(row["recovery_operator_T_mean_K"]) for row in rows])
+    temperature = np.asarray([float(row["T_mean"]) for row in rows])
+    thermal = np.asarray([float(row["thermal_dt"]) for row in rows])
+    finite = bool(np.all(np.isfinite(np.r_[flow, recovery, temperature, thermal])))
+    if intervention == "none":
+        routing = finite and np.allclose(flow, recovery, rtol=0.0, atol=1e-9)
+    elif intervention == "freeze_flow":
+        routing = (finite and np.allclose(flow, flow[0], rtol=0.0, atol=1e-9)
+                   and np.allclose(recovery, temperature, rtol=1e-8, atol=1e-6)
+                   and np.any(np.abs(recovery-flow) > 1e-9))
+    else:
+        routing = False
+    return {
+        "status": "verified" if routing else "declared_not_verified",
+        "intervention": intervention, "path": str(path.resolve()),
+        "sha256": digest(path), "rows": len(rows),
+        "flow_temperature_range_K": [float(flow.min()), float(flow.max())],
+        "recovery_temperature_range_K": [float(recovery.min()), float(recovery.max())],
+        "state_temperature_range_K": [float(temperature.min()), float(temperature.max())],
+        "positive_thermal_step_present": bool(np.any(thermal > 0.0)),
+    }
+
+
 def episode_audit(rows: list[dict], components: dict[int, np.ndarray]) -> dict:
     """Measure all sampled candidate episodes, including the terminal episode."""
     episodes = []; start = None; previous_component = None; overlap_rows = []
@@ -250,11 +286,21 @@ def main() -> None:
         if parameters.keys() >= {"baseline", "control"}
         else {"only_declared_intervention_differs": False,
               "runtime_temperature_routing": "unavailable"})
+    routing = {
+        name: runtime_routing_audit(
+            directories[name], parameter_audit.get(f"{name}_intervention"))
+        for name in ("baseline", "control")}
+    parameter_audit["runtime_temperature_routing"] = routing
+    parameter_audit["runtime_temperature_routing_verified"] = all(
+        item["status"] == "verified" for item in routing.values())
     causal_comparable = bool(
         common_steps and common_parent
         and all(row["physical_time_exact"] and row["applied_strain_exact"]
                 for row in clock_rows)
         and parameter_audit["only_declared_intervention_differs"])
+    causal_comparable = bool(
+        causal_comparable
+        and parameter_audit["runtime_temperature_routing_verified"])
 
     episodes = episode_audit(trajectories["baseline"], components["baseline"])
     persistent = episodes["persistent"]

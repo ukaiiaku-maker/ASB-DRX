@@ -2,7 +2,7 @@ import numpy as np
 
 from full_model.analysis.postprocess_v53_asb_mechanism import (
     episode_audit, field_metrics, overlap, periodic_components,
-    physical_parameter_audit,
+    physical_parameter_audit, runtime_routing_audit,
 )
 
 
@@ -58,3 +58,13 @@ def test_episode_audit_separates_maximum_and_terminal_persistence():
     assert audit["maximum_episode_duration_s"] == 2.0e-6
     assert audit["terminal_episode_duration_s"] == 0.0
     assert audit["persistent"]
+
+
+def test_runtime_routing_audit_verifies_freeze_flow(tmp_path):
+    path = tmp_path/"drx_v25_restart_asb_diagnostics.csv"
+    path.write_text(
+        "flow_operator_T_mean_K,recovery_operator_T_mean_K,T_mean,thermal_dt\n"
+        "900,910,910,1e-9\n900,920,920,1e-9\n")
+    audit = runtime_routing_audit(tmp_path, "freeze_flow")
+    assert audit["status"] == "verified"
+    assert audit["positive_thermal_step_present"]
