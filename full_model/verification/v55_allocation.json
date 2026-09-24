@@ -1,0 +1,12 @@
+{
+  "schema": "asb-drx-v55-local-allocation-v1",
+  "allocation_id": "v55-local-20260924T234641Z",
+  "authorized_by": "user",
+  "execution_site": "local",
+  "started_utc": "2026-09-24T23:46:41Z",
+  "deadline_utc": "2026-09-25T17:46:41Z",
+  "duration_hours": 18,
+  "maximum_concurrent_heavy_solvers": 1,
+  "parent_evidence_commit": "7ce6f39ffbc3402f5119f557b336eac3221603ce",
+  "mission": "Advance retained ASB and DRX pathways toward a functioning coupled single-crystal/polycrystal model without stopping at intermediate scientific gates."
+}

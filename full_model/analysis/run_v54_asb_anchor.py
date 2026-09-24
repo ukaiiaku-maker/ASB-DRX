@@ -74,6 +74,15 @@ def main() -> None:
              if not state_path.exists() else json.loads(state_path.read_text()))
     if state.get("source_sha") != args.source_sha:
         raise RuntimeError("manager source changed across resume")
+    if state.get("allocation_id") != allocation["allocation_id"]:
+        state.setdefault("continuation_allocations", []).append({
+            "allocation_id": allocation["allocation_id"],
+            "started_utc": allocation.get("started_utc"),
+            "deadline_utc": allocation["deadline_utc"],
+            "resumed_utc": utc(),
+        })
+        state["active_allocation_id"] = allocation["allocation_id"]
+    state["targets"] = args.targets
     state["state"] = "RUNNING"; state["updated_utc"] = utc()
     write_json(state_path, state)
     driver = root/"full_model/hpc3/run_v37_conduction_case.py"
