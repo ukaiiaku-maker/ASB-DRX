@@ -45,7 +45,7 @@ CASES = (
      "parent_line_fraction": 1.0, "child_line_fraction": .35,
      "proposal_direction": 1, "front_enabled": True,
      "front_symmetric_availability": 1.0},
-    {"id": "equal_complete_state", "misorientation_deg": 20.0,
+    {"id": "equal_complete_state", "misorientation_deg": 0.0,
      "parent_line_fraction": 1.0, "child_line_fraction": 1.0,
      "proposal_direction": 1, "front_enabled": True,
      "front_symmetric_availability": 1.0},
@@ -189,18 +189,23 @@ def main():
             path=output/case["id"]/"result.json"
             if path.exists(): summaries[case["id"]]=compact(json.loads(path.read_text()))
         anchor=summaries[CASES[0]["id"]]
-        demonstrated=bool(anchor["newly_swept_volume_m3"]>0.0 and
-                          anchor["accepted_contour_displacement_m"]!=0.0)
+        motion_observed=bool(anchor["newly_swept_volume_m3"]>0.0 and
+                             anchor["accepted_contour_displacement_m"]!=0.0)
+        substantial=bool(abs(anchor["accepted_contour_displacement_m"])
+                         >= 2.48e-10)
         decision={
             "schema":"asb-drx/v54/existing-boundary-decision/v1",
             "generated_utc":utc(),"source_sha":args.source_sha,"cases":summaries,
             "hard_valid":all(item["all_loading_first_law_checks_passed"]
                              for item in summaries.values()),
             "mechanism_status":{"implemented":True,"enabled":True,
-                                "exercised":True,"demonstrated":demonstrated},
+                                "exercised":True,
+                                "direct_motion_observed":motion_observed,
+                                "substantial_growth_demonstrated":substantial},
             "scientific_classification":(
                 "PREPARED_EXISTING_BOUNDARY_GROWTH_AND_PROCESSING_DEMONSTRATED"
-                if demonstrated else "VALID_EXISTING_BOUNDARY_ARREST_OR_NEGLIGIBLE_GROWTH"),
+                if substantial else "VALID_EXISTING_BOUNDARY_ATOMIC_MOTION_BUT_NEGLIGIBLE_GEOMETRIC_GROWTH"
+                if motion_observed else "VALID_EXISTING_BOUNDARY_ARREST_OR_NO_RESOLVED_GROWTH"),
             "claim_boundary":"prepared existing-grain growth; not spontaneous grain birth",
         }
         decision_path=output/"v54_existing_boundary_decision.json"
