@@ -125,6 +125,23 @@ def test_resolved_bicrystal_is_an_existing_two_owner_state_not_nucleation():
     assert context["interface_width_m"] >= 2.0*context["spacing_m"]
 
 
+def test_misoriented_bicrystal_has_declared_pure_owner_cores_without_fake_nye():
+    context = resolved_bicrystal(
+        grid=16, length_m=3.2e-6, interface_width_m=4.0e-7,
+        misorientation_deg=20.0)
+    state = context["state"]
+    parent = state.common_front.parent
+    child = state.common_front.child
+    assert np.isclose(np.rad2deg(parent.orientation_rad[0, 0]), -10.0)
+    assert np.isclose(np.rad2deg(child.orientation_rad[0, 0]), 10.0)
+    assert np.all(parent.family_nye_m1 == 0.0)
+    assert np.all(child.family_nye_m1 == 0.0)
+    audit = context["boundary_initialization"]
+    assert audit["kind"] == "misoriented_bicrystal"
+    assert audit["declared_misorientation_deg"] == 20.0
+    assert audit["plastic_nye_from_orientation_target"] is False
+
+
 def test_v37_front_kinetic_family_controls_enter_production_event():
     context, initial, forward, _, driving, controls = _fixture()
     baseline_controls = replace(
@@ -140,6 +157,13 @@ def test_v37_front_kinetic_family_controls_enter_production_event():
         half_available["front_decision"]["net_velocity_a_to_b_m_s"],
         .5*baseline["front_decision"]["net_velocity_a_to_b_m_s"],
         rtol=2e-14, atol=0.0)
+
+    zero_state, zero_available = run_i3_cycle(
+        context, initial, forward, driving, replace(
+            baseline_controls, front_symmetric_availability=0.0))
+    assert zero_available["front_enabled"] is True
+    assert zero_available["front_decision"] is None
+    np.testing.assert_array_equal(zero_state.eta, initial.eta)
 
     _, altered_event = run_i3_cycle(
         context, initial, forward, driving, replace(

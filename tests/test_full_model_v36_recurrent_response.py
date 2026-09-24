@@ -34,3 +34,18 @@ def test_response_checkpoint_restart_reproduces_second_interval(tmp_path):
     assert restarted["physical_time_s"] == continuous["physical_time_s"]
     assert restarted["cumulative_signed_sweep_m3"] == continuous[
         "cumulative_signed_sweep_m3"]
+
+
+def test_response_records_compatible_transport_and_misoriented_boundary(tmp_path):
+    result = run_response(
+        output_dir=tmp_path/"misoriented", protocol="continued_deformation",
+        intervals=1, checkpoint_every=1, misorientation_deg=20.0,
+        mura_transport_operator="compatible_dealiased",
+        qualified_midpoint_loading=True)
+    assert result["configuration"]["mura_transport_operator"] == (
+        "compatible_dealiased")
+    assert result["boundary_initialization"]["kind"] == "misoriented_bicrystal"
+    row = result["records"][0]
+    assert row["mura"]["transport_operator"] == "compatible_dealiased"
+    assert row["cumulative_newly_swept_volume_m3"] >= 0.0
+    assert row["loading_energy_audit"]["first_law_passed"]

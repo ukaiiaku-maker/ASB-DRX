@@ -22,10 +22,14 @@ import time
 import numpy as np
 
 from full_model.analysis.run_v34_finite_coupled_response import (
-    I3Controls, checkpoint_payload, resolved_bicrystal, run_i3_cycle,
+    I3Controls, _energy_options, checkpoint_payload, resolved_bicrystal, run_i3_cycle,
     state_from_payload,
 )
-from full_model.production.common_tensorial_wall import CommonWallDriving
+from full_model.production.common_front_state import reconstruct_common
+from full_model.production.complete_front_energy import evaluate_complete_front_energy
+from full_model.production.common_tensorial_wall import (
+    CommonWallDriving, resolved_driving_components,
+)
 
 
 SCHEMA = "asb-drx/v36/recurrent-physical-response/v1"
@@ -79,17 +83,42 @@ def driving_at_time(grid, initial_shear, protocol, strain_rate_s, time_s):
         fixed_eigenstrain=fixed)
 
 
-def _record(index, time_s, driving, audit):
+def _record(index, time_s, driving, audit, state, context,
+            loading_audit=None):
     front = audit["front_decision"]
     kinetic = audit["complete_directional_kinetics"]
     measure = audit["physical_site_event_measure"]
     signed_sweep = float(audit["sweep"]["net_m3"])
     interface_area = (None if front is None else
                       float(front["interface_area_m2"]))
+    runtime_ledger = state.front_runtime.ledger
+    common, _ = reconstruct_common(
+        state.common_front, context["spacing_m"])
+    resolved = resolved_driving_components(
+        common, driving, context["systems"], context["topologies"],
+        context["wall_parameters"])
+    def owner_line_mean(owner):
+        return float(np.mean(sum(
+            np.sum(np.asarray(getattr(owner, name)), axis=2)
+            for name in ("mobile_plus_m2", "mobile_minus_m2",
+                         "forest_plus_m2", "forest_minus_m2",
+                         "wall_plus_m2", "wall_minus_m2"))))
+    gross_swept = (runtime_ledger.a_to_b_swept_volume_m3
+                   +runtime_ledger.b_to_a_swept_volume_m3)
     record = {
         "interval": int(index),
         "physical_time_end_s": float(time_s),
         "mean_shear_strain": float(driving.mean_strain[0, 1]),
+        "engineering_total_shear": float(
+            driving.mean_strain[0, 1]+driving.mean_strain[1, 0]),
+        "mean_shear_stress_Pa": float(np.mean(
+            resolved["stress_tensor_Pa"][..., 0, 1])),
+        "engineering_plastic_shear": float(np.mean(
+            common.beta_p[..., 0, 1]+common.beta_p[..., 1, 0])),
+        "parent_owner_total_line_density_mean_m2": owner_line_mean(
+            state.common_front.parent),
+        "child_owner_total_line_density_mean_m2": owner_line_mean(
+            state.common_front.child),
         "front_classification": None if front is None else front["classification"],
         "front_channel_diagnostics": front,
         "front_published": bool(audit["candidate_sweep_published"]),
@@ -106,6 +135,15 @@ def _record(index, time_s, driving, audit):
             row["normal_displacement_m"])
             for row in audit["sweep"]["components"]],
         "child_fraction_change": float(audit["phase"]["child_fraction_change"]),
+        "current_child_fraction": float(np.mean(state.eta[..., 1])),
+        "cumulative_gross_swept_volume_m3": float(gross_swept),
+        "cumulative_revisit_volume_m3": float(runtime_ledger.revisit_volume_m3),
+        "cumulative_newly_swept_volume_m3": float(
+            max(gross_swept-runtime_ledger.revisit_volume_m3, 0.0)),
+        "cumulative_processed_line_m": float(
+            state.common_front.ledger.processed_line_m),
+        "cumulative_boundary_stored_line_m": float(
+            state.common_front.ledger.boundary_line_m),
         "rate_a_to_b_per_site_s": None if front is None else float(
             front["rate_a_to_b_s"]),
         "rate_b_to_a_per_site_s": None if front is None else float(
@@ -131,6 +169,7 @@ def _record(index, time_s, driving, audit):
         "complete_energy_delta_J": float(
             audit["complete_energy"]["delta_helmholtz_J"]),
         "complete_energy_decision": audit["complete_energy"]["front_decision"],
+        "loading_energy_audit": loading_audit,
     }
     # Checkpoint metadata is JSON.  Normalize tuples and NumPy scalar subclasses
     # immediately so continuous and restarted records have identical semantics.
@@ -160,9 +199,14 @@ def _read_checkpoint(path, context):
 def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  dt_s=2.0e-9, initial_shear=0.01, strain_rate_s=1.0e3,
                  temperature_K=1100.0, child_line_fraction=0.35,
+                 parent_line_fraction=1.0,
                  length_m=3.2e-6, interface_width_m=4.0e-7,
+                 misorientation_deg=0.0,
                  proposal_fraction=0.125, proposal_direction=1,
                  front_enabled=True, mura_enabled=True,
+                 mura_transport_operator="legacy_mixed",
+                 prescribed_temperature=False,
+                 qualified_midpoint_loading=False,
                  checkpoint_every=10,
                  front_activation_h0_eV=.35, front_exp_a=2.0,
                  front_exp_n=1.5, front_exp_floor=.10,
@@ -176,11 +220,15 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     context = resolved_bicrystal(
         grid=grid, length_m=length_m, interface_width_m=interface_width_m,
         temperature_K=temperature_K,
-        child_line_fraction=child_line_fraction)
+        child_line_fraction=child_line_fraction,
+        parent_line_fraction=parent_line_fraction,
+        misorientation_deg=misorientation_deg)
     source = _source_commit()
     records = []
     start = 0
     physical_time = 0.0
+    cumulative_external_work_J = 0.0
+    initial_internal_energy_J = None
     state = context["state"]
     if resume is not None:
         state, saved = _read_checkpoint(Path(resume), context)
@@ -200,18 +248,28 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         immutable.setdefault("front_event_volume_b3", 1.0)
         immutable.setdefault("front_jump_length_b", 1.0)
         immutable.setdefault("front_symmetric_availability", 1.0)
+        immutable.setdefault("misorientation_deg", 0.0)
+        immutable.setdefault("parent_line_fraction", 1.0)
+        immutable.setdefault("mura_transport_operator", "legacy_mixed")
+        immutable.setdefault("prescribed_temperature", False)
+        immutable.setdefault("qualified_midpoint_loading", False)
         requested = {
             "protocol": protocol, "grid": int(grid), "dt_s": float(dt_s),
             "initial_shear": float(initial_shear),
             "strain_rate_s": float(strain_rate_s),
             "temperature_K": float(temperature_K),
             "child_line_fraction": float(child_line_fraction),
+            "parent_line_fraction": float(parent_line_fraction),
             "length_m": float(length_m),
             "interface_width_m": float(interface_width_m),
+            "misorientation_deg": float(misorientation_deg),
             "proposal_fraction": float(proposal_fraction),
             "proposal_direction": int(proposal_direction),
             "front_enabled": bool(front_enabled),
             "mura_enabled": bool(mura_enabled),
+            "mura_transport_operator": str(mura_transport_operator),
+            "prescribed_temperature": bool(prescribed_temperature),
+            "qualified_midpoint_loading": bool(qualified_midpoint_loading),
             "front_activation_h0_eV": float(front_activation_h0_eV),
             "front_exp_a": float(front_exp_a),
             "front_exp_n": float(front_exp_n),
@@ -227,18 +285,26 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         records = list(saved["records"])
         start = int(saved["completed_intervals"])
         physical_time = float(saved["physical_time_s"])
+        cumulative_external_work_J = float(saved.get(
+            "cumulative_external_work_J", 0.0))
+        initial_internal_energy_J = saved.get("initial_internal_energy_J")
     configuration = {
         "protocol": protocol, "grid": int(grid), "dt_s": float(dt_s),
         "initial_shear": float(initial_shear),
         "strain_rate_s": float(strain_rate_s),
         "temperature_K": float(temperature_K),
         "child_line_fraction": float(child_line_fraction),
+        "parent_line_fraction": float(parent_line_fraction),
         "length_m": float(length_m),
         "interface_width_m": float(interface_width_m),
+        "misorientation_deg": float(misorientation_deg),
         "proposal_fraction": float(proposal_fraction),
         "proposal_direction": int(proposal_direction),
         "front_enabled": bool(front_enabled),
         "mura_enabled": bool(mura_enabled),
+        "mura_transport_operator": str(mura_transport_operator),
+        "prescribed_temperature": bool(prescribed_temperature),
+        "qualified_midpoint_loading": bool(qualified_midpoint_loading),
         "front_activation_h0_eV": float(front_activation_h0_eV),
         "front_exp_a": float(front_exp_a),
         "front_exp_n": float(front_exp_n),
@@ -251,6 +317,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     }
     controls = I3Controls(
         mura_enabled=bool(mura_enabled), front_enabled=bool(front_enabled),
+        mura_transport_operator=str(mura_transport_operator),
+        prescribed_temperature=bool(prescribed_temperature),
         driving_pressure_a_to_b_Pa=0.0,
         applied_pressure_a_to_b_Pa=0.0,
         geometric_probe_pressure_Pa=1.0e8,
@@ -264,9 +332,28 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         front_jump_length_b=front_jump_length_b,
         front_symmetric_availability=front_symmetric_availability)
     wall_start = time.monotonic()
+    def total_energy(current_state, current_driving):
+        return evaluate_complete_front_energy(
+            current_state.common_front, current_state.eta,
+            spacing_m=context["spacing_m"],
+            represented_thickness_m=context["represented_thickness_m"],
+            **_energy_options(context, current_driving))
+    if initial_internal_energy_J is None:
+        initial_internal_energy_J = total_energy(
+            state, driving_at_time(grid, initial_shear, protocol,
+                                   strain_rate_s, physical_time)).internal_J
     for index in range(start, int(intervals)):
+        time_start = physical_time
+        initial_driving = driving_at_time(
+            grid, initial_shear, protocol, strain_rate_s, time_start)
         driving = driving_at_time(
-            grid, initial_shear, protocol, strain_rate_s, physical_time)
+            grid, initial_shear, protocol, strain_rate_s,
+            time_start+(0.5*dt_s if qualified_midpoint_loading else 0.0))
+        state_before = state
+        energy_before = (total_energy(state_before, initial_driving)
+                         if qualified_midpoint_loading else None)
+        energy_mid_before = (total_energy(state_before, driving)
+                             if qualified_midpoint_loading else None)
         envelope = geometric_envelope(
             state.eta, proposal_fraction, direction=proposal_direction)
         state, audit = run_i3_cycle(
@@ -277,7 +364,51 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                               atol=32*np.finfo(float).eps*max(dt_s, 1e-300)):
                 raise RuntimeError("Mura and front failed the declared common clock")
         physical_time += float(dt_s)
-        records.append(_record(index, physical_time, driving, audit))
+        loading_audit = None
+        if qualified_midpoint_loading:
+            endpoint_driving = driving_at_time(
+                grid, initial_shear, protocol, strain_rate_s, physical_time)
+            energy_mid_after = total_energy(state, driving)
+            energy_after = total_energy(state, endpoint_driving)
+            external_work = float(
+                energy_mid_before.recoverable_elastic_J
+                -energy_before.recoverable_elastic_J
+                +energy_after.recoverable_elastic_J
+                -energy_mid_after.recoverable_elastic_J)
+            delta_internal = float(energy_after.internal_J-energy_before.internal_J)
+            residual = delta_internal-external_work
+            scale = max(abs(energy_before.internal_J),
+                        abs(energy_after.internal_J), abs(delta_internal),
+                        abs(external_work), 1.0e-300)
+            relative_tolerance = 8192.0*np.finfo(float).eps
+            passed = bool(abs(residual) <= relative_tolerance*scale)
+            if not passed:
+                raise RuntimeError(
+                    "qualified changing-load first-law audit failed: "
+                    f"residual={residual}, scale={scale}")
+            cumulative_external_work_J += external_work
+            loading_audit = {
+                "load_time_start_s": time_start,
+                "load_time_midpoint_s": time_start+0.5*dt_s,
+                "load_time_end_s": physical_time,
+                "external_work_J": external_work,
+                "delta_internal_energy_J": delta_internal,
+                "first_law_residual_J": residual,
+                "first_law_passed": passed,
+                "first_law_scale_J": scale,
+                "first_law_relative_tolerance": relative_tolerance,
+                "cumulative_external_work_J": cumulative_external_work_J,
+                "cumulative_internal_energy_change_J": float(
+                    energy_after.internal_J-initial_internal_energy_J),
+                "cumulative_first_law_residual_J": float(
+                    energy_after.internal_J-initial_internal_energy_J
+                    -cumulative_external_work_J),
+            }
+            record_driving = endpoint_driving
+        else:
+            record_driving = driving
+        records.append(_record(index, physical_time, record_driving, audit,
+                               state, context, loading_audit))
         if ((index+1) % int(checkpoint_every) == 0
                 or index+1 == int(intervals)):
             metadata = {
@@ -285,6 +416,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 "configuration": configuration,
                 "completed_intervals": index+1,
                 "physical_time_s": physical_time,
+                "cumulative_external_work_J": cumulative_external_work_J,
+                "initial_internal_energy_J": initial_internal_energy_J,
                 "records": records,
             }
             _write_checkpoint(
@@ -301,10 +434,13 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     result = {
         "schema": SCHEMA, "created_utc": _utc_now(),
         "source_commit": source, "configuration": configuration,
+        "boundary_initialization": context["boundary_initialization"],
         "applied_front_work_Pa": 0.0,
         "geometric_probe_is_nonphysical_and_unledgered": True,
         "completed_intervals": len(records),
         "physical_time_s": physical_time,
+        "cumulative_external_work_J": cumulative_external_work_J,
+        "initial_internal_energy_J": initial_internal_energy_J,
         "accepted_front_intervals": accepted,
         "cumulative_signed_sweep_m3": cumulative,
         "gross_expected_event_count": gross,
@@ -332,8 +468,10 @@ def main():
     parser.add_argument("--strain-rate-s", type=float, default=1.0e3)
     parser.add_argument("--temperature-K", type=float, default=1100.0)
     parser.add_argument("--child-line-fraction", type=float, default=0.35)
+    parser.add_argument("--parent-line-fraction", type=float, default=1.0)
     parser.add_argument("--length-m", type=float, default=3.2e-6)
     parser.add_argument("--interface-width-m", type=float, default=4.0e-7)
+    parser.add_argument("--misorientation-deg", type=float, default=0.0)
     parser.add_argument("--proposal-fraction", type=float, default=0.125)
     parser.add_argument("--proposal-direction", type=int, choices=(-1, 1),
                         default=1)
@@ -341,6 +479,11 @@ def main():
                         dest="front_enabled")
     parser.add_argument("--disable-mura", action="store_false",
                         dest="mura_enabled")
+    parser.add_argument("--mura-transport-operator",
+                        choices=("compatible_dealiased", "legacy_mixed"),
+                        default="legacy_mixed")
+    parser.add_argument("--prescribed-temperature", action="store_true")
+    parser.add_argument("--qualified-midpoint-loading", action="store_true")
     parser.add_argument("--checkpoint-every", type=int, default=10)
     parser.add_argument("--front-activation-h0-eV", type=float, default=.35)
     parser.add_argument("--front-exp-a", type=float, default=2.0)

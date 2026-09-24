@@ -132,7 +132,9 @@ def _defect(owner):
 
 def resolved_bicrystal(grid=64, length_m=1.0e-5,
                        interface_width_m=3.0e-7,
-                       child_line_fraction=0.35, temperature_K=1100.0):
+                       child_line_fraction=0.35, parent_line_fraction=1.0,
+                       temperature_K=1100.0,
+                       misorientation_deg=0.0):
     """Construct an existing periodic bicrystal and one shared physical state."""
     if grid < 16 or interface_width_m < 2.0*length_m/grid:
         raise ValueError("bicrystal interface must be resolved by at least two cells")
@@ -153,10 +155,16 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
         # dedicated oracle audit below V39 retains the stricter 0.5 ps spacing.
         ordering_internal_substep_s=5e-11,
         ordering_internal_max_substeps=8192)
+    misorientation = np.deg2rad(float(misorientation_deg))
+    if not 0.0 <= float(misorientation_deg) < 180.0:
+        raise ValueError("bicrystal misorientation must lie in [0,180) degrees")
     parent = replace(
-        base.common,
+        _owner_with_line_scale(base.common, parent_line_fraction),
+        orientation_rad=np.full((grid, grid), -.5*misorientation),
         temperature_K=np.full((grid, grid), float(temperature_K)))
-    child = _owner_with_line_scale(parent, child_line_fraction)
+    child = _owner_with_line_scale(base.common, child_line_fraction)
+    child = replace(
+        child, orientation_rad=np.full((grid, grid), .5*misorientation))
     x = np.arange(grid)*spacing
     left, right = .25*length_m, .75*length_m
     fraction_1d = .5*(np.tanh((x-left)/interface_width_m)
@@ -169,10 +177,15 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
     adapter = initialize_common_front(front, parent)
     # initialize_common_front obtains all signed line owners from the declared
     # parent/child defect states.  Preserve the intended non-line child fields.
-    adapter = replace(adapter, child=replace(
-        adapter.child,
-        temperature_K=child.temperature_K.copy(),
-        orientation_rad=child.orientation_rad.copy()))
+    adapter = replace(
+        adapter,
+        parent=replace(adapter.parent,
+                       orientation_rad=parent.orientation_rad.copy()),
+        child=replace(adapter.child,
+                      temperature_K=child.temperature_K.copy(),
+                      orientation_rad=child.orientation_rad.copy()),
+        wake=replace(adapter.wake,
+                     orientation_rad=child.orientation_rad.copy()))
     owner_densities = []
     owner_alignments = []
     for owner in (adapter.parent, adapter.child, adapter.wake):
@@ -188,6 +201,12 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
         adapter, *owner_densities, *owner_alignments, systems, topologies)
     mechanical = reconstruct_mechanical_state(
         adapter, spacing, systems, topologies)
+    parent_core = chi <= 0.05
+    child_core = chi >= 0.95
+    measured_parent = float(np.mean(
+        mechanical.common.orientation_rad[parent_core]))
+    measured_child = float(np.mean(
+        mechanical.common.orientation_rad[child_core]))
     runtime = initialize_coupled_front_runtime(
         adapter.front, eta[..., 1]-eta[..., 0], normal_axis=0,
         periodic=True)
@@ -200,6 +219,26 @@ def resolved_bicrystal(grid=64, length_m=1.0e-5,
         "spacing_m": spacing,
         "represented_thickness_m": 2.0*parameters.burgers_m,
         "interface_width_m": float(interface_width_m),
+        "boundary_initialization": {
+            "kind": ("misoriented_bicrystal" if misorientation else
+                     "same_orientation_density_front"),
+            "declared_misorientation_deg": float(misorientation_deg),
+            "parent_orientation_rad": -.5*misorientation,
+            "child_orientation_rad": .5*misorientation,
+            "measured_parent_pure_core_orientation_rad": measured_parent,
+            "measured_child_pure_core_orientation_rad": measured_child,
+            "measured_pure_core_misorientation_deg": float(np.rad2deg(
+                measured_child-measured_parent)),
+            "initial_beta_p_max_abs": float(np.max(np.abs(
+                mechanical.common.beta_p))),
+            "initial_family_nye_max_abs_m1": float(np.max(np.abs(
+                mechanical.common.family_nye_m1))),
+            "intrinsic_boundary_energy_representation": (
+                "two-phase barrier and gradient terms in complete front energy"),
+            "plastic_nye_from_orientation_target": False,
+            "parent_line_fraction_of_base": float(parent_line_fraction),
+            "child_line_fraction_of_base": float(child_line_fraction),
+        },
     }
 
 
@@ -291,7 +330,9 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
     burgers = float(context["wall_parameters"].burgers_m)
     kinetic_event_volume = controls.front_event_volume_b3*burgers**3
     kinetic_event_length = controls.front_jump_length_b*burgers
-    if controls.front_enabled:
+    if controls.front_symmetric_availability < 0.0:
+        raise ValueError("front symmetric availability cannot be negative")
+    if controls.front_enabled and controls.front_symmetric_availability > 0.0:
         process = ActivatedProcess(
             "v34-i3-existing-boundary",
             controls.front_attempt_frequency_s*controls.front_symmetric_availability,
