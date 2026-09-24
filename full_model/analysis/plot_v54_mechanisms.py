@@ -53,7 +53,10 @@ def plot_drx(decision_path: Path, output: Path):
     fig,axes=plt.subplots(3,2,figsize=(10,9),sharex=True)
     for case,label in (("misoriented_front","front enabled"),
                        ("misoriented_front_disabled","front disabled")):
-        result=json.loads((decision_path.parent/case/"result.json").read_text())
+        # The independently postprocessed decision may live above the execution
+        # directory.  Its case record is the authoritative result address.
+        result_path=Path(decision["cases"][case]["result"])
+        result=json.loads(result_path.read_text())
         rows=result["records"];time=np.asarray([r["physical_time_end_s"] for r in rows])*1e6
         axes[0,0].plot(time,np.cumsum([r["accepted_contour_displacement_m"] for r in rows])*1e9,label=label)
         axes[0,1].plot(time,[r["cumulative_newly_swept_volume_m3"] for r in rows],label=label)
