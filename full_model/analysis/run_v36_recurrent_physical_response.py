@@ -214,7 +214,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  front_activation_entropy_kB=0.0,
                  front_event_volume_b3=1.0, front_jump_length_b=1.0,
                  front_symmetric_availability=1.0,
-                 resume=None):
+                 resume=None, accepted_restart_source_sha=None):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
@@ -230,10 +230,24 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     cumulative_external_work_J = 0.0
     initial_internal_energy_J = None
     state = context["state"]
+    restart_source_transition = None
     if resume is not None:
         state, saved = _read_checkpoint(Path(resume), context)
-        if saved.get("source_commit") != source:
-            raise ValueError("restart source differs from the frozen checkpoint source")
+        saved_source = saved.get("source_commit")
+        allowed_sources = {source}
+        if accepted_restart_source_sha is not None:
+            allowed_sources.add(str(accepted_restart_source_sha))
+        if saved_source not in allowed_sources:
+            raise ValueError(
+                "restart source is neither the current source nor the explicitly "
+                "accepted repair-parent source")
+        restart_source_transition = saved.get("restart_source_transition")
+        if saved_source != source:
+            restart_source_transition = {
+                "checkpoint_source_commit": saved_source,
+                "execution_source_commit": source,
+                "authorization": "explicit accepted_restart_source_sha",
+            }
         immutable = saved["configuration"]
         # V36 checkpoints predate the explicit V37 kinetic-family controls.
         # Their implicit values are exactly the defaults below, so schema
@@ -419,6 +433,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 "cumulative_external_work_J": cumulative_external_work_J,
                 "initial_internal_energy_J": initial_internal_energy_J,
                 "records": records,
+                "restart_source_transition": restart_source_transition,
             }
             _write_checkpoint(
                 output_dir/f"checkpoint_{index+1:06d}.npz",
@@ -434,6 +449,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     result = {
         "schema": SCHEMA, "created_utc": _utc_now(),
         "source_commit": source, "configuration": configuration,
+        "restart_source_transition": restart_source_transition,
         "boundary_initialization": context["boundary_initialization"],
         "applied_front_work_Pa": 0.0,
         "geometric_probe_is_nonphysical_and_unledgered": True,
@@ -495,6 +511,7 @@ def main():
     parser.add_argument("--front-jump-length-b", type=float, default=1.0)
     parser.add_argument("--front-symmetric-availability", type=float, default=1.0)
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--accepted-restart-source-sha")
     args = parser.parse_args()
     result = run_response(**vars(args))
     print(json.dumps({key: result[key] for key in (

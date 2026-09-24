@@ -65,7 +65,8 @@ def latest_checkpoint(directory):
     return paths[-1] if paths else None
 
 
-def run_case(root, source_sha, output, case, target, log):
+def run_case(root, source_sha, output, case, target, log,
+             accepted_restart_source_sha=None):
     directory = output/case["id"]; directory.mkdir(parents=True, exist_ok=True)
     result_path = directory/"result.json"
     if result_path.exists():
@@ -94,6 +95,9 @@ def run_case(root, source_sha, output, case, target, log):
     restart = latest_checkpoint(directory)
     if restart is not None:
         command.extend(("--resume", str(restart)))
+        if accepted_restart_source_sha is not None:
+            command.extend(("--accepted-restart-source-sha",
+                            accepted_restart_source_sha))
     started = time.perf_counter()
     with log.open("a") as stream:
         stream.write("COMMAND "+json.dumps(command)+"\n"); stream.flush()
@@ -144,6 +148,7 @@ def main():
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--allocation", type=Path, required=True)
     parser.add_argument("--targets", type=int, nargs="+", default=[1, 10, 50, 100, 200, 500])
+    parser.add_argument("--accepted-restart-source-sha")
     args = parser.parse_args()
     root=args.source_root.resolve(); output=args.output_root.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -158,7 +163,9 @@ def main():
         # Exercise the physical anchor first, then all bounded one-step controls.
         ordered=[CASES[0], CASES[1], *CASES[2:]]
         for case in ordered:
-            result,wall=run_case(root,args.source_sha,output,case,1,log)
+            result,wall=run_case(
+                root,args.source_sha,output,case,1,log,
+                args.accepted_restart_source_sha)
             state["blocks"].append({"case":case["id"],"target":1,
                                     "wall_seconds":wall,"completed_utc":utc()})
             atomic_json(state_path,state)
@@ -179,7 +186,9 @@ def main():
             for case in CASES[:2]:
                 state["active"]={"case":case["id"],"target":target,"started_utc":utc()}
                 atomic_json(state_path,state)
-                result,wall=run_case(root,args.source_sha,output,case,target,log)
+                result,wall=run_case(
+                    root,args.source_sha,output,case,target,log,
+                    args.accepted_restart_source_sha)
                 increment=max(target-prior,1); per_interval.append(wall/increment)
                 state["blocks"].append({"case":case["id"],"target":target,
                                         "wall_seconds":wall,"completed_utc":utc()})
