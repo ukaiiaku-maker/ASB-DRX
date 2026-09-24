@@ -1,7 +1,8 @@
 import numpy as np
 
 from full_model.analysis.postprocess_v53_asb_mechanism import (
-    field_metrics, overlap, periodic_components, physical_parameter_audit,
+    episode_audit, field_metrics, overlap, periodic_components,
+    physical_parameter_audit,
 )
 
 
@@ -35,3 +36,25 @@ def test_physical_audit_allows_only_causal_flag_and_runtime_restart():
     assert physical_parameter_audit(left, right)["only_declared_intervention_differs"]
     right["k_thermal"] = .2
     assert not physical_parameter_audit(left, right)["only_declared_intervention_differs"]
+
+
+def test_physical_audit_rejects_identical_none_interventions():
+    left = {"T0": 900.0, "causal_temperature_ablation": "none"}
+    right = {"T0": 900.0, "causal_temperature_ablation": "none"}
+    audit = physical_parameter_audit(left, right)
+    assert not audit["intervention_identity_passed"]
+    assert not audit["only_declared_intervention_differs"]
+
+
+def test_episode_audit_separates_maximum_and_terminal_persistence():
+    mask = np.ones((2, 2), dtype=bool)
+    rows = [
+        {"step": 0, "physical_time_s": 0.0, "candidate_snapshot": True},
+        {"step": 1, "physical_time_s": 2.0e-6, "candidate_snapshot": True},
+        {"step": 2, "physical_time_s": 3.0e-6, "candidate_snapshot": False},
+        {"step": 3, "physical_time_s": 4.0e-6, "candidate_snapshot": True},
+    ]
+    audit = episode_audit(rows, {i: mask for i in range(4)})
+    assert audit["maximum_episode_duration_s"] == 2.0e-6
+    assert audit["terminal_episode_duration_s"] == 0.0
+    assert audit["persistent"]

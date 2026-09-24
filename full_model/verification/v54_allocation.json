@@ -1,0 +1,26 @@
+{
+  "schema": "asb-drx/v54/allocation/v1",
+  "allocation_id": "v54-local-20260924T184730Z",
+  "created_utc": "2026-09-24T18:47:30Z",
+  "deadline_utc": "2026-09-25T06:47:30Z",
+  "nominal_duration_hours": 12.0,
+  "execution_policy": {
+    "location": "local_only",
+    "maximum_concurrent_heavy_solvers": 1,
+    "owner_model": "single_live_owner",
+    "resume_retains_deadline": true
+  },
+  "source": {
+    "parent_commit": "0b645e739b4a6e3b53d396a87ff6febd50c4dcd2",
+    "parent_branch": "exp/full-v34-recovery-v53-20260923",
+    "branch": "exp/full-v54-mechanism-first-20260924",
+    "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v54-20260924"
+  },
+  "case_priority": [
+    "asb_common_prefix_and_feedback_pair",
+    "misoriented_existing_boundary_drx_anchor",
+    "one_discriminating_extension",
+    "closure"
+  ],
+  "state": "STARTED"
+}
