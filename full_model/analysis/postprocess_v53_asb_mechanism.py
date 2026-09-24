@@ -120,7 +120,8 @@ def checkpoint_record(path: Path) -> tuple[dict, np.ndarray, dict]:
             "imposed_tensor_history": (
                 "production simple-shear finite-loading protocol; edot_app is the "
                 "declared scalar loading-rate parameter"),
-            "stress_Pa": float(raw["sigma_bar"])*1.0e6,
+            "stress_Pa": float(raw["sigma_bar"]),
+            "stress_source_units": "checkpoint sigma_bar is Pa; diagnostics export converts it to MPa",
             "temperature_mean_K": float(temperature.mean()),
             "temperature_peak_K": float(temperature.max()),
             "temperature_peak_minus_mean_K": float(
