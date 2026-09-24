@@ -11,6 +11,8 @@ from pathlib import Path
 
 
 BURGERS_M = 2.48e-10
+EQUAL_STATE_STATIONARITY_TOLERANCE_B = 1.0e-5
+SUBSTANTIAL_TRANSFORMED_FRACTION = 0.01
 
 
 def digest(path):
@@ -30,6 +32,7 @@ def summarize(path):
     front_allowance=sum(float(r["tolerance_J"]) for r in front)
     front_cumulative=sum(float(r["first_law_residual_J"]) for r in front)
     displacement=sum(float(r["accepted_contour_displacement_m"]) for r in rows)
+    phase_fraction_change=sum(float(r["child_fraction_change"]) for r in rows)
     return {
         "result":str(path.resolve()),"sha256":digest(path),
         "configuration":result["configuration"],
@@ -38,6 +41,7 @@ def summarize(path):
         "physical_time_s":float(result["physical_time_s"]),
         "direct_signed_contour_displacement_m":displacement,
         "displacement_in_burgers_vectors":displacement/BURGERS_M,
+        "cumulative_child_fraction_change":phase_fraction_change,
         "newly_swept_volume_m3":float(end["cumulative_newly_swept_volume_m3"]),
         "revisit_volume_m3":float(end["cumulative_revisit_volume_m3"]),
         "processed_line_m":float(end["cumulative_processed_line_m"]),
@@ -84,8 +88,15 @@ def main():
     motion=False if anchor is None else bool(
         anchor["newly_swept_volume_m3"]>0.0 and
         anchor["direct_signed_contour_displacement_m"]!=0.0)
-    substantial=False if anchor is None else bool(
+    atomic_length_milestone=False if anchor is None else bool(
         abs(anchor["direct_signed_contour_displacement_m"])>=BURGERS_M)
+    substantial=False if anchor is None else bool(
+        abs(anchor["cumulative_child_fraction_change"])
+        >=SUBSTANTIAL_TRANSFORMED_FRACTION)
+    equal=cases.get("equal_complete_state",{})
+    reversal=cases.get("contrast_reversal",{})
+    equal_stationarity_tolerance_m=(
+        EQUAL_STATE_STATIONARITY_TOLERANCE_B*BURGERS_M)
     control_contract={
         "front_disabled_has_zero_sweep": (
             cases.get("misoriented_front_disabled",{}).get("newly_swept_volume_m3")==0.0),
@@ -98,6 +109,13 @@ def main():
                 "parent_line_fraction")==1.0
             and cases.get("equal_complete_state",{}).get("configuration",{}).get(
                 "child_line_fraction")==1.0),
+        "equal_complete_state_measured_stationary": bool(
+            equal and abs(equal["direct_signed_contour_displacement_m"])
+            <=equal_stationarity_tolerance_m),
+        "contrast_reversal_changes_motion_sign": bool(
+            anchor and reversal
+            and anchor["direct_signed_contour_displacement_m"]
+            *reversal["direct_signed_contour_displacement_m"] < 0.0),
     }
     hard_valid=bool(not missing and all(c["hard_loading_ledger_passed"] and
                     c["complete_front_first_law_passed"] and
@@ -110,7 +128,7 @@ def main():
     elif substantial:
         classification="PREPARED_EXISTING_BOUNDARY_SUBSTANTIAL_GROWTH_DEMONSTRATED"
     elif motion:
-        classification="VALID_ATOMIC_MOTION_WITH_NEGLIGIBLE_GEOMETRIC_GROWTH"
+        classification="VALID_CONTINUUM_AVERAGED_MOTION_WITH_NEGLIGIBLE_GEOMETRIC_GROWTH"
     else:
         classification="VALID_ARREST_OR_NO_RESOLVED_GROWTH"
     payload={"schema":"asb-drx/v54/existing-boundary-decision/v2",
@@ -120,10 +138,17 @@ def main():
              "mechanism_status":{"implemented":True,"enabled":True,
                                  "exercised":anchor is not None,
                                  "direct_motion_observed":motion,
+                                 "atomic_length_milestone_reached":atomic_length_milestone,
                                  "substantial_growth_demonstrated":substantial},
-             "substantial_motion_definition":{
-                 "minimum_direct_displacement_m":BURGERS_M,
-                 "basis":"one declared BCC Burgers-vector jump length"},
+             "atomic_length_milestone_definition":{
+                 "minimum_area_equivalent_displacement_m":BURGERS_M,
+                 "basis":"one declared BCC Burgers-vector jump length; this is not by itself substantial DRX"},
+             "substantial_growth_definition":{
+                 "minimum_absolute_transformed_fraction":SUBSTANTIAL_TRANSFORMED_FRACTION,
+                 "basis":"one percent net domain transformation measured from phase-fraction increments"},
+             "control_tolerances":{
+                 "equal_state_stationarity_m":equal_stationarity_tolerance_m,
+                 "equal_state_stationarity_b":EQUAL_STATE_STATIONARITY_TOLERANCE_B},
              "cases":cases,"spontaneous_grain_birth_claimed":False}
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(payload,indent=2,sort_keys=True)+"\n")
