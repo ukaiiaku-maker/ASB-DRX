@@ -1,0 +1,70 @@
+{
+  "schema": "asb-drx-v54-campaign-manifest-v1",
+  "allocation": {
+    "id": "v54-local-20260924T184730Z",
+    "execution_site": "local",
+    "started_utc": "2026-09-24T18:47:30Z",
+    "deadline_utc": "2026-09-25T06:47:30Z",
+    "maximum_concurrent_heavy_solvers": 1
+  },
+  "repository": {
+    "branch": "exp/full-v54-mechanism-first-20260924",
+    "parent_commit": "0b645e739b4a6e3b53d396a87ff6febd50c4dcd2",
+    "asb_numerical_source": "bb468ab02327a3164b5c95b76a3978d421ded452",
+    "drx_initial_numerical_source": "35f123c044ca2b5db3a7ec4776172004d83ba7a1",
+    "drx_repair_source": "4aac7f21cf58cb833bd8355484cb0a4430038e51",
+    "drx_final_numerical_source": "028b8d61a83f6b302fc6777b8c966080c9de55c0",
+    "canonical_test_source": "19a5aac14427d4ac71305c200aca588447c6830f",
+    "remote": "https://github.com/ukaiiaku-maker/ASB-DRX.git"
+  },
+  "execution": {
+    "asb": {
+      "state": "COMPLETE",
+      "created_utc": "2026-09-24T18:51:49.049405+00:00",
+      "completed_utc": "2026-09-24T20:35:06.368873+00:00",
+      "paired_targets": [300, 700, 1200, 1800, 2500],
+      "final_physical_time_s": 8.336666666666454e-06,
+      "final_audited_applied_strain": 0.2500999999999936,
+      "manager": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/anchor/v54_asb_anchor_manager.json"
+    },
+    "drx": {
+      "state": "COMPLETE",
+      "created_utc": "2026-09-24T20:59:49.369546+00:00",
+      "completed_utc": "2026-09-24T22:57:41.150352+00:00",
+      "grid": 64,
+      "completed_intervals": 500,
+      "dt_s": 2e-09,
+      "final_physical_time_s": 1.0000000000000078e-06,
+      "manager": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/drx/anchor/v54_drx_anchor_manager.json"
+    }
+  },
+  "restart_lineage": {
+    "asb_common_prefix_source": "a59681aaa62e2d47ccbd790532c028fe4fd7e8b2",
+    "asb_common_prefix_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/common-prefix/current_source_thermal_feedback/drx_v25_restart_000002.npz",
+    "asb_common_prefix_checkpoint_sha256": "be7abc4a6f14e1217931aa72d052d847cc5742489b56ae7d407e6c990c24db63",
+    "drx_accepted_prefix_source": "35f123c044ca2b5db3a7ec4776172004d83ba7a1",
+    "drx_restart_source": "028b8d61a83f6b302fc6777b8c966080c9de55c0",
+    "drx_transition_reason": "scalar compatibility density views accumulated cancellation-sized differences from authoritative split reservoirs; repaired by exact reconstruction without changing or relaxing authoritative reservoir invariants"
+  },
+  "artifacts": [
+    {"path": "full_model/verification/v54_allocation.json", "sha256": "ee3049ad60ca7cbc7419e97d8eef4a425a13972923face26d3dcacd99df5688c"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/anchor/v54_asb_anchor_manager.json", "sha256": "5dcb426cf7350b5129d6def6e5aa0df7593ed0beb80ef4a16b5670c9678f812e"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/v54_asb_mechanism_decision_final.json", "sha256": "1ceece53d0ea8891e70d15ef7862c089cc94a547caf91ea0b5622b1d1853341b"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/drx/anchor/v54_drx_anchor_manager.json", "sha256": "9be90496368593cc18f9225ae356dc7a402d8736053ab695ee66428626cd17fb"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/drx/v54_existing_boundary_decision_final.json", "sha256": "4827eba48194e53534b31d44a5a23ba0f6e9a6760d5c2d9da502793404d60d7a"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/figures/v54_asb_evolution.png", "sha256": "0a78459e550e08b8dcd09145bfd382edd964ae3e388bf3805a24fba2324bf775"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/figures/v54_asb_endpoint_fields.png", "sha256": "99e0a36f196a728902589e8885a247e75e83b220d62be99c2445208a517b0d03"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/figures/v54_drx_evolution.png", "sha256": "8bbbdc2c8cece55e800f8eca5fdfa7faca758a181dd4711a5dae0d1b57242008"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/anchor/asb-pair/current_source_thermal_feedback/drx_v25_restart_002500.npz", "sha256": "8f7a2542027acc051350373264ec33d5ff6ba12861ef74ea6c646abe169fa4d2"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/anchor/asb-pair/current_source_freeze_flow_control/drx_v25_restart_002500.npz", "sha256": "9f22e63952108451fb0dea05ec563454e39ec34b88b9f24516e6881c8bf92787"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/drx/anchor/misoriented_front/checkpoint_000500.npz", "sha256": "177ffe09a010dee292de15532ea46b7be33b69d5e71ab0ee53478f1ea8970753"},
+    {"path": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/drx/anchor/misoriented_front_disabled/checkpoint_000500.npz", "sha256": "96bdfe6e650d376790083fb201b5d1b2e10bf52ea2fc1c272fc5f2a0ca45bf14"}
+  ],
+  "canonical_regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 872,
+    "failed": 0,
+    "duration_s": 462.90,
+    "source": "19a5aac14427d4ac71305c200aca588447c6830f"
+  }
+}

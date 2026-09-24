@@ -2107,3 +2107,33 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `PHYSICAL_FLOW_APPROACH_COMPLETE_MATCHED_N192_THROUGH_INTERVAL_32_GEOMETRY_OPTION_QUALIFIED_WITH_CLIMB_STRESS_HYPOTHESIS`.
   Report: `full_model/docs/v52_decision_report.md`. DRX, persistent LAGB,
   strict ASB, and material calibration remain unclaimed.
+
+## Directive v54 mechanism-first ASB and existing-boundary DRX (2026-09-24)
+
+- The n128 matched ASB pair completed 8.3367 microseconds and audited strain
+  0.2501 from one exact shared prefix. Hard invariants, physical clocks,
+  affine loading, the declared `none`/`freeze_flow` intervention, and runtime
+  temperature routing all pass.
+- Thermal feedback lowers endpoint stress by 245.29 MPa relative to the
+  frozen-flow control and raises peak-minus-mean temperature contrast by
+  40.094 K, but no connected localization episode meets the inherited strict
+  persistence criterion. Classification:
+  `VALID_BROAD_OR_NONPERSISTENT_THERMAL_FEEDBACK`; strict ASB is not shown.
+- A physical n64 misoriented bicrystal with compatible-dealiased Mura
+  transport and evolving temperature completed a matched front-enabled and
+  disabled 1.000 microsecond horizon. The enabled front moves
+  3.82047e-13 m (0.0015405 Burgers vectors), sweeps 1.21277e-27 m3, and
+  processes 1.16419e-12 m of line; the disabled control remains exactly zero.
+- Equal-complete-state, zero-exposure, same-orientation density-front, and
+  contrast-reversal controls pass. The observed motion is below the declared
+  one-Burgers-vector substantial-growth threshold. Classification:
+  `VALID_ATOMIC_MOTION_WITH_NEGLIGIBLE_GEOMETRIC_GROWTH`; neither meaningful
+  DRX growth nor spontaneous grain birth is claimed.
+- A restart at accepted interval 23 followed an exact compatibility-view
+  repair: scalar views are reconstructed from authoritative reservoirs with
+  no tolerance relaxation or reservoir change. The accepted prefix and source
+  transition are recorded.
+- ASB/DRX numerical sources are `bb468ab`/`028b8d6`; the frozen final-analysis
+  source `19a5aac` passes 872 canonical tests in 462.90 s. Report and manifest:
+  `full_model/docs/v54_decision_report.md` and
+  `full_model/verification/v54_campaign_manifest.json`.

@@ -1,0 +1,59 @@
+{
+  "schema": "asb-drx-v54-mechanism-decision-v1",
+  "asb": {
+    "classification": "VALID_BROAD_OR_NONPERSISTENT_THERMAL_FEEDBACK",
+    "implemented": true,
+    "enabled": true,
+    "exercised": true,
+    "strict_asb_demonstrated": false,
+    "hard_invariants_passed": true,
+    "causal_comparability_passed": true,
+    "screening_candidate": false,
+    "maximum_localization_episode_duration_s": 0.0,
+    "terminal_localization_episode_duration_s": null,
+    "feedback_endpoint": {
+      "stress_Pa": 2704040232.098132,
+      "temperature_mean_K": 1167.470299956527,
+      "temperature_peak_K": 1225.723396014154,
+      "temperature_peak_minus_mean_K": 58.25309605762709,
+      "plastic_power_inverse_participation_fraction": 0.901778170778952
+    },
+    "frozen_flow_endpoint": {
+      "stress_Pa": 2949334080.521902,
+      "temperature_mean_K": 1178.134427368188,
+      "temperature_peak_K": 1196.2937871491354,
+      "temperature_peak_minus_mean_K": 18.159359780947398,
+      "plastic_power_inverse_participation_fraction": 0.9836075936943913
+    },
+    "matched_effect_control_minus_feedback": {
+      "stress_Pa": 245293848.42377043,
+      "temperature_peak_minus_mean_K": -40.09373627667969,
+      "temperature_peak_K": -29.429608865018736,
+      "plastic_power_inverse_participation_fraction": 0.08182942291543938
+    },
+    "authoritative_result": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/asb/v54_asb_mechanism_decision_final.json"
+  },
+  "existing_boundary_drx": {
+    "classification": "VALID_ATOMIC_MOTION_WITH_NEGLIGIBLE_GEOMETRIC_GROWTH",
+    "implemented": true,
+    "enabled": true,
+    "exercised": true,
+    "direct_motion_observed": true,
+    "substantial_growth_demonstrated": false,
+    "spontaneous_grain_birth_claimed": false,
+    "hard_valid": true,
+    "controls_passed": true,
+    "qualified_transport": "compatible_dealiased",
+    "declared_misorientation_deg": 20.0,
+    "measured_pure_core_misorientation_deg": 18.544146386408276,
+    "direct_signed_contour_displacement_m": 3.820471307036666e-13,
+    "displacement_in_burgers_vectors": 0.001540512623805107,
+    "substantial_motion_threshold_m": 2.48e-10,
+    "newly_swept_volume_m3": 1.2127704117057194e-27,
+    "revisit_volume_m3": 0.0,
+    "processed_line_m": 1.1641922432002064e-12,
+    "boundary_stored_line_m": 2.917483364682903e-14,
+    "authoritative_result": "/Users/sdillon/HPC3/campaigns/asb-drx-v54-20260924/drx/v54_existing_boundary_decision_final.json"
+  },
+  "campaign_conclusion": "Both production mechanisms were exercised with valid ledgers and controls. The tested ASB condition produced causal but broad/nonpersistent thermal feedback, and the prepared misoriented boundary moved atomically but did not exhibit substantial geometric growth. Neither strict ASB nor DRX is demonstrated."
+}
