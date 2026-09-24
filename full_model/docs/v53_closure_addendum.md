@@ -75,3 +75,10 @@ transformed volume, processed/boundary line, child defect reduction, stored
 energy advantage, capacity limits, and rehardening.  This is a prepared-grain
 growth test, not spontaneous nucleation.
 
+## Terminal software qualification
+
+The immutable closure source `4089ce83c4d5c4056d06b6862d227ee5f3a903b6`
+passes the complete configured regression suite: 866 tests in 430.30 seconds.
+The closure manager terminates `COMPLETE_AT_ACHIEVED_SCOPE`; it launched no
+ASB preflight or scientific solver after finding the original V53 campaign
+clock exhausted.

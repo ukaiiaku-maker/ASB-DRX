@@ -1,0 +1,64 @@
+{
+  "schema": "asb-drx/v53/closure/v1",
+  "source_sha": "4089ce83c4d5c4056d06b6862d227ee5f3a903b6",
+  "execution_location": "local",
+  "hpc3_jobs_submitted": 0,
+  "completed_utc": "2026-09-24T18:04:43.204087+00:00",
+  "execution_completion": "COMPLETE_AT_ACHIEVED_SCOPE",
+  "n128": {
+    "completed_intervals": 128,
+    "physical_time_s": 6.25e-05,
+    "total_engineering_shear": 0.0325,
+    "engineering_plastic_shear": 0.006710348524342243,
+    "mean_shear_stress_Pa": 2297857946.4811077,
+    "mean_temperature_K": 1104.3474748991985,
+    "first_law_checks_passed": true,
+    "classification": "NEAR_FLOW_ATTAINED_EXACT_MICROSCOPIC_PEAK_UNRESOLVED"
+  },
+  "n192": {
+    "completed_intervals": 52,
+    "physical_time_s": 2.5390625e-05,
+    "post32_segment_wall_s": 23257.272556985496,
+    "checkpoint_sha256": "0c009a7b1b7e38b56b0050a23e6a53ff43bf354ec2b49d3251e56e0eba59dd53",
+    "manifest_sha256": "224cc2dd86638e94b8ebf02dbc8172c668f99181ebdbb3f19137973a22f30126",
+    "spatial_comparison_sha256": "5b0b57be0df172ebe94cbbbe2d6fb5ac212400880e2aa8e795c16612de72e684",
+    "comparison_preconditions_passed": true,
+    "primary_increment_all_below_5_percent": true
+  },
+  "controller_recovery": {
+    "classification": "RECOVERED_POSTPROCESSING_ONLY_PREDECESSOR_FAILURE",
+    "original_failure": "missing retained n128 interval 52 in the continuation-only file directory",
+    "accepted_trajectory_invalidated": false
+  },
+  "asb": {
+    "execution_state": "PREPARED_NOT_RUN",
+    "classification": "BUDGET_DEFERRED_NO_MECHANISM_EXECUTION",
+    "physical_negative_claimed": false,
+    "strict_asb_claimed": false,
+    "next_priority": "exact-common-state current-source ASB causal pair"
+  },
+  "drx": {
+    "existing_boundary_enabled_in_v53": false,
+    "intragranular_recognition_promotion_integrated": false,
+    "physical_negative_claimed": false,
+    "next_task": "full_model/hpc3/v53_existing_boundary_drx_next.json"
+  },
+  "canonical_regression": {
+    "passed": true,
+    "tests_passed": 866,
+    "wall_seconds": 430.30
+  },
+  "closure_manager": {
+    "journal_sha256": "d5e8d7c291feada183e692d0bc20f53761340f8996aaa750c8ab0f69c8f29596",
+    "log_sha256": "efc36557ffa7c0ef9f28c0f4693415188ae891331a095f94c68051dd16574be7"
+  },
+  "scientific_claims": {
+    "near_flow_bulk_response": true,
+    "spatially_supported_through_interval": 52,
+    "prepared_geometry_physical_result": false,
+    "drx": false,
+    "lagb": false,
+    "strict_asb": false,
+    "material_calibration": false
+  }
+}

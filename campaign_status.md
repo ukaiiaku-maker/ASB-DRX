@@ -18,6 +18,9 @@ Updated: 2026-09-23 (America/Los_Angeles)
   validity terminals, and uses an outcome-neutral periodic, duration-based
   classifier.  A concrete existing-boundary DRX calculation is separately
   staged for the next allocation; no new grain birth is claimed.
+- Terminal source `4089ce8` passes 866 canonical tests in 430.30 s.  The
+  machine-readable closure is `COMPLETE_AT_ACHIEVED_SCOPE`; no V53 process is
+  still running and no HPC3 job was submitted.
 - The attributable n128 continuation completed interval 128 at 62.5 us and
   total engineering shear 0.0325.  Its endpoint has engineering plastic shear
   0.0067103485, mean shear stress 2.297857946 GPa, mean temperature
