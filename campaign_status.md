@@ -4,6 +4,20 @@ Updated: 2026-09-23 (America/Los_Angeles)
 
 ## Directive v53 flow regime, conjugate geometry, and mechanism priority
 
+- Overnight reconciliation: n192 completed interval 52 with a valid checksum
+  and first-law closure.  The old manager then failed only while locating the
+  inherited n128 interval-52 file for postprocessing; no solver state was lost.
+  The recovered exact-time n128/n192 comparison passes every provenance/load
+  precondition and all four primary increments agree within 0.0025%.
+- The waiting handoff and ASB manager correctly stopped after that propagated
+  controller failure.  No ASB case or geometry case ran.  The original 12-hour
+  elapsed-time allocation is now exhausted, so ASB is recorded as
+  `BUDGET_DEFERRED_PREPARED_NOT_EXECUTED`, not as negative physics.
+- The next-source ASB path now forks both interventions from one exact physical
+  checkpoint, validates reuse provenance and hashes, respects early physical-
+  validity terminals, and uses an outcome-neutral periodic, duration-based
+  classifier.  A concrete existing-boundary DRX calculation is separately
+  staged for the next allocation; no new grain birth is claimed.
 - The attributable n128 continuation completed interval 128 at 62.5 us and
   total engineering shear 0.0325.  Its endpoint has engineering plastic shear
   0.0067103485, mean shear stress 2.297857946 GPa, mean temperature

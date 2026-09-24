@@ -1,0 +1,44 @@
+{
+  "classification": "PREPARED_NEXT_AUTHORIZED_ALLOCATION_NOT_RUN_IN_V53",
+  "scientific_route": "existing-boundary growth under continued deformation",
+  "production_driver": "full_model.analysis.run_v36_recurrent_physical_response",
+  "production_front_routine": "full_model.production.moving_front.advance_front",
+  "configuration": {
+    "protocol": "continued_deformation",
+    "grid": 64,
+    "length_m": 3.2e-6,
+    "interface_width_m": 4.0e-7,
+    "interface_cells": 8.0,
+    "temperature_K": 1100.0,
+    "initial_shear": 0.01,
+    "strain_rate_s": 100.0,
+    "child_line_fraction": 0.35,
+    "dt_s": 2.0e-9,
+    "front_enabled": true,
+    "mura_enabled": true,
+    "applied_front_pressure_Pa": 0.0,
+    "physical_migration_pressure_Pa": 0.0,
+    "proposal_fraction": 0.125,
+    "proposal_semantics": "topology-preserving geometric envelope; unledgered and supplies no physical work"
+  },
+  "controls": [
+    "equal-complete-state",
+    "contrast-reversal",
+    "front-disabled",
+    "mobility-off-or-zero-exposure"
+  ],
+  "staged_horizons_s": [1e-7, 1e-6, 1e-5, 1e-4, 1e-3],
+  "selection_rule": "advance to the next exact horizon only from measured displacement, energy/rate sign, and recent wall cost",
+  "required_observables": [
+    "direct_normal_displacement_m",
+    "newly_transformed_volume_m3",
+    "processed_line_m",
+    "boundary_stored_line_m",
+    "transformed_region_defect_density_m-2",
+    "retained_stored_energy_advantage_J",
+    "rehardening_rate_under_continued_deformation",
+    "complete_energy_and_force_channels",
+    "capacity_limited_volume_m3"
+  ],
+  "claim_boundary": "prepared lower-defect existing grain tests growth and recovery; it is not spontaneous grain birth"
+}

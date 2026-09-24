@@ -19,7 +19,7 @@ from full_model.analysis.run_v52_completion_manager import (
 )
 
 
-SCHEMA = "asb-drx/v53/mechanism-priority/v1"
+SCHEMA = "asb-drx/v53/mechanism-priority/v2"
 COMPLETE = "COMPLETE_AT_ACHIEVED_SCOPE"
 
 
@@ -75,6 +75,84 @@ def run_logged(command: list[str], cwd: Path, log: Path) -> tuple[int, float]:
 
 def checkpoint_for(case_dir: Path, step: int) -> Path:
     return case_dir/f"drx_v25_restart_{step:06d}.npz"
+
+
+def checkpoint_steps(case_dir: Path) -> list[int]:
+    steps = []
+    for path in case_dir.glob("drx_v25_restart_*.npz"):
+        try:
+            steps.append(int(path.stem.rsplit("_", 1)[1]))
+        except ValueError:
+            continue
+    return sorted(set(steps))
+
+
+def validate_checkpoint_fields(path: Path) -> dict:
+    required = {"asb_last_plastic_power_W_m3",
+                "asb_last_heat_production_W_m3", "T", "step", "sim_time",
+                "P_json"}
+    with np.load(path, allow_pickle=True) as raw:
+        missing = sorted(required-set(raw.files))
+        if missing:
+            raise RuntimeError(f"checkpoint lacks accepted-trajectory fields: {missing}")
+        return {"step": int(raw["step"]), "physical_time_s": float(raw["sim_time"]),
+                "sha256": digest(path)}
+
+
+def validate_run_record(path: Path, source: str, case: dict,
+                        parent_sha256: str | None = None) -> dict:
+    if not path.is_file():
+        raise RuntimeError(f"missing run record: {path}")
+    payload = json.loads(path.read_text())
+    if payload.get("production_source_commit") != source:
+        raise RuntimeError("run record production source mismatch")
+    if payload.get("case") != case:
+        raise RuntimeError("run record case configuration mismatch")
+    checkpoint = Path(payload.get("latest_checkpoint", ""))
+    if not checkpoint.is_file():
+        raise RuntimeError("run record latest checkpoint is missing")
+    if payload.get("latest_checkpoint_sha256") != digest(checkpoint):
+        raise RuntimeError("run record latest checkpoint checksum mismatch")
+    if parent_sha256 is not None and payload.get(
+            "intervention_start_checkpoint_sha256") != parent_sha256:
+        raise RuntimeError("run record intervention-start identity mismatch")
+    metadata = validate_checkpoint_fields(checkpoint)
+    if metadata["step"] != payload.get("latest_step"):
+        raise RuntimeError("run record/checkpoint step mismatch")
+    return payload
+
+
+def recovered_v53_handoff(handoff: dict, output_root: Path) -> dict | None:
+    """Recognize the exact postprocessing-only V53 failure without relabeling it."""
+    if (handoff.get("state") != "FAILED_CONTROLLER"
+            or "predecessor ended without valid terminal" not in str(
+                handoff.get("failure", ""))):
+        return None
+    bulk = output_root.parent
+    manifest_path = bulk/"n192/loading/run_manifest.json"
+    comparison = bulk/"verification/v53_spatial_comparison_052.json"
+    if not manifest_path.is_file() or not comparison.is_file():
+        return None
+    manifest = json.loads(manifest_path.read_text())
+    evidence = json.loads(comparison.read_text())
+    checkpoint = Path(manifest.get("latest_checkpoint", ""))
+    valid = bool(
+        manifest.get("status") == "COMPLETE"
+        and manifest.get("completed_intervals") == 52
+        and checkpoint.is_file()
+        and manifest.get("latest_checkpoint_sha256") == digest(checkpoint)
+        and evidence.get("comparison_interval") == 52
+        and evidence.get("comparison_preconditions", {}).get(
+            "all_preconditions_passed"))
+    if not valid:
+        return None
+    return {
+        "classification": "RECOVERED_POSTPROCESSING_ONLY_PREDECESSOR_FAILURE",
+        "n192_manifest": str(manifest_path),
+        "n192_manifest_sha256": digest(manifest_path),
+        "spatial_comparison": str(comparison),
+        "spatial_comparison_sha256": digest(comparison),
+    }
 
 
 def finish_with_regression(state: dict, state_path: Path, root: Path,
@@ -149,9 +227,13 @@ def main() -> None:
                 continue
             state["handoff"] = {"live": False, "state": handoff.get("state"),
                                 "manager": identity}
-            if handoff.get("state") != COMPLETE:
+            recovered = recovered_v53_handoff(handoff, output)
+            if handoff.get("state") != COMPLETE and recovered is None:
                 raise RuntimeError(
-                    f"V53 handoff ended without valid terminal: {handoff.get('state')}")
+                    f"V53 handoff ended without valid or recoverable terminal: "
+                    f"{handoff.get('state')}")
+            if recovered is not None:
+                state["handoff_recovery"] = recovered
             break
 
         origin = json.loads(args.campaign_origin_state.read_text())
@@ -159,21 +241,81 @@ def main() -> None:
         state["campaign_origin_utc"] = origin_utc
         state["campaign_budget_s"] = args.budget_s
 
-        # Two tiny current-source executions verify configuration, checkpoint
-        # publication, and accepted-trajectory field availability before any
-        # physical-horizon claim is attempted.
+        elapsed = elapsed_campaign_seconds(origin_utc)
+        remaining = args.budget_s-elapsed
+        state["budget_decision"] = {
+            "campaign_elapsed_s": elapsed, "remaining_s": remaining,
+            "full_pair_estimate_s": args.full_pair_estimate_s,
+            "closure_reserve_s": args.closure_reserve_s,
+            "checked_before_preflight": True,
+            "full_pair_authorized": remaining >= (
+                args.full_pair_estimate_s+args.closure_reserve_s),
+        }
+        if remaining <= args.closure_reserve_s:
+            state["runnable_next_work"] = {
+                "classification": "BUDGET_DEFERRED_NO_MECHANISM_EXECUTION",
+                "physical_asb_result_claimed": False,
+                "execution_state": "PREPARED_NOT_RUN",
+                "reason": "original V53 campaign wall-clock allocation exhausted",
+                "next_priority": (
+                    "current-source matched ASB pair from one exact common "
+                    "intervention-start checkpoint"),
+            }
+            finish_with_regression(state, state_path, root, log)
+            return
+
+        # Create one short full-feedback prefix, then fork both interventions
+        # from its exact checkpoint.  This makes the common initial physical
+        # arrays an attributable byte identity rather than a recipe inference.
         run_root = output/"asb-pair"
         driver = root/"full_model/hpc3/run_v37_conduction_case.py"
+        prefix_root = output/"common-prefix"
+        prefix_record = (prefix_root/str(cases[0]["id"])/
+                         "v37_conduction_run_record.json")
+        if not prefix_record.exists():
+            command = [
+                sys.executable, str(driver), "--case-id", "0",
+                "--case-table", str(args.case_table.resolve()),
+                "--source-root", str(root), "--expected-source-sha", source,
+                "--run-root", str(prefix_root), "--grid", str(args.grid),
+                "--target-step", str(args.target_step), "--preflight",
+            ]
+            persist(state_path, state, "RUNNING_COMMON_PREFIX_PREFLIGHT")
+            code, wall = run_logged(command, root, log)
+            if code:
+                raise RuntimeError("common-prefix preflight failed")
+            state["stages"]["COMMON_PREFIX_PREFLIGHT"] = {
+                "returncode": code, "wall_seconds": wall}
+        prefix_payload = validate_run_record(prefix_record, source, cases[0])
+        prefix = Path(prefix_payload["latest_checkpoint"])
+        prefix_sha = digest(prefix)
+        state["stages"].setdefault("COMMON_PREFIX_PREFLIGHT", {}).update({
+            "classification": "VALID_EXACT_INTERVENTION_START_STATE",
+            "checkpoint": str(prefix), "checkpoint_sha256": prefix_sha,
+            "run_record": str(prefix_record),
+            "run_record_sha256": digest(prefix_record),
+        })
+        persist(state_path, state)
+
         for index, case in enumerate(cases):
             name = f"PREFLIGHT_{index}_{case['id']}"
             record = run_root/str(case["id"])/"v37_conduction_run_record.json"
-            if not (record.exists() and json.loads(record.read_text()).get("latest_step", -1) >= 2):
+            valid_existing = False
+            if record.exists():
+                try:
+                    payload = validate_run_record(record, source, case, prefix_sha)
+                    valid_existing = payload.get("latest_step", -1) > int(
+                        prefix_payload["latest_step"])
+                except (OSError, ValueError, KeyError, RuntimeError, EOFError):
+                    valid_existing = False
+            if not valid_existing:
                 command = [
                     sys.executable, str(driver), "--case-id", str(index),
                     "--case-table", str(args.case_table.resolve()),
                     "--source-root", str(root), "--expected-source-sha", source,
                     "--run-root", str(run_root), "--grid", str(args.grid),
                     "--target-step", str(args.target_step), "--preflight",
+                    "--initial-checkpoint", str(prefix),
                 ]
                 persist(state_path, state, "RUNNING_"+name)
                 code, wall = run_logged(command, root, log)
@@ -181,35 +323,44 @@ def main() -> None:
                     raise RuntimeError(f"{name} failed with return code {code}")
                 state["stages"][name] = {"returncode": code, "wall_seconds": wall}
                 persist(state_path, state)
-            payload = json.loads(record.read_text())
+            payload = validate_run_record(record, source, case, prefix_sha)
             latest = Path(payload["latest_checkpoint"])
-            with np.load(latest, allow_pickle=True) as raw:
-                required = {"asb_last_plastic_power_W_m3",
-                            "asb_last_heat_production_W_m3", "T"}
-                missing = sorted(required-set(raw.files))
-            if missing:
-                raise RuntimeError(f"{name} lacks accepted-trajectory fields: {missing}")
+            checkpoint_metadata = validate_checkpoint_fields(latest)
             state["stages"].setdefault(name, {}).update({
                 "classification": "VALID_CURRENT_SOURCE_PREFLIGHT",
                 "run_record": str(record), "run_record_sha256": digest(record),
                 "latest_checkpoint": str(latest),
                 "latest_checkpoint_sha256": digest(latest),
+                "physical_time_s": checkpoint_metadata["physical_time_s"],
+                "common_intervention_start_checkpoint_sha256": prefix_sha,
             })
             persist(state_path, state)
 
         elapsed = elapsed_campaign_seconds(origin_utc)
         remaining = args.budget_s-elapsed
-        required = args.full_pair_estimate_s+args.closure_reserve_s
+        progress = []
+        prefix_step = int(prefix_payload["latest_step"])
+        for case in cases:
+            steps = checkpoint_steps(run_root/str(case["id"]))
+            progress.append(max(steps) if steps else prefix_step)
+        unfinished_fraction = sum(max(args.target_step-step, 0)
+                                  for step in progress)/max(
+                                      2*(args.target_step-prefix_step), 1)
+        unfinished_estimate = args.full_pair_estimate_s*unfinished_fraction
+        required = unfinished_estimate+args.closure_reserve_s
         state["budget_decision"] = {
             "campaign_elapsed_s": elapsed, "remaining_s": remaining,
             "full_pair_estimate_s": args.full_pair_estimate_s,
+            "completed_steps_by_member": progress,
+            "unfinished_fraction": unfinished_fraction,
+            "unfinished_estimate_s": unfinished_estimate,
             "closure_reserve_s": args.closure_reserve_s,
             "full_pair_authorized": remaining >= required,
         }
         persist(state_path, state)
         if remaining < required:
             state["runnable_next_work"] = {
-                "classification": "CURRENT_SOURCE_PREFLIGHT_COMPLETE_FULL_PAIR_BUDGET_DEFERRED",
+                "classification": "PREFLIGHT_COMPLETE_FULL_PAIR_BUDGET_DEFERRED",
                 "command_template": (
                     "python full_model/analysis/run_v53_mechanism_priority.py "
                     "--handoff-state <terminal-handoff.json> "
@@ -221,17 +372,20 @@ def main() -> None:
             finish_with_regression(state, state_path, root, log)
             return
 
+        useful_target = args.target_step
         for index, case in enumerate(cases):
             name = f"PHYSICAL_HORIZON_{index}_{case['id']}"
             case_dir = run_root/str(case["id"])
-            target = checkpoint_for(case_dir, args.target_step)
-            if not target.exists():
+            target_step = useful_target
+            target = checkpoint_for(case_dir, target_step)
+            if not target.exists() and max(checkpoint_steps(case_dir)) < target_step:
                 command = [
                     sys.executable, str(driver), "--case-id", str(index),
                     "--case-table", str(args.case_table.resolve()),
                     "--source-root", str(root), "--expected-source-sha", source,
                     "--run-root", str(run_root), "--grid", str(args.grid),
-                    "--target-step", str(args.target_step),
+                    "--target-step", str(target_step),
+                    "--initial-checkpoint", str(prefix),
                 ]
                 persist(state_path, state, "RUNNING_"+name)
                 code, wall = run_logged(command, root, log)
@@ -239,27 +393,35 @@ def main() -> None:
                 if code:
                     raise RuntimeError(f"{name} failed with return code {code}")
             record = case_dir/"v37_conduction_run_record.json"
-            payload = json.loads(record.read_text())
-            if not payload.get("terminal") or payload.get("latest_step") != args.target_step:
-                raise RuntimeError(f"{name} did not reach its requested horizon")
+            payload = validate_run_record(record, source, case, prefix_sha)
+            latest_step = int(payload["latest_step"])
+            terminal_reason = str(payload.get("terminal_reason", ""))
+            validity_terminal = "VALIDITY_BOUNDARY" in terminal_reason
+            if not payload.get("terminal"):
+                raise RuntimeError(f"{name} lacks a terminal accepted prefix")
+            if latest_step < target_step and not validity_terminal:
+                raise RuntimeError(f"{name} ended early without a validity boundary")
+            useful_target = min(useful_target, latest_step)
+            target = Path(payload["latest_checkpoint"])
             state["stages"].setdefault(name, {}).update({
-                "classification": "VALID_COMPUTATIONAL_COMPLETION",
+                "classification": ("VALIDITY_LIMITED_ACCEPTED_PREFIX" if
+                                   validity_terminal else
+                                   "VALID_COMPUTATIONAL_COMPLETION"),
                 "run_record": str(record), "run_record_sha256": digest(record),
                 "checkpoint": str(target), "checkpoint_sha256": digest(target),
+                "terminal_reason": terminal_reason,
+                "accepted_latest_step": latest_step,
             })
             persist(state_path, state)
 
         result = output/"v53_asb_mechanism_decision.json"
-        figure = output/"v53_asb_mechanism_fields.png"
-        baseline = checkpoint_for(run_root/str(cases[0]["id"]), args.target_step)
+        baseline_dir = run_root/str(cases[0]["id"])
         control_dir = run_root/str(cases[1]["id"])
-        control = checkpoint_for(control_dir, args.target_step)
         command = [
             sys.executable,
-            str(root/"full_model/analysis/postprocess_v41_thermal_response.py"),
-            "--baseline", str(baseline), "--control", str(control),
-            "--control-ledger", str(control_dir/"v31_common_mura_asb_ledger.json"),
-            "--output", str(result), "--figure", str(figure),
+            str(root/"full_model/analysis/postprocess_v53_asb_mechanism.py"),
+            "--baseline-dir", str(baseline_dir),
+            "--control-dir", str(control_dir), "--output", str(result),
         ]
         persist(state_path, state, "RUNNING_ASB_CLASSIFICATION")
         code, wall = run_logged(command, root, log)
@@ -268,10 +430,17 @@ def main() -> None:
         decision = json.loads(result.read_text())
         state["stages"]["ASB_CLASSIFICATION"] = {
             "classification": decision["classification"],
-            "strict_asb_claimed": bool(decision["strict_asb_claimed"]),
+            "computational_complete": decision["execution"][
+                "computational_complete"],
+            "evidence_valid": decision["evidence_validity"][
+                "hard_invariants_passed"],
+            "causally_comparable": decision["causal_comparability"]["passed"],
+            "candidate_localization": decision["candidate_localization"][
+                "screening_candidate"],
+            "strict_asb_claimed": bool(
+                decision["refinement"]["strict_asb_claimed"]),
             "wall_seconds": wall, "result": str(result),
-            "result_sha256": digest(result), "figure": str(figure),
-            "figure_sha256": digest(figure),
+            "result_sha256": digest(result),
         }
         finish_with_regression(state, state_path, root, log)
     except Exception as error:

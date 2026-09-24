@@ -4,7 +4,8 @@ from pathlib import Path
 import pytest
 
 from full_model.analysis.run_v53_mechanism_priority import (
-    elapsed_campaign_seconds, parse_utc, validate_case_table,
+    elapsed_campaign_seconds, parse_utc, recovered_v53_handoff,
+    validate_case_table,
 )
 
 
@@ -29,3 +30,31 @@ def test_v53_asb_pair_rejects_unmatched_parameters(tmp_path):
     path.write_text(json.dumps(cases))
     with pytest.raises(ValueError, match="does not share"):
         validate_case_table(path)
+
+
+def test_recovery_accepts_only_complete_hashed_n192_and_matched_comparison(
+        tmp_path):
+    mechanism = tmp_path/"v53-bulk"/"mechanism-priority"
+    loading = mechanism.parent/"n192"/"loading"
+    verification = mechanism.parent/"verification"
+    loading.mkdir(parents=True); verification.mkdir()
+    checkpoint = loading/"checkpoint_000052.npz"
+    checkpoint.write_bytes(b"attributable-checkpoint")
+    import hashlib
+    checksum = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
+    manifest = loading/"run_manifest.json"
+    manifest.write_text(json.dumps({
+        "status": "COMPLETE", "completed_intervals": 52,
+        "latest_checkpoint": str(checkpoint),
+        "latest_checkpoint_sha256": checksum,
+    }))
+    comparison = verification/"v53_spatial_comparison_052.json"
+    comparison.write_text(json.dumps({
+        "comparison_interval": 52,
+        "comparison_preconditions": {"all_preconditions_passed": True},
+    }))
+    handoff = {"state": "FAILED_CONTROLLER",
+               "failure": "predecessor ended without valid terminal"}
+    assert recovered_v53_handoff(handoff, mechanism) is not None
+    comparison.write_text(json.dumps({"comparison_interval": 52}))
+    assert recovered_v53_handoff(handoff, mechanism) is None

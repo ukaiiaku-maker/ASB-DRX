@@ -90,6 +90,10 @@ def main() -> None:
     parser.add_argument("--target-step", type=int, default=2500)
     parser.add_argument("--grid", type=int, default=128)
     parser.add_argument("--preflight", action="store_true")
+    parser.add_argument(
+        "--initial-checkpoint", type=Path,
+        help=("exact common physical state from which this case forks; used "
+              "only when the case output has no checkpoint"))
     args = parser.parse_args()
     cases = load_cases(args.case_table)
     if args.case_id < 0 or args.case_id >= len(cases):
@@ -102,6 +106,12 @@ def main() -> None:
     output.mkdir(parents=True, exist_ok=True)
     existing = list(output.glob("drx_v25_restart_*.npz"))
     restart = max(existing, key=checkpoint_step) if existing else None
+    external_initial = (None if args.initial_checkpoint is None else
+                        args.initial_checkpoint.resolve())
+    if restart is None and external_initial is not None:
+        if not external_initial.is_file():
+            raise ValueError("declared initial checkpoint does not exist")
+        restart = external_initial
     completed = checkpoint_step(restart)+1 if restart else 0
     target = min(args.target_step, completed+2) if args.preflight else args.target_step
     remaining = max(target+1-completed, 0)
@@ -136,6 +146,21 @@ def main() -> None:
         "restart_file": None if restart is None else str(restart),
         "restart_reset_clock": restart is None,
     }
+    initialization_recipe = {
+        key: parameters[key] for key in (
+            "Nx", "Ny", "poly_n", "T0", "edot_app", "dt_base_mode",
+            "dt_strain_step", "rho0_mode", "rho0_abs", "poly_seed",
+            "v19_noise_seed", "v19_one_grain_mode",
+            "v19_density_noise_fraction", "v19_signed_noise_fraction",
+            "v19_mechanical_heterogeneity", "v19_particle_radius_um",
+            "k_thermal", "T_bath_coupling", "thermal_control_semantics",
+            "v34_authoritative_common_temperature_routing",
+            "use_hazard_nucleation", "use_component_relabel",
+            "disable_nucleation")}
+    initialization_recipe_json = json.dumps(
+        initialization_recipe, sort_keys=True, separators=(",", ":"))
+    initialization_recipe_sha256 = hashlib.sha256(
+        initialization_recipe_json.encode()).hexdigest()
     env = os.environ.copy()
     env.update(DRX_PARAMS=json.dumps(parameters, separators=(",", ":")),
                DRX_OUTDIR=str(output), MPLBACKEND="Agg", OMP_NUM_THREADS="1",
@@ -164,6 +189,17 @@ def main() -> None:
         "latest_step": latest_step,
         "latest_checkpoint": None if latest is None else str(latest),
         "latest_checkpoint_sha256": None if latest is None else digest(latest),
+        "intervention_start_checkpoint": (
+            None if external_initial is None else str(external_initial)),
+        "intervention_start_checkpoint_sha256": (
+            None if external_initial is None else digest(external_initial)),
+        "initialization_recipe": initialization_recipe,
+        "initialization_recipe_sha256": initialization_recipe_sha256,
+        "causal_intervention": parameters["causal_temperature_ablation"],
+        "physical_time_semantics": "checkpoint sim_time; accepted thermal step clock",
+        "applied_strain_semantics": (
+            "finite-loading nominal strain=(step+1)*dt_strain_step; actual "
+            "checkpoint time retained independently"),
         "terminal_reason": terminal_reason(output),
         "terminal": bool(latest_step == args.target_step or (
             latest is not None and terminal_reason(output) != "REQUESTED_HORIZON")),
