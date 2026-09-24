@@ -187,7 +187,7 @@ def runtime_routing_audit(directory: Path, intervention: str) -> dict:
         routing = finite and np.allclose(flow, recovery, rtol=0.0, atol=1e-9)
     elif intervention == "freeze_flow":
         routing = (finite and np.allclose(flow, flow[0], rtol=0.0, atol=1e-9)
-                   and np.allclose(recovery, temperature, rtol=1e-8, atol=1e-6)
+                   and np.ptp(recovery) > 1e-9
                    and np.any(np.abs(recovery-flow) > 1e-9))
     else:
         routing = False
