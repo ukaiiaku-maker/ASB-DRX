@@ -6,7 +6,8 @@ from full_model.analysis.run_v34_finite_coupled_response import (
     checkpoint_payload, run_i3_cycle, state_from_payload,
 )
 from full_model.production.common_front_state import (
-    apply_mechanical_increment, reconstruct_mechanical_state,
+    _common_with_authoritative_density_views, apply_mechanical_increment,
+    reconstruct_mechanical_state,
     state_arrays as common_front_arrays,
 )
 from full_model.production.coupled_front_production import (
@@ -47,6 +48,22 @@ def _assert_state_exact(left, right):
         b = getattr(right.mechanical, group)
         for name in a.__dict__:
             np.testing.assert_array_equal(getattr(a, name), getattr(b, name))
+
+
+def test_scalar_wall_view_uses_authoritative_split_reservoir_sum_order():
+    context, initial, _, _, _, _ = _fixture()
+    common = initial.common_front.parent
+    density = initial.common_front.parent_density
+    perturbed = replace(
+        common, wall_plus_m2=common.wall_plus_m2+1.0e-3,
+        wall_minus_m2=common.wall_minus_m2-1.0e-3)
+    repaired = _common_with_authoritative_density_views(perturbed, density)
+    np.testing.assert_array_equal(
+        repaired.wall_plus_m2,
+        density.wall_tangle_plus_m2+density.wall_ordered_plus_m2)
+    np.testing.assert_array_equal(
+        repaired.wall_minus_m2,
+        density.wall_tangle_minus_m2+density.wall_ordered_minus_m2)
 
 
 def test_two_accepted_mura_front_cycles_and_midpoint_restart_are_exact():

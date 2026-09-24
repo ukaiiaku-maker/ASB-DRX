@@ -118,25 +118,52 @@ def attach_reservoir_moment_owners(
 def _validate_owner_density_common(state, tolerance=64*np.finfo(float).eps):
     if not has_reservoir_moment_owners(state):
         return True
-    for common, density in zip(
+    for owner_name, common, density in zip(
+            ("parent", "child", "wake"),
             (state.parent, state.child, state.wake),
             (state.parent_density, state.child_density, state.wake_density)):
         pairs = (
-            (common.mobile_plus_m2, density.mobile_plus_m2),
-            (common.mobile_minus_m2, density.mobile_minus_m2),
-            (common.forest_plus_m2, density.forest_plus_m2),
-            (common.forest_minus_m2, density.forest_minus_m2),
-            (common.wall_plus_m2,
+            ("mobile_plus_m2", common.mobile_plus_m2, density.mobile_plus_m2),
+            ("mobile_minus_m2", common.mobile_minus_m2, density.mobile_minus_m2),
+            ("forest_plus_m2", common.forest_plus_m2, density.forest_plus_m2),
+            ("forest_minus_m2", common.forest_minus_m2, density.forest_minus_m2),
+            ("wall_plus_m2", common.wall_plus_m2,
              density.wall_tangle_plus_m2+density.wall_ordered_plus_m2),
-            (common.wall_minus_m2,
+            ("wall_minus_m2", common.wall_minus_m2,
              density.wall_tangle_minus_m2+density.wall_ordered_minus_m2),
-            (common.junction_m2, density.junction_m2))
-        for left, right in pairs:
+            ("junction_m2", common.junction_m2, density.junction_m2))
+        for field_name, left, right in pairs:
             scale = max(float(np.max(np.abs(left))),
                         float(np.max(np.abs(right))), 1.0)
-            if float(np.max(np.abs(left-right))) > tolerance*scale:
-                raise RuntimeError("common and reservoir owner densities diverged")
+            maximum = float(np.max(np.abs(left-right)))
+            if maximum > tolerance*scale:
+                raise RuntimeError(
+                    "common and reservoir owner densities diverged: "
+                    f"owner={owner_name}, field={field_name}, "
+                    f"maximum_abs={maximum:.17g}, scale={scale:.17g}, "
+                    f"relative={maximum/scale:.17g}, tolerance={tolerance:.17g}")
     return True
+
+
+def _common_with_authoritative_density_views(common, density):
+    """Rebuild scalar compatibility views in the density ledger's sum order.
+
+    The split tangle/ordered reservoirs are authoritative.  Repeatedly
+    advancing their already-summed wall view independently accumulates a
+    cancellation-sized difference, so publish the exact compatibility view
+    rather than loosening the owner-consistency invariant.
+    """
+    return replace(
+        common,
+        mobile_plus_m2=np.asarray(density.mobile_plus_m2).copy(),
+        mobile_minus_m2=np.asarray(density.mobile_minus_m2).copy(),
+        forest_plus_m2=np.asarray(density.forest_plus_m2).copy(),
+        forest_minus_m2=np.asarray(density.forest_minus_m2).copy(),
+        wall_plus_m2=(np.asarray(density.wall_tangle_plus_m2)
+                      +np.asarray(density.wall_ordered_plus_m2)),
+        wall_minus_m2=(np.asarray(density.wall_tangle_minus_m2)
+                       +np.asarray(density.wall_ordered_minus_m2)),
+        junction_m2=np.asarray(density.junction_m2).copy())
 
 
 def _copy_state(state):
@@ -577,6 +604,14 @@ def apply_mechanical_increment(state, updated, spacing_m, systems, topologies):
         ReservoirAlignmentState(**arrays) for arrays in alignment_arrays]
     for density, alignment in zip(density_owners, alignment_owners):
         alignment.validate(density, len(systems))
+    common_candidate = replace(
+        common_candidate,
+        parent=_common_with_authoritative_density_views(
+            common_candidate.parent, density_owners[0]),
+        child=_common_with_authoritative_density_views(
+            common_candidate.child, density_owners[1]),
+        wake=_common_with_authoritative_density_views(
+            common_candidate.wake, density_owners[2]))
     candidate = replace(
         common_candidate,
         parent_density=density_owners[0], child_density=density_owners[1],
