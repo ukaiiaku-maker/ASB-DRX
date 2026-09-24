@@ -49,3 +49,25 @@ def test_response_records_compatible_transport_and_misoriented_boundary(tmp_path
     assert row["mura"]["transport_operator"] == "compatible_dealiased"
     assert row["cumulative_newly_swept_volume_m3"] >= 0.0
     assert row["loading_energy_audit"]["first_law_passed"]
+
+
+def test_declared_dt_transition_preserves_clock_and_is_audited(tmp_path):
+    output = tmp_path/"transition"
+    first = run_response(
+        output_dir=output, protocol="hold", intervals=1, dt_s=2.0e-9,
+        checkpoint_every=1)
+    continued = run_response(
+        output_dir=output, protocol="hold", intervals=2, dt_s=4.0e-9,
+        checkpoint_every=1, resume=output/"checkpoint_000001.npz",
+        allow_dt_transition=True)
+    assert continued["physical_time_s"] == first["physical_time_s"]+4.0e-9
+    assert continued["numerical_method_transitions"] == [{
+        "kind": "declared_common-clock_dt_transition",
+        "completed_intervals_at_transition": 1,
+        "physical_time_at_transition_s": first["physical_time_s"],
+        "old_dt_s": 2.0e-9,
+        "new_dt_s": 4.0e-9,
+        "state_reset": False,
+        "loading_origin_reset": False,
+        "cumulative_work_reset": False,
+    }]

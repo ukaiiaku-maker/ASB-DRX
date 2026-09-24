@@ -214,7 +214,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  front_activation_entropy_kB=0.0,
                  front_event_volume_b3=1.0, front_jump_length_b=1.0,
                  front_symmetric_availability=1.0,
-                 resume=None, accepted_restart_source_sha=None):
+                 resume=None, accepted_restart_source_sha=None,
+                 allow_dt_transition=False):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
@@ -231,6 +232,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     initial_internal_energy_J = None
     state = context["state"]
     restart_source_transition = None
+    numerical_method_transitions = []
     if resume is not None:
         state, saved = _read_checkpoint(Path(resume), context)
         saved_source = saved.get("source_commit")
@@ -242,6 +244,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 "restart source is neither the current source nor the explicitly "
                 "accepted repair-parent source")
         restart_source_transition = saved.get("restart_source_transition")
+        numerical_method_transitions = list(saved.get(
+            "numerical_method_transitions", []))
         if saved_source != source:
             restart_source_transition = {
                 "checkpoint_source_commit": saved_source,
@@ -294,8 +298,28 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
             "front_jump_length_b": float(front_jump_length_b),
             "front_symmetric_availability": float(front_symmetric_availability),
         }
-        if immutable != requested:
-            raise ValueError("restart configuration differs from checkpoint")
+        differences = {
+            key: {"checkpoint": immutable.get(key), "requested": value}
+            for key, value in requested.items()
+            if immutable.get(key) != value
+        }
+        if differences:
+            if not (allow_dt_transition and set(differences) == {"dt_s"}):
+                raise ValueError(
+                    "restart configuration differs from checkpoint: "
+                    f"{differences}")
+            numerical_method_transitions.append({
+                "kind": "declared_common-clock_dt_transition",
+                "completed_intervals_at_transition": int(
+                    saved["completed_intervals"]),
+                "physical_time_at_transition_s": float(
+                    saved["physical_time_s"]),
+                "old_dt_s": float(immutable["dt_s"]),
+                "new_dt_s": float(dt_s),
+                "state_reset": False,
+                "loading_origin_reset": False,
+                "cumulative_work_reset": False,
+            })
         records = list(saved["records"])
         start = int(saved["completed_intervals"])
         physical_time = float(saved["physical_time_s"])
@@ -434,6 +458,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 "initial_internal_energy_J": initial_internal_energy_J,
                 "records": records,
                 "restart_source_transition": restart_source_transition,
+                "numerical_method_transitions": numerical_method_transitions,
             }
             _write_checkpoint(
                 output_dir/f"checkpoint_{index+1:06d}.npz",
@@ -450,6 +475,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         "schema": SCHEMA, "created_utc": _utc_now(),
         "source_commit": source, "configuration": configuration,
         "restart_source_transition": restart_source_transition,
+        "numerical_method_transitions": numerical_method_transitions,
         "boundary_initialization": context["boundary_initialization"],
         "applied_front_work_Pa": 0.0,
         "geometric_probe_is_nonphysical_and_unledgered": True,
@@ -512,6 +538,7 @@ def main():
     parser.add_argument("--front-symmetric-availability", type=float, default=1.0)
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--accepted-restart-source-sha")
+    parser.add_argument("--allow-dt-transition", action="store_true")
     args = parser.parse_args()
     result = run_response(**vars(args))
     print(json.dumps({key: result[key] for key in (
