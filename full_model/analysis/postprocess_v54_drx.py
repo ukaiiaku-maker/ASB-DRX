@@ -21,6 +21,14 @@ def summarize(path):
     result=json.loads(path.read_text()); rows=result["records"]; end=rows[-1]
     load=[r.get("loading_energy_audit") for r in rows]
     load=[r for r in load if r is not None]
+    load_allowance=sum(float(r["first_law_scale_J"])
+                       *float(r["first_law_relative_tolerance"]) for r in load)
+    load_cumulative=(None if not load else float(
+        load[-1]["cumulative_first_law_residual_J"]))
+    front=[r["complete_energy_decision"] for r in rows
+           if r.get("complete_energy_decision") is not None]
+    front_allowance=sum(float(r["tolerance_J"]) for r in front)
+    front_cumulative=sum(float(r["first_law_residual_J"]) for r in front)
     displacement=sum(float(r["accepted_contour_displacement_m"]) for r in rows)
     return {
         "result":str(path.resolve()),"sha256":digest(path),
@@ -40,9 +48,25 @@ def summarize(path):
         "stress_Pa":float(end["mean_shear_stress_Pa"]),
         "plastic_shear":float(end["engineering_plastic_shear"]),
         "hard_loading_ledger_passed":bool(load and all(
-            r["first_law_passed"] for r in load)),
+            r["first_law_passed"] for r in load)
+            and abs(load_cumulative)<=load_allowance),
         "maximum_abs_first_law_residual_J":max(
             (abs(float(r["first_law_residual_J"])) for r in load),default=None),
+        "cumulative_loading_first_law_residual_J":load_cumulative,
+        "accumulated_loading_first_law_allowance_J":load_allowance,
+        "complete_front_first_law_passed":bool(
+            not front or abs(front_cumulative)<=front_allowance),
+        "cumulative_complete_front_first_law_residual_J":front_cumulative,
+        "accumulated_complete_front_first_law_allowance_J":front_allowance,
+        "child_owner_rehardening_rate_m2_s":(
+            (float(rows[-1]["child_owner_total_line_density_mean_m2"])
+             -float(rows[0]["child_owner_total_line_density_mean_m2"]))
+            /max(float(rows[-1]["physical_time_end_s"]
+                       -rows[0]["physical_time_end_s"]),1e-300)),
+        "minimum_topology_backtrack_fraction":min(
+            (float(r["front_channel_diagnostics"]["topology_backtrack_fraction"])
+             for r in rows if r.get("front_channel_diagnostics") is not None),
+            default=None),
         "all_mura_intervals_use_compatible_transport":all(
             r["mura"]["transport_operator"]=="compatible_dealiased" for r in rows),
     }
@@ -76,6 +100,7 @@ def main():
                 "child_line_fraction")==1.0),
     }
     hard_valid=bool(not missing and all(c["hard_loading_ledger_passed"] and
+                    c["complete_front_first_law_passed"] and
                     c["all_mura_intervals_use_compatible_transport"]
                     for c in cases.values()) and all(control_contract.values()))
     if missing:
