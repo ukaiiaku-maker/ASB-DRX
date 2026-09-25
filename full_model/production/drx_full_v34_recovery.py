@@ -4141,7 +4141,15 @@ if (P.get('use_sparse_common_front_state', False) and _restart_loaded
                 (rp, rm, rho_forest, rho_wall)))
             _restart_mix_scale = max(float(np.max(np.abs(a))) for a in
                                      (rp, rm, rho_forest, rho_wall))
-            if _restart_mix_error > 8.0*np.finfo(float).eps*max(_restart_mix_scale, 1.0):
+            # ``apply_common_constitutive_increment`` proves this same
+            # reconstruction with a 256-epsilon bound.  A diffuse front mixes
+            # three supported owners and, after a committed transaction, the
+            # accumulated multiply/add roundoff can legitimately exceed eight
+            # epsilons (the V55 n64 checkpoint measured 34.3 epsilons).  Keep
+            # the restart guard identical to the producer-side invariant: this
+            # still rejects any physical-state discrepancy while accepting the
+            # representation error the producer explicitly permits.
+            if _restart_mix_error > 256.0*np.finfo(float).eps*max(_restart_mix_scale, 1.0):
                 raise ValueError('checkpoint sparse/full defect states are inconsistent')
             if 'sibm_experiment_json' in _restart_npz.files:
                 sibm_experiment_state = json.loads(
