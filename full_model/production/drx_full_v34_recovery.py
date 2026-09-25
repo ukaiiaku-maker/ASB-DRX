@@ -8495,8 +8495,23 @@ for n in range(_restart_step_offset, _restart_end_step):
         if (P.get('v55_rate_complete_front_geometry', False)
                 and P.get('sibm_front_processing_enabled', True)
                 and float(P.get('sibm_mobility_multiplier', 1.0)) > 0.0):
-            _declared_drive = float(sibm_experiment_state.get(
-                'net_flat_boundary_drive_Pa', 0.0))
+            _published_drive = sibm_experiment_state.get(
+                'net_flat_boundary_drive_Pa')
+            if _published_drive is None:
+                # Common-variational mode prices the full endpoints below and
+                # may not publish a scalar pressure before the proposal.  The
+                # density contrast supplies direction only; it never supplies
+                # a rate, pressure magnitude, or acceptance decision.
+                _declared_drive = float(
+                    sibm_experiment_state.get('parent_mean_density_m2', 0.0)
+                    -sibm_experiment_state.get('child_mean_density_m2', 0.0))
+                _direction_basis = 'parent_minus_child_line_density_sign'
+            else:
+                _declared_drive = float(_published_drive)
+                _direction_basis = 'published_net_flat_boundary_drive_sign'
+            sibm_experiment_state.update(
+                v55_geometric_envelope_direction_basis=_direction_basis,
+                v55_geometric_envelope_direction_metric=_declared_drive)
             if _declared_drive != 0.0:
                 _front_eta_trial = existing_pair_geometric_envelope(
                     eta_before_ac[:, :, :Ng],
