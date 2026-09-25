@@ -53,5 +53,23 @@
     "particle_radius_um": 1.5,
     "front_attempt_frequency_s": 10000000000.0,
     "causal_temperature_ablation": "freeze_flow"
+  },
+  {
+    "id": "high_rate_intermediate_mobility_feedback",
+    "T0_K": 900.0,
+    "strain_rate_s": 100000.0,
+    "conductivity_W_m_K": 0.15,
+    "particle_radius_um": 1.5,
+    "front_attempt_frequency_s": 10000000000.0,
+    "causal_temperature_ablation": "none"
+  },
+  {
+    "id": "high_rate_intermediate_mobility_freeze_flow_control",
+    "T0_K": 900.0,
+    "strain_rate_s": 100000.0,
+    "conductivity_W_m_K": 0.15,
+    "particle_radius_um": 1.5,
+    "front_attempt_frequency_s": 10000000000.0,
+    "causal_temperature_ablation": "freeze_flow"
   }
 ]
