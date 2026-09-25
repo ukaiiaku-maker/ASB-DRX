@@ -9450,14 +9450,54 @@ for n in range(_restart_step_offset, _restart_end_step):
     # step, independent of checkpoint cadence.  This absorbs all post-front
     # GND/GB/constitutive increments and makes restart a bitwise state copy
     # rather than a delayed projection.
-    if (sparse_front_state is not None and common_front_state is None
-            and not _v25_exact_freeze):
-        sparse_front_state = apply_common_constitutive_increment(
-            sparse_front_state, DefectState(rp, rm, rho_forest, rho_wall))
-        _canonical_front_mixture = reconstruct_mixture(sparse_front_state)
-        rp, rm = _canonical_front_mixture.rp, _canonical_front_mixture.rm
-        rho_forest, rho_wall = (
-            _canonical_front_mixture.forest, _canonical_front_mixture.wall)
+    if sparse_front_state is not None and not _v25_exact_freeze:
+        if common_front_state is None:
+            sparse_front_state = apply_common_constitutive_increment(
+                sparse_front_state, DefectState(
+                    rp, rm, rho_forest, rho_wall))
+            _canonical_front_mixture = reconstruct_mixture(
+                sparse_front_state)
+            rp, rm = (_canonical_front_mixture.rp,
+                      _canonical_front_mixture.rm)
+            rho_forest, rho_wall = (
+                _canonical_front_mixture.forest,
+                _canonical_front_mixture.wall)
+        else:
+            # Front processing is followed by GB/GND and optional terminal
+            # suboperators.  Those accepted increments belong to the common
+            # phase owners at the end of this same physical step, not at the
+            # beginning of the next one.  Delaying this projection made an
+            # end-of-block checkpoint contain newer full arrays than its
+            # authoritative owners and broke exact continuation.
+            _terminal_common = CommonWallState(
+                np.asarray(rp).copy(), np.asarray(rm).copy(),
+                np.asarray(rho_forest_plus).copy(),
+                np.asarray(rho_forest_minus).copy(),
+                np.asarray(rho_wall_plus).copy(),
+                np.asarray(rho_wall_minus).copy(),
+                np.asarray(v21_junction_m2).copy(),
+                np.asarray(q_wall_v19).copy(),
+                np.asarray(v22_multi_hit_coordination).copy(),
+                np.asarray(v20_tensorial_state.slip).copy(),
+                np.asarray(v20_tensorial_state.beta_p).copy(),
+                np.asarray(v20_tensorial_state.alignment_m2).copy(),
+                np.asarray(v20_tensorial_state.family_nye_m1).copy(),
+                np.asarray(psi_lat).copy(), np.asarray(T).copy())
+            common_front_state = apply_common_front_increment(
+                common_front_state, _terminal_common, dx)
+            sparse_front_state = common_front_state.front
+            _terminal_reconstructed, _ = reconstruct_common_front(
+                common_front_state, dx)
+            rp = _terminal_reconstructed.mobile_plus_m2.copy()
+            rm = _terminal_reconstructed.mobile_minus_m2.copy()
+            rho_forest_plus = (
+                _terminal_reconstructed.forest_plus_m2.copy())
+            rho_forest_minus = (
+                _terminal_reconstructed.forest_minus_m2.copy())
+            rho_wall_plus = _terminal_reconstructed.wall_plus_m2.copy()
+            rho_wall_minus = _terminal_reconstructed.wall_minus_m2.copy()
+            rho_forest = rho_forest_plus+rho_forest_minus
+            rho_wall = np.sum(rho_wall_plus+rho_wall_minus, axis=2)
         rho = _rho_total_state(rp, rm, rho_forest, rho_wall)
         kappa_tot = _signed_kappa_field(rp, rm)
 
