@@ -122,7 +122,8 @@ def main() -> None:
         return
     interval = 1 if args.preflight else 100
     parameters = {
-        "v31_asb_common_mura_ledger": True,
+        "v31_asb_common_mura_ledger": bool(case.get(
+            "common_mura_ledger", True)),
         "Nx": args.grid, "Ny": args.grid,
         "poly_n": int(case.get("poly_n", 1)), "nSteps": remaining,
         "T0": float(case["T0_K"]), "edot_app": float(case["strain_rate_s"]),
@@ -158,6 +159,7 @@ def main() -> None:
             "v19_density_noise_fraction", "v19_signed_noise_fraction",
             "v19_mechanical_heterogeneity", "v19_particle_radius_um",
             "k_thermal", "T_bath_coupling", "thermal_control_semantics",
+            "v31_asb_common_mura_ledger",
             "v34_authoritative_common_temperature_routing",
             "use_hazard_nucleation", "use_component_relabel",
             "disable_nucleation")}

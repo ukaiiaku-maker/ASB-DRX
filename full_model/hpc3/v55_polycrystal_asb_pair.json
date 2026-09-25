@@ -7,6 +7,7 @@
     "conductivity_W_m_K": 0.15,
     "poly_n": 8,
     "one_grain_mode": false,
+    "common_mura_ledger": false,
     "causal_temperature_ablation": "none"
   },
   {
@@ -17,6 +18,7 @@
     "conductivity_W_m_K": 0.15,
     "poly_n": 8,
     "one_grain_mode": false,
+    "common_mura_ledger": false,
     "causal_temperature_ablation": "freeze_flow"
   }
 ]
