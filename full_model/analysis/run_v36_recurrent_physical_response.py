@@ -215,7 +215,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                  front_event_volume_b3=1.0, front_jump_length_b=1.0,
                  front_symmetric_availability=1.0,
                  resume=None, accepted_restart_source_sha=None,
-                 allow_dt_transition=False):
+                 allow_dt_transition=False, allow_loading_transition=False):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     context = resolved_bicrystal(
@@ -304,12 +304,30 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
             if immutable.get(key) != value
         }
         if differences:
-            if not (allow_dt_transition and set(differences) == {"dt_s"}):
+            dt_keys = {"dt_s"} if allow_dt_transition else set()
+            loading_keys = ({"protocol", "initial_shear"}
+                            if allow_loading_transition else set())
+            permitted = dt_keys | loading_keys
+            loading_transition = set(differences) & loading_keys
+            loading_is_continuous = True
+            if loading_transition:
+                expected_hold_shear = (
+                    float(immutable["initial_shear"])
+                    +float(immutable["strain_rate_s"])
+                    *float(saved["physical_time_s"]))
+                loading_is_continuous = bool(
+                    immutable["protocol"] == "continued_deformation"
+                    and protocol == "hold"
+                    and abs(float(initial_shear)-expected_hold_shear)
+                    <=64*np.finfo(float).eps*max(abs(expected_hold_shear), 1.0))
+            if not (set(differences) <= permitted and loading_is_continuous):
                 raise ValueError(
                     "restart configuration differs from checkpoint: "
                     f"{differences}")
-            numerical_method_transitions.append({
-                "kind": "declared_common-clock_dt_transition",
+            transition = {
+                "kind": ("declared_loading_hold_and_common_clock_transition"
+                         if loading_transition else
+                         "declared_common-clock_dt_transition"),
                 "completed_intervals_at_transition": int(
                     saved["completed_intervals"]),
                 "physical_time_at_transition_s": float(
@@ -319,7 +337,15 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 "state_reset": False,
                 "loading_origin_reset": False,
                 "cumulative_work_reset": False,
-            })
+            }
+            if loading_transition:
+                transition.update({
+                    "old_protocol": immutable["protocol"],
+                    "new_protocol": protocol,
+                    "held_mean_shear_component": float(initial_shear),
+                    "continuous_from_prior_endpoint": True,
+                })
+            numerical_method_transitions.append(transition)
         records = list(saved["records"])
         start = int(saved["completed_intervals"])
         physical_time = float(saved["physical_time_s"])
@@ -539,6 +565,7 @@ def main():
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--accepted-restart-source-sha")
     parser.add_argument("--allow-dt-transition", action="store_true")
+    parser.add_argument("--allow-loading-transition", action="store_true")
     args = parser.parse_args()
     result = run_response(**vars(args))
     print(json.dumps({key: result[key] for key in (

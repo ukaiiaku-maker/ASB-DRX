@@ -71,3 +71,22 @@ def test_declared_dt_transition_preserves_clock_and_is_audited(tmp_path):
         "loading_origin_reset": False,
         "cumulative_work_reset": False,
     }]
+
+
+def test_declared_loading_to_hold_transition_preserves_endpoint_load(tmp_path):
+    output = tmp_path/"loading_transition"
+    first = run_response(
+        output_dir=output, protocol="continued_deformation", intervals=1,
+        dt_s=2.0e-9, initial_shear=0.01, strain_rate_s=1.0e3,
+        checkpoint_every=1, qualified_midpoint_loading=True)
+    held_shear = 0.01+1.0e3*first["physical_time_s"]
+    continued = run_response(
+        output_dir=output, protocol="hold", intervals=2, dt_s=2.0e-9,
+        initial_shear=held_shear, strain_rate_s=1.0e3,
+        checkpoint_every=1, qualified_midpoint_loading=True,
+        resume=output/"checkpoint_000001.npz",
+        allow_loading_transition=True)
+    transition = continued["numerical_method_transitions"][-1]
+    assert transition["new_protocol"] == "hold"
+    assert transition["continuous_from_prior_endpoint"]
+    assert continued["records"][-1]["mean_shear_strain"] == held_shear
