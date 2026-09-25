@@ -8528,7 +8528,8 @@ for n in range(_restart_step_offset, _restart_end_step):
                     normal_axis=coupled_front_runtime.normal_axis,
                     fraction=float(P.get(
                         'v55_front_geometric_envelope_fraction', 0.125)),
-                    direction=(1 if _declared_drive > 0.0 else -1))
+                    direction=(1 if _declared_drive > 0.0 else -1),
+                    active_mask=sibm_active_mask)
         _front_thickness = max(
             float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30)
         _front_accept_kwargs = dict(

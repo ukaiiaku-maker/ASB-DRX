@@ -46,7 +46,7 @@ SCHEMA = "full-v34-coupled-front-production/v1"
 
 def existing_pair_geometric_envelope(
         eta, *, parent_label: int, child_label: int, normal_axis: int,
-        fraction: float = 0.125, direction: int = 1):
+        fraction: float = 0.125, direction: int = 1, active_mask=None):
     """Expose a bounded existing-interface translation to the kinetic limiter.
 
     This is a proposal envelope, not a mobility law.  Only the declared parent
@@ -73,6 +73,11 @@ def existing_pair_geometric_envelope(
              np.roll(value, -1, axis=axis)))
     proposed_child = np.clip(
         value + float(fraction)*(bound-value), 0.0, 1.0)
+    if active_mask is not None:
+        mask = np.asarray(active_mask, dtype=bool)
+        if mask.shape != value.shape:
+            raise ValueError("geometric-envelope active mask is not grid matched")
+        proposed_child = np.where(mask, proposed_child, value)
     # On a multiphase junction, the child may neighbor a third label.  The
     # pair envelope can consume only locally available declared parent; it may
     # not borrow phase fraction from an uninvolved grain.

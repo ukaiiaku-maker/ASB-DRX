@@ -69,6 +69,18 @@ def test_existing_pair_envelope_does_not_consume_a_third_grain():
     assert np.sum(proposed[:, :, 1]) > np.sum(eta[:, :, 1])
 
 
+def test_existing_pair_envelope_changes_only_the_declared_active_window():
+    eta = _phase(32)
+    active = np.zeros((32, 32), dtype=bool)
+    active[:, 5:13] = True
+    proposed = existing_pair_geometric_envelope(
+        eta, parent_label=0, child_label=1, normal_axis=0,
+        fraction=.5, direction=1, active_mask=active)
+    np.testing.assert_array_equal(proposed[~active], eta[~active])
+    assert np.any(proposed[active] != eta[active])
+    np.testing.assert_allclose(np.sum(proposed, axis=2), 1.0)
+
+
 def _step(state, runtime, before, trial, pressure, mobility=True, capacity=None):
     return accept_coupled_front_candidate(
         state, runtime, before, trial, spacing_m=2e-9,
