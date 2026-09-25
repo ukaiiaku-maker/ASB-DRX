@@ -1,0 +1,22 @@
+[
+  {
+    "id": "poly8_thermal_feedback",
+    "T0_K": 900.0,
+    "strain_rate_s": 30000.0,
+    "particle_radius_um": 1.5,
+    "conductivity_W_m_K": 0.15,
+    "poly_n": 8,
+    "one_grain_mode": false,
+    "causal_temperature_ablation": "none"
+  },
+  {
+    "id": "poly8_freeze_flow_control",
+    "T0_K": 900.0,
+    "strain_rate_s": 30000.0,
+    "particle_radius_um": 1.5,
+    "conductivity_W_m_K": 0.15,
+    "poly_n": 8,
+    "one_grain_mode": false,
+    "causal_temperature_ablation": "freeze_flow"
+  }
+]
