@@ -45,6 +45,8 @@ def load_cases(path: Path) -> list[dict[str, object]]:
         raise ValueError("case ids must be unique")
     if any(float(case["conductivity_W_m_K"]) <= 0.0 for case in cases):
         raise ValueError("V37 physical screen requires positive conductivity")
+    if any(int(case.get("poly_n", 1)) < 1 for case in cases):
+        raise ValueError("poly_n must be a positive grain count")
     return cases
 
 
@@ -121,12 +123,14 @@ def main() -> None:
     interval = 1 if args.preflight else 100
     parameters = {
         "v31_asb_common_mura_ledger": True,
-        "Nx": args.grid, "Ny": args.grid, "poly_n": 1, "nSteps": remaining,
+        "Nx": args.grid, "Ny": args.grid,
+        "poly_n": int(case.get("poly_n", 1)), "nSteps": remaining,
         "T0": float(case["T0_K"]), "edot_app": float(case["strain_rate_s"]),
         "dt_base_mode": "strain_increment", "dt_strain_step": 1.0e-4,
         "rho0_mode": "absolute", "rho0_abs": 3.5e17,
         "poly_seed": 43, "v19_noise_seed": 43,
-        "v19_one_grain_mode": True,
+        "v19_one_grain_mode": bool(case.get(
+            "one_grain_mode", int(case.get("poly_n", 1)) == 1)),
         "v19_density_noise_fraction": 0.02,
         "v19_signed_noise_fraction": 0.01,
         "v19_mechanical_heterogeneity": "eigenstrain_particle",

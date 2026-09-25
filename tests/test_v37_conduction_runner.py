@@ -26,6 +26,17 @@ def test_case_table_rejects_zero_conductivity(tmp_path):
         load_cases(path)
 
 
+def test_case_table_accepts_declared_polycrystal_and_rejects_zero_grains(tmp_path):
+    base = {"id": "poly", "T0_K": 900.0, "strain_rate_s": 3e4,
+            "particle_radius_um": 0.75, "conductivity_W_m_K": 0.15,
+            "poly_n": 8}
+    path = tmp_path/"cases.json"; path.write_text(json.dumps([base]))
+    assert load_cases(path)[0]["poly_n"] == 8
+    base["poly_n"] = 0; path.write_text(json.dumps([base]))
+    with pytest.raises(ValueError, match="positive grain count"):
+        load_cases(path)
+
+
 def test_exact_frozen_source_identity_does_not_require_descendant_diff():
     from pathlib import Path
     from unittest.mock import patch
