@@ -180,6 +180,48 @@ def plot_history(feedback: list[dict], control: list[dict], output: Path) -> Non
     fig.savefig(output, dpi=180); plt.close(fig)
 
 
+def plot_endpoint_pair(feedback_dir: Path, control_dir: Path,
+                       output: Path) -> None:
+    paths = (checkpoint_paths(feedback_dir)[-1],
+             checkpoint_paths(control_dir)[-1])
+    rows = []
+    for path in paths:
+        with np.load(path, allow_pickle=True) as raw:
+            params = json.loads(str(raw["P_json"].item()))
+            rows.append((
+                float(params["L_phys"])*1e6,
+                np.asarray(raw["T"]),
+                np.asarray(raw["asb_last_plastic_power_W_m3"]),
+                np.asarray(raw["eta"][:, :, 1]),
+                np.asarray(raw["rho"])))
+    fields = tuple(zip(*(item[1:] for item in rows)))
+    limits = []
+    for index, pair in enumerate(fields):
+        transformed = ([np.log10(np.maximum(value, 1.0)) for value in pair]
+                       if index == 3 else list(pair))
+        limits.append((min(float(value.min()) for value in transformed),
+                       max(float(value.max()) for value in transformed)))
+    fig, axes = plt.subplots(2, 4, figsize=(13, 6), constrained_layout=True)
+    titles = ("Temperature (K)", "Plastic power (W m$^{-3}$)",
+              "Child phase fraction", "log$_{10}$ total density (m$^{-2}$)")
+    for i, (length, temperature, power, phase, density) in enumerate(rows):
+        values = (temperature, power, phase, np.log10(np.maximum(density, 1.0)))
+        for j, value in enumerate(values):
+            image = axes[i, j].imshow(
+                value.T, origin="lower", extent=(0, length, 0, length),
+                vmin=limits[j][0], vmax=limits[j][1], cmap="viridis",
+                interpolation="nearest")
+            axes[i, j].set_title(titles[j]); axes[i, j].set_xlabel("x (µm)")
+            axes[i, j].set_ylabel("y (µm)")
+            fig.colorbar(image, ax=axes[i, j], shrink=.78)
+        axes[i, 0].text(
+            .02, .96, "feedback" if i == 0 else "freeze-flow",
+            transform=axes[i, 0].transAxes, va="top", color="white",
+            bbox={"facecolor": "black", "alpha": .55, "pad": 2})
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=180); plt.close(fig)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--qualification-root", type=Path, required=True)
@@ -187,8 +229,10 @@ def main() -> None:
     parser.add_argument("--intermediate-root", type=Path, required=True)
     parser.add_argument("--high-rate-root", type=Path)
     parser.add_argument("--small-particle-root", type=Path)
+    parser.add_argument("--low-conductivity-root", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--figure", type=Path, required=True)
+    parser.add_argument("--endpoint-figure", type=Path)
     args = parser.parse_args()
 
     grids = {}
@@ -262,10 +306,20 @@ def main() -> None:
         result["high_rate_discriminator"] = causal_pair(
             args.high_rate_root, "high_rate_intermediate_mobility_feedback",
             "high_rate_intermediate_mobility_freeze_flow_control")
+        if args.endpoint_figure is not None:
+            plot_endpoint_pair(
+                args.high_rate_root/"high_rate_intermediate_mobility_feedback",
+                args.high_rate_root/
+                "high_rate_intermediate_mobility_freeze_flow_control",
+                args.endpoint_figure)
     if args.small_particle_root is not None:
         result["small_particle_discriminator"] = causal_pair(
             args.small_particle_root, "small_particle_high_rate_feedback",
             "small_particle_high_rate_freeze_flow_control")
+    if args.low_conductivity_root is not None:
+        result["low_conductivity_discriminator"] = causal_pair(
+            args.low_conductivity_root, "low_conductivity_high_rate_feedback",
+            "low_conductivity_high_rate_freeze_flow_control")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
     plot_history(feedback_rows, freeze_rows, args.figure)
