@@ -97,7 +97,10 @@ def main() -> None:
         "sibm_front_operator": "coupled_bidirectional_v30",
         "sibm_legacy_afterburner_reproduction": False,
         "v55_rate_complete_front_geometry": True,
-        "v55_front_geometric_envelope_fraction": 0.125,
+        # A full one-cell envelope is a geometric CFL bracket, not a mobility.
+        # The complete EXP-floor rate accepts only its physical prefix.
+        "v55_front_geometric_envelope_fraction": float(
+            case.get("front_geometric_envelope_fraction", 1.0)),
         "moving_front_attempt_frequency_s": float(
             case["front_attempt_frequency_s"]),
         "disable_nucleation": True,
