@@ -1,0 +1,40 @@
+{
+  "schema": "asb-drx-v55-campaign-manifest-v1",
+  "allocation_id": "v55-local-20260924T234641Z",
+  "execution_site": "local",
+  "branch": "exp/full-v55-integrated-completion-20260924",
+  "parent_evidence_commit": "7ce6f39ffbc3402f5119f557b336eac3221603ce",
+  "campaign_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v55-20260924",
+  "source_checkpoints": {
+    "high_mobility_grid_and_restart": "220581b",
+    "intermediate_coupled_pair": "b420a7c",
+    "high_rate_pair": "23759fa",
+    "small_particle_pair": "d015372",
+    "low_conductivity_pair": "a75b51a",
+    "polycrystal_reference": "12570de"
+  },
+  "evidence": [
+    {"path": "asb/v55_asb_decision_strain035.json", "sha256": "b2f68227a035ea1b62a01d3f094b3a9fafa3c8862e453ceaf1270a7444dc7304"},
+    {"path": "integrated/v55_integrated_decision.json", "sha256": "d37d0c59364094ff957b33ee7433649c385d63d360b9e105b4ccb8f23544f788"},
+    {"path": "integrated/step_sync_n64/high_mobility_feedback/drx_v25_restart_000110.npz", "sha256": "954d4c3021813990c7f2ecc334ac4c981f588cee2db007bcbc4b8ea880b1b87f"},
+    {"path": "integrated/intermediate_n64/intermediate_mobility_feedback/drx_v25_restart_001500.npz", "sha256": "ff8bff11e711fb57f7bf82738c8296083a7d81797f4b9ba620af4246ce6cb209"},
+    {"path": "integrated/figures/v55_integrated_history.png", "sha256": "7c31be2b9938da48e178af2d53780f99eeca40407a3873af3fd1aa7d459f5916"},
+    {"path": "integrated/figures/v55_high_rate_endpoint_fields.png", "sha256": "3640e60562938abd81258297e10e910d78caf67498808574b410c05c8f58e222"},
+    {"path": "polycrystal_asb_v2/poly8_thermal_feedback/drx_v25_restart_000500.npz", "sha256": "67adbf20277120c39e3d7248ba5548006b918b1c862b2ffd143f061ec1f325dc"},
+    {"path": "polycrystal_asb_v2/poly8_freeze_flow_control/drx_v25_restart_000500.npz", "sha256": "a3dcdf635276271270335fcf53e72ae82244118f64a86d73f865b72e97ec34c3"}
+  ],
+  "numerical_qualification": {
+    "grid_sizes": [32, 64, 128],
+    "successive_drx_error_below_5_percent": true,
+    "continuous_checkpoint_restart_bitwise_equal": true,
+    "complete_front_first_law_max_abs_j": 1.3507e-26
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 885,
+    "failed": 0,
+    "elapsed_s": 374.59
+  },
+  "claim": "functioning generic existing-boundary DRX coupled to thermomechanical response",
+  "nonclaims": ["strict ASB", "spontaneous intragranular DRX", "material calibration", "energy-qualified production polycrystal"]
+}

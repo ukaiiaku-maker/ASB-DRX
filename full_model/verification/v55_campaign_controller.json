@@ -7,45 +7,42 @@
   "branches": {
     "single_crystal_asb": {
       "state": "SCIENTIFIC_NEGATIVE_VALID_COMPLETE",
-      "numerical_source": "bb468ab02327a3164b5c95b76a3978d421ded452",
-      "retained_step": 3500,
-      "active_targets": [3000, 3500],
       "classification": "VALID_BROAD_OR_NONPERSISTENT_THERMAL_FEEDBACK",
-      "next_action": "retain the causally verified 35 percent endpoint and transfer the heavy slot to DRX; strict ASB remains unclaimed"
+      "retained_step": 3500,
+      "strict_asb_observed": false
     },
     "prepared_boundary_drx": {
-      "state": "RUNNING",
-      "retained_interval": 500,
-      "retained_source": "028b8d61a83f6b302fc6777b8c966080c9de55c0",
-      "transition_source": "d34281fed3c8889cdf0c3fe58c51d97319053c21",
-      "qualified_dt_s": 1e-08,
-      "rejected_dt_s": [2e-08, 5e-08],
-      "enabled_interval": 700,
-      "enabled_physical_time_s": 3e-06,
-      "high_mobility_hypothesis_source": "54cebbf9ea24d24d513b46b2253a3bdef8d85aae",
-      "high_mobility_10ns_overlap_passed": true,
-      "next_action": "complete the matched front-disabled 3 microsecond continuation, then extend the qualified generic high-mobility path"
+      "state": "SCIENTIFIC_POSITIVE_COMPLETE",
+      "classification": "VALID_GENERIC_EXISTING_BOUNDARY_DRX",
+      "source": "220581b",
+      "grid_sizes": [32, 64, 128],
+      "successive_transformed_fraction_relative_differences": [0.0428, 0.0316],
+      "restart_bitwise_exact": true,
+      "front_disabled_transformation": 0.0
+    },
+    "coupled_drx_asb": {
+      "state": "SCIENTIFIC_MIXED_COMPLETE",
+      "classification": "VALID_GENERIC_EXISTING_BOUNDARY_DRX_WITH_COUPLED_THERMOMECHANICAL_RESPONSE",
+      "source": "b420a7c",
+      "drx_transformed_fraction_at_15_percent_strain": 0.0419165,
+      "strict_asb_observed": false,
+      "asb_classification": "BROAD_OR_NONPERSISTENT_LOCALIZATION"
     },
     "intragranular_drx": {
-      "state": "DEVELOPMENT_ADVANCED",
-      "recognition_handoff_source": "fcb28a5",
-      "actual_evolved_state_result": "NO_QUALIFIED_INTRAGRANULAR_BOUNDARY_IN_THIS_EVOLVED_STATE",
-      "next_action": "apply read-only recognition to longer authoritative common-state single-crystal trajectories; handoff only after physical qualification"
+      "state": "SCIENTIFIC_NEGATIVE_VALID_COMPLETE",
+      "classification": "NO_QUALIFIED_INTRAGRANULAR_BOUNDARY_IN_THIS_EVOLVED_STATE",
+      "spontaneous_grain_birth_observed": false
     },
     "polycrystal_asb": {
-      "state": "REGISTERED",
-      "case_table": "full_model/hpc3/v55_polycrystal_asb_pair.json",
-      "next_action": "run a bounded n64 matched pair after the two retained production branches have useful extended evidence"
-    },
-    "integrated_drx_asb": {
-      "state": "PRODUCTION_REPAIR_READY_FOR_PREFLIGHT",
-      "case_table": "full_model/hpc3/v55_integrated_response_cases.json",
-      "numerical_source": "3781e17fc73c4ec73b20f307be2cce97d291c668",
-      "initial_preflight_result": "SIMULTANEOUS_ACTIVITY_WITH_PHASE_PROPOSAL_CLIPPING",
-      "repair": "rate-complete existing-pair geometry envelope bounded to declared parent and child; complete kinetics still selects the accepted prefix",
-      "next_action": "rerun the two-step integrated high-mobility preflight, verify proposal no longer clips the physical rate, then launch matched feedback/front-disabled controls"
+      "state": "QUALITATIVE_REFERENCE_COMPLETE",
+      "classification": "EIGHT_GRAIN_ANISOTROPIC_REFERENCE_NOT_ENERGY_QUALIFIED",
+      "source": "12570de",
+      "physical_grain_count": 8,
+      "hard_valid": false,
+      "reason": "legacy multi-grain tensor path declares all_channels_available=false and its cumulative first-law ledger does not close"
     }
   },
-  "active_heavy_action": "prepared_boundary_drx_10ns_front_disabled_to_3us",
+  "active_heavy_action": null,
+  "campaign_complete": true,
   "scientific_failures_stop_campaign": false
 }

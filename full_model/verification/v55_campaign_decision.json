@@ -1,0 +1,20 @@
+{
+  "schema": "asb-drx-v55-campaign-decision-v1",
+  "fixture_passed": true,
+  "scientific_gate_passed": true,
+  "classification": "VALID_GENERIC_EXISTING_BOUNDARY_DRX_WITH_COUPLED_THERMOMECHANICAL_RESPONSE",
+  "strict_asb_passed": false,
+  "strict_asb_classification": "VALID_BROAD_OR_NONPERSISTENT_THERMAL_FEEDBACK",
+  "spontaneous_intragranular_drx_passed": false,
+  "polycrystal_hard_valid": false,
+  "evidence_summary": {
+    "maximum_grid_converged_transformed_fraction": 0.3103049,
+    "coupled_transformed_fraction_at_15_percent_strain": 0.0419165,
+    "coupled_peak_temperature_k": 1181.133,
+    "coupled_temperature_contrast_k": 124.681,
+    "coupled_power_participation": 0.856336,
+    "restart_bitwise_exact": true,
+    "front_disabled_transformed_fraction": 0.0
+  },
+  "decision": "Accept the existing-boundary DRX pathway as functioning and coupled. Retain ASB as a valid negative under inherited strict criteria. Do not claim spontaneous grain birth or an energy-qualified production polycrystal."
+}

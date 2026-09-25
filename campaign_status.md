@@ -2137,3 +2137,32 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   source `19a5aac` passes 872 canonical tests in 462.90 s. Report and manifest:
   `full_model/docs/v54_decision_report.md` and
   `full_model/verification/v54_campaign_manifest.json`.
+
+## Directive v55 integrated completion (2026-09-24)
+
+- The production front transaction now confines proposals to the owned
+  boundary, distributes topology-defined sweep over diffuse material capacity,
+  and synchronizes phase owners at every physical step. A continuous and
+  checkpoint/restart run are bitwise identical across all audited fields and
+  ledgers.
+- Zero-pressure existing-boundary DRX transforms 28.79%, 30.08%, and 31.03%
+  of material on n32/n64/n128 before the same topology endpoint. Successive
+  differences are 4.28% and 3.16%; the matched front-disabled control has
+  exactly zero sweep and transformation.
+- At 30,000/s, the coupled intermediate-mobility calculation reaches 15.01%
+  strain with 4.19% DRX, 1181.1 K peak temperature, 124.7 K contrast, and
+  broad plastic-power participation of 0.856. It demonstrates simultaneous
+  DRX and thermomechanical feedback but not strict persistent ASB.
+- Rate, particle-size, and conductivity discriminators remain broad under the
+  inherited ASB criterion. The retained single-crystal result is likewise a
+  valid broad/nonpersistent thermal-feedback response through 35% strain.
+- The repaired polycrystal reference contains eight grains and anisotropic GB
+  physics, but remains qualitative because the legacy multi-grain path lacks a
+  complete physical energy ledger.
+- Classification:
+  `VALID_GENERIC_EXISTING_BOUNDARY_DRX_WITH_COUPLED_THERMOMECHANICAL_RESPONSE`.
+  Strict ASB, spontaneous intragranular grain birth, material calibration, and
+  an energy-qualified production polycrystal remain unclaimed. Report and
+  manifest: `full_model/docs/v55_decision_report.md` and
+  `full_model/verification/v55_campaign_manifest.json`.
+- Final canonical regression: 885 tests pass in 374.59 s.
