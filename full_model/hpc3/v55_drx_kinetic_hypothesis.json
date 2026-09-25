@@ -1,0 +1,47 @@
+{
+  "schema": "asb-drx/v55/drx-kinetic-hypothesis/v1",
+  "status": "REGISTERED_NOT_YET_QUALIFIED",
+  "scientific_scope": "generic kinetic hypothesis, not a material calibration",
+  "reason": "The unchanged 1e8 s^-1 prepared-boundary anchor has positive complete affinity and velocity but negligible transformed fraction; measured topology acceptance is unity and therefore does not identify proposal clipping. A phonon-scale 1e12 s^-1 attempt frequency tests physical exposure while retaining the verified EXP-floor barrier and event measure.",
+  "single_physical_change": {
+    "parameter": "front_attempt_frequency_s",
+    "anchor_value": 100000000.0,
+    "hypothesis_value": 1000000000000.0
+  },
+  "unchanged_physics": {
+    "front_activation_h0_eV": 0.35,
+    "front_activation_entropy_kB": 0.0,
+    "front_exp_a": 2.0,
+    "front_exp_n": 1.5,
+    "front_exp_floor": 0.1,
+    "front_event_volume_b3": 1.0,
+    "front_jump_length_b": 1.0,
+    "front_symmetric_availability": 1.0,
+    "temperature_K": 1100.0,
+    "strain_rate_s": 100.0,
+    "parent_line_fraction": 1.0,
+    "child_line_fraction": 0.35,
+    "misorientation_deg": 20.0,
+    "length_m": 3.2e-6,
+    "interface_width_m": 4e-7,
+    "mura_transport_operator": "compatible_dealiased",
+    "qualified_midpoint_loading": true
+  },
+  "execution_contract": {
+    "fresh_common_initial_state": true,
+    "matched_front_disabled_control": true,
+    "reuse_evolved_anchor_checkpoint": false,
+    "initial_timestep_s": 2e-9,
+    "require_full_half_step_overlap_before_acceleration": true,
+    "retain_complete_energy_and_loading_ledgers": true,
+    "stop_or_reduce_timestep_on_capacity_or_conservation_failure": true
+  },
+  "claim_limits": {
+    "positive_result": "demonstrates a functioning generic high-mobility prepared-boundary DRX pathway only",
+    "does_not_establish": [
+      "calibration to a named material",
+      "spontaneous intragranular grain birth",
+      "uniqueness of the selected mobility"
+    ]
+  }
+}
