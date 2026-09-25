@@ -51,6 +51,24 @@ def test_response_records_compatible_transport_and_misoriented_boundary(tmp_path
     assert row["loading_energy_audit"]["first_law_passed"]
 
 
+def test_loading_audit_composes_front_material_export_at_high_mobility(tmp_path):
+    result = run_response(
+        output_dir=tmp_path/"high_mobility", protocol="continued_deformation",
+        intervals=1, checkpoint_every=1, misorientation_deg=20.0,
+        child_line_fraction=0.35, parent_line_fraction=1.0,
+        mura_transport_operator="compatible_dealiased",
+        qualified_midpoint_loading=True,
+        front_attempt_frequency_s=1.0e12)
+    row = result["records"][0]
+    decision = row["complete_energy_decision"]
+    loading = row["loading_energy_audit"]
+    expected_export = (decision["material_sink_export_J"]
+                       + decision["thermostat_export_J"])
+    assert expected_export > 0.0
+    assert loading["nonloading_export_J"] == expected_export
+    assert loading["first_law_passed"]
+
+
 def test_declared_dt_transition_preserves_clock_and_is_audited(tmp_path):
     output = tmp_path/"transition"
     first = run_response(

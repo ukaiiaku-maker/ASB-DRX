@@ -229,6 +229,7 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
     start = 0
     physical_time = 0.0
     cumulative_external_work_J = 0.0
+    cumulative_nonloading_export_J = 0.0
     initial_internal_energy_J = None
     state = context["state"]
     restart_source_transition = None
@@ -351,6 +352,13 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
         physical_time = float(saved["physical_time_s"])
         cumulative_external_work_J = float(saved.get(
             "cumulative_external_work_J", 0.0))
+        cumulative_nonloading_export_J = float(saved.get(
+            "cumulative_nonloading_export_J", sum(
+                float(decision.get("material_sink_export_J", 0.0))
+                + float(decision.get("thermostat_export_J", 0.0))
+                for row in records
+                for decision in [row.get("complete_energy_decision")]
+                if decision is not None)))
         initial_internal_energy_J = saved.get("initial_internal_energy_J")
     configuration = {
         "protocol": protocol, "grid": int(grid), "dt_s": float(dt_s),
@@ -440,7 +448,11 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 +energy_after.recoverable_elastic_J
                 -energy_mid_after.recoverable_elastic_J)
             delta_internal = float(energy_after.internal_J-energy_before.internal_J)
-            residual = delta_internal-external_work
+            front_decision = audit["complete_energy"]["front_decision"]
+            nonloading_export = (0.0 if front_decision is None else float(
+                front_decision.get("material_sink_export_J", 0.0)
+                +front_decision.get("thermostat_export_J", 0.0)))
+            residual = delta_internal+nonloading_export-external_work
             scale = max(abs(energy_before.internal_J),
                         abs(energy_after.internal_J), abs(delta_internal),
                         abs(external_work), 1.0e-300)
@@ -451,21 +463,26 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                     "qualified changing-load first-law audit failed: "
                     f"residual={residual}, scale={scale}")
             cumulative_external_work_J += external_work
+            cumulative_nonloading_export_J += nonloading_export
             loading_audit = {
                 "load_time_start_s": time_start,
                 "load_time_midpoint_s": time_start+0.5*dt_s,
                 "load_time_end_s": physical_time,
                 "external_work_J": external_work,
+                "nonloading_export_J": nonloading_export,
                 "delta_internal_energy_J": delta_internal,
                 "first_law_residual_J": residual,
                 "first_law_passed": passed,
                 "first_law_scale_J": scale,
                 "first_law_relative_tolerance": relative_tolerance,
                 "cumulative_external_work_J": cumulative_external_work_J,
+                "cumulative_nonloading_export_J": (
+                    cumulative_nonloading_export_J),
                 "cumulative_internal_energy_change_J": float(
                     energy_after.internal_J-initial_internal_energy_J),
                 "cumulative_first_law_residual_J": float(
                     energy_after.internal_J-initial_internal_energy_J
+                    +cumulative_nonloading_export_J
                     -cumulative_external_work_J),
             }
             record_driving = endpoint_driving
@@ -481,6 +498,8 @@ def run_response(*, output_dir, protocol, grid=16, intervals=10,
                 "completed_intervals": index+1,
                 "physical_time_s": physical_time,
                 "cumulative_external_work_J": cumulative_external_work_J,
+                "cumulative_nonloading_export_J": (
+                    cumulative_nonloading_export_J),
                 "initial_internal_energy_J": initial_internal_energy_J,
                 "records": records,
                 "restart_source_transition": restart_source_transition,
