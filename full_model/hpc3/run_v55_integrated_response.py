@@ -92,6 +92,8 @@ def main() -> None:
         "sibm_active_window_radius_um": 4.5,
         "sibm_applied_pressure_Pa": 0.0,
         "sibm_physical_drag_pressure_Pa": 0.0,
+        "sibm_mobility_multiplier": (
+            1.0 if bool(case.get("front_enabled", True)) else 0.0),
         "sibm_front_operator": "coupled_bidirectional_v30",
         "sibm_legacy_afterburner_reproduction": False,
         "moving_front_attempt_frequency_s": float(
@@ -138,6 +140,7 @@ def main() -> None:
         "fresh_common_state": restart is None,
         "nucleation_disabled": True,
         "direct_label_allocation_disabled": True,
+        "front_enabled": bool(case.get("front_enabled", True)),
         "applied_front_pressure_Pa": 0.0,
         "enabled_mechanisms": [
             "common_mura_dislocation_evolution",
