@@ -20,7 +20,11 @@
       "transition_source": "d34281fed3c8889cdf0c3fe58c51d97319053c21",
       "qualified_dt_s": 1e-08,
       "rejected_dt_s": [2e-08, 5e-08],
-      "next_action": "complete matched front-enabled and front-disabled 10 ns continuations, classify at 3 microseconds, then select deformation or load-continuous hold extension"
+      "enabled_interval": 700,
+      "enabled_physical_time_s": 3e-06,
+      "high_mobility_hypothesis_source": "54cebbf9ea24d24d513b46b2253a3bdef8d85aae",
+      "high_mobility_10ns_overlap_passed": true,
+      "next_action": "complete the matched front-disabled 3 microsecond continuation, then extend the qualified generic high-mobility path"
     },
     "intragranular_drx": {
       "state": "DEVELOPMENT_ADVANCED",
@@ -32,8 +36,16 @@
       "state": "REGISTERED",
       "case_table": "full_model/hpc3/v55_polycrystal_asb_pair.json",
       "next_action": "run a bounded n64 matched pair after the two retained production branches have useful extended evidence"
+    },
+    "integrated_drx_asb": {
+      "state": "PRODUCTION_REPAIR_READY_FOR_PREFLIGHT",
+      "case_table": "full_model/hpc3/v55_integrated_response_cases.json",
+      "numerical_source": "3781e17fc73c4ec73b20f307be2cce97d291c668",
+      "initial_preflight_result": "SIMULTANEOUS_ACTIVITY_WITH_PHASE_PROPOSAL_CLIPPING",
+      "repair": "rate-complete existing-pair geometry envelope bounded to declared parent and child; complete kinetics still selects the accepted prefix",
+      "next_action": "rerun the two-step integrated high-mobility preflight, verify proposal no longer clips the physical rate, then launch matched feedback/front-disabled controls"
     }
   },
-  "active_heavy_action": "prepared_boundary_drx_10ns_front_enabled_to_3us",
+  "active_heavy_action": "prepared_boundary_drx_10ns_front_disabled_to_3us",
   "scientific_failures_stop_campaign": false
 }
