@@ -117,6 +117,44 @@ def endpoint(directory: Path) -> dict:
     return record(paths[-1])
 
 
+def causal_pair(root: Path, feedback_name: str, control_name: str) -> dict:
+    feedback = series(root/feedback_name)
+    control = series(root/control_name)
+    controls = {row["step"]: row for row in control}
+    matched = []
+    for row in feedback:
+        other = controls.get(row["step"])
+        if other is None:
+            continue
+        matched.append({
+            "step": row["step"], "applied_strain": row["applied_strain"],
+            "stress_feedback_Pa": row["stress_Pa"],
+            "stress_control_Pa": other["stress_Pa"],
+            "controlled_stress_reduction_fraction": float(
+                (other["stress_Pa"]-row["stress_Pa"])
+                /max(abs(other["stress_Pa"]), 1e-300)),
+            "temperature_contrast_feedback_K": row[
+                "temperature_peak_minus_mean_K"],
+            "temperature_contrast_control_K": other[
+                "temperature_peak_minus_mean_K"],
+            "power_participation_feedback": row["plastic_power"][
+                "participation_fraction"],
+            "power_participation_control": other["plastic_power"][
+                "participation_fraction"],
+            "transformed_fraction_feedback": row[
+                "net_transformed_material_fraction"],
+            "transformed_fraction_control": other[
+                "net_transformed_material_fraction"],
+        })
+    return {
+        "feedback_history": feedback, "freeze_flow_history": control,
+        "matched_causal_history": matched,
+        "latest_feedback": feedback[-1] if feedback else None,
+        "latest_control": control[-1] if control else None,
+        "latest_matched_comparison": matched[-1] if matched else None,
+    }
+
+
 def plot_history(feedback: list[dict], control: list[dict], output: Path) -> None:
     fig, axes = plt.subplots(2, 2, figsize=(9, 7), constrained_layout=True)
     for rows, label in ((feedback, "feedback"), (control, "freeze-flow")):
@@ -147,6 +185,8 @@ def main() -> None:
     parser.add_argument("--qualification-root", type=Path, required=True)
     parser.add_argument("--continuous-step60", type=Path, required=True)
     parser.add_argument("--intermediate-root", type=Path, required=True)
+    parser.add_argument("--high-rate-root", type=Path)
+    parser.add_argument("--small-particle-root", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--figure", type=Path, required=True)
     args = parser.parse_args()
@@ -218,6 +258,14 @@ def main() -> None:
             "strict ASB is not claimed without the inherited persistence and refinement tests",
         ],
     }
+    if args.high_rate_root is not None:
+        result["high_rate_discriminator"] = causal_pair(
+            args.high_rate_root, "high_rate_intermediate_mobility_feedback",
+            "high_rate_intermediate_mobility_freeze_flow_control")
+    if args.small_particle_root is not None:
+        result["small_particle_discriminator"] = causal_pair(
+            args.small_particle_root, "small_particle_high_rate_feedback",
+            "small_particle_high_rate_freeze_flow_control")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
     plot_history(feedback_rows, freeze_rows, args.figure)
