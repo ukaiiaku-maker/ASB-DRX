@@ -6,7 +6,8 @@ import pytest
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.coupled_front_production import (
     accept_coupled_front_candidate, initialize_coupled_front_runtime,
-    runtime_arrays, runtime_from_checkpoint, runtime_metadata_json)
+    existing_pair_geometric_envelope, runtime_arrays,
+    runtime_from_checkpoint, runtime_metadata_json)
 from full_model.production.moving_front import (
     DefectState, initialize_declared_boundary_front, reconstruct_mixture,
     state_arrays, state_from_checkpoint, state_metadata_json,
@@ -37,6 +38,22 @@ def _fixture(n=32, rho_a=1e14, rho_b=1e14):
     runtime = initialize_coupled_front_runtime(
         state, eta[:, :, 1]-eta[:, :, 0], normal_axis=0)
     return eta, state, runtime
+
+
+def test_existing_pair_envelope_is_conservative_and_directional():
+    eta = _phase(32)
+    expanded = existing_pair_geometric_envelope(
+        eta, parent_label=0, child_label=1, normal_axis=0,
+        fraction=.125, direction=1)
+    contracted = existing_pair_geometric_envelope(
+        eta, parent_label=0, child_label=1, normal_axis=0,
+        fraction=.125, direction=-1)
+    np.testing.assert_allclose(np.sum(expanded, axis=2), 1.0)
+    np.testing.assert_allclose(np.sum(contracted, axis=2), 1.0)
+    assert np.sum(expanded[:, :, 1]) > np.sum(eta[:, :, 1])
+    assert np.sum(contracted[:, :, 1]) < np.sum(eta[:, :, 1])
+    assert np.all(expanded >= 0.0) and np.all(expanded <= 1.0)
+    assert np.all(contracted >= 0.0) and np.all(contracted <= 1.0)
 
 
 def _step(state, runtime, before, trial, pressure, mobility=True, capacity=None):

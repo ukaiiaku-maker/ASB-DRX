@@ -44,6 +44,47 @@ except ImportError:  # pragma: no cover - direct production-script execution
 SCHEMA = "full-v34-coupled-front-production/v1"
 
 
+def existing_pair_geometric_envelope(
+        eta, *, parent_label: int, child_label: int, normal_axis: int,
+        fraction: float = 0.125, direction: int = 1):
+    """Expose a bounded existing-interface translation to the kinetic limiter.
+
+    This is a proposal envelope, not a mobility law.  Only the declared parent
+    and child exchange phase fraction; the complete bidirectional rate and
+    topology transaction below select the accepted prefix.
+    """
+    fields = np.asarray(eta, dtype=float)
+    parent, child, axis = int(parent_label), int(child_label), int(normal_axis)
+    if (fields.ndim != 3 or parent == child
+            or min(parent, child) < 0 or max(parent, child) >= fields.shape[2]):
+        raise ValueError("invalid existing-pair phase labels")
+    if axis not in (0, 1) or direction not in (-1, 1):
+        raise ValueError("invalid geometric-envelope direction")
+    if not 0.0 < float(fraction) <= 1.0:
+        raise ValueError("geometric-envelope fraction must be in (0,1]")
+    value = fields[:, :, child]
+    if direction > 0:
+        bound = np.maximum.reduce(
+            (value, np.roll(value, 1, axis=axis),
+             np.roll(value, -1, axis=axis)))
+    else:
+        bound = np.minimum.reduce(
+            (value, np.roll(value, 1, axis=axis),
+             np.roll(value, -1, axis=axis)))
+    proposed_child = np.clip(
+        value + float(fraction)*(bound-value), 0.0, 1.0)
+    delta = proposed_child-value
+    proposed_parent = fields[:, :, parent]-delta
+    if np.min(proposed_parent) < -128*np.finfo(float).eps:
+        raise ValueError("existing-pair envelope exceeds parent availability")
+    result = fields.copy()
+    result[:, :, child] = proposed_child
+    result[:, :, parent] = np.maximum(proposed_parent, 0.0)
+    if np.max(np.abs(np.sum(result, axis=2)-np.sum(fields, axis=2))) > 1e-12:
+        raise RuntimeError("existing-pair envelope failed phase conservation")
+    return result
+
+
 @dataclass(frozen=True)
 class CoupledFrontLedger:
     attempts: int = 0

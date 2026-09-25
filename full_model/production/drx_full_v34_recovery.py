@@ -127,6 +127,7 @@ from moving_front import (
 )
 from coupled_front_production import (
     accept_coupled_front_candidate,
+    existing_pair_geometric_envelope,
     initialize_coupled_front_runtime,
     runtime_arrays as coupled_front_runtime_arrays,
     runtime_from_checkpoint as coupled_front_runtime_from_checkpoint,
@@ -891,6 +892,8 @@ P = dict(
     # available only for frozen reproduction and must be requested explicitly.
     sibm_front_operator='coupled_bidirectional_v30',
     sibm_legacy_afterburner_reproduction=False,
+    v55_rate_complete_front_geometry=False,
+    v55_front_geometric_envelope_fraction=0.125,
     # v10 deterministic existing-HAGB SIBM pathway.  It perturbs only two
     # existing labels and never allocates an orientation or grain identity.
     use_sibm_existing_boundary=False,
@@ -8489,6 +8492,20 @@ for n in range(_restart_step_offset, _restart_end_step):
         _front_runtime_before = coupled_front_runtime
         _front_common_before = common_front_state
         _front_eta_trial = eta[:, :, :Ng].copy()
+        if (P.get('v55_rate_complete_front_geometry', False)
+                and P.get('sibm_front_processing_enabled', True)
+                and float(P.get('sibm_mobility_multiplier', 1.0)) > 0.0):
+            _declared_drive = float(sibm_experiment_state.get(
+                'net_flat_boundary_drive_Pa', 0.0))
+            if _declared_drive != 0.0:
+                _front_eta_trial = existing_pair_geometric_envelope(
+                    eta_before_ac[:, :, :Ng],
+                    parent_label=sparse_front_state.parent_label,
+                    child_label=sparse_front_state.child_label,
+                    normal_axis=coupled_front_runtime.normal_axis,
+                    fraction=float(P.get(
+                        'v55_front_geometric_envelope_fraction', 0.125)),
+                    direction=(1 if _declared_drive > 0.0 else -1))
         _front_thickness = max(
             float(P.get('nuc_barrier_thickness_b', 2.0))*P['b'], 1e-30)
         _front_accept_kwargs = dict(

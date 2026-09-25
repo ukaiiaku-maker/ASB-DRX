@@ -96,6 +96,8 @@ def main() -> None:
             1.0 if bool(case.get("front_enabled", True)) else 0.0),
         "sibm_front_operator": "coupled_bidirectional_v30",
         "sibm_legacy_afterburner_reproduction": False,
+        "v55_rate_complete_front_geometry": True,
+        "v55_front_geometric_envelope_fraction": 0.125,
         "moving_front_attempt_frequency_s": float(
             case["front_attempt_frequency_s"]),
         "disable_nucleation": True,
