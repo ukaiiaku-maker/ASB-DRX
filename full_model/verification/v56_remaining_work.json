@@ -1,0 +1,29 @@
+{
+  "schema": "asb-drx-v56-remaining-work-v1",
+  "ordered_items": [
+    {
+      "priority": 1,
+      "mechanism": "multi-grain common ownership",
+      "first_unresolved_task": "generalize the validated pair owner state to three persistent grain IDs with normalized supports and one joint donor-capacity transaction at a junction",
+      "required_demonstration": "zero-pressure three-grain coupled trajectory with deformation, plasticity, recovery, heat, two moving boundaries, junction conservation, restart, and complete energy"
+    },
+    {
+      "priority": 2,
+      "mechanism": "monolithic temporal accuracy",
+      "first_unresolved_task": "fork an evolved common step-100 state into one full step and two half steps without changing the operator or physical horizon",
+      "required_demonstration": "state-specific temporal errors for sweep, processed line, owner energy/density, stress, temperature, slip, and complete ledgers"
+    },
+    {
+      "priority": 3,
+      "mechanism": "tracking-window-independent interface continuation",
+      "first_unresolved_task": "preserve pair/component identity, winding, first-passage/revisit state, wake, boundary inventory, and cumulative clocks while moving the tracking region",
+      "required_demonstration": "overlap-identical continuation beyond PAIR_LEFT_ACTIVE_WINDOW without admitting the second periodic boundary"
+    },
+    {
+      "priority": 4,
+      "mechanism": "ASB/DRX interaction",
+      "first_unresolved_task": "complete the intermediate-frequency front on/off by full/frozen-flow factorial comparison from matched physical origins",
+      "required_demonstration": "separate migration, thermal-flow, and interaction effects without changing inherited localization thresholds"
+    }
+  ]
+}

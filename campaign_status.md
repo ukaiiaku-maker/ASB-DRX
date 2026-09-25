@@ -2166,3 +2166,21 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   manifest: `full_model/docs/v55_decision_report.md` and
   `full_model/verification/v55_campaign_manifest.json`.
 - Final canonical regression: 885 tests pass in 374.59 s.
+
+## V56 retained-evidence correction (2026-09-25)
+
+- V55 remains a valid substantial prepared-boundary migration result, but its
+  unconditional full scientific classification is withdrawn.
+- Existing n32/n64/n128 step-100 records share the same 0.336667 microsecond
+  clock and 1.01% strain. Transformation, gross sweep, processed line, stress,
+  mean/peak temperature, and mean slip all have successive differences below
+  5% at this common horizon.
+- Every retained supporting prefix and enabled/disabled/frozen control passes
+  the corrected hard-validity audit. The scoped restart remains bitwise exact.
+- The monolithic integrated caller lacks an evolved-state full/half-step fork.
+  Corrected top-level classification: `INCOMPLETE_EVIDENCE`, with temporal
+  refinement missing and no failed hard condition.
+- No new heavy solver was launched: unrelated DDD and FFT workers were active
+  and preserved. Multi-grain common ownership remains the next implementation
+  task and may not be replaced by the hard-invalid legacy polycrystal route.
+- Frozen-source canonical regression: 895 tests pass in 433.16 s.

@@ -1,0 +1,33 @@
+{
+  "schema": "asb-drx-v56-controller-v1",
+  "allocation_id": "v55-local-20260924T234641Z",
+  "allocation_reused_without_reset": true,
+  "deadline_utc": "2026-09-25T17:46:41Z",
+  "execution_site": "local",
+  "maximum_campaign_heavy_solvers": 1,
+  "workstreams": {
+    "v55_evidence_correction": {
+      "state": "COMPLETE",
+      "classification": "INCOMPLETE_EVIDENCE",
+      "failed_hard_conditions": [],
+      "missing_qualification": ["monolithic evolved-state temporal refinement"]
+    },
+    "multigrain_common_owner": {
+      "state": "READY_NOT_STARTED_WITHIN_REMAINING_ALLOCATION",
+      "reason": "requires a new substantial implementation/solver allocation; no legacy polycrystal substitution is permitted"
+    },
+    "retained_asb_continuation": {
+      "state": "NOT_LAUNCHED",
+      "reason": "unrelated DDD and FFT heavy workers were live during startup audit and were preserved"
+    },
+    "current_state_recognition": {
+      "state": "READY_FOR_SOURCE_REPAIR",
+      "first_repairs": [
+        "full-vector Burgers closure with geometric sign",
+        "periodic components and physical-distance shells",
+        "complete neutral-map energy"
+      ]
+    }
+  },
+  "active_campaign_heavy_action": null
+}
