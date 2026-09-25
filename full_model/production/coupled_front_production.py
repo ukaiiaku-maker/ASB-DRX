@@ -73,13 +73,15 @@ def existing_pair_geometric_envelope(
              np.roll(value, -1, axis=axis)))
     proposed_child = np.clip(
         value + float(fraction)*(bound-value), 0.0, 1.0)
-    delta = proposed_child-value
+    # On a multiphase junction, the child may neighbor a third label.  The
+    # pair envelope can consume only locally available declared parent; it may
+    # not borrow phase fraction from an uninvolved grain.
+    delta = np.clip(proposed_child-value, -value, fields[:, :, parent])
+    proposed_child = value+delta
     proposed_parent = fields[:, :, parent]-delta
-    if np.min(proposed_parent) < -128*np.finfo(float).eps:
-        raise ValueError("existing-pair envelope exceeds parent availability")
     result = fields.copy()
     result[:, :, child] = proposed_child
-    result[:, :, parent] = np.maximum(proposed_parent, 0.0)
+    result[:, :, parent] = proposed_parent
     if np.max(np.abs(np.sum(result, axis=2)-np.sum(fields, axis=2))) > 1e-12:
         raise RuntimeError("existing-pair envelope failed phase conservation")
     return result

@@ -56,6 +56,19 @@ def test_existing_pair_envelope_is_conservative_and_directional():
     assert np.all(contracted >= 0.0) and np.all(contracted <= 1.0)
 
 
+def test_existing_pair_envelope_does_not_consume_a_third_grain():
+    eta = np.zeros((16, 16, 3))
+    eta[:6, :, 0] = 1.0
+    eta[6:11, :, 1] = 1.0
+    eta[11:, :, 2] = 1.0
+    proposed = existing_pair_geometric_envelope(
+        eta, parent_label=0, child_label=1, normal_axis=0,
+        fraction=.5, direction=1)
+    np.testing.assert_array_equal(proposed[:, :, 2], eta[:, :, 2])
+    np.testing.assert_allclose(np.sum(proposed, axis=2), 1.0)
+    assert np.sum(proposed[:, :, 1]) > np.sum(eta[:, :, 1])
+
+
 def _step(state, runtime, before, trial, pressure, mobility=True, capacity=None):
     return accept_coupled_front_candidate(
         state, runtime, before, trial, spacing_m=2e-9,
