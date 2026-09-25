@@ -1,0 +1,36 @@
+{
+  "schema": "asb-drx-v55-autonomous-controller-v1",
+  "allocation_id": "v55-local-20260924T234641Z",
+  "deadline_utc": "2026-09-25T17:46:41Z",
+  "owner": "single local continuation owner",
+  "maximum_concurrent_heavy_solvers": 1,
+  "branches": {
+    "single_crystal_asb": {
+      "state": "RUNNING",
+      "numerical_source": "bb468ab02327a3164b5c95b76a3978d421ded452",
+      "retained_step": 2500,
+      "active_targets": [3000, 3500],
+      "next_action": "classify trend and either continue toward validity boundary or transfer heavy slot to DRX overlap"
+    },
+    "prepared_boundary_drx": {
+      "state": "READY",
+      "retained_interval": 500,
+      "retained_source": "028b8d61a83f6b302fc6777b8c966080c9de55c0",
+      "transition_source": "941db61bd6b8349d2e7d3d50ad14f21fba21b1fd",
+      "next_action": "run 5x2 ns versus 1x10 ns evolved-state common-clock overlap, then extend enabled/disabled pair"
+    },
+    "intragranular_drx": {
+      "state": "DEVELOPMENT_ADVANCED",
+      "recognition_handoff_source": "fcb28a5",
+      "actual_evolved_state_result": "NO_QUALIFIED_INTRAGRANULAR_BOUNDARY_IN_THIS_EVOLVED_STATE",
+      "next_action": "apply read-only recognition to longer authoritative common-state single-crystal trajectories; handoff only after physical qualification"
+    },
+    "polycrystal_asb": {
+      "state": "REGISTERED",
+      "case_table": "full_model/hpc3/v55_polycrystal_asb_pair.json",
+      "next_action": "run a bounded n64 matched pair after the two retained production branches have useful extended evidence"
+    }
+  },
+  "active_heavy_action": "single_crystal_asb_step_2500_to_3500_matched_continuation",
+  "scientific_failures_stop_campaign": false
+}
