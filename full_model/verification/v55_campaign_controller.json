@@ -6,18 +6,21 @@
   "maximum_concurrent_heavy_solvers": 1,
   "branches": {
     "single_crystal_asb": {
-      "state": "RUNNING",
+      "state": "SCIENTIFIC_NEGATIVE_VALID_COMPLETE",
       "numerical_source": "bb468ab02327a3164b5c95b76a3978d421ded452",
-      "retained_step": 2500,
+      "retained_step": 3500,
       "active_targets": [3000, 3500],
-      "next_action": "classify trend and either continue toward validity boundary or transfer heavy slot to DRX overlap"
+      "classification": "VALID_BROAD_OR_NONPERSISTENT_THERMAL_FEEDBACK",
+      "next_action": "retain the causally verified 35 percent endpoint and transfer the heavy slot to DRX; strict ASB remains unclaimed"
     },
     "prepared_boundary_drx": {
-      "state": "READY",
+      "state": "RUNNING",
       "retained_interval": 500,
       "retained_source": "028b8d61a83f6b302fc6777b8c966080c9de55c0",
-      "transition_source": "941db61bd6b8349d2e7d3d50ad14f21fba21b1fd",
-      "next_action": "run 5x2 ns versus 1x10 ns evolved-state common-clock overlap, then extend enabled/disabled pair"
+      "transition_source": "d34281fed3c8889cdf0c3fe58c51d97319053c21",
+      "qualified_dt_s": 1e-08,
+      "rejected_dt_s": [2e-08, 5e-08],
+      "next_action": "complete matched front-enabled and front-disabled 10 ns continuations, classify at 3 microseconds, then select deformation or load-continuous hold extension"
     },
     "intragranular_drx": {
       "state": "DEVELOPMENT_ADVANCED",
@@ -31,6 +34,6 @@
       "next_action": "run a bounded n64 matched pair after the two retained production branches have useful extended evidence"
     }
   },
-  "active_heavy_action": "single_crystal_asb_step_2500_to_3500_matched_continuation",
+  "active_heavy_action": "prepared_boundary_drx_10ns_front_enabled_to_3us",
   "scientific_failures_stop_campaign": false
 }
