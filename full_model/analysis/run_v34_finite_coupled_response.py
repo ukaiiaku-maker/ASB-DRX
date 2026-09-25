@@ -437,6 +437,21 @@ def run_i3_cycle(context, state, eta_trial, driving, controls=I3Controls()):
             runtime = state.front_runtime
             accepted_eta = state.eta.copy()
 
+    if controls.prescribed_temperature:
+        # A prescribed-temperature boundary condition owns the exact thermal
+        # state after *every* suboperator.  Reapply it to each material owner
+        # after the front transaction; otherwise support-weighted
+        # reconstruction can introduce a one-ulp temperature perturbation.
+        prescribed = state.mechanical.common.temperature_K.copy()
+        front_state = replace(
+            front_state,
+            parent=replace(front_state.parent,
+                           temperature_K=prescribed.copy()),
+            child=replace(front_state.child,
+                          temperature_K=prescribed.copy()),
+            wake=replace(front_state.wake,
+                         temperature_K=prescribed.copy()))
+
     # The next Mura interval is reconstructed only from evolved owner
     # inventories and moments.  This is an exact support-weighted read, not a
     # Nye inversion or a manufactured realignment.

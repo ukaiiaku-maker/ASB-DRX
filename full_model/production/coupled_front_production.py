@@ -21,7 +21,7 @@ try:
     from .moving_front import (
         DefectState, FrontLedger, SparseFrontState, conservative_front_transfer,
         reconstruct_mixture, supported_front_state_is_exactly_equal,
-        total_line_density)
+        total_line_density, translation_sweep_from_profile_change)
     from .front_topology import (
         TopologySnapshot, diagnostic_ray_crossing_count,
         initialize_front_topology, match_front_topology,
@@ -33,7 +33,7 @@ except ImportError:  # pragma: no cover - direct production-script execution
     from moving_front import (
         DefectState, FrontLedger, SparseFrontState, conservative_front_transfer,
         reconstruct_mixture, supported_front_state_is_exactly_equal,
-        total_line_density)
+        total_line_density, translation_sweep_from_profile_change)
     from front_topology import (
         TopologySnapshot, diagnostic_ray_crossing_count,
         initialize_front_topology, match_front_topology,
@@ -42,6 +42,54 @@ except ImportError:  # pragma: no cover - direct production-script execution
 
 
 SCHEMA = "full-v34-coupled-front-production/v1"
+
+
+def distributed_material_sweep_from_phase_change(
+        state, phase_change, *, normal_axis, signed_area_cells2,
+        topology_sweep=None):
+    """Map contour motion onto nonsaturated diffuse-interface cell fractions.
+
+    The topology tracker supplies the authoritative swept *area*, but its
+    polygon rasterization can repeatedly place subcell motion in one already
+    saturated cell.  The phase-profile translation supplies a smooth local
+    measure.  This routine combines them: topology fixes the signed integral,
+    while the translation field distributes that integral over cells with
+    available parent/child capacity.  Width-only changes remain excluded by
+    ``translation_sweep_from_profile_change``.
+    """
+    change = translation_sweep_from_profile_change(
+        np.asarray(phase_change, dtype=float), int(normal_axis))
+    target = float(signed_area_cells2)
+    if not math.isfinite(target):
+        raise ValueError("signed swept area must be finite")
+    if target == 0.0:
+        return np.zeros_like(state.chi)
+    capacity = (1.0-state.chi) if target > 0.0 else state.chi
+    weight = np.maximum(change if target > 0.0 else -change, 0.0)
+    if not np.any(weight > 0.0) and topology_sweep is not None:
+        raw = np.asarray(topology_sweep, dtype=float)
+        weight = np.maximum(raw if target > 0.0 else -raw, 0.0)
+    result = np.zeros_like(state.chi)
+    remaining = abs(target)
+    available = capacity > 64.0*np.finfo(float).eps
+    # Water-fill the prescribed contour area across the diffuse translation
+    # support.  The loop is bounded by the number of distinct saturation
+    # levels and normally exits on its first pass.
+    while remaining > 256.0*np.finfo(float).eps*max(abs(target), 1.0):
+        active = available & (weight > 0.0)
+        total_weight = float(np.sum(weight[active], dtype=np.longdouble))
+        if total_weight <= 0.0:
+            break
+        proposal = remaining*weight/total_weight
+        room = np.maximum(capacity-result, 0.0)
+        increment = np.where(active, np.minimum(proposal, room), 0.0)
+        accepted = float(np.sum(increment, dtype=np.longdouble))
+        if accepted <= 0.0:
+            break
+        result += increment
+        remaining -= accepted
+        available = room-increment > 64.0*np.finfo(float).eps
+    return result if target > 0.0 else -result
 
 
 def existing_pair_geometric_envelope(
@@ -701,13 +749,13 @@ def accept_coupled_front_candidate(
             filtered_subcell_components_after=(
                 accepted_topology.snapshot.filtered_subcell_component_count),
             **_site_diagnostics)
-    signed_sweep = (accepted_topology.receiver_fraction_after
-                    -accepted_topology.receiver_fraction_before)
-    if accepted_topology.signed_receiver_area_cells2 > 0.0:
-        signed_sweep = np.maximum(signed_sweep, 0.0)
-    else:
-        signed_sweep = -np.maximum(-signed_sweep, 0.0)
-    signed_sweep = np.clip(signed_sweep, -state.chi, 1.0-state.chi)
+    topology_sweep = (accepted_topology.receiver_fraction_after
+                      -accepted_topology.receiver_fraction_before)
+    signed_sweep = distributed_material_sweep_from_phase_change(
+        state, accepted_eta[:, :, b]-before[:, :, b],
+        normal_axis=runtime.normal_axis,
+        signed_area_cells2=accepted_topology.signed_receiver_area_cells2,
+        topology_sweep=topology_sweep)
     new_state, audit = _transaction(
         state, signed_sweep, cell_volume_m3=event_volume,
         line_energy_J_m=line_energy_J_m,

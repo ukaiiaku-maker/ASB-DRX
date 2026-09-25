@@ -6,6 +6,7 @@ import pytest
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.coupled_front_production import (
     accept_coupled_front_candidate, initialize_coupled_front_runtime,
+    distributed_material_sweep_from_phase_change,
     existing_pair_geometric_envelope, runtime_arrays,
     runtime_from_checkpoint, runtime_metadata_json)
 from full_model.production.moving_front import (
@@ -79,6 +80,25 @@ def test_existing_pair_envelope_changes_only_the_declared_active_window():
     np.testing.assert_array_equal(proposed[~active], eta[~active])
     assert np.any(proposed[active] != eta[active])
     np.testing.assert_allclose(np.sum(proposed, axis=2), 1.0)
+
+
+def test_diffuse_sweep_distribution_avoids_a_saturated_contour_cell():
+    _, state, _ = _fixture(16)
+    chi = state.chi.copy()
+    chi[8, :] = 1.0
+    from dataclasses import replace
+    state = replace(state, chi=chi, processed_max=np.maximum(
+        state.processed_max, chi))
+    change = np.zeros_like(chi)
+    change[8, :] = .04
+    change[9, :] = .03
+    change[10, :] = .01
+    sweep = distributed_material_sweep_from_phase_change(
+        state, change, normal_axis=0, signed_area_cells2=0.5)
+    assert np.all(sweep[8, :] == 0.0)
+    assert np.any(sweep[9:, :] > 0.0)
+    np.testing.assert_allclose(np.sum(sweep), .5, rtol=0.0, atol=2e-15)
+    assert np.all(sweep <= 1.0-state.chi+1e-15)
 
 
 def _step(state, runtime, before, trial, pressure, mobility=True, capacity=None):
