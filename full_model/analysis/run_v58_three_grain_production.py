@@ -122,6 +122,8 @@ def main():
                         default=10)
     parser.add_argument("--thermal-diffusivity", type=float,
                         default=0.15/3.8e6)
+    parser.add_argument("--flow-temperature-mode",
+                        choices=("physical", "frozen"), default="physical")
     parser.add_argument("--resume")
     parser.add_argument("--source-commit")
     args = parser.parse_args()
@@ -140,6 +142,7 @@ def main():
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": .75,
         "source_commit": source_commit,
+        "flow_temperature_mode": args.flow_temperature_mode,
     }
     systems = bcc_four_family_systems()
     wall = CommonWallParameters(
@@ -147,6 +150,9 @@ def main():
         mobile_correlation_diffusivity_m2_s=0.0,
         transport_scheme="upwind",
         maximum_fraction_per_step=0.75,
+        flow_temperature_override_K=(
+            args.temperature if args.flow_temperature_mode == "frozen"
+            else None),
         volumetric_heat_capacity_J_m3_K=3.8e6,
         thermal_diffusivity_m2_s=args.thermal_diffusivity, bath_rate_s=0.0)
     kinetics = MultiGrainFrontKinetics(
@@ -259,6 +265,13 @@ def main():
                         value.consumed_interval_s
                         for value in mechanical.operator_decisions),
                 },
+                "localization": _localization_diagnostics(
+                    sum((value.plastic_work_J_m3_cells
+                         for value in mechanical.operator_decisions),
+                        np.zeros((args.n, args.n)))/args.dt,
+                    sum((value.irreversible_heat_J_m3_cells
+                         for value in mechanical.operator_decisions),
+                        np.zeros((args.n, args.n)))/args.dt),
                 "mechanical_energy": {
                     "external_work_J": mechanical.external_work_J,
                     "internal_energy_change_J": (
@@ -314,6 +327,34 @@ def replace_ledger(ledger, dt, shear_rate):
         stationary_intervals=ledger.stationary_intervals+1,
         physical_time_s=ledger.physical_time_s+dt,
         applied_shear_strain=ledger.applied_shear_strain+shear_rate*dt)
+
+
+def _localization_diagnostics(plastic_power, heat_rate):
+    """Return outcome-neutral instantaneous spatial concentration metrics."""
+    plastic = np.asarray(plastic_power, dtype=float)
+    heat = np.asarray(heat_rate, dtype=float)
+
+    def values(field):
+        positive = np.maximum(field, 0.0)
+        mean = float(np.mean(positive))
+        threshold = 2.0*mean
+        mask = positive >= threshold if threshold > 0.0 else np.zeros(
+            positive.shape, dtype=bool)
+        # A periodic spanning fraction is retained as a conservative band
+        # proxy; persistence is assessed from the time history, not one field.
+        row_fraction = float(np.max(np.mean(mask, axis=1)))
+        column_fraction = float(np.max(np.mean(mask, axis=0)))
+        return {
+            "signed_min_W_m3": float(np.min(field)),
+            "positive_mean_W_m3": mean,
+            "positive_max_W_m3": float(np.max(positive)),
+            "maximum_to_mean": float(np.max(positive)/max(mean, 1e-300)),
+            "above_twice_mean_fraction": float(np.mean(mask)),
+            "maximum_hot_row_or_column_fraction": max(
+                row_fraction, column_fraction),
+        }
+    return {"plastic_power": values(plastic),
+            "irreversible_heat_rate": values(heat)}
 
 
 if __name__ == "__main__":

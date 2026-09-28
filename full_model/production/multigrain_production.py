@@ -101,6 +101,8 @@ class MultiGrainMechanicalDecision:
     maximum_line_balance_residual_m2_s: float
     maximum_substeps: int
     consumed_interval_s: float
+    plastic_work_J_m3_cells: np.ndarray
+    irreversible_heat_J_m3_cells: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -141,6 +143,8 @@ def advance_multigrain_mechanics(
                    *float(represented_thickness_m))
     owners = []
     work = heat = 0.0
+    plastic_work_density = np.zeros(state.supports.shape[1:], dtype=float)
+    irreversible_heat_density = np.zeros_like(plastic_work_density)
     minimum_scale = 1.0
     maximum_line_residual = 0.0
     maximum_substeps = 0
@@ -207,6 +211,9 @@ def advance_multigrain_mechanics(
             owner_heat += float(np.sum(
                 weight*residual.heat_rate_W_m3,
                 dtype=np.longdouble)*cell_volume*consumed)
+            plastic_work_density += (
+                weight*residual.plastic_power_W_m3*consumed)
+            irreversible_heat_density += weight*residual.heat_rate_W_m3*consumed
             line_residual = residual.channel_rates_m2_s.get(
                 "line_balance_residual_m2_s", 0.0)
             maximum_line_residual = max(
@@ -247,7 +254,8 @@ def advance_multigrain_mechanics(
     candidate.validate()
     decision = MultiGrainMechanicalDecision(
         True, minimum_scale, work, heat, maximum_line_residual,
-        maximum_substeps, dt)
+        maximum_substeps, dt, plastic_work_density,
+        irreversible_heat_density)
     return candidate, decision
 
 
