@@ -129,24 +129,31 @@ def advance_multigrain_mechanics(
     minimum_scale = 1.0
     maximum_line_residual = 0.0
     maximum_substeps = 0
+    # Temperature is a common Eulerian field, not a dormant grain history.
+    # Owner kinetics deposits its local heat without conducting separately
+    # across artificial owner-support discontinuities. Conduction is applied
+    # once to the reconstructed common temperature below.
+    local_parameters = replace(
+        wall_parameters, thermal_diffusivity_m2_s=0.0, bath_rate_s=0.0)
     for support, owner in zip(state.supports, state.owners):
         updated = owner
         remaining = dt
         substeps = 0
-        failed_retries = 0
+        suggested = remaining
         owner_work = owner_heat = 0.0
         while remaining > 64.0*np.finfo(float).eps*dt:
-            attempted = remaining
+            attempted = min(remaining, suggested)
+            local_retries = 0
             while True:
                 try:
                     trial, residual, scale = accepted_euler_step(
                         updated, driving, systems, topologies,
-                        wall_parameters, attempted)
+                        local_parameters, attempted)
                     break
                 except (ValueError, FloatingPointError):
                     attempted *= .5
-                    failed_retries += 1
-                    if (failed_retries > 64
+                    local_retries += 1
+                    if (local_retries > 64
                             or attempted <= 64.0*np.finfo(float).eps*dt):
                         raise RuntimeError(
                             "mechanical interval could not find an admissible substep")
@@ -168,6 +175,7 @@ def advance_multigrain_mechanics(
             minimum_scale = min(minimum_scale, float(scale))
             updated = trial
             remaining -= consumed
+            suggested = min(dt, max(attempted, consumed)*1.25)
             substeps += 1
             if substeps > 4096:
                 raise RuntimeError("mechanical physical interval exceeded substep budget")
@@ -176,6 +184,26 @@ def advance_multigrain_mechanics(
         work += owner_work
         heat += owner_heat
         maximum_substeps = max(maximum_substeps, substeps)
+    common_temperature = sum(
+        np.asarray(state.supports[index])*owner.temperature_K
+        for index, owner in enumerate(owners))
+    diffusivity = float(wall_parameters.thermal_diffusivity_m2_s)
+    if diffusivity > 0.0:
+        nx, ny = common_temperature.shape
+        kx = 2*np.pi*np.fft.fftfreq(nx, d=wall_parameters.spacing_m)
+        ky = 2*np.pi*np.fft.fftfreq(ny, d=wall_parameters.spacing_m)
+        kx, ky = np.meshgrid(kx, ky, indexing="ij")
+        spectrum = np.fft.fftn(common_temperature)
+        common_temperature = np.real(np.fft.ifftn(
+            np.exp(-diffusivity*(kx*kx+ky*ky)*dt)*spectrum))
+    bath_rate = float(wall_parameters.bath_rate_s)
+    if bath_rate > 0.0:
+        decay = math.exp(-bath_rate*dt)
+        common_temperature = (wall_parameters.bath_temperature_K
+                              +decay*(common_temperature
+                                      -wall_parameters.bath_temperature_K))
+    owners = [replace(owner, temperature_K=common_temperature.copy())
+              for owner in owners]
     candidate = replace(state, owners=tuple(owners))
     candidate.validate()
     decision = MultiGrainMechanicalDecision(

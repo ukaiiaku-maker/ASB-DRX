@@ -55,7 +55,8 @@ def test_mechanical_step_evolves_supported_owner_and_preserves_dormant_history()
     systems = bcc_four_family_systems()
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=1,
-        mobile_correlation_diffusivity_m2_s=0.0)
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=1e-7)
     stress = np.full((12, 12, 4), 8e8)
     dormant_before = state.owners[2].slip[:6].copy()
     evolved, decision = advance_multigrain_mechanics(
@@ -68,3 +69,6 @@ def test_mechanical_step_evolves_supported_owner_and_preserves_dormant_history()
     # Grain 30 has no support in the upper half and cannot age while absent.
     np.testing.assert_array_equal(evolved.owners[2].slip[:6], dormant_before)
     assert np.max(np.abs(evolved.owners[0].slip-state.owners[0].slip)) > 0.0
+    for owner_state in evolved.owners[1:]:
+        np.testing.assert_array_equal(
+            owner_state.temperature_K, evolved.owners[0].temperature_K)
