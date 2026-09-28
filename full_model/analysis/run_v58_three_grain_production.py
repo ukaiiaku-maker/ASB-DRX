@@ -123,9 +123,12 @@ def main():
     parser.add_argument("--thermal-diffusivity", type=float,
                         default=0.15/3.8e6)
     parser.add_argument("--resume")
+    parser.add_argument("--source-commit")
     args = parser.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     spacing = args.length/args.n; thickness = 2.0*2.48e-10
+    source_commit = (args.source_commit or subprocess.check_output(
+        ("git", "rev-parse", "HEAD"), text=True).strip())
     configuration = {
         "schema": "v58-three-grain-production-v2-common-stress-upwind",
         "n": args.n, "length_m": args.length,
@@ -136,6 +139,7 @@ def main():
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": .75,
+        "source_commit": source_commit,
     }
     systems = bcc_four_family_systems()
     wall = CommonWallParameters(
@@ -293,8 +297,7 @@ def main():
         "interface_width_m": args.interface_width,
         "front_attempt_frequency_s": args.front_attempt_frequency,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
-        "source_commit": subprocess.check_output(
-            ("git", "rev-parse", "HEAD"), text=True).strip(),
+        "source_commit": source_commit,
         "initial_grain_volume_m3": initial_volume.tolist(),
         "final": history[-1], "runtime": asdict(runtime.ledger),
         "checkpoint": str(latest),

@@ -34,11 +34,34 @@ def _total_density(owner):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("run")
+    parser.add_argument("--source-commit")
     args = parser.parse_args()
     root = Path(args.run)
-    run_result = json.loads((root/"result.json").read_text())
-    checkpoint = Path(run_result["checkpoint"])
-    state, runtime, step, gamma, initial_volume = _load_checkpoint(checkpoint)
+    history = json.loads((root/"history.json").read_text())
+    complete = (root/"result.json").exists()
+    if complete:
+        run_result = json.loads((root/"result.json").read_text())
+        checkpoint = Path(run_result["checkpoint"])
+    else:
+        checkpoint = sorted(root.glob("checkpoint_*.npz"))[-1]
+        (_, _, _, _, _, configuration) = _load_checkpoint(checkpoint)
+        if configuration is None:
+            raise ValueError("partial checkpoint has no bound configuration")
+        n = int(configuration["n"])
+        spacing = float(configuration["length_m"])/n
+        run_result = {
+            "case": configuration["case"], "n": n,
+            "temperature_K": configuration["temperature_K"],
+            "spacing_m": spacing,
+            "represented_thickness_m": 2.0*2.48e-10,
+            "interface_width_m": configuration["interface_width_m"],
+            "source_commit": (args.source_commit
+                              or configuration.get("source_commit")
+                              or "UNRECORDED_PARTIAL_SOURCE"),
+            "final": history[-1], "checkpoint": str(checkpoint),
+        }
+    (state, runtime, step, gamma, initial_volume,
+     checkpoint_configuration) = _load_checkpoint(checkpoint)
     spacing = float(run_result["spacing_m"])
     thickness = float(run_result["represented_thickness_m"])
     initial = initialize_state(
@@ -86,14 +109,15 @@ def main():
     thermal_localization_ratio = float(
         (np.max(temperature)-np.min(temperature))
         /max(np.mean(temperature)-run_result["temperature_K"], 1e-12))
-    strict_asb = bool(
+    strict_asb = (bool(
         run_result["final"]["temperature_contrast_K"] >= 100.0
         and thermal_localization_ratio >= 2.0
         and run_result["final"]["shear_stress_Pa"]
-        < max(item["shear_stress_Pa"]
-              for item in json.loads((root/"history.json").read_text())))
+        < max(item["shear_stress_Pa"] for item in history))
+        if complete else False)
     classification = {
         "schema": "asb-drx-v58-three-grain-classification-v1",
+        "trajectory_complete": complete,
         "source_commit": run_result["source_commit"],
         "checkpoint": str(checkpoint),
         "step": step, "physical_time_s": runtime.ledger.physical_time_s,
@@ -125,7 +149,9 @@ def main():
             "nucleation claim. Strict ASB also requires persistence and "
             "observable-specific refinement beyond this endpoint screen."),
     }
-    (root/"classification.json").write_text(json.dumps(classification, indent=2))
+    classification_name = ("classification.json" if complete
+                           else "classification_partial.json")
+    (root/classification_name).write_text(json.dumps(classification, indent=2))
 
     figure, axes = plt.subplots(2, 3, figsize=(12, 7), constrained_layout=True)
     fields = (
@@ -140,7 +166,8 @@ def main():
         image = axis.imshow(field, origin="lower", cmap=cmap)
         axis.set_title(title); axis.set_xticks(()); axis.set_yticks(())
         figure.colorbar(image, ax=axis, shrink=.75)
-    figure.savefig(root/"final_fields.png", dpi=180)
+    figure.savefig(root/("final_fields.png" if complete
+                         else "latest_fields.png"), dpi=180)
     plt.close(figure)
     print(json.dumps(classification, indent=2))
 
