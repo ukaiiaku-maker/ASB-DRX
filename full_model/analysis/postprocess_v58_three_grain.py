@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+"""Outcome-neutral physical classification of a V58 three-grain trajectory."""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from full_model.analysis.run_v58_three_grain_production import (
+    _load_checkpoint, initialize_state,
+)
+from full_model.production.multigrain_common_state import (
+    audit_multigrain_nye, reconstruct_multigrain_common,
+)
+from full_model.production.tensorial_nye import spectral_derivatives
+
+
+def _perimeter_m(support, spacing):
+    gx, gy = spectral_derivatives(support, spacing)
+    return float(np.sum(np.sqrt(gx*gx+gy*gy), dtype=np.longdouble)*spacing**2)
+
+
+def _total_density(owner):
+    return np.sum(
+        owner.mobile_plus_m2+owner.mobile_minus_m2
+        +owner.forest_plus_m2+owner.forest_minus_m2
+        +owner.wall_plus_m2+owner.wall_minus_m2, axis=2)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("run")
+    args = parser.parse_args()
+    root = Path(args.run)
+    run_result = json.loads((root/"result.json").read_text())
+    checkpoint = Path(run_result["checkpoint"])
+    state, runtime, step, gamma, initial_volume = _load_checkpoint(checkpoint)
+    spacing = 2e-8; thickness = 5e-10
+    initial = initialize_state(
+        run_result["n"], run_result["temperature_K"],
+        run_result["case"] == "equal_density")
+    cell_volume = spacing**2*thickness
+    final_volume = np.sum(state.supports, axis=(1, 2))*cell_volume
+    support_delta = state.supports-initial.supports
+    gross_transformed = float(
+        .5*np.sum(np.abs(support_delta), dtype=np.longdouble)*cell_volume)
+    fresh = state.ledger.fresh_sweep_fraction*cell_volume
+    revisit = state.ledger.revisit_sweep_fraction*cell_volume
+    common, _ = reconstruct_multigrain_common(state, spacing)
+    total_density = _total_density(common)
+    temperature = np.asarray(common.temperature_K)
+    orientation = np.asarray(common.orientation_rad)
+    audit = audit_multigrain_nye(state, spacing)
+    gnd = np.linalg.norm(audit.exact_reconstructed_m1, axis=(-2, -1))
+    owner_mismatch = np.linalg.norm(
+        audit.owner_reservoir_mismatch_m1, axis=(-2, -1))
+    perimeters_initial = np.asarray([
+        _perimeter_m(value, spacing) for value in initial.supports])
+    perimeters_final = np.asarray([
+        _perimeter_m(value, spacing) for value in state.supports])
+    equivalent_displacement = np.divide(
+        final_volume-initial_volume,
+        thickness*.5*(perimeters_initial+perimeters_final),
+        out=np.zeros_like(final_volume),
+        where=(perimeters_initial+perimeters_final) > 0.0)
+    newly_swept_density = []
+    for index, owner in enumerate(state.owners):
+        growth = np.maximum(support_delta[index], 0.0)
+        density = _total_density(owner)
+        newly_swept_density.append(float(np.sum(growth*density)
+            /max(float(np.sum(growth)), 1e-300)))
+    low_index = 1
+    low_growth_fraction = float(
+        (final_volume[low_index]-initial_volume[low_index])
+        /max(initial_volume[low_index], 1e-300))
+    substantial_drx = bool(
+        low_growth_fraction >= .01
+        and equivalent_displacement[low_index] >= .5*spacing
+        and fresh > 0.0)
+    thermal_localization_ratio = float(
+        (np.max(temperature)-np.min(temperature))
+        /max(np.mean(temperature)-run_result["temperature_K"], 1e-12))
+    strict_asb = bool(
+        run_result["final"]["temperature_contrast_K"] >= 100.0
+        and thermal_localization_ratio >= 2.0
+        and run_result["final"]["shear_stress_Pa"]
+        < max(item["shear_stress_Pa"]
+              for item in json.loads((root/"history.json").read_text())))
+    classification = {
+        "schema": "asb-drx-v58-three-grain-classification-v1",
+        "source_commit": run_result["source_commit"],
+        "checkpoint": str(checkpoint),
+        "step": step, "physical_time_s": runtime.ledger.physical_time_s,
+        "applied_shear_strain": gamma,
+        "initial_volume_m3": initial_volume.tolist(),
+        "final_volume_m3": final_volume.tolist(),
+        "net_volume_change_m3": (final_volume-initial_volume).tolist(),
+        "gross_transformed_volume_m3": gross_transformed,
+        "fresh_sweep_volume_m3": fresh,
+        "revisit_sweep_volume_m3": revisit,
+        "equivalent_contour_displacement_m": equivalent_displacement.tolist(),
+        "newly_swept_owner_density_m2": newly_swept_density,
+        "temperature_mean_K": float(np.mean(temperature)),
+        "temperature_contrast_K": float(np.max(temperature)-np.min(temperature)),
+        "thermal_localization_ratio": thermal_localization_ratio,
+        "maximum_gnd_m1": float(np.max(gnd)),
+        "maximum_owner_nye_mismatch_m1": float(np.max(owner_mismatch)),
+        "maximum_energy_closure_relative": (
+            runtime.ledger.maximum_relative_energy_closure),
+        "energy_qualified_multigrain_production": bool(
+            runtime.ledger.accepted_events > 0
+            and runtime.ledger.rejected_events == 0
+            and runtime.ledger.maximum_relative_energy_closure <= .05),
+        "substantial_existing_boundary_drx": substantial_drx,
+        "strict_asb": strict_asb,
+        "spontaneous_grain_birth": False,
+        "claim_limit": (
+            "Prepared three-grain existing-boundary trajectory; no spontaneous "
+            "nucleation claim. Strict ASB also requires persistence and "
+            "observable-specific refinement beyond this endpoint screen."),
+    }
+    (root/"classification.json").write_text(json.dumps(classification, indent=2))
+
+    figure, axes = plt.subplots(2, 3, figsize=(12, 7), constrained_layout=True)
+    fields = (
+        (np.argmax(state.supports, axis=0), "dominant grain", "tab10"),
+        (state.supports[1], "low-defect grain support", "viridis"),
+        (total_density, "total dislocation density [m$^{-2}$]", "magma"),
+        (gnd, "Nye/GND norm [m$^{-1}$]", "inferno"),
+        (orientation, "orientation [rad]", "twilight"),
+        (temperature, "temperature [K]", "plasma"),
+    )
+    for axis, (field, title, cmap) in zip(axes.flat, fields):
+        image = axis.imshow(field, origin="lower", cmap=cmap)
+        axis.set_title(title); axis.set_xticks(()); axis.set_yticks(())
+        figure.colorbar(image, ax=axis, shrink=.75)
+    figure.savefig(root/"final_fields.png", dpi=180)
+    plt.close(figure)
+    print(json.dumps(classification, indent=2))
+
+
+if __name__ == "__main__":
+    main()

@@ -171,7 +171,7 @@ def main():
                 state, runtime, kinetics=kinetics, dt_s=args.dt,
                 spacing_m=spacing, represented_thickness_m=thickness,
                 wall_parameters=wall, energy_kwargs=energy_options,
-                applied_shear_rate_s=args.shear_rate)
+                applied_shear_rate_s=args.shear_rate, systems=systems)
         if step == start or (step+1) % max(args.checkpoint_every, 1) == 0:
             energy = evaluate_complete_multigrain_energy(
                 state, spacing_m=spacing,

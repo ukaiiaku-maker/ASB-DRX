@@ -4,7 +4,7 @@
   "campaign_state": "ACTIVE",
   "start_utc": "2026-09-28T21:13:10Z",
   "deadline_utc": "2026-09-29T09:13:10Z",
-  "source_checkpoint": "7a1f284324185d9038bc999a1c5acd16ff212175",
+  "source_checkpoint": "e6c8171799cef72d6bd79537264f6647745385b4",
   "accepted_prefix": {
     "v57_temporal_increment_error": 0.020888122071016084,
     "v57_temporal_scope": "n64 retained monolithic step-100 one-full/two-half interval",
@@ -14,10 +14,17 @@
   "current_physical_observations": [
     "No V57 solver remains live.",
     "V57 multi-grain support and scalar line inventory transaction is executable but not a physical published event.",
-    "V57 reconstruction does not independently expose owner Curl mismatch and support-gradient Nye."
+    "V58 now independently exposes owner Curl mismatch and support-gradient Nye.",
+    "A recurrent n16 smoke interval accepted a zero-pressure three-grain event with plastic flow, heat, and sub-0.1% first-law error."
   ],
-  "first_unresolved_transaction": "Compute, bind, and atomically decide the complete final multi-owner energy/dissipation transaction, with physical transfer semantics and recurrent interface history.",
-  "current_action": "Implement state-specific multi-grain Nye audit and whole-state complete energy evaluator with focused tests.",
-  "active_campaign_heavy_action": null,
-  "next_action": "Integrate computed decision with joint transaction and exercise a nonzero three-grain recurrent event."
+  "first_unresolved_transaction": "Qualify recurrent contour migration beyond diffuse-profile relaxation and complete the common mechanical/front energy ledger over a useful physical horizon.",
+  "current_action": "Run and postprocess the first n32 continued-deformation three-grain trajectory from immutable source e6c8171.",
+  "active_campaign_heavy_action": {
+    "pid": 6369,
+    "source": "e6c8171799cef72d6bd79537264f6647745385b4",
+    "case": "three_grain_baseline_n32",
+    "command": "PYTHONPATH=src:. python full_model/analysis/run_v58_three_grain_production.py --n 32 --steps 100 --dt 1e-7 --shear-rate 2e4 --temperature 900 --case baseline --checkpoint-every 10",
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_baseline_n32"
+  },
+  "next_action": "Classify migration versus profile relaxation, then run the matched equal-density or front-off discriminator selected by that result."
 }

@@ -37,7 +37,8 @@ def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():
         spacing_m=spacing, represented_thickness_m=5e-10,
         wall_parameters=wall, energy_kwargs=dict(
             phase_barrier_J_m3=5e6, phase_gradient_J_m=5e-7,
-            reference_temperature_K=900.0))
+            reference_temperature_K=900.0),
+        systems=bcc_four_family_systems())
     assert decision.accepted
     assert decision.energy_decision.complete_functional
     assert decision.energy_decision.external_work_J == 0.0

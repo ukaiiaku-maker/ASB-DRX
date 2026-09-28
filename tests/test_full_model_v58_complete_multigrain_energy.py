@@ -15,6 +15,9 @@ from full_model.production.multigrain_common_state import (
     publish_energy_accepted_candidate,
 )
 from tests.test_full_model_multigrain_common_state import owner, zero_exports
+from full_model.production.tensorial_nye import (
+    bcc_four_family_systems, rotated_system_fields,
+)
 
 
 def _state(n=12):
@@ -138,7 +141,8 @@ def test_physical_transfer_derives_product_channels_and_recurrent_history():
         neutral_sink_fraction=.05)
     forward = derive_physical_transfer_proposal(
         state, interface_id="junction-arm-a", donor_id=10, receiver_id=20,
-        requested_fraction=request, law=law, interval_s=2e-9)
+        requested_fraction=request, law=law, interval_s=2e-9,
+        systems=bcc_four_family_systems())
     # The caller cannot select an artificially clean product: it is derived
     # from the donor and declared transfer law, while orientation remains the
     # persistent receiving-grain identity.
@@ -165,7 +169,7 @@ def test_physical_transfer_derives_product_channels_and_recurrent_history():
     reverse = derive_physical_transfer_proposal(
         first.candidate, interface_id="junction-arm-a", donor_id=20,
         receiver_id=10, requested_fraction=request, law=law,
-        interval_s=3e-9)
+        interval_s=3e-9, systems=bcc_four_family_systems())
     second = joint_material_transaction(first.candidate, (reverse,))
     recurrent = second.candidate.interfaces[0]
     assert recurrent.exposure_s == 5e-9
@@ -180,10 +184,46 @@ def test_two_physical_incident_edges_share_capacity_and_keep_histories():
     law = PhysicalTransferLaw(.7, .1, .05)
     proposals = tuple(derive_physical_transfer_proposal(
         state, interface_id=name, donor_id=10, receiver_id=receiver,
-        requested_fraction=request, law=law, interval_s=1e-9)
+        requested_fraction=request, law=law, interval_s=1e-9,
+        systems=bcc_four_family_systems())
         for name, receiver in (("10-20", 20), ("10-30", 30)))
     result = joint_material_transaction(state, proposals)
     np.testing.assert_allclose(np.sum(result.candidate.supports, axis=0), 1.0)
     assert len(result.candidate.interfaces) == 2
     assert result.candidate.ledger.capacity_limited_material_fraction > 0.0
     assert result.candidate.ledger.maximum_line_export_closure_m2 < 1e-13
+
+
+def test_misoriented_transfer_closes_vector_burgers_content_at_interface():
+    state = _state(8)
+    biased = state.owners[0].mobile_plus_m2.copy()
+    biased[..., 0] *= 1.7
+    state = replace(state, owners=(
+        replace(state.owners[0], mobile_plus_m2=biased),
+        state.owners[1], state.owners[2]))
+    systems = bcc_four_family_systems()
+    request = np.zeros((8, 8)); request[:2] = .1
+    proposal = derive_physical_transfer_proposal(
+        state, interface_id="10-20", donor_id=10, receiver_id=20,
+        requested_fraction=request,
+        law=PhysicalTransferLaw(.6, .1, .0), interval_s=1e-9,
+        systems=systems)
+    bd, _, _ = rotated_system_fields(systems, state.owners[0].orientation_rad)
+    br, _, _ = rotated_system_fields(systems, state.owners[1].orientation_rad)
+    pairs = (("mobile_plus_m2", "mobile_minus_m2"),
+             ("forest_plus_m2", "forest_minus_m2"),
+             ("wall_plus_m2", "wall_minus_m2"))
+    for reservoir, (plus, minus) in enumerate(pairs):
+        donor_b = np.einsum(
+            "...a,...ai->...i",
+            getattr(state.owners[0], plus)-getattr(state.owners[0], minus), bd)
+        product_b = np.einsum(
+            "...a,...ai->...i",
+            getattr(proposal.product_owner, plus)
+            -getattr(proposal.product_owner, minus), br)
+        np.testing.assert_allclose(
+            donor_b-product_b,
+            proposal.physical_channels.boundary_burgers_m1[..., reservoir, :],
+            rtol=5e-14, atol=5e-10)
+    result = joint_material_transaction(state, (proposal,))
+    assert np.linalg.norm(result.candidate.interfaces[0].boundary_burgers_m1) > 0.0

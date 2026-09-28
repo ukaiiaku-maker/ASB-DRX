@@ -133,12 +133,24 @@ def advance_multigrain_mechanics(
         updated = owner
         remaining = dt
         substeps = 0
+        failed_retries = 0
         owner_work = owner_heat = 0.0
         while remaining > 64.0*np.finfo(float).eps*dt:
-            trial, residual, scale = accepted_euler_step(
-                updated, driving, systems, topologies, wall_parameters,
-                remaining)
-            consumed = remaining*float(scale)
+            attempted = remaining
+            while True:
+                try:
+                    trial, residual, scale = accepted_euler_step(
+                        updated, driving, systems, topologies,
+                        wall_parameters, attempted)
+                    break
+                except (ValueError, FloatingPointError):
+                    attempted *= .5
+                    failed_retries += 1
+                    if (failed_retries > 64
+                            or attempted <= 64.0*np.finfo(float).eps*dt):
+                        raise RuntimeError(
+                            "mechanical interval could not find an admissible substep")
+            consumed = attempted*float(scale)
             if consumed <= 0.0:
                 raise RuntimeError("mechanical interval made no physical-time progress")
             weight = np.asarray(support, dtype=float)
@@ -192,7 +204,7 @@ def _contact_weight(state, donor_index, receiver_index):
 
 def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
                      spacing_m, represented_thickness_m, wall_parameters,
-                     energy_kwargs, interval_s):
+                     energy_kwargs, interval_s, systems):
     index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
     weight = _contact_weight(state, index[donor_id], index[receiver_id])
     request = kinetics.virtual_fraction*weight
@@ -204,7 +216,7 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
     proposal = derive_physical_transfer_proposal(
         state, interface_id=interface.component_id, donor_id=donor_id,
         receiver_id=receiver_id, requested_fraction=request,
-        law=kinetics.transfer_law, interval_s=interval_s)
+        law=kinetics.transfer_law, interval_s=interval_s, systems=systems)
     capacity = joint_material_transaction(state, (proposal,))
     priced = evaluate_joint_multigrain_transaction(
         state, capacity, spacing_m=spacing_m,
@@ -218,7 +230,7 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
 def advance_multigrain_front(
         state, runtime, *, kinetics, dt_s, spacing_m,
         represented_thickness_m, wall_parameters, energy_kwargs=None,
-        applied_shear_rate_s=0.0):
+        applied_shear_rate_s=0.0, systems=None):
     """Advance all incident boundaries from one immutable accepted state.
 
     Directional derivatives price each edge in the full shared functional.
@@ -246,13 +258,13 @@ def advance_multigrain_front(
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
-            interval_s=dt)
+            interval_s=dt, systems=systems)
         ba, weight_ba = _virtual_channel(
             state, interface, interface.grain_b_id, interface.grain_a_id,
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
-            interval_s=dt)
+            interval_s=dt, systems=systems)
         if ab is None and ba is None:
             continue
         delta_ab = 0.0 if ab is None else ab[0]*kinetics.event_volume_m3/ab[1]
@@ -320,7 +332,7 @@ def advance_multigrain_front(
             proposals.append(derive_physical_transfer_proposal(
                 state, interface_id=interface.component_id, donor_id=donor,
                 receiver_id=receiver, requested_fraction=factor*request,
-                law=kinetics.transfer_law, interval_s=dt))
+                law=kinetics.transfer_law, interval_s=dt, systems=systems))
         capacity = joint_material_transaction(state, tuple(proposals))
         cell_volume = float(spacing_m)**2*float(represented_thickness_m)
         dissipation_J = sum(

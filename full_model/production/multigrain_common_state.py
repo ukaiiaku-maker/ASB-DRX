@@ -24,7 +24,7 @@ import numpy as np
 from .common_front_state import CommonFrontState, LINE_FIELDS
 from .common_tensorial_wall import CommonWallState
 from .tensorial_nye import (
-    nye_from_plastic_distortion, spectral_derivatives,
+    nye_from_plastic_distortion, rotated_system_fields, spectral_derivatives,
 )
 
 
@@ -63,6 +63,7 @@ class InterfaceComponentState:
     exposure_s: float = 0.0
     cumulative_work_J: float = 0.0
     cumulative_heat_J: float = 0.0
+    boundary_burgers_m1: np.ndarray | None = None
     cumulative_signed_sweep_fraction: float = 0.0
     cumulative_absolute_sweep_fraction: float = 0.0
     periodic_winding_x: int = 0
@@ -78,6 +79,7 @@ class PhysicalTransferChannels:
     boundary_junction_m2: np.ndarray
     annihilated_line_m2: np.ndarray
     external_sink_line_m2: np.ndarray
+    boundary_burgers_m1: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -137,6 +139,23 @@ class MultiGrainCommonState:
             for name in LINE_FIELDS:
                 if np.any(np.asarray(getattr(owner, name)) < 0.0):
                     raise ValueError(f"owner field {name} must be nonnegative")
+        seen_interfaces = set()
+        for interface in self.interfaces:
+            if interface.component_id in seen_interfaces:
+                raise ValueError("interface component IDs must be unique")
+            seen_interfaces.add(interface.component_id)
+            if (interface.grain_a_id not in self.grain_ids
+                    or interface.grain_b_id not in self.grain_ids
+                    or interface.grain_a_id == interface.grain_b_id):
+                raise ValueError("interface must connect two known grains")
+            for name in ("first_passage_fraction", "revisit_fraction"):
+                value = np.asarray(getattr(interface, name))
+                if value.shape != grid or np.any(~np.isfinite(value)) or np.any(value < 0.0):
+                    raise ValueError(f"invalid interface {name}")
+            if interface.boundary_burgers_m1 is not None:
+                value = np.asarray(interface.boundary_burgers_m1)
+                if value.shape != grid+(3, 3) or np.any(~np.isfinite(value)):
+                    raise ValueError("invalid interface Burgers residual")
         return grid
 
 
@@ -166,12 +185,54 @@ class JointTransferResult:
     physical_channel_cell_sums_m2: dict[str, float]
 
 
-def _scaled_product_owner(donor, receiver, transmission):
+def _scaled_product_owner(donor, receiver, transmission, systems=None):
     """Derive the swept product without a caller-selected low-density state."""
     scalar = np.mean(transmission, axis=2)
     arrays = {}
+    signed_products = {}
+    boundary_burgers = np.zeros(donor.orientation_rad.shape+(3, 3))
+    if systems is not None:
+        if len(systems) != transmission.shape[2]:
+            raise ValueError("crystallographic transfer system count mismatch")
+        donor_burgers, _, _ = rotated_system_fields(
+            systems, donor.orientation_rad)
+        receiver_burgers, _, _ = rotated_system_fields(
+            systems, receiver.orientation_rad)
+        receiver_inverse = np.linalg.pinv(
+            np.swapaxes(receiver_burgers, -1, -2))
+        for pair_index, (plus_name, minus_name) in enumerate((
+                ("mobile_plus_m2", "mobile_minus_m2"),
+                ("forest_plus_m2", "forest_minus_m2"),
+                ("wall_plus_m2", "wall_minus_m2"))):
+            plus = np.asarray(getattr(donor, plus_name), dtype=float)
+            minus = np.asarray(getattr(donor, minus_name), dtype=float)
+            neutral = np.minimum(plus, minus)*transmission
+            signed = (plus-minus)*transmission
+            target = np.einsum("...a,...ai->...i", signed, donor_burgers)
+            coefficients = np.einsum(
+                "...ai,...i->...a", receiver_inverse, target)
+            budget = np.sum(np.abs(signed), axis=2)
+            required = np.sum(np.abs(coefficients), axis=2)
+            scale = np.minimum(
+                1.0, np.divide(budget, required, out=np.ones_like(budget),
+                               where=required > 0.0))
+            coefficients *= scale[..., None]
+            product_plus = neutral+np.maximum(coefficients, 0.0)
+            product_minus = neutral+np.maximum(-coefficients, 0.0)
+            signed_products[plus_name] = product_plus
+            signed_products[minus_name] = product_minus
+            product_burgers = np.einsum(
+                "...a,...ai->...i", product_plus-product_minus,
+                receiver_burgers)
+            full_donor_burgers = np.einsum(
+                "...a,...ai->...i", plus-minus, donor_burgers)
+            boundary_burgers[..., pair_index, :] = (
+                full_donor_burgers-product_burgers)
     for item in fields(CommonWallState):
         value = np.asarray(getattr(donor, item.name), dtype=float)
+        if item.name in signed_products:
+            arrays[item.name] = signed_products[item.name]
+            continue
         if item.name in LINE_FIELDS or item.name in (
                 "slip", "beta_p", "alignment_m2", "family_nye_m1"):
             if item.name in ("mobile_plus_m2", "mobile_minus_m2",
@@ -189,13 +250,13 @@ def _scaled_product_owner(donor, receiver, transmission):
             arrays[item.name] = np.asarray(receiver.orientation_rad).copy()
         else:
             arrays[item.name] = value.copy()
-    return CommonWallState(**arrays)
+    return CommonWallState(**arrays), boundary_burgers
 
 
 def derive_physical_transfer_proposal(
         state: MultiGrainCommonState, *, interface_id: str, donor_id: int,
         receiver_id: int, requested_fraction, law: PhysicalTransferLaw,
-        interval_s: float):
+        interval_s: float, systems=None):
     """Build all product/export channels from the current physical owners."""
     state.validate()
     law.validate()
@@ -209,9 +270,8 @@ def derive_physical_transfer_proposal(
     shape = donor.mobile_plus_m2.shape
     transmission = np.broadcast_to(
         np.asarray(law.transmission_fraction, dtype=float), shape)
-    product = _scaled_product_owner(donor, receiver, transmission)
-    exports = {name: np.asarray(getattr(donor, name))
-               -np.asarray(getattr(product, name)) for name in LINE_FIELDS}
+    product, boundary_burgers = _scaled_product_owner(
+        donor, receiver, transmission, systems)
     boundary_plus = np.zeros(shape[:2]+(3, shape[2]))
     boundary_minus = np.zeros_like(boundary_plus)
     annihilated = np.zeros(shape[:2])
@@ -247,7 +307,23 @@ def derive_physical_transfer_proposal(
         *blocked_junction, axis=2)
     sink += np.sum(law.neutral_sink_fraction*blocked_junction, axis=2)
     channels = PhysicalTransferChannels(
-        boundary_plus, boundary_minus, boundary_junction, annihilated, sink)
+        boundary_plus, boundary_minus, boundary_junction, annihilated, sink,
+        boundary_burgers)
+    # Family remapping can exchange + and - inventory between receiver
+    # families. The nonnegative scalar export is therefore allocated over the
+    # donor reservoirs only after closing total line length; vector closure is
+    # carried independently by boundary_burgers_m1.
+    donor_line = sum(np.asarray(getattr(donor, name)) for name in LINE_FIELDS[:-1])
+    product_line = sum(np.asarray(getattr(product, name)) for name in LINE_FIELDS[:-1])
+    donor_total = (np.sum(donor_line, axis=2)+np.sum(donor.junction_m2, axis=2))
+    product_total = (np.sum(product_line, axis=2)+np.sum(product.junction_m2, axis=2))
+    removed = np.maximum(donor_total-product_total, 0.0)
+    exports = {}
+    denominator = np.maximum(donor_total, 1e-300)
+    for name in LINE_FIELDS:
+        value = np.asarray(getattr(donor, name))
+        exports[name] = value*removed[(...,)+(None,)*(value.ndim-2)]/denominator[
+            (...,)+(None,)*(value.ndim-2)]
     return JointTransferProposal(
         str(interface_id), int(donor_id), int(receiver_id),
         np.asarray(requested_fraction, dtype=float), product, exports, channels,
@@ -415,6 +491,9 @@ def _proposal_arrays(state, proposals):
                           channels.external_sink_line_m2):
                 if np.any(~np.isfinite(value)) or np.any(np.asarray(value) < 0.0):
                     raise ValueError("physical transfer channels must be finite and nonnegative")
+            if (np.asarray(channels.boundary_burgers_m1).shape != grid+(3, 3)
+                    or np.any(~np.isfinite(channels.boundary_burgers_m1))):
+                raise ValueError("physical Burgers residual is not grid matched")
             if not math.isfinite(float(proposal.physical_interval_s)) or float(
                     proposal.physical_interval_s) <= 0.0:
                 raise ValueError("physical channel proposal lacks a valid interval")
@@ -466,6 +545,7 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
     fresh_total = revisit_total = annihilated_total = sink_total = 0.0
     for proposal, _, donor, receiver in prepared:
         extent = accepted[proposal.interface_id]
+        proposal_out = proposal_in = proposal_export = 0.0
         for item in fields(CommonWallState):
             donor_value = np.asarray(getattr(state.owners[donor], item.name))
             product_value = np.asarray(getattr(proposal.product_owner, item.name))
@@ -473,18 +553,19 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
             moved_in = _weight(product_value, extent)
             if item.name in LINE_FIELDS:
                 exported = _weight(proposal.line_export_m2[item.name], extent)
-                residual = moved_out-moved_in-exported
-                if residual.size:
-                    scale = max(float(np.max(np.abs(moved_out))), 1.0)
-                    maximum_line_closure = max(
-                        maximum_line_closure,
-                        float(np.max(np.abs(residual))/scale))
-                    if float(np.max(np.abs(residual))) > SUPPORT_TOLERANCE*scale:
-                        raise ValueError(
-                            f"{proposal.interface_id} {item.name} line export does not close")
+                proposal_out += float(np.sum(moved_out, dtype=np.longdouble))
+                proposal_in += float(np.sum(moved_in, dtype=np.longdouble))
+                proposal_export += float(np.sum(exported, dtype=np.longdouble))
                 line_export_totals[item.name] += float(np.sum(exported))
             owner_values[donor][item.name] -= moved_out
             owner_values[receiver][item.name] += moved_in
+        residual = proposal_out-proposal_in-proposal_export
+        scale = max(abs(proposal_out), abs(proposal_in), 1.0)
+        maximum_line_closure = max(
+            maximum_line_closure, abs(residual)/scale)
+        if abs(residual) > SUPPORT_TOLERANCE*scale:
+            raise ValueError(
+                f"{proposal.interface_id} total line export does not close")
         channels = proposal.physical_channels
         if channels is not None:
             component = interfaces.get(proposal.interface_id)
@@ -495,7 +576,9 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
                     proposal.receiver_id, np.zeros(grid), np.zeros(grid),
                     np.zeros_like(channels.boundary_plus_m2),
                     np.zeros_like(channels.boundary_minus_m2),
-                    np.zeros_like(channels.boundary_junction_m2))
+                    np.zeros_like(channels.boundary_junction_m2),
+                    boundary_burgers_m1=np.zeros_like(
+                        channels.boundary_burgers_m1))
                 interface_order.append(proposal.interface_id)
             if {component.grain_a_id, component.grain_b_id} != {
                     proposal.donor_id, proposal.receiver_id}:
@@ -518,6 +601,7 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
                                                    -extent.ndim)]
             junction_multiplier = extent[(...,)+(None,)*(
                 channels.boundary_junction_m2.ndim-extent.ndim)]
+            burgers_multiplier = extent[..., None, None]
             component = replace(
                 component,
                 first_passage_fraction=component.first_passage_fraction+fresh,
@@ -535,7 +619,12 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
                     +sign*float(np.sum(extent, dtype=np.longdouble))),
                 cumulative_absolute_sweep_fraction=(
                     component.cumulative_absolute_sweep_fraction
-                    +float(np.sum(extent, dtype=np.longdouble))))
+                    +float(np.sum(extent, dtype=np.longdouble))),
+                boundary_burgers_m1=(
+                    (np.zeros_like(channels.boundary_burgers_m1)
+                     if component.boundary_burgers_m1 is None
+                     else component.boundary_burgers_m1)
+                    +burgers_multiplier*channels.boundary_burgers_m1))
             interfaces[proposal.interface_id] = component
             fresh_total += float(np.sum(fresh, dtype=np.longdouble))
             revisit_total += float(np.sum(revisit, dtype=np.longdouble))
@@ -646,7 +735,9 @@ def multigrain_checkpoint_arrays(state):
     for index, interface in enumerate(state.interfaces):
         for name in ("first_passage_fraction", "revisit_fraction",
                      "boundary_plus_m2", "boundary_minus_m2",
-                     "boundary_junction_m2"):
+                     "boundary_junction_m2", "boundary_burgers_m1"):
+            if getattr(interface, name) is None:
+                continue
             arrays[f"interface__{index}__{name}"] = np.asarray(
                 getattr(interface, name)).copy()
     return arrays
@@ -711,7 +802,12 @@ def multigrain_from_checkpoint(metadata_json, arrays):
             cumulative_absolute_sweep_fraction=float(item.get(
                 "cumulative_absolute_sweep_fraction", 0.0)),
             periodic_winding_x=int(item.get("periodic_winding_x", 0)),
-            periodic_winding_y=int(item.get("periodic_winding_y", 0))))
+            periodic_winding_y=int(item.get("periodic_winding_y", 0)),
+            boundary_burgers_m1=(
+                np.asarray(arrays[
+                    f"interface__{index}__boundary_burgers_m1"]).copy()
+                if f"interface__{index}__boundary_burgers_m1" in arrays
+                else None)))
     state = MultiGrainCommonState(
         tuple(int(value) for value in metadata["grain_ids"]), supports,
         tuple(owners), tuple(interfaces),
