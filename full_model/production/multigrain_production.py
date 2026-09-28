@@ -182,7 +182,7 @@ def multigrain_instantaneous_dissipation_fields(
 
 def advance_multigrain_mechanics(
         state, *, driving, systems, topologies, wall_parameters, dt_s,
-        represented_thickness_m):
+        represented_thickness_m, maximum_internal_substeps=4096):
     """Advance each persistent material owner over the same physical interval.
 
     Only supported material evolves; dormant owner history is bitwise retained
@@ -260,7 +260,7 @@ def advance_multigrain_mechanics(
             remaining -= consumed
             suggested = min(dt, max(attempted, consumed)*1.25)
             substeps += 1
-            if substeps > 4096:
+            if substeps > int(maximum_internal_substeps):
                 raise RuntimeError("mechanical physical interval exceeded substep budget")
         owners.append(_masked_owner_update(owner, updated, active))
         work += owner_work
@@ -326,7 +326,11 @@ def advance_energy_qualified_mechanics(
                 accepted, driving=CommonWallDriving(mean_strain=midpoint),
                 systems=systems, topologies=topologies,
                 wall_parameters=wall_parameters, dt_s=interval,
-                represented_thickness_m=represented_thickness_m)
+                represented_thickness_m=represented_thickness_m,
+                # This is a trial inside an outer rollback/bisection
+                # controller.  Fail early rather than spending thousands of
+                # constitutive substeps proving that a coarse trial is stiff.
+                maximum_internal_substeps=128)
         except RuntimeError as error:
             adaptive_failure = any(text in str(error) for text in (
                 "mechanical physical interval exceeded substep budget",
