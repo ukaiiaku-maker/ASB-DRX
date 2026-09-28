@@ -14,7 +14,9 @@ from .complete_multigrain_energy import (
 )
 from .coupled_front_event import propose_bidirectional_front_event
 from .moving_front import DefectState
-from .common_tensorial_wall import CommonWallDriving, accepted_euler_step
+from .common_tensorial_wall import (
+    CommonWallDriving, accepted_euler_step, wall_residual,
+)
 from .nonlocal_elasticity import solve_periodic_eigenstrain
 from .tensorial_nye import rotated_system_fields
 from .multigrain_common_state import (
@@ -129,6 +131,55 @@ def _masked_owner_update(before, after, active):
     return CommonWallState(**arrays)
 
 
+def _owner_drivings_from_common_stress(
+        state, driving, systems, wall_parameters):
+    if driving.resolved_stress_Pa is not None:
+        return tuple(driving for _ in state.owners)
+    mixture, _ = reconstruct_multigrain_common(
+        state, wall_parameters.spacing_m)
+    beta2 = np.asarray(mixture.beta_p)[..., :2, :2]
+    eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
+    common_stress, _ = solve_periodic_eigenstrain(
+        eigenstrain, np.asarray(driving.mean_strain, dtype=float),
+        wall_parameters.spacing_m, wall_parameters.c11_Pa,
+        wall_parameters.c12_Pa, wall_parameters.c44_Pa,
+        iterations=wall_parameters.elastic_iterations)
+    owner_drivings = []
+    for owner in state.owners:
+        _, directions, normals = rotated_system_fields(
+            systems, owner.orientation_rad)
+        schmid = .5*(
+            np.einsum("...si,...sj->...sij", directions[..., :2],
+                      normals[..., :2])
+            +np.einsum("...si,...sj->...sij", normals[..., :2],
+                       directions[..., :2]))
+        owner_drivings.append(CommonWallDriving(resolved_stress_Pa=np.einsum(
+            "...ij,...sij->...s", common_stress, schmid)))
+    return tuple(owner_drivings)
+
+
+def multigrain_instantaneous_dissipation_fields(
+        state, *, driving, systems, topologies, wall_parameters):
+    """Evaluate common-stress owner power/heat fields without advancing."""
+    shape = state.supports.shape[1:]
+    plastic = np.zeros(shape, dtype=float)
+    heat = np.zeros(shape, dtype=float)
+    free_energy = np.zeros(shape, dtype=float)
+    owner_drivings = _owner_drivings_from_common_stress(
+        state, driving, systems, wall_parameters)
+    for support, owner, owner_driving in zip(
+            state.supports, state.owners, owner_drivings):
+        residual = wall_residual(
+            owner, owner_driving, systems, topologies, wall_parameters)
+        weight = np.asarray(support, dtype=float)
+        plastic += weight*residual.plastic_power_W_m3
+        heat += weight*residual.heat_rate_W_m3
+        free_energy += weight*residual.free_energy_rate_W_m3
+    return {"plastic_power_W_m3": plastic,
+            "irreversible_heat_rate_W_m3": heat,
+            "defect_free_energy_rate_W_m3": free_energy}
+
+
 def advance_multigrain_mechanics(
         state, *, driving, systems, topologies, wall_parameters, dt_s,
         represented_thickness_m):
@@ -154,32 +205,11 @@ def advance_multigrain_mechanics(
     # once to the reconstructed common temperature below.
     local_parameters = replace(
         wall_parameters, thermal_diffusivity_m2_s=0.0, bath_rate_s=0.0)
-    if driving.resolved_stress_Pa is None:
-        mixture, _ = reconstruct_multigrain_common(
-            state, wall_parameters.spacing_m)
-        beta2 = np.asarray(mixture.beta_p)[..., :2, :2]
-        eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
-        common_stress, _ = solve_periodic_eigenstrain(
-            eigenstrain, np.asarray(driving.mean_strain, dtype=float),
-            wall_parameters.spacing_m, wall_parameters.c11_Pa,
-            wall_parameters.c12_Pa, wall_parameters.c44_Pa,
-            iterations=wall_parameters.elastic_iterations)
-    else:
-        common_stress = None
-    for support, owner in zip(state.supports, state.owners):
+    owner_drivings = _owner_drivings_from_common_stress(
+        state, driving, systems, wall_parameters)
+    for support, owner, owner_driving in zip(
+            state.supports, state.owners, owner_drivings):
         active = np.asarray(support) > 256.0*np.finfo(float).eps
-        if common_stress is None:
-            owner_driving = driving
-        else:
-            _, directions, normals = rotated_system_fields(
-                systems, owner.orientation_rad)
-            schmid = .5*(
-                np.einsum("...si,...sj->...sij", directions[..., :2],
-                          normals[..., :2])
-                +np.einsum("...si,...sj->...sij", normals[..., :2],
-                           directions[..., :2]))
-            owner_driving = CommonWallDriving(resolved_stress_Pa=np.einsum(
-                "...ij,...sij->...s", common_stress, schmid))
         updated = owner
         remaining = dt
         substeps = 0

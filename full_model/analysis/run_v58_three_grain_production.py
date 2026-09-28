@@ -30,6 +30,7 @@ from full_model.production.multigrain_production import (
     advance_energy_qualified_mechanics, advance_multigrain_front,
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
+from full_model.analysis.spatial_localization import spatial_localization_metrics
 
 
 def _owner(n, density, orientation, temperature):
@@ -331,30 +332,10 @@ def replace_ledger(ledger, dt, shear_rate):
 
 def _localization_diagnostics(plastic_power, heat_rate):
     """Return outcome-neutral instantaneous spatial concentration metrics."""
-    plastic = np.asarray(plastic_power, dtype=float)
-    heat = np.asarray(heat_rate, dtype=float)
-
-    def values(field):
-        positive = np.maximum(field, 0.0)
-        mean = float(np.mean(positive))
-        threshold = 2.0*mean
-        mask = positive >= threshold if threshold > 0.0 else np.zeros(
-            positive.shape, dtype=bool)
-        # A periodic spanning fraction is retained as a conservative band
-        # proxy; persistence is assessed from the time history, not one field.
-        row_fraction = float(np.max(np.mean(mask, axis=1)))
-        column_fraction = float(np.max(np.mean(mask, axis=0)))
-        return {
-            "signed_min_W_m3": float(np.min(field)),
-            "positive_mean_W_m3": mean,
-            "positive_max_W_m3": float(np.max(positive)),
-            "maximum_to_mean": float(np.max(positive)/max(mean, 1e-300)),
-            "above_twice_mean_fraction": float(np.mean(mask)),
-            "maximum_hot_row_or_column_fraction": max(
-                row_fraction, column_fraction),
-        }
-    return {"plastic_power": values(plastic),
-            "irreversible_heat_rate": values(heat)}
+    return {
+        "plastic_power": spatial_localization_metrics(plastic_power),
+        "irreversible_heat_rate": spatial_localization_metrics(heat_rate),
+    }
 
 
 if __name__ == "__main__":

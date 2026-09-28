@@ -15,6 +15,7 @@ from full_model.production.multigrain_production import (
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 from tests.test_full_model_v58_complete_multigrain_energy import _state
+from full_model.analysis.spatial_localization import spatial_localization_metrics
 
 
 def _front_parameters(spacing):
@@ -130,3 +131,16 @@ def test_active_mask_cannot_age_dormant_owner_cells_or_limit_step():
         before = np.asarray(getattr(state, name))
         after = np.asarray(getattr(evolved, name))
         np.testing.assert_array_equal(after[~active], before[~active])
+
+
+def test_periodic_localization_distinguishes_hotspot_from_band():
+    hotspot = np.zeros((16, 16)); hotspot[7, 8] = 100.0
+    point = spatial_localization_metrics(hotspot)
+    assert not point["band_like"]
+    assert point["largest_component_cells"] == 1
+
+    band = np.ones((16, 16)); band[7, :] = 100.0
+    line = spatial_localization_metrics(band)
+    assert line["band_like"]
+    assert line["periodic_winding"][1]
+    assert line["signed_min_W_m3"] == 1.0

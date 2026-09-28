@@ -16,7 +16,16 @@ from full_model.analysis.run_v58_three_grain_production import (
 from full_model.production.multigrain_common_state import (
     audit_multigrain_nye, reconstruct_multigrain_common,
 )
-from full_model.production.tensorial_nye import spectral_derivatives
+from full_model.production.common_tensorial_wall import (
+    CommonWallDriving, CommonWallParameters,
+)
+from full_model.production.multigrain_production import (
+    multigrain_instantaneous_dissipation_fields,
+)
+from full_model.production.tensorial_nye import (
+    bcc_four_family_systems, spectral_derivatives,
+)
+from full_model.analysis.spatial_localization import spatial_localization_metrics
 
 
 def _perimeter_m(support, spacing):
@@ -83,6 +92,22 @@ def main():
     gnd = np.linalg.norm(audit.exact_reconstructed_m1, axis=(-2, -1))
     owner_mismatch = np.linalg.norm(
         audit.owner_reservoir_mismatch_m1, axis=(-2, -1))
+    systems = bcc_four_family_systems()
+    flow_mode = ((checkpoint_configuration or {}).get(
+        "flow_temperature_mode", "physical"))
+    wall = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=2,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        transport_scheme="upwind", maximum_fraction_per_step=.75,
+        flow_temperature_override_K=(
+            run_result["temperature_K"] if flow_mode == "frozen" else None),
+        volumetric_heat_capacity_J_m3_K=3.8e6,
+        thermal_diffusivity_m2_s=(checkpoint_configuration or {}).get(
+            "thermal_diffusivity_m2_s", 0.15/3.8e6), bath_rate_s=0.0)
+    strain = np.array([[0.0, .5*gamma], [.5*gamma, 0.0]])
+    dissipation = multigrain_instantaneous_dissipation_fields(
+        state, driving=CommonWallDriving(mean_strain=strain), systems=systems,
+        topologies=(), wall_parameters=wall)
     perimeters_initial = np.asarray([
         _perimeter_m(value, spacing) for value in initial.supports])
     perimeters_final = np.asarray([
@@ -135,6 +160,10 @@ def main():
         "thermal_localization_ratio": thermal_localization_ratio,
         "maximum_gnd_m1": float(np.max(gnd)),
         "maximum_owner_nye_mismatch_m1": float(np.max(owner_mismatch)),
+        "instantaneous_plastic_power": spatial_localization_metrics(
+            dissipation["plastic_power_W_m3"]),
+        "instantaneous_irreversible_heat_rate": spatial_localization_metrics(
+            dissipation["irreversible_heat_rate_W_m3"]),
         "maximum_energy_closure_relative": (
             runtime.ledger.maximum_relative_energy_closure),
         "energy_qualified_multigrain_production": bool(
@@ -168,6 +197,24 @@ def main():
         figure.colorbar(image, ax=axis, shrink=.75)
     figure.savefig(root/("final_fields.png" if complete
                          else "latest_fields.png"), dpi=180)
+    plt.close(figure)
+
+    figure, axes = plt.subplots(2, 3, figsize=(12, 7), constrained_layout=True)
+    dissipation_fields = (
+        (dissipation["plastic_power_W_m3"], "plastic power [W m$^{-3}$]", "magma"),
+        (dissipation["irreversible_heat_rate_W_m3"],
+         "irreversible heat rate [W m$^{-3}$]", "inferno"),
+        (np.sum(np.abs(common.slip), axis=2), "accumulated |slip|", "viridis"),
+        (common.wall_order, "wall order", "cividis"),
+        (owner_mismatch, "owner Nye mismatch [m$^{-1}$]", "plasma"),
+        (temperature, "temperature [K]", "coolwarm"),
+    )
+    for axis, (field, title, cmap) in zip(axes.flat, dissipation_fields):
+        image = axis.imshow(field, origin="lower", cmap=cmap)
+        axis.set_title(title); axis.set_xticks(()); axis.set_yticks(())
+        figure.colorbar(image, ax=axis, shrink=.75)
+    figure.savefig(root/("final_dissipation.png" if complete
+                         else "latest_dissipation.png"), dpi=180)
     plt.close(figure)
     print(json.dumps(classification, indent=2))
 
