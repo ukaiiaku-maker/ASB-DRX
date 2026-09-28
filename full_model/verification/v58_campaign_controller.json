@@ -23,16 +23,18 @@
     "The corrected implementation passed 14 focused tests and the full 925-test regression suite."
     ,"The fresh n32 v2 trajectory is hard-valid through step 23 (5.8% strain); its compact triple-junction hotspot has 99.2 K contrast but no band topology or winding and is not strict ASB."
     ,"Step 24 exposed private owner-temperature evolution inside constitutive subcycles. The fca4fa2 repair applies support-weighted heat once to the common Eulerian temperature and passed the rejected mechanical interval at 0.782% cumulative first-law error."
+    ,"The repaired v3 trajectory remained band-like through step 33, developed periodic winding and post-peak softening, and reached 463.5 K contrast before step 34 failed atomically at a 6.75% asymptotic first-law mismatch."
+    ,"The 994de27 front repair replaces contact-profile transfer with the level-set sweep measure and prices that same direction; finite events use the inherited 5% complete-energy threshold."
   ],
-  "first_unresolved_transaction": "Continue the repaired n32 common-temperature trajectory beyond the step-23 hotspot, classify persistence/softening/topology, then execute matched controls.",
-  "current_action": "Resume the exact step-23 checkpoint through the explicit v2-to-v3 common-temperature repair transition.",
+  "first_unresolved_transaction": "Complete the fresh v4 n32 common-temperature/geometric-front trajectory, then execute matched frozen-flow/front controls and selected refinement.",
+  "current_action": "Run a fresh n32 trajectory from the unified v4 architecture; monitor DRX contour displacement and ASB persistence together.",
   "active_campaign_heavy_action": {
-    "pid": 11236,
-    "tmux_session": "v58_common_v3_n32",
-    "source": "fca4fa233f3eb5598788d107fd92b51113c4a2ef",
-    "case": "three_grain_common_v3_n32_from23",
-    "command": "PYTHONPATH=src:. python -u full_model/analysis/run_v58_three_grain_production.py --n 32 --steps 60 --dt 1e-7 --shear-rate 2e4 --temperature 900 --case baseline --checkpoint-every 1 --maximum-mechanical-subdivisions 14 --source-commit fca4fa2 --resume checkpoint_000023.npz --resume-transition common_temperature_once_from_v2 --expected-resume-sha256 ae33387b...",
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_common_v3_n32_from23"
+    "pid": 12132,
+    "tmux_session": "v58_v4_geo_n32",
+    "source": "fdece4a",
+    "case": "three_grain_v4_geometric_n32",
+    "command": "PYTHONPATH=src:. python -u full_model/analysis/run_v58_three_grain_production.py --n 32 --steps 60 --dt 1e-7 --shear-rate 2e4 --temperature 900 --case baseline --checkpoint-every 1 --maximum-mechanical-subdivisions 14 --source-commit fdece4a",
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v4_geometric_n32"
   },
   "next_action": "Launch the fresh n32 baseline from the repair commit; classify checkpoints continuously and select equal-density/front-off and thermal controls from observed mechanisms."
 }
