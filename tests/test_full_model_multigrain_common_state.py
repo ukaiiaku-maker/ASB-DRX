@@ -14,7 +14,8 @@ from full_model.production.multigrain_common_state import (
     InterfaceComponentState, JointTransferProposal, MultiGrainCommonState,
     from_common_front_pair, joint_material_transaction,
     multigrain_checkpoint_arrays, multigrain_checkpoint_metadata,
-    multigrain_from_checkpoint, publish_energy_accepted_candidate,
+    multigrain_from_checkpoint, multigrain_state_digest,
+    publish_energy_accepted_candidate,
     reconstruct_multigrain_common,
 )
 
@@ -171,13 +172,15 @@ def test_unpriced_candidate_cannot_be_published_and_rejection_is_atomic():
     rejected = SimpleNamespace(
         accepted=False, complete_functional=True,
         independent_dissipation=True, first_law_residual_J=0.0,
-        tolerance_J=1e-20)
+        tolerance_J=1e-20,
+        candidate_state_digest=multigrain_state_digest(result.candidate))
     assert publish_energy_accepted_candidate(result, rejected) is None
     np.testing.assert_array_equal(state.supports[0], .75)
     accepted = SimpleNamespace(
         accepted=True, complete_functional=True,
         independent_dissipation=True, first_law_residual_J=1e-24,
-        tolerance_J=1e-20)
+        tolerance_J=1e-20,
+        candidate_state_digest=multigrain_state_digest(result.candidate))
     published = publish_energy_accepted_candidate(result, accepted)
     assert published.ledger.capacity_feasible_candidates == 1
     assert published.ledger.energy_accepted_transactions == 1

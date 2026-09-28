@@ -1,0 +1,23 @@
+{
+  "schema": "asb-drx-v58-allocation-v1",
+  "allocation_id": "v58-local-20260928T211310Z",
+  "campaign_state": "ACTIVE",
+  "authorization": "User-authorized fresh 12-hour local autonomous DRX/ASB development-and-simulation campaign (V58 directive).",
+  "start_utc": "2026-09-28T21:13:10Z",
+  "deadline_utc": "2026-09-29T09:13:10Z",
+  "duration_s": 43200,
+  "execution_site": "local workstation",
+  "branch": "exp/full-v58-autonomous-20260928",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v58-20260928",
+  "source_identity": "7a1f284324185d9038bc999a1c5acd16ff212175",
+  "directive_sha256": "136893d3316bf2500ea9a540797464f66e935f1e7c1003e6deb8b04444c63f91",
+  "assessment_sha256": "f675f9049fc59fbf587abb42c58d4501de71928a555ab66e90e05c205235df37",
+  "maximum_concurrent_campaign_heavy_solvers": 1,
+  "preserved_external_processes": [
+    {
+      "pid": 34369,
+      "description": "unrelated Stateful_kitagawa fatigue tmux owner",
+      "action": "preserve"
+    }
+  ]
+}

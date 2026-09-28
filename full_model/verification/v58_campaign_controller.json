@@ -1,0 +1,23 @@
+{
+  "schema": "asb-drx-v58-controller-v1",
+  "allocation_id": "v58-local-20260928T211310Z",
+  "campaign_state": "ACTIVE",
+  "start_utc": "2026-09-28T21:13:10Z",
+  "deadline_utc": "2026-09-29T09:13:10Z",
+  "source_checkpoint": "7a1f284324185d9038bc999a1c5acd16ff212175",
+  "accepted_prefix": {
+    "v57_temporal_increment_error": 0.020888122071016084,
+    "v57_temporal_scope": "n64 retained monolithic step-100 one-full/two-half interval",
+    "v55_prepared_boundary_drx": "PASSED_SCOPED",
+    "multigrain_capacity": "CAPACITY_FEASIBLE_UNPRICED_CANDIDATE"
+  },
+  "current_physical_observations": [
+    "No V57 solver remains live.",
+    "V57 multi-grain support and scalar line inventory transaction is executable but not a physical published event.",
+    "V57 reconstruction does not independently expose owner Curl mismatch and support-gradient Nye."
+  ],
+  "first_unresolved_transaction": "Compute, bind, and atomically decide the complete final multi-owner energy/dissipation transaction, with physical transfer semantics and recurrent interface history.",
+  "current_action": "Implement state-specific multi-grain Nye audit and whole-state complete energy evaluator with focused tests.",
+  "active_campaign_heavy_action": null,
+  "next_action": "Integrate computed decision with joint transaction and exercise a nonzero three-grain recurrent event."
+}

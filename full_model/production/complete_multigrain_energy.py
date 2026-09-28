@@ -1,0 +1,275 @@
+"""Whole-state energy and independently dissipative multi-grain transaction.
+
+Every energy is integrated once over the represented three-dimensional patch.
+Intrinsic grain-boundary energy resides in the multiphase local/gradient terms;
+``boundary_excess_J`` contains only explicit trapped line/junction inventory.
+Numerical normalization or compatibility penalties are deliberately absent.
+"""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass, replace
+import hashlib
+import json
+import math
+
+import numpy as np
+
+from .common_tensorial_wall import wall_total_free_energy_density_J_m3
+from .complete_front_energy import CompleteFrontEnergy
+from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
+from .tensorial_nye import spectral_derivatives
+from .multigrain_common_state import (
+    LINE_FIELDS, JointTransferResult, MultiGrainCommonState,
+    multigrain_state_digest, reconstruct_multigrain_common,
+)
+
+
+@dataclass(frozen=True)
+class MultiGrainDissipation:
+    """Physical irreversible channels computed independently of closure."""
+
+    glide_J: float = 0.0
+    recovery_J: float = 0.0
+    boundary_mobility_J: float = 0.0
+    neutral_annihilation_J: float = 0.0
+
+    @property
+    def generated_heat_J(self):
+        return (self.glide_J+self.recovery_J+self.boundary_mobility_J
+                +self.neutral_annihilation_J)
+
+    def validate(self):
+        values = tuple(float(getattr(self, name)) for name in (
+            "glide_J", "recovery_J", "boundary_mobility_J",
+            "neutral_annihilation_J"))
+        if any(not math.isfinite(value) or value < 0.0 for value in values):
+            raise ValueError("dissipation channels must be finite and nonnegative")
+
+
+@dataclass(frozen=True)
+class CompleteMultiGrainDecision:
+    accepted: bool
+    classification: str
+    complete_functional: bool
+    independent_dissipation: bool
+    before_state_digest: str
+    candidate_state_digest: str
+    configuration_digest: str
+    interval_s: float
+    before: CompleteFrontEnergy
+    candidate: CompleteFrontEnergy
+    delta_helmholtz_J: float
+    external_work_J: float
+    material_sink_export_J: float
+    available_change_J: float
+    generated_heat_J: float
+    thermostat_export_J: float
+    first_law_residual_J: float
+    dissipation_residual_J: float
+    tolerance_J: float
+
+    def as_dict(self):
+        value = asdict(self)
+        value["before"]["helmholtz_J"] = self.before.helmholtz_J
+        value["before"]["internal_J"] = self.before.internal_J
+        value["candidate"]["helmholtz_J"] = self.candidate.helmholtz_J
+        value["candidate"]["internal_J"] = self.candidate.internal_J
+        return value
+
+
+@dataclass(frozen=True)
+class CompleteMultiGrainTransaction:
+    published_state: MultiGrainCommonState
+    candidate_state: MultiGrainCommonState
+    decision: CompleteMultiGrainDecision
+
+
+def _config_digest(values):
+    def convert(value):
+        if hasattr(value, "__dataclass_fields__"):
+            return {key: convert(item) for key, item in asdict(value).items()}
+        if isinstance(value, np.ndarray):
+            return value.tolist()
+        if isinstance(value, (tuple, list)):
+            return [convert(item) for item in value]
+        if isinstance(value, dict):
+            return {str(key): convert(item) for key, item in value.items()}
+        return value
+    encoded = json.dumps(convert(values), sort_keys=True,
+                         separators=(",", ":"), default=str).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def evaluate_complete_multigrain_energy(
+        state, *, spacing_m, represented_thickness_m, wall_parameters,
+        mean_strain=None, topologies=(), systems=None,
+        phase_barrier_J_m3=0.0, phase_gradient_J_m=0.0,
+        boundary_line_energy_J_m=None, boundary_junction_energy_J_m=None,
+        reference_temperature_K=0.0):
+    """Evaluate the complete shared functional on one multi-owner state."""
+    state.validate()
+    spacing = float(spacing_m)
+    thickness = float(represented_thickness_m)
+    if not math.isfinite(spacing) or spacing <= 0.0 or not math.isfinite(
+            thickness) or thickness <= 0.0:
+        raise ValueError("positive finite spacing and thickness required")
+    mixture, _ = reconstruct_multigrain_common(state, spacing)
+    volume = spacing*spacing*thickness
+    local = wall_total_free_energy_density_J_m3(
+        mixture, wall_parameters, topologies, systems)
+    multiplicity = (np.asarray([t.product_line_multiplicity for t in topologies])
+                    if topologies else np.ones(mixture.junction_m2.shape[2]))
+    reaction = (np.asarray([t.delta_free_energy_J_m for t in topologies])
+                if topologies else np.zeros(mixture.junction_m2.shape[2]))
+    junction_density = np.sum(
+        mixture.junction_m2*(multiplicity*wall_parameters.junction_energy_J_m
+                             +reaction), axis=2)
+    junction_J = float(np.sum(junction_density, dtype=np.longdouble)*volume)
+    total_defect_J = float(np.sum(local, dtype=np.longdouble)*volume)
+
+    line_energy = (wall_parameters.line_energy_J_m
+                   if boundary_line_energy_J_m is None
+                   else float(boundary_line_energy_J_m))
+    junction_energy = (wall_parameters.junction_energy_J_m
+                       if boundary_junction_energy_J_m is None
+                       else float(boundary_junction_energy_J_m))
+    boundary_J = 0.0
+    for interface in state.interfaces:
+        line_density = np.sum(
+            interface.boundary_plus_m2+interface.boundary_minus_m2,
+            axis=tuple(range(2, interface.boundary_plus_m2.ndim)))
+        junction_interface = np.sum(
+            interface.boundary_junction_m2,
+            axis=tuple(range(2, interface.boundary_junction_m2.ndim)))
+        boundary_J += float(np.sum(
+            line_energy*line_density+junction_energy*junction_interface,
+            dtype=np.longdouble)*volume)
+
+    beta = np.asarray(mixture.beta_p)
+    eigenstrain = .5*(beta[..., :2, :2]
+                      +np.swapaxes(beta[..., :2, :2], -1, -2))
+    mean = np.zeros((2, 2)) if mean_strain is None else np.asarray(
+        mean_strain, dtype=float)
+    stress, strain = solve_periodic_eigenstrain(
+        eigenstrain, mean, spacing, wall_parameters.c11_Pa,
+        wall_parameters.c12_Pa, wall_parameters.c44_Pa,
+        iterations=wall_parameters.elastic_iterations)
+    elastic_J = float(np.sum(
+        elastic_energy_density(stress, strain, eigenstrain),
+        dtype=np.longdouble)*volume)
+
+    phases = np.moveaxis(np.asarray(state.supports, dtype=float), 0, -1)
+    sum_e2 = np.sum(phases*phases, axis=2)
+    sum_e4 = np.sum(phases**4, axis=2)
+    phase_local = (.5*float(phase_barrier_J_m3)
+                   *np.maximum(sum_e2*sum_e2-sum_e4, 0.0))
+    phase_local_J = float(np.sum(phase_local, dtype=np.longdouble)*volume)
+    phase_gradient_J = 0.0
+    for index in range(phases.shape[2]):
+        gx, gy = spectral_derivatives(phases[..., index], spacing)
+        phase_gradient_J += float(
+            .5*float(phase_gradient_J_m)
+            *np.sum(gx*gx+gy*gy, dtype=np.longdouble)*volume)
+    thermal_J = float(
+        wall_parameters.volumetric_heat_capacity_J_m3_K
+        *np.sum(mixture.temperature_K-float(reference_temperature_K),
+                dtype=np.longdouble)*volume)
+    return CompleteFrontEnergy(
+        total_defect_J-junction_J, junction_J, boundary_J, elastic_J,
+        phase_local_J, phase_gradient_J, thermal_J, 0.0)
+
+
+def evaluate_joint_multigrain_transaction(
+        before_state: MultiGrainCommonState, capacity: JointTransferResult, *,
+        spacing_m, represented_thickness_m, wall_parameters, interval_s,
+        dissipation: MultiGrainDissipation, external_work_J=0.0,
+        prescribed_temperature=False, energy_kwargs=None,
+        absolute_tolerance_J=0.0,
+        relative_tolerance=8192.0*np.finfo(float).eps):
+    """Evaluate and atomically publish a complete joint physical event.
+
+    The independent dissipation is deposited as heat (or exported by a
+    prescribed-temperature thermostat). No residual is relabelled as heat.
+    """
+    if not capacity.capacity_feasible:
+        raise ValueError("capacity result is infeasible")
+    if float(interval_s) <= 0.0 or not math.isfinite(float(interval_s)):
+        raise ValueError("positive finite physical interval required")
+    dissipation.validate()
+    options = {} if energy_kwargs is None else dict(energy_kwargs)
+    common = dict(spacing_m=spacing_m,
+                  represented_thickness_m=represented_thickness_m,
+                  wall_parameters=wall_parameters, **options)
+    before_energy = evaluate_complete_multigrain_energy(before_state, **common)
+    cold_state = capacity.candidate
+    cold_energy = evaluate_complete_multigrain_energy(cold_state, **common)
+    cell_volume = (float(spacing_m)**2*float(represented_thickness_m))
+    line_sum = sum(value for name, value in
+                   capacity.line_export_m2_by_field.items()
+                   if name != "junction_m2")
+    junction_sum = capacity.line_export_m2_by_field.get("junction_m2", 0.0)
+    material_export = cell_volume*(
+        line_sum*wall_parameters.line_energy_J_m
+        +junction_sum*wall_parameters.junction_energy_J_m)
+    generated_heat = dissipation.generated_heat_J
+    thermostat = generated_heat if prescribed_temperature else 0.0
+    candidate = cold_state
+    if generated_heat > 0.0 and not prescribed_temperature:
+        represented_volume = before_state.supports.shape[1]*before_state.supports.shape[2]*cell_volume
+        delta_temperature = generated_heat/max(
+            wall_parameters.volumetric_heat_capacity_J_m3_K
+            *represented_volume, 1e-300)
+        candidate = replace(cold_state, owners=tuple(
+            replace(owner, temperature_K=np.asarray(owner.temperature_K)
+                    +delta_temperature) for owner in cold_state.owners))
+    candidate_energy = evaluate_complete_multigrain_energy(candidate, **common)
+    delta_f = cold_energy.helmholtz_J-before_energy.helmholtz_J
+    work = float(external_work_J)
+    available = delta_f-work+material_export
+    scale = max(abs(before_energy.helmholtz_J), abs(cold_energy.helmholtz_J),
+                abs(work), abs(material_export), abs(generated_heat), 1e-300)
+    tolerance = max(float(absolute_tolerance_J),
+                    float(relative_tolerance)*scale)
+    dissipation_residual = generated_heat+available
+    first_law = (candidate_energy.internal_J-before_energy.internal_J
+                 -work+thermostat+material_export)
+    finite = all(math.isfinite(value) for value in (
+        delta_f, work, material_export, available, generated_heat,
+        thermostat, dissipation_residual, first_law, tolerance))
+    accepted = (finite and available <= tolerance
+                and abs(dissipation_residual) <= tolerance
+                and abs(first_law) <= tolerance)
+    if not finite:
+        classification = "REJECTED_NONFINITE_COMPLETE_PHYSICS"
+    elif available > tolerance:
+        classification = "REJECTED_UPHILL_COMPLETE_PHYSICAL_ENERGY"
+    elif abs(dissipation_residual) > tolerance:
+        classification = "REJECTED_INDEPENDENT_DISSIPATION_MISMATCH"
+    elif abs(first_law) > tolerance:
+        classification = "REJECTED_FIRST_LAW_MISMATCH"
+    else:
+        classification = "ACCEPTED_COMPLETE_MULTIGRAIN_PHYSICAL_EVENT"
+    config = _config_digest({
+        "spacing_m": spacing_m,
+        "represented_thickness_m": represented_thickness_m,
+        "wall_parameters": wall_parameters,
+        "interval_s": interval_s,
+        "prescribed_temperature": prescribed_temperature,
+        "energy_kwargs": options,
+    })
+    decision = CompleteMultiGrainDecision(
+        accepted, classification, True, True,
+        multigrain_state_digest(before_state),
+        multigrain_state_digest(capacity.candidate), config,
+        float(interval_s), before_energy, candidate_energy, delta_f, work,
+        material_export, available, generated_heat, thermostat, first_law,
+        dissipation_residual, tolerance)
+    if not accepted:
+        return CompleteMultiGrainTransaction(before_state, candidate, decision)
+    ledger = replace(
+        candidate.ledger,
+        energy_accepted_transactions=(
+            candidate.ledger.energy_accepted_transactions+1))
+    return CompleteMultiGrainTransaction(
+        replace(candidate, ledger=ledger), candidate, decision)
