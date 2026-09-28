@@ -2,6 +2,8 @@ import numpy as np
 from scipy import ndimage
 
 from full_model.production.common_subgrain_recognition import (
+    _full_vector_closure_residual, _largest_periodic_component,
+    _periodic_component_center,
     neutral_common_subgrain_handoff, recognize_common_orientation_plateau,
 )
 from full_model.production.common_tensorial_wall import (
@@ -71,3 +73,22 @@ def test_unqualified_state_cannot_allocate_phase_support():
         assert "qualified recognition" in str(error)
     else:
         raise AssertionError("unqualified state allocated phase support")
+
+
+def test_transverse_burgers_error_cannot_hide_behind_projected_closure():
+    residual = _full_vector_closure_residual(
+        np.array([1.0, 10.0, 0.0]), np.array([1.0, 0.0, 0.0]))
+    assert residual["projected_relative_residual"] == 0.0
+    assert residual["transverse_leakage_relative"] == 10.0
+    assert residual["full_vector_relative_residual"] == 10.0
+
+
+def test_periodic_component_joins_support_across_domain_edge():
+    mask = np.zeros((16, 16), dtype=bool)
+    mask[:3, 5:11] = True
+    mask[-3:, 5:11] = True
+    component = _largest_periodic_component(mask)
+    np.testing.assert_array_equal(component, mask)
+    center = _periodic_component_center(component)
+    assert min(center[0], 16.0-center[0]) <= 0.5
+    np.testing.assert_allclose(center[1], 7.5)

@@ -27,8 +27,9 @@
   },
   "regression": {
     "command": "PYTHONPATH=src:. python -m pytest -q tests",
-    "passed": 895,
+    "passed": 897,
     "failed": 0,
-    "elapsed_s": 433.16
+    "elapsed_s": 401.95,
+    "scope": "includes resumed periodic full-vector recognition repair"
   }
 }

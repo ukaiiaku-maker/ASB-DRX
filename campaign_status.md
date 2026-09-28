@@ -2184,3 +2184,12 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   and preserved. Multi-grain common ownership remains the next implementation
   task and may not be replaced by the hard-invalid legacy polycrystal route.
 - Frozen-source canonical regression: 895 tests pass in 433.16 s.
+- The interrupted recognition repair was resumed on 2026-09-28. Frank--Bilby
+  qualification now uses a geometrically signed full-vector residual and the
+  maximum sampled ray, so transverse Burgers error cannot be hidden by a
+  projected scalar or median. Components, centroids, morphology, and boundary
+  traversal are periodic, and shell/circuit distances are expressed in
+  physical units. Crystal-symmetry equivalence and complete neutral-handoff
+  interface/order energy remain unresolved; physical promotion stays disabled.
+- Frozen-source regression after the resumed repair: 897 tests pass in
+  401.95 s.

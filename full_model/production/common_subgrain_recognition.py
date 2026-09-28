@@ -26,6 +26,75 @@ def _window_indices(center, half_width, size):
     return np.mod(np.arange(center-half_width, center+half_width+1), size)
 
 
+def _largest_periodic_component(mask):
+    """Return the largest four-connected component on a periodic 2-D grid."""
+    labels, count = ndimage.label(mask)
+    if count == 0:
+        return None
+    parent = list(range(count+1))
+
+    def root(value):
+        while parent[value] != value:
+            parent[value] = parent[parent[value]]
+            value = parent[value]
+        return value
+
+    def union(left, right):
+        if left and right:
+            a, b = root(int(left)), root(int(right))
+            if a != b:
+                parent[b] = a
+
+    for j in range(mask.shape[1]):
+        union(labels[0, j], labels[-1, j])
+    for i in range(mask.shape[0]):
+        union(labels[i, 0], labels[i, -1])
+    roots = np.zeros_like(labels)
+    for value in range(1, count+1):
+        roots[labels == value] = root(value)
+    values, sizes = np.unique(roots[roots > 0], return_counts=True)
+    return roots == int(values[np.argmax(sizes)])
+
+
+def _periodic_binary_operation(mask, iterations, operation):
+    tiled = np.tile(np.asarray(mask, dtype=bool), (3, 3))
+    changed = operation(tiled, iterations=int(iterations))
+    nx, ny = mask.shape
+    return changed[nx:2*nx, ny:2*ny]
+
+
+def _circular_mean(angle):
+    values = np.asarray(angle, dtype=float)
+    return float(np.arctan2(np.mean(np.sin(values)), np.mean(np.cos(values))))
+
+
+def _periodic_component_center(component):
+    coordinates = np.argwhere(component)
+    if coordinates.size == 0:
+        raise ValueError("periodic center requires nonempty support")
+    center = []
+    for axis, size in enumerate(component.shape):
+        phase = 2.0*np.pi*coordinates[:, axis]/size
+        angle = np.arctan2(np.mean(np.sin(phase)), np.mean(np.cos(phase)))
+        center.append(float(np.mod(angle, 2.0*np.pi)*size/(2.0*np.pi)))
+    return np.asarray(center)
+
+
+def _full_vector_closure_residual(measured, expected):
+    measured = np.asarray(measured, dtype=float)
+    expected = np.asarray(expected, dtype=float)
+    scale = max(float(np.linalg.norm(expected)), 1e-30)
+    direction = expected/scale
+    projected = float(np.dot(measured, direction))
+    transverse = measured-projected*direction
+    return {
+        "full_vector_relative_residual": float(
+            np.linalg.norm(measured-expected)/scale),
+        "projected_relative_residual": float(abs(projected-scale)/scale),
+        "transverse_leakage_relative": float(np.linalg.norm(transverse)/scale),
+    }
+
+
 def _ray_closure(alpha, orientation, component, center, axis, side, spacing_m,
                  half_width):
     transverse_axis = 1-axis
@@ -34,7 +103,19 @@ def _ray_closure(alpha, orientation, component, center, axis, side, spacing_m,
     occupied = np.flatnonzero(line)
     if occupied.size == 0:
         return None
-    boundary = int(occupied.min() if side < 0 else occupied.max())
+    origin = int(round(center[axis])) % line.size
+    if not line[origin]:
+        periodic_distance = np.minimum(
+            np.mod(occupied-origin, line.size), np.mod(origin-occupied, line.size))
+        origin = int(occupied[np.argmin(periodic_distance)])
+    boundary = origin
+    for distance in range(1, line.size+1):
+        trial = (origin+side*distance) % line.size
+        if not line[trial]:
+            break
+        boundary = trial
+    else:
+        return None
     indices = _window_indices(boundary, half_width, line.size)
     if axis == 0:
         from_nye = np.sum(alpha[indices, transverse, :, 2], axis=0)*spacing_m
@@ -49,27 +130,25 @@ def _ray_closure(alpha, orientation, component, center, axis, side, spacing_m,
         outside_index = (boundary-1 if side < 0 else boundary+1) % line.size
         inside = orientation[transverse, inside_index]
         outside = orientation[transverse, outside_index]
-        tangent = np.array([1.0, 0.0, 0.0])
+        # Curl convention used by ``nye_from_plastic_distortion`` fixes the
+        # horizontal circuit tangent opposite to the array x direction.
+        tangent = np.array([-1.0, 0.0, 0.0])
     if side < 0:
         from_lattice = frank_bilby_closure_from_orientations(
             outside, inside, tangent)
     else:
         from_lattice = frank_bilby_closure_from_orientations(
             inside, outside, tangent)
-    # The contour orientation fixes an otherwise conventional overall sign.
-    lattice_norm = max(np.linalg.norm(from_lattice), 1e-30)
-    lattice_direction = from_lattice/lattice_norm
-    projected = float(np.dot(from_nye, lattice_direction))
-    relative = min(abs(projected-lattice_norm),
-                   abs(projected+lattice_norm))/lattice_norm
-    transverse = np.linalg.norm(
-        from_nye-np.dot(from_nye, lattice_direction)*lattice_direction)
+    # The declared ray traversal fixes the sign: negative-side circuits use
+    # outside->inside and positive-side circuits use inside->outside.  Do not
+    # choose a separate best sign from the measured result.
+    residual = _full_vector_closure_residual(from_nye, from_lattice)
     return {
         "axis": axis, "side": side,
         "nye_closure": from_nye,
         "lattice_closure": from_lattice,
-        "relative_residual": float(relative),
-        "transverse_leakage_relative": float(transverse/lattice_norm),
+        "relative_residual": residual["full_vector_relative_residual"],
+        **residual,
     }
 
 
@@ -77,7 +156,9 @@ def recognize_common_orientation_plateau(
         orientation_rad, family_nye_m1, wall_order, total_density_m2,
         spacing_m, *, minimum_misorientation_deg=2.0,
         minimum_boundary_order=0.45, minimum_ordered_fraction=0.70,
-        maximum_frank_bilby_relative_residual=0.20):
+        maximum_frank_bilby_relative_residual=0.20,
+        interior_distance_m=2.0e-7, boundary_shell_thickness_m=2.0e-7,
+        circuit_half_width_m=1.0e-7):
     """Recognize a resolved intragranular plateau without mutating state."""
     orientation = np.asarray(orientation_rad, dtype=float)
     family_nye = np.asarray(family_nye_m1, dtype=float)
@@ -88,34 +169,38 @@ def recognize_common_orientation_plateau(
             or density.shape != orientation.shape:
         raise ValueError("common-state recognition fields are inconsistent")
     alpha = np.sum(family_nye, axis=2) if family_nye.ndim == 5 else family_nye
-    reference = float(np.median(orientation))
+    reference = _circular_mean(orientation)
     contrast = np.abs(_periodic_angle_delta(orientation, reference))
     threshold = math.radians(float(minimum_misorientation_deg))
     maximum = float(np.max(contrast))
     candidate = contrast >= max(threshold, 0.75*maximum)
-    labels, count = ndimage.label(candidate)
-    if count == 0:
+    component = _largest_periodic_component(candidate)
+    if component is None:
         return {"qualified": False, "reason": "no_resolved_orientation_plateau"}
-    sizes = ndimage.sum(candidate, labels, range(1, count+1))
-    component = labels == 1+int(np.argmax(sizes))
-    interior = ndimage.binary_erosion(component, iterations=2)
-    shell = ndimage.binary_dilation(component, iterations=2) & ~interior
+    interior_pixels = max(1, int(round(float(interior_distance_m)/spacing_m)))
+    shell_pixels = max(1, int(round(
+        float(boundary_shell_thickness_m)/spacing_m)))
+    interior = _periodic_binary_operation(
+        component, interior_pixels, ndimage.binary_erosion)
+    dilated = _periodic_binary_operation(
+        component, shell_pixels, ndimage.binary_dilation)
+    shell = dilated & ~interior
     if not np.any(interior) or not np.any(~component) or not np.any(shell):
         return {"qualified": False, "reason": "unresolved_interior_or_boundary"}
-    theta_in = float(np.mean(orientation[interior]))
-    theta_out = float(np.mean(orientation[~component]))
+    theta_in = _circular_mean(orientation[interior])
+    theta_out = _circular_mean(orientation[~component])
     misorientation = abs(float(_periodic_angle_delta(theta_in, theta_out)))
     ordered_fraction = float(np.mean(order[shell] >= minimum_boundary_order))
-    center = np.mean(np.argwhere(interior), axis=0)
-    half_width = max(4, int(round(math.sqrt(np.sum(component))/8.0)))
+    center = _periodic_component_center(interior)
+    half_width = max(0, int(round(float(circuit_half_width_m)/spacing_m)))
     rays = [
         _ray_closure(alpha, orientation, component, center, axis, side,
                      float(spacing_m), half_width)
         for axis in (0, 1) for side in (-1, 1)
     ]
     rays = [item for item in rays if item is not None]
-    fb_residual = float(np.median(
-        [item["relative_residual"] for item in rays])) if rays else math.inf
+    fb_residuals = [item["full_vector_relative_residual"] for item in rays]
+    fb_residual = float(max(fb_residuals)) if rays else math.inf
     result = {
         "qualified": bool(
             misorientation >= threshold
@@ -130,6 +215,13 @@ def recognize_common_orientation_plateau(
             np.sum(component)*float(spacing_m)**2/math.pi)),
         "boundary_order_mean": float(np.mean(order[shell])),
         "boundary_order_closure_fraction": ordered_fraction,
+        "periodic_component_geometry": True,
+        "interior_distance_m": float(interior_pixels*spacing_m),
+        "boundary_shell_thickness_m": float(shell_pixels*spacing_m),
+        "circuit_half_width_m": float(half_width*spacing_m),
+        "frank_bilby_maximum_full_vector_relative_residual": fb_residual,
+        # Compatibility alias: its value now intentionally uses the stronger
+        # full-vector maximum and must not be interpreted as the old median.
         "frank_bilby_median_projected_relative_residual": fb_residual,
         "frank_bilby_rays": rays,
         "interior_total_density_m2": float(np.mean(density[interior])),

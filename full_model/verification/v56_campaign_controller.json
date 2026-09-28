@@ -21,11 +21,17 @@
       "reason": "unrelated DDD and FFT heavy workers were live during startup audit and were preserved"
     },
     "current_state_recognition": {
-      "state": "READY_FOR_SOURCE_REPAIR",
-      "first_repairs": [
-        "full-vector Burgers closure with geometric sign",
-        "periodic components and physical-distance shells",
-        "complete neutral-map energy"
+      "state": "SOURCE_REPAIR_ADVANCED_NOT_PROMOTION_QUALIFIED",
+      "completed_repairs": [
+        "full-vector Burgers closure with declared geometric sign",
+        "maximum over sampled rays instead of median",
+        "periodic components, centroid, morphology, and boundary-ray traversal",
+        "physical-distance shell and circuit parameters",
+        "circular orientation means"
+      ],
+      "remaining_repairs": [
+        "chosen crystal-symmetry orientation equivalence",
+        "complete neutral-map interface/order energy"
       ]
     }
   },

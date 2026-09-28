@@ -24,6 +24,12 @@
       "mechanism": "ASB/DRX interaction",
       "first_unresolved_task": "complete the intermediate-frequency front on/off by full/frozen-flow factorial comparison from matched physical origins",
       "required_demonstration": "separate migration, thermal-flow, and interaction effects without changing inherited localization thresholds"
+    },
+    {
+      "priority": 5,
+      "mechanism": "neutral intragranular promotion",
+      "first_unresolved_task": "define crystal-symmetry orientation equivalence and include pre-existing interface/order energy in the representation-neutral handoff",
+      "required_demonstration": "unchanged complete energy, signed inventory, reconstructed bulk fields, and history before any unforced growth test"
     }
   ]
 }
