@@ -14,7 +14,7 @@ and temperature is K.  Every reaction extent below is m^-2 s^-1.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, replace
 import math
 
 import numpy as np
@@ -973,9 +973,24 @@ def _state_map(state, function):
         for item in fields(state)})
 
 
-def accepted_euler_step(state, driving, systems, topologies, parameters, dt_s):
-    """Advance the common residual with one global positivity/bound limiter."""
+def accepted_euler_step(state, driving, systems, topologies, parameters, dt_s,
+                        active_mask=None):
+    """Advance the common residual with one global positivity/bound limiter.
+
+    ``active_mask`` freezes material-owner history outside its current
+    support.  Masking is applied to the residual before the limiter, so an
+    inactive depleted reservoir cannot impose a fictitious global timestep.
+    """
     residual = wall_residual(state, driving, systems, topologies, parameters)
+    if active_mask is not None:
+        active = np.asarray(active_mask, dtype=bool)
+        if active.shape != state.temperature_K.shape:
+            raise ValueError("active mask must match the spatial grid")
+        rate = _state_map(
+            residual.state_rate,
+            lambda name, value: np.where(
+                active[(...,)+(None,)*(value.ndim-active.ndim)], value, 0.0))
+        residual = replace(residual, state_rate=rate)
     rate = residual.state_rate
     scale = 1.0
     nonnegative = (

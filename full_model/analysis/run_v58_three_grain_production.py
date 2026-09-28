@@ -75,13 +75,15 @@ def initialize_state(n, temperature, equal_density=False, *,
     return state
 
 
-def _save_checkpoint(path, state, runtime, step, gamma, initial_volume):
+def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
+                     configuration):
     arrays = multigrain_checkpoint_arrays(state)
     arrays["metadata_json"] = np.asarray(multigrain_checkpoint_metadata(state))
     arrays["runtime_json"] = np.asarray(json.dumps({
         "step": int(step), "gamma": float(gamma),
         "ledger": asdict(runtime.ledger),
         "interfaces": [asdict(item) for item in runtime.interfaces],
+        "configuration": configuration,
     }, sort_keys=True))
     arrays["initial_grain_volume_m3"] = np.asarray(initial_volume)
     np.savez_compressed(path, **arrays)
@@ -99,7 +101,7 @@ def _load_checkpoint(path):
         tuple(MultiGrainInterface(**item) for item in meta["interfaces"]),
         MultiGrainProductionLedger(**meta["ledger"]))
     return (state, runtime, int(meta["step"]), float(meta["gamma"]),
-            initial_volume)
+            initial_volume, meta.get("configuration"))
 
 
 def main():
@@ -116,16 +118,31 @@ def main():
     parser.add_argument("--length", type=float, default=5e-6)
     parser.add_argument("--interface-width", type=float, default=3.125e-7)
     parser.add_argument("--front-attempt-frequency", type=float, default=1e8)
+    parser.add_argument("--maximum-mechanical-subdivisions", type=int,
+                        default=10)
     parser.add_argument("--thermal-diffusivity", type=float,
                         default=0.15/3.8e6)
     parser.add_argument("--resume")
     args = parser.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     spacing = args.length/args.n; thickness = 2.0*2.48e-10
+    configuration = {
+        "schema": "v58-three-grain-production-v2-common-stress-upwind",
+        "n": args.n, "length_m": args.length,
+        "interface_width_m": args.interface_width, "dt_s": args.dt,
+        "shear_rate_s": args.shear_rate, "temperature_K": args.temperature,
+        "case": args.case,
+        "front_attempt_frequency_s": args.front_attempt_frequency,
+        "thermal_diffusivity_m2_s": args.thermal_diffusivity,
+        "transport_scheme": "upwind",
+        "maximum_fraction_per_step": .75,
+    }
     systems = bcc_four_family_systems()
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
+        transport_scheme="upwind",
+        maximum_fraction_per_step=0.75,
         volumetric_heat_capacity_J_m3_K=3.8e6,
         thermal_diffusivity_m2_s=args.thermal_diffusivity, bath_rate_s=0.0)
     kinetics = MultiGrainFrontKinetics(
@@ -140,7 +157,12 @@ def main():
         ("arm-10-20", 10, 20), ("arm-10-30", 10, 30),
         ("arm-20-30", 20, 30)))
     if args.resume:
-        state, runtime, start, gamma, initial_volume = _load_checkpoint(args.resume)
+        (state, runtime, start, gamma, initial_volume,
+         checkpoint_configuration) = _load_checkpoint(args.resume)
+        if checkpoint_configuration != configuration:
+            raise ValueError(
+                "checkpoint configuration is absent or differs from the "
+                "common-stress/upwind production configuration")
     else:
         state = initialize_state(
             args.n, args.temperature, args.case == "equal_density",
@@ -173,7 +195,7 @@ def main():
             dt_s=args.dt, represented_thickness_m=thickness,
             energy_kwargs=energy_options,
             maximum_relative_first_law_residual=.05,
-            maximum_subdivisions=10)
+            maximum_subdivisions=args.maximum_mechanical_subdivisions)
         state = mechanical.state
         shear_stress = float(
             mechanical.energy_balances[-1].mean_stress_candidate_Pa[0, 1])
@@ -256,7 +278,8 @@ def main():
             })
             checkpoint = out/f"checkpoint_{step+1:06d}.npz"
             _save_checkpoint(
-                checkpoint, state, runtime, step+1, gamma, initial_volume)
+                checkpoint, state, runtime, step+1, gamma, initial_volume,
+                configuration)
             (out/"history.json").write_text(json.dumps(history, indent=2))
             print(json.dumps(history[-1], sort_keys=True), flush=True)
     latest = sorted(out.glob("checkpoint_*.npz"))[-1]
@@ -276,6 +299,7 @@ def main():
         "final": history[-1], "runtime": asdict(runtime.ledger),
         "checkpoint": str(latest),
         "checkpoint_sha256": hashlib.sha256(latest.read_bytes()).hexdigest(),
+        "configuration": configuration,
     }
     (out/"result.json").write_text(json.dumps(result, indent=2))
 

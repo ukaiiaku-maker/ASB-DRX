@@ -2,7 +2,7 @@ import numpy as np
 
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.common_tensorial_wall import (
-    CommonWallDriving, CommonWallParameters,
+    CommonWallDriving, CommonWallParameters, accepted_euler_step,
 )
 from full_model.production.multigrain_common_state import PhysicalTransferLaw
 from full_model.production.complete_multigrain_energy import (
@@ -111,3 +111,22 @@ def test_energy_qualified_mechanics_consumes_full_interval():
     assert sum(item.consumed_interval_s
                for item in result.operator_decisions) == 1e-10
     assert result.relative_first_law_residual <= .05
+
+
+def test_active_mask_cannot_age_dormant_owner_cells_or_limit_step():
+    spacing = 2e-8
+    state = _state(8).owners[0]
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0)
+    active = np.zeros((8, 8), dtype=bool); active[:4] = True
+    stress = np.full((8, 8, 4), 7e8)
+    evolved, _, scale = accepted_euler_step(
+        state, CommonWallDriving(resolved_stress_Pa=stress), systems, (),
+        parameters, 1e-12, active_mask=active)
+    assert scale > 0.0
+    for name in state.__dataclass_fields__:
+        before = np.asarray(getattr(state, name))
+        after = np.asarray(getattr(evolved, name))
+        np.testing.assert_array_equal(after[~active], before[~active])

@@ -4,6 +4,9 @@ import numpy as np
 import pytest
 
 from full_model.production.common_tensorial_wall import CommonWallParameters
+from full_model.production.common_tensorial_wall import (
+    wall_total_free_energy_density_J_m3,
+)
 from full_model.production.complete_multigrain_energy import (
     MultiGrainDissipation, evaluate_complete_multigrain_energy,
     evaluate_joint_multigrain_transaction,
@@ -131,6 +134,24 @@ def test_complete_energy_counts_multiphase_interface_once():
     assert energy.phase_gradient_J > 0.0
     assert energy.phase_local_J == 0.0
     assert energy.numerical_constraint_J == 0.0
+
+
+def test_nonlinear_defect_storage_is_integrated_by_material_owner():
+    spacing = 2e-8
+    state = _state(8)
+    supports = np.empty_like(state.supports)
+    supports[0] = .2; supports[1] = .3; supports[2] = .5
+    state = replace(state, supports=supports)
+    parameters = CommonWallParameters(spacing_m=spacing)
+    energy = evaluate_complete_multigrain_energy(
+        state, spacing_m=spacing, represented_thickness_m=5e-10,
+        wall_parameters=parameters, reference_temperature_K=900.0)
+    expected_density = sum(
+        state.supports[index]*wall_total_free_energy_density_J_m3(
+            item, parameters, (), bcc_four_family_systems())
+        for index, item in enumerate(state.owners))
+    expected = float(np.sum(expected_density)*spacing**2*5e-10)
+    assert energy.defect_storage_J == pytest.approx(expected, rel=2e-15)
 
 
 def test_physical_transfer_derives_product_channels_and_recurrent_history():

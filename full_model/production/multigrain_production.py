@@ -15,9 +15,11 @@ from .complete_multigrain_energy import (
 from .coupled_front_event import propose_bidirectional_front_event
 from .moving_front import DefectState
 from .common_tensorial_wall import CommonWallDriving, accepted_euler_step
+from .nonlocal_elasticity import solve_periodic_eigenstrain
+from .tensorial_nye import rotated_system_fields
 from .multigrain_common_state import (
     PhysicalTransferLaw, derive_physical_transfer_proposal,
-    joint_material_transaction,
+    joint_material_transaction, reconstruct_multigrain_common,
 )
 
 
@@ -148,7 +150,32 @@ def advance_multigrain_mechanics(
     # once to the reconstructed common temperature below.
     local_parameters = replace(
         wall_parameters, thermal_diffusivity_m2_s=0.0, bath_rate_s=0.0)
+    if driving.resolved_stress_Pa is None:
+        mixture, _ = reconstruct_multigrain_common(
+            state, wall_parameters.spacing_m)
+        beta2 = np.asarray(mixture.beta_p)[..., :2, :2]
+        eigenstrain = .5*(beta2+np.swapaxes(beta2, -1, -2))
+        common_stress, _ = solve_periodic_eigenstrain(
+            eigenstrain, np.asarray(driving.mean_strain, dtype=float),
+            wall_parameters.spacing_m, wall_parameters.c11_Pa,
+            wall_parameters.c12_Pa, wall_parameters.c44_Pa,
+            iterations=wall_parameters.elastic_iterations)
+    else:
+        common_stress = None
     for support, owner in zip(state.supports, state.owners):
+        active = np.asarray(support) > 256.0*np.finfo(float).eps
+        if common_stress is None:
+            owner_driving = driving
+        else:
+            _, directions, normals = rotated_system_fields(
+                systems, owner.orientation_rad)
+            schmid = .5*(
+                np.einsum("...si,...sj->...sij", directions[..., :2],
+                          normals[..., :2])
+                +np.einsum("...si,...sj->...sij", normals[..., :2],
+                           directions[..., :2]))
+            owner_driving = CommonWallDriving(resolved_stress_Pa=np.einsum(
+                "...ij,...sij->...s", common_stress, schmid))
         updated = owner
         remaining = dt
         substeps = 0
@@ -160,8 +187,8 @@ def advance_multigrain_mechanics(
             while True:
                 try:
                     trial, residual, scale = accepted_euler_step(
-                        updated, driving, systems, topologies,
-                        local_parameters, attempted)
+                        updated, owner_driving, systems, topologies,
+                        local_parameters, attempted, active_mask=active)
                     break
                 except (ValueError, FloatingPointError):
                     attempted *= .5
@@ -192,7 +219,6 @@ def advance_multigrain_mechanics(
             substeps += 1
             if substeps > 4096:
                 raise RuntimeError("mechanical physical interval exceeded substep budget")
-        active = np.asarray(support) > 256.0*np.finfo(float).eps
         owners.append(_masked_owner_update(owner, updated, active))
         work += owner_work
         heat += owner_heat
@@ -252,7 +278,13 @@ def advance_energy_qualified_mechanics(
             return candidate, (operator,), (balance,), depth
         if depth >= int(maximum_subdivisions):
             raise RuntimeError(
-                "mechanical complete-energy audit failed subdivision budget")
+                "mechanical complete-energy audit failed subdivision budget: "
+                f"depth={depth}, interval_s={interval:.17g}, "
+                f"relative_residual={balance.relative_first_law_residual:.17g}, "
+                f"external_work_J={balance.external_work_J:.17g}, "
+                f"internal_energy_change_J={balance.internal_energy_change_J:.17g}, "
+                f"left_strain={np.asarray(left).tolist()}, "
+                f"right_strain={np.asarray(right).tolist()}")
         middle = .5*(left+right)
         first_state, first_ops, first_balances, depth_a = recurse(
             accepted, left, middle, .5*interval, depth+1)

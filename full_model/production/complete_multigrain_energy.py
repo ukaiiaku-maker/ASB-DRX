@@ -175,17 +175,29 @@ def evaluate_complete_multigrain_energy(
         raise ValueError("positive finite spacing and thickness required")
     mixture, _ = reconstruct_multigrain_common(state, spacing)
     volume = spacing*spacing*thickness
-    local = wall_total_free_energy_density_J_m3(
-        mixture, wall_parameters, topologies, systems)
     multiplicity = (np.asarray([t.product_line_multiplicity for t in topologies])
                     if topologies else np.ones(mixture.junction_m2.shape[2]))
     reaction = (np.asarray([t.delta_free_energy_J_m for t in topologies])
                 if topologies else np.zeros(mixture.junction_m2.shape[2]))
-    junction_density = np.sum(
-        mixture.junction_m2*(multiplicity*wall_parameters.junction_energy_J_m
-                             +reaction), axis=2)
-    junction_J = float(np.sum(junction_density, dtype=np.longdouble)*volume)
-    total_defect_J = float(np.sum(local, dtype=np.longdouble)*volume)
+    # Defect storage is an owner-local nonlinear constitutive energy.  Average
+    # the owner energies, not the owner densities: g(sum eta_i rho_i) invents
+    # cross-grain correlation energy in diffuse interfaces and is not
+    # conjugate to the support-weighted owner kinetics.  Elasticity below is
+    # deliberately different because beta_p is a shared spatial source.
+    total_defect_J = 0.0
+    junction_J = 0.0
+    for support, owner in zip(state.supports, state.owners):
+        weight = np.asarray(support, dtype=float)
+        local = wall_total_free_energy_density_J_m3(
+            owner, wall_parameters, topologies, systems)
+        junction_density = np.sum(
+            owner.junction_m2
+            *(multiplicity*wall_parameters.junction_energy_J_m+reaction),
+            axis=2)
+        total_defect_J += float(np.sum(
+            weight*local, dtype=np.longdouble)*volume)
+        junction_J += float(np.sum(
+            weight*junction_density, dtype=np.longdouble)*volume)
 
     line_energy = (wall_parameters.line_energy_J_m
                    if boundary_line_energy_J_m is None
