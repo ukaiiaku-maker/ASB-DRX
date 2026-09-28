@@ -63,38 +63,28 @@ def green_operator(shape, spacing_m, c11_pa, c12_pa, c44_pa):
 
 def solve_periodic_eigenstrain(eigenstrain, mean_strain, spacing_m,
                                c11_pa, c12_pa, c44_pa, iterations=3):
+    """Return the exact periodic plane-strain equilibrium solution.
+
+    ``iterations`` is retained for checkpoint/configuration API compatibility,
+    but is deliberately ignored.  The former fixed-point Green iteration was
+    exact for single Fourier modes after one application, yet accumulated a
+    measurable equilibrium/work-conjugacy error for evolved heterogeneous
+    plastic-strain fields when production selected only two or three sweeps.
+    Embedding the in-plane source in the exact z-invariant displacement solve
+    removes that solver-count dependence while preserving the declared
+    plane-strain constraint.
+    """
     inelastic = np.asarray(eigenstrain, dtype=float)
     mean = np.asarray(mean_strain, dtype=float)
     if inelastic.ndim != 4 or inelastic.shape[2:] != (2, 2) or mean.shape != (2, 2):
         raise ValueError("eigenstrain and mean-strain layouts are invalid")
-    c4 = stiffness_2d(c11_pa, c12_pa, c44_pa)
-    gamma = green_operator(inelastic.shape[:2], spacing_m,
-                           c11_pa, c12_pa, c44_pa)
-    strain = np.zeros_like(inelastic)
-    for i in range(2):
-        for j in range(2):
-            strain[:, :, i, j] = mean[i, j]
-    for _ in range(int(iterations)):
-        stress = np.einsum("ijkl,...kl->...ij", c4, strain-inelastic)
-        stress_hat = np.zeros_like(stress, dtype=complex)
-        correction_hat = np.zeros_like(stress_hat)
-        for i in range(2):
-            for j in range(2):
-                stress_hat[:, :, i, j] = np.fft.fft2(stress[:, :, i, j])
-        for i in range(2):
-            for j in range(2):
-                for k in range(2):
-                    for l in range(2):
-                        correction_hat[:, :, i, j] += (
-                            gamma[i, j, k, l]*stress_hat[:, :, k, l])
-        for i in range(2):
-            for j in range(2):
-                strain[:, :, i, j] -= np.real(np.fft.ifft2(
-                    correction_hat[:, :, i, j]))
-                strain[:, :, i, j] += mean[i, j]-np.mean(strain[:, :, i, j])
-        strain = .5*(strain+np.swapaxes(strain, -1, -2))
-    stress = np.einsum("ijkl,...kl->...ij", c4, strain-inelastic)
-    return stress, strain
+    inelastic3 = np.zeros(inelastic.shape[:2]+(3, 3), dtype=float)
+    inelastic3[..., :2, :2] = inelastic
+    mean3 = np.zeros((3, 3), dtype=float)
+    mean3[:2, :2] = mean
+    stress3, strain3 = solve_periodic_eigenstrain_3d_z_invariant(
+        inelastic3, mean3, spacing_m, c11_pa, c12_pa, c44_pa)
+    return stress3[..., :2, :2], strain3[..., :2, :2]
 
 
 def solve_periodic_eigenstrain_3d_z_invariant(

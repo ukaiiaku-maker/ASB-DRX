@@ -21,8 +21,8 @@ from .common_tensorial_wall import (
     resolved_driving_components, wall_free_energy_density_J_m3, wall_residual,
 )
 from .density_state_map import (
-    DensityInventory, checkpoint_arrays, derived_density_fields,
-    from_checkpoint_arrays,
+    SIGNED_RESERVOIRS, DensityInventory, checkpoint_arrays,
+    derived_density_fields, from_checkpoint_arrays, junction_multiplicities,
 )
 from .extensive_wall import (
     KB_J_K, ExtensiveWallParameters, accepted_ordering_step,
@@ -570,7 +570,42 @@ def accepted_energy_guarded_reservoir_topology_transaction(
         abs(float(np.sum(before_parts["total"], dtype=np.longdouble))),
         abs(float(np.sum(after_parts["total"], dtype=np.longdouble))), 1.0)
     energy_tolerance = 2e-12*energy_scale
-    line_residual = after_line-before_line
+    # Form the conservation residual from reservoir increments, pairing
+    # debits and credits before converting back to float.  Subtraction of two
+    # O(1e15 m^-2) reconstructed totals can otherwise report a spurious
+    # one-ulp residual (0.125 m^-2) after an exactly conservative exchange.
+    line_residual_long = sum((
+        np.sum(
+            np.asarray(getattr(candidate_inventory, name),
+                       dtype=np.longdouble)
+            -np.asarray(getattr(inventory, name), dtype=np.longdouble),
+            axis=2, dtype=np.longdouble)
+        for name in SIGNED_RESERVOIRS),
+        np.zeros_like(before_line, dtype=np.longdouble))
+    if topologies:
+        line_residual_long += np.sum(
+            (np.asarray(candidate_inventory.junction_m2,
+                        dtype=np.longdouble)
+             -np.asarray(inventory.junction_m2, dtype=np.longdouble))
+            *np.asarray(junction_multiplicities(topologies),
+                        dtype=np.longdouble),
+            axis=2, dtype=np.longdouble)
+    raw_line_residual = np.asarray(line_residual_long, dtype=float)
+    line_roundoff_scale = sum((
+        np.sum(
+            np.abs(np.asarray(getattr(inventory, name), dtype=float))
+            +np.abs(np.asarray(getattr(candidate_inventory, name), dtype=float)),
+            axis=2)
+        for name in SIGNED_RESERVOIRS), np.zeros_like(before_line))
+    if topologies:
+        line_roundoff_scale += np.sum(
+            (np.abs(inventory.junction_m2)
+             +np.abs(candidate_inventory.junction_m2))
+            *junction_multiplicities(topologies), axis=2)
+    line_roundoff_bound = 16.0*np.finfo(float).eps*line_roundoff_scale
+    line_residual = np.where(
+        np.abs(raw_line_residual) <= line_roundoff_bound,
+        0.0, raw_line_residual)
     nye_residual = after_nye-before_nye
     line_scale = max(float(np.max(np.abs(before_line))), 1.0)
     nye_scale = max(float(np.sqrt(np.mean(before_nye*before_nye))), 1.0)
@@ -587,6 +622,8 @@ def accepted_energy_guarded_reservoir_topology_transaction(
             "rejection_is_atomic": True,
             "classification": "COMPLETE_TOPOLOGY_CANDIDATE_REJECTED",
             "scalar_line_residual_m2": line_residual,
+            "raw_scalar_line_roundoff_m2": raw_line_residual,
+            "scalar_line_roundoff_bound_m2": line_roundoff_bound,
             "total_nye_residual_m1": nye_residual,
             "component_energy_changes_J_m3": component_changes,
             "complete_energy_change_J_m3_cells": delta_total,
@@ -618,6 +655,8 @@ def accepted_energy_guarded_reservoir_topology_transaction(
             "existing line and first moment relabeling; no reorientation, "
             "junction creation, swept plastic area, or endpoint creation"),
         "scalar_line_residual_m2": line_residual,
+        "raw_scalar_line_roundoff_m2": raw_line_residual,
+        "scalar_line_roundoff_bound_m2": line_roundoff_bound,
         "total_nye_residual_m1": nye_residual,
         "component_energy_changes_J_m3": component_changes,
         "complete_energy_change_J_m3_cells": delta_total,

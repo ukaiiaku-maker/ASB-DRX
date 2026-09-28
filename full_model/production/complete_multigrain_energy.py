@@ -97,7 +97,8 @@ class MultiGrainMechanicalEnergyBalance:
     mean_stress_candidate_Pa: np.ndarray
 
 
-def _mean_mechanical_stress(state, spacing_m, wall_parameters, mean_strain):
+def _mechanical_stress_and_eigenstrain(
+        state, spacing_m, wall_parameters, mean_strain):
     mixture, _ = reconstruct_multigrain_common(state, spacing_m)
     beta = np.asarray(mixture.beta_p)
     eigenstrain = .5*(beta[..., :2, :2]
@@ -106,6 +107,12 @@ def _mean_mechanical_stress(state, spacing_m, wall_parameters, mean_strain):
         eigenstrain, np.asarray(mean_strain, dtype=float), float(spacing_m),
         wall_parameters.c11_Pa, wall_parameters.c12_Pa,
         wall_parameters.c44_Pa, iterations=wall_parameters.elastic_iterations)
+    return stress, eigenstrain
+
+
+def _mean_mechanical_stress(state, spacing_m, wall_parameters, mean_strain):
+    stress, _ = _mechanical_stress_and_eigenstrain(
+        state, spacing_m, wall_parameters, mean_strain)
     return np.mean(stress, axis=(0, 1))
 
 
@@ -124,10 +131,14 @@ def evaluate_multigrain_mechanical_interval(
         before_state, mean_strain=mean_strain_before, **common)
     candidate = evaluate_complete_multigrain_energy(
         candidate_state, mean_strain=mean_strain_candidate, **common)
-    stress_before = _mean_mechanical_stress(
+    stress_field_before, eigenstrain_before = _mechanical_stress_and_eigenstrain(
         before_state, spacing_m, wall_parameters, mean_strain_before)
-    stress_candidate = _mean_mechanical_stress(
+    stress_field_candidate, eigenstrain_candidate = (
+        _mechanical_stress_and_eigenstrain(
         candidate_state, spacing_m, wall_parameters, mean_strain_candidate)
+    )
+    stress_before = np.mean(stress_field_before, axis=(0, 1))
+    stress_candidate = np.mean(stress_field_candidate, axis=(0, 1))
     delta_strain = (np.asarray(mean_strain_candidate, dtype=float)
                     -np.asarray(mean_strain_before, dtype=float))
     represented_volume = (before_state.supports.shape[1]
@@ -136,7 +147,29 @@ def evaluate_multigrain_mechanical_interval(
                           *float(represented_thickness_m))
     work = float(np.sum(.5*(stress_before+stress_candidate)*delta_strain)
                  *represented_volume)
-    delta_internal = candidate.internal_J-before.internal_J
+    # Linear-elastic energy is quadratic.  Its endpoint trapezoidal identity
+    # is exact and avoids subtracting O(1e-12 J) totals to audit physical
+    # increments as small as O(1e-20 J) after recursive time subdivision.
+    # This is an evaluation repair, not a residual correction: both endpoint
+    # stresses and the independently evolved eigenstrain enter explicitly.
+    average_stress = .5*(stress_field_before+stress_field_candidate)
+    elastic_change = float(np.sum(
+        average_stress*delta_strain, dtype=np.longdouble)
+        *float(spacing_m)**2*float(represented_thickness_m)
+        -np.sum(
+            average_stress*(eigenstrain_candidate-eigenstrain_before),
+            dtype=np.longdouble)
+        *float(spacing_m)**2*float(represented_thickness_m))
+    nonelastic_change = sum((
+        candidate.defect_storage_J-before.defect_storage_J,
+        candidate.signed_junction_storage_J-before.signed_junction_storage_J,
+        candidate.boundary_excess_J-before.boundary_excess_J,
+        candidate.phase_local_J-before.phase_local_J,
+        candidate.phase_gradient_J-before.phase_gradient_J,
+        candidate.thermal_internal_J-before.thermal_internal_J,
+        candidate.numerical_constraint_J-before.numerical_constraint_J,
+    ))
+    delta_internal = elastic_change+nonelastic_change
     residual = delta_internal-work
     scale = max(abs(delta_internal), abs(work), 1e-300)
     return MultiGrainMechanicalEnergyBalance(
