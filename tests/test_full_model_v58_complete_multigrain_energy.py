@@ -156,6 +156,12 @@ def test_nonlinear_defect_storage_is_integrated_by_material_owner():
 
 def test_physical_transfer_derives_product_channels_and_recurrent_history():
     state = _state(8)
+    donor = replace(
+        state.owners[0], slip=np.full_like(state.owners[0].slip, .03),
+        beta_p=np.full_like(state.owners[0].beta_p, .02),
+        alignment_m2=np.full_like(state.owners[0].alignment_m2, 4e6),
+        family_nye_m1=np.full_like(state.owners[0].family_nye_m1, 3e5))
+    state = replace(state, owners=(donor, state.owners[1], state.owners[2]))
     request = np.zeros((8, 8)); request[3:5, :] = .2
     law = PhysicalTransferLaw(
         transmission_fraction=.5, boundary_storage_fraction=.1,
@@ -164,15 +170,19 @@ def test_physical_transfer_derives_product_channels_and_recurrent_history():
         state, interface_id="junction-arm-a", donor_id=10, receiver_id=20,
         requested_fraction=request, law=law, interval_s=2e-9,
         systems=bcc_four_family_systems())
-    # The caller cannot select an artificially clean product: it is derived
-    # from the donor and declared transfer law, while orientation remains the
-    # persistent receiving-grain identity.
+    # Line transmission is derived from the donor law. Kinematic history is
+    # the persistent receiver owner's dormant history; migration must not
+    # inject a scaled donor plastic distortion into that crystal.
     np.testing.assert_allclose(
         forward.product_owner.mobile_plus_m2,
         .5*state.owners[0].mobile_plus_m2)
     np.testing.assert_array_equal(
         forward.product_owner.orientation_rad,
         state.owners[1].orientation_rad)
+    for name in ("slip", "beta_p", "alignment_m2", "family_nye_m1"):
+        np.testing.assert_array_equal(
+            getattr(forward.product_owner, name),
+            getattr(state.owners[1], name))
     first = joint_material_transaction(state, (forward,))
     interface = first.candidate.interfaces[0]
     assert interface.exposure_s == 2e-9

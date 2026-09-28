@@ -233,14 +233,20 @@ def _scaled_product_owner(donor, receiver, transmission, systems=None):
         if item.name in signed_products:
             arrays[item.name] = signed_products[item.name]
             continue
-        if item.name in LINE_FIELDS or item.name in (
-                "slip", "beta_p", "alignment_m2", "family_nye_m1"):
+        if item.name in ("slip", "beta_p", "alignment_m2", "family_nye_m1"):
+            # A migrating boundary enlarges the persistent receiver crystal.
+            # Its kinematic history is the receiver owner's dormant history
+            # at that material point, not a scaled copy of the donor plastic
+            # distortion.  Transmitted donor line inventory is handled
+            # independently above.  The crystal incompatibility consequently
+            # remains in the explicit support-gradient/interface Nye term.
+            arrays[item.name] = np.asarray(
+                getattr(receiver, item.name), dtype=float).copy()
+        elif item.name in LINE_FIELDS:
             if item.name in ("mobile_plus_m2", "mobile_minus_m2",
                              "forest_plus_m2", "forest_minus_m2",
-                             "wall_plus_m2", "wall_minus_m2", "slip"):
+                             "wall_plus_m2", "wall_minus_m2"):
                 factor = transmission
-            elif item.name in ("alignment_m2", "family_nye_m1"):
-                factor = transmission[(...,)+(None,)*(value.ndim-transmission.ndim)]
             else:
                 factor = scalar[(...,)+(None,)*(value.ndim-scalar.ndim)]
             arrays[item.name] = factor*value
