@@ -12,9 +12,11 @@ from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionRuntime, advance_multigrain_front,
     advance_energy_qualified_mechanics, advance_multigrain_mechanics,
-    _geometric_sweep_weight,
+    _geometric_sweep_weight, _masked_owner_update,
 )
-from full_model.production.tensorial_nye import bcc_four_family_systems
+from full_model.production.tensorial_nye import (
+    bcc_four_family_systems, nye_from_plastic_distortion,
+)
 from tests.test_full_model_v58_complete_multigrain_energy import _state
 from full_model.analysis.spatial_localization import spatial_localization_metrics
 
@@ -152,6 +154,26 @@ def test_active_mask_cannot_age_dormant_owner_cells_or_limit_step():
         before = np.asarray(getattr(state, name))
         after = np.asarray(getattr(evolved, name))
         np.testing.assert_array_equal(after[~active], before[~active])
+
+
+def test_masked_owner_update_retains_curl_nye_identity():
+    spacing = 2e-8
+    before = _state(8).owners[0]
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0)
+    stress = np.full((8, 8, 4), 7e8)
+    after, _, _ = accepted_euler_step(
+        before, CommonWallDriving(resolved_stress_Pa=stress), systems, (),
+        parameters, 1e-12)
+    active = np.zeros((8, 8), dtype=bool); active[:4] = True
+    published = _masked_owner_update(
+        before, after, active, systems, spacing)
+    np.testing.assert_allclose(
+        np.sum(published.family_nye_m1, axis=2),
+        nye_from_plastic_distortion(published.beta_p, spacing),
+        rtol=2e-13, atol=2e-8)
 
 
 def test_periodic_localization_distinguishes_hotspot_from_band():

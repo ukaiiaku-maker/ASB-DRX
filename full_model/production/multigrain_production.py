@@ -18,7 +18,10 @@ from .common_tensorial_wall import (
     CommonWallDriving, accepted_euler_step, wall_residual,
 )
 from .nonlocal_elasticity import solve_periodic_eigenstrain
-from .tensorial_nye import rotated_system_fields, spectral_derivatives
+from .tensorial_nye import (
+    nye_from_plastic_distortion, plastic_distortion_from_slip,
+    rotated_system_fields, spectral_derivatives,
+)
 from .multigrain_common_state import (
     PhysicalTransferLaw, derive_physical_transfer_proposal,
     joint_material_transaction, reconstruct_multigrain_common,
@@ -119,7 +122,15 @@ class EnergyQualifiedMechanicalResult:
     relative_first_law_residual: float
 
 
-def _masked_owner_update(before, after, active):
+def _masked_owner_update(before, after, active, systems, spacing_m):
+    """Publish material history with a Curl-compatible derived Nye update.
+
+    Masking an owner increment creates a product-rule Nye contribution at the
+    edge of its support.  Simply masking the already-computed family Nye rate
+    omits that contribution.  The correction below is fixed by the actual
+    masked beta increment and is partitioned using the corresponding physical
+    family slip increments; it is not inferred from a target wall pattern.
+    """
     from dataclasses import fields
     from .common_tensorial_wall import CommonWallState
     arrays = {}
@@ -128,6 +139,31 @@ def _masked_owner_update(before, after, active):
         new = np.asarray(getattr(after, item.name))
         mask = active[(...,)+(None,)*(old.ndim-active.ndim)]
         arrays[item.name] = np.where(mask, new, old)
+    mask = np.asarray(active, dtype=float)
+    beta_increment = (np.asarray(after.beta_p)-np.asarray(before.beta_p))
+    target_increment = nye_from_plastic_distortion(
+        mask[..., None, None]*beta_increment, spacing_m)
+    family_increment = (np.asarray(after.family_nye_m1)
+                        -np.asarray(before.family_nye_m1))
+    masked_family_increment = mask[..., None, None, None]*family_increment
+    correction = target_increment-np.sum(masked_family_increment, axis=2)
+    slip_increment = np.asarray(after.slip)-np.asarray(before.slip)
+    family_weights = []
+    for family in range(len(systems)):
+        family_slip = np.zeros_like(slip_increment)
+        family_slip[..., family] = slip_increment[..., family]
+        family_beta = plastic_distortion_from_slip(
+            family_slip, systems, before.orientation_rad)
+        family_weights.append(np.linalg.norm(family_beta, axis=(-2, -1)))
+    family_weights = np.stack(family_weights, axis=2)
+    denominator = np.sum(family_weights, axis=2, keepdims=True)
+    family_weights = np.divide(
+        family_weights, denominator,
+        out=np.full_like(family_weights, 1.0/len(systems)),
+        where=denominator > 0.0)
+    arrays["family_nye_m1"] = (
+        np.asarray(before.family_nye_m1)+masked_family_increment
+        +family_weights[..., None, None]*correction[..., None, :, :])
     return CommonWallState(**arrays)
 
 
@@ -262,7 +298,8 @@ def advance_multigrain_mechanics(
             substeps += 1
             if substeps > int(maximum_internal_substeps):
                 raise RuntimeError("mechanical physical interval exceeded substep budget")
-        owners.append(_masked_owner_update(owner, updated, active))
+        owners.append(_masked_owner_update(
+            owner, updated, active, systems, wall_parameters.spacing_m))
         work += owner_work
         heat += owner_heat
         maximum_substeps = max(maximum_substeps, substeps)
