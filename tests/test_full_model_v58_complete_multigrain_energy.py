@@ -227,3 +227,12 @@ def test_misoriented_transfer_closes_vector_burgers_content_at_interface():
             rtol=5e-14, atol=5e-10)
     result = joint_material_transaction(state, (proposal,))
     assert np.linalg.norm(result.candidate.interfaces[0].boundary_burgers_m1) > 0.0
+    component = result.candidate.interfaces[0]
+    stored = float(np.sum(component.boundary_plus_m2
+                          +component.boundary_minus_m2)
+                   +np.sum(component.boundary_junction_m2))
+    exported = sum(result.line_export_m2_by_field.values())
+    np.testing.assert_allclose(
+        exported,
+        stored+result.physical_channel_cell_sums_m2["annihilated"]
+        +result.physical_channel_cell_sums_m2["external_sink"], rtol=2e-14)

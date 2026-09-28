@@ -260,6 +260,9 @@ def derive_physical_transfer_proposal(
     """Build all product/export channels from the current physical owners."""
     state.validate()
     law.validate()
+    if systems is not None and law.signed_sink_fraction != 0.0:
+        raise ValueError(
+            "crystallographic signed sink requires an explicit external Burgers vector")
     if not math.isfinite(float(interval_s)) or float(interval_s) <= 0.0:
         raise ValueError("physical transfer requires a positive finite interval")
     index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
@@ -299,6 +302,28 @@ def derive_physical_transfer_proposal(
         sink += np.sum(
             2.0*law.neutral_sink_fraction*neutral
             +law.signed_sink_fraction*(excess_plus+excess_minus), axis=2)
+        product_plus = np.asarray(getattr(product, names[0]))
+        product_minus = np.asarray(getattr(product, names[1]))
+        removed_scalar = np.sum(
+            plus+minus-product_plus-product_minus, axis=2)
+        accounted_scalar = (np.sum(
+            boundary_plus[..., pair_index, :]
+            +boundary_minus[..., pair_index, :], axis=2)
+            +np.sum(2.0*(1.0-law.boundary_storage_fraction
+                         -law.neutral_sink_fraction)*neutral, axis=2)
+            +np.sum(2.0*law.neutral_sink_fraction*neutral
+                    +law.signed_sink_fraction*(excess_plus+excess_minus),
+                    axis=2))
+        remap_residual = np.maximum(removed_scalar-accounted_scalar, 0.0)
+        donor_pair = plus+minus
+        donor_total = np.sum(donor_pair, axis=2)
+        # Crystallographic reprojection that cannot remain as receiver-family
+        # line is an interface-stored residual, not an unlabelled annihilation.
+        allocation = np.divide(
+            remap_residual[..., None], donor_total[..., None],
+            out=np.zeros_like(donor_pair), where=donor_total[..., None] > 0.0)
+        boundary_plus[..., pair_index, :] += allocation*plus
+        boundary_minus[..., pair_index, :] += allocation*minus
     tf = np.mean(transmission, axis=2)
     blocked_junction = (1.0-tf[..., None])*donor.junction_m2
     boundary_junction = law.boundary_storage_fraction*blocked_junction
