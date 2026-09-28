@@ -26,15 +26,15 @@
     ,"The repaired v3 trajectory remained band-like through step 33, developed periodic winding and post-peak softening, and reached 463.5 K contrast before step 34 failed atomically at a 6.75% asymptotic first-law mismatch."
     ,"The 994de27 front repair replaces contact-profile transfer with the level-set sweep measure and prices that same direction; finite events use the inherited 5% complete-energy threshold."
   ],
-  "first_unresolved_transaction": "Complete the fresh v4 n32 common-temperature/geometric-front trajectory, then execute matched frozen-flow/front controls and selected refinement.",
-  "current_action": "Run a fresh n32 trajectory from the unified v4 architecture; monitor DRX contour displacement and ASB persistence together.",
+  "first_unresolved_transaction": "Establish a tractable corrected-operator trajectory through the coupled DRX/ASB horizon, then execute matched frozen-flow/front controls and selected refinement.",
+  "current_action": "Run an n16 preflight from the exact heterogeneous elasticity and cancellation-stable energy audit before selecting the corrected n32 production horizon.",
   "active_campaign_heavy_action": {
-    "pid": 12132,
-    "tmux_session": "v58_v4_geo_n32",
-    "source": "fdece4a",
-    "case": "three_grain_v4_geometric_n32",
-    "command": "PYTHONPATH=src:. python -u full_model/analysis/run_v58_three_grain_production.py --n 32 --steps 60 --dt 1e-7 --shear-rate 2e4 --temperature 900 --case baseline --checkpoint-every 1 --maximum-mechanical-subdivisions 14 --source-commit fdece4a",
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v4_geometric_n32"
+    "pid": null,
+    "exec_session": 12091,
+    "source": "ed1cb78",
+    "case": "three_grain_v5_exact_n16",
+    "command": "PYTHONPATH=src:. python -u full_model/analysis/run_v58_three_grain_production.py --n 16 --steps 60 --dt 1e-7 --shear-rate 2e4 --temperature 900 --case baseline --checkpoint-every 1 --maximum-mechanical-subdivisions 18 --source-commit ed1cb78",
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v5_exact_n16"
   },
-  "next_action": "Launch the fresh n32 baseline from the repair commit; classify checkpoints continuously and select equal-density/front-off and thermal controls from observed mechanisms."
+  "next_action": "Classify the n16 corrected preflight, then launch the smallest informative n32 baseline/control pair supported by its cost and stiffness."
 }

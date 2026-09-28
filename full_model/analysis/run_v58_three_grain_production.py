@@ -130,7 +130,9 @@ def main():
     parser.add_argument("--resume")
     parser.add_argument("--source-commit")
     parser.add_argument(
-        "--resume-transition", choices=("none", "common_temperature_once_from_v2"),
+        "--resume-transition", choices=(
+            "none", "common_temperature_once_from_v2",
+            "adaptive_bisection_controller_v5"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -196,6 +198,18 @@ def main():
             provenance["restart_transition"] = args.resume_transition
             provenance["parent_checkpoint_sha256"] = resume_sha
             provenance["parent_source_commit"] = "f3d7d7f"
+        elif args.resume_transition == "adaptive_bisection_controller_v5":
+            if not args.expected_resume_sha256:
+                raise ValueError("controller transition requires expected checkpoint SHA-256")
+            if (checkpoint_configuration != configuration
+                    or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit") != "ed1cb78"):
+                raise ValueError(
+                    "adaptive controller transition requires the ed1cb78 "
+                    "exact-elasticity configuration")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = "ed1cb78"
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):

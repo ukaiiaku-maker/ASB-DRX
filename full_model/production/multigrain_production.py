@@ -311,12 +311,30 @@ def advance_energy_qualified_mechanics(
     strain1 = np.asarray(mean_strain_candidate, dtype=float)
 
     def recurse(accepted, left, right, interval, depth):
+        def bisect_interval():
+            middle = .5*(left+right)
+            first_state, first_ops, first_balances, depth_a = recurse(
+                accepted, left, middle, .5*interval, depth+1)
+            final_state, second_ops, second_balances, depth_b = recurse(
+                first_state, middle, right, .5*interval, depth+1)
+            return (final_state, first_ops+second_ops,
+                    first_balances+second_balances, max(depth_a, depth_b))
+
         midpoint = .5*(left+right)
-        candidate, operator = advance_multigrain_mechanics(
-            accepted, driving=CommonWallDriving(mean_strain=midpoint),
-            systems=systems, topologies=topologies,
-            wall_parameters=wall_parameters, dt_s=interval,
-            represented_thickness_m=represented_thickness_m)
+        try:
+            candidate, operator = advance_multigrain_mechanics(
+                accepted, driving=CommonWallDriving(mean_strain=midpoint),
+                systems=systems, topologies=topologies,
+                wall_parameters=wall_parameters, dt_s=interval,
+                represented_thickness_m=represented_thickness_m)
+        except RuntimeError as error:
+            adaptive_failure = any(text in str(error) for text in (
+                "mechanical physical interval exceeded substep budget",
+                "mechanical interval could not find an admissible substep",
+            ))
+            if not adaptive_failure or depth >= int(maximum_subdivisions):
+                raise
+            return bisect_interval()
         balance = evaluate_multigrain_mechanical_interval(
             accepted, candidate, mean_strain_before=left,
             mean_strain_candidate=right,
@@ -335,13 +353,7 @@ def advance_energy_qualified_mechanics(
                 f"internal_energy_change_J={balance.internal_energy_change_J:.17g}, "
                 f"left_strain={np.asarray(left).tolist()}, "
                 f"right_strain={np.asarray(right).tolist()}")
-        middle = .5*(left+right)
-        first_state, first_ops, first_balances, depth_a = recurse(
-            accepted, left, middle, .5*interval, depth+1)
-        final_state, second_ops, second_balances, depth_b = recurse(
-            first_state, middle, right, .5*interval, depth+1)
-        return (final_state, first_ops+second_ops,
-                first_balances+second_balances, max(depth_a, depth_b))
+        return bisect_interval()
 
     candidate, operators, balances, depth = recurse(
         state, strain0, strain1, float(dt_s), 0)
