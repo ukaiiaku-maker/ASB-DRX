@@ -4,7 +4,7 @@
   "campaign_state": "ACTIVE",
   "start_utc": "2026-09-28T21:13:10Z",
   "deadline_utc": "2026-09-29T09:13:10Z",
-  "source_checkpoint": "WORKTREE_COMMON_STRESS_UPWIND_PRECOMMIT",
+  "source_checkpoint": "2217c42c58c483beb278c6cd2aa7481c0a3bf462",
   "accepted_prefix": {
     "v57_temporal_increment_error": 0.020888122071016084,
     "v57_temporal_scope": "n64 retained monolithic step-100 one-full/two-half interval",
@@ -23,7 +23,7 @@
     "The corrected implementation passed 14 focused tests and the full 925-test regression suite."
   ],
   "first_unresolved_transaction": "Complete and classify a fresh configuration-bound n32 common-stress/upwind physical-horizon trajectory, then execute matched controls and strict-ASB persistence/refinement.",
-  "current_action": "Commit the common-stress, owner-energy, positive-transport repair and launch a fresh restartable n32 trajectory.",
+  "current_action": "Launch a fresh restartable n32 common-stress/upwind trajectory from 2217c42.",
   "active_campaign_heavy_action": null,
   "next_action": "Launch the fresh n32 baseline from the repair commit; classify checkpoints continuously and select equal-density/front-off and thermal controls from observed mechanisms."
 }
