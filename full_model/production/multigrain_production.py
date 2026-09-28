@@ -539,6 +539,41 @@ def advance_multigrain_front(
         return state, replace(runtime, ledger=next_ledger), MultiGrainProductionDecision(
             True, "STATIONARY_COMPLETE_AFFINITY", {}, {}, {}, {}, None, 0)
 
+    # Individual edge derivatives do not in general add at a diffuse triple
+    # junction: all proposals act on the same partition-of-unity supports and
+    # physical boundary reservoirs.  Price the selected *joint direction* at
+    # an independently prescribed virtual amplitude, then apply one scalar
+    # correction to the edge pressures.  This remains a directional
+    # derivative evaluated before the realized event; it is not inferred from
+    # the finite-event closure residual.
+    joint_virtual_proposals = []
+    for key in base_requests:
+        interface, donor, receiver = channel_records[key]
+        virtual_weight = _geometric_sweep_weight(
+            state, index[donor], index[receiver], spacing_m)
+        joint_virtual_proposals.append(derive_physical_transfer_proposal(
+            state, interface_id=interface.component_id, donor_id=donor,
+            receiver_id=receiver,
+            requested_fraction=kinetics.virtual_fraction*virtual_weight,
+            law=kinetics.transfer_law, interval_s=dt, systems=systems))
+    joint_virtual_capacity = joint_material_transaction(
+        state, tuple(joint_virtual_proposals))
+    joint_virtual_price = evaluate_joint_multigrain_transaction(
+        state, joint_virtual_capacity, spacing_m=spacing_m,
+        represented_thickness_m=represented_thickness_m,
+        wall_parameters=wall_parameters, interval_s=dt,
+        dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
+        absolute_tolerance_J=0.0).decision.available_change_J
+    cell_volume = float(spacing_m)**2*float(represented_thickness_m)
+    independent_virtual_work = sum(
+        pressures[key]*float(np.sum(extent, dtype=np.longdouble))*cell_volume
+        for key, extent in
+        joint_virtual_capacity.accepted_fraction_by_interface.items())
+    if joint_virtual_price < 0.0 and independent_virtual_work > 0.0:
+        joint_pressure_factor = -joint_virtual_price/independent_virtual_work
+        pressures = {
+            key: value*joint_pressure_factor for key, value in pressures.items()}
+
     options = {} if energy_kwargs is None else dict(energy_kwargs)
     result = None
     for backtrack in range(kinetics.maximum_backtracks+1):
@@ -551,7 +586,6 @@ def advance_multigrain_front(
                 receiver_id=receiver, requested_fraction=factor*request,
                 law=kinetics.transfer_law, interval_s=dt, systems=systems))
         capacity = joint_material_transaction(state, tuple(proposals))
-        cell_volume = float(spacing_m)**2*float(represented_thickness_m)
         dissipation_J = sum(
             pressures[key]*float(np.sum(extent, dtype=np.longdouble))*cell_volume
             for key, extent in capacity.accepted_fraction_by_interface.items())
