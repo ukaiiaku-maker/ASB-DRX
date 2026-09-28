@@ -11,7 +11,7 @@ from full_model.production.complete_multigrain_energy import (
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionRuntime, advance_multigrain_front,
-    advance_multigrain_mechanics,
+    advance_energy_qualified_mechanics, advance_multigrain_mechanics,
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 from tests.test_full_model_v58_complete_multigrain_energy import _state
@@ -90,3 +90,24 @@ def test_mechanical_identity_interval_has_exact_common_energy_closure():
     assert balance.external_work_J == 0.0
     assert balance.internal_energy_change_J == 0.0
     assert balance.first_law_residual_J == 0.0
+
+
+def test_energy_qualified_mechanics_consumes_full_interval():
+    spacing = 2e-8
+    state = _state(8)
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=1e-7)
+    before = np.array([[0.0, .004], [.004, 0.0]])
+    after = np.array([[0.0, .0041], [.0041, 0.0]])
+    result = advance_energy_qualified_mechanics(
+        state, mean_strain_before=before, mean_strain_candidate=after,
+        systems=systems, topologies=(), wall_parameters=parameters,
+        dt_s=1e-10, represented_thickness_m=5e-10,
+        energy_kwargs=dict(reference_temperature_K=900.0),
+        maximum_relative_first_law_residual=.05)
+    assert sum(item.consumed_interval_s
+               for item in result.operator_decisions) == 1e-10
+    assert result.relative_first_law_residual <= .05

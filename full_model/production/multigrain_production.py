@@ -10,10 +10,11 @@ import numpy as np
 from .arrhenius_kinetics import ActivatedProcess
 from .complete_multigrain_energy import (
     MultiGrainDissipation, evaluate_joint_multigrain_transaction,
+    evaluate_multigrain_mechanical_interval,
 )
 from .coupled_front_event import propose_bidirectional_front_event
 from .moving_front import DefectState
-from .common_tensorial_wall import accepted_euler_step
+from .common_tensorial_wall import CommonWallDriving, accepted_euler_step
 from .multigrain_common_state import (
     PhysicalTransferLaw, derive_physical_transfer_proposal,
     joint_material_transaction,
@@ -98,6 +99,18 @@ class MultiGrainMechanicalDecision:
     maximum_line_balance_residual_m2_s: float
     maximum_substeps: int
     consumed_interval_s: float
+
+
+@dataclass(frozen=True)
+class EnergyQualifiedMechanicalResult:
+    state: object
+    operator_decisions: tuple[MultiGrainMechanicalDecision, ...]
+    energy_balances: tuple[object, ...]
+    subdivisions: int
+    external_work_J: float
+    internal_energy_change_J: float
+    first_law_residual_J: float
+    relative_first_law_residual: float
 
 
 def _masked_owner_update(before, after, active):
@@ -210,6 +223,58 @@ def advance_multigrain_mechanics(
         True, minimum_scale, work, heat, maximum_line_residual,
         maximum_substeps, dt)
     return candidate, decision
+
+
+def advance_energy_qualified_mechanics(
+        state, *, mean_strain_before, mean_strain_candidate, systems,
+        topologies, wall_parameters, dt_s, represented_thickness_m,
+        energy_kwargs=None, maximum_relative_first_law_residual=.05,
+        maximum_subdivisions=10):
+    """Rollback and bisect a mechanical interval until every leaf qualifies."""
+    strain0 = np.asarray(mean_strain_before, dtype=float)
+    strain1 = np.asarray(mean_strain_candidate, dtype=float)
+
+    def recurse(accepted, left, right, interval, depth):
+        midpoint = .5*(left+right)
+        candidate, operator = advance_multigrain_mechanics(
+            accepted, driving=CommonWallDriving(mean_strain=midpoint),
+            systems=systems, topologies=topologies,
+            wall_parameters=wall_parameters, dt_s=interval,
+            represented_thickness_m=represented_thickness_m)
+        balance = evaluate_multigrain_mechanical_interval(
+            accepted, candidate, mean_strain_before=left,
+            mean_strain_candidate=right,
+            spacing_m=wall_parameters.spacing_m,
+            represented_thickness_m=represented_thickness_m,
+            wall_parameters=wall_parameters, energy_kwargs=energy_kwargs)
+        if balance.relative_first_law_residual <= float(
+                maximum_relative_first_law_residual):
+            return candidate, (operator,), (balance,), depth
+        if depth >= int(maximum_subdivisions):
+            raise RuntimeError(
+                "mechanical complete-energy audit failed subdivision budget")
+        middle = .5*(left+right)
+        first_state, first_ops, first_balances, depth_a = recurse(
+            accepted, left, middle, .5*interval, depth+1)
+        final_state, second_ops, second_balances, depth_b = recurse(
+            first_state, middle, right, .5*interval, depth+1)
+        return (final_state, first_ops+second_ops,
+                first_balances+second_balances, max(depth_a, depth_b))
+
+    candidate, operators, balances, depth = recurse(
+        state, strain0, strain1, float(dt_s), 0)
+    work = sum(value.external_work_J for value in balances)
+    delta_internal = (balances[-1].candidate.internal_J
+                      -balances[0].before.internal_J)
+    residual = delta_internal-work
+    scale = max(abs(delta_internal), abs(work), 1e-300)
+    relative = abs(residual)/scale
+    if relative > float(maximum_relative_first_law_residual):
+        raise RuntimeError(
+            "subdivided mechanical interval fails cumulative first-law audit")
+    return EnergyQualifiedMechanicalResult(
+        candidate, operators, balances, depth, work, delta_internal,
+        residual, relative)
 
 
 def _defect(owner):

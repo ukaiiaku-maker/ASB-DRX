@@ -14,11 +14,10 @@ import numpy as np
 
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.common_tensorial_wall import (
-    CommonWallDriving, CommonWallParameters, CommonWallState,
+    CommonWallParameters, CommonWallState,
 )
 from full_model.production.complete_multigrain_energy import (
     evaluate_complete_multigrain_energy,
-    evaluate_multigrain_mechanical_interval,
 )
 from full_model.production.multigrain_common_state import (
     MultiGrainCommonState, PhysicalTransferLaw, audit_multigrain_nye,
@@ -28,7 +27,7 @@ from full_model.production.multigrain_common_state import (
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionLedger, MultiGrainProductionRuntime,
-    advance_multigrain_front, advance_multigrain_mechanics,
+    advance_energy_qualified_mechanics, advance_multigrain_front,
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 
@@ -167,17 +166,17 @@ def main():
             [[0.0, .5*gamma_before], [.5*gamma_before, 0.0]])
         strain_after = np.array([[0.0, .5*gamma], [.5*gamma, 0.0]])
         strain_midpoint = .5*(strain_before+strain_after)
-        mechanical_before = state
-        state, mechanical = advance_multigrain_mechanics(
-            state, driving=CommonWallDriving(mean_strain=strain_midpoint),
+        mechanical = advance_energy_qualified_mechanics(
+            state, mean_strain_before=strain_before,
+            mean_strain_candidate=strain_after,
             systems=systems, topologies=(), wall_parameters=wall,
-            dt_s=args.dt, represented_thickness_m=thickness)
-        mechanical_energy = evaluate_multigrain_mechanical_interval(
-            mechanical_before, state, mean_strain_before=strain_before,
-            mean_strain_candidate=strain_after, spacing_m=spacing,
-            represented_thickness_m=thickness, wall_parameters=wall,
-            energy_kwargs=energy_options)
-        shear_stress = float(mechanical_energy.mean_stress_candidate_Pa[0, 1])
+            dt_s=args.dt, represented_thickness_m=thickness,
+            energy_kwargs=energy_options,
+            maximum_relative_first_law_residual=.05,
+            maximum_subdivisions=10)
+        state = mechanical.state
+        shear_stress = float(
+            mechanical.energy_balances[-1].mean_stress_candidate_Pa[0, 1])
         energy_options["mean_strain"] = strain_after
         if args.case == "no_front":
             front = None
@@ -214,15 +213,37 @@ def main():
                     audit.support_gradient_m1)),
                 "owner_nye_mismatch_norm_m1": float(np.linalg.norm(
                     audit.owner_reservoir_mismatch_m1)),
-                "mechanical": asdict(mechanical),
+                "mechanical": {
+                    "accepted": True,
+                    "subintervals": len(mechanical.operator_decisions),
+                    "subdivision_depth": mechanical.subdivisions,
+                    "minimum_step_scale": min(
+                        value.minimum_step_scale
+                        for value in mechanical.operator_decisions),
+                    "maximum_substeps": max(
+                        value.maximum_substeps
+                        for value in mechanical.operator_decisions),
+                    "external_plastic_work_J": sum(
+                        value.external_plastic_work_J
+                        for value in mechanical.operator_decisions),
+                    "irreversible_heat_J": sum(
+                        value.irreversible_heat_J
+                        for value in mechanical.operator_decisions),
+                    "consumed_interval_s": sum(
+                        value.consumed_interval_s
+                        for value in mechanical.operator_decisions),
+                },
                 "mechanical_energy": {
-                    "external_work_J": mechanical_energy.external_work_J,
+                    "external_work_J": mechanical.external_work_J,
                     "internal_energy_change_J": (
-                        mechanical_energy.internal_energy_change_J),
+                        mechanical.internal_energy_change_J),
                     "first_law_residual_J": (
-                        mechanical_energy.first_law_residual_J),
+                        mechanical.first_law_residual_J),
                     "relative_first_law_residual": (
-                        mechanical_energy.relative_first_law_residual),
+                        mechanical.relative_first_law_residual),
+                    "maximum_leaf_relative_first_law_residual": max(
+                        value.relative_first_law_residual
+                        for value in mechanical.energy_balances),
                 },
                 "front": None if front is None else {
                     "accepted": front.accepted,
