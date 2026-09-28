@@ -362,10 +362,16 @@ def advance_energy_qualified_mechanics(
     candidate, operators, balances, depth = recurse(
         state, strain0, strain1, float(dt_s), 0)
     work = sum(value.external_work_J for value in balances)
-    delta_internal = (balances[-1].candidate.internal_J
-                      -balances[0].before.internal_J)
+    # Sum the cancellation-stable leaf evaluations.  Re-subtracting the two
+    # O(1e-11 J) endpoint totals here would discard the accuracy recovered by
+    # the exact quadratic elastic identity used in each accepted leaf.
+    delta_internal = sum(value.internal_energy_change_J
+                         for value in balances)
     residual = delta_internal-work
-    scale = max(abs(delta_internal), abs(work), 1e-300)
+    roundoff_floor = (4096.0*np.finfo(float).eps
+                      *max(abs(balances[0].before.internal_J),
+                           abs(balances[-1].candidate.internal_J), 1e-300))
+    scale = max(abs(delta_internal), abs(work), roundoff_floor, 1e-300)
     relative = abs(residual)/scale
     if relative > float(maximum_relative_first_law_residual):
         raise RuntimeError(

@@ -171,7 +171,17 @@ def evaluate_multigrain_mechanical_interval(
     ))
     delta_internal = elastic_change+nonelastic_change
     residual = delta_internal-work
-    scale = max(abs(delta_internal), abs(work), 1e-300)
+    # A hold can exchange defect/elastic energy with the thermal reservoir
+    # while its exact external work is zero.  The endpoint totals are O(1e-11)
+    # J in the production patch, so their floating-point subtraction cannot
+    # resolve an O(1e-27) J residual.  Include that independently calculated
+    # roundoff floor in the normalization; this does not relax any physically
+    # resolvable imbalance and prevents recursive bisection of a zero-load
+    # interval down to machine precision.
+    roundoff_floor = (4096.0*np.finfo(float).eps
+                      *max(abs(before.internal_J),
+                           abs(candidate.internal_J), 1e-300))
+    scale = max(abs(delta_internal), abs(work), roundoff_floor, 1e-300)
     return MultiGrainMechanicalEnergyBalance(
         before, candidate, work, delta_internal, residual,
         abs(residual)/scale, stress_before, stress_candidate)

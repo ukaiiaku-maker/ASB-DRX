@@ -115,6 +115,26 @@ def test_energy_qualified_mechanics_consumes_full_interval():
     assert result.relative_first_law_residual <= .05
 
 
+def test_energy_qualified_zero_load_hold_is_not_bisected_below_roundoff():
+    spacing = 2e-8
+    state = _state(8)
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=1e-7)
+    strain = np.array([[0.0, .004], [.004, 0.0]])
+    result = advance_energy_qualified_mechanics(
+        state, mean_strain_before=strain, mean_strain_candidate=strain,
+        systems=systems, topologies=(), wall_parameters=parameters,
+        dt_s=1e-10, represented_thickness_m=5e-10,
+        energy_kwargs=dict(reference_temperature_K=900.0),
+        maximum_relative_first_law_residual=.05)
+    assert sum(item.consumed_interval_s
+               for item in result.operator_decisions) == 1e-10
+    assert result.relative_first_law_residual <= .05
+
+
 def test_active_mask_cannot_age_dormant_owner_cells_or_limit_step():
     spacing = 2e-8
     state = _state(8).owners[0]
