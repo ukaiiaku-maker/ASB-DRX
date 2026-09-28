@@ -1,0 +1,41 @@
+{
+  "schema": "asb-drx-v57-controller-v1",
+  "branch": "exp/full-v57-multigrain-20260928",
+  "parent_v56_head": "597a6e724c2116ff69a178c91691add6b09172b0",
+  "workstreams": {
+    "monolithic_temporal_fork": {
+      "state": "PASSED",
+      "source": "220581b8efbf768e57bd85fd7828a8722a4425f2",
+      "source_step": 100,
+      "common_endpoint": true,
+      "hard_valid": true,
+      "maximum_selected_increment_relative_error": 0.020888122071016084
+    },
+    "v55_evidence_wiring": {
+      "state": "PASSED_SCOPED",
+      "classification": "VALID_GENERIC_EXISTING_BOUNDARY_DRX_WITH_COUPLED_THERMOMECHANICAL_RESPONSE",
+      "strict_asb": false,
+      "spontaneous_grain_birth": false
+    },
+    "multigrain_common_owner": {
+      "state": "CAPACITY_TRANSACTION_IMPLEMENTED_NOT_PRODUCTION_PUBLISHABLE",
+      "implemented": [
+        "persistent grain IDs and normalized supports",
+        "support-weighted common reconstruction and Curl-after-beta Nye",
+        "qualified pair-limit adapter",
+        "simultaneous donor-capacity allocation",
+        "explicit line export closure",
+        "order and label neutrality",
+        "constant-product temporal subdivision",
+        "exact owner/interface/ledger restart",
+        "complete-energy publication guard"
+      ],
+      "first_unresolved_transaction": "construct and integrate the complete combined multi-interface energy/dissipation candidate before publication"
+    },
+    "three_grain_production": {
+      "state": "NOT_RUN",
+      "reason": "joint candidate is deliberately unpriced and no long V57 solver allocation is active"
+    }
+  },
+  "active_campaign_heavy_action": null
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "asb-drx-v57-manifest-v1",
+  "branch": "exp/full-v57-multigrain-20260928",
+  "parent_v56_head": "597a6e724c2116ff69a178c91691add6b09172b0",
+  "temporal_source_commit": "220581b8efbf768e57bd85fd7828a8722a4425f2",
+  "evidence_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v57-20260928",
+  "artifacts": [
+    {"path": "evidence/v55_v57_reclassified.json", "sha256": "0a1c5c695cfeb5c1d4d6eda98e0ffe41c90ec0ce8ce86ca75f8cc8fd09272224"},
+    {"path": "temporal_fork/temporal_result.json", "sha256": "f3df2e28d95f7d9fdc3693da11f209b028b06504a2d6a0adc82299f403a3d08c"},
+    {"path": "temporal_fork/one_full_interval/drx_v25_restart_000101.npz", "sha256": "44807bf2056b8dafc479402a16c8be204674610b75d1a04990854a0a62baddf2"},
+    {"path": "temporal_fork/two_half_intervals/drx_v25_restart_000102.npz", "sha256": "1f318f1eb92daefecbc8a7bbd7162a202ae89abaff9619024d4305c7ecb820ce"}
+  ],
+  "claim_limits": [
+    "temporal qualification is state-, interval-, source-, and observable-specific",
+    "multi-grain capacity candidate is not yet complete-energy priced or production publishable",
+    "no three-grain coupled trajectory has been run",
+    "strict ASB and spontaneous grain birth remain unqualified"
+  ],
+  "regression": {
+    "command": "PYTHONPATH=src:. python -m pytest -q tests",
+    "passed": 911,
+    "failed": 0,
+    "elapsed_s": 383.60
+  }
+}

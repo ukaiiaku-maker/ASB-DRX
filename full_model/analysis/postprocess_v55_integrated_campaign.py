@@ -60,6 +60,19 @@ def _physical_protocol(params: dict) -> dict:
     return {key: params.get(key) for key in keys}
 
 
+def _array_identity(raw, names, parameters):
+    value = hashlib.sha256()
+    for name in names:
+        if name not in raw.files:
+            return None
+        array = np.ascontiguousarray(raw[name])
+        value.update(name.encode()); value.update(str(array.dtype).encode())
+        value.update(str(array.shape).encode()); value.update(array.tobytes())
+    value.update(json.dumps(parameters, sort_keys=True,
+                            separators=(",", ":")).encode())
+    return value.hexdigest()
+
+
 def comparison_contract(left: dict, right: dict) -> dict:
     time_scale = max(abs(left["physical_time_s"]),
                      abs(right["physical_time_s"]), 1e-30)
@@ -72,9 +85,15 @@ def comparison_contract(left: dict, right: dict) -> dict:
                                     right["applied_strain"]) <= 1e-12*strain_scale,
         "physical_protocol_equal": left.get("physical_protocol") ==
                                    right.get("physical_protocol"),
+        "applied_tensor_equal": left.get("applied_strain_tensor") ==
+                                right.get("applied_strain_tensor"),
         "initial_material_fraction_equal": abs(
             left["initial_child_material_fraction"]-
             right["initial_child_material_fraction"]) <= 1e-14,
+        "physical_origin_equal": (
+            left.get("physical_origin_identity") is not None
+            and left.get("physical_origin_identity") ==
+            right.get("physical_origin_identity")),
     }
     return {"checks": checks, "comparable": bool(all(checks.values()))}
 
@@ -86,13 +105,17 @@ def outcome_neutral_decision(evidence: dict) -> dict:
         "physical_comparability", "nontrivial_transformation",
         "selected_observable_refinement", "restart_qualified",
         "temporal_refinement_qualified", "coupled_trajectory_valid",
-        "causal_controls_valid",
+        "causal_controls_valid", "front_disabled_intervention_valid",
+        "thermal_intervention_valid",
     )
     missing = [key for key in required if evidence.get(key) is None]
     failed = [key for key in required if evidence.get(key) is not None
               and not evidence[key]]
     passed = not missing and not failed
-    if passed:
+    hard_failure = evidence.get("all_supporting_cases_hard_valid") is False
+    if hard_failure:
+        classification = "INVALID_SUPPORTING_EVIDENCE"
+    elif passed:
         classification = ("VALID_GENERIC_EXISTING_BOUNDARY_DRX_WITH_"
                           "COUPLED_THERMOMECHANICAL_RESPONSE")
     elif missing:
@@ -119,6 +142,8 @@ def record(path: Path) -> dict:
         energy = json.loads(str(raw["v30_asb_cumulative_json"].item()))
         mura = json.loads(str(raw["v21_balance_ledger_json"].item()))
         experiment = json.loads(str(raw["sibm_experiment_json"].item()))
+        common_parameters = json.loads(str(
+            raw["v21_common_parameters_json"].item()))
         temperature = np.asarray(raw["T"], dtype=float)
         chi = np.asarray(raw["sparse_front__chi"], dtype=float)
         power = np.asarray(raw["asb_last_plastic_power_W_m3"], dtype=float)
@@ -127,11 +152,19 @@ def record(path: Path) -> dict:
                     abs(float(energy["physical_stored_change_J_m3"])), 1.0)
         initial_fraction = float(np.asarray(
             raw["sibm_initial_child_fraction"], dtype=float).mean())
+        origin_parameters = {
+            "noise_seed": params.get("v19_noise_seed"),
+            "clean_parent_density_m2": params.get("sibm_clean_parent_density_m2"),
+            "clean_child_density_m2": params.get("sibm_clean_child_density_m2"),
+            "clean_misorientation_deg": params.get("sibm_clean_misorientation_deg"),
+            "particle_radius_um": params.get("v19_particle_radius_um"),
+        }
         return {
             "checkpoint": str(path.resolve()), "checkpoint_sha256": digest(path),
             "source_commit": params.get("v55_source_commit"),
             "step": int(raw["step"]), "physical_time_s": float(raw["sim_time"]),
             "applied_strain": float(raw["E_tot"][0, 0]),
+            "applied_strain_tensor": np.asarray(raw["E_tot"], dtype=float).tolist(),
             "stress_Pa": float(raw["sigma_bar"]),
             "temperature_mean_K": float(temperature.mean()),
             "temperature_peak_K": float(temperature.max()),
@@ -155,6 +188,25 @@ def record(path: Path) -> dict:
             "energy_ledger": energy,
             "mura_ledger": mura,
             "physical_protocol": _physical_protocol(params),
+            "physical_origin_identity": _array_identity(
+                raw, ("sibm_reference_eta", "sibm_reference_parent_mask",
+                      "sibm_initial_child_fraction"), origin_parameters),
+            "intervention": {
+                "front_processing_enabled": bool(params.get(
+                    "sibm_front_processing_enabled", True)),
+                "front_mobility_multiplier": float(params.get(
+                    "sibm_mobility_multiplier", 1.0)),
+                "thermal_control_semantics": params.get(
+                    "thermal_control_semantics"),
+                "causal_temperature_ablation": params.get(
+                    "causal_temperature_ablation"),
+                "causal_reference_temperature_K": params.get(
+                    "causal_reference_temperature_K"),
+                "actual_flow_temperature_override_K": common_parameters.get(
+                    "flow_temperature_override_K"),
+                "actual_recovery_temperature_override_K": common_parameters.get(
+                    "recovery_temperature_override_K"),
+            },
             "last_front_classification": experiment["front_last_decision"][
                 "classification"],
             "absolute_cumulative_first_law_residual_J_m3": float(
@@ -208,6 +260,76 @@ def checkpoint_at_step(directory: Path, step: int) -> dict | None:
 def successive_relative(values: list[float]) -> list[float]:
     return [abs(values[i+1]-values[i])/max(abs(values[i+1]), 1e-300)
             for i in range(len(values)-1)]
+
+
+def execution_completion(histories: dict[str, list[dict]], targets: dict[str, int]):
+    details = {}
+    for name, target in targets.items():
+        rows = histories.get(name, [])
+        terminal = max((row["step"] for row in rows), default=None)
+        details[name] = {
+            "requested_step": int(target), "terminal_step": terminal,
+            "complete": bool(terminal is not None and terminal >= target),
+        }
+    return {"complete": bool(details and all(item["complete"]
+                                             for item in details.values())),
+            "histories": details}
+
+
+def front_disabled_intervention_audit(rows: list[dict], tolerance=1e-12):
+    if not rows:
+        return {"valid": None, "reason": "missing_front_disabled_history"}
+    switch = all((not row["intervention"]["front_processing_enabled"])
+                 or row["intervention"]["front_mobility_multiplier"] <= 0.0
+                 for row in rows)
+    zero_sweep = all(abs(row["gross_swept_volume_m3"]) <= 1e-30 for row in rows)
+    zero_processing = all(abs(
+        row["front_ledger"]["a_to_b_line_processed_m"]
+        +row["front_ledger"]["b_to_a_line_processed_m"]) <= 1e-30
+        for row in rows)
+    zero_transformation = all(abs(row[
+        "net_transformed_material_fraction"]) <= tolerance for row in rows)
+    checks = {"effective_switch_disabled": switch,
+              "zero_front_sweep": zero_sweep,
+              "zero_front_processing": zero_processing,
+              "zero_front_transformation": zero_transformation}
+    return {"valid": bool(all(checks.values())), "checks": checks}
+
+
+def thermal_intervention_audit(feedback: list[dict], frozen: list[dict]):
+    if not frozen:
+        return {"valid": None, "reason": "missing_frozen_flow_history"}
+    labels = bool(feedback and all(
+        row["intervention"]["causal_temperature_ablation"] == "none"
+        for row in feedback) and all(
+        row["intervention"]["causal_temperature_ablation"] == "freeze_flow"
+        for row in frozen))
+    feedback_route = bool(feedback and all(
+        row["intervention"]["actual_flow_temperature_override_K"] is None
+        and row["intervention"]["actual_recovery_temperature_override_K"] is None
+        for row in feedback))
+    frozen_route = bool(frozen and all(
+        row["intervention"]["actual_flow_temperature_override_K"] is not None
+        and row["intervention"]["actual_recovery_temperature_override_K"] is None
+        for row in frozen))
+    checks = {"effective_labels_match": labels,
+              "feedback_uses_evolving_flow_temperature": feedback_route,
+              "freeze_flow_routes_only_flow_override": frozen_route}
+    return {"valid": bool(all(checks.values())), "checks": checks}
+
+
+def temporal_result_audit(path: Path | None, expected_checkpoint_sha256: str):
+    if path is None or not path.is_file():
+        return {"qualified": None, "reason": "missing_temporal_result"}
+    value = json.loads(path.read_text())
+    required = ("schema", "source_checkpoint_sha256", "common_endpoint",
+                "hard_valid", "qualified")
+    if any(name not in value for name in required):
+        return {"qualified": None, "reason": "incomplete_temporal_result"}
+    scope = value["source_checkpoint_sha256"] == expected_checkpoint_sha256
+    return {"qualified": bool(scope and value["common_endpoint"]
+                              and value["hard_valid"] and value["qualified"]),
+            "scope_matches": scope, "record": value}
 
 
 def causal_pair(root: Path, feedback_name: str, control_name: str) -> dict:
@@ -334,6 +456,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--figure", type=Path, required=True)
     parser.add_argument("--endpoint-figure", type=Path)
+    parser.add_argument("--temporal-result", type=Path)
     args = parser.parse_args()
 
     grids = {}
@@ -402,8 +525,24 @@ def main() -> None:
         comparison_contract(enabled, disabled),
         comparison_contract(enabled, frozen),
     )
+    histories = {**{f"grid_n{key}": value
+                    for key, value in grid_histories.items()},
+                 "front_disabled": disabled_rows,
+                 "freeze_flow": frozen_rows,
+                 "coupled_intermediate": feedback_rows}
+    completion = execution_completion(histories, {
+        "grid_n32": 100, "grid_n64": 100, "grid_n128": 100,
+        "front_disabled": 100, "freeze_flow": 100,
+        "coupled_intermediate": 1500,
+    })
+    disabled_audit = front_disabled_intervention_audit(disabled_rows)
+    thermal_audit = thermal_intervention_audit(
+        grid_histories["64"], frozen_rows)
+    temporal_audit = temporal_result_audit(
+        args.temporal_result,
+        matched_time["64"]["checkpoint_sha256"] if matched_available else "")
     evidence = {
-        "execution_complete": bool(supporting_rows),
+        "execution_complete": completion["complete"],
         "all_supporting_cases_hard_valid": bool(
             supporting_rows and all(row["hard_valid"] for row in supporting_rows)),
         "physical_comparability": bool(
@@ -414,13 +553,15 @@ def main() -> None:
         "selected_observable_refinement": bool(
             matched_observables and all(item["below_five_percent"]
                                         for item in matched_observables.values())),
-        "temporal_refinement_qualified": None,
+        "temporal_refinement_qualified": temporal_audit["qualified"],
         "restart_qualified": False,
         "coupled_trajectory_valid": bool(
             feedback_rows and all(row["hard_valid"] for row in feedback_rows)),
         "causal_controls_valid": bool(
             disabled_rows and frozen_rows and all(
                 row["hard_valid"] for row in disabled_rows+frozen_rows)),
+        "front_disabled_intervention_valid": disabled_audit["valid"],
+        "thermal_intervention_valid": thermal_audit["valid"],
     }
     restart = exact_restart_audit(
         args.qualification_root/"high_mobility_feedback"/
@@ -436,6 +577,7 @@ def main() -> None:
         "schema": SCHEMA,
         "source_scope": "generic kinetic hypothesis; not material calibration",
         "qualification": {
+            "execution_completion": completion,
             "grid_endpoints": grids,
             "successive_relative_transformed_fraction_errors": refinement,
             "terminal_window_exit_comparison_below_five_percent": bool(
@@ -458,6 +600,9 @@ def main() -> None:
             "all_supporting_prefixes_hard_valid": evidence[
                 "all_supporting_cases_hard_valid"],
             "physical_comparison_contracts": high_mobility_contracts,
+            "front_disabled_intervention": disabled_audit,
+            "thermal_intervention": thermal_audit,
+            "temporal_refinement": temporal_audit,
             "restart": restart,
         },
         "coupled_response": {

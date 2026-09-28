@@ -1,0 +1,9 @@
+{
+  "schema": "asb-drx-v57-interactive-allocation-v1",
+  "authorized_mode": "interactive_development_and_bounded_tests",
+  "long_unattended_solver_authorized": false,
+  "duration_hours": null,
+  "reason": "the pasted 18-hour authorization is explicitly proposed and was not adopted in the user request",
+  "maximum_campaign_heavy_solvers": 1,
+  "preserve_unrelated_processes": true
+}
