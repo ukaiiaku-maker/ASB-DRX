@@ -139,7 +139,7 @@ def main():
     source_commit = (args.source_commit or subprocess.check_output(
         ("git", "rev-parse", "HEAD"), text=True).strip())
     configuration = {
-        "schema": "v58-three-grain-production-v3-common-temperature-once",
+        "schema": "v58-three-grain-production-v4-geometric-front",
         "n": args.n, "length_m": args.length,
         "interface_width_m": args.interface_width, "dt_s": args.dt,
         "shear_rate_s": args.shear_rate, "temperature_K": args.temperature,
@@ -149,6 +149,8 @@ def main():
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": .75,
         "flow_temperature_mode": args.flow_temperature_mode,
+        "front_sweep_measure": "level_set_gradient_pair_partition",
+        "front_closure_fraction": .05,
     }
     provenance = {"source_commit": source_commit}
     systems = bcc_four_family_systems()
@@ -169,7 +171,7 @@ def main():
         PhysicalTransferLaw(.55, .08, .02), .35*EV_J, 1e9,
         2.0, 1.5, .10, wall.burgers_m**3, wall.burgers_m,
         virtual_fraction=2e-4, maximum_fraction_per_step=.015,
-        closure_fraction=.02, maximum_backtracks=14)
+        closure_fraction=.05, maximum_backtracks=14)
     interfaces = tuple(MultiGrainInterface(name, a, b) for name, a, b in (
         ("arm-10-20", 10, 20), ("arm-10-30", 10, 30),
         ("arm-20-30", 20, 30)))

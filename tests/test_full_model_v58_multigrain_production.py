@@ -12,6 +12,7 @@ from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionRuntime, advance_multigrain_front,
     advance_energy_qualified_mechanics, advance_multigrain_mechanics,
+    _geometric_sweep_weight,
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 from tests.test_full_model_v58_complete_multigrain_energy import _state
@@ -166,3 +167,21 @@ def test_owner_heat_is_applied_once_to_common_eulerian_temperature():
     for owner_state in evolved.owners:
         np.testing.assert_allclose(
             owner_state.temperature_K, expected, rtol=0.0, atol=2e-13)
+
+
+def test_pair_sweep_uses_level_set_contour_measure():
+    n = 32; spacing = 2e-8
+    state = _state(n)
+    x = np.arange(n)[:, None]
+    donor = np.broadcast_to(.5+.45*np.cos(2*np.pi*x/n), (n, n)).copy()
+    supports = np.zeros_like(state.supports)
+    supports[0] = donor; supports[1] = 1.0-donor
+    state = type(state)(state.grain_ids, supports, state.owners)
+    weight = _geometric_sweep_weight(state, 0, 1, spacing)
+    # The implementation uses the authoritative periodic spectral gradient;
+    # compare its integral directly rather than a finite-difference surrogate.
+    from full_model.production.tensorial_nye import spectral_derivatives
+    sx, sy = spectral_derivatives(donor, spacing)
+    np.testing.assert_allclose(
+        np.sum(weight), spacing*np.sum(np.sqrt(sx*sx+sy*sy)), rtol=2e-14)
+    assert np.sum(weight) > 1.5*n

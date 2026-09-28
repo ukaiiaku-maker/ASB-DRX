@@ -18,7 +18,7 @@ from .common_tensorial_wall import (
     CommonWallDriving, accepted_euler_step, wall_residual,
 )
 from .nonlocal_elasticity import solve_periodic_eigenstrain
-from .tensorial_nye import rotated_system_fields
+from .tensorial_nye import rotated_system_fields, spectral_derivatives
 from .multigrain_common_state import (
     PhysicalTransferLaw, derive_physical_transfer_proposal,
     joint_material_transaction, reconstruct_multigrain_common,
@@ -377,11 +377,33 @@ def _contact_weight(state, donor_index, receiver_index):
     return np.minimum(donor, np.clip(neighbor, 0.0, 1.0))
 
 
+def _geometric_sweep_weight(state, donor_index, receiver_index, spacing_m):
+    """Return the dimensionless level-set measure for one directed pair.
+
+    ``fraction * weight`` integrates to the area swept by a contour moving
+    ``fraction`` grid spacings. Pair contact partitions a donor contour at
+    junctions without replacing its geometric ``|grad eta|`` measure.
+    """
+    donor = np.asarray(state.supports[donor_index], dtype=float)
+    gx, gy = spectral_derivatives(donor, float(spacing_m))
+    contour = float(spacing_m)*np.sqrt(gx*gx+gy*gy)
+    contacts = np.stack([
+        (_contact_weight(state, donor_index, other)
+         if other != donor_index else np.zeros_like(donor))
+        for other in range(len(state.owners))])
+    total_contact = np.sum(contacts, axis=0)
+    share = np.divide(
+        contacts[receiver_index], total_contact,
+        out=np.zeros_like(donor), where=total_contact > 1e-15)
+    return contour*share
+
+
 def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
                      spacing_m, represented_thickness_m, wall_parameters,
                      energy_kwargs, interval_s, systems):
     index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
-    weight = _contact_weight(state, index[donor_id], index[receiver_id])
+    weight = _geometric_sweep_weight(
+        state, index[donor_id], index[receiver_id], spacing_m)
     request = kinetics.virtual_fraction*weight
     swept_cells = float(np.sum(request, dtype=np.longdouble))
     cell_volume = float(spacing_m)**2*float(represented_thickness_m)
@@ -476,7 +498,11 @@ def advance_multigrain_front(
             continue
         fraction = min(abs(velocity)*dt/float(spacing_m),
                        kinetics.maximum_fraction_per_step)
-        request = fraction*weight
+        donor_index = index[donor]
+        receiver_index = index[receiver]
+        request = fraction*_geometric_sweep_weight(
+            state, donor_index, receiver_index, spacing_m)
+        request = np.minimum(request, state.supports[donor_index])
         pressure = max(-virtual[0]/virtual[1], 0.0)
         if pressure <= 0.0 or not np.any(request > 0.0):
             continue

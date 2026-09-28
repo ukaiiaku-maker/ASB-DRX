@@ -116,6 +116,15 @@ velocity determines the requested support transfer over the actual interval;
 joint capacity then limits all incident boundaries simultaneously. A finite
 event that misses the energy audit is halved and rebuilt atomically.
 
+The realized support increment uses the geometric level-set measure
+`delta eta = v delta_t |grad eta|`, partitioned among actual neighboring
+grains at junctions. Thus integrated swept volume and identified-contour
+motion share one velocity. The former contact-profile weight is retained only
+as a neighborhood discriminator; using it as the sweep measure under-advanced
+the contour relative to its physical clock. Finite events use the campaign's
+5% complete-energy tolerance, with rollback/backtracking rather than mobility
+retuning when the nonlinear endpoint exceeds it.
+
 The existing signed-wall residual advances dislocation/plastic owners. A
 single equilibrated stress tensor is solved from the reconstructed plastic
 distortion. Each owner's rotated BCC Schmid tensors resolve that same stress,
