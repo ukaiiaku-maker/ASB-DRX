@@ -205,15 +205,15 @@ def evaluate_joint_multigrain_transaction(
     cold_state = capacity.candidate
     cold_energy = evaluate_complete_multigrain_energy(cold_state, **common)
     cell_volume = (float(spacing_m)**2*float(represented_thickness_m))
-    line_sum = sum(value for name, value in
-                   capacity.line_export_m2_by_field.items()
-                   if name != "junction_m2")
-    junction_sum = capacity.line_export_m2_by_field.get("junction_m2", 0.0)
-    material_export = cell_volume*(
-        line_sum*wall_parameters.line_energy_J_m
-        +junction_sum*wall_parameters.junction_energy_J_m)
+    # Only the explicitly external channel leaves the represented system.
+    # Boundary storage and neutral annihilation remain internal and may not be
+    # counted again as material export merely because they leave bulk owners.
+    material_export = (cell_volume*wall_parameters.line_energy_J_m
+                       *capacity.physical_channel_cell_sums_m2.get(
+                           "external_sink", 0.0))
     generated_heat = dissipation.generated_heat_J
     thermostat = generated_heat if prescribed_temperature else 0.0
+    work = float(external_work_J)
     candidate = cold_state
     if generated_heat > 0.0 and not prescribed_temperature:
         represented_volume = before_state.supports.shape[1]*before_state.supports.shape[2]*cell_volume
@@ -223,9 +223,22 @@ def evaluate_joint_multigrain_transaction(
         candidate = replace(cold_state, owners=tuple(
             replace(owner, temperature_K=np.asarray(owner.temperature_K)
                     +delta_temperature) for owner in cold_state.owners))
+    accepted_extents = {
+        key: float(np.sum(value, dtype=np.longdouble))
+        for key, value in capacity.accepted_fraction_by_interface.items()}
+    total_extent = sum(accepted_extents.values())
+    if total_extent > 0.0:
+        interfaces = []
+        for interface in candidate.interfaces:
+            share = accepted_extents.get(interface.component_id, 0.0)/total_extent
+            interfaces.append(replace(
+                interface,
+                cumulative_work_J=(interface.cumulative_work_J+share*work),
+                cumulative_heat_J=(interface.cumulative_heat_J
+                                   +share*generated_heat)))
+        candidate = replace(candidate, interfaces=tuple(interfaces))
     candidate_energy = evaluate_complete_multigrain_energy(candidate, **common)
     delta_f = cold_energy.helmholtz_J-before_energy.helmholtz_J
-    work = float(external_work_J)
     available = delta_f-work+material_export
     scale = max(abs(before_energy.helmholtz_J), abs(cold_energy.helmholtz_J),
                 abs(work), abs(material_export), abs(generated_heat), 1e-300)
@@ -261,7 +274,7 @@ def evaluate_joint_multigrain_transaction(
     decision = CompleteMultiGrainDecision(
         accepted, classification, True, True,
         multigrain_state_digest(before_state),
-        multigrain_state_digest(capacity.candidate), config,
+        multigrain_state_digest(candidate), config,
         float(interval_s), before_energy, candidate_energy, delta_f, work,
         material_export, available, generated_heat, thermostat, first_law,
         dissipation_residual, tolerance)

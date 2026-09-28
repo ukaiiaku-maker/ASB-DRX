@@ -44,6 +44,10 @@ class MultiGrainLedger:
     maximum_support_closure: float = 0.0
     maximum_donor_overdraft: float = 0.0
     maximum_line_export_closure_m2: float = 0.0
+    fresh_sweep_fraction: float = 0.0
+    revisit_sweep_fraction: float = 0.0
+    annihilated_line_cell_sum_m2: float = 0.0
+    external_sink_line_cell_sum_m2: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -59,6 +63,42 @@ class InterfaceComponentState:
     exposure_s: float = 0.0
     cumulative_work_J: float = 0.0
     cumulative_heat_J: float = 0.0
+    cumulative_signed_sweep_fraction: float = 0.0
+    cumulative_absolute_sweep_fraction: float = 0.0
+    periodic_winding_x: int = 0
+    periodic_winding_y: int = 0
+
+
+@dataclass(frozen=True)
+class PhysicalTransferChannels:
+    """Per-unit-swept-support products of a declared transfer law."""
+
+    boundary_plus_m2: np.ndarray
+    boundary_minus_m2: np.ndarray
+    boundary_junction_m2: np.ndarray
+    annihilated_line_m2: np.ndarray
+    external_sink_line_m2: np.ndarray
+
+
+@dataclass(frozen=True)
+class PhysicalTransferLaw:
+    transmission_fraction: object
+    boundary_storage_fraction: float
+    neutral_sink_fraction: float
+    signed_sink_fraction: float = 0.0
+
+    def validate(self):
+        transmission = np.asarray(self.transmission_fraction, dtype=float)
+        if np.any(~np.isfinite(transmission)) or np.any(
+                (transmission < 0.0)|(transmission > 1.0)):
+            raise ValueError("transmission fraction must lie in [0,1]")
+        values = (self.boundary_storage_fraction,
+                  self.neutral_sink_fraction, self.signed_sink_fraction)
+        if any(not math.isfinite(float(value)) or not 0.0 <= float(value) <= 1.0
+               for value in values):
+            raise ValueError("transfer channel fractions must lie in [0,1]")
+        if self.boundary_storage_fraction+self.neutral_sink_fraction > 1.0:
+            raise ValueError("neutral boundary and sink fractions exceed unity")
 
 
 @dataclass(frozen=True)
@@ -110,6 +150,8 @@ class JointTransferProposal:
     # Explicit nonnegative line exported from the represented state per unit
     # transferred support.  Keys must cover every LINE_FIELDS member.
     line_export_m2: dict[str, np.ndarray]
+    physical_channels: PhysicalTransferChannels | None = None
+    physical_interval_s: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -121,6 +163,95 @@ class JointTransferResult:
     accepted_fraction_by_interface: dict[str, np.ndarray]
     capacity_scale_by_donor: dict[int, np.ndarray]
     line_export_m2_by_field: dict[str, float]
+    physical_channel_cell_sums_m2: dict[str, float]
+
+
+def _scaled_product_owner(donor, receiver, transmission):
+    """Derive the swept product without a caller-selected low-density state."""
+    scalar = np.mean(transmission, axis=2)
+    arrays = {}
+    for item in fields(CommonWallState):
+        value = np.asarray(getattr(donor, item.name), dtype=float)
+        if item.name in LINE_FIELDS or item.name in (
+                "slip", "beta_p", "alignment_m2", "family_nye_m1"):
+            if item.name in ("mobile_plus_m2", "mobile_minus_m2",
+                             "forest_plus_m2", "forest_minus_m2",
+                             "wall_plus_m2", "wall_minus_m2", "slip"):
+                factor = transmission
+            elif item.name in ("alignment_m2", "family_nye_m1"):
+                factor = transmission[(...,)+(None,)*(value.ndim-transmission.ndim)]
+            else:
+                factor = scalar[(...,)+(None,)*(value.ndim-scalar.ndim)]
+            arrays[item.name] = factor*value
+        elif item.name == "orientation_rad":
+            # Crystal identity belongs to the receiving grain, not to an
+            # arithmetic average or to the consumed donor support.
+            arrays[item.name] = np.asarray(receiver.orientation_rad).copy()
+        else:
+            arrays[item.name] = value.copy()
+    return CommonWallState(**arrays)
+
+
+def derive_physical_transfer_proposal(
+        state: MultiGrainCommonState, *, interface_id: str, donor_id: int,
+        receiver_id: int, requested_fraction, law: PhysicalTransferLaw,
+        interval_s: float):
+    """Build all product/export channels from the current physical owners."""
+    state.validate()
+    law.validate()
+    if not math.isfinite(float(interval_s)) or float(interval_s) <= 0.0:
+        raise ValueError("physical transfer requires a positive finite interval")
+    index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
+    if donor_id not in index or receiver_id not in index or donor_id == receiver_id:
+        raise ValueError("physical transfer requires distinct known grains")
+    donor = state.owners[index[donor_id]]
+    receiver = state.owners[index[receiver_id]]
+    shape = donor.mobile_plus_m2.shape
+    transmission = np.broadcast_to(
+        np.asarray(law.transmission_fraction, dtype=float), shape)
+    product = _scaled_product_owner(donor, receiver, transmission)
+    exports = {name: np.asarray(getattr(donor, name))
+               -np.asarray(getattr(product, name)) for name in LINE_FIELDS}
+    boundary_plus = np.zeros(shape[:2]+(3, shape[2]))
+    boundary_minus = np.zeros_like(boundary_plus)
+    annihilated = np.zeros(shape[:2])
+    sink = np.zeros(shape[:2])
+    for pair_index, names in enumerate((
+            ("mobile_plus_m2", "mobile_minus_m2"),
+            ("forest_plus_m2", "forest_minus_m2"),
+            ("wall_plus_m2", "wall_minus_m2"))):
+        plus = np.asarray(getattr(donor, names[0]))
+        minus = np.asarray(getattr(donor, names[1]))
+        blocked_plus = (1.0-transmission)*plus
+        blocked_minus = (1.0-transmission)*minus
+        neutral = np.minimum(blocked_plus, blocked_minus)
+        excess_plus = blocked_plus-neutral
+        excess_minus = blocked_minus-neutral
+        boundary_plus[..., pair_index, :] = (
+            excess_plus*(1.0-law.signed_sink_fraction)
+            +law.boundary_storage_fraction*neutral)
+        boundary_minus[..., pair_index, :] = (
+            excess_minus*(1.0-law.signed_sink_fraction)
+            +law.boundary_storage_fraction*neutral)
+        annihilated += np.sum(
+            2.0*(1.0-law.boundary_storage_fraction
+                 -law.neutral_sink_fraction)*neutral, axis=2)
+        sink += np.sum(
+            2.0*law.neutral_sink_fraction*neutral
+            +law.signed_sink_fraction*(excess_plus+excess_minus), axis=2)
+    tf = np.mean(transmission, axis=2)
+    blocked_junction = (1.0-tf[..., None])*donor.junction_m2
+    boundary_junction = law.boundary_storage_fraction*blocked_junction
+    annihilated += np.sum(
+        (1.0-law.boundary_storage_fraction-law.neutral_sink_fraction)
+        *blocked_junction, axis=2)
+    sink += np.sum(law.neutral_sink_fraction*blocked_junction, axis=2)
+    channels = PhysicalTransferChannels(
+        boundary_plus, boundary_minus, boundary_junction, annihilated, sink)
+    return JointTransferProposal(
+        str(interface_id), int(donor_id), int(receiver_id),
+        np.asarray(requested_fraction, dtype=float), product, exports, channels,
+        float(interval_s))
 
 
 @dataclass(frozen=True)
@@ -267,6 +398,26 @@ def _proposal_arrays(state, proposals):
             if exported.shape != shape or np.any(~np.isfinite(exported)) or np.any(
                     exported < 0.0):
                 raise ValueError(f"invalid explicit {name} export")
+        if proposal.physical_channels is not None:
+            channels = proposal.physical_channels
+            expected = grid+(3, np.asarray(
+                proposal.product_owner.mobile_plus_m2).shape[2])
+            if (np.asarray(channels.boundary_plus_m2).shape != expected
+                    or np.asarray(channels.boundary_minus_m2).shape != expected):
+                raise ValueError("physical boundary reservoirs are not grid matched")
+            if np.asarray(channels.boundary_junction_m2).shape != np.asarray(
+                    proposal.product_owner.junction_m2).shape:
+                raise ValueError("physical boundary junction is not grid matched")
+            for value in (channels.boundary_plus_m2,
+                          channels.boundary_minus_m2,
+                          channels.boundary_junction_m2,
+                          channels.annihilated_line_m2,
+                          channels.external_sink_line_m2):
+                if np.any(~np.isfinite(value)) or np.any(np.asarray(value) < 0.0):
+                    raise ValueError("physical transfer channels must be finite and nonnegative")
+            if not math.isfinite(float(proposal.physical_interval_s)) or float(
+                    proposal.physical_interval_s) <= 0.0:
+                raise ValueError("physical channel proposal lacks a valid interval")
         prepared.append((proposal, requested, index[proposal.donor_id],
                          index[proposal.receiver_id]))
     return prepared
@@ -284,7 +435,7 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
     prepared = _proposal_arrays(state, tuple(proposals))
     if not prepared:
         return JointTransferResult(
-            False, False, "NO_PROPOSALS", state, {}, {}, {})
+            False, False, "NO_PROPOSALS", state, {}, {}, {}, {})
     outgoing = np.zeros_like(state.supports)
     for _, requested, donor, _ in prepared:
         outgoing[donor] += requested
@@ -310,6 +461,9 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
                     for index, owner in enumerate(state.owners)]
     line_export_totals = {name: 0.0 for name in LINE_FIELDS}
     maximum_line_closure = 0.0
+    interfaces = {item.component_id: item for item in state.interfaces}
+    interface_order = [item.component_id for item in state.interfaces]
+    fresh_total = revisit_total = annihilated_total = sink_total = 0.0
     for proposal, _, donor, receiver in prepared:
         extent = accepted[proposal.interface_id]
         for item in fields(CommonWallState):
@@ -331,6 +485,64 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
                 line_export_totals[item.name] += float(np.sum(exported))
             owner_values[donor][item.name] -= moved_out
             owner_values[receiver][item.name] += moved_in
+        channels = proposal.physical_channels
+        if channels is not None:
+            component = interfaces.get(proposal.interface_id)
+            if component is None:
+                grid = extent.shape
+                component = InterfaceComponentState(
+                    proposal.interface_id, proposal.donor_id,
+                    proposal.receiver_id, np.zeros(grid), np.zeros(grid),
+                    np.zeros_like(channels.boundary_plus_m2),
+                    np.zeros_like(channels.boundary_minus_m2),
+                    np.zeros_like(channels.boundary_junction_m2))
+                interface_order.append(proposal.interface_id)
+            if {component.grain_a_id, component.grain_b_id} != {
+                    proposal.donor_id, proposal.receiver_id}:
+                raise ValueError("interface identity was reused for another grain pair")
+            sign = (1.0 if (proposal.donor_id == component.grain_a_id
+                            and proposal.receiver_id == component.grain_b_id)
+                    else -1.0)
+            prior_sign = np.sign(component.cumulative_signed_sweep_fraction)
+            if prior_sign != 0.0 and sign != prior_sign:
+                # Retreat first traverses material swept by the previous
+                # direction; only any excess enters previously unseen support.
+                revisit = np.minimum(extent, component.first_passage_fraction)
+                fresh = extent-revisit
+            else:
+                fresh = np.minimum(
+                    extent, np.maximum(
+                        1.0-component.first_passage_fraction, 0.0))
+                revisit = extent-fresh
+            multiplier = extent[(...,)+(None,)*(channels.boundary_plus_m2.ndim
+                                                   -extent.ndim)]
+            junction_multiplier = extent[(...,)+(None,)*(
+                channels.boundary_junction_m2.ndim-extent.ndim)]
+            component = replace(
+                component,
+                first_passage_fraction=component.first_passage_fraction+fresh,
+                revisit_fraction=component.revisit_fraction+revisit,
+                boundary_plus_m2=(component.boundary_plus_m2
+                                  +multiplier*channels.boundary_plus_m2),
+                boundary_minus_m2=(component.boundary_minus_m2
+                                   +multiplier*channels.boundary_minus_m2),
+                boundary_junction_m2=(component.boundary_junction_m2
+                                      +junction_multiplier
+                                      *channels.boundary_junction_m2),
+                exposure_s=component.exposure_s+proposal.physical_interval_s,
+                cumulative_signed_sweep_fraction=(
+                    component.cumulative_signed_sweep_fraction
+                    +sign*float(np.sum(extent, dtype=np.longdouble))),
+                cumulative_absolute_sweep_fraction=(
+                    component.cumulative_absolute_sweep_fraction
+                    +float(np.sum(extent, dtype=np.longdouble))))
+            interfaces[proposal.interface_id] = component
+            fresh_total += float(np.sum(fresh, dtype=np.longdouble))
+            revisit_total += float(np.sum(revisit, dtype=np.longdouble))
+            annihilated_total += float(np.sum(
+                extent*channels.annihilated_line_m2, dtype=np.longdouble))
+            sink_total += float(np.sum(
+                extent*channels.external_sink_line_m2, dtype=np.longdouble))
 
     next_owners = []
     for grain, old_owner in enumerate(state.owners):
@@ -365,15 +577,23 @@ def joint_material_transaction(state: MultiGrainCommonState, proposals):
                                     overdraft),
         maximum_line_export_closure_m2=max(
             state.ledger.maximum_line_export_closure_m2,
-            maximum_line_closure))
+            maximum_line_closure),
+        fresh_sweep_fraction=state.ledger.fresh_sweep_fraction+fresh_total,
+        revisit_sweep_fraction=state.ledger.revisit_sweep_fraction+revisit_total,
+        annihilated_line_cell_sum_m2=(
+            state.ledger.annihilated_line_cell_sum_m2+annihilated_total),
+        external_sink_line_cell_sum_m2=(
+            state.ledger.external_sink_line_cell_sum_m2+sink_total))
     candidate = MultiGrainCommonState(
-        state.grain_ids, next_support, tuple(next_owners), state.interfaces,
+        state.grain_ids, next_support, tuple(next_owners),
+        tuple(interfaces[key] for key in interface_order),
         ledger, state.schema)
     candidate.validate()
     return JointTransferResult(
         False, True, "CAPACITY_FEASIBLE_UNPRICED_CANDIDATE", candidate, accepted,
         {grain_id: scales[index] for index, grain_id in enumerate(state.grain_ids)
-         if np.any(outgoing[index] > 0.0)}, line_export_totals)
+         if np.any(outgoing[index] > 0.0)}, line_export_totals,
+        {"annihilated": annihilated_total, "external_sink": sink_total})
 
 
 def publish_energy_accepted_candidate(result, energy_decision):
@@ -445,6 +665,12 @@ def multigrain_checkpoint_metadata(state):
             "exposure_s": item.exposure_s,
             "cumulative_work_J": item.cumulative_work_J,
             "cumulative_heat_J": item.cumulative_heat_J,
+            "cumulative_signed_sweep_fraction": (
+                item.cumulative_signed_sweep_fraction),
+            "cumulative_absolute_sweep_fraction": (
+                item.cumulative_absolute_sweep_fraction),
+            "periodic_winding_x": item.periodic_winding_x,
+            "periodic_winding_y": item.periodic_winding_y,
         } for item in state.interfaces],
     }
     return json.dumps(metadata, sort_keys=True, separators=(",", ":"))
@@ -479,7 +705,13 @@ def multigrain_from_checkpoint(metadata_json, arrays):
                 f"interface__{index}__boundary_junction_m2"]).copy(),
             exposure_s=float(item["exposure_s"]),
             cumulative_work_J=float(item["cumulative_work_J"]),
-            cumulative_heat_J=float(item["cumulative_heat_J"])))
+            cumulative_heat_J=float(item["cumulative_heat_J"]),
+            cumulative_signed_sweep_fraction=float(item.get(
+                "cumulative_signed_sweep_fraction", 0.0)),
+            cumulative_absolute_sweep_fraction=float(item.get(
+                "cumulative_absolute_sweep_fraction", 0.0)),
+            periodic_winding_x=int(item.get("periodic_winding_x", 0)),
+            periodic_winding_y=int(item.get("periodic_winding_y", 0))))
     state = MultiGrainCommonState(
         tuple(int(value) for value in metadata["grain_ids"]), supports,
         tuple(owners), tuple(interfaces),

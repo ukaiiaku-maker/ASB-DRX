@@ -9,7 +9,8 @@ from full_model.production.complete_multigrain_energy import (
     evaluate_joint_multigrain_transaction,
 )
 from full_model.production.multigrain_common_state import (
-    JointTransferProposal, MultiGrainCommonState, audit_multigrain_nye,
+    JointTransferProposal, MultiGrainCommonState, PhysicalTransferLaw,
+    audit_multigrain_nye, derive_physical_transfer_proposal,
     joint_material_transaction, multigrain_state_digest,
     publish_energy_accepted_candidate,
 )
@@ -127,3 +128,62 @@ def test_complete_energy_counts_multiphase_interface_once():
     assert energy.phase_gradient_J > 0.0
     assert energy.phase_local_J == 0.0
     assert energy.numerical_constraint_J == 0.0
+
+
+def test_physical_transfer_derives_product_channels_and_recurrent_history():
+    state = _state(8)
+    request = np.zeros((8, 8)); request[3:5, :] = .2
+    law = PhysicalTransferLaw(
+        transmission_fraction=.5, boundary_storage_fraction=.1,
+        neutral_sink_fraction=.05)
+    forward = derive_physical_transfer_proposal(
+        state, interface_id="junction-arm-a", donor_id=10, receiver_id=20,
+        requested_fraction=request, law=law, interval_s=2e-9)
+    # The caller cannot select an artificially clean product: it is derived
+    # from the donor and declared transfer law, while orientation remains the
+    # persistent receiving-grain identity.
+    np.testing.assert_allclose(
+        forward.product_owner.mobile_plus_m2,
+        .5*state.owners[0].mobile_plus_m2)
+    np.testing.assert_array_equal(
+        forward.product_owner.orientation_rad,
+        state.owners[1].orientation_rad)
+    first = joint_material_transaction(state, (forward,))
+    interface = first.candidate.interfaces[0]
+    assert interface.exposure_s == 2e-9
+    assert np.sum(interface.first_passage_fraction) > 0.0
+    assert np.sum(interface.revisit_fraction) == 0.0
+    assert np.sum(interface.boundary_plus_m2) > 0.0
+    exported = sum(first.line_export_m2_by_field.values())
+    stored = float(np.sum(interface.boundary_plus_m2+interface.boundary_minus_m2)
+                   +np.sum(interface.boundary_junction_m2))
+    channels = first.physical_channel_cell_sums_m2
+    np.testing.assert_allclose(
+        exported, stored+channels["annihilated"]+channels["external_sink"],
+        rtol=2e-15)
+
+    reverse = derive_physical_transfer_proposal(
+        first.candidate, interface_id="junction-arm-a", donor_id=20,
+        receiver_id=10, requested_fraction=request, law=law,
+        interval_s=3e-9)
+    second = joint_material_transaction(first.candidate, (reverse,))
+    recurrent = second.candidate.interfaces[0]
+    assert recurrent.exposure_s == 5e-9
+    assert np.sum(recurrent.revisit_fraction) > 0.0
+    assert recurrent.cumulative_absolute_sweep_fraction > abs(
+        recurrent.cumulative_signed_sweep_fraction)
+
+
+def test_two_physical_incident_edges_share_capacity_and_keep_histories():
+    state = _state(8)
+    request = np.zeros((8, 8)); request[:4] = .8
+    law = PhysicalTransferLaw(.7, .1, .05)
+    proposals = tuple(derive_physical_transfer_proposal(
+        state, interface_id=name, donor_id=10, receiver_id=receiver,
+        requested_fraction=request, law=law, interval_s=1e-9)
+        for name, receiver in (("10-20", 20), ("10-30", 30)))
+    result = joint_material_transaction(state, proposals)
+    np.testing.assert_allclose(np.sum(result.candidate.supports, axis=0), 1.0)
+    assert len(result.candidate.interfaces) == 2
+    assert result.candidate.ledger.capacity_limited_material_fraction > 0.0
+    assert result.candidate.ledger.maximum_line_export_closure_m2 < 1e-13
