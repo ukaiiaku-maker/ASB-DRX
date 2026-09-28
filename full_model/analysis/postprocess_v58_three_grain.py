@@ -97,6 +97,12 @@ def main():
     gnd = np.linalg.norm(audit.exact_reconstructed_m1, axis=(-2, -1))
     owner_mismatch = np.linalg.norm(
         audit.owner_reservoir_mismatch_m1, axis=(-2, -1))
+    owner_mismatch_norm = float(np.linalg.norm(
+        audit.owner_reservoir_mismatch_m1))
+    owner_nye_scale = max(
+        float(np.linalg.norm(audit.owner_curl_weighted_m1)),
+        float(np.linalg.norm(audit.owner_reservoir_weighted_m1)), 1e-300)
+    relative_owner_nye_mismatch = owner_mismatch_norm/owner_nye_scale
     systems = bcc_four_family_systems()
     flow_mode = ((checkpoint_configuration or {}).get(
         "flow_temperature_mode", "physical"))
@@ -164,6 +170,17 @@ def main():
     persistent_candidate = bool(
         maximum_consecutive >= 3 and thermal_threshold_met
         and post_peak_softening)
+    trajectory_minimum_heat = min(
+        item.get("localization", {}).get(
+            "irreversible_heat_rate", {}).get("signed_min_W_m3", 0.0)
+        for item in history)
+    trajectory_maximum_heat = max(
+        item.get("localization", {}).get(
+            "irreversible_heat_rate", {}).get("positive_max_W_m3", 0.0)
+        for item in history)
+    local_dissipation_nonnegative = bool(
+        trajectory_minimum_heat >= -1e-12*max(trajectory_maximum_heat, 1.0))
+    owner_nye_consistent = bool(relative_owner_nye_mismatch <= .05)
     classification = {
         "schema": "asb-drx-v58-three-grain-classification-v1",
         "trajectory_complete": complete,
@@ -184,6 +201,8 @@ def main():
         "thermal_localization_ratio": thermal_localization_ratio,
         "maximum_gnd_m1": float(np.max(gnd)),
         "maximum_owner_nye_mismatch_m1": float(np.max(owner_mismatch)),
+        "relative_owner_nye_mismatch": relative_owner_nye_mismatch,
+        "owner_nye_consistent": owner_nye_consistent,
         "instantaneous_plastic_power": spatial_localization_metrics(
             dissipation["plastic_power_W_m3"]),
         "instantaneous_irreversible_heat_rate": spatial_localization_metrics(
@@ -194,6 +213,9 @@ def main():
         "asb_temperature_contrast_threshold_met": thermal_threshold_met,
         "post_peak_softening_observed": post_peak_softening,
         "persistent_asb_trajectory_candidate": persistent_candidate,
+        "trajectory_minimum_irreversible_heat_rate_W_m3": (
+            trajectory_minimum_heat),
+        "local_dissipation_nonnegative": local_dissipation_nonnegative,
         "maximum_energy_closure_relative": (
             runtime.ledger.maximum_relative_energy_closure),
         "energy_qualified_multigrain_production": bool(
@@ -208,6 +230,9 @@ def main():
                 ("completed physical horizon", not complete),
                 ("matched frozen-flow/front controls", True),
                 ("selected spatial/time refinement", True),
+                ("nonnegative local physical dissipation",
+                 not local_dissipation_nonnegative),
+                ("owner Nye consistency", not owner_nye_consistent),
             ) if missing],
         "spontaneous_grain_birth": False,
         "claim_limit": (
