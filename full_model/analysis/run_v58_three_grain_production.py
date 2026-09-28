@@ -35,7 +35,9 @@ from full_model.production.tensorial_nye import bcc_four_family_systems
 
 def _owner(n, density, orientation, temperature):
     grid = (n, n); family = grid+(4,)
-    value = np.full(family, density)
+    # The argument is total line density. Reservoir/family weights below sum
+    # to unity, matching the retained V55 physical density scale.
+    value = np.full(family, density/(4.0*(2*.08+2*.18+2*.12)))
     return CommonWallState(
         .08*value, .08*value, .18*value, .18*value,
         .12*value, .12*value, np.zeros(grid+(0,)),
@@ -50,7 +52,9 @@ def _periodic_distance(coordinate, center, n):
     return np.minimum(delta, n-delta)
 
 
-def initialize_state(n, temperature, equal_density=False):
+def initialize_state(n, temperature, equal_density=False, *,
+                     spacing_m=1.5625e-7,
+                     interface_width_m=3.125e-7):
     x, y = np.meshgrid(np.arange(n), np.arange(n), indexing="ij")
     centers = ((.22*n, .50*n), (.72*n, .27*n), (.72*n, .73*n))
     distance = np.stack([
@@ -58,13 +62,13 @@ def initialize_state(n, temperature, equal_density=False):
         for cx, cy in centers])
     # Smooth Voronoi ownership produces resolved pure cores, three distinct
     # orientations, and two incident arms meeting at a real triple junction.
-    width_cells = 2.0
+    width_cells = float(interface_width_m)/float(spacing_m)
     logits = -distance/(2.0*width_cells**2)
     logits -= np.max(logits, axis=0, keepdims=True)
     supports = np.exp(logits)
     supports /= np.sum(supports, axis=0, keepdims=True)
-    densities = ((2.2e14, 2.2e14, 2.2e14) if equal_density
-                 else (2.2e14, 5.0e13, 1.8e14))
+    densities = ((4.0e17, 4.0e17, 4.0e17) if equal_density
+                 else (4.0e17, 1.0e17, 3.0e17))
     owners = tuple(_owner(n, rho, angle, temperature) for rho, angle in zip(
         densities, (0.0, np.deg2rad(18.0), np.deg2rad(-14.0))))
     state = MultiGrainCommonState((10, 20, 30), supports, owners)
@@ -110,17 +114,25 @@ def main():
     parser.add_argument("--case", choices=("baseline", "equal_density", "no_front"),
                         default="baseline")
     parser.add_argument("--checkpoint-every", type=int, default=20)
+    parser.add_argument("--length", type=float, default=5e-6)
+    parser.add_argument("--interface-width", type=float, default=3.125e-7)
+    parser.add_argument("--front-attempt-frequency", type=float, default=1e8)
+    parser.add_argument("--thermal-diffusivity", type=float,
+                        default=0.15/3.8e6)
     parser.add_argument("--resume")
     args = parser.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
-    spacing = 2e-8; thickness = 5e-10
+    spacing = args.length/args.n; thickness = 2.0*2.48e-10
     systems = bcc_four_family_systems()
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
-        thermal_diffusivity_m2_s=1e-7, bath_rate_s=0.0)
+        volumetric_heat_capacity_J_m3_K=3.8e6,
+        thermal_diffusivity_m2_s=args.thermal_diffusivity, bath_rate_s=0.0)
     kinetics = MultiGrainFrontKinetics(
-        ActivatedProcess("V58 multi-grain HAGB", 1e8, 0.0, 1e8),
+        ActivatedProcess(
+            "V58 multi-grain HAGB", args.front_attempt_frequency, 0.0,
+            args.front_attempt_frequency),
         PhysicalTransferLaw(.55, .08, .02), .35*EV_J, 1e9,
         2.0, 1.5, .10, wall.burgers_m**3, wall.burgers_m,
         virtual_fraction=2e-4, maximum_fraction_per_step=.015,
@@ -132,7 +144,8 @@ def main():
         state, runtime, start, gamma, initial_volume = _load_checkpoint(args.resume)
     else:
         state = initialize_state(
-            args.n, args.temperature, args.case == "equal_density")
+            args.n, args.temperature, args.case == "equal_density",
+            spacing_m=spacing, interface_width_m=args.interface_width)
         runtime = MultiGrainProductionRuntime(interfaces)
         start = 0; gamma = .012
         initial_volume = np.sum(
@@ -142,8 +155,8 @@ def main():
                if args.resume and history_path.exists() else [])
     energy_options = dict(
         mean_strain=np.array([[0.0, .5*gamma], [.5*gamma, 0.0]]),
-        topologies=(), systems=systems, phase_barrier_J_m3=8e7,
-        phase_gradient_J_m=3.2e-8,
+        topologies=(), systems=systems, phase_barrier_J_m3=5e6,
+        phase_gradient_J_m=5e-7,
         boundary_line_energy_J_m=wall.line_energy_J_m,
         boundary_junction_energy_J_m=wall.junction_energy_J_m,
         reference_temperature_K=args.temperature)
@@ -231,6 +244,11 @@ def main():
         "case": args.case, "n": args.n, "steps": args.steps,
         "dt_s": args.dt, "temperature_K": args.temperature,
         "shear_rate_s": args.shear_rate,
+        "length_m": args.length, "spacing_m": spacing,
+        "represented_thickness_m": thickness,
+        "interface_width_m": args.interface_width,
+        "front_attempt_frequency_s": args.front_attempt_frequency,
+        "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "source_commit": subprocess.check_output(
             ("git", "rev-parse", "HEAD"), text=True).strip(),
         "initial_grain_volume_m3": initial_volume.tolist(),

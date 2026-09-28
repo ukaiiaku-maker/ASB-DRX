@@ -39,10 +39,12 @@ def main():
     run_result = json.loads((root/"result.json").read_text())
     checkpoint = Path(run_result["checkpoint"])
     state, runtime, step, gamma, initial_volume = _load_checkpoint(checkpoint)
-    spacing = 2e-8; thickness = 5e-10
+    spacing = float(run_result["spacing_m"])
+    thickness = float(run_result["represented_thickness_m"])
     initial = initialize_state(
         run_result["n"], run_result["temperature_K"],
-        run_result["case"] == "equal_density")
+        run_result["case"] == "equal_density", spacing_m=spacing,
+        interface_width_m=run_result["interface_width_m"])
     cell_volume = spacing**2*thickness
     final_volume = np.sum(state.supports, axis=(1, 2))*cell_volume
     support_delta = state.supports-initial.supports
