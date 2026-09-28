@@ -18,6 +18,7 @@ from full_model.production.common_tensorial_wall import (
 )
 from full_model.production.complete_multigrain_energy import (
     evaluate_complete_multigrain_energy,
+    evaluate_multigrain_mechanical_interval,
 )
 from full_model.production.multigrain_common_state import (
     MultiGrainCommonState, PhysicalTransferLaw, audit_multigrain_nye,
@@ -147,20 +148,24 @@ def main():
         boundary_junction_energy_J_m=wall.junction_energy_J_m,
         reference_temperature_K=args.temperature)
     for step in range(start, args.steps):
+        gamma_before = gamma
         gamma += args.shear_rate*args.dt
-        mean_slip = float(np.mean(sum(
-            state.supports[index][..., None]*owner.slip
-            for index, owner in enumerate(state.owners))))
-        shear_stress = np.clip(
-            wall.c44_Pa*(gamma-mean_slip), -2.5e9, 2.5e9)
-        resolved = np.empty((args.n, args.n, 4))
-        resolved[:] = shear_stress*np.asarray((1.0, .82, .71, .63))
+        strain_before = np.array(
+            [[0.0, .5*gamma_before], [.5*gamma_before, 0.0]])
+        strain_after = np.array([[0.0, .5*gamma], [.5*gamma, 0.0]])
+        strain_midpoint = .5*(strain_before+strain_after)
+        mechanical_before = state
         state, mechanical = advance_multigrain_mechanics(
-            state, driving=CommonWallDriving(resolved_stress_Pa=resolved),
+            state, driving=CommonWallDriving(mean_strain=strain_midpoint),
             systems=systems, topologies=(), wall_parameters=wall,
             dt_s=args.dt, represented_thickness_m=thickness)
-        energy_options["mean_strain"] = np.array(
-            [[0.0, .5*gamma], [.5*gamma, 0.0]])
+        mechanical_energy = evaluate_multigrain_mechanical_interval(
+            mechanical_before, state, mean_strain_before=strain_before,
+            mean_strain_candidate=strain_after, spacing_m=spacing,
+            represented_thickness_m=thickness, wall_parameters=wall,
+            energy_kwargs=energy_options)
+        shear_stress = float(mechanical_energy.mean_stress_candidate_Pa[0, 1])
+        energy_options["mean_strain"] = strain_after
         if args.case == "no_front":
             front = None
             runtime = MultiGrainProductionRuntime(
@@ -197,6 +202,15 @@ def main():
                 "owner_nye_mismatch_norm_m1": float(np.linalg.norm(
                     audit.owner_reservoir_mismatch_m1)),
                 "mechanical": asdict(mechanical),
+                "mechanical_energy": {
+                    "external_work_J": mechanical_energy.external_work_J,
+                    "internal_energy_change_J": (
+                        mechanical_energy.internal_energy_change_J),
+                    "first_law_residual_J": (
+                        mechanical_energy.first_law_residual_J),
+                    "relative_first_law_residual": (
+                        mechanical_energy.relative_first_law_residual),
+                },
                 "front": None if front is None else {
                     "accepted": front.accepted,
                     "classification": front.classification,

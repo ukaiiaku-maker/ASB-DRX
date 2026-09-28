@@ -85,6 +85,65 @@ class CompleteMultiGrainTransaction:
     decision: CompleteMultiGrainDecision
 
 
+@dataclass(frozen=True)
+class MultiGrainMechanicalEnergyBalance:
+    before: CompleteFrontEnergy
+    candidate: CompleteFrontEnergy
+    external_work_J: float
+    internal_energy_change_J: float
+    first_law_residual_J: float
+    relative_first_law_residual: float
+    mean_stress_before_Pa: np.ndarray
+    mean_stress_candidate_Pa: np.ndarray
+
+
+def _mean_mechanical_stress(state, spacing_m, wall_parameters, mean_strain):
+    mixture, _ = reconstruct_multigrain_common(state, spacing_m)
+    beta = np.asarray(mixture.beta_p)
+    eigenstrain = .5*(beta[..., :2, :2]
+                      +np.swapaxes(beta[..., :2, :2], -1, -2))
+    stress, _ = solve_periodic_eigenstrain(
+        eigenstrain, np.asarray(mean_strain, dtype=float), float(spacing_m),
+        wall_parameters.c11_Pa, wall_parameters.c12_Pa,
+        wall_parameters.c44_Pa, iterations=wall_parameters.elastic_iterations)
+    return np.mean(stress, axis=(0, 1))
+
+
+def evaluate_multigrain_mechanical_interval(
+        before_state, candidate_state, *, mean_strain_before,
+        mean_strain_candidate, spacing_m, represented_thickness_m,
+        wall_parameters, energy_kwargs=None):
+    """Independently audit strain-controlled work across one owner step."""
+    options = {} if energy_kwargs is None else dict(energy_kwargs)
+    options.pop("mean_strain", None)
+    common = dict(
+        spacing_m=spacing_m,
+        represented_thickness_m=represented_thickness_m,
+        wall_parameters=wall_parameters, **options)
+    before = evaluate_complete_multigrain_energy(
+        before_state, mean_strain=mean_strain_before, **common)
+    candidate = evaluate_complete_multigrain_energy(
+        candidate_state, mean_strain=mean_strain_candidate, **common)
+    stress_before = _mean_mechanical_stress(
+        before_state, spacing_m, wall_parameters, mean_strain_before)
+    stress_candidate = _mean_mechanical_stress(
+        candidate_state, spacing_m, wall_parameters, mean_strain_candidate)
+    delta_strain = (np.asarray(mean_strain_candidate, dtype=float)
+                    -np.asarray(mean_strain_before, dtype=float))
+    represented_volume = (before_state.supports.shape[1]
+                          *before_state.supports.shape[2]
+                          *float(spacing_m)**2
+                          *float(represented_thickness_m))
+    work = float(np.sum(.5*(stress_before+stress_candidate)*delta_strain)
+                 *represented_volume)
+    delta_internal = candidate.internal_J-before.internal_J
+    residual = delta_internal-work
+    scale = max(abs(delta_internal), abs(work), 1e-300)
+    return MultiGrainMechanicalEnergyBalance(
+        before, candidate, work, delta_internal, residual,
+        abs(residual)/scale, stress_before, stress_candidate)
+
+
 def _config_digest(values):
     def convert(value):
         if hasattr(value, "__dataclass_fields__"):

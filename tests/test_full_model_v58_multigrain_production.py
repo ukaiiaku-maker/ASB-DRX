@@ -5,6 +5,9 @@ from full_model.production.common_tensorial_wall import (
     CommonWallDriving, CommonWallParameters,
 )
 from full_model.production.multigrain_common_state import PhysicalTransferLaw
+from full_model.production.complete_multigrain_energy import (
+    evaluate_multigrain_mechanical_interval,
+)
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionRuntime, advance_multigrain_front,
@@ -72,3 +75,18 @@ def test_mechanical_step_evolves_supported_owner_and_preserves_dormant_history()
     for owner_state in evolved.owners[1:]:
         np.testing.assert_array_equal(
             owner_state.temperature_K, evolved.owners[0].temperature_K)
+
+
+def test_mechanical_identity_interval_has_exact_common_energy_closure():
+    state = _state(8)
+    spacing = 2e-8
+    parameters = CommonWallParameters(spacing_m=spacing, elastic_iterations=1)
+    strain = np.array([[0.0, .004], [.004, 0.0]])
+    balance = evaluate_multigrain_mechanical_interval(
+        state, state, mean_strain_before=strain,
+        mean_strain_candidate=strain, spacing_m=spacing,
+        represented_thickness_m=5e-10, wall_parameters=parameters,
+        energy_kwargs=dict(reference_temperature_K=900.0))
+    assert balance.external_work_J == 0.0
+    assert balance.internal_energy_change_J == 0.0
+    assert balance.first_law_residual_J == 0.0
