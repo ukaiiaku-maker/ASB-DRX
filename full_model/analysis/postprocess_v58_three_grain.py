@@ -44,9 +44,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("run")
     parser.add_argument("--source-commit")
+    parser.add_argument("--parent-run")
     args = parser.parse_args()
     root = Path(args.run)
     history = json.loads((root/"history.json").read_text())
+    if args.parent_run:
+        parent = json.loads((Path(args.parent_run)/"history.json").read_text())
+        first_step = int(history[0]["step"]) if history else 10**30
+        history = [item for item in parent if int(item["step"]) < first_step]+history
     complete = (root/"result.json").exists()
     if complete:
         run_result = json.loads((root/"result.json").read_text())
@@ -134,12 +139,31 @@ def main():
     thermal_localization_ratio = float(
         (np.max(temperature)-np.min(temperature))
         /max(np.mean(temperature)-run_result["temperature_K"], 1e-12))
-    strict_asb = (bool(
-        run_result["final"]["temperature_contrast_K"] >= 100.0
-        and thermal_localization_ratio >= 2.0
-        and run_result["final"]["shear_stress_Pa"]
-        < max(item["shear_stress_Pa"] for item in history))
-        if complete else False)
+    peak_stress = max(item["shear_stress_Pa"] for item in history)
+    consecutive = maximum_consecutive = 0
+    candidate_steps = []
+    for item in history:
+        spatial = item.get("localization", {})
+        plastic = spatial.get("plastic_power", {})
+        heat = spatial.get("irreversible_heat_rate", {})
+        candidate = bool(
+            plastic.get("band_like", False)
+            and heat.get("band_like", False)
+            and plastic.get("maximum_to_mean", 0.0) >= 5.0
+            and item["mechanical_energy"]["relative_first_law_residual"] <= .05)
+        if candidate:
+            consecutive += 1; candidate_steps.append(int(item["step"]))
+            maximum_consecutive = max(maximum_consecutive, consecutive)
+        else:
+            consecutive = 0
+    thermal_threshold_met = any(
+        item["temperature_contrast_K"] >= 100.0 for item in history)
+    post_peak_softening = any(
+        item["shear_stress_Pa"] < peak_stress for item in history
+        if int(item["step"]) >= candidate_steps[0]) if candidate_steps else False
+    persistent_candidate = bool(
+        maximum_consecutive >= 3 and thermal_threshold_met
+        and post_peak_softening)
     classification = {
         "schema": "asb-drx-v58-three-grain-classification-v1",
         "trajectory_complete": complete,
@@ -164,6 +188,12 @@ def main():
             dissipation["plastic_power_W_m3"]),
         "instantaneous_irreversible_heat_rate": spatial_localization_metrics(
             dissipation["irreversible_heat_rate_W_m3"]),
+        "peak_shear_stress_Pa": peak_stress,
+        "asb_candidate_steps": candidate_steps,
+        "maximum_consecutive_asb_candidate_steps": maximum_consecutive,
+        "asb_temperature_contrast_threshold_met": thermal_threshold_met,
+        "post_peak_softening_observed": post_peak_softening,
+        "persistent_asb_trajectory_candidate": persistent_candidate,
         "maximum_energy_closure_relative": (
             runtime.ledger.maximum_relative_energy_closure),
         "energy_qualified_multigrain_production": bool(
@@ -171,7 +201,14 @@ def main():
             and runtime.ledger.rejected_events == 0
             and runtime.ledger.maximum_relative_energy_closure <= .05),
         "substantial_existing_boundary_drx": substantial_drx,
-        "strict_asb": strict_asb,
+        "strict_asb": False,
+        "strict_asb_missing_requirements": [
+            item for item, missing in (
+                ("three-step persistence", not persistent_candidate),
+                ("completed physical horizon", not complete),
+                ("matched frozen-flow/front controls", True),
+                ("selected spatial/time refinement", True),
+            ) if missing],
         "spontaneous_grain_birth": False,
         "claim_limit": (
             "Prepared three-grain existing-boundary trajectory; no spontaneous "
