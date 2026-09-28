@@ -253,6 +253,47 @@ def main():
     figure.savefig(root/("final_dissipation.png" if complete
                          else "latest_dissipation.png"), dpi=180)
     plt.close(figure)
+
+    strain_history = np.asarray(
+        [item["applied_shear_strain"] for item in history])
+    stress_history = np.asarray([item["shear_stress_Pa"] for item in history])
+    mean_temperature_history = np.asarray(
+        [item["temperature_mean_K"] for item in history])
+    contrast_history = np.asarray(
+        [item["temperature_contrast_K"] for item in history])
+    low_growth_history = np.asarray([
+        item["grain_volume_change_m3"][low_index]/initial_volume[low_index]
+        for item in history])
+    energy_error_history = np.asarray([
+        item["mechanical_energy"]["relative_first_law_residual"]
+        for item in history])
+    power_ratio_history = np.asarray([
+        item.get("localization", {}).get("plastic_power", {}).get(
+            "maximum_to_mean", np.nan) for item in history])
+    band_history = np.asarray([
+        item.get("localization", {}).get("plastic_power", {}).get(
+            "band_like", False) for item in history], dtype=float)
+    figure, axes = plt.subplots(3, 2, figsize=(11, 10), constrained_layout=True)
+    series = (
+        (stress_history/1e9, "shear stress [GPa]"),
+        (mean_temperature_history, "mean temperature [K]"),
+        (contrast_history, "temperature contrast [K]"),
+        (low_growth_history, "low-defect grain volume change / initial"),
+        (power_ratio_history, "plastic-power max / mean"),
+        (energy_error_history, "relative first-law residual"),
+    )
+    for axis, (values, label) in zip(axes.flat, series):
+        axis.plot(strain_history, values, marker="o", ms=2)
+        if label == "plastic-power max / mean":
+            axis.scatter(strain_history[band_history > 0.5],
+                         values[band_history > 0.5], color="tab:red", s=12,
+                         label="band-like")
+            axis.legend(loc="best", fontsize=8)
+        axis.set_xlabel("applied shear strain")
+        axis.set_ylabel(label); axis.grid(alpha=.25)
+    figure.savefig(root/("trajectory.png" if complete
+                         else "trajectory_partial.png"), dpi=180)
+    plt.close(figure)
     print(json.dumps(classification, indent=2))
 
 
