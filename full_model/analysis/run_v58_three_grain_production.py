@@ -77,7 +77,7 @@ def initialize_state(n, temperature, equal_density=False, *,
 
 
 def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
-                     configuration):
+                     configuration, provenance):
     arrays = multigrain_checkpoint_arrays(state)
     arrays["metadata_json"] = np.asarray(multigrain_checkpoint_metadata(state))
     arrays["runtime_json"] = np.asarray(json.dumps({
@@ -85,6 +85,7 @@ def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
         "ledger": asdict(runtime.ledger),
         "interfaces": [asdict(item) for item in runtime.interfaces],
         "configuration": configuration,
+        "provenance": provenance,
     }, sort_keys=True))
     arrays["initial_grain_volume_m3"] = np.asarray(initial_volume)
     np.savez_compressed(path, **arrays)
@@ -102,7 +103,8 @@ def _load_checkpoint(path):
         tuple(MultiGrainInterface(**item) for item in meta["interfaces"]),
         MultiGrainProductionLedger(**meta["ledger"]))
     return (state, runtime, int(meta["step"]), float(meta["gamma"]),
-            initial_volume, meta.get("configuration"))
+            initial_volume, meta.get("configuration"),
+            meta.get("provenance"))
 
 
 def main():
@@ -127,13 +129,17 @@ def main():
                         choices=("physical", "frozen"), default="physical")
     parser.add_argument("--resume")
     parser.add_argument("--source-commit")
+    parser.add_argument(
+        "--resume-transition", choices=("none", "common_temperature_once_from_v2"),
+        default="none")
+    parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     spacing = args.length/args.n; thickness = 2.0*2.48e-10
     source_commit = (args.source_commit or subprocess.check_output(
         ("git", "rev-parse", "HEAD"), text=True).strip())
     configuration = {
-        "schema": "v58-three-grain-production-v2-common-stress-upwind",
+        "schema": "v58-three-grain-production-v3-common-temperature-once",
         "n": args.n, "length_m": args.length,
         "interface_width_m": args.interface_width, "dt_s": args.dt,
         "shear_rate_s": args.shear_rate, "temperature_K": args.temperature,
@@ -142,9 +148,9 @@ def main():
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": .75,
-        "source_commit": source_commit,
         "flow_temperature_mode": args.flow_temperature_mode,
     }
+    provenance = {"source_commit": source_commit}
     systems = bcc_four_family_systems()
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
@@ -169,11 +175,30 @@ def main():
         ("arm-20-30", 20, 30)))
     if args.resume:
         (state, runtime, start, gamma, initial_volume,
-         checkpoint_configuration) = _load_checkpoint(args.resume)
-        if checkpoint_configuration != configuration:
+         checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(
+             args.resume)
+        resume_sha = hashlib.sha256(Path(args.resume).read_bytes()).hexdigest()
+        if args.expected_resume_sha256 and resume_sha != args.expected_resume_sha256:
+            raise ValueError("resume checkpoint SHA-256 does not match expectation")
+        if args.resume_transition == "common_temperature_once_from_v2":
+            if not args.expected_resume_sha256:
+                raise ValueError("repair transition requires expected checkpoint SHA-256")
+            legacy = dict(checkpoint_configuration or {})
+            if legacy.pop("schema", None) != (
+                    "v58-three-grain-production-v2-common-stress-upwind"):
+                raise ValueError("temperature repair transition requires v2 checkpoint")
+            current = dict(configuration); current.pop("schema")
+            current.pop("flow_temperature_mode")
+            if legacy != current or args.flow_temperature_mode != "physical":
+                raise ValueError("v2 checkpoint physical configuration mismatch")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = "f3d7d7f"
+        elif (checkpoint_configuration != configuration
+              or not checkpoint_provenance
+              or checkpoint_provenance.get("source_commit") != source_commit):
             raise ValueError(
-                "checkpoint configuration is absent or differs from the "
-                "common-stress/upwind production configuration")
+                "checkpoint physical configuration or source provenance differs")
     else:
         state = initialize_state(
             args.n, args.temperature, args.case == "equal_density",
@@ -297,7 +322,7 @@ def main():
             checkpoint = out/f"checkpoint_{step+1:06d}.npz"
             _save_checkpoint(
                 checkpoint, state, runtime, step+1, gamma, initial_volume,
-                configuration)
+                configuration, provenance)
             (out/"history.json").write_text(json.dumps(history, indent=2))
             print(json.dumps(history[-1], sort_keys=True), flush=True)
     latest = sorted(out.glob("checkpoint_*.npz"))[-1]
@@ -317,6 +342,7 @@ def main():
         "checkpoint": str(latest),
         "checkpoint_sha256": hashlib.sha256(latest.read_bytes()).hexdigest(),
         "configuration": configuration,
+        "provenance": provenance,
     }
     (out/"result.json").write_text(json.dumps(result, indent=2))
 

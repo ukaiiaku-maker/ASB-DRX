@@ -144,3 +144,25 @@ def test_periodic_localization_distinguishes_hotspot_from_band():
     assert line["band_like"]
     assert line["periodic_winding"][1]
     assert line["signed_min_W_m3"] == 1.0
+
+
+def test_owner_heat_is_applied_once_to_common_eulerian_temperature():
+    spacing = 2e-8
+    state = _state(8)
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=0.0, bath_rate_s=0.0)
+    stress = np.full((8, 8, 4), 7e8)
+    before = sum(weight*owner_state.temperature_K for weight, owner_state
+                 in zip(state.supports, state.owners))
+    evolved, decision = advance_multigrain_mechanics(
+        state, driving=CommonWallDriving(resolved_stress_Pa=stress),
+        systems=systems, topologies=(), wall_parameters=parameters,
+        dt_s=1e-12, represented_thickness_m=5e-10)
+    expected = (before+decision.irreversible_heat_J_m3_cells
+                /parameters.volumetric_heat_capacity_J_m3_K)
+    for owner_state in evolved.owners:
+        np.testing.assert_allclose(
+            owner_state.temperature_K, expected, rtol=0.0, atol=2e-13)

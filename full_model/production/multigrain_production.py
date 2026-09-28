@@ -250,6 +250,12 @@ def advance_multigrain_mechanics(
                 maximum_line_residual,
                 float(np.max(np.abs(line_residual))))
             minimum_scale = min(minimum_scale, float(scale))
+            # Temperature is one common Eulerian field.  The owner residual
+            # supplies heat but may not evolve a private temperature during
+            # its constitutive subcycles; the support-weighted source is
+            # applied once below after every owner has advanced.
+            trial = replace(
+                trial, temperature_K=np.asarray(updated.temperature_K).copy())
             updated = trial
             remaining -= consumed
             suggested = min(dt, max(attempted, consumed)*1.25)
@@ -262,7 +268,13 @@ def advance_multigrain_mechanics(
         maximum_substeps = max(maximum_substeps, substeps)
     common_temperature = sum(
         np.asarray(state.supports[index])*owner.temperature_K
-        for index, owner in enumerate(owners))
+        for index, owner in enumerate(state.owners))
+    common_temperature = (
+        common_temperature+irreversible_heat_density
+        /wall_parameters.volumetric_heat_capacity_J_m3_K)
+    if np.any(~np.isfinite(common_temperature)) or np.any(
+            common_temperature <= 0.0):
+        raise ValueError("common heat update produced nonpositive temperature")
     diffusivity = float(wall_parameters.thermal_diffusivity_m2_s)
     if diffusivity > 0.0:
         nx, ny = common_temperature.shape

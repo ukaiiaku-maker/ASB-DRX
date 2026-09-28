@@ -53,7 +53,7 @@ def main():
         checkpoint = Path(run_result["checkpoint"])
     else:
         checkpoint = sorted(root.glob("checkpoint_*.npz"))[-1]
-        (_, _, _, _, _, configuration) = _load_checkpoint(checkpoint)
+        (_, _, _, _, _, configuration, provenance) = _load_checkpoint(checkpoint)
         if configuration is None:
             raise ValueError("partial checkpoint has no bound configuration")
         n = int(configuration["n"])
@@ -65,12 +65,12 @@ def main():
             "represented_thickness_m": 2.0*2.48e-10,
             "interface_width_m": configuration["interface_width_m"],
             "source_commit": (args.source_commit
-                              or configuration.get("source_commit")
+                              or (provenance or {}).get("source_commit")
                               or "UNRECORDED_PARTIAL_SOURCE"),
             "final": history[-1], "checkpoint": str(checkpoint),
         }
     (state, runtime, step, gamma, initial_volume,
-     checkpoint_configuration) = _load_checkpoint(checkpoint)
+     checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(checkpoint)
     spacing = float(run_result["spacing_m"])
     thickness = float(run_result["represented_thickness_m"])
     initial = initialize_state(
