@@ -673,3 +673,47 @@ def advance_multigrain_front(
             MultiGrainProductionDecision(
                 True, result.decision.classification, directions, pressures,
                 requested, accepted_fractions, result.decision, backtrack))
+
+
+def advance_multigrain_front_interval(
+        state, runtime, *, kinetics, dt_s, maximum_substep_s, spacing_m,
+        represented_thickness_m, wall_parameters, energy_kwargs=None,
+        applied_shear_rate_s=0.0, systems=None):
+    """Advance a physical interval with recomputed finite front increments.
+
+    ``maximum_fraction_per_step`` is a local contour-CFL bound, not a physical
+    mobility.  Applying it once per caller step therefore makes the migration
+    distance depend on that caller step.  This controller divides the physical
+    interval into equal subintervals no longer than ``maximum_substep_s`` and
+    recomputes affinity, mobility, competition, and dissipation after every
+    accepted atomic transaction.  The runtime ledger is advanced by the
+    subintervals themselves, so its accumulated time and applied strain remain
+    the exact requested interval.
+
+    A rejected atomic transaction is retained in the returned audit trail and
+    does not erase earlier accepted subintervals.  This is intentionally not a
+    retry with inferred heat or relaxed energy closure.
+    """
+    dt = float(dt_s)
+    maximum = float(maximum_substep_s)
+    if not math.isfinite(dt) or dt <= 0.0:
+        raise ValueError("production interval must be positive and finite")
+    if not math.isfinite(maximum) or maximum <= 0.0:
+        raise ValueError("front maximum substep must be positive and finite")
+    ratio = dt/maximum
+    # Suppress a spurious extra substep when a decimal input lies only a few
+    # ulps above an integer ratio.  Equal subdivision then closes time exactly.
+    count = max(1, int(math.ceil(ratio-16.0*np.finfo(float).eps*max(ratio, 1.0))))
+    sub_dt = dt/count
+    decisions = []
+    evolved = state
+    evolved_runtime = runtime
+    for _ in range(count):
+        evolved, evolved_runtime, decision = advance_multigrain_front(
+            evolved, evolved_runtime, kinetics=kinetics, dt_s=sub_dt,
+            spacing_m=spacing_m,
+            represented_thickness_m=represented_thickness_m,
+            wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
+            applied_shear_rate_s=applied_shear_rate_s, systems=systems)
+        decisions.append(decision)
+    return evolved, evolved_runtime, tuple(decisions)

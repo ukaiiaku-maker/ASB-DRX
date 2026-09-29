@@ -11,6 +11,7 @@ from full_model.production.complete_multigrain_energy import (
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionRuntime, advance_multigrain_front,
+    advance_multigrain_front_interval,
     advance_energy_qualified_mechanics, advance_multigrain_mechanics,
     _geometric_sweep_weight, _masked_owner_update,
 )
@@ -54,6 +55,43 @@ def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():
     assert runtime.ledger.generated_heat_J > 0.0
     assert runtime.ledger.maximum_relative_energy_closure < .05
     assert evolved.ledger.energy_accepted_transactions == 1
+
+
+def test_front_physical_interval_subcycling_matches_manual_sequence():
+    spacing = 2e-8
+    state = _state(16)
+    wall, kinetics = _front_parameters(spacing)
+    initial_runtime = MultiGrainProductionRuntime((
+        MultiGrainInterface("10-20", 10, 20),
+        MultiGrainInterface("10-30", 10, 30)))
+    options = dict(
+        phase_barrier_J_m3=5e6, phase_gradient_J_m=5e-7,
+        reference_temperature_K=900.0)
+    automatic, automatic_runtime, decisions = (
+        advance_multigrain_front_interval(
+            state, initial_runtime, kinetics=kinetics, dt_s=1e-7,
+            maximum_substep_s=2.5e-8, spacing_m=spacing,
+            represented_thickness_m=5e-10, wall_parameters=wall,
+            energy_kwargs=options, applied_shear_rate_s=2e4,
+            systems=bcc_four_family_systems()))
+    manual = state
+    manual_runtime = initial_runtime
+    for _ in range(4):
+        manual, manual_runtime, _ = advance_multigrain_front(
+            manual, manual_runtime, kinetics=kinetics, dt_s=2.5e-8,
+            spacing_m=spacing, represented_thickness_m=5e-10,
+            wall_parameters=wall, energy_kwargs=options,
+            applied_shear_rate_s=2e4, systems=bcc_four_family_systems())
+    assert len(decisions) == 4
+    assert automatic_runtime == manual_runtime
+    assert automatic_runtime.ledger.physical_time_s == 1e-7
+    assert automatic_runtime.ledger.applied_shear_strain == 2e-3
+    np.testing.assert_array_equal(automatic.supports, manual.supports)
+    for automatic_owner, manual_owner in zip(
+            automatic.owners, manual.owners):
+        for name in automatic_owner.__dataclass_fields__:
+            np.testing.assert_array_equal(
+                getattr(automatic_owner, name), getattr(manual_owner, name))
 
 
 def test_mechanical_step_evolves_supported_owner_and_preserves_dormant_history():

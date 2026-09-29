@@ -27,7 +27,7 @@ from full_model.production.multigrain_common_state import (
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionLedger, MultiGrainProductionRuntime,
-    advance_energy_qualified_mechanics, advance_multigrain_front,
+    advance_energy_qualified_mechanics, advance_multigrain_front_interval,
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 from full_model.analysis.spatial_localization import spatial_localization_metrics
@@ -122,7 +122,11 @@ def main():
     parser.add_argument("--interface-width", type=float, default=3.125e-7)
     parser.add_argument("--front-attempt-frequency", type=float, default=1e8)
     parser.add_argument("--front-maximum-fraction", type=float, default=.015,
-                        help="numerical contour-CFL bound per macro interval")
+                        help="numerical contour-CFL bound per front substep")
+    parser.add_argument(
+        "--front-maximum-substep", type=float, default=1e-8,
+        help=("maximum physical front integration substep in seconds; "
+              "affinity and dissipation are recomputed after each substep"))
     parser.add_argument("--maximum-mechanical-subdivisions", type=int,
                         default=10)
     parser.add_argument("--thermal-diffusivity", type=float,
@@ -155,6 +159,7 @@ def main():
         "case": args.case,
         "front_attempt_frequency_s": args.front_attempt_frequency,
         "front_maximum_fraction_per_step": args.front_maximum_fraction,
+        "front_maximum_substep_s": args.front_maximum_substep,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": .75,
@@ -326,13 +331,14 @@ def main():
             }
         energy_options["mean_strain"] = strain_after
         if args.case == "no_front":
-            front = None
+            fronts = ()
             runtime = MultiGrainProductionRuntime(
                 runtime.interfaces, replace_ledger(runtime.ledger, args.dt,
                                                    args.shear_rate))
         else:
-            state, runtime, front = advance_multigrain_front(
+            state, runtime, fronts = advance_multigrain_front_interval(
                 state, runtime, kinetics=kinetics, dt_s=args.dt,
+                maximum_substep_s=args.front_maximum_substep,
                 spacing_m=spacing, represented_thickness_m=thickness,
                 wall_parameters=wall, energy_kwargs=energy_options,
                 applied_shear_rate_s=args.shear_rate, systems=systems)
@@ -363,12 +369,21 @@ def main():
                 "mechanical": mechanical_record,
                 "localization": localization_record,
                 "mechanical_energy": mechanical_energy_record,
-                "front": None if front is None else {
-                    "accepted": front.accepted,
-                    "classification": front.classification,
-                    "directions": front.direction_by_interface,
-                    "pressures_Pa": front.pressure_by_interface_Pa,
-                    "backtracks": front.backtracks,
+                "front": None if not fronts else {
+                    "accepted": all(item.accepted for item in fronts),
+                    "classification": (
+                        fronts[-1].classification if len(fronts) == 1 else
+                        "SUBCYCLED_" + (
+                            "ACCEPTED" if all(item.accepted for item in fronts)
+                            else "WITH_REJECTION")),
+                    "directions": fronts[-1].direction_by_interface,
+                    "pressures_Pa": fronts[-1].pressure_by_interface_Pa,
+                    "backtracks": max(item.backtracks for item in fronts),
+                    "subintervals": len(fronts),
+                    "rejected_subintervals": sum(
+                        not item.accepted for item in fronts),
+                    "classifications": [
+                        item.classification for item in fronts],
                 },
                 "runtime": asdict(runtime.ledger),
             })
@@ -388,6 +403,7 @@ def main():
         "represented_thickness_m": thickness,
         "interface_width_m": args.interface_width,
         "front_attempt_frequency_s": args.front_attempt_frequency,
+        "front_maximum_substep_s": args.front_maximum_substep,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "source_commit": source_commit,
         "initial_grain_volume_m3": initial_volume.tolist(),
