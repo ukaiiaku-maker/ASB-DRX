@@ -56,6 +56,21 @@ def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():
     assert runtime.ledger.maximum_relative_energy_closure < .05
     assert evolved.ledger.energy_accepted_transactions == 1
 
+    # After a finite first sweep, low-support cells and unequal edge speeds
+    # make the next multi-edge direction nontrivial.  Its joint virtual price
+    # must remain conjugate to that realized direction.
+    evolved_again, runtime_again, second = advance_multigrain_front(
+        evolved, runtime, kinetics=kinetics, dt_s=1e-7,
+        spacing_m=spacing, represented_thickness_m=5e-10,
+        wall_parameters=wall, energy_kwargs=dict(
+            phase_barrier_J_m3=5e6, phase_gradient_J_m=5e-7,
+            reference_temperature_K=900.0),
+        systems=bcc_four_family_systems())
+    assert second.accepted
+    assert second.energy_decision.independent_dissipation
+    assert runtime_again.ledger.accepted_events == 2
+    assert evolved_again.ledger.energy_accepted_transactions == 2
+
 
 def test_front_physical_interval_subcycling_matches_manual_sequence():
     spacing = 2e-8

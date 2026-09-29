@@ -561,7 +561,12 @@ def advance_multigrain_front(
         receiver_index = index[receiver]
         request = fraction*_geometric_sweep_weight(
             state, donor_index, receiver_index, spacing_m)
-        request = np.minimum(request, state.supports[donor_index])
+        # Preserve the same geometric direction used by the virtual price.
+        # Donor support and competing outgoing channels are resolved jointly
+        # by ``joint_material_transaction`` at every trial amplitude.  Clipping
+        # here would permanently reshape the direction before backtracking,
+        # so the finite event would no longer be conjugate to its price after
+        # a boundary had swept through low-support cells.
         pressure = max(-virtual[0]/virtual[1], 0.0)
         if pressure <= 0.0 or not np.any(request > 0.0):
             continue
@@ -589,15 +594,24 @@ def advance_multigrain_front(
     # correction to the edge pressures.  This remains a directional
     # derivative evaluated before the realized event; it is not inferred from
     # the finite-event closure residual.
+    # Price the *actual kinetic direction*: interface velocities generally
+    # differ, so a bundle assigning the same virtual contour fraction to every
+    # edge is not collinear with the realized request.  A single pressure
+    # correction obtained from that different direction is non-conjugate once
+    # several interfaces are active.  Scale the complete realized request to
+    # a small virtual amplitude instead; donor competition is still handled
+    # jointly and the direction is unchanged.
+    maximum_request = max(
+        float(np.max(request)) for request in base_requests.values())
+    joint_virtual_scale = min(
+        1.0, kinetics.virtual_fraction/max(maximum_request, 1e-300))
     joint_virtual_proposals = []
     for key in base_requests:
         interface, donor, receiver = channel_records[key]
-        virtual_weight = _geometric_sweep_weight(
-            state, index[donor], index[receiver], spacing_m)
         joint_virtual_proposals.append(derive_physical_transfer_proposal(
             state, interface_id=interface.component_id, donor_id=donor,
             receiver_id=receiver,
-            requested_fraction=kinetics.virtual_fraction*virtual_weight,
+            requested_fraction=joint_virtual_scale*base_requests[key],
             law=kinetics.transfer_law, interval_s=dt, systems=systems))
     joint_virtual_capacity = joint_material_transaction(
         state, tuple(joint_virtual_proposals))
