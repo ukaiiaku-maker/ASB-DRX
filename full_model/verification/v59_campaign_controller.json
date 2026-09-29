@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 49448,
-    "case": "network4_conjugate_n32_to0p5us",
+    "exec_session": 32021,
+    "case": "network4_conjugate_n32_0p5to1p0us",
     "source_commit": "60c2b3e9ef0121df73a8f2efceafdb46ddbb2f87",
-    "resume_checkpoint": null,
-    "resume_sha256": null,
-    "target_physical_time_s": 5e-7,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/network4_conjugate_n32_to0p5us"
+    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/network4_conjugate_n32_to0p5us/checkpoint_000020.npz",
+    "resume_sha256": "d11e71d4daf7c907c9280b542ed7e1f0fcc2c6123f408dc9631815c478c89dc1",
+    "target_physical_time_s": 1e-6,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/network4_conjugate_n32_0p5to1p0us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -38,7 +38,8 @@
     "common_strain_rate_result": "EARLY_STRESS_RATE_INSENSITIVE_AND_PHYSICAL_TIME_EXPOSURE_DOMINANT",
     "high_rate_4us_result": "STRICT_ASB_FAILED_BUT_POWER_PARTICIPATION_REACHED_0P246_AND_TRUE_SOFTENING_REACHED_14P6_PERCENT",
     "high_rate_4us_checkpoint_sha256": "d3c367b4dd53f114b7a5f8722055ec9aee67aec757b964567dc0d9b0cc40b88c",
-    "network_branch": "RUNNING_FRESH_FOUR_GRAIN_PREFIX"
+    "network_branch": "VALID_PREFIX_AND_RUNNING_EXACT_RESTART",
+    "network_prefix_classification": "VALID_EVOLVED_PREPARED_MULTIGRAIN_NETWORK"
   },
   "next_actions": [
     "Finish and restart the genuine four-grain common-owner trajectory",
