@@ -1,0 +1,35 @@
+{
+  "schema": "asb-drx-v59-controller-v1",
+  "allocation_id": "v59-local-20260929T164808Z",
+  "campaign_state": "ACTIVE",
+  "start_utc": "2026-09-29T16:48:08Z",
+  "deadline_utc": "2026-09-30T04:48:08Z",
+  "execution_site": "local workstation",
+  "branch": "exp/full-v59-persistence-20260929",
+  "v58_closure_commit": "8c7a8456e2476b528923bfc61f8ec3ab7ccbf235",
+  "v58_numerical_source": "ce3d101bb19b66dac337e4cc88edd3d99aa2172d",
+  "reviewed_status": {
+    "prepared_three_grain_production": "PRESERVED",
+    "substantial_prepared_boundary_migration": "PRESERVED",
+    "high_rate_localization": "EXPLORATORY_CONNECTED_BAND_CANDIDATE",
+    "inherited_strict_asb": "WITHDRAWN_PENDING_PHYSICAL_PERSISTENCE_AND_MORPHOLOGY",
+    "spontaneous_grain_birth": "NOT_ESTABLISHED",
+    "material_calibration": "NOT_CLAIMED"
+  },
+  "focused_tests": "29 passed in 15.16 s",
+  "active_heavy_solver": {
+    "exec_session": 5180,
+    "case": "high_rate_n32_to3p5us",
+    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v33_fixedwidth_dense_from110_n32/checkpoint_000126.npz",
+    "resume_sha256": "3cd1ac1b322386c91b5242739c1c8c16b2dfefc74bc5c8bde77ae2287139e188",
+    "target_physical_time_s": 3.5e-6,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_n32_to3p5us"
+  },
+  "next_actions": [
+    "Finish the 3.5 microsecond baseline continuation and classify its physical episode",
+    "Continue its already-diverged frozen-flow control to the same physical horizon",
+    "Extend useful accepted horizons toward 4.0 and 4.5 microseconds",
+    "Audit front force-rate conjugacy and stage-consistent endpoint observables",
+    "Use measured cost to select comparable-exposure and four-to-eight-grain runs"
+  ]
+}

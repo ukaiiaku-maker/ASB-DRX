@@ -2246,3 +2246,20 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   now qualifies the coupled DRX/ASB response. Report:
   `full_model/docs/v58_decision_report.md`.
 - Final frozen-source canonical regression: 936 tests pass in 326.17 s.
+
+## V59 physical-persistence and network continuation (2026-09-29--30)
+
+- Fixed local allocation: 2026-09-29 16:48:08 UTC through 2026-09-30
+  04:48:08 UTC. V58 source and outputs are immutable inputs; V59 uses isolated
+  branch `exp/full-v59-persistence-20260929`.
+- The reviewed V58 strict-ASB headline is withdrawn. Substantial prepared-
+  boundary migration and the high-rate connected-band candidate are preserved
+  at their demonstrated scope.
+- A physical-clock classifier now requires a continuous same-component episode,
+  true preceding-peak softening, co-located heat and power, physical width and
+  aspect, concentration, matched thermal excess, one-microsecond duration, and
+  localization-specific refinement. The supplied cadence, temperature-stage,
+  monotone-hardening, gap, wrapped-band, and isotropic-patch controls pass.
+- An exact repaired-source n32 continuation from 3.15 to 3.5 microseconds was
+  launched immediately with 50 ns accepted-state checkpoint cadence. Unrelated
+  DDD, fatigue, and FFT jobs remain untouched.
