@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 96884,
-    "case": "high_rate4e4_T900_frozen_all_conjugate_n32_to2p25us",
+    "exec_session": 83463,
+    "case": "high_rate4e4_T900_physical_exact42a_n32_to2p25us",
     "source_commit": "42a5432173cc77ebc70faa0d20fa922189e33c66",
     "resume_checkpoint": null,
     "resume_sha256": null,
     "target_physical_time_s": 2.25e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_frozen_all_conjugate_n32_to2p25us"
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_physical_exact42a_n32_to2p25us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -58,11 +58,14 @@
     "strict_morphology_revision": "TRACKED_THRESHOLD_COMPONENT_EXCESS_COMMIT_09f7bbd",
     "rate4e4_T900_frozen_flow_checkpoint_sha256": "0dda9a897e8e2340e9649f9d709f7dc2d0f401dae748d363e86456ce04731ee7",
     "rate4e4_T900_frozen_flow_result": "VALID_NEAR_THRESHOLD_NEGATIVE_MAX_REGISTERED_EXCESS_38P97K_SOFTENING_14P3_PERCENT_NO_CONJUNCTIVE_EPISODE",
-    "temperature_channel_separation_source": "42a5432173cc77ebc70faa0d20fa922189e33c66"
+    "temperature_channel_separation_source": "42a5432173cc77ebc70faa0d20fa922189e33c66",
+    "rate4e4_T900_full_frozen_checkpoint_sha256": "e3714d561c77c2a14ff4c883ba402d0364fbef3b6df3cfba71a5dfa3708edce3",
+    "rate4e4_T900_cross_source_full_control_result": "PRELIMINARY_CAUSAL_CROSSING_MAX_REGISTERED_EXCESS_56P99K_BUT_SOFTENING_14P3_PERCENT_AND_ASPECT_1P39_FAIL",
+    "rate4e4_T900_cross_source_warning": "Physical and full-control members use adjacent commits; exact-source physical baseline is active before attribution or continuation"
   },
   "next_actions": [
-    "Complete the full constitutive-temperature control through 2.25 microseconds",
-    "Separate glide feedback from recovery and organization feedback",
-    "Use the channel-resolved causal result to select horizon or spatial refinement"
+    "Complete the exact-42a physical baseline through 2.25 microseconds",
+    "Recompute the full constitutive-temperature causal pair on one source",
+    "Continue both attributable members toward the registered physical persistence horizon if the causal crossing survives"
   ]
 }
