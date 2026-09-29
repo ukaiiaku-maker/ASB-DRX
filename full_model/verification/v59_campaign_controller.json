@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 93876,
-    "case": "high_rate4e4_T900_baseline_conjugate_n32_to2p25us",
+    "exec_session": 92632,
+    "case": "high_rate4e4_T900_frozen_conjugate_n32_to2p25us",
     "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
     "resume_checkpoint": null,
     "resume_sha256": null,
     "target_physical_time_s": 2.25e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_baseline_conjugate_n32_to2p25us"
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_frozen_conjugate_n32_to2p25us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -52,11 +52,14 @@
     "T1000_4us_result": "STRONGER_LOCALIZATION_CANDIDATE_PENDING_MATCHED_CAUSAL_CONTROL_AND_FAILING_STRICT_MORPHOLOGY",
     "T1000_4us_checkpoint_sha256": "87983db67a1a96ff3ac1e7e6f5adf1968b8d793386c9ba6be55ada0197fa5907",
     "T1000_4us_matched_control_sha256": "86c12356185f11fdae88cb4b20036214fc09b0cf803894dde7c6c055fd13bf01",
-    "T1000_4us_causal_result": "FAILED_SCIENTIFIC_MATCHED_THERMAL_EXCESS_2P87K_AND_BROAD_MORPHOLOGY"
+    "T1000_4us_causal_result": "FAILED_SCIENTIFIC_MATCHED_THERMAL_EXCESS_2P87K_AND_BROAD_MORPHOLOGY",
+    "rate4e4_T900_baseline_result": "VALID_STRONG_LOCALIZATION_AND_14P3_PERCENT_SOFTENING_PENDING_MATCHED_CAUSAL_CONTROL",
+    "rate4e4_T900_baseline_checkpoint_sha256": "0f28d1732a4007fa299f56b65c29986cb6352f450b7d1ac1d09edf8fb8dfee49",
+    "strict_morphology_revision": "TRACKED_THRESHOLD_COMPONENT_EXCESS_COMMIT_09f7bbd"
   },
   "next_actions": [
-    "Run the fixed-parameter 4e4/s 900 K discriminator to comparable strain",
-    "Classify its stage-consistent onset and morphology",
-    "Run its matched control only if the baseline response is informative"
+    "Complete the fresh matched frozen-flow control through 2.25 microseconds",
+    "Classify cell-registered causal thermal excess and conjunctive persistence",
+    "Use the causal result to select fixed-parameter horizon or spatial refinement"
   ]
 }
