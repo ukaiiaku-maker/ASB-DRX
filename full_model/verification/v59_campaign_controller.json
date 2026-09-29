@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 7141,
-    "case": "high_rate_frozen_conjugate_n32_3p5to4p5us",
+    "exec_session": 67161,
+    "case": "high_rate_T1000_baseline_conjugate_n32_to2p5us",
     "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
-    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_frozen_conjugate_exact_n32_to3p5us/checkpoint_000140.npz",
-    "resume_sha256": "0d5e7acd615eb274f122b0a3366194c49f6337458b0976e5d639e496b2b56438",
-    "target_physical_time_s": 4.5e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_frozen_conjugate_n32_3p5to4p5us"
+    "resume_checkpoint": null,
+    "resume_sha256": null,
+    "target_physical_time_s": 2.5e-6,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_T1000_baseline_conjugate_n32_to2p5us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -44,12 +44,13 @@
     "network_restart_verified": true,
     "common_strain_0p02_result": "STRESS_RATE_INSENSITIVE_WITH_SLOW_EXPOSURE_HEATING_AND_MIGRATION_DOMINANT",
     "low_rate_10us_result": "VALID_BROAD_RESPONSE_WITH_SUBSTANTIAL_PREPARED_BOUNDARY_MIGRATION",
-    "high_rate_4p5us_result": "SOFTENING_THRESHOLD_PASSED_BUT_CONCENTRATION_AND_MORPHOLOGY_FAILED",
-    "high_rate_4p5us_checkpoint_sha256": "fd14eaf75abf3c259a405a779a9d15683f9dccb017146e887ea7a39ee43eacc9"
+    "high_rate_4p5us_result": "BROAD_MECHANICAL_SOFTENING_NOT_CAUSAL_THERMAL_ASB",
+    "high_rate_4p5us_checkpoint_sha256": "fd14eaf75abf3c259a405a779a9d15683f9dccb017146e887ea7a39ee43eacc9",
+    "high_rate_4p5us_matched_control_sha256": "cf6b3c54510f9147a7af3af926c4b6ab13976777866b8ba7ec17d3b8709b37a6"
   },
   "next_actions": [
-    "Finish the matched frozen-flow control at 4.5 microseconds",
-    "Classify the causal matched physical episode through 4.5 microseconds",
-    "Select the next condition from the broad-zone failure mode"
+    "Run the fixed-parameter 1000 K discriminator to 2.5 microseconds",
+    "Classify its physical morphology and thermal response",
+    "Extend or construct its matched control only if it is informative"
   ]
 }
