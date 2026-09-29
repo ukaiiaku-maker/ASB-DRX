@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 
-def load(root, common_step=None):
+def load(root, common_step=None, common_time_s=None):
     root = Path(root)
     result_path = root/"result.json"
     result = json.loads(result_path.read_text()) if result_path.exists() else None
@@ -16,7 +16,16 @@ def load(root, common_step=None):
                   else root/"classification_partial.json")
     classification = json.loads(class_path.read_text())
     history = json.loads((root/"history.json").read_text())
-    if common_step is None:
+    if common_time_s is not None:
+        scale = max(abs(float(common_time_s)), 1e-300)
+        matches = [item for item in history
+                   if abs(float(item["time_s"])-float(common_time_s))/scale
+                   <= 1e-10]
+        if not matches:
+            raise ValueError(
+                f"{root} does not reach common physical time {common_time_s}")
+        row = matches[-1]
+    elif common_step is None:
         row = history[-1]
     else:
         matches = [item for item in history if int(item["step"]) == common_step]
@@ -29,8 +38,12 @@ def load(root, common_step=None):
             "row": row, "source": source,
             "history": [item for item in history
                         if int(item["step"]) <= int(row["step"])],
-            "reached_common_horizon": int(row["step"]) == common_step
-            if common_step is not None else result is not None}
+            "reached_common_horizon": (
+                abs(float(row["time_s"])-float(common_time_s))
+                / max(abs(float(common_time_s)), 1e-300) <= 1e-10
+                if common_time_s is not None else
+                int(row["step"]) == common_step
+                if common_step is not None else result is not None)}
 
 
 def observables(case):
@@ -97,6 +110,7 @@ def main():
     }
     raw = {name: load(path, args.common_step)
            for name, path in names.items()}
+    common_time_s = float(raw["front_full"]["row"]["time_s"])
     obs = {name: observables(value) for name, value in raw.items()}
     front_effect_full = subtract(obs["front_full"], obs["no_front_full"])
     front_effect_frozen = subtract(
@@ -112,7 +126,10 @@ def main():
     for label, path in (("time", args.time_refined),
                         ("space", args.space_refined)):
         if path:
-            candidate = load(path, args.common_step)
+            # A temporal or spatial refinement generally reaches the same
+            # physical horizon at a different integer step.  Match it by the
+            # authoritative baseline clock, not by an unrelated step number.
+            candidate = load(path, common_time_s=common_time_s)
             candidate_obs = observables(candidate)
             errors = refinement_error(obs["front_full"], candidate_obs)
             refinements[label] = {
@@ -143,6 +160,7 @@ def main():
     report = {
         "schema": "asb-drx-v58-response-family-v1",
         "common_step": args.common_step,
+        "common_time_s": common_time_s,
         "cases": names, "source_commits": sorted(sources),
         "observables": obs,
         "front_effect_at_full_feedback": front_effect_full,
