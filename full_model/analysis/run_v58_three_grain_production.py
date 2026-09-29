@@ -121,6 +121,8 @@ def main():
     parser.add_argument("--length", type=float, default=5e-6)
     parser.add_argument("--interface-width", type=float, default=3.125e-7)
     parser.add_argument("--front-attempt-frequency", type=float, default=1e8)
+    parser.add_argument("--front-maximum-fraction", type=float, default=.015,
+                        help="numerical contour-CFL bound per macro interval")
     parser.add_argument("--maximum-mechanical-subdivisions", type=int,
                         default=10)
     parser.add_argument("--thermal-diffusivity", type=float,
@@ -152,6 +154,7 @@ def main():
         "shear_rate_s": args.shear_rate, "temperature_K": args.temperature,
         "case": args.case,
         "front_attempt_frequency_s": args.front_attempt_frequency,
+        "front_maximum_fraction_per_step": args.front_maximum_fraction,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": .75,
@@ -180,7 +183,10 @@ def main():
             args.front_attempt_frequency),
         PhysicalTransferLaw(.55, .08, .02), .35*EV_J, 1e9,
         2.0, 1.5, .10, wall.burgers_m**3, wall.burgers_m,
-        virtual_fraction=2e-4, maximum_fraction_per_step=.015,
+        # This is a numerical contour-CFL control, recorded in the bound
+        # configuration and varied only for refinement diagnostics.
+        virtual_fraction=2e-4,
+        maximum_fraction_per_step=args.front_maximum_fraction,
         closure_fraction=.05, maximum_backtracks=14)
     interfaces = tuple(MultiGrainInterface(name, a, b) for name, a, b in (
         ("arm-10-20", 10, 20), ("arm-10-30", 10, 30),
