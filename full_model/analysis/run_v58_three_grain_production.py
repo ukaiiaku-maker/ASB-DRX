@@ -202,6 +202,12 @@ def main():
     parser.add_argument("--flow-temperature-mode",
                         choices=("physical", "frozen"), default="physical")
     parser.add_argument(
+        "--recovery-temperature-mode", choices=("physical", "frozen"),
+        default="physical",
+        help=("independent causal routing for locking, annihilation, wall, "
+              "junction, and ordering kinetics; the physical temperature "
+              "state and heat equation always continue to evolve"))
+    parser.add_argument(
         "--mechanics-mode", choices=("physical", "frozen_hold"),
         default="physical",
         help=("frozen_hold isolates stored-energy front migration at fixed "
@@ -244,6 +250,7 @@ def main():
         "transport_scheme": "upwind",
         "maximum_fraction_per_step": args.mechanical_maximum_fraction,
         "flow_temperature_mode": args.flow_temperature_mode,
+        "recovery_temperature_mode": args.recovery_temperature_mode,
         "mechanics_mode": args.mechanics_mode,
         "mechanical_stress_integrator": "synchronized_common_stress_substeps",
         "front_sweep_measure": "level_set_gradient_pair_partition",
@@ -260,6 +267,9 @@ def main():
         maximum_fraction_per_step=args.mechanical_maximum_fraction,
         flow_temperature_override_K=(
             args.temperature if args.flow_temperature_mode == "frozen"
+            else None),
+        recovery_temperature_override_K=(
+            args.temperature if args.recovery_temperature_mode == "frozen"
             else None),
         volumetric_heat_capacity_J_m3_K=3.8e6,
         thermal_diffusivity_m2_s=args.thermal_diffusivity, bath_rate_s=0.0)

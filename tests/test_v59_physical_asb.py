@@ -1,8 +1,8 @@
 import numpy as np
 
 from full_model.analysis.postprocess_v59_physical_asb import (
-    PhysicalASBCriteria, classify_physical_episode, component_morphology,
-    periodic_identity,
+    PhysicalASBCriteria, _wall_parameters, classify_physical_episode,
+    component_morphology, periodic_identity,
 )
 
 
@@ -92,6 +92,21 @@ def test_component_morphology_keeps_square_patch_isotropic():
     morphology = component_morphology(
         field, component, field.mean()+field.std(), 1.0)
     assert np.isclose(morphology["aspect_ratio"], 1.0)
+
+
+def test_postprocess_reconstructs_independent_temperature_controls():
+    configuration = {
+        "maximum_fraction_per_step": .1, "thermal_diffusivity_m2_s": 1e-8,
+        "temperature_K": 900.0, "flow_temperature_mode": "frozen",
+        "recovery_temperature_mode": "frozen",
+    }
+    parameters = _wall_parameters(configuration, 1e-7)
+    assert parameters.flow_temperature_override_K == 900.0
+    assert parameters.recovery_temperature_override_K == 900.0
+    configuration["recovery_temperature_mode"] = "physical"
+    parameters = _wall_parameters(configuration, 1e-7)
+    assert parameters.flow_temperature_override_K == 900.0
+    assert parameters.recovery_temperature_override_K is None
 
 
 def test_full_one_microsecond_conjunction_passes_only_with_refinement():

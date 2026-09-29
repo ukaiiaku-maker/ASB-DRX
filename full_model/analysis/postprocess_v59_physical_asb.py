@@ -145,6 +145,10 @@ def _wall_parameters(configuration: dict, spacing_m: float) -> CommonWallParamet
         flow_temperature_override_K=(
             float(configuration["temperature_K"])
             if configuration.get("flow_temperature_mode") == "frozen" else None),
+        recovery_temperature_override_K=(
+            float(configuration["temperature_K"])
+            if configuration.get("recovery_temperature_mode") == "frozen"
+            else None),
         volumetric_heat_capacity_J_m3_K=3.8e6,
         thermal_diffusivity_m2_s=float(configuration["thermal_diffusivity_m2_s"]),
         bath_rate_s=0.0)
