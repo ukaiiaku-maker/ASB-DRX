@@ -92,6 +92,54 @@ def initialize_state(n, temperature, equal_density=False, *,
     return state
 
 
+def initialize_network_state(n, temperature, grain_count, *,
+                             spacing_m=1.5625e-7,
+                             interface_width_m=3.125e-7,
+                             equal_density=False):
+    """Initialize a resolved deterministic prepared-grain periodic network."""
+    count = int(grain_count)
+    if count == 3:
+        return initialize_state(
+            n, temperature, equal_density, spacing_m=spacing_m,
+            interface_width_m=interface_width_m)
+    layouts = {
+        4: ((.20, .22), (.72, .18), (.28, .72), (.76, .68)),
+        6: ((.16, .22), (.50, .17), (.82, .25),
+            (.20, .72), (.54, .78), (.85, .68)),
+        8: ((.12, .22), (.38, .17), (.64, .24), (.88, .19),
+            (.16, .72), (.42, .79), (.68, .69), (.91, .76)),
+    }
+    if count not in layouts:
+        raise ValueError("V59 network grain count must be 3, 4, 6, or 8")
+    centers = tuple((x*n, y*n) for x, y in layouts[count])
+    width_cells = float(interface_width_m)/float(spacing_m)
+    supports = _smooth_voronoi_supports(n, centers, width_cells)
+    density_scale = (4.0, 1.0, 3.0, 2.2, 3.6, 1.7, 2.8, 1.3)
+    angles_deg = (0.0, 18.0, -14.0, 31.0, -27.0, 43.0, -39.0, 9.0)
+    densities = ((4.0e17,)*count if equal_density else
+                 tuple(value*1e17 for value in density_scale[:count]))
+    owners = tuple(_owner(n, density, np.deg2rad(angle), temperature)
+                   for density, angle in zip(densities, angles_deg[:count]))
+    state = MultiGrainCommonState(
+        tuple(10*(index+1) for index in range(count)), supports, owners)
+    state.validate()
+    return state
+
+
+def network_interfaces(state):
+    """Declare actual dominant-owner adjacencies on the periodic grid."""
+    labels = np.argmax(state.supports, axis=0)
+    pairs = set()
+    for axis in (0, 1):
+        neighbor = np.roll(labels, -1, axis=axis)
+        for left, right in zip(labels[labels != neighbor], neighbor[labels != neighbor]):
+            pairs.add(tuple(sorted((int(left), int(right)))))
+    return tuple(MultiGrainInterface(
+        f"edge-{state.grain_ids[left]}-{state.grain_ids[right]}",
+        state.grain_ids[left], state.grain_ids[right])
+        for left, right in sorted(pairs))
+
+
 def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
                      configuration, provenance):
     arrays = multigrain_checkpoint_arrays(state)
@@ -127,6 +175,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", required=True)
     parser.add_argument("--n", type=int, default=32)
+    parser.add_argument("--grain-count", type=int, choices=(3, 4, 6, 8), default=3)
     parser.add_argument("--steps", type=int, default=200)
     parser.add_argument("--dt", type=float, default=2e-10)
     parser.add_argument("--shear-rate", type=float, default=2e4)
@@ -182,6 +231,7 @@ def main():
     configuration = {
         "schema": "v58-three-grain-production-v4-geometric-front",
         "n": args.n, "length_m": args.length,
+        "grain_count": args.grain_count,
         "interface_width_m": args.interface_width, "dt_s": args.dt,
         "shear_rate_s": args.shear_rate, "temperature_K": args.temperature,
         "case": args.case,
@@ -222,9 +272,6 @@ def main():
         virtual_fraction=2e-4,
         maximum_fraction_per_step=args.front_maximum_fraction,
         closure_fraction=.05, maximum_backtracks=14)
-    interfaces = tuple(MultiGrainInterface(name, a, b) for name, a, b in (
-        ("arm-10-20", 10, 20), ("arm-10-30", 10, 30),
-        ("arm-20-30", 20, 30)))
     if args.resume:
         (state, runtime, start, gamma, initial_volume,
          checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(
@@ -281,7 +328,9 @@ def main():
             if not args.expected_resume_sha256:
                 raise ValueError(
                     "V59 force-rate transition requires expected checkpoint SHA-256")
-            if (checkpoint_configuration != configuration
+            legacy_configuration = dict(checkpoint_configuration or {})
+            legacy_configuration.setdefault("grain_count", 3)
+            if (legacy_configuration != configuration
                     or not checkpoint_provenance
                     or checkpoint_provenance.get("source_commit") != "ce3d101"):
                 raise ValueError(
@@ -299,10 +348,11 @@ def main():
             raise ValueError(
                 "checkpoint physical configuration or source provenance differs")
     else:
-        state = initialize_state(
-            args.n, args.temperature, args.case == "equal_density",
-            spacing_m=spacing, interface_width_m=args.interface_width)
-        runtime = MultiGrainProductionRuntime(interfaces)
+        state = initialize_network_state(
+            args.n, args.temperature, args.grain_count,
+            spacing_m=spacing, interface_width_m=args.interface_width,
+            equal_density=args.case == "equal_density")
+        runtime = MultiGrainProductionRuntime(network_interfaces(state))
         start = 0; gamma = .012
         initial_volume = np.sum(
             state.supports, axis=(1, 2))*spacing**2*thickness

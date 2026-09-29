@@ -20,6 +20,9 @@ from full_model.production.tensorial_nye import (
 )
 from tests.test_full_model_v58_complete_multigrain_energy import _state
 from full_model.analysis.spatial_localization import spatial_localization_metrics
+from full_model.analysis.run_v58_three_grain_production import (
+    initialize_network_state, network_interfaces,
+)
 
 
 def _front_parameters(spacing):
@@ -31,6 +34,37 @@ def _front_parameters(spacing):
         virtual_fraction=1e-3, maximum_fraction_per_step=.02,
         closure_fraction=.05)
     return wall, kinetics
+
+
+def test_four_grain_network_has_partition_cores_and_real_periodic_adjacency():
+    state = initialize_network_state(
+        32, 900.0, 4, spacing_m=5e-6/32,
+        interface_width_m=3.125e-7)
+    np.testing.assert_allclose(np.sum(state.supports, axis=0), 1.0)
+    assert all(np.max(support) > .8 for support in state.supports)
+    interfaces = network_interfaces(state)
+    assert len(interfaces) >= 4
+    assert all(item.grain_a_id in state.grain_ids
+               and item.grain_b_id in state.grain_ids for item in interfaces)
+
+
+def test_four_grain_network_executes_one_joint_complete_event():
+    spacing = 5e-6/16
+    state = initialize_network_state(
+        16, 900.0, 4, spacing_m=spacing, interface_width_m=6.25e-7)
+    wall, kinetics = _front_parameters(spacing)
+    evolved, runtime, decision = advance_multigrain_front(
+        state, MultiGrainProductionRuntime(network_interfaces(state)),
+        kinetics=kinetics, dt_s=1e-8, spacing_m=spacing,
+        represented_thickness_m=5e-10, wall_parameters=wall,
+        energy_kwargs=dict(phase_barrier_J_m3=5e6,
+                           phase_gradient_J_m=5e-7,
+                           reference_temperature_K=900.0),
+        systems=bcc_four_family_systems())
+    assert decision.accepted
+    assert decision.selected_rate_conjugate_to_recorded_force
+    assert runtime.ledger.accepted_events == 1
+    assert evolved.ledger.energy_accepted_transactions == 1
 
 
 def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():

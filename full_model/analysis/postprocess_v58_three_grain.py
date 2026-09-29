@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from full_model.analysis.run_v58_three_grain_production import (
-    _load_checkpoint, initialize_state,
+    _load_checkpoint, initialize_network_state,
 )
 from full_model.production.multigrain_common_state import (
     audit_multigrain_nye, reconstruct_multigrain_common,
@@ -78,9 +78,10 @@ def main():
      checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(checkpoint)
     spacing = float(run_result["spacing_m"])
     thickness = float(run_result["represented_thickness_m"])
-    initial = initialize_state(
+    initial = initialize_network_state(
         run_result["n"], run_result["temperature_K"],
-        run_result["case"] == "equal_density", spacing_m=spacing,
+        (checkpoint_configuration or {}).get("grain_count", 3),
+        equal_density=run_result["case"] == "equal_density", spacing_m=spacing,
         interface_width_m=run_result["interface_width_m"])
     cell_volume = spacing**2*thickness
     final_volume = np.sum(state.supports, axis=(1, 2))*cell_volume
