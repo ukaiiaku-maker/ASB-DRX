@@ -163,7 +163,8 @@ def main():
         "--resume-transition", choices=(
             "none", "common_temperature_once_from_v2",
             "adaptive_bisection_controller_v5",
-            "v58_smaller_macro_step_from_97b91df"),
+            "v58_smaller_macro_step_from_97b91df",
+            "v59_conjugate_front_from_ce3d101"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -269,6 +270,22 @@ def main():
             provenance["parent_checkpoint_sha256"] = resume_sha
             provenance["parent_source_commit"] = "97b91df"
             provenance["parent_dt_s"] = float(legacy_dt)
+        elif args.resume_transition == "v59_conjugate_front_from_ce3d101":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V59 force-rate transition requires expected checkpoint SHA-256")
+            if (checkpoint_configuration != configuration
+                    or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit") != "ce3d101"):
+                raise ValueError(
+                    "V59 force-rate transition requires an exact ce3d101 "
+                    "checkpoint with unchanged physical configuration")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = "ce3d101"
+            provenance["governing_change"] = (
+                "fixed-point conjugacy between constrained complete front "
+                "force, EXP-floor rate, and mobility dissipation")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
@@ -420,6 +437,13 @@ def main():
                             else "WITH_REJECTION")),
                     "directions": fronts[-1].direction_by_interface,
                     "pressures_Pa": fronts[-1].pressure_by_interface_Pa,
+                    "independent_pressures_Pa": (
+                        fronts[-1].independent_pressure_by_interface_Pa),
+                    "selected_velocities_m_s": (
+                        fronts[-1].selected_velocity_by_interface_m_s),
+                    "joint_pressure_factor": fronts[-1].joint_pressure_factor,
+                    "selected_rate_conjugate_to_recorded_force": (
+                        fronts[-1].selected_rate_conjugate_to_recorded_force),
                     "backtracks": max(item.backtracks for item in fronts),
                     "subintervals": len(fronts),
                     "rejected_subintervals": sum(

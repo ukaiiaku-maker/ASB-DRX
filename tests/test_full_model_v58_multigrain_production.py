@@ -55,6 +55,10 @@ def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():
     assert runtime.ledger.generated_heat_J > 0.0
     assert runtime.ledger.maximum_relative_energy_closure < .05
     assert evolved.ledger.energy_accepted_transactions == 1
+    assert decision.independent_pressure_by_interface_Pa
+    assert decision.selected_velocity_by_interface_m_s
+    assert decision.joint_pressure_factor > 0.0
+    assert decision.selected_rate_conjugate_to_recorded_force
 
     # After a finite first sweep, low-support cells and unequal edge speeds
     # make the next multi-edge direction nontrivial.  Its joint virtual price

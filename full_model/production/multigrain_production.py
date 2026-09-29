@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, fields, replace
+from dataclasses import dataclass, field, fields, replace
 import math
 
 import numpy as np
@@ -95,6 +95,12 @@ class MultiGrainProductionDecision:
     accepted_fraction_by_interface: dict[str, float]
     energy_decision: object | None
     backtracks: int
+    independent_pressure_by_interface_Pa: dict[str, float] = field(
+        default_factory=dict)
+    selected_velocity_by_interface_m_s: dict[str, float] = field(
+        default_factory=dict)
+    joint_pressure_factor: float = 1.0
+    selected_rate_conjugate_to_recorded_force: bool = True
 
 
 @dataclass(frozen=True)
@@ -509,8 +515,10 @@ def advance_multigrain_front(
         np.mean(owner.temperature_K) for owner in state.owners]))
     directions = {}
     pressures = {}
+    selected_velocities = {}
     base_requests = {}
     channel_records = {}
+    directional_channels = {}
     for interface in runtime.interfaces:
         if interface.grain_a_id not in index or interface.grain_b_id not in index:
             raise ValueError("runtime interface references an unknown grain")
@@ -530,6 +538,11 @@ def advance_multigrain_front(
             continue
         delta_ab = 0.0 if ab is None else ab[0]*kinetics.event_volume_m3/ab[1]
         delta_ba = 0.0 if ba is None else ba[0]*kinetics.event_volume_m3/ba[1]
+        directional_channels[interface.component_id] = (
+            interface,
+            0.0 if ab is None else max(-ab[0]/ab[1], 0.0),
+            0.0 if ba is None else max(-ba[0]/ba[1], 0.0),
+            weight_ab, weight_ba)
         event = propose_bidirectional_front_event(
             _defect(state.owners[index[interface.grain_a_id]]),
             _defect(state.owners[index[interface.grain_b_id]]),
@@ -577,6 +590,7 @@ def advance_multigrain_front(
             continue
         directions[interface.component_id] = direction
         pressures[interface.component_id] = pressure
+        selected_velocities[interface.component_id] = float(velocity)
         base_requests[interface.component_id] = request
         channel_records[interface.component_id] = (interface, donor, receiver)
 
@@ -606,35 +620,115 @@ def advance_multigrain_front(
     # several interfaces are active.  Scale the complete realized request to
     # a small virtual amplitude instead; donor competition is still handled
     # jointly and the direction is unchanged.
-    maximum_request = max(
-        float(np.max(request)) for request in base_requests.values())
-    joint_virtual_scale = min(
-        1.0, kinetics.virtual_fraction/max(maximum_request, 1e-300))
-    joint_virtual_proposals = []
-    for key in base_requests:
-        interface, donor, receiver = channel_records[key]
-        joint_virtual_proposals.append(derive_physical_transfer_proposal(
-            state, interface_id=interface.component_id, donor_id=donor,
-            receiver_id=receiver,
-            requested_fraction=joint_virtual_scale*base_requests[key],
-            law=kinetics.transfer_law, interval_s=dt, systems=systems))
-    joint_virtual_capacity = joint_material_transaction(
-        state, tuple(joint_virtual_proposals))
-    joint_virtual_price = evaluate_joint_multigrain_transaction(
-        state, joint_virtual_capacity, spacing_m=spacing_m,
-        represented_thickness_m=represented_thickness_m,
-        wall_parameters=wall_parameters, interval_s=dt,
-        dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
-        absolute_tolerance_J=0.0).decision.available_change_J
     cell_volume = float(spacing_m)**2*float(represented_thickness_m)
-    independent_virtual_work = sum(
-        pressures[key]*float(np.sum(extent, dtype=np.longdouble))*cell_volume
-        for key, extent in
-        joint_virtual_capacity.accepted_fraction_by_interface.items())
-    if joint_virtual_price < 0.0 and independent_virtual_work > 0.0:
-        joint_pressure_factor = -joint_virtual_price/independent_virtual_work
-        pressures = {
-            key: value*joint_pressure_factor for key, value in pressures.items()}
+
+    def requests_at_force_scale(scale):
+        trial_directions = {}; trial_pressures = {}; trial_requests = {}
+        trial_records = {}; trial_velocities = {}
+        for key, (interface, pressure_ab, pressure_ba,
+                  weight_ab, weight_ba) in directional_channels.items():
+            event = propose_bidirectional_front_event(
+                _defect(state.owners[index[interface.grain_a_id]]),
+                _defect(state.owners[index[interface.grain_b_id]]),
+                event_volume_m3=kinetics.event_volume_m3,
+                event_length_m=kinetics.event_length_m,
+                line_energy_J_m=wall_parameters.line_energy_J_m,
+                temperature_K=temperature, process=kinetics.process,
+                h0_J=kinetics.h0_J,
+                critical_pressure_Pa=kinetics.critical_pressure_Pa,
+                exp_a=kinetics.exp_a, exp_n=kinetics.exp_n,
+                exp_floor=kinetics.exp_floor,
+                transmission_fraction=0.0, boundary_storage_fraction=0.0,
+                neutral_sink_fraction=0.0,
+                kinetic_free_energy_a_to_b_J=(
+                    -float(scale)*pressure_ab*kinetics.event_volume_m3),
+                kinetic_free_energy_b_to_a_J=(
+                    -float(scale)*pressure_ba*kinetics.event_volume_m3),
+                actual_reverse_edge=False,
+                deterministic_rate_law="complete_dissipation")
+            velocity = event.net_velocity_a_to_b_m_s
+            if velocity == 0.0:
+                continue
+            if velocity > 0.0:
+                donor = interface.grain_a_id; receiver = interface.grain_b_id
+                weight = weight_ab; direction = "a_to_b"; pressure = pressure_ab
+            else:
+                donor = interface.grain_b_id; receiver = interface.grain_a_id
+                weight = weight_ba; direction = "b_to_a"; pressure = pressure_ba
+            fraction = min(abs(velocity)*dt/float(spacing_m),
+                           kinetics.maximum_fraction_per_step)
+            request = fraction*weight
+            if pressure <= 0.0 or not np.any(request > 0.0):
+                continue
+            trial_directions[key] = direction
+            trial_pressures[key] = pressure
+            trial_requests[key] = request
+            trial_records[key] = (interface, donor, receiver)
+            trial_velocities[key] = float(velocity)
+        return (trial_directions, trial_pressures, trial_requests,
+                trial_records, trial_velocities)
+
+    def complete_direction_factor(requests, records, unscaled_pressures):
+        maximum_request = max(
+            float(np.max(request)) for request in requests.values())
+        virtual_scale = min(
+            1.0, kinetics.virtual_fraction/max(maximum_request, 1e-300))
+        proposals = []
+        for key in requests:
+            interface, donor, receiver = records[key]
+            proposals.append(derive_physical_transfer_proposal(
+                state, interface_id=interface.component_id, donor_id=donor,
+                receiver_id=receiver,
+                requested_fraction=virtual_scale*requests[key],
+                law=kinetics.transfer_law, interval_s=dt, systems=systems))
+        capacity = joint_material_transaction(state, tuple(proposals))
+        price = evaluate_joint_multigrain_transaction(
+            state, capacity, spacing_m=spacing_m,
+            represented_thickness_m=represented_thickness_m,
+            wall_parameters=wall_parameters, interval_s=dt,
+            dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
+            absolute_tolerance_J=0.0).decision.available_change_J
+        independent_work = sum(
+            unscaled_pressures[key]
+            *float(np.sum(extent, dtype=np.longdouble))*cell_volume
+            for key, extent in capacity.accepted_fraction_by_interface.items())
+        return (-price/independent_work
+                if price < 0.0 and independent_work > 0.0 else 1.0)
+
+    # The complete joint directional derivative changes the force supplied to
+    # the nonlinear EXP-floor law.  Reusing velocities selected before that
+    # correction is formally nonconjugate.  Solve the scalar projected-force
+    # fixed point so the published rate is generated by the same corrected
+    # force used for mobility dissipation.
+    joint_pressure_factor = 1.0
+    force_rate_converged = False
+    for _ in range(24):
+        (directions, independent_pressures, base_requests,
+         channel_records, selected_velocities) = requests_at_force_scale(
+             joint_pressure_factor)
+        if not base_requests:
+            break
+        updated_factor = complete_direction_factor(
+            base_requests, channel_records, independent_pressures)
+        relative = abs(updated_factor-joint_pressure_factor)/max(
+            abs(updated_factor), 1e-300)
+        joint_pressure_factor = float(updated_factor)
+        if relative <= 1e-10:
+            force_rate_converged = True
+            break
+    (directions, independent_pressures, base_requests,
+     channel_records, selected_velocities) = requests_at_force_scale(
+         joint_pressure_factor)
+    if base_requests:
+        verification_factor = complete_direction_factor(
+            base_requests, channel_records, independent_pressures)
+        force_rate_converged = bool(force_rate_converged and np.isclose(
+            verification_factor, joint_pressure_factor,
+            rtol=1e-10, atol=1e-12))
+    if not force_rate_converged:
+        raise RuntimeError("joint front force-rate fixed point did not converge")
+    pressures = {key: value*joint_pressure_factor
+                 for key, value in independent_pressures.items()}
 
     options = {} if energy_kwargs is None else dict(energy_kwargs)
     result = None
@@ -691,7 +785,9 @@ def advance_multigrain_front(
     return (result.published_state, replace(runtime, ledger=next_ledger),
             MultiGrainProductionDecision(
                 True, result.decision.classification, directions, pressures,
-                requested, accepted_fractions, result.decision, backtrack))
+                requested, accepted_fractions, result.decision, backtrack,
+                independent_pressures, selected_velocities,
+                float(joint_pressure_factor), force_rate_converged))
 
 
 def advance_multigrain_front_interval(

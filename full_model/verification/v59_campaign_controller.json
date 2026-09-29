@@ -16,18 +16,18 @@
     "spontaneous_grain_birth": "NOT_ESTABLISHED",
     "material_calibration": "NOT_CLAIMED"
   },
-  "focused_tests": "29 passed in 15.16 s",
+  "focused_tests": "29 classifier tests passed; 20 front/energy tests passed",
   "active_heavy_solver": {
-    "exec_session": 5180,
-    "case": "high_rate_n32_to3p5us",
-    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v33_fixedwidth_dense_from110_n32/checkpoint_000126.npz",
-    "resume_sha256": "3cd1ac1b322386c91b5242739c1c8c16b2dfefc74bc5c8bde77ae2287139e188",
+    "exec_session": 86033,
+    "case": "high_rate_frozen_n32_to3p5us",
+    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v29_fixedwidth_front_frozen_n32/checkpoint_000126.npz",
+    "resume_sha256": "0aad817494c7a0ac5ba9bbebd08bb0ec8c9b0593b0c5934960010c6b0d40b8f8",
     "target_physical_time_s": 3.5e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_n32_to3p5us"
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_frozen_n32_to3p5us"
   },
   "next_actions": [
-    "Finish the 3.5 microsecond baseline continuation and classify its physical episode",
-    "Continue its already-diverged frozen-flow control to the same physical horizon",
+    "Finish the 3.5 microsecond already-diverged frozen-flow control",
+    "Classify the matched 3.5 microsecond physical episode",
     "Extend useful accepted horizons toward 4.0 and 4.5 microseconds",
     "Audit front force-rate conjugacy and stage-consistent endpoint observables",
     "Use measured cost to select comparable-exposure and four-to-eight-grain runs"
