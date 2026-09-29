@@ -170,7 +170,8 @@ def _masked_owner_update(before, after, active, systems, spacing_m):
 def _owner_drivings_from_common_stress(
         state, driving, systems, wall_parameters):
     if driving.resolved_stress_Pa is not None:
-        return tuple(driving for _ in state.owners)
+        return tuple(replace(driving, material_support=support)
+                     for support in state.supports)
     mixture, _ = reconstruct_multigrain_common(
         state, wall_parameters.spacing_m)
     beta2 = np.asarray(mixture.beta_p)[..., :2, :2]
@@ -181,7 +182,7 @@ def _owner_drivings_from_common_stress(
         wall_parameters.c12_Pa, wall_parameters.c44_Pa,
         iterations=wall_parameters.elastic_iterations)
     owner_drivings = []
-    for owner in state.owners:
+    for support, owner in zip(state.supports, state.owners):
         _, directions, normals = rotated_system_fields(
             systems, owner.orientation_rad)
         schmid = .5*(
@@ -189,8 +190,10 @@ def _owner_drivings_from_common_stress(
                       normals[..., :2])
             +np.einsum("...si,...sj->...sij", normals[..., :2],
                        directions[..., :2]))
-        owner_drivings.append(CommonWallDriving(resolved_stress_Pa=np.einsum(
-            "...ij,...sij->...s", common_stress, schmid)))
+        owner_drivings.append(CommonWallDriving(
+            resolved_stress_Pa=np.einsum(
+                "...ij,...sij->...s", common_stress, schmid),
+            material_support=np.asarray(support, dtype=float)))
     return tuple(owner_drivings)
 
 

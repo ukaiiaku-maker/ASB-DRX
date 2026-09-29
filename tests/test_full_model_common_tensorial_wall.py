@@ -12,7 +12,7 @@ from full_model.production.common_tensorial_wall import (
     wall_free_energy_density_J_m3,
     wall_total_free_energy_density_J_m3,
     wall_free_energy_derivatives, wall_residual,
-    _biased_exchange_components,
+    _biased_exchange_components, _periodic_upwind_rate,
 )
 from full_model.production.tensorial_nye import (
     bcc_four_family_systems, junction_closure_metrics, make_junction_topology,
@@ -321,6 +321,23 @@ def test_unloaded_hold_decreases_declared_defect_free_energy():
         systems, topologies, p)
     assert np.max(residual.plastic_power_W_m3) == 0.0
     assert np.max(residual.free_energy_rate_W_m3) <= 0.0
+
+
+def test_supported_upwind_transport_conserves_owner_extensive_content():
+    n = 32
+    x = np.arange(n)[:, None]
+    support = .5+.45*np.cos(2*np.pi*x/n)
+    support = np.broadcast_to(support, (n, n)).copy()
+    density = np.ones((n, n, 4))*3e14
+    density *= (1.0+.2*np.sin(2*np.pi*np.arange(n)[None, :, None]/n))
+    velocity = np.zeros((n, n, 4, 2))
+    velocity[..., 0] = 2e-4
+    rate = _periodic_upwind_rate(
+        density, velocity, 2e-7, support=support)
+    weighted_rate = support[..., None]*rate
+    imbalance = np.abs(np.sum(weighted_rate, axis=(0, 1)))
+    turnover = np.sum(np.abs(weighted_rate), axis=(0, 1))
+    assert np.max(imbalance/turnover) < 2e-15
 
 
 def test_reversible_exchange_is_attempt_bounded_and_obeys_declared_affinity():

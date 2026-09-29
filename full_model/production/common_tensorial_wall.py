@@ -255,6 +255,10 @@ class CommonWallDriving:
     full_tensor_z_invariant_enabled: bool = False
     mean_strain_3d: np.ndarray | None = None
     fixed_eigenstrain_3d: np.ndarray | None = None
+    # Fixed material-owner support for an Eulerian multi-grain mechanical
+    # interval.  When supplied, conservative transport advances eta*rho and
+    # prevents an unledgered defect-energy flux through the owner boundary.
+    material_support: np.ndarray | None = None
 
 
 @dataclass(frozen=True)
@@ -287,18 +291,32 @@ def _divergence(vector, spacing):
     return np.real(dx+dy)
 
 
-def _periodic_upwind_rate(density, velocity, spacing):
-    """Conservative first-order finite-volume advection on a periodic grid."""
+def _periodic_upwind_rate(density, velocity, spacing, support=None):
+    """Conservative periodic advection of density or supported inventory."""
     rho = np.asarray(density, dtype=float)
     vel = np.asarray(velocity, dtype=float)
-    rate = np.zeros_like(rho)
+    eta = None if support is None else np.asarray(support, dtype=float)
+    if eta is not None and eta.shape != rho.shape[:2]:
+        raise ValueError("transport support must match the spatial grid")
+    extensive_rate = np.zeros_like(rho)
     for axis in (0, 1):
         right_rho = np.roll(rho, -1, axis=axis)
         face_velocity = 0.5*(vel[..., axis]+np.roll(vel[..., axis], -1, axis=axis))
         face_flux = (np.maximum(face_velocity, 0.0)*rho
                      +np.minimum(face_velocity, 0.0)*right_rho)
-        rate -= (face_flux-np.roll(face_flux, 1, axis=axis))/spacing
-    return rate
+        if eta is not None:
+            # A face can carry only material owned on both sides.  ``min`` is
+            # a conservative diffuse-interface transmissivity and becomes an
+            # exact no-flux condition at absent support.
+            face_eta = np.minimum(eta, np.roll(eta, -1, axis=axis))
+            face_flux *= face_eta[..., None]
+        extensive_rate -= (
+            face_flux-np.roll(face_flux, 1, axis=axis))/spacing
+    if eta is None:
+        return extensive_rate
+    return np.divide(
+        extensive_rate, eta[..., None], out=np.zeros_like(extensive_rate),
+        where=eta[..., None] > 256.0*np.finfo(float).eps)
 
 
 def exp_floor_rate(stress_pa, temperature_K, barrier_eV, parameters):
@@ -569,13 +587,40 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
         raw = np.asarray(driving.resolved_stress_Pa, dtype=float)
     if raw.shape != family_shape:
         raise ValueError("resolved stress requires grid x family layout")
+    # Conservative signed transport carries defect free energy.  Its
+    # variational force must enter the glide affinity; otherwise prescribed
+    # stress alone can advect line content uphill in the declared logarithmic
+    # storage functional.  For J+ = rho+ v s and J- = -rho- v s,
+    #
+    #   D_transport = v [tau b (rho+ + rho-)
+    #                    - (s.grad(mu)) (rho+ - rho-)].
+    #
+    # The bracketed second term is therefore an internal chemical backstress.
+    # It vanishes exactly in homogeneous material and introduces no target
+    # wall wavelength or prescribed pattern.
+    chemical = wall_free_energy_derivatives(
+        state, parameters, topologies, systems)
+    mu_x, mu_y = _spectral_gradient(
+        chemical["mobile_mu_J_m"], parameters.spacing_m)
+    _, directions, _ = rotated_system_fields(systems, state.orientation_rad)
+    directional_mu_gradient = (
+        mu_x[..., None]*directions[..., 0]
+        +mu_y[..., None]*directions[..., 1])
+    mobile_total = state.mobile_plus_m2+state.mobile_minus_m2
+    mobile_signed = state.mobile_plus_m2-state.mobile_minus_m2
+    chemical_backstress = np.divide(
+        directional_mu_gradient*mobile_signed,
+        parameters.burgers_m*mobile_total,
+        out=np.zeros_like(mobile_total), where=mobile_total > 0.0)
+    thermodynamic_stress = raw-chemical_backstress
     resistance = taylor_resistance_Pa(state, systems, topologies, parameters)
     if parameters.taylor_alpha == 0.0:
-        effective = raw.copy()
+        effective = thermodynamic_stress.copy()
     else:
-        smooth = np.sqrt(raw*raw+resistance*resistance
+        smooth = np.sqrt(thermodynamic_stress*thermodynamic_stress
+                         +resistance*resistance
                          +parameters.taylor_regularization_Pa**2)
-        effective = raw*(1.0-resistance/smooth)
+        effective = thermodynamic_stress*(1.0-resistance/smooth)
     if driving.glide_speed_m_s is None:
         activation = exp_floor_rate(
             effective, channel_temperature_K(
@@ -588,6 +633,8 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
     if speed.shape != family_shape:
         raise ValueError("glide speed requires grid x family layout")
     return {"speed_m_s": speed, "raw_stress_Pa": raw,
+            "chemical_backstress_Pa": chemical_backstress,
+            "thermodynamic_stress_Pa": thermodynamic_stress,
             "effective_stress_Pa": effective,
             "taylor_resistance_Pa": resistance,
             "stress_tensor_Pa": stress_tensor,
@@ -631,13 +678,26 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     if parameters.transport_scheme == "upwind":
         mp_rate = _periodic_upwind_rate(
             state.mobile_plus_m2, speed[..., None]*planar,
-            parameters.spacing_m)
+            parameters.spacing_m, driving.material_support)
         mm_rate = _periodic_upwind_rate(
             state.mobile_minus_m2, -speed[..., None]*planar,
-            parameters.spacing_m)
+            parameters.spacing_m, driving.material_support)
     else:
-        mp_rate = -_divergence(flux_plus, parameters.spacing_m)
-        mm_rate = -_divergence(flux_minus, parameters.spacing_m)
+        if driving.material_support is None:
+            mp_rate = -_divergence(flux_plus, parameters.spacing_m)
+            mm_rate = -_divergence(flux_minus, parameters.spacing_m)
+        else:
+            eta = np.asarray(driving.material_support, dtype=float)
+            mp_extensive = -_divergence(
+                eta[..., None, None]*flux_plus, parameters.spacing_m)
+            mm_extensive = -_divergence(
+                eta[..., None, None]*flux_minus, parameters.spacing_m)
+            mp_rate = np.divide(
+                mp_extensive, eta[..., None], out=np.zeros_like(mp_extensive),
+                where=eta[..., None] > 256.0*np.finfo(float).eps)
+            mm_rate = np.divide(
+                mm_extensive, eta[..., None], out=np.zeros_like(mm_extensive),
+                where=eta[..., None] > 256.0*np.finfo(float).eps)
     # Preserve the accepted transport contribution before reactions are
     # accumulated.  V31 uses this to construct a term-by-term first-law
     # transaction; no channel is inferred from the final balance residual.
@@ -719,8 +779,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         transport_mp_rate+transport_mm_rate, axis=2)
     multiplication_cost = (2.0*np.maximum(chemical["mobile_mu_J_m"], 0.0)
                            *np.sum(multiplication, axis=2))
+    transport_driving_power = np.sum(
+        drive["thermodynamic_stress_Pa"]*slip_rate, axis=2)
     multiplication_power_available = np.maximum(
-        plastic_power-transport_free_energy_rate, 0.0)
+        transport_driving_power, 0.0)
     multiplication_budget_scale = np.ones(grid)
     if parameters.enforce_multiplication_energy_budget:
         multiplication_budget_scale = np.minimum(
@@ -833,7 +895,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # is intentionally retained so the thermodynamic hard gate fails loudly.
     multiplication_free_energy_rate = chemical["mobile_mu_J_m"]*2.0*np.sum(
         multiplication, axis=2)
-    plastic_drag_dissipation = (plastic_power-transport_free_energy_rate
+    plastic_drag_dissipation = (transport_driving_power
                                 -multiplication_free_energy_rate)
     lock_dissipation = -delta_lock*np.sum(lock_p+lock_m, axis=2)
     wall_exchange_dissipation = -np.sum(
@@ -850,11 +912,19 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                 +chemical["wall_minus_mu_J_m"]*wm_rate, axis=2)
         +np.sum(chemical["junction_mu_J_m"]*junction_rate, axis=2)
         +q_chemical_potential*q_rate)
-    heat_rate = plastic_power-free_energy_rate
     physical_channel_sum = (
         plastic_drag_dissipation+lock_dissipation
         +annihilation_dissipation+junction_dissipation
         +wall_exchange_dissipation+order_dissipation)
+    # Irreversible heat is the independently evaluated sum of affinity-rate
+    # products.  The difference from ``plastic_power-free_energy_rate`` is the
+    # local divergence of defect energy carried by conservative transport;
+    # it integrates away in the periodic continuum balance and must not be
+    # relabelled as heat.  The endpoint complete-energy audit remains the hard
+    # check on its discrete integral.
+    heat_rate = physical_channel_sum
+    defect_energy_flux_divergence = (
+        plastic_power-free_energy_rate-heat_rate)
     temperature_rate = (
         heat_rate/parameters.volumetric_heat_capacity_J_m3_K
         +parameters.thermal_diffusivity_m2_s*lap_temperature
@@ -888,6 +958,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "wall_exchange_dissipation_W_m3": wall_exchange_dissipation,
         "wall_order_dissipation_W_m3": order_dissipation,
         "transport_free_energy_rate_W_m3": transport_free_energy_rate,
+        "chemical_backstress_Pa": drive["chemical_backstress_Pa"],
+        "transport_driving_power_W_m3": transport_driving_power,
+        "defect_energy_flux_divergence_W_m3": (
+            defect_energy_flux_divergence),
         "multiplication_free_energy_rate_W_m3": multiplication_free_energy_rate,
         "multiplication_energy_budget_scale": multiplication_budget_scale,
         "physical_channel_sum_W_m3": physical_channel_sum,
