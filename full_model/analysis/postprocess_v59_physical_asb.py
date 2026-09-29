@@ -232,6 +232,19 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
         power_field, power_component, power["threshold"], spacing)
     common, _ = reconstruct_multigrain_common(state, spacing)
     temperature = np.asarray(common.temperature_K, dtype=float)
+    accumulated_slip = np.sum(np.abs(np.asarray(common.slip)), axis=2)
+    slip_metrics, slip_component = field_metrics(accumulated_slip, spacing)
+    nye_magnitude = np.sqrt(np.sum(
+        np.asarray(common.family_nye_m1, dtype=float)**2,
+        axis=(2, 3, 4)))
+    nye_metrics, nye_component = field_metrics(nye_magnitude, spacing)
+    total_line_density = sum(
+        np.sum(np.asarray(getattr(common, name), dtype=float), axis=2)
+        for name in ("mobile_plus_m2", "mobile_minus_m2",
+                     "forest_plus_m2", "forest_minus_m2",
+                     "wall_plus_m2", "wall_minus_m2"))
+    density_metrics, density_component = field_metrics(
+        total_line_density, spacing)
     widths = morphology["second_moment_widths"]
     post_front_stress = float(_mean_mechanical_stress(
         state, spacing, wall, strain)[0, 1])
@@ -252,6 +265,16 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
         "temperature_mean_K": float(temperature.mean()),
         "temperature_max_minus_mean_K": float(temperature.max()-temperature.mean()),
         "temperature_max_minus_min_K": float(temperature.max()-temperature.min()),
+        "accumulated_absolute_slip": slip_metrics,
+        "accumulated_slip_power_component_overlap": overlap(
+            slip_component, power_component),
+        "nye_magnitude_m1": nye_metrics,
+        "nye_power_component_overlap": overlap(nye_component, power_component),
+        "total_line_density_m2": density_metrics,
+        "density_power_component_overlap": overlap(
+            density_component, power_component),
+        "orientation_range_rad": float(
+            np.max(common.orientation_rad)-np.min(common.orientation_rad)),
         "plastic_power": power,
         "plastic_power_component_morphology": morphology,
         "irreversible_heat_rate": heat,

@@ -82,7 +82,13 @@ def main():
         run_result["n"], run_result["temperature_K"],
         (checkpoint_configuration or {}).get("grain_count", 3),
         equal_density=run_result["case"] == "equal_density", spacing_m=spacing,
-        interface_width_m=run_result["interface_width_m"])
+        interface_width_m=run_result["interface_width_m"],
+        initial_temperature_band_K=(checkpoint_configuration or {}).get(
+            "initial_temperature_band_K", 0.0),
+        initial_temperature_band_width_m=(checkpoint_configuration or {}).get(
+            "initial_temperature_band_width_m", 3.125e-7),
+        single_crystal_band_normal=(checkpoint_configuration or {}).get(
+            "single_crystal_band_normal", "x"))
     cell_volume = spacing**2*thickness
     final_volume = np.sum(state.supports, axis=(1, 2))*cell_volume
     support_delta = state.supports-initial.supports
@@ -137,13 +143,15 @@ def main():
         density = _total_density(owner)
         newly_swept_density.append(float(np.sum(growth*density)
             /max(float(np.sum(growth)), 1e-300)))
-    low_index = 1
+    target_index = int(np.argmin([
+        float(np.mean(_total_density(owner))) for owner in initial.owners]))
     low_growth_fraction = float(
-        (final_volume[low_index]-initial_volume[low_index])
-        /max(initial_volume[low_index], 1e-300))
+        (final_volume[target_index]-initial_volume[target_index])
+        /max(initial_volume[target_index], 1e-300))
     substantial_drx = bool(
-        low_growth_fraction >= .01
-        and equivalent_displacement[low_index] >= .5*spacing
+        len(state.grain_ids) > 1
+        and low_growth_fraction >= .01
+        and equivalent_displacement[target_index] >= .5*spacing
         and fresh > 0.0)
     thermal_localization_ratio = float(
         (np.max(temperature)-np.min(temperature))
@@ -251,7 +259,9 @@ def main():
     figure, axes = plt.subplots(2, 3, figsize=(12, 7), constrained_layout=True)
     fields = (
         (np.argmax(state.supports, axis=0), "dominant grain", "tab10"),
-        (state.supports[1], "low-defect grain support", "viridis"),
+        (state.supports[target_index],
+         ("single-crystal support" if len(state.grain_ids) == 1
+          else "lowest-initial-density grain support"), "viridis"),
         (total_density, "total dislocation density [m$^{-2}$]", "magma"),
         (gnd, "Nye/GND norm [m$^{-1}$]", "inferno"),
         (orientation, "orientation [rad]", "twilight"),
@@ -291,7 +301,8 @@ def main():
     contrast_history = np.asarray(
         [item["temperature_contrast_K"] for item in history])
     low_growth_history = np.asarray([
-        item["grain_volume_change_m3"][low_index]/initial_volume[low_index]
+        item["grain_volume_change_m3"][target_index]
+        /initial_volume[target_index]
         for item in history])
     energy_error_history = np.asarray([
         item["mechanical_energy"]["relative_first_law_residual"]
@@ -307,7 +318,10 @@ def main():
         (stress_history/1e9, "shear stress [GPa]"),
         (mean_temperature_history, "mean temperature [K]"),
         (contrast_history, "temperature contrast [K]"),
-        (low_growth_history, "low-defect grain volume change / initial"),
+        (low_growth_history,
+         ("single-crystal volume change / initial"
+          if len(state.grain_ids) == 1 else
+          "lowest-density grain volume change / initial")),
         (power_ratio_history, "plastic-power max / mean"),
         (energy_error_history, "relative first-law residual"),
     )
