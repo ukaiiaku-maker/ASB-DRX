@@ -116,9 +116,9 @@ class MultiGrainCommonState:
         support = np.asarray(self.supports, dtype=float)
         if support.ndim != 3 or support.shape[0] != len(self.grain_ids):
             raise ValueError("supports require grain x grid layout")
-        if len(self.grain_ids) < 2 or len(set(self.grain_ids)) != len(
+        if len(self.grain_ids) < 1 or len(set(self.grain_ids)) != len(
                 self.grain_ids):
-            raise ValueError("grain IDs must be unique and contain at least two grains")
+            raise ValueError("grain IDs must be unique and contain at least one grain")
         if len(self.owners) != len(self.grain_ids):
             raise ValueError("every physical grain requires exactly one owner")
         if np.any(~np.isfinite(support)) or np.any(support < -SUPPORT_TOLERANCE):

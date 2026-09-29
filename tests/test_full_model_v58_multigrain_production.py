@@ -50,6 +50,21 @@ def test_four_grain_network_has_partition_cores_and_real_periodic_adjacency():
                and item.grain_b_id in state.grain_ids for item in interfaces)
 
 
+def test_single_crystal_common_owner_has_declared_weak_thermal_band():
+    state = initialize_network_state(
+        32, 900.0, 1, spacing_m=5e-6/32,
+        initial_temperature_band_K=1.0,
+        initial_temperature_band_width_m=3.125e-7,
+        single_crystal_band_normal="diagonal")
+    assert state.grain_ids == (10,)
+    assert not network_interfaces(state)
+    np.testing.assert_allclose(state.supports, 1.0)
+    temperature = state.owners[0].temperature_K
+    assert np.isclose(temperature.mean(), 900.0)
+    assert np.isclose(temperature.max()-900.0, 1.0)
+    state.validate()
+
+
 def test_four_grain_network_executes_one_joint_complete_event():
     spacing = 5e-6/16
     state = initialize_network_state(

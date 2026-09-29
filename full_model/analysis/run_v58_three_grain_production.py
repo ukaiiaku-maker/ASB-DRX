@@ -95,10 +95,44 @@ def initialize_state(n, temperature, equal_density=False, *,
 def initialize_network_state(n, temperature, grain_count, *,
                              spacing_m=1.5625e-7,
                              interface_width_m=3.125e-7,
-                             equal_density=False):
+                             equal_density=False,
+                             initial_temperature_band_K=0.0,
+                             initial_temperature_band_width_m=3.125e-7,
+                             single_crystal_band_normal="x"):
     """Initialize a resolved deterministic prepared-grain periodic network."""
     count = int(grain_count)
+    if count == 1:
+        support = np.ones((1, n, n))
+        owner = _owner(n, 4.0e17, 0.0, temperature)
+        amplitude = float(initial_temperature_band_K)
+        width_cells = float(initial_temperature_band_width_m)/float(spacing_m)
+        if amplitude < 0.0 or not np.isfinite(amplitude):
+            raise ValueError("initial temperature-band amplitude must be nonnegative")
+        if width_cells <= 0.0 or not np.isfinite(width_cells):
+            raise ValueError("initial temperature-band width must be positive")
+        if amplitude > 0.0:
+            x, y = np.meshgrid(np.arange(n), np.arange(n), indexing="ij")
+            if single_crystal_band_normal == "x":
+                coordinate = x
+            elif single_crystal_band_normal == "y":
+                coordinate = y
+            elif single_crystal_band_normal == "diagonal":
+                coordinate = np.mod(x-y, n)
+            else:
+                raise ValueError("unknown single-crystal band normal")
+            distance = _periodic_distance(coordinate, 0.5*n, n)
+            profile = np.exp(-0.5*(distance/width_cells)**2)
+            profile -= profile.mean()
+            profile /= max(float(profile.max()), 1e-300)
+            owner = replace(
+                owner, temperature_K=np.asarray(owner.temperature_K)
+                +amplitude*profile)
+        state = MultiGrainCommonState((10,), support, (owner,))
+        state.validate()
+        return state
     if count == 3:
+        if initial_temperature_band_K != 0.0:
+            raise ValueError("temperature-band seed is a single-crystal control")
         return initialize_state(
             n, temperature, equal_density, spacing_m=spacing_m,
             interface_width_m=interface_width_m)
@@ -110,7 +144,9 @@ def initialize_network_state(n, temperature, grain_count, *,
             (.16, .72), (.42, .79), (.68, .69), (.91, .76)),
     }
     if count not in layouts:
-        raise ValueError("V59 network grain count must be 3, 4, 6, or 8")
+        raise ValueError("V59 grain count must be 1, 3, 4, 6, or 8")
+    if initial_temperature_band_K != 0.0:
+        raise ValueError("temperature-band seed is a single-crystal control")
     centers = tuple((x*n, y*n) for x, y in layouts[count])
     width_cells = float(interface_width_m)/float(spacing_m)
     supports = _smooth_voronoi_supports(n, centers, width_cells)
@@ -175,7 +211,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", required=True)
     parser.add_argument("--n", type=int, default=32)
-    parser.add_argument("--grain-count", type=int, choices=(3, 4, 6, 8), default=3)
+    parser.add_argument("--grain-count", type=int, choices=(1, 3, 4, 6, 8), default=3)
     parser.add_argument("--steps", type=int, default=200)
     parser.add_argument("--dt", type=float, default=2e-10)
     parser.add_argument("--shear-rate", type=float, default=2e4)
@@ -185,6 +221,11 @@ def main():
     parser.add_argument("--checkpoint-every", type=int, default=20)
     parser.add_argument("--length", type=float, default=5e-6)
     parser.add_argument("--interface-width", type=float, default=3.125e-7)
+    parser.add_argument("--initial-temperature-band-K", type=float, default=0.0)
+    parser.add_argument("--initial-temperature-band-width", type=float,
+                        default=3.125e-7)
+    parser.add_argument("--single-crystal-band-normal",
+                        choices=("x", "y", "diagonal"), default="x")
     parser.add_argument("--front-attempt-frequency", type=float, default=1e8)
     parser.add_argument("--front-maximum-fraction", type=float, default=.015,
                         help="numerical contour-CFL bound per front substep")
@@ -241,12 +282,17 @@ def main():
                 "declared source commit does not match the executing worktree HEAD")
     source_commit = head_commit
     configuration = {
-        "schema": ("v58-three-grain-production-v4-geometric-front"
+        "schema": ("v59-single-crystal-production-v1"
+                   if args.grain_count == 1 else
+                   "v58-three-grain-production-v4-geometric-front"
                    if args.grain_count == 3 else
                    "v59-prepared-network-production-v1"),
         "n": args.n, "length_m": args.length,
         "grain_count": args.grain_count,
         "interface_width_m": args.interface_width, "dt_s": args.dt,
+        "initial_temperature_band_K": args.initial_temperature_band_K,
+        "initial_temperature_band_width_m": args.initial_temperature_band_width,
+        "single_crystal_band_normal": args.single_crystal_band_normal,
         "shear_rate_s": args.shear_rate, "temperature_K": args.temperature,
         "case": args.case,
         "front_attempt_frequency_s": args.front_attempt_frequency,
@@ -382,7 +428,11 @@ def main():
         state = initialize_network_state(
             args.n, args.temperature, args.grain_count,
             spacing_m=spacing, interface_width_m=args.interface_width,
-            equal_density=args.case == "equal_density")
+            equal_density=args.case == "equal_density",
+            initial_temperature_band_K=args.initial_temperature_band_K,
+            initial_temperature_band_width_m=(
+                args.initial_temperature_band_width),
+            single_crystal_band_normal=args.single_crystal_band_normal)
         runtime = MultiGrainProductionRuntime(network_interfaces(state))
         start = 0; gamma = .012
         initial_volume = np.sum(
@@ -563,7 +613,9 @@ def main():
             print(json.dumps(history[-1], sort_keys=True), flush=True)
     latest = sorted(out.glob("checkpoint_*.npz"))[-1]
     result = {
-        "schema": ("asb-drx-v58-three-grain-production-v1"
+        "schema": ("asb-drx-v59-single-crystal-production-v1"
+                   if args.grain_count == 1 else
+                   "asb-drx-v58-three-grain-production-v1"
                    if args.grain_count == 3 else
                    "asb-drx-v59-prepared-network-production-v1"),
         "case": args.case, "n": args.n, "steps": args.steps,
