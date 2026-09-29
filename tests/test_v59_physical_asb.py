@@ -136,7 +136,10 @@ def test_temperature_intervention_requires_every_arrhenius_channel():
     control["front_temperature_mode"] = "physical"
     decision = temperature_intervention_certificate(base, control, **kwargs)
     assert not decision["passed"]
-    assert not decision["checks"]["control_all_temperature_channels_frozen"]
+    assert not decision["checks"][
+        "control_matches_declared_temperature_intervention"]
+    assert temperature_intervention_certificate(
+        base, control, intervention_scope="flow_recovery", **kwargs)["passed"]
 
 
 def test_full_one_microsecond_conjunction_passes_only_with_refinement():

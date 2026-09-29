@@ -85,8 +85,9 @@ def temperature_intervention_certificate(
         baseline_initial_volume: np.ndarray,
         control_initial_volume: np.ndarray,
         baseline_grain_ids: tuple[int, ...],
-        control_grain_ids: tuple[int, ...]) -> dict:
-    """Certify the declared all-Arrhenius temperature intervention.
+        control_grain_ids: tuple[int, ...],
+        intervention_scope: str = "all_arrhenius") -> dict:
+    """Certify the declared channel-resolved temperature intervention.
 
     Fresh runs are analytically co-initialized by the deterministic production
     initializer when source, non-intervention configuration, initial volumes,
@@ -99,6 +100,20 @@ def temperature_intervention_certificate(
         key: baseline.pop(key, "physical") for key in _TEMPERATURE_INTERVENTION_KEYS}
     control_modes = {
         key: control.pop(key, "physical") for key in _TEMPERATURE_INTERVENTION_KEYS}
+    expected_control_modes = {
+        "all_arrhenius": {
+            "flow_temperature_mode": "frozen",
+            "recovery_temperature_mode": "frozen",
+            "front_temperature_mode": "frozen",
+        },
+        "flow_recovery": {
+            "flow_temperature_mode": "frozen",
+            "recovery_temperature_mode": "frozen",
+            "front_temperature_mode": "physical",
+        },
+    }
+    if intervention_scope not in expected_control_modes:
+        raise ValueError("unknown temperature-intervention scope")
     checks = {
         "same_source_commit": bool(
             baseline_provenance and control_provenance
@@ -107,8 +122,8 @@ def temperature_intervention_certificate(
         "same_nonintervention_configuration": baseline == control,
         "baseline_all_temperature_channels_physical": all(
             value == "physical" for value in baseline_modes.values()),
-        "control_all_temperature_channels_frozen": all(
-            value == "frozen" for value in control_modes.values()),
+        "control_matches_declared_temperature_intervention": (
+            control_modes == expected_control_modes[intervention_scope]),
         "same_step": int(baseline_step) == int(control_step),
         "same_physical_time": bool(np.isclose(
             baseline_time_s, control_time_s, rtol=0.0, atol=1e-18)),
@@ -122,11 +137,12 @@ def temperature_intervention_certificate(
     }
     return {
         "passed": all(checks.values()), "checks": checks,
+        "intervention_scope": intervention_scope,
         "baseline_modes": baseline_modes, "control_modes": control_modes,
         "semantics": (
-            "same deterministic analytic origin and loading; only flow, "
-            "recovery/organization, and moving-front Arrhenius temperature "
-            "routes differ while the physical heat equation evolves in both"),
+            "same deterministic analytic origin and loading; only the "
+            f"declared {intervention_scope} Arrhenius temperature routes "
+            "differ while the physical heat equation evolves in both"),
     }
 
 
@@ -380,7 +396,8 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
 
 
 def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
-            refinement_passed: bool = False) -> dict:
+            refinement_passed: bool = False,
+            intervention_scope: str = "all_arrhenius") -> dict:
     baseline = _checkpoint_map(baseline_dirs); history = _history_map(baseline_dirs)
     control = _checkpoint_map(control_dirs) if control_dirs else {}
     common = sorted(set(baseline) & set(control))
@@ -406,7 +423,8 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
             baseline_initial_volume=baseline_initial_volume,
             control_initial_volume=control_initial_volume,
             baseline_grain_ids=baseline_state.grain_ids,
-            control_grain_ids=state.grain_ids)
+            control_grain_ids=state.grain_ids,
+            intervention_scope=intervention_scope)
     for step, path in sorted(baseline.items()):
         row, component = checkpoint_snapshot(path, history.get(step))
         if (step in control_temperature
@@ -435,6 +453,7 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
     return {
         "schema": "asb-drx-v59-physical-asb-v1",
         "exploratory_v58_three_record_flag_is_strict": False,
+        "temperature_intervention_scope": intervention_scope,
         "criterion_provenance": {
             "retained_recent": (
                 "postprocess_v53_asb_mechanism.py: 1 us, power participation "
@@ -464,9 +483,14 @@ def main() -> None:
     parser.add_argument("--baseline-dir", action="append", type=Path, required=True)
     parser.add_argument("--control-dir", action="append", type=Path, default=[])
     parser.add_argument("--refinement-passed", action="store_true")
+    parser.add_argument("--intervention-scope",
+                        choices=("all_arrhenius", "flow_recovery"),
+                        default="all_arrhenius")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    result = analyze(args.baseline_dir, args.control_dir, args.refinement_passed)
+    result = analyze(
+        args.baseline_dir, args.control_dir, args.refinement_passed,
+        args.intervention_scope)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2)+"\n")
     print(json.dumps(result["physical_episode"], indent=2))
