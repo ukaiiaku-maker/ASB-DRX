@@ -229,7 +229,9 @@ def main():
                 "declared source commit does not match the executing worktree HEAD")
     source_commit = head_commit
     configuration = {
-        "schema": "v58-three-grain-production-v4-geometric-front",
+        "schema": ("v58-three-grain-production-v4-geometric-front"
+                   if args.grain_count == 3 else
+                   "v59-prepared-network-production-v1"),
         "n": args.n, "length_m": args.length,
         "grain_count": args.grain_count,
         "interface_width_m": args.interface_width, "dt_s": args.dt,
@@ -532,7 +534,9 @@ def main():
             print(json.dumps(history[-1], sort_keys=True), flush=True)
     latest = sorted(out.glob("checkpoint_*.npz"))[-1]
     result = {
-        "schema": "asb-drx-v58-three-grain-production-v1",
+        "schema": ("asb-drx-v58-three-grain-production-v1"
+                   if args.grain_count == 3 else
+                   "asb-drx-v59-prepared-network-production-v1"),
         "case": args.case, "n": args.n, "steps": args.steps,
         "dt_s": args.dt, "temperature_K": args.temperature,
         "shear_rate_s": args.shear_rate,
