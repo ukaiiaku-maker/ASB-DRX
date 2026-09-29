@@ -18,7 +18,7 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 77432,
+    "exec_session": 62595,
     "case": "low_rate_conjugate_n32_5to10us",
     "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
     "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v28_fixedwidth_rate2e3_n32/checkpoint_000050.npz",
