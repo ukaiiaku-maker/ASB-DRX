@@ -113,6 +113,8 @@ def main():
     systems = bcc_four_family_systems()
     flow_mode = ((checkpoint_configuration or {}).get(
         "flow_temperature_mode", "physical"))
+    recovery_mode = ((checkpoint_configuration or {}).get(
+        "recovery_temperature_mode", "physical"))
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
@@ -121,6 +123,9 @@ def main():
                 "maximum_fraction_per_step", .75)),
         flow_temperature_override_K=(
             run_result["temperature_K"] if flow_mode == "frozen" else None),
+        recovery_temperature_override_K=(
+            run_result["temperature_K"]
+            if recovery_mode == "frozen" else None),
         volumetric_heat_capacity_J_m3_K=3.8e6,
         thermal_diffusivity_m2_s=(checkpoint_configuration or {}).get(
             "thermal_diffusivity_m2_s", 0.15/3.8e6), bath_rate_s=0.0)
