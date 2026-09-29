@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 67161,
-    "case": "high_rate_T1000_baseline_conjugate_n32_to2p5us",
+    "exec_session": 28944,
+    "case": "high_rate_T1000_baseline_conjugate_n32_2p5to4p0us",
     "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
-    "resume_checkpoint": null,
-    "resume_sha256": null,
-    "target_physical_time_s": 2.5e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_T1000_baseline_conjugate_n32_to2p5us"
+    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_T1000_baseline_conjugate_n32_to2p5us/checkpoint_000100.npz",
+    "resume_sha256": "1c8d51a119cf62183dbddbd29a830ef9d1eaa885d598e29384874d6d07e9f1d8",
+    "target_physical_time_s": 4.0e-6,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_T1000_baseline_conjugate_n32_2p5to4p0us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -47,10 +47,12 @@
     "high_rate_4p5us_result": "BROAD_MECHANICAL_SOFTENING_NOT_CAUSAL_THERMAL_ASB",
     "high_rate_4p5us_checkpoint_sha256": "fd14eaf75abf3c259a405a779a9d15683f9dccb017146e887ea7a39ee43eacc9",
     "high_rate_4p5us_matched_control_sha256": "cf6b3c54510f9147a7af3af926c4b6ab13976777866b8ba7ec17d3b8709b37a6"
+    ,"T1000_2p5us_result": "VALID_ONSET_CANDIDATE_NOT_STRICT_ASB_STAGE_CONSISTENT_FIELD_BROAD",
+    "T1000_2p5us_checkpoint_sha256": "1c8d51a119cf62183dbddbd29a830ef9d1eaa885d598e29384874d6d07e9f1d8"
   },
   "next_actions": [
-    "Run the fixed-parameter 1000 K discriminator to 2.5 microseconds",
-    "Classify its physical morphology and thermal response",
-    "Extend or construct its matched control only if it is informative"
+    "Extend the exact fixed-parameter 1000 K state to 4 microseconds",
+    "Classify stage-consistent persistence and morphology through the emerging peak",
+    "Construct its matched control if the extended baseline remains informative"
   ]
 }
