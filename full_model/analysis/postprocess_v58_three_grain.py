@@ -239,9 +239,10 @@ def main():
             ) if missing],
         "spontaneous_grain_birth": False,
         "claim_limit": (
-            "Prepared three-grain existing-boundary trajectory; no spontaneous "
-            "nucleation claim. Strict ASB also requires persistence and "
-            "observable-specific refinement beyond this endpoint screen."),
+            f"Prepared {len(state.grain_ids)}-grain existing-boundary "
+            "trajectory; no spontaneous nucleation claim. Strict ASB also "
+            "requires persistence and observable-specific refinement beyond "
+            "this endpoint screen."),
     }
     classification_name = ("classification.json" if complete
                            else "classification_partial.json")
