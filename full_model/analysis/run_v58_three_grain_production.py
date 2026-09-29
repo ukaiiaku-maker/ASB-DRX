@@ -129,6 +129,9 @@ def main():
               "affinity and dissipation are recomputed after each substep"))
     parser.add_argument("--maximum-mechanical-subdivisions", type=int,
                         default=10)
+    parser.add_argument(
+        "--mechanical-maximum-fraction", type=float, default=.10,
+        help="maximum reservoir/bound change per accepted Euler microstep")
     parser.add_argument("--thermal-diffusivity", type=float,
                         default=0.15/3.8e6)
     parser.add_argument("--flow-temperature-mode",
@@ -162,9 +165,10 @@ def main():
         "front_maximum_substep_s": args.front_maximum_substep,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "transport_scheme": "upwind",
-        "maximum_fraction_per_step": .75,
+        "maximum_fraction_per_step": args.mechanical_maximum_fraction,
         "flow_temperature_mode": args.flow_temperature_mode,
         "mechanics_mode": args.mechanics_mode,
+        "mechanical_stress_integrator": "synchronized_common_stress_substeps",
         "front_sweep_measure": "level_set_gradient_pair_partition",
         "front_closure_fraction": .05,
     }
@@ -176,7 +180,7 @@ def main():
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
         transport_scheme="upwind",
-        maximum_fraction_per_step=0.75,
+        maximum_fraction_per_step=args.mechanical_maximum_fraction,
         flow_temperature_override_K=(
             args.temperature if args.flow_temperature_mode == "frozen"
             else None),

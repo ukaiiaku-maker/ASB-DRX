@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, fields, replace
 import math
 
 import numpy as np
@@ -172,6 +172,9 @@ def _owner_drivings_from_common_stress(
     if driving.resolved_stress_Pa is not None:
         return tuple(replace(driving, material_support=support)
                      for support in state.supports)
+    if driving.fixed_stress_tensor_Pa is not None:
+        return tuple(replace(driving, material_support=support)
+                     for support in state.supports)
     mixture, _ = reconstruct_multigrain_common(
         state, wall_parameters.spacing_m)
     beta2 = np.asarray(mixture.beta_p)[..., :2, :2]
@@ -182,17 +185,9 @@ def _owner_drivings_from_common_stress(
         wall_parameters.c12_Pa, wall_parameters.c44_Pa,
         iterations=wall_parameters.elastic_iterations)
     owner_drivings = []
-    for support, owner in zip(state.supports, state.owners):
-        _, directions, normals = rotated_system_fields(
-            systems, owner.orientation_rad)
-        schmid = .5*(
-            np.einsum("...si,...sj->...sij", directions[..., :2],
-                      normals[..., :2])
-            +np.einsum("...si,...sj->...sij", normals[..., :2],
-                       directions[..., :2]))
+    for support in state.supports:
         owner_drivings.append(CommonWallDriving(
-            resolved_stress_Pa=np.einsum(
-                "...ij,...sij->...s", common_stress, schmid),
+            fixed_stress_tensor_Pa=common_stress,
             material_support=np.asarray(support, dtype=float)))
     return tuple(owner_drivings)
 
@@ -231,112 +226,119 @@ def advance_multigrain_mechanics(
     dt = float(dt_s)
     cell_volume = (float(wall_parameters.spacing_m)**2
                    *float(represented_thickness_m))
-    owners = []
     work = heat = 0.0
     plastic_work_density = np.zeros(state.supports.shape[1:], dtype=float)
     irreversible_heat_density = np.zeros_like(plastic_work_density)
     minimum_scale = 1.0
     maximum_line_residual = 0.0
-    maximum_substeps = 0
-    # Temperature is a common Eulerian field, not a dormant grain history.
-    # Owner kinetics deposits its local heat without conducting separately
-    # across artificial owner-support discontinuities. Conduction is applied
-    # once to the reconstructed common temperature below.
+    substeps = 0
+    # All owners advance on one accepted clock.  Re-equilibrating the common
+    # stress after each microstep supplies the elastic unloading that bounds a
+    # finite-rate burst and keeps evolving crystal frames work-conjugate.
     local_parameters = replace(
         wall_parameters, thermal_diffusivity_m2_s=0.0, bath_rate_s=0.0)
-    owner_drivings = _owner_drivings_from_common_stress(
-        state, driving, systems, wall_parameters)
-    for support, owner, owner_driving in zip(
-            state.supports, state.owners, owner_drivings):
-        active = np.asarray(support) > 256.0*np.finfo(float).eps
-        updated = owner
-        remaining = dt
-        substeps = 0
-        suggested = remaining
-        owner_work = owner_heat = 0.0
-        while remaining > 64.0*np.finfo(float).eps*dt:
-            attempted = min(remaining, suggested)
-            local_retries = 0
-            while True:
-                try:
-                    trial, residual, scale = accepted_euler_step(
-                        updated, owner_driving, systems, topologies,
-                        local_parameters, attempted, active_mask=active)
-                    break
-                except (ValueError, FloatingPointError):
-                    attempted *= .5
-                    local_retries += 1
-                    if (local_retries > 64
-                            or attempted <= 64.0*np.finfo(float).eps*dt):
-                        raise RuntimeError(
-                            "mechanical interval could not find an admissible substep")
-            consumed = attempted*float(scale)
-            if consumed <= 0.0:
-                raise RuntimeError("mechanical interval made no physical-time progress")
+    updated_state = state
+    remaining = dt
+    suggested = remaining
+    diffusivity = float(wall_parameters.thermal_diffusivity_m2_s)
+    bath_rate = float(wall_parameters.bath_rate_s)
+    nx, ny = state.supports.shape[1:]
+    kx = 2*np.pi*np.fft.fftfreq(nx, d=wall_parameters.spacing_m)
+    ky = 2*np.pi*np.fft.fftfreq(ny, d=wall_parameters.spacing_m)
+    kx, ky = np.meshgrid(kx, ky, indexing="ij")
+    while remaining > 64.0*np.finfo(float).eps*dt:
+        attempted = min(remaining, suggested)
+        local_retries = 0
+        while True:
+            try:
+                owner_drivings = _owner_drivings_from_common_stress(
+                    updated_state, driving, systems, wall_parameters)
+                trials = [accepted_euler_step(
+                    owner, owner_driving, systems, topologies,
+                    local_parameters, attempted,
+                    active_mask=(np.asarray(support)
+                                 >256.0*np.finfo(float).eps))
+                    for support, owner, owner_driving in zip(
+                        updated_state.supports, updated_state.owners,
+                        owner_drivings)]
+                break
+            except (ValueError, FloatingPointError):
+                attempted *= .5
+                local_retries += 1
+                if (local_retries > 64
+                        or attempted <= 64.0*np.finfo(float).eps*dt):
+                    raise RuntimeError(
+                        "mechanical interval could not find an admissible substep")
+        scale = min(float(item[2]) for item in trials)
+        consumed = attempted*scale
+        if consumed <= 0.0:
+            raise RuntimeError("mechanical interval made no physical-time progress")
+        owners = []
+        heat_increment = np.zeros(state.supports.shape[1:], dtype=float)
+        for support, owner, (_, residual, _) in zip(
+                updated_state.supports, updated_state.owners, trials):
             weight = np.asarray(support, dtype=float)
-            owner_work += float(np.sum(
-                weight*residual.plastic_power_W_m3,
-                dtype=np.longdouble)*cell_volume*consumed)
-            owner_heat += float(np.sum(
-                weight*residual.heat_rate_W_m3,
-                dtype=np.longdouble)*cell_volume*consumed)
-            plastic_work_density += (
-                weight*residual.plastic_power_W_m3*consumed)
-            irreversible_heat_density += weight*residual.heat_rate_W_m3*consumed
+            work_increment = weight*residual.plastic_power_W_m3*consumed
+            owner_heat_increment = weight*residual.heat_rate_W_m3*consumed
+            plastic_work_density += work_increment
+            irreversible_heat_density += owner_heat_increment
+            heat_increment += owner_heat_increment
+            work += float(np.sum(work_increment, dtype=np.longdouble)
+                          *cell_volume)
+            heat += float(np.sum(owner_heat_increment, dtype=np.longdouble)
+                          *cell_volume)
             line_residual = residual.channel_rates_m2_s.get(
                 "line_balance_residual_m2_s", 0.0)
             maximum_line_residual = max(
                 maximum_line_residual,
                 float(np.max(np.abs(line_residual))))
-            minimum_scale = min(minimum_scale, float(scale))
-            # Temperature is one common Eulerian field.  The owner residual
-            # supplies heat but may not evolve a private temperature during
-            # its constitutive subcycles; the support-weighted source is
-            # applied once below after every owner has advanced.
-            trial = replace(
-                trial, temperature_K=np.asarray(updated.temperature_K).copy())
-            updated = trial
-            remaining -= consumed
-            suggested = min(dt, max(attempted, consumed)*1.25)
-            substeps += 1
-            if substeps > int(maximum_internal_substeps):
-                raise RuntimeError("mechanical physical interval exceeded substep budget")
-        owners.append(_masked_owner_update(
-            owner, updated, active, systems, wall_parameters.spacing_m))
-        work += owner_work
-        heat += owner_heat
-        maximum_substeps = max(maximum_substeps, substeps)
-    common_temperature = sum(
-        np.asarray(state.supports[index])*owner.temperature_K
-        for index, owner in enumerate(state.owners))
-    common_temperature = (
-        common_temperature+irreversible_heat_density
-        /wall_parameters.volumetric_heat_capacity_J_m3_K)
-    if np.any(~np.isfinite(common_temperature)) or np.any(
-            common_temperature <= 0.0):
-        raise ValueError("common heat update produced nonpositive temperature")
-    diffusivity = float(wall_parameters.thermal_diffusivity_m2_s)
-    if diffusivity > 0.0:
-        nx, ny = common_temperature.shape
-        kx = 2*np.pi*np.fft.fftfreq(nx, d=wall_parameters.spacing_m)
-        ky = 2*np.pi*np.fft.fftfreq(ny, d=wall_parameters.spacing_m)
-        kx, ky = np.meshgrid(kx, ky, indexing="ij")
-        spectrum = np.fft.fftn(common_temperature)
-        common_temperature = np.real(np.fft.ifftn(
-            np.exp(-diffusivity*(kx*kx+ky*ky)*dt)*spectrum))
-    bath_rate = float(wall_parameters.bath_rate_s)
-    if bath_rate > 0.0:
-        decay = math.exp(-bath_rate*dt)
-        common_temperature = (wall_parameters.bath_temperature_K
-                              +decay*(common_temperature
-                                      -wall_parameters.bath_temperature_K))
-    owners = [replace(owner, temperature_K=common_temperature.copy())
-              for owner in owners]
-    candidate = replace(state, owners=tuple(owners))
+            active = weight > 256.0*np.finfo(float).eps
+            arrays = {}
+            for item in fields(owner):
+                value = np.asarray(getattr(owner, item.name))
+                rate = np.asarray(getattr(residual.state_rate, item.name))
+                mask = active[(...,)+(None,)*(value.ndim-active.ndim)]
+                arrays[item.name] = np.where(
+                    mask, value+consumed*rate, value)
+            raw_trial = type(owner)(**arrays)
+            raw_trial = replace(
+                raw_trial, temperature_K=np.asarray(owner.temperature_K).copy())
+            owners.append(_masked_owner_update(
+                owner, raw_trial, active, systems,
+                wall_parameters.spacing_m))
+        common_temperature = sum(
+            np.asarray(updated_state.supports[index])
+            *owner.temperature_K
+            for index, owner in enumerate(updated_state.owners))
+        common_temperature += (
+            heat_increment/wall_parameters.volumetric_heat_capacity_J_m3_K)
+        if diffusivity > 0.0:
+            common_temperature = np.real(np.fft.ifftn(
+                np.exp(-diffusivity*(kx*kx+ky*ky)*consumed)
+                *np.fft.fftn(common_temperature)))
+        if bath_rate > 0.0:
+            decay = math.exp(-bath_rate*consumed)
+            common_temperature = (
+                wall_parameters.bath_temperature_K
+                +decay*(common_temperature-wall_parameters.bath_temperature_K))
+        if np.any(~np.isfinite(common_temperature)) or np.any(
+                common_temperature <= 0.0):
+            raise ValueError("common heat update produced nonpositive temperature")
+        owners = [replace(owner, temperature_K=common_temperature.copy())
+                  for owner in owners]
+        updated_state = replace(updated_state, owners=tuple(owners))
+        updated_state.validate()
+        remaining -= consumed
+        suggested = min(dt, max(consumed, attempted*scale)*1.25)
+        minimum_scale = min(minimum_scale, scale)
+        substeps += 1
+        if substeps > int(maximum_internal_substeps):
+            raise RuntimeError("mechanical physical interval exceeded substep budget")
+    candidate = updated_state
     candidate.validate()
     decision = MultiGrainMechanicalDecision(
         True, minimum_scale, work, heat, maximum_line_residual,
-        maximum_substeps, dt, plastic_work_density,
+        substeps, dt, plastic_work_density,
         irreversible_heat_density)
     return candidate, decision
 
