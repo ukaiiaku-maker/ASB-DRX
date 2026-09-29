@@ -52,21 +52,37 @@ def _periodic_distance(coordinate, center, n):
     return np.minimum(delta, n-delta)
 
 
-def initialize_state(n, temperature, equal_density=False, *,
-                     spacing_m=1.5625e-7,
-                     interface_width_m=3.125e-7):
+def _smooth_voronoi_supports(n, centers, width_cells):
+    """Return a partition with a declared *distance* transition scale.
+
+    A Gaussian softmax of squared center distance does not have the requested
+    interface width: near a bisector its width is proportional to
+    ``width_cells**2 / center_separation``.  That made the former nominally
+    physical interface subcell and grid dependent.  A distance softmax has a
+    bisector transition proportional to ``width_cells`` itself.
+    """
+    if width_cells <= 0.0 or not np.isfinite(width_cells):
+        raise ValueError("interface width in cells must be positive and finite")
     x, y = np.meshgrid(np.arange(n), np.arange(n), indexing="ij")
-    centers = ((.22*n, .50*n), (.72*n, .27*n), (.72*n, .73*n))
-    distance = np.stack([
-        _periodic_distance(x, cx, n)**2+_periodic_distance(y, cy, n)**2
+    radial_distance = np.stack([
+        np.sqrt(_periodic_distance(x, cx, n)**2
+                + _periodic_distance(y, cy, n)**2)
         for cx, cy in centers])
-    # Smooth Voronoi ownership produces resolved pure cores, three distinct
-    # orientations, and two incident arms meeting at a real triple junction.
-    width_cells = float(interface_width_m)/float(spacing_m)
-    logits = -distance/(2.0*width_cells**2)
+    logits = -radial_distance/float(width_cells)
     logits -= np.max(logits, axis=0, keepdims=True)
     supports = np.exp(logits)
     supports /= np.sum(supports, axis=0, keepdims=True)
+    return supports
+
+
+def initialize_state(n, temperature, equal_density=False, *,
+                     spacing_m=1.5625e-7,
+                     interface_width_m=3.125e-7):
+    centers = ((.22*n, .50*n), (.72*n, .27*n), (.72*n, .73*n))
+    # Smooth Voronoi ownership produces resolved pure cores, three distinct
+    # orientations, and two incident arms meeting at a real triple junction.
+    width_cells = float(interface_width_m)/float(spacing_m)
+    supports = _smooth_voronoi_supports(n, centers, width_cells)
     densities = ((4.0e17, 4.0e17, 4.0e17) if equal_density
                  else (4.0e17, 1.0e17, 3.0e17))
     owners = tuple(_owner(n, rho, angle, temperature) for rho, angle in zip(
