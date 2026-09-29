@@ -2263,3 +2263,30 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - An exact repaired-source n32 continuation from 3.15 to 3.5 microseconds was
   launched immediately with 50 ns accepted-state checkpoint cadence. Unrelated
   DDD, fatigue, and FFT jobs remain untouched.
+- The production front now solves the constrained complete-force/EXP-floor
+  rate fixed point and publishes the same force used for mobility dissipation.
+  The inherited V58 correction factors were only 1.00349--1.00424; repaired
+  accepted events are explicitly force--rate conjugate.
+- The repaired high-rate baseline reaches 4.00 microseconds and 0.080 added
+  shear with no rejected events. At its accepted post-front endpoint, stress
+  has softened 14.65% from the true preceding peak, peak-minus-mean
+  temperature is 143.32 K, and power participation is 0.2461. The minor width
+  remains 1.661 micrometers and aspect ratio 1.734, so the response is still a
+  broad zone and fails strict ASB; the matched control currently ends at
+  3.50 microseconds.
+- A genuine four-grain n32 common-owner calculation evolves all six periodic
+  adjacencies through 1.00 microsecond and 0.020 added shear. It retains four
+  resolved cores, partition error below 2e-15, 120 accepted events, zero
+  rejections, front closure below 4.93e-5, and cumulative mechanical closure
+  below 1.85e-6. The 0.5 microsecond checkpoint/restart edge is independently
+  verified from its SHA-256, source/configuration, first resumed step, clocks,
+  grain identities, and initial volumes.
+- On that evolved four-grain endpoint, interface-weighted temperatures differ
+  from the production global mean by at most 0.342 K; the corresponding
+  selected-channel transition-rate change is below 2.78e-4. This supports the
+  global-temperature approximation for this early trajectory only. A general
+  segment-resolved force/capacity law remains outside the demonstrated scope.
+- The first equal-strain comparison at 0.010 added shear shows nearly identical
+  stresses at 2e3/s and 2e4/s (4.60 kPa difference) but 45.41 K greater mean
+  heating in the slower, ten-times-longer exposure. A repaired low-rate
+  continuation toward 0.020 added shear is active.
