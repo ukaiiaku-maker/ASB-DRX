@@ -1,0 +1,115 @@
+{
+  "schema": "asb-drx-v58-campaign-manifest-v1",
+  "allocation_id": "v58-local-20260928T211310Z",
+  "start_utc": "2026-09-28T21:13:10Z",
+  "deadline_utc": "2026-09-29T09:13:10Z",
+  "closure_utc": "2026-09-29T08:34:54Z",
+  "execution_site": "local workstation",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v58-autonomous-20260928",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v58-20260928",
+  "production_source_commit": "ce3d101bb19b66dac337e4cc88edd3d99aa2172d",
+  "source_sequence": [
+    "659090f front physical-time subcycling",
+    "e08f962 realized-direction front pricing",
+    "8874335 supported transport energy and dissipation",
+    "97b91df synchronized common-stress mechanics",
+    "894223f attributable V58 continuation",
+    "9750dc9 unconditional final checkpoint",
+    "d09fba7 refinement matching by physical horizon",
+    "ce3d101 physically resolved interface-width initialization"
+  ],
+  "selected_runs": [
+    {
+      "id": "low_rate_drx",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v28_fixedwidth_rate2e3_n32",
+      "n": 32,
+      "dt_s": 1e-7,
+      "steps": 50,
+      "rate_s-1": 2000.0,
+      "temperature_K": 900.0,
+      "result_sha256": "dce6b7255d81c34f4f2740c2137a9ff3bb2eb16df91c5e6d4172d2a3e55ae784",
+      "classification_sha256": "451ebd588711068edb8c91d47ce6e229c540974998879bb7cbb7068f36b632e4"
+    },
+    {
+      "id": "high_rate_dense_baseline",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v33_fixedwidth_dense_from110_n32",
+      "n": 32,
+      "dt_s": 2.5e-8,
+      "resume_step": 110,
+      "steps": 126,
+      "rate_s-1": 20000.0,
+      "result_sha256": "09a86afdede9842c410bb1a43881e567470913c05930f15a02bdc9618e555908",
+      "classification_sha256": "4ee46b300a184ff40cd3324aff2e2f0828e6ae4d8c26b049b4dc5a97fea0f489"
+    },
+    {
+      "id": "front_frozen_flow",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v29_fixedwidth_front_frozen_n32",
+      "result_sha256": "2c68587791d5c3b046dc728f082ec121b1ea55c3500c03968a3094c7931ed92c",
+      "classification_sha256": "210f77396890d50f1e9c283f6f015f7787293a0959a6b07fda0d54b68f5ccac4"
+    },
+    {
+      "id": "no_front_full_flow",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v30_fixedwidth_no_front_full_n32",
+      "result_sha256": "a81e76f8ba20f5286cc1661e7b1757558410765dbbbcae4e8898ab288e49af3a",
+      "classification_sha256": "ce57a409ac5c5fb6eb5c4a1e6324e8d62876cbf8ac3305dcc5222e34d9647712"
+    },
+    {
+      "id": "no_front_frozen_flow",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v31_fixedwidth_no_front_frozen_n32",
+      "result_sha256": "a14d2c742816ab2db298a4b990a1442df200f886c15861420d777eeff9d4b32b",
+      "classification_sha256": "bdf998cbb41a95ed50ccdaa55db70f7d17c3505130dd07dce8309f99b2562987"
+    },
+    {
+      "id": "temporal_refinement",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v32_fixedwidth_dt1p25e8_n32",
+      "n": 32,
+      "dt_s": 1.25e-8,
+      "steps": 252,
+      "result_sha256": "09a7cd9f254b5c589fe6938fa7fb0cfe2ae94bae6f5d2ef10b8e546192a8a195",
+      "classification_sha256": "8b2931ae9ee60dd6cd65df7bad879efc68c5d1f3ba764f9e9ba3d2df9d234f50"
+    },
+    {
+      "id": "spatial_n48",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v26_fixedwidth_n48",
+      "n": 48,
+      "dt_s": 2.5e-8,
+      "steps": 126,
+      "result_sha256": "f383fecc077468db21eff4097cc528f67f351c90142f9de787e5d39e5f757f19",
+      "classification_sha256": "de08331370672f9b7e80dad0a44e7d7af08d8fc34a471db217e091f5a66f86ef"
+    },
+    {
+      "id": "spatial_n64",
+      "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v27_fixedwidth_n64",
+      "n": 64,
+      "dt_s": 2.5e-8,
+      "steps": 126,
+      "status": "COMPLETE_FROM_EXACT_STEP_100_CHECKPOINT",
+      "result_sha256": "350dfa0a887836ebc12a33d95976f90d89454a1d9f054594f877edde9350e293",
+      "classification_sha256": "46f35c5610b235659cdea2ea28d19b71076b7f4acd40dcc8cd7a257bed2d5962"
+    }
+  ],
+  "response_family": {
+    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/response_family_fixedwidth_n32/decision.json",
+    "sha256": "2bf1621ec36f98f3d6880d5a1f88f279a14f00d14cd160ce22d343920ea32bdc"
+  },
+  "spatial_refinement": {
+    "path": "full_model/verification/v58_spatial_refinement.json",
+    "sha256": "f708ddf0d2ada7c097a91fb935da0ad3c961b67ed4f173e7b532b4557842e167",
+    "selected_pair": [48, 64],
+    "maximum_selected_relative_error": 0.03822731743691185,
+    "passed_5_percent": true
+  },
+  "reproduction": {
+    "runner": "python -m full_model.analysis.run_v58_three_grain_production",
+    "postprocessor": "python -m full_model.analysis.postprocess_v58_three_grain",
+    "family_classifier": "python -m full_model.analysis.classify_v58_response_family",
+    "common_parameters": "--length 5e-6 --interface-width 3.125e-7 --front-attempt-frequency 1e10 --front-maximum-fraction .015 --front-maximum-substep 1e-8 --mechanical-maximum-fraction .10 --maximum-mechanical-subdivisions 15 --thermal-diffusivity 3.9473684210526316e-8 --mechanics-mode physical --source-commit ce3d101"
+  },
+  "tests": {
+    "interface_width_and_affected_suite": "31 passed",
+    "canonical_final_suite": "936 passed in 326.17 s with PYTHONPATH=src:."
+  },
+  "superseded_runs": "All V58 physical classifications from sources before ce3d101 are retained only as context.",
+  "hpc_used": false
+}

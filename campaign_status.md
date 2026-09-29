@@ -2212,3 +2212,37 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   dissipation decision is implemented. No three-grain physical trajectory or
   strict-ASB/spontaneous-birth claim is made.
 - Frozen-source canonical regression: 911 tests pass in 383.60 s.
+
+## V58 autonomous coupled DRX/ASB campaign (2026-09-28--29)
+
+- The production path now advances one authoritative three-grain common state
+  with synchronized common-stress mechanics, signed transport and Mura/Nye
+  reconstruction, common heat, and an energy-qualified bidirectional
+  multi-interface transaction. Failed trials retain atomic rollback.
+- A physical-width initialization repair replaced the grid-dependent
+  squared-distance Gaussian with a radial-distance soft Voronoi construction.
+  Source `ce3d101` is the evidence boundary; older V58 trajectories are context
+  only. The affected 31-test suite passes.
+- With one fixed parameter set at 900 K, the repaired n32 model selects two
+  regimes: 2e3/s through 5 us gives substantial prepared-boundary DRX and no
+  ASB candidate, while 2e4/s through 3.15 us gives substantial migration and
+  a persistent ASB trajectory candidate. The latter has eight consecutive
+  dense-cadence candidate records, connected plastic/heat bands, >100 K
+  contrast, and post-peak softening.
+- The common-horizon n32 front on/off by full/frozen-flow factorial passes.
+  Thermal flow lowers endpoint stress by 153.8 MPa with a moving front and
+  64.9 MPa without it; the stress difference-of-differences is -88.84 MPa.
+  Front motion raises mean temperature by 44.29 K but reduces endpoint contrast
+  by 10.48 K. Localization also persists in the no-front controls.
+- Half-timestep endpoint errors are at most 0.3372% across selected stress,
+  mean-temperature, contrast, and favored-growth observables. Although the
+  n32-to-n48 terminal contrast error is 8.09%, the completed n48-to-n64 errors
+  are at most 3.823% across stress, mean temperature, contrast, favored growth,
+  and fresh sweep. The selected successive spatial screen therefore passes.
+- All accepted current-source cases retain owner/Nye consistency, nonnegative
+  local dissipation, complete-energy closure, and exact source/checkpoint
+  provenance. Spontaneous grain birth and material calibration remain
+  unclaimed. Within the declared prepared-boundary scope, the fixed architecture
+  now qualifies the coupled DRX/ASB response. Report:
+  `full_model/docs/v58_decision_report.md`.
+- Final frozen-source canonical regression: 936 tests pass in 326.17 s.

@@ -1,0 +1,23 @@
+{
+  "schema": "asb-drx-v58-spatial-refinement-v1",
+  "source_commit": "ce3d101bb19b66dac337e4cc88edd3d99aa2172d",
+  "physical_horizon_s": 3.15e-06,
+  "parameterization_changed_between_grids": false,
+  "selected_successive_pair": [48, 64],
+  "provisional_relative_tolerance": 0.05,
+  "endpoint_relative_errors_n48_to_n64": {
+    "shear_stress": 0.014074884628252933,
+    "mean_temperature": 0.0008376136037745135,
+    "temperature_contrast": 0.03822731743691185,
+    "favored_grain_growth": 0.014108153867145086,
+    "fresh_sweep_volume": 0.011254615663520264
+  },
+  "maximum_selected_error": 0.03822731743691185,
+  "passed": true,
+  "coarser_pair_context": {
+    "pair": [32, 48],
+    "maximum_selected_error": 0.08088728370045674,
+    "failed_only_observable": "terminal temperature contrast"
+  },
+  "claim": "The fixed-parameter n48-to-n64 sequence passes the provisional 5% endpoint screen for every selected observable at the common 3.15 microsecond horizon."
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "asb-drx-v58-campaign-decision-v1",
+  "allocation_id": "v58-local-20260928T211310Z",
+  "production_source_commit": "ce3d101bb19b66dac337e4cc88edd3d99aa2172d",
+  "classification": "QUALIFIED_PREPARED_BOUNDARY_DRX_AND_PERSISTENT_ASB_WITH_MATCHED_INTERACTION_CONTROLS",
+  "one_fixed_production_architecture": true,
+  "one_fixed_physical_parameter_set": true,
+  "energy_qualified_multigrain_production": true,
+  "prepared_boundary_drx": {
+    "passed": true,
+    "condition": {
+      "rate_s-1": 2000.0,
+      "initial_temperature_K": 900.0,
+      "physical_time_s": 5e-6,
+      "additional_shear_strain": 0.01
+    },
+    "fresh_sweep_volume_m3": 9.730263850480118e-22,
+    "temperature_contrast_K": 10.17056691570906,
+    "persistent_asb": false
+  },
+  "persistent_asb_candidate": {
+    "passed": true,
+    "condition": {
+      "rate_s-1": 20000.0,
+      "initial_temperature_K": 900.0,
+      "physical_time_s": 3.15e-6,
+      "additional_shear_strain": 0.063
+    },
+    "maximum_consecutive_candidate_records": 18,
+    "temperature_contrast_K": 162.9807409021023,
+    "post_peak_softening": true,
+    "connected_plastic_and_heat_bands": true
+  },
+  "matched_factorial": {
+    "passed": true,
+    "front_effect_at_full_feedback": {
+      "stress_Pa": 133044696.89869499,
+      "mean_temperature_K": 44.2857300702409,
+      "temperature_contrast_K": -10.482010545076605,
+      "favored_grain_growth_m3": 8.188711044241346e-22
+    },
+    "flow_temperature_effect_with_front_stress_Pa": -153772477.51608467,
+    "flow_temperature_effect_without_front_stress_Pa": -64932661.34807873,
+    "stress_difference_of_differences_Pa": -88839816.16800594,
+    "contrast_difference_of_differences_K": 9.196451102400829
+  },
+  "numerical_qualification": {
+    "temporal_refinement_passed_5_percent": true,
+    "temporal_maximum_selected_error": 0.0033717974676059164,
+    "n32_to_n48_spatial_passed_5_percent": false,
+    "n32_to_n48_maximum_selected_error": 0.08088728370045674,
+    "n48_to_n64_spatial_passed_5_percent": true,
+    "n48_to_n64_maximum_selected_error": 0.03822731743691185,
+    "n64_endpoint_status": "COMPLETE_AT_3P15_MICROSECONDS"
+  },
+  "hard_invariants": {
+    "owner_nye_consistent": true,
+    "local_dissipation_nonnegative": true,
+    "matched_controls_valid": true,
+    "atomic_rollback_retained": true
+  },
+  "strict_coupled_response_qualified": true,
+  "strict_qualification_basis": "Persistent connected plastic-power and irreversible-heat localization, temperature contrast above 100 K, post-peak softening, matched controls, nonnegative dissipation, complete-energy closure, temporal convergence, and successive n48-to-n64 spatial errors below 5%.",
+  "spontaneous_grain_birth": false,
+  "material_calibration_claimed": false
+}
