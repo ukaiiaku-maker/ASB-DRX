@@ -212,6 +212,29 @@ def periodic_identity(left: np.ndarray, right: np.ndarray,
     }
 
 
+def component_temperature_excess(
+        baseline_temperature: np.ndarray, control_temperature: np.ndarray,
+        baseline_power_component: np.ndarray) -> dict:
+    """Return causal thermal excess locally on the candidate structure."""
+    baseline = np.asarray(baseline_temperature, dtype=float)
+    control = np.asarray(control_temperature, dtype=float)
+    component = np.asarray(baseline_power_component, dtype=bool)
+    if baseline.shape != control.shape or baseline.shape != component.shape:
+        raise ValueError("matched temperatures and component must share a grid")
+    difference = baseline-control
+    return {
+        "component_maximum_K": (None if not np.any(component) else
+                                  float(np.max(difference[component]))),
+        "whole_field_maximum_diagnostic_K": float(np.max(difference)),
+        "component_mean_K": (None if not np.any(component) else
+                               float(np.mean(difference[component]))),
+        "semantics": (
+            "Eulerian physical-minus-control temperature on the baseline "
+            "accepted-state plastic-power component; the whole-field maximum "
+            "is diagnostic only"),
+    }
+
+
 def _wall_parameters(configuration: dict, spacing_m: float) -> CommonWallParameters:
     return CommonWallParameters(
         spacing_m=spacing_m, elastic_iterations=2,
@@ -431,10 +454,14 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
                 and pair_certificates[step]["passed"]):
             state, *_ = _load_checkpoint(path)
             reconstructed, _ = reconstruct_multigrain_common(state, row["spacing_m"])
-            row["matched_temperature_excess_K"] = float(np.max(
-                np.asarray(reconstructed.temperature_K)-control_temperature[step]))
+            causal_temperature = component_temperature_excess(
+                reconstructed.temperature_K, control_temperature[step], component)
+            row["matched_temperature_excess_K"] = causal_temperature[
+                "component_maximum_K"]
+            row["matched_temperature_excess"] = causal_temperature
         else:
             row["matched_temperature_excess_K"] = None
+            row["matched_temperature_excess"] = None
         rows.append(row); components[step] = component
     valid_matched_rows = [
         row for row in rows if row["matched_temperature_excess_K"] is not None]

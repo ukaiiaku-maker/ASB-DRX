@@ -3,6 +3,7 @@ import numpy as np
 from full_model.analysis.postprocess_v59_physical_asb import (
     PhysicalASBCriteria, _wall_parameters, classify_physical_episode,
     component_morphology, periodic_identity,
+    component_temperature_excess,
     temperature_intervention_certificate,
 )
 
@@ -93,6 +94,16 @@ def test_component_morphology_keeps_square_patch_isotropic():
     morphology = component_morphology(
         field, component, field.mean()+field.std(), 1.0)
     assert np.isclose(morphology["aspect_ratio"], 1.0)
+
+
+def test_matched_temperature_excess_must_be_on_power_component():
+    baseline = np.zeros((8, 8)); control = np.zeros((8, 8))
+    component = np.zeros((8, 8), dtype=bool); component[:, 3] = True
+    baseline[0, 0] = 100.0
+    baseline[:, 3] = 20.0
+    result = component_temperature_excess(baseline, control, component)
+    assert result["component_maximum_K"] == 20.0
+    assert result["whole_field_maximum_diagnostic_K"] == 100.0
 
 
 def test_postprocess_reconstructs_independent_temperature_controls():
