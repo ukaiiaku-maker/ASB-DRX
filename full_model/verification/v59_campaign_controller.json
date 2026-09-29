@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 92632,
-    "case": "high_rate4e4_T900_frozen_conjugate_n32_to2p25us",
-    "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
+    "exec_session": 96884,
+    "case": "high_rate4e4_T900_frozen_all_conjugate_n32_to2p25us",
+    "source_commit": "42a5432173cc77ebc70faa0d20fa922189e33c66",
     "resume_checkpoint": null,
     "resume_sha256": null,
     "target_physical_time_s": 2.25e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_frozen_conjugate_n32_to2p25us"
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_frozen_all_conjugate_n32_to2p25us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -55,11 +55,14 @@
     "T1000_4us_causal_result": "FAILED_SCIENTIFIC_MATCHED_THERMAL_EXCESS_2P87K_AND_BROAD_MORPHOLOGY",
     "rate4e4_T900_baseline_result": "VALID_STRONG_LOCALIZATION_AND_14P3_PERCENT_SOFTENING_PENDING_MATCHED_CAUSAL_CONTROL",
     "rate4e4_T900_baseline_checkpoint_sha256": "0f28d1732a4007fa299f56b65c29986cb6352f450b7d1ac1d09edf8fb8dfee49",
-    "strict_morphology_revision": "TRACKED_THRESHOLD_COMPONENT_EXCESS_COMMIT_09f7bbd"
+    "strict_morphology_revision": "TRACKED_THRESHOLD_COMPONENT_EXCESS_COMMIT_09f7bbd",
+    "rate4e4_T900_frozen_flow_checkpoint_sha256": "0dda9a897e8e2340e9649f9d709f7dc2d0f401dae748d363e86456ce04731ee7",
+    "rate4e4_T900_frozen_flow_result": "VALID_NEAR_THRESHOLD_NEGATIVE_MAX_REGISTERED_EXCESS_38P97K_SOFTENING_14P3_PERCENT_NO_CONJUNCTIVE_EPISODE",
+    "temperature_channel_separation_source": "42a5432173cc77ebc70faa0d20fa922189e33c66"
   },
   "next_actions": [
-    "Complete the fresh matched frozen-flow control through 2.25 microseconds",
-    "Classify cell-registered causal thermal excess and conjunctive persistence",
-    "Use the causal result to select fixed-parameter horizon or spatial refinement"
+    "Complete the full constitutive-temperature control through 2.25 microseconds",
+    "Separate glide feedback from recovery and organization feedback",
+    "Use the channel-resolved causal result to select horizon or spatial refinement"
   ]
 }
