@@ -366,7 +366,9 @@ def main():
                 spacing_m=spacing, represented_thickness_m=thickness,
                 wall_parameters=wall, energy_kwargs=energy_options,
                 applied_shear_rate_s=args.shear_rate, systems=systems)
-        if step == start or (step+1) % max(args.checkpoint_every, 1) == 0:
+        if (step == start
+                or (step+1) % max(args.checkpoint_every, 1) == 0
+                or step+1 == args.steps):
             energy = evaluate_complete_multigrain_energy(
                 state, spacing_m=spacing,
                 represented_thickness_m=thickness,
