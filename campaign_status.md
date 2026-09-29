@@ -2286,7 +2286,21 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   selected-channel transition-rate change is below 2.78e-4. This supports the
   global-temperature approximation for this early trajectory only. A general
   segment-resolved force/capacity law remains outside the demonstrated scope.
-- The first equal-strain comparison at 0.010 added shear shows nearly identical
-  stresses at 2e3/s and 2e4/s (4.60 kPa difference) but 45.41 K greater mean
-  heating in the slower, ten-times-longer exposure. A repaired low-rate
-  continuation toward 0.020 added shear is active.
+- The repaired low-rate trajectory reaches 10 microseconds and 0.020 added
+  shear with zero rejected events. At common 0.020 added shear, the high- and
+  low-rate stresses differ by only 0.156 MPa, while the ten-times-longer low-
+  rate exposure is 98.75 K hotter in the mean and produces substantially more
+  prepared-boundary migration. The early response is therefore exposure-
+  dominated rather than a demonstrated rate-selected ASB boundary.
+- The 900 K high-rate baseline and matched frozen-flow control both reach
+  4.50 microseconds. The baseline has 21.40% true softening and 166.73 K
+  peak-minus-mean temperature, but it is not causal thermal ASB: its matched
+  thermal excess is -0.87 K, power participation is 0.271, and its accepted-
+  state morphology is broad (1.80 micrometer minor width; aspect 1.69).
+- A fixed-parameter 1000 K discriminator reaches 2.50 microseconds with zero
+  rejected events and exact front force--rate conjugacy. Its accepted-state
+  reconstruction is still broad (participation 0.580, 2.64 micrometer minor
+  width, aspect 1.09), only 0.17% post-peak softened, and 33.31 K above the
+  mean at the hot point. Because a stress peak and growing interval-level
+  localization have just emerged, its exact accepted checkpoint is continuing
+  toward 4.00 microseconds under the same coefficients and source.
