@@ -16,20 +16,32 @@
     "spontaneous_grain_birth": "NOT_ESTABLISHED",
     "material_calibration": "NOT_CLAIMED"
   },
-  "focused_tests": "29 classifier tests passed; 20 front/energy tests passed",
+  "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 86033,
-    "case": "high_rate_frozen_n32_to3p5us",
-    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v58-20260928/three_grain_v29_fixedwidth_front_frozen_n32/checkpoint_000126.npz",
-    "resume_sha256": "0aad817494c7a0ac5ba9bbebd08bb0ec8c9b0593b0c5934960010c6b0d40b8f8",
-    "target_physical_time_s": 3.5e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_frozen_n32_to3p5us"
+    "exec_session": 25644,
+    "case": "high_rate_baseline_conjugate_n32_3p5to4p0us",
+    "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
+    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_baseline_conjugate_exact_n32_to3p5us/checkpoint_000140.npz",
+    "resume_sha256": "2fa252e85f216d51c93163c408e7d96249c8eaaae38a025e0e4d4bea0182ea6a",
+    "target_physical_time_s": 4e-6,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_baseline_conjugate_n32_3p5to4p0us"
+  },
+  "current_decisions": {
+    "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
+    "strict_asb_failure_reasons": [
+      "post-front softening 4.21 percent is below 20 percent",
+      "matched thermal excess 13.55 K is below 50 K",
+      "power participation 0.351 exceeds 0.25",
+      "minor width 2.16 micrometers exceeds 0.25 domain width",
+      "aspect ratio 1.34 is below 3"
+    ],
+    "common_strain_rate_result": "EARLY_STRESS_RATE_INSENSITIVE_AND_PHYSICAL_TIME_EXPOSURE_DOMINANT",
+    "network_branch": "READY_AFTER_CURRENT_HEAVY_SOLVER"
   },
   "next_actions": [
-    "Finish the 3.5 microsecond already-diverged frozen-flow control",
-    "Classify the matched 3.5 microsecond physical episode",
-    "Extend useful accepted horizons toward 4.0 and 4.5 microseconds",
-    "Audit front force-rate conjugacy and stage-consistent endpoint observables",
-    "Use measured cost to select comparable-exposure and four-to-eight-grain runs"
+    "Finish and classify the repaired baseline at 4.0 microseconds",
+    "Run and restart a genuine four-grain common-owner trajectory",
+    "Extend the lower-rate physical exposure to common strain",
+    "Use measured morphology and cost to select the next persistence or refinement case"
   ]
 }
