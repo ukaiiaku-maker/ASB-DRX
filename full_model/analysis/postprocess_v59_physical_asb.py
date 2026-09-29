@@ -420,8 +420,11 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
         rows.append(row); components[step] = component
     valid_matched_rows = [
         row for row in rows if row["matched_temperature_excess_K"] is not None]
-    episode_rows = (valid_matched_rows if control_dirs and valid_matched_rows
-                    else rows)
+    # Retain the complete baseline stress history so the preceding peak is
+    # physical even when an attributable control starts later.  Unmatched
+    # rows fail the conjunctive matched-excess check and therefore cannot
+    # enter or bridge an episode.
+    episode_rows = rows
     episode_components = {row["step"]: components[row["step"]]
                           for row in episode_rows}
     matched_available = bool(control_dirs and valid_matched_rows)

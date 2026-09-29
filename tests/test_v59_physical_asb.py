@@ -144,3 +144,17 @@ def test_full_one_microsecond_conjunction_passes_only_with_refinement():
             _row(2, 1e-6, 70.0), _row(3, 1.5e-6, 70.0)]
     assert _decision(rows, True)["inherited_strict_asb"]
     assert not _decision(rows, False)["inherited_strict_asb"]
+
+
+def test_preceding_peak_can_predate_attributable_control_window():
+    rows = [
+        _row(0, 0.0, stress=100.0, matched=None),
+        _row(1, 1.1e-6, stress=75.0),
+        _row(2, 2.2e-6, stress=75.0),
+    ]
+    mask = np.zeros((8, 8), dtype=bool); mask[:, 3] = True
+    decision = classify_physical_episode(
+        rows, {row["step"]: mask for row in rows}, PhysicalASBCriteria(),
+        matched_control_available=True, refinement_passed=True)
+    assert decision["inherited_strict_asb"]
+    assert rows[1]["preceding_peak_time_s"] == 0.0
