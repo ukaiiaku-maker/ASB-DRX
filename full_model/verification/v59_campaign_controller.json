@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 25644,
-    "case": "high_rate_baseline_conjugate_n32_3p5to4p0us",
-    "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
-    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_baseline_conjugate_exact_n32_to3p5us/checkpoint_000140.npz",
-    "resume_sha256": "2fa252e85f216d51c93163c408e7d96249c8eaaae38a025e0e4d4bea0182ea6a",
-    "target_physical_time_s": 4e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_baseline_conjugate_n32_3p5to4p0us"
+    "exec_session": 49448,
+    "case": "network4_conjugate_n32_to0p5us",
+    "source_commit": "60c2b3e9ef0121df73a8f2efceafdb46ddbb2f87",
+    "resume_checkpoint": null,
+    "resume_sha256": null,
+    "target_physical_time_s": 5e-7,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/network4_conjugate_n32_to0p5us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -36,12 +36,13 @@
       "aspect ratio 1.34 is below 3"
     ],
     "common_strain_rate_result": "EARLY_STRESS_RATE_INSENSITIVE_AND_PHYSICAL_TIME_EXPOSURE_DOMINANT",
-    "network_branch": "READY_AFTER_CURRENT_HEAVY_SOLVER"
+    "high_rate_4us_result": "STRICT_ASB_FAILED_BUT_POWER_PARTICIPATION_REACHED_0P246_AND_TRUE_SOFTENING_REACHED_14P6_PERCENT",
+    "high_rate_4us_checkpoint_sha256": "d3c367b4dd53f114b7a5f8722055ec9aee67aec757b964567dc0d9b0cc40b88c",
+    "network_branch": "RUNNING_FRESH_FOUR_GRAIN_PREFIX"
   },
   "next_actions": [
-    "Finish and classify the repaired baseline at 4.0 microseconds",
-    "Run and restart a genuine four-grain common-owner trajectory",
+    "Finish and restart the genuine four-grain common-owner trajectory",
     "Extend the lower-rate physical exposure to common strain",
-    "Use measured morphology and cost to select the next persistence or refinement case"
+    "Use measured four-microsecond morphology and cost to select the next high-rate persistence or refinement case"
   ]
 }
