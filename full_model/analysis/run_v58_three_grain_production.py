@@ -146,7 +146,8 @@ def main():
     parser.add_argument(
         "--resume-transition", choices=(
             "none", "common_temperature_once_from_v2",
-            "adaptive_bisection_controller_v5"),
+            "adaptive_bisection_controller_v5",
+            "v58_smaller_macro_step_from_97b91df"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -233,6 +234,25 @@ def main():
             provenance["restart_transition"] = args.resume_transition
             provenance["parent_checkpoint_sha256"] = resume_sha
             provenance["parent_source_commit"] = "ed1cb78"
+        elif args.resume_transition == "v58_smaller_macro_step_from_97b91df":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "time-refinement transition requires expected checkpoint SHA-256")
+            legacy = dict(checkpoint_configuration or {})
+            current = dict(configuration)
+            legacy_dt = legacy.pop("dt_s", None)
+            current_dt = current.pop("dt_s", None)
+            if (legacy != current or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit") != "97b91df"
+                    or current_dt is None or legacy_dt is None
+                    or not float(current_dt) < float(legacy_dt)):
+                raise ValueError(
+                    "V58 time refinement requires the exact 97b91df state "
+                    "and an otherwise identical smaller-step configuration")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = "97b91df"
+            provenance["parent_dt_s"] = float(legacy_dt)
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):

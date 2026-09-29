@@ -109,7 +109,9 @@ def main():
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
-        transport_scheme="upwind", maximum_fraction_per_step=.75,
+        transport_scheme="upwind", maximum_fraction_per_step=(
+            (checkpoint_configuration or {}).get(
+                "maximum_fraction_per_step", .75)),
         flow_temperature_override_K=(
             run_result["temperature_K"] if flow_mode == "frozen" else None),
         volumetric_heat_capacity_J_m3_K=3.8e6,
