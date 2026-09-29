@@ -1,7 +1,8 @@
 import numpy as np
 
 from full_model.analysis.postprocess_v59_physical_asb import (
-    PhysicalASBCriteria, classify_physical_episode, periodic_identity,
+    PhysicalASBCriteria, classify_physical_episode, component_morphology,
+    periodic_identity,
 )
 
 
@@ -71,6 +72,26 @@ def test_periodic_component_identity_recovers_wrapped_translation():
     result = periodic_identity(left, right, 2.0)
     assert result["overlap"] == 1.0
     assert abs(result["displacement_m"][1]) == 6.0
+
+
+def test_component_morphology_resolves_band_without_background_bias():
+    field = np.ones((32, 32)); field[:, 14:18] = 20.0
+    component = field > field.mean()+field.std()
+    morphology = component_morphology(
+        field, component, field.mean()+field.std(), 1.0)
+    assert morphology["status"] == "DEFINED_THRESHOLD_COMPONENT_EXCESS"
+    assert morphology["aspect_ratio"] > 3.0
+    # The transverse width follows the four-cell component, not the box-sized
+    # positive background.
+    assert morphology["second_moment_widths"]["minor_gaussian_fwhm_m"] < 4.0
+
+
+def test_component_morphology_keeps_square_patch_isotropic():
+    field = np.ones((32, 32)); field[8:16, 8:16] = 20.0
+    component = field > field.mean()+field.std()
+    morphology = component_morphology(
+        field, component, field.mean()+field.std(), 1.0)
+    assert np.isclose(morphology["aspect_ratio"], 1.0)
 
 
 def test_full_one_microsecond_conjunction_passes_only_with_refinement():

@@ -20,6 +20,7 @@ import numpy as np
 from full_model.analysis.postprocess_v53_asb_mechanism import (
     field_metrics, overlap, periodic_components,
 )
+from full_model.analysis.run_v37_conduction_localization import weighted_width
 from full_model.analysis.run_v58_three_grain_production import _load_checkpoint
 from full_model.production.common_tensorial_wall import (
     CommonWallDriving, CommonWallParameters,
@@ -77,6 +78,40 @@ def _largest_component(field: np.ndarray) -> np.ndarray:
             np.zeros(value.shape, dtype=bool))
 
 
+def component_morphology(field: np.ndarray, component: np.ndarray,
+                         threshold: float, spacing_m: float) -> dict:
+    """Measure the tracked hot component without diffuse-background bias.
+
+    The earlier V59 draft evaluated second moments of ``field-field.min()``
+    over the whole periodic box.  A narrow intense band on a nonzero plastic-
+    power background could therefore acquire a nearly box-sized, isotropic
+    width.  Here the weight is the positive excess above the same threshold
+    that defines the connected component.  ``weighted_width`` supplies a
+    periodic-translation-invariant covariance.
+    """
+    value = np.asarray(field, dtype=float)
+    mask = np.asarray(component, dtype=bool)
+    if value.shape != mask.shape or value.ndim != 2:
+        raise ValueError("component morphology requires matching 2-D arrays")
+    weight = np.where(mask, np.maximum(value-float(threshold), 0.0), 0.0)
+    if not np.any(weight > 0.0):
+        return {
+            "status": "UNDEFINED_NO_POSITIVE_COMPONENT_EXCESS",
+            "area_fraction": float(mask.mean()), "second_moment_widths": None,
+            "aspect_ratio": None,
+        }
+    widths = weighted_width(weight, float(spacing_m))
+    minor = float(widths["minor_gaussian_fwhm_m"])
+    major = float(widths["major_gaussian_fwhm_m"])
+    return {
+        "status": "DEFINED_THRESHOLD_COMPONENT_EXCESS",
+        "weight_semantics": "max(field-(mean+std),0) on largest periodic component",
+        "area_fraction": float(mask.mean()),
+        "second_moment_widths": widths,
+        "aspect_ratio": float(major/max(minor, 1e-300)),
+    }
+
+
 def periodic_identity(left: np.ndarray, right: np.ndarray,
                       spacing_m: float) -> dict:
     """Best periodic Jaccard overlap and the associated physical displacement."""
@@ -129,9 +164,11 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
     heat_field = np.asarray(dissipation["irreversible_heat_rate_W_m3"], dtype=float)
     power, power_component = field_metrics(power_field, spacing)
     heat, heat_component = field_metrics(heat_field, spacing)
+    morphology = component_morphology(
+        power_field, power_component, power["threshold"], spacing)
     common, _ = reconstruct_multigrain_common(state, spacing)
     temperature = np.asarray(common.temperature_K, dtype=float)
-    widths = power["second_moment_widths"]
+    widths = morphology["second_moment_widths"]
     post_front_stress = float(_mean_mechanical_stress(
         state, spacing, wall, strain)[0, 1])
     row = {
@@ -152,15 +189,18 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
         "temperature_max_minus_mean_K": float(temperature.max()-temperature.mean()),
         "temperature_max_minus_min_K": float(temperature.max()-temperature.min()),
         "plastic_power": power,
+        "plastic_power_component_morphology": morphology,
         "irreversible_heat_rate": heat,
         "heat_power_component_overlap": overlap(power_component, heat_component),
         "power_width_minor_m": (None if widths is None else
                                  float(widths["minor_gaussian_fwhm_m"])),
         "power_width_major_m": (None if widths is None else
                                  float(widths["major_gaussian_fwhm_m"])),
-        "power_aspect_ratio": (None if widths is None else float(
-            widths["major_gaussian_fwhm_m"]
-            / max(widths["minor_gaussian_fwhm_m"], 1e-300))),
+        "power_aspect_ratio": morphology["aspect_ratio"],
+        "whole_field_power_width_diagnostic": power["second_moment_widths"],
+        "strict_width_semantics": (
+            "positive excess above mean+std on the largest periodic component; "
+            "whole-field shifted width is retained as a nonqualifying diagnostic"),
         "instantaneous_rate_semantics": "reconstructed from exact accepted post-front state",
         "interval_average_semantics": (
             "saved runner localization fields summarize the preceding accepted mechanical interval"),
