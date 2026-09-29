@@ -77,6 +77,11 @@ class MultiGrainProductionLedger:
     transformed_volume_m3: float = 0.0
     generated_heat_J: float = 0.0
     maximum_relative_energy_closure: float = 0.0
+    cumulative_mechanical_external_work_J: float = 0.0
+    cumulative_mechanical_internal_energy_change_J: float = 0.0
+    cumulative_mechanical_first_law_residual_J: float = 0.0
+    maximum_mechanical_relative_first_law_residual: float = 0.0
+    cumulative_front_first_law_residual_J: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -781,7 +786,10 @@ def advance_multigrain_front(
         generated_heat_J=(next_ledger.generated_heat_J
                           +result.decision.generated_heat_J),
         maximum_relative_energy_closure=max(
-            next_ledger.maximum_relative_energy_closure, relative_closure))
+            next_ledger.maximum_relative_energy_closure, relative_closure),
+        cumulative_front_first_law_residual_J=(
+            next_ledger.cumulative_front_first_law_residual_J
+            +result.decision.first_law_residual_J))
     return (result.published_state, replace(runtime, ledger=next_ledger),
             MultiGrainProductionDecision(
                 True, result.decision.classification, directions, pressures,

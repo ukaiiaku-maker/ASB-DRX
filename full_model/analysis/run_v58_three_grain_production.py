@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import hashlib
 import json
 from pathlib import Path
@@ -423,6 +423,20 @@ def main():
                     value.relative_first_law_residual
                     for value in mechanical.energy_balances),
             }
+            runtime = replace(runtime, ledger=replace(
+                runtime.ledger,
+                cumulative_mechanical_external_work_J=(
+                    runtime.ledger.cumulative_mechanical_external_work_J
+                    +mechanical.external_work_J),
+                cumulative_mechanical_internal_energy_change_J=(
+                    runtime.ledger.cumulative_mechanical_internal_energy_change_J
+                    +mechanical.internal_energy_change_J),
+                cumulative_mechanical_first_law_residual_J=(
+                    runtime.ledger.cumulative_mechanical_first_law_residual_J
+                    +mechanical.first_law_residual_J),
+                maximum_mechanical_relative_first_law_residual=max(
+                    runtime.ledger.maximum_mechanical_relative_first_law_residual,
+                    mechanical.relative_first_law_residual)))
         else:
             mechanical = None
             shear_stress = float(_mean_mechanical_stress(
