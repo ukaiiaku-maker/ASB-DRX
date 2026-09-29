@@ -8,8 +8,9 @@ migration. The 900 K, 2e4/s trajectory develops large temperature contrast and
 true mechanical softening, but its matched-control and accepted-state
 morphology tests identify a broad response rather than causal thermal ASB.
 The fixed-parameter 1000 K discriminator produces a stronger localization
-candidate; its matched-control qualification is in progress and no strict-ASB
-claim is made before that evidence is complete.
+candidate, but its matched control rejects causal thermal ASB. The campaign
+therefore proceeds to a higher-rate discriminator without changing physical
+coefficients.
 
 V59 also extends the architecture from the prepared three-grain junction to a
 real four-grain periodic network. All six observed adjacencies evolve through
@@ -69,9 +70,12 @@ The n32 baseline reaches 4.00 microseconds with 480 accepted front events and
 no rejection. Its accepted post-front endpoint has 15.72% softening, 165.34 K
 peak-minus-mean temperature, power participation 0.190, 1.54 micrometer minor
 width, aspect ratio 1.84, and heat/power overlap 0.903. Temperature and
-participation pass individually, but softening and morphology do not. A
-matched frozen-flow-temperature control is being advanced to the identical
-clock and strain before any causal interpretation or selected continuation.
+participation pass individually, but softening and morphology do not. The
+matched frozen-flow-temperature control also completes the same 4.00
+microsecond clock and strain with zero rejection. The maximum cellwise
+physical-minus-control temperature excess is only 2.87 K, versus the
+registered 50 K requirement; the control is 22.20 K hotter in the mean at the
+endpoint. This condition is therefore a causal negative, not strict ASB.
 
 ## Prepared four-grain network
 
@@ -95,8 +99,8 @@ and spontaneous grain birth remain outside the demonstrated scope.
 - Substantial prepared-boundary migration: passed.
 - Four-grain prepared network evolution and exact restart: passed.
 - Strict causal physical ASB at 900 K and 2e4/s: failed scientifically.
-- Strict causal physical ASB at 1000 K and 2e4/s: pending matched control;
-  present endpoint independently fails softening and morphology.
+- Strict causal physical ASB at 1000 K and 2e4/s: failed scientifically;
+  matched excess, softening, and morphology fail.
 - Spontaneous intragranular grain birth: not established.
 - Material calibration or material-class prediction: not claimed.
 

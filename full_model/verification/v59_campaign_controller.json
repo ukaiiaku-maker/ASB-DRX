@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 76070,
-    "case": "high_rate_T1000_frozen_conjugate_n32_to4p0us",
+    "exec_session": 93876,
+    "case": "high_rate4e4_T900_baseline_conjugate_n32_to2p25us",
     "source_commit": "97c1d972c3bb35e1e7f5ab96296d0f69093084da",
     "resume_checkpoint": null,
     "resume_sha256": null,
-    "target_physical_time_s": 4.0e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate_T1000_frozen_conjugate_n32_to4p0us"
+    "target_physical_time_s": 2.25e-6,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_baseline_conjugate_n32_to2p25us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -50,11 +50,13 @@
     ,"T1000_2p5us_result": "VALID_ONSET_CANDIDATE_NOT_STRICT_ASB_STAGE_CONSISTENT_FIELD_BROAD",
     "T1000_2p5us_checkpoint_sha256": "1c8d51a119cf62183dbddbd29a830ef9d1eaa885d598e29384874d6d07e9f1d8",
     "T1000_4us_result": "STRONGER_LOCALIZATION_CANDIDATE_PENDING_MATCHED_CAUSAL_CONTROL_AND_FAILING_STRICT_MORPHOLOGY",
-    "T1000_4us_checkpoint_sha256": "87983db67a1a96ff3ac1e7e6f5adf1968b8d793386c9ba6be55ada0197fa5907"
+    "T1000_4us_checkpoint_sha256": "87983db67a1a96ff3ac1e7e6f5adf1968b8d793386c9ba6be55ada0197fa5907",
+    "T1000_4us_matched_control_sha256": "86c12356185f11fdae88cb4b20036214fc09b0cf803894dde7c6c055fd13bf01",
+    "T1000_4us_causal_result": "FAILED_SCIENTIFIC_MATCHED_THERMAL_EXCESS_2P87K_AND_BROAD_MORPHOLOGY"
   },
   "next_actions": [
-    "Run the matched 1000 K frozen-flow-temperature control to 4 microseconds",
-    "Classify stage-consistent thermal excess and morphology",
-    "Continue the selected condition or rate discriminator from the causal result"
+    "Run the fixed-parameter 4e4/s 900 K discriminator to comparable strain",
+    "Classify its stage-consistent onset and morphology",
+    "Run its matched control only if the baseline response is informative"
   ]
 }
