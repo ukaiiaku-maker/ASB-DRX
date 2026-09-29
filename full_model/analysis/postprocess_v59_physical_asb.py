@@ -177,7 +177,7 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
     peak = -math.inf; peak_time = None; episode = None; episodes = []
     previous_component = None; previous_time = None
     nominal_dt = min(np.diff([row["physical_time_s"] for row in rows]), default=math.inf)
-    for row in rows:
+    for row_index, row in enumerate(rows):
         stress = abs(float(row["post_front_equilibrated_stress_Pa"]))
         if stress > peak:
             peak = stress; peak_time = row["physical_time_s"]
@@ -223,7 +223,7 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
                            "start_step": row["step"]}
         elif episode is not None:
             episode.update({"end_s": previous_time,
-                            "end_step": rows[rows.index(row)-1]["step"]})
+                            "end_step": rows[row_index-1]["step"]})
             episode["duration_s"] = episode["end_s"]-episode["start_s"]
             episodes.append(episode); episode = None
         previous_component = components[row["step"]]
@@ -290,6 +290,18 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
     return {
         "schema": "asb-drx-v59-physical-asb-v1",
         "exploratory_v58_three_record_flag_is_strict": False,
+        "criterion_provenance": {
+            "retained_recent": (
+                "postprocess_v53_asb_mechanism.py: 1 us, power participation "
+                "<=0.25, Tmax-Tmean >=50 K, component overlap >=0.25"),
+            "retained_older_strict": (
+                "production/asb_classifier.py and its tests: 20% true "
+                "preceding-peak softening and width >=2 interface widths"),
+            "prospective_v59_morphology": (
+                "registered before V59 production classification: minor width "
+                "<=0.25 domain and aspect ratio >=3; prevents isotropic hot "
+                "patches from being called bands"),
+        },
         "baseline_directories": [str(path.resolve()) for path in baseline_dirs],
         "control_directories": [str(path.resolve()) for path in control_dirs],
         "common_control_steps": common,
