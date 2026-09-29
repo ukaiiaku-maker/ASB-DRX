@@ -266,7 +266,8 @@ def main():
             "none", "common_temperature_once_from_v2",
             "adaptive_bisection_controller_v5",
             "v58_smaller_macro_step_from_97b91df",
-            "v59_conjugate_front_from_ce3d101"),
+            "v59_conjugate_front_from_ce3d101",
+            "v59_all_temperature_routing_from_42a5432"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -410,6 +411,39 @@ def main():
             provenance["governing_change"] = (
                 "fixed-point conjugacy between constrained complete front "
                 "force, EXP-floor rate, and mobility dissipation")
+        elif args.resume_transition == "v59_all_temperature_routing_from_42a5432":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V59 temperature-routing transition requires an exact "
+                    "parent checkpoint checksum")
+            legacy = dict(checkpoint_configuration or {})
+            current = dict(configuration)
+            if current.pop("front_temperature_mode", None) != "physical":
+                raise ValueError(
+                    "only the unchanged physical front-temperature path may "
+                    "cross the routing transition")
+            if (current.pop("initial_temperature_band_K", None) != 0.0
+                    or current.pop("initial_temperature_band_width_m", None)
+                    != 3.125e-7
+                    or current.pop("single_crystal_band_normal", None) != "x"):
+                raise ValueError(
+                    "temperature-routing transition requires the unchanged "
+                    "three-grain analytic initialization")
+            if (legacy != current or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "42a5432173cc77ebc70faa0d20fa922189e33c66"):
+                raise ValueError(
+                    "V59 temperature-routing transition requires the exact "
+                    "42a5432 physical-temperature baseline configuration")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["governing_change"] = (
+                "added an independently frozen moving-front temperature "
+                "route and single-crystal controls; all temperature routes "
+                "remain physical and production evolution is unchanged in "
+                "this baseline continuation")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
