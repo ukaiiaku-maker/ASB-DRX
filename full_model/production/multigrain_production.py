@@ -50,6 +50,7 @@ class MultiGrainFrontKinetics:
     maximum_fraction_per_step: float = 0.05
     closure_fraction: float = 0.01
     maximum_backtracks: int = 12
+    temperature_override_K: float | None = None
 
     def validate(self):
         self.transfer_law.validate()
@@ -64,6 +65,10 @@ class MultiGrainFrontKinetics:
             raise ValueError("invalid EXP-floor kinetics")
         if self.maximum_fraction_per_step > 1.0 or self.virtual_fraction > 1.0:
             raise ValueError("front fractions must not exceed unity")
+        if (self.temperature_override_K is not None
+                and (not math.isfinite(float(self.temperature_override_K))
+                     or float(self.temperature_override_K) <= 0.0)):
+            raise ValueError("front temperature override must be positive and finite")
 
 
 @dataclass(frozen=True)
@@ -516,8 +521,10 @@ def advance_multigrain_front(
     if not math.isfinite(dt) or dt <= 0.0:
         raise ValueError("production interval must be positive and finite")
     index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
-    temperature = float(np.mean([
-        np.mean(owner.temperature_K) for owner in state.owners]))
+    temperature = (float(kinetics.temperature_override_K)
+                   if kinetics.temperature_override_K is not None else
+                   float(np.mean([
+                       np.mean(owner.temperature_K) for owner in state.owners])))
     directions = {}
     pressures = {}
     selected_velocities = {}

@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
@@ -65,6 +67,33 @@ def test_four_grain_network_executes_one_joint_complete_event():
     assert decision.selected_rate_conjugate_to_recorded_force
     assert runtime.ledger.accepted_events == 1
     assert evolved.ledger.energy_accepted_transactions == 1
+
+
+def test_front_temperature_override_is_independent_of_physical_heat_state():
+    spacing = 5e-6/16
+    state = initialize_network_state(
+        16, 900.0, 4, spacing_m=spacing, interface_width_m=6.25e-7)
+    wall, physical = _front_parameters(spacing)
+    overridden = replace(physical, temperature_override_K=1200.0)
+    kwargs = dict(
+        dt_s=1e-8, spacing_m=spacing,
+        represented_thickness_m=5e-10, wall_parameters=wall,
+        energy_kwargs=dict(phase_barrier_J_m3=5e6,
+                           phase_gradient_J_m=5e-7,
+                           reference_temperature_K=900.0),
+        systems=bcc_four_family_systems())
+    runtime = MultiGrainProductionRuntime(network_interfaces(state))
+    _, _, hot_decision = advance_multigrain_front(
+        state, runtime, kinetics=physical, **kwargs)
+    _, _, overridden_decision = advance_multigrain_front(
+        state, runtime, kinetics=overridden, **kwargs)
+    assert hot_decision.selected_velocity_by_interface_m_s
+    assert overridden_decision.selected_velocity_by_interface_m_s.keys() == (
+        hot_decision.selected_velocity_by_interface_m_s.keys())
+    assert any(
+        not np.isclose(overridden_decision.selected_velocity_by_interface_m_s[key],
+                       hot_decision.selected_velocity_by_interface_m_s[key])
+        for key in hot_decision.selected_velocity_by_interface_m_s)
 
 
 def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():

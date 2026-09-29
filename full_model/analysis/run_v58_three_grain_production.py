@@ -208,6 +208,12 @@ def main():
               "junction, and ordering kinetics; the physical temperature "
               "state and heat equation always continue to evolve"))
     parser.add_argument(
+        "--front-temperature-mode", choices=("physical", "frozen"),
+        default="physical",
+        help=("independent causal routing for the EXP-floor moving-front "
+              "kinetics; the physical temperature state and heat equation "
+              "always continue to evolve"))
+    parser.add_argument(
         "--mechanics-mode", choices=("physical", "frozen_hold"),
         default="physical",
         help=("frozen_hold isolates stored-energy front migration at fixed "
@@ -251,6 +257,7 @@ def main():
         "maximum_fraction_per_step": args.mechanical_maximum_fraction,
         "flow_temperature_mode": args.flow_temperature_mode,
         "recovery_temperature_mode": args.recovery_temperature_mode,
+        "front_temperature_mode": args.front_temperature_mode,
         "mechanics_mode": args.mechanics_mode,
         "mechanical_stress_integrator": "synchronized_common_stress_substeps",
         "front_sweep_measure": "level_set_gradient_pair_partition",
@@ -283,7 +290,10 @@ def main():
         # configuration and varied only for refinement diagnostics.
         virtual_fraction=2e-4,
         maximum_fraction_per_step=args.front_maximum_fraction,
-        closure_fraction=.05, maximum_backtracks=14)
+        closure_fraction=.05, maximum_backtracks=14,
+        temperature_override_K=(
+            args.temperature if args.front_temperature_mode == "frozen"
+            else None))
     if args.resume:
         (state, runtime, start, gamma, initial_volume,
          checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(

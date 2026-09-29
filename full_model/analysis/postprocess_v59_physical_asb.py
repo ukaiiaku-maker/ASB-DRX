@@ -70,6 +70,66 @@ def _history_map(directories: list[Path]) -> dict[int, dict]:
     return result
 
 
+_TEMPERATURE_INTERVENTION_KEYS = (
+    "flow_temperature_mode", "recovery_temperature_mode",
+    "front_temperature_mode",
+)
+
+
+def temperature_intervention_certificate(
+        baseline_configuration: dict, control_configuration: dict,
+        baseline_provenance: dict | None, control_provenance: dict | None,
+        *, baseline_step: int, control_step: int,
+        baseline_time_s: float, control_time_s: float,
+        baseline_gamma: float, control_gamma: float,
+        baseline_initial_volume: np.ndarray,
+        control_initial_volume: np.ndarray,
+        baseline_grain_ids: tuple[int, ...],
+        control_grain_ids: tuple[int, ...]) -> dict:
+    """Certify the declared all-Arrhenius temperature intervention.
+
+    Fresh runs are analytically co-initialized by the deterministic production
+    initializer when source, non-intervention configuration, initial volumes,
+    and grain identities agree.  Resumed members retain those same bound
+    fields and their explicit parent edges in checkpoint provenance.
+    """
+    baseline = dict(baseline_configuration or {})
+    control = dict(control_configuration or {})
+    baseline_modes = {
+        key: baseline.pop(key, "physical") for key in _TEMPERATURE_INTERVENTION_KEYS}
+    control_modes = {
+        key: control.pop(key, "physical") for key in _TEMPERATURE_INTERVENTION_KEYS}
+    checks = {
+        "same_source_commit": bool(
+            baseline_provenance and control_provenance
+            and baseline_provenance.get("source_commit")
+            == control_provenance.get("source_commit")),
+        "same_nonintervention_configuration": baseline == control,
+        "baseline_all_temperature_channels_physical": all(
+            value == "physical" for value in baseline_modes.values()),
+        "control_all_temperature_channels_frozen": all(
+            value == "frozen" for value in control_modes.values()),
+        "same_step": int(baseline_step) == int(control_step),
+        "same_physical_time": bool(np.isclose(
+            baseline_time_s, control_time_s, rtol=0.0, atol=1e-18)),
+        "same_loading_coordinate": bool(np.isclose(
+            baseline_gamma, control_gamma, rtol=0.0, atol=1e-14)),
+        "same_initial_grain_volumes": bool(np.array_equal(
+            np.asarray(baseline_initial_volume),
+            np.asarray(control_initial_volume))),
+        "same_grain_identities": tuple(baseline_grain_ids)
+            == tuple(control_grain_ids),
+    }
+    return {
+        "passed": all(checks.values()), "checks": checks,
+        "baseline_modes": baseline_modes, "control_modes": control_modes,
+        "semantics": (
+            "same deterministic analytic origin and loading; only flow, "
+            "recovery/organization, and moving-front Arrhenius temperature "
+            "routes differ while the physical heat equation evolves in both"),
+    }
+
+
 def _largest_component(field: np.ndarray) -> np.ndarray:
     value = np.asarray(field, dtype=float)
     threshold = float(value.mean()+value.std())
@@ -302,16 +362,32 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
     control = _checkpoint_map(control_dirs) if control_dirs else {}
     common = sorted(set(baseline) & set(control))
     rows = []; components = {}
-    control_temperature = {}
+    control_temperature = {}; pair_certificates = {}
     for step in common:
-        state, *_ = _load_checkpoint(control[step])
-        configuration = _load_checkpoint(control[step])[-2]
+        (state, control_runtime, control_step, control_gamma,
+         control_initial_volume, configuration,
+         control_provenance) = _load_checkpoint(control[step])
         spacing = float(configuration["length_m"])/int(configuration["n"])
         reconstructed, _ = reconstruct_multigrain_common(state, spacing)
         control_temperature[step] = np.asarray(reconstructed.temperature_K)
+        (baseline_state, baseline_runtime, baseline_step, baseline_gamma,
+         baseline_initial_volume, baseline_configuration,
+         baseline_provenance) = _load_checkpoint(baseline[step])
+        pair_certificates[step] = temperature_intervention_certificate(
+            baseline_configuration, configuration,
+            baseline_provenance, control_provenance,
+            baseline_step=baseline_step, control_step=control_step,
+            baseline_time_s=baseline_runtime.ledger.physical_time_s,
+            control_time_s=control_runtime.ledger.physical_time_s,
+            baseline_gamma=baseline_gamma, control_gamma=control_gamma,
+            baseline_initial_volume=baseline_initial_volume,
+            control_initial_volume=control_initial_volume,
+            baseline_grain_ids=baseline_state.grain_ids,
+            control_grain_ids=state.grain_ids)
     for step, path in sorted(baseline.items()):
         row, component = checkpoint_snapshot(path, history.get(step))
-        if step in control_temperature:
+        if (step in control_temperature
+                and pair_certificates[step]["passed"]):
             state, *_ = _load_checkpoint(path)
             reconstructed, _ = reconstruct_multigrain_common(state, row["spacing_m"])
             row["matched_temperature_excess_K"] = float(np.max(
@@ -319,14 +395,13 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
         else:
             row["matched_temperature_excess_K"] = None
         rows.append(row); components[step] = component
-    episode_rows = ([row for row in rows
-                     if row["matched_temperature_excess_K"] is not None]
-                    if control_dirs else rows)
+    valid_matched_rows = [
+        row for row in rows if row["matched_temperature_excess_K"] is not None]
+    episode_rows = (valid_matched_rows if control_dirs and valid_matched_rows
+                    else rows)
     episode_components = {row["step"]: components[row["step"]]
                           for row in episode_rows}
-    matched_available = bool(control_dirs and episode_rows and all(
-        row["matched_temperature_excess_K"] is not None
-        for row in episode_rows))
+    matched_available = bool(control_dirs and valid_matched_rows)
     episode = classify_physical_episode(
         episode_rows, episode_components, PhysicalASBCriteria(),
         matched_control_available=matched_available,
@@ -349,6 +424,11 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
         "baseline_directories": [str(path.resolve()) for path in baseline_dirs],
         "control_directories": [str(path.resolve()) for path in control_dirs],
         "common_control_steps": common,
+        "temperature_intervention_certificate": {
+            "passed": bool(common and all(
+                pair_certificates[step]["passed"] for step in common)),
+            "steps": {str(step): pair_certificates[step] for step in common},
+        },
         "rows": rows, "physical_episode": episode,
     }
 

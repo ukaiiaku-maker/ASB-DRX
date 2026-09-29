@@ -3,6 +3,7 @@ import numpy as np
 from full_model.analysis.postprocess_v59_physical_asb import (
     PhysicalASBCriteria, _wall_parameters, classify_physical_episode,
     component_morphology, periodic_identity,
+    temperature_intervention_certificate,
 )
 
 
@@ -107,6 +108,35 @@ def test_postprocess_reconstructs_independent_temperature_controls():
     parameters = _wall_parameters(configuration, 1e-7)
     assert parameters.flow_temperature_override_K == 900.0
     assert parameters.recovery_temperature_override_K is None
+
+
+def test_temperature_intervention_requires_every_arrhenius_channel():
+    base = {
+        "n": 32, "shear_rate_s": 4e4,
+        "flow_temperature_mode": "physical",
+        "recovery_temperature_mode": "physical",
+        "front_temperature_mode": "physical",
+    }
+    control = dict(base)
+    control.update(flow_temperature_mode="frozen",
+                   recovery_temperature_mode="frozen",
+                   front_temperature_mode="frozen")
+    kwargs = dict(
+        baseline_provenance={"source_commit": "abc"},
+        control_provenance={"source_commit": "abc"},
+        baseline_step=10, control_step=10,
+        baseline_time_s=1e-6, control_time_s=1e-6,
+        baseline_gamma=.04, control_gamma=.04,
+        baseline_initial_volume=np.ones(3),
+        control_initial_volume=np.ones(3),
+        baseline_grain_ids=(10, 20, 30),
+        control_grain_ids=(10, 20, 30))
+    assert temperature_intervention_certificate(
+        base, control, **kwargs)["passed"]
+    control["front_temperature_mode"] = "physical"
+    decision = temperature_intervention_certificate(base, control, **kwargs)
+    assert not decision["passed"]
+    assert not decision["checks"]["control_all_temperature_channels_frozen"]
 
 
 def test_full_one_microsecond_conjunction_passes_only_with_refinement():
