@@ -38,7 +38,42 @@ def network_topology_metrics(state) -> dict:
     }
 
 
-def analyze(root: Path) -> dict:
+def _verified_external_restart(parent_checkpoint: Path, final_checkpoint: Path,
+                               history: list[dict]) -> dict:
+    (parent_state, parent_runtime, parent_step, parent_gamma,
+     parent_initial_volume, parent_configuration, parent_provenance) = (
+        _load_checkpoint(parent_checkpoint))
+    (final_state, final_runtime, final_step, final_gamma,
+     final_initial_volume, final_configuration, final_provenance) = (
+        _load_checkpoint(final_checkpoint))
+    first_saved_step = min((int(row["step"]) for row in history), default=None)
+    checks = {
+        "same_configuration": parent_configuration == final_configuration,
+        "same_source_commit": bool(
+            parent_provenance and final_provenance
+            and parent_provenance.get("source_commit")
+            == final_provenance.get("source_commit")),
+        "consecutive_first_saved_step": first_saved_step == parent_step+1,
+        "advanced_step": final_step > parent_step,
+        "advanced_physical_clock": (
+            final_runtime.ledger.physical_time_s
+            > parent_runtime.ledger.physical_time_s),
+        "advanced_applied_shear": final_gamma > parent_gamma,
+        "same_initial_volume": bool(np.array_equal(
+            parent_initial_volume, final_initial_volume)),
+        "same_grain_ids": parent_state.grain_ids == final_state.grain_ids,
+    }
+    return {
+        "verified": bool(all(checks.values())),
+        "parent_checkpoint": str(parent_checkpoint.resolve()),
+        "parent_checkpoint_sha256": digest(parent_checkpoint),
+        "parent_step": parent_step,
+        "first_saved_step": first_saved_step,
+        "checks": checks,
+    }
+
+
+def analyze(root: Path, parent_checkpoint: Path | None = None) -> dict:
     result_path = root/"result.json"
     if not result_path.is_file():
         raise ValueError("network run is not complete")
@@ -47,6 +82,9 @@ def analyze(root: Path) -> dict:
     state, runtime, step, gamma, initial_volume, configuration, provenance = (
         _load_checkpoint(checkpoint))
     history = json.loads((root/"history.json").read_text())
+    external_restart = (None if parent_checkpoint is None else
+                        _verified_external_restart(
+                            parent_checkpoint, checkpoint, history))
     spacing = float(configuration["length_m"])/int(configuration["n"])
     thickness = float(result["represented_thickness_m"])
     volume = np.sum(state.supports, axis=(1, 2))*spacing**2*thickness
@@ -90,7 +128,10 @@ def analyze(root: Path) -> dict:
             "joint_pressure_factor_range": ([min(factors), max(factors)]
                                              if factors else None),
         },
-        "restart_exercised": bool((provenance or {}).get("parent_checkpoint_sha256")),
+        "restart_exercised": bool(
+            (provenance or {}).get("parent_checkpoint_sha256")
+            or (external_restart and external_restart["verified"])),
+        "external_restart_verification": external_restart,
         "spontaneous_grain_birth": False,
         "claim_limit": (
             "Prepared-grain network evolution only; no intragranular birth or "
@@ -102,8 +143,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("run", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--parent-checkpoint", type=Path)
     args = parser.parse_args()
-    result = analyze(args.run)
+    result = analyze(args.run, args.parent_checkpoint)
     output = args.output or args.run/"network_audit.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2)+"\n")

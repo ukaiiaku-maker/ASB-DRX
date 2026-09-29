@@ -349,6 +349,15 @@ def main():
               or checkpoint_provenance.get("source_commit") != source_commit):
             raise ValueError(
                 "checkpoint physical configuration or source provenance differs")
+        else:
+            # Exact same-source restarts were already validated above, but
+            # previously failed to carry an explicit parent edge into the new
+            # checkpoint provenance.  Preserve that edge so restart evidence
+            # is machine-auditable without reconstructing the launch command.
+            provenance["restart_transition"] = "exact_same_source_restart"
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
     else:
         state = initialize_network_state(
             args.n, args.temperature, args.grain_count,
