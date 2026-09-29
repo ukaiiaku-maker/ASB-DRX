@@ -170,8 +170,15 @@ def main():
     args = parser.parse_args()
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     spacing = args.length/args.n; thickness = 2.0*2.48e-10
-    source_commit = (args.source_commit or subprocess.check_output(
-        ("git", "rev-parse", "HEAD"), text=True).strip())
+    head_commit = subprocess.check_output(
+        ("git", "rev-parse", "HEAD"), text=True).strip()
+    if args.source_commit:
+        declared_commit = subprocess.check_output(
+            ("git", "rev-parse", args.source_commit), text=True).strip()
+        if declared_commit != head_commit:
+            raise ValueError(
+                "declared source commit does not match the executing worktree HEAD")
+    source_commit = head_commit
     configuration = {
         "schema": "v58-three-grain-production-v4-geometric-front",
         "n": args.n, "length_m": args.length,

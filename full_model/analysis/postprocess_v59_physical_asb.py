@@ -275,9 +275,16 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
         else:
             row["matched_temperature_excess_K"] = None
         rows.append(row); components[step] = component
-    matched_available = bool(rows and len(common) == len(rows))
+    episode_rows = ([row for row in rows
+                     if row["matched_temperature_excess_K"] is not None]
+                    if control_dirs else rows)
+    episode_components = {row["step"]: components[row["step"]]
+                          for row in episode_rows}
+    matched_available = bool(control_dirs and episode_rows and all(
+        row["matched_temperature_excess_K"] is not None
+        for row in episode_rows))
     episode = classify_physical_episode(
-        rows, components, PhysicalASBCriteria(),
+        episode_rows, episode_components, PhysicalASBCriteria(),
         matched_control_available=matched_available,
         refinement_passed=refinement_passed)
     return {
