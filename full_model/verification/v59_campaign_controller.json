@@ -18,13 +18,13 @@
   },
   "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
   "active_heavy_solver": {
-    "exec_session": 28049,
-    "case": "high_rate4e4_T900_physical_9b_step54_to3p5us",
+    "exec_session": 7957,
+    "case": "high_rate4e4_T900_all_arrhenius_frozen_9b_n32_to3p5us",
     "source_commit": "9b40708a775699d00b3504c97cee879f85a54ff0",
-    "resume_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_physical_exact42a_n32_to2p25us/checkpoint_000054.npz",
-    "resume_sha256": "16841e9d54d2fc518d18ca69101a5bbe791a059468b1650ceae89df6ca73a97a",
+    "resume_checkpoint": null,
+    "resume_sha256": null,
     "target_physical_time_s": 3.5e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_physical_9b_step54_to3p5us"
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_all_arrhenius_frozen_9b_n32_to3p5us"
   },
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
@@ -64,11 +64,21 @@
     "rate4e4_T900_cross_source_warning": "Physical and full-control members use adjacent commits; exact-source physical baseline is active before attribution or continuation",
     "rate4e4_T900_exact42_prefix_result": "VALID_ACCEPTED_PREFIX_THROUGH_STEP54_INTERRUPTED_AFTER_65_OF_65_STATE_ARRAYS_MATCHED_PRIOR_BASELINE_BITWISE",
     "rate4e4_T900_exact42_step54_checkpoint_sha256": "16841e9d54d2fc518d18ca69101a5bbe791a059468b1650ceae89df6ca73a97a",
-    "temperature_routing_continuation_source": "9b40708a775699d00b3504c97cee879f85a54ff0"
+    "temperature_routing_continuation_source": "9b40708a775699d00b3504c97cee879f85a54ff0",
+    "rate4e4_T900_physical_3p5us_checkpoint_sha256": "91fee2d7246d835eafd27d39760c77877a101870ab26a6d5fb23ba963e25b829",
+    "rate4e4_T900_physical_3p5us_result": "VALID_STRONG_SOFTENING_AND_THERMAL_CONTRAST_BUT_NO_SNAPSHOT_SATISFIES_NONCAUSAL_STRICT_MORPHOLOGY_CONJUNCTION",
+    "rate4e4_T900_physical_3p5us_terminal": {
+      "post_front_stress_GPa": 2.7523721973425754,
+      "softening_fraction": 0.41535215848264695,
+      "temperature_peak_minus_mean_K": 261.86511603132567,
+      "power_participation": 0.22538463725140495,
+      "power_minor_width_um": 0.9355675930669608,
+      "power_aspect_ratio": 1.5674540840481224
+    }
   },
   "next_actions": [
-    "Continue the guarded physical baseline through 3.5 microseconds",
-    "Run the all-Arrhenius frozen control fresh on source 9b40708",
-    "Classify the common final-source window and then exercise the single-crystal seeded control"
+    "Complete the all-Arrhenius frozen control through 3.5 microseconds",
+    "Classify local causal excess on the common final-source window",
+    "Exercise the single-crystal seeded physical/frozen control pair"
   ]
 }
