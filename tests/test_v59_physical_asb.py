@@ -76,6 +76,15 @@ def test_periodic_component_identity_recovers_wrapped_translation():
     assert abs(result["displacement_m"][1]) == 6.0
 
 
+def test_component_identity_rejects_an_unphysical_translation_but_retains_diagnostic():
+    left = np.zeros((16, 16), dtype=bool); left[:, 1] = True
+    right = np.roll(left, 5, axis=1)
+    result = periodic_identity(
+        left, right, 1.0, maximum_displacement_m=1.0)
+    assert result["overlap"] == 0.0
+    assert result["unrestricted_alignment_diagnostic"]["overlap"] == 1.0
+
+
 def test_component_morphology_resolves_band_without_background_bias():
     field = np.ones((32, 32)); field[:, 14:18] = 20.0
     component = field > field.mean()+field.std()
@@ -94,6 +103,43 @@ def test_component_morphology_keeps_square_patch_isotropic():
     morphology = component_morphology(
         field, component, field.mean()+field.std(), 1.0)
     assert np.isclose(morphology["aspect_ratio"], 1.0)
+
+
+def test_diagonal_winding_band_width_is_translation_invariant():
+    n = 48
+    row, column = np.indices((n, n))
+    distance = (column-row+n/2) % n-n/2
+    field = 1.0+20.0*np.exp(-.5*(distance/1.5)**2)
+    component = np.abs(distance) <= 4.0
+    threshold = 1.0
+    reference = component_morphology(field, component, threshold, 2.0)
+    translated = component_morphology(
+        np.roll(field, (9, -7), axis=(0, 1)),
+        np.roll(component, (9, -7), axis=(0, 1)), threshold, 2.0)
+    assert reference["second_moment_widths"]["topology"] == "rank_one_winding"
+    assert reference["second_moment_widths"]["winding_vectors"] == [[1, 1]]
+    assert np.isclose(
+        reference["second_moment_widths"]["minor_gaussian_fwhm_m"],
+        translated["second_moment_widths"]["minor_gaussian_fwhm_m"],
+        rtol=2e-14)
+    assert np.isclose(reference["aspect_ratio"], translated["aspect_ratio"],
+                      rtol=2e-14)
+
+
+def test_curved_periodic_band_retains_winding_under_translation():
+    n = 64
+    row, column = np.indices((n, n))
+    center = row+4.0*np.sin(2.0*np.pi*row/n)
+    distance = (column-center+n/2) % n-n/2
+    field = 1.0+15.0*np.exp(-.5*(distance/1.75)**2)
+    component = np.abs(distance) <= 4.0
+    first = component_morphology(field, component, 1.0, 1.0)
+    second = component_morphology(
+        np.roll(field, (11, 13), axis=(0, 1)),
+        np.roll(component, (11, 13), axis=(0, 1)), 1.0, 1.0)
+    assert first["second_moment_widths"]["topology"] == "rank_one_winding"
+    assert np.isclose(first["power_aspect_ratio"] if "power_aspect_ratio" in first
+                      else first["aspect_ratio"], second["aspect_ratio"], rtol=1e-13)
 
 
 def test_matched_temperature_excess_must_be_on_power_component():

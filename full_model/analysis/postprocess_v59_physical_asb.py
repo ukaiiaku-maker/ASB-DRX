@@ -45,6 +45,129 @@ class PhysicalASBCriteria:
     minimum_aspect_ratio: float = 3.0
     minimum_heat_power_overlap: float = 0.25
     minimum_component_identity_overlap: float = 0.25
+    maximum_component_speed_m_s: float = 2.0
+
+
+def _primitive_lattice_vector(vector: np.ndarray) -> tuple[int, int]:
+    value = np.asarray(vector, dtype=int)
+    divisor = math.gcd(abs(int(value[0])), abs(int(value[1])))
+    if divisor == 0:
+        return (0, 0)
+    value //= divisor
+    first = next((int(item) for item in value if item != 0), 1)
+    if first < 0:
+        value *= -1
+    return int(value[0]), int(value[1])
+
+
+def _lift_component(mask: np.ndarray) -> tuple[dict, list[tuple[int, int]]]:
+    """Lift one periodic component to Z² and recover its torus winding."""
+    points = np.argwhere(mask)
+    if len(points) == 0:
+        return {}, []
+    shape = np.asarray(mask.shape, dtype=int)
+    start = tuple(int(x) for x in points[0])
+    lifted = {start: np.asarray(start, dtype=int)}
+    queue = [start]
+    windings: set[tuple[int, int]] = set()
+    steps = tuple((di, dj) for di in (-1, 0, 1)
+                  for dj in (-1, 0, 1) if di or dj)
+    while queue:
+        point = queue.pop()
+        origin = lifted[point]
+        for step in steps:
+            neighbor = ((point[0]+step[0]) % shape[0],
+                        (point[1]+step[1]) % shape[1])
+            if not mask[neighbor]:
+                continue
+            proposed = origin+np.asarray(step, dtype=int)
+            if neighbor not in lifted:
+                lifted[neighbor] = proposed
+                queue.append(neighbor)
+            else:
+                loop = proposed-lifted[neighbor]
+                if np.any(loop):
+                    winding = np.rint(loop/shape).astype(int)
+                    if np.any(winding):
+                        windings.add(_primitive_lattice_vector(winding))
+    independent = []
+    for winding in sorted(windings):
+        if winding == (0, 0):
+            continue
+        if not independent:
+            independent.append(winding)
+        elif abs(np.linalg.det(np.asarray([independent[0], winding]))) > 0:
+            independent.append(winding)
+            break
+    return lifted, independent
+
+
+def topology_aware_width(weight: np.ndarray, spacing_m: float) -> dict:
+    """Measure a weighted component on the periodic torus.
+
+    Contractible components are measured in a consistent universal-cover
+    lift.  A rank-one winding band is measured in its periodic transverse
+    phase, avoiding the invalid independent x/y unwrap used previously.
+    """
+    values = np.asarray(weight, dtype=float)
+    if values.ndim != 2 or np.any(~np.isfinite(values)) or np.any(values < 0.0):
+        raise ValueError("topology width requires a finite nonnegative 2-D field")
+    mask = values > 0.0
+    lifted, windings = _lift_component(mask)
+    total = float(np.sum(values, dtype=np.longdouble))
+    if total <= 0.0:
+        raise ValueError("topology width requires positive weight")
+    gaussian = 2.0*math.sqrt(2.0*math.log(2.0))
+    if len(lifted) != int(mask.sum()):
+        raise ValueError("topology width requires one connected component")
+    if not windings:
+        coordinates = np.asarray([lifted[tuple(point)] for point in np.argwhere(mask)],
+                                 dtype=float)*float(spacing_m)
+        weights = values[mask]
+        center = np.average(coordinates, axis=0, weights=weights)
+        centered = coordinates-center
+        covariance = ((centered*weights[:, None]).T@centered)/total
+        eigenvalues = np.maximum(np.linalg.eigvalsh(covariance), 0.0)
+        minor_rms, major_rms = np.sqrt(eigenvalues)
+        topology = "contractible"
+        winding = None
+    elif len(windings) == 1:
+        winding = np.asarray(windings[0], dtype=int)
+        normal = np.asarray((winding[1], -winding[0]), dtype=int)
+        indices = np.indices(values.shape)
+        phase = 2.0*math.pi*(normal[0]*indices[0]/values.shape[0]
+                             +normal[1]*indices[1]/values.shape[1])
+        resultant = np.sum(values*np.exp(1j*phase), dtype=np.clongdouble)/total
+        center_phase = float(np.angle(complex(resultant)))
+        wrapped_phase = np.angle(np.exp(1j*(phase-center_phase)))
+        lengths = np.asarray(values.shape, dtype=float)*float(spacing_m)
+        wave_number = 2.0*math.pi*np.linalg.norm(normal/lengths)
+        transverse = wrapped_phase/max(wave_number, 1e-300)
+        minor_rms = math.sqrt(float(
+            np.sum(values*transverse*transverse, dtype=np.longdouble)/total))
+        # A winding component has no finite longitudinal covariance on the
+        # torus.  Its shortest homology representative is the declared extent.
+        major_extent = float(np.linalg.norm(winding*lengths))
+        major_rms = major_extent/gaussian
+        topology = "rank_one_winding"
+        winding = winding.tolist()
+    else:
+        # A component winding independently around both cycles is a network,
+        # not a single band. Retain the legacy moment only as a diagnostic.
+        legacy = weighted_width(values, float(spacing_m))
+        return {**legacy, "topology": "rank_two_winding_network",
+                "winding_vectors": [list(value) for value in windings],
+                "width_semantics": "network diagnostic; not a single-band width"}
+    return {
+        "minor_rms_width_m": float(minor_rms),
+        "major_rms_width_m": float(major_rms),
+        "minor_gaussian_fwhm_m": float(gaussian*minor_rms),
+        "major_gaussian_fwhm_m": float(gaussian*major_rms),
+        "topology": topology,
+        "winding_vectors": ([] if winding is None else [winding]),
+        "width_semantics": ("universal-cover covariance" if winding is None else
+                            "periodic transverse phase and shortest homology extent"),
+    }
 
 
 def _digest(path: Path) -> str:
@@ -176,7 +299,7 @@ def component_morphology(field: np.ndarray, component: np.ndarray,
             "area_fraction": float(mask.mean()), "second_moment_widths": None,
             "aspect_ratio": None,
         }
-    widths = weighted_width(weight, float(spacing_m))
+    widths = topology_aware_width(weight, float(spacing_m))
     minor = float(widths["minor_gaussian_fwhm_m"])
     major = float(widths["major_gaussian_fwhm_m"])
     return {
@@ -189,8 +312,8 @@ def component_morphology(field: np.ndarray, component: np.ndarray,
 
 
 def periodic_identity(left: np.ndarray, right: np.ndarray,
-                      spacing_m: float) -> dict:
-    """Best periodic Jaccard overlap and the associated physical displacement."""
+                      spacing_m: float, maximum_displacement_m=None) -> dict:
+    """Periodic identity with an optional physically admissible motion cone."""
     a = np.asarray(left, dtype=bool); b = np.asarray(right, dtype=bool)
     if a.shape != b.shape or a.ndim != 2:
         raise ValueError("periodic components must have the same 2-D shape")
@@ -199,16 +322,39 @@ def periodic_identity(left: np.ndarray, right: np.ndarray,
                 "displacement_m": [0.0, 0.0]}
     correlation = np.fft.ifftn(
         np.fft.fftn(a.astype(float))*np.conj(np.fft.fftn(b.astype(float)))).real
-    index = np.unravel_index(int(np.argmax(correlation)), correlation.shape)
+    unrestricted_index = np.unravel_index(
+        int(np.argmax(correlation)), correlation.shape)
+    candidate = correlation.copy()
+    if maximum_displacement_m is not None:
+        shifts = [np.where(np.arange(count) <= count//2,
+                           np.arange(count), np.arange(count)-count)
+                  for count in a.shape]
+        sy, sx = np.meshgrid(shifts[0], shifts[1], indexing="ij")
+        admissible = np.hypot(sy, sx)*float(spacing_m) <= (
+            float(maximum_displacement_m)+1e-15*float(spacing_m))
+        candidate = np.where(admissible, candidate, -np.inf)
+    index = np.unravel_index(int(np.argmax(candidate)), correlation.shape)
     shift = np.asarray(index, dtype=int)
     for axis, count in enumerate(a.shape):
         if shift[axis] > count//2:
             shift[axis] -= count
     aligned = np.roll(b, tuple(shift), axis=(0, 1))
+    unrestricted_shift = np.asarray(unrestricted_index, dtype=int)
+    for axis, count in enumerate(a.shape):
+        if unrestricted_shift[axis] > count//2:
+            unrestricted_shift[axis] -= count
+    unrestricted_aligned = np.roll(
+        b, tuple(unrestricted_shift), axis=(0, 1))
     return {
         "overlap": overlap(a, aligned),
         "shift_cells": shift.tolist(),
         "displacement_m": (shift.astype(float)*spacing_m).tolist(),
+        "maximum_admissible_displacement_m": maximum_displacement_m,
+        "unrestricted_alignment_diagnostic": {
+            "overlap": overlap(a, unrestricted_aligned),
+            "shift_cells": unrestricted_shift.tolist(),
+            "displacement_m": (unrestricted_shift.astype(float)*spacing_m).tolist(),
+        },
     }
 
 
@@ -349,8 +495,13 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
             peak = stress; peak_time = row["physical_time_s"]
         softening = 0.0 if peak <= 0.0 else (peak-stress)/peak
         width = row["power_width_minor_m"]
+        elapsed = (None if previous_time is None else
+                   row["physical_time_s"]-previous_time)
         identity = (None if previous_component is None else periodic_identity(
-            previous_component, components[row["step"]], row["spacing_m"]))
+            previous_component, components[row["step"]], row["spacing_m"],
+            maximum_displacement_m=(criteria.maximum_component_speed_m_s
+                                    *max(float(elapsed), 0.0)
+                                    +row["spacing_m"])))
         matched = row.get("matched_temperature_excess_K")
         checks = {
             "power_participation": row["plastic_power"][

@@ -68,6 +68,9 @@ class CompleteMultiGrainDecision:
     first_law_residual_J: float
     dissipation_residual_J: float
     tolerance_J: float
+    heat_deposition_mode: str
+    heat_source_integral_J: float
+    heat_source_closure_J: float
 
     def as_dict(self):
         value = asdict(self)
@@ -299,6 +302,8 @@ def evaluate_joint_multigrain_transaction(
         spacing_m, represented_thickness_m, wall_parameters, interval_s,
         dissipation: MultiGrainDissipation, external_work_J=0.0,
         prescribed_temperature=False, energy_kwargs=None,
+        heat_source_J_by_cell=None,
+        heat_deposition_mode="local_realized_event",
         absolute_tolerance_J=0.0,
         relative_tolerance=8192.0*np.finfo(float).eps):
     """Evaluate and atomically publish a complete joint physical event.
@@ -328,12 +333,49 @@ def evaluate_joint_multigrain_transaction(
     generated_heat = dissipation.generated_heat_J
     thermostat = generated_heat if prescribed_temperature else 0.0
     work = float(external_work_J)
+    if heat_deposition_mode not in {"local_realized_event", "uniform_ablation"}:
+        raise ValueError("unknown heat deposition mode")
     candidate = cold_state
+    heat_source_integral = 0.0
+    heat_source_closure = 0.0
     if generated_heat > 0.0 and not prescribed_temperature:
-        represented_volume = before_state.supports.shape[1]*before_state.supports.shape[2]*cell_volume
-        delta_temperature = generated_heat/max(
-            wall_parameters.volumetric_heat_capacity_J_m3_K
-            *represented_volume, 1e-300)
+        shape = before_state.supports.shape[1:]
+        if heat_deposition_mode == "uniform_ablation":
+            source = np.ones(shape, dtype=float)
+        elif heat_source_J_by_cell is not None:
+            source = np.asarray(heat_source_J_by_cell, dtype=float)
+            if source.shape != shape:
+                raise ValueError("heat source must match the common-state grid")
+            if np.any(~np.isfinite(source)) or np.any(source < 0.0):
+                raise ValueError("heat source must be finite and nonnegative")
+        else:
+            # Generic physical transactions may not have a channel-resolved
+            # force field.  Their least-assumptive local support is the
+            # realized transfer measure itself, never the requested event.
+            source = np.zeros(shape, dtype=float)
+            for extent in capacity.accepted_fraction_by_interface.values():
+                source += np.asarray(extent, dtype=float)
+        source_sum = float(np.sum(source, dtype=np.longdouble))
+        if source_sum <= 0.0:
+            raise ValueError("positive heat requires a positive realized source")
+        # Normalize the *geometry* independently of its absolute scale.  The
+        # imposed integral is exactly the independently computed dissipation;
+        # no energy residual is relabelled as heat.
+        source_energy = generated_heat*source/source_sum
+        heat_source_integral = float(
+            np.sum(source_energy, dtype=np.longdouble))
+        # Remove the final floating reduction error at one occupied cell.  It
+        # is normally sub-ulp but makes the deposited source ledger explicit.
+        occupied = np.argwhere(source > 0.0)
+        correction = generated_heat-heat_source_integral
+        if correction != 0.0:
+            source_energy[tuple(occupied[0])] += correction
+            heat_source_integral = float(
+                np.sum(source_energy, dtype=np.longdouble))
+        heat_source_closure = heat_source_integral-generated_heat
+        delta_temperature = source_energy/max(
+            wall_parameters.volumetric_heat_capacity_J_m3_K*cell_volume,
+            1e-300)
         candidate = replace(cold_state, owners=tuple(
             replace(owner, temperature_K=np.asarray(owner.temperature_K)
                     +delta_temperature) for owner in cold_state.owners))
@@ -383,6 +425,7 @@ def evaluate_joint_multigrain_transaction(
         "wall_parameters": wall_parameters,
         "interval_s": interval_s,
         "prescribed_temperature": prescribed_temperature,
+        "heat_deposition_mode": heat_deposition_mode,
         "energy_kwargs": options,
     })
     decision = CompleteMultiGrainDecision(
@@ -391,7 +434,8 @@ def evaluate_joint_multigrain_transaction(
         multigrain_state_digest(candidate), config,
         float(interval_s), before_energy, candidate_energy, delta_f, work,
         material_export, available, generated_heat, thermostat, first_law,
-        dissipation_residual, tolerance)
+        dissipation_residual, tolerance, heat_deposition_mode,
+        heat_source_integral, heat_source_closure)
     if not accepted:
         return CompleteMultiGrainTransaction(before_state, candidate, decision)
     ledger = replace(

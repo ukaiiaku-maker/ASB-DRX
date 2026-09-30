@@ -507,7 +507,8 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
 def advance_multigrain_front(
         state, runtime, *, kinetics, dt_s, spacing_m,
         represented_thickness_m, wall_parameters, energy_kwargs=None,
-        applied_shear_rate_s=0.0, systems=None):
+        applied_shear_rate_s=0.0, systems=None,
+        heat_deposition_mode="local_realized_event"):
     """Advance all incident boundaries from one immutable accepted state.
 
     Directional derivatives price each edge in the full shared functional.
@@ -757,6 +758,10 @@ def advance_multigrain_front(
         dissipation_J = sum(
             pressures[key]*float(np.sum(extent, dtype=np.longdouble))*cell_volume
             for key, extent in capacity.accepted_fraction_by_interface.items())
+        heat_source_J_by_cell = sum(
+            (pressures[key]*np.asarray(extent, dtype=float)*cell_volume
+             for key, extent in capacity.accepted_fraction_by_interface.items()),
+            start=np.zeros(state.supports.shape[1:], dtype=float))
         tolerance_J = max(
             4096.0*np.finfo(float).eps*max(dissipation_J, 1e-300),
             kinetics.closure_fraction*dissipation_J)
@@ -766,6 +771,8 @@ def advance_multigrain_front(
             wall_parameters=wall_parameters, interval_s=dt,
             dissipation=MultiGrainDissipation(
                 boundary_mobility_J=dissipation_J),
+            heat_source_J_by_cell=heat_source_J_by_cell,
+            heat_deposition_mode=heat_deposition_mode,
             energy_kwargs=options, absolute_tolerance_J=tolerance_J)
         if result.decision.accepted:
             break
@@ -808,7 +815,8 @@ def advance_multigrain_front(
 def advance_multigrain_front_interval(
         state, runtime, *, kinetics, dt_s, maximum_substep_s, spacing_m,
         represented_thickness_m, wall_parameters, energy_kwargs=None,
-        applied_shear_rate_s=0.0, systems=None):
+        applied_shear_rate_s=0.0, systems=None,
+        heat_deposition_mode="local_realized_event"):
     """Advance a physical interval with recomputed finite front increments.
 
     ``maximum_fraction_per_step`` is a local contour-CFL bound, not a physical
@@ -844,6 +852,7 @@ def advance_multigrain_front_interval(
             spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
-            applied_shear_rate_s=applied_shear_rate_s, systems=systems)
+            applied_shear_rate_s=applied_shear_rate_s, systems=systems,
+            heat_deposition_mode=heat_deposition_mode)
         decisions.append(decision)
     return evolved, evolved_runtime, tuple(decisions)

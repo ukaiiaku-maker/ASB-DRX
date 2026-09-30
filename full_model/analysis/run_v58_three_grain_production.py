@@ -255,6 +255,12 @@ def main():
               "kinetics; the physical temperature state and heat equation "
               "always continue to evolve"))
     parser.add_argument(
+        "--front-heat-deposition",
+        choices=("local_realized_event", "uniform_ablation"),
+        default="local_realized_event",
+        help=("deposit front dissipation on its realized cellwise event "
+              "measure; uniform_ablation is a labeled matched diagnostic"))
+    parser.add_argument(
         "--mechanics-mode", choices=("physical", "frozen_hold"),
         default="physical",
         help=("frozen_hold isolates stored-energy front migration at fixed "
@@ -267,7 +273,8 @@ def main():
             "adaptive_bisection_controller_v5",
             "v58_smaller_macro_step_from_97b91df",
             "v59_conjugate_front_from_ce3d101",
-            "v59_all_temperature_routing_from_42a5432"),
+            "v59_all_temperature_routing_from_42a5432",
+            "v60_local_front_heat_from_13d908e"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -305,6 +312,7 @@ def main():
         "flow_temperature_mode": args.flow_temperature_mode,
         "recovery_temperature_mode": args.recovery_temperature_mode,
         "front_temperature_mode": args.front_temperature_mode,
+        "front_heat_deposition": args.front_heat_deposition,
         "mechanics_mode": args.mechanics_mode,
         "mechanical_stress_integrator": "synchronized_common_stress_substeps",
         "front_sweep_measure": "level_set_gradient_pair_partition",
@@ -444,6 +452,30 @@ def main():
                 "route and single-crystal controls; all temperature routes "
                 "remain physical and production evolution is unchanged in "
                 "this baseline continuation")
+        elif args.resume_transition == "v60_local_front_heat_from_13d908e":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V60 heat-deposition transition requires an exact parent "
+                    "checkpoint checksum")
+            legacy = dict(checkpoint_configuration or {})
+            current = dict(configuration)
+            deposition = current.pop("front_heat_deposition", None)
+            if (legacy != current or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "13d908e38f72154b3b6c4294f696faa502adc8d5"
+                    or deposition not in {
+                        "local_realized_event", "uniform_ablation"}):
+                raise ValueError(
+                    "V60 heat transition requires the exact 13d908e state "
+                    "with unchanged physical configuration")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["governing_change"] = (
+                "front mobility dissipation is retained cellwise as pressure "
+                "times realized accepted extent; past heat is not relocated")
+            provenance["front_heat_deposition"] = deposition
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
@@ -584,7 +616,8 @@ def main():
                 maximum_substep_s=args.front_maximum_substep,
                 spacing_m=spacing, represented_thickness_m=thickness,
                 wall_parameters=wall, energy_kwargs=energy_options,
-                applied_shear_rate_s=args.shear_rate, systems=systems)
+                applied_shear_rate_s=args.shear_rate, systems=systems,
+                heat_deposition_mode=args.front_heat_deposition)
         if (step == start
                 or (step+1) % max(args.checkpoint_every, 1) == 0
                 or step+1 == args.steps):
@@ -660,6 +693,7 @@ def main():
         "interface_width_m": args.interface_width,
         "front_attempt_frequency_s": args.front_attempt_frequency,
         "front_maximum_substep_s": args.front_maximum_substep,
+        "front_heat_deposition": args.front_heat_deposition,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "source_commit": source_commit,
         "initial_grain_volume_m3": initial_volume.tolist(),

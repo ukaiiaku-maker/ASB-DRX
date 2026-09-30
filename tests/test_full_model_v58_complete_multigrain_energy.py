@@ -103,6 +103,47 @@ def test_nonzero_event_cannot_invent_heat_to_close_energy():
         }
 
 
+def test_realized_heat_source_is_local_and_integrates_exactly():
+    spacing = 2e-8
+    thickness = 5e-10
+    state = _state(8)
+    request = np.zeros((8, 8)); request[2:4, 1:6] = .05
+    proposal = JointTransferProposal(
+        "10-20", 10, 20, request, state.owners[0],
+        zero_exports(state.owners[0]))
+    capacity = joint_material_transaction(state, (proposal,))
+    source = np.zeros((8, 8)); source[2:4, 1:6] = np.arange(1, 11).reshape(2, 5)
+    heat = 2.5e-15
+    parameters = CommonWallParameters(spacing_m=spacing)
+    local = evaluate_joint_multigrain_transaction(
+        state, capacity, spacing_m=spacing,
+        represented_thickness_m=thickness, wall_parameters=parameters,
+        interval_s=1e-9,
+        dissipation=MultiGrainDissipation(boundary_mobility_J=heat),
+        heat_source_J_by_cell=source,
+        absolute_tolerance_J=heat*10.0)
+    increment = (local.candidate_state.owners[0].temperature_K
+                 -capacity.candidate.owners[0].temperature_K)
+    assert np.all(increment[source == 0.0] == 0.0)
+    assert np.ptp(increment[source > 0.0]) > 0.0
+    deposited = (parameters.volumetric_heat_capacity_J_m3_K
+                 *spacing**2*thickness
+                 *np.sum(increment, dtype=np.longdouble))
+    assert np.isclose(deposited, heat, rtol=2e-15, atol=0.0)
+    assert abs(local.decision.heat_source_closure_J) <= 1e-30
+
+    uniform = evaluate_joint_multigrain_transaction(
+        state, capacity, spacing_m=spacing,
+        represented_thickness_m=thickness, wall_parameters=parameters,
+        interval_s=1e-9,
+        dissipation=MultiGrainDissipation(boundary_mobility_J=heat),
+        heat_source_J_by_cell=source, heat_deposition_mode="uniform_ablation",
+        absolute_tolerance_J=heat*10.0)
+    uniform_increment = (uniform.candidate_state.owners[0].temperature_K
+                         -capacity.candidate.owners[0].temperature_K)
+    np.testing.assert_allclose(uniform_increment, uniform_increment[0, 0])
+
+
 def test_stale_decision_is_rejected_by_publication_guard():
     state = _state(8)
     request = np.zeros((8, 8)); request[:2] = .05
