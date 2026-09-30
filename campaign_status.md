@@ -2304,3 +2304,26 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   mean at the hot point. Because a stress peak and growing interval-level
   localization have just emerged, its exact accepted checkpoint is continuing
   toward 4.00 microseconds under the same coefficients and source.
+- The exact-source 900 K, 4e4/s three-grain physical/all-frozen pair reaches
+  3.50 microseconds with 420 accepted events and no rejection in either member.
+  The physical endpoint has 41.54% true softening and 133.71 K local matched
+  excess, but aspect 1.57 and no one-microsecond conjunctive episode. It is a
+  causal thermal-localization result with patch/broad morphology, not strict
+  ASB.
+- A mean-preserving 1 K thermal-band single-crystal discriminator remains
+  spatially homogeneous through 3.50 microseconds. n32/n48/n64 terminal
+  contrasts are 0.861578/0.861565/0.861559 K and stresses agree essentially to
+  floating-point accuracy. Temperature feedback changes the mean but does not
+  amplify the weak spatial seed.
+- A four-grain 4e4/s network reaches a restartable 3.00 microsecond physical
+  prefix and a 2.50 microsecond matched all-frozen control. At the common
+  endpoint the physical response has 54.27% softening, participation 0.0343,
+  and aspect 4.09, but its 45.22 K local excess misses the 50 K criterion, its
+  61.6 nm width is under-resolved, and heat/power component overlap is zero.
+  This is an elongated ASB precursor, not strict physical ASB.
+- V59 final scientific classification: coupled prepared-boundary DRX and
+  causal thermomechanical localization are demonstrated, but no tested
+  topology produces a resolved, persistent, co-located strict ASB. Spontaneous
+  grain birth and material calibration remain unclaimed.
+- Final canonical regression: 957 tests pass in 317.51 s. V59 closes at
+  2026-09-30 03:29:37 UTC with no campaign solver left active.

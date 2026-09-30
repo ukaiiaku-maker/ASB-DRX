@@ -1,0 +1,72 @@
+{
+  "schema": "asb-drx-v59-campaign-manifest-v1",
+  "allocation_id": "v59-local-20260929T164808Z",
+  "start_utc": "2026-09-29T16:48:08Z",
+  "deadline_utc": "2026-09-30T04:48:08Z",
+  "closure_utc": "2026-09-30T03:29:37Z",
+  "execution_site": "local workstation",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v59-persistence-20260929",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v59-20260929",
+  "v58_closure_commit": "8c7a8456e2476b528923bfc61f8ec3ab7ccbf235",
+  "production_sources": {
+    "three_and_four_grain": "9b40708a775699d00b3504c97cee879f85a54ff0",
+    "single_crystal": "c6cf28c4200b2b40b83379eb55e3b82359a31165"
+  },
+  "selected_results": [
+    {
+      "id": "three_grain_rate4e4_physical_all_frozen_pair",
+      "physical_time_s": 3.5e-6,
+      "physical_checkpoint_sha256": "91fee2d7246d835eafd27d39760c77877a101870ab26a6d5fb23ba963e25b829",
+      "control_checkpoint_sha256": "1a46a34ed613eb1bf9fdb094152e07cf70fd349d2bc537ee1433dd6beb80aa48",
+      "classification": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/physical_asb_rate4e4_T900_all_arrhenius_to3p5us.json",
+      "classification_sha256": "e4bc701e3c74bb4314054aed37280eb626990f0548276bd3833b04d65af885d9",
+      "decision": "CAUSAL_THERMAL_LOCALIZATION_BUT_BROAD_OR_PATCH_NOT_STRICT_ASB"
+    },
+    {
+      "id": "single_crystal_rate4e4_n32_pair",
+      "physical_checkpoint_sha256": "5a84ec27e0b9d8726cdf52ab75a10ee6f4c9ad337a5b8e447786edc27d691ed6",
+      "control_checkpoint_sha256": "aefc0cd18dc3f1783b1fb60cf6cf573c2ad5fd86a4f8639e20f875e5597a8ee4",
+      "classification_sha256": "207fd896c051e9958300f475bd6b46508f0b7fec7803a1a2f51d28e832a32869",
+      "decision": "GRID_CONVERGENT_SPATIALLY_HOMOGENEOUS_NEGATIVE"
+    },
+    {
+      "id": "single_crystal_rate4e4_n48_pair",
+      "physical_checkpoint_sha256": "02a14742944098cd5d1077d7bdc67d1bf4845c81d44506526c9f9b8f04e339ee",
+      "control_checkpoint_sha256": "e5fca7a0e3b8373b6a21e33c1c3b35de9261a7c9729a4980b32c8bd7966d2365",
+      "classification_sha256": "d363a2690887649d5834f1bcf756edf9aa9de4f246d71f570236d1d80492177f"
+    },
+    {
+      "id": "single_crystal_rate4e4_n64_pair",
+      "physical_checkpoint_sha256": "0624b1ee7138c367980b15cbd4d3f03d66529c646a4110892df4dc0069bbe1ef",
+      "control_checkpoint_sha256": "bc2874d35a7ac32e0794bb939d206e2413b3ba25374fc5e1da39ee2894b999fe",
+      "classification_sha256": "e23c9937df991b4dc7276898134a32ee636db7cb8b71742317f4ce11686aa82c"
+    },
+    {
+      "id": "four_grain_rate4e4_physical_all_frozen_pair",
+      "physical_time_s": 3.0e-6,
+      "matched_control_time_s": 2.5e-6,
+      "physical_checkpoint_sha256": "329b74f19d3ef796574f921a4192920d62c00f9162248b5f9319ce60b2635e32",
+      "control_checkpoint_sha256": "cea486ff59f5cbafbd95ae87903ba5aa09e713078a4f0731aaf09164b1b8f0e5",
+      "classification_sha256": "254baad07cc25a01cb77ac8664f487f61c77d8f237be9f7eae5893bee7b17bd5",
+      "decision": "ELONGATED_UNDERRESOLVED_PRECURSOR_NOT_STRICT_ASB"
+    }
+  ],
+  "movies": {
+    "three_grain_sha256": "81cef3a59a5c878ca6a50461de646e552c256f396cbe1ab42843eed1569fb07a",
+    "four_grain_sha256": "e261b9ac30d1b84021a607c6872b8f838783c6fd3ee1ddf500825909eaa94cfd"
+  },
+  "claims": {
+    "coupled_common_owner_production": true,
+    "substantial_prepared_boundary_drx_three_grain": true,
+    "causal_thermal_localization": true,
+    "strict_physical_asb": false,
+    "single_crystal_spontaneous_localization": false,
+    "spontaneous_grain_birth": false,
+    "material_calibration": false
+  },
+  "tests": {
+    "canonical_final_suite": "957 passed in 317.51 s with PYTHONPATH=src:."
+  },
+  "hpc_used": false
+}

@@ -1,7 +1,7 @@
 {
   "schema": "asb-drx-v59-controller-v1",
   "allocation_id": "v59-local-20260929T164808Z",
-  "campaign_state": "ACTIVE",
+  "campaign_state": "COMPLETE",
   "start_utc": "2026-09-29T16:48:08Z",
   "deadline_utc": "2026-09-30T04:48:08Z",
   "execution_site": "local workstation",
@@ -16,16 +16,8 @@
     "spontaneous_grain_birth": "NOT_ESTABLISHED",
     "material_calibration": "NOT_CLAIMED"
   },
-  "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass",
-  "active_heavy_solver": {
-    "exec_session": 7957,
-    "case": "high_rate4e4_T900_all_arrhenius_frozen_9b_n32_to3p5us",
-    "source_commit": "9b40708a775699d00b3504c97cee879f85a54ff0",
-    "resume_checkpoint": null,
-    "resume_sha256": null,
-    "target_physical_time_s": 3.5e-6,
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v59-20260929/high_rate4e4_T900_all_arrhenius_frozen_9b_n32_to3p5us"
-  },
+  "focused_tests": "All affected V59 classifier, front/energy, rate-exposure, network, and provenance test batches pass; final canonical suite 957 passed in 317.51 s",
+  "active_heavy_solver": null,
   "current_decisions": {
     "strict_asb_at_3p5us": "FAILED_SCIENTIFIC_BROAD_ZONE",
     "strict_asb_failure_reasons": [
@@ -74,11 +66,21 @@
       "power_participation": 0.22538463725140495,
       "power_minor_width_um": 0.9355675930669608,
       "power_aspect_ratio": 1.5674540840481224
-    }
+    },
+    "rate4e4_T900_all_frozen_checkpoint_sha256": "1a46a34ed613eb1bf9fdb094152e07cf70fd349d2bc537ee1433dd6beb80aa48",
+    "rate4e4_T900_causal_result": "CAUSAL_THERMAL_LOCALIZATION_BUT_BROAD_OR_PATCH_NOT_STRICT_ASB",
+    "rate4e4_T900_terminal_local_matched_excess_K": 133.71493583281608,
+    "single_crystal_result": "GRID_CONVERGENT_SPATIALLY_HOMOGENEOUS_NEGATIVE_N32_N48_N64",
+    "single_crystal_terminal_peak_minus_mean_K": 0.8615775688444955,
+    "four_grain_physical_checkpoint_sha256": "329b74f19d3ef796574f921a4192920d62c00f9162248b5f9319ce60b2635e32",
+    "four_grain_control_checkpoint_sha256": "cea486ff59f5cbafbd95ae87903ba5aa09e713078a4f0731aaf09164b1b8f0e5",
+    "four_grain_result": "ELONGATED_UNDERRESOLVED_PRECURSOR_NOT_STRICT_ASB",
+    "four_grain_common_horizon_s": 2.5e-6,
+    "four_grain_local_matched_excess_K": 45.21640277319625
   },
   "next_actions": [
-    "Complete the all-Arrhenius frozen control through 3.5 microseconds",
-    "Classify local causal excess on the common final-source window",
-    "Exercise the single-crystal seeded physical/frozen control pair"
+    "Refine the four-grain elongated precursor at fixed physical width before any strict-ASB claim",
+    "Develop a physical heterogeneous single-crystal defect seed if intragranular ASB remains a target",
+    "Preserve the restartable four-grain 3.0 microsecond physical checkpoint"
   ]
 }
