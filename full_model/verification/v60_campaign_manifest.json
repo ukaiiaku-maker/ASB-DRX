@@ -1,0 +1,53 @@
+{
+  "schema": "asb-drx-v60-campaign-manifest-v1",
+  "closure_utc": "2026-09-30T21:52:57Z",
+  "execution_site": "local workstation",
+  "repository": "https://github.com/ukaiiaku-maker/ASB-DRX.git",
+  "branch": "exp/full-v60-local-heat-morphology-20260930",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v60-20260930",
+  "v59_closure_commit": "13d908e38f72154b3b6c4294f696faa502adc8d5",
+  "operator_commit": "954c399",
+  "instrumented_production_commit": "c545d357f7583f6bf18516800d77dd43149b92b4",
+  "parent_checkpoints": {
+    "physical_2p5us_sha256": "678b784dca9afac3a6cc5a0c05dcbdef8f70862f0817e05eca8b4d6ac1d10b50",
+    "all_frozen_2p5us_sha256": "cea486ff59f5cbafbd95ae87903ba5aa09e713078a4f0731aaf09164b1b8f0e5",
+    "physical_3p0us_sha256": "329b74f19d3ef796574f921a4192920d62c00f9162248b5f9319ce60b2635e32",
+    "parent_solver_source": "9b40708a775699d00b3504c97cee879f85a54ff0"
+  },
+  "same_parent_heat_fork": {
+    "audit": "/Users/sdillon/HPC3/campaigns/asb-drx-v60-20260930/front_heat_same_parent_audit.json",
+    "audit_sha256": "4728fbca43483c5bed4347f4d885e7a67554b109e6ed4e16b4848ab75b1baaf8",
+    "local_result_sha256": "8909dbcf34d1a23bae58634d504de2f86ac38202a279185d6377bcf18c83fdf8",
+    "uniform_result_sha256": "f1f9db221f400a76b4f3ef92d01f5f8feca38045aaf7076a53a8ef271a1c2eb5",
+    "classification": "LOCAL_FRONT_HEAT_OPERATOR_ACTIVATED_SHORT_HORIZON"
+  },
+  "corrected_n32_pair": {
+    "physical_result_sha256": "8cbab1d0d8e2be427fab05ba24918313596efc7f49241f2edf2a854989a74e6c",
+    "all_frozen_result_sha256": "8857d696409c4feb68f3b7d8e034ed82b9bc5e636240755a46f6c2064c674e1b",
+    "physical_checkpoint_sha256": "02bb76e04e3b17009c3dc6f93afb426b2746a604d09c20f67bd5c21138e6804e",
+    "all_frozen_checkpoint_sha256": "413cfa16855160bff6eae008430ce97f50f8b0240a2b3d02f19cf29a2b9cda72",
+    "classification": "/Users/sdillon/HPC3/campaigns/asb-drx-v60-20260930/network4_local_pair_to3p0us_classification.json",
+    "classification_sha256": "cef10076b0734ce078b66237a45c0a04ed03bcb5e4b8973963dff3c68273d639",
+    "common_local_deposition_window_s": 5e-7,
+    "physical_time_s": 3e-6,
+    "rejected_events": 0,
+    "strict_physical_asb": false,
+    "decision": "CAUSAL_DIFFERENCE_BUT_UNDERRESOLVED_AND_NOT_SOURCE_COLOCATED"
+  },
+  "tests": {
+    "operator_boundary": "961 passed in 435.80 s with PYTHONPATH=src:.",
+    "instrumented_production_boundary": "962 passed in 385.58 s with PYTHONPATH=src:.",
+    "postprocessor_targeted": "34 passed in 11.63 s",
+    "final_documented_boundary": "962 passed in 367.89 s with PYTHONPATH=src:."
+  },
+  "claims": {
+    "local_front_heat_conservative": true,
+    "topology_aware_periodic_morphology": true,
+    "signed_channel_budget_available": true,
+    "prepared_boundary_migration_preserved": true,
+    "strict_physical_asb": false,
+    "spontaneous_grain_birth": false,
+    "material_calibration": false
+  },
+  "hpc_used": false
+}

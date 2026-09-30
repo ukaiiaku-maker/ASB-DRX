@@ -2327,3 +2327,32 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   grain birth and material calibration remain unclaimed.
 - Final canonical regression: 957 tests pass in 317.51 s. V59 closes at
   2026-09-30 03:29:37 UTC with no campaign solver left active.
+
+## V60 local front heat and topology-aware audit (2026-09-30)
+
+- Isolated branch `exp/full-v60-local-heat-morphology-20260930` starts from
+  frozen V59 checkpoint `13d908e`; all simulations run locally.
+- Front mobility heat is deposited using corrected pressure times realized
+  cellwise accepted extent. Its integral remains the independently computed
+  dissipation. Uniform deposition survives only as a labeled ablation.
+- Contractible and winding periodic morphologies now use distinct geometry;
+  temporal identity is constrained by elapsed time and allowed displacement.
+- A SHA-bound 50 ns same-parent local/uniform fork conserves total heat while
+  producing a 5.70 K temperature-field span after 25 ns and 11.31 K after
+  50 ns, confirming that the spatial coupling is active.
+- Instantaneous signed budgets expose each physical dissipation channel,
+  reversible defect-energy transport, conduction, and storage. Checkpoints
+  additionally retain accepted-interval front and mechanical heat fields.
+- The n32 physical/all-frozen pair was restarted prospectively from matched
+  2.5 microsecond V59 states and completed through 3.0 microseconds with zero
+  rejected events. Past uniform heat was not relocated.
+- The corrected pair remains strict-ASB negative: peak local matched excess is
+  48.97 K, widths are 59.9--222.4 nm versus the unchanged 625 nm screen,
+  front-source/power overlap is at most 0.0171, endpoint softening is 13.98%,
+  and no conjunctive episode forms.
+- The original 2.5 microsecond candidate is contractible, so its 61.6 nm width
+  is not a diagonal-winding measurement artifact; it remains underresolved.
+- Production regression boundaries: 961 tests after the operator repair and
+  962 tests after channel/checkpoint instrumentation; the final documented
+  boundary is 962 tests in 367.89 s. Decision report:
+  `full_model/docs/v60_decision_report.md`.

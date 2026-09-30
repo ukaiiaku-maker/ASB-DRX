@@ -458,6 +458,24 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
     thickness = float(configuration.get(
         "represented_thickness_m", 2.0*2.48e-10))
     cell_volume = spacing*spacing*thickness
+    with np.load(path, allow_pickle=False) as checkpoint_data:
+        front_source_J_by_cell = (
+            np.asarray(checkpoint_data[
+                "diagnostic_front_heat_source_J_by_cell"], dtype=float)
+            if "diagnostic_front_heat_source_J_by_cell" in checkpoint_data.files
+            else None)
+        interval_mechanical_heat = (
+            np.asarray(checkpoint_data[
+                "diagnostic_mechanical_heat_J_m3_cells"], dtype=float)
+            if "diagnostic_mechanical_heat_J_m3_cells" in checkpoint_data.files
+            else None)
+    interval_s = float(configuration["dt_s"])
+    front_source_rate = (None if front_source_J_by_cell is None else
+                         front_source_J_by_cell/max(
+                             interval_s*cell_volume, 1e-300))
+    mechanical_interval_heat_rate = (
+        None if interval_mechanical_heat is None else
+        interval_mechanical_heat/max(interval_s, 1e-300))
     budget_fields = {
         "plastic_power": power_field,
         "irreversible_heat": heat_field,
@@ -472,6 +490,11 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
             for name, value in dissipation["dissipation_channels_W_m3"].items()
         },
     }
+    if front_source_rate is not None:
+        budget_fields["preceding_interval_front_dissipation"] = front_source_rate
+    if mechanical_interval_heat_rate is not None:
+        budget_fields["preceding_interval_mechanical_heat"] = (
+            mechanical_interval_heat_rate)
     eligible_components = periodic_components(power_field > power["threshold"])
     eligible_components.sort(key=np.count_nonzero, reverse=True)
     component_budgets = []
@@ -494,6 +517,10 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
                 "heat_deposition_mode"),
             "semantics": "accepted preceding macro-interval, not instantaneous rate",
         }
+    front_source_metrics = (None if front_source_rate is None else
+                            field_metrics(front_source_rate, spacing))
+    front_source_overlap = (None if front_source_metrics is None else overlap(
+        power_component, front_source_metrics[1]))
     row = {
         "step": step, "physical_time_s": runtime.ledger.physical_time_s,
         "applied_shear_strain": gamma,
@@ -537,6 +564,13 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
             },
             "all_eligible_components": component_budgets,
             "preceding_interval_front_dissipation": front_interval,
+            "front_source_power_component_overlap": front_source_overlap,
+            "front_source_field_metrics": (
+                None if front_source_metrics is None else front_source_metrics[0]),
+            "stage_warning": (
+                "instantaneous accepted-state rates and preceding accepted-"
+                "interval sources are reported separately and are not summed "
+                "as if simultaneous"),
         },
         "power_width_minor_m": (None if widths is None else
                                  float(widths["minor_gaussian_fwhm_m"])),
