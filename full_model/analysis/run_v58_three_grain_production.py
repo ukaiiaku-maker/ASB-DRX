@@ -274,7 +274,7 @@ def main():
             "v58_smaller_macro_step_from_97b91df",
             "v59_conjugate_front_from_ce3d101",
             "v59_all_temperature_routing_from_42a5432",
-            "v60_local_front_heat_from_13d908e"),
+            "v60_local_front_heat_from_9b40708"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -452,7 +452,7 @@ def main():
                 "route and single-crystal controls; all temperature routes "
                 "remain physical and production evolution is unchanged in "
                 "this baseline continuation")
-        elif args.resume_transition == "v60_local_front_heat_from_13d908e":
+        elif args.resume_transition == "v60_local_front_heat_from_9b40708":
             if not args.expected_resume_sha256:
                 raise ValueError(
                     "V60 heat-deposition transition requires an exact parent "
@@ -462,11 +462,11 @@ def main():
             deposition = current.pop("front_heat_deposition", None)
             if (legacy != current or not checkpoint_provenance
                     or checkpoint_provenance.get("source_commit")
-                    != "13d908e38f72154b3b6c4294f696faa502adc8d5"
+                    != "9b40708a775699d00b3504c97cee879f85a54ff0"
                     or deposition not in {
                         "local_realized_event", "uniform_ablation"}):
                 raise ValueError(
-                    "V60 heat transition requires the exact 13d908e state "
+                    "V60 heat transition requires the exact 9b40708 state "
                     "with unchanged physical configuration")
             provenance["restart_transition"] = args.resume_transition
             provenance["parent_checkpoint_sha256"] = resume_sha
