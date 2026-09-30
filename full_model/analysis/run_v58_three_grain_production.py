@@ -177,7 +177,7 @@ def network_interfaces(state):
 
 
 def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
-                     configuration, provenance):
+                     configuration, provenance, diagnostic_arrays=None):
     arrays = multigrain_checkpoint_arrays(state)
     arrays["metadata_json"] = np.asarray(multigrain_checkpoint_metadata(state))
     arrays["runtime_json"] = np.asarray(json.dumps({
@@ -188,6 +188,10 @@ def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
         "provenance": provenance,
     }, sort_keys=True))
     arrays["initial_grain_volume_m3"] = np.asarray(initial_volume)
+    for name, value in (diagnostic_arrays or {}).items():
+        if not name.startswith("diagnostic_"):
+            raise ValueError("checkpoint diagnostic names require diagnostic_ prefix")
+        arrays[name] = np.asarray(value)
     np.savez_compressed(path, **arrays)
 
 
@@ -195,7 +199,8 @@ def _load_checkpoint(path):
     with np.load(path, allow_pickle=False) as data:
         arrays = {key: data[key] for key in data.files
                   if key not in ("metadata_json", "runtime_json",
-                                 "initial_grain_volume_m3")}
+                                 "initial_grain_volume_m3")
+                  and not key.startswith("diagnostic_")}
         state = multigrain_from_checkpoint(str(data["metadata_json"]), arrays)
         meta = json.loads(str(data["runtime_json"]))
         initial_volume = np.asarray(data["initial_grain_volume_m3"]).copy()
@@ -559,7 +564,15 @@ def main():
                     np.zeros((args.n, args.n)))/args.dt,
                 sum((value.irreversible_heat_J_m3_cells
                      for value in mechanical.operator_decisions),
-                    np.zeros((args.n, args.n)))/args.dt)
+                     np.zeros((args.n, args.n)))/args.dt)
+            mechanical_heat_J_m3_cells = sum(
+                (value.irreversible_heat_J_m3_cells
+                 for value in mechanical.operator_decisions),
+                np.zeros((args.n, args.n)))
+            mechanical_work_J_m3_cells = sum(
+                (value.plastic_work_J_m3_cells
+                 for value in mechanical.operator_decisions),
+                np.zeros((args.n, args.n)))
             mechanical_energy_record = {
                 "external_work_J": mechanical.external_work_J,
                 "internal_energy_change_J": mechanical.internal_energy_change_J,
@@ -597,6 +610,8 @@ def main():
                 "consumed_interval_s": args.dt,
             }
             zeros = np.zeros((args.n, args.n))
+            mechanical_heat_J_m3_cells = zeros.copy()
+            mechanical_work_J_m3_cells = zeros.copy()
             localization_record = _localization_diagnostics(zeros, zeros)
             mechanical_energy_record = {
                 "external_work_J": 0.0, "internal_energy_change_J": 0.0,
@@ -618,6 +633,13 @@ def main():
                 wall_parameters=wall, energy_kwargs=energy_options,
                 applied_shear_rate_s=args.shear_rate, systems=systems,
                 heat_deposition_mode=args.front_heat_deposition)
+        front_sources = [
+            np.asarray(item.heat_source_J_by_cell, dtype=float)
+            for item in fronts if item.heat_source_J_by_cell is not None]
+        front_source_J_by_cell = sum(
+            front_sources, start=np.zeros((args.n, args.n), dtype=float))
+        front_source_rate = front_source_J_by_cell/max(
+            args.dt*spacing**2*thickness, 1e-300)
         if (step == start
                 or (step+1) % max(args.checkpoint_every, 1) == 0
                 or step+1 == args.steps):
@@ -669,13 +691,29 @@ def main():
                         not item.accepted for item in fronts),
                     "classifications": [
                         item.classification for item in fronts],
+                    "generated_heat_J": float(np.sum(
+                        front_source_J_by_cell, dtype=np.longdouble)),
+                    "heat_source": spatial_localization_metrics(
+                        front_source_rate),
+                    "heat_deposition_mode": args.front_heat_deposition,
+                    "heat_source_semantics": (
+                        "accepted pressure times realized cellwise extent, "
+                        "summed over front subintervals and divided by the "
+                        "macro-interval represented cell volume"),
                 },
                 "runtime": asdict(runtime.ledger),
             })
             checkpoint = out/f"checkpoint_{step+1:06d}.npz"
             _save_checkpoint(
                 checkpoint, state, runtime, step+1, gamma, initial_volume,
-                configuration, provenance)
+                configuration, provenance, diagnostic_arrays={
+                    "diagnostic_front_heat_source_J_by_cell": (
+                        front_source_J_by_cell),
+                    "diagnostic_mechanical_heat_J_m3_cells": (
+                        mechanical_heat_J_m3_cells),
+                    "diagnostic_mechanical_work_J_m3_cells": (
+                        mechanical_work_J_m3_cells),
+                })
             (out/"history.json").write_text(json.dumps(history, indent=2))
             print(json.dumps(history[-1], sort_keys=True), flush=True)
     latest = sorted(out.glob("checkpoint_*.npz"))[-1]

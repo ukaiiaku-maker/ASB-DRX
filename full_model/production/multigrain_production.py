@@ -111,6 +111,10 @@ class MultiGrainProductionDecision:
         default_factory=dict)
     joint_pressure_factor: float = 1.0
     selected_rate_conjugate_to_recorded_force: bool = True
+    # Accepted energy deposited by cell during this atomic front interval.
+    # This is transient audit data; authoritative state remains the common
+    # temperature field and checkpoint serialization is handled by the runner.
+    heat_source_J_by_cell: np.ndarray | None = None
 
 
 @dataclass(frozen=True)
@@ -215,6 +219,16 @@ def multigrain_instantaneous_dissipation_fields(
     plastic = np.zeros(shape, dtype=float)
     heat = np.zeros(shape, dtype=float)
     free_energy = np.zeros(shape, dtype=float)
+    channel_names = (
+        "plastic_drag_dissipation_W_m3",
+        "mobile_forest_recovery_dissipation_W_m3",
+        "neutral_pair_annihilation_dissipation_W_m3",
+        "junction_dissipation_W_m3",
+        "wall_exchange_dissipation_W_m3",
+        "wall_order_dissipation_W_m3",
+    )
+    channels = {name: np.zeros(shape, dtype=float) for name in channel_names}
+    transported = np.zeros(shape, dtype=float)
     owner_drivings = _owner_drivings_from_common_stress(
         state, driving, systems, wall_parameters)
     for support, owner, owner_driving in zip(
@@ -225,9 +239,35 @@ def multigrain_instantaneous_dissipation_fields(
         plastic += weight*residual.plastic_power_W_m3
         heat += weight*residual.heat_rate_W_m3
         free_energy += weight*residual.free_energy_rate_W_m3
+        for name in channel_names:
+            channels[name] += weight*np.asarray(
+                residual.channel_rates_m2_s[name], dtype=float)
+        transported += weight*np.asarray(
+            residual.channel_rates_m2_s[
+                "defect_energy_flux_divergence_W_m3"], dtype=float)
+    mixture, _ = reconstruct_multigrain_common(
+        state, wall_parameters.spacing_m)
+    temperature = np.asarray(mixture.temperature_K, dtype=float)
+    spectrum = np.fft.fftn(temperature)
+    kx = 2*np.pi*np.fft.fftfreq(shape[0], d=wall_parameters.spacing_m)
+    ky = 2*np.pi*np.fft.fftfreq(shape[1], d=wall_parameters.spacing_m)
+    kx, ky = np.meshgrid(kx, ky, indexing="ij")
+    conduction = np.real(np.fft.ifftn(
+        -(kx*kx+ky*ky)*spectrum))
+    conduction *= (wall_parameters.volumetric_heat_capacity_J_m3_K
+                   *wall_parameters.thermal_diffusivity_m2_s)
+    bath = (-wall_parameters.volumetric_heat_capacity_J_m3_K
+            *wall_parameters.bath_rate_s
+            *(temperature-wall_parameters.bath_temperature_K))
+    storage = heat+conduction+bath
     return {"plastic_power_W_m3": plastic,
             "irreversible_heat_rate_W_m3": heat,
-            "defect_free_energy_rate_W_m3": free_energy}
+            "defect_free_energy_rate_W_m3": free_energy,
+            "dissipation_channels_W_m3": channels,
+            "reversible_defect_transport_divergence_W_m3": transported,
+            "thermal_conduction_W_m3": conduction,
+            "thermal_bath_exchange_W_m3": bath,
+            "instantaneous_local_thermal_storage_W_m3": storage}
 
 
 def advance_multigrain_mechanics(
@@ -809,7 +849,8 @@ def advance_multigrain_front(
                 True, result.decision.classification, directions, pressures,
                 requested, accepted_fractions, result.decision, backtrack,
                 independent_pressures, selected_velocities,
-                float(joint_pressure_factor), force_rate_converged))
+                float(joint_pressure_factor), force_rate_converged,
+                np.asarray(heat_source_J_by_cell, dtype=float)))
 
 
 def advance_multigrain_front_interval(

@@ -399,6 +399,28 @@ def _wall_parameters(configuration: dict, spacing_m: float) -> CommonWallParamet
         bath_rate_s=0.0)
 
 
+def _signed_budget(field: np.ndarray, component: np.ndarray,
+                   cell_volume_m3: float) -> dict:
+    value = np.asarray(field, dtype=float)
+    mask = np.asarray(component, dtype=bool)
+    return {
+        "whole_domain_signed_W": float(
+            np.sum(value, dtype=np.longdouble)*cell_volume_m3),
+        "whole_domain_positive_W": float(
+            np.sum(np.maximum(value, 0.0), dtype=np.longdouble)*cell_volume_m3),
+        "whole_domain_negative_W": float(
+            np.sum(np.minimum(value, 0.0), dtype=np.longdouble)*cell_volume_m3),
+        "component_signed_W": float(
+            np.sum(value[mask], dtype=np.longdouble)*cell_volume_m3),
+        "component_positive_W": float(
+            np.sum(np.maximum(value[mask], 0.0), dtype=np.longdouble)
+            *cell_volume_m3),
+        "component_negative_W": float(
+            np.sum(np.minimum(value[mask], 0.0), dtype=np.longdouble)
+            *cell_volume_m3),
+    }
+
+
 def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[dict, np.ndarray]:
     state, runtime, step, gamma, _, configuration, provenance = _load_checkpoint(path)
     if configuration is None:
@@ -433,6 +455,45 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
     widths = morphology["second_moment_widths"]
     post_front_stress = float(_mean_mechanical_stress(
         state, spacing, wall, strain)[0, 1])
+    thickness = float(configuration.get(
+        "represented_thickness_m", 2.0*2.48e-10))
+    cell_volume = spacing*spacing*thickness
+    budget_fields = {
+        "plastic_power": power_field,
+        "irreversible_heat": heat_field,
+        "reversible_defect_transport_divergence": dissipation[
+            "reversible_defect_transport_divergence_W_m3"],
+        "thermal_conduction": dissipation["thermal_conduction_W_m3"],
+        "thermal_bath_exchange": dissipation["thermal_bath_exchange_W_m3"],
+        "instantaneous_local_thermal_storage": dissipation[
+            "instantaneous_local_thermal_storage_W_m3"],
+        **{
+            name.removesuffix("_W_m3"): value
+            for name, value in dissipation["dissipation_channels_W_m3"].items()
+        },
+    }
+    eligible_components = periodic_components(power_field > power["threshold"])
+    eligible_components.sort(key=np.count_nonzero, reverse=True)
+    component_budgets = []
+    for component_index, eligible in enumerate(eligible_components):
+        component_budgets.append({
+            "component_index_by_descending_area": component_index,
+            "cell_count": int(np.count_nonzero(eligible)),
+            "area_fraction": float(np.mean(eligible)),
+            "channels": {
+                name: _signed_budget(value, eligible, cell_volume)
+                for name, value in budget_fields.items()
+            },
+        })
+    front_interval = None
+    if pre_front_row and pre_front_row.get("front"):
+        front_interval = {
+            "generated_heat_J": pre_front_row["front"].get("generated_heat_J"),
+            "heat_source": pre_front_row["front"].get("heat_source"),
+            "deposition_mode": pre_front_row["front"].get(
+                "heat_deposition_mode"),
+            "semantics": "accepted preceding macro-interval, not instantaneous rate",
+        }
     row = {
         "step": step, "physical_time_s": runtime.ledger.physical_time_s,
         "applied_shear_strain": gamma,
@@ -464,6 +525,19 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
         "plastic_power_component_morphology": morphology,
         "irreversible_heat_rate": heat,
         "heat_power_component_overlap": overlap(power_component, heat_component),
+        "signed_channel_budget": {
+            "instantaneous_stage": "accepted post-front state",
+            "represented_cell_volume_m3": cell_volume,
+            "eligible_component_rule": (
+                "every periodic plastic-power component above mean+std; "
+                "ordered by descending cell count"),
+            "whole_domain_and_largest_component": {
+                name: _signed_budget(value, power_component, cell_volume)
+                for name, value in budget_fields.items()
+            },
+            "all_eligible_components": component_budgets,
+            "preceding_interval_front_dissipation": front_interval,
+        },
         "power_width_minor_m": (None if widths is None else
                                  float(widths["minor_gaussian_fwhm_m"])),
         "power_width_major_m": (None if widths is None else

@@ -15,6 +15,7 @@ from full_model.production.multigrain_production import (
     MultiGrainProductionRuntime, advance_multigrain_front,
     advance_multigrain_front_interval,
     advance_energy_qualified_mechanics, advance_multigrain_mechanics,
+    multigrain_instantaneous_dissipation_fields,
     _geometric_sweep_weight, _masked_owner_update,
 )
 from full_model.production.tensorial_nye import (
@@ -80,6 +81,10 @@ def test_four_grain_network_executes_one_joint_complete_event():
         systems=bcc_four_family_systems())
     assert decision.accepted
     assert decision.selected_rate_conjugate_to_recorded_force
+    assert decision.heat_source_J_by_cell is not None
+    assert np.isclose(
+        np.sum(decision.heat_source_J_by_cell, dtype=np.longdouble),
+        decision.energy_decision.generated_heat_J, rtol=2e-15, atol=0.0)
     assert runtime.ledger.accepted_events == 1
     assert evolved.ledger.energy_accepted_transactions == 1
 
@@ -153,6 +158,30 @@ def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():
     assert runtime_again.ledger.accepted_events == 2
     assert evolved_again.ledger.energy_accepted_transactions == 2
 
+
+def test_instantaneous_budget_exposes_signed_physical_channels_and_storage():
+    spacing = 5e-6/16
+    state = initialize_network_state(
+        16, 900.0, 4, spacing_m=spacing, interface_width_m=6.25e-7)
+    wall = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        thermal_diffusivity_m2_s=4e-8)
+    fields = multigrain_instantaneous_dissipation_fields(
+        state, driving=CommonWallDriving(
+            mean_strain=np.array([[0.0, .01], [.01, 0.0]])),
+        systems=bcc_four_family_systems(), topologies=(),
+        wall_parameters=wall)
+    channels = fields["dissipation_channels_W_m3"]
+    np.testing.assert_allclose(
+        sum(channels.values()), fields["irreversible_heat_rate_W_m3"],
+        rtol=2e-13, atol=1e-4)
+    np.testing.assert_allclose(
+        fields["instantaneous_local_thermal_storage_W_m3"],
+        fields["irreversible_heat_rate_W_m3"]
+        +fields["thermal_conduction_W_m3"]
+        +fields["thermal_bath_exchange_W_m3"])
+    assert abs(np.sum(fields["thermal_conduction_W_m3"],
+                      dtype=np.longdouble)) < 1e-6
 
 def test_front_physical_interval_subcycling_matches_manual_sequence():
     spacing = 2e-8
