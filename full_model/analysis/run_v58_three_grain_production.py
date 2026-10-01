@@ -98,7 +98,9 @@ def initialize_network_state(n, temperature, grain_count, *,
                              equal_density=False,
                              initial_temperature_band_K=0.0,
                              initial_temperature_band_width_m=3.125e-7,
-                             single_crystal_band_normal="x"):
+                             single_crystal_band_normal="x",
+                             initial_density_band_fraction=0.0,
+                             initial_density_band_width_m=3.125e-7):
     """Initialize a resolved deterministic prepared-grain periodic network."""
     count = int(grain_count)
     if count == 1:
@@ -106,11 +108,20 @@ def initialize_network_state(n, temperature, grain_count, *,
         owner = _owner(n, 4.0e17, 0.0, temperature)
         amplitude = float(initial_temperature_band_K)
         width_cells = float(initial_temperature_band_width_m)/float(spacing_m)
+        density_amplitude = float(initial_density_band_fraction)
+        density_width_cells = float(
+            initial_density_band_width_m)/float(spacing_m)
         if amplitude < 0.0 or not np.isfinite(amplitude):
             raise ValueError("initial temperature-band amplitude must be nonnegative")
         if width_cells <= 0.0 or not np.isfinite(width_cells):
             raise ValueError("initial temperature-band width must be positive")
-        if amplitude > 0.0:
+        if (density_amplitude < 0.0 or density_amplitude >= 1.0
+                or not np.isfinite(density_amplitude)):
+            raise ValueError(
+                "initial density-band fraction must be finite in [0,1)")
+        if density_width_cells <= 0.0 or not np.isfinite(density_width_cells):
+            raise ValueError("initial density-band width must be positive")
+        if amplitude > 0.0 or density_amplitude > 0.0:
             x, y = np.meshgrid(np.arange(n), np.arange(n), indexing="ij")
             if single_crystal_band_normal == "x":
                 coordinate = x
@@ -121,15 +132,32 @@ def initialize_network_state(n, temperature, grain_count, *,
             else:
                 raise ValueError("unknown single-crystal band normal")
             distance = _periodic_distance(coordinate, 0.5*n, n)
-            profile = np.exp(-0.5*(distance/width_cells)**2)
-            profile -= profile.mean()
-            profile /= max(float(profile.max()), 1e-300)
-            owner = replace(
-                owner, temperature_K=np.asarray(owner.temperature_K)
-                +amplitude*profile)
+            if amplitude > 0.0:
+                profile = np.exp(-0.5*(distance/width_cells)**2)
+                profile -= profile.mean()
+                profile /= max(float(profile.max()), 1e-300)
+                owner = replace(
+                    owner, temperature_K=np.asarray(owner.temperature_K)
+                    +amplitude*profile)
+            if density_amplitude > 0.0:
+                density_profile = np.exp(
+                    -0.5*(distance/density_width_cells)**2)
+                density_profile -= density_profile.mean()
+                density_profile /= max(float(density_profile.max()), 1e-300)
+                scale = 1.0+density_amplitude*density_profile[..., None]
+                # Every +/- reservoir receives the same multiplier.  Thus the
+                # mean line inventory is unchanged, and the perturbation adds
+                # neither family-signed Burgers content nor beta/Nye content.
+                owner = replace(owner, **{
+                    name: np.asarray(getattr(owner, name))*scale for name in (
+                        "mobile_plus_m2", "mobile_minus_m2",
+                        "forest_plus_m2", "forest_minus_m2",
+                        "wall_plus_m2", "wall_minus_m2")})
         state = MultiGrainCommonState((10,), support, (owner,))
         state.validate()
         return state
+    if initial_density_band_fraction != 0.0:
+        raise ValueError("density-band seed is a single-crystal control")
     if count == 3:
         if initial_temperature_band_K != 0.0:
             raise ValueError("temperature-band seed is a single-crystal control")
@@ -231,6 +259,10 @@ def main():
                         default=3.125e-7)
     parser.add_argument("--single-crystal-band-normal",
                         choices=("x", "y", "diagonal"), default="x")
+    parser.add_argument("--initial-density-band-fraction", type=float,
+                        default=0.0)
+    parser.add_argument("--initial-density-band-width", type=float,
+                        default=3.125e-7)
     parser.add_argument("--front-attempt-frequency", type=float, default=1e8)
     parser.add_argument("--front-maximum-fraction", type=float, default=.015,
                         help="numerical contour-CFL bound per front substep")
@@ -324,6 +356,11 @@ def main():
         "front_sweep_measure": "level_set_gradient_pair_partition",
         "front_closure_fraction": .05,
     }
+    if args.initial_density_band_fraction != 0.0:
+        configuration.update({
+            "initial_density_band_fraction": args.initial_density_band_fraction,
+            "initial_density_band_width_m": args.initial_density_band_width,
+        })
     provenance = {"source_commit": source_commit}
     if args.mechanics_mode == "frozen_hold" and args.shear_rate != 0.0:
         raise ValueError("frozen_hold mechanics requires zero shear rate")
@@ -525,7 +562,20 @@ def main():
             initial_temperature_band_K=args.initial_temperature_band_K,
             initial_temperature_band_width_m=(
                 args.initial_temperature_band_width),
-            single_crystal_band_normal=args.single_crystal_band_normal)
+            single_crystal_band_normal=args.single_crystal_band_normal,
+            initial_density_band_fraction=(
+                args.initial_density_band_fraction),
+            initial_density_band_width_m=args.initial_density_band_width)
+        unperturbed_initial_state = (None if (
+            args.grain_count != 1
+            or args.initial_density_band_fraction == 0.0) else
+            initialize_network_state(
+                args.n, args.temperature, 1, spacing_m=spacing,
+                interface_width_m=args.interface_width,
+                initial_temperature_band_K=args.initial_temperature_band_K,
+                initial_temperature_band_width_m=(
+                    args.initial_temperature_band_width),
+                single_crystal_band_normal=args.single_crystal_band_normal))
         runtime = MultiGrainProductionRuntime(network_interfaces(state))
         start = 0; gamma = .012
         initial_volume = np.sum(
@@ -540,6 +590,45 @@ def main():
         boundary_line_energy_J_m=wall.line_energy_J_m,
         boundary_junction_energy_J_m=wall.junction_energy_J_m,
         reference_temperature_K=args.temperature)
+    initialization_diagnostics = None
+    if not args.resume and unperturbed_initial_state is not None:
+        perturbed_energy = evaluate_complete_multigrain_energy(
+            state, spacing_m=spacing, represented_thickness_m=thickness,
+            wall_parameters=wall, **energy_options)
+        reference_energy = evaluate_complete_multigrain_energy(
+            unperturbed_initial_state, spacing_m=spacing,
+            represented_thickness_m=thickness, wall_parameters=wall,
+            **energy_options)
+        owner = state.owners[0]; reference = unperturbed_initial_state.owners[0]
+        reservoir_names = (
+            "mobile_plus_m2", "mobile_minus_m2",
+            "forest_plus_m2", "forest_minus_m2",
+            "wall_plus_m2", "wall_minus_m2")
+        family_signed = sum(
+            np.asarray(getattr(owner, plus))-np.asarray(getattr(owner, minus))
+            for plus, minus in (("mobile_plus_m2", "mobile_minus_m2"),
+                                ("forest_plus_m2", "forest_minus_m2"),
+                                ("wall_plus_m2", "wall_minus_m2")))
+        initialization_diagnostics = {
+            "kind": "sign_balanced_density_band",
+            "total_line_inventory_cell_sum_change": float(sum(
+                np.sum(np.asarray(getattr(owner, name)), dtype=np.longdouble)
+                -np.sum(np.asarray(getattr(reference, name)), dtype=np.longdouble)
+                for name in reservoir_names)),
+            "maximum_family_signed_density_m2": float(
+                np.max(np.abs(family_signed))),
+            "plastic_distortion_changed": bool(np.any(
+                np.asarray(owner.beta_p) != np.asarray(reference.beta_p))),
+            "family_nye_changed": bool(np.any(
+                np.asarray(owner.family_nye_m1)
+                != np.asarray(reference.family_nye_m1))),
+            "initial_helmholtz_change_J": float(
+                perturbed_energy.helmholtz_J-reference_energy.helmholtz_J),
+            "energy_semantics": (
+                "complete common functional at identical initial strain and "
+                "temperature seed; nonzero change is the nonlinear rho-ln-rho "
+                "cost of the mean-preserving density modulation"),
+        }
     for step in range(start, args.steps):
         gamma_before = gamma
         gamma += args.shear_rate*args.dt
@@ -768,6 +857,7 @@ def main():
         "front_attempt_frequency_s": args.front_attempt_frequency,
         "front_maximum_substep_s": args.front_maximum_substep,
         "front_heat_deposition": args.front_heat_deposition,
+        "initialization_diagnostics": initialization_diagnostics,
         "thermal_diffusivity_m2_s": args.thermal_diffusivity,
         "source_commit": source_commit,
         "initial_grain_volume_m3": initial_volume.tolist(),

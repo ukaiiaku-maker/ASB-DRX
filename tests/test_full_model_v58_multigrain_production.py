@@ -66,6 +66,32 @@ def test_single_crystal_common_owner_has_declared_weak_thermal_band():
     state.validate()
 
 
+def test_single_crystal_density_band_preserves_inventory_and_signed_content():
+    kwargs = dict(spacing_m=5e-6/32, interface_width_m=3.125e-7)
+    reference = initialize_network_state(32, 900.0, 1, **kwargs)
+    seeded = initialize_network_state(
+        32, 900.0, 1, initial_density_band_fraction=.05,
+        initial_density_band_width_m=3.125e-7,
+        single_crystal_band_normal="diagonal", **kwargs)
+    fields = (("mobile_plus_m2", "mobile_minus_m2"),
+              ("forest_plus_m2", "forest_minus_m2"),
+              ("wall_plus_m2", "wall_minus_m2"))
+    reference_total = sum(np.sum(getattr(reference.owners[0], name))
+                          for pair in fields for name in pair)
+    seeded_total = sum(np.sum(getattr(seeded.owners[0], name))
+                       for pair in fields for name in pair)
+    assert np.isclose(seeded_total, reference_total, rtol=2e-15, atol=0.0)
+    signed = sum(getattr(seeded.owners[0], plus)
+                 -getattr(seeded.owners[0], minus) for plus, minus in fields)
+    np.testing.assert_array_equal(signed, 0.0)
+    np.testing.assert_array_equal(
+        seeded.owners[0].beta_p, reference.owners[0].beta_p)
+    np.testing.assert_array_equal(
+        seeded.owners[0].family_nye_m1,
+        reference.owners[0].family_nye_m1)
+    assert np.ptp(seeded.owners[0].mobile_plus_m2[..., 0]) > 0.0
+
+
 def test_four_grain_network_executes_one_joint_complete_event():
     spacing = 5e-6/16
     state = initialize_network_state(
