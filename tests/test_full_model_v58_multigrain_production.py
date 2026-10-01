@@ -401,6 +401,22 @@ def test_owner_heat_is_applied_once_to_common_eulerian_temperature():
             owner_state.temperature_K, expected, rtol=0.0, atol=2e-13)
 
 
+def test_instantaneous_diagnostics_include_signed_family_slip_rate():
+    spacing = 2e-8
+    state = _state(8)
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0)
+    fields = multigrain_instantaneous_dissipation_fields(
+        state, driving=CommonWallDriving(
+            resolved_stress_Pa=np.full((8, 8, 4), 7e8)),
+        systems=systems, topologies=(), wall_parameters=parameters)
+    assert fields["signed_slip_rate_s"].shape == (8, 8, 4)
+    assert np.all(np.isfinite(fields["signed_slip_rate_s"]))
+    assert np.any(fields["signed_slip_rate_s"] != 0.0)
+
+
 def test_conduction_and_bath_are_independently_ledgered_as_thermal_increments():
     spacing = 2e-8
     state = _state(8)

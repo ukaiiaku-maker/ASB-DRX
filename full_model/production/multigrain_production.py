@@ -219,6 +219,7 @@ def multigrain_instantaneous_dissipation_fields(
     """Evaluate common-stress owner power/heat fields without advancing."""
     shape = state.supports.shape[1:]
     plastic = np.zeros(shape, dtype=float)
+    signed_slip_rate = np.zeros(shape+(len(systems),), dtype=float)
     heat = np.zeros(shape, dtype=float)
     free_energy = np.zeros(shape, dtype=float)
     channel_names = (
@@ -239,6 +240,8 @@ def multigrain_instantaneous_dissipation_fields(
             owner, owner_driving, systems, topologies, wall_parameters)
         weight = np.asarray(support, dtype=float)
         plastic += weight*residual.plastic_power_W_m3
+        signed_slip_rate += weight[..., None]*np.asarray(
+            residual.state_rate.slip, dtype=float)
         heat += weight*residual.heat_rate_W_m3
         free_energy += weight*residual.free_energy_rate_W_m3
         for name in channel_names:
@@ -263,6 +266,7 @@ def multigrain_instantaneous_dissipation_fields(
             *(temperature-wall_parameters.bath_temperature_K))
     storage = heat+conduction+bath
     return {"plastic_power_W_m3": plastic,
+            "signed_slip_rate_s": signed_slip_rate,
             "irreversible_heat_rate_W_m3": heat,
             "defect_free_energy_rate_W_m3": free_energy,
             "dissipation_channels_W_m3": channels,
