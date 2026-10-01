@@ -867,8 +867,35 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
     }
 
 
+def _verify_refinement_certificate(certificate: dict | None) -> dict:
+    if certificate is None:
+        return {"passed": False, "checks": {
+            "certificate_present": False,
+            "declared_passed": False,
+            "source_bound_records": False,
+            "fixed_physical_scales": False,
+        }}
+    records = certificate.get("comparison_records", [])
+    hashes_bound = bool(records) and all(
+        len(str(record.get(key, ""))) == 64
+        for record in records
+        for key in ("coarse_checkpoint_sha256", "fine_checkpoint_sha256"))
+    common_times = bool(records) and all(
+        float(record.get("common_physical_time_s", -1.0)) > 0.0
+        for record in records)
+    checks = {
+        "certificate_present": True,
+        "declared_passed": certificate.get("passed") is True,
+        "source_bound_records": bool(hashes_bound and common_times),
+        "fixed_physical_scales": certificate.get(
+            "fixed_physical_scales_verified") is True,
+    }
+    return {"passed": bool(all(checks.values())), "checks": checks,
+            "certificate": certificate}
+
+
 def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
-            refinement_passed: bool = False,
+            refinement_certificate: dict | None = None,
             intervention_scope: str = "all_arrhenius") -> dict:
     baseline = _checkpoint_map(baseline_dirs); history = _history_map(baseline_dirs)
     segment_metadata = _sampling_segment_metadata(baseline_dirs)
@@ -931,10 +958,12 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
                           for row in episode_rows}
     matched_available = bool(control_dirs and valid_matched_rows)
     qualifying_operator = (None if not rows else rows[-1].get("operator_id"))
+    refinement_verification = _verify_refinement_certificate(
+        refinement_certificate)
     episode = classify_physical_episode(
         episode_rows, episode_components, PhysicalASBCriteria(),
         matched_control_available=matched_available,
-        refinement_passed=refinement_passed,
+        refinement_passed=refinement_verification["passed"],
         qualifying_operator_id=qualifying_operator)
     return {
         "schema": "asb-drx-v59-physical-asb-v1",
@@ -961,6 +990,7 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
                 pair_certificates[step]["passed"] for step in common)),
             "steps": {str(step): pair_certificates[step] for step in common},
         },
+        "localization_refinement_certificate": refinement_verification,
         "rows": rows, "physical_episode": episode,
     }
 
@@ -969,14 +999,16 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--baseline-dir", action="append", type=Path, required=True)
     parser.add_argument("--control-dir", action="append", type=Path, default=[])
-    parser.add_argument("--refinement-passed", action="store_true")
+    parser.add_argument("--refinement-certificate", type=Path)
     parser.add_argument("--intervention-scope",
                         choices=("all_arrhenius", "flow_recovery"),
                         default="all_arrhenius")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    certificate = (None if args.refinement_certificate is None else
+                   json.loads(args.refinement_certificate.read_text()))
     result = analyze(
-        args.baseline_dir, args.control_dir, args.refinement_passed,
+        args.baseline_dir, args.control_dir, certificate,
         args.intervention_scope)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2)+"\n")

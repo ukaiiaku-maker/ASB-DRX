@@ -1,12 +1,29 @@
 import numpy as np
 
 from full_model.analysis.postprocess_v59_physical_asb import (
-    PhysicalASBCriteria, _wall_parameters, classify_physical_episode,
+    PhysicalASBCriteria, _verify_refinement_certificate, _wall_parameters,
+    classify_physical_episode,
     component_morphology, periodic_identity,
     component_temperature_excess,
     source_association,
     temperature_intervention_certificate,
 )
+
+
+def test_refinement_requires_source_bound_fixed_scale_comparison_records():
+    digest = "a"*64
+    valid = {
+        "passed": True, "fixed_physical_scales_verified": True,
+        "comparison_records": [{
+            "coarse_checkpoint_sha256": digest,
+            "fine_checkpoint_sha256": digest,
+            "common_physical_time_s": 2.5e-6,
+        }],
+    }
+    assert _verify_refinement_certificate(valid)["passed"]
+    invalid = dict(valid, comparison_records=[])
+    assert not _verify_refinement_certificate(invalid)["passed"]
+    assert not _verify_refinement_certificate(None)["passed"]
 
 
 def _row(step, time_s, stress=100.0, contrast=100.0, matched=100.0,
