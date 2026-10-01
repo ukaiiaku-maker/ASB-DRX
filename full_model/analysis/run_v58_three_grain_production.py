@@ -279,7 +279,8 @@ def main():
             "v58_smaller_macro_step_from_97b91df",
             "v59_conjugate_front_from_ce3d101",
             "v59_all_temperature_routing_from_42a5432",
-            "v60_local_front_heat_from_9b40708"),
+            "v60_local_front_heat_from_9b40708",
+            "v61_interval_thermal_ledger_from_3b1db8a"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -481,6 +482,27 @@ def main():
                 "front mobility dissipation is retained cellwise as pressure "
                 "times realized accepted extent; past heat is not relocated")
             provenance["front_heat_deposition"] = deposition
+        elif args.resume_transition == "v61_interval_thermal_ledger_from_3b1db8a":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V61 thermal-ledger transition requires an exact parent "
+                    "checkpoint checksum")
+            if (checkpoint_configuration != configuration
+                    or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "3b1db8aacb35c456f0564cc95694dee4d6983fe8"):
+                raise ValueError(
+                    "V61 thermal-ledger transition requires the exact 3b1db8a "
+                    "configuration and source lineage")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["governing_change"] = (
+                "diagnostic-only recording of independently integrated "
+                "conduction and bath increments plus heat-source integral "
+                "consistency enforcement; accepted evolution equations are "
+                "unchanged")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
