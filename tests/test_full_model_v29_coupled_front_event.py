@@ -21,7 +21,8 @@ import pytest
 
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
 from full_model.production.coupled_front_event import (
-    FrontEnergyTerms, propose_bidirectional_front_event)
+    FrontEnergyTerms, complete_dissipation_velocity_field,
+    propose_bidirectional_front_event)
 from full_model.production.moving_front import DefectState
 
 
@@ -184,3 +185,22 @@ def test_channel_availability_and_mobility_are_exposed_separately():
     assert event.a_to_b_channel.activation_entropy_over_kB == .2
     assert event.a_to_b_channel.identifiable_prefactor_s == pytest.approx(
         2e10*np.exp(.2))
+
+
+def test_vectorized_complete_dissipation_velocity_matches_scalar_events():
+    process = ActivatedProcess("front", 2e10, .2, 1e9)
+    temperatures = np.array([800.0, 900.0, 1100.0])
+    kwargs = dict(
+        event_volume_m3=2e-27, event_length_m=2.8e-10,
+        process=process, h0_J=.3*EV_J, critical_pressure_Pa=1e9,
+        exp_a=2.0, exp_n=1.5, exp_floor=.1,
+        kinetic_free_energy_a_to_b_J=-2e-21,
+        kinetic_free_energy_b_to_a_J=-1e-21)
+    vector = complete_dissipation_velocity_field(
+        temperature_K=temperatures, **kwargs)
+    scalar = np.array([propose_bidirectional_front_event(
+        _state(1e14), _state(1e14), line_energy_J_m=1.1e-9,
+        temperature_K=value, transmission_fraction=.5,
+        deterministic_rate_law="complete_dissipation", **kwargs
+    ).net_velocity_a_to_b_m_s for value in temperatures])
+    np.testing.assert_allclose(vector, scalar, rtol=2e-15, atol=0.0)

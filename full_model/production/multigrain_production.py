@@ -12,7 +12,9 @@ from .complete_multigrain_energy import (
     MultiGrainDissipation, evaluate_joint_multigrain_transaction,
     evaluate_multigrain_mechanical_interval,
 )
-from .coupled_front_event import propose_bidirectional_front_event
+from .coupled_front_event import (
+    complete_dissipation_velocity_field, propose_bidirectional_front_event,
+)
 from .moving_front import DefectState
 from .common_tensorial_wall import (
     CommonWallDriving, accepted_euler_step, wall_residual,
@@ -51,6 +53,7 @@ class MultiGrainFrontKinetics:
     closure_fraction: float = 0.01
     maximum_backtracks: int = 12
     temperature_override_K: float | None = None
+    temperature_resolution: str = "global_mean"
 
     def validate(self):
         self.transfer_law.validate()
@@ -69,6 +72,8 @@ class MultiGrainFrontKinetics:
                 and (not math.isfinite(float(self.temperature_override_K))
                      or float(self.temperature_override_K) <= 0.0)):
             raise ValueError("front temperature override must be positive and finite")
+        if self.temperature_resolution not in {"global_mean", "local_interface"}:
+            raise ValueError("unknown front temperature resolution")
 
 
 @dataclass(frozen=True)
@@ -583,12 +588,101 @@ def advance_multigrain_front(
                    if kinetics.temperature_override_K is not None else
                    float(np.mean([
                        np.mean(owner.temperature_K) for owner in state.owners])))
+    if (kinetics.temperature_override_K is not None
+            or kinetics.temperature_resolution == "global_mean"):
+        resolved_temperature = np.full(state.supports.shape[1:], temperature)
+    else:
+        mixture, _ = reconstruct_multigrain_common(state, float(spacing_m))
+        resolved_temperature = np.asarray(mixture.temperature_K, dtype=float)
     directions = {}
     pressures = {}
     selected_velocities = {}
     base_requests = {}
     channel_records = {}
     directional_channels = {}
+
+    def request_at_force_scale(interface, pressure_ab, pressure_ba,
+                               weight_ab, weight_ba, scale):
+        delta_ab = -float(scale)*pressure_ab*kinetics.event_volume_m3
+        delta_ba = -float(scale)*pressure_ba*kinetics.event_volume_m3
+        if kinetics.temperature_resolution == "global_mean":
+            event = propose_bidirectional_front_event(
+                _defect(state.owners[index[interface.grain_a_id]]),
+                _defect(state.owners[index[interface.grain_b_id]]),
+                event_volume_m3=kinetics.event_volume_m3,
+                event_length_m=kinetics.event_length_m,
+                line_energy_J_m=wall_parameters.line_energy_J_m,
+                temperature_K=temperature, process=kinetics.process,
+                h0_J=kinetics.h0_J,
+                critical_pressure_Pa=kinetics.critical_pressure_Pa,
+                exp_a=kinetics.exp_a, exp_n=kinetics.exp_n,
+                exp_floor=kinetics.exp_floor,
+                transmission_fraction=0.0, boundary_storage_fraction=0.0,
+                neutral_sink_fraction=0.0,
+                kinetic_free_energy_a_to_b_J=delta_ab,
+                kinetic_free_energy_b_to_a_J=delta_ba,
+                actual_reverse_edge=False,
+                deterministic_rate_law="complete_dissipation")
+            velocity = float(event.net_velocity_a_to_b_m_s)
+            if velocity == 0.0:
+                return None
+            if velocity > 0.0:
+                donor = interface.grain_a_id; receiver = interface.grain_b_id
+                weight = weight_ab; direction = "a_to_b"; pressure = pressure_ab
+            else:
+                donor = interface.grain_b_id; receiver = interface.grain_a_id
+                weight = weight_ba; direction = "b_to_a"; pressure = pressure_ba
+            fraction = min(abs(velocity)*dt/float(spacing_m),
+                           kinetics.maximum_fraction_per_step)
+            request = fraction*np.asarray(weight, dtype=float)
+            representative_velocity = velocity
+        else:
+            velocity = complete_dissipation_velocity_field(
+                kinetic_free_energy_a_to_b_J=delta_ab,
+                kinetic_free_energy_b_to_a_J=delta_ba,
+                event_volume_m3=kinetics.event_volume_m3,
+                event_length_m=kinetics.event_length_m,
+                temperature_K=resolved_temperature,
+                process=kinetics.process, h0_J=kinetics.h0_J,
+                critical_pressure_Pa=kinetics.critical_pressure_Pa,
+                exp_a=kinetics.exp_a, exp_n=kinetics.exp_n,
+                exp_floor=kinetics.exp_floor)
+            positive_request = np.minimum(
+                np.maximum(velocity, 0.0)*dt/float(spacing_m),
+                kinetics.maximum_fraction_per_step)*weight_ab
+            negative_request = np.minimum(
+                np.maximum(-velocity, 0.0)*dt/float(spacing_m),
+                kinetics.maximum_fraction_per_step)*weight_ba
+            positive_extent = float(np.sum(
+                positive_request, dtype=np.longdouble))
+            negative_extent = float(np.sum(
+                negative_request, dtype=np.longdouble))
+            scale_extent = max(positive_extent, negative_extent, 1e-300)
+            if min(positive_extent, negative_extent) > 1e-12*scale_extent:
+                raise RuntimeError(
+                    "one interface has simultaneous resolved opposite front "
+                    "directions; segmented interface state is required")
+            if positive_extent >= negative_extent and positive_extent > 0.0:
+                donor = interface.grain_a_id; receiver = interface.grain_b_id
+                weight = np.asarray(weight_ab); direction = "a_to_b"
+                pressure = pressure_ab; request = positive_request
+                representative_velocity = float(np.sum(
+                    velocity*weight, dtype=np.longdouble)/max(
+                        float(np.sum(weight, dtype=np.longdouble)), 1e-300))
+            elif negative_extent > 0.0:
+                donor = interface.grain_b_id; receiver = interface.grain_a_id
+                weight = np.asarray(weight_ba); direction = "b_to_a"
+                pressure = pressure_ba; request = negative_request
+                representative_velocity = float(np.sum(
+                    velocity*weight, dtype=np.longdouble)/max(
+                        float(np.sum(weight, dtype=np.longdouble)), 1e-300))
+            else:
+                return None
+        if pressure <= 0.0 or not np.any(request > 0.0):
+            return None
+        return (direction, pressure, request,
+                (interface, donor, receiver), representative_velocity)
+
     for interface in runtime.interfaces:
         if interface.grain_a_id not in index or interface.grain_b_id not in index:
             raise ValueError("runtime interface references an unknown grain")
@@ -606,63 +700,21 @@ def advance_multigrain_front(
             interval_s=dt, systems=systems)
         if ab is None and ba is None:
             continue
-        delta_ab = 0.0 if ab is None else ab[0]*kinetics.event_volume_m3/ab[1]
-        delta_ba = 0.0 if ba is None else ba[0]*kinetics.event_volume_m3/ba[1]
+        pressure_ab = 0.0 if ab is None else max(-ab[0]/ab[1], 0.0)
+        pressure_ba = 0.0 if ba is None else max(-ba[0]/ba[1], 0.0)
         directional_channels[interface.component_id] = (
-            interface,
-            0.0 if ab is None else max(-ab[0]/ab[1], 0.0),
-            0.0 if ba is None else max(-ba[0]/ba[1], 0.0),
+            interface, pressure_ab, pressure_ba,
             weight_ab, weight_ba)
-        event = propose_bidirectional_front_event(
-            _defect(state.owners[index[interface.grain_a_id]]),
-            _defect(state.owners[index[interface.grain_b_id]]),
-            event_volume_m3=kinetics.event_volume_m3,
-            event_length_m=kinetics.event_length_m,
-            line_energy_J_m=wall_parameters.line_energy_J_m,
-            temperature_K=temperature, process=kinetics.process,
-            h0_J=kinetics.h0_J,
-            critical_pressure_Pa=kinetics.critical_pressure_Pa,
-            exp_a=kinetics.exp_a, exp_n=kinetics.exp_n,
-            exp_floor=kinetics.exp_floor,
-            transmission_fraction=0.0, boundary_storage_fraction=0.0,
-            neutral_sink_fraction=0.0,
-            kinetic_free_energy_a_to_b_J=delta_ab,
-            kinetic_free_energy_b_to_a_J=delta_ba,
-            actual_reverse_edge=False,
-            deterministic_rate_law="complete_dissipation")
-        velocity = event.net_velocity_a_to_b_m_s
-        if velocity == 0.0:
+        selected = request_at_force_scale(
+            interface, pressure_ab, pressure_ba, weight_ab, weight_ba, 1.0)
+        if selected is None:
             continue
-        if velocity > 0.0:
-            donor, receiver, weight, virtual = (
-                interface.grain_a_id, interface.grain_b_id, weight_ab, ab)
-            direction = "a_to_b"
-        else:
-            donor, receiver, weight, virtual = (
-                interface.grain_b_id, interface.grain_a_id, weight_ba, ba)
-            direction = "b_to_a"
-        if virtual is None:
-            continue
-        fraction = min(abs(velocity)*dt/float(spacing_m),
-                       kinetics.maximum_fraction_per_step)
-        donor_index = index[donor]
-        receiver_index = index[receiver]
-        request = fraction*_geometric_sweep_weight(
-            state, donor_index, receiver_index, spacing_m)
-        # Preserve the same geometric direction used by the virtual price.
-        # Donor support and competing outgoing channels are resolved jointly
-        # by ``joint_material_transaction`` at every trial amplitude.  Clipping
-        # here would permanently reshape the direction before backtracking,
-        # so the finite event would no longer be conjugate to its price after
-        # a boundary had swept through low-support cells.
-        pressure = max(-virtual[0]/virtual[1], 0.0)
-        if pressure <= 0.0 or not np.any(request > 0.0):
-            continue
+        direction, pressure, request, record, velocity = selected
         directions[interface.component_id] = direction
         pressures[interface.component_id] = pressure
         selected_velocities[interface.component_id] = float(velocity)
         base_requests[interface.component_id] = request
-        channel_records[interface.component_id] = (interface, donor, receiver)
+        channel_records[interface.component_id] = record
 
     next_ledger = replace(
         runtime.ledger, intervals=runtime.ledger.intervals+1,
@@ -697,43 +749,16 @@ def advance_multigrain_front(
         trial_records = {}; trial_velocities = {}
         for key, (interface, pressure_ab, pressure_ba,
                   weight_ab, weight_ba) in directional_channels.items():
-            event = propose_bidirectional_front_event(
-                _defect(state.owners[index[interface.grain_a_id]]),
-                _defect(state.owners[index[interface.grain_b_id]]),
-                event_volume_m3=kinetics.event_volume_m3,
-                event_length_m=kinetics.event_length_m,
-                line_energy_J_m=wall_parameters.line_energy_J_m,
-                temperature_K=temperature, process=kinetics.process,
-                h0_J=kinetics.h0_J,
-                critical_pressure_Pa=kinetics.critical_pressure_Pa,
-                exp_a=kinetics.exp_a, exp_n=kinetics.exp_n,
-                exp_floor=kinetics.exp_floor,
-                transmission_fraction=0.0, boundary_storage_fraction=0.0,
-                neutral_sink_fraction=0.0,
-                kinetic_free_energy_a_to_b_J=(
-                    -float(scale)*pressure_ab*kinetics.event_volume_m3),
-                kinetic_free_energy_b_to_a_J=(
-                    -float(scale)*pressure_ba*kinetics.event_volume_m3),
-                actual_reverse_edge=False,
-                deterministic_rate_law="complete_dissipation")
-            velocity = event.net_velocity_a_to_b_m_s
-            if velocity == 0.0:
+            selected = request_at_force_scale(
+                interface, pressure_ab, pressure_ba,
+                weight_ab, weight_ba, scale)
+            if selected is None:
                 continue
-            if velocity > 0.0:
-                donor = interface.grain_a_id; receiver = interface.grain_b_id
-                weight = weight_ab; direction = "a_to_b"; pressure = pressure_ab
-            else:
-                donor = interface.grain_b_id; receiver = interface.grain_a_id
-                weight = weight_ba; direction = "b_to_a"; pressure = pressure_ba
-            fraction = min(abs(velocity)*dt/float(spacing_m),
-                           kinetics.maximum_fraction_per_step)
-            request = fraction*weight
-            if pressure <= 0.0 or not np.any(request > 0.0):
-                continue
+            direction, pressure, request, record, velocity = selected
             trial_directions[key] = direction
             trial_pressures[key] = pressure
             trial_requests[key] = request
-            trial_records[key] = (interface, donor, receiver)
+            trial_records[key] = record
             trial_velocities[key] = float(velocity)
         return (trial_directions, trial_pressures, trial_requests,
                 trial_records, trial_velocities)
@@ -772,7 +797,9 @@ def advance_multigrain_front(
     # force used for mobility dissipation.
     joint_pressure_factor = 1.0
     force_rate_converged = False
-    for _ in range(24):
+    maximum_force_iterations = (64 if
+        kinetics.temperature_resolution == "local_interface" else 24)
+    for _ in range(maximum_force_iterations):
         (directions, independent_pressures, base_requests,
          channel_records, selected_velocities) = requests_at_force_scale(
              joint_pressure_factor)
@@ -782,7 +809,10 @@ def advance_multigrain_front(
             base_requests, channel_records, independent_pressures)
         relative = abs(updated_factor-joint_pressure_factor)/max(
             abs(updated_factor), 1e-300)
-        joint_pressure_factor = float(updated_factor)
+        joint_pressure_factor = float(
+            .5*(joint_pressure_factor+updated_factor)
+            if kinetics.temperature_resolution == "local_interface"
+            else updated_factor)
         if relative <= 1e-10:
             force_rate_converged = True
             break

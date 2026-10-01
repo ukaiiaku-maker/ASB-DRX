@@ -142,6 +142,49 @@ def test_front_temperature_override_is_independent_of_physical_heat_state():
         for key in hot_decision.selected_velocity_by_interface_m_s)
 
 
+def test_local_interface_temperature_is_uniform_limit_and_changes_hot_gradient_rate():
+    spacing = 5e-6/16
+    state = initialize_network_state(
+        16, 900.0, 4, spacing_m=spacing, interface_width_m=6.25e-7)
+    wall, global_kinetics = _front_parameters(spacing)
+    local_kinetics = replace(
+        global_kinetics, temperature_resolution="local_interface")
+    kwargs = dict(
+        dt_s=1e-8, spacing_m=spacing,
+        represented_thickness_m=5e-10, wall_parameters=wall,
+        energy_kwargs=dict(phase_barrier_J_m3=5e6,
+                           phase_gradient_J_m=5e-7,
+                           reference_temperature_K=900.0),
+        systems=bcc_four_family_systems())
+    runtime = MultiGrainProductionRuntime(network_interfaces(state))
+    global_state, _, global_decision = advance_multigrain_front(
+        state, runtime, kinetics=global_kinetics, **kwargs)
+    local_state, _, local_decision = advance_multigrain_front(
+        state, runtime, kinetics=local_kinetics, **kwargs)
+    assert global_decision.accepted and local_decision.accepted
+    np.testing.assert_allclose(local_state.supports, global_state.supports,
+                               rtol=2e-14, atol=2e-16)
+
+    x = np.arange(16)[:, None]
+    hot = 900.0+150.0*np.cos(2.0*np.pi*x/16.0)
+    hot = np.broadcast_to(hot, (16, 16)).copy()
+    hot_state = replace(state, owners=tuple(
+        replace(owner_state, temperature_K=hot.copy())
+        for owner_state in state.owners))
+    _, _, hot_global = advance_multigrain_front(
+        hot_state, runtime, kinetics=global_kinetics, **kwargs)
+    hot_local_state, _, hot_local = advance_multigrain_front(
+        hot_state, runtime, kinetics=local_kinetics, **kwargs)
+    assert hot_global.accepted and hot_local.accepted
+    assert any(not np.isclose(
+        hot_local.selected_velocity_by_interface_m_s[key],
+        hot_global.selected_velocity_by_interface_m_s[key], rtol=1e-8)
+        for key in hot_local.selected_velocity_by_interface_m_s)
+    np.testing.assert_allclose(np.sum(hot_local_state.supports, axis=0), 1.0,
+                               rtol=0.0, atol=2e-15)
+    assert hot_local.energy_decision.accepted
+
+
 def test_zero_pressure_two_boundary_production_step_is_complete_and_joint():
     spacing = 2e-8
     state = _state(16)

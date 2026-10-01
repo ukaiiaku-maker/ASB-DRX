@@ -61,7 +61,9 @@ def _operators(configuration: dict):
         maximum_backtracks=14,
         temperature_override_K=(
             temperature if configuration["front_temperature_mode"] == "frozen"
-            else None))
+            else None),
+        temperature_resolution=configuration.get(
+            "front_temperature_resolution", "global_mean"))
     return spacing, wall, kinetics
 
 

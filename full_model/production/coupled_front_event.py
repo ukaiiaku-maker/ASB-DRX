@@ -15,14 +15,14 @@ import numpy as np
 
 try:
     from .arrhenius_kinetics import (
-        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j,
-        free_barrier_j)
+        ActivatedProcess, KB_J_K, activated_rate_array_s, activated_rate_s,
+        exp_floor_enthalpy_j, free_barrier_j)
     from .moving_front import (
         DefectState, conservative_front_transfer, total_line_density)
 except ImportError:  # pragma: no cover - direct production-script execution
     from arrhenius_kinetics import (
-        ActivatedProcess, KB_J_K, activated_rate_s, exp_floor_enthalpy_j,
-        free_barrier_j)
+        ActivatedProcess, KB_J_K, activated_rate_array_s, activated_rate_s,
+        exp_floor_enthalpy_j, free_barrier_j)
     from moving_front import (
         DefectState, conservative_front_transfer, total_line_density)
 
@@ -241,6 +241,39 @@ def _complete_dissipation_pair(channel_ab, channel_ba):
         return (channel.availability_factor
                 *channel.transition_state_rate_s*force)
     return activity(channel_ab), activity(channel_ba)
+
+
+def complete_dissipation_velocity_field(
+        *, kinetic_free_energy_a_to_b_J, kinetic_free_energy_b_to_a_J,
+        event_volume_m3, event_length_m, temperature_K,
+        process: ActivatedProcess, h0_J, critical_pressure_Pa, exp_a, exp_n,
+        exp_floor):
+    """Vectorized counterpart of the complete-dissipation front-rate law.
+
+    The two complete directional affinities remain scalar derivatives of the
+    joint common functional.  Temperature may vary along the resolved
+    interface, yielding a local mobility without inventing a local pressure.
+    """
+    temperature = np.asarray(temperature_K, dtype=float)
+    if np.any(~np.isfinite(temperature)) or np.any(temperature <= 0.0):
+        raise ValueError("front temperature field must be finite and positive")
+    volume = float(event_volume_m3)
+
+    def activity(delta_f):
+        delta = float(delta_f)
+        pressure = abs(delta)/volume
+        enthalpy = exp_floor_enthalpy_j(
+            pressure, h0_J, critical_pressure_Pa, exp_a, exp_n, exp_floor)
+        transition = activated_rate_array_s(process, enthalpy, temperature)
+        if delta >= 0.0:
+            return np.zeros_like(temperature)
+        affinity = delta/(KB_J_K*temperature)
+        force = -np.expm1(np.maximum(affinity, -700.0))
+        return transition*force
+
+    return float(event_length_m)*(
+        activity(kinetic_free_energy_a_to_b_J)
+        -activity(kinetic_free_energy_b_to_a_J))
 
 
 def propose_bidirectional_front_event(

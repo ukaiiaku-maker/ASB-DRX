@@ -293,6 +293,11 @@ def main():
               "kinetics; the physical temperature state and heat equation "
               "always continue to evolve"))
     parser.add_argument(
+        "--front-temperature-resolution",
+        choices=("global_mean", "local_interface"), default="global_mean",
+        help=("evaluate front mobility at the production global mean or at "
+              "the resolved common temperature along each interface"))
+    parser.add_argument(
         "--front-heat-deposition",
         choices=("local_realized_event", "uniform_ablation"),
         default="local_realized_event",
@@ -313,7 +318,8 @@ def main():
             "v59_conjugate_front_from_ce3d101",
             "v59_all_temperature_routing_from_42a5432",
             "v60_local_front_heat_from_9b40708",
-            "v61_interval_thermal_ledger_from_3b1db8a"),
+            "v61_interval_thermal_ledger_from_3b1db8a",
+            "v61_local_front_temperature_from_3b1db8a"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -362,6 +368,9 @@ def main():
             "initial_density_band_fraction": args.initial_density_band_fraction,
             "initial_density_band_width_m": args.initial_density_band_width,
         })
+    if args.front_temperature_resolution != "global_mean":
+        configuration["front_temperature_resolution"] = (
+            args.front_temperature_resolution)
     provenance = {"source_commit": source_commit}
     if args.mechanics_mode == "frozen_hold" and args.shear_rate != 0.0:
         raise ValueError("frozen_hold mechanics requires zero shear rate")
@@ -392,7 +401,8 @@ def main():
         closure_fraction=.05, maximum_backtracks=14,
         temperature_override_K=(
             args.temperature if args.front_temperature_mode == "frozen"
-            else None))
+            else None),
+        temperature_resolution=args.front_temperature_resolution)
     if args.resume:
         (state, runtime, start, gamma, initial_volume,
          checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(
@@ -541,6 +551,30 @@ def main():
                 "conduction and bath increments plus heat-source integral "
                 "consistency enforcement; accepted evolution equations are "
                 "unchanged")
+        elif args.resume_transition == "v61_local_front_temperature_from_3b1db8a":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V61 local-temperature transition requires an exact "
+                    "parent checkpoint checksum")
+            legacy = dict(checkpoint_configuration or {})
+            current = dict(configuration)
+            resolution = current.pop("front_temperature_resolution", None)
+            if (legacy != current or resolution != "local_interface"
+                    or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "3b1db8aacb35c456f0564cc95694dee4d6983fe8"):
+                raise ValueError(
+                    "V61 local-temperature transition requires the exact "
+                    "3b1db8a configuration and local-interface resolution")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["governing_change"] = (
+                "front EXP-floor mobility is evaluated from the resolved "
+                "common temperature on each interface while complete joint "
+                "affinity, donor competition, capacity, and energy acceptance "
+                "remain authoritative")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
