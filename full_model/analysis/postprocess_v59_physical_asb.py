@@ -46,6 +46,7 @@ class PhysicalASBCriteria:
     minimum_heat_power_overlap: float = 0.25
     minimum_component_identity_overlap: float = 0.25
     maximum_component_speed_m_s: float = 2.0
+    maximum_sampling_gap_s: float = 1.0e-7
 
 
 def _primitive_lattice_vector(vector: np.ndarray) -> tuple[int, int]:
@@ -190,6 +191,29 @@ def _history_map(directories: list[Path]) -> dict[int, dict]:
         if path.is_file():
             for row in json.loads(path.read_text()):
                 result[int(row["step"])] = row
+    return result
+
+
+def _sampling_segment_metadata(directories: list[Path]) -> dict[str, dict]:
+    """Recover the actual saved cadence independently for each directory."""
+    result = {}
+    for directory in directories:
+        paths = sorted(directory.glob("checkpoint_*.npz"))
+        segment_id = str(directory.resolve())
+        steps = [int(path.stem.rsplit("_", 1)[-1]) for path in paths]
+        if not paths:
+            continue
+        *_, configuration, provenance = _load_checkpoint(paths[0])
+        differences = np.diff(steps)
+        cadence = (None if len(differences) == 0 else
+                   float(np.median(differences))*float(configuration["dt_s"]))
+        result[segment_id] = {
+            "declared_sampling_cadence_s": cadence,
+            "step_differences": differences.tolist(),
+            "source_commit": (provenance or {}).get("source_commit"),
+            "operator_id": configuration.get(
+                "front_heat_deposition", "uniform_legacy_front_heat"),
+        }
     return result
 
 
@@ -358,6 +382,38 @@ def periodic_identity(left: np.ndarray, right: np.ndarray,
     }
 
 
+def source_association(source_field: np.ndarray, candidate: np.ndarray) -> dict:
+    """Associate a source with one candidate without largest-mask aliasing."""
+    source = np.asarray(source_field, dtype=float)
+    region = np.asarray(candidate, dtype=bool)
+    if source.shape != region.shape or source.ndim != 2:
+        raise ValueError("source association requires matching 2-D fields")
+    positive = np.maximum(source, 0.0)
+    threshold = float(source.mean()+source.std())
+    source_components = periodic_components(source > threshold)
+    overlaps = [overlap(region, item) for item in source_components]
+    largest = (max(source_components, key=np.count_nonzero)
+               if source_components else np.zeros(source.shape, dtype=bool))
+    total_positive = float(np.sum(positive, dtype=np.longdouble))
+    local_positive = float(np.sum(positive[region], dtype=np.longdouble))
+    return {
+        "threshold": threshold,
+        "source_component_count": len(source_components),
+        "independently_largest_component_overlap": overlap(region, largest),
+        "maximum_overlap_with_any_source_component": max(overlaps, default=0.0),
+        "overlap_with_each_source_component": overlaps,
+        "positive_source_cell_sum_on_candidate": local_positive,
+        "positive_source_fraction_on_candidate": (
+            local_positive/max(total_positive, 1e-300)),
+        "candidate_positive_cell_fraction": (
+            float(np.mean(positive[region] > 0.0)) if np.any(region) else 0.0),
+        "semantics": (
+            "direct positive-source integral on this power component plus "
+            "all thresholded source-component associations; the independently "
+            "largest overlap is retained only as a historical diagnostic"),
+    }
+
+
 def component_temperature_excess(
         baseline_temperature: np.ndarray, control_temperature: np.ndarray,
         baseline_power_component: np.ndarray) -> dict:
@@ -469,6 +525,16 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
                 "diagnostic_mechanical_heat_J_m3_cells"], dtype=float)
             if "diagnostic_mechanical_heat_J_m3_cells" in checkpoint_data.files
             else None)
+        interval_conduction = (
+            np.asarray(checkpoint_data[
+                "diagnostic_thermal_conduction_J_m3_cells"], dtype=float)
+            if "diagnostic_thermal_conduction_J_m3_cells" in checkpoint_data.files
+            else None)
+        interval_bath_exchange = (
+            np.asarray(checkpoint_data[
+                "diagnostic_thermal_bath_exchange_J_m3_cells"], dtype=float)
+            if "diagnostic_thermal_bath_exchange_J_m3_cells" in checkpoint_data.files
+            else None)
     interval_s = float(configuration["dt_s"])
     front_source_rate = (None if front_source_J_by_cell is None else
                          front_source_J_by_cell/max(
@@ -495,6 +561,22 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
     if mechanical_interval_heat_rate is not None:
         budget_fields["preceding_interval_mechanical_heat"] = (
             mechanical_interval_heat_rate)
+    if interval_conduction is not None:
+        budget_fields["preceding_interval_thermal_conduction"] = (
+            interval_conduction/max(interval_s, 1e-300))
+    if interval_bath_exchange is not None:
+        budget_fields["preceding_interval_thermal_bath_exchange"] = (
+            interval_bath_exchange/max(interval_s, 1e-300))
+    finite_interval_terms = [value for value in (
+        mechanical_interval_heat_rate,
+        None if interval_conduction is None else
+        interval_conduction/max(interval_s, 1e-300),
+        None if interval_bath_exchange is None else
+        interval_bath_exchange/max(interval_s, 1e-300),
+        front_source_rate) if value is not None]
+    if finite_interval_terms:
+        budget_fields["preceding_interval_thermal_storage"] = sum(
+            finite_interval_terms, start=np.zeros_like(power_field))
     eligible_components = periodic_components(power_field > power["threshold"])
     eligible_components.sort(key=np.count_nonzero, reverse=True)
     component_budgets = []
@@ -505,6 +587,10 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
             "area_fraction": float(np.mean(eligible)),
             "channels": {
                 name: _signed_budget(value, eligible, cell_volume)
+                for name, value in budget_fields.items()
+            },
+            "source_association": {
+                name: source_association(value, eligible)
                 for name, value in budget_fields.items()
             },
         })
@@ -526,6 +612,11 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
         "applied_shear_strain": gamma,
         "checkpoint": str(path.resolve()), "checkpoint_sha256": _digest(path),
         "source_commit": (provenance or {}).get("source_commit"),
+        "restart_transition": (provenance or {}).get("restart_transition"),
+        "parent_checkpoint_sha256": (provenance or {}).get(
+            "parent_checkpoint_sha256"),
+        "operator_id": configuration.get(
+            "front_heat_deposition", "uniform_legacy_front_heat"),
         "spacing_m": spacing,
         "interface_width_m": float(configuration["interface_width_m"]),
         "domain_length_m": float(configuration["length_m"]),
@@ -565,6 +656,10 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
             "all_eligible_components": component_budgets,
             "preceding_interval_front_dissipation": front_interval,
             "front_source_power_component_overlap": front_source_overlap,
+            "largest_power_component_source_association": {
+                name: source_association(value, power_component)
+                for name, value in budget_fields.items()
+            },
             "front_source_field_metrics": (
                 None if front_source_metrics is None else front_source_metrics[0]),
             "stage_warning": (
@@ -591,17 +686,40 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
 def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray],
                               criteria: PhysicalASBCriteria,
                               *, matched_control_available: bool,
-                              refinement_passed: bool) -> dict:
+                              refinement_passed: bool,
+                              qualifying_operator_id: str | None = None) -> dict:
     if not rows:
         raise ValueError("physical ASB history is empty")
-    peak = -math.inf; peak_time = None; episode = None; episodes = []
+    # Sort physical time and deterministically collapse duplicate records.
+    # A later entry for the same (time, step) wins, matching directory overlay
+    # semantics without creating fictitious persistence.
+    unique = {}
+    for row in rows:
+        key = (float(row["physical_time_s"]), int(row["step"]))
+        unique[key] = row
+    ordered_rows = [unique[key] for key in sorted(unique)]
+    if any(right["physical_time_s"] <= left["physical_time_s"]
+           for left, right in zip(ordered_rows, ordered_rows[1:])):
+        raise ValueError("physical ASB records must have strictly increasing time")
+    duplicate_count = len(rows)-len(ordered_rows)
+    peak = -math.inf; peak_time = None; peak_row = None
+    operator_peak = -math.inf; operator_peak_time = None
+    episode = None; episodes = []
     previous_component = None; previous_time = None
-    nominal_dt = min(np.diff([row["physical_time_s"] for row in rows]), default=math.inf)
-    for row_index, row in enumerate(rows):
+    legacy_nominal_dt = min(np.diff(
+        [row["physical_time_s"] for row in ordered_rows]), default=math.inf)
+    previous_row = None
+    for row_index, row in enumerate(ordered_rows):
         stress = abs(float(row["post_front_equilibrated_stress_Pa"]))
         if stress > peak:
-            peak = stress; peak_time = row["physical_time_s"]
-        softening = 0.0 if peak <= 0.0 else (peak-stress)/peak
+            peak = stress; peak_time = row["physical_time_s"]; peak_row = row
+        operator_eligible = (qualifying_operator_id is None
+                             or row.get("operator_id") == qualifying_operator_id)
+        if operator_eligible and stress > operator_peak:
+            operator_peak = stress; operator_peak_time = row["physical_time_s"]
+        whole_softening = 0.0 if peak <= 0.0 else (peak-stress)/peak
+        operator_softening = (None if operator_peak <= 0.0 else
+                              (operator_peak-stress)/operator_peak)
         width = row["power_width_minor_m"]
         elapsed = (None if previous_time is None else
                    row["physical_time_s"]-previous_time)
@@ -621,7 +739,7 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
                 and matched >= criteria.minimum_matched_temperature_excess_K),
             "post_peak_softening": bool(
                 peak_time is not None and row["physical_time_s"] > peak_time
-                and softening >= criteria.minimum_softening_fraction),
+                and whole_softening >= criteria.minimum_softening_fraction),
             "resolved_width": bool(width is not None and
                 width >= criteria.minimum_width_to_interface*row["interface_width_m"]),
             "narrow_width": bool(width is not None and
@@ -633,13 +751,48 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
         }
         identity_ok = (identity is None or identity["overlap"] >=
                        criteria.minimum_component_identity_overlap)
-        no_gap = (previous_time is None or not math.isfinite(nominal_dt)
-                  or row["physical_time_s"]-previous_time <= 1.5*nominal_dt)
-        qualifies = bool(all(checks.values()) and identity_ok and no_gap)
+        if previous_row is None:
+            no_gap = True; gap_limit = None; seam = "initial"
+        else:
+            same_segment = (row.get("sampling_segment_id")
+                            == previous_row.get("sampling_segment_id"))
+            declared = row.get("declared_sampling_cadence_s")
+            previous_declared = previous_row.get("declared_sampling_cadence_s")
+            if declared is None or previous_declared is None:
+                gap_limit = 1.5*legacy_nominal_dt
+                seam = "legacy_inferred_global_minimum"
+            else:
+                gap_limit = min(
+                    criteria.maximum_sampling_gap_s,
+                    1.5*max(float(declared), float(previous_declared)))
+                seam = ("same_declared_segment" if same_segment else
+                        "verified_restart_seam" if row.get(
+                            "source_seam_verified", False) else
+                        "unverified_source_seam")
+            no_gap = bool(
+                row["physical_time_s"]-previous_time <= gap_limit
+                and (same_segment or row.get("source_seam_verified", False)
+                     or declared is None or previous_declared is None))
+        qualifies = bool(operator_eligible and all(checks.values())
+                         and identity_ok and no_gap)
         row.update({"preceding_peak_stress_Pa": peak,
                     "preceding_peak_time_s": peak_time,
-                    "softening_fraction": softening,
+                    "preceding_peak_checkpoint": (
+                        None if peak_row is None else peak_row.get("checkpoint")),
+                    "preceding_peak_source_commit": (
+                        None if peak_row is None else peak_row.get("source_commit")),
+                    "whole_history_softening_fraction": whole_softening,
+                    "operator_segment_peak_stress_Pa": (
+                        None if operator_peak <= 0.0 else operator_peak),
+                    "operator_segment_peak_time_s": operator_peak_time,
+                    "operator_segment_softening_fraction": operator_softening,
+                    "softening_fraction": whole_softening,
                     "component_identity": identity,
+                    "sampling_continuity": {
+                        "passed": no_gap, "gap_limit_s": gap_limit,
+                        "classification": seam,
+                    },
+                    "qualifying_operator_eligible": operator_eligible,
                     "strict_snapshot_checks": checks,
                     "strict_snapshot_qualifies": qualifies})
         if qualifies:
@@ -648,18 +801,27 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
                            "start_step": row["step"]}
         elif episode is not None:
             episode.update({"end_s": previous_time,
-                            "end_step": rows[row_index-1]["step"]})
+                            "end_step": ordered_rows[row_index-1]["step"]})
             episode["duration_s"] = episode["end_s"]-episode["start_s"]
             episodes.append(episode); episode = None
         previous_component = components[row["step"]]
         previous_time = row["physical_time_s"]
+        previous_row = row
     if episode is not None:
-        episode.update({"end_s": rows[-1]["physical_time_s"],
-                        "end_step": rows[-1]["step"]})
+        episode.update({"end_s": ordered_rows[-1]["physical_time_s"],
+                        "end_step": ordered_rows[-1]["step"]})
         episode["duration_s"] = episode["end_s"]-episode["start_s"]
         episodes.append(episode)
     maximum = max((item["duration_s"] for item in episodes), default=0.0)
     strict = bool(maximum >= criteria.minimum_persistence_s and refinement_passed)
+    maximum_whole_softening = max(
+        float(row["whole_history_softening_fraction"])
+        for row in ordered_rows)
+    maximum_operator_softening = max(
+        (float(row["operator_segment_softening_fraction"])
+         for row in ordered_rows
+         if row["operator_segment_softening_fraction"] is not None),
+        default=None)
     missing = []
     if not matched_control_available:
         missing.append("matched temperature field at the same accepted times")
@@ -669,6 +831,34 @@ def classify_physical_episode(rows: list[dict], components: dict[int, np.ndarray
         missing.append("localization onset/width/persistence refinement")
     return {
         "criteria": asdict(criteria), "episodes": episodes,
+        "record_count_input": len(rows),
+        "record_count_unique": len(ordered_rows),
+        "duplicate_record_count": duplicate_count,
+        "qualifying_operator_id": qualifying_operator_id,
+        "whole_history_peak": {
+            "stress_Pa": peak, "physical_time_s": peak_time,
+            "checkpoint": None if peak_row is None else peak_row.get("checkpoint"),
+            "source_commit": None if peak_row is None else peak_row.get("source_commit"),
+            "stress_stage": "post_front_equilibrated_stress_Pa",
+        },
+        "qualifying_operator_peak": {
+            "stress_Pa": None if operator_peak <= 0.0 else operator_peak,
+            "physical_time_s": operator_peak_time,
+        },
+        "softening_summary": {
+            "maximum_whole_history_fraction": maximum_whole_softening,
+            "maximum_qualifying_operator_segment_fraction": (
+                maximum_operator_softening),
+            "final_whole_history_fraction": ordered_rows[-1][
+                "whole_history_softening_fraction"],
+            "final_qualifying_operator_segment_fraction": ordered_rows[-1][
+                "operator_segment_softening_fraction"],
+            "semantics": (
+                "whole-history softening may inherit a peak established by an "
+                "earlier operator; qualifying-operator softening measures only "
+                "stress loss from the maximum reached under the declared "
+                "operator and is the relevant persistence diagnostic"),
+        },
         "maximum_episode_duration_s": maximum,
         "matched_control_available": matched_control_available,
         "localization_refinement_passed": refinement_passed,
@@ -681,6 +871,7 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
             refinement_passed: bool = False,
             intervention_scope: str = "all_arrhenius") -> dict:
     baseline = _checkpoint_map(baseline_dirs); history = _history_map(baseline_dirs)
+    segment_metadata = _sampling_segment_metadata(baseline_dirs)
     control = _checkpoint_map(control_dirs) if control_dirs else {}
     common = sorted(set(baseline) & set(control))
     rows = []; components = {}
@@ -709,6 +900,13 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
             intervention_scope=intervention_scope)
     for step, path in sorted(baseline.items()):
         row, component = checkpoint_snapshot(path, history.get(step))
+        segment_id = str(path.parent.resolve())
+        row["sampling_segment_id"] = segment_id
+        row["declared_sampling_cadence_s"] = segment_metadata.get(
+            segment_id, {}).get("declared_sampling_cadence_s")
+        row["source_seam_verified"] = bool(
+            row.get("restart_transition") and row.get(
+                "parent_checkpoint_sha256"))
         if (step in control_temperature
                 and pair_certificates[step]["passed"]):
             state, *_ = _load_checkpoint(path)
@@ -732,10 +930,12 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
     episode_components = {row["step"]: components[row["step"]]
                           for row in episode_rows}
     matched_available = bool(control_dirs and valid_matched_rows)
+    qualifying_operator = (None if not rows else rows[-1].get("operator_id"))
     episode = classify_physical_episode(
         episode_rows, episode_components, PhysicalASBCriteria(),
         matched_control_available=matched_available,
-        refinement_passed=refinement_passed)
+        refinement_passed=refinement_passed,
+        qualifying_operator_id=qualifying_operator)
     return {
         "schema": "asb-drx-v59-physical-asb-v1",
         "exploratory_v58_three_record_flag_is_strict": False,
@@ -753,6 +953,7 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
                 "patches from being called bands"),
         },
         "baseline_directories": [str(path.resolve()) for path in baseline_dirs],
+        "sampling_segments": segment_metadata,
         "control_directories": [str(path.resolve()) for path in control_dirs],
         "common_control_steps": common,
         "temperature_intervention_certificate": {

@@ -573,6 +573,14 @@ def main():
                 (value.plastic_work_J_m3_cells
                  for value in mechanical.operator_decisions),
                 np.zeros((args.n, args.n)))
+            thermal_conduction_J_m3_cells = sum(
+                (value.thermal_conduction_J_m3_cells
+                 for value in mechanical.operator_decisions),
+                np.zeros((args.n, args.n)))
+            thermal_bath_exchange_J_m3_cells = sum(
+                (value.thermal_bath_exchange_J_m3_cells
+                 for value in mechanical.operator_decisions),
+                np.zeros((args.n, args.n)))
             mechanical_energy_record = {
                 "external_work_J": mechanical.external_work_J,
                 "internal_energy_change_J": mechanical.internal_energy_change_J,
@@ -612,6 +620,8 @@ def main():
             zeros = np.zeros((args.n, args.n))
             mechanical_heat_J_m3_cells = zeros.copy()
             mechanical_work_J_m3_cells = zeros.copy()
+            thermal_conduction_J_m3_cells = zeros.copy()
+            thermal_bath_exchange_J_m3_cells = zeros.copy()
             localization_record = _localization_diagnostics(zeros, zeros)
             mechanical_energy_record = {
                 "external_work_J": 0.0, "internal_energy_change_J": 0.0,
@@ -713,6 +723,10 @@ def main():
                         mechanical_heat_J_m3_cells),
                     "diagnostic_mechanical_work_J_m3_cells": (
                         mechanical_work_J_m3_cells),
+                    "diagnostic_thermal_conduction_J_m3_cells": (
+                        thermal_conduction_J_m3_cells),
+                    "diagnostic_thermal_bath_exchange_J_m3_cells": (
+                        thermal_bath_exchange_J_m3_cells),
                 })
             (out/"history.json").write_text(json.dumps(history, indent=2))
             print(json.dumps(history[-1], sort_keys=True), flush=True)

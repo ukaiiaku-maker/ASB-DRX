@@ -4,6 +4,7 @@ from full_model.analysis.postprocess_v59_physical_asb import (
     PhysicalASBCriteria, _wall_parameters, classify_physical_episode,
     component_morphology, periodic_identity,
     component_temperature_excess,
+    source_association,
     temperature_intervention_certificate,
 )
 
@@ -218,3 +219,62 @@ def test_preceding_peak_can_predate_attributable_control_window():
         matched_control_available=True, refinement_passed=True)
     assert decision["inherited_strict_asb"]
     assert rows[1]["preceding_peak_time_s"] == 0.0
+
+
+def test_declared_segment_cadence_is_not_reduced_by_one_short_interval():
+    rows = [_row(index, time, stress=100.0 if index == 0 else 70.0)
+            for index, time in enumerate((0.0, 25e-9, 75e-9, 125e-9))]
+    for row in rows:
+        row.update(sampling_segment_id="segment-a",
+                   declared_sampling_cadence_s=50e-9)
+    _decision(rows)
+    assert all(row["sampling_continuity"]["passed"] for row in rows)
+    assert rows[-1]["sampling_continuity"]["gap_limit_s"] == 75e-9
+
+
+def test_declared_cadence_rejects_real_missing_interval_and_deduplicates():
+    rows = [_row(0, 0.0), _row(1, 50e-9, stress=70.0),
+            _row(1, 50e-9, stress=70.0), _row(3, 150e-9, stress=70.0)]
+    for row in rows:
+        row.update(sampling_segment_id="segment-a",
+                   declared_sampling_cadence_s=50e-9)
+    decision = _decision(rows)
+    assert decision["duplicate_record_count"] == 1
+    assert not rows[-1]["sampling_continuity"]["passed"]
+
+
+def test_operator_transition_retains_whole_peak_but_separates_segment_drop():
+    rows = [_row(0, 0.0, stress=100.0),
+            _row(1, .5e-6, stress=80.0),
+            _row(2, 1.0e-6, stress=70.0)]
+    rows[0].update(operator_id="uniform", sampling_segment_id="old",
+                   declared_sampling_cadence_s=.5e-6)
+    for row in rows[1:]:
+        row.update(operator_id="local", sampling_segment_id="new",
+                   declared_sampling_cadence_s=.5e-6,
+                   source_seam_verified=row is rows[1])
+    mask = np.zeros((8, 8), dtype=bool); mask[:, 3] = True
+    decision = classify_physical_episode(
+        rows, {row["step"]: mask for row in rows}, PhysicalASBCriteria(
+            maximum_sampling_gap_s=1e-6), matched_control_available=True,
+        refinement_passed=True, qualifying_operator_id="local")
+    assert decision["whole_history_peak"]["stress_Pa"] == 100.0
+    assert decision["qualifying_operator_peak"]["stress_Pa"] == 80.0
+    assert np.isclose(rows[-1]["whole_history_softening_fraction"], .3)
+    assert np.isclose(rows[-1]["operator_segment_softening_fraction"], .125)
+    assert np.isclose(decision["softening_summary"][
+        "maximum_whole_history_fraction"], .3)
+    assert np.isclose(decision["softening_summary"][
+        "maximum_qualifying_operator_segment_fraction"], .125)
+    assert not rows[0]["qualifying_operator_eligible"]
+
+
+def test_source_association_finds_smaller_colocated_heat_component():
+    candidate = np.zeros((16, 16), dtype=bool); candidate[2:4, 2:4] = True
+    source = np.zeros((16, 16), dtype=float)
+    source[2:4, 2:4] = 10.0
+    source[9:13, 9:13] = 20.0
+    association = source_association(source, candidate)
+    assert association["independently_largest_component_overlap"] == 0.0
+    assert association["maximum_overlap_with_any_source_component"] == 1.0
+    assert association["positive_source_fraction_on_candidate"] > 0.0

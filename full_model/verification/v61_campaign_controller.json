@@ -1,0 +1,82 @@
+{
+  "schema": "asb-drx-v61-campaign-controller-v1",
+  "allocation": {
+    "start_utc": "2026-10-01T17:10:45Z",
+    "deadline_utc": "2026-10-02T05:10:45Z",
+    "duration_s": 43200,
+    "execution_site": "local workstation",
+    "maximum_concurrent_campaign_heavy_solvers": 1
+  },
+  "mission": "Advance the common physical model toward prepared-boundary DRX and physically defensible rate/temperature-selected thermal localization using clean local-heat histories and fixed-scale refinement.",
+  "lineage": {
+    "v60_closure_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
+    "v61_branch": "exp/full-v61-clean-history-20261001",
+    "v61_worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v61-20261001",
+    "evidence_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001"
+  },
+  "startup_audit": {
+    "v60_worktree_clean": true,
+    "remote_v60_sha_verified": true,
+    "reported_v60_checkpoint_hashes_verified": true,
+    "v60_or_v61_solver_active_at_start": false,
+    "unrelated_heavy_processes_observed_and_not_touched": true
+  },
+  "current": {
+    "state": "RUNNING",
+    "verified_solver_source": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
+    "last_accepted_pair_horizon_s": null,
+    "last_accepted_grid": null,
+    "unresolved_physics": [
+      "clean-history localization response",
+      "fixed-scale spatial refinement",
+      "finite-interval regional heat balance",
+      "late-state front-temperature locality",
+      "single-crystal sign-balanced perturbation response"
+    ],
+    "next_action": "complete clean n32 physical/control pair, classify it, then select fixed-scale refinement while production repair tests remain green"
+  },
+  "active_heavy_solver": {
+    "case": "clean_network4_physical_n32_to3p0us",
+    "pid_at_launch": 14437,
+    "continuation_session_id": 27805,
+    "source_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
+    "started_utc": "2026-10-01T17:20:31Z",
+    "target_physical_time_s": 3e-6,
+    "initialization": "deterministic analytic four-grain state with local front heat from time zero",
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/clean_network4_physical_n32_to3p0us"
+  },
+  "scientific_status": {
+    "production_correctness": "PRESERVED_FROM_V60",
+    "conservative_heat_deposition": "PASSED_V60_OPERATOR_SCOPE",
+    "prepared_boundary_drx": "DEMONSTRATED_PRIOR_SCOPE",
+    "strict_physical_asb": "UNESTABLISHED",
+    "spatial_refinement": "NOT_STARTED_V61",
+    "spontaneous_grain_birth": "UNQUALIFIED",
+    "historical_peak_reduction": "REPAIRED_AND_NEGATIVE_FOR_LOCAL_OPERATOR_PERSISTENCE",
+    "sampling_cadence_reduction": "REPAIRED_WITH_SEGMENT_CADENCE_AND_GAP_CAP",
+    "source_component_association": "REPAIRED_WITH_DIRECT_CANDIDATE_INTEGRALS",
+    "finite_interval_thermal_ledger": "IMPLEMENTED_AND_FOCUSED_TESTED"
+  },
+  "development_evidence": {
+    "focused_tests": {
+      "command_scope": [
+        "tests/test_full_model_v58_complete_multigrain_energy.py",
+        "tests/test_full_model_v58_multigrain_production.py",
+        "tests/test_v59_physical_asb.py",
+        "tests/test_v59_network_postprocess.py"
+      ],
+      "passed": 49,
+      "failed": 0
+    },
+    "combined_v59_v60_reduction": {
+      "artifact": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/v59_v60_combined_operator_aware_classification.json",
+      "whole_history_peak_Pa": 4005374177.3236847,
+      "whole_history_peak_time_s": 1.1999999999999995e-6,
+      "final_whole_history_softening_fraction": 0.61241082567525,
+      "local_operator_peak_Pa": 1804801882.6999552,
+      "final_local_operator_softening_fraction": 0.13982820766557705,
+      "strict_episode_duration_s": 0.0,
+      "classification": "NEGATIVE_LOCAL_OPERATOR_PERSISTENCE"
+    }
+  }
+}

@@ -128,6 +128,8 @@ class MultiGrainMechanicalDecision:
     consumed_interval_s: float
     plastic_work_J_m3_cells: np.ndarray
     irreversible_heat_J_m3_cells: np.ndarray
+    thermal_conduction_J_m3_cells: np.ndarray
+    thermal_bath_exchange_J_m3_cells: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -285,6 +287,8 @@ def advance_multigrain_mechanics(
     work = heat = 0.0
     plastic_work_density = np.zeros(state.supports.shape[1:], dtype=float)
     irreversible_heat_density = np.zeros_like(plastic_work_density)
+    thermal_conduction_density = np.zeros_like(plastic_work_density)
+    thermal_bath_exchange_density = np.zeros_like(plastic_work_density)
     minimum_scale = 1.0
     maximum_line_residual = 0.0
     substeps = 0
@@ -369,14 +373,22 @@ def advance_multigrain_mechanics(
         common_temperature += (
             heat_increment/wall_parameters.volumetric_heat_capacity_J_m3_K)
         if diffusivity > 0.0:
+            before_conduction = common_temperature.copy()
             common_temperature = np.real(np.fft.ifftn(
                 np.exp(-diffusivity*(kx*kx+ky*ky)*consumed)
                 *np.fft.fftn(common_temperature)))
+            thermal_conduction_density += (
+                wall_parameters.volumetric_heat_capacity_J_m3_K
+                *(common_temperature-before_conduction))
         if bath_rate > 0.0:
+            before_bath = common_temperature.copy()
             decay = math.exp(-bath_rate*consumed)
             common_temperature = (
                 wall_parameters.bath_temperature_K
                 +decay*(common_temperature-wall_parameters.bath_temperature_K))
+            thermal_bath_exchange_density += (
+                wall_parameters.volumetric_heat_capacity_J_m3_K
+                *(common_temperature-before_bath))
         if np.any(~np.isfinite(common_temperature)) or np.any(
                 common_temperature <= 0.0):
             raise ValueError("common heat update produced nonpositive temperature")
@@ -395,7 +407,8 @@ def advance_multigrain_mechanics(
     decision = MultiGrainMechanicalDecision(
         True, minimum_scale, work, heat, maximum_line_residual,
         substeps, dt, plastic_work_density,
-        irreversible_heat_density)
+        irreversible_heat_density, thermal_conduction_density,
+        thermal_bath_exchange_density)
     return candidate, decision
 
 

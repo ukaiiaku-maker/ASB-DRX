@@ -71,6 +71,9 @@ class CompleteMultiGrainDecision:
     heat_deposition_mode: str
     heat_source_integral_J: float
     heat_source_closure_J: float
+    raw_heat_source_integral_J: float
+    heat_source_normalization_factor: float
+    raw_heat_source_relative_mismatch: float
 
     def as_dict(self):
         value = asdict(self)
@@ -338,6 +341,9 @@ def evaluate_joint_multigrain_transaction(
     candidate = cold_state
     heat_source_integral = 0.0
     heat_source_closure = 0.0
+    raw_heat_source_integral = 0.0
+    heat_source_normalization_factor = 1.0
+    raw_heat_source_relative_mismatch = 0.0
     if generated_heat > 0.0 and not prescribed_temperature:
         shape = before_state.supports.shape[1:]
         if heat_deposition_mode == "uniform_ablation":
@@ -358,6 +364,21 @@ def evaluate_joint_multigrain_transaction(
         source_sum = float(np.sum(source, dtype=np.longdouble))
         if source_sum <= 0.0:
             raise ValueError("positive heat requires a positive realized source")
+        raw_heat_source_integral = source_sum
+        heat_source_normalization_factor = generated_heat/source_sum
+        raw_heat_source_relative_mismatch = abs(source_sum-generated_heat)/max(
+            abs(generated_heat), 1e-300)
+        # A production local source is already an energy-by-cell ledger made
+        # from the same accepted force and extent as the scalar dissipation.
+        # Renormalizing a materially inconsistent field would conceal a
+        # force/source association bug.  Geometry-only generic sources and the
+        # explicitly declared uniform ablation remain normalized by design.
+        if (heat_deposition_mode == "local_realized_event"
+                and heat_source_J_by_cell is not None
+                and raw_heat_source_relative_mismatch
+                > max(float(relative_tolerance), 8192.0*np.finfo(float).eps)):
+            raise ValueError(
+                "local heat-source integral disagrees with generated heat")
         # Normalize the *geometry* independently of its absolute scale.  The
         # imposed integral is exactly the independently computed dissipation;
         # no energy residual is relabelled as heat.
@@ -435,7 +456,9 @@ def evaluate_joint_multigrain_transaction(
         float(interval_s), before_energy, candidate_energy, delta_f, work,
         material_export, available, generated_heat, thermostat, first_law,
         dissipation_residual, tolerance, heat_deposition_mode,
-        heat_source_integral, heat_source_closure)
+        heat_source_integral, heat_source_closure,
+        raw_heat_source_integral, heat_source_normalization_factor,
+        raw_heat_source_relative_mismatch)
     if not accepted:
         return CompleteMultiGrainTransaction(before_state, candidate, decision)
     ledger = replace(

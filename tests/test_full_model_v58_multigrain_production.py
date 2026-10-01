@@ -375,6 +375,36 @@ def test_owner_heat_is_applied_once_to_common_eulerian_temperature():
             owner_state.temperature_K, expected, rtol=0.0, atol=2e-13)
 
 
+def test_conduction_and_bath_are_independently_ledgered_as_thermal_increments():
+    spacing = 2e-8
+    state = _state(8)
+    x = np.arange(8)[:, None]
+    initial = 910.0+2.0*np.cos(2.0*np.pi*x/8.0)
+    initial = np.broadcast_to(initial, (8, 8)).copy()
+    state = replace(state, owners=tuple(
+        replace(item, temperature_K=initial.copy()) for item in state.owners))
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=1e-8, bath_rate_s=1e6,
+        bath_temperature_K=900.0)
+    zero_stress = np.zeros((8, 8, 4))
+    evolved, decision = advance_multigrain_mechanics(
+        state, driving=CommonWallDriving(resolved_stress_Pa=zero_stress),
+        systems=bcc_four_family_systems(), topologies=(),
+        wall_parameters=parameters, dt_s=1e-9,
+        represented_thickness_m=5e-10)
+    final = evolved.owners[0].temperature_K
+    thermal_increment = (final-initial)*parameters.volumetric_heat_capacity_J_m3_K
+    ledgered = (decision.irreversible_heat_J_m3_cells
+                +decision.thermal_conduction_J_m3_cells
+                +decision.thermal_bath_exchange_J_m3_cells)
+    np.testing.assert_allclose(ledgered, thermal_increment, rtol=2e-13,
+                               atol=2e-5)
+    assert abs(np.sum(decision.thermal_conduction_J_m3_cells)) < 1e-4
+    assert np.sum(decision.thermal_bath_exchange_J_m3_cells) < 0.0
+
+
 def test_pair_sweep_uses_level_set_contour_measure():
     n = 32; spacing = 2e-8
     state = _state(n)

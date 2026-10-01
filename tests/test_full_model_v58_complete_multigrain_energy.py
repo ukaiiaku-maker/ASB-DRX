@@ -112,8 +112,9 @@ def test_realized_heat_source_is_local_and_integrates_exactly():
         "10-20", 10, 20, request, state.owners[0],
         zero_exports(state.owners[0]))
     capacity = joint_material_transaction(state, (proposal,))
-    source = np.zeros((8, 8)); source[2:4, 1:6] = np.arange(1, 11).reshape(2, 5)
     heat = 2.5e-15
+    source = np.zeros((8, 8)); source[2:4, 1:6] = np.arange(1, 11).reshape(2, 5)
+    source *= heat/np.sum(source, dtype=np.longdouble)
     parameters = CommonWallParameters(spacing_m=spacing)
     local = evaluate_joint_multigrain_transaction(
         state, capacity, spacing_m=spacing,
@@ -131,6 +132,20 @@ def test_realized_heat_source_is_local_and_integrates_exactly():
                  *np.sum(increment, dtype=np.longdouble))
     assert np.isclose(deposited, heat, rtol=2e-15, atol=0.0)
     assert abs(local.decision.heat_source_closure_J) <= 1e-30
+    assert np.isclose(local.decision.raw_heat_source_integral_J, heat,
+                      rtol=2e-15, atol=0.0)
+    assert np.isclose(local.decision.heat_source_normalization_factor, 1.0,
+                      rtol=2e-15, atol=0.0)
+    assert local.decision.raw_heat_source_relative_mismatch < 2e-15
+
+    with pytest.raises(ValueError, match="integral disagrees"):
+        evaluate_joint_multigrain_transaction(
+            state, capacity, spacing_m=spacing,
+            represented_thickness_m=thickness, wall_parameters=parameters,
+            interval_s=1e-9,
+            dissipation=MultiGrainDissipation(boundary_mobility_J=heat),
+            heat_source_J_by_cell=2.0*source,
+            absolute_tolerance_J=heat*10.0)
 
     uniform = evaluate_joint_multigrain_transaction(
         state, capacity, spacing_m=spacing,
