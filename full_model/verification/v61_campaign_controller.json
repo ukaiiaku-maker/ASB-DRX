@@ -24,7 +24,7 @@
   "current": {
     "state": "RUNNING",
     "verified_solver_source": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
-    "last_accepted_pair_horizon_s": null,
+    "last_accepted_pair_horizon_s": 3e-6,
     "last_accepted_grid": 32,
     "unresolved_physics": [
       "matched clean-history causal response",
@@ -33,18 +33,9 @@
       "qualification of resolved local-interface front temperature",
       "single-crystal sign-balanced perturbation response"
     ],
-    "next_action": "complete the running clean n32 frozen control, classify the pair, then execute the source-61535a9 local-interface fork and fixed-scale comparison"
+    "next_action": "execute the source-8ccd29f local-interface physical/control forks from the exact 2.5 us parents, audit the finite-interval heat balance, then begin fixed-scale local-interface comparison"
   },
-  "active_heavy_solver": {
-    "case": "clean_network4_allfrozen_n32_to3p0us",
-    "pid_at_launch": 19373,
-    "continuation_session_id": 55413,
-    "source_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
-    "started_utc": "2026-10-01T18:12:41Z",
-    "target_physical_time_s": 3e-6,
-    "initialization": "deterministic analytic four-grain state with local front heat from time zero",
-    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/clean_network4_allfrozen_n32_to3p0us"
-  },
+  "active_heavy_solver": null,
   "scientific_status": {
     "production_correctness": "PRESERVED_FROM_V60",
     "conservative_heat_deposition": "PASSED_V60_OPERATOR_SCOPE",
@@ -92,6 +83,30 @@
       "prepared_network_classification": "VALID_EVOLVED_PREPARED_MULTIGRAIN_NETWORK",
       "late_global_vs_local_front_rate_relative_change": 0.14936730693586084,
       "late_front_direction_changed": false
+    },
+    "clean_n32_all_arrhenius_frozen": {
+      "source_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
+      "physical_horizon_s": 3.0000000000000128e-6,
+      "result_sha256": "d3ca3560f34b4f9887f3e863d9d4e033cd330693409620f758243a9fefce2743",
+      "checkpoint_sha256": "cfea791dcdcdef866e32febc8417a6ad4ec763af8d54482d07fb8573283b9ada",
+      "accepted_events": 360,
+      "rejected_events": 0,
+      "final_stress_Pa": 1742340807.3442822,
+      "final_temperature_mean_K": 1102.8282659831148,
+      "final_temperature_contrast_K": 339.13543671772413,
+      "maximum_relative_front_energy_closure": 0.012598135490062083
+    },
+    "clean_n32_matched_classification": {
+      "artifact": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/clean_network4_n32_operator_aware_classification.json",
+      "temperature_intervention_certificate_passed": true,
+      "operator_segment_softening_fraction": 0.5835747330765318,
+      "maximum_episode_duration_s": 0.0,
+      "endpoint_matched_component_temperature_excess_K": 31.63891512737905,
+      "endpoint_power_minor_width_m": 7.082621478672291e-8,
+      "endpoint_power_aspect_ratio": 5.607815157677346,
+      "endpoint_heat_power_overlap": 0.0,
+      "strict_physical_asb": false,
+      "classification": "NEGATIVE_UNRESOLVED_NONPERSISTENT_THERMOMECHANICAL_LOCALIZATION"
     }
   }
 }
