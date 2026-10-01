@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import time
 
 import numpy as np
 
@@ -629,6 +630,8 @@ def main():
                 "temperature seed; nonzero change is the nonlinear rho-ln-rho "
                 "cost of the mean-preserving density modulation"),
         }
+    saved_block_start = time.perf_counter()
+    last_saved_step = start
     for step in range(start, args.steps):
         gamma_before = gamma
         gamma += args.shear_rate*args.dt
@@ -657,6 +660,9 @@ def main():
                     value.minimum_step_scale
                     for value in mechanical.operator_decisions),
                 "maximum_substeps": max(
+                    value.maximum_substeps
+                    for value in mechanical.operator_decisions),
+                "total_internal_substeps": sum(
                     value.maximum_substeps
                     for value in mechanical.operator_decisions),
                 "external_plastic_work_J": sum(
@@ -724,6 +730,7 @@ def main():
                 "accepted": True, "mode": "frozen_hold",
                 "subintervals": 0, "subdivision_depth": 0,
                 "minimum_step_scale": 1.0, "maximum_substeps": 0,
+                "total_internal_substeps": 0,
                 "external_plastic_work_J": 0.0,
                 "irreversible_heat_J": 0.0,
                 "consumed_interval_s": args.dt,
@@ -772,6 +779,8 @@ def main():
             volumes = np.sum(state.supports, axis=(1, 2))*spacing**2*thickness
             temperatures = sum(state.supports[index]*owner.temperature_K
                                for index, owner in enumerate(state.owners))
+            block_wall_time = time.perf_counter()-saved_block_start
+            block_intervals = step+1-last_saved_step
             history.append({
                 "step": step+1, "time_s": runtime.ledger.physical_time_s,
                 "applied_shear_strain": gamma,
@@ -783,6 +792,12 @@ def main():
                                                 -np.min(temperatures)),
                 "helmholtz_J": energy.helmholtz_J,
                 "thermal_internal_J": energy.thermal_internal_J,
+                "runtime_cost": {
+                    "saved_block_wall_time_s": block_wall_time,
+                    "saved_block_macro_intervals": block_intervals,
+                    "wall_time_per_macro_interval_s": (
+                        block_wall_time/max(block_intervals, 1)),
+                },
                 "support_gradient_nye_norm_m1": float(np.linalg.norm(
                     audit.support_gradient_m1)),
                 "owner_nye_mismatch_norm_m1": float(np.linalg.norm(
@@ -841,6 +856,8 @@ def main():
                 })
             (out/"history.json").write_text(json.dumps(history, indent=2))
             print(json.dumps(history[-1], sort_keys=True), flush=True)
+            saved_block_start = time.perf_counter()
+            last_saved_step = step+1
     latest = sorted(out.glob("checkpoint_*.npz"))[-1]
     result = {
         "schema": ("asb-drx-v59-single-crystal-production-v1"
