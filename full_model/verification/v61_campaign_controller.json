@@ -7,106 +7,26 @@
     "execution_site": "local workstation",
     "maximum_concurrent_campaign_heavy_solvers": 1
   },
-  "mission": "Advance the common physical model toward prepared-boundary DRX and physically defensible rate/temperature-selected thermal localization using clean local-heat histories and fixed-scale refinement.",
   "lineage": {
     "v60_closure_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
-    "v61_branch": "exp/full-v61-clean-history-20261001",
-    "v61_worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v61-20261001",
+    "solver_source_commit": "b457eaf1ba7436431e95e75ec0da5448cb4cd950",
+    "branch": "exp/full-v61-clean-history-20261001",
     "evidence_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001"
   },
-  "startup_audit": {
-    "v60_worktree_clean": true,
-    "remote_v60_sha_verified": true,
-    "reported_v60_checkpoint_hashes_verified": true,
-    "v60_or_v61_solver_active_at_start": false,
-    "unrelated_heavy_processes_observed_and_not_touched": true
-  },
   "current": {
-    "state": "RUNNING",
-    "verified_solver_source": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
-    "last_accepted_pair_horizon_s": 3e-6,
-    "last_accepted_grid": 32,
-    "unresolved_physics": [
-      "matched clean-history causal response",
-      "fixed-scale spatial refinement",
-      "finite-interval regional heat balance",
-      "qualification of resolved local-interface front temperature",
-      "single-crystal sign-balanced perturbation response"
-    ],
-    "next_action": "execute the source-8ccd29f local-interface physical/control forks from the exact 2.5 us parents, audit the finite-interval heat balance, then begin fixed-scale local-interface comparison"
+    "state": "COMPLETE",
+    "last_accepted_common_grid_horizon_s": 1.675e-6,
+    "last_accepted_grids": [32, 48],
+    "active_heavy_solver": null,
+    "final_regression": "972_PASSED",
+    "next_action": "campaign delivery complete; continue from source-bound V61 evidence in a new allocation"
   },
-  "active_heavy_solver": null,
   "scientific_status": {
-    "production_correctness": "PRESERVED_FROM_V60",
-    "conservative_heat_deposition": "PASSED_V60_OPERATOR_SCOPE",
-    "prepared_boundary_drx": "DEMONSTRATED_PRIOR_SCOPE",
+    "prepared_boundary_drx": "PRESERVED_PRIOR_QUALIFIED_SCOPE",
+    "causal_thermal_feedback": "DEMONSTRATED",
     "strict_physical_asb": "UNESTABLISHED",
-    "spatial_refinement": "NOT_STARTED_V61",
-    "spontaneous_grain_birth": "UNQUALIFIED",
-    "historical_peak_reduction": "REPAIRED_AND_NEGATIVE_FOR_LOCAL_OPERATOR_PERSISTENCE",
-    "sampling_cadence_reduction": "REPAIRED_WITH_SEGMENT_CADENCE_AND_GAP_CAP",
-    "source_component_association": "REPAIRED_WITH_DIRECT_CANDIDATE_INTEGRALS",
-    "finite_interval_thermal_ledger": "IMPLEMENTED_AND_FOCUSED_TESTED",
-    "late_front_temperature_locality": "GLOBAL_MEAN_OUT_OF_SCOPE_AT_2P5_TO_3P0_US",
-    "resolved_local_interface_front": "IMPLEMENTED_46_FOCUSED_TESTS_PASS"
-  },
-  "development_evidence": {
-    "focused_tests": {
-      "command_scope": [
-        "tests/test_full_model_v58_complete_multigrain_energy.py",
-        "tests/test_full_model_v58_multigrain_production.py",
-        "tests/test_v59_physical_asb.py",
-        "tests/test_v59_network_postprocess.py"
-      ],
-      "passed": 49,
-      "failed": 0
-    },
-    "combined_v59_v60_reduction": {
-      "artifact": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/v59_v60_combined_operator_aware_classification.json",
-      "whole_history_peak_Pa": 4005374177.3236847,
-      "whole_history_peak_time_s": 1.1999999999999995e-6,
-      "final_whole_history_softening_fraction": 0.61241082567525,
-      "local_operator_peak_Pa": 1804801882.6999552,
-      "final_local_operator_softening_fraction": 0.13982820766557705,
-      "strict_episode_duration_s": 0.0,
-      "classification": "NEGATIVE_LOCAL_OPERATOR_PERSISTENCE"
-    },
-    "clean_n32_physical": {
-      "source_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
-      "physical_horizon_s": 3.0000000000000128e-6,
-      "checkpoint_sha256": "9978e3f075305a3300f47a0a4afeea0d07bae5a9a4ad9a3beae4e92900ee51c5",
-      "accepted_events": 360,
-      "rejected_events": 0,
-      "peak_stress_Pa": 4032253344.6928964,
-      "final_stress_Pa": 1759345878.8767376,
-      "final_temperature_contrast_K": 406.57420362119456,
-      "prepared_network_classification": "VALID_EVOLVED_PREPARED_MULTIGRAIN_NETWORK",
-      "late_global_vs_local_front_rate_relative_change": 0.14936730693586084,
-      "late_front_direction_changed": false
-    },
-    "clean_n32_all_arrhenius_frozen": {
-      "source_commit": "3b1db8aacb35c456f0564cc95694dee4d6983fe8",
-      "physical_horizon_s": 3.0000000000000128e-6,
-      "result_sha256": "d3ca3560f34b4f9887f3e863d9d4e033cd330693409620f758243a9fefce2743",
-      "checkpoint_sha256": "cfea791dcdcdef866e32febc8417a6ad4ec763af8d54482d07fb8573283b9ada",
-      "accepted_events": 360,
-      "rejected_events": 0,
-      "final_stress_Pa": 1742340807.3442822,
-      "final_temperature_mean_K": 1102.8282659831148,
-      "final_temperature_contrast_K": 339.13543671772413,
-      "maximum_relative_front_energy_closure": 0.012598135490062083
-    },
-    "clean_n32_matched_classification": {
-      "artifact": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/clean_network4_n32_operator_aware_classification.json",
-      "temperature_intervention_certificate_passed": true,
-      "operator_segment_softening_fraction": 0.5835747330765318,
-      "maximum_episode_duration_s": 0.0,
-      "endpoint_matched_component_temperature_excess_K": 31.63891512737905,
-      "endpoint_power_minor_width_m": 7.082621478672291e-8,
-      "endpoint_power_aspect_ratio": 5.607815157677346,
-      "endpoint_heat_power_overlap": 0.0,
-      "strict_physical_asb": false,
-      "classification": "NEGATIVE_UNRESOLVED_NONPERSISTENT_THERMOMECHANICAL_LOCALIZATION"
-    }
+    "spatial_refinement": "FAILED_NONCONVERGED",
+    "rate_temperature_regime": "BOUNDED_TREND_NO_SELECTED_ASB_BOUNDARY",
+    "spontaneous_grain_birth": "UNQUALIFIED"
   }
 }

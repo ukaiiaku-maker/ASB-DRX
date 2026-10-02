@@ -2356,3 +2356,34 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   962 tests after channel/checkpoint instrumentation; the final documented
   boundary is 962 tests in 367.89 s. Decision report:
   `full_model/docs/v60_decision_report.md`.
+
+## V61 clean-history local-interface and fixed-scale audit (2026-10-01/02)
+
+- The fixed local allocation is `2026-10-01T17:10:45Z` through
+  `2026-10-02T05:10:45Z`; all calculations ran locally with at most one
+  campaign heavy solver.
+- V61 repairs peak/cadence/source association, implements an independent
+  accepted-interval thermal ledger, exposes signed family slip rate, and uses
+  resolved local-interface temperature in the conjugate common-owner front.
+- The matched n32 transition-history pair demonstrates causal thermal response
+  but no strict episode: maximum local matched excess is 54.184 K, maximum
+  same-operator softening is 33.935%, and maximum width is only 0.6165
+  interface widths.
+- Fresh identical-history n32/n48 physical members both reach 1.675 us with
+  201 accepted events and zero rejections. Stress, peak time, temperature,
+  width, aspect and source overlap remain materially mesh-sensitive; both
+  power widths are below two cells. Spatial refinement therefore fails.
+- Independent whole-domain and fixed-candidate interval heat balances close
+  below 1.6e-11 relative maximum cell error, with exactly zero mismatch between
+  saved front heat and independent pressure-times-realized-volume heat.
+- Final V61 scientific classification: prepared-boundary DRX and causal
+  thermomechanical localization remain demonstrated, but strict physical ASB,
+  a converged band morphology, rate/temperature selection and spontaneous
+  grain birth remain unqualified. Decision report:
+  `full_model/docs/v61_decision_report.md`.
+- Fresh matched 900 K and 1000 K n32 physical/frozen pairs both reach 1.675 us.
+  Maximum matched excess increases from 24.194 to 28.824 K and softening from
+  2.623% to 3.837%, but neither pair forms an episode; this is a bounded
+  temperature trend rather than a selected ASB regime.
+- Final canonical regression: 972 tests pass in 331.22 s. No campaign solver
+  remains active.
