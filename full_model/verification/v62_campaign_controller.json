@@ -25,8 +25,30 @@
   },
   "current": {
     "state": "RUNNING",
-    "active_heavy_solver": "immutable-b457 n48 copied-state step-68 cProfile",
-    "current_task": "measure residual-evaluation cost and adaptive-substep structure before exact optimization",
+    "active_heavy_solver": "immutable-1c0cb4c n48 repaired-clock physical continuation to 2.0 microseconds",
+    "current_task": "advance the temporally qualified physical trajectory while preserving per-step checkpoints",
     "scientific_completion": false
+  },
+  "step_68_diagnosis": {
+    "baseline_profile_wall_time_s": 183.889777447097,
+    "baseline_residual_calls": 1132,
+    "baseline_attempted_common_substeps": 283,
+    "accepted_substeps": 154,
+    "discarded_coarse_trial_substeps": 129,
+    "initial_controlling_constraint": "grain 40 mobile_plus_m2 positivity at cell (33,12), family 0, support 0.005536",
+    "exact_optimized_wall_time_s": 123.23797524999827,
+    "exact_speedup": 1.492185772,
+    "all_checkpoint_arrays_bitwise_equal": true
+  },
+  "temporal_repair": {
+    "cause": "front requests were clipped at the contour-CFL bound, so caller-step refinement changed the number of capped events",
+    "repair": "rollback and adaptive predictive subcycling until every accepted front event is below the unchanged 0.015 contour-CFL limit",
+    "physical_law_changed": false,
+    "selected_macro_dt_s": 6.25e-9,
+    "n32_two_half_vs_four_quarter_max_signal_relative_l2": 0.026492588331140845,
+    "n48_two_half_vs_four_quarter_max_signal_relative_l2": 0.020949513444882568,
+    "n48_swept_volume_increment_relative_error": 0.002827766541553193,
+    "n48_front_heat_increment_relative_error": 0.004885074668373015,
+    "limitation": "n48 signed-density and Nye increment-relative L2 errors remain 0.255 and 0.104 even though signal-relative errors are below 5 percent"
   }
 }
