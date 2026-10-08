@@ -834,6 +834,8 @@ def advance_multigrain_front(
     force_rate_converged = False
     maximum_force_iterations = (64 if
         kinetics.temperature_resolution == "local_interface" else 24)
+    previous_factor = None
+    previous_residual = None
     for _ in range(maximum_force_iterations):
         (directions, independent_pressures, base_requests,
          channel_records, selected_velocities, cfl_clipped_by_interface,
@@ -845,13 +847,29 @@ def advance_multigrain_front(
             base_requests, channel_records, independent_pressures)
         relative = abs(updated_factor-joint_pressure_factor)/max(
             abs(updated_factor), 1e-300)
-        joint_pressure_factor = float(
-            .5*(joint_pressure_factor+updated_factor)
-            if kinetics.temperature_resolution == "local_interface"
-            else updated_factor)
         if relative <= 1e-10:
+            joint_pressure_factor = float(updated_factor)
             force_rate_converged = True
             break
+        residual = updated_factor-joint_pressure_factor
+        candidate = updated_factor
+        if kinetics.temperature_resolution == "local_interface":
+            candidate = .5*(joint_pressure_factor+updated_factor)
+            if (previous_factor is not None
+                    and residual != previous_residual):
+                secant = (joint_pressure_factor
+                          -residual*(joint_pressure_factor-previous_factor)
+                          /(residual-previous_residual))
+                # The force correction is positive.  Use scalar secant
+                # acceleration only inside a broad positive trust interval;
+                # otherwise retain the formerly robust damped fixed point.
+                if (math.isfinite(secant)
+                        and .1*joint_pressure_factor < secant
+                        < 10.0*joint_pressure_factor):
+                    candidate = secant
+        previous_factor = joint_pressure_factor
+        previous_residual = residual
+        joint_pressure_factor = float(candidate)
     (directions, independent_pressures, base_requests,
      channel_records, selected_velocities, cfl_clipped_by_interface,
      maximum_unclipped_by_interface) = requests_at_force_scale(
@@ -984,14 +1002,20 @@ def advance_multigrain_front_interval(
         if depth >= 32:
             raise RuntimeError(
                 "front interval could not satisfy the contour-CFL bound")
-        first, first_runtime, first_decisions = (
-            advance_without_cfl_clipping(
-                accepted, accepted_runtime, .5*interval, depth+1))
-        final, final_runtime, second_decisions = (
-            advance_without_cfl_clipping(
-                first, first_runtime, .5*interval, depth+1))
-        return (final, final_runtime,
-                first_decisions+second_decisions)
+        ratio = (decision.maximum_unclipped_fraction
+                 /kinetics.maximum_fraction_per_step)
+        count = max(2, int(math.ceil(
+            ratio-32.0*np.finfo(float).eps*max(ratio, 1.0))))
+        subinterval = interval/count
+        evolved = accepted
+        evolved_runtime = accepted_runtime
+        decisions = ()
+        for _ in range(count):
+            evolved, evolved_runtime, accepted_decisions = (
+                advance_without_cfl_clipping(
+                    evolved, evolved_runtime, subinterval, depth+1))
+            decisions += accepted_decisions
+        return evolved, evolved_runtime, decisions
 
     decisions = []
     evolved = state

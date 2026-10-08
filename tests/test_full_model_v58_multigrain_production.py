@@ -307,7 +307,9 @@ def test_front_interval_adaptively_removes_contour_cfl_clipping(monkeypatch):
         decision = MultiGrainProductionDecision(
             True, "SYNTHETIC", {}, {}, {}, {}, None, 0,
             contour_cfl_clipped=clipped,
-            maximum_unclipped_fraction=dt_s/threshold)
+            maximum_unclipped_fraction=(
+                dt_s/threshold
+                *unused["kinetics"].maximum_fraction_per_step))
         return state, replace(runtime, ledger=ledger), decision
 
     monkeypatch.setattr(production, "advance_multigrain_front", fake_front)
