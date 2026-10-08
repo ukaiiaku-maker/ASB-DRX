@@ -105,13 +105,16 @@ def spectral_derivatives(field, spacing_m):
     return dx, dy
 
 
-def plastic_distortion_from_slip(slip, systems, orientation_rad=None):
+def plastic_distortion_from_slip(
+        slip, systems, orientation_rad=None, *, _rotated_fields=None):
     gamma = np.asarray(slip, dtype=float)
     if gamma.ndim != 3 or gamma.shape[2] != len(systems):
         raise ValueError("slip must have grid x family layout")
-    if orientation_rad is None:
-        orientation_rad = np.zeros(gamma.shape[:2])
-    _, directions, normals = rotated_system_fields(systems, orientation_rad)
+    if _rotated_fields is None:
+        if orientation_rad is None:
+            orientation_rad = np.zeros(gamma.shape[:2])
+        _rotated_fields = rotated_system_fields(systems, orientation_rad)
+    _, directions, normals = _rotated_fields
     return np.einsum("...a,...ai,...aj->...ij", gamma, directions, normals)
 
 
@@ -127,14 +130,17 @@ def nye_from_plastic_distortion(beta_p, spacing_m):
     return alpha
 
 
-def alignment_increment_from_slip(slip_increment, systems, orientation_rad,
-                                  spacing_m):
+def alignment_increment_from_slip(
+        slip_increment, systems, orientation_rad, spacing_m, *,
+        _rotated_fields=None):
     """Discrete first-order alignment increment implied by accepted slip."""
     dgamma = np.asarray(slip_increment, dtype=float)
     if dgamma.ndim != 3 or dgamma.shape[2] != len(systems):
         raise ValueError("slip increment must have grid x family layout")
     gx, gy = spectral_derivatives(dgamma, spacing_m)
-    _, _, normals = rotated_system_fields(systems, orientation_rad)
+    if _rotated_fields is None:
+        _rotated_fields = rotated_system_fields(systems, orientation_rad)
+    _, _, normals = _rotated_fields
     bmag = np.asarray([system.burgers_m for system in systems])
     alignment = np.empty(dgamma.shape+(3,))
     alignment[..., 0] = -normals[..., 2]*gy/bmag

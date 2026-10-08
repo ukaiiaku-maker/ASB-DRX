@@ -6,7 +6,7 @@ from full_model.production.tensorial_nye import (
     frank_bilby_closure_from_orientations, integrated_nye_closure,
     make_junction_topology, nye_from_alignment,
     nye_from_plastic_distortion, plastic_distortion_from_slip,
-    rotation_z, junction_closure_metrics,
+    rotated_system_fields, rotation_z, junction_closure_metrics,
 )
 
 
@@ -39,6 +39,18 @@ def test_slip_reconstruction_matches_incremental_beta_path():
     np.testing.assert_allclose(
         state.beta_p, plastic_distortion_from_slip(increment, systems, orientation),
         rtol=2e-15, atol=1e-16)
+
+
+def test_rotated_field_reuse_is_exact_for_slip_reconstruction():
+    systems = bcc_four_family_systems()
+    orientation = np.full((16, 16), .31)
+    increment = smooth_periodic_slip(16, 4)
+    reference = plastic_distortion_from_slip(
+        increment, systems, orientation)
+    cached = plastic_distortion_from_slip(
+        increment, systems, orientation,
+        _rotated_fields=rotated_system_fields(systems, orientation))
+    np.testing.assert_array_equal(cached, reference)
 
 
 def test_frame_rotation_covariance_for_constant_tensor_state():

@@ -334,14 +334,17 @@ def exp_floor_rate(stress_pa, temperature_K, barrier_eV, parameters):
         -free/(KB_J_K*temperature), -700.0, 40.0))
 
 
-def wall_polarization_invariants(state, systems, parameters):
+def wall_polarization_invariants(
+        state, systems, parameters, *, _rotated_fields=None):
     """Objective wall-content/polarization gate and exact density derivatives."""
     wall_plus = np.asarray(state.wall_plus_m2)
     wall_minus = np.asarray(state.wall_minus_m2)
     wall = np.sum(wall_plus+wall_minus, axis=2)
     signed = wall_plus-wall_minus
-    burgers, directions, normals = rotated_system_fields(
-        systems, state.orientation_rad)
+    if _rotated_fields is None:
+        _rotated_fields = rotated_system_fields(
+            systems, state.orientation_rad)
+    burgers, directions, normals = _rotated_fields
     lines = np.cross(normals, directions)
     lines /= np.maximum(np.linalg.norm(lines, axis=-1)[..., None], 1e-300)
     basis = np.einsum("...ai,...aj->...aij", burgers, lines)
@@ -389,7 +392,9 @@ def wall_polarization_invariants(state, systems, parameters):
     }
 
 
-def wall_free_energy_derivatives(state, parameters, topologies=(), systems=None):
+def wall_free_energy_derivatives(
+        state, parameters, topologies=(), systems=None, *,
+        _rotated_fields=None):
     reservoirs = (
         state.mobile_plus_m2+state.mobile_minus_m2
         +state.forest_plus_m2+state.forest_minus_m2
@@ -404,7 +409,8 @@ def wall_free_energy_derivatives(state, parameters, topologies=(), systems=None)
              +np.sum(state.junction_m2*multiplicity, axis=2))
     if systems is None:
         systems = bcc_four_family_systems(parameters.burgers_m)
-    invariants = wall_polarization_invariants(state, systems, parameters)
+    invariants = wall_polarization_invariants(
+        state, systems, parameters, _rotated_fields=_rotated_fields)
     wall = invariants["wall_density_m2"]
     gate = invariants["wall_gate"]
     q = state.wall_order
@@ -541,7 +547,9 @@ def taylor_resistance_Pa(state, systems, topologies, parameters):
             *np.sqrt(np.maximum(obstacle, 0.0)))
 
 
-def resolved_driving_components(state, driving, systems, topologies, parameters):
+def resolved_driving_components(
+        state, driving, systems, topologies, parameters, *,
+        _chemical=None, _rotated_fields=None):
     """Return raw/effective stress, Taylor resistance, and glide speed."""
     family_shape = state.mobile_plus_m2.shape
     stress_tensor = None
@@ -554,8 +562,10 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
         stress_tensor = np.asarray(driving.fixed_stress_tensor_Pa, dtype=float)
         if stress_tensor.shape != state.orientation_rad.shape+(2, 2):
             raise ValueError("fixed stress tensor must have grid x 2 x 2 layout")
-        _, directions, normals = rotated_system_fields(
-            systems, state.orientation_rad)
+        if _rotated_fields is None:
+            _rotated_fields = rotated_system_fields(
+                systems, state.orientation_rad)
+        _, directions, normals = _rotated_fields
         schmid = .5*(
             np.einsum("...si,...sj->...sij", directions[..., :2], normals[..., :2])
             +np.einsum("...si,...sj->...sij", normals[..., :2], directions[..., :2]))
@@ -580,8 +590,10 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
                     eigenstrain, mean, parameters.spacing_m,
                     parameters.c11_Pa, parameters.c12_Pa,
                     parameters.c44_Pa))
-            _, directions, normals = rotated_system_fields(
-                systems, state.orientation_rad)
+            if _rotated_fields is None:
+                _rotated_fields = rotated_system_fields(
+                    systems, state.orientation_rad)
+            _, directions, normals = _rotated_fields
             schmid = .5*(
                 np.einsum("...si,...sj->...sij", directions, normals)
                 +np.einsum("...si,...sj->...sij", normals, directions))
@@ -594,8 +606,10 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
                 eigenstrain, driving.mean_strain, parameters.spacing_m,
                 parameters.c11_Pa, parameters.c12_Pa, parameters.c44_Pa,
                 iterations=parameters.elastic_iterations)
-            _, directions, normals = rotated_system_fields(
-                systems, state.orientation_rad)
+            if _rotated_fields is None:
+                _rotated_fields = rotated_system_fields(
+                    systems, state.orientation_rad)
+            _, directions, normals = _rotated_fields
             schmid = .5*(
                 np.einsum("...si,...sj->...sij", directions[..., :2], normals[..., :2])
                 +np.einsum("...si,...sj->...sij", normals[..., :2], directions[..., :2]))
@@ -615,11 +629,16 @@ def resolved_driving_components(state, driving, systems, topologies, parameters)
     # The bracketed second term is therefore an internal chemical backstress.
     # It vanishes exactly in homogeneous material and introduces no target
     # wall wavelength or prescribed pattern.
-    chemical = wall_free_energy_derivatives(
-        state, parameters, topologies, systems)
+    chemical = (_chemical if _chemical is not None else
+                wall_free_energy_derivatives(
+                    state, parameters, topologies, systems,
+                    _rotated_fields=_rotated_fields))
     mu_x, mu_y = _spectral_gradient(
         chemical["mobile_mu_J_m"], parameters.spacing_m)
-    _, directions, _ = rotated_system_fields(systems, state.orientation_rad)
+    if _rotated_fields is None:
+        _rotated_fields = rotated_system_fields(
+            systems, state.orientation_rad)
+    _, directions, _ = _rotated_fields
     directional_mu_gradient = (
         mu_x[..., None]*directions[..., 0]
         +mu_y[..., None]*directions[..., 1])
@@ -674,11 +693,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     """Evaluate the single authoritative nonlinear residual."""
     grid, family_shape = state.validate(
         systems, topologies, admissibility=not differentiation_state)
+    rotated_fields = rotated_system_fields(systems, state.orientation_rad)
+    chemical = wall_free_energy_derivatives(
+        state, parameters, topologies, systems,
+        _rotated_fields=rotated_fields)
     drive = resolved_driving_components(
-        state, driving, systems, topologies, parameters)
+        state, driving, systems, topologies, parameters,
+        _chemical=chemical, _rotated_fields=rotated_fields)
     speed = drive["speed_m_s"]
     stress = drive["effective_stress_Pa"]
-    _, directions, _ = rotated_system_fields(systems, state.orientation_rad)
+    _, directions, _ = rotated_fields
     planar = directions[..., :2]
     flux_plus = state.mobile_plus_m2[..., None]*speed[..., None]*planar
     flux_minus = -state.mobile_minus_m2[..., None]*speed[..., None]*planar
@@ -726,8 +750,6 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     wp_rate = np.zeros(family_shape); wm_rate = np.zeros(family_shape)
     junction_rate = np.zeros(grid+(len(topologies),))
 
-    chemical = wall_free_energy_derivatives(
-        state, parameters, topologies, systems)
     temperature = channel_temperature_K(
         state, parameters, "recovery")[..., None]
     coordination = state.multi_hit_coordination[..., None]
@@ -859,16 +881,21 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         0.0, coordination_rate)
 
     beta_rate = plastic_distortion_from_slip(
-        slip_rate, systems, state.orientation_rad)
+        slip_rate, systems, state.orientation_rad,
+        _rotated_fields=rotated_fields)
+    _, slip_directions, slip_normals = rotated_fields
+    family_beta_rate = (
+        slip_rate[..., :, None, None]
+        *slip_directions[..., :, :, None]
+        *slip_normals[..., :, None, :])
     family_nye_rate = np.stack([
         nye_from_plastic_distortion(
-            plastic_distortion_from_slip(
-                np.where(np.arange(len(systems))[None, None, :] == family,
-                         slip_rate, 0.0), systems, state.orientation_rad),
+            family_beta_rate[..., family, :, :],
             parameters.spacing_m)
         for family in range(len(systems))], axis=2)
     alignment_rate = alignment_increment_from_slip(
-        slip_rate, systems, state.orientation_rad, parameters.spacing_m)
+        slip_rate, systems, state.orientation_rad, parameters.spacing_m,
+        _rotated_fields=rotated_fields)
     orientation_rate = parameters.orientation_spin_weight*.5*(
         beta_rate[..., 1, 0]-beta_rate[..., 0, 1])
 

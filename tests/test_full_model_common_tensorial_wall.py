@@ -16,6 +16,7 @@ from full_model.production.common_tensorial_wall import (
 )
 from full_model.production.tensorial_nye import (
     bcc_four_family_systems, junction_closure_metrics, make_junction_topology,
+    rotated_system_fields,
 )
 
 
@@ -51,6 +52,32 @@ def burgers_inventory(state, systems, topologies):
     for index, topology in enumerate(topologies):
         result += state.junction_m2[..., index, None]*topology.product_burgers_m
     return result
+
+
+def test_state_lifetime_constitutive_cache_is_exact():
+    systems, topologies, p, state, driving = fixture()
+    orientation = .17*np.sin(
+        2*np.pi*np.arange(state.orientation_rad.shape[0])[:, None]
+        /state.orientation_rad.shape[0])
+    state = replace(state, orientation_rad=np.broadcast_to(
+        orientation, state.orientation_rad.shape).copy())
+    rotated = rotated_system_fields(systems, state.orientation_rad)
+    reference_chemical = wall_free_energy_derivatives(
+        state, p, topologies, systems)
+    cached_chemical = wall_free_energy_derivatives(
+        state, p, topologies, systems, _rotated_fields=rotated)
+    for name in reference_chemical:
+        np.testing.assert_array_equal(
+            cached_chemical[name], reference_chemical[name])
+    reference_drive = resolved_driving_components(
+        state, driving, systems, topologies, p)
+    cached_drive = resolved_driving_components(
+        state, driving, systems, topologies, p,
+        _chemical=cached_chemical, _rotated_fields=rotated)
+    for name in reference_drive:
+        if reference_drive[name] is not None:
+            np.testing.assert_array_equal(
+                cached_drive[name], reference_drive[name])
 
 
 def test_common_residual_reaction_burgers_and_line_node_closure():
