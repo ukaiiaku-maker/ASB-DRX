@@ -961,6 +961,12 @@ def main():
                         fronts[-1].selected_rate_conjugate_to_recorded_force),
                     "backtracks": max(item.backtracks for item in fronts),
                     "subintervals": len(fronts),
+                    "contour_cfl_satisfied": all(
+                        not item.contour_cfl_clipped for item in fronts),
+                    "maximum_unclipped_fraction": max(
+                        item.maximum_unclipped_fraction for item in fronts),
+                    "contour_cfl_limit": (
+                        kinetics.maximum_fraction_per_step),
                     "rejected_subintervals": sum(
                         not item.accepted for item in fronts),
                     "classifications": [
