@@ -319,7 +319,8 @@ def main():
             "v59_all_temperature_routing_from_42a5432",
             "v60_local_front_heat_from_9b40708",
             "v61_interval_thermal_ledger_from_3b1db8a",
-            "v61_local_front_temperature_from_3b1db8a"),
+            "v61_local_front_temperature_from_3b1db8a",
+            "v62_exact_residual_optimization_from_b457eaf"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -575,6 +576,27 @@ def main():
                 "common temperature on each interface while complete joint "
                 "affinity, donor competition, capacity, and energy acceptance "
                 "remain authoritative")
+        elif args.resume_transition == (
+                "v62_exact_residual_optimization_from_b457eaf"):
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V62 exact-optimization transition requires an exact "
+                    "parent checkpoint checksum")
+            if (checkpoint_configuration != configuration
+                    or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "b457eaf1ba7436431e95e75ec0da5448cb4cd950"):
+                raise ValueError(
+                    "V62 exact-optimization transition requires the exact "
+                    "b457eaf configuration and source lineage")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["governing_change"] = (
+                "none: algebraically identical residual evaluation reuses "
+                "rotated crystallographic fields and wall chemical "
+                "derivatives only within one immutable state evaluation")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
