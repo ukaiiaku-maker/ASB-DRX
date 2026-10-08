@@ -323,7 +323,8 @@ def main():
             "v62_exact_residual_optimization_from_b457eaf",
             "v62_half_step_refinement_from_b457eaf",
             "v62_quarter_step_refinement_from_b457eaf",
-            "v62_eighth_step_refinement_from_b457eaf"),
+            "v62_eighth_step_refinement_from_b457eaf",
+            "v62_adaptive_front_cfl_from_b457eaf"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -679,6 +680,26 @@ def main():
             provenance["governing_change"] = (
                 "none: temporal-refinement diagnostic using eight eighth "
                 "macro-intervals and the exact V62 residual optimization")
+        elif args.resume_transition == "v62_adaptive_front_cfl_from_b457eaf":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V62 adaptive-front transition requires an exact parent "
+                    "checkpoint checksum")
+            if (checkpoint_configuration != configuration
+                    or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "b457eaf1ba7436431e95e75ec0da5448cb4cd950"):
+                raise ValueError(
+                    "V62 adaptive-front transition requires the exact "
+                    "b457eaf configuration and source lineage")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["governing_change"] = (
+                "numerical only: rollback and dyadic front subcycling replace "
+                "contour-CFL request clipping; physical force, rate, energy, "
+                "transfer, and heat laws are unchanged")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
