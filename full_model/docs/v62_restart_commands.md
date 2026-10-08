@@ -60,3 +60,26 @@ checkpoint, retain the same configuration and source, set `--steps` to the
 new absolute runner step target, and supply both `--resume` and
 `--expected-resume-sha256`. Exact same-source restart provenance is then
 recorded automatically.
+
+## Fresh analytic-origin physical n48 reference
+
+This is the causal partner of the all-frozen control. It must be generated
+from the same analytic origin because the repaired clock changes accumulated
+front history; the transitioned V61 continuation above is informative but is
+not a clean causal reference.
+
+```sh
+PYTHONPATH=src:. python -m full_model.analysis.run_v58_three_grain_production \
+  --out /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n48_physical_fresh_adaptive_quarter_to2p0us_1c0cb4c \
+  --n 48 --grain-count 4 --steps 320 --dt 6.25e-9 --shear-rate 4e4 \
+  --temperature 900 --case baseline --checkpoint-every 1 --length 5e-6 \
+  --interface-width 3.125e-7 --front-attempt-frequency 1e10 \
+  --front-maximum-fraction .015 --front-maximum-substep 1e-8 \
+  --mechanical-maximum-fraction .1 \
+  --thermal-diffusivity 3.947368421052632e-8 \
+  --flow-temperature-mode physical --recovery-temperature-mode physical \
+  --front-temperature-mode physical \
+  --front-temperature-resolution local_interface \
+  --front-heat-deposition local_realized_event --mechanics-mode physical \
+  --source-commit 1c0cb4c
+```
