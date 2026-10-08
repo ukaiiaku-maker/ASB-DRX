@@ -1,0 +1,48 @@
+{
+  "schema": "asb-drx-v62-step68-optimization-v1",
+  "copied_parent_checkpoint_sha256": "e7f584ffb40aa859546b6f8cf78b53d7d0aad24fcdbb99d99e7bd9bf32ba9c59",
+  "baseline": {
+    "source_commit": "b457eaf1ba7436431e95e75ec0da5448cb4cd950",
+    "wall_time_s": 183.889777447097,
+    "profile_total_s": 186.105,
+    "profile_sha256": "29b25836c7f926930ef33f0c2550f0a03bf8962a36007b0195cac2a7e6e8f7b8",
+    "checkpoint_sha256": "97cae7fa90dc8671bea896cfeb7597cab2469c8643aac542f82ebf3ee6aeafff",
+    "wall_residual_calls": 1132,
+    "rotated_system_field_calls": 19232,
+    "einsum_calls": 74277,
+    "attempted_common_substeps": 283,
+    "accepted_common_substeps": 154,
+    "discarded_coarse_trial_substeps": 129
+  },
+  "exact_optimization": {
+    "source_commit": "17f0e88",
+    "wall_time_s": 123.23797524999827,
+    "speedup": 1.492185772,
+    "checkpoint_sha256": "065c74cc9865493cd5bf1c870be3eb0ace6e7a27c05fa1f04fc3e03bc286ed1a",
+    "all_numeric_checkpoint_arrays_bitwise_equal": true,
+    "runtime_metadata_equal_except_provenance": true,
+    "accepted_substeps_equal": true,
+    "event_decisions_equal": true,
+    "ledgers_equal": true,
+    "cache_lifetime": "one immutable owner residual or masked owner publication",
+    "refreshed_each_microstep": [
+      "temperature", "stress", "orientation", "support", "density"
+    ]
+  },
+  "limiter_at_parent_state": {
+    "constraint": "mobile_plus_m2 positivity",
+    "grain_id": 40,
+    "cell": [33, 12],
+    "family": 0,
+    "support": 0.005536162667442282,
+    "proposed_scale_for_25ns": 0.0022402157788787465,
+    "density_m2": 47878148144588.09,
+    "rate_m2_s": -8.548845802443486e22,
+    "temperature_K": 961.680473295873,
+    "raw_stress_Pa": 2305054409.619065,
+    "effective_stress_Pa": 1078028254.023861,
+    "slip_rate_s-1": 941880.2985648955,
+    "interpretation": "explicit intensive transport in a low-support diffuse owner tail controls the positivity step"
+  },
+  "classification": "EXPENSIVE_RESIDUAL_PLUS_EXCESS_DISCARDED_SUBSTEPS; NOT_A_DEADLOCK"
+}
