@@ -175,12 +175,14 @@ def _masked_owner_update(before, after, active, systems, spacing_m):
     masked_family_increment = mask[..., None, None, None]*family_increment
     correction = target_increment-np.sum(masked_family_increment, axis=2)
     slip_increment = np.asarray(after.slip)-np.asarray(before.slip)
+    rotated_fields = rotated_system_fields(systems, before.orientation_rad)
     family_weights = []
     for family in range(len(systems)):
         family_slip = np.zeros_like(slip_increment)
         family_slip[..., family] = slip_increment[..., family]
         family_beta = plastic_distortion_from_slip(
-            family_slip, systems, before.orientation_rad)
+            family_slip, systems, before.orientation_rad,
+            _rotated_fields=rotated_fields)
         family_weights.append(np.linalg.norm(family_beta, axis=(-2, -1)))
     family_weights = np.stack(family_weights, axis=2)
     denominator = np.sum(family_weights, axis=2, keepdims=True)
