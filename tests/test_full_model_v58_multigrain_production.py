@@ -12,7 +12,8 @@ from full_model.production.complete_multigrain_energy import (
 )
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainInterface,
-    MultiGrainProductionRuntime, advance_multigrain_front,
+    MultiGrainProductionDecision, MultiGrainProductionRuntime,
+    advance_multigrain_front,
     advance_multigrain_front_interval,
     advance_energy_qualified_mechanics, advance_multigrain_mechanics,
     multigrain_instantaneous_dissipation_fields,
@@ -287,6 +288,42 @@ def test_front_physical_interval_subcycling_matches_manual_sequence():
         for name in automatic_owner.__dataclass_fields__:
             np.testing.assert_array_equal(
                 getattr(automatic_owner, name), getattr(manual_owner, name))
+
+
+def test_front_interval_adaptively_removes_contour_cfl_clipping(monkeypatch):
+    import full_model.production.multigrain_production as production
+
+    threshold = 2.5e-9
+
+    def fake_front(state, runtime, *, dt_s, applied_shear_rate_s=0.0,
+                   **unused):
+        clipped = dt_s > threshold
+        ledger = replace(
+            runtime.ledger,
+            intervals=runtime.ledger.intervals+1,
+            physical_time_s=runtime.ledger.physical_time_s+dt_s,
+            applied_shear_strain=(runtime.ledger.applied_shear_strain
+                                  +applied_shear_rate_s*dt_s))
+        decision = MultiGrainProductionDecision(
+            True, "SYNTHETIC", {}, {}, {}, {}, None, 0,
+            contour_cfl_clipped=clipped,
+            maximum_unclipped_fraction=dt_s/threshold)
+        return state, replace(runtime, ledger=ledger), decision
+
+    monkeypatch.setattr(production, "advance_multigrain_front", fake_front)
+    spacing = 2e-8
+    state = _state(4)
+    wall, kinetics = _front_parameters(spacing)
+    runtime = MultiGrainProductionRuntime(())
+    _, evolved_runtime, decisions = advance_multigrain_front_interval(
+        state, runtime, kinetics=kinetics, dt_s=1e-8,
+        maximum_substep_s=1e-8, spacing_m=spacing,
+        represented_thickness_m=5e-10, wall_parameters=wall,
+        applied_shear_rate_s=2e4)
+    assert len(decisions) == 4
+    assert all(not decision.contour_cfl_clipped for decision in decisions)
+    assert evolved_runtime.ledger.physical_time_s == 1e-8
+    assert evolved_runtime.ledger.applied_shear_strain == 2e-4
 
 
 def test_mechanical_step_evolves_supported_owner_and_preserves_dormant_history():

@@ -120,6 +120,8 @@ class MultiGrainProductionDecision:
     # This is transient audit data; authoritative state remains the common
     # temperature field and checkpoint serialization is handled by the runner.
     heat_source_J_by_cell: np.ndarray | None = None
+    contour_cfl_clipped: bool = False
+    maximum_unclipped_fraction: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -602,6 +604,8 @@ def advance_multigrain_front(
     base_requests = {}
     channel_records = {}
     directional_channels = {}
+    cfl_clipped_by_interface = {}
+    maximum_unclipped_by_interface = {}
 
     def request_at_force_scale(interface, pressure_ab, pressure_ba,
                                weight_ab, weight_ba, scale):
@@ -638,6 +642,9 @@ def advance_multigrain_front(
                            kinetics.maximum_fraction_per_step)
             request = fraction*np.asarray(weight, dtype=float)
             representative_velocity = velocity
+            maximum_unclipped = abs(velocity)*dt/float(spacing_m)
+            cfl_clipped = bool(
+                maximum_unclipped > kinetics.maximum_fraction_per_step)
         else:
             velocity = complete_dissipation_velocity_field(
                 kinetic_free_energy_a_to_b_J=delta_ab,
@@ -649,11 +656,15 @@ def advance_multigrain_front(
                 critical_pressure_Pa=kinetics.critical_pressure_Pa,
                 exp_a=kinetics.exp_a, exp_n=kinetics.exp_n,
                 exp_floor=kinetics.exp_floor)
+            positive_unclipped = (
+                np.maximum(velocity, 0.0)*dt/float(spacing_m))
+            negative_unclipped = (
+                np.maximum(-velocity, 0.0)*dt/float(spacing_m))
             positive_request = np.minimum(
-                np.maximum(velocity, 0.0)*dt/float(spacing_m),
+                positive_unclipped,
                 kinetics.maximum_fraction_per_step)*weight_ab
             negative_request = np.minimum(
-                np.maximum(-velocity, 0.0)*dt/float(spacing_m),
+                negative_unclipped,
                 kinetics.maximum_fraction_per_step)*weight_ba
             positive_extent = float(np.sum(
                 positive_request, dtype=np.longdouble))
@@ -668,6 +679,12 @@ def advance_multigrain_front(
                 donor = interface.grain_a_id; receiver = interface.grain_b_id
                 weight = np.asarray(weight_ab); direction = "a_to_b"
                 pressure = pressure_ab; request = positive_request
+                active_weight = np.asarray(weight_ab) > 0.0
+                maximum_unclipped = float(np.max(
+                    positive_unclipped[active_weight], initial=0.0))
+                cfl_clipped = bool(np.any(
+                    positive_unclipped[active_weight]
+                    >kinetics.maximum_fraction_per_step))
                 representative_velocity = float(np.sum(
                     velocity*weight, dtype=np.longdouble)/max(
                         float(np.sum(weight, dtype=np.longdouble)), 1e-300))
@@ -675,6 +692,12 @@ def advance_multigrain_front(
                 donor = interface.grain_b_id; receiver = interface.grain_a_id
                 weight = np.asarray(weight_ba); direction = "b_to_a"
                 pressure = pressure_ba; request = negative_request
+                active_weight = np.asarray(weight_ba) > 0.0
+                maximum_unclipped = float(np.max(
+                    negative_unclipped[active_weight], initial=0.0))
+                cfl_clipped = bool(np.any(
+                    negative_unclipped[active_weight]
+                    >kinetics.maximum_fraction_per_step))
                 representative_velocity = float(np.sum(
                     velocity*weight, dtype=np.longdouble)/max(
                         float(np.sum(weight, dtype=np.longdouble)), 1e-300))
@@ -683,7 +706,8 @@ def advance_multigrain_front(
         if pressure <= 0.0 or not np.any(request > 0.0):
             return None
         return (direction, pressure, request,
-                (interface, donor, receiver), representative_velocity)
+                (interface, donor, receiver), representative_velocity,
+                cfl_clipped, maximum_unclipped)
 
     for interface in runtime.interfaces:
         if interface.grain_a_id not in index or interface.grain_b_id not in index:
@@ -711,12 +735,16 @@ def advance_multigrain_front(
             interface, pressure_ab, pressure_ba, weight_ab, weight_ba, 1.0)
         if selected is None:
             continue
-        direction, pressure, request, record, velocity = selected
+        (direction, pressure, request, record, velocity, cfl_clipped,
+         maximum_unclipped) = selected
         directions[interface.component_id] = direction
         pressures[interface.component_id] = pressure
         selected_velocities[interface.component_id] = float(velocity)
         base_requests[interface.component_id] = request
         channel_records[interface.component_id] = record
+        cfl_clipped_by_interface[interface.component_id] = cfl_clipped
+        maximum_unclipped_by_interface[interface.component_id] = (
+            maximum_unclipped)
 
     next_ledger = replace(
         runtime.ledger, intervals=runtime.ledger.intervals+1,
@@ -749,6 +777,7 @@ def advance_multigrain_front(
     def requests_at_force_scale(scale):
         trial_directions = {}; trial_pressures = {}; trial_requests = {}
         trial_records = {}; trial_velocities = {}
+        trial_clipped = {}; trial_maximum_unclipped = {}
         for key, (interface, pressure_ab, pressure_ba,
                   weight_ab, weight_ba) in directional_channels.items():
             selected = request_at_force_scale(
@@ -756,14 +785,18 @@ def advance_multigrain_front(
                 weight_ab, weight_ba, scale)
             if selected is None:
                 continue
-            direction, pressure, request, record, velocity = selected
+            (direction, pressure, request, record, velocity, cfl_clipped,
+             maximum_unclipped) = selected
             trial_directions[key] = direction
             trial_pressures[key] = pressure
             trial_requests[key] = request
             trial_records[key] = record
             trial_velocities[key] = float(velocity)
+            trial_clipped[key] = cfl_clipped
+            trial_maximum_unclipped[key] = maximum_unclipped
         return (trial_directions, trial_pressures, trial_requests,
-                trial_records, trial_velocities)
+                trial_records, trial_velocities, trial_clipped,
+                trial_maximum_unclipped)
 
     def complete_direction_factor(requests, records, unscaled_pressures):
         maximum_request = max(
@@ -803,7 +836,8 @@ def advance_multigrain_front(
         kinetics.temperature_resolution == "local_interface" else 24)
     for _ in range(maximum_force_iterations):
         (directions, independent_pressures, base_requests,
-         channel_records, selected_velocities) = requests_at_force_scale(
+         channel_records, selected_velocities, cfl_clipped_by_interface,
+         maximum_unclipped_by_interface) = requests_at_force_scale(
              joint_pressure_factor)
         if not base_requests:
             break
@@ -819,7 +853,8 @@ def advance_multigrain_front(
             force_rate_converged = True
             break
     (directions, independent_pressures, base_requests,
-     channel_records, selected_velocities) = requests_at_force_scale(
+     channel_records, selected_velocities, cfl_clipped_by_interface,
+     maximum_unclipped_by_interface) = requests_at_force_scale(
          joint_pressure_factor)
     if base_requests:
         verification_factor = complete_direction_factor(
@@ -899,7 +934,9 @@ def advance_multigrain_front(
                 requested, accepted_fractions, result.decision, backtrack,
                 independent_pressures, selected_velocities,
                 float(joint_pressure_factor), force_rate_converged,
-                np.asarray(heat_source_J_by_cell, dtype=float)))
+                np.asarray(heat_source_J_by_cell, dtype=float),
+                any(cfl_clipped_by_interface.values()),
+                max(maximum_unclipped_by_interface.values(), default=0.0)))
 
 
 def advance_multigrain_front_interval(
@@ -933,16 +970,35 @@ def advance_multigrain_front_interval(
     # ulps above an integer ratio.  Equal subdivision then closes time exactly.
     count = max(1, int(math.ceil(ratio-16.0*np.finfo(float).eps*max(ratio, 1.0))))
     sub_dt = dt/count
-    decisions = []
-    evolved = state
-    evolved_runtime = runtime
-    for _ in range(count):
-        evolved, evolved_runtime, decision = advance_multigrain_front(
-            evolved, evolved_runtime, kinetics=kinetics, dt_s=sub_dt,
+    def advance_without_cfl_clipping(accepted, accepted_runtime, interval,
+                                     depth=0):
+        trial, trial_runtime, decision = advance_multigrain_front(
+            accepted, accepted_runtime, kinetics=kinetics, dt_s=interval,
             spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
             applied_shear_rate_s=applied_shear_rate_s, systems=systems,
             heat_deposition_mode=heat_deposition_mode)
-        decisions.append(decision)
+        if not decision.contour_cfl_clipped:
+            return trial, trial_runtime, (decision,)
+        if depth >= 32:
+            raise RuntimeError(
+                "front interval could not satisfy the contour-CFL bound")
+        first, first_runtime, first_decisions = (
+            advance_without_cfl_clipping(
+                accepted, accepted_runtime, .5*interval, depth+1))
+        final, final_runtime, second_decisions = (
+            advance_without_cfl_clipping(
+                first, first_runtime, .5*interval, depth+1))
+        return (final, final_runtime,
+                first_decisions+second_decisions)
+
+    decisions = []
+    evolved = state
+    evolved_runtime = runtime
+    for _ in range(count):
+        evolved, evolved_runtime, accepted_decisions = (
+            advance_without_cfl_clipping(
+                evolved, evolved_runtime, sub_dt))
+        decisions.extend(accepted_decisions)
     return evolved, evolved_runtime, tuple(decisions)
