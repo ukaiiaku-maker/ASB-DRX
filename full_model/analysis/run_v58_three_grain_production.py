@@ -321,7 +321,8 @@ def main():
             "v61_interval_thermal_ledger_from_3b1db8a",
             "v61_local_front_temperature_from_3b1db8a",
             "v62_exact_residual_optimization_from_b457eaf",
-            "v62_half_step_refinement_from_b457eaf"),
+            "v62_half_step_refinement_from_b457eaf",
+            "v62_quarter_step_refinement_from_b457eaf"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -623,6 +624,33 @@ def main():
             provenance["parent_dt_s"] = float(legacy_dt)
             provenance["governing_change"] = (
                 "none: temporal-refinement diagnostic using two half "
+                "macro-intervals and the exact V62 residual optimization")
+        elif args.resume_transition == "v62_quarter_step_refinement_from_b457eaf":
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V62 quarter-step transition requires an exact parent "
+                    "checkpoint checksum")
+            legacy = dict(checkpoint_configuration or {})
+            current = dict(configuration)
+            legacy_dt = legacy.pop("dt_s", None)
+            current_dt = current.pop("dt_s", None)
+            if (legacy != current or not checkpoint_provenance
+                    or checkpoint_provenance.get("source_commit")
+                    != "b457eaf1ba7436431e95e75ec0da5448cb4cd950"
+                    or current_dt is None or legacy_dt is None
+                    or not np.isclose(4.0*float(current_dt), float(legacy_dt),
+                                      rtol=0.0, atol=0.0)):
+                raise ValueError(
+                    "V62 quarter-step transition requires the exact "
+                    "b457eaf state and an otherwise identical quarter "
+                    "timestep")
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = checkpoint_provenance[
+                "source_commit"]
+            provenance["parent_dt_s"] = float(legacy_dt)
+            provenance["governing_change"] = (
+                "none: temporal-refinement diagnostic using four quarter "
                 "macro-intervals and the exact V62 residual optimization")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
