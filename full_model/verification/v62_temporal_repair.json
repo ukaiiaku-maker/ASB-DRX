@@ -1,0 +1,60 @@
+{
+  "schema": "asb-drx-v62-temporal-repair-v1",
+  "copied_state": {
+    "n32_parent_step": 48,
+    "n32_parent_time_s": 1.2e-6,
+    "n48_parent_step": 67,
+    "n48_parent_time_s": 1.675e-6,
+    "total_physical_interval_s": 2.5e-8,
+    "load_and_time_matched": true
+  },
+  "rejected_clipped_clock": {
+    "n48_full_vs_two_half_swept_volume_increment_relative_error": 0.23496404882105762,
+    "n48_full_vs_two_half_front_heat_increment_relative_error": 0.2300951139827539,
+    "n48_four_quarter_vs_eight_eighth_swept_volume_increment_relative_error": 0.43649431608612027,
+    "diagnosis": "the 0.015 contour-CFL cap clipped realized requests; caller-step refinement changed the number of capped events",
+    "classification": "FAILED_TEMPORAL_CONVERGENCE_NUMERICAL_FRONT_CLOCK"
+  },
+  "repair": {
+    "source_commit": "1c0cb4c",
+    "method": "rollback and predictive adaptive front subdivision until every accepted event is below the unchanged contour-CFL limit",
+    "fixed_point_solver": "positive-trust-region scalar secant with damped fallback and independent final verification",
+    "physical_force_changed": false,
+    "physical_rate_changed": false,
+    "transfer_law_changed": false,
+    "energy_functional_changed": false,
+    "heat_law_changed": false,
+    "hard_checks_weakened": false
+  },
+  "selected_two_half_vs_four_quarter": {
+    "candidate_dt_s": 1.25e-8,
+    "reference_dt_s": 6.25e-9,
+    "selected_continuation_dt_s": 6.25e-9,
+    "n32": {
+      "artifact_sha256": "cd0c3ee3bdc882f7a7f0939c537afb4705af3ff5023ca8dc40004697829fd91d",
+      "maximum_signal_relative_l2": 0.026492588331140845,
+      "maximum_increment_relative_l2": 0.03520140315336477,
+      "swept_volume_increment_relative_error": 0.008884084275734875,
+      "front_heat_increment_relative_error": 0.01070864941027569,
+      "stress_relative_error": 0.0022116164453535327
+    },
+    "n48": {
+      "artifact_sha256": "e0f855ebe3ca847b57f9c7ba949dffd65b68b4c398da9c62e55a1b8c4215bb0f",
+      "maximum_signal_relative_l2": 0.020949513444882568,
+      "maximum_increment_relative_l2": 0.2553008256758675,
+      "swept_volume_increment_relative_error": 0.002827766541553193,
+      "front_heat_increment_relative_error": 0.004885074668373015,
+      "stress_relative_error": 0.014065638729632209,
+      "signed_density_increment_relative_l2": 0.2553008256758675,
+      "nye_increment_relative_l2": 0.1041596830225263
+    }
+  },
+  "decision": {
+    "signal_relative_provisional_5_percent_screen_passed": true,
+    "increment_relative_5_percent_screen_passed": false,
+    "scope": "one evolved copied-state interval at each grid",
+    "trajectory_temporal_convergence_claimed": false,
+    "spatial_convergence_claimed": false,
+    "interpretation": "6.25 ns is the best qualified production cadence in this audit; retained n48 increment-relative sensitivity requires continued monitoring"
+  }
+}
