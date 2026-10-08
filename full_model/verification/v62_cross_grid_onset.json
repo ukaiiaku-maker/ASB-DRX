@@ -1,0 +1,39 @@
+{
+  "schema": "asb-drx-v62-cross-grid-onset-v1",
+  "source_histories": {
+    "n32": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/local_interface_physical_n32_to1p675us",
+    "n48": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/local_interface_physical_n48_to3p5us",
+    "source_commit": "b457eaf1ba7436431e95e75ec0da5448cb4cd950",
+    "warning": "these histories used the subsequently rejected clipped front clock; they diagnose the old divergence but cannot qualify the repaired model"
+  },
+  "initial_geometry_control": {
+    "step": 1,
+    "n32_support_gradient_nye_rms_m1": 2.045062041140304e-5,
+    "n48_support_gradient_nye_rms_m1": 2.0450678354557214e-5,
+    "relative_difference": 2.833327239e-6,
+    "raw_l2_norm_relative_difference": 0.3333352222080581,
+    "interpretation": "the former raw norm scales with grid point count; RMS shows that the fixed physical initialization itself agrees"
+  },
+  "first_dynamic_discrepancies": {
+    "temperature_contrast_over_5_percent": {
+      "step": 44,
+      "time_s": 1.1e-6,
+      "relative_difference": 0.05103227365854793
+    },
+    "support_gradient_nye_rms_over_5_percent": {
+      "step": 51,
+      "time_s": 1.275e-6,
+      "n32_rms_m1": 12756.714451619053,
+      "n48_rms_m1": 12062.294134593027,
+      "relative_difference": 0.05756950620483733
+    }
+  },
+  "stage_classification": {
+    "initialization_quadrature": "AGREES_IN_PHYSICAL_RMS",
+    "first_observed_material_divergence": "THERMAL_CONTRAST",
+    "later_observed_geometric_divergence": "SUPPORT_GRADIENT_NYE",
+    "identified_numerical_coupling": "clipped front motion per caller step was proportional to grid spacing through min(v*dt/dx, 0.015)",
+    "conclusion": "the old n32/n48 divergence cannot be assigned solely to a missing physical length; the rejected front clock supplied a grid-dependent migration increment"
+  },
+  "next_valid_comparison": "fresh analytic-origin n32/n48 histories using the repaired unclipped adaptive front clock"
+}
