@@ -241,6 +241,32 @@ def _load_checkpoint(path):
             meta.get("provenance"))
 
 
+def _validate_v63_temporal_transition(checkpoint_configuration,
+                                      current_configuration,
+                                      checkpoint_provenance, ratio):
+    """Validate a same-law copied-state V63 caller-step refinement.
+
+    V63's development source adds diagnostics and this provenance route but
+    does not change the 1c0cb4c physical operators.  The copied checkpoint is
+    accepted only when every bound option except ``dt_s`` is identical and the
+    new caller interval is exactly the declared integer refinement.
+    """
+    legacy = dict(checkpoint_configuration or {})
+    current = dict(current_configuration)
+    legacy_dt = legacy.pop("dt_s", None)
+    current_dt = current.pop("dt_s", None)
+    parent = (checkpoint_provenance or {}).get("source_commit")
+    if (legacy != current
+            or parent != "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499"
+            or current_dt is None or legacy_dt is None
+            or not np.isclose(float(ratio)*float(current_dt), float(legacy_dt),
+                              rtol=0.0, atol=0.0)):
+        raise ValueError(
+            "V63 temporal refinement requires an exact 1c0cb4c parent and "
+            "an otherwise identical integer-refined caller timestep")
+    return float(legacy_dt), parent
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", required=True)
@@ -326,7 +352,9 @@ def main():
             "v62_eighth_step_refinement_from_b457eaf",
             "v62_adaptive_front_cfl_from_b457eaf",
             "v62_adaptive_front_cfl_half_from_b457eaf",
-            "v62_adaptive_front_cfl_quarter_from_b457eaf"),
+            "v62_adaptive_front_cfl_quarter_from_b457eaf",
+            "v63_half_step_refinement_from_1c0cb4c",
+            "v63_quarter_step_refinement_from_1c0cb4c"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -760,6 +788,24 @@ def main():
                 "numerical only: adaptive unclipped contour-CFL front clock "
                 "with a copied-state four-quarter-step refinement; physical "
                 "force, rate, energy, transfer, and heat laws are unchanged")
+        elif args.resume_transition in (
+                "v63_half_step_refinement_from_1c0cb4c",
+                "v63_quarter_step_refinement_from_1c0cb4c"):
+            if not args.expected_resume_sha256:
+                raise ValueError(
+                    "V63 temporal refinement requires an exact parent hash")
+            ratio = (2 if args.resume_transition.startswith("v63_half") else 4)
+            parent_dt, parent_source = _validate_v63_temporal_transition(
+                checkpoint_configuration, configuration,
+                checkpoint_provenance, ratio)
+            provenance["restart_transition"] = args.resume_transition
+            provenance["parent_checkpoint_sha256"] = resume_sha
+            provenance["parent_source_commit"] = parent_source
+            provenance["parent_dt_s"] = parent_dt
+            provenance["governing_change"] = (
+                "none: copied-state V63 caller-step refinement of the "
+                "unchanged 1c0cb4c physical operators; only diagnostic and "
+                "provenance code differs in the executing source")
         elif (checkpoint_configuration != configuration
               or not checkpoint_provenance
               or checkpoint_provenance.get("source_commit") != source_commit):
