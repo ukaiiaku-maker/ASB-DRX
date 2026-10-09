@@ -21,6 +21,7 @@ from full_model.production.multigrain_production import (
     _owner_drivings_from_common_stress,
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
+from full_model.production.tensorial_nye import rotated_system_fields
 
 
 def project(field: np.ndarray, half_width: int, quadrature_n: int) -> np.ndarray:
@@ -48,6 +49,10 @@ def owner_drivers(path: Path) -> tuple[dict, dict, object]:
     values = {name: np.stack(fields, axis=2) for name, fields in rows.items()}
     values["temperature_K"] = np.stack(
         [owner.temperature_K for owner in state.owners], axis=2)[..., None]
+    values["owner_orientation_rad"] = np.stack(
+        [owner.orientation_rad for owner in state.owners], axis=2)
+    values["common_stress_tensor_Pa"] = np.asarray(
+        drivings[0].fixed_stress_tensor_Pa, dtype=float)
     values["supports"] = np.moveaxis(np.asarray(state.supports), 0, 2)
     metadata = {
         "path": str(path.resolve()), "sha256": digest(path), "step": step,
@@ -73,6 +78,18 @@ def speed_from_inputs(raw, chemical, resistance, temperature, wall):
     )/wall.attempt_frequency_s
     return (wall.glide_speed_attempt_m_s*activation
             *np.tanh(effective/wall.critical_stress_Pa)), effective
+
+
+def raw_from_stress_orientation(stress: np.ndarray, orientation: np.ndarray) -> np.ndarray:
+    systems = bcc_four_family_systems()
+    owner_raw = []
+    for owner in range(orientation.shape[2]):
+        _, directions, normals = rotated_system_fields(systems, orientation[..., owner])
+        schmid = .5*(
+            np.einsum("...si,...sj->...sij", directions[..., :2], normals[..., :2])
+            +np.einsum("...si,...sj->...sij", normals[..., :2], directions[..., :2]))
+        owner_raw.append(np.einsum("...ij,...sij->...s", stress, schmid))
+    return np.stack(owner_raw, axis=2)
 
 
 def weighted_relative(left, right, weight) -> float:
@@ -133,6 +150,29 @@ def run(left: Path, right: Path, output: Path,
             "effective_stress_change_from_left_relative_l2": weighted_relative(
                 effective, effective_a, weight),
         }
+    decomposed_raw = {
+        "common_stress_tensor": raw_from_stress_orientation(
+            pb["common_stress_tensor_Pa"], pa["owner_orientation_rad"]),
+        "owner_orientation": raw_from_stress_orientation(
+            pa["common_stress_tensor_Pa"], pb["owner_orientation_rad"]),
+    }
+    raw_substitutions = {}
+    for name, raw in decomposed_raw.items():
+        speed, effective = speed_from_inputs(
+            raw, inputs_a["chemical"], inputs_a["resistance"],
+            inputs_a["temperature"], wall_a)
+        error_to_b = weighted_relative(speed, recomputed_b, weight)
+        raw_substitutions[name] = {
+            "raw_stress_change_from_left_relative_l2": weighted_relative(
+                raw, inputs_a["raw"], weight),
+            "rate_change_from_left_relative_l2": weighted_relative(
+                speed, recomputed_a, weight),
+            "remaining_rate_error_to_right_relative_l2": error_to_b,
+            "fraction_of_baseline_error_removed": (
+                baseline_error-error_to_b)/max(baseline_error, 1e-300),
+            "effective_stress_change_from_left_relative_l2": weighted_relative(
+                effective, effective_a, weight),
+        }
     direct_effective_with_left_temperature = (
         wall_a.glide_speed_attempt_m_s
         *exp_floor_rate(pb["effective_stress_Pa"], temperature_a,
@@ -165,6 +205,16 @@ def run(left: Path, right: Path, output: Path,
                 "of the independently computed nonlinear rate"),
         },
         "one_input_at_a_time_substitutions": substitutions,
+        "raw_stress_substitutions": raw_substitutions,
+        "raw_reconstruction_projection_error": {
+            "left": weighted_relative(raw_from_stress_orientation(
+                pa["common_stress_tensor_Pa"], pa["owner_orientation_rad"]),
+                inputs_a["raw"], weight),
+            "right": weighted_relative(raw_from_stress_orientation(
+                pb["common_stress_tensor_Pa"], pb["owner_orientation_rad"]),
+                inputs_b["raw"], weight),
+            "semantics": "resolve projected common stress with projected owner angle versus project production resolved stress",
+        },
         "right_effective_stress_only_with_left_temperature": {
             "remaining_rate_error_to_right": weighted_relative(
                 direct_effective_with_left_temperature, recomputed_b, weight),
