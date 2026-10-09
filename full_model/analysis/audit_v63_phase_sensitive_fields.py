@@ -175,6 +175,7 @@ def projection_checks(fields: dict, metadata: dict, half_width: int,
         fields["signed_total_density_m2"], axis=(0, 1))
     projected_signed_mean = np.mean(
         project("signed_total_density_m2"), axis=(0, 1))
+    signed_mean_error = projected_signed_mean-source_signed_mean
     return {
         "half_width": half_width, "quadrature_n": quadrature_n,
         "support_partition_maximum_absolute_error": float(
@@ -184,7 +185,9 @@ def projection_checks(fields: dict, metadata: dict, half_width: int,
         "support_projected_minimum": float(np.min(supports)),
         "support_projected_maximum": float(np.max(supports)),
         "signed_density_mean_maximum_absolute_error_m2": float(
-            np.max(np.abs(projected_signed_mean-source_signed_mean))),
+            np.max(np.abs(signed_mean_error))),
+        "signed_density_mean_relative_l2_error": norm(signed_mean_error)/max(
+            norm(source_signed_mean), norm(projected_signed_mean), 1e-300),
         "nye_curl_commutation_relative_l2": norm(curl-projected_nye)/max(
             norm(curl), norm(projected_nye), 1e-300),
         "semantics": (
