@@ -137,9 +137,19 @@ def run(left: Path, right: Path, output: Path,
     projected_actual_b = pb["speed_m_s"]
     baseline_error = weighted_relative(recomputed_a, recomputed_b, weight)
     substitutions = {}
+    directional_linearization = {}
+    finite_difference_fraction = 1.0e-4
     for name in inputs_a:
         mixed = dict(inputs_a); mixed[name] = inputs_b[name]
         speed, effective = speed_from_inputs(**mixed, wall=wall_a)
+        delta = inputs_b[name]-inputs_a[name]
+        plus = dict(inputs_a); minus = dict(inputs_a)
+        plus[name] = inputs_a[name]+finite_difference_fraction*delta
+        minus[name] = inputs_a[name]-finite_difference_fraction*delta
+        speed_plus, _ = speed_from_inputs(**plus, wall=wall_a)
+        speed_minus, _ = speed_from_inputs(**minus, wall=wall_a)
+        predicted_delta = (speed_plus-speed_minus)/(2.0*finite_difference_fraction)
+        actual_delta = speed-recomputed_a
         error_to_b = weighted_relative(speed, recomputed_b, weight)
         substitutions[name] = {
             "rate_change_from_left_relative_l2": weighted_relative(
@@ -150,6 +160,23 @@ def run(left: Path, right: Path, output: Path,
             "effective_stress_change_from_left_relative_l2": weighted_relative(
                 effective, effective_a, weight),
         }
+        directional_linearization[name] = {
+            "predicted_delta_relative_error": weighted_relative(
+                predicted_delta, actual_delta, weight),
+            "predicted_delta_weighted_l2": float(np.sqrt(np.sum(
+                weight*predicted_delta**2, dtype=np.longdouble))),
+            "actual_delta_weighted_l2": float(np.sqrt(np.sum(
+                weight*actual_delta**2, dtype=np.longdouble))),
+        }
+    all_plus = {name: inputs_a[name]+finite_difference_fraction*(
+        inputs_b[name]-inputs_a[name]) for name in inputs_a}
+    all_minus = {name: inputs_a[name]-finite_difference_fraction*(
+        inputs_b[name]-inputs_a[name]) for name in inputs_a}
+    all_plus_speed, _ = speed_from_inputs(**all_plus, wall=wall_a)
+    all_minus_speed, _ = speed_from_inputs(**all_minus, wall=wall_a)
+    joint_predicted_delta = (all_plus_speed-all_minus_speed)/(
+        2.0*finite_difference_fraction)
+    joint_actual_delta = recomputed_b-recomputed_a
     decomposed_raw = {
         "common_stress_tensor": raw_from_stress_orientation(
             pb["common_stress_tensor_Pa"], pa["owner_orientation_rad"]),
@@ -205,6 +232,19 @@ def run(left: Path, right: Path, output: Path,
                 "of the independently computed nonlinear rate"),
         },
         "one_input_at_a_time_substitutions": substitutions,
+        "directional_derivative_predictions": {
+            "finite_difference_fraction_of_full_input_delta": finite_difference_fraction,
+            "one_input": directional_linearization,
+            "all_inputs_joint": {
+                "predicted_delta_relative_error": weighted_relative(
+                    joint_predicted_delta, joint_actual_delta, weight),
+                "predicted_delta_weighted_l2": float(np.sqrt(np.sum(
+                    weight*joint_predicted_delta**2, dtype=np.longdouble))),
+                "actual_delta_weighted_l2": float(np.sqrt(np.sum(
+                    weight*joint_actual_delta**2, dtype=np.longdouble))),
+            },
+            "interpretation": "centered directional derivative at the left projected state, evaluated along the full left-to-right input difference; discrepancy from the finite substitution measures nonlinearity and saturation",
+        },
         "raw_stress_substitutions": raw_substitutions,
         "raw_reconstruction_projection_error": {
             "left": weighted_relative(raw_from_stress_orientation(
