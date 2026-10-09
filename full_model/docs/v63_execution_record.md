@@ -17,3 +17,34 @@ The unchanged-source n64 continuation started in
 `/Users/sdillon/HPC3/campaigns/asb-drx-v63-20261009/n64_physical_same_source_from_step210_to320_1c0cb4c`.
 Its requested milestones are steps 240, 264, and 320. Only committed
 checkpoints are authoritative.
+
+The continuation reached checksum-readable step 215 at 1.34375 microseconds
+with zero rejected front subintervals and no increase in the inherited maximum
+energy-closure bound. Phase-sensitive common-band comparisons now cover steps
+185, 200, 210, and 215. On band 15 the plastic-power discrepancy rises from
+10.03% to 56.83%, 78.24%, and 89.63%; the corresponding temperature errors are
+1.04%, 1.98%, 2.25%, and 2.50%. At step 215 the exact reconstructed-Nye error
+is 39.51%. This rejects the earlier interpretation of radial spectral-shape
+agreement as local-field convergence.
+
+A fixed physical candidate, tracked by component overlap rather than by
+reselecting the largest component, has only 0.31 n48/n64 mask overlap at step
+210 and 0.46 at step 215. Fixed-axis transverse-profile errors are 83% and 90%.
+The step-215 n64 candidate FWHM is only 1.5 native cells and is explicitly
+unresolved.
+
+Matched-coordinate reevaluation of the unchanged EXP-floor map attributes
+about 88% of the recomputed step-215 rate discrepancy to replacement of the
+raw resolved stress. Resistance removes about 4.8%, temperature 0.5%, and
+chemical backstress is negligible. The raw-stress directional linearization
+has a 60% delta-prediction error, and the joint linearization has a 63% error,
+so the finite discrepancy is already strongly nonlinear. Substituting common
+stress or orientation separately changes the rate strongly but does not
+reproduce the refined member; their spatial correlation matters.
+
+Diagnostic source `dbd23bf76a670fb2a050943cb5eb17f128a3abde` is frozen in
+`/Users/sdillon/HPC3/worktrees/asb-drx-v63-numerical-dbd23bf`. It adds exact
+temporal-fork provenance, phase-sensitive and EXP-floor audits, exact DRX
+event-energy replay, fixed-candidate profiles, and atomic physical-cadence
+scalar diagnostics. It does not change the physical kernels used by the live
+`1c0cb4c` continuation.

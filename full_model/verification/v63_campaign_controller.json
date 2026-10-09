@@ -34,8 +34,10 @@
   "current": {
     "state": "RUNNING",
     "active_heavy_solver_pid": 63042,
+    "last_verified_checkpoint_step": 215,
+    "last_verified_physical_time_s": 1.3437500000000015e-06,
     "current_task": "same-source n64 continuation from committed step 210 toward steps 240, 264, and 320",
-    "next_independent_task": "phase-sensitive matching-state field comparison and fresh-state temporal-fork design",
+    "next_independent_task": "finish matching-state field comparisons, then run sequential fresh-state temporal forks and exact current-state DRX replay",
     "scientific_completion": false
   }
 }
