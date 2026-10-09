@@ -42,7 +42,7 @@ so the finite discrepancy is already strongly nonlinear. Substituting common
 stress or orientation separately changes the rate strongly but does not
 reproduce the refined member; their spatial correlation matters.
 
-Diagnostic source `dbd23bf76a670fb2a050943cb5eb17f128a3abde` is frozen in
+Diagnostic source `dbd23bf78fe5103335d1bdcc24523286ae13a8ae` is frozen in
 `/Users/sdillon/HPC3/worktrees/asb-drx-v63-numerical-dbd23bf`. It adds exact
 temporal-fork provenance, phase-sensitive and EXP-floor audits, exact DRX
 event-energy replay, fixed-candidate profiles, and atomic physical-cadence

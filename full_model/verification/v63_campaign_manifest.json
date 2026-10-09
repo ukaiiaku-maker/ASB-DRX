@@ -11,7 +11,7 @@
     "v62_numerical_source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
     "v62_package_sha256": "f4ec2e8ff46f8280f362e47dd1f3208fbdd7b86910b1e566f349f4461eb9e2f6",
     "parent_checkpoint_sha256": "f44f2e437845688a70e6eb2a47edf972ead192d580c65e9a6602711928175ff0",
-    "v63_diagnostic_source_commit": "dbd23bf76a670fb2a050943cb5eb17f128a3abde",
+    "v63_diagnostic_source_commit": "dbd23bf78fe5103335d1bdcc24523286ae13a8ae",
     "v63_immutable_diagnostic_worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v63-numerical-dbd23bf"
   },
   "active_n64_continuation": {
