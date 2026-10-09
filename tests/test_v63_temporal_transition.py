@@ -16,6 +16,12 @@ def test_v63_temporal_transition_requires_exact_ratio_and_same_configuration():
     assert dt == 6.25e-9
     assert source == PARENT
 
+    eighth = {"n": 64, "dt_s": 0.78125e-9, "case": "baseline"}
+    dt, source = _validate_v63_temporal_transition(
+        parent, eighth, {"source_commit": PARENT}, 8)
+    assert dt == 6.25e-9
+    assert source == PARENT
+
 
 def test_v63_temporal_transition_rejects_configuration_or_lineage_change():
     parent = {"n": 64, "dt_s": 6.25e-9, "case": "baseline"}

@@ -354,7 +354,8 @@ def main():
             "v62_adaptive_front_cfl_half_from_b457eaf",
             "v62_adaptive_front_cfl_quarter_from_b457eaf",
             "v63_half_step_refinement_from_1c0cb4c",
-            "v63_quarter_step_refinement_from_1c0cb4c"),
+            "v63_quarter_step_refinement_from_1c0cb4c",
+            "v63_eighth_step_refinement_from_1c0cb4c"),
         default="none")
     parser.add_argument("--expected-resume-sha256")
     args = parser.parse_args()
@@ -790,11 +791,14 @@ def main():
                 "force, rate, energy, transfer, and heat laws are unchanged")
         elif args.resume_transition in (
                 "v63_half_step_refinement_from_1c0cb4c",
-                "v63_quarter_step_refinement_from_1c0cb4c"):
+                "v63_quarter_step_refinement_from_1c0cb4c",
+                "v63_eighth_step_refinement_from_1c0cb4c"):
             if not args.expected_resume_sha256:
                 raise ValueError(
                     "V63 temporal refinement requires an exact parent hash")
-            ratio = (2 if args.resume_transition.startswith("v63_half") else 4)
+            ratio = (2 if args.resume_transition.startswith("v63_half") else
+                     4 if args.resume_transition.startswith("v63_quarter") else
+                     8)
             parent_dt, parent_source = _validate_v63_temporal_transition(
                 checkpoint_configuration, configuration,
                 checkpoint_provenance, ratio)
