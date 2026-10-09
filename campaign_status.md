@@ -2417,3 +2417,39 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   temperature trend rather than a selected ASB regime.
 - Final canonical regression: 972 tests pass in 331.22 s. No campaign solver
   remains active.
+
+## V62 repaired-clock causal and spatial campaign (2026-10-08/09)
+
+- The fixed local allocation is `2026-10-08T17:46:14Z` through
+  `2026-10-09T05:46:14Z`; at most one campaign heavy solver ran at a time.
+- Exact constitutive caching accelerates the copied n48 obstruction by 1.492x
+  with bitwise-equal state, decisions, and ledgers. The larger defect was a
+  caller-cadence-dependent clipped front clock; rollback plus predictive
+  subdivision now enforces the unchanged contour-CFL limit.
+- The selected 6.25 ns cadence passes the provisional n48 signal, swept-volume,
+  front-heat, and stress screens on the tested interval. Signed-density and Nye
+  increment sensitivity remains explicitly unqualified.
+- A fresh n48 physical/all-Arrhenius-frozen pair reaches 2.0 microseconds with
+  zero rejection. Freezing delays the simple localization onset by 56.25 ns,
+  but maximum matched excess is only 37.565 K and no strict episode forms.
+- A fresh repaired-clock n32 physical partner also reaches 2.0 microseconds
+  with zero rejection and 0.532% maximum complete-energy closure. Endpoint
+  stress, temperatures, power participation, and prepared-boundary processing
+  agree with n48 within 5%, showing that the rejected clock caused the former
+  bulk divergence.
+- Spatial convergence is still not qualified: endpoint mean Nye differs by
+  13.43%, power width by 54.34%, aspect by 58.05%, and source overlap also
+  differs. The physical-only pair has no repaired n32 causal control or third
+  grid. Disk capacity was reserved for authoritative evidence rather than an
+  unsafe speculative n64 launch.
+- A common-mode audit identifies signed-content/mechanical organization as the
+  first remaining spatially sensitive pathway: at 1.65 microseconds the
+  temperature/front-heat spectral distances are 4.52%/4.17%, versus
+  12.49%/19.58% for Nye/power. Endpoint front heat remains at 2.34% while Nye
+  and power reach 34.17% and 16.34%.
+- Final V62 classification remains strict-ASB negative and substantial-DRX
+  negative at this horizon. Prepared-boundary migration is active and
+  conservative; spontaneous grain birth and material calibration remain
+  unclaimed. Decision report: `full_model/docs/v62_decision_report.md`.
+- Canonical regression on the final numerical source: 975 tests pass in
+  364.92 s. No campaign solver remains active.

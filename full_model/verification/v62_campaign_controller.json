@@ -26,7 +26,7 @@
   "current": {
     "state": "COMPLETE",
     "active_heavy_solver": null,
-    "current_task": "final commit and push",
+    "current_task": "final evidence package and pushed provenance complete",
     "scientific_completion": false
   },
   "step_68_diagnosis": {
@@ -50,5 +50,17 @@
     "n48_swept_volume_increment_relative_error": 0.002827766541553193,
     "n48_front_heat_increment_relative_error": 0.004885074668373015,
     "limitation": "n48 signed-density and Nye increment-relative L2 errors remain 0.255 and 0.104 even though signal-relative errors are below 5 percent"
+  },
+  "fresh_repaired_spatial_audit": {
+    "n32_steps": 320,
+    "n32_internal_intervals": 548,
+    "n32_rejected_events": 0,
+    "common_endpoint_time_s": 2e-6,
+    "primary_thermomechanical_screen_passed": true,
+    "prepared_boundary_processing_screen_passed": true,
+    "signed_spatial_content_screen_passed": false,
+    "localization_morphology_screen_passed": false,
+    "spatial_convergence_claimed": false,
+    "comparison_sha256": "795e4c6d0c614d655bb1a8c177bc8edb4d85aa4435741c223af6db169b0de525"
   }
 }

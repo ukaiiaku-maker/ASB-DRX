@@ -40,8 +40,34 @@
     "initial_physical_rms_relative_difference": 2.8e-6,
     "old_temperature_contrast_first_over_5_percent_s": 1.1e-6,
     "old_normalized_support_gradient_nye_first_over_5_percent_s": 1.275e-6,
+    "fresh_repaired_pair_common_time_s": 2e-6,
+    "fresh_endpoint_stress_relative_difference": 0.039084849067452465,
+    "fresh_endpoint_temperature_mean_relative_difference": 0.0007019263382042754,
+    "fresh_endpoint_temperature_range_relative_difference": 0.01357024513067794,
+    "fresh_endpoint_nye_mean_relative_difference": 0.13427605922192654,
+    "fresh_endpoint_power_width_relative_difference": 0.5433586023404724,
+    "fresh_endpoint_aspect_relative_difference": 0.5804720186882194,
+    "fresh_primary_thermomechanical_screen_passed": true,
+    "fresh_signed_spatial_content_screen_passed": false,
+    "fresh_localization_morphology_screen_passed": false,
+    "common_fourier_audit": {
+      "radial_modes": [1, 15],
+      "step_160_temperature_total_variation": 0.0014889181454001764,
+      "step_160_nye_total_variation": 0.0247547878673054,
+      "step_264_temperature_total_variation": 0.04521185467607822,
+      "step_264_front_heat_total_variation": 0.04171677062164071,
+      "step_264_nye_total_variation": 0.12485143773166668,
+      "step_264_power_total_variation": 0.1958006204954027,
+      "step_320_front_heat_total_variation": 0.02344399435572207,
+      "step_320_nye_total_variation": 0.34168492659867966,
+      "step_320_power_total_variation": 0.16340020319561002,
+      "diagnosis": "first remaining spatial sensitivity is signed-content and instantaneous mechanical organization, not front heat or thermal diffusion",
+      "artifact_sha256": "926e5ee1bf8b083ca0297d28aa85a9839621d6caf6d094e1285611eb04ec8913",
+      "plot_sha256": "1c3e52870ff81d0721173f61b53ee0e369724de16ef0d72546513e5f236765a6"
+    },
     "spatial_convergence_claimed": false,
-    "artifact_sha256": "1f08837cf4aff84fe91cf848c84f17e5294ea6122672016069fb1366f7c09478"
+    "old_clock_artifact_sha256": "1f08837cf4aff84fe91cf848c84f17e5294ea6122672016069fb1366f7c09478",
+    "fresh_repaired_comparison_sha256": "795e4c6d0c614d655bb1a8c177bc8edb4d85aa4435741c223af6db169b0de525"
   },
   "transitioned_physical": {
     "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n48_physical_adaptive_quarter_to2p0us_1c0cb4c",
@@ -118,6 +144,33 @@
       "compact_audit_sha256": "e0846f4cfba2f382fc6cebf60bf2f06ca70a090dd7925aca4ce4185a49539756"
     }
   },
+  "fresh_spatial_partner": {
+    "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n32_physical_fresh_adaptive_quarter_to2p0us_1c0cb4c",
+    "classification": "VALID_REPAIRED_CLOCK_PHYSICAL_SPATIAL_PARTNER_NOT_CAUSAL_CONTROL",
+    "caller_steps": 320,
+    "internal_intervals": 548,
+    "rejected_events": 0,
+    "endpoint_time_s": 2e-6,
+    "endpoint_stress_Pa": 2265710581.321834,
+    "endpoint_temperature_mean_K": 1032.9526678928914,
+    "endpoint_temperature_range_K": 285.1597178520793,
+    "maximum_energy_closure": 0.005316292412667767,
+    "relative_owner_nye_mismatch": 4.458985753608881e-15,
+    "fresh_sweep_volume_m3": 2.2452717122540604e-21,
+    "revisit_volume_m3": 2.6858612795997414e-22,
+    "largest_grain_net_growth_m3": 1.894725628709148e-21,
+    "result_sha256": "b321e2238e585afe555497dcda1aa1f6b5eb0ac9f7539e70298ea019adda28c7",
+    "history_sha256": "5edc1e1f4fffbd266e03ae90d936065af41d2f2686712c06f2b799c5395d026c",
+    "endpoint_classification_sha256": "b41577780931cef9d4bbbe0361f797fc726310914b02472410c909b48e7ca3fd",
+    "physical_history_classification_sha256": "038df27987eb12a17c7cec7649e4391edd69b9303e19ecbcbb4b351e4c812a9c",
+    "checkpoint_320_sha256": "08586cf314b3cd5ef8dbc357f81c2b1304cc34923173b316ca36d72f98012a5e",
+    "spatial_evidence": {
+      "frame_count": 16,
+      "gif_sha256": "7652b762a7ffef2aa482c6996be8b47c2b068cb79792f42100d78161d8737b80",
+      "archive_sha256": "538786901da86be274d8e62739a33d94ba406f167a06b145ecb53cda4d47a2b8",
+      "manifest_sha256": "06756572780e7f0a6d756804adcedb02e020485d0f9c900d7c887f86a67ecbd8"
+    }
+  },
   "interval_heat_audit": {
     "before_step": 268,
     "after_step": 269,
@@ -143,8 +196,8 @@
     }
   },
   "consolidated_delivery": {
-    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_consolidated_delivery.zip",
-    "sha256": "944fe0446049dfe79fb080eca5b8718148d91370b5bd207555bf1f4697673aec",
+    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_consolidated_delivery_authoritative.zip",
+    "sha256": "6cd1c9849061d136f35af78e5768d2a4513269328c2eb76308d70d5d3f8fa2e8",
     "zip_integrity_passed": true,
     "embedded_manifest_precedes_standalone_package_hash": true,
     "unpacked_staging": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_delivery_staging",

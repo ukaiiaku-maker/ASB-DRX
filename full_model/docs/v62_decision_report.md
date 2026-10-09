@@ -1,8 +1,9 @@
-# V62 decision report: repaired front clock and fresh n48 causal pair
+# V62 decision report: repaired front clock, fresh n48 causal pair, and repaired-clock spatial audit
 
 ## Decision
 
-V62 completes the requested numerical repair and clean n48 causal experiment.
+V62 completes the requested numerical repair, clean n48 causal experiment, and
+a fresh repaired-clock n32/n48 physical comparison through 2.0 microseconds.
 It does **not** qualify strict ASB or spontaneous grain birth. The repaired
 production model develops large post-peak softening and short, causally shifted
 heat/power localization episodes, but no state satisfies the registered strict
@@ -50,8 +51,42 @@ to 2.8e-6 relative. The old histories first separate by more than 5% in
 temperature contrast at 1.1 microseconds and normalized support-gradient Nye
 at 1.275 microseconds, but those histories use the rejected clipped clock.
 Their divergence therefore cannot be assigned uniquely to spatial resolution.
-No spatial refinement certificate is issued, and no n64 production matrix was
-launched from a numerically confounded premise.
+That diagnosis was subsequently tested with a fresh n32 trajectory using the
+same repaired source, analytic origin, dimensions, coefficients, and 6.25 ns
+cadence as the fresh n48 member. At 1.25 microseconds its mean-temperature and
+temperature-range differences are 0.22% and 0.80%; at 1.53125 microseconds
+they are 0.04% and 0.98%. The former large bulk divergence therefore does not
+reappear after the clock repair.
+
+At the common 2.0 microsecond endpoint, post-front stress differs by 3.91%,
+mean temperature by 0.070%, peak-minus-mean temperature by 1.68%, temperature
+range by 1.36%, and power participation by 4.53%. Fresh sweep, revisit, and
+largest-grain growth differ by 1.72%, 0.72%, and 2.84%. Those bulk response
+and prepared-boundary observables pass the provisional 5% screen. Spatial
+content and morphology do not: mean Nye differs by 13.43%, power width by
+54.34%, aspect ratio by 58.05%, and endpoint heat/power overlap is zero at n32
+versus 0.0714 at n48. An explicitly unmatched localization screen begins at
+1.56875 and 1.58125 microseconds, only two caller intervals apart, but this is
+not a causal ASB criterion.
+
+No spatial refinement certificate is issued. The physical-only pair lacks a
+repaired-clock n32 Arrhenius control and a third grid, and the morphology fails
+the registered comparison. An n64 run was also not launched: only 5.4 GiB of
+disk remained while the authoritative n32 history was still growing, so a
+speculative finer run would have endangered checkpoint and delivery integrity.
+
+A common-physical-mode Fourier audit further localizes the discrepancy. At
+1.0 microsecond, common-band total-variation distances are 0.15% for
+temperature, 0.26% for instantaneous plastic power, 0.95% for preceding front
+heat, and 2.48% for Nye magnitude. At 1.65 microseconds, temperature and front
+heat remain at 4.52% and 4.17%, while Nye and power have separated to 12.49%
+and 19.58%. At 2.0 microseconds, front heat is still 2.34%, but Nye is 34.17%
+and power is 16.34%; the n32 fractions in common radial modes 8--15 are 0.432
+for Nye and 0.421 for power, versus 0.117 and 0.314 at n48. This evidence
+places the first unresolved length-selection problem in signed-content and
+instantaneous mechanical organization rather than in the repaired front-heat
+field or thermal diffusion. It is a diagnostic localization, not proof of one
+unique offending term.
 
 ## Repaired physical continuations
 
@@ -61,7 +96,7 @@ microsecond checkpoint to 2.0 microseconds with zero rejection. It reaches
 softening. It is valid evidence for the repaired continuation, but it is not a
 clean causal partner because its prefix used the old clock.
 
-The fresh physical member completes 320 caller intervals and 697 accepted
+The fresh n48 physical member completes 320 caller intervals and 697 accepted
 internal intervals with zero rejection. Its endpoint is 2.356 GPa, 1033.68 K,
 and a 289.08 K range. Maximum relative complete-energy closure is 0.2125%, and
 relative owner-Nye mismatch is 1.81e-14. The corresponding frozen member
@@ -96,6 +131,13 @@ the frozen control. These are conservative existing-boundary transformations,
 but the endpoint classifier does not mark them substantial. Grain count stays
 four and no spontaneous grain is allocated.
 
+The fresh n32 spatial partner completes 320 caller intervals and 548 accepted
+internal intervals with zero rejection. Maximum complete-energy closure is
+0.5316%, and relative owner-Nye mismatch is 4.46e-15. It records 2.245e-21 m3
+fresh sweep, 2.686e-22 m3 revisit, and 1.895e-21 m3 largest-grain growth. Its
+existing-boundary transformation is likewise conservative and below the
+substantial endpoint threshold; grain count remains four.
+
 For physical step 268 to 269, independent direct thermal storage is
 3.1569901e-14 J. Mechanical/reaction heat contributes 8.6035442e-15 J and
 front heat 2.2966357e-14 J; global conduction integrates to numerical zero.
@@ -109,10 +151,12 @@ event heat.
 
 V62 establishes a usable adaptive physical-time front operator, a valid fresh
 n48 causal pair, causally shifted short localization, complete interval heat
-closure, and conservative prepared-boundary processing. It does not establish
-a mesh-converged ASB, a one-microsecond episode, substantial DRX at this
-horizon, spontaneous nucleation, a rate/temperature boundary, or material
-calibration.
+closure, conservative prepared-boundary processing, and repaired-clock
+agreement of the selected bulk n32/n48 response. It does not establish a
+mesh-converged ASB: signed spatial content and localization morphology remain
+grid-sensitive, and no one-microsecond strict episode forms. It also does not
+establish substantial DRX at this horizon, spontaneous nucleation, a
+rate/temperature boundary, or material calibration.
 
 The next scientific decision should not tune width or temperature thresholds.
 It should first add or justify a physical nonlocal length/transport closure (or
