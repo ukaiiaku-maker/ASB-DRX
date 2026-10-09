@@ -70,10 +70,11 @@ versus 0.0714 at n48. An explicitly unmatched localization screen begins at
 not a causal ASB criterion.
 
 No spatial refinement certificate is issued. The physical-only pair lacks a
-repaired-clock n32 Arrhenius control and a third grid, and the morphology fails
-the registered comparison. An n64 run was also not launched: only 5.4 GiB of
-disk remained while the authoritative n32 history was still growing, so a
-speculative finer run would have endangered checkpoint and delivery integrity.
+repaired-clock n32 Arrhenius control and, at this late horizon, a third grid;
+the morphology fails the registered comparison. A full n64 matrix was not
+safe with only 5.4 GiB of disk remaining. V62 instead uses the sparse bounded
+n64 prefix described below, retaining every fifth state through the earlier
+rate-amplification window without claiming late morphology.
 
 A common-physical-mode Fourier audit further localizes the discrepancy. At
 1.0 microsecond, common-band total-variation distances are 0.15% for
@@ -111,12 +112,30 @@ microseconds, effective stress at 1.53125 microseconds, and temperature at
 1.6875 microseconds. Total line density, Taylor resistance, supports, and
 orientation never fail the 5% spectral screen.
 
-Thus the remaining causal problem is a steep but consistently evaluated
-owner-level stress-to-rate map acting on a spatial stress field without a
-qualified rate-regularizing length. The next repair must resolve that stress
-field or add a declared thermodynamically conjugate nonlocal closure. Retuning
-the EXP-floor barrier, filtering a plotted result, or changing the ASB width
-criterion would hide rather than repair the mechanism.
+Before a third-grid test, the supported working hypothesis is a steep but
+consistently evaluated owner-level stress-to-rate map amplifying coarse spatial
+stress error. Retuning the EXP-floor barrier, filtering a plotted result, or
+changing the ASB width criterion would hide rather than test that mechanism.
+
+A bounded fresh n64 calculation then tests whether this is already resolved at
+n48. It reaches 1.25 microseconds in 200 caller steps and 301 accepted internal
+intervals, with zero rejection and 0.0554% maximum complete-energy closure.
+Sparse five-step checkpointing limits its storage while retaining the diagnosed
+window. At 1.0 microsecond, n48/n64 owner speed, slip-rate, and power spectral
+distances are 0.11%, 0.15%, and 0.20%. At the decisive 1.15625 microsecond
+state they are 2.66%, 2.85%, and 4.12%, all below 5%; the corresponding
+n32/n48 values are 6.89%, 6.87%, and 9.53%. At 1.25 microseconds, n48/n64
+post-front stress, mean temperature, peak-minus-mean temperature, temperature
+range, and power width differ by 0.16%, 0.007%, 0.29%, 0.22%, and 0.80%.
+Power aspect still differs by 9.46%.
+
+This makes n32 a demonstrated coarse-grid outlier for the activated-rate
+pathway and provisionally qualifies the selected n48 onset-rate observables
+against n64. It does **not** qualify late localization morphology: n64 stops
+before the 1.65--2.0 microsecond n48 localization window, has no matched
+Arrhenius control, and its endpoint aspect has not met the 5% screen. The
+three-grid result therefore selects an n64 sparse continuation before any new
+physical regularization is adopted.
 
 ## Repaired physical continuations
 
@@ -189,10 +208,12 @@ establish substantial DRX at this horizon, spontaneous nucleation, a
 rate/temperature boundary, or material calibration.
 
 The next scientific decision should not tune width or temperature thresholds.
-It should first add or justify an energy-conjugate nonlocal regularization of
-the owner stress-to-rate pathway (or demonstrate resolution of the existing
-one) and then repeat a bounded common-origin spatial refinement. The unchanged
-EXP-floor reference must be preserved. A longer pair is secondary: the present
+It should first continue the checksum-bound n64 sparse trajectory through the
+1.65--2.0 microsecond localization window and compare the same owner-rate and
+morphology observables with n48. Only if that pair fails should an
+energy-conjugate nonlocal regularization of the owner stress-to-rate pathway be
+introduced as a registered physical hypothesis. The unchanged EXP-floor
+reference must be preserved. A longer causal pair is secondary: the present
 strict failure is already controlled by matched excess and morphology, not
 only by insufficient observation time.
 

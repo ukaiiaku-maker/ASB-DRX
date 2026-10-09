@@ -50,6 +50,22 @@
     "fresh_primary_thermomechanical_screen_passed": true,
     "fresh_signed_spatial_content_screen_passed": false,
     "fresh_localization_morphology_screen_passed": false,
+    "three_grid_prefix": {
+      "common_endpoint_time_s": 1.25e-6,
+      "step_185_n32_n48_owner_speed_total_variation": 0.0689430710109174,
+      "step_185_n48_n64_owner_speed_total_variation": 0.026605550038712355,
+      "step_185_n32_n48_owner_slip_rate_total_variation": 0.06873306164001611,
+      "step_185_n48_n64_owner_slip_rate_total_variation": 0.02848478333158931,
+      "step_185_n32_n48_owner_power_total_variation": 0.09532576994567517,
+      "step_185_n48_n64_owner_power_total_variation": 0.041176374010379116,
+      "step_200_n48_n64_stress_relative_difference": 0.001585263120736366,
+      "step_200_n48_n64_temperature_range_relative_difference": 0.00223376023356194,
+      "step_200_n48_n64_power_width_relative_difference": 0.008037767093325706,
+      "step_200_n48_n64_aspect_relative_difference": 0.0946207069555413,
+      "n48_onset_rate_observables_provisionally_converged": true,
+      "late_localization_morphology_converged": false,
+      "artifact_sha256": "b730e36ec4244681128053cc487a64ea47065d5d2741e75f799fd2e1bcb7801c"
+    },
     "common_fourier_audit": {
       "radial_modes": [1, 15],
       "step_160_temperature_total_variation": 0.0014889181454001764,
@@ -200,6 +216,25 @@
       "manifest_sha256": "06756572780e7f0a6d756804adcedb02e020485d0f9c900d7c887f86a67ecbd8"
     }
   },
+  "fresh_n64_prefix": {
+    "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_fresh_adaptive_quarter_to1p25us_sparse_1c0cb4c",
+    "classification": "VALID_REPAIRED_CLOCK_PHYSICAL_THIRD_GRID_PREFIX_NOT_LATE_MORPHOLOGY_CERTIFICATE",
+    "caller_steps": 200,
+    "saved_checkpoint_cadence_steps": 5,
+    "internal_intervals": 301,
+    "rejected_events": 0,
+    "endpoint_time_s": 1.25e-6,
+    "endpoint_stress_Pa": 3957894875.2717066,
+    "endpoint_temperature_mean_K": 950.4972498414336,
+    "endpoint_temperature_range_K": 128.05127725696764,
+    "maximum_energy_closure": 0.0005538445956421801,
+    "relative_owner_nye_mismatch": 5.652948740449592e-15,
+    "result_sha256": "30887af11b7a5122c372f9d8ee82d4f61106440592d4012a262c6168bcc19e76",
+    "history_sha256": "fa434394bacbcaa5852182077b67b6ab6dfca408fc23a3ae7ff5613151254e79",
+    "endpoint_classification_sha256": "47749353b6ccef800f36254ebcedb7fc452ed0d26fc06aada22e4b5a45573e61",
+    "physical_history_classification_sha256": "512e54202792fa46c74aa9159bd56cba1ece44b6e46fef9811247772acd91c3a",
+    "checkpoint_200_sha256": "d228bc797bb7e4dba0945c7d41bbce40deabec56a63687e5b9d80439e00d375f"
+  },
   "interval_heat_audit": {
     "before_step": 268,
     "after_step": 269,
@@ -225,8 +260,8 @@
     }
   },
   "consolidated_delivery": {
-    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_consolidated_delivery_diagnostic_complete.zip",
-    "sha256": "843071145a2978c75152709cf366e251fa5d2f779cb1a4162015a540c9f9e8f0",
+    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_consolidated_delivery_final_n64.zip",
+    "sha256": "f3f8ccc1abbfe521dcff3304ae32e2761ee85671e8aa56469061f08f169f24b1",
     "zip_integrity_passed": true,
     "embedded_manifest_precedes_standalone_package_hash": true,
     "unpacked_staging": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_delivery_staging",
@@ -244,7 +279,7 @@
   "final_scientific_status": {
     "production_front_clock": "REPAIRED_AND_EXERCISED",
     "temporal_refinement": "LOCAL_INTERVAL_PROVISIONAL_SIGNAL_SCREEN_PASSED_INCREMENT_SENSITIVITY_RETAINED",
-    "spatial_refinement": "NOT_QUALIFIED",
+    "spatial_refinement": "ONSET_OWNER_RATE_N48_N64_PROVISIONALLY_PASSED_LATE_MORPHOLOGY_NOT_QUALIFIED",
     "prepared_boundary_drx": "ACTIVE_CONSERVATIVE_BELOW_SUBSTANTIAL_ENDPOINT_THRESHOLD",
     "spontaneous_grain_birth": "UNQUALIFIED",
     "causal_arrhenius_effect": "DEMONSTRATED_ONSET_ADVANCE_AND_TRAJECTORY_CHANGE",

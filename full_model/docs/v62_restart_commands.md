@@ -106,3 +106,30 @@ PYTHONPATH=src:. python -m full_model.analysis.run_v58_three_grain_production \
   --front-heat-deposition local_realized_event --mechanics-mode physical \
   --source-commit 1c0cb4c
 ```
+
+## Sparse n64 physical prefix and continuation
+
+The fresh n64 member uses the identical physical protocol but saves every
+fifth caller state. It completed step 200 at 1.25 microseconds. Continue from
+the checksum-bound endpoint without changing its cadence or coefficients:
+
+```sh
+PYTHONPATH=src:. python -m full_model.analysis.run_v58_three_grain_production \
+  --out /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_fresh_adaptive_quarter_to2p0us_sparse_1c0cb4c \
+  --n 64 --grain-count 4 --steps 320 --dt 6.25e-9 --shear-rate 4e4 \
+  --temperature 900 --case baseline --checkpoint-every 5 --length 5e-6 \
+  --interface-width 3.125e-7 --front-attempt-frequency 1e10 \
+  --front-maximum-fraction .015 --front-maximum-substep 1e-8 \
+  --mechanical-maximum-fraction .1 \
+  --thermal-diffusivity 3.947368421052632e-8 \
+  --flow-temperature-mode physical --recovery-temperature-mode physical \
+  --front-temperature-mode physical \
+  --front-temperature-resolution local_interface \
+  --front-heat-deposition local_realized_event --mechanics-mode physical \
+  --resume /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_fresh_adaptive_quarter_to1p25us_sparse_1c0cb4c/checkpoint_000200.npz \
+  --expected-resume-sha256 d228bc797bb7e4dba0945c7d41bbce40deabec56a63687e5b9d80439e00d375f \
+  --source-commit 1c0cb4c
+```
+
+The intended next discriminator is the common n48/n64 interval from 1.65 to
+2.0 microseconds. The existing n64 prefix is not a late-morphology certificate.

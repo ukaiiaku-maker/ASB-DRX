@@ -2440,8 +2440,8 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Spatial convergence is still not qualified: endpoint mean Nye differs by
   13.43%, power width by 54.34%, aspect by 58.05%, and source overlap also
   differs. The physical-only pair has no repaired n32 causal control or third
-  grid. Disk capacity was reserved for authoritative evidence rather than an
-  unsafe speculative n64 launch.
+  grid at the late endpoint. Disk capacity precluded a full n64 matrix; the
+  later sparse n64 prefix tests the earlier rate-amplification window instead.
 - A common-mode audit identifies signed-content/mechanical organization as the
   first remaining spatially sensitive pathway: at 1.65 microseconds the
   temperature/front-heat spectral distances are 4.52%/4.17%, versus
@@ -2452,9 +2452,18 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   0.019%/1.57%/0.042%, but weighted owner speed/slip rate/power differ by
   6.89%/6.87%/9.53%. The unchanged EXP-floor law has median logarithmic
   stress sensitivity 20.83/20.85 on n32/n48. Signed polarization, accumulated
-  slip, effective stress, and temperature separate only afterward. The next
-  physical repair therefore targets an energy-conjugate owner stress-to-rate
-  length, not the front heat, scalar density, or classification thresholds.
+  slip, effective stress, and temperature separate only afterward. This rules
+  out the front heat, scalar total density, and classification thresholds as
+  causes of the early n32/n48 split.
+- A fresh sparse-checkpoint n64 physical prefix reaches 1.25 microseconds with
+  301 accepted intervals, zero rejection, and 0.0554% maximum complete-energy
+  closure. At the decisive step 185, n48/n64 speed/slip-rate/power spectral
+  distances are 2.66%/2.85%/4.12%, versus 6.89%/6.87%/9.53% for n32/n48.
+  At step 200, n48/n64 stress and temperature observables differ by at most
+  0.29% and power width by 0.80%, although aspect remains 9.46% different.
+  N32 is therefore a demonstrated coarse outlier, while n48 onset rates are
+  provisionally resolved. Late morphology remains unqualified until the n64
+  sparse trajectory is continued through 1.65--2.0 microseconds.
 - Final V62 classification remains strict-ASB negative and substantial-DRX
   negative at this horizon. Prepared-boundary migration is active and
   conservative; spontaneous grain birth and material calibration remain
