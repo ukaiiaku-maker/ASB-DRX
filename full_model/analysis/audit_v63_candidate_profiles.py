@@ -18,11 +18,16 @@ def periodic_delta(value: np.ndarray, origin: float, period: float) -> np.ndarra
 
 
 def component_at_anchor(field: np.ndarray, anchor_xy: tuple[float, float],
-                        length_m: float) -> np.ndarray:
+                        length_m: float,
+                        previous: np.ndarray | None = None) -> np.ndarray:
     positive = np.maximum(np.asarray(field, dtype=float), 0.0)
     components = periodic_components(positive > 2.0*float(positive.mean()))
     if not components:
         return np.zeros(positive.shape, dtype=bool)
+    if previous is not None:
+        overlaps = np.asarray([jaccard(previous, item) for item in components])
+        if float(np.max(overlaps)) > 0.0:
+            return components[int(np.argmax(overlaps))]
     n = positive.shape[0]
     ii, jj = np.indices(positive.shape)
     x = ii*length_m/n; y = jj*length_m/n
@@ -86,11 +91,11 @@ def profile(field: np.ndarray, geometry: dict, length_m: float,
 
 
 def record(path: Path, anchor_xy: tuple[float, float], geometry: dict,
-           bins: int) -> tuple[dict, np.ndarray]:
+           bins: int, previous: np.ndarray | None = None) -> tuple[dict, np.ndarray]:
     fields, metadata = checkpoint_fields(path)
     power = fields["instantaneous_plastic_power_W_m3"]
     length_m = metadata["spacing_m"]*metadata["n"]
-    component = component_at_anchor(power, anchor_xy, length_m)
+    component = component_at_anchor(power, anchor_xy, length_m, previous)
     masked = np.maximum(power, 0.0)*component
     peak = np.unravel_index(int(np.argmax(masked)), masked.shape)
     peak_xy = np.asarray(peak)*metadata["spacing_m"]
@@ -136,7 +141,8 @@ def run(left: list[Path], right: list[Path], output: Path,
     trajectories = {"left": [], "right": []}; masks = {"left": [], "right": []}
     for name, paths in (("left", left), ("right", right)):
         for path in paths:
-            row, mask = record(path, anchor_xy, geometry, bins)
+            row, mask = record(path, anchor_xy, geometry, bins,
+                               None if not masks[name] else masks[name][-1])
             row["jaccard_with_prior_sample"] = (None if not masks[name] else
                                                    jaccard(masks[name][-1], mask))
             trajectories[name].append(row); masks[name].append(mask)
@@ -152,7 +158,7 @@ def run(left: list[Path], right: list[Path], output: Path,
                                                                     np.linalg.norm(pb), 1e-300))})
     result = {"schema": "asb-drx-v63-fixed-candidate-profile-v1",
               "anchor_step": anchor_step, "anchor_geometry": geometry,
-              "selection": "component above twice the positive spatial mean nearest the fixed anchor peak",
+              "selection": "anchor component is nearest the fixed physical peak; later samples maximize overlap with the preceding tracked component and fall back to anchor proximity only if overlap vanishes",
               "profile_semantics": "positive power in the tracked threshold component, averaged in fixed normal-coordinate bins within the anchor tangent span",
               "trajectories": trajectories, "paired_comparisons": comparisons,
               "limitations": "threshold masks identify continuity; widths below two native cells are reported but not called resolved"}
