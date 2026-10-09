@@ -207,9 +207,21 @@ grid-sensitive, and no one-microsecond strict episode forms. It also does not
 establish substantial DRX at this horizon, spontaneous nucleation, a
 rate/temperature boundary, or material calibration.
 
+A final sparse n64 continuation extended the checksum-bound trajectory from
+step 200 to committed step 210 (1.3125 microseconds), crossing the diagnosed
+family-slip/plastic-distortion transition. It retained zero rejected events
+and 0.0554% maximum energy closure. At step 210 the n48/n64 relative
+differences are 0.37% in stress, 0.016% in mean temperature, 0.17% in
+temperature range, and 4.20% in mean plastic power. Mean Nye differs by 8.15%,
+power participation by 69.8%, major component width by 18.3%, and aspect by
+20.0%. This is valid partial-continuation evidence, not a late-localization
+certificate. The allocation cutoff interrupted only the uncommitted 211--215
+block; no state from that block is classified.
+
 The next scientific decision should not tune width or temperature thresholds.
-It should first continue the checksum-bound n64 sparse trajectory through the
-1.65--2.0 microsecond localization window and compare the same owner-rate and
+It should first resume the checksum-bound n64 sparse trajectory from step 210
+and continue through the 1.65--2.0 microsecond localization window, comparing
+the same owner-rate and
 morphology observables with n48. Only if that pair fails should an
 energy-conjugate nonlocal regularization of the owner stress-to-rate pathway be
 introduced as a registered physical hypothesis. The unchanged EXP-floor

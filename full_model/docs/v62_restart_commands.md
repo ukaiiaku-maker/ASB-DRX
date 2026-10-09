@@ -110,12 +110,13 @@ PYTHONPATH=src:. python -m full_model.analysis.run_v58_three_grain_production \
 ## Sparse n64 physical prefix and continuation
 
 The fresh n64 member uses the identical physical protocol but saves every
-fifth caller state. It completed step 200 at 1.25 microseconds. Continue from
-the checksum-bound endpoint without changing its cadence or coefficients:
+fifth caller state. A bounded continuation completed step 210 at 1.3125
+microseconds. Continue from that checksum-bound endpoint without changing its
+cadence or coefficients:
 
 ```sh
 PYTHONPATH=src:. python -m full_model.analysis.run_v58_three_grain_production \
-  --out /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_fresh_adaptive_quarter_to2p0us_sparse_1c0cb4c \
+  --out /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_sparse_continuation_from1p3125us_1c0cb4c \
   --n 64 --grain-count 4 --steps 320 --dt 6.25e-9 --shear-rate 4e4 \
   --temperature 900 --case baseline --checkpoint-every 5 --length 5e-6 \
   --interface-width 3.125e-7 --front-attempt-frequency 1e10 \
@@ -126,10 +127,11 @@ PYTHONPATH=src:. python -m full_model.analysis.run_v58_three_grain_production \
   --front-temperature-mode physical \
   --front-temperature-resolution local_interface \
   --front-heat-deposition local_realized_event --mechanics-mode physical \
-  --resume /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_fresh_adaptive_quarter_to1p25us_sparse_1c0cb4c/checkpoint_000200.npz \
-  --expected-resume-sha256 d228bc797bb7e4dba0945c7d41bbce40deabec56a63687e5b9d80439e00d375f \
+  --resume /Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_sparse_continuation_from1p25us_1c0cb4c/checkpoint_000210.npz \
+  --expected-resume-sha256 f44f2e437845688a70e6eb2a47edf972ead192d580c65e9a6602711928175ff0 \
   --source-commit 1c0cb4c
 ```
 
-The intended next discriminator is the common n48/n64 interval from 1.65 to
-2.0 microseconds. The existing n64 prefix is not a late-morphology certificate.
+The intended next discriminator remains the common n48/n64 interval from 1.65
+to 2.0 microseconds. The existing n64 partial continuation is not a
+late-morphology certificate.

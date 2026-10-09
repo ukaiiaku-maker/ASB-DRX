@@ -2464,6 +2464,15 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   N32 is therefore a demonstrated coarse outlier, while n48 onset rates are
   provisionally resolved. Late morphology remains unqualified until the n64
   sparse trajectory is continued through 1.65--2.0 microseconds.
+- A final checksum-bound n64 continuation reaches committed step 210 at
+  1.3125 microseconds with 349 cumulative internal intervals, zero rejection,
+  and 0.0554% maximum energy closure. Relative to n48 at the same time, stress,
+  mean/range temperature, mean power, and minor component width differ by
+  0.37%, 0.016%/0.17%, 4.20%, and 1.99%. Mean Nye differs by 8.15%, power
+  participation by 69.8%, major width by 18.3%, and aspect by 20.0%; the added
+  segment therefore strengthens the bulk/rate result but does not qualify
+  morphology. The allocation cutoff discarded only the uncommitted 211--215
+  block; checkpoint 210 is the next checksum-bound restart state.
 - Final V62 classification remains strict-ASB negative and substantial-DRX
   negative at this horizon. Prepared-boundary migration is active and
   conservative; spontaneous grain birth and material calibration remain
