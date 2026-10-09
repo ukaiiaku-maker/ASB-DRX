@@ -1,0 +1,23 @@
+{
+  "schema": "asb-drx-v63-live-manifest-v1",
+  "allocation": {
+    "start_utc": "2026-10-09T17:26:51Z",
+    "deadline_utc": "2026-10-10T05:26:51Z",
+    "execution_site": "local workstation",
+    "delivery_state": "RUNNING"
+  },
+  "lineage": {
+    "v62_documentation_commit": "58ee7de5c9c52c65990250c72f7e3e75d9a25241",
+    "v62_numerical_source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
+    "v62_package_sha256": "f4ec2e8ff46f8280f362e47dd1f3208fbdd7b86910b1e566f349f4461eb9e2f6",
+    "parent_checkpoint_sha256": "f44f2e437845688a70e6eb2a47edf972ead192d580c65e9a6602711928175ff0"
+  },
+  "active_n64_continuation": {
+    "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v63-20261009/n64_physical_same_source_from_step210_to320_1c0cb4c",
+    "source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
+    "start_step": 210,
+    "target_step": 320,
+    "checkpoint_cadence_steps": 5,
+    "state": "RUNNING"
+  }
+}

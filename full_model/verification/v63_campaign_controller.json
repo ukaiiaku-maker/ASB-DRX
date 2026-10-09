@@ -1,0 +1,41 @@
+{
+  "schema": "asb-drx-v63-campaign-controller-v1",
+  "allocation": {
+    "start_utc": "2026-10-09T17:26:51Z",
+    "deadline_utc": "2026-10-10T05:26:51Z",
+    "duration_s": 43200,
+    "execution_site": "local workstation",
+    "maximum_concurrent_campaign_heavy_solvers": 1
+  },
+  "authority": {
+    "directive_sha256": "2666699c8453ab14aa6f2be9985540dbe748d194a9b744246c99663c3a1e3852",
+    "assessment_sha256": "55659a129ffe89c512a29b94ec673298d7c375760b695b14d7b1f276ef550e6b"
+  },
+  "lineage": {
+    "v62_documentation_commit": "58ee7de5c9c52c65990250c72f7e3e75d9a25241",
+    "immutable_numerical_source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
+    "parent_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n64_physical_sparse_continuation_from1p25us_1c0cb4c/checkpoint_000210.npz",
+    "parent_checkpoint_sha256": "f44f2e437845688a70e6eb2a47edf972ead192d580c65e9a6602711928175ff0",
+    "branch": "exp/full-v63-rate-accuracy-20261009",
+    "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v63-20261009",
+    "evidence_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v63-20261009"
+  },
+  "startup_audit": {
+    "v62_worktree_clean": true,
+    "v62_local_remote_match": true,
+    "numerical_worktree_clean": true,
+    "parent_checkpoint_checksum_verified": true,
+    "outer_package_checksum_verified": true,
+    "source_archive_checksum_verified": true,
+    "related_solver_found_at_start": false,
+    "unrelated_processes_preserved": true,
+    "available_disk_at_start_GiB": 7.2
+  },
+  "current": {
+    "state": "RUNNING",
+    "active_heavy_solver_pid": 63042,
+    "current_task": "same-source n64 continuation from committed step 210 toward steps 240, 264, and 320",
+    "next_independent_task": "phase-sensitive matching-state field comparison and fresh-state temporal-fork design",
+    "scientific_completion": false
+  }
+}
