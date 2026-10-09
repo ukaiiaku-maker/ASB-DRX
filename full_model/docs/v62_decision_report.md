@@ -88,6 +88,36 @@ instantaneous mechanical organization rather than in the repaired front-heat
 field or thermal diffusion. It is a diagnostic localization, not proof of one
 unique offending term.
 
+The saved-state operator ordering sharpens that statement. A family-resolved
+Nye spectral warning first exceeds 5% at 1.0625 microseconds, but this is a
+near-coarse-Nyquist derivative signal: its modes 1--7 differ by only 2.60%,
+whereas n32 carries 7.59% of Nye power in modes 8--15 versus 0.54% at n48.
+The support-gradient and exact reconstructed Nye tensors remain within 0.52%
+and 0.62% at that time; the high-mode discrepancy is in the support-weighted
+owner curl/reservoir representation. Owner-curl and owner-reservoir tensors
+remain mutually consistent to roundoff, so this is not a second Nye update.
+
+More importantly, Nye is not the rate-driving state in this implementation.
+The first causal response separation occurs at 1.15625 microseconds. There,
+support spectra differ by 0.019%, common-stress spectra by 1.57%, and weighted
+owner effective-stress spectra by only 0.042%, but the same EXP-floor mapping
+amplifies these differences to 6.89% in weighted owner speed, 6.87% in slip
+rate, and 9.53% in plastic power. Its independently evaluated local logarithmic
+sensitivity is essentially grid-independent: weighted medians are 20.83 and
+20.85 and 90th percentiles are 21.56 on both grids. Signed mobile polarization
+then separates at 1.25 microseconds, chemical backstress at 1.28125
+microseconds, accumulated family slip and plastic distortion at 1.3125
+microseconds, effective stress at 1.53125 microseconds, and temperature at
+1.6875 microseconds. Total line density, Taylor resistance, supports, and
+orientation never fail the 5% spectral screen.
+
+Thus the remaining causal problem is a steep but consistently evaluated
+owner-level stress-to-rate map acting on a spatial stress field without a
+qualified rate-regularizing length. The next repair must resolve that stress
+field or add a declared thermodynamically conjugate nonlocal closure. Retuning
+the EXP-floor barrier, filtering a plotted result, or changing the ASB width
+criterion would hide rather than repair the mechanism.
+
 ## Repaired physical continuations
 
 The transitioned V61 n48 state was advanced from its verified 1.675
@@ -159,9 +189,10 @@ establish substantial DRX at this horizon, spontaneous nucleation, a
 rate/temperature boundary, or material calibration.
 
 The next scientific decision should not tune width or temperature thresholds.
-It should first add or justify a physical nonlocal length/transport closure (or
-demonstrate resolution of the existing one) and then repeat a bounded
-common-origin spatial refinement. A longer pair is secondary: the present
+It should first add or justify an energy-conjugate nonlocal regularization of
+the owner stress-to-rate pathway (or demonstrate resolution of the existing
+one) and then repeat a bounded common-origin spatial refinement. The unchanged
+EXP-floor reference must be preserved. A longer pair is secondary: the present
 strict failure is already controlled by matched excess and morphology, not
 only by insufficient observation time.
 

@@ -2447,6 +2447,14 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   temperature/front-heat spectral distances are 4.52%/4.17%, versus
   12.49%/19.58% for Nye/power. Endpoint front heat remains at 2.34% while Nye
   and power reach 34.17% and 16.34%.
+- Owner-resolved ordering identifies the causal amplification: at 1.15625
+  microseconds supports/common stress/weighted effective stress differ by
+  0.019%/1.57%/0.042%, but weighted owner speed/slip rate/power differ by
+  6.89%/6.87%/9.53%. The unchanged EXP-floor law has median logarithmic
+  stress sensitivity 20.83/20.85 on n32/n48. Signed polarization, accumulated
+  slip, effective stress, and temperature separate only afterward. The next
+  physical repair therefore targets an energy-conjugate owner stress-to-rate
+  length, not the front heat, scalar density, or classification thresholds.
 - Final V62 classification remains strict-ASB negative and substantial-DRX
   negative at this horizon. Prepared-boundary migration is active and
   conservative; spontaneous grain birth and material calibration remain
