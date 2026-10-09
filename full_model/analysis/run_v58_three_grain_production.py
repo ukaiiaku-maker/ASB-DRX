@@ -1033,6 +1033,48 @@ def main():
             front_sources, start=np.zeros((args.n, args.n), dtype=float))
         front_source_rate = front_source_J_by_cell/max(
             args.dt*spacing**2*thickness, 1e-300)
+        # Preserve cheap physical-cadence observables independently of the
+        # sparse, full-state checkpoint cadence.  One file per caller interval
+        # makes restart publication atomic and a repeated interval idempotent.
+        scalar_directory = out/"scalar_diagnostics"
+        scalar_directory.mkdir(parents=True, exist_ok=True)
+        scalar_temperatures = sum(
+            state.supports[index]*owner.temperature_K
+            for index, owner in enumerate(state.owners))
+        scalar_volumes = (
+            np.sum(state.supports, axis=(1, 2))*spacing**2*thickness)
+        scalar_record = {
+            "schema": "asb-drx-v63-physical-cadence-scalar-v1",
+            "step": step+1,
+            "time_s": runtime.ledger.physical_time_s,
+            "applied_shear_strain": gamma,
+            "shear_stress_Pa": float(shear_stress),
+            "grain_volume_m3": scalar_volumes.tolist(),
+            "temperature_mean_K": float(np.mean(scalar_temperatures)),
+            "temperature_contrast_K": float(
+                np.max(scalar_temperatures)-np.min(scalar_temperatures)),
+            "mechanical": mechanical_record,
+            "mechanical_energy": mechanical_energy_record,
+            "localization": localization_record,
+            "front": None if not fronts else {
+                "accepted": all(item.accepted for item in fronts),
+                "subintervals": len(fronts),
+                "directions": fronts[-1].direction_by_interface,
+                "pressures_Pa": fronts[-1].pressure_by_interface_Pa,
+                "generated_heat_J": float(np.sum(
+                    front_source_J_by_cell, dtype=np.longdouble)),
+                "maximum_unclipped_fraction": max(
+                    item.maximum_unclipped_fraction for item in fronts),
+                "contour_cfl_satisfied": all(
+                    not item.contour_cfl_clipped for item in fronts),
+            },
+            "runtime": asdict(runtime.ledger),
+        }
+        scalar_path = scalar_directory/f"step_{step+1:06d}.json"
+        scalar_temporary = scalar_path.with_suffix(".json.tmp")
+        scalar_temporary.write_text(
+            json.dumps(scalar_record, sort_keys=True)+"\n")
+        scalar_temporary.replace(scalar_path)
         if (step == start
                 or (step+1) % max(args.checkpoint_every, 1) == 0
                 or step+1 == args.steps):
