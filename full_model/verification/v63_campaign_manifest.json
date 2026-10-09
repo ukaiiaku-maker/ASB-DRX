@@ -20,18 +20,21 @@
     "start_step": 210,
     "target_step": 320,
     "checkpoint_cadence_steps": 5,
-    "last_verified_checkpoint_step": 215,
+    "last_verified_checkpoint_step": 240,
+    "step_240_checkpoint_sha256": "90b2c19c3366e744634f84709a363299161e2852a243c30dadea269f4999186c",
     "state": "RUNNING"
   },
   "interim_accuracy_evidence": {
-    "phase_sensitive_steps": [185, 200, 210, 215],
+    "phase_sensitive_steps": [185, 200, 210, 215, 220, 240],
     "step_215_common_band_15_relative_errors": {
       "temperature": 0.025003279709177265,
       "exact_reconstructed_nye": 0.39514418565961595,
       "instantaneous_plastic_power": 0.8963437191680702
     },
     "step_215_exp_floor_attribution_sha256": "86e7c2ee30ec64511d802f21a4c340efb7712db5496b02f895d8bd7f544cfb95",
-    "step_210_215_fixed_candidate_profile_sha256": "decbe7360e36d51df0c44379fdbd1fbd0a284844f9e535951328e9270c882286",
+    "step_240_phase_sensitive_sha256": "ffa5670d775b4596fc924ab991e641afff89c1889cf51a854c29c20891537129",
+    "step_240_exp_floor_attribution_sha256": "399166246cda8ce84f98490a2bd403291e01c8a5316ed9666de78486e56decee",
+    "step_210_240_fixed_candidate_profile_sha256": "572892d2a249e62fa426e82a429aaf380d467a74dd4e84aa94e1c90f01674a6f",
     "interpretation": "temperature remains close while signed spatial mechanics and power diverge; raw resolved stress dominates the finite rate-map discrepancy and is strongly nonlinear"
   }
 }

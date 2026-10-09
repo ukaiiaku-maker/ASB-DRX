@@ -48,3 +48,13 @@ temporal-fork provenance, phase-sensitive and EXP-floor audits, exact DRX
 event-energy replay, fixed-candidate profiles, and atomic physical-cadence
 scalar diagnostics. It does not change the physical kernels used by the live
 `1c0cb4c` continuation.
+
+The exact n64 step-240 milestone reached 1.500 microseconds with SHA-256
+`90b2c19c3366e744634f84709a363299161e2852a243c30dadea269f4999186c`.
+All physical events remained accepted. Its band-15 discrepancies are 49.95%
+for instantaneous power, 92.50% for owner speed, 48.28% for signed density,
+23.82% for plastic distortion, 49.08% for exact Nye, and 3.93% for
+temperature. Support and orientation differ by only about 0.5%. The tracked
+candidate has 0.32 cross-grid mask overlap and 97.78% profile error. Thus a
+temporary reduction in the instantaneous power norm does not constitute local
+field convergence.
