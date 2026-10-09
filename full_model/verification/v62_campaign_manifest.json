@@ -1,0 +1,172 @@
+{
+  "schema": "asb-drx-v62-final-manifest-v1",
+  "allocation": {
+    "start_utc": "2026-10-08T17:46:14Z",
+    "deadline_utc": "2026-10-09T05:46:14Z",
+    "duration_s": 43200,
+    "execution_site": "local workstation",
+    "delivery_state": "COMPLETE",
+    "scientific_completion": false
+  },
+  "lineage": {
+    "v61_solver_source_commit": "b457eaf1ba7436431e95e75ec0da5448cb4cd950",
+    "v62_numerical_source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
+    "v62_numerical_source_archive_sha256": "cb95839080e38d6333ffaaccb7796ec4b784e3418eb655396ff43f000ced6389",
+    "documentation_branch": "exp/full-v62-temporal-n48-20261008",
+    "evidence_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008",
+    "v61_parent_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v61-20261001/local_interface_physical_n48_to3p5us/checkpoint_000067.npz",
+    "v61_parent_checkpoint_sha256": "e7f584ffb40aa859546b6f8cf78b53d7d0aad24fcdbb99d99e7bd9bf32ba9c59"
+  },
+  "step_68_repair": {
+    "cause": "redundant constitutive rebuilds plus a caller-step-dependent clipped front clock",
+    "exact_optimization_speedup": 1.492185772,
+    "baseline_wall_s": 183.889777447097,
+    "optimized_wall_s": 123.23797524999827,
+    "checkpoint_arrays_bitwise_equal": true,
+    "front_repair": "rollback and predictive adaptive subdivision until every accepted event satisfies contour CFL < 0.015",
+    "physical_law_changed": false,
+    "artifact_sha256": "542a970a38d1bea4dd5bdf65b6837e6212fc0c8de268df4a0e381ab751a3afe9"
+  },
+  "temporal_qualification": {
+    "selected_dt_s": 6.25e-9,
+    "n48_max_signal_relative_l2": 0.020949513444882568,
+    "n48_max_increment_relative_l2": 0.2553008256758675,
+    "n48_swept_increment_relative_error": 0.002827766541553193,
+    "n48_front_heat_increment_relative_error": 0.004885074668373015,
+    "trajectory_temporal_convergence_claimed": false,
+    "artifact_sha256": "91c1b22d9357fed866f9796cce66429492e28f2bae07722af84203093e9d5460"
+  },
+  "cross_grid": {
+    "initial_physical_rms_relative_difference": 2.8e-6,
+    "old_temperature_contrast_first_over_5_percent_s": 1.1e-6,
+    "old_normalized_support_gradient_nye_first_over_5_percent_s": 1.275e-6,
+    "spatial_convergence_claimed": false,
+    "artifact_sha256": "1f08837cf4aff84fe91cf848c84f17e5294ea6122672016069fb1366f7c09478"
+  },
+  "transitioned_physical": {
+    "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n48_physical_adaptive_quarter_to2p0us_1c0cb4c",
+    "classification": "VALID_REPAIRED_CONTINUATION_NOT_CLEAN_CAUSAL_REFERENCE",
+    "caller_steps": 119,
+    "internal_intervals": 407,
+    "rejected_events": 0,
+    "endpoint_time_s": 2.0e-6,
+    "endpoint_stress_Pa": 2083881602.8212857,
+    "endpoint_temperature_mean_K": 1036.4302947357648,
+    "endpoint_temperature_range_K": 276.6398869323292,
+    "result_sha256": "0feb5449253763eddf51750cc2687e651d05662807d86f8587a3b82ac5d78c71",
+    "checkpoint_sha256": "d4c6c3d759eaf1623c68fbeb6ea82193480bab06c69ea8bf3763daed804b6913"
+  },
+  "fresh_pair": {
+    "protocol": {
+      "n": 48,
+      "domain_m": 5e-6,
+      "interface_width_m": 3.125e-7,
+      "dt_s": 6.25e-9,
+      "steps": 320,
+      "physical_time_s": 2.0e-6,
+      "initial_temperature_K": 900.0,
+      "shear_rate_s-1": 40000.0,
+      "front_temperature_resolution": "local_interface",
+      "front_heat_deposition": "local_realized_event"
+    },
+    "physical": {
+      "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n48_physical_fresh_adaptive_quarter_to2p0us_1c0cb4c",
+      "internal_intervals": 697,
+      "rejected_events": 0,
+      "maximum_energy_closure": 0.002124954630601921,
+      "endpoint_stress_Pa": 2355526760.898629,
+      "endpoint_temperature_mean_K": 1033.6782338704736,
+      "endpoint_temperature_range_K": 289.0826401418275,
+      "fresh_sweep_volume_m3": 2.2845697614757677e-21,
+      "revisit_volume_m3": 2.7053669616954954e-22,
+      "largest_grain_net_growth_m3": 1.950113614377694e-21,
+      "result_sha256": "225468ae3a76b6ed6fe10b1f44e21f750a18024a58c74618844def8db3d084c4",
+      "history_sha256": "4c0f2553d11166025ba3aeb89248446cb1039e2e1116d2227422be6dbf49b84f",
+      "classification_sha256": "3ad67edb317d9794e325ec5ce7498da79e920d87d056fc08ee99eb56b721aa78",
+      "checkpoint_320_sha256": "ea0b2f928e568fc059c7261706a05aac48b3199dfbb0038f5e2dbe45e7609974"
+    },
+    "all_arrhenius_frozen": {
+      "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/n48_allfrozen_adaptive_quarter_to2p0us_1c0cb4c",
+      "internal_intervals": 670,
+      "rejected_events": 0,
+      "maximum_energy_closure": 0.003219889701697474,
+      "endpoint_stress_Pa": 2385083580.4602017,
+      "endpoint_temperature_mean_K": 1025.8952048994865,
+      "endpoint_temperature_range_K": 252.95397638098416,
+      "fresh_sweep_volume_m3": 2.1909037305515367e-21,
+      "revisit_volume_m3": 2.597834587829165e-22,
+      "largest_grain_net_growth_m3": 1.8758585521543092e-21,
+      "result_sha256": "caf83c35cb52f97c0b62c6cf04373194f98d33561f9ec5892b7ca5062675c74a",
+      "history_sha256": "26353f926ac5795534ffa8c8655db92151801d650ac2e30c41f48b868c53801f",
+      "classification_sha256": "83a2c5b68bab48829f266f9f4e6036a1f7da87e574cf9030318a13713bc7016a",
+      "checkpoint_320_sha256": "6341a1fe2cc40602414f37642e2bb7efd21d8f3a04bdddebd0e73832ae5883a8"
+    },
+    "causal_classification": {
+      "common_steps": 320,
+      "intervention_certificate_passed": true,
+      "physical_simple_joint_onset_s": 1.65625e-6,
+      "frozen_simple_joint_onset_s": 1.7125e-6,
+      "onset_advance_s": 5.625e-8,
+      "physical_simple_joint_endpoint_span_s": 5.625e-8,
+      "frozen_simple_joint_endpoint_span_s": 3.125e-8,
+      "maximum_matched_component_excess_K": 37.565017107482845,
+      "maximum_operator_softening_fraction": 0.41403171024525703,
+      "strict_snapshot_count": 0,
+      "strict_episode_count": 0,
+      "strict_physical_asb": false,
+      "pair_classification_sha256": "a9b658bca9c6cc0e244aa77c199a3b2805d6865e3f8bce6b79111dd5229ecb38",
+      "compact_audit_sha256": "e0846f4cfba2f382fc6cebf60bf2f06ca70a090dd7925aca4ce4185a49539756"
+    }
+  },
+  "interval_heat_audit": {
+    "before_step": 268,
+    "after_step": 269,
+    "whole_relative_residual": 4.0370389090398244e-12,
+    "candidate_relative_residual": 3.887686051304884e-12,
+    "maximum_cell_relative_residual": 1.822126155942841e-10,
+    "front_source_relative_mismatch": 0.0,
+    "artifact_sha256": "d510aec2639dc984f0479172fa2210a2d1dcec41bf4d41e7f809c1a13b0576fa",
+    "arrays_sha256": "4734622a4b71753a849476a0a34e6cef6d51ad4ffba2da20540cc0186b3461da"
+  },
+  "spatial_evidence": {
+    "physical": {
+      "frame_count": 16,
+      "gif_sha256": "fe10ad740ebea5af6c216973489191da42455b90a29918abb227bb6b33c9b154",
+      "archive_sha256": "be154c0990546a9e6b906e964c3118e435ea77d90a3bde185877c35e747a8b61",
+      "manifest_sha256": "d8bf5f36ddf2d4b8389fe61e58efb320c6efa2b6e3531684f86d233e17c7c859"
+    },
+    "frozen": {
+      "frame_count": 16,
+      "gif_sha256": "dc5a1b8650b19ecedc96f36be6cdf08e3fb9632dfe8070506ab0eceb8b93f52d",
+      "archive_sha256": "5c770eb21f2f94267a1c548045e24b462502fe45871cbcd67b9fa9e9bd5fc1ba",
+      "manifest_sha256": "5acbd3ba1acedf8af9f2417ab2474d4dc1c0058ccbc6a902773ac8af96d42b6f"
+    }
+  },
+  "consolidated_delivery": {
+    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_consolidated_delivery.zip",
+    "sha256": "944fe0446049dfe79fb080eca5b8718148d91370b5bd207555bf1f4697673aec",
+    "zip_integrity_passed": true,
+    "embedded_manifest_precedes_standalone_package_hash": true,
+    "unpacked_staging": "/Users/sdillon/HPC3/campaigns/asb-drx-v62-20261008/v62_delivery_staging",
+    "staging_has_sha256_inventory": true
+  },
+  "regression": {
+    "command": "PYTHONPATH=src:. pytest -q",
+    "state": "PASSED",
+    "passed": 975,
+    "failed": 0,
+    "duration_s": 364.92,
+    "artifact": "full_model/verification/v62_regression.json",
+    "artifact_sha256": "9f65d54ab5dd425fdcc710b046bc7be38ec3bdacfaee0812ac9fec3e7ca1fd82"
+  },
+  "final_scientific_status": {
+    "production_front_clock": "REPAIRED_AND_EXERCISED",
+    "temporal_refinement": "LOCAL_INTERVAL_PROVISIONAL_SIGNAL_SCREEN_PASSED_INCREMENT_SENSITIVITY_RETAINED",
+    "spatial_refinement": "NOT_QUALIFIED",
+    "prepared_boundary_drx": "ACTIVE_CONSERVATIVE_BELOW_SUBSTANTIAL_ENDPOINT_THRESHOLD",
+    "spontaneous_grain_birth": "UNQUALIFIED",
+    "causal_arrhenius_effect": "DEMONSTRATED_ONSET_ADVANCE_AND_TRAJECTORY_CHANGE",
+    "strict_physical_asb": "NOT_ESTABLISHED",
+    "material_calibration": "NOT_CLAIMED"
+  }
+}

@@ -1,6 +1,36 @@
 # Campaign status
 
-Updated: 2026-09-23 (America/Los_Angeles)
+Updated: 2026-10-08 (America/Los_Angeles)
+
+## V62 repaired-clock n48 causal campaign
+
+- Exact constitutive caching accelerates the copied V61 obstruction state by
+  1.492x with bitwise-identical arrays, decisions, and ledgers. The physical
+  obstruction was a caller-cadence-dependent clipped front clock; production
+  now rolls back and predictively subdivides until every accepted event obeys
+  the unchanged 0.015 contour-CFL bound.
+- A 6.25 ns copied-state audit passes the provisional 5% signal-relative
+  screen at n32 and n48, while n48 signed-density and Nye increment errors
+  remain 25.5% and 10.4%. Complete-trajectory temporal convergence is not
+  claimed. Old n32/n48 divergence is confounded by the rejected clock, and no
+  spatial refinement certificate is issued.
+- The repaired V61 n48 continuation reaches 2.0 us with zero rejection. A new
+  analytic-origin n48 physical/frozen pair also reaches 2.0 us at immutable
+  source `1c0cb4c`; both members have 320 common checkpoints, zero rejection,
+  tight energy closure, and a passing intervention certificate.
+- Physical Arrhenius feedback advances the simple joint heat/power onset by
+  56.25 ns and lengthens its sampled span from 31.25 to 56.25 ns. Strict ASB
+  remains false: maximum matched excess is 37.57 K, the physical episode is
+  only 1.10--1.13 interface widths with aspect 1.30--1.35, no strict snapshot
+  qualifies, persistence is far below 1 us, and spatial refinement is absent.
+- Conservative prepared-boundary processing remains active in both members,
+  with more fresh/revisit sweep in the physical case, but neither endpoint is
+  classified as substantial DRX. Grain count remains four; spontaneous grain
+  birth and material calibration are not claimed.
+- Canonical immutable-source regression passes 975 tests in 364.92 seconds.
+  The 151 MB consolidated delivery passes ZIP integrity and has SHA-256
+  `944fe0446049dfe79fb080eca5b8718148d91370b5bd207555bf1f4697673aec`.
+  No V62 HPC or cloud job was launched, and no unrelated process was modified.
 
 ## Directive v53 flow regime, conjugate geometry, and mechanism priority
 
