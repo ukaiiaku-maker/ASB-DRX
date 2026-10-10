@@ -1,0 +1,10 @@
+{
+  "schema": "asb-drx-v63-regression-v1",
+  "source_commit": "ad6171b87a0ec5e3ef588be2484934356514443b",
+  "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v63-numerical-ad6171b",
+  "command": "PYTHONPATH=src:. pytest -q",
+  "passed": 987,
+  "failed": 0,
+  "wall_time_s": 673.72,
+  "result": "PASSED"
+}

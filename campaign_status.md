@@ -1,6 +1,34 @@
 # Campaign status
 
-Updated: 2026-10-08 (America/Los_Angeles)
+Updated: 2026-10-09 (America/Los_Angeles)
+
+## V63 rate-accuracy and coupled DRX/ASB continuation
+
+- The checksum-bound, unchanged-source n64 trajectory now reaches 2.0 us and
+  engineering shear 0.092.  All 832 cumulative front intervals are accepted;
+  maximum complete-energy closure is 0.1903%.  Endpoint stress is 2.35254 GPa,
+  mean temperature 1034.07 K, and temperature range 283.35 K.
+- Phase-sensitive n48/n64 discrepancies at step 320 are 8.24% in temperature,
+  61.51% in exact Nye, and 73.66% in plastic power.  The tracked late
+  component persists for only 343.75 ns and its physical transverse width
+  differs by 45.7%.  Strict and spatially converged ASB remain false.
+- Fresh n64 temporal forks pass the provisional 5% increment screen at early
+  and divergence states using 3.125/1.5625 ns.  The late state requires
+  1.5625/0.78125 ns to reduce signed-density and Nye errors to 2.57% and
+  2.34%.  The 6.25 ns production result is not promoted to a continuum-time
+  morphology certificate.
+- Exact DRX replay shows that grain-40 growth is selected by a coupled decrease
+  in domain defect and recoverable elastic energy, not by the initial scalar
+  density ranking.  Prepared-boundary redistribution is active and
+  conservative; grain count stays four and spontaneous nucleation is absent.
+- A fixed-parameter 80,000/s n32 causal pair is valid but negative for strict
+  ASB.  The n48 physical member and matched frozen-Arrhenius control extend the
+  same test at higher resolution; exact pair results and hashes are in the V63
+  final manifest.
+- Diagnostic source `ad6171b` changes analysis/copy-state temporal machinery,
+  not production constitutive kernels.  Canonical regression passes 987 tests
+  in 673.72 s.  No HPC or cloud calculation was launched and unrelated jobs
+  were preserved.
 
 ## V62 repaired-clock n48 causal campaign
 

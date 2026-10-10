@@ -58,3 +58,45 @@ temperature. Support and orientation differ by only about 0.5%. The tracked
 candidate has 0.32 cross-grid mask overlap and 97.78% profile error. Thus a
 temporary reduction in the instantaneous power norm does not constitute local
 field convergence.
+
+The same-source continuation subsequently completed exact step 320 at 2.0
+microseconds.  Its terminal checkpoint SHA-256 is
+`ac4ac1ee6e7b01cd2d95fc4d5e35d694604c4e886e15111c1e01e297ce21a3ea`.
+All 832 cumulative front intervals were accepted; maximum complete-energy
+closure is 0.1903%.  Endpoint stress is 2.35254 GPa, mean temperature is
+1034.07 K, and temperature range is 283.35 K.  The final five-step block cost
+838.6 seconds, or 167.7 seconds per caller interval.
+
+The continuously tracked late candidate spans saved steps 265--320, only
+343.75 ns.  At step 320 its cross-grid mask Jaccard index is 0.668 and its
+fixed-axis profile error is 45.7%.  The n48/n64 FWHM values are 1.016/0.742
+micrometres despite both occupying about 9.5 native cells.  Phase-sensitive
+band-15 discrepancies are 8.24% for temperature, 61.51% for exact Nye, and
+73.66% for instantaneous power.  Late morphology is not converged.
+
+Fresh-state caller splitting was tested at parent steps 185, 210, and 275.
+At 185 and 210, 3.125 versus 1.5625 ns is below 5% for signed density, exact
+Nye, temperature, and power.  At 275 that comparison gives 5.56% signed
+density error; the added 1.5625 versus 0.78125 ns fork reduces signed-density,
+Nye, temperature, and power increment errors to 2.57%, 2.34%, 0.75%, and
+2.40%.  Every requested mechanics and front clock closes.  Diagnostic commit
+`ad6171b87a0ec5e3ef588be2484934356514443b` adds this eighth-step transition
+without changing a production physical kernel.
+
+Exact replay of the accepted n48 step-268--269 front transaction gives a
+2.2966e-14 J cold Helmholtz decrease: defect storage decreases by 1.5641e-14 J,
+recoverable elastic energy by 7.4734e-15 J, and boundary excess increases by
+1.4783e-16 J.  Grain 40 grows even though its own assigned defect storage
+increases, because the constrained multigrain transaction is downhill as a
+whole.  A separate n64 step-264--265 heat audit closes to 2.62e-12 relative
+over the domain and 1.69e-12 over the fixed candidate; saved front heat exactly
+matches independent pressure-times-realized-volume heat.
+
+After the n64 decision, a fixed-parameter 80,000/s experiment was selected.
+The n32 physical/frozen pair completed to 1.0 microsecond with zero rejection.
+The physical member is slightly stronger and hotter on average but has lower
+temperature contrast and lower power concentration than the frozen member.
+No strict episode occurs.  The n48 physical member then completed the same
+protocol with zero rejection and 0.3744% maximum energy closure; its matched
+frozen control and outcome-neutral pair postprocessing are recorded in the
+final V63 manifest.

@@ -1,40 +1,181 @@
 {
-  "schema": "asb-drx-v63-live-manifest-v1",
+  "schema": "asb-drx-v63-final-manifest-v1",
   "allocation": {
     "start_utc": "2026-10-09T17:26:51Z",
     "deadline_utc": "2026-10-10T05:26:51Z",
+    "duration_s": 43200,
     "execution_site": "local workstation",
-    "delivery_state": "RUNNING"
+    "delivery_state": "CLOSURE_IN_PROGRESS",
+    "scientific_completion": false
   },
   "lineage": {
     "v62_documentation_commit": "58ee7de5c9c52c65990250c72f7e3e75d9a25241",
-    "v62_numerical_source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
-    "v62_package_sha256": "f4ec2e8ff46f8280f362e47dd1f3208fbdd7b86910b1e566f349f4461eb9e2f6",
-    "parent_checkpoint_sha256": "f44f2e437845688a70e6eb2a47edf972ead192d580c65e9a6602711928175ff0",
-    "v63_diagnostic_source_commit": "dbd23bf78fe5103335d1bdcc24523286ae13a8ae",
-    "v63_immutable_diagnostic_worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-v63-numerical-dbd23bf"
+    "v62_production_source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
+    "v63_diagnostic_source_commit": "ad6171b87a0ec5e3ef588be2484934356514443b",
+    "production_physical_kernels_changed": false,
+    "v63_source_archive_sha256": "b04a8a395f1cce1c933c0da22cae36451a21cbe871458e2b11dd0f6dd63f9786",
+    "documentation_branch": "exp/full-v63-rate-accuracy-20261009",
+    "evidence_root": "/Users/sdillon/HPC3/campaigns/asb-drx-v63-20261009",
+    "n64_parent_checkpoint_sha256": "f44f2e437845688a70e6eb2a47edf972ead192d580c65e9a6602711928175ff0"
   },
-  "active_n64_continuation": {
-    "directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v63-20261009/n64_physical_same_source_from_step210_to320_1c0cb4c",
+  "n64_same_source_completion": {
     "source_commit": "1c0cb4ca0e8a9a30b0c1a320817a0b35b4d14499",
     "start_step": 210,
-    "target_step": 320,
-    "checkpoint_cadence_steps": 5,
-    "last_verified_checkpoint_step": 240,
-    "step_240_checkpoint_sha256": "90b2c19c3366e744634f84709a363299161e2852a243c30dadea269f4999186c",
-    "state": "RUNNING"
+    "endpoint_step": 320,
+    "endpoint_time_s": 2e-6,
+    "endpoint_engineering_shear": 0.092,
+    "cumulative_accepted_intervals": 832,
+    "rejected_events": 0,
+    "maximum_complete_energy_closure": 0.001902654081169426,
+    "maximum_mechanical_first_law_residual": 0.0026206347722283322,
+    "endpoint_stress_Pa": 2352540557.693709,
+    "endpoint_temperature_mean_K": 1034.0687644485488,
+    "endpoint_temperature_range_K": 283.3456410080853,
+    "endpoint_grain_volume_m3": [2.911202430412724e-21, 2.023920039832552e-21, 2.3926345045702105e-21, 5.072243025184517e-21],
+    "relative_owner_nye_mismatch": 1.0259261347492458e-14,
+    "checkpoint_240_sha256": "90b2c19c3366e744634f84709a363299161e2852a243c30dadea269f4999186c",
+    "checkpoint_264_sha256": "0d4e0b405d45a482be357230410a7925d5f7f5762910dd8dfb1ea55d0cf5f6e7",
+    "checkpoint_275_sha256": "19fb9ab0af57a755d645912ca3a93a0d4696c7d32714e71eb36dd579bb90cb45",
+    "checkpoint_320_sha256": "ac4ac1ee6e7b01cd2d95fc4d5e35d694604c4e886e15111c1e01e297ce21a3ea",
+    "result_sha256": "eccf7903ca168d5779984e954a5d596783087d55a7abc888bc205ea693e77fb6",
+    "classification_sha256": "eb6be07aa6806ae97b66ff1829965fbcb957bfb9baab667c606cb0a763515729",
+    "substantial_initially_lowest_density_grain_growth": false,
+    "prepared_boundary_redistribution_active": true,
+    "spontaneous_grain_birth": false
   },
-  "interim_accuracy_evidence": {
-    "phase_sensitive_steps": [185, 200, 210, 215, 220, 240],
-    "step_215_common_band_15_relative_errors": {
-      "temperature": 0.025003279709177265,
-      "exact_reconstructed_nye": 0.39514418565961595,
-      "instantaneous_plastic_power": 0.8963437191680702
+  "late_spatial_comparison": {
+    "sampled_continuous_duration_s": 3.4375e-7,
+    "step_320_mask_jaccard": 0.6677,
+    "step_320_profile_relative_error": 0.4572,
+    "n48_fwhm_m": 1.0156e-6,
+    "n64_fwhm_m": 7.4219e-7,
+    "band_15_relative_error": {
+      "temperature": 0.0824,
+      "exact_reconstructed_nye": 0.6151,
+      "instantaneous_plastic_power": 0.7366
     },
-    "step_215_exp_floor_attribution_sha256": "86e7c2ee30ec64511d802f21a4c340efb7712db5496b02f895d8bd7f544cfb95",
-    "step_240_phase_sensitive_sha256": "ffa5670d775b4596fc924ab991e641afff89c1889cf51a854c29c20891537129",
-    "step_240_exp_floor_attribution_sha256": "399166246cda8ce84f98490a2bd403291e01c8a5316ed9666de78486e56decee",
-    "step_210_240_fixed_candidate_profile_sha256": "572892d2a249e62fa426e82a429aaf380d467a74dd4e84aa94e1c90f01674a6f",
-    "interpretation": "temperature remains close while signed spatial mechanics and power diverge; raw resolved stress dominates the finite rate-map discrepancy and is strongly nonlinear"
+    "strict_asb": false,
+    "spatial_convergence_claimed": false,
+    "phase_sensitive_sha256": "972bc6ebd9505a8ba306a3a383e32d4cebc82bd9bb36226343c5fac62aefb4b9",
+    "tracked_profile_sha256": "0429d7e5bfe143a2d6f56d58a394a17443bf017a50c14558136432d996a821e0",
+    "spatial_animation_frame_count": 23,
+    "spatial_gif_sha256": "0b8bd90493893cd5cf0f69f025e5bc5add13593f54dae6d661907a224160f02f",
+    "original_animation_archive_sha256": "95a395f653edbe9bc8630ad8ae680a95b29eeca4deba9664f1c6c9b0023ab404"
+  },
+  "exp_floor_attribution": {
+    "state_step": 320,
+    "raw_resolved_stress_fraction_of_rate_discrepancy_removed": 0.764,
+    "resistance_fraction_removed": 0.055,
+    "temperature_fraction_removed": 0.005,
+    "interpretation": "finite discrepancy is predominantly nonlinear signed raw-stress pathway; no production substitution or retuning was made",
+    "artifact_sha256": "52e33b6382c07098bec9a778a1305960bd25d422fa5724e4b088ab97707e1d8f"
+  },
+  "fresh_state_temporal_accuracy": {
+    "scope": "one copied-state caller interval at each state; not a trajectory-wide certificate",
+    "step_185_half_quarter_increment_relative_error": {
+      "signed_density": 0.00915,
+      "exact_nye": 0.008405,
+      "temperature": 0.004139,
+      "plastic_power": 0.002198
+    },
+    "step_210_half_quarter_increment_relative_error": {
+      "signed_density": 0.02685,
+      "exact_nye": 0.02460,
+      "temperature": 0.00572,
+      "plastic_power": 0.03069
+    },
+    "step_275_half_quarter_signed_density_error": 0.05558,
+    "step_275_quarter_eighth_increment_relative_error": {
+      "signed_density": 0.0256965,
+      "exact_nye": 0.0233676,
+      "temperature": 0.00747293,
+      "plastic_power": 0.0240443
+    },
+    "all_requested_mechanical_clocks_closed": true,
+    "all_requested_front_clocks_closed": true,
+    "late_state_converged_at_or_below_dt_s": 1.5625e-9,
+    "production_cadence_universally_qualified": false,
+    "step_185_half_quarter_sha256": "69f33ef40472a77ebd97b3b2a88297afbc3df489b8d6ba72600cba8e97fba678",
+    "step_210_half_quarter_sha256": "395d2236e719e5965bfbd74ec6822d8568765d374dab42c61775d727c3d80b0f",
+    "step_275_quarter_eighth_sha256": "01c8ac8bc155e4ea57d1b5432eb7fcb193b5f2fa8425fa83d503535c100e04bb"
+  },
+  "current_state_drx_energy_replay": {
+    "interval": [268, 269],
+    "cold_delta_helmholtz_J": -2.2966048e-14,
+    "defect_storage_change_J": -1.564062e-14,
+    "recoverable_elastic_change_J": -7.473448e-15,
+    "boundary_excess_change_J": 1.47833e-16,
+    "generated_front_heat_J": 2.2966357e-14,
+    "internal_energy_change_J": 3.09e-19,
+    "grain_40_volume_change_m3": 1.357e-23,
+    "grain_40_line_change_m": 1.4135e-6,
+    "grain_40_assigned_defect_storage_change_J": 6.787e-15,
+    "interpretation": "complete constrained multigrain transaction is downhill although the growing receiver's assigned defect storage rises",
+    "artifact_sha256": "4b7154f2e009c7ef2994f706776920e2f9597874d6bab3278019721880a49d47"
+  },
+  "independent_heat_balance": {
+    "interval": [264, 265],
+    "whole_domain_relative_residual": 2.6217107850376172e-12,
+    "candidate_relative_residual": 1.6925906626214778e-12,
+    "maximum_cell_relative_residual": 1.851396180185688e-10,
+    "front_saved_vs_independent_relative_mismatch": 0.0,
+    "artifact_sha256": "a1dcf899e4190170d49929bd9e9e47cde6b2ec746ff52562cd032539d78c6ab3"
+  },
+  "rate_80000_experiment": {
+    "protocol": {
+      "physical_time_s": 1e-6,
+      "engineering_shear": 0.092,
+      "dt_s": 6.25e-9,
+      "initial_temperature_K": 900,
+      "intervention": "freeze only flow, recovery, and front Arrhenius temperature arguments; heat equation remains physical"
+    },
+    "n32_pair": {
+      "intervention_certificate_passed": true,
+      "physical_endpoint_stress_Pa": 2835100000.0,
+      "physical_endpoint_temperature_mean_K": 1006.067,
+      "physical_endpoint_temperature_range_K": 249.986,
+      "frozen_endpoint_stress_Pa": 2782340000.0,
+      "frozen_endpoint_temperature_mean_K": 1002.924,
+      "frozen_endpoint_temperature_range_K": 254.196,
+      "physical_maximum_softening_fraction": 0.331245656716216,
+      "strict_episode_count": 0,
+      "strict_asb": false
+    },
+    "n48_pair": {
+      "state": "FROZEN_MEMBER_RUNNING_AT_MANIFEST_DRAFT",
+      "physical_result_sha256": "7dabb61f2aeb1e7b400e745eef329a415df4e519bc3ddedab5cdaace1f4796bb",
+      "physical_checkpoint_sha256": "511ca2795dbd636f024e583cd37abff5b7b770d90ef1f3faa2bb2175b21b2118",
+      "physical_endpoint_stress_Pa": 2946199514.8928003,
+      "physical_endpoint_temperature_mean_K": 1006.0291595699556,
+      "physical_endpoint_temperature_range_K": 255.78844024307466,
+      "physical_maximum_energy_closure": 0.003744170516715385,
+      "physical_rejected_events": 0
+    },
+    "n32_n48_physical_phase_sensitive_endpoint": {
+      "common_band": 15,
+      "temperature_relative_error": 0.166452954407698,
+      "exact_nye_relative_error": 0.818050639669588,
+      "instantaneous_power_relative_error": 0.8222535686081293,
+      "spatial_convergence_passed": false,
+      "artifact_sha256": "6acff5b6653f38b822fc27fe963ef5b8f5b604e0757354160d1e5dbe2cf47405"
+    },
+    "regime_map_claimed": false,
+    "material_calibration_claimed": false
+  },
+  "regression": {
+    "source_commit": "ad6171b87a0ec5e3ef588be2484934356514443b",
+    "passed": 987,
+    "failed": 0,
+    "wall_time_s": 673.72,
+    "result": "PASSED"
+  },
+  "claims": {
+    "prepared_boundary_drx_active": true,
+    "conservative_multigrain_front": true,
+    "persistent_strict_asb": false,
+    "spatially_converged_asb": false,
+    "spontaneous_grain_birth": false,
+    "material_calibration": false,
+    "full_scientific_objective_complete": false
   }
 }
