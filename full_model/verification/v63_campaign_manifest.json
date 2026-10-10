@@ -219,6 +219,13 @@
     "wall_time_s": 673.72,
     "result": "PASSED"
   },
+  "delivery_package": {
+    "path": "/Users/sdillon/HPC3/campaigns/asb-drx-v63-20261009/v63_consolidated_delivery.zip",
+    "sha256": "89948ed9085743427276d10e781dfe8e8f5eacd8a1e369c0531c2c9ca8fe2e62",
+    "size_bytes": 240857578,
+    "archive_integrity_test": "PASSED",
+    "note": "The outer package checksum is recorded in the repository manifest; the manifest copy inside the archive predates this non-self-referential outer checksum field."
+  },
   "claims": {
     "prepared_boundary_drx_active": true,
     "conservative_multigrain_front": true,
