@@ -32,12 +32,12 @@
     "available_disk_at_start_GiB": 7.2
   },
   "current": {
-    "state": "RUNNING",
-    "active_heavy_solver_pid": 63042,
-    "last_verified_checkpoint_step": 240,
-    "last_verified_physical_time_s": 1.4999999999999973e-06,
-    "current_task": "same-source n64 continuation from committed step 210 toward steps 240, 264, and 320",
-    "next_independent_task": "finish matching-state field comparisons, then run sequential fresh-state temporal forks and exact current-state DRX replay",
-    "scientific_completion": false
+    "state": "COMPLETE",
+    "active_heavy_solver_pid": null,
+    "last_verified_checkpoint_step": 320,
+    "last_verified_physical_time_s": 2.0000000000000097e-06,
+    "current_task": "V63 evidence reduction and delivery complete",
+    "next_independent_task": "future work must test an energy-consistent spatial stress/rate hypothesis at a tighter late cadence and converged grid",
+    "scientific_completion": true
   }
 }

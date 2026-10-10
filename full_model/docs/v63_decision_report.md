@@ -90,10 +90,26 @@ arguments therefore does not suppress a persistent ASB at this grid; the
 causal result is negative rather than the expected simple thermal-runaway
 ordering.
 
-The matched n48 pair, its independent classifier, and exact endpoint hashes
-are recorded in the final machine-readable manifest.  It is an additional
-fixed-parameter resolution check at the selected rate, not a material
+The matched n48 intervention certificate passes, with zero rejected events in
+either member and maximum energy closure of 0.374% physical and 0.429% frozen.
+At 1.0 microsecond the physical member is stronger (2.946 versus 2.803 GPa)
+and hotter on average (1006.03 versus 1003.62 K), but has lower temperature
+range (255.79 versus 260.45 K).  Its maximum matched component excess is only
+16.21 K against the registered 50 K threshold.  No strict snapshot or episode
+exists.  This is an additional fixed-parameter causal check, not a material
 calibration or a rate/temperature regime map.
+
+The coarse n32 pair was additionally continued, without parameter changes,
+through 2.0 microseconds.  Its physical member reaches 1.248 GPa, 1128.29 K
+mean temperature, and 480.86 K temperature range; the frozen member reaches
+1.331 GPa, 1114.15 K, and 411.46 K.  Both trajectories have zero rejected
+events, and their maximum complete-energy closures are 1.884% and 1.350%.
+The matched intervention remains valid and the physical component eventually
+exceeds the control by 67.17 K, while stress softening reaches 70.91%.
+Nevertheless, no conjunctive snapshot and no one-microsecond same-component
+episode is present.  This longer coarse-grid result is therefore an
+informative negative, not an ASB qualification, especially given the failed
+n32/n48 spatial comparison.
 
 The physical n32/n48 high-rate endpoint is itself not spatially converged.
 On common Fourier band 15, phase-sensitive errors are 16.65% for temperature,

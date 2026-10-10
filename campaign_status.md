@@ -2507,3 +2507,24 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   unclaimed. Decision report: `full_model/docs/v62_decision_report.md`.
 - Canonical regression on the final numerical source: 975 tests pass in
   364.92 s. No campaign solver remains active.
+
+## V63 rate-accuracy and coupled-response campaign (2026-10-09/10)
+
+- The unchanged-source n64 trajectory reaches 2.0 microseconds with zero
+  rejected events and 0.1903% maximum complete-energy closure. Its late
+  n48/n64 temperature/Nye/power discrepancies are 8.24%/61.51%/73.66%, so
+  morphology remains spatially unqualified.
+- Fresh-state temporal forks pass below 5% at early and transition states. At
+  the late state, the production cadence is inaccurate, while the added
+  1.5625/0.78125 ns comparison converges below 2.57% for the requested fields.
+- Exact event replay shows prepared-boundary DRX is globally driven by defect
+  plus recoverable elastic energy even though the growing grain's own assigned
+  defect storage rises. Spontaneous grain birth remains absent.
+- The n48 80,000/s physical/frozen pair is strict-ASB negative. A coarse n32
+  extension to 2.0 microseconds reaches 67.17 K matched excess and 70.91%
+  softening but still forms no conjunctive snapshot or persistent episode.
+- Final scientific classification: conservative prepared-boundary DRX and
+  thermomechanical localization are demonstrated; spatially converged
+  persistent ASB, spontaneous nucleation, and material calibration are not.
+  Canonical regression: 987 tests pass in 673.72 s. No campaign solver remains
+  active. Decision report: `full_model/docs/v63_decision_report.md`.

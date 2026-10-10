@@ -100,3 +100,18 @@ No strict episode occurs.  The n48 physical member then completed the same
 protocol with zero rejection and 0.3744% maximum energy closure; its matched
 frozen control and outcome-neutral pair postprocessing are recorded in the
 final V63 manifest.
+
+The original n32 pair was finally continued in checksum-bound segments through
+step 320 (2.0 microseconds).  Physical and frozen checkpoint hashes are
+`5da317ca04f697179ebdb9c3bc03f04acab0947dc7926588694859fe208eee4f` and
+`063fdb83a666796ae6fd681372f764d7373b13d19cdb1b637b47470bbdf8460d`.
+Both have zero rejected events.  Full three-segment matched reduction passes
+the intervention certificate and finds 67.174 K maximum matched component
+excess and 70.91% maximum softening, but zero conjunctive snapshots and zero
+strict episodes.  The classifier artifact SHA-256 is
+`0ce01d78b2a19037da44cbe26d2d5c61d5246ff60225e0a6502de2e41388ff92`.
+Because n32 is already a demonstrated spatial outlier, this extension cannot
+override the n48/n64 nonconvergence finding.
+
+All campaign solvers were stopped naturally after committed endpoints.  The
+canonical regression boundary is 987 passing tests in 673.72 seconds.
