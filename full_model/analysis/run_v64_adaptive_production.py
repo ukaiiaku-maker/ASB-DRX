@@ -167,7 +167,8 @@ def main() -> None:
     parser.add_argument("--source-commit")
     parser.add_argument(
         "--numerical-transition",
-        choices=("none", "v64_bracketed_front_root"), default="none")
+        choices=("none", "v64_bracketed_front_root",
+                 "v64_adaptive_growth"), default="none")
     args = parser.parse_args()
     if digest(args.resume) != args.expected_resume_sha256:
         raise ValueError("resume checkpoint SHA-256 does not match expectation")
@@ -210,15 +211,15 @@ def main() -> None:
     source_changed = parent_source not in {None, head}
     if restored is not None and source_changed and args.numerical_transition == "none":
         raise ValueError("adaptive source change requires a declared transition")
-    if args.numerical_transition == "v64_bracketed_front_root" and not (
+    if args.numerical_transition != "none" and not (
             restored is not None and source_changed):
-        raise ValueError("bracketed-root transition requires a changed adaptive source")
+        raise ValueError(
+            "declared numerical transition requires a changed adaptive source")
     provenance = {
         "source_commit": head,
         "restart_transition": (
-            "v64_bracketed_front_root" if
-            args.numerical_transition == "v64_bracketed_front_root" else
-            "v64_analytic_origin_accuracy_control" if analytic_origin_parent
+            args.numerical_transition if args.numerical_transition != "none"
+            else "v64_analytic_origin_accuracy_control" if analytic_origin_parent
             else "v64_complete_interval_accuracy_control"),
         "parent_checkpoint_sha256": args.expected_resume_sha256,
         "parent_source_commit": (checkpoint_provenance or {}).get(
@@ -233,6 +234,11 @@ def main() -> None:
             "safeguarded bracketed scalar solution of the existing joint "
             "front force-rate conjugacy residual after fixed-point stagnation; "
             "unchanged functional, root tolerance, mobility, and physical laws")
+    elif args.numerical_transition == "v64_adaptive_growth":
+        provenance["numerical_change"] = (
+            "bounded 1.25x adaptive proposal after two consecutive accepts "
+            "below half tolerance; every proposal retains the complete coarse/"
+            "two-half test, rollback, and unchanged physical tolerances")
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     history = json.loads(history_path.read_text()) if history_path.exists() else []
