@@ -69,3 +69,5 @@ def test_disabled_front_channel_has_exact_zero_front_heat():
     assert result.integrals["front_heat_J"] == 0.0
     assert np.all(result.integrals["front_heat_J_by_cell"] == 0.0)
     assert result.audit["front_subintervals"] == 0
+    assert result.audit["front_force_rate_closure_classifications"] == []
+    assert result.audit["front_force_rate_closure_brackets"] == []

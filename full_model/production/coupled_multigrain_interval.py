@@ -234,6 +234,11 @@ def advance_complete_multigrain_interval(
                              fronts[-1].direction_by_interface),
         "front_selected_velocities_m_s": ({} if not fronts else
                                            fronts[-1].selected_velocity_by_interface_m_s),
+        "front_force_rate_closure_classifications": [
+            item.force_rate_closure_classification for item in fronts],
+        "front_force_rate_closure_brackets": [
+            item.force_rate_closure_bracket for item in fronts
+            if item.force_rate_closure_bracket is not None],
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "front_map": front_wall_time,
