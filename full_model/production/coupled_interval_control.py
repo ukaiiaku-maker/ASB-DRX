@@ -218,7 +218,12 @@ def advance_error_controlled_interval(
             "wall_time_s": time.perf_counter()-started,
         })
         if passed:
-            low = worst_ratio <= 0.25
+            # Half-tolerance leaves a full factor-of-two error margin while
+            # allowing the controller to escape unnecessarily conservative
+            # plateaus.  Growth remains only 1.25x after two consecutive
+            # accepts, and the proposed interval is independently tested and
+            # rolled back before publication if that margin does not persist.
+            low = worst_ratio <= 0.5
             low_count = (controller.consecutive_low_error_accepts+1
                          if low else 0)
             proposed = h

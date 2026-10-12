@@ -71,6 +71,22 @@ def test_two_consecutive_steps_advance_load_once_per_physical_interval():
     assert second.interval.endpoint.runtime.time == pytest.approx(expected)
 
 
+def test_two_half_tolerance_accepts_trigger_only_bounded_tested_growth():
+    metric = (ErrorMetric("x", "endpoint_increment", .1, 1e-12),)
+    control = AdaptiveControllerState(.2, .01, .5)
+    first = advance_error_controlled_interval(
+        endpoint(), control, nonlinear_map([]), metric)
+    first_ratio = first.decision["attempts"][-1]["maximum_tolerance_ratio"]
+    assert .25 < first_ratio < .5
+    assert first.controller.proposed_step_s == pytest.approx(.2)
+    second = advance_error_controlled_interval(
+        first.interval.endpoint, first.controller, nonlinear_map([]), metric)
+    assert second.controller.proposed_step_s == pytest.approx(.25)
+    # The larger proposal is not pre-accepted: the next call must still build
+    # its own coarse and two-half comparison before it can publish.
+    assert second.decision["published_path"] == "two_complete_half_intervals"
+
+
 def test_integral_and_rate_metrics_are_independent():
     result = advance_error_controlled_interval(
         endpoint(), AdaptiveControllerState(.05, .0125, .05),
