@@ -103,6 +103,31 @@ def test_nonzero_event_cannot_invent_heat_to_close_energy():
         }
 
 
+def test_precomputed_parent_energy_is_exact_complete_functional_reuse():
+    spacing = 2e-8
+    thickness = 5e-10
+    state = _state()
+    request = np.zeros(state.supports.shape[1:])
+    request[4:6, :] = .025
+    capacity = joint_material_transaction(state, (JointTransferProposal(
+        "10-20", 10, 20, request, state.owners[0],
+        zero_exports(state.owners[0])),))
+    parameters = CommonWallParameters(spacing_m=spacing)
+    common = dict(
+        spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=parameters, interval_s=1e-9,
+        dissipation=MultiGrainDissipation())
+    baseline = evaluate_joint_multigrain_transaction(state, capacity, **common)
+    parent_energy = evaluate_complete_multigrain_energy(
+        state, spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=parameters)
+    reused = evaluate_joint_multigrain_transaction(
+        state, capacity, precomputed_before_energy=parent_energy, **common)
+    assert reused.decision.as_dict() == baseline.decision.as_dict()
+    assert multigrain_state_digest(reused.candidate_state) == (
+        multigrain_state_digest(baseline.candidate_state))
+
+
 def test_realized_heat_source_is_local_and_integrates_exactly():
     spacing = 2e-8
     thickness = 5e-10

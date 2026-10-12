@@ -169,6 +169,33 @@ def run(checkpoint: Path, output: Path,
             "directional complete-functional evidence for prepared-boundary "
             "selection; no spontaneous grain birth or scalar-density ranking claim"),
     }
+    smallest_slopes = {
+        f"{row['interface']}:{row['direction']}":
+            row["virtual_sequence"][-1]["directional_energy_density_Pa"]
+        for row in directions
+    }
+    by_interface = {}
+    for row in directions:
+        by_interface.setdefault(row["interface"], {})[row["direction"]] = (
+            row["virtual_sequence"][-1]["directional_energy_density_Pa"])
+    result["summary"] = {
+        "smallest_extent_directional_energy_density_Pa": smallest_slopes,
+        "downhill_direction_count": sum(value < 0.0
+                                          for value in smallest_slopes.values()),
+        "uphill_direction_count": sum(value > 0.0
+                                        for value in smallest_slopes.values()),
+        "interfaces_downhill_in_both_directions": sorted(
+            key for key, value in by_interface.items()
+            if len(value) == 2 and all(item < 0.0 for item in value.values())),
+        "maximum_relative_slope_change_over_virtual_sequence": max(
+            row["virtual_sequence"][0][
+                "relative_slope_difference_from_smallest_extent"]
+            for row in directions),
+        "interpretation": (
+            "a downhill directional derivative establishes local energetic "
+            "availability, not unique direction selection; the production "
+            "joint event additionally applies mobility and donor competition"),
+    }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
     return result
@@ -188,4 +215,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

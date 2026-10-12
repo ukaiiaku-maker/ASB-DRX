@@ -308,7 +308,8 @@ def evaluate_joint_multigrain_transaction(
         heat_source_J_by_cell=None,
         heat_deposition_mode="local_realized_event",
         absolute_tolerance_J=0.0,
-        relative_tolerance=8192.0*np.finfo(float).eps):
+        relative_tolerance=8192.0*np.finfo(float).eps,
+        precomputed_before_energy: CompleteFrontEnergy | None = None):
     """Evaluate and atomically publish a complete joint physical event.
 
     The independent dissipation is deposited as heat (or exported by a
@@ -323,7 +324,14 @@ def evaluate_joint_multigrain_transaction(
     common = dict(spacing_m=spacing_m,
                   represented_thickness_m=represented_thickness_m,
                   wall_parameters=wall_parameters, **options)
-    before_energy = evaluate_complete_multigrain_energy(before_state, **common)
+    # A front-force solve prices many candidates from one immutable parent.
+    # Its parent functional is therefore exactly state invariant.  Accepting
+    # an explicitly supplied value avoids repeated FFT/elastic evaluations;
+    # callers remain responsible for computing it with this same ``common``
+    # configuration before entering the candidate loop.
+    before_energy = (evaluate_complete_multigrain_energy(before_state, **common)
+                     if precomputed_before_energy is None
+                     else precomputed_before_energy)
     cold_state = capacity.candidate
     cold_energy = evaluate_complete_multigrain_energy(cold_state, **common)
     cell_volume = (float(spacing_m)**2*float(represented_thickness_m))
@@ -414,7 +422,12 @@ def evaluate_joint_multigrain_transaction(
                 cumulative_heat_J=(interface.cumulative_heat_J
                                    +share*generated_heat)))
         candidate = replace(candidate, interfaces=tuple(interfaces))
-    candidate_energy = evaluate_complete_multigrain_energy(candidate, **common)
+    # With no work or heat the physical candidate fields equal the cold
+    # fields.  Only zero-valued cumulative interface ledger additions may have
+    # been materialized, and those ledgers do not enter the functional.
+    candidate_energy = (cold_energy if generated_heat == 0.0 and work == 0.0
+                        else evaluate_complete_multigrain_energy(
+                            candidate, **common))
     delta_f = cold_energy.helmholtz_J-before_energy.helmholtz_J
     available = delta_f-work+material_export
     scale = max(abs(before_energy.helmholtz_J), abs(cold_energy.helmholtz_J),

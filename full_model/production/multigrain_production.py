@@ -10,6 +10,7 @@ import numpy as np
 from .arrhenius_kinetics import ActivatedProcess
 from .complete_multigrain_energy import (
     MultiGrainDissipation, evaluate_joint_multigrain_transaction,
+    evaluate_complete_multigrain_energy,
     evaluate_multigrain_mechanical_interval,
 )
 from .coupled_front_event import (
@@ -546,7 +547,8 @@ def _geometric_sweep_weight(state, donor_index, receiver_index, spacing_m):
 
 def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
                      spacing_m, represented_thickness_m, wall_parameters,
-                     energy_kwargs, interval_s, systems):
+                     energy_kwargs, interval_s, systems,
+                     precomputed_before_energy=None):
     index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
     weight = _geometric_sweep_weight(
         state, index[donor_id], index[receiver_id], spacing_m)
@@ -566,7 +568,8 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
         represented_thickness_m=represented_thickness_m,
         wall_parameters=wall_parameters, interval_s=interval_s,
         dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
-        absolute_tolerance_J=0.0)
+        absolute_tolerance_J=0.0,
+        precomputed_before_energy=precomputed_before_energy)
     return (priced.decision.available_change_J, swept_volume), weight
 
 
@@ -606,6 +609,13 @@ def advance_multigrain_front(
     directional_channels = {}
     cfl_clipped_by_interface = {}
     maximum_unclipped_by_interface = {}
+    energy_options = {} if energy_kwargs is None else dict(energy_kwargs)
+    common_energy = dict(
+        spacing_m=spacing_m,
+        represented_thickness_m=represented_thickness_m,
+        wall_parameters=wall_parameters, **energy_options)
+    parent_energy = evaluate_complete_multigrain_energy(
+        state, **common_energy)
 
     def request_at_force_scale(interface, pressure_ab, pressure_ba,
                                weight_ab, weight_ba, scale):
@@ -717,13 +727,15 @@ def advance_multigrain_front(
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
-            interval_s=dt, systems=systems)
+            interval_s=dt, systems=systems,
+            precomputed_before_energy=parent_energy)
         ba, weight_ba = _virtual_channel(
             state, interface, interface.grain_b_id, interface.grain_a_id,
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
-            interval_s=dt, systems=systems)
+            interval_s=dt, systems=systems,
+            precomputed_before_energy=parent_energy)
         if ab is None and ba is None:
             continue
         pressure_ab = 0.0 if ab is None else max(-ab[0]/ab[1], 0.0)
@@ -817,7 +829,8 @@ def advance_multigrain_front(
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, interval_s=dt,
             dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
-            absolute_tolerance_J=0.0).decision.available_change_J
+            absolute_tolerance_J=0.0,
+            precomputed_before_energy=parent_energy).decision.available_change_J
         independent_work = sum(
             unscaled_pressures[key]
             *float(np.sum(extent, dtype=np.longdouble))*cell_volume
@@ -915,7 +928,8 @@ def advance_multigrain_front(
                 boundary_mobility_J=dissipation_J),
             heat_source_J_by_cell=heat_source_J_by_cell,
             heat_deposition_mode=heat_deposition_mode,
-            energy_kwargs=options, absolute_tolerance_J=tolerance_J)
+            energy_kwargs=options, absolute_tolerance_J=tolerance_J,
+            precomputed_before_energy=parent_energy)
         if result.decision.accepted:
             break
     requested = {key: float(np.sum(value, dtype=np.longdouble))
