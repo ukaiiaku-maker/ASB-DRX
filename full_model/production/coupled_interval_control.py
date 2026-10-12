@@ -39,6 +39,7 @@ class ErrorMetric:
     source: str = "endpoint_increment"
     relative_tolerance: float = 0.02
     absolute_scale: float = 0.0
+    observable_name: str | None = None
 
     def validate(self) -> None:
         if self.source not in {
@@ -93,15 +94,16 @@ def _norm(value) -> float:
 def _metric_error(metric: ErrorMetric, parent: CoupledEndpoint,
                   coarse: CoupledInterval, fine: CoupledInterval) -> dict:
     metric.validate()
+    field = metric.name if metric.observable_name is None else metric.observable_name
     if metric.source == "interval_integral":
-        left = np.asarray(coarse.integrals[metric.name], dtype=float)
-        right = np.asarray(fine.integrals[metric.name], dtype=float)
+        left = np.asarray(coarse.integrals[field], dtype=float)
+        right = np.asarray(fine.integrals[field], dtype=float)
         parent_value = None
         scale = max(_norm(left), _norm(right), metric.absolute_scale)
     else:
-        left = np.asarray(coarse.endpoint.observables[metric.name], dtype=float)
-        right = np.asarray(fine.endpoint.observables[metric.name], dtype=float)
-        parent_value = np.asarray(parent.observables[metric.name], dtype=float)
+        left = np.asarray(coarse.endpoint.observables[field], dtype=float)
+        right = np.asarray(fine.endpoint.observables[field], dtype=float)
+        parent_value = np.asarray(parent.observables[field], dtype=float)
         if metric.source == "endpoint_increment":
             scale = max(_norm(left-parent_value), _norm(right-parent_value),
                         metric.absolute_scale)
@@ -111,6 +113,7 @@ def _metric_error(metric: ErrorMetric, parent: CoupledEndpoint,
     relative = difference/max(scale, np.finfo(float).tiny)
     return {
         "source": metric.source,
+        "observable_name": field,
         "absolute_l2": difference,
         "normalization_l2": scale,
         "normalized_error": relative,

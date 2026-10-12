@@ -76,10 +76,14 @@ def test_integral_and_rate_metrics_are_independent():
         endpoint(), AdaptiveControllerState(.05, .0125, .05),
         nonlinear_map([]), (
             ErrorMetric("rate", "endpoint_signal", .2, 1e-12),
+            ErrorMetric("rate_change", "endpoint_increment", .2, 1e-12,
+                        "rate"),
             ErrorMetric("work", "interval_integral", .2, 1e-12),
         ))
     errors = result.decision["attempts"][-1]["metric_errors"]
     assert errors["rate"]["source"] == "endpoint_signal"
+    assert errors["rate_change"]["source"] == "endpoint_increment"
+    assert errors["rate_change"]["observable_name"] == "rate"
     assert errors["work"]["source"] == "interval_integral"
 
 
