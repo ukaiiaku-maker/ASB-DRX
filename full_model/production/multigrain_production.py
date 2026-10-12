@@ -587,8 +587,10 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
         elif hint > center:
             high, updated_high, value_high = hint, updated_hint, value_hint
     relative_radius = 1e-6
+    bracketed = False
     for _ in range(48):
         if value_low >= 0.0 and value_high <= 0.0:
+            bracketed = True
             break
         if value_center >= 0.0:
             high = (center*(1.0+relative_radius)
@@ -599,8 +601,26 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
                    if relative_radius < .999999 else max(.5*low, 1e-12))
             updated_low, value_low = residual(low)
         relative_radius = min(2.0*relative_radius, .999999)
-    else:
-        raise RuntimeError("could not bracket joint front force-rate root")
+    if not bracketed:
+        # The active-set residual need not be monotone around the last two
+        # iterates.  A hint is only an optimization; restore the qualified
+        # broad positive bracket before declaring the physical map invalid.
+        low = max(center*1e-6, 1e-12)
+        high = max(center, 1.0)
+        updated_low, value_low = residual(low)
+        updated_high, value_high = residual(high)
+        for _ in range(48):
+            if value_low >= 0.0 and value_high <= 0.0:
+                bracketed = True
+                break
+            if value_low < 0.0:
+                low *= .5
+                updated_low, value_low = residual(low)
+            if value_high > 0.0:
+                high *= 2.0
+                updated_high, value_high = residual(high)
+        if not bracketed:
+            raise RuntimeError("could not bracket joint front force-rate root")
     # Active-set jumps can make an exact zero unrepresentable.  If a bracket
     # endpoint already satisfies the unchanged independently reevaluated
     # production closure, further scalar iterations cannot improve the
@@ -633,7 +653,7 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
         # numbers inside a discontinuous sign-changing bracket.  Finish only
         # that representability tail; the expensive global bisection has
         # already been avoided.
-        for _ in range(16):
+        for _ in range(maximum_iterations):
             if np.nextafter(low_row[0], math.inf) >= high_row[0]:
                 break
             middle = .5*(low_row[0]+high_row[0])
