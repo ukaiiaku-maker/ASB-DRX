@@ -570,21 +570,42 @@ def _bracketed_positive_fixed_point(update, initial, *,
             cache[key] = (updated, updated-key)
         return cache[key]
 
-    low = max(float(initial)*1e-6, 1e-12)
-    high = max(float(initial), 1.0)
-    updated_low, value_low = residual(low)
-    updated_high, value_high = residual(high)
+    center = max(float(initial), 1e-12)
+    updated_center, value_center = residual(center)
+    if abs(value_center) <= max(
+            absolute_tolerance,
+            relative_tolerance*max(abs(updated_center), abs(center), 1e-300)):
+        return float(center)
+    low = high = center
+    updated_low = updated_high = updated_center
+    value_low = value_high = value_center
+    relative_radius = 1e-6
     for _ in range(48):
         if value_low >= 0.0 and value_high <= 0.0:
             break
-        if value_low < 0.0:
-            low *= .5
-            updated_low, value_low = residual(low)
-        if value_high > 0.0:
-            high *= 2.0
+        if value_center >= 0.0:
+            high = (center*(1.0+relative_radius)
+                    if relative_radius < .999999 else 2.0*high)
             updated_high, value_high = residual(high)
+        else:
+            low = (max(center*(1.0-relative_radius), center*1e-6, 1e-12)
+                   if relative_radius < .999999 else max(.5*low, 1e-12))
+            updated_low, value_low = residual(low)
+        relative_radius = min(2.0*relative_radius, .999999)
     else:
         raise RuntimeError("could not bracket joint front force-rate root")
+    # Active-set jumps can make an exact zero unrepresentable.  If a bracket
+    # endpoint already satisfies the unchanged independently reevaluated
+    # production closure, further scalar iterations cannot improve the
+    # physical acceptance decision and only repeat complete-energy maps.
+    candidate, updated_candidate, value_candidate = min(
+        ((low, updated_low, value_low),
+         (high, updated_high, value_high)), key=lambda item: abs(item[2]))
+    if abs(value_candidate) <= max(
+            verification_absolute_tolerance,
+            verification_relative_tolerance*max(
+                abs(updated_candidate), abs(candidate), 1e-300)):
+        return float(candidate)
     root = brentq(
         lambda value: residual(value)[1], low, high,
         xtol=np.nextafter(0.0, 1.0), rtol=4*np.finfo(float).eps,

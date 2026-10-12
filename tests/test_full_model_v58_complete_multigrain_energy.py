@@ -41,6 +41,21 @@ def test_bracketed_root_accepts_best_adjacent_float_within_verification():
     assert abs(quantized_update(root)-root) <= 1e-10
 
 
+def test_bracketed_root_uses_nearby_iterate_to_limit_expensive_maps():
+    evaluations = []
+
+    def nearby_discontinuous_update(value):
+        evaluations.append(value)
+        transition = 1.00004
+        return value+(4e-11 if value < transition else -8e-11)
+
+    root = _bracketed_positive_fixed_point(
+        nearby_discontinuous_update, 1.00003, relative_tolerance=1e-12,
+        absolute_tolerance=1e-13)
+    assert abs(nearby_discontinuous_update(root)-root) <= 1e-10
+    assert len(evaluations) < 30
+
+
 def _state(n=12):
     supports = np.zeros((3, n, n))
     supports[0, :n//2] = 1.0
