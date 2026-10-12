@@ -1163,7 +1163,8 @@ def advance_multigrain_front(
             allow_set_valued_active_set=True, return_certificate=True)
         joint_pressure_factor = closure["value"]
         force_rate_closure_classification = closure["classification"]
-        force_rate_closure_bracket = closure["bracket"]
+        if closure["bracket"] is not None:
+            force_rate_closure_bracket = closure["bracket"]
         set_valued_closure_encountered = bool(
             set_valued_closure_encountered
             or closure["classification"] == "SET_VALUED_ACTIVE_SET_CLOSURE")
