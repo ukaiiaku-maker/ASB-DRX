@@ -1061,7 +1061,11 @@ def advance_multigrain_front(
         joint_pressure_factor = _bracketed_positive_fixed_point(
             complete_factor_at_scale, joint_pressure_factor,
             bracket_hint=previous_factor,
-            relative_tolerance=1e-11, absolute_tolerance=1e-13)
+            relative_tolerance=1e-11, absolute_tolerance=1e-13,
+            # Retain margin for the independent post-solve reevaluation.  The
+            # public production closure below remains rtol=1e-10/atol=1e-12.
+            verification_relative_tolerance=5e-11,
+            verification_absolute_tolerance=5e-13)
         force_rate_converged = True
     (directions, independent_pressures, base_requests,
      channel_records, selected_velocities, cfl_clipped_by_interface,
