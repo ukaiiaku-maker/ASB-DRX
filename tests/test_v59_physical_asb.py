@@ -1,13 +1,25 @@
 import numpy as np
 
 from full_model.analysis.postprocess_v59_physical_asb import (
-    PhysicalASBCriteria, _verify_refinement_certificate, _wall_parameters,
+    PhysicalASBCriteria, _history_map, _physical_configuration,
+    _verify_refinement_certificate, _wall_parameters,
     classify_physical_episode,
     component_morphology, periodic_identity,
     component_temperature_excess,
     source_association,
     temperature_intervention_certificate,
 )
+
+
+def test_v64_adaptive_history_and_configuration_are_read_without_relabeling(
+        tmp_path):
+    (tmp_path/"history.json").write_text(
+        '[{"adaptive_interval": 7, "physical_time_s": 1.0}]\n')
+    assert _history_map([tmp_path])[7]["physical_time_s"] == 1.0
+    physical = {"n": 48, "length_m": 5e-6}
+    assert _physical_configuration({
+        "schema": "asb-drx-v64-adaptive-production-v1",
+        "physical_configuration": physical}) == physical
 
 
 def test_refinement_requires_source_bound_fixed_scale_comparison_records():

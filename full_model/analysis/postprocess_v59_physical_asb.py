@@ -190,8 +190,17 @@ def _history_map(directories: list[Path]) -> dict[int, dict]:
         path = directory/"history.json"
         if path.is_file():
             for row in json.loads(path.read_text()):
-                result[int(row["step"])] = row
+                identifier = row.get("step", row.get("adaptive_interval"))
+                if identifier is None:
+                    raise ValueError("history row lacks a checkpoint identifier")
+                result[int(identifier)] = row
     return result
+
+
+def _physical_configuration(configuration: dict) -> dict:
+    if configuration.get("schema") == "asb-drx-v64-adaptive-production-v1":
+        return dict(configuration["physical_configuration"])
+    return dict(configuration)
 
 
 def _sampling_segment_metadata(directories: list[Path]) -> dict[str, dict]:
@@ -203,10 +212,14 @@ def _sampling_segment_metadata(directories: list[Path]) -> dict[str, dict]:
         steps = [int(path.stem.rsplit("_", 1)[-1]) for path in paths]
         if not paths:
             continue
-        *_, configuration, provenance = _load_checkpoint(paths[0])
+        loaded = [_load_checkpoint(path) for path in paths]
+        *_, raw_configuration, provenance = loaded[0]
+        configuration = _physical_configuration(raw_configuration)
         differences = np.diff(steps)
-        cadence = (None if len(differences) == 0 else
-                   float(np.median(differences))*float(configuration["dt_s"]))
+        times = [item[1].ledger.physical_time_s for item in loaded]
+        time_differences = np.diff(times)
+        cadence = (None if len(time_differences) == 0 else
+                   float(np.median(time_differences)))
         result[segment_id] = {
             "declared_sampling_cadence_s": cadence,
             "step_differences": differences.tolist(),
@@ -481,6 +494,7 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
     state, runtime, step, gamma, _, configuration, provenance = _load_checkpoint(path)
     if configuration is None:
         raise ValueError(f"checkpoint lacks bound configuration: {path}")
+    configuration = _physical_configuration(configuration)
     spacing = float(configuration["length_m"])/int(configuration["n"])
     wall = _wall_parameters(configuration, spacing)
     strain = np.array([[0.0, .5*gamma], [.5*gamma, 0.0]])
@@ -907,12 +921,15 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
         (state, control_runtime, control_step, control_gamma,
          control_initial_volume, configuration,
          control_provenance) = _load_checkpoint(control[step])
+        configuration = _physical_configuration(configuration)
         spacing = float(configuration["length_m"])/int(configuration["n"])
         reconstructed, _ = reconstruct_multigrain_common(state, spacing)
         control_temperature[step] = np.asarray(reconstructed.temperature_K)
         (baseline_state, baseline_runtime, baseline_step, baseline_gamma,
          baseline_initial_volume, baseline_configuration,
          baseline_provenance) = _load_checkpoint(baseline[step])
+        baseline_configuration = _physical_configuration(
+            baseline_configuration)
         pair_certificates[step] = temperature_intervention_certificate(
             baseline_configuration, configuration,
             baseline_provenance, control_provenance,
