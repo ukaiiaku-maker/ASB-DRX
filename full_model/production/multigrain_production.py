@@ -958,6 +958,7 @@ def advance_multigrain_front(
      channel_records, selected_velocities, cfl_clipped_by_interface,
      maximum_unclipped_by_interface) = requests_at_force_scale(
          joint_pressure_factor)
+    verification_factor = math.nan
     if base_requests:
         verification_factor = complete_direction_factor(
             base_requests, channel_records, independent_pressures)
@@ -965,7 +966,11 @@ def advance_multigrain_front(
             verification_factor, joint_pressure_factor,
             rtol=1e-10, atol=1e-12))
     if not force_rate_converged:
-        raise RuntimeError("joint front force-rate fixed point did not converge")
+        raise RuntimeError(
+            "joint front force-rate fixed point did not converge: "
+            f"factor={joint_pressure_factor:.17g}, "
+            f"verification={verification_factor:.17g}, "
+            f"directions={directions}")
     pressures = {key: value*joint_pressure_factor
                  for key, value in independent_pressures.items()}
 
