@@ -944,6 +944,12 @@ def analyze(baseline_dirs: list[Path], control_dirs: list[Path],
             intervention_scope=intervention_scope)
     for step, path in sorted(baseline.items()):
         row, component = checkpoint_snapshot(path, history.get(step))
+        # Adaptive checkpoint identity is carried by the filename/controller.
+        # Older V64 restarts over-counted the legacy serialized ``step`` field;
+        # retain it for provenance but never use it to index components or
+        # histories.
+        row["stored_step"] = row["step"]
+        row["step"] = step
         segment_id = str(path.parent.resolve())
         row["sampling_segment_id"] = segment_id
         row["declared_sampling_cadence_s"] = segment_metadata.get(
