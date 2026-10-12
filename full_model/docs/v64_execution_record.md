@@ -110,9 +110,26 @@ redistribution, not spontaneous grain birth or a material-specific DRX claim.
 
 The current local solver is the only campaign-heavy process.  It is continuing
 the n48 common-origin trajectory toward 1.25 microseconds under source
-`4789cd2`; checkpoints are retained every eight accepted intervals.  Exact
+`b579a16`; checkpoints are retained every eight accepted intervals.  Exact
 request-invariant front-product caching reduced a representative complete
 proposal from 23.77 s to 15.54 s while preserving every physical array, state
 digest, load, clock, and ledger bitwise.  Checkpoint 269 has SHA-256
 `f73f0d9e15df9ff3f4de36e86500a3b474ee54c838c0369bdc61e8755dc56200`.
 No HPC, cloud, or paid execution has been used.
+
+At adaptive interval 318 the pointwise-only scalar solver encountered a
+sign-changing active-cone residual whose bracket had collapsed to adjacent
+floating-point numbers. Halving admitted one 11.92 ps interval but the next
+call exhausted the 6.10 ps minimum; no invalid trial was published. The repair
+treats only an adjacent-float sign bracket as a set-valued complementarity
+closure, independently reconstructs that inclusion, and still requires the
+unchanged pointwise tolerance away from the non-single-valued limit.
+
+From checksum-bound checkpoint 317, the repaired complete 190.735 ps proposal
+passes at 0.739912 times tolerance. Its coarse and first-half maps close
+pointwise; the second half crosses the certified adjacent bracket
+`[0.9999878552028691, 0.9999878552028693]` and then independently recovers a
+pointwise publication value. The bracket residuals are `+1.64950e-10` and
+`-1.57876e-10`. Promoted checkpoint 318 has SHA-256
+`e67f4f9acc81c9d6df54c47f93aecd8a0a770a3745c25106384a5bfa05d4209b`.
+Production continues under the original tolerances.

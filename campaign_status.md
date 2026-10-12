@@ -2575,6 +2575,12 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   stationary zero-request state. Exact directed-product caching reduces a
   representative complete proposal by 34.6% with bitwise-equal physical
   fields, decisions, clocks, and ledgers.
+- At interval 318, a pointwise root ceased to exist at an adjacent-float
+  active-cone switch. The failed attempts published nothing. An explicit,
+  independently reconstructed set-valued complementarity certificate repairs
+  that representability limit without relaxing the pointwise tolerance; the
+  qualified 190.735 ps proposal passes at 0.739912 times tolerance and
+  production has resumed under source `b579a16`.
 - Through the currently classified early horizon, the prepared four-grain
   network is hardening and redistributing material but has no strict ASB
   episode and no demonstrated spontaneous grain birth. The controlled run is

@@ -17,8 +17,8 @@
     "physical_constitutive_change": false,
     "numerical_change": "complete coupled step doubling with private rollback, independent accuracy/admissibility decisions, bounded adaptive feedback, restartable controller state, fine-path-only publication, safeguarded discontinuous front closure, fail-closed unbound virtual prices, and adaptive checkpoint identity repair",
     "status": "CONTROLLED_COMMON_ORIGIN_PRODUCTION_RUNNING",
-    "current_source_commit": "4789cd2",
-    "focused_tests_passed": 69
+    "current_source_commit": "b579a16",
+    "focused_tests_passed": 47
   },
   "completed_evidence": {
     "late_n64_two_percent_suffix": true,
@@ -30,14 +30,15 @@
     "profile_and_track_semantics_repaired": true,
     "native_axis_frames_through_adaptive_interval": 179,
     "on_trajectory_accuracy_rejection_and_rollback": true,
-    "exact_front_cache_bitwise_equivalence": true
+    "exact_front_cache_bitwise_equivalence": true,
+    "adjacent_float_active_cone_closure_qualified": true
   },
   "current_physical_result": {
     "grid_n": 48,
     "common_origin_controlled": true,
-    "adaptive_interval": 264,
-    "physical_time_s": 8.163879394530922e-7,
-    "engineering_shear": 0.04465551757812369,
+    "adaptive_interval": 320,
+    "physical_time_s": 8.270309448241729e-7,
+    "engineering_shear": 0.04508123779296692,
     "strict_asb": false,
     "substantial_drx": false,
     "prepared_grain_redistribution_active": true,

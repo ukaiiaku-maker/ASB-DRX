@@ -34,12 +34,12 @@
     "delivery_status": "PARTIAL",
     "scoped_experiment_complete": false,
     "full_scientific_objective_complete": false,
-    "active_heavy_solver_pid": 23938,
-    "current_source_commit": "4789cd2",
-    "current_task": "continue error-controlled n48 common-origin trajectory after the on-trajectory accuracy rollback toward 1.25 microseconds",
+    "active_heavy_solver_pid": 26347,
+    "current_source_commit": "b579a16",
+    "current_task": "continue error-controlled n48 common-origin trajectory after qualified adjacent-float active-cone closure repair toward 1.25 microseconds",
     "next_task": "postprocess attained physical horizon, run final-source regression, package checksummed evidence",
-    "current_physical_time_s": 8.163879394530922e-7,
-    "current_engineering_shear": 0.04465551757812369,
+    "current_physical_time_s": 8.270309448241729e-7,
+    "current_engineering_shear": 0.04508123779296692,
     "strict_asb_through_interval_179": false,
     "spontaneous_grain_birth_exercised": false
   }
