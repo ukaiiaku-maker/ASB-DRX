@@ -168,7 +168,8 @@ def main() -> None:
     parser.add_argument(
         "--numerical-transition",
         choices=("none", "v64_bracketed_front_root",
-                 "v64_adaptive_growth"), default="none")
+                 "v64_adaptive_growth", "v64_exact_front_cache"),
+        default="none")
     args = parser.parse_args()
     if digest(args.resume) != args.expected_resume_sha256:
         raise ValueError("resume checkpoint SHA-256 does not match expectation")
@@ -239,6 +240,11 @@ def main() -> None:
             "bounded 1.25x adaptive proposal after two consecutive accepts "
             "below half tolerance; every proposal retains the complete coarse/"
             "two-half test, rollback, and unchanged physical tolerances")
+    elif args.numerical_transition == "v64_exact_front_cache":
+        provenance["numerical_change"] = (
+            "per-map reuse of request-invariant directed product owners, line "
+            "exports, and physical channels; joint capacity, complete energy, "
+            "force/rate closure, and final hash-bound publication are recomputed")
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     history = json.loads(history_path.read_text()) if history_path.exists() else []
