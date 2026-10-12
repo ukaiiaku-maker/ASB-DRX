@@ -203,18 +203,6 @@ def main() -> None:
                               rtol=0.0, atol=0.0)
                for name, value in requested_accuracy.items()):
             raise ValueError("restart accuracy tolerances differ from checkpoint")
-    output_configuration = {
-        "schema": "asb-drx-v64-adaptive-production-v1",
-        "physical_configuration": physical,
-        "accuracy": {
-            "state_relative_tolerance": args.state_tolerance,
-            "rate_relative_tolerance": args.rate_tolerance,
-            "integral_relative_tolerance": args.integral_tolerance,
-            "minimum_step_s": args.minimum_step,
-            "maximum_step_s": args.maximum_step,
-            "accepted_solution": "two_complete_half_intervals",
-        },
-    }
     provenance = {
         "source_commit": head,
         "restart_transition": (
@@ -234,6 +222,24 @@ def main() -> None:
     endpoint = make_endpoint(state, runtime, gamma, context)
     metrics = _metrics(endpoint, args.state_tolerance, args.rate_tolerance,
                        args.integral_tolerance)
+    metric_definitions = [asdict(metric) for metric in metrics]
+    if restored is not None and prior_accuracy.get(
+            "metric_definitions") != metric_definitions:
+        raise ValueError(
+            "restart accuracy metric definitions differ from checkpoint")
+    output_configuration = {
+        "schema": "asb-drx-v64-adaptive-production-v1",
+        "physical_configuration": physical,
+        "accuracy": {
+            "state_relative_tolerance": args.state_tolerance,
+            "rate_relative_tolerance": args.rate_tolerance,
+            "integral_relative_tolerance": args.integral_tolerance,
+            "minimum_step_s": args.minimum_step,
+            "maximum_step_s": args.maximum_step,
+            "accepted_solution": "two_complete_half_intervals",
+            "metric_definitions": metric_definitions,
+        },
+    }
     accepted_at_start = controller.accepted_intervals
     run_started = time.perf_counter()
     while target_pending(endpoint.runtime.ledger.physical_time_s,
