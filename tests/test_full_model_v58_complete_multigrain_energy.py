@@ -32,6 +32,11 @@ def test_bracketed_positive_fixed_point_closes_an_oscillatory_map():
     assert 2.0/root == pytest.approx(root, rel=2e-10)
 
 
+def test_bracketed_positive_fixed_point_preserves_stationary_identity():
+    root = _bracketed_positive_fixed_point(lambda value: value, .731)
+    assert root == .731
+
+
 def test_bracketed_root_accepts_best_adjacent_float_within_verification():
     def quantized_update(value):
         return value+(4e-11 if value < 1.0 else -8e-11)
