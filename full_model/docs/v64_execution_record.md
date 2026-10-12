@@ -50,10 +50,15 @@ transitions because scalar front closure was repaired during execution; each
 transition restarts an accepted complete state and declares unchanged physical
 kernels.
 
-At the current checkpoint the common-origin calculation has crossed 0.792578
-microseconds and engineering shear 0.0437031.  The 0.1953125 ns step passes all
-19 state, endpoint-rate, rate-change, and integral metrics.  The controlling
-error is the change in plastic power, presently about 34% of its 2% tolerance.
+The common-origin calculation subsequently crossed 0.816388 microseconds.
+After exact front-product caching, a 0.30517578125 ns production trial reached
+1.003573 times the declared accuracy tolerance and was rejected without
+publication.  Its already-computed first half was the exact coarse candidate
+for the retry; the 0.152587890625 ns fine path passed at 0.496808 times the
+tolerance.  The following interval also passed and the bounded controller then
+regrew to 0.190734863281 ns.  This is an on-trajectory rollback/continuation
+event, rather than only a manufactured controller test.  All 19 state,
+endpoint-rate, rate-change, and integral metrics remain active.
 The four-grain prepared network is still hardening at this horizon.  Strict ASB
 is false through adaptive interval 179: there is no stress softening, no
 qualifying conjunctive episode, no matched control at the new accepted times,
@@ -104,6 +109,10 @@ variation below 0.04%.  This supports complete-functional prepared-boundary
 redistribution, not spontaneous grain birth or a material-specific DRX claim.
 
 The current local solver is the only campaign-heavy process.  It is continuing
-the n48 common-origin trajectory toward 1.25 microseconds from checkpoint 184
-under source `fae5b3f`; checkpoints are retained every eight accepted
-intervals.  No HPC, cloud, or paid execution has been used.
+the n48 common-origin trajectory toward 1.25 microseconds under source
+`4789cd2`; checkpoints are retained every eight accepted intervals.  Exact
+request-invariant front-product caching reduced a representative complete
+proposal from 23.77 s to 15.54 s while preserving every physical array, state
+digest, load, clock, and ledger bitwise.  Checkpoint 269 has SHA-256
+`f73f0d9e15df9ff3f4de36e86500a3b474ee54c838c0369bdc61e8755dc56200`.
+No HPC, cloud, or paid execution has been used.

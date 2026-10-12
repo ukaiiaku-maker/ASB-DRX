@@ -2560,3 +2560,23 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   persistent ASB, spontaneous nucleation, and material calibration are not.
   Canonical regression: 987 tests pass in 673.72 s. No campaign solver remains
   active. Decision report: `full_model/docs/v63_decision_report.md`.
+
+## V64 production-accuracy and coupled-evolution campaign (2026-10-12/13)
+
+- A complete coupled interval is now accepted by comparing one full step with
+  two half steps from an immutable parent. Only the qualified two-half-step
+  path publishes state, clocks, work, heat, or event history.
+- Late n64 2%/1% suffixes agree closely but retain their inherited V63 prefix.
+  A fresh n48 common-origin trajectory supplies the controlled-history result.
+- Production rollback is exercised on trajectory: a 305.176 ps trial at
+  0.816235 us failed at 1.003573 times tolerance, published nothing, and its
+  exact 152.588 ps retry passed at 0.496808. Evolution continued normally.
+- Safeguarded scalar front closure handles active-set discontinuities and a
+  stationary zero-request state. Exact directed-product caching reduces a
+  representative complete proposal by 34.6% with bitwise-equal physical
+  fields, decisions, clocks, and ledgers.
+- Through the currently classified early horizon, the prepared four-grain
+  network is hardening and redistributing material but has no strict ASB
+  episode and no demonstrated spontaneous grain birth. The controlled run is
+  continuing locally under source `4789cd2`; this is not a terminal physical
+  classification.

@@ -34,12 +34,12 @@
     "delivery_status": "PARTIAL",
     "scoped_experiment_complete": false,
     "full_scientific_objective_complete": false,
-    "active_heavy_solver_pid": 22732,
-    "current_source_commit": "fae5b3f",
-    "current_task": "continue error-controlled n48 common-origin trajectory from adaptive checkpoint 184 toward 1.25 microseconds",
+    "active_heavy_solver_pid": 23938,
+    "current_source_commit": "4789cd2",
+    "current_task": "continue error-controlled n48 common-origin trajectory after the on-trajectory accuracy rollback toward 1.25 microseconds",
     "next_task": "postprocess attained physical horizon, run final-source regression, package checksummed evidence",
-    "current_physical_time_s": 7.925781249999936e-7,
-    "current_engineering_shear": 0.0437031249999999,
+    "current_physical_time_s": 8.163879394530922e-7,
+    "current_engineering_shear": 0.04465551757812369,
     "strict_asb_through_interval_179": false,
     "spontaneous_grain_birth_exercised": false
   }
