@@ -1062,6 +1062,7 @@ def advance_multigrain_front(
     force_rate_converged = False
     force_rate_closure_classification = "POINTWISE_FIXED_POINT"
     force_rate_closure_bracket = None
+    set_valued_closure_encountered = False
     maximum_force_iterations = (64 if
         kinetics.temperature_resolution == "local_interface" else 24)
     previous_factor = None
@@ -1126,6 +1127,8 @@ def advance_multigrain_front(
         joint_pressure_factor = closure["value"]
         force_rate_closure_classification = closure["classification"]
         force_rate_closure_bracket = closure["bracket"]
+        set_valued_closure_encountered = bool(
+            closure["classification"] == "SET_VALUED_ACTIVE_SET_CLOSURE")
         force_rate_converged = True
     verification_factor = math.nan
     for verification_attempt in range(3):
@@ -1142,8 +1145,12 @@ def advance_multigrain_front(
             verification_factor, joint_pressure_factor,
             rtol=1e-10, atol=1e-12))
         if force_rate_converged:
-            force_rate_closure_classification = "POINTWISE_FIXED_POINT"
-            force_rate_closure_bracket = None
+            force_rate_closure_classification = (
+                "POINTWISE_FIXED_POINT_AFTER_SET_VALUED_BRACKET"
+                if set_valued_closure_encountered else
+                "POINTWISE_FIXED_POINT")
+            if not set_valued_closure_encountered:
+                force_rate_closure_bracket = None
             break
         # A discontinuous active set can move by a few ulps when the same
         # complete map is independently reconstructed for publication.  Solve
@@ -1157,6 +1164,9 @@ def advance_multigrain_front(
         joint_pressure_factor = closure["value"]
         force_rate_closure_classification = closure["classification"]
         force_rate_closure_bracket = closure["bracket"]
+        set_valued_closure_encountered = bool(
+            set_valued_closure_encountered
+            or closure["classification"] == "SET_VALUED_ACTIVE_SET_CLOSURE")
         if force_rate_closure_classification == "SET_VALUED_ACTIVE_SET_CLOSURE":
             # Reconstruct the nonsmooth inclusion independently. A second
             # adjacent-float sign bracket is the publication certificate; the
