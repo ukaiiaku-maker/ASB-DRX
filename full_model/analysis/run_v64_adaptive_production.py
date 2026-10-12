@@ -1,0 +1,309 @@
+#!/usr/bin/env python3
+"""Run a restartable complete-interval, error-controlled production suffix."""
+
+from __future__ import annotations
+
+import argparse
+from dataclasses import asdict
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import time
+
+import numpy as np
+
+from full_model.analysis.postprocess_v59_physical_asb import _wall_parameters
+from full_model.analysis.run_v58_three_grain_production import (
+    _load_checkpoint, _save_checkpoint,
+)
+from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
+from full_model.production.complete_multigrain_energy import (
+    evaluate_complete_multigrain_energy,
+)
+from full_model.production.coupled_interval_control import (
+    AdaptiveControllerState, ErrorMetric, advance_error_controlled_interval,
+)
+from full_model.production.coupled_multigrain_interval import (
+    CoupledMultigrainContext, advance_complete_multigrain_interval, make_endpoint,
+)
+from full_model.production.multigrain_common_state import PhysicalTransferLaw
+from full_model.production.multigrain_production import MultiGrainFrontKinetics
+from full_model.production.tensorial_nye import bcc_four_family_systems
+
+
+def digest(path: Path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _physical_configuration(configuration: dict) -> dict:
+    if configuration.get("schema") == "asb-drx-v64-adaptive-production-v1":
+        return dict(configuration["physical_configuration"])
+    return dict(configuration)
+
+
+def _controller_from_checkpoint(path: Path):
+    with np.load(path, allow_pickle=False) as data:
+        if "diagnostic_adaptive_controller_json" not in data.files:
+            return None
+        return AdaptiveControllerState.from_dict(json.loads(
+            str(data["diagnostic_adaptive_controller_json"])))
+
+
+def _context(configuration: dict) -> CoupledMultigrainContext:
+    n = int(configuration["n"])
+    spacing = float(configuration["length_m"])/n
+    thickness = 2.0*2.48e-10
+    systems = bcc_four_family_systems()
+    wall = _wall_parameters(configuration, spacing)
+    attempt = float(configuration["front_attempt_frequency_s"])
+    kinetics = MultiGrainFrontKinetics(
+        ActivatedProcess("V64 multi-grain HAGB", attempt, 0.0, attempt),
+        PhysicalTransferLaw(.55, .08, .02), .35*EV_J, 1e9,
+        2.0, 1.5, .10, wall.burgers_m**3, wall.burgers_m,
+        virtual_fraction=2e-4,
+        maximum_fraction_per_step=float(
+            configuration["front_maximum_fraction_per_step"]),
+        closure_fraction=.05, maximum_backtracks=14,
+        temperature_override_K=(
+            float(configuration["temperature_K"])
+            if configuration.get("front_temperature_mode") == "frozen"
+            else None),
+        temperature_resolution=configuration.get(
+            "front_temperature_resolution", "global_mean"))
+    energy = {
+        "topologies": (), "systems": systems,
+        "phase_barrier_J_m3": 5e6, "phase_gradient_J_m": 5e-7,
+        "boundary_line_energy_J_m": wall.line_energy_J_m,
+        "boundary_junction_energy_J_m": wall.junction_energy_J_m,
+        "reference_temperature_K": float(configuration["temperature_K"]),
+    }
+    return CoupledMultigrainContext(
+        systems, (), wall, kinetics, spacing, thickness,
+        float(configuration["shear_rate_s"]),
+        float(configuration["front_maximum_substep_s"]), 10, energy,
+        heat_deposition_mode=configuration.get(
+            "front_heat_deposition", "local_realized_event"),
+        front_enabled=configuration.get("case") != "no_front")
+
+
+def _metrics(parent, state_tolerance, rate_tolerance,
+             integral_tolerance) -> tuple[ErrorMetric, ...]:
+    obs = parent.observables
+    size = lambda name: np.sqrt(np.asarray(obs[name]).size)
+    return (
+        ErrorMetric("supports", "endpoint_increment", state_tolerance,
+                    1e-9*size("supports")),
+        ErrorMetric("common_beta_p", "endpoint_increment", state_tolerance,
+                    1e-12*size("common_beta_p")),
+        ErrorMetric("signed_total_density_m2", "endpoint_increment",
+                    state_tolerance, 1e8*size("signed_total_density_m2")),
+        ErrorMetric("exact_reconstructed_nye_m1", "endpoint_increment",
+                    state_tolerance, 1e2*size("exact_reconstructed_nye_m1")),
+        ErrorMetric("common_temperature_K", "endpoint_increment",
+                    state_tolerance, 1e-3*size("common_temperature_K")),
+        ErrorMetric("common_stress_tensor_Pa", "endpoint_signal",
+                    state_tolerance, 1e6*size("common_stress_tensor_Pa")),
+        ErrorMetric("instantaneous_plastic_power_W_m3", "endpoint_signal",
+                    rate_tolerance, 1e8*size(
+                        "instantaneous_plastic_power_W_m3")),
+        ErrorMetric("instantaneous_signed_slip_rate_s", "endpoint_signal",
+                    rate_tolerance, 1e-7*size(
+                        "instantaneous_signed_slip_rate_s")),
+        ErrorMetric("owner_weighted_speed_m_s", "endpoint_signal",
+                    rate_tolerance, 1e-12*size("owner_weighted_speed_m_s")),
+        ErrorMetric("owner_weighted_signed_slip_rate_s", "endpoint_signal",
+                    rate_tolerance, 1e-7*size(
+                        "owner_weighted_signed_slip_rate_s")),
+        ErrorMetric("mechanical_external_work_J", "interval_integral",
+                    integral_tolerance, 1e-20),
+        ErrorMetric("mechanical_irreversible_heat_J", "interval_integral",
+                    integral_tolerance, 1e-20),
+        ErrorMetric("front_heat_J", "interval_integral",
+                    integral_tolerance, 1e-20),
+        ErrorMetric("mechanical_work_J_m3", "interval_integral",
+                    integral_tolerance, 1.0*np.sqrt(
+                        np.asarray(obs["common_temperature_K"]).size)),
+        ErrorMetric("mechanical_heat_J_m3", "interval_integral",
+                    integral_tolerance, 1.0*np.sqrt(
+                        np.asarray(obs["common_temperature_K"]).size)),
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--resume", type=Path, required=True)
+    parser.add_argument("--expected-resume-sha256", required=True)
+    parser.add_argument("--target-time", type=float, required=True)
+    parser.add_argument("--initial-step", type=float, default=6.25e-9)
+    parser.add_argument("--minimum-step", type=float, default=9.765625e-11)
+    parser.add_argument("--maximum-step", type=float, default=6.25e-9)
+    parser.add_argument("--state-tolerance", type=float, default=.02)
+    parser.add_argument("--rate-tolerance", type=float, default=.02)
+    parser.add_argument("--integral-tolerance", type=float, default=.02)
+    parser.add_argument("--checkpoint-every", type=int, default=1)
+    parser.add_argument("--source-commit")
+    args = parser.parse_args()
+    if digest(args.resume) != args.expected_resume_sha256:
+        raise ValueError("resume checkpoint SHA-256 does not match expectation")
+    head = subprocess.check_output(
+        ("git", "rev-parse", "HEAD"), text=True).strip()
+    if args.source_commit and subprocess.check_output(
+            ("git", "rev-parse", args.source_commit), text=True).strip() != head:
+        raise ValueError("declared source commit does not match executing HEAD")
+    (state, runtime, parent_step, gamma, initial_volume,
+     checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(
+        args.resume)
+    physical = _physical_configuration(checkpoint_configuration or {})
+    context = _context(physical)
+    if float(args.target_time) <= runtime.ledger.physical_time_s:
+        raise ValueError("target physical time must exceed the checkpoint time")
+    restored = _controller_from_checkpoint(args.resume)
+    controller = restored or AdaptiveControllerState(
+        args.initial_step, args.minimum_step, args.maximum_step)
+    if restored is not None and not (
+            np.isclose(restored.minimum_step_s, args.minimum_step)
+            and np.isclose(restored.maximum_step_s, args.maximum_step)):
+        raise ValueError("restart controller bounds differ from checkpoint")
+    if restored is not None:
+        prior_accuracy = (checkpoint_configuration or {}).get("accuracy", {})
+        requested_accuracy = {
+            "state_relative_tolerance": args.state_tolerance,
+            "rate_relative_tolerance": args.rate_tolerance,
+            "integral_relative_tolerance": args.integral_tolerance,
+        }
+        if any(not np.isclose(float(prior_accuracy.get(name, np.nan)), value,
+                              rtol=0.0, atol=0.0)
+               for name, value in requested_accuracy.items()):
+            raise ValueError("restart accuracy tolerances differ from checkpoint")
+    output_configuration = {
+        "schema": "asb-drx-v64-adaptive-production-v1",
+        "physical_configuration": physical,
+        "accuracy": {
+            "state_relative_tolerance": args.state_tolerance,
+            "rate_relative_tolerance": args.rate_tolerance,
+            "integral_relative_tolerance": args.integral_tolerance,
+            "minimum_step_s": args.minimum_step,
+            "maximum_step_s": args.maximum_step,
+            "accepted_solution": "two_complete_half_intervals",
+        },
+    }
+    provenance = {
+        "source_commit": head,
+        "restart_transition": "v64_complete_interval_accuracy_control",
+        "parent_checkpoint_sha256": args.expected_resume_sha256,
+        "parent_source_commit": (checkpoint_provenance or {}).get(
+            "source_commit"),
+        "physical_kernels_changed": False,
+        "numerical_change": (
+            "complete coupled step doubling with private rollback and fine-path "
+            "publication; established mechanics/front constitutive laws unchanged"),
+    }
+    args.out.mkdir(parents=True, exist_ok=True)
+    history_path = args.out/"history.json"
+    history = json.loads(history_path.read_text()) if history_path.exists() else []
+    endpoint = make_endpoint(state, runtime, gamma, context)
+    metrics = _metrics(endpoint, args.state_tolerance, args.rate_tolerance,
+                       args.integral_tolerance)
+    accepted_at_start = controller.accepted_intervals
+    run_started = time.perf_counter()
+    while endpoint.runtime.ledger.physical_time_s < args.target_time:
+        remaining = args.target_time-endpoint.runtime.ledger.physical_time_s
+        interval_started = time.perf_counter()
+        accepted = advance_error_controlled_interval(
+            endpoint, controller,
+            lambda parent, h: advance_complete_multigrain_interval(
+                parent, h, context), metrics, requested_maximum_s=remaining)
+        endpoint = accepted.interval.endpoint
+        controller = accepted.controller
+        errors = accepted.decision["attempts"][-1]["metric_errors"]
+        maximum_ratio = max(
+            row["normalized_error"]/row["relative_tolerance"]
+            for row in errors.values())
+        temperature = endpoint.observables["common_temperature_K"]
+        stress = endpoint.observables["common_stress_tensor_Pa"]
+        volumes = (np.sum(endpoint.state.supports, axis=(1, 2))
+                   *context.spacing_m**2*context.represented_thickness_m)
+        record = {
+            "schema": "asb-drx-v64-adaptive-production-record-v1",
+            "adaptive_interval": controller.accepted_intervals,
+            "physical_time_s": endpoint.runtime.ledger.physical_time_s,
+            "applied_shear_strain": endpoint.load,
+            "accepted_duration_s": accepted.decision["accepted_duration_s"],
+            "next_proposed_step_s": controller.proposed_step_s,
+            "shear_stress_Pa": float(np.mean(stress[..., 0, 1])),
+            "temperature_mean_K": float(np.mean(temperature)),
+            "temperature_contrast_K": float(np.max(temperature)-np.min(temperature)),
+            "grain_volume_m3": volumes.tolist(),
+            "maximum_tolerance_ratio": maximum_ratio,
+            "accuracy_decision": accepted.decision,
+            "published_interval_audit": accepted.interval.audit,
+            "runtime": asdict(endpoint.runtime.ledger),
+            "wall_time_s": time.perf_counter()-interval_started,
+        }
+        history.append(record)
+        history_path.write_text(json.dumps(history, indent=2)+"\n")
+        relative_index = controller.accepted_intervals-accepted_at_start
+        if (relative_index == 1 or relative_index % max(args.checkpoint_every, 1) == 0
+                or endpoint.runtime.ledger.physical_time_s >= args.target_time):
+            checkpoint = args.out/f"checkpoint_adaptive_{controller.accepted_intervals:06d}.npz"
+            _save_checkpoint(
+                checkpoint, endpoint.state, endpoint.runtime,
+                parent_step+controller.accepted_intervals, endpoint.load,
+                initial_volume, output_configuration, provenance,
+                diagnostic_arrays={
+                    "diagnostic_adaptive_controller_json": np.asarray(
+                        json.dumps(controller.to_dict(), sort_keys=True)),
+                    "diagnostic_accuracy_decision_json": np.asarray(
+                        json.dumps(accepted.decision, sort_keys=True)),
+                    "diagnostic_front_heat_source_J_by_cell": np.asarray(
+                        accepted.interval.integrals["front_heat_J_by_cell"]),
+                    "diagnostic_mechanical_heat_J_m3_cells": np.asarray(
+                        accepted.interval.integrals["mechanical_heat_J_m3"]),
+                    "diagnostic_mechanical_work_J_m3_cells": np.asarray(
+                        accepted.interval.integrals["mechanical_work_J_m3"]),
+                    "diagnostic_thermal_conduction_J_m3_cells": np.asarray(
+                        accepted.interval.integrals["thermal_conduction_J_m3"]),
+                    "diagnostic_thermal_bath_exchange_J_m3_cells": np.asarray(
+                        accepted.interval.integrals["thermal_bath_exchange_J_m3"]),
+                })
+            record["checkpoint"] = str(checkpoint)
+            record["checkpoint_sha256"] = digest(checkpoint)
+            history_path.write_text(json.dumps(history, indent=2)+"\n")
+        print(json.dumps(record, sort_keys=True), flush=True)
+    energy = evaluate_complete_multigrain_energy(
+        endpoint.state, spacing_m=context.spacing_m,
+        represented_thickness_m=context.represented_thickness_m,
+        wall_parameters=context.wall_parameters,
+        **dict(context.energy_kwargs, mean_strain=np.array(
+            [[0.0, .5*endpoint.load], [.5*endpoint.load, 0.0]])))
+    checkpoint = Path(history[-1]["checkpoint"])
+    result = {
+        "schema": "asb-drx-v64-adaptive-production-result-v1",
+        "execution_status": "TARGET_REACHED",
+        "delivery_status": "COMPLETE_AT_ATTAINED_SCOPE",
+        "scoped_experiment_complete": True,
+        "full_scientific_objective_complete": False,
+        "source_commit": head,
+        "parent_checkpoint": str(args.resume.resolve()),
+        "parent_checkpoint_sha256": args.expected_resume_sha256,
+        "inherited_prefix_uncontrolled_by_v64": True,
+        "target_time_s": args.target_time,
+        "final_time_s": endpoint.runtime.ledger.physical_time_s,
+        "final_load": endpoint.load,
+        "controller": controller.to_dict(),
+        "wall_time_s": time.perf_counter()-run_started,
+        "helmholtz_J": energy.helmholtz_J,
+        "runtime": asdict(endpoint.runtime.ledger),
+        "checkpoint": str(checkpoint),
+        "checkpoint_sha256": digest(checkpoint),
+        "physical_configuration": physical,
+        "accuracy_configuration": output_configuration["accuracy"],
+        "provenance": provenance,
+    }
+    (args.out/"result.json").write_text(json.dumps(result, indent=2)+"\n")
+
+
+if __name__ == "__main__":
+    main()
