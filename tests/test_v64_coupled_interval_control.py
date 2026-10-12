@@ -3,6 +3,8 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
+from full_model.analysis.run_v64_adaptive_production import target_pending
+
 from full_model.production.coupled_interval_control import (
     AdaptiveControllerState, CoupledEndpoint, CoupledInterval, ErrorMetric,
     advance_error_controlled_interval,
@@ -89,3 +91,8 @@ def test_controller_round_trip_and_minimum_step_failure():
             endpoint(), control, nonlinear_map([]),
             (ErrorMetric("x", "endpoint_increment", 1e-12, 1e-12),))
 
+
+def test_target_roundoff_does_not_create_a_spurious_physical_interval():
+    target = 1.7203125e-6
+    assert not target_pending(target-5.0e-21, target)
+    assert target_pending(target-1.0e-12, target)

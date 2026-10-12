@@ -36,6 +36,12 @@ def digest(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def target_pending(current_time_s: float, target_time_s: float) -> bool:
+    tolerance = 128*np.finfo(float).eps*max(
+        abs(float(target_time_s)), np.finfo(float).tiny)
+    return float(current_time_s) < float(target_time_s)-tolerance
+
+
 def _physical_configuration(configuration: dict) -> dict:
     if configuration.get("schema") == "asb-drx-v64-adaptive-production-v1":
         return dict(configuration["physical_configuration"])
@@ -208,7 +214,8 @@ def main() -> None:
                        args.integral_tolerance)
     accepted_at_start = controller.accepted_intervals
     run_started = time.perf_counter()
-    while endpoint.runtime.ledger.physical_time_s < args.target_time:
+    while target_pending(endpoint.runtime.ledger.physical_time_s,
+                         args.target_time):
         remaining = args.target_time-endpoint.runtime.ledger.physical_time_s
         interval_started = time.perf_counter()
         accepted = advance_error_controlled_interval(
@@ -246,7 +253,8 @@ def main() -> None:
         history_path.write_text(json.dumps(history, indent=2)+"\n")
         relative_index = controller.accepted_intervals-accepted_at_start
         if (relative_index == 1 or relative_index % max(args.checkpoint_every, 1) == 0
-                or endpoint.runtime.ledger.physical_time_s >= args.target_time):
+                or not target_pending(endpoint.runtime.ledger.physical_time_s,
+                                      args.target_time)):
             checkpoint = args.out/f"checkpoint_adaptive_{controller.accepted_intervals:06d}.npz"
             _save_checkpoint(
                 checkpoint, endpoint.state, endpoint.runtime,
