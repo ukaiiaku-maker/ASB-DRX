@@ -548,6 +548,8 @@ def _geometric_sweep_weight(state, donor_index, receiver_index, spacing_m):
 def _bracketed_positive_fixed_point(update, initial, *,
                                     relative_tolerance=1e-10,
                                     absolute_tolerance=1e-12,
+                                    verification_relative_tolerance=1e-10,
+                                    verification_absolute_tolerance=1e-12,
                                     maximum_iterations=64):
     """Safeguarded fallback for a positive scalar fixed point.
 
@@ -583,6 +585,20 @@ def _bracketed_positive_fixed_point(update, initial, *,
     else:
         raise RuntimeError("could not bracket joint front force-rate root")
     for _ in range(maximum_iterations):
+        if np.nextafter(low, math.inf) >= high:
+            candidate, updated, value = min(
+                ((low, updated_low, value_low),
+                 (high, updated_high, value_high)),
+                key=lambda item: abs(item[2]))
+            if abs(value) <= max(
+                    verification_absolute_tolerance,
+                    verification_relative_tolerance*max(
+                        abs(updated), abs(candidate), 1e-300)):
+                # No representable factor exists inside this sign-changing
+                # bracket.  Return the endpoint that independently satisfies
+                # the unchanged production verification.
+                return float(candidate)
+            break
         middle = .5*(low+high)
         updated, value = residual(middle)
         if abs(value) <= max(
@@ -590,10 +606,13 @@ def _bracketed_positive_fixed_point(update, initial, *,
                 relative_tolerance*max(abs(updated), abs(middle), 1e-300)):
             return float(updated)
         if value > 0.0:
-            low = middle; value_low = value
+            low = middle; updated_low = updated; value_low = value
         else:
-            high = middle; value_high = value
-    raise RuntimeError("bracketed joint front force-rate root did not converge")
+            high = middle; updated_high = updated; value_high = value
+    raise RuntimeError(
+        "bracketed joint front force-rate root did not converge: "
+        f"low={low:.17g}, high={high:.17g}, "
+        f"residual_low={value_low:.17g}, residual_high={value_high:.17g}")
 
 
 def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
@@ -970,11 +989,16 @@ def advance_multigrain_front(
             verification_factor, joint_pressure_factor,
             rtol=1e-10, atol=1e-12))
     if not force_rate_converged:
+        low_directions = requests_at_force_scale(
+            joint_pressure_factor*(1.0-1e-6))[0]
+        high_directions = requests_at_force_scale(
+            joint_pressure_factor*(1.0+1e-6))[0]
         raise RuntimeError(
             "joint front force-rate fixed point did not converge: "
             f"factor={joint_pressure_factor:.17g}, "
             f"verification={verification_factor:.17g}, "
-            f"directions={directions}")
+            f"directions={directions}, low={low_directions}, "
+            f"high={high_directions}")
     pressures = {key: value*joint_pressure_factor
                  for key, value in independent_pressures.items()}
 

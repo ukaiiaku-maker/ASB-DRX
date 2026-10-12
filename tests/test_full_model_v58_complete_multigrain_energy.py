@@ -32,6 +32,15 @@ def test_bracketed_positive_fixed_point_closes_an_oscillatory_map():
     assert 2.0/root == pytest.approx(root, rel=2e-10)
 
 
+def test_bracketed_root_accepts_best_adjacent_float_within_verification():
+    def quantized_update(value):
+        return value+(4e-11 if value < 1.0 else -8e-11)
+    root = _bracketed_positive_fixed_point(
+        quantized_update, 1.0, relative_tolerance=1e-12,
+        absolute_tolerance=1e-13)
+    assert abs(quantized_update(root)-root) <= 1e-10
+
+
 def _state(n=12):
     supports = np.zeros((3, n, n))
     supports[0, :n//2] = 1.0
