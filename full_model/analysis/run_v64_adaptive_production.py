@@ -168,7 +168,8 @@ def main() -> None:
     parser.add_argument(
         "--numerical-transition",
         choices=("none", "v64_bracketed_front_root",
-                 "v64_adaptive_growth", "v64_exact_front_cache"),
+                 "v64_adaptive_growth", "v64_exact_front_cache",
+                 "v64_set_valued_active_cone"),
         default="none")
     args = parser.parse_args()
     if digest(args.resume) != args.expected_resume_sha256:
@@ -245,6 +246,13 @@ def main() -> None:
             "per-map reuse of request-invariant directed product owners, line "
             "exports, and physical channels; joint capacity, complete energy, "
             "force/rate closure, and final hash-bound publication are recomputed")
+    elif args.numerical_transition == "v64_set_valued_active_cone":
+        provenance["numerical_change"] = (
+            "explicit complementarity closure when a sign-changing front "
+            "active-cone bracket collapses to adjacent floating-point values; "
+            "the interval inclusion is independently reconstructed, while the "
+            "unchanged pointwise force/rate tolerance remains mandatory away "
+            "from that non-single-valued limit")
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     history = json.loads(history_path.read_text()) if history_path.exists() else []
