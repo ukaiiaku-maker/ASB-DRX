@@ -6,6 +6,7 @@ from dataclasses import dataclass, field, fields, replace
 import math
 
 import numpy as np
+from scipy.optimize import brentq
 
 from .arrhenius_kinetics import ActivatedProcess
 from .complete_multigrain_energy import (
@@ -584,31 +585,46 @@ def _bracketed_positive_fixed_point(update, initial, *,
             updated_high, value_high = residual(high)
     else:
         raise RuntimeError("could not bracket joint front force-rate root")
-    for _ in range(maximum_iterations):
-        if np.nextafter(low, math.inf) >= high:
+    root = brentq(
+        lambda value: residual(value)[1], low, high,
+        xtol=np.nextafter(0.0, 1.0), rtol=4*np.finfo(float).eps,
+        maxiter=maximum_iterations, disp=False)
+    updated_root, value_root = residual(root)
+    if abs(value_root) <= max(
+            absolute_tolerance,
+            relative_tolerance*max(abs(updated_root), abs(root), 1e-300)):
+        return float(root)
+    positive = [(key, values[0], values[1]) for key, values in cache.items()
+                if values[1] >= 0.0]
+    negative = [(key, values[0], values[1]) for key, values in cache.items()
+                if values[1] <= 0.0]
+    if positive and negative:
+        low_row = max(positive, key=lambda item: item[0])
+        high_row = min(negative, key=lambda item: item[0])
+        # Brent's relative-width termination can leave a handful of machine
+        # numbers inside a discontinuous sign-changing bracket.  Finish only
+        # that representability tail; the expensive global bisection has
+        # already been avoided.
+        for _ in range(16):
+            if np.nextafter(low_row[0], math.inf) >= high_row[0]:
+                break
+            middle = .5*(low_row[0]+high_row[0])
+            if middle == low_row[0] or middle == high_row[0]:
+                break
+            updated_middle, value_middle = residual(middle)
+            middle_row = (middle, updated_middle, value_middle)
+            if value_middle >= 0.0:
+                low_row = middle_row
+            else:
+                high_row = middle_row
+        if np.nextafter(low_row[0], math.inf) >= high_row[0]:
             candidate, updated, value = min(
-                ((low, updated_low, value_low),
-                 (high, updated_high, value_high)),
-                key=lambda item: abs(item[2]))
+                (low_row, high_row), key=lambda item: abs(item[2]))
             if abs(value) <= max(
                     verification_absolute_tolerance,
                     verification_relative_tolerance*max(
                         abs(updated), abs(candidate), 1e-300)):
-                # No representable factor exists inside this sign-changing
-                # bracket.  Return the endpoint that independently satisfies
-                # the unchanged production verification.
                 return float(candidate)
-            break
-        middle = .5*(low+high)
-        updated, value = residual(middle)
-        if abs(value) <= max(
-                absolute_tolerance,
-                relative_tolerance*max(abs(updated), abs(middle), 1e-300)):
-            return float(updated)
-        if value > 0.0:
-            low = middle; updated_low = updated; value_low = value
-        else:
-            high = middle; updated_high = updated; value_high = value
     raise RuntimeError(
         "bracketed joint front force-rate root did not converge: "
         f"low={low:.17g}, high={high:.17g}, "
