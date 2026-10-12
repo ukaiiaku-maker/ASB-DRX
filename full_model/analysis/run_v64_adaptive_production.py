@@ -303,7 +303,7 @@ def main() -> None:
             checkpoint = args.out/f"checkpoint_adaptive_{controller.accepted_intervals:06d}.npz"
             _save_checkpoint(
                 checkpoint, endpoint.state, endpoint.runtime,
-                parent_step+controller.accepted_intervals, endpoint.load,
+                controller.accepted_intervals, endpoint.load,
                 initial_volume, output_configuration, provenance,
                 diagnostic_arrays={
                     "diagnostic_adaptive_controller_json": np.asarray(

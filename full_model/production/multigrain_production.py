@@ -1056,7 +1056,11 @@ def advance_multigrain_front(
         previous_factor = joint_pressure_factor
         previous_residual = residual
         joint_pressure_factor = float(candidate)
-        if stagnation_count >= 8:
+        # Four consecutive non-improving complete-energy iterations are
+        # sufficient to identify the active-set cycle.  Continuing the same
+        # damped/secant map only repeats expensive virtual transactions; the
+        # safeguarded scalar closure below evaluates the identical residual.
+        if stagnation_count >= 4:
             break
     if not force_rate_converged:
         joint_pressure_factor = _bracketed_positive_fixed_point(
