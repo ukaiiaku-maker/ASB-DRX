@@ -545,6 +545,57 @@ def _geometric_sweep_weight(state, donor_index, receiver_index, spacing_m):
     return contour*share
 
 
+def _bracketed_positive_fixed_point(update, initial, *,
+                                    relative_tolerance=1e-10,
+                                    absolute_tolerance=1e-12,
+                                    maximum_iterations=64):
+    """Safeguarded fallback for a positive scalar fixed point.
+
+    The production front normally uses the faster damped/secant iteration.
+    Near an active-set transition that iteration can cycle even though the
+    conjugate scalar root remains bracketed.  This fallback solves
+    ``update(x)-x=0`` without relaxing the force/rate closure.
+    """
+    cache = {}
+
+    def residual(value):
+        key = float(value)
+        if key not in cache:
+            updated = float(update(key))
+            if not math.isfinite(updated) or updated <= 0.0:
+                raise RuntimeError("front force update is not positive finite")
+            cache[key] = (updated, updated-key)
+        return cache[key]
+
+    low = max(float(initial)*1e-6, 1e-12)
+    high = max(float(initial), 1.0)
+    updated_low, value_low = residual(low)
+    updated_high, value_high = residual(high)
+    for _ in range(48):
+        if value_low >= 0.0 and value_high <= 0.0:
+            break
+        if value_low < 0.0:
+            low *= .5
+            updated_low, value_low = residual(low)
+        if value_high > 0.0:
+            high *= 2.0
+            updated_high, value_high = residual(high)
+    else:
+        raise RuntimeError("could not bracket joint front force-rate root")
+    for _ in range(maximum_iterations):
+        middle = .5*(low+high)
+        updated, value = residual(middle)
+        if abs(value) <= max(
+                absolute_tolerance,
+                relative_tolerance*max(abs(updated), abs(middle), 1e-300)):
+            return float(updated)
+        if value > 0.0:
+            low = middle; value_low = value
+        else:
+            high = middle; value_high = value
+    raise RuntimeError("bracketed joint front force-rate root did not converge")
+
+
 def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
                      spacing_m, represented_thickness_m, wall_parameters,
                      energy_kwargs, interval_s, systems,
@@ -849,6 +900,8 @@ def advance_multigrain_front(
         kinetics.temperature_resolution == "local_interface" else 24)
     previous_factor = None
     previous_residual = None
+    best_relative = math.inf
+    stagnation_count = 0
     for _ in range(maximum_force_iterations):
         (directions, independent_pressures, base_requests,
          channel_records, selected_velocities, cfl_clipped_by_interface,
@@ -864,6 +917,11 @@ def advance_multigrain_front(
             joint_pressure_factor = float(updated_factor)
             force_rate_converged = True
             break
+        if relative < .8*best_relative:
+            best_relative = relative
+            stagnation_count = 0
+        else:
+            stagnation_count += 1
         residual = updated_factor-joint_pressure_factor
         candidate = updated_factor
         if kinetics.temperature_resolution == "local_interface":
@@ -883,6 +941,19 @@ def advance_multigrain_front(
         previous_factor = joint_pressure_factor
         previous_residual = residual
         joint_pressure_factor = float(candidate)
+        if stagnation_count >= 8:
+            break
+    if not force_rate_converged:
+        def complete_factor_at_scale(scale):
+            (_, trial_pressures, trial_requests, trial_records,
+             _, _, _) = requests_at_force_scale(scale)
+            if not trial_requests:
+                raise RuntimeError("front force root lost every active request")
+            return complete_direction_factor(
+                trial_requests, trial_records, trial_pressures)
+        joint_pressure_factor = _bracketed_positive_fixed_point(
+            complete_factor_at_scale, joint_pressure_factor)
+        force_rate_converged = True
     (directions, independent_pressures, base_requests,
      channel_records, selected_velocities, cfl_clipped_by_interface,
      maximum_unclipped_by_interface) = requests_at_force_scale(

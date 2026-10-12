@@ -21,6 +21,15 @@ from tests.test_full_model_multigrain_common_state import owner, zero_exports
 from full_model.production.tensorial_nye import (
     bcc_four_family_systems, rotated_system_fields,
 )
+from full_model.production.multigrain_production import (
+    _bracketed_positive_fixed_point,
+)
+
+
+def test_bracketed_positive_fixed_point_closes_an_oscillatory_map():
+    root = _bracketed_positive_fixed_point(lambda value: 2.0/value, 1.0)
+    assert root == pytest.approx(np.sqrt(2.0), rel=2e-10)
+    assert 2.0/root == pytest.approx(root, rel=2e-10)
 
 
 def _state(n=12):
