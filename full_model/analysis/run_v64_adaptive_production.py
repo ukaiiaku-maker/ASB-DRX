@@ -161,6 +161,11 @@ def main() -> None:
     (state, runtime, parent_step, gamma, initial_volume,
      checkpoint_configuration, checkpoint_provenance) = _load_checkpoint(
         args.resume)
+    analytic_origin_parent = bool(
+        runtime.ledger.physical_time_s == 0.0
+        and parent_step == 0
+        and (checkpoint_provenance or {}).get("origin")
+        == "deterministic_analytic_prepared_network")
     physical = _physical_configuration(checkpoint_configuration or {})
     context = _context(physical)
     if float(args.target_time) <= runtime.ledger.physical_time_s:
@@ -197,7 +202,9 @@ def main() -> None:
     }
     provenance = {
         "source_commit": head,
-        "restart_transition": "v64_complete_interval_accuracy_control",
+        "restart_transition": (
+            "v64_analytic_origin_accuracy_control" if analytic_origin_parent
+            else "v64_complete_interval_accuracy_control"),
         "parent_checkpoint_sha256": args.expected_resume_sha256,
         "parent_source_commit": (checkpoint_provenance or {}).get(
             "source_commit"),
@@ -296,7 +303,7 @@ def main() -> None:
         "source_commit": head,
         "parent_checkpoint": str(args.resume.resolve()),
         "parent_checkpoint_sha256": args.expected_resume_sha256,
-        "inherited_prefix_uncontrolled_by_v64": True,
+        "inherited_prefix_uncontrolled_by_v64": not analytic_origin_parent,
         "target_time_s": args.target_time,
         "final_time_s": endpoint.runtime.ledger.physical_time_s,
         "final_load": endpoint.load,
