@@ -7,6 +7,7 @@ import argparse
 from dataclasses import replace
 import json
 from pathlib import Path
+import subprocess
 
 import numpy as np
 
@@ -149,6 +150,8 @@ def run(checkpoint: Path, output: Path,
         "checkpoint": str(checkpoint.resolve()),
         "checkpoint_sha256": digest(checkpoint),
         "source_commit": (provenance or {}).get("source_commit"),
+        "analysis_source_commit": subprocess.check_output(
+            ("git", "rev-parse", "HEAD"), text=True).strip(),
         "prepared_state": "after exact mechanical stage and before front",
         "step": step+1, "virtual_fractions": list(fractions),
         "directed_interface_transfers": directions,
