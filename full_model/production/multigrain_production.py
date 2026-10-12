@@ -633,14 +633,33 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
             verification_relative_tolerance*max(
                 abs(updated_candidate), abs(candidate), 1e-300)):
         return float(candidate)
+    def verified_residual(value):
+        updated, result = residual(value)
+        # Brent normally terminates on abscissa width, which is wasteful at
+        # an active-set jump.  A deterministic trial that already meets the
+        # independently repeated production closure is an exact terminal for
+        # the numerical contract even when no mathematical zero is
+        # representable.
+        if abs(result) <= max(
+                verification_absolute_tolerance,
+                verification_relative_tolerance*max(
+                    abs(updated), abs(value), 1e-300)):
+            return 0.0
+        return result
+
     root = brentq(
-        lambda value: residual(value)[1], low, high,
+        verified_residual, low, high,
         xtol=np.nextafter(0.0, 1.0), rtol=4*np.finfo(float).eps,
         maxiter=maximum_iterations, disp=False)
     updated_root, value_root = residual(root)
     if abs(value_root) <= max(
             absolute_tolerance,
             relative_tolerance*max(abs(updated_root), abs(root), 1e-300)):
+        return float(root)
+    if abs(value_root) <= max(
+            verification_absolute_tolerance,
+            verification_relative_tolerance*max(
+                abs(updated_root), abs(root), 1e-300)):
         return float(root)
     positive = [(key, values[0], values[1]) for key, values in cache.items()
                 if values[1] >= 0.0]
