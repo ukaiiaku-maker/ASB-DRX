@@ -53,6 +53,11 @@ def test_rejected_trial_is_private_and_first_half_is_reused():
                for row in result.decision["attempts"])
     assert result.decision["attempts"][-1][
         "coarse_reused_from_rejected_first_half"] is True
+    closure = result.decision["attempts"][-1][
+        "trial_front_force_rate_closure"]
+    assert set(closure) == {"coarse", "fine_first", "fine_second"}
+    assert closure["coarse"]["classifications"] == []
+    assert closure["coarse"]["set_valued_brackets"] == []
     assert result.controller.rejected_accuracy_trials >= 1
 
 

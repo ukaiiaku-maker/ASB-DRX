@@ -214,6 +214,17 @@ def advance_error_controlled_interval(
                 "fine_first": fine_first.audit.get("cost_breakdown_s"),
                 "fine_second": fine_second.audit.get("cost_breakdown_s"),
             },
+            "trial_front_force_rate_closure": {
+                name: {
+                    "classifications": interval.audit.get(
+                        "front_force_rate_closure_classifications", []),
+                    "set_valued_brackets": interval.audit.get(
+                        "front_force_rate_closure_brackets", []),
+                }
+                for name, interval in (
+                    ("coarse", coarse), ("fine_first", fine_first),
+                    ("fine_second", fine_second))
+            },
             "maximum_tolerance_ratio": worst_ratio,
             "wall_time_s": time.perf_counter()-started,
         })
