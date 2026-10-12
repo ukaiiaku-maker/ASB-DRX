@@ -546,7 +546,7 @@ def _geometric_sweep_weight(state, donor_index, receiver_index, spacing_m):
     return contour*share
 
 
-def _bracketed_positive_fixed_point(update, initial, *,
+def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
                                     relative_tolerance=1e-10,
                                     absolute_tolerance=1e-12,
                                     verification_relative_tolerance=1e-10,
@@ -579,6 +579,13 @@ def _bracketed_positive_fixed_point(update, initial, *,
     low = high = center
     updated_low = updated_high = updated_center
     value_low = value_high = value_center
+    if bracket_hint is not None:
+        hint = max(float(bracket_hint), 1e-12)
+        updated_hint, value_hint = residual(hint)
+        if hint < center:
+            low, updated_low, value_low = hint, updated_hint, value_hint
+        elif hint > center:
+            high, updated_high, value_high = hint, updated_hint, value_hint
     relative_radius = 1e-6
     for _ in range(48):
         if value_low >= 0.0 and value_high <= 0.0:
@@ -1014,6 +1021,7 @@ def advance_multigrain_front(
                 trial_requests, trial_records, trial_pressures)
         joint_pressure_factor = _bracketed_positive_fixed_point(
             complete_factor_at_scale, joint_pressure_factor,
+            bracket_hint=previous_factor,
             relative_tolerance=1e-11, absolute_tolerance=1e-13)
         force_rate_converged = True
     (directions, independent_pressures, base_requests,
