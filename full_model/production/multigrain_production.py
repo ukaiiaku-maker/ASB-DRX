@@ -676,7 +676,8 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
         wall_parameters=wall_parameters, interval_s=interval_s,
         dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
         absolute_tolerance_J=0.0,
-        precomputed_before_energy=precomputed_before_energy)
+        precomputed_before_energy=precomputed_before_energy,
+        bind_state_identity=False)
     return (priced.decision.available_change_J, swept_volume), weight
 
 
@@ -937,7 +938,8 @@ def advance_multigrain_front(
             wall_parameters=wall_parameters, interval_s=dt,
             dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
             absolute_tolerance_J=0.0,
-            precomputed_before_energy=parent_energy).decision.available_change_J
+            precomputed_before_energy=parent_energy,
+            bind_state_identity=False).decision.available_change_J
         independent_work = sum(
             unscaled_pressures[key]
             *float(np.sum(extent, dtype=np.longdouble))*cell_volume

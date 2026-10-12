@@ -109,6 +109,25 @@ def test_complete_joint_identity_is_bound_and_accepted():
     assert abs(result.decision.first_law_residual_J) <= result.decision.tolerance_J
 
 
+def test_unbound_virtual_energy_price_cannot_publish_candidate():
+    spacing = 2e-8
+    state = _state()
+    zero = np.zeros(state.supports.shape[1:])
+    capacity = joint_material_transaction(state, (JointTransferProposal(
+        "10-20", 10, 20, zero, state.owners[0],
+        zero_exports(state.owners[0])),))
+    result = evaluate_joint_multigrain_transaction(
+        state, capacity, spacing_m=spacing,
+        represented_thickness_m=5e-10,
+        wall_parameters=CommonWallParameters(spacing_m=spacing),
+        interval_s=1e-9, dissipation=MultiGrainDissipation(),
+        bind_state_identity=False)
+    assert result.decision.candidate_state_digest == (
+        "UNBOUND_VIRTUAL_ENERGY_PRICE")
+    with pytest.raises(ValueError, match="stale or unrelated"):
+        publish_energy_accepted_candidate(capacity, result.decision)
+
+
 def test_nonzero_event_cannot_invent_heat_to_close_energy():
     spacing = 2e-8
     state = _state()
@@ -158,6 +177,18 @@ def test_precomputed_parent_energy_is_exact_complete_functional_reuse():
         state, capacity, precomputed_before_energy=parent_energy, **common)
     assert reused.decision.as_dict() == baseline.decision.as_dict()
     assert multigrain_state_digest(reused.candidate_state) == (
+        multigrain_state_digest(baseline.candidate_state))
+
+    unbound = evaluate_joint_multigrain_transaction(
+        state, capacity, precomputed_before_energy=parent_energy,
+        bind_state_identity=False, **common)
+    bound_record = baseline.decision.as_dict()
+    unbound_record = unbound.decision.as_dict()
+    for key in ("before_state_digest", "candidate_state_digest"):
+        bound_record.pop(key)
+        unbound_record.pop(key)
+    assert unbound_record == bound_record
+    assert multigrain_state_digest(unbound.candidate_state) == (
         multigrain_state_digest(baseline.candidate_state))
 
 

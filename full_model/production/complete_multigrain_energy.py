@@ -309,7 +309,8 @@ def evaluate_joint_multigrain_transaction(
         heat_deposition_mode="local_realized_event",
         absolute_tolerance_J=0.0,
         relative_tolerance=8192.0*np.finfo(float).eps,
-        precomputed_before_energy: CompleteFrontEnergy | None = None):
+        precomputed_before_energy: CompleteFrontEnergy | None = None,
+        bind_state_identity=True):
     """Evaluate and atomically publish a complete joint physical event.
 
     The independent dissipation is deposited as heat (or exported by a
@@ -462,10 +463,18 @@ def evaluate_joint_multigrain_transaction(
         "heat_deposition_mode": heat_deposition_mode,
         "energy_kwargs": options,
     })
+    if bind_state_identity:
+        before_digest = multigrain_state_digest(before_state)
+        candidate_digest = multigrain_state_digest(candidate)
+    else:
+        # Virtual force probes are read-only prices, never publication
+        # authorities.  A sentinel keeps accidental publication fail-closed
+        # while avoiding repeated full-state serialization and hashing.
+        before_digest = "UNBOUND_VIRTUAL_ENERGY_PRICE"
+        candidate_digest = "UNBOUND_VIRTUAL_ENERGY_PRICE"
     decision = CompleteMultiGrainDecision(
         accepted, classification, True, True,
-        multigrain_state_digest(before_state),
-        multigrain_state_digest(candidate), config,
+        before_digest, candidate_digest, config,
         float(interval_s), before_energy, candidate_energy, delta_f, work,
         material_export, available, generated_heat, thermostat, first_law,
         dissipation_residual, tolerance, heat_deposition_mode,
