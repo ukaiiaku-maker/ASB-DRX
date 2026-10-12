@@ -964,6 +964,24 @@ def advance_multigrain_front(
                 trial_records, trial_velocities, trial_clipped,
                 trial_maximum_unclipped)
 
+    proposal_templates = {}
+
+    def transfer_proposal(interface, donor, receiver, request):
+        """Reuse request-invariant physical products within this front map."""
+        key = (interface.component_id, int(donor), int(receiver))
+        requested = np.asarray(request, dtype=float)
+        if key not in proposal_templates:
+            proposal_templates[key] = derive_physical_transfer_proposal(
+                state, interface_id=interface.component_id, donor_id=donor,
+                receiver_id=receiver, requested_fraction=requested,
+                law=kinetics.transfer_law, interval_s=dt, systems=systems)
+        # Product owner, exports, and physical channels depend on the immutable
+        # parent and direction, not the requested fraction.  Capacity and the
+        # complete functional are still recomputed for every scalar probe.
+        return replace(
+            proposal_templates[key], requested_fraction=requested,
+            physical_interval_s=dt)
+
     def complete_direction_factor(requests, records, unscaled_pressures):
         maximum_request = max(
             float(np.max(request)) for request in requests.values())
@@ -972,11 +990,8 @@ def advance_multigrain_front(
         proposals = []
         for key in requests:
             interface, donor, receiver = records[key]
-            proposals.append(derive_physical_transfer_proposal(
-                state, interface_id=interface.component_id, donor_id=donor,
-                receiver_id=receiver,
-                requested_fraction=virtual_scale*requests[key],
-                law=kinetics.transfer_law, interval_s=dt, systems=systems))
+            proposals.append(transfer_proposal(
+                interface, donor, receiver, virtual_scale*requests[key]))
         capacity = joint_material_transaction(state, tuple(proposals))
         price = evaluate_joint_multigrain_transaction(
             state, capacity, spacing_m=spacing_m,
@@ -1118,10 +1133,8 @@ def advance_multigrain_front(
         proposals = []
         for key, request in base_requests.items():
             interface, donor, receiver = channel_records[key]
-            proposals.append(derive_physical_transfer_proposal(
-                state, interface_id=interface.component_id, donor_id=donor,
-                receiver_id=receiver, requested_fraction=factor*request,
-                law=kinetics.transfer_law, interval_s=dt, systems=systems))
+            proposals.append(transfer_proposal(
+                interface, donor, receiver, factor*request))
         capacity = joint_material_transaction(state, tuple(proposals))
         dissipation_J = sum(
             pressures[key]*float(np.sum(extent, dtype=np.longdouble))*cell_volume
