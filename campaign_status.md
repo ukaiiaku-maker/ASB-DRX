@@ -1,6 +1,38 @@
 # Campaign status
 
-Updated: 2026-10-09 (America/Los_Angeles)
+Updated: 2026-10-12 (America/Los_Angeles)
+
+## V64 production accuracy and controlled coupled evolution
+
+- A complete coupled interval map and restartable step-doubling controller now
+  publish only the accepted fine path. Nineteen separately named metrics cover
+  state increments, endpoint signals, rate changes, and work/heat integrals;
+  positivity, contour CFL, donor capacity, and first-law checks remain separate
+  physical-admissibility gates.
+- Late n64 2%/1% suffixes agree to 0.1058% in endpoint plastic power and much
+  better in bulk/state fields. A fresh analytic-origin n48 history is now under
+  production control; it has crossed 0.792578 us at engineering shear 0.0437031
+  and continues locally toward 1.25 us. Its current 0.1953125 ns interval uses
+  only 34% of the 2% limiting tolerance.
+- Piecewise front force/rate closure now has safeguarded positive bracketing,
+  active-set publication re-verification, floating-point representability
+  termination, and a stationary zero-request state. The public force/rate
+  closure is unchanged. Exact virtual-pricing/hash and parent-energy reuse plus
+  earlier stagnation handoff reduce measured interval cost without changing
+  physical laws.
+- Restart across the actual interval-118 rejected/accepted accuracy decision
+  reproduces all 98 physical arrays, the state digest, load, clocks, and ledgers
+  bitwise. A legacy restart step-label over-count and adaptive postprocessor
+  indexing defect are repaired.
+- Native-axis fields through adaptive interval 179 show prepared-boundary
+  redistribution and interface-correlated temperature/Nye structure, but no
+  stress softening or strict ASB episode. The present result is early-horizon
+  and lacks a matched accepted-time control/refinement certificate. Grain count
+  remains four; spontaneous nucleation, strict ASB, and material calibration
+  are not claimed.
+- Source is pushed through `fae5b3f`. Focused numerical/front/ASB tests pass;
+  final-source canonical regression and end-of-allocation packaging remain in
+  progress. No V64 HPC or cloud calculation has been launched.
 
 ## V63 rate-accuracy and coupled DRX/ASB continuation
 

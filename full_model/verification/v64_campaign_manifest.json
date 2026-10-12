@@ -15,8 +15,33 @@
   },
   "implementation": {
     "physical_constitutive_change": false,
-    "numerical_change": "complete coupled step doubling with private rollback, independent accuracy/admissibility decisions, bounded adaptive feedback, restartable controller state, and fine-path-only publication",
-    "status": "FOCUSED_VERIFICATION"
+    "numerical_change": "complete coupled step doubling with private rollback, independent accuracy/admissibility decisions, bounded adaptive feedback, restartable controller state, fine-path-only publication, safeguarded discontinuous front closure, fail-closed unbound virtual prices, and adaptive checkpoint identity repair",
+    "status": "CONTROLLED_COMMON_ORIGIN_PRODUCTION_RUNNING",
+    "current_source_commit": "fae5b3f",
+    "focused_tests_passed": 68
+  },
+  "completed_evidence": {
+    "late_n64_two_percent_suffix": true,
+    "late_n64_one_percent_suffix": true,
+    "analytic_origin_replay_bitwise_physical_state": true,
+    "restart_across_accuracy_rejection_bitwise_physical_state": true,
+    "directed_drx_energy_audit": true,
+    "native_rate_replay_exact": true,
+    "profile_and_track_semantics_repaired": true,
+    "native_axis_frames_through_adaptive_interval": 179
+  },
+  "current_physical_result": {
+    "grid_n": 48,
+    "common_origin_controlled": true,
+    "adaptive_interval": 184,
+    "physical_time_s": 7.925781249999936e-7,
+    "engineering_shear": 0.0437031249999999,
+    "strict_asb": false,
+    "substantial_drx": false,
+    "prepared_grain_redistribution_active": true,
+    "grain_count": 4,
+    "spontaneous_grain_birth_exercised": false,
+    "interpretation": "early-horizon controlled continuation; no lifetime or rate-regime rejection"
   },
   "execution_status": "RUNNING",
   "delivery_status": "PARTIAL",

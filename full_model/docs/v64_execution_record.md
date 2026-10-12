@@ -28,3 +28,82 @@ the exact coarse candidate at the reduced duration. Step growth is bounded and
 requires two consecutive comfortably resolved accepted intervals; no formal
 order is assumed across active-set changes.
 
+## Executed accuracy cases and common-origin continuation
+
+The late n64 step-275 suffix was executed at both 2% and 1% working
+tolerances.  The 2% branch used four accepted intervals and two rejected
+accuracy trials; the 1% branch used eight accepted intervals and one rejected
+trial.  Both had zero physical-admissibility failures.  Their endpoint
+differences were 0.000355% in temperature, 0.1058% in plastic power, 0.00202%
+in exact Nye, 0.000906% in plastic distortion, 0.0000817% in supports, and
+0.00164% in stress.  These are suffix comparisons with an inherited V63
+prefix, not common-origin convergence certificates.
+
+Fresh n48 and n64 analytic-origin files were generated and independently
+replayed for one legacy-sized step.  Every physical array, state digest, load,
+clock, and ledger was bitwise identical to the ordinary initializer.  The n48
+2% production trajectory then advanced from the analytic origin.  Its
+controller reduced 6.25 ns to 3.125, 1.5625, 0.78125, 0.390625, and finally
+0.1953125 ns as rate-change fields became active.  No tolerance was weakened.
+The retained common-origin lineage is a sequence of checksum-bound numerical
+transitions because scalar front closure was repaired during execution; each
+transition restarts an accepted complete state and declares unchanged physical
+kernels.
+
+At the current checkpoint the common-origin calculation has crossed 0.792578
+microseconds and engineering shear 0.0437031.  The 0.1953125 ns step passes all
+19 state, endpoint-rate, rate-change, and integral metrics.  The controlling
+error is the change in plastic power, presently about 34% of its 2% tolerance.
+The four-grain prepared network is still hardening at this horizon.  Strict ASB
+is false through adaptive interval 179: there is no stress softening, no
+qualifying conjunctive episode, no matched control at the new accepted times,
+and no localization-refinement certificate.  This is an early-horizon result,
+not a lifetime rejection.
+
+## Scalar front closure and exact optimizations
+
+The complete joint front affinity has a piecewise active set.  A damped/secant
+fixed point can therefore cycle even though the scalar force/rate residual is
+bracketed.  Production now uses a positive safeguarded bracket, closes at the
+unchanged independently re-evaluated `rtol=1e-10`, `atol=1e-12` criterion,
+handles adjacent floating-point endpoints explicitly, and repeats closure if
+the publication reconstruction crosses an active-set ulp.  A zero-request
+point is treated as the physically stationary solution: it publishes zero
+front extent, work, and heat rather than manufacturing a direction.
+
+Two exact cost repairs were also exercised.  Parent complete energy is reused
+within an immutable front-force solve, and virtual energy prices are marked
+deliberately unbound so they cannot be published and need not serialize/hash
+entire trial states.  Final realized transactions remain state-hash bound.
+Handing a stagnant fixed-point cycle to the safeguarded solve after four rather
+than eight non-improving iterations reduced one measured interval from 25.23 s
+to 20.59 s.  Its largest physical-field relative L2 change was
+2.50e-11, attributable to scalar root arithmetic ordering; load and the public
+closure were unchanged.
+
+## Restart, diagnostics, and physical interpretation
+
+A source-frozen replay from adaptive checkpoint 112 through checkpoint 120
+crossed the interval-118 rejected/accepted accuracy decision.  All 98 physical
+arrays, the state digest, load, clocks, and runtime ledgers reproduced bitwise.
+The audit exposed only an over-counted legacy serialized `step` label after
+restart; current checkpoints now store the authoritative global adaptive
+interval.  Postprocessing likewise indexes adaptive data by filename/controller
+identity while retaining the old stored step as provenance.
+
+Native-node frames with fixed color limits cover the common-origin history
+through interval 179.  They show the prepared four-owner geometry, interface-
+correlated temperature and Nye structure, and a broad high plastic-power field;
+they do not show a qualified narrow persistent shear band.  The corrected V63
+attribution remains projection-sensitive, while native unprojected rate replay
+is exact.  The late profile quantity formerly called FWHM is recorded as a
+multi-peak half-height envelope, and the component track is right-censored.
+Directed feasible front probes at the V63 DRX state are downhill for 11 of 12
+directions and for both senses on five of six interfaces, with virtual-slope
+variation below 0.04%.  This supports complete-functional prepared-boundary
+redistribution, not spontaneous grain birth or a material-specific DRX claim.
+
+The current local solver is the only campaign-heavy process.  It is continuing
+the n48 common-origin trajectory toward 1.25 microseconds from checkpoint 184
+under source `fae5b3f`; checkpoints are retained every eight accepted
+intervals.  No HPC, cloud, or paid execution has been used.

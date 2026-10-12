@@ -34,8 +34,13 @@
     "delivery_status": "PARTIAL",
     "scoped_experiment_complete": false,
     "full_scientific_objective_complete": false,
-    "active_heavy_solver_pid": null,
-    "current_task": "freeze and qualify complete-interval adaptive production source",
-    "next_task": "run late n64 production suffix and tighter-tolerance companion"
+    "active_heavy_solver_pid": 22732,
+    "current_source_commit": "fae5b3f",
+    "current_task": "continue error-controlled n48 common-origin trajectory from adaptive checkpoint 184 toward 1.25 microseconds",
+    "next_task": "postprocess attained physical horizon, run final-source regression, package checksummed evidence",
+    "current_physical_time_s": 7.925781249999936e-7,
+    "current_engineering_shear": 0.0437031249999999,
+    "strict_asb_through_interval_179": false,
+    "spontaneous_grain_birth_exercised": false
   }
 }
