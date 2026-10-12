@@ -30,7 +30,11 @@ def project(field: np.ndarray, half_width: int, quadrature_n: int) -> np.ndarray
 
 
 def owner_drivers(path: Path) -> tuple[dict, dict, object]:
-    state, runtime, step, gamma, _, configuration, provenance = _load_checkpoint(path)
+    state, runtime, step, gamma, _, bound_configuration, provenance = _load_checkpoint(path)
+    configuration = (bound_configuration["physical_configuration"]
+                     if bound_configuration.get("schema")
+                     == "asb-drx-v64-adaptive-production-v1"
+                     else bound_configuration)
     n = int(configuration["n"])
     spacing = float(configuration["length_m"])/n
     wall = _wall_parameters(configuration, spacing)

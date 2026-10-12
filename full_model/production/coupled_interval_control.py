@@ -206,6 +206,11 @@ def advance_error_controlled_interval(
             "coarse_reused_from_rejected_first_half": coarse_reused,
             "endpoint_load_absolute_difference": load_error,
             "metric_errors": errors,
+            "trial_cost_breakdown_s": {
+                "coarse": coarse.audit.get("cost_breakdown_s"),
+                "fine_first": fine_first.audit.get("cost_breakdown_s"),
+                "fine_second": fine_second.audit.get("cost_breakdown_s"),
+            },
             "maximum_tolerance_ratio": worst_ratio,
             "wall_time_s": time.perf_counter()-started,
         })

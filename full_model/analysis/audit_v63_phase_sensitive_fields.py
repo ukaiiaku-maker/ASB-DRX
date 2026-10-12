@@ -198,9 +198,13 @@ def projection_checks(fields: dict, metadata: dict, half_width: int,
 
 
 def checkpoint_fields(path: Path) -> tuple[dict, dict]:
-    state, runtime, step, gamma, _, configuration, provenance = _load_checkpoint(path)
-    if configuration is None:
+    state, runtime, step, gamma, _, bound_configuration, provenance = _load_checkpoint(path)
+    if bound_configuration is None:
         raise ValueError("checkpoint lacks bound configuration")
+    integration_schema = bound_configuration.get("schema")
+    configuration = (bound_configuration["physical_configuration"]
+                     if integration_schema == "asb-drx-v64-adaptive-production-v1"
+                     else bound_configuration)
     n = int(configuration["n"])
     spacing = float(configuration["length_m"])/n
     systems = bcc_four_family_systems()
@@ -282,6 +286,7 @@ def checkpoint_fields(path: Path) -> tuple[dict, dict]:
         "physical_time_s": runtime.ledger.physical_time_s, "gamma": gamma,
         "n": n, "spacing_m": spacing, "source_commit": (provenance or {}).get(
             "source_commit"), "grain_ids": list(state.grain_ids),
+        "integration_schema": integration_schema,
         "owner_nye_identity_relative_l2": norm(
             nye.owner_reservoir_mismatch_m1)/max(
                 norm(nye.owner_curl_weighted_m1), 1e-300),
@@ -293,10 +298,16 @@ def run(left: Path, right: Path, output: Path,
         half_widths: tuple[int, ...], quadrature_n: int) -> dict:
     left_fields, left_meta = checkpoint_fields(left)
     right_fields, right_meta = checkpoint_fields(right)
-    if left_meta["step"] != right_meta["step"] or not np.isclose(
-            left_meta["physical_time_s"], right_meta["physical_time_s"],
-            rtol=0.0, atol=1e-18):
+    if not np.isclose(left_meta["physical_time_s"], right_meta["physical_time_s"],
+                      rtol=0.0, atol=1e-18):
         raise ValueError("checkpoints do not share one physical state time")
+    if left_meta["step"] != right_meta["step"] and not all(
+            row["integration_schema"] == "asb-drx-v64-adaptive-production-v1"
+            for row in (left_meta, right_meta)):
+        raise ValueError("fixed-cadence checkpoints require matching step IDs")
+    if not np.isclose(left_meta["gamma"], right_meta["gamma"],
+                      rtol=0.0, atol=1e-14):
+        raise ValueError("checkpoints do not share one physical load")
     if left_meta["grain_ids"] != right_meta["grain_ids"]:
         raise ValueError("owner identity differs")
     if set(left_fields) != set(right_fields):

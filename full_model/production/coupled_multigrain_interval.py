@@ -10,6 +10,7 @@ accuracy controller publishes an accepted fine path.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import time
 from typing import Mapping
 
 import numpy as np
@@ -117,6 +118,7 @@ def advance_complete_multigrain_interval(
     strain0 = np.array([[0.0, .5*gamma0], [.5*gamma0, 0.0]])
     strain1 = np.array([[0.0, .5*gamma1], [.5*gamma1, 0.0]])
     energy_before = dict(context.energy_kwargs, mean_strain=strain0)
+    mechanical_started = time.perf_counter()
     mechanical = advance_energy_qualified_mechanics(
         parent.state, mean_strain_before=strain0,
         mean_strain_candidate=strain1, systems=context.systems,
@@ -124,6 +126,7 @@ def advance_complete_multigrain_interval(
         dt_s=dt, represented_thickness_m=context.represented_thickness_m,
         energy_kwargs=energy_before, maximum_relative_first_law_residual=.05,
         maximum_subdivisions=context.maximum_mechanical_subdivisions)
+    mechanical_wall_time = time.perf_counter()-mechanical_started
     mechanical_heat = sum(
         (np.asarray(item.irreversible_heat_J_m3_cells)
          for item in mechanical.operator_decisions),
@@ -155,6 +158,7 @@ def advance_complete_multigrain_interval(
             parent.runtime.ledger.maximum_mechanical_relative_first_law_residual,
             mechanical.relative_first_law_residual)))
     energy_after = dict(context.energy_kwargs, mean_strain=strain1)
+    front_started = time.perf_counter()
     if context.front_enabled:
         state, runtime, fronts = advance_multigrain_front_interval(
             mechanical.state, runtime, kinetics=context.front_kinetics,
@@ -179,6 +183,7 @@ def advance_complete_multigrain_interval(
             applied_shear_strain=(runtime.ledger.applied_shear_strain
                                   +context.shear_rate_s*dt),
             stationary_intervals=runtime.ledger.stationary_intervals+1))
+    front_wall_time = time.perf_counter()-front_started
     front_sources = [
         np.asarray(item.heat_source_J_by_cell, dtype=float)
         for item in fronts if item.heat_source_J_by_cell is not None]
@@ -196,7 +201,9 @@ def advance_complete_multigrain_interval(
                       context.shear_rate_s*dt, rtol=0.0,
                       atol=64*np.finfo(float).eps*max(abs(gamma1), 1.0)):
         raise RuntimeError("complete coupled map failed its load clock")
+    observable_started = time.perf_counter()
     endpoint = make_endpoint(state, runtime, gamma1, context)
+    observable_wall_time = time.perf_counter()-observable_started
     integrals = {
         "mechanical_external_work_J": mechanical.external_work_J,
         "mechanical_internal_energy_change_J": mechanical.internal_energy_change_J,
@@ -227,5 +234,12 @@ def advance_complete_multigrain_interval(
                              fronts[-1].direction_by_interface),
         "front_selected_velocities_m_s": ({} if not fronts else
                                            fronts[-1].selected_velocity_by_interface_m_s),
+        "cost_breakdown_s": {
+            "mechanical_map": mechanical_wall_time,
+            "front_map": front_wall_time,
+            "endpoint_observables": observable_wall_time,
+            "accounted_total": (mechanical_wall_time+front_wall_time
+                                +observable_wall_time),
+        },
     }
     return CoupledInterval(endpoint, dt, integrals, audit)
