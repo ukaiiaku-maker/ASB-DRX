@@ -913,7 +913,10 @@ def advance_multigrain_front(
             base_requests, channel_records, independent_pressures)
         relative = abs(updated_factor-joint_pressure_factor)/max(
             abs(updated_factor), 1e-300)
-        if relative <= 1e-10:
+        # Solve more tightly than the separately reevaluated production
+        # verification so returning ``updated_factor`` retains margin after
+        # one additional nonlinear map evaluation.
+        if relative <= 1e-11:
             joint_pressure_factor = float(updated_factor)
             force_rate_converged = True
             break
@@ -952,7 +955,8 @@ def advance_multigrain_front(
             return complete_direction_factor(
                 trial_requests, trial_records, trial_pressures)
         joint_pressure_factor = _bracketed_positive_fixed_point(
-            complete_factor_at_scale, joint_pressure_factor)
+            complete_factor_at_scale, joint_pressure_factor,
+            relative_tolerance=1e-11, absolute_tolerance=1e-13)
         force_rate_converged = True
     (directions, independent_pressures, base_requests,
      channel_records, selected_velocities, cfl_clipped_by_interface,
