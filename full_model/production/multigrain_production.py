@@ -993,6 +993,14 @@ def advance_multigrain_front(
         return (-price/independent_work
                 if price < 0.0 and independent_work > 0.0 else 1.0)
 
+    def complete_factor_at_scale(scale):
+        (_, trial_pressures, trial_requests, trial_records,
+         _, _, _) = requests_at_force_scale(scale)
+        if not trial_requests:
+            raise RuntimeError("front force root lost every active request")
+        return complete_direction_factor(
+            trial_requests, trial_records, trial_pressures)
+
     # The complete joint directional derivative changes the force supplied to
     # the nonlinear EXP-floor law.  Reusing velocities selected before that
     # correction is formally nonconjugate.  Solve the scalar projected-force
@@ -1051,33 +1059,34 @@ def advance_multigrain_front(
         if stagnation_count >= 8:
             break
     if not force_rate_converged:
-        def complete_factor_at_scale(scale):
-            (_, trial_pressures, trial_requests, trial_records,
-             _, _, _) = requests_at_force_scale(scale)
-            if not trial_requests:
-                raise RuntimeError("front force root lost every active request")
-            return complete_direction_factor(
-                trial_requests, trial_records, trial_pressures)
         joint_pressure_factor = _bracketed_positive_fixed_point(
             complete_factor_at_scale, joint_pressure_factor,
             bracket_hint=previous_factor,
-            relative_tolerance=1e-11, absolute_tolerance=1e-13,
-            # Retain margin for the independent post-solve reevaluation.  The
-            # public production closure below remains rtol=1e-10/atol=1e-12.
-            verification_relative_tolerance=5e-11,
-            verification_absolute_tolerance=5e-13)
+            relative_tolerance=1e-11, absolute_tolerance=1e-13)
         force_rate_converged = True
-    (directions, independent_pressures, base_requests,
-     channel_records, selected_velocities, cfl_clipped_by_interface,
-     maximum_unclipped_by_interface) = requests_at_force_scale(
-         joint_pressure_factor)
     verification_factor = math.nan
-    if base_requests:
+    for verification_attempt in range(3):
+        (directions, independent_pressures, base_requests,
+         channel_records, selected_velocities, cfl_clipped_by_interface,
+         maximum_unclipped_by_interface) = requests_at_force_scale(
+             joint_pressure_factor)
+        if not base_requests:
+            break
         verification_factor = complete_direction_factor(
             base_requests, channel_records, independent_pressures)
-        force_rate_converged = bool(force_rate_converged and np.isclose(
+        force_rate_converged = bool(np.isclose(
             verification_factor, joint_pressure_factor,
             rtol=1e-10, atol=1e-12))
+        if force_rate_converged:
+            break
+        # A discontinuous active set can move by a few ulps when the same
+        # complete map is independently reconstructed for publication.  Solve
+        # that reconstructed residual again; never publish unless the public
+        # verification itself passes unchanged.
+        joint_pressure_factor = _bracketed_positive_fixed_point(
+            complete_factor_at_scale, joint_pressure_factor,
+            bracket_hint=verification_factor,
+            relative_tolerance=1e-11, absolute_tolerance=1e-13)
     if not force_rate_converged:
         low_directions = requests_at_force_scale(
             joint_pressure_factor*(1.0-1e-6))[0]
