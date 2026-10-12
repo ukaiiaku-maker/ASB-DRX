@@ -124,6 +124,8 @@ class MultiGrainProductionDecision:
     heat_source_J_by_cell: np.ndarray | None = None
     contour_cfl_clipped: bool = False
     maximum_unclipped_fraction: float = 0.0
+    force_rate_closure_classification: str = "POINTWISE_FIXED_POINT"
+    force_rate_closure_bracket: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -551,7 +553,9 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
                                     absolute_tolerance=1e-12,
                                     verification_relative_tolerance=1e-10,
                                     verification_absolute_tolerance=1e-12,
-                                    maximum_iterations=64):
+                                    maximum_iterations=64,
+                                    allow_set_valued_active_set=False,
+                                    return_certificate=False):
     """Safeguarded fallback for a positive scalar fixed point.
 
     The production front normally uses the faster damped/secant iteration.
@@ -560,6 +564,15 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
     ``update(x)-x=0`` without relaxing the force/rate closure.
     """
     cache = {}
+
+    def result(value, classification="POINTWISE_FIXED_POINT", *,
+               bracket=None):
+        certificate = {
+            "value": float(value),
+            "classification": classification,
+            "bracket": bracket,
+        }
+        return certificate if return_certificate else float(value)
 
     def residual(value):
         key = float(value)
@@ -575,7 +588,7 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
     if abs(value_center) <= max(
             absolute_tolerance,
             relative_tolerance*max(abs(updated_center), abs(center), 1e-300)):
-        return float(center)
+        return result(center)
     low = high = center
     updated_low = updated_high = updated_center
     value_low = value_high = value_center
@@ -632,7 +645,7 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
             verification_absolute_tolerance,
             verification_relative_tolerance*max(
                 abs(updated_candidate), abs(candidate), 1e-300)):
-        return float(candidate)
+        return result(candidate)
     def verified_residual(value):
         updated, result = residual(value)
         # Brent normally terminates on abscissa width, which is wasteful at
@@ -655,12 +668,12 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
     if abs(value_root) <= max(
             absolute_tolerance,
             relative_tolerance*max(abs(updated_root), abs(root), 1e-300)):
-        return float(root)
+        return result(root)
     if abs(value_root) <= max(
             verification_absolute_tolerance,
             verification_relative_tolerance*max(
                 abs(updated_root), abs(root), 1e-300)):
-        return float(root)
+        return result(root)
     positive = [(key, values[0], values[1]) for key, values in cache.items()
                 if values[1] >= 0.0]
     negative = [(key, values[0], values[1]) for key, values in cache.items()
@@ -691,7 +704,27 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
                     verification_absolute_tolerance,
                     verification_relative_tolerance*max(
                         abs(updated), abs(candidate), 1e-300)):
-                return float(candidate)
+                return result(candidate)
+            if allow_set_valued_active_set:
+                # A direction/cone switch makes the finite-dimensional force
+                # map set-valued at this point. When its sign-changing bracket
+                # has collapsed to adjacent floating-point numbers, no
+                # representable scalar can improve the abscissa. The interval
+                # inclusion 0 in [r(right), r(left)] is the exact
+                # complementarity closure, not a relaxed pointwise residual.
+                candidate = min(
+                    (low_row, high_row), key=lambda item: abs(item[2]))
+                return result(
+                    candidate[0], "SET_VALUED_ACTIVE_SET_CLOSURE",
+                    bracket={
+                        "low": float(low_row[0]),
+                        "high": float(high_row[0]),
+                        "updated_low": float(low_row[1]),
+                        "updated_high": float(high_row[1]),
+                        "residual_low": float(low_row[2]),
+                        "residual_high": float(high_row[2]),
+                        "adjacent_floats": True,
+                    })
     raise RuntimeError(
         "bracketed joint front force-rate root did not converge: "
         f"low={low:.17g}, high={high:.17g}, "
@@ -1027,6 +1060,8 @@ def advance_multigrain_front(
     # force used for mobility dissipation.
     joint_pressure_factor = 1.0
     force_rate_converged = False
+    force_rate_closure_classification = "POINTWISE_FIXED_POINT"
+    force_rate_closure_bracket = None
     maximum_force_iterations = (64 if
         kinetics.temperature_resolution == "local_interface" else 24)
     previous_factor = None
@@ -1083,10 +1118,14 @@ def advance_multigrain_front(
         if stagnation_count >= 4:
             break
     if not force_rate_converged:
-        joint_pressure_factor = _bracketed_positive_fixed_point(
+        closure = _bracketed_positive_fixed_point(
             complete_factor_at_scale, joint_pressure_factor,
             bracket_hint=previous_factor,
-            relative_tolerance=1e-11, absolute_tolerance=1e-13)
+            relative_tolerance=1e-11, absolute_tolerance=1e-13,
+            allow_set_valued_active_set=True, return_certificate=True)
+        joint_pressure_factor = closure["value"]
+        force_rate_closure_classification = closure["classification"]
+        force_rate_closure_bracket = closure["bracket"]
         force_rate_converged = True
     verification_factor = math.nan
     for verification_attempt in range(3):
@@ -1103,15 +1142,39 @@ def advance_multigrain_front(
             verification_factor, joint_pressure_factor,
             rtol=1e-10, atol=1e-12))
         if force_rate_converged:
+            force_rate_closure_classification = "POINTWISE_FIXED_POINT"
+            force_rate_closure_bracket = None
             break
         # A discontinuous active set can move by a few ulps when the same
         # complete map is independently reconstructed for publication.  Solve
         # that reconstructed residual again; never publish unless the public
         # verification itself passes unchanged.
-        joint_pressure_factor = _bracketed_positive_fixed_point(
+        closure = _bracketed_positive_fixed_point(
             complete_factor_at_scale, joint_pressure_factor,
             bracket_hint=verification_factor,
-            relative_tolerance=1e-11, absolute_tolerance=1e-13)
+            relative_tolerance=1e-11, absolute_tolerance=1e-13,
+            allow_set_valued_active_set=True, return_certificate=True)
+        joint_pressure_factor = closure["value"]
+        force_rate_closure_classification = closure["classification"]
+        force_rate_closure_bracket = closure["bracket"]
+        if force_rate_closure_classification == "SET_VALUED_ACTIVE_SET_CLOSURE":
+            # Reconstruct the nonsmooth inclusion independently. A second
+            # adjacent-float sign bracket is the publication certificate; the
+            # unchanged pointwise test remains mandatory otherwise.
+            repeated = _bracketed_positive_fixed_point(
+                complete_factor_at_scale, joint_pressure_factor,
+                relative_tolerance=1e-11, absolute_tolerance=1e-13,
+                allow_set_valued_active_set=True, return_certificate=True)
+            if repeated["classification"] == "SET_VALUED_ACTIVE_SET_CLOSURE":
+                joint_pressure_factor = repeated["value"]
+                force_rate_closure_bracket = repeated["bracket"]
+                (directions, independent_pressures, base_requests,
+                 channel_records, selected_velocities,
+                 cfl_clipped_by_interface,
+                 maximum_unclipped_by_interface) = requests_at_force_scale(
+                     joint_pressure_factor)
+                force_rate_converged = True
+                break
     if not force_rate_converged:
         low_directions = requests_at_force_scale(
             joint_pressure_factor*(1.0-1e-6))[0]
@@ -1194,7 +1257,9 @@ def advance_multigrain_front(
                 float(joint_pressure_factor), force_rate_converged,
                 np.asarray(heat_source_J_by_cell, dtype=float),
                 any(cfl_clipped_by_interface.values()),
-                max(maximum_unclipped_by_interface.values(), default=0.0)))
+                max(maximum_unclipped_by_interface.values(), default=0.0),
+                force_rate_closure_classification,
+                force_rate_closure_bracket))
 
 
 def advance_multigrain_front_interval(

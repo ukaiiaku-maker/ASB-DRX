@@ -76,6 +76,28 @@ def test_bracketed_root_reuses_last_oscillation_as_bracket():
     assert len(evaluations) <= 3
 
 
+def test_adjacent_float_active_set_jump_has_explicit_set_valued_certificate():
+    transition = 1.0
+
+    def discontinuous_update(value):
+        return value+(1.4e-10 if value < transition else -3.1e-10)
+
+    with pytest.raises(RuntimeError, match="did not converge"):
+        _bracketed_positive_fixed_point(
+            discontinuous_update, transition,
+            relative_tolerance=1e-12, absolute_tolerance=1e-13)
+    certificate = _bracketed_positive_fixed_point(
+        discontinuous_update, transition,
+        relative_tolerance=1e-12, absolute_tolerance=1e-13,
+        allow_set_valued_active_set=True, return_certificate=True)
+    assert certificate["classification"] == "SET_VALUED_ACTIVE_SET_CLOSURE"
+    bracket = certificate["bracket"]
+    assert bracket["adjacent_floats"]
+    assert np.nextafter(bracket["low"], np.inf) >= bracket["high"]
+    assert bracket["residual_low"] >= 0.0
+    assert bracket["residual_high"] <= 0.0
+
+
 def _state(n=12):
     supports = np.zeros((3, n, n))
     supports[0, :n//2] = 1.0
