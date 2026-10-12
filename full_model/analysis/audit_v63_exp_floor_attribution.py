@@ -101,6 +101,11 @@ def weighted_relative(left, right, weight) -> float:
     return difference/scale
 
 
+def weighted_l2(value, weight) -> float:
+    w = np.maximum(np.asarray(weight, dtype=float), 0.0)
+    return float(np.sqrt(np.sum(w*np.asarray(value)**2, dtype=np.longdouble)))
+
+
 def run(left: Path, right: Path, output: Path,
         half_width: int, quadrature_n: int) -> dict:
     a, ma, wall_a = owner_drivers(left)
@@ -114,6 +119,25 @@ def run(left: Path, right: Path, output: Path,
     if any(getattr(wall_a, name) != getattr(wall_b, name)
            for name in parameter_names):
         raise ValueError("rate-map parameters differ")
+    native_rate_checks = {}
+    for label, values, wall in (("left", a, wall_a), ("right", b, wall_b)):
+        temperature = np.broadcast_to(
+            values["temperature_K"], values["raw_stress_Pa"].shape)
+        recomputed, _ = speed_from_inputs(
+            values["raw_stress_Pa"], values["chemical_backstress_Pa"],
+            values["taylor_resistance_Pa"], temperature, wall)
+        support = np.broadcast_to(
+            values["supports"][..., None], values["raw_stress_Pa"].shape)
+        native_rate_checks[label] = {
+            "recomputed_vs_recorded_weighted_relative_l2": weighted_relative(
+                recomputed, values["speed_m_s"], support),
+            "recomputed_vs_recorded_maximum_absolute_m_s": float(np.max(
+                np.abs(recomputed-values["speed_m_s"]))),
+            "grid": list(values["speed_m_s"].shape[:2]),
+            "temperature_route": (
+                "frozen" if wall.flow_temperature_override_K is not None
+                else "physical_native_owner_field"),
+        }
     pa = {name: project(value, half_width, quadrature_n)
           for name, value in a.items()}
     pb = {name: project(value, half_width, quadrature_n)
@@ -136,6 +160,8 @@ def run(left: Path, right: Path, output: Path,
     projected_actual_a = pa["speed_m_s"]
     projected_actual_b = pb["speed_m_s"]
     baseline_error = weighted_relative(recomputed_a, recomputed_b, weight)
+    fixed_scale = max(weighted_l2(recomputed_a, weight),
+                      weighted_l2(recomputed_b, weight), 1e-300)
     substitutions = {}
     directional_linearization = {}
     finite_difference_fraction = 1.0e-4
@@ -157,6 +183,8 @@ def run(left: Path, right: Path, output: Path,
             "remaining_rate_error_to_right_relative_l2": error_to_b,
             "fraction_of_baseline_error_removed": (
                 baseline_error-error_to_b)/max(baseline_error, 1e-300),
+            "fixed_denominator_remaining_error": weighted_l2(
+                speed-recomputed_b, weight)/fixed_scale,
             "effective_stress_change_from_left_relative_l2": weighted_relative(
                 effective, effective_a, weight),
         }
@@ -200,6 +228,19 @@ def run(left: Path, right: Path, output: Path,
             "effective_stress_change_from_left_relative_l2": weighted_relative(
                 effective, effective_a, weight),
         }
+    reverse_substitutions = {}
+    for name in inputs_b:
+        mixed = dict(inputs_b); mixed[name] = inputs_a[name]
+        speed, _ = speed_from_inputs(**mixed, wall=wall_a)
+        remaining = weighted_l2(speed-recomputed_a, weight)/fixed_scale
+        reverse_substitutions[name] = {
+            "fixed_denominator_remaining_error_to_left": remaining,
+            "fixed_denominator_fraction_of_baseline_removed": (
+                (weighted_l2(recomputed_b-recomputed_a, weight)/fixed_scale
+                 -remaining)
+                /max(weighted_l2(recomputed_b-recomputed_a, weight)/fixed_scale,
+                     1e-300)),
+        }
     direct_effective_with_left_temperature = (
         wall_a.glide_speed_attempt_m_s
         *exp_floor_rate(pb["effective_stress_Pa"], temperature_a,
@@ -216,6 +257,16 @@ def run(left: Path, right: Path, output: Path,
             "chemical, thermodynamic, and effective owner/family stresses are retained"),
         "active_weight_semantics": (
             "mean of nonnegative projected owner supports, broadcast over four families"),
+        "native_independent_rate_map_checks": native_rate_checks,
+        "projected_support_diagnostics": {
+            "left_minimum": float(np.min(pa["supports"])),
+            "left_maximum": float(np.max(pa["supports"])),
+            "right_minimum": float(np.min(pb["supports"])),
+            "right_maximum": float(np.max(pb["supports"])),
+            "left_negative_fraction": float(np.mean(pa["supports"] < 0.0)),
+            "right_negative_fraction": float(np.mean(pb["supports"] < 0.0)),
+            "semantics": "reported without clipping; projected fields are never production states"
+        },
         "projected_primitive_differences": {
             name: weighted_relative(inputs_a[name], inputs_b[name], weight)
             for name in inputs_a},
@@ -232,6 +283,13 @@ def run(left: Path, right: Path, output: Path,
                 "of the independently computed nonlinear rate"),
         },
         "one_input_at_a_time_substitutions": substitutions,
+        "reverse_one_input_substitutions": reverse_substitutions,
+        "fixed_discrepancy_norm": {
+            "weighted_l2_scale": fixed_scale,
+            "baseline_relative_error": weighted_l2(
+                recomputed_a-recomputed_b, weight)/fixed_scale,
+            "semantics": "one symmetric denominator fixed before either substitution direction"
+        },
         "directional_derivative_predictions": {
             "finite_difference_fraction_of_full_input_delta": finite_difference_fraction,
             "one_input": directional_linearization,
@@ -261,8 +319,8 @@ def run(left: Path, right: Path, output: Path,
             "rate_change_from_left": weighted_relative(
                 direct_effective_with_left_temperature, recomputed_a, weight),
         },
-        "all_right_inputs_reproduce_right_rate_relative_l2": weighted_relative(
-            recomputed_b, recomputed_b, weight),
+        "right_projected_inputs_vs_projected_actual_rate_relative_l2": (
+            weighted_relative(recomputed_b, projected_actual_b, weight)),
         "limitations": (
             "diagnostic reevaluation only; projected primitives are not an "
             "admissible production state and no counterfactual is published"),

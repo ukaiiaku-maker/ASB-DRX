@@ -28,6 +28,10 @@ def component_at_anchor(field: np.ndarray, anchor_xy: tuple[float, float],
         overlaps = np.asarray([jaccard(previous, item) for item in components])
         if float(np.max(overlaps)) > 0.0:
             return components[int(np.argmax(overlaps))]
+        # A vanished association closes the old track.  Returning a nearby
+        # unrelated component here formerly continued the same identity
+        # silently.  A replacement may start at the next sample with a new ID.
+        return np.zeros(positive.shape, dtype=bool)
     n = positive.shape[0]
     ii, jj = np.indices(positive.shape)
     x = ii*length_m/n; y = jj*length_m/n
@@ -82,11 +86,37 @@ def profile(field: np.ndarray, geometry: dict, length_m: float,
     width = float(np.sqrt(np.sum((centers-mean)**2*values)/max(total, 1e-300)))
     half = .5*float(values.max())
     above = np.flatnonzero(values >= half)
-    fwhm = (0.0 if above.size == 0 else
-            float(edges[above[-1]+1]-edges[above[0]]))
+    runs = []
+    if above.size:
+        split = np.flatnonzero(np.diff(above) > 1)+1
+        for indices in np.split(above, split):
+            runs.append({
+                "first_bin": int(indices[0]), "last_bin": int(indices[-1]),
+                "width_m": float(edges[indices[-1]+1]-edges[indices[0]]),
+                "contains_global_maximum": bool(
+                    int(np.argmax(values)) in set(map(int, indices))),
+            })
+    envelope = (0.0 if above.size == 0 else
+                float(edges[above[-1]+1]-edges[above[0]]))
+    connected = next((row["width_m"] for row in runs
+                      if row["contains_global_maximum"]), 0.0)
     return {"bin_centers_m": centers.tolist(), "power_W_m3": values.tolist(),
-            "second_moment_width_m": width, "fwhm_m": fwhm,
-            "fwhm_native_cells": fwhm/(length_m/n),
+            "second_moment_width_m": width,
+            "fwhm_m": envelope,
+            "fwhm_semantics": (
+                "backward-compatible first-to-last half-maximum envelope; "
+                "not a connected single-peak FWHM when run_count exceeds one"),
+            "half_maximum_envelope_m": envelope,
+            "half_maximum_envelope_native_cells": envelope/(length_m/n),
+            "connected_peak_fwhm_m": connected,
+            "connected_peak_fwhm_native_cells": connected/(length_m/n),
+            "half_maximum_run_count": len(runs),
+            "half_maximum_runs": runs,
+            "profile_classification": (
+                "EMPTY" if not runs else "SINGLE_CONNECTED_PEAK"
+                if len(runs) == 1 else "MULTI_PEAK_ENVELOPE"),
+            "empty_bin_count": int(np.count_nonzero(counts == 0)),
+            "nonempty_bin_count": int(np.count_nonzero(counts > 0)),
             "native_spacing_m": length_m/n}
 
 
@@ -140,11 +170,25 @@ def run(left: list[Path], right: list[Path], output: Path,
     anchor_xy = tuple(geometry["center_m"])
     trajectories = {"left": [], "right": []}; masks = {"left": [], "right": []}
     for name, paths in (("left", left), ("right", right)):
+        track_id = 0
         for path in paths:
-            row, mask = record(path, anchor_xy, geometry, bins,
-                               None if not masks[name] else masks[name][-1])
-            row["jaccard_with_prior_sample"] = (None if not masks[name] else
-                                                   jaccard(masks[name][-1], mask))
+            previous = None if not masks[name] or not np.any(
+                masks[name][-1]) else masks[name][-1]
+            prior_track_closed = bool(masks[name] and previous is None)
+            row, mask = record(path, anchor_xy, geometry, bins, previous)
+            overlap = (None if previous is None else jaccard(previous, mask))
+            if previous is not None and not np.any(mask):
+                event = "DISAPPEARANCE"
+            elif previous is None:
+                track_id += 1
+                event = "REPLACEMENT_NEW_TRACK" if prior_track_closed else "NEW_TRACK"
+            else:
+                event = "CONTINUATION"
+            row["track_id"] = f"{name}-{track_id}"
+            row["association_event"] = event
+            row["jaccard_with_prior_sample"] = overlap
+            row["merge_status"] = (
+                "NOT_INFERRED_BY_SINGLE_CANDIDATE_TRACKER")
             trajectories[name].append(row); masks[name].append(mask)
     comparisons = []
     for i, (a, b) in enumerate(zip(trajectories["left"], trajectories["right"])):
@@ -152,14 +196,22 @@ def run(left: list[Path], right: list[Path], output: Path,
             raise ValueError("paired steps differ")
         q = np.lcm(masks["left"][i].shape[0], masks["right"][i].shape[0])
         pa = np.asarray(a["profile"]["power_W_m3"]); pb = np.asarray(b["profile"]["power_W_m3"])
+        envelope_a = a["profile"]["half_maximum_envelope_m"]
+        envelope_b = b["profile"]["half_maximum_envelope_m"]
+        connected_a = a["profile"]["connected_peak_fwhm_m"]
+        connected_b = b["profile"]["connected_peak_fwhm_m"]
         comparisons.append({"step": a["step"], "component_jaccard_common_grid": jaccard(
             nearest_resample(masks["left"][i], q), nearest_resample(masks["right"][i], q)),
             "profile_relative_l2": float(np.linalg.norm(pa-pb)/max(np.linalg.norm(pa),
-                                                                    np.linalg.norm(pb), 1e-300))})
+                                                                    np.linalg.norm(pb), 1e-300)),
+            "half_maximum_envelope_relative_difference": abs(
+                envelope_a-envelope_b)/max(envelope_a, envelope_b, 1e-300),
+            "connected_peak_fwhm_relative_difference": abs(
+                connected_a-connected_b)/max(connected_a, connected_b, 1e-300)})
     result = {"schema": "asb-drx-v63-fixed-candidate-profile-v1",
               "anchor_step": anchor_step, "anchor_geometry": geometry,
-              "selection": "anchor component is nearest the fixed physical peak; later samples maximize overlap with the preceding tracked component and fall back to anchor proximity only if overlap vanishes",
-              "profile_semantics": "positive power in the tracked threshold component, averaged in fixed normal-coordinate bins within the anchor tangent span",
+              "selection": "anchor component is nearest the fixed physical peak; later samples require positive overlap with the preceding tracked component; zero overlap closes that track and a later replacement receives a new ID",
+              "profile_semantics": "positive power in the tracked threshold component, averaged in fixed normal-coordinate bins within the anchor tangent span; first-to-last half-maximum envelope and connected peak width are reported separately",
               "trajectories": trajectories, "paired_comparisons": comparisons,
               "limitations": "threshold masks identify continuity; widths below two native cells are reported but not called resolved"}
     output.parent.mkdir(parents=True, exist_ok=True)
