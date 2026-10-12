@@ -997,7 +997,11 @@ def advance_multigrain_front(
         (_, trial_pressures, trial_requests, trial_records,
          _, _, _) = requests_at_force_scale(scale)
         if not trial_requests:
-            raise RuntimeError("front force root lost every active request")
+            # Exact cancellation is a valid stationary active-set point.  Its
+            # force/rate residual is identically closed and it carries no
+            # front work or heat; never manufacture a direction to continue
+            # the scalar solve.
+            return float(scale)
         return complete_direction_factor(
             trial_requests, trial_records, trial_pressures)
 
@@ -1020,6 +1024,7 @@ def advance_multigrain_front(
          maximum_unclipped_by_interface) = requests_at_force_scale(
              joint_pressure_factor)
         if not base_requests:
+            force_rate_converged = True
             break
         updated_factor = complete_direction_factor(
             base_requests, channel_records, independent_pressures)
@@ -1075,6 +1080,7 @@ def advance_multigrain_front(
          maximum_unclipped_by_interface) = requests_at_force_scale(
              joint_pressure_factor)
         if not base_requests:
+            force_rate_converged = True
             break
         verification_factor = complete_direction_factor(
             base_requests, channel_records, independent_pressures)
