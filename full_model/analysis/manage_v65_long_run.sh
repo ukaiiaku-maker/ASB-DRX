@@ -99,6 +99,7 @@ PYTHONPATH=src:. python -m pytest -q \
   tests/test_v59_physical_asb.py tests/test_v65_grain_response_metrics.py \
   tests/test_v65_merge_adaptive_histories.py tests/test_v65_delivery.py \
   tests/test_v65_decision.py tests/test_v65_checkpoint_monitor.py \
+  tests/test_v65_component_transition.py \
   > "$logs/focused_tests_final.log" 2>&1
 focused_status=$?
 

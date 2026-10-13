@@ -95,6 +95,7 @@ def required_files(campaign: Path, worktree: Path) -> list[tuple[Path, str]]:
         campaign / "analysis/work_precision_1p030_to1p035us.json",
         campaign / "analysis/interval454_cost_error_trace.json",
         campaign / "analysis/grain20_selection_energy_affinity.json",
+        campaign / "analysis/power_component_transition_2900_3028.json",
         campaign / "analysis/production_to1p25us_summary.json",
         campaign / "analysis/merged_controlled_history.json",
         campaign / "analysis/final_asb_through1p25us.json",
