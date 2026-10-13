@@ -43,6 +43,7 @@ frames, classification JSON, exact restart lineage, histories, selected
 checkpoints, source, logs, and checksums are retained in the consolidated V64
 delivery.  The post-one-microsecond extensions used the remaining compute
 allocation without changing source, physics, or tolerances and terminated
-normally.  Delivery is complete at the attained experimental scope; the full
+normally.  An independent checkpoint-2577 replay reproduces the terminal
+physical state, load, clocks, and ledgers bitwise.  Delivery is complete at the attained experimental scope; the full
 scientific objective of a jointly qualified DRX/ASB response family remains
 incomplete.

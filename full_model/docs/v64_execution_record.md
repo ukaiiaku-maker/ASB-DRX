@@ -174,3 +174,10 @@ met.  Grain count remains four and spontaneous birth was not exercised.  The
 controller closes with 2585 accepted intervals, seven accuracy-rejected trials,
 one admissibility-failed trial, no rejected physical front event, and maximum
 relative complete-energy closure `1.35982e-5`.
+
+An independent restart from checkpoint 2577 to the exact terminal target
+reproduces every physical array, the physical-state digest, load, step, clocks,
+ledgers, and runtime dataclass bitwise.  The two NPZ container hashes differ
+only because the replay correctly binds checkpoint 2577, rather than checkpoint
+2457, as its immediate provenance parent; diagnostic wall times and provenance
+are outside the physical-state comparison.
