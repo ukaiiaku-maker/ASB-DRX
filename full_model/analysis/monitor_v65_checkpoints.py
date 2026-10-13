@@ -36,6 +36,13 @@ def checkpoint_index(path: Path) -> int:
     return int(path.stem.rsplit("_", 1)[-1])
 
 
+def nonnegative_softening(peak_stress: float, stress: float) -> float:
+    """Return physical post-peak loss without roundoff-scale negatives."""
+    if peak_stress <= 0.0:
+        return 0.0
+    return max(0.0, (peak_stress-stress)/peak_stress)
+
+
 def accepted_history(run: Path, maximum_interval: int) -> list[dict]:
     telemetry = run/"accepted_telemetry.jsonl"
     if not telemetry.is_file():
@@ -71,7 +78,7 @@ def classify(checkpoint: Path, origin: Path, run: Path,
     peak = max((abs(float(item["shear_stress_Pa"])) for item in history),
                default=abs(float(row["post_front_equilibrated_stress_Pa"])))
     stress = abs(float(row["post_front_equilibrated_stress_Pa"]))
-    softening = (peak-stress)/max(peak, 1e-300)
+    softening = nonnegative_softening(peak, stress)
     criteria = PhysicalASBCriteria()
     width = row["power_width_minor_m"]
     checks = {
