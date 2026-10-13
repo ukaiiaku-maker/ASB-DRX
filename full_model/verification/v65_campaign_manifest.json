@@ -56,7 +56,7 @@
     "status": "RUNNING"
   },
   "autonomous_finalizer": {
-    "process_pid": 49354,
+    "process_pid": 49430,
     "manager_source_commit": "56947e7",
     "poll_interval_s": 60,
     "planned_actions": [
