@@ -54,9 +54,9 @@
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 2900,
-      "physical_time_s": 1.058480395164586e-6,
-      "sha256": "ae69474d4ffa9821cdac995e9e28a3af6f7e8a9b28197132791efd7818f8e7e8"
+      "adaptive_interval": 2964,
+      "physical_time_s": 1.0648831992177246e-6,
+      "sha256": "627e8df8940909f4b94cddb7fadc2eeafe44196a79df9a84087e74292e24c111"
     },
     "status": "RUNNING"
   },
@@ -89,7 +89,7 @@
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 2900,
+    "latest_classified_interval": 2964,
     "diagnostic_corrections": [
       {
         "adaptive_interval": 2836,

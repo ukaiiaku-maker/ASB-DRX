@@ -100,3 +100,12 @@ roundoff floor to both sides of the reconstructed peak; the reclassified
 softening fraction is exactly zero, with no classification or trajectory
 change.  Its correction artifact SHA-256 is
 `e9d0894af7ead2e20bc896bcdb5c70ab327d280f3378e9bc082bacdff9555f5b`.
+
+Checkpoint 2964 is durable at 1.064883199 microseconds with SHA-256
+`627e8df8940909f4b94cddb7fadc2eeafe44196a79df9a84087e74292e24c111`.
+Corrected softening is exactly zero and the stress remains at its running
+maximum.  Peak-minus-mean temperature is 52.7396 K, while power participation
+is 0.73010, aspect ratio is 1.14416, and heat/power overlap has declined to
+0.23173; strict ASB remains false.  Grain 20 has receded to 5.74892% net growth
+and 0.383734 cell displacement.  The last 64 accepted intervals retain the
+plastic-power-change limiter with a median tolerance ratio of 0.849482.
