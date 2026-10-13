@@ -51,10 +51,10 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_compatible_signed_absorption_and_conservative_network_redistribution_lower_complete_energy_without_imposed_rotation",
-    "next_executable_experiment": "run_reduced_H1_signed_absorption_and_H2_network_discriminators",
-    "source_identity": "f5a6bc6474d70333255a10d19c267648086e2c78",
-    "expected_discriminatory_observation": "signed_structural_change_and_total_energy_direction_separated_from_unsigned_absorption_and_geometry_dilution",
+    "physical_uncertainty": "whether_the_supported_reduced_structural_reaction_can_be_coupled_to_persistent_common_interface_content_and_remain_active_in_dynamic_and_static_protocols",
+    "next_executable_experiment": "integrate_structural_interface_reaction_then_execute_retained_state_dynamic_fixed_strain_and_unloaded_anneal_controls",
+    "source_identity": "226a8fc21942f7d4c6350a7e5252cded8623efff",
+    "expected_discriminatory_observation": "compatible_interface_content_changes_misorientation_with_exact_content_energy_and_work_ledgers_while_static_recovery_competes_without_new_plastic_strain",
     "resource_need": "lightweight_local",
     "result_status": "running"
   },

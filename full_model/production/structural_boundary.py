@@ -239,7 +239,9 @@ def absorb_lattice_content(
     candidate_energy = structural_boundary_energy_J_m2(candidate, parameters)
     delta = candidate_energy-before_energy
     accepted = delta <= float(energy_tolerance_J_m2)
-    if not compatible:
+    if plus == 0.0 and minus == 0.0:
+        classification = "no_incoming_content"
+    elif not compatible:
         classification = "incompatible_extrinsic_storage"
     elif plus > 0.0 and minus > 0.0 and abs(plus-minus) <= 1e-12*max(plus, minus):
         classification = "sign_balanced_no_rotation"

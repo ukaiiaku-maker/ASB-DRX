@@ -1,0 +1,184 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_interaction_stability/common_wall_dispersion.png": "49c61f3657b07b30d7e03f89d8f3c9142eb01555e0147891378fd355a9d7ccfb"
+  },
+  "base_state_total_reservoir_density_m2": 168010000000000.0,
+  "common_rho_log_curvature": "positive: d2[C rho log(rho/rho_ref)]/d rho2 = C/rho",
+  "conditions": {
+    "0": {
+      "leading_mode_composition": [
+        {
+          "coordinate": "('junction_m2', (0,))",
+          "magnitude": 0.5852325035608831
+        },
+        {
+          "coordinate": "('forest_plus_m2', (0,))",
+          "magnitude": 0.5732706026581555
+        },
+        {
+          "coordinate": "('forest_minus_m2', (1,))",
+          "magnitude": 0.573270602658154
+        },
+        {
+          "coordinate": "('mobile_plus_m2', (0,))",
+          "magnitude": 0.010568833781146087
+        },
+        {
+          "coordinate": "('mobile_minus_m2', (1,))",
+          "magnitude": 0.010568833781146066
+        },
+        {
+          "coordinate": "('wall_minus_m2', (1,))",
+          "magnitude": 0.0007515816226449953
+        },
+        {
+          "coordinate": "('wall_plus_m2', (0,))",
+          "magnitude": 0.0007515816226449948
+        },
+        {
+          "coordinate": "('temperature_K', ())",
+          "magnitude": 0.00013675326219758706
+        }
+      ],
+      "records": [
+        {
+          "dominant_coordinate_fraction": 0.5852325035608831,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 4.33004018539e-14,
+          "leading_real_rate_s": 452.31268704513735,
+          "mode_index": 1,
+          "wavelength_m": 1.2e-06
+        },
+        {
+          "dominant_coordinate_fraction": 0.5852306573000945,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 1.0893975141137656e-13,
+          "leading_real_rate_s": 452.3126895013095,
+          "mode_index": 2,
+          "wavelength_m": 6e-07
+        },
+        {
+          "dominant_coordinate_fraction": 0.5852250475614789,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 1.384808278466703e-13,
+          "leading_real_rate_s": 452.31269236267286,
+          "mode_index": 3,
+          "wavelength_m": 4e-07
+        },
+        {
+          "dominant_coordinate_fraction": 0.5852170426807316,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 2.068273681598467e-13,
+          "leading_real_rate_s": 452.31269481433094,
+          "mode_index": 4,
+          "wavelength_m": 3e-07
+        },
+        {
+          "dominant_coordinate_fraction": 0.5852087265158916,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 2.0840423788709695e-13,
+          "leading_real_rate_s": 452.3126967986188,
+          "mode_index": 5,
+          "wavelength_m": 2.4e-07
+        }
+      ]
+    },
+    "180000000": {
+      "leading_mode_composition": [
+        {
+          "coordinate": "('junction_m2', (0,))",
+          "magnitude": 0.5851309954064847
+        },
+        {
+          "coordinate": "('forest_minus_m2', (1,))",
+          "magnitude": 0.5733237332907601
+        },
+        {
+          "coordinate": "('forest_plus_m2', (0,))",
+          "magnitude": 0.5733237332907601
+        },
+        {
+          "coordinate": "('mobile_minus_m2', (1,))",
+          "magnitude": 0.010497947062685557
+        },
+        {
+          "coordinate": "('mobile_plus_m2', (0,))",
+          "magnitude": 0.01049794706268543
+        },
+        {
+          "coordinate": "('wall_minus_m2', (1,))",
+          "magnitude": 0.0007092994081485634
+        },
+        {
+          "coordinate": "('wall_plus_m2', (0,))",
+          "magnitude": 0.0007092994081485624
+        },
+        {
+          "coordinate": "('forest_minus_m2', (0,))",
+          "magnitude": 0.00015325949576302725
+        }
+      ],
+      "records": [
+        {
+          "dominant_coordinate_fraction": 0.5851309954064847,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 5.5067309809430886e-14,
+          "leading_real_rate_s": 480.09581302872186,
+          "mode_index": 1,
+          "wavelength_m": 1.2e-06
+        },
+        {
+          "dominant_coordinate_fraction": 0.5851292000774003,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 1.0878777474259854e-13,
+          "leading_real_rate_s": 480.09581553549043,
+          "mode_index": 2,
+          "wavelength_m": 6e-07
+        },
+        {
+          "dominant_coordinate_fraction": 0.5851238513137806,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 1.478882341159624e-13,
+          "leading_real_rate_s": 480.0958190657057,
+          "mode_index": 3,
+          "wavelength_m": 4e-07
+        },
+        {
+          "dominant_coordinate_fraction": 0.5851161900325251,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 1.9438270437710514e-13,
+          "leading_real_rate_s": 480.09582136264993,
+          "mode_index": 4,
+          "wavelength_m": 3e-07
+        },
+        {
+          "dominant_coordinate_fraction": 0.585108057095526,
+          "dominant_state_coordinate": "('junction_m2', (0,))",
+          "leading_imaginary_rate_s": 2.0141874279566707e-13,
+          "leading_real_rate_s": 480.0958237090181,
+          "mode_index": 5,
+          "wavelength_m": 2.4e-07
+        }
+      ]
+    }
+  },
+  "created_utc": "2026-10-13T23:44:25.188212+00:00",
+  "decision": {
+    "H3_interaction_selected_wall_spacing_supported": false,
+    "classification": "local_reaction_mode_not_finite_wavelength_patterning",
+    "local_reaction_instability_present": true,
+    "reason": "the leading positive tangent is nearly wave-number independent and is dominated by junction/forest exchange, while short nonlinear runs remain almost perfectly correlated with their imposed source maps. This does not establish an interaction-selected wall wavelength; it keeps H1/H2 primary."
+  },
+  "nonlinear_source_evidence": {
+    "gb_tj_density_source_correlation": 0.9999043100618816,
+    "gb_tj_peak_index": 2.0,
+    "random_density_source_correlation": 0.9942902915363769,
+    "random_peak_index": 11.180339887498949
+  },
+  "relative_dispersion_flatness": {
+    "0": 2.1563581137770368e-08,
+    "180000000": 2.224617628648009e-08
+  },
+  "schema": "v66-interaction-stability-v1",
+  "scope": "linear tangent of authoritative common residual plus nonlinear source comparison"
+}

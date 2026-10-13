@@ -1,0 +1,119 @@
+{
+  "H1": {
+    "dF_dLambda_J_m_extrema": [
+      -2.2666157935447016e-09,
+      6.075740594000886e-10
+    ],
+    "fraction_energy_favorable": 0.8867777777777778,
+    "prediction_confirmed": true,
+    "rate_Hz_at_theta2deg_rho2e14": {
+      "1100": 590091247987.8539,
+      "700": 436531757474.4303,
+      "900": 524822351789.34
+    },
+    "rho_m2_range": [
+      1000000000000.0,
+      2e+16
+    ],
+    "theta_deg_range": [
+      0.15,
+      12.0
+    ]
+  },
+  "H2": {
+    "critical_accommodation_stiffness_J_m2_rad2": 87.54150266697985,
+    "negative_balance_residual_m1": 0.0,
+    "negative_perturbation_delta_J_m2": -0.0001333689116639336,
+    "positive_balance_residual_m1": 0.0,
+    "positive_perturbation_delta_J_m2": -0.0001333689116639336,
+    "theta0_deg": 2.5,
+    "unconstrained_curvature_J_m2_rad2": -87.54150266697985
+  },
+  "artifacts": {
+    "full_model/verification/v66_reduced_rx/h1_absorption_map.png": "9e452ad75f8ba4eb8b6c5a9bface39a3f263a10d01dec11e0e6894d03f4aa3d0",
+    "full_model/verification/v66_reduced_rx/h2_network_redistribution.png": "471457ed6fc387b56e4c90a6dd4fca89ec836b74259faa27d80e4b16322bd617"
+  },
+  "controls": {
+    "compatible_positive": {
+      "accepted": true,
+      "annihilated_line_m1": 0.0,
+      "classification": "compatible_absorption_rotation",
+      "delta_helmholtz_J_m2": -0.007848298308263613,
+      "extrinsic_line_change_m1": 0.0,
+      "line_balance_residual_m1": 6.51925802230835e-09,
+      "misorientation_change_deg": 0.09999999999999991,
+      "structural_change_m1": 7037617.951590031
+    },
+    "incompatible_positive": {
+      "accepted": true,
+      "annihilated_line_m1": 0.0,
+      "classification": "incompatible_extrinsic_storage",
+      "delta_helmholtz_J_m2": -0.003926236624159252,
+      "extrinsic_line_change_m1": 7037617.951590038,
+      "line_balance_residual_m1": 0.0,
+      "misorientation_change_deg": 0.0,
+      "structural_change_m1": 0.0
+    },
+    "no_incoming": {
+      "accepted": true,
+      "annihilated_line_m1": 0.0,
+      "classification": "compatible_absorption_rotation",
+      "delta_helmholtz_J_m2": 0.0,
+      "extrinsic_line_change_m1": 0.0,
+      "line_balance_residual_m1": 0.0,
+      "misorientation_change_deg": 0.0,
+      "structural_change_m1": 0.0
+    },
+    "sign_balanced": {
+      "accepted": true,
+      "annihilated_line_m1": 0.0,
+      "classification": "sign_balanced_no_rotation",
+      "delta_helmholtz_J_m2": -0.00783193492293055,
+      "extrinsic_line_change_m1": 14075235.903180076,
+      "line_balance_residual_m1": 0.0,
+      "misorientation_change_deg": 0.0,
+      "structural_change_m1": 0.0
+    }
+  },
+  "created_utc": "2026-10-13T23:39:22.715653+00:00",
+  "geometry_dilution": {
+    "formula": "Ndot_required = theta * 2*pi*v / b",
+    "radial_speed_um_s_range": [
+      0.001,
+      1000.0
+    ],
+    "radius_um_range": [
+      0.1,
+      20.0
+    ],
+    "required_structural_line_rate_m_s_range": [
+      2.2109328855486914,
+      2210932.8855486913
+    ],
+    "theta_deg": 5.0
+  },
+  "material_claim": "generic mechanism discriminator; not calibrated",
+  "parameters": {
+    "activation_enthalpy_eV": 1.5,
+    "activation_segment_m": 2.48e-10,
+    "attempt_frequency_Hz": 1000000000000.0,
+    "barrier_floor_eV": 0.05,
+    "bulk_correlation_energy_J_m": 8e-11,
+    "bulk_line_energy_J_m": 1.5e-09,
+    "burgers_m": 2.48e-10,
+    "extrinsic_line_energy_J_m": 1.5e-09,
+    "high_angle_energy_J_m2": 0.5,
+    "reference_density_m2": 1000000000000.0,
+    "reservoir_width_m": 5e-07,
+    "transition_misorientation_rad": 0.2617993877991494
+  },
+  "pre_manifest_result_sha256": "c461b3bd99a461ad6dfbef53ccab8d910c65c850711b35cdede7528a09099780",
+  "schema": "v66-reduced-rx-discriminators-v1",
+  "scientific_decision": {
+    "H1_supported_in_reduced_scope": true,
+    "H2_redistribution_supported_in_reduced_scope": true,
+    "production_integration_qualified": false,
+    "reason": "compatible signed absorption can lower complete reduced energy and change misorientation; Read-Shockley concavity makes conservative redistribution energy lowering unless accommodation exceeds the derived critical stiffness. Kinetic accessibility and tensorial production coupling remain to be tested."
+  },
+  "scope": "straight low-angle tilt boundary and three-region common-axis network"
+}

@@ -70,6 +70,18 @@ def test_sign_balanced_and_incompatible_controls_do_not_rotate():
     assert incompatible.line_balance_residual_m1 == pytest.approx(0.0, abs=1e-8)
 
 
+def test_zero_absorption_is_explicit_no_event():
+    p = StructuralBoundaryParameters()
+    state = StructuralBoundaryState(2e14, 2e14,
+                                    math.radians(2.0)/p.burgers_m)
+    result = absorb_lattice_content(
+        state, absorbed_plus_m1=0.0, absorbed_minus_m1=0.0,
+        compatible=True, parameters=p)
+    assert result.classification == "no_incoming_content"
+    assert result.candidate == state
+    assert result.delta_helmholtz_J_m2 == 0.0
+
+
 def test_opposite_signed_absorption_reports_annihilation():
     p = StructuralBoundaryParameters()
     state = StructuralBoundaryState(

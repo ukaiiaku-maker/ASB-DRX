@@ -1,0 +1,70 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_source_organization/source_organization_fields.png": "f76498a9141c6f79ad178732076e37467c4837f96369596396ddde7bb38068b3"
+  },
+  "cases": {
+    "gb_tj_only": {
+      "density_boundary_correlation": 0.9999043100618816,
+      "density_source_correlation": 0.9999043100618816,
+      "dt_s": 1e-05,
+      "integrated_pair_source_m2": 134848318265842.33,
+      "mean_total_density_m2": 269697436531684.66,
+      "minimum_transport_acceptance_scale": 1.0,
+      "rms_nye_m1": 711.8161937576169,
+      "rms_orientation_rad": 0.0001469257519101013,
+      "rms_signed_mobile_m2": 1950187980329.3567,
+      "source_line_balance_max_abs_m2": 1.5,
+      "structure_factor_peak_index": 2.0,
+      "total_density_cv": 0.3818347936779381
+    },
+    "random_bulk": {
+      "density_boundary_correlation": 0.014779180363754491,
+      "density_source_correlation": 0.9942902915363769,
+      "dt_s": 1e-05,
+      "integrated_pair_source_m2": 134848318265842.33,
+      "mean_total_density_m2": 269697436531684.66,
+      "minimum_transport_acceptance_scale": 1.0,
+      "rms_nye_m1": 4194.043192080142,
+      "rms_orientation_rad": 0.00014460986033104222,
+      "rms_signed_mobile_m2": 4562089965345.123,
+      "source_line_balance_max_abs_m2": 1.5,
+      "structure_factor_peak_index": 11.180339887498949,
+      "total_density_cv": 0.30948691014116514
+    }
+  },
+  "created_utc": "2026-10-13T23:43:07.731688+00:00",
+  "decision": {
+    "interpretation": "source localization alone creates distinguishable density and GND heterogeneity, but finite-time structural-wall qualification requires the absorption/network reaction and complete source-energy transaction",
+    "location_changes_organization": true,
+    "matched_integrated_source": true,
+    "physical_wall_claim": false
+  },
+  "numerics": {
+    "common_transport": "upwind production residual",
+    "duration_s": 0.002,
+    "grid": [
+      48,
+      48
+    ],
+    "length_m": 4.8e-06,
+    "random_control": "exact permutation of GB/TJ site weights",
+    "resolved_stress_Pa": 180000000.0,
+    "steps": 200,
+    "temperature_K": 900.0
+  },
+  "production_qualification": false,
+  "reason_not_production_qualified": "the Hall-Petch hazard is physical, but its sign-balanced pair transition kernel and source work/heat ledger remain a V66 hypothesis",
+  "schema": "v66-source-organization-v1",
+  "scope": "source-location discriminator using common signed transport",
+  "source_parameters": {
+    "activation_enthalpy_eV": 1.9,
+    "activation_entropy_kB": 0.0,
+    "attempt_frequency_Hz": 1000000000000.0,
+    "barrier_floor_eV": 0.05,
+    "burgers_m": 2.48e-10,
+    "grain_size_m": 2.4e-06,
+    "intrinsic_activation_volume_m3": 1.5252992000000005e-29,
+    "pair_increment_m2": 100000000000000.0,
+    "tj_site_weight": 2.0
+  }
+}
