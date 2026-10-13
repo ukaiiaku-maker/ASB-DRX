@@ -61,8 +61,8 @@
     "status": "RUNNING"
   },
   "autonomous_finalizer": {
-    "process_pid": 51705,
-    "manager_source_commit": "b95f49f",
+    "process_pid": 52314,
+    "manager_source_commit": "57701dc",
     "poll_interval_s": 60,
     "planned_actions": [
       "summarize controlled production",
@@ -74,9 +74,9 @@
     "status": "WAITING_FOR_PRODUCTION"
   },
   "autonomous_closure": {
-    "process_pid": 51759,
-    "manager_source_commit": "b95f49f",
-    "waits_for_finalizer_pid": 51705,
+    "process_pid": 52369,
+    "manager_source_commit": "57701dc",
+    "waits_for_finalizer_pid": 52314,
     "planned_actions": [
       "write machine-readable and Markdown final decisions",
       "build compact definitive archive with production and evidence source",
@@ -86,8 +86,8 @@
     "status": "WAITING_FOR_FINALIZER"
   },
   "live_checkpoint_monitor": {
-    "process_pid": 50358,
-    "source_commit": "bae59a2",
+    "process_pid": 52396,
+    "source_commit": "57701dc",
     "poll_interval_s": 60,
     "latest_classified_interval": 2836,
     "status": "RUNNING"
