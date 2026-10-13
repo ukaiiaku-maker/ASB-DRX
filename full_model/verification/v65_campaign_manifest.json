@@ -61,8 +61,8 @@
     "status": "RUNNING"
   },
   "autonomous_finalizer": {
-    "process_pid": 50794,
-    "manager_source_commit": "6b91323",
+    "process_pid": 51273,
+    "manager_source_commit": "5bad697",
     "poll_interval_s": 60,
     "planned_actions": [
       "summarize controlled production",
