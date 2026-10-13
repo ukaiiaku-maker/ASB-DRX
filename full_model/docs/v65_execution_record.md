@@ -245,7 +245,13 @@ therefore classified `UNRESOLVED_COMPONENT_TRANSITION`. The identity-audit
 SHA-256 is
 `c85d0c04ab05053b390db1caf3004434111c4b6281449d201117c6cae2e1d157`.
 
-The prospective peak validator remains pending through accepted interval
-3543. The latest observed stress maximum is at 1.141478 microseconds, still
-5.217 nanoseconds before the frozen projection midpoint, and no post-peak lag
-has accrued. This is neither observed softening nor a strict-ASB claim.
+The prospective peak test is validated without revising its forecast or
+acceptance rule. Accepted scalar stress peaks at interval 3559 and
+1.144907929 microseconds, 1.787 nanoseconds below the frozen projection
+midpoint and inside the predeclared plus-or-minus 2-nanosecond band. It then
+remains strictly lower through interval 3582, an elapsed 5.82656 nanoseconds
+against the predeclared 5-nanosecond confirmation lag. The peak stress is
+3.987800892 GPa and the confirmed softening fraction is 1.25463e-5. This
+validates a local scalar constitutive peak only; it is neither evidence of
+spatial localization nor a strict-ASB claim. The validation artifact SHA-256
+is `6af5619e6fa4716c976d5c6261d4350e793c2bd542769ed54cf9638b072c2a98`.

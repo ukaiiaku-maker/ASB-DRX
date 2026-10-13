@@ -175,8 +175,15 @@
     "solver_pid": 49003,
     "predeclared_forecast_tolerance_s": 2e-9,
     "confirmation_lag_s": 5e-9,
+    "classification": "FORECAST_VALIDATED_LOCAL_SCALAR_PEAK",
+    "observed_peak_interval": 3559,
+    "observed_peak_time_s": 1.1449079285929656e-6,
+    "observed_peak_stress_Pa": 3987800892.1798434,
+    "observed_minus_forecast_midpoint_s": -1.786994285914032e-9,
+    "confirmation_elapsed_s": 5.826561825763221e-9,
+    "validation_artifact_sha256": "6af5619e6fa4716c976d5c6261d4350e793c2bd542769ed54cf9638b072c2a98",
     "strict_asb_claim": false,
-    "status": "RUNNING"
+    "status": "COMPLETE"
   },
   "execution_status": "RUNNING",
   "scientific_status": "PENDING"
