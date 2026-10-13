@@ -22,10 +22,18 @@ def sha256(path: Path) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, action="append", required=True)
+    parser.add_argument("--history-file", type=Path, action="append", default=[])
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     checkpoints = _checkpoint_map(args.run)
     histories = _history_map(args.run)
+    history_sources = [str(path.resolve()) for path in args.history_file]
+    for path in args.history_file:
+        for row in json.loads(path.read_text()):
+            identifier = int(row.get("adaptive_interval", row.get("step")))
+            if identifier in histories and histories[identifier] != row:
+                raise ValueError(f"conflicting scalar history at {identifier}")
+            histories[identifier] = row
     segments = _sampling_segment_metadata(args.run)
     rows = []
     components = {}
@@ -57,11 +65,20 @@ def main() -> None:
         matched_control_available=False, refinement_passed=False,
         qualifying_operator_id="local_realized_event")
     scalar_history = [row for step, row in sorted(histories.items())]
+    history_indices = sorted(histories)
+    history_gaps = [
+        {"after_interval": left, "before_interval": right,
+         "missing_count": right-left-1}
+        for left, right in zip(history_indices, history_indices[1:])
+        if right != left+1]
     peak = (None if not scalar_history else
             max(scalar_history, key=lambda row: abs(row["shear_stress_Pa"])))
     final = None if not scalar_history else scalar_history[-1]
     scalar_summary = {
         "record_count": len(scalar_history),
+        "explicit_history_sources": history_sources,
+        "gaps": history_gaps,
+        "history_complete": not history_gaps,
         "peak_shear_stress_Pa": (
             None if peak is None else peak["shear_stress_Pa"]),
         "peak_physical_time_s": (
@@ -77,8 +94,9 @@ def main() -> None:
             (abs(peak["shear_stress_Pa"])-abs(final["shear_stress_Pa"]))
             /max(abs(peak["shear_stress_Pa"]), 1e-300)),
         "semantics": (
-            "dense accepted-time scalar history; spatial conjunction and "
-            "persistence are evaluated only at raw checkpoint times"),
+            "available accepted-time scalar history; declared gaps prohibit "
+            "a whole-history label, and spatial conjunction/persistence are "
+            "evaluated only at raw checkpoint times"),
     }
     payload = {
         "schema": "asb-drx-v65-controlled-episode-v1",
