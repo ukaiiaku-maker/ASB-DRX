@@ -8,6 +8,10 @@
   "errors": 0,
   "pytest_wall_time_s": 280.67,
   "process_real_time_s": 281.33,
+  "focused_closure_command": "PYTHONPATH=src:. pytest -q tests/test_v64_complete_multigrain_interval.py tests/test_v64_coupled_interval_control.py tests/test_v64_profile_tracking.py tests/test_v64_rate_attribution.py",
+  "focused_closure_passed": 13,
+  "focused_closure_failed": 0,
+  "focused_closure_wall_time_s": 1.70,
   "misconfigured_attempt_preserved": true,
   "misconfigured_attempt_interpretation": "collection-only PYTHONPATH omission; no test executed"
 }
