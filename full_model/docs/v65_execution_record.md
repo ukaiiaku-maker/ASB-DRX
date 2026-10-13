@@ -89,3 +89,14 @@ diagnostic to the physical nonnegative range.  Reclassification gives exactly
 zero softening and leaves every ASB check and the trajectory unchanged.  The
 preserved correction artifact has SHA-256
 `eb092d26d6f76791c4ce0d41f989ccf5e911f0ec7f4a7a62e2af664b2752bae7`.
+
+Checkpoint 2900 is durable at 1.058480395 microseconds with SHA-256
+`ae69474d4ffa9821cdac995e9e28a3af6f7e8a9b28197132791efd7818f8e7e8`.
+The trajectory remains hardening.  Peak-minus-mean temperature is 51.9202 K,
+but power participation is 0.72783, aspect ratio is 1.13347, heat/power overlap
+is 0.23759, and strict ASB is false.  Grain 20 has receded to 5.90118% net
+growth and 0.393765 cell displacement.  Source `6b1d860` applies the same
+roundoff floor to both sides of the reconstructed peak; the reclassified
+softening fraction is exactly zero, with no classification or trajectory
+change.  Its correction artifact SHA-256 is
+`e9d0894af7ead2e20bc896bcdb5c70ab327d280f3378e9bc082bacdff9555f5b`.
