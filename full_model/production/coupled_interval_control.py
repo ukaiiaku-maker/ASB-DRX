@@ -142,7 +142,8 @@ def advance_error_controlled_interval(
         controller: AdaptiveControllerState,
         interval_map: Callable[[CoupledEndpoint, float], CoupledInterval],
         metrics: tuple[ErrorMetric, ...], *,
-        requested_maximum_s: float | None = None) -> AcceptedAdaptiveInterval:
+        requested_maximum_s: float | None = None,
+        proposal_policy: str = "cautious") -> AcceptedAdaptiveInterval:
     """Advance exactly one accepted interval and publish the fine path only.
 
     A rejected step's already-computed first half becomes the coarse candidate
@@ -151,6 +152,8 @@ def advance_error_controlled_interval(
     private and is discarded.
     """
     controller.validate()
+    if proposal_policy not in {"cautious", "error_responsive"}:
+        raise ValueError("unknown adaptive proposal policy")
     if not metrics:
         raise ValueError("at least one physical accuracy metric is required")
     cap = (controller.maximum_step_s if requested_maximum_s is None else
@@ -235,16 +238,27 @@ def advance_error_controlled_interval(
             # plateaus.  Growth remains only 1.25x after two consecutive
             # accepts, and the proposed interval is independently tested and
             # rolled back before publication if that margin does not persist.
-            low = worst_ratio <= 0.5
-            low_count = (controller.consecutive_low_error_accepts+1
-                         if low else 0)
             proposed = h
-            # No convergence order is assumed.  Growth requires two successive
-            # intervals comfortably below tolerance and remains deliberately
-            # bounded; any failed proposal rolls back normally.
-            if low_count >= 2:
-                proposed = min(1.25*h, controller.maximum_step_s)
+            if proposal_policy == "cautious":
+                low = worst_ratio <= 0.5
+                low_count = (controller.consecutive_low_error_accepts+1
+                             if low else 0)
+                # No convergence order is assumed. Growth requires two
+                # successive intervals comfortably below tolerance.
+                if low_count >= 2:
+                    proposed = min(1.25*h, controller.maximum_step_s)
+                    low_count = 0
+            else:
+                # The normalized coarse/fine discrepancy is locally close to
+                # first order in h when its denominator is an endpoint
+                # increment. Aim below the hard boundary, cap growth at the
+                # already qualified 1.25x bound, and still independently test
+                # and roll back every resulting proposal before publication.
                 low_count = 0
+                if worst_ratio < 0.85:
+                    factor = min(1.25, max(1.0, 0.85/max(
+                        worst_ratio, np.finfo(float).tiny)))
+                    proposed = min(factor*h, controller.maximum_step_s)
             updated = replace(
                 controller, proposed_step_s=max(
                     controller.minimum_step_s, min(proposed,
@@ -260,6 +274,7 @@ def advance_error_controlled_interval(
                 "schema": "asb-drx-v64-complete-interval-control-v1",
                 "accepted_duration_s": h,
                 "published_path": "two_complete_half_intervals",
+                "proposal_policy": proposal_policy,
                 "coarse_path_published": False,
                 "attempts": attempts,
                 "controller_before": controller.to_dict(),

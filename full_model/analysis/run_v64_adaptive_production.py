@@ -215,12 +215,16 @@ def main() -> None:
         help="manifest certifying recursively controlled analytic-origin ancestry")
     parser.add_argument("--warm-start-front-factor", action="store_true")
     parser.add_argument(
+        "--proposal-policy", choices=("cautious", "error_responsive"),
+        default="cautious")
+    parser.add_argument(
         "--numerical-transition",
         choices=("none", "v64_bracketed_front_root",
                  "v64_adaptive_growth", "v64_exact_front_cache",
                  "v64_set_valued_active_cone",
                  "v65_terminal_horizon_restore",
                  "v65_warm_started_front",
+                 "v65_predictive_warm_front",
                  "v65_instrumentation_only"),
         default="none")
     args = parser.parse_args()
@@ -275,6 +279,10 @@ def main() -> None:
                               rtol=0.0, atol=0.0)
                for name, value in requested_accuracy.items()):
             raise ValueError("restart accuracy tolerances differ from checkpoint")
+        prior_policy = prior_accuracy.get("proposal_policy")
+        if (prior_policy is not None
+                and prior_policy != args.proposal_policy):
+            raise ValueError("restart adaptive proposal policy differs")
     if args.restart_proposed_step is not None:
         if restored is None:
             raise ValueError("proposal restoration requires a saved controller")
@@ -289,22 +297,33 @@ def main() -> None:
         raise ValueError(
             "declared numerical transition requires a changed adaptive source")
     restores_terminal_horizon = args.numerical_transition in {
-        "v65_terminal_horizon_restore", "v65_warm_started_front"}
+        "v65_terminal_horizon_restore", "v65_warm_started_front",
+        "v65_predictive_warm_front"}
     if (restores_terminal_horizon
             != (args.restart_proposed_step is not None)):
         raise ValueError(
             "V65 terminal-horizon transition and proposal restoration must "
             "be declared together")
-    if args.numerical_transition == "v65_warm_started_front":
+    if args.numerical_transition in {
+            "v65_warm_started_front", "v65_predictive_warm_front"}:
         if not (args.warm_start_front_factor
                 and args.restart_proposed_step is not None):
             raise ValueError(
                 "V65 warm-start transition requires warm start and explicit "
                 "terminal-horizon proposal restoration")
+        if (args.numerical_transition == "v65_predictive_warm_front"
+                and args.proposal_policy != "error_responsive"):
+            raise ValueError(
+                "V65 predictive transition requires error-responsive proposals")
     elif args.warm_start_front_factor and source_changed:
         raise ValueError(
             "first front warm start across a source seam requires its "
             "declared transition")
+    if (args.proposal_policy == "error_responsive" and source_changed
+            and args.numerical_transition != "v65_predictive_warm_front"):
+        raise ValueError(
+            "first error-responsive proposal across a source seam requires "
+            "its declared transition")
     provenance = {
         "source_commit": head,
         "restart_transition": (
@@ -360,6 +379,13 @@ def main() -> None:
             "factor; every root is independently converged and verified, and "
             "physical laws, complete-map trials, and 2% tolerances are unchanged")
         provenance["restored_proposed_step_s"] = controller.proposed_step_s
+    elif args.numerical_transition == "v65_predictive_warm_front":
+        provenance["numerical_change"] = (
+            "restore the ordinary proposal, warm-start the unchanged verified "
+            "front conjugacy root, and use a bounded error-responsive proposal "
+            "targeting 0.85 of tolerance; every proposal retains the complete "
+            "coarse/two-half test, private rollback, and unchanged 2% metrics")
+        provenance["restored_proposed_step_s"] = controller.proposed_step_s
     elif args.numerical_transition == "v65_instrumentation_only":
         provenance["numerical_change"] = (
             "diagnostic-only counters for directional prices, joint capacity "
@@ -392,6 +418,7 @@ def main() -> None:
             "minimum_step_s": args.minimum_step,
             "maximum_step_s": args.maximum_step,
             "accepted_solution": "two_complete_half_intervals",
+            "proposal_policy": args.proposal_policy,
             "metric_definitions": metric_definitions,
         },
     }
@@ -404,7 +431,8 @@ def main() -> None:
         accepted = advance_error_controlled_interval(
             endpoint, controller,
             lambda parent, h: advance_complete_multigrain_interval(
-                parent, h, context), metrics, requested_maximum_s=remaining)
+                parent, h, context), metrics, requested_maximum_s=remaining,
+            proposal_policy=args.proposal_policy)
         endpoint = accepted.interval.endpoint
         controller = accepted.controller
         errors = accepted.decision["attempts"][-1]["metric_errors"]

@@ -94,6 +94,24 @@ def test_two_half_tolerance_accepts_trigger_only_bounded_tested_growth():
     assert second.decision["published_path"] == "two_complete_half_intervals"
 
 
+def test_error_responsive_policy_grows_below_target_and_retests():
+    metric = (ErrorMetric("x", "endpoint_increment", .1, 1e-12),)
+    control = AdaptiveControllerState(.1, .01, .5)
+    first = advance_error_controlled_interval(
+        endpoint(), control, nonlinear_map([]), metric,
+        proposal_policy="error_responsive")
+    assert first.decision["proposal_policy"] == "error_responsive"
+    assert first.controller.proposed_step_s > first.decision[
+        "accepted_duration_s"]
+    assert first.controller.proposed_step_s <= 1.25*first.decision[
+        "accepted_duration_s"]
+    second = advance_error_controlled_interval(
+        first.interval.endpoint, first.controller, nonlinear_map([]), metric,
+        proposal_policy="error_responsive")
+    assert second.decision["attempts"][-1]["classification"] == (
+        "ACCEPTED_FINE_PATH")
+
+
 def test_integral_and_rate_metrics_are_independent():
     result = advance_error_controlled_interval(
         endpoint(), AdaptiveControllerState(.05, .0125, .05),
