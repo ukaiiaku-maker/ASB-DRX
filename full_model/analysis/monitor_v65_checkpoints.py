@@ -40,7 +40,12 @@ def nonnegative_softening(peak_stress: float, stress: float) -> float:
     """Return physical post-peak loss without roundoff-scale negatives."""
     if peak_stress <= 0.0:
         return 0.0
-    return max(0.0, (peak_stress-stress)/peak_stress)
+    loss = peak_stress-stress
+    roundoff = 64.0*np.finfo(float).eps*max(
+        abs(peak_stress), abs(stress), 1.0)
+    if loss <= roundoff:
+        return 0.0
+    return loss/peak_stress
 
 
 def accepted_history(run: Path, maximum_interval: int) -> list[dict]:
