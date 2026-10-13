@@ -165,3 +165,8 @@ ASB is false. The same largest component retains 0.960452 identity over
 3156--3220 while the whole field becomes more diffuse. The identity audit
 SHA-256 is
 `7ed412dd9bf7f4fd10b35a09f4bb8d7d7b0fa021c30952308e7629df24f82988`.
+
+Future checkpoint-pair identity audits are assigned to the lightweight
+companion monitor under source `9cf7610`, PID 56883. It reads only complete
+atomic checkpoints, writes atomic JSON into `analysis/live_monitor`, and does
+not modify the solver, accepted state, classification thresholds, or cadence.
