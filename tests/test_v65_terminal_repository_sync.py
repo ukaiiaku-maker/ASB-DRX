@@ -12,7 +12,10 @@ def test_terminal_sync_records_exact_checkpoint_and_claim_boundary(tmp_path):
         "active_production": {},
         "live_checkpoint_monitor": {},
         "component_identity_monitor": {},
+        "autonomous_finalizer": {},
+        "autonomous_closure": {},
         "execution_status": "RUNNING",
+        "scientific_status": "PENDING",
     }
     result = {
         "execution_status": "TARGET_REACHED",
@@ -49,5 +52,9 @@ def test_terminal_sync_records_exact_checkpoint_and_claim_boundary(tmp_path):
     assert updated["active_production"]["terminal_checkpoint_sha256"] == sha
     assert updated["active_production"]["status"] == "TARGET_REACHED"
     assert updated["component_identity_monitor"]["status"] == "COMPLETE"
-    assert updated["execution_status"] == "TARGET_REACHED_POSTPROCESS_PENDING"
+    assert updated["execution_status"] == "TARGET_REACHED"
+    assert updated["scientific_status"] == "SEE_FINAL_DECISION_RECORD"
+    assert updated["autonomous_finalizer"]["status"].endswith(
+        "SEE_FINALIZER_STATUS"
+    )
     assert "final cumulative classifier and tests remain post-processing work" in paragraph

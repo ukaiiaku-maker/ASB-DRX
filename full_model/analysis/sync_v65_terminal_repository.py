@@ -65,9 +65,16 @@ def synchronize(
         "latest_completed_pair"
     )
     identity_record["status"] = "COMPLETE"
-    updated["execution_status"] = "TARGET_REACHED_POSTPROCESS_PENDING"
+    updated["execution_status"] = "TARGET_REACHED"
+    updated["scientific_status"] = "SEE_FINAL_DECISION_RECORD"
+    updated["autonomous_finalizer"]["status"] = (
+        "POSTPROCESSING_OR_COMPLETE_SEE_FINALIZER_STATUS"
+    )
+    updated["autonomous_closure"]["status"] = (
+        "WAITING_OR_COMPLETE_SEE_CLOSURE_STATUS"
+    )
     updated["terminal_repository_sync"] = {
-        "status": "READY_TO_COMMIT",
+        "status": "SYNCHRONIZED_SEE_REPOSITORY_SYNC_STATUS",
         "terminal_checkpoint_sha256": result["checkpoint_sha256"],
         "terminal_interval": int(latest["adaptive_interval"]),
         "trajectory_modified": False,
