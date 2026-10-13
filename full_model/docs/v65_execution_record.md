@@ -180,3 +180,10 @@ peak-minus-mean temperature is 57.5699 K, power participation is 0.74328,
 heat/power overlap is 0.10108, and the width remains unresolved. Strict ASB
 is false. The autonomous identity monitor classifies 3220--3284 as
 `STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION` with 0.930108 overlap.
+
+Terminal repository provenance is protected by a post-solver synchronization
+manager under source `29c201f`, PID 57716. It waits for the exact target result,
+terminal physical classification, and completed identity monitor; then it
+atomically updates this record and the campaign manifest, runs its focused
+test, commits, and pushes. The definitive archive now requires that successful
+sync status, so a stale running-state manifest cannot silently enter closure.
