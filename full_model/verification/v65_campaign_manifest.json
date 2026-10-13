@@ -61,8 +61,8 @@
     "status": "RUNNING"
   },
   "autonomous_finalizer": {
-    "process_pid": 51273,
-    "manager_source_commit": "5bad697",
+    "process_pid": 51705,
+    "manager_source_commit": "b95f49f",
     "poll_interval_s": 60,
     "planned_actions": [
       "summarize controlled production",
@@ -72,6 +72,18 @@
       "run focused and canonical tests"
     ],
     "status": "WAITING_FOR_PRODUCTION"
+  },
+  "autonomous_closure": {
+    "process_pid": 51759,
+    "manager_source_commit": "b95f49f",
+    "waits_for_finalizer_pid": 51705,
+    "planned_actions": [
+      "write machine-readable and Markdown final decisions",
+      "build compact definitive archive with production and evidence source",
+      "verify every archived payload checksum",
+      "write atomic closure status and archive digest"
+    ],
+    "status": "WAITING_FOR_FINALIZER"
   },
   "live_checkpoint_monitor": {
     "process_pid": 50358,
