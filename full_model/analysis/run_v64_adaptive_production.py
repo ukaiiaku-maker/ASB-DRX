@@ -220,7 +220,8 @@ def main() -> None:
                  "v64_adaptive_growth", "v64_exact_front_cache",
                  "v64_set_valued_active_cone",
                  "v65_terminal_horizon_restore",
-                 "v65_warm_started_front"),
+                 "v65_warm_started_front",
+                 "v65_instrumentation_only"),
         default="none")
     args = parser.parse_args()
     if digest(args.resume) != args.expected_resume_sha256:
@@ -300,8 +301,10 @@ def main() -> None:
             raise ValueError(
                 "V65 warm-start transition requires warm start and explicit "
                 "terminal-horizon proposal restoration")
-    elif args.warm_start_front_factor:
-        raise ValueError("front warm start requires its declared transition")
+    elif args.warm_start_front_factor and source_changed:
+        raise ValueError(
+            "first front warm start across a source seam requires its "
+            "declared transition")
     provenance = {
         "source_commit": head,
         "restart_transition": (
@@ -357,6 +360,11 @@ def main() -> None:
             "factor; every root is independently converged and verified, and "
             "physical laws, complete-map trials, and 2% tolerances are unchanged")
         provenance["restored_proposed_step_s"] = controller.proposed_step_s
+    elif args.numerical_transition == "v65_instrumentation_only":
+        provenance["numerical_change"] = (
+            "diagnostic-only counters for directional prices, joint capacity "
+            "solves, complete-energy evaluations, and scalar force iterations; "
+            "physical and numerical update paths unchanged")
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     telemetry_path = args.out/"accepted_telemetry.jsonl"

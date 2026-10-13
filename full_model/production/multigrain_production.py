@@ -128,6 +128,8 @@ class MultiGrainProductionDecision:
     force_rate_closure_bracket: dict | None = None
     force_rate_iterations: int = 0
     complete_energy_evaluations: int = 0
+    independent_directional_prices: int = 0
+    joint_capacity_solves: int = 0
 
 
 @dataclass(frozen=True)
@@ -807,6 +809,7 @@ def advance_multigrain_front(
     parent_energy = evaluate_complete_multigrain_energy(
         state, **common_energy)
     complete_energy_evaluations = 1
+    independent_directional_prices = 0
 
     def request_at_force_scale(interface, pressure_ab, pressure_ba,
                                weight_ab, weight_ba, scale):
@@ -927,6 +930,9 @@ def advance_multigrain_front(
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
             interval_s=dt, systems=systems,
             precomputed_before_energy=parent_energy)
+        evaluated_prices = int(ab is not None)+int(ba is not None)
+        independent_directional_prices += evaluated_prices
+        complete_energy_evaluations += evaluated_prices
         if ab is None and ba is None:
             continue
         pressure_ab = 0.0 if ab is None else max(-ab[0]/ab[1], 0.0)
@@ -1282,7 +1288,8 @@ def advance_multigrain_front(
                 max(maximum_unclipped_by_interface.values(), default=0.0),
                 force_rate_closure_classification,
                 force_rate_closure_bracket, force_rate_iterations,
-                complete_energy_evaluations))
+                complete_energy_evaluations, independent_directional_prices,
+                complete_energy_evaluations-1))
 
 
 def advance_multigrain_front_interval(

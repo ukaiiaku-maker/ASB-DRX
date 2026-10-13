@@ -259,6 +259,10 @@ def advance_complete_multigrain_interval(
             item.force_rate_iterations for item in fronts],
         "front_complete_energy_evaluations": [
             item.complete_energy_evaluations for item in fronts],
+        "front_independent_directional_prices": [
+            item.independent_directional_prices for item in fronts],
+        "front_joint_capacity_solves": [
+            item.joint_capacity_solves for item in fronts],
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "front_map": front_wall_time,
