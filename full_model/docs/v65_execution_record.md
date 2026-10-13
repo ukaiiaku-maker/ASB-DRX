@@ -170,3 +170,13 @@ Future checkpoint-pair identity audits are assigned to the lightweight
 companion monitor under source `9cf7610`, PID 56883. It reads only complete
 atomic checkpoints, writes atomic JSON into `analysis/live_monitor`, and does
 not modify the solver, accepted state, classification thresholds, or cadence.
+
+The unattended path is verified at checkpoint 3284, durable at 1.101554807
+microseconds with SHA-256
+`26a45e52f775c74609705f3b21461661b3a3a8e9973097f9648a2a4ba797454f`.
+Grain 20 has receded below the endpoint five-percent growth screen to 4.78938%
+and 0.320360 cell displacement. The stress remains at its running maximum;
+peak-minus-mean temperature is 57.5699 K, power participation is 0.74328,
+heat/power overlap is 0.10108, and the width remains unresolved. Strict ASB
+is false. The autonomous identity monitor classifies 3220--3284 as
+`STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION` with 0.930108 overlap.
