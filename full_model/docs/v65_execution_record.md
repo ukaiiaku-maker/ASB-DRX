@@ -268,3 +268,15 @@ ASB is false. The associated-fragment union identity overlap across
 3540--3604 falls to 0.496084, so this is conservatively classified
 `UNRESOLVED_COMPONENT_TRANSITION`; the identity-audit SHA-256 is
 `4a40d43ab23b3b834d0b5667f3ce42f41aadf28d8bd101a777c771634469af56`.
+
+Checkpoint 3668 is durable at 1.172454553 microseconds with SHA-256
+`8291214c7eebbe279a7c01414031502c7d7b7420bc9ec0081d20cbc892875774`.
+Post-peak softening grows to 3.65413e-4 and the latest 64-record stress slope
+is -8.671e13 Pa/s. Grain 20 continues to recede, retaining 2.54668% net growth
+and 0.171181 cell displacement. Peak-minus-mean temperature is 68.0952 K and
+power participation falls to 0.64030, but the selected structure has zero
+heat/power overlap and an unresolved 0.472197-micrometer minor width. Strict
+ASB remains false. The 3604--3668 associated-fragment union overlap is only
+0.428571, so the candidate morphology is again classified
+`UNRESOLVED_COMPONENT_TRANSITION`; the audit SHA-256 is
+`90e796a709f1b3a52baaf240507aabc9301152533994cf17a0862fa8d99ce567`.
