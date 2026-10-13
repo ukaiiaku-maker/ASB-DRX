@@ -53,6 +53,11 @@
     "parent_checkpoint_sha256": "7672cb556586bbbf69547910e6239c41ef2ddb2bebeead9760741a27ab30f34e",
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
+    "latest_durable_checkpoint": {
+      "adaptive_interval": 2708,
+      "physical_time_s": 1.0405940387934285e-6,
+      "sha256": "b8f8b3d66e02953d06726f13ff71a8478ed050b6139da3ca7dab83c3e54c2ac6"
+    },
     "status": "RUNNING"
   },
   "autonomous_finalizer": {

@@ -47,3 +47,12 @@ The qualified method is running locally from the 1.035 microsecond checkpoint
 toward 1.25 microseconds under source `6debbe0`, PID 49003. Checkpoints are
 written on a 64-accepted-interval cadence with append-only telemetry and an
 atomic checkpoint-aligned history snapshot.
+
+The first 64-interval durable checkpoint is interval 2708 at 1.040594039
+microseconds, SHA-256
+`b8f8b3d66e02953d06726f13ff71a8478ed050b6139da3ca7dab83c3e54c2ac6`.
+Grain 20 has receded to 6.30138% net growth and 0.420098 cell displacement.
+The trajectory remains at its stress maximum (3.97395 GPa). Peak-minus-mean
+temperature has reached 49.6568 K, but power participation is 0.72159, aspect
+ratio is 1.13093, heat/power overlap is 0.24780, and no softening is present;
+strict ASB therefore remains false at this checkpoint.
