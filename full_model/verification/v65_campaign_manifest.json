@@ -73,6 +73,13 @@
     ],
     "status": "WAITING_FOR_PRODUCTION"
   },
+  "live_checkpoint_monitor": {
+    "process_pid": 49891,
+    "source_commit": "83b7b26",
+    "poll_interval_s": 60,
+    "latest_classified_interval": 2708,
+    "status": "RUNNING"
+  },
   "execution_status": "RUNNING",
   "scientific_status": "PENDING"
 }
