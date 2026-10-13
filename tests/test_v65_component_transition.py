@@ -47,3 +47,18 @@ def test_rank_swap_does_not_splice_largest_component_identity():
     assert decision["classification"] == (
         "LARGEST_COMPONENT_RANK_SWAP_WITHOUT_GLOBAL_LOCALIZATION"
     )
+
+
+def test_stable_component_identity_is_distinguished_from_transition():
+    prior = np.zeros((10, 10), dtype=bool)
+    prior[2:6, 2:6] = True
+    current = prior.copy()
+    current[5, 5] = False
+    transition = transition_metrics([prior], [current], spacing_m=1.0)
+
+    decision = classify_transition(transition, 0.72, 0.73)
+
+    assert decision["stable_largest_component_identity"]
+    assert decision["classification"] == (
+        "STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION"
+    )

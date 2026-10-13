@@ -114,6 +114,10 @@ def classify_transition(
     largest_rank_swap = bool(
         associated and 0 not in associated and retained >= 0.90
     )
+    stable_largest_identity = bool(
+        associated == [0] and retained >= 0.90
+        and transition["current_component_count_change"] == 0
+    )
     participation_nonlocalizing = current_participation >= previous_participation
     if component_split and participation_nonlocalizing:
         classification = "THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION"
@@ -132,6 +136,14 @@ def classify_transition(
             "largest-component morphology values therefore describe different "
             "physical structures and do not establish localization."
         )
+    elif stable_largest_identity and participation_nonlocalizing:
+        classification = "STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION"
+        reason = (
+            "The largest component retains its physical identity across the "
+            "checkpoint pair, but the whole-field inverse participation fraction "
+            "increases. Its morphology is continuous over this pair without "
+            "providing evidence of global physical localization."
+        )
     else:
         classification = "UNRESOLVED_COMPONENT_TRANSITION"
         reason = (
@@ -142,6 +154,7 @@ def classify_transition(
         "classification": classification,
         "component_split": component_split,
         "largest_component_rank_swap": largest_rank_swap,
+        "stable_largest_component_identity": stable_largest_identity,
         "associated_fragment_union_identity_overlap": retained,
         "global_power_participation_became_no_more_localized": (
             participation_nonlocalizing

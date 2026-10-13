@@ -143,3 +143,14 @@ at 175 cells. Consecutive morphology values selected solely by largest area
 therefore splice different physical structures. The audit classifies this as
 `LARGEST_COMPONENT_RANK_SWAP_WITHOUT_GLOBAL_LOCALIZATION`; its SHA-256 is
 `0dd862279e5127597c950f04ac7953c5c9a60dcd7ec45c38e68c73b6516e3732`.
+
+Checkpoint 3156 is durable at 1.085801020 microseconds with SHA-256
+`5a42e4c506e5ac8bf21bcd54ed6b41a13e9532a8eba6b367d11c65521726bfd9`.
+The response remains hardening, grain 20 has receded to 5.21945% net growth
+and 0.348798 cell displacement, and peak-minus-mean temperature has reached
+55.4343 K. Power participation nevertheless rises to 0.73762, heat/power
+overlap falls to 0.11314, and the 0.469321-micrometer minor width is unresolved.
+Strict ASB remains false. The post-rank-swap largest component retains 0.965909
+identity over 3092--3156, establishing continuous morphology over this pair
+without global localization. The identity audit SHA-256 is
+`35fddd00a08917feb439c1d890c2b95bf27cb3bc4c11ec02b547be1935d63dd9`.
