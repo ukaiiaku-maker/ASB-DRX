@@ -92,6 +92,7 @@ def required_files(campaign: Path, worktree: Path) -> list[tuple[Path, str]]:
     reconstructed = campaign / "reconstructed_v64"
     fixed = [
         campaign / "finalizer_status.json",
+        campaign / "repository_sync_status.json",
         campaign / "analysis/work_precision_1p030_to1p035us.json",
         campaign / "analysis/interval454_cost_error_trace.json",
         campaign / "analysis/grain20_selection_energy_affinity.json",

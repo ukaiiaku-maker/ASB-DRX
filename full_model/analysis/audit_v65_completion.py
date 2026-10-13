@@ -37,6 +37,7 @@ def evaluate_records(records: dict) -> dict[str, bool]:
     closure = records.get("closure") or {}
     decision = records.get("decision") or {}
     identity = records.get("identity_monitor") or {}
+    repository_sync = records.get("repository_sync") or {}
     target = float(result.get("target_time_s", float("nan")))
     final = float(result.get("final_time_s", float("nan")))
     exit_codes = finalizer.get("step_exit_codes", {})
@@ -61,6 +62,8 @@ def evaluate_records(records: dict) -> dict[str, bool]:
         ) is False,
         "component_identity_monitor_complete": identity.get("status")
         == "COMPLETE",
+        "terminal_repository_sync_complete": repository_sync.get("status")
+        == "COMPLETE",
     }
 
 
@@ -83,6 +86,7 @@ def audit(campaign: Path, worktree: Path, branch: str) -> dict:
         "identity_monitor": load(
             analysis/"live_monitor/component_identity_monitor_status.json"
         ),
+        "repository_sync": load(campaign/"repository_sync_status.json"),
     }
     checks = evaluate_records(records)
     archive_error = None
