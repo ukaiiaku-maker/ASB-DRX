@@ -72,3 +72,12 @@ instantaneous plastic-power-change metric, with a median tolerance ratio of
 0.849585.  Their median throughput is 135.93 wall seconds per physical
 nanosecond.  This is accepted-time evidence rather than a terminal estimate;
 the durable finalizer will recompute the complete suffix after production.
+
+At interval 2836 (1.052313666 microseconds), the durable checkpoint SHA-256 is
+`b80e1083c2e6925047f36f079d003698c1756a6021c3db813f35e6962dbe2597`.
+Peak-minus-mean temperature has increased to 51.1351 K, but this remains an
+isolated screen rather than ASB: the stress is still at its trajectory maximum,
+power participation is 0.72566, aspect ratio is 1.12684, and heat/power overlap
+has fallen to 0.23852.  Grain 20 has receded to 6.04338% net growth and
+0.403127 cell displacement.  The last 64 accepted intervals have a median
+tolerance ratio of 0.849553 and remain limited by plastic-power change.
