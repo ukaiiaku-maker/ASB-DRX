@@ -205,6 +205,7 @@ def main() -> None:
     parser.add_argument("--rate-tolerance", type=float, default=.02)
     parser.add_argument("--integral-tolerance", type=float, default=.02)
     parser.add_argument("--checkpoint-every", type=int, default=1)
+    parser.add_argument("--compact-stdout", action="store_true")
     parser.add_argument(
         "--restart-proposed-step", type=float,
         help=("replace only the restored controller proposal after an exact "
@@ -225,6 +226,7 @@ def main() -> None:
                  "v65_terminal_horizon_restore",
                  "v65_warm_started_front",
                  "v65_predictive_warm_front",
+                 "v65_durable_long_run",
                  "v65_instrumentation_only"),
         default="none")
     args = parser.parse_args()
@@ -315,12 +317,14 @@ def main() -> None:
                 and args.proposal_policy != "error_responsive"):
             raise ValueError(
                 "V65 predictive transition requires error-responsive proposals")
-    elif args.warm_start_front_factor and source_changed:
+    elif (args.warm_start_front_factor and source_changed
+          and args.numerical_transition != "v65_durable_long_run"):
         raise ValueError(
             "first front warm start across a source seam requires its "
             "declared transition")
     if (args.proposal_policy == "error_responsive" and source_changed
-            and args.numerical_transition != "v65_predictive_warm_front"):
+            and args.numerical_transition not in {
+                "v65_predictive_warm_front", "v65_durable_long_run"}):
         raise ValueError(
             "first error-responsive proposal across a source seam requires "
             "its declared transition")
@@ -391,6 +395,12 @@ def main() -> None:
             "diagnostic-only counters for directional prices, joint capacity "
             "solves, complete-energy evaluations, and scalar force iterations; "
             "physical and numerical update paths unchanged")
+    elif args.numerical_transition == "v65_durable_long_run":
+        provenance["numerical_change"] = (
+            "checkpoint-aligned atomic history snapshots with append-only "
+            "accepted telemetry and compact stdout; accepted physical map, "
+            "warm-started verified front root, proposal policy, and all "
+            "accuracy metrics unchanged")
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     telemetry_path = args.out/"accepted_telemetry.jsonl"
@@ -462,9 +472,12 @@ def main() -> None:
         }
         history.append(record)
         relative_index = controller.accepted_intervals-accepted_at_start
-        if (relative_index == 1 or relative_index % max(args.checkpoint_every, 1) == 0
+        wrote_checkpoint = bool(
+            relative_index == 1
+            or relative_index % max(args.checkpoint_every, 1) == 0
                 or not target_pending(endpoint.runtime.ledger.physical_time_s,
-                                      args.target_time)):
+                                      args.target_time))
+        if wrote_checkpoint:
             checkpoint = args.out/f"checkpoint_adaptive_{controller.accepted_intervals:06d}.npz"
             _save_checkpoint(
                 checkpoint, endpoint.state, endpoint.runtime,
@@ -492,8 +505,19 @@ def main() -> None:
             record["checkpoint"] = str(checkpoint)
             record["checkpoint_sha256"] = digest(checkpoint)
         append_telemetry(telemetry_path, record)
-        atomic_json(history_path, history)
-        print(json.dumps(record, sort_keys=True), flush=True)
+        # The recoverable JSON snapshot and the physical checkpoint advance
+        # atomically at the same cadence. Telemetry after the last snapshot is
+        # explicitly provisional and can be filtered by checkpoint identity.
+        if wrote_checkpoint:
+            atomic_json(history_path, history)
+        if args.compact_stdout:
+            print(json.dumps({key: record[key] for key in (
+                "adaptive_interval", "physical_time_s", "accepted_duration_s",
+                "next_proposed_step_s", "maximum_tolerance_ratio",
+                "wall_time_s", "checkpoint", "checkpoint_sha256")
+                if key in record}, sort_keys=True), flush=True)
+        else:
+            print(json.dumps(record, sort_keys=True), flush=True)
     energy = evaluate_complete_multigrain_energy(
         endpoint.state, spacing_m=context.spacing_m,
         represented_thickness_m=context.represented_thickness_m,
