@@ -203,6 +203,15 @@ def _physical_configuration(configuration: dict) -> dict:
     return dict(configuration)
 
 
+def accepted_interval_duration_s(checkpoint_data, configuration: dict) -> float:
+    """Use the actual accepted adaptive duration for finite-interval rates."""
+    if "diagnostic_accuracy_decision_json" in checkpoint_data:
+        decision = json.loads(str(checkpoint_data[
+            "diagnostic_accuracy_decision_json"]))
+        return float(decision["accepted_duration_s"])
+    return float(configuration["dt_s"])
+
+
 def _sampling_segment_metadata(directories: list[Path]) -> dict[str, dict]:
     """Recover the actual saved cadence independently for each directory."""
     result = {}
@@ -529,11 +538,8 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
         "represented_thickness_m", 2.0*2.48e-10))
     cell_volume = spacing*spacing*thickness
     with np.load(path, allow_pickle=False) as checkpoint_data:
-        accuracy_decision = (
-            json.loads(str(checkpoint_data[
-                "diagnostic_accuracy_decision_json"]))
-            if "diagnostic_accuracy_decision_json" in checkpoint_data.files
-            else None)
+        interval_s = accepted_interval_duration_s(
+            checkpoint_data, configuration)
         front_source_J_by_cell = (
             np.asarray(checkpoint_data[
                 "diagnostic_front_heat_source_J_by_cell"], dtype=float)
@@ -554,9 +560,6 @@ def checkpoint_snapshot(path: Path, pre_front_row: dict | None = None) -> tuple[
                 "diagnostic_thermal_bath_exchange_J_m3_cells"], dtype=float)
             if "diagnostic_thermal_bath_exchange_J_m3_cells" in checkpoint_data.files
             else None)
-    interval_s = float(
-        accuracy_decision["accepted_duration_s"]
-        if accuracy_decision is not None else configuration["dt_s"])
     front_source_rate = (None if front_source_J_by_cell is None else
                          front_source_J_by_cell/max(
                              interval_s*cell_volume, 1e-300))

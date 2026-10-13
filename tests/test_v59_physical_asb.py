@@ -1,14 +1,25 @@
+import json
+
 import numpy as np
 
 from full_model.analysis.postprocess_v59_physical_asb import (
     PhysicalASBCriteria, _history_map, _physical_configuration,
     _verify_refinement_certificate, _wall_parameters,
+    accepted_interval_duration_s,
     classify_physical_episode,
     component_morphology, periodic_identity,
     component_temperature_excess,
     source_association,
     temperature_intervention_certificate,
 )
+
+
+def test_adaptive_checkpoint_uses_actual_accepted_interval_duration():
+    checkpoint = {"diagnostic_accuracy_decision_json": np.asarray(json.dumps(
+        {"accepted_duration_s": 7.450580596923e-11}))}
+    assert accepted_interval_duration_s(
+        checkpoint, {"dt_s": 6.25e-9}) == 7.450580596923e-11
+    assert accepted_interval_duration_s({}, {"dt_s": 6.25e-9}) == 6.25e-9
 
 
 def test_v64_adaptive_history_and_configuration_are_read_without_relabeling(
