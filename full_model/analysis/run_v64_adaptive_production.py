@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import hashlib
 import json
 from pathlib import Path
@@ -54,6 +54,21 @@ def _controller_from_checkpoint(path: Path):
             return None
         return AdaptiveControllerState.from_dict(json.loads(
             str(data["diagnostic_adaptive_controller_json"])))
+
+
+def restore_horizon_proposal(
+        controller: AdaptiveControllerState, proposal_s: float
+        ) -> AdaptiveControllerState:
+    """Undo only a smaller exact-target clip in a persisted controller."""
+    proposal = float(proposal_s)
+    if not (controller.minimum_step_s <= proposal
+            <= controller.maximum_step_s):
+        raise ValueError("restored proposal lies outside controller bounds")
+    if proposal < controller.proposed_step_s:
+        raise ValueError("horizon restoration may not reduce the proposal")
+    return replace(
+        controller, proposed_step_s=proposal,
+        consecutive_low_error_accepts=0)
 
 
 def _context(configuration: dict) -> CoupledMultigrainContext:
@@ -164,12 +179,17 @@ def main() -> None:
     parser.add_argument("--rate-tolerance", type=float, default=.02)
     parser.add_argument("--integral-tolerance", type=float, default=.02)
     parser.add_argument("--checkpoint-every", type=int, default=1)
+    parser.add_argument(
+        "--restart-proposed-step", type=float,
+        help=("replace only the restored controller proposal after an exact "
+              "target-horizon clip; physical state and tolerances are unchanged"))
     parser.add_argument("--source-commit")
     parser.add_argument(
         "--numerical-transition",
         choices=("none", "v64_bracketed_front_root",
                  "v64_adaptive_growth", "v64_exact_front_cache",
-                 "v64_set_valued_active_cone"),
+                 "v64_set_valued_active_cone",
+                 "v65_terminal_horizon_restore"),
         default="none")
     args = parser.parse_args()
     if digest(args.resume) != args.expected_resume_sha256:
@@ -209,6 +229,11 @@ def main() -> None:
                               rtol=0.0, atol=0.0)
                for name, value in requested_accuracy.items()):
             raise ValueError("restart accuracy tolerances differ from checkpoint")
+    if args.restart_proposed_step is not None:
+        if restored is None:
+            raise ValueError("proposal restoration requires a saved controller")
+        controller = restore_horizon_proposal(
+            controller, args.restart_proposed_step)
     parent_source = (checkpoint_provenance or {}).get("source_commit")
     source_changed = parent_source not in {None, head}
     if restored is not None and source_changed and args.numerical_transition == "none":
@@ -217,6 +242,11 @@ def main() -> None:
             restored is not None and source_changed):
         raise ValueError(
             "declared numerical transition requires a changed adaptive source")
+    if ((args.numerical_transition == "v65_terminal_horizon_restore")
+            != (args.restart_proposed_step is not None)):
+        raise ValueError(
+            "V65 terminal-horizon transition and proposal restoration must "
+            "be declared together")
     provenance = {
         "source_commit": head,
         "restart_transition": (
@@ -253,6 +283,12 @@ def main() -> None:
             "the interval inclusion is independently reconstructed, while the "
             "unchanged pointwise force/rate tolerance remains mandatory away "
             "from that non-single-valued limit")
+    elif args.numerical_transition == "v65_terminal_horizon_restore":
+        provenance["numerical_change"] = (
+            "restore the pre-terminal ordinary adaptive proposal after an "
+            "exact-target horizon clip; physical state, controller bounds, "
+            "complete coarse/two-half trial, and all 2% tolerances unchanged")
+        provenance["restored_proposed_step_s"] = controller.proposed_step_s
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     history = json.loads(history_path.read_text()) if history_path.exists() else []

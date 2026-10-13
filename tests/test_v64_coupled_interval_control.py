@@ -3,7 +3,9 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
-from full_model.analysis.run_v64_adaptive_production import target_pending
+from full_model.analysis.run_v64_adaptive_production import (
+    restore_horizon_proposal, target_pending,
+)
 
 from full_model.production.coupled_interval_control import (
     AdaptiveControllerState, CoupledEndpoint, CoupledInterval, ErrorMetric,
@@ -121,3 +123,21 @@ def test_target_roundoff_does_not_create_a_spurious_physical_interval():
     target = 1.7203125e-6
     assert not target_pending(target-5.0e-21, target)
     assert target_pending(target-1.0e-12, target)
+
+
+def test_terminal_horizon_proposal_can_be_restored_without_state_change():
+    clipped = AdaptiveControllerState(
+        2.418041251250174e-11, 6.103515625e-12, 6.25e-9,
+        accepted_intervals=2585, rejected_accuracy_trials=7,
+        failed_admissibility_trials=1, consecutive_low_error_accepts=1)
+    restored = restore_horizon_proposal(clipped, 7.450580596913911e-11)
+    assert restored.accepted_intervals == clipped.accepted_intervals
+    assert restored.rejected_accuracy_trials == clipped.rejected_accuracy_trials
+    assert restored.failed_admissibility_trials == clipped.failed_admissibility_trials
+    assert restored.minimum_step_s == clipped.minimum_step_s
+    assert restored.maximum_step_s == clipped.maximum_step_s
+    restored.validate()
+    with pytest.raises(ValueError, match="may not reduce"):
+        restore_horizon_proposal(clipped, 1.0e-11)
+    with pytest.raises(ValueError, match="outside controller bounds"):
+        restore_horizon_proposal(clipped, 1.0e-8)
