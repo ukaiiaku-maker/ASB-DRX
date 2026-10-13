@@ -47,3 +47,9 @@ normally.  An independent checkpoint-2577 replay reproduces the terminal
 physical state, load, clocks, and ledgers bitwise.  Delivery is complete at the attained experimental scope; the full
 scientific objective of a jointly qualified DRX/ASB response family remains
 incomplete.
+
+The fixed allocation ran from `2026-10-12T19:57:02Z` through its deadline at
+`2026-10-13T07:57:02Z`; monitored closure ended at `2026-10-13T07:57:30Z` with
+execution status `DEADLINE_REACHED`.  The definitive 85-file delivery is
+`v64_consolidated_delivery_v5_definitive.zip`, SHA-256
+`cedefcad33197f7bd709473a973754e43df2f314329f9eed6d5b6f91968698b7`.

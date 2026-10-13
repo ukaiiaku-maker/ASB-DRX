@@ -48,6 +48,10 @@ Updated: 2026-10-13 (America/Los_Angeles)
   substantial-existing-boundary-DRX threshold. Prepared-boundary processing is
   active; substantial DRX, spontaneous birth, and a qualified ASB regime are
   not claimed.
+- V64 reached its fixed `2026-10-13T07:57:02Z` deadline and closed with
+  `execution_status=DEADLINE_REACHED`. The definitive 85-file ZIP passes
+  internal checksum and archive-integrity verification; SHA-256 is
+  `cedefcad33197f7bd709473a973754e43df2f314329f9eed6d5b6f91968698b7`.
 
 ## V63 rate-accuracy and coupled DRX/ASB continuation
 
