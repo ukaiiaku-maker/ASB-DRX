@@ -154,3 +154,14 @@ Strict ASB remains false. The post-rank-swap largest component retains 0.965909
 identity over 3092--3156, establishing continuous morphology over this pair
 without global localization. The identity audit SHA-256 is
 `35fddd00a08917feb439c1d890c2b95bf27cb3bc4c11ec02b547be1935d63dd9`.
+
+Checkpoint 3220 is durable at 1.093464961 microseconds with SHA-256
+`9dd64b8fa2073f68dd478b0af69800ec00de2ce4fa38d2691f4c5806833b0671`.
+Grain 20 has receded to 5.01351% net growth and 0.335188 cell displacement.
+The stress remains at its running maximum and peak-minus-mean temperature is
+56.4530 K. Power participation rises to 0.74039, heat/power overlap falls to
+0.10949, and the 0.473529-micrometer minor width remains unresolved; strict
+ASB is false. The same largest component retains 0.960452 identity over
+3156--3220 while the whole field becomes more diffuse. The identity audit
+SHA-256 is
+`7ed412dd9bf7f4fd10b35a09f4bb8d7d7b0fa021c30952308e7629df24f82988`.
