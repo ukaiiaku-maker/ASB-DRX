@@ -255,3 +255,16 @@ against the predeclared 5-nanosecond confirmation lag. The peak stress is
 validates a local scalar constitutive peak only; it is neither evidence of
 spatial localization nor a strict-ASB claim. The validation artifact SHA-256
 is `6af5619e6fa4716c976d5c6261d4350e793c2bd542769ed54cf9638b072c2a98`.
+
+Checkpoint 3604 is durable at 1.158572561 microseconds with SHA-256
+`81bdf7bee931ea7a6291f065312f974be9c0f9c727aa25aa1f9eda14ef0dbdca`.
+It is the first durable post-peak checkpoint: the latest 64-record stress
+slope is -1.623e13 Pa/s, but the softening fraction is only 7.56052e-5 and
+does not pass the declared localization screen. Grain 20 has receded to
+3.02381% net growth and 0.203042 cell displacement. Peak-minus-mean
+temperature reaches 66.0251 K, while power participation remains broad at
+0.74833, heat/power overlap is 0.08551, and aspect ratio is 1.86802. Strict
+ASB is false. The associated-fragment union identity overlap across
+3540--3604 falls to 0.496084, so this is conservatively classified
+`UNRESOLVED_COMPONENT_TRANSITION`; the identity-audit SHA-256 is
+`4a40d43ab23b3b834d0b5667f3ce42f41aadf28d8bd101a777c771634469af56`.
