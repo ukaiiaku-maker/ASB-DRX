@@ -1,5 +1,9 @@
 # Analytical EXP-floor PF DRX/ASB campaign
 
+The standing scientific mission and current persistent goal definitions are in
+[CAMPAIGN_CHARTER.md](CAMPAIGN_CHARTER.md). Active allocations must also read
+`campaign_state.json` before changing source or launching calculations.
+
 Campaign ID: `asb-drx-independent-20260827`
 
 This branch is a scientific redevelopment. Legacy programs, parameters, and outputs are context only: they do not calibrate, validate, or regression-gate the new model. The implementation lives under `src/asb_drx/` and will use one equation set and one parameter set across temperature and strain rate.

@@ -1,0 +1,69 @@
+{
+  "schema": "asb-drx-standing-campaign-state-v1",
+  "active_allocation": {
+    "campaign": "V66",
+    "start_utc": "2026-10-13T23:31:11Z",
+    "deadline_utc": "2026-10-14T11:31:11Z",
+    "duration_s": 43200,
+    "execution_location": "local_only",
+    "maximum_heavy_campaign_solvers": 1,
+    "hpc_authorized": false,
+    "paid_compute_authorized": false
+  },
+  "repository": {
+    "branch": "exp/full-v66-rx-physics-20261013",
+    "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v66-20261013",
+    "base_commit": "f5a6bc6474d70333255a10d19c267648086e2c78"
+  },
+  "immutable_mechanics": {
+    "arrhenius_mechanics": true,
+    "exp_floor_baseline": true,
+    "peierls_resistance": true,
+    "taylor_forest_resistance": true,
+    "hall_petch_boundary_interactions": true,
+    "thermal_and_rate_coupling": true
+  },
+  "frozen_v65": {
+    "closure_commit": "f5a6bc6474d70333255a10d19c267648086e2c78",
+    "production_source": "6debbe0813ca0c365abcf473e5106cb90dbdd75a",
+    "terminal_checkpoint_sha256": "735e95de2825a9d4cc963b7504aa19a3edee40431331e8bcfb3550b9951ab9ad",
+    "archive_sha256": "4822e96f4ec201a3dafbcb311cadac53e3234ca7e2c9d85fecc2e4eec9575fe3",
+    "status": "closed_reference_untouched"
+  },
+  "goal_status": {
+    "G01": "partially_supported_common_framework_requires_RX_mechanism",
+    "G02": "transient_prepared_boundary_growth_not_sustained",
+    "G03": "not_qualified_in_V65",
+    "G04": "not_yet_fixed_law_qualified",
+    "G05": "not_established",
+    "G06": "not_established"
+  },
+  "active_hypotheses": {
+    "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
+    "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
+    "H3": "interaction_and_transport_can_organize_dislocations_without_an_RX_nucleation_double_well",
+    "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
+  },
+  "resource_ownership": {
+    "heavy_campaign_solver": null,
+    "unrelated_processes_preserved": [34369, 34370, 71220, 94577]
+  },
+  "current_task": {
+    "goal_ids": ["G01", "G02", "G05", "G06"],
+    "hypothesis_ids": ["H1", "H2", "H3", "H4"],
+    "physical_uncertainty": "whether_compatible_signed_absorption_and_conservative_network_redistribution_lower_complete_energy_without_imposed_rotation",
+    "next_executable_experiment": "run_reduced_H1_signed_absorption_and_H2_network_discriminators",
+    "source_identity": "f5a6bc6474d70333255a10d19c267648086e2c78",
+    "expected_discriminatory_observation": "signed_structural_change_and_total_energy_direction_separated_from_unsigned_absorption_and_geometry_dilution",
+    "resource_need": "lightweight_local",
+    "result_status": "running"
+  },
+  "completion_semantics": {
+    "execution_complete": false,
+    "implementation_verified": false,
+    "mechanism_supported_at_tested_conditions": false,
+    "integrated_response_qualified": false,
+    "material_validated": false,
+    "full_charter_complete": false
+  }
+}
