@@ -33,6 +33,12 @@ Updated: 2026-10-12 (America/Los_Angeles)
 - Source is pushed through `fae5b3f`. Focused numerical/front/ASB tests pass;
   final-source canonical regression and end-of-allocation packaging remain in
   progress. No V64 HPC or cloud calculation has been launched.
+- The controlled common-origin branch has crossed 0.9041 us. At adaptive
+  interval 886, a 119.209 ps proposal failed narrowly at 1.000708 times the
+  unchanged tolerance; its exact first half was reused, and the 59.605 ps retry
+  passed at 0.499381. No physical event was rejected. The controller then
+  regrew conservatively to 74.506 ps, providing a second separated production
+  rollback/regrowth observation.
 
 ## V63 rate-accuracy and coupled DRX/ASB continuation
 

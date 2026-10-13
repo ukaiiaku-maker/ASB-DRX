@@ -142,3 +142,14 @@ published nothing.  Its exact 95.367 ps first half was reused and passed at
 proposal of 119.209 ps passed at 0.624477.  This demonstrates rejection,
 rollback, exact half reuse, and cautious regrowth after the active-cone repair
 without changing any physical coefficient or error tolerance.
+
+The same controlled history later supplied a second, independently separated
+rollback at adaptive interval 886.  The 119.209 ps proposal failed only the
+accuracy decision at `1.000708130789342` times tolerance.  It published no
+state or elapsed time; the exact computed first half was reused as the coarse
+candidate for the 59.6046 ps retry, which passed at
+`0.4993805769782655`.  No physical event was rejected.  Checkpoint 886 was
+written at 0.903479862 microseconds, and the controller subsequently completed
+the required consecutive resolved steps and regrew conservatively to 74.506 ps.
+This confirms repeatable on-trajectory rejection, private rollback, exact
+half reuse, and bounded regrowth well after the active-cone repair.

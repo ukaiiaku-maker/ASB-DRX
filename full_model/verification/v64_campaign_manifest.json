@@ -37,15 +37,15 @@
   "current_physical_result": {
     "grid_n": 48,
     "common_origin_controlled": true,
-    "adaptive_interval": 450,
-    "physical_time_s": 8.515642166137617e-7,
-    "engineering_shear": 0.046062568664550466,
+    "adaptive_interval": 895,
+    "physical_time_s": 9.04135513305558e-7,
+    "engineering_shear": 0.04816542053222232,
     "strict_asb": false,
     "substantial_drx": false,
     "prepared_grain_redistribution_active": true,
     "grain_count": 4,
     "spontaneous_grain_birth_exercised": false,
-    "interpretation": "early-horizon controlled continuation; no lifetime or rate-regime rejection"
+    "interpretation": "early-horizon controlled continuation with a second separated production accuracy rejection, exact-half rollback, and bounded regrowth; no lifetime or rate-regime rejection"
   },
   "execution_status": "RUNNING",
   "delivery_status": "PARTIAL",
