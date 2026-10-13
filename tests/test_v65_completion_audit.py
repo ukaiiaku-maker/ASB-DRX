@@ -28,6 +28,7 @@ def complete_records():
         },
         "identity_monitor": {"status": "COMPLETE"},
         "repository_sync": {"status": "COMPLETE"},
+        "peak_forecast_monitor": {"status": "COMPLETE"},
     }
 
 
@@ -45,9 +46,11 @@ def test_running_campaign_is_not_misclassified_complete():
     records["decision"] = None
     records["identity_monitor"] = {"status": "RUNNING"}
     records["repository_sync"] = None
+    records["peak_forecast_monitor"] = {"status": "RUNNING"}
     checks = evaluate_records(records)
     assert not checks["production_target_reached"]
     assert not checks["finalizer_complete"]
     assert not checks["closure_complete"]
     assert not checks["component_identity_monitor_complete"]
     assert not checks["terminal_repository_sync_complete"]
+    assert not checks["stress_peak_forecast_monitor_complete"]

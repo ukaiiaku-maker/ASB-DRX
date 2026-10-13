@@ -14,6 +14,7 @@ def test_terminal_sync_records_exact_checkpoint_and_claim_boundary(tmp_path):
         "component_identity_monitor": {},
         "autonomous_finalizer": {},
         "autonomous_closure": {},
+        "stress_peak_forecast_monitor": {},
         "execution_status": "RUNNING",
         "scientific_status": "PENDING",
     }
@@ -46,12 +47,19 @@ def test_terminal_sync_records_exact_checkpoint_and_claim_boundary(tmp_path):
         "completed_pair_count": 10,
         "latest_completed_pair": {"from_interval": 3936, "to_interval": 4000},
     }
+    peak_status = {
+        "status": "COMPLETE",
+        "classification": "FORECAST_VALIDATED_LOCAL_SCALAR_PEAK",
+        "latest_interval": 4000,
+    }
 
-    updated, paragraph = synchronize(manifest, result, latest, identity)
+    updated, paragraph = synchronize(
+        manifest, result, latest, identity, peak_status)
 
     assert updated["active_production"]["terminal_checkpoint_sha256"] == sha
     assert updated["active_production"]["status"] == "TARGET_REACHED"
     assert updated["component_identity_monitor"]["status"] == "COMPLETE"
+    assert updated["stress_peak_forecast_monitor"]["status"] == "COMPLETE"
     assert updated["execution_status"] == "TARGET_REACHED"
     assert updated["scientific_status"] == "SEE_FINAL_DECISION_RECORD"
     assert updated["autonomous_finalizer"]["status"].endswith(

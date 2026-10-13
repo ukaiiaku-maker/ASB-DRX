@@ -15,13 +15,17 @@ done
 ready=0
 for _ in $(seq 1 30); do
   if [[ -s "$run/result.json" && -s "$live/live_checkpoint_latest.json" && \
-        -s "$live/component_identity_monitor_status.json" ]] && \
+        -s "$live/component_identity_monitor_status.json" && \
+        -s "$live/peak_forecast_monitor_status.json" ]] && \
      python - "$run/result.json" "$live/live_checkpoint_latest.json" \
-       "$live/component_identity_monitor_status.json" <<'PY'
+       "$live/component_identity_monitor_status.json" \
+       "$live/peak_forecast_monitor_status.json" <<'PY'
 import json, sys
-result, latest, identity = (json.load(open(path)) for path in sys.argv[1:])
+result, latest, identity, peak = (
+    json.load(open(path)) for path in sys.argv[1:])
 raise SystemExit(0 if (
     identity.get("status") == "COMPLETE"
+    and peak.get("status") == "COMPLETE"
     and latest.get("checkpoint_sha256") == result.get("checkpoint_sha256")
 ) else 1)
 PY
@@ -40,7 +44,8 @@ if [[ "$ready" -eq 1 && -z "$(git status --porcelain)" ]]; then
     --execution-record full_model/docs/v65_execution_record.md \
     --result "$run/result.json" \
     --latest-classification "$live/live_checkpoint_latest.json" \
-    --identity-status "$live/component_identity_monitor_status.json"
+    --identity-status "$live/component_identity_monitor_status.json" \
+    --peak-forecast-status "$live/peak_forecast_monitor_status.json"
   sync_code=$?
   python -m pytest -q tests/test_v65_terminal_repository_sync.py
   test_code=$?

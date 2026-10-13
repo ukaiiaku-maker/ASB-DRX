@@ -24,7 +24,8 @@ def atomic_text(path: Path, payload: str) -> None:
 
 
 def synchronize(
-    manifest: dict, result: dict, latest: dict, identity: dict
+    manifest: dict, result: dict, latest: dict, identity: dict,
+    peak_forecast_status: dict,
 ) -> tuple[dict, str]:
     if result.get("execution_status") != "TARGET_REACHED":
         raise ValueError("production result has not reached its target")
@@ -37,6 +38,8 @@ def synchronize(
         raise ValueError("live classifier has not consumed terminal checkpoint")
     if identity.get("status") != "COMPLETE":
         raise ValueError("component identity monitor is not complete")
+    if peak_forecast_status.get("status") != "COMPLETE":
+        raise ValueError("stress-peak forecast monitor is not complete")
     target = float(result["target_time_s"])
     final = float(result["final_time_s"])
     if abs(final-target) > 1e-18:
@@ -65,6 +68,12 @@ def synchronize(
         "latest_completed_pair"
     )
     identity_record["status"] = "COMPLETE"
+    peak_record = updated["stress_peak_forecast_monitor"]
+    peak_record["status"] = "COMPLETE"
+    peak_record["classification"] = peak_forecast_status.get(
+        "classification")
+    peak_record["latest_interval"] = peak_forecast_status.get(
+        "latest_interval")
     updated["execution_status"] = "TARGET_REACHED"
     updated["scientific_status"] = "SEE_FINAL_DECISION_RECORD"
     updated["autonomous_finalizer"]["status"] = (
@@ -108,12 +117,15 @@ def main() -> None:
     parser.add_argument("--result", required=True, type=Path)
     parser.add_argument("--latest-classification", required=True, type=Path)
     parser.add_argument("--identity-status", required=True, type=Path)
+    parser.add_argument("--peak-forecast-status", required=True, type=Path)
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text())
     result = json.loads(args.result.read_text())
     latest = json.loads(args.latest_classification.read_text())
     identity = json.loads(args.identity_status.read_text())
-    updated, terminal = synchronize(manifest, result, latest, identity)
+    peak_forecast_status = json.loads(args.peak_forecast_status.read_text())
+    updated, terminal = synchronize(
+        manifest, result, latest, identity, peak_forecast_status)
     document = args.execution_record.read_text()
     if TERMINAL_HEADING in document:
         document = document.split(TERMINAL_HEADING, 1)[0].rstrip()+"\n\n"
