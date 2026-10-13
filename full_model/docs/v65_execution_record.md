@@ -205,3 +205,11 @@ power participation is 0.74935, heat/power overlap is 0.08273, aspect ratio is
 2.21129, and the minor width has broadened to 0.524776 micrometers. Strict ASB
 remains false. The same largest component retains 0.958763 identity over
 3348--3412 while the whole-field power becomes more diffuse.
+
+Accepted scalar stress is strongly concave but has not peaked. Quadratic fits
+over the latest 64, 128, 256, and 512 accepted intervals independently project
+a peak between 1.146575 and 1.146815 microseconds, before the 1.25-microsecond
+target. The 0.240-nanosecond projection spread is a useful prospective test,
+not an observed softening or spatial-localization result. The preserved audit
+SHA-256 is
+`3699635ee7e7861661def7b54404ea50438b7a9ac5b1e5c98608744b234e55dc`.

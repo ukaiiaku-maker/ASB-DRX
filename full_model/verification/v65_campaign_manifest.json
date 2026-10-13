@@ -23,7 +23,7 @@
       "bounded error-responsive proposal targeting 0.85 of tolerance",
       "checkpoint-aligned atomic history and append-only telemetry"
     ],
-    "focused_tests_passed": 47
+    "focused_tests_passed": 48
   },
   "qualification": {
     "common_window_start_s": 1.0300000000000003e-6,
@@ -135,6 +135,14 @@
         "artifact_sha256": "e9d0894af7ead2e20bc896bcdb5c70ab327d280f3378e9bc082bacdff9555f5b"
       }
     ],
+    "preterminal_stress_peak_projection": {
+      "classification": "CONSISTENT_QUADRATIC_PEAK_PROJECTION_NOT_OBSERVED",
+      "minimum_projected_peak_time_s": 1.146574948072267e-6,
+      "maximum_projected_peak_time_s": 1.1468148976854922e-6,
+      "stress_peak_observed": false,
+      "strict_asb_claim": false,
+      "artifact_sha256": "3699635ee7e7861661def7b54404ea50438b7a9ac5b1e5c98608744b234e55dc"
+    },
     "status": "RUNNING"
   },
   "component_identity_monitor": {
