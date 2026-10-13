@@ -280,3 +280,19 @@ ASB remains false. The 3604--3668 associated-fragment union overlap is only
 0.428571, so the candidate morphology is again classified
 `UNRESOLVED_COMPONENT_TRANSITION`; the audit SHA-256 is
 `90e796a709f1b3a52baaf240507aabc9301152533994cf17a0862fa8d99ce567`.
+
+## Terminal production state
+
+Production reached its exact target at 1.250000000000e-06 s and engineering shear
+0.062. The terminal checkpoint is adaptive interval
+3718, SHA-256
+`735e95de2825a9d4cc963b7504aa19a3edee40431331e8bcfb3550b9951ab9ad`. Grain 20 retains
+-0.576404% net growth and
+-0.0390042 cell displacement.
+The accepted-state stress is 3.94535 GPa,
+peak-minus-mean temperature is
+79.6905 K, power
+participation is 0.203746, and
+heat/power overlap is 0. The live
+strict-ASB snapshot is `false`;
+the final cumulative classifier and tests remain post-processing work.

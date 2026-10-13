@@ -26,8 +26,8 @@
     "focused_tests_passed": 50
   },
   "qualification": {
-    "common_window_start_s": 1.0300000000000003e-6,
-    "common_window_end_s": 1.035e-6,
+    "common_window_start_s": 1.0300000000000003e-06,
+    "common_window_end_s": 1.035e-06,
     "reference_wall_time_s": 930.1901875752956,
     "candidate_wall_time_s": 718.3179838368669,
     "speedup": 1.2949560062616303,
@@ -51,14 +51,17 @@
     "process_pid": 49003,
     "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/runs/production_1p035_to1p25us_6debbe0",
     "parent_checkpoint_sha256": "7672cb556586bbbf69547910e6239c41ef2ddb2bebeead9760741a27ab30f34e",
-    "target_time_s": 1.25e-6,
+    "target_time_s": 1.25e-06,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 3668,
-      "physical_time_s": 1.1724545526342389e-6,
-      "sha256": "8291214c7eebbe279a7c01414031502c7d7b7420bc9ec0081d20cbc892875774"
+      "adaptive_interval": 3718,
+      "physical_time_s": 1.2500000000000003e-06,
+      "sha256": "735e95de2825a9d4cc963b7504aa19a3edee40431331e8bcfb3550b9951ab9ad"
     },
-    "status": "RUNNING"
+    "status": "TARGET_REACHED",
+    "terminal_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/runs/production_1p035_to1p25us_6debbe0/checkpoint_adaptive_003718.npz",
+    "terminal_checkpoint_sha256": "735e95de2825a9d4cc963b7504aa19a3edee40431331e8bcfb3550b9951ab9ad",
+    "final_applied_shear_strain": 0.06200000000000552
   },
   "autonomous_finalizer": {
     "process_pid": 52314,
@@ -71,7 +74,7 @@
       "render native-grid evidence",
       "run focused and canonical tests"
     ],
-    "status": "WAITING_FOR_PRODUCTION"
+    "status": "POSTPROCESSING_OR_COMPLETE_SEE_FINALIZER_STATUS"
   },
   "autonomous_closure": {
     "process_pid": 52369,
@@ -83,13 +86,13 @@
       "verify every archived payload checksum",
       "write atomic closure status and archive digest"
     ],
-    "status": "WAITING_FOR_FINALIZER"
+    "status": "WAITING_OR_COMPLETE_SEE_CLOSURE_STATUS"
   },
   "live_checkpoint_monitor": {
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 3668,
+    "latest_classified_interval": 3718,
     "component_transition_audit": {
       "from_interval": 2964,
       "to_interval": 3028,
@@ -137,13 +140,13 @@
     ],
     "preterminal_stress_peak_projection": {
       "classification": "CONSISTENT_QUADRATIC_PEAK_PROJECTION_NOT_OBSERVED",
-      "minimum_projected_peak_time_s": 1.146574948072267e-6,
-      "maximum_projected_peak_time_s": 1.1468148976854922e-6,
+      "minimum_projected_peak_time_s": 1.146574948072267e-06,
+      "maximum_projected_peak_time_s": 1.1468148976854922e-06,
       "stress_peak_observed": false,
       "strict_asb_claim": false,
       "artifact_sha256": "3699635ee7e7861661def7b54404ea50438b7a9ac5b1e5c98608744b234e55dc"
     },
-    "status": "RUNNING"
+    "status": "COMPLETE"
   },
   "component_identity_monitor": {
     "process_pid": 56883,
@@ -153,13 +156,14 @@
     "poll_interval_s": 60,
     "output_directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/analysis/live_monitor",
     "trajectory_modified": false,
-    "verified_completed_pair_count": 7,
+    "verified_completed_pair_count": 8,
     "latest_verified_pair": {
-      "from_interval": 3604,
-      "to_interval": 3668,
+      "from_interval": 3668,
+      "to_interval": 3718,
+      "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/analysis/live_monitor/power_component_transition_3668_3718.json",
       "classification": "UNRESOLVED_COMPONENT_TRANSITION"
     },
-    "status": "RUNNING"
+    "status": "COMPLETE"
   },
   "terminal_repository_sync_manager": {
     "process_pid": 59086,
@@ -173,18 +177,25 @@
     "process_pid": 58866,
     "source_commit": "e3c5804393a1b62cd883671d6eea1d736760ab1b",
     "solver_pid": 49003,
-    "predeclared_forecast_tolerance_s": 2e-9,
-    "confirmation_lag_s": 5e-9,
+    "predeclared_forecast_tolerance_s": 2e-09,
+    "confirmation_lag_s": 5e-09,
     "classification": "FORECAST_VALIDATED_LOCAL_SCALAR_PEAK",
     "observed_peak_interval": 3559,
-    "observed_peak_time_s": 1.1449079285929656e-6,
+    "observed_peak_time_s": 1.1449079285929656e-06,
     "observed_peak_stress_Pa": 3987800892.1798434,
-    "observed_minus_forecast_midpoint_s": -1.786994285914032e-9,
-    "confirmation_elapsed_s": 5.826561825763221e-9,
+    "observed_minus_forecast_midpoint_s": -1.786994285914032e-09,
+    "confirmation_elapsed_s": 5.826561825763221e-09,
     "validation_artifact_sha256": "6af5619e6fa4716c976d5c6261d4350e793c2bd542769ed54cf9638b072c2a98",
     "strict_asb_claim": false,
-    "status": "COMPLETE"
+    "status": "COMPLETE",
+    "latest_interval": 3582
   },
-  "execution_status": "RUNNING",
-  "scientific_status": "PENDING"
+  "execution_status": "TARGET_REACHED",
+  "scientific_status": "SEE_FINAL_DECISION_RECORD",
+  "terminal_repository_sync": {
+    "status": "SYNCHRONIZED_SEE_REPOSITORY_SYNC_STATUS",
+    "terminal_checkpoint_sha256": "735e95de2825a9d4cc963b7504aa19a3edee40431331e8bcfb3550b9951ab9ad",
+    "terminal_interval": 3718,
+    "trajectory_modified": false
+  }
 }
