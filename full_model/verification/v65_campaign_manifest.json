@@ -54,9 +54,9 @@
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 3284,
-      "physical_time_s": 1.1015548069136914e-6,
-      "sha256": "26a45e52f775c74609705f3b21461661b3a3a8e9973097f9648a2a4ba797454f"
+      "adaptive_interval": 3348,
+      "physical_time_s": 1.110141716211571e-6,
+      "sha256": "bd91eea3a9c7ae9d10d147fb6bcd6cc7153dec6e82303e22da8e48287486644d"
     },
     "status": "RUNNING"
   },
@@ -89,7 +89,7 @@
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 3284,
+    "latest_classified_interval": 3348,
     "component_transition_audit": {
       "from_interval": 2964,
       "to_interval": 3028,
@@ -109,13 +109,13 @@
       "artifact_sha256": "0dd862279e5127597c950f04ac7953c5c9a60dcd7ec45c38e68c73b6516e3732"
     },
     "stable_component_identity_audit": {
-      "from_interval": 3220,
-      "to_interval": 3284,
+      "from_interval": 3284,
+      "to_interval": 3348,
       "classification": "STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION",
-      "largest_component_identity_overlap": 0.9301075268817204,
+      "largest_component_identity_overlap": 0.9175257731958762,
       "strict_asb_claim": false,
       "trajectory_modified": false,
-      "artifact_sha256": "113ea2383f1c77350c936a8d33277b52b4990c82a60e78edc7779585ee09d6e6"
+      "artifact_sha256": "9d5d26bfa58a923e98f9e8c76e9ffc19f4b4630e57b1f7779b219f1a4703191f"
     },
     "diagnostic_corrections": [
       {
@@ -145,10 +145,10 @@
     "poll_interval_s": 60,
     "output_directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/analysis/live_monitor",
     "trajectory_modified": false,
-    "verified_completed_pair_count": 1,
+    "verified_completed_pair_count": 2,
     "latest_verified_pair": {
-      "from_interval": 3220,
-      "to_interval": 3284,
+      "from_interval": 3284,
+      "to_interval": 3348,
       "classification": "STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION"
     },
     "status": "RUNNING"

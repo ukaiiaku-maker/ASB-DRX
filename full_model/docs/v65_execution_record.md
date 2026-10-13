@@ -187,3 +187,12 @@ terminal physical classification, and completed identity monitor; then it
 atomically updates this record and the campaign manifest, runs its focused
 test, commits, and pushes. The definitive archive now requires that successful
 sync status, so a stale running-state manifest cannot silently enter closure.
+
+Checkpoint 3348 is durable at 1.110141716 microseconds with SHA-256
+`bd91eea3a9c7ae9d10d147fb6bcd6cc7153dec6e82303e22da8e48287486644d`.
+Grain 20 has receded to 4.54404% net growth and 0.304114 cell displacement.
+The response remains hardening; peak-minus-mean temperature is 58.7653 K,
+power participation is 0.74629, heat/power overlap is 0.09302, aspect ratio is
+2.29307, and the width remains unresolved. Strict ASB remains false. The same
+largest component retains 0.917526 identity over 3284--3348 while the
+whole-field power becomes more diffuse.
