@@ -108,9 +108,8 @@ directions and for both senses on five of six interfaces, with virtual-slope
 variation below 0.04%.  This supports complete-functional prepared-boundary
 redistribution, not spontaneous grain birth or a material-specific DRX claim.
 
-The current local solver is the only campaign-heavy process.  It is continuing
-the n48 common-origin trajectory toward 1.25 microseconds under source
-`b579a16`; checkpoints are retained every eight accepted intervals.  Exact
+The campaign-heavy solver continued the n48 common-origin trajectory under
+source `b579a16`; checkpoints were retained every eight accepted intervals. Exact
 request-invariant front-product caching reduced a representative complete
 proposal from 23.77 s to 15.54 s while preserving every physical array, state
 digest, load, clock, and ledger bitwise.  Checkpoint 269 has SHA-256
@@ -156,17 +155,22 @@ half reuse, and bounded regrowth well after the active-cone repair.
 
 ## Attained endpoint and decision
 
-The controlled analytic-origin history reached adaptive interval 2184 at
-`1.0001734971998194 us` and engineering shear `0.05200693988799694`.  Closure
-replay from checksum-bound checkpoints reproduced the final two already
-observed accepted intervals exactly and terminated normally.  Final checkpoint
-SHA-256 is `16a4128b1aec06ebe10013cb85dd05dd51579adc59f6a7b35582b2e04500820b`.
+The controlled analytic-origin history first reached its provisional
+one-microsecond endpoint, then continued under the same source, physics,
+tolerances, and controller to adaptive interval 2457 at
+`1.020513582229403 us` and engineering shear `0.052820543289181024`.  The final
+single-interval terminal replay from checksum-bound checkpoint 2456 terminated
+normally.  Final checkpoint SHA-256 is
+`1a66604c813bff2d044910c12daa66bf3fbfb8dc7da3fd0b33ae4c3d166cf165`.
 The final configured regression passes 1009 tests in 280.67 s.
 
-The endpoint remains at the whole-history stress maximum, 3.96129 GPa.  Strict
+The endpoint remains at the whole-history stress maximum, 3.96818 GPa.  Strict
 ASB is false: no softening or conjunctive episode exists, peak-minus-mean
-temperature is 44.77 K, power aspect ratio is 1.24, and matched control and
+temperature is 47.18 K, power aspect ratio is 1.17, and matched control and
 localization refinement certificates are absent.  The initially-lowest-density
-grain 20 grows 7.064%, but its equivalent displacement is only 0.470 grid
+grain 20 grows 6.705%, but its equivalent displacement is only 0.4466 grid
 spacings; the registered half-spacing existing-boundary DRX threshold is not
-met.  Grain count remains four and spontaneous birth was not exercised.
+met.  Grain count remains four and spontaneous birth was not exercised.  The
+controller closes with 2457 accepted intervals, seven accuracy-rejected trials,
+one admissibility-failed trial, no rejected physical front event, and maximum
+relative complete-energy closure `1.35982e-5`.

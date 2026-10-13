@@ -38,16 +38,16 @@
   "current_physical_result": {
     "grid_n": 48,
     "common_origin_controlled": true,
-    "adaptive_interval": 2184,
-    "physical_time_s": 1.0001734971998194e-6,
-    "engineering_shear": 0.05200693988799694,
+    "adaptive_interval": 2457,
+    "physical_time_s": 1.020513582229403e-6,
+    "engineering_shear": 0.052820543289181024,
     "strict_asb": false,
     "substantial_drx": false,
     "prepared_grain_redistribution_active": true,
     "grain_count": 4,
     "spontaneous_grain_birth_exercised": false,
-    "terminal_checkpoint_sha256": "16a4128b1aec06ebe10013cb85dd05dd51579adc59f6a7b35582b2e04500820b",
-    "interpretation": "controlled one-microsecond common-origin history; still hardening, no strict ASB, and prepared-boundary grain growth narrowly below the registered substantial-DRX displacement threshold"
+    "terminal_checkpoint_sha256": "1a66604c813bff2d044910c12daa66bf3fbfb8dc7da3fd0b33ae4c3d166cf165",
+    "interpretation": "controlled 1.0205-microsecond common-origin history; still hardening, no strict ASB, and prepared-boundary grain growth below the registered substantial-DRX displacement threshold"
   },
   "execution_status": "CLOSURE_IN_PROGRESS",
   "delivery_status": "COMPLETE_AT_ATTAINED_SCOPE",

@@ -1,6 +1,6 @@
 # Campaign status
 
-Updated: 2026-10-12 (America/Los_Angeles)
+Updated: 2026-10-13 (America/Los_Angeles)
 
 ## V64 production accuracy and controlled coupled evolution
 
@@ -10,10 +10,9 @@ Updated: 2026-10-12 (America/Los_Angeles)
   positivity, contour CFL, donor capacity, and first-law checks remain separate
   physical-admissibility gates.
 - Late n64 2%/1% suffixes agree to 0.1058% in endpoint plastic power and much
-  better in bulk/state fields. A fresh analytic-origin n48 history is now under
-  production control; it has crossed 0.792578 us at engineering shear 0.0437031
-  and continues locally toward 1.25 us. Its current 0.1953125 ns interval uses
-  only 34% of the 2% limiting tolerance.
+  better in bulk/state fields. The fresh analytic-origin n48 history completed
+  2457 accepted adaptive intervals at 1.020513582 us and engineering shear
+  0.05282054 under the unchanged two-percent production tolerance.
 - Piecewise front force/rate closure now has safeguarded positive bracketing,
   active-set publication re-verification, floating-point representability
   termination, and a stationary zero-request state. The public force/rate
@@ -30,22 +29,22 @@ Updated: 2026-10-12 (America/Los_Angeles)
   and lacks a matched accepted-time control/refinement certificate. Grain count
   remains four; spontaneous nucleation, strict ASB, and material calibration
   are not claimed.
-- Source is pushed through `fae5b3f`. Focused numerical/front/ASB tests pass;
-  final-source canonical regression and end-of-allocation packaging remain in
-  progress. No V64 HPC or cloud calculation has been launched.
+- Physical/numerical source is frozen at `b579a16`. Focused numerical/front/ASB
+  tests and the 1009-test final-source canonical regression pass. No V64 HPC or
+  cloud calculation was launched.
 - The controlled common-origin branch has crossed 0.9041 us. At adaptive
   interval 886, a 119.209 ps proposal failed narrowly at 1.000708 times the
   unchanged tolerance; its exact first half was reused, and the 59.605 ps retry
   passed at 0.499381. No physical event was rejected. The controller then
   regrew conservatively to 74.506 ps, providing a second separated production
   rollback/regrowth observation.
-- The common-origin calculation now terminates normally at adaptive interval
-  2184, 1.000173497 us, and engineering shear 0.05200694. Terminal checkpoint
-  SHA-256 is `16a4128b1aec06ebe10013cb85dd05dd51579adc59f6a7b35582b2e04500820b`.
+- The common-origin calculation terminates normally at adaptive interval 2457,
+  1.020513582 us, and engineering shear 0.05282054. Terminal checkpoint SHA-256
+  is `1a66604c813bff2d044910c12daa66bf3fbfb8dc7da3fd0b33ae4c3d166cf165`.
   Canonical regression passes 1009 tests in 280.67 s.
-- The endpoint is still hardening at 3.96129 GPa. Strict ASB is false through
-  the attained horizon. Grain 20 grows 7.064%, but its equivalent boundary
-  displacement is 0.470 grid spacings, narrowly below the registered 0.5-grid
+- The endpoint is still hardening at 3.96818 GPa. Strict ASB is false through
+  the attained horizon. Grain 20 grows 6.705%, but its equivalent boundary
+  displacement is 0.4466 grid spacings, below the registered 0.5-grid
   substantial-existing-boundary-DRX threshold. Prepared-boundary processing is
   active; substantial DRX, spontaneous birth, and a qualified ASB regime are
   not claimed.
