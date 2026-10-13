@@ -17,6 +17,9 @@ from full_model.analysis.postprocess_v59_physical_asb import (
     PhysicalASBCriteria, checkpoint_snapshot,
 )
 from full_model.analysis.run_v58_three_grain_production import _load_checkpoint
+from full_model.analysis.summarize_v65_live_trends import (
+    load_rows as load_trend_rows, summarize as summarize_trends,
+)
 
 
 def sha256(path: Path) -> str:
@@ -138,6 +141,8 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--solver-pid", type=int)
     parser.add_argument("--poll-seconds", type=float, default=60.0)
+    parser.add_argument("--telemetry", type=Path, action="append", default=[])
+    parser.add_argument("--target-time", type=float)
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -153,6 +158,11 @@ def main() -> None:
         pending = [path for path in checkpoints if checkpoint_index(path) > last]
         for checkpoint in pending:
             payload = classify(checkpoint, args.origin, args.run)
+            if args.telemetry and args.target_time is not None:
+                trend_rows, trend_sources = load_trend_rows(args.telemetry)
+                payload["accepted_time_trend"] = summarize_trends(
+                    trend_rows, trend_sources, window=64,
+                    target_time_s=args.target_time, grain_index=1)
             with (args.output_dir/"live_checkpoint_classifications.jsonl").open(
                     "a") as stream:
                 stream.write(json.dumps(payload, sort_keys=True)+"\n")
