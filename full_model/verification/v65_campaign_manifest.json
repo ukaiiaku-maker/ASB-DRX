@@ -23,7 +23,7 @@
       "bounded error-responsive proposal targeting 0.85 of tolerance",
       "checkpoint-aligned atomic history and append-only telemetry"
     ],
-    "focused_tests_passed": 40
+    "focused_tests_passed": 41
   },
   "qualification": {
     "common_window_start_s": 1.0300000000000003e-6,
@@ -54,9 +54,9 @@
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 2964,
-      "physical_time_s": 1.0648831992177246e-6,
-      "sha256": "627e8df8940909f4b94cddb7fadc2eeafe44196a79df9a84087e74292e24c111"
+      "adaptive_interval": 3028,
+      "physical_time_s": 1.071549383068826e-6,
+      "sha256": "854531d1008e859baca66e314c4f05a288b9cf0b49970b9b83c3f6141a71f1e9"
     },
     "status": "RUNNING"
   },
@@ -89,7 +89,16 @@
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 2964,
+    "latest_classified_interval": 3028,
+    "component_transition_audit": {
+      "from_interval": 2964,
+      "to_interval": 3028,
+      "classification": "THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION",
+      "associated_fragment_union_identity_overlap": 0.9426229508196722,
+      "strict_asb_claim": false,
+      "trajectory_modified": false,
+      "artifact_sha256": "61ea24cf041f78ae0a4ef3fc8cd1b342892a8f4d3327e885a301273a121e7f6d"
+    },
     "diagnostic_corrections": [
       {
         "adaptive_interval": 2836,

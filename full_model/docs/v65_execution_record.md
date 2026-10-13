@@ -109,3 +109,21 @@ is 0.73010, aspect ratio is 1.14416, and heat/power overlap has declined to
 0.23173; strict ASB remains false.  Grain 20 has receded to 5.74892% net growth
 and 0.383734 cell displacement.  The last 64 accepted intervals retain the
 plastic-power-change limiter with a median tolerance ratio of 0.849482.
+
+Checkpoint 3028 is durable at 1.071549383 microseconds with SHA-256
+`854531d1008e859baca66e314c4f05a288b9cf0b49970b9b83c3f6141a71f1e9`.
+Grain 20 continues to recede, retaining 5.58546% net growth and 0.372957
+cell displacement. Peak-minus-mean temperature is 53.5962 K, but the stress
+remains at its running maximum, power participation has risen to 0.73248, and
+heat/power overlap has fallen to 0.11545. Strict ASB remains false.
+
+The apparent largest-component morphology jump at interval 3028 is a threshold
+selection event, not evidence of a resolved band. The former 235-cell largest
+component split into 175- and 64-cell fragments above the fixed `mean+std`
+rule. Their union has 0.942623 identity overlap with the former component.
+Selecting only the 175-cell fragment changes its reported aspect ratio from
+1.14416 to 2.59394 and minor FWHM from 1.06910 to 0.482501 micrometers, while
+the whole-field power participation becomes more diffuse. The read-only audit
+classifies this as `THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION`;
+its artifact SHA-256 is
+`61ea24cf041f78ae0a4ef3fc8cd1b342892a8f4d3327e885a301273a121e7f6d`.
