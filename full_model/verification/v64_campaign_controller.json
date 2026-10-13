@@ -36,10 +36,10 @@
     "full_scientific_objective_complete": false,
     "active_heavy_solver_pid": null,
     "current_source_commit": "b579a16",
-    "current_task": "package checksummed terminal evidence after controlled 1.0205-microsecond common-origin trajectory",
+    "current_task": "package checksummed terminal evidence after controlled 1.0300-microsecond common-origin trajectory",
     "next_task": "verify consolidated archive, commit and push final closure",
-    "current_physical_time_s": 1.020513582229403e-6,
-    "current_engineering_shear": 0.052820543289181024,
+    "current_physical_time_s": 1.0300000000000003e-6,
+    "current_engineering_shear": 0.05320000000000526,
     "strict_asb_through_interval_179": false,
     "spontaneous_grain_birth_exercised": false
   }

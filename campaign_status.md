@@ -11,8 +11,8 @@ Updated: 2026-10-13 (America/Los_Angeles)
   physical-admissibility gates.
 - Late n64 2%/1% suffixes agree to 0.1058% in endpoint plastic power and much
   better in bulk/state fields. The fresh analytic-origin n48 history completed
-  2457 accepted adaptive intervals at 1.020513582 us and engineering shear
-  0.05282054 under the unchanged two-percent production tolerance.
+  2585 accepted adaptive intervals at 1.030000000 us and engineering shear
+  0.05320000 under the unchanged two-percent production tolerance.
 - Piecewise front force/rate closure now has safeguarded positive bracketing,
   active-set publication re-verification, floating-point representability
   termination, and a stationary zero-request state. The public force/rate
@@ -38,13 +38,13 @@ Updated: 2026-10-13 (America/Los_Angeles)
   passed at 0.499381. No physical event was rejected. The controller then
   regrew conservatively to 74.506 ps, providing a second separated production
   rollback/regrowth observation.
-- The common-origin calculation terminates normally at adaptive interval 2457,
-  1.020513582 us, and engineering shear 0.05282054. Terminal checkpoint SHA-256
-  is `1a66604c813bff2d044910c12daa66bf3fbfb8dc7da3fd0b33ae4c3d166cf165`.
+- The common-origin calculation terminates normally at adaptive interval 2585,
+  1.030000000 us, and engineering shear 0.05320000. Terminal checkpoint SHA-256
+  is `2bbf987b6e6dbbf603c518686b90812a91c821715874bd580a0367dbeb1b1667`.
   Canonical regression passes 1009 tests in 280.67 s.
-- The endpoint is still hardening at 3.96818 GPa. Strict ASB is false through
-  the attained horizon. Grain 20 grows 6.705%, but its equivalent boundary
-  displacement is 0.4466 grid spacings, below the registered 0.5-grid
+- The endpoint is still hardening at 3.97103 GPa. Strict ASB is false through
+  the attained horizon. Grain 20 grows 6.521%, but its equivalent boundary
+  displacement is 0.4412 grid spacings, below the registered 0.5-grid
   substantial-existing-boundary-DRX threshold. Prepared-boundary processing is
   active; substantial DRX, spontaneous birth, and a qualified ASB regime are
   not claimed.

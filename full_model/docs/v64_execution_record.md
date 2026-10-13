@@ -157,20 +157,20 @@ half reuse, and bounded regrowth well after the active-cone repair.
 
 The controlled analytic-origin history first reached its provisional
 one-microsecond endpoint, then continued under the same source, physics,
-tolerances, and controller to adaptive interval 2457 at
-`1.020513582229403 us` and engineering shear `0.052820543289181024`.  The final
-single-interval terminal replay from checksum-bound checkpoint 2456 terminated
-normally.  Final checkpoint SHA-256 is
-`1a66604c813bff2d044910c12daa66bf3fbfb8dc7da3fd0b33ae4c3d166cf165`.
+tolerances, and controller to adaptive interval 2585 at
+`1.0300000000000003 us` and engineering shear `0.05320000000000526`.  Both the
+single-interval replay through 2457 and the final-allocation segment through
+2585 terminated normally from checksum-bound parents.  Final checkpoint
+SHA-256 is `2bbf987b6e6dbbf603c518686b90812a91c821715874bd580a0367dbeb1b1667`.
 The final configured regression passes 1009 tests in 280.67 s.
 
-The endpoint remains at the whole-history stress maximum, 3.96818 GPa.  Strict
+The endpoint remains at the whole-history stress maximum, 3.97103 GPa.  Strict
 ASB is false: no softening or conjunctive episode exists, peak-minus-mean
-temperature is 47.18 K, power aspect ratio is 1.17, and matched control and
+temperature is 48.34 K, power aspect ratio is 1.15, and matched control and
 localization refinement certificates are absent.  The initially-lowest-density
-grain 20 grows 6.705%, but its equivalent displacement is only 0.4466 grid
+grain 20 grows 6.521%, but its equivalent displacement is only 0.4412 grid
 spacings; the registered half-spacing existing-boundary DRX threshold is not
 met.  Grain count remains four and spontaneous birth was not exercised.  The
-controller closes with 2457 accepted intervals, seven accuracy-rejected trials,
+controller closes with 2585 accepted intervals, seven accuracy-rejected trials,
 one admissibility-failed trial, no rejected physical front event, and maximum
 relative complete-energy closure `1.35982e-5`.
