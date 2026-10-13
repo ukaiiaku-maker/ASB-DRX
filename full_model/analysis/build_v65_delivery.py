@@ -75,6 +75,16 @@ def require_complete_finalizer(campaign: Path) -> dict:
     return payload
 
 
+def stable_tree_files(campaign: Path, root: Path) -> list[Path]:
+    """Return closed evidence files, excluding the builder's live stdout."""
+    if not root.is_dir():
+        return []
+    live_builder_log = campaign / "logs/build_v65_delivery.log"
+    return sorted(
+        path for path in root.rglob("*")
+        if path.is_file() and path != live_builder_log)
+
+
 def required_files(campaign: Path, worktree: Path) -> list[tuple[Path, str]]:
     production = campaign / "runs/production_1p035_to1p25us_6debbe0"
     candidate = campaign / "runs/candidate_to1p035us_0637685"
@@ -129,9 +139,8 @@ def required_files(campaign: Path, worktree: Path) -> list[tuple[Path, str]]:
 
     for root in (campaign / "analysis/live_monitor", campaign / "logs",
                  campaign / "visuals"):
-        if root.is_dir():
-            for path in sorted(item for item in root.rglob("*") if item.is_file()):
-                pairs.append((path, str(path.relative_to(campaign))))
+        for path in stable_tree_files(campaign, root):
+            pairs.append((path, str(path.relative_to(campaign))))
 
     times = telemetry_times(production / "accepted_telemetry.jsonl")
     checkpoints = select_checkpoints(

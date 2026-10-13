@@ -6,7 +6,8 @@ import pytest
 
 import full_model.analysis.build_v65_delivery as delivery
 from full_model.analysis.build_v65_delivery import (
-    build, require_complete_finalizer, select_checkpoints, verify,
+    build, require_complete_finalizer, select_checkpoints, stable_tree_files,
+    verify,
 )
 
 
@@ -39,6 +40,16 @@ def test_delivery_accepts_complete_verified_finalizer(tmp_path):
     payload = {"status": "COMPLETE", "all_required_artifacts_present": True}
     (tmp_path / "finalizer_status.json").write_text(json.dumps(payload))
     assert require_complete_finalizer(tmp_path) == payload
+
+
+def test_delivery_excludes_its_still_open_builder_log(tmp_path):
+    logs = tmp_path/"logs"
+    logs.mkdir()
+    stable = logs/"canonical_tests_final.log"
+    live = logs/"build_v65_delivery.log"
+    stable.write_text("passed")
+    live.write_text("still open")
+    assert stable_tree_files(tmp_path, logs) == [stable]
 
 
 def test_delivery_builds_and_reverifies_atomic_archive(tmp_path, monkeypatch):
