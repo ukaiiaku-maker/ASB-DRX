@@ -90,6 +90,16 @@
     "source_commit": "57701dc",
     "poll_interval_s": 60,
     "latest_classified_interval": 2836,
+    "diagnostic_corrections": [
+      {
+        "adaptive_interval": 2836,
+        "classification_changed": false,
+        "softening_fraction_before": -2.398065309933931e-16,
+        "softening_fraction_after": 0.0,
+        "trajectory_modified": false,
+        "artifact_sha256": "eb092d26d6f76791c4ce0d41f989ccf5e911f0ec7f4a7a62e2af664b2752bae7"
+      }
+    ],
     "status": "RUNNING"
   },
   "execution_status": "RUNNING",

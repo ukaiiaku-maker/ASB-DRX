@@ -81,3 +81,11 @@ power participation is 0.72566, aspect ratio is 1.12684, and heat/power overlap
 has fallen to 0.23852.  Grain 20 has receded to 6.04338% net growth and
 0.403127 cell displacement.  The last 64 accepted intervals have a median
 tolerance ratio of 0.849553 and remain limited by plastic-power change.
+
+The interval-2836 live classifier originally reported a roundoff-scale
+`-2.3981e-16` softening fraction because its reconstructed stress exceeded the
+telemetry peak by one floating-point residual.  Source `57701dc` clamps this
+diagnostic to the physical nonnegative range.  Reclassification gives exactly
+zero softening and leaves every ASB check and the trajectory unchanged.  The
+preserved correction artifact has SHA-256
+`eb092d26d6f76791c4ce0d41f989ccf5e911f0ec7f4a7a62e2af664b2752bae7`.
