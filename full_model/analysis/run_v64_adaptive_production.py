@@ -56,6 +56,16 @@ def _controller_from_checkpoint(path: Path):
             str(data["diagnostic_adaptive_controller_json"])))
 
 
+def _front_factor_from_checkpoint(path: Path):
+    with np.load(path, allow_pickle=False) as data:
+        if "diagnostic_front_joint_pressure_factor" not in data.files:
+            return None
+        value = float(data["diagnostic_front_joint_pressure_factor"])
+        if not np.isfinite(value) or value <= 0.0:
+            raise ValueError("saved front pressure factor is not positive finite")
+        return value
+
+
 def restore_horizon_proposal(
         controller: AdaptiveControllerState, proposal_s: float
         ) -> AdaptiveControllerState:
@@ -71,7 +81,8 @@ def restore_horizon_proposal(
         consecutive_low_error_accepts=0)
 
 
-def _context(configuration: dict) -> CoupledMultigrainContext:
+def _context(configuration: dict, *, warm_start_front_factor=False
+             ) -> CoupledMultigrainContext:
     n = int(configuration["n"])
     spacing = float(configuration["length_m"])/n
     thickness = 2.0*2.48e-10
@@ -105,7 +116,8 @@ def _context(configuration: dict) -> CoupledMultigrainContext:
         float(configuration["front_maximum_substep_s"]), 10, energy,
         heat_deposition_mode=configuration.get(
             "front_heat_deposition", "local_realized_event"),
-        front_enabled=configuration.get("case") != "no_front")
+        front_enabled=configuration.get("case") != "no_front",
+        warm_start_front_factor=warm_start_front_factor)
 
 
 def _metrics(parent, state_tolerance, rate_tolerance,
@@ -184,12 +196,14 @@ def main() -> None:
         help=("replace only the restored controller proposal after an exact "
               "target-horizon clip; physical state and tolerances are unchanged"))
     parser.add_argument("--source-commit")
+    parser.add_argument("--warm-start-front-factor", action="store_true")
     parser.add_argument(
         "--numerical-transition",
         choices=("none", "v64_bracketed_front_root",
                  "v64_adaptive_growth", "v64_exact_front_cache",
                  "v64_set_valued_active_cone",
-                 "v65_terminal_horizon_restore"),
+                 "v65_terminal_horizon_restore",
+                 "v65_warm_started_front"),
         default="none")
     args = parser.parse_args()
     if digest(args.resume) != args.expected_resume_sha256:
@@ -208,7 +222,8 @@ def main() -> None:
         and (checkpoint_provenance or {}).get("origin")
         == "deterministic_analytic_prepared_network")
     physical = _physical_configuration(checkpoint_configuration or {})
-    context = _context(physical)
+    context = _context(
+        physical, warm_start_front_factor=args.warm_start_front_factor)
     if float(args.target_time) <= runtime.ledger.physical_time_s:
         raise ValueError("target physical time must exceed the checkpoint time")
     restored = _controller_from_checkpoint(args.resume)
@@ -242,11 +257,21 @@ def main() -> None:
             restored is not None and source_changed):
         raise ValueError(
             "declared numerical transition requires a changed adaptive source")
-    if ((args.numerical_transition == "v65_terminal_horizon_restore")
+    restores_terminal_horizon = args.numerical_transition in {
+        "v65_terminal_horizon_restore", "v65_warm_started_front"}
+    if (restores_terminal_horizon
             != (args.restart_proposed_step is not None)):
         raise ValueError(
             "V65 terminal-horizon transition and proposal restoration must "
             "be declared together")
+    if args.numerical_transition == "v65_warm_started_front":
+        if not (args.warm_start_front_factor
+                and args.restart_proposed_step is not None):
+            raise ValueError(
+                "V65 warm-start transition requires warm start and explicit "
+                "terminal-horizon proposal restoration")
+    elif args.warm_start_front_factor:
+        raise ValueError("front warm start requires its declared transition")
     provenance = {
         "source_commit": head,
         "restart_transition": (
@@ -289,10 +314,22 @@ def main() -> None:
             "exact-target horizon clip; physical state, controller bounds, "
             "complete coarse/two-half trial, and all 2% tolerances unchanged")
         provenance["restored_proposed_step_s"] = controller.proposed_step_s
+    elif args.numerical_transition == "v65_warm_started_front":
+        provenance["numerical_change"] = (
+            "restore the pre-terminal ordinary proposal and warm-start each "
+            "unchanged joint front conjugacy root from the last accepted "
+            "factor; every root is independently converged and verified, and "
+            "physical laws, complete-map trials, and 2% tolerances are unchanged")
+        provenance["restored_proposed_step_s"] = controller.proposed_step_s
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
     history = json.loads(history_path.read_text()) if history_path.exists() else []
-    endpoint = make_endpoint(state, runtime, gamma, context)
+    saved_front_factor = _front_factor_from_checkpoint(args.resume)
+    endpoint = make_endpoint(
+        state, runtime, gamma, context,
+        numerical_hints=({"front_joint_pressure_factor": saved_front_factor}
+                         if (args.warm_start_front_factor
+                             and saved_front_factor is not None) else {}))
     metrics = _metrics(endpoint, args.state_tolerance, args.rate_tolerance,
                        args.integral_tolerance)
     metric_definitions = [asdict(metric) for metric in metrics]
@@ -366,6 +403,9 @@ def main() -> None:
                         json.dumps(controller.to_dict(), sort_keys=True)),
                     "diagnostic_accuracy_decision_json": np.asarray(
                         json.dumps(accepted.decision, sort_keys=True)),
+                    "diagnostic_front_joint_pressure_factor": np.asarray(
+                        endpoint.numerical_hints.get(
+                            "front_joint_pressure_factor", 1.0)),
                     "diagnostic_front_heat_source_J_by_cell": np.asarray(
                         accepted.interval.integrals["front_heat_J_by_cell"]),
                     "diagnostic_mechanical_heat_J_m3_cells": np.asarray(

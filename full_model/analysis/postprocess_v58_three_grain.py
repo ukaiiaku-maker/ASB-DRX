@@ -22,15 +22,9 @@ from full_model.production.common_tensorial_wall import (
 from full_model.production.multigrain_production import (
     multigrain_instantaneous_dissipation_fields,
 )
-from full_model.production.tensorial_nye import (
-    bcc_four_family_systems, spectral_derivatives,
-)
+from full_model.production.tensorial_nye import bcc_four_family_systems
 from full_model.analysis.spatial_localization import spatial_localization_metrics
-
-
-def _perimeter_m(support, spacing):
-    gx, gy = spectral_derivatives(support, spacing)
-    return float(np.sum(np.sqrt(gx*gx+gy*gy), dtype=np.longdouble)*spacing**2)
+from full_model.analysis.grain_response_metrics import grain_response
 
 
 def _total_density(owner):
@@ -133,15 +127,11 @@ def main():
     dissipation = multigrain_instantaneous_dissipation_fields(
         state, driving=CommonWallDriving(mean_strain=strain), systems=systems,
         topologies=(), wall_parameters=wall)
-    perimeters_initial = np.asarray([
-        _perimeter_m(value, spacing) for value in initial.supports])
-    perimeters_final = np.asarray([
-        _perimeter_m(value, spacing) for value in state.supports])
-    equivalent_displacement = np.divide(
-        final_volume-initial_volume,
-        thickness*.5*(perimeters_initial+perimeters_final),
-        out=np.zeros_like(final_volume),
-        where=(perimeters_initial+perimeters_final) > 0.0)
+    geometric_response = grain_response(
+        initial.supports, state.supports, spacing_m=spacing,
+        represented_thickness_m=thickness)
+    equivalent_displacement = geometric_response[
+        "equivalent_contour_displacement_m"]
     newly_swept_density = []
     for index, owner in enumerate(state.owners):
         growth = np.maximum(support_delta[index], 0.0)
@@ -211,6 +201,8 @@ def main():
         "fresh_sweep_volume_m3": fresh,
         "revisit_sweep_volume_m3": revisit,
         "equivalent_contour_displacement_m": equivalent_displacement.tolist(),
+        "equivalent_contour_displacement_convention": geometric_response[
+            "convention"],
         "newly_swept_owner_density_m2": newly_swept_density,
         "temperature_mean_K": float(np.mean(temperature)),
         "temperature_contrast_K": float(np.max(temperature)-np.min(temperature)),

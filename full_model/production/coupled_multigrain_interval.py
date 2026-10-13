@@ -43,6 +43,7 @@ class CoupledMultigrainContext:
     energy_kwargs: Mapping[str, object]
     heat_deposition_mode: str = "local_realized_event"
     front_enabled: bool = True
+    warm_start_front_factor: bool = False
 
 
 def endpoint_observables(state, load: float,
@@ -96,9 +97,11 @@ def endpoint_observables(state, load: float,
 
 
 def make_endpoint(state, runtime, load: float,
-                  context: CoupledMultigrainContext) -> CoupledEndpoint:
+                  context: CoupledMultigrainContext, *,
+                  numerical_hints=None) -> CoupledEndpoint:
     return CoupledEndpoint(
-        state, runtime, float(load), endpoint_observables(state, load, context))
+        state, runtime, float(load), endpoint_observables(state, load, context),
+        {} if numerical_hints is None else dict(numerical_hints))
 
 
 def advance_complete_multigrain_interval(
@@ -169,7 +172,13 @@ def advance_complete_multigrain_interval(
             energy_kwargs=energy_after,
             applied_shear_rate_s=context.shear_rate_s,
             systems=context.systems,
-            heat_deposition_mode=context.heat_deposition_mode)
+            heat_deposition_mode=context.heat_deposition_mode,
+            initial_joint_pressure_factor=(
+                float(parent.numerical_hints.get(
+                    "front_joint_pressure_factor", 1.0))
+                if context.warm_start_front_factor else 1.0),
+            warm_start_joint_pressure_factor=(
+                context.warm_start_front_factor))
         if not all(item.accepted and not item.contour_cfl_clipped
                    for item in fronts):
             raise RuntimeError(
@@ -202,7 +211,12 @@ def advance_complete_multigrain_interval(
                       atol=64*np.finfo(float).eps*max(abs(gamma1), 1.0)):
         raise RuntimeError("complete coupled map failed its load clock")
     observable_started = time.perf_counter()
-    endpoint = make_endpoint(state, runtime, gamma1, context)
+    numerical_hints = dict(parent.numerical_hints)
+    if fronts:
+        numerical_hints["front_joint_pressure_factor"] = float(
+            fronts[-1].joint_pressure_factor)
+    endpoint = make_endpoint(
+        state, runtime, gamma1, context, numerical_hints=numerical_hints)
     observable_wall_time = time.perf_counter()-observable_started
     integrals = {
         "mechanical_external_work_J": mechanical.external_work_J,
@@ -239,6 +253,12 @@ def advance_complete_multigrain_interval(
         "front_force_rate_closure_brackets": [
             item.force_rate_closure_bracket for item in fronts
             if item.force_rate_closure_bracket is not None],
+        "front_joint_pressure_factors": [
+            item.joint_pressure_factor for item in fronts],
+        "front_force_rate_iterations": [
+            item.force_rate_iterations for item in fronts],
+        "front_complete_energy_evaluations": [
+            item.complete_energy_evaluations for item in fronts],
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "front_map": front_wall_time,

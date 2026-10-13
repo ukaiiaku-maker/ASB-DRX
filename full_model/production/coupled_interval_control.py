@@ -9,7 +9,7 @@ history.  Only the fine endpoint is eligible for publication.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, field, replace
 import math
 import time
 from typing import Callable, Mapping
@@ -23,6 +23,7 @@ class CoupledEndpoint:
     runtime: object
     load: float
     observables: Mapping[str, np.ndarray | float]
+    numerical_hints: Mapping[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
