@@ -121,6 +121,12 @@ def test_final_decision_reduces_complete_evidence_schema(tmp_path):
             {"projected_peak_time_s": 1.1468e-6},
         ],
     })
+    write(analysis/"live_monitor/peak_forecast_validation.json", {
+        "schema": "fixture",
+        "classification": "FORECAST_VALIDATED_LOCAL_SCALAR_PEAK",
+        "local_scalar_peak_confirmed": True,
+        "strict_asb_claim": False,
+    })
     payload = reduce(campaign)
     assert payload["scoped_experiment_complete"] is True
     assert payload["full_scientific_objective_complete"] is False
@@ -129,6 +135,8 @@ def test_final_decision_reduces_complete_evidence_schema(tmp_path):
     )
     assert payload["preterminal_stress_peak_projection"]["decision"][
         "stress_peak_observed"] is False
+    assert payload["preterminal_stress_peak_validation"][
+        "classification"] == "FORECAST_VALIDATED_LOCAL_SCALAR_PEAK"
     assert payload["numerical_qualification"][
         "production_candidate_qualified"] is True
     assert payload["physical_claims"] == {

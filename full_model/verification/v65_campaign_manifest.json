@@ -23,7 +23,7 @@
       "bounded error-responsive proposal targeting 0.85 of tolerance",
       "checkpoint-aligned atomic history and append-only telemetry"
     ],
-    "focused_tests_passed": 48
+    "focused_tests_passed": 50
   },
   "qualification": {
     "common_window_start_s": 1.0300000000000003e-6,
@@ -168,6 +168,15 @@
     "waits_for_terminal_classifier_and_identity_monitor": true,
     "archive_requires_successful_status": true,
     "status": "WAITING_FOR_PRODUCTION"
+  },
+  "stress_peak_forecast_monitor": {
+    "process_pid": 58866,
+    "source_commit": "e3c5804393a1b62cd883671d6eea1d736760ab1b",
+    "solver_pid": 49003,
+    "predeclared_forecast_tolerance_s": 2e-9,
+    "confirmation_lag_s": 5e-9,
+    "strict_asb_claim": false,
+    "status": "RUNNING"
   },
   "execution_status": "RUNNING",
   "scientific_status": "PENDING"

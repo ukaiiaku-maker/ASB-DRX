@@ -213,3 +213,9 @@ target. The 0.240-nanosecond projection spread is a useful prospective test,
 not an observed softening or spatial-localization result. The preserved audit
 SHA-256 is
 `3699635ee7e7861661def7b54404ea50438b7a9ac5b1e5c98608744b234e55dc`.
+
+Prospective validation is assigned to the lightweight scalar-peak monitor
+under source `e3c5804`, PID 58866. Before seeing the outcome it declares a
+plus-or-minus 2-nanosecond forecast band and requires 5 nanoseconds of strictly
+lower subsequent accepted stress. A confirmed result remains a local scalar
+peak only and cannot qualify spatial localization or strict ASB.

@@ -85,6 +85,9 @@ def reduce(campaign: Path) -> dict:
         })
     curvature_path = analysis/"live_monitor/stress_curvature_latest.json"
     curvature = load(curvature_path) if curvature_path.is_file() else None
+    peak_validation_path = analysis/"live_monitor/peak_forecast_validation.json"
+    peak_validation = (load(peak_validation_path)
+                       if peak_validation_path.is_file() else None)
     return {
         "schema": "asb-drx-v65-final-decision-v1",
         "execution_status": result.get("execution_status"),
@@ -161,6 +164,13 @@ def reduce(campaign: Path) -> dict:
                 ],
             }
         ),
+        "preterminal_stress_peak_validation": (
+            None if peak_validation is None else {
+                "artifact": str(peak_validation_path.resolve()),
+                "artifact_sha256": digest(peak_validation_path),
+                **peak_validation,
+            }
+        ),
         "tests": {
             "passed": tests_passed,
             "exit_codes": exit_codes,
@@ -183,6 +193,7 @@ def markdown(payload: dict) -> str:
     provenance = payload["provenance"]
     identity_audits = payload.get("localization_identity_audits", [])
     forecast = payload.get("preterminal_stress_peak_projection")
+    validation = payload.get("preterminal_stress_peak_validation")
     identity_text = (
         " No threshold-component identity event was separately audited."
         if not identity_audits else
@@ -196,6 +207,12 @@ def markdown(payload: dict) -> str:
         " A preterminal scalar-history extrapolation was preserved as "
         f"`{forecast['decision']['classification']}`; it explicitly did not "
         "constitute an observed peak, softening event, or spatial ASB claim."
+    )
+    validation_text = (
+        "" if validation is None else
+        " Its prospective validation result is "
+        f"`{validation['classification']}` and remains a scalar-stress result, "
+        "not a spatial ASB qualification."
     )
     return f"""# V65 final decision
 
@@ -235,7 +252,7 @@ The available scalar history retains the declared interval 2185--2456 gap and
 is not labeled a complete whole-history record.  Raw checkpoint conjunctions
 and accepted-time suffix trends remain attributable.  No common-origin matched
 temperature control or spatial refinement exists, and no spontaneous grain
-nucleation is claimed.{identity_text}{forecast_text}
+nucleation is claimed.{identity_text}{forecast_text}{validation_text}
 
 ## Remaining work
 
