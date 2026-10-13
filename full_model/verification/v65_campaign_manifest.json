@@ -54,9 +54,9 @@
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 3476,
-      "physical_time_s": 1.129358405973865e-6,
-      "sha256": "ab18bea98dfe2dd90a016485e22e4df7ce3cb37d2baac90767b5ca6d956ab381"
+      "adaptive_interval": 3540,
+      "physical_time_s": 1.1408698707372707e-6,
+      "sha256": "817bd4a2af868912e161d521d33f8ac6d8e3bb5e08ccb76dbee6c224661dacaa"
     },
     "status": "RUNNING"
   },
@@ -89,7 +89,7 @@
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 3476,
+    "latest_classified_interval": 3540,
     "component_transition_audit": {
       "from_interval": 2964,
       "to_interval": 3028,
@@ -109,13 +109,13 @@
       "artifact_sha256": "0dd862279e5127597c950f04ac7953c5c9a60dcd7ec45c38e68c73b6516e3732"
     },
     "latest_component_identity_audit": {
-      "from_interval": 3412,
-      "to_interval": 3476,
+      "from_interval": 3476,
+      "to_interval": 3540,
       "classification": "UNRESOLVED_COMPONENT_TRANSITION",
-      "largest_component_identity_overlap": 0.8932038834951457,
+      "largest_component_identity_overlap": 0.909952606635071,
       "strict_asb_claim": false,
       "trajectory_modified": false,
-      "artifact_sha256": "4cabcb36be5b1eee86244d8f65effbb8ce789c8c51a55f8efe4b86fad15ef43f"
+      "artifact_sha256": "c85d0c04ab05053b390db1caf3004434111c4b6281449d201117c6cae2e1d157"
     },
     "diagnostic_corrections": [
       {
@@ -153,10 +153,10 @@
     "poll_interval_s": 60,
     "output_directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/analysis/live_monitor",
     "trajectory_modified": false,
-    "verified_completed_pair_count": 4,
+    "verified_completed_pair_count": 5,
     "latest_verified_pair": {
-      "from_interval": 3412,
-      "to_interval": 3476,
+      "from_interval": 3476,
+      "to_interval": 3540,
       "classification": "UNRESOLVED_COMPONENT_TRANSITION"
     },
     "status": "RUNNING"

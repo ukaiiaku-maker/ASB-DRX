@@ -231,3 +231,21 @@ minor width broadens to 0.555422 micrometers. Strict ASB remains false. The
 largest-component overlap across 3412--3476 is 0.893204, below the declared
 0.90 stable-identity screen, so this morphology transition is conservatively
 classified `UNRESOLVED_COMPONENT_TRANSITION` rather than joined across time.
+
+Checkpoint 3540 is durable at 1.140869871 microseconds with SHA-256
+`817bd4a2af868912e161d521d33f8ac6d8e3bb5e08ccb76dbee6c224661dacaa`.
+Grain 20 has receded to 3.60571% net growth and 0.241809 cell displacement.
+The response is still hardening, with a latest 64-record slope of
+2.628e13 Pa/s. Peak-minus-mean temperature is 63.3696 K, power participation
+is 0.75479, heat/power overlap is 0.06595, aspect ratio is 1.92558, and the
+0.608374-micrometer minor width remains unresolved. Strict ASB is false. The
+associated-fragment union overlap across 3476--3540 is 0.909953, but the
+predeclared stable-largest-component test is not satisfied; the transition is
+therefore classified `UNRESOLVED_COMPONENT_TRANSITION`. The identity-audit
+SHA-256 is
+`c85d0c04ab05053b390db1caf3004434111c4b6281449d201117c6cae2e1d157`.
+
+The prospective peak validator remains pending through accepted interval
+3543. The latest observed stress maximum is at 1.141478 microseconds, still
+5.217 nanoseconds before the frozen projection midpoint, and no post-peak lag
+has accrued. This is neither observed softening nor a strict-ASB claim.
