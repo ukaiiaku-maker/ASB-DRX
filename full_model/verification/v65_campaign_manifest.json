@@ -55,6 +55,19 @@
     "checkpoint_every_accepted_intervals": 64,
     "status": "RUNNING"
   },
+  "autonomous_finalizer": {
+    "process_pid": 49354,
+    "manager_source_commit": "56947e7",
+    "poll_interval_s": 60,
+    "planned_actions": [
+      "summarize controlled production",
+      "merge histories with declared gaps",
+      "classify DRX and ASB",
+      "render native-grid evidence",
+      "run focused and canonical tests"
+    ],
+    "status": "WAITING_FOR_PRODUCTION"
+  },
   "execution_status": "RUNNING",
   "scientific_status": "PENDING"
 }
