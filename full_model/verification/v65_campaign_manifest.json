@@ -13,6 +13,48 @@
     "terminal_checkpoint_sha256": "2bbf987b6e6dbbf603c518686b90812a91c821715874bd580a0367dbeb1b1667",
     "reconstructed_terminal_checkpoint": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/reconstructed_v64/checkpoint_adaptive_002585.npz"
   },
+  "implementation": {
+    "qualified_candidate_commit": "0637685352e4aacbbbab3e5a0174832c2ffe2b73",
+    "long_run_source_commit": "6debbe0813ca0c365abcf473e5106cb90dbdd75a",
+    "physical_kernel_change": false,
+    "accuracy_tolerance_change": false,
+    "numerical_changes": [
+      "verified joint-front pressure-factor warm start",
+      "bounded error-responsive proposal targeting 0.85 of tolerance",
+      "checkpoint-aligned atomic history and append-only telemetry"
+    ],
+    "focused_tests_passed": 40
+  },
+  "qualification": {
+    "common_window_start_s": 1.0300000000000003e-6,
+    "common_window_end_s": 1.035e-6,
+    "reference_wall_time_s": 930.1901875752956,
+    "candidate_wall_time_s": 718.3179838368669,
+    "speedup": 1.2949560062616303,
+    "reference_accepted_intervals": 68,
+    "candidate_accepted_intervals": 59,
+    "candidate_agrees_at_working_tolerance": true,
+    "maximum_reported_endpoint_difference_fraction": 0.001910231101574253,
+    "work_precision_sha256": "e9db8ab9a24f974f95cb43172cfde1646a257bd8b7436b37a67b1095201f7b58"
+  },
+  "grain_selection": {
+    "target_grain_id": 20,
+    "maximum_growth_interval": 552,
+    "maximum_growth_fraction": 0.08158861769270723,
+    "displacement_cells_at_454": 0.5412748757577481,
+    "displacement_cells_at_886": 0.535952617277174,
+    "displacement_cells_at_2585": 0.43450157885204904,
+    "classification": "TRANSIENT_GROWTH_THEN_RECESSION",
+    "analysis_sha256": "071331dee4ae62cdae89c62e858752bf27c12de48770cb89e26c9edf464bbf84"
+  },
+  "active_production": {
+    "process_pid": 49003,
+    "output": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/runs/production_1p035_to1p25us_6debbe0",
+    "parent_checkpoint_sha256": "7672cb556586bbbf69547910e6239c41ef2ddb2bebeead9760741a27ab30f34e",
+    "target_time_s": 1.25e-6,
+    "checkpoint_every_accepted_intervals": 64,
+    "status": "RUNNING"
+  },
   "execution_status": "RUNNING",
   "scientific_status": "PENDING"
 }
