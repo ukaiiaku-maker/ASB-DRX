@@ -162,10 +162,10 @@
     "status": "RUNNING"
   },
   "terminal_repository_sync_manager": {
-    "process_pid": 57716,
-    "source_commit": "29c201f6230243336b62351a0a86c4c7f264741e",
+    "process_pid": 59086,
+    "source_commit": "5ed4493f68eeab83a8b93fef226c25dacaafff44",
     "solver_pid": 49003,
-    "waits_for_terminal_classifier_and_identity_monitor": true,
+    "waits_for_terminal_classifier_identity_and_peak_monitors": true,
     "archive_requires_successful_status": true,
     "status": "WAITING_FOR_PRODUCTION"
   },

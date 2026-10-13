@@ -182,8 +182,9 @@ is false. The autonomous identity monitor classifies 3220--3284 as
 `STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION` with 0.930108 overlap.
 
 Terminal repository provenance is protected by a post-solver synchronization
-manager under source `29c201f`, PID 57716. It waits for the exact target result,
-terminal physical classification, and completed identity monitor; then it
+manager under source `5ed4493`, PID 59086. It waits for the exact target result,
+terminal physical classification, completed identity monitor, and completed
+prospective peak validation; then it
 atomically updates this record and the campaign manifest, runs its focused
 test, commits, and pushes. The definitive archive now requires that successful
 sync status, so a stale running-state manifest cannot silently enter closure.
