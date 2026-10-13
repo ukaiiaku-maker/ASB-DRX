@@ -89,6 +89,8 @@ def required_files(campaign: Path, worktree: Path) -> list[tuple[Path, str]]:
         campaign / "analysis/merged_controlled_history.json",
         campaign / "analysis/final_asb_through1p25us.json",
         campaign / "analysis/final_grain20_selection.json",
+        campaign / "analysis/v65_final_decision.json",
+        campaign / "analysis/v65_final_decision.md",
         reconstructed / "checkpoint_adaptive_002585.npz",
         reconstructed / "trajectory_checkpoints/n48_analytic_origin_bab4c95.npz",
         reconstructed / "trajectory_checkpoints/checkpoint_adaptive_000454.npz",
