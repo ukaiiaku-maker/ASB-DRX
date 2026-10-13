@@ -54,9 +54,9 @@
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 3412,
-      "physical_time_s": 1.119336390764616e-6,
-      "sha256": "db8fdb5e6b952caff8c4252b83e7683ef651d2cc500e7a39d71e20dac45eaf23"
+      "adaptive_interval": 3476,
+      "physical_time_s": 1.129358405973865e-6,
+      "sha256": "ab18bea98dfe2dd90a016485e22e4df7ce3cb37d2baac90767b5ca6d956ab381"
     },
     "status": "RUNNING"
   },
@@ -89,7 +89,7 @@
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 3412,
+    "latest_classified_interval": 3476,
     "component_transition_audit": {
       "from_interval": 2964,
       "to_interval": 3028,
@@ -108,14 +108,14 @@
       "trajectory_modified": false,
       "artifact_sha256": "0dd862279e5127597c950f04ac7953c5c9a60dcd7ec45c38e68c73b6516e3732"
     },
-    "stable_component_identity_audit": {
-      "from_interval": 3348,
-      "to_interval": 3412,
-      "classification": "STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION",
-      "largest_component_identity_overlap": 0.9587628865979382,
+    "latest_component_identity_audit": {
+      "from_interval": 3412,
+      "to_interval": 3476,
+      "classification": "UNRESOLVED_COMPONENT_TRANSITION",
+      "largest_component_identity_overlap": 0.8932038834951457,
       "strict_asb_claim": false,
       "trajectory_modified": false,
-      "artifact_sha256": "459dbec3c5485555ecdac7992c7ec09330b152a9f9b42e34f7f9d0fb6a7620ea"
+      "artifact_sha256": "4cabcb36be5b1eee86244d8f65effbb8ce789c8c51a55f8efe4b86fad15ef43f"
     },
     "diagnostic_corrections": [
       {
@@ -153,11 +153,11 @@
     "poll_interval_s": 60,
     "output_directory": "/Users/sdillon/HPC3/campaigns/asb-drx-v65-20261013/analysis/live_monitor",
     "trajectory_modified": false,
-    "verified_completed_pair_count": 3,
+    "verified_completed_pair_count": 4,
     "latest_verified_pair": {
-      "from_interval": 3348,
-      "to_interval": 3412,
-      "classification": "STABLE_COMPONENT_IDENTITY_WITHOUT_GLOBAL_LOCALIZATION"
+      "from_interval": 3412,
+      "to_interval": 3476,
+      "classification": "UNRESOLVED_COMPONENT_TRANSITION"
     },
     "status": "RUNNING"
   },

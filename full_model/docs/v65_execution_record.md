@@ -220,3 +220,14 @@ under source `e3c5804`, PID 58866. Before seeing the outcome it declares a
 plus-or-minus 2-nanosecond forecast band and requires 5 nanoseconds of strictly
 lower subsequent accepted stress. A confirmed result remains a local scalar
 peak only and cannot qualify spatial localization or strict ASB.
+
+Checkpoint 3476 is durable at 1.129358406 microseconds with SHA-256
+`ab18bea98dfe2dd90a016485e22e4df7ce3cb37d2baac90767b5ca6d956ab381`.
+Grain 20 has receded to 3.96807% net growth and 0.265900 cell displacement.
+The response remains hardening, although its latest 64-record slope has fallen
+to 5.484e13 Pa/s. Peak-minus-mean temperature is 61.6412 K, power participation
+is 0.75234, heat/power overlap is 0.07295, aspect ratio is 2.10340, and the
+minor width broadens to 0.555422 micrometers. Strict ASB remains false. The
+largest-component overlap across 3412--3476 is 0.893204, below the declared
+0.90 stable-identity screen, so this morphology transition is conservatively
+classified `UNRESOLVED_COMPONENT_TRANSITION` rather than joined across time.
