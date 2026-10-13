@@ -196,3 +196,12 @@ power participation is 0.74629, heat/power overlap is 0.09302, aspect ratio is
 2.29307, and the width remains unresolved. Strict ASB remains false. The same
 largest component retains 0.917526 identity over 3284--3348 while the
 whole-field power becomes more diffuse.
+
+Checkpoint 3412 is durable at 1.119336391 microseconds with SHA-256
+`db8fdb5e6b952caff8c4252b83e7683ef651d2cc500e7a39d71e20dac45eaf23`.
+Grain 20 has receded to 4.27304% net growth and 0.286146 cell displacement.
+The response remains hardening; peak-minus-mean temperature is 60.1390 K,
+power participation is 0.74935, heat/power overlap is 0.08273, aspect ratio is
+2.21129, and the minor width has broadened to 0.524776 micrometers. Strict ASB
+remains false. The same largest component retains 0.958763 identity over
+3348--3412 while the whole-field power becomes more diffuse.
