@@ -2581,6 +2581,10 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   that representability limit without relaxing the pointwise tolerance; the
   qualified 190.735 ps proposal passes at 0.739912 times tolerance and
   production has resumed under source `b579a16`.
+- The repaired live trajectory independently rejects a 190.735 ps proposal at
+  1.000891 times tolerance, reuses and accepts its exact 95.367 ps first half
+  at 0.498043, and then qualifies a bounded 119.209 ps regrowth proposal at
+  0.624477. No rejected work, heat, history, or elapsed time is published.
 - Through the currently classified early horizon, the prepared four-grain
   network is hardening and redistributing material but has no strict ASB
   episode and no demonstrated spontaneous grain birth. The controlled run is

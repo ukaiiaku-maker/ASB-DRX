@@ -31,14 +31,15 @@
     "native_axis_frames_through_adaptive_interval": 179,
     "on_trajectory_accuracy_rejection_and_rollback": true,
     "exact_front_cache_bitwise_equivalence": true,
-    "adjacent_float_active_cone_closure_qualified": true
+    "adjacent_float_active_cone_closure_qualified": true,
+    "post_repair_accuracy_rollback_and_regrowth": true
   },
   "current_physical_result": {
     "grid_n": 48,
     "common_origin_controlled": true,
-    "adaptive_interval": 320,
-    "physical_time_s": 8.270309448241729e-7,
-    "engineering_shear": 0.04508123779296692,
+    "adaptive_interval": 450,
+    "physical_time_s": 8.515642166137617e-7,
+    "engineering_shear": 0.046062568664550466,
     "strict_asb": false,
     "substantial_drx": false,
     "prepared_grain_redistribution_active": true,

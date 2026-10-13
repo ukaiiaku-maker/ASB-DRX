@@ -133,3 +133,12 @@ pointwise publication value. The bracket residuals are `+1.64950e-10` and
 `-1.57876e-10`. Promoted checkpoint 318 has SHA-256
 `e67f4f9acc81c9d6df54c47f93aecd8a0a770a3745c25106384a5bfa05d4209b`.
 Production continues under the original tolerances.
+
+The repaired production branch then supplied an independent live rollback
+test.  At 0.851254 microseconds a 190.735 ps interval still passed at
+0.999054 times tolerance; the next proposal failed narrowly at 1.000891 and
+published nothing.  Its exact 95.367 ps first half was reused and passed at
+0.498043, the following equal step passed at 0.498510, and the bounded 1.25x
+proposal of 119.209 ps passed at 0.624477.  This demonstrates rejection,
+rollback, exact half reuse, and cautious regrowth after the active-cone repair
+without changing any physical coefficient or error tolerance.
