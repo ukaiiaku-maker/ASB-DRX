@@ -105,9 +105,18 @@ def test_final_decision_reduces_complete_evidence_schema(tmp_path):
             "power": {"relative_difference": .0019},
         },
     })
+    write(analysis/"power_component_transition_fixture.json", {
+        "decision": {
+            "classification": "THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION",
+            "strict_asb_claim": False,
+        },
+    })
     payload = reduce(campaign)
     assert payload["scoped_experiment_complete"] is True
     assert payload["full_scientific_objective_complete"] is False
+    assert payload["localization_identity_audits"][0]["classification"] == (
+        "THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION"
+    )
     assert payload["numerical_qualification"][
         "production_candidate_qualified"] is True
     assert payload["physical_claims"] == {

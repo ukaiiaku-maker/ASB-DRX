@@ -73,6 +73,16 @@ def reduce(campaign: Path) -> dict:
         < float(maximum_grain["volume_growth_fraction"])
     )
     production_run = summary["runs"][0]
+    component_audits = []
+    for path in sorted(analysis.glob("power_component_transition_*.json")) + sorted(
+        (analysis / "live_monitor").glob("power_component_transition_*.json")
+    ):
+        payload = load(path)
+        component_audits.append({
+            "artifact": str(path.resolve()),
+            "artifact_sha256": digest(path),
+            **payload["decision"],
+        })
     return {
         "schema": "asb-drx-v65-final-decision-v1",
         "execution_status": result.get("execution_status"),
@@ -138,6 +148,7 @@ def reduce(campaign: Path) -> dict:
             "declared_gaps": asb["scalar_history"]["gaps"],
             "semantics": asb["scalar_history"]["semantics"],
         },
+        "localization_identity_audits": component_audits,
         "tests": {
             "passed": tests_passed,
             "exit_codes": exit_codes,
@@ -158,6 +169,15 @@ def markdown(payload: dict) -> str:
     p = payload["physical_claims"]
     q = payload["numerical_qualification"]
     provenance = payload["provenance"]
+    identity_audits = payload.get("localization_identity_audits", [])
+    identity_text = (
+        " No threshold-component identity event was separately audited."
+        if not identity_audits else
+        " Audited component-selection events are: " + ", ".join(
+            f"`{item['classification']}`" for item in identity_audits
+        ) + ". These events prevent largest-area morphology samples from being "
+        "interpreted as one continuous physical structure."
+    )
     return f"""# V65 final decision
 
 ## Decision
@@ -196,7 +216,7 @@ The available scalar history retains the declared interval 2185--2456 gap and
 is not labeled a complete whole-history record.  Raw checkpoint conjunctions
 and accepted-time suffix trends remain attributable.  No common-origin matched
 temperature control or spatial refinement exists, and no spontaneous grain
-nucleation is claimed.
+nucleation is claimed.{identity_text}
 
 ## Remaining work
 
