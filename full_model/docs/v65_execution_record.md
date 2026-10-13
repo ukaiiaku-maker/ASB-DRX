@@ -127,3 +127,19 @@ the whole-field power participation becomes more diffuse. The read-only audit
 classifies this as `THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION`;
 its artifact SHA-256 is
 `61ea24cf041f78ae0a4ef3fc8cd1b342892a8f4d3327e885a301273a121e7f6d`.
+
+Checkpoint 3092 is durable at 1.078510034 microseconds with SHA-256
+`6f9d1279e863b5268c5824141a659fbac10ebc9e907b8a0de6c66ae76795961f`.
+The trajectory remains hardening and grain 20 has receded to 5.40949% net
+growth and 0.361347 cell displacement. Peak-minus-mean temperature is
+54.4932 K, but power participation is 0.73498, heat/power overlap is 0.11691,
+and the 0.464062-micrometer minor width remains below two interface widths.
+Strict ASB is false.
+
+The largest-component identity also changes at this checkpoint. The interval-
+3028 largest component retains 0.948864 identity as the interval-3092
+second-ranked 168-cell component, while the other structure becomes largest
+at 175 cells. Consecutive morphology values selected solely by largest area
+therefore splice different physical structures. The audit classifies this as
+`LARGEST_COMPONENT_RANK_SWAP_WITHOUT_GLOBAL_LOCALIZATION`; its SHA-256 is
+`0dd862279e5127597c950f04ac7953c5c9a60dcd7ec45c38e68c73b6516e3732`.

@@ -23,7 +23,7 @@
       "bounded error-responsive proposal targeting 0.85 of tolerance",
       "checkpoint-aligned atomic history and append-only telemetry"
     ],
-    "focused_tests_passed": 41
+    "focused_tests_passed": 42
   },
   "qualification": {
     "common_window_start_s": 1.0300000000000003e-6,
@@ -54,9 +54,9 @@
     "target_time_s": 1.25e-6,
     "checkpoint_every_accepted_intervals": 64,
     "latest_durable_checkpoint": {
-      "adaptive_interval": 3028,
-      "physical_time_s": 1.071549383068826e-6,
-      "sha256": "854531d1008e859baca66e314c4f05a288b9cf0b49970b9b83c3f6141a71f1e9"
+      "adaptive_interval": 3092,
+      "physical_time_s": 1.0785100338862224e-6,
+      "sha256": "6f9d1279e863b5268c5824141a659fbac10ebc9e907b8a0de6c66ae76795961f"
     },
     "status": "RUNNING"
   },
@@ -89,7 +89,7 @@
     "process_pid": 53547,
     "source_commit": "6b1d860",
     "poll_interval_s": 60,
-    "latest_classified_interval": 3028,
+    "latest_classified_interval": 3092,
     "component_transition_audit": {
       "from_interval": 2964,
       "to_interval": 3028,
@@ -98,6 +98,15 @@
       "strict_asb_claim": false,
       "trajectory_modified": false,
       "artifact_sha256": "61ea24cf041f78ae0a4ef3fc8cd1b342892a8f4d3327e885a301273a121e7f6d"
+    },
+    "component_rank_swap_audit": {
+      "from_interval": 3028,
+      "to_interval": 3092,
+      "classification": "LARGEST_COMPONENT_RANK_SWAP_WITHOUT_GLOBAL_LOCALIZATION",
+      "former_largest_identity_overlap": 0.9488636363636364,
+      "strict_asb_claim": false,
+      "trajectory_modified": false,
+      "artifact_sha256": "0dd862279e5127597c950f04ac7953c5c9a60dcd7ec45c38e68c73b6516e3732"
     },
     "diagnostic_corrections": [
       {

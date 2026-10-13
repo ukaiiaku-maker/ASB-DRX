@@ -1,6 +1,7 @@
 import numpy as np
 
 from full_model.analysis.analyze_v65_power_component_transition import (
+    classify_transition,
     transition_metrics,
 )
 
@@ -23,3 +24,26 @@ def test_split_fragments_recover_parent_identity():
     assert result["associated_current_component_indices"] == [0, 1]
     assert result["old_largest_to_associated_fragment_union"]["overlap"] == 1.0
     assert result["associated_fragment_union_cell_count"] == int(parent.sum())
+
+
+def test_rank_swap_does_not_splice_largest_component_identity():
+    former_largest = np.zeros((12, 12), dtype=bool)
+    former_largest[2:6, 2:6] = True
+    former_second = np.zeros_like(former_largest)
+    former_second[8:11, 8:11] = True
+    retained = former_largest.copy()
+    retained[5, 5] = False
+    new_largest = np.zeros_like(former_largest)
+    new_largest[7:11, 7:11] = True
+    new_largest[6, 7] = True
+
+    transition = transition_metrics(
+        [former_largest, former_second], [new_largest, retained], spacing_m=1.0
+    )
+    decision = classify_transition(transition, 0.70, 0.71)
+
+    assert transition["associated_current_component_indices"] == [1]
+    assert decision["largest_component_rank_swap"]
+    assert decision["classification"] == (
+        "LARGEST_COMPONENT_RANK_SWAP_WITHOUT_GLOBAL_LOCALIZATION"
+    )

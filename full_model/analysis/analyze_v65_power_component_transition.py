@@ -100,6 +100,57 @@ def transition_metrics(
     }
 
 
+def classify_transition(
+    transition: dict, previous_participation: float, current_participation: float
+) -> dict:
+    """Separate threshold splitting from largest-component rank exchange."""
+    retained = transition["old_largest_to_associated_fragment_union"]["overlap"]
+    associated = transition["associated_current_component_indices"]
+    component_split = (
+        transition["current_component_count_change"] > 0
+        and len(associated) > 1
+        and retained >= 0.90
+    )
+    largest_rank_swap = bool(
+        associated and 0 not in associated and retained >= 0.90
+    )
+    participation_nonlocalizing = current_participation >= previous_participation
+    if component_split and participation_nonlocalizing:
+        classification = "THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION"
+        reason = (
+            "The old largest threshold component split into multiple fragments "
+            "whose union preserves its identity, while the whole-field inverse "
+            "participation fraction increased. The largest-fragment width and "
+            "aspect jump is therefore not evidence of global physical localization."
+        )
+    elif largest_rank_swap and participation_nonlocalizing:
+        classification = "LARGEST_COMPONENT_RANK_SWAP_WITHOUT_GLOBAL_LOCALIZATION"
+        reason = (
+            "The former largest component retains its identity as a lower-ranked "
+            "component while another component becomes largest by cell count, and "
+            "the whole-field inverse participation fraction increases. Consecutive "
+            "largest-component morphology values therefore describe different "
+            "physical structures and do not establish localization."
+        )
+    else:
+        classification = "UNRESOLVED_COMPONENT_TRANSITION"
+        reason = (
+            "The registered split/rank-swap and nonlocalization conditions were "
+            "not jointly established; no strict ASB claim is made."
+        )
+    return {
+        "classification": classification,
+        "component_split": component_split,
+        "largest_component_rank_swap": largest_rank_swap,
+        "associated_fragment_union_identity_overlap": retained,
+        "global_power_participation_became_no_more_localized": (
+            participation_nonlocalizing
+        ),
+        "strict_asb_claim": False,
+        "reason": reason,
+    }
+
+
 def analyze(paths: list[Path]) -> dict:
     if len(paths) < 2:
         raise ValueError("at least two checkpoints are required")
@@ -146,46 +197,17 @@ def analyze(paths: list[Path]) -> dict:
         for index in range(len(records)-1)
     ]
     last = transitions[-1]
-    retained = last["old_largest_to_associated_fragment_union"]["overlap"]
-    component_split = (
-        last["current_component_count_change"] > 0
-        and len(last["associated_current_component_indices"]) > 1
-        and retained >= 0.90
-    )
-    participation_nonlocalizing = (
-        records[-1]["inverse_participation_fraction"]
-        >= records[-2]["inverse_participation_fraction"]
-    )
-    classification = (
-        "THRESHOLD_COMPONENT_SPLIT_WITHOUT_GLOBAL_LOCALIZATION"
-        if component_split and participation_nonlocalizing
-        else "UNRESOLVED_COMPONENT_TRANSITION"
-    )
     return {
         "schema": "asb-drx-v65-power-component-transition-v1",
         "selection_rule": "periodic components of plastic power > mean+std",
         "trajectory_modified": False,
         "records": records,
         "transitions": transitions,
-        "decision": {
-            "classification": classification,
-            "component_split": component_split,
-            "associated_fragment_union_identity_overlap": retained,
-            "global_power_participation_became_no_more_localized": (
-                participation_nonlocalizing
-            ),
-            "strict_asb_claim": False,
-            "reason": (
-                "The old largest threshold component split into multiple "
-                "fragments whose union preserves its identity, while the "
-                "whole-field inverse participation fraction increased. The "
-                "largest-fragment width and aspect jump is therefore not "
-                "evidence of global physical localization."
-                if component_split and participation_nonlocalizing
-                else "The registered split and nonlocalization conditions "
-                "were not both established; no strict ASB claim is made."
-            ),
-        },
+        "decision": classify_transition(
+            last,
+            records[-2]["inverse_participation_fraction"],
+            records[-1]["inverse_participation_fraction"],
+        ),
     }
 
 
