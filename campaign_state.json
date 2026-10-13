@@ -32,11 +32,11 @@
   },
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "transient_prepared_boundary_growth_not_sustained",
+    "G02": "reduced_matured_HAGB_handoff_sustained_but_full_multigrain_requalification_pending",
     "G03": "not_qualified_in_V65",
-    "G04": "not_yet_fixed_law_qualified",
-    "G05": "not_established",
-    "G06": "not_established"
+    "G04": "fixed_law_reduced_temperature_rate_switch_demonstrated_not_material_validated",
+    "G05": "inherited_subgrain_maturation_supported_new_boundary_formation_not_established",
+    "G06": "reduced_static_maturation_and_growth_supported_full_unload_protocol_pending"
   },
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
@@ -51,10 +51,10 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_supported_reduced_structural_reaction_can_be_coupled_to_persistent_common_interface_content_and_remain_active_in_dynamic_and_static_protocols",
-    "next_executable_experiment": "integrate_structural_interface_reaction_then_execute_retained_state_dynamic_fixed_strain_and_unloaded_anneal_controls",
-    "source_identity": "226a8fc21942f7d4c6350a7e5252cded8623efff",
-    "expected_discriminatory_observation": "compatible_interface_content_changes_misorientation_with_exact_content_energy_and_work_ledgers_while_static_recovery_competes_without_new_plastic_strain",
+    "physical_uncertainty": "whether_the_reduced_orientation_gradient_maturation_and_HAGB_handoff_can_be_embedded_in_the_full_multigrain_owner_front_state_without_energy_or_Nye_inconsistency",
+    "next_executable_experiment": "implement_multigrain_structural_interface_state_and_exercise_one_coupled_maturation_to_front_case_then_reassess_ASB_overlap",
+    "source_identity": "5fdacc84a4c0f1a9a7c7471b515d4c30881c3aab",
+    "expected_discriminatory_observation": "production_owner_state_reaches_HAGB_by_cell_elimination_then_sustains_energy_qualified_front_motion_with_common_heat_and_defect_ledgers",
     "resource_need": "lightweight_local",
     "result_status": "running"
   },

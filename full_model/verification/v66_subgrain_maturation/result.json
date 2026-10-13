@@ -1,0 +1,264 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_subgrain_maturation/subgrain_maturation_map.png": "f1fd68ac0ecfb35dc0dd89c659500872dba988b446b7feb809da528d932bbed1"
+  },
+  "assumed_parameters": {
+    "dt_s": 0.05,
+    "flow_stress_Pa": 200000000.0,
+    "horizon_s": 50.0,
+    "network": {
+      "activation_enthalpy_eV": 0.7,
+      "critical_pressure_Pa": 2000000.0,
+      "exp_a": 2.0,
+      "exp_floor": 0.05,
+      "exp_n": 2.0,
+      "mobility_prefactor_m4_J_s": 5e-14
+    },
+    "recovery_activation_eV": 1.2,
+    "recovery_prefactor_s": 1000000.0,
+    "stored_work_fraction": 0.1,
+    "target_storage_fraction": 0.1
+  },
+  "cases": {
+    "T1000_rate0": {
+      "HAGB_matured": false,
+      "classification": "RECOVERY_ARREST",
+      "cylindrical_front_pressure_Pa": -1510765.882758681,
+      "eliminated_cells": 0,
+      "final_subgrain_count": 13,
+      "front_viable": false,
+      "maximum_orientation_sum_residual_rad": 0.0,
+      "maximum_target_misorientation_deg": 2.5000000000000004,
+      "stored_energy_contrast_Pa": 1.5801332460952044e-13,
+      "target_index": 6,
+      "target_width_um": 0.6619159271547654
+    },
+    "T1000_rate0.1": {
+      "HAGB_matured": false,
+      "classification": "MATURATION_WITHOUT_HAGB",
+      "cylindrical_front_pressure_Pa": 1700722.2374862412,
+      "eliminated_cells": 4,
+      "final_subgrain_count": 9,
+      "front_viable": false,
+      "maximum_orientation_sum_residual_rad": 0.0,
+      "maximum_target_misorientation_deg": 7.500000000000001,
+      "stored_energy_contrast_Pa": 2009122.084542293,
+      "target_index": 4,
+      "target_width_um": 3.2425437611136325
+    },
+    "T1000_rate1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 19937374.691576738,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 20091220.84542289,
+      "target_index": 1,
+      "target_width_um": 6.499999999999999
+    },
+    "T650_rate0": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 4235847.968179772,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 4389694.122025926,
+      "target_index": 1,
+      "target_width_um": 6.499999999999997
+    },
+    "T650_rate0.1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 93128226.64453493,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 93282072.79838109,
+      "target_index": 1,
+      "target_width_um": 6.499999999999995
+    },
+    "T650_rate1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 893159634.7317762,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 893313480.8856224,
+      "target_index": 1,
+      "target_width_um": 6.499999999999999
+    },
+    "T800_rate0": {
+      "HAGB_matured": false,
+      "classification": "MATURATION_WITHOUT_HAGB",
+      "cylindrical_front_pressure_Pa": 943198.955367479,
+      "eliminated_cells": 8,
+      "final_subgrain_count": 5,
+      "front_viable": false,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 12.500000000000002,
+      "stored_energy_contrast_Pa": 1134177.3711653524,
+      "target_index": 2,
+      "target_width_um": 5.236193817098024
+    },
+    "T800_rate0.1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 49825149.16368707,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 49978995.317533225,
+      "target_index": 1,
+      "target_width_um": 6.499999999999993
+    },
+    "T800_rate1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 489428510.68100184,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 489582356.834848,
+      "target_index": 1,
+      "target_width_um": 6.499999999999998
+    },
+    "T900_rate0": {
+      "HAGB_matured": false,
+      "classification": "RECOVERY_ARREST",
+      "cylindrical_front_pressure_Pa": -808245.0711720472,
+      "eliminated_cells": 0,
+      "final_subgrain_count": 13,
+      "front_viable": false,
+      "maximum_orientation_sum_residual_rad": 0.0,
+      "maximum_target_misorientation_deg": 2.5000000000000004,
+      "stored_energy_contrast_Pa": 325.6405279062133,
+      "target_index": 6,
+      "target_width_um": 1.2367502130983477
+    },
+    "T900_rate0.1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 9285899.778352233,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 9439745.932198387,
+      "target_index": 1,
+      "target_width_um": 6.499999999999997
+    },
+    "T900_rate1": {
+      "HAGB_matured": true,
+      "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+      "cylindrical_front_pressure_Pa": 94240682.40338664,
+      "eliminated_cells": 10,
+      "final_subgrain_count": 3,
+      "front_viable": true,
+      "maximum_orientation_sum_residual_rad": 2.7755575615628914e-17,
+      "maximum_target_misorientation_deg": 14.999999999999998,
+      "stored_energy_contrast_Pa": 94394528.5572328,
+      "target_index": 1,
+      "target_width_um": 6.499999999999998
+    }
+  },
+  "classification_map": {
+    "T1000_rate0": "RECOVERY_ARREST",
+    "T1000_rate0.1": "MATURATION_WITHOUT_HAGB",
+    "T1000_rate1": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T650_rate0": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T650_rate0.1": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T650_rate1": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T800_rate0": "MATURATION_WITHOUT_HAGB",
+    "T800_rate0.1": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T800_rate1": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T900_rate0": "RECOVERY_ARREST",
+    "T900_rate0.1": "HAGB_MATURED_AND_FRONT_VIABLE",
+    "T900_rate1": "HAGB_MATURED_AND_FRONT_VIABLE"
+  },
+  "conditions": {
+    "strain_rates_s": [
+      0.0,
+      0.1,
+      1.0
+    ],
+    "temperatures_K": [
+      650.0,
+      800.0,
+      900.0,
+      1000.0
+    ]
+  },
+  "created_utc": "2026-10-13T23:55:57.093682+00:00",
+  "decision": {
+    "dynamic_maturation_supported": true,
+    "front_handoff_exercised": true,
+    "grain_count_increased": false,
+    "interpretation": "selective growth can concentrate a pre-existing orientation gradient into a HAGB while reducing subgrain count. Recovery outruns migration in hot static cases, whereas deformation-maintained stored-energy contrast restores maturation and a viable SIBM handoff.",
+    "new_orientation_created": false,
+    "orientation_gradient_maturation_supported": true,
+    "static_maturation_supported": true,
+    "time_refinement_passed": true
+  },
+  "derived": {
+    "boundary_energy": "sum_i Read-Shockley(theta_i)",
+    "boundary_motion": "v=M_EXP(T,p)*(f_right-f_left)",
+    "bulk_energy": "sum_i width_i*f_i",
+    "topology_event": "two LAGBs replaced by one compatible summed-misorientation boundary"
+  },
+  "front_handoff": {
+    "cumulative_signed_area_change_m2": 4.143600971800253e-12,
+    "duration_s": 1.0,
+    "energy_nonincreasing": true,
+    "executed": true,
+    "free_energy_change_J": -8.32500022198588e-15,
+    "maximum_pressure_Pa": 20091220.84542289,
+    "mean_boundary_displacement_um": 0.6474376518437797,
+    "source_case": "T1000_rate1",
+    "terminal_velocity_um_s": 0.647437651843697
+  },
+  "schema": "v66-subgrain-maturation-v1",
+  "scope": "one-dimensional inherited orientation-gradient network; generic, not calibrated",
+  "time_refinement": {
+    "cases": [
+      {
+        "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+        "dt_s": 0.1,
+        "maximum_target_misorientation_deg": 14.999999999999998,
+        "stored_energy_contrast_Pa": 20091220.845422905,
+        "target_width_um": 6.499999999999996
+      },
+      {
+        "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+        "dt_s": 0.05,
+        "maximum_target_misorientation_deg": 14.999999999999998,
+        "stored_energy_contrast_Pa": 20091220.84542289,
+        "target_width_um": 6.499999999999999
+      },
+      {
+        "classification": "HAGB_MATURED_AND_FRONT_VIABLE",
+        "dt_s": 0.025,
+        "maximum_target_misorientation_deg": 14.999999999999998,
+        "stored_energy_contrast_Pa": 20091220.845422782,
+        "target_width_um": 6.5
+      }
+    ],
+    "provisional_5_percent_passed": true,
+    "relative_target_width_spread": 6.832141690000964e-16
+  }
+}

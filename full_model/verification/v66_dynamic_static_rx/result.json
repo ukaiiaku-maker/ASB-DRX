@@ -1,0 +1,1113 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_dynamic_static_rx/dynamic_static_histories.png": "be0a3c5595ec151e69af544b895597452efe0a11d5f2e524273a83bae846ceb4"
+  },
+  "branches": {
+    "continued_deformation": {
+      "accepted_absorption_records": 41,
+      "audit": {
+        "absorption_line_balance_max_abs_m1": 1.4901161193847656e-08,
+        "minimum_mechanical_acceptance_scale": 1.0,
+        "source_line_balance_max_abs_m2": 0.322265625
+      },
+      "final_mean_orientation_right_deg": 2.5604598490061794,
+      "final_mean_temperature_K": 900.0000032439466,
+      "final_structural_misorientation_deg": 2.5604597558435827,
+      "history": [
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 297610169.19930327,
+          "bulk_energy_change_J_m3": -295.96283367051365,
+          "cumulative_boundary_dissipation_J_m2": 0.010680760854438294,
+          "mean_bulk_defect_energy_J_m3": 40239.80792967139,
+          "mean_total_density_m2": 7629845923555.287,
+          "structural_misorientation_deg": 2.2658824377400033,
+          "time_s": 2e-06
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 287934924.57454497,
+          "bulk_energy_change_J_m3": -1639.872887511694,
+          "cumulative_boundary_dissipation_J_m2": 0.012376805273848605,
+          "mean_bulk_defect_energy_J_m3": 38895.89787583021,
+          "mean_total_density_m2": 7400768587150.045,
+          "structural_misorientation_deg": 2.307811489261499,
+          "time_s": 1.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 272242970.5811032,
+          "bulk_energy_change_J_m3": -2782.1272655134235,
+          "cumulative_boundary_dissipation_J_m2": 0.01382866108565668,
+          "mean_bulk_defect_energy_J_m3": 37753.64349782848,
+          "mean_total_density_m2": 7204795234226.705,
+          "structural_misorientation_deg": 2.3438174500569136,
+          "time_s": 2.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 252806527.12464413,
+          "bulk_energy_change_J_m3": -3752.5729028313945,
+          "cumulative_boundary_dissipation_J_m2": 0.015069529176205068,
+          "mean_bulk_defect_energy_J_m3": 36783.19786051051,
+          "mean_total_density_m2": 7037249402260.637,
+          "structural_misorientation_deg": 2.374737056597306,
+          "time_s": 3.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 231490044.16335037,
+          "bulk_energy_change_J_m3": -4576.633658042054,
+          "cumulative_boundary_dissipation_J_m2": 0.016128815141351244,
+          "mean_bulk_defect_energy_J_m3": 35959.13710529985,
+          "mean_total_density_m2": 6894115256258.801,
+          "structural_misorientation_deg": 2.4012888424545635,
+          "time_s": 4.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 209696878.86797965,
+          "bulk_energy_change_J_m3": -5275.962697415598,
+          "cumulative_boundary_dissipation_J_m2": 0.01703231254430884,
+          "mean_bulk_defect_energy_J_m3": 35259.80806592631,
+          "mean_total_density_m2": 6771944263790.818,
+          "structural_misorientation_deg": 2.424089836358464,
+          "time_s": 5.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 188398944.642842,
+          "bulk_energy_change_J_m3": -5868.999107425181,
+          "cumulative_boundary_dissipation_J_m2": 0.017802478207760722,
+          "mean_bulk_defect_energy_J_m3": 34666.771655916724,
+          "mean_total_density_m2": 6667775053863.975,
+          "structural_misorientation_deg": 2.4436699013876533,
+          "time_s": 6.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 168206829.09841546,
+          "bulk_energy_change_J_m3": -6371.44284967718,
+          "cumulative_boundary_dissipation_J_m2": 0.018458748865542343,
+          "mean_bulk_defect_energy_J_m3": 34164.327913664725,
+          "mean_total_density_m2": 6579064597174.35,
+          "structural_misorientation_deg": 2.4604840485223285,
+          "time_s": 7.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 149452019.8862671,
+          "bulk_energy_change_J_m3": -6796.6600797258,
+          "cumulative_boundary_dissipation_J_m2": 0.01901786797154315,
+          "mean_bulk_defect_energy_J_m3": 33739.110683616105,
+          "mean_total_density_m2": 6503629108377.16,
+          "structural_misorientation_deg": 2.4749230107122595,
+          "time_s": 8.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 132265168.52643953,
+          "bulk_energy_change_J_m3": -7156.029060138491,
+          "cumulative_boundary_dissipation_J_m2": 0.019494203955393714,
+          "mean_bulk_defect_energy_J_m3": 33379.74170320341,
+          "mean_total_density_m2": 6439593296959.709,
+          "structural_misorientation_deg": 2.487322323189674,
+          "time_s": 9.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 116642652.95709151,
+          "bulk_energy_change_J_m3": -7459.235367590387,
+          "cumulative_boundary_dissipation_J_m2": 0.019900049232491453,
+          "mean_bulk_defect_energy_J_m3": 33076.53539575152,
+          "mean_total_density_m2": 6385346787321.98,
+          "structural_misorientation_deg": 2.4979701210432084,
+          "time_s": 0.000102
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 102499392.6509026,
+          "bulk_energy_change_J_m3": -7714.5237895344035,
+          "cumulative_boundary_dissipation_J_m2": 0.020245894401760684,
+          "mean_bulk_defect_energy_J_m3": 32821.2469738075,
+          "mean_total_density_m2": 6339506695281.916,
+          "structural_misorientation_deg": 2.5071138352596334,
+          "time_s": 0.000112
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 89708429.77987792,
+          "bulk_energy_change_J_m3": -7928.913199103823,
+          "cumulative_boundary_dissipation_J_m2": 0.020540675313489673,
+          "mean_bulk_defect_energy_J_m3": 32606.857564238082,
+          "mean_total_density_m2": 6300885491297.33,
+          "structural_misorientation_deg": 2.514965942841807,
+          "time_s": 0.000122
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 78129412.95672795,
+          "bulk_energy_change_J_m3": -8108.379761746102,
+          "cumulative_boundary_dissipation_J_m2": 0.020791992720304433,
+          "mean_bulk_defect_energy_J_m3": 32427.391001595803,
+          "mean_total_density_m2": 6268463403558.957,
+          "structural_misorientation_deg": 2.521708904629215,
+          "time_s": 0.00013199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 67628108.02049382,
+          "bulk_energy_change_J_m3": -8258.013040131598,
+          "cumulative_boundary_dissipation_J_m2": 0.021006305465572833,
+          "mean_bulk_defect_energy_J_m3": 32277.757723210307,
+          "mean_total_density_m2": 6241364719615.103,
+          "structural_misorientation_deg": 2.5274994055708113,
+          "time_s": 0.00014199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 58088671.55041369,
+          "bulk_energy_change_J_m3": -8382.1489029843,
+          "cumulative_boundary_dissipation_J_m2": 0.02118909889325675,
+          "mean_bulk_defect_energy_J_m3": 32153.621860357605,
+          "mean_total_density_m2": 6218837435789.195,
+          "structural_misorientation_deg": 2.5324719959898023,
+          "time_s": 0.00015199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 49420418.520236395,
+          "bulk_energy_change_J_m3": -8484.482587872582,
+          "cumulative_boundary_dissipation_J_m2": 0.021345030560065377,
+          "mean_bulk_defect_energy_J_m3": 32051.288175469323,
+          "mean_total_density_m2": 6200235781453.424,
+          "structural_misorientation_deg": 2.536742218459961,
+          "time_s": 0.00016199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 41559891.420642786,
+          "bulk_energy_change_J_m3": -8568.164798740283,
+          "cumulative_boundary_dissipation_J_m2": 0.02147805550867656,
+          "mean_bulk_defect_energy_J_m3": 31967.605964601622,
+          "mean_total_density_m2": 6185005212032.066,
+          "structural_misorientation_deg": 2.540409292959408,
+          "time_s": 0.00017199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 34468938.37744838,
+          "bulk_energy_change_J_m3": -8635.883319589171,
+          "cumulative_boundary_dissipation_J_m2": 0.02159153339278333,
+          "mean_bulk_defect_energy_J_m3": 31899.887443752734,
+          "mean_total_density_m2": 6172669521980.336,
+          "structural_misorientation_deg": 2.5435584227027843,
+          "time_s": 0.00018199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 28129429.54616755,
+          "bulk_energy_change_J_m3": -8689.932282713144,
+          "cumulative_boundary_dissipation_J_m2": 0.021688319678808087,
+          "mean_bulk_defect_energy_J_m3": 31845.83848062876,
+          "mean_total_density_m2": 6162819778251.906,
+          "structural_misorientation_deg": 2.5462627742378343,
+          "time_s": 0.000192
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 22535378.55624314,
+          "bulk_energy_change_J_m3": -8732.270932737549,
+          "cumulative_boundary_dissipation_J_m2": 0.021770843018521873,
+          "mean_bulk_defect_energy_J_m3": 31803.499830604356,
+          "mean_total_density_m2": 6155104817075.331,
+          "structural_misorientation_deg": 2.548585177822695,
+          "time_s": 0.000202
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 17683532.310945686,
+          "bulk_energy_change_J_m3": -8764.573468686162,
+          "cumulative_boundary_dissipation_J_m2": 0.02184117071589453,
+          "mean_bulk_defect_energy_J_m3": 31771.197294655743,
+          "mean_total_density_m2": 6149223083190.621,
+          "structural_misorientation_deg": 2.550579587599794,
+          "time_s": 0.000212
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 13564014.582438527,
+          "bulk_energy_change_J_m3": -8788.27131983966,
+          "cumulative_boundary_dissipation_J_m2": 0.021901064018968387,
+          "mean_bulk_defect_energy_J_m3": 31747.499443502245,
+          "mean_total_density_m2": 6144915621895.619,
+          "structural_misorientation_deg": 2.5522923355000597,
+          "time_s": 0.000222
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 10152507.406981329,
+          "bulk_energy_change_J_m3": -8804.58901324404,
+          "cumulative_boundary_dissipation_J_m2": 0.021952024767786495,
+          "mean_bulk_defect_energy_J_m3": 31731.181750097865,
+          "mean_total_density_m2": 6141960061047.631,
+          "structural_misorientation_deg": 2.5537632080168415,
+          "time_s": 0.000232
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 7405711.93120819,
+          "bulk_energy_change_J_m3": -8814.57461330012,
+          "cumulative_boundary_dissipation_J_m2": 0.021995334728753327,
+          "mean_bulk_defect_energy_J_m3": 31721.196150041786,
+          "mean_total_density_m2": 6140165444106.074,
+          "structural_misorientation_deg": 2.5550263707400913,
+          "time_s": 0.000242
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 5260892.306652947,
+          "bulk_energy_change_J_m3": -8819.125210866208,
+          "cumulative_boundary_dissipation_J_m2": 0.022032088461401342,
+          "mean_bulk_defect_energy_J_m3": 31716.645552475697,
+          "mean_total_density_m2": 6139367859961.951,
+          "structural_misorientation_deg": 2.556111153119299,
+          "time_s": 0.000252
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 3639535.6862865486,
+          "bulk_energy_change_J_m3": -8818.999998642888,
+          "cumulative_boundary_dissipation_J_m2": 0.022063214175695678,
+          "mean_bulk_defect_energy_J_m3": 31716.770764699017,
+          "mean_total_density_m2": 6139428265810.351,
+          "structural_misorientation_deg": 2.557042515116869,
+          "time_s": 0.00026199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 2454199.1233507367,
+          "bulk_energy_change_J_m3": -8814.760526815462,
+          "cumulative_boundary_dissipation_J_m2": 0.022089439015751333,
+          "mean_bulk_defect_energy_J_m3": 31721.010236526443,
+          "mean_total_density_m2": 6140243606792.897,
+          "structural_misorientation_deg": 2.5578398355492262,
+          "time_s": 0.000272
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 1616889.7643839845,
+          "bulk_energy_change_J_m3": -8806.537722431181,
+          "cumulative_boundary_dissipation_J_m2": 0.022111147290791153,
+          "mean_bulk_defect_energy_J_m3": 31729.233040910724,
+          "mean_total_density_m2": 6141789653252.54,
+          "structural_misorientation_deg": 2.5585122211782263,
+          "time_s": 0.00028199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 1046278.7368208838,
+          "bulk_energy_change_J_m3": -8793.893781338003,
+          "cumulative_boundary_dissipation_J_m2": 0.022128366791108613,
+          "mean_bulk_defect_energy_J_m3": 31741.8769820039,
+          "mean_total_density_m2": 6144146317633.382,
+          "structural_misorientation_deg": 2.559057253935021,
+          "time_s": 0.000292
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 671326.2526938384,
+          "bulk_energy_change_J_m3": -8776.312123830234,
+          "cumulative_boundary_dissipation_J_m2": 0.022141190215151024,
+          "mean_bulk_defect_energy_J_m3": 31759.45863951167,
+          "mean_total_density_m2": 6147407665687.131,
+          "structural_misorientation_deg": 2.5594734484790806,
+          "time_s": 0.00030199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 432556.0253971487,
+          "bulk_energy_change_J_m3": -8753.884132886677,
+          "cumulative_boundary_dissipation_J_m2": 0.022150178964770333,
+          "mean_bulk_defect_energy_J_m3": 31781.88663045523,
+          "mean_total_density_m2": 6151555966398.689,
+          "structural_misorientation_deg": 2.559773657895808,
+          "time_s": 0.000312
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 283376.24842378485,
+          "bulk_energy_change_J_m3": -8727.358143839068,
+          "cumulative_boundary_dissipation_J_m2": 0.022156241634773702,
+          "mean_bulk_defect_energy_J_m3": 31808.412619502837,
+          "mean_total_density_m2": 6156452947093.236,
+          "structural_misorientation_deg": 2.5599827405656717,
+          "time_s": 0.00032199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 190466.9663859833,
+          "bulk_energy_change_J_m3": -8697.71906643104,
+          "cumulative_boundary_dissipation_J_m2": 0.02216027941508352,
+          "mean_bulk_defect_energy_J_m3": 31838.051696910865,
+          "mean_total_density_m2": 6161917138723.783,
+          "structural_misorientation_deg": 2.560126985684126,
+          "time_s": 0.000332
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 131972.79917104915,
+          "bulk_energy_change_J_m3": -8665.847789239677,
+          "cumulative_boundary_dissipation_J_m2": 0.02216298742530639,
+          "mean_bulk_defect_energy_J_m3": 31869.92297410223,
+          "mean_total_density_m2": 6167786421537.717,
+          "structural_misorientation_deg": 2.560227481514956,
+          "time_s": 0.00034199999999999996
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 94389.43696878415,
+          "bulk_energy_change_J_m3": -8632.40864342334,
+          "cumulative_boundary_dissipation_J_m2": 0.02216483720699573,
+          "mean_bulk_defect_energy_J_m3": 31903.362119918565,
+          "mean_total_density_m2": 6173938621557.135,
+          "structural_misorientation_deg": 2.5602989762251545,
+          "time_s": 0.000352
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 69621.31881107086,
+          "bulk_energy_change_J_m3": -8597.865710997357,
+          "cumulative_boundary_dissipation_J_m2": 0.022166130641115413,
+          "mean_bulk_defect_energy_J_m3": 31937.905052344548,
+          "mean_total_density_m2": 6180288446311.823,
+          "structural_misorientation_deg": 2.5603511663817935,
+          "time_s": 0.00036199999999999996
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 52849.57026904001,
+          "bulk_energy_change_J_m3": -8562.534105968254,
+          "cumulative_boundary_dissipation_J_m2": 0.02216705753304693,
+          "mean_bulk_defect_energy_J_m3": 31973.23665737365,
+          "mean_total_density_m2": 6186778019964.385,
+          "structural_misorientation_deg": 2.5603903005253326,
+          "time_s": 0.000372
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 41182.612176137845,
+          "bulk_energy_change_J_m3": -8526.627115828145,
+          "cumulative_boundary_dissipation_J_m2": 0.022167737644635713,
+          "mean_bulk_defect_energy_J_m3": 32009.14364751376,
+          "mean_total_density_m2": 6193368198219.494,
+          "structural_misorientation_deg": 2.5604204146225475,
+          "time_s": 0.00038199999999999996
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 32856.12288892667,
+          "bulk_energy_change_J_m3": -8490.290517198118,
+          "cumulative_boundary_dissipation_J_m2": 0.022168247651910656,
+          "mean_bulk_defect_energy_J_m3": 32045.480246143787,
+          "mean_total_density_m2": 6200032251167.437,
+          "structural_misorientation_deg": 2.5604441516036824,
+          "time_s": 0.000392
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 27846.230114033904,
+          "bulk_energy_change_J_m3": -8460.981038013757,
+          "cumulative_boundary_dissipation_J_m2": 0.022168567445831983,
+          "mean_bulk_defect_energy_J_m3": 32074.789725328148,
+          "mean_total_density_m2": 6205404023226.746,
+          "structural_misorientation_deg": 2.5604597558435827,
+          "time_s": 0.00039999999999999996
+        }
+      ]
+    },
+    "static_zero_stress_hold": {
+      "accepted_absorption_records": 41,
+      "audit": {
+        "absorption_line_balance_max_abs_m1": 1.4837269191048108e-08,
+        "minimum_mechanical_acceptance_scale": 1.0,
+        "source_line_balance_max_abs_m2": 0.0
+      },
+      "final_mean_orientation_right_deg": 2.5620207404242152,
+      "final_mean_temperature_K": 900.000002443699,
+      "final_structural_misorientation_deg": 2.562020720279252,
+      "history": [
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 297999771.25115466,
+          "bulk_energy_change_J_m3": -304.16572453996923,
+          "cumulative_boundary_dissipation_J_m2": 0.010680728151340371,
+          "mean_bulk_defect_energy_J_m3": 40231.605038801936,
+          "mean_total_density_m2": 7628451334856.18,
+          "structural_misorientation_deg": 2.26588243815894,
+          "time_s": 2e-06
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 290390893.43192774,
+          "bulk_energy_change_J_m3": -1687.8986859765428,
+          "cumulative_boundary_dissipation_J_m2": 0.012376155292309357,
+          "mean_bulk_defect_energy_J_m3": 38847.87207736536,
+          "mean_total_density_m2": 7392548416849.264,
+          "structural_misorientation_deg": 2.3078114973467914,
+          "time_s": 1.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 276870861.5420185,
+          "bulk_energy_change_J_m3": -2868.1793889878754,
+          "cumulative_boundary_dissipation_J_m2": 0.013826727823655825,
+          "mean_bulk_defect_energy_J_m3": 37667.59137435403,
+          "mean_total_density_m2": 7189969395788.496,
+          "structural_misorientation_deg": 2.3438174736287563,
+          "time_s": 2.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 259618717.5489341,
+          "bulk_energy_change_J_m3": -3875.086952556245,
+          "cumulative_boundary_dissipation_J_m2": 0.015065760569097728,
+          "mean_bulk_defect_energy_J_m3": 36660.68381078566,
+          "mean_total_density_m2": 7016006761040.728,
+          "structural_misorientation_deg": 2.3747371020924324,
+          "time_s": 3.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 240446538.11205313,
+          "bulk_energy_change_J_m3": -4734.2492221506545,
+          "cumulative_boundary_dissipation_J_m2": 0.016122763978551582,
+          "mean_bulk_defect_energy_J_m3": 35801.52154119125,
+          "mean_total_density_m2": 6866618015260.638,
+          "structural_misorientation_deg": 2.401288915541475,
+          "time_s": 4.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 220741032.24174196,
+          "bulk_energy_change_J_m3": -5467.499496432531,
+          "cumulative_boundary_dissipation_J_m2": 0.017023629490688523,
+          "mean_bulk_defect_energy_J_m3": 35068.271266909374,
+          "mean_total_density_m2": 6738331729763.603,
+          "structural_misorientation_deg": 2.424089942392483,
+          "time_s": 5.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 201484630.93186903,
+          "bulk_energy_change_J_m3": -6093.436685786888,
+          "cumulative_boundary_dissipation_J_m2": 0.017790906167607756,
+          "mean_bulk_defect_energy_J_m3": 34442.33407755502,
+          "mean_total_density_m2": 6628166871262.233,
+          "structural_misorientation_deg": 2.4436700457308236,
+          "time_s": 6.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 183316390.8036525,
+          "bulk_energy_change_J_m3": -6627.903112662127,
+          "cumulative_boundary_dissipation_J_m2": 0.018444118001917365,
+          "mean_bulk_defect_energy_J_m3": 33907.86765067978,
+          "mean_total_density_m2": 6533563525146.055,
+          "structural_misorientation_deg": 2.4604842367514457,
+          "time_s": 7.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 166605714.97515252,
+          "bulk_energy_change_J_m3": -7084.392069830923,
+          "cumulative_boundary_dissipation_J_m2": 0.019000090790380446,
+          "mean_bulk_defect_energy_J_m3": 33451.37869351098,
+          "mean_total_density_m2": 6452323405339.594,
+          "structural_misorientation_deg": 2.474923248736583,
+          "time_s": 8.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 151523662.5312654,
+          "bulk_energy_change_J_m3": -7474.395463706176,
+          "cumulative_boundary_dissipation_J_m2": 0.019473269986309272,
+          "mean_bulk_defect_energy_J_m3": 33061.37529963573,
+          "mean_total_density_m2": 6382558768211.678,
+          "structural_misorientation_deg": 2.4873226172981058,
+          "time_s": 9.2e-05
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 138103859.69434708,
+          "bulk_energy_change_J_m3": -7807.700342002696,
+          "cumulative_boundary_dissipation_J_m2": 0.019876018984986286,
+          "mean_bulk_defect_energy_J_m3": 32728.07042133921,
+          "mean_total_density_m2": 6322648543314.806,
+          "structural_misorientation_deg": 2.4979704778986305,
+          "time_s": 0.000102
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 126290983.57168724,
+          "bulk_energy_change_J_m3": -8092.641801343518,
+          "cumulative_boundary_dissipation_J_m2": 0.02021889243729624,
+          "mean_bulk_defect_energy_J_m3": 32443.128961998387,
+          "mean_total_density_m2": 6271200661448.567,
+          "structural_misorientation_deg": 2.507114261855831,
+          "time_s": 0.000112
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 115976835.4625466,
+          "bulk_energy_change_J_m3": -8336.318659497581,
+          "cumulative_boundary_dissipation_J_m2": 0.020510882436012352,
+          "mean_bulk_defect_energy_J_m3": 32199.452103844324,
+          "mean_total_density_m2": 6227019704563.021,
+          "structural_misorientation_deg": 2.514966446435928,
+          "time_s": 0.000122
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 107026117.92255658,
+          "bulk_energy_change_J_m3": -8544.777331946705,
+          "cumulative_boundary_dissipation_J_m2": 0.020759637432784892,
+          "mean_bulk_defect_energy_J_m3": 31990.9934313952,
+          "mean_total_density_m2": 6189079125694.467,
+          "structural_misorientation_deg": 2.5217094926602397,
+          "time_s": 0.00013199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 99293687.1557092,
+          "bulk_energy_change_J_m3": -8723.168550114504,
+          "cumulative_boundary_dissipation_J_m2": 0.020971654951937965,
+          "mean_bulk_defect_energy_J_m3": 31812.6022132274,
+          "mean_total_density_m2": 6156497393331.501,
+          "structural_misorientation_deg": 2.527500085572055,
+          "time_s": 0.00014199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 92635831.95779108,
+          "bulk_energy_change_J_m3": -8875.880878366675,
+          "cumulative_boundary_dissipation_J_m2": 0.02115244985274782,
+          "mean_bulk_defect_energy_J_m3": 31659.88988497523,
+          "mean_total_density_m2": 6128517505811.443,
+          "structural_misorientation_deg": 2.5324727755012364,
+          "time_s": 0.00015199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 86916735.90356328,
+          "bulk_energy_change_J_m3": -9006.654410619398,
+          "cumulative_boundary_dissipation_J_m2": 0.021306700241029642,
+          "mean_bulk_defect_energy_J_m3": 31529.116352722507,
+          "mean_total_density_m2": 6104489399665.904,
+          "structural_misorientation_deg": 2.5367431049441356,
+          "time_s": 0.00016199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 82012012.50689442,
+          "bulk_energy_change_J_m3": -9118.677538922519,
+          "cumulative_boundary_dissipation_J_m2": 0.021438373265265744,
+          "mean_bulk_defect_energy_J_m3": 31417.093224419386,
+          "mean_total_density_m2": 6083854843089.097,
+          "structural_misorientation_deg": 2.5404102937230593,
+          "time_s": 0.00017199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 77810176.6120573,
+          "bulk_energy_change_J_m3": -9214.669271510604,
+          "cumulative_boundary_dissipation_J_m2": 0.021550833031221166,
+          "mean_bulk_defect_energy_J_m3": 31321.1014918313,
+          "mean_total_density_m2": 6066134463456.34,
+          "structural_misorientation_deg": 2.5435595448248516,
+          "time_s": 0.00018199999999999998
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 74212840.02909262,
+          "bulk_energy_change_J_m3": -9296.949224289743,
+          "cumulative_boundary_dissipation_J_m2": 0.021646932783214768,
+          "mean_bulk_defect_energy_J_m3": 31238.821539052162,
+          "mean_total_density_m2": 6050916607415.445,
+          "structural_misorientation_deg": 2.546264024503552,
+          "time_s": 0.000192
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 71134048.64462745,
+          "bulk_energy_change_J_m3": -9367.497107244813,
+          "cumulative_boundary_dissipation_J_m2": 0.02172909336330064,
+          "mean_bulk_defect_energy_J_m3": 31168.27365609709,
+          "mean_total_density_m2": 6037847774662.288,
+          "structural_misorientation_deg": 2.548586562662713,
+          "time_s": 0.000202
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 68499329.3515934,
+          "bulk_energy_change_J_m3": -9428.00326736995,
+          "cumulative_boundary_dissipation_J_m2": 0.02179936979368617,
+          "mean_bulk_defect_energy_J_m3": 31107.767495971955,
+          "mean_total_density_m2": 6026624403084.262,
+          "structural_misorientation_deg": 2.550581113032865,
+          "time_s": 0.000212
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 66244482.98453141,
+          "bulk_energy_change_J_m3": -9479.911625674853,
+          "cumulative_boundary_dissipation_J_m2": 0.021859507647881152,
+          "mean_bulk_defect_energy_J_m3": 31055.859137667052,
+          "mean_total_density_m2": 6016985814360.99,
+          "structural_misorientation_deg": 2.5522940070777183,
+          "time_s": 0.000222
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 64314503.59089783,
+          "bulk_energy_change_J_m3": -9524.456152250008,
+          "cumulative_boundary_dissipation_J_m2": 0.02191099069292919,
+          "mean_bulk_defect_energy_J_m3": 31011.314611091897,
+          "mean_total_density_m2": 6008708156081.002,
+          "structural_misorientation_deg": 2.5537650307692705,
+          "time_s": 0.000232
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 62662096.42719905,
+          "bulk_energy_change_J_m3": -9562.691856041485,
+          "cumulative_boundary_dissipation_J_m2": 0.021955081106168232,
+          "mean_bulk_defect_energy_J_m3": 30973.07890730042,
+          "mean_total_density_m2": 6001599199592.553,
+          "structural_misorientation_deg": 2.55502834925562,
+          "time_s": 0.000242
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 61246996.644626044,
+          "bulk_energy_change_J_m3": -9595.521121472208,
+          "cumulative_boundary_dissipation_J_m2": 0.021992853400574244,
+          "mean_bulk_defect_energy_J_m3": 30940.249641869697,
+          "mean_total_density_m2": 5995493872695.26,
+          "structural_misorientation_deg": 2.5561133009102948,
+          "time_s": 0.000252
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 60034799.19896749,
+          "bulk_energy_change_J_m3": -9623.716099518086,
+          "cumulative_boundary_dissipation_J_m2": 0.022025223036331264,
+          "mean_bulk_defect_energy_J_m3": 30912.05466382382,
+          "mean_total_density_m2": 5990250423358.561,
+          "structural_misorientation_deg": 2.557045079216154,
+          "time_s": 0.00026199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 58996113.857914515,
+          "bulk_energy_change_J_m3": -9647.937753866609,
+          "cumulative_boundary_dissipation_J_m2": 0.022052970554849376,
+          "mean_bulk_defect_energy_J_m3": 30887.833009475296,
+          "mean_total_density_m2": 5985747125320.339,
+          "structural_misorientation_deg": 2.557845318329854,
+          "time_s": 0.000272
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 58105687.358248994,
+          "bulk_energy_change_J_m3": -9668.752071203358,
+          "cumulative_boundary_dissipation_J_m2": 0.02207676194582355,
+          "mean_bulk_defect_energy_J_m3": 30867.018692138547,
+          "mean_total_density_m2": 5981879449015.185,
+          "structural_misorientation_deg": 2.5585325959339293,
+          "time_s": 0.00028199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 57342402.771659985,
+          "bulk_energy_change_J_m3": -9686.64386655231,
+          "cumulative_boundary_dissipation_J_m2": 0.022097165848000744,
+          "mean_bulk_defect_energy_J_m3": 30849.126896789596,
+          "mean_total_density_m2": 5978557632098.946,
+          "structural_misorientation_deg": 2.559122865060737,
+          "time_s": 0.000292
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 56687722.56361791,
+          "bulk_energy_change_J_m3": -9702.028548180337,
+          "cumulative_boundary_dissipation_J_m2": 0.022114668089338114,
+          "mean_bulk_defect_energy_J_m3": 30833.74221516157,
+          "mean_total_density_m2": 5975704593125.8125,
+          "structural_misorientation_deg": 2.5596298249213127,
+          "time_s": 0.00030199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 56126088.54402197,
+          "bulk_energy_change_J_m3": -9715.26215027893,
+          "cumulative_boundary_dissipation_J_m2": 0.022129683991010684,
+          "mean_bulk_defect_energy_J_m3": 30820.508613062975,
+          "mean_total_density_m2": 5973254139911.32,
+          "structural_misorientation_deg": 2.5600652393541976,
+          "time_s": 0.000312
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 55644275.76979604,
+          "bulk_energy_change_J_m3": -9726.649894027556,
+          "cumulative_boundary_dissipation_J_m2": 0.022142568790854918,
+          "mean_bulk_defect_energy_J_m3": 30809.12086931435,
+          "mean_total_density_m2": 5971149430964.506,
+          "structural_misorientation_deg": 2.5604392102917086,
+          "time_s": 0.00032199999999999997
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 55230850.473202795,
+          "bulk_energy_change_J_m3": -9736.453497454244,
+          "cumulative_boundary_dissipation_J_m2": 0.022153626483819615,
+          "mean_bulk_defect_energy_J_m3": 30799.31726588766,
+          "mean_total_density_m2": 5969341654253.531,
+          "structural_misorientation_deg": 2.560760412595704,
+          "time_s": 0.000332
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 54876032.97504239,
+          "bulk_energy_change_J_m3": -9744.897420623747,
+          "cumulative_boundary_dissipation_J_m2": 0.022163117328369966,
+          "mean_bulk_defect_energy_J_m3": 30790.873342718158,
+          "mean_total_density_m2": 5967788892618.305,
+          "structural_misorientation_deg": 2.561036295717429,
+          "time_s": 0.00034199999999999996
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 54571605.589982934,
+          "bulk_energy_change_J_m3": -9752.17420413013,
+          "cumulative_boundary_dissipation_J_m2": 0.022171264227176985,
+          "mean_bulk_defect_energy_J_m3": 30783.596559211775,
+          "mean_total_density_m2": 5966455149478.064,
+          "structural_misorientation_deg": 2.561273256865506,
+          "time_s": 0.000352
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 54310116.96931281,
+          "bulk_energy_change_J_m3": -9758.449034812344,
+          "cumulative_boundary_dissipation_J_m2": 0.022178258156583877,
+          "mean_bulk_defect_energy_J_m3": 30777.32172852956,
+          "mean_total_density_m2": 5965309512202.57,
+          "structural_misorientation_deg": 2.561476789704819,
+          "time_s": 0.00036199999999999996
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 54085506.28020661,
+          "bulk_energy_change_J_m3": -9763.863652330772,
+          "cumulative_boundary_dissipation_J_m2": 0.022184262791169557,
+          "mean_bulk_defect_energy_J_m3": 30771.907111011133,
+          "mean_total_density_m2": 5964325433709.834,
+          "structural_misorientation_deg": 2.5616516120412194,
+          "time_s": 0.000372
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 53892837.610986166,
+          "bulk_energy_change_J_m3": -9768.539693136023,
+          "cumulative_boundary_dissipation_J_m2": 0.022189418446287502,
+          "mean_bulk_defect_energy_J_m3": 30767.231070205882,
+          "mean_total_density_m2": 5963480115595.481,
+          "structural_misorientation_deg": 2.5618017754595965,
+          "time_s": 0.00038199999999999996
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 53726957.545157745,
+          "bulk_energy_change_J_m3": -9772.581553913704,
+          "cumulative_boundary_dissipation_J_m2": 0.022193845441939072,
+          "mean_bulk_defect_energy_J_m3": 30763.1892094282,
+          "mean_total_density_m2": 5962753978453.619,
+          "structural_misorientation_deg": 2.561930759464262,
+          "time_s": 0.000392
+        },
+        {
+          "absorption_accepted": true,
+          "absorption_event_rate_Hz": 53611629.16168734,
+          "bulk_energy_change_J_m3": -9775.419092206914,
+          "cumulative_boundary_dissipation_J_m2": 0.022196932262746785,
+          "mean_bulk_defect_energy_J_m3": 30760.35167113499,
+          "mean_total_density_m2": 5962247496607.804,
+          "structural_misorientation_deg": 2.562020720279252,
+          "time_s": 0.00039999999999999996
+        }
+      ]
+    }
+  },
+  "created_utc": "2026-10-13T23:50:36.088217+00:00",
+  "decision": {
+    "G05_full_initiation_qualified": false,
+    "G06_static_RX_qualified": false,
+    "continued_source_changes_maturation": true,
+    "dynamic_static_discriminator_executed": true,
+    "interpretation": "the same stationary structural reaction remains active after the source and applied stress are removed, while continued deformation changes its line supply. The calculation matures an inherited subgrain but does not yet create a new internal boundary or demonstrate sustained front growth.",
+    "same_laws_used": true,
+    "static_absorption_active_without_imposed_deformation": true
+  },
+  "parameters": {
+    "continuation_steps": 200,
+    "deformation_stress_Pa": 180000000.0,
+    "dt_s": 2e-06,
+    "grid": [
+      32,
+      32
+    ],
+    "preparation_steps": 20,
+    "source": {
+      "activation_enthalpy_eV": 1.9,
+      "activation_entropy_kB": 0.0,
+      "attempt_frequency_Hz": 1000000000000.0,
+      "barrier_floor_eV": 0.05,
+      "burgers_m": 2.48e-10,
+      "grain_size_m": 1.6e-06,
+      "intrinsic_activation_volume_m3": 1.5252992000000005e-29,
+      "pair_increment_m2": 50000000000000.0,
+      "tj_site_weight": 1.0
+    },
+    "spacing_m": 1e-07,
+    "structural": {
+      "activation_enthalpy_eV": 1.5,
+      "activation_segment_m": 2.48e-10,
+      "attempt_frequency_Hz": 1000000000000.0,
+      "barrier_floor_eV": 0.05,
+      "bulk_correlation_energy_J_m": 8e-11,
+      "bulk_line_energy_J_m": 1.5e-09,
+      "burgers_m": 2.48e-10,
+      "extrinsic_line_energy_J_m": 1.5e-09,
+      "high_angle_energy_J_m2": 0.5,
+      "reference_density_m2": 1000000000000.0,
+      "reservoir_width_m": 2e-07,
+      "transition_misorientation_rad": 0.2617993877991494
+    },
+    "temperature_K": 900.0
+  },
+  "retained_state": {
+    "audit": {
+      "absorption_line_balance_max_abs_m1": 1.446460373699665e-08,
+      "minimum_mechanical_acceptance_scale": 1.0,
+      "source_line_balance_max_abs_m2": 0.705078125
+    },
+    "preparation_history": [
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 232540232.47412032,
+        "bulk_energy_change_J_m3": -565.0091821718524,
+        "cumulative_boundary_dissipation_J_m2": 0.0006675426347806065,
+        "mean_bulk_defect_energy_J_m3": 48430.45003992411,
+        "mean_total_density_m2": 9000456875893.844,
+        "structural_misorientation_deg": 2.0168807126527883,
+        "time_s": 2e-06
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 240370843.09449723,
+        "bulk_energy_change_J_m3": -1112.0903249583134,
+        "cumulative_boundary_dissipation_J_m2": 0.0013170014264601534,
+        "mean_bulk_defect_energy_J_m3": 47883.36889713765,
+        "mean_total_density_m2": 8909994112184.55,
+        "structural_misorientation_deg": 2.033255004906792,
+        "time_s": 4e-06
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 247756713.4984829,
+        "bulk_energy_change_J_m3": -1641.8082374956139,
+        "cumulative_boundary_dissipation_J_m2": 0.001948704073032514,
+        "mean_bulk_defect_energy_J_m3": 47353.65098460035,
+        "mean_total_density_m2": 8822276797745.871,
+        "structural_misorientation_deg": 2.049138069444177,
+        "time_s": 6e-06
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 254676539.1246496,
+        "bulk_energy_change_J_m3": -2154.7099694707867,
+        "cumulative_boundary_dissipation_J_m2": 0.002562987045724754,
+        "mean_bulk_defect_energy_J_m3": 46840.74925262517,
+        "mean_total_density_m2": 8737222568810.037,
+        "structural_misorientation_deg": 2.064544643165591,
+        "time_s": 8e-06
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 261113214.34087074,
+        "bulk_energy_change_J_m3": -2651.325367720914,
+        "cumulative_boundary_dissipation_J_m2": 0.0031601937796894037,
+        "mean_bulk_defect_energy_J_m3": 46344.133854375046,
+        "mean_total_density_m2": 8654751532545.711,
+        "structural_misorientation_deg": 2.0794890208636247,
+        "time_s": 9.999999999999999e-06
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 267053694.7055819,
+        "bulk_energy_change_J_m3": -3132.167615410217,
+        "cumulative_boundary_dissipation_J_m2": 0.003740673054083472,
+        "mean_bulk_defect_energy_J_m3": 45863.29160668574,
+        "mean_total_density_m2": 8574786192928.628,
+        "structural_misorientation_deg": 2.0939850684860657,
+        "time_s": 1.2e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 272488797.52924573,
+        "bulk_energy_change_J_m3": -3597.733754329929,
+        "cumulative_boundary_dissipation_J_m2": 0.004304777542821162,
+        "mean_bulk_defect_energy_J_m3": 45397.72546776603,
+        "mean_total_density_m2": 8497251378836.176,
+        "structural_misorientation_deg": 2.1080462360012606,
+        "time_s": 1.4e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 277413042.92029387,
+        "bulk_energy_change_J_m3": -4048.505190848926,
+        "cumulative_boundary_dissipation_J_m2": 0.004852862519263221,
+        "mean_bulk_defect_energy_J_m3": 44946.954031247034,
+        "mean_total_density_m2": 8422074174299.203,
+        "structural_misorientation_deg": 2.1216855698775072,
+        "time_s": 1.6e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 281824385.7571757,
+        "bulk_energy_change_J_m3": -4484.94818602618,
+        "cumulative_boundary_dissipation_J_m2": 0.0053852846998468165,
+        "mean_bulk_defect_energy_J_m3": 44510.51103606978,
+        "mean_total_density_m2": 8349183850846.357,
+        "structural_misorientation_deg": 2.134915725188071,
+        "time_s": 1.8e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 285723989.96470326,
+        "bulk_energy_change_J_m3": -4907.514330380327,
+        "cumulative_boundary_dissipation_J_m2": 0.005902401213203377,
+        "mean_bulk_defect_energy_J_m3": 44087.94489171563,
+        "mean_total_density_m2": 8278511801878.102,
+        "structural_misorientation_deg": 2.1477489773530425,
+        "time_s": 1.9999999999999998e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 289115978.9996987,
+        "bulk_energy_change_J_m3": -5316.641003796845,
+        "cumulative_boundary_dissipation_J_m2": 0.0064045686826778876,
+        "mean_bulk_defect_energy_J_m3": 43678.818218299115,
+        "mean_total_density_m2": 8209991479009.593,
+        "structural_misorientation_deg": 2.160197233528947,
+        "time_s": 2.2e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 292007150.03894746,
+        "bulk_energy_change_J_m3": -5712.75182103712,
+        "cumulative_boundary_dissipation_J_m2": 0.006892142411374533,
+        "mean_bulk_defect_energy_J_m3": 43282.70740105884,
+        "mean_total_density_m2": 8143558330323.328,
+        "structural_misorientation_deg": 2.172272043656657,
+        "time_s": 2.4e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 294406740.5467924,
+        "bulk_energy_change_J_m3": -6096.257063300531,
+        "cumulative_boundary_dissipation_J_m2": 0.007365475659936061,
+        "mean_bulk_defect_energy_J_m3": 42899.20215879543,
+        "mean_total_density_m2": 8079149740474.225,
+        "structural_misorientation_deg": 2.183984611177872,
+        "time_s": 2.6e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 296326137.3328497,
+        "bulk_energy_change_J_m3": -6467.554096275751,
+        "cumulative_boundary_dissipation_J_m2": 0.007824919008223807,
+        "mean_bulk_defect_energy_J_m3": 42527.90512582021,
+        "mean_total_density_m2": 8016704972591.623,
+        "structural_misorientation_deg": 2.1953458034301008,
+        "time_s": 2.8e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 297778634.6806323,
+        "bulk_energy_change_J_m3": -6827.027775104158,
+        "cumulative_boundary_dissipation_J_m2": 0.00827081979292471,
+        "mean_bulk_defect_energy_J_m3": 42168.4314469918,
+        "mean_total_density_m2": 7956165111924.262,
+        "structural_misorientation_deg": 2.206366161729796,
+        "time_s": 2.9999999999999997e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 298779160.2382956,
+        "bulk_energy_change_J_m3": -7175.050836665192,
+        "cumulative_boundary_dissipation_J_m2": 0.008703521613880646,
+        "mean_bulk_defect_energy_J_m3": 41820.40838543077,
+        "mean_total_density_m2": 7897473011175.932,
+        "structural_misorientation_deg": 2.2170559111529893,
+        "time_s": 3.2e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 299344050.70060223,
+        "bulk_energy_change_J_m3": -7511.984279580523,
+        "cumulative_boundary_dissipation_J_m2": 0.009123363902621804,
+        "mean_bulk_defect_energy_J_m3": 41483.47494251544,
+        "mean_total_density_m2": 7840573237481.118,
+        "structural_misorientation_deg": 2.227424970022512,
+        "time_s": 3.4e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 299490789.7770654,
+        "bulk_energy_change_J_m3": -7838.17773232155,
+        "cumulative_boundary_dissipation_J_m2": 0.009530681547203252,
+        "mean_bulk_defect_energy_J_m3": 41157.28148977441,
+        "mean_total_density_m2": 7785412020971.391,
+        "structural_misorientation_deg": 2.237482959110597,
+        "time_s": 3.6e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 299237842.61446685,
+        "bulk_energy_change_J_m3": -8153.9698097931105,
+        "cumulative_boundary_dissipation_J_m2": 0.00992580456799872,
+        "mean_bulk_defect_energy_J_m3": 40841.48941230285,
+        "mean_total_density_m2": 7731937204884.847,
+        "structural_misorientation_deg": 2.2472392105653993,
+        "time_s": 3.7999999999999995e-05
+      },
+      {
+        "absorption_accepted": true,
+        "absorption_event_rate_Hz": 298604389.98990357,
+        "bulk_energy_change_J_m3": -8459.688458754055,
+        "cumulative_boundary_dissipation_J_m2": 0.010309057839602169,
+        "mean_bulk_defect_energy_J_m3": 40535.770763341905,
+        "mean_total_density_m2": 7680098197172.291,
+        "structural_misorientation_deg": 2.256702776569727,
+        "time_s": 3.9999999999999996e-05
+      }
+    ],
+    "state_shared_exactly_by_branches": true,
+    "structural_misorientation_deg": 2.256702776569727
+  },
+  "schema": "v66-dynamic-static-rx-v1",
+  "scope": "inherited planar low-angle subgrain; common-axis maturation, not new-grain formation"
+}
