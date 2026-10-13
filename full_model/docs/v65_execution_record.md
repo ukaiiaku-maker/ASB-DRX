@@ -56,3 +56,19 @@ The trajectory remains at its stress maximum (3.97395 GPa). Peak-minus-mean
 temperature has reached 49.6568 K, but power participation is 0.72159, aspect
 ratio is 1.13093, heat/power overlap is 0.24780, and no softening is present;
 strict ASB therefore remains false at this checkpoint.
+
+The next durable checkpoint is interval 2772 at 1.046358779 microseconds,
+SHA-256
+`de3da07d23b8f61a5e2a39c6269f6249807bbad204ac042adaf2dfe3e141070e`.
+Peak-minus-mean temperature has now crossed the registered 50 K screen at
+50.3814 K.  The independent conditions still reject strict ASB: the trajectory
+is hardening, power participation is 0.72358, aspect ratio is 1.12662,
+heat/power overlap is 0.24558, and no matched-temperature or spatial-refinement
+qualification exists.  Grain 20 continues to recede, with 6.17649% net growth
+and 0.411885 cell displacement remaining relative to the analytic origin.
+
+The latest 64 accepted intervals remain controlled by the registered
+instantaneous plastic-power-change metric, with a median tolerance ratio of
+0.849585.  Their median throughput is 135.93 wall seconds per physical
+nanosecond.  This is accepted-time evidence rather than a terminal estimate;
+the durable finalizer will recompute the complete suffix after production.
