@@ -7,6 +7,7 @@ import argparse
 from dataclasses import asdict, replace
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import time
@@ -34,6 +35,19 @@ from full_model.production.tensorial_nye import bcc_four_family_systems
 
 def digest(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def atomic_json(path: Path, payload) -> None:
+    temporary = path.with_name(path.name+".tmp")
+    temporary.write_text(json.dumps(payload, indent=2)+"\n")
+    os.replace(temporary, path)
+
+
+def append_telemetry(path: Path, payload) -> None:
+    with path.open("a") as stream:
+        stream.write(json.dumps(payload, sort_keys=True)+"\n")
+        stream.flush()
+        os.fsync(stream.fileno())
 
 
 def target_pending(current_time_s: float, target_time_s: float) -> bool:
@@ -196,6 +210,9 @@ def main() -> None:
         help=("replace only the restored controller proposal after an exact "
               "target-horizon clip; physical state and tolerances are unchanged"))
     parser.add_argument("--source-commit")
+    parser.add_argument(
+        "--controlled-lineage-manifest", type=Path,
+        help="manifest certifying recursively controlled analytic-origin ancestry")
     parser.add_argument("--warm-start-front-factor", action="store_true")
     parser.add_argument(
         "--numerical-transition",
@@ -221,6 +238,19 @@ def main() -> None:
         and parent_step == 0
         and (checkpoint_provenance or {}).get("origin")
         == "deterministic_analytic_prepared_network")
+    controlled_analytic_origin_lineage = bool(
+        analytic_origin_parent or (checkpoint_provenance or {}).get(
+            "controlled_analytic_origin_lineage", False))
+    lineage_certificate = None
+    if args.controlled_lineage_manifest is not None:
+        lineage_certificate = json.loads(
+            args.controlled_lineage_manifest.read_text())
+        certified = lineage_certificate.get("current_physical_result", {})
+        if certified.get("terminal_checkpoint_sha256") != args.expected_resume_sha256:
+            raise ValueError("lineage manifest does not certify resume checkpoint")
+        if not certified.get("common_origin_controlled", False):
+            raise ValueError("lineage manifest does not certify controlled origin")
+        controlled_analytic_origin_lineage = True
     physical = _physical_configuration(checkpoint_configuration or {})
     context = _context(
         physical, warm_start_front_factor=args.warm_start_front_factor)
@@ -282,10 +312,16 @@ def main() -> None:
         "parent_source_commit": (checkpoint_provenance or {}).get(
             "source_commit"),
         "physical_kernels_changed": False,
+        "controlled_analytic_origin_lineage": controlled_analytic_origin_lineage,
         "numerical_change": (
             "complete coupled step doubling with private rollback and fine-path "
             "publication; established mechanics/front constitutive laws unchanged"),
     }
+    if args.controlled_lineage_manifest is not None:
+        provenance["lineage_certificate"] = {
+            "path": str(args.controlled_lineage_manifest.resolve()),
+            "sha256": digest(args.controlled_lineage_manifest),
+        }
     if args.numerical_transition == "v64_bracketed_front_root":
         provenance["numerical_change"] = (
             "safeguarded bracketed scalar solution of the existing joint "
@@ -323,6 +359,7 @@ def main() -> None:
         provenance["restored_proposed_step_s"] = controller.proposed_step_s
     args.out.mkdir(parents=True, exist_ok=True)
     history_path = args.out/"history.json"
+    telemetry_path = args.out/"accepted_telemetry.jsonl"
     history = json.loads(history_path.read_text()) if history_path.exists() else []
     saved_front_factor = _front_factor_from_checkpoint(args.resume)
     endpoint = make_endpoint(
@@ -388,7 +425,6 @@ def main() -> None:
             "wall_time_s": time.perf_counter()-interval_started,
         }
         history.append(record)
-        history_path.write_text(json.dumps(history, indent=2)+"\n")
         relative_index = controller.accepted_intervals-accepted_at_start
         if (relative_index == 1 or relative_index % max(args.checkpoint_every, 1) == 0
                 or not target_pending(endpoint.runtime.ledger.physical_time_s,
@@ -419,7 +455,8 @@ def main() -> None:
                 })
             record["checkpoint"] = str(checkpoint)
             record["checkpoint_sha256"] = digest(checkpoint)
-            history_path.write_text(json.dumps(history, indent=2)+"\n")
+        append_telemetry(telemetry_path, record)
+        atomic_json(history_path, history)
         print(json.dumps(record, sort_keys=True), flush=True)
     energy = evaluate_complete_multigrain_energy(
         endpoint.state, spacing_m=context.spacing_m,
@@ -437,7 +474,8 @@ def main() -> None:
         "source_commit": head,
         "parent_checkpoint": str(args.resume.resolve()),
         "parent_checkpoint_sha256": args.expected_resume_sha256,
-        "inherited_prefix_uncontrolled_by_v64": not analytic_origin_parent,
+        "inherited_prefix_uncontrolled_by_v64": (
+            not controlled_analytic_origin_lineage),
         "target_time_s": args.target_time,
         "final_time_s": endpoint.runtime.ledger.physical_time_s,
         "final_load": endpoint.load,
@@ -451,7 +489,7 @@ def main() -> None:
         "accuracy_configuration": output_configuration["accuracy"],
         "provenance": provenance,
     }
-    (args.out/"result.json").write_text(json.dumps(result, indent=2)+"\n")
+    atomic_json(args.out/"result.json", result)
 
 
 if __name__ == "__main__":
