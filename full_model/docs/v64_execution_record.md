@@ -153,3 +153,20 @@ written at 0.903479862 microseconds, and the controller subsequently completed
 the required consecutive resolved steps and regrew conservatively to 74.506 ps.
 This confirms repeatable on-trajectory rejection, private rollback, exact
 half reuse, and bounded regrowth well after the active-cone repair.
+
+## Attained endpoint and decision
+
+The controlled analytic-origin history reached adaptive interval 2184 at
+`1.0001734971998194 us` and engineering shear `0.05200693988799694`.  Closure
+replay from checksum-bound checkpoints reproduced the final two already
+observed accepted intervals exactly and terminated normally.  Final checkpoint
+SHA-256 is `16a4128b1aec06ebe10013cb85dd05dd51579adc59f6a7b35582b2e04500820b`.
+The final configured regression passes 1009 tests in 280.67 s.
+
+The endpoint remains at the whole-history stress maximum, 3.96129 GPa.  Strict
+ASB is false: no softening or conjunctive episode exists, peak-minus-mean
+temperature is 44.77 K, power aspect ratio is 1.24, and matched control and
+localization refinement certificates are absent.  The initially-lowest-density
+grain 20 grows 7.064%, but its equivalent displacement is only 0.470 grid
+spacings; the registered half-spacing existing-boundary DRX threshold is not
+met.  Grain count remains four and spontaneous birth was not exercised.

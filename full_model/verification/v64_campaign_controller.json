@@ -30,16 +30,16 @@
     "available_disk_at_start_GiB": 32
   },
   "current": {
-    "execution_status": "RUNNING",
-    "delivery_status": "PARTIAL",
-    "scoped_experiment_complete": false,
+    "execution_status": "CLOSURE_IN_PROGRESS",
+    "delivery_status": "COMPLETE_AT_ATTAINED_SCOPE",
+    "scoped_experiment_complete": true,
     "full_scientific_objective_complete": false,
-    "active_heavy_solver_pid": 26347,
+    "active_heavy_solver_pid": null,
     "current_source_commit": "b579a16",
-    "current_task": "continue error-controlled n48 common-origin trajectory after qualified post-repair rollback and bounded regrowth toward 1.25 microseconds",
-    "next_task": "postprocess attained physical horizon, run final-source regression, package checksummed evidence",
-    "current_physical_time_s": 9.04135513305558e-7,
-    "current_engineering_shear": 0.04816542053222232,
+    "current_task": "package checksummed terminal evidence after controlled one-microsecond common-origin trajectory",
+    "next_task": "verify consolidated archive, commit and push final closure",
+    "current_physical_time_s": 1.0001734971998194e-6,
+    "current_engineering_shear": 0.05200693988799694,
     "strict_asb_through_interval_179": false,
     "spontaneous_grain_birth_exercised": false
   }

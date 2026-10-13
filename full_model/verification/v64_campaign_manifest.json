@@ -16,9 +16,10 @@
   "implementation": {
     "physical_constitutive_change": false,
     "numerical_change": "complete coupled step doubling with private rollback, independent accuracy/admissibility decisions, bounded adaptive feedback, restartable controller state, fine-path-only publication, safeguarded discontinuous front closure, fail-closed unbound virtual prices, and adaptive checkpoint identity repair",
-    "status": "CONTROLLED_COMMON_ORIGIN_PRODUCTION_RUNNING",
+    "status": "CONTROLLED_COMMON_ORIGIN_PRODUCTION_COMPLETE_AT_ATTAINED_SCOPE",
     "current_source_commit": "b579a16",
-    "focused_tests_passed": 47
+    "focused_tests_passed": 47,
+    "canonical_tests_passed": 1009
   },
   "completed_evidence": {
     "late_n64_two_percent_suffix": true,
@@ -37,18 +38,19 @@
   "current_physical_result": {
     "grid_n": 48,
     "common_origin_controlled": true,
-    "adaptive_interval": 895,
-    "physical_time_s": 9.04135513305558e-7,
-    "engineering_shear": 0.04816542053222232,
+    "adaptive_interval": 2184,
+    "physical_time_s": 1.0001734971998194e-6,
+    "engineering_shear": 0.05200693988799694,
     "strict_asb": false,
     "substantial_drx": false,
     "prepared_grain_redistribution_active": true,
     "grain_count": 4,
     "spontaneous_grain_birth_exercised": false,
-    "interpretation": "early-horizon controlled continuation with a second separated production accuracy rejection, exact-half rollback, and bounded regrowth; no lifetime or rate-regime rejection"
+    "terminal_checkpoint_sha256": "16a4128b1aec06ebe10013cb85dd05dd51579adc59f6a7b35582b2e04500820b",
+    "interpretation": "controlled one-microsecond common-origin history; still hardening, no strict ASB, and prepared-boundary grain growth narrowly below the registered substantial-DRX displacement threshold"
   },
-  "execution_status": "RUNNING",
-  "delivery_status": "PARTIAL",
-  "scoped_experiment_complete": false,
+  "execution_status": "CLOSURE_IN_PROGRESS",
+  "delivery_status": "COMPLETE_AT_ATTAINED_SCOPE",
+  "scoped_experiment_complete": true,
   "full_scientific_objective_complete": false
 }

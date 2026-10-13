@@ -39,6 +39,16 @@ Updated: 2026-10-12 (America/Los_Angeles)
   passed at 0.499381. No physical event was rejected. The controller then
   regrew conservatively to 74.506 ps, providing a second separated production
   rollback/regrowth observation.
+- The common-origin calculation now terminates normally at adaptive interval
+  2184, 1.000173497 us, and engineering shear 0.05200694. Terminal checkpoint
+  SHA-256 is `16a4128b1aec06ebe10013cb85dd05dd51579adc59f6a7b35582b2e04500820b`.
+  Canonical regression passes 1009 tests in 280.67 s.
+- The endpoint is still hardening at 3.96129 GPa. Strict ASB is false through
+  the attained horizon. Grain 20 grows 7.064%, but its equivalent boundary
+  displacement is 0.470 grid spacings, narrowly below the registered 0.5-grid
+  substantial-existing-boundary-DRX threshold. Prepared-boundary processing is
+  active; substantial DRX, spontaneous birth, and a qualified ASB regime are
+  not claimed.
 
 ## V63 rate-accuracy and coupled DRX/ASB continuation
 

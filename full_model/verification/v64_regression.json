@@ -1,0 +1,13 @@
+{
+  "schema": "asb-drx-v64-regression-v1",
+  "source_commit_under_test": "b579a1623361a93e68ae26aec27edbefc9a91a3d",
+  "documentation_head_at_execution": "06ae692835480d213b3f00ace02bc85ed1c6a0d8",
+  "command": "PYTHONPATH=src:. pytest -q --junitxml=<evidence>/v64_canonical_junit.xml",
+  "passed": 1009,
+  "failed": 0,
+  "errors": 0,
+  "pytest_wall_time_s": 280.67,
+  "process_real_time_s": 281.33,
+  "misconfigured_attempt_preserved": true,
+  "misconfigured_attempt_interpretation": "collection-only PYTHONPATH omission; no test executed"
+}
