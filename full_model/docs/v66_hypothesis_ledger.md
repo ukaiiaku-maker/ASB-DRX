@@ -898,3 +898,6 @@ experiment, result, limitation, and next branch.
   high-slip-rate mechanical band. Reject descriptions of it as a scalar
   high-density band or a GND wall. This strengthens the causal interpretation
   but does not repair the n32-to-n48 geometry error or qualify strict ASB.
+- Regression: the canonical suite passes 1102 tests in 286.75 seconds on
+  pushed source `64301aa`, with `src` and the repository root on
+  `PYTHONPATH`.

@@ -2734,3 +2734,5 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   0.788 Jaccard overlap. Power is carried by signed slip-rate magnitude
   (correlation about 0.971; 2.47x band enrichment), not a GND wall (correlation
   0.11--0.14) or scalar density band (0.82--0.84x density depletion).
+- Final canonical regression on pushed carrier-audit source: 1102 tests pass
+  in 286.75 seconds.
