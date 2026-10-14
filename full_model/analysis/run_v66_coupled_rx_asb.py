@@ -96,7 +96,9 @@ def _physics(args):
     spacing = args.length/args.n
     thickness = 2.0*2.48e-10
     systems = bcc_four_family_systems()
-    bath_rate = 0.0 if args.thermal_control == "adiabatic" else args.bath_rate
+    thermal_control = getattr(args, "thermal_control", "adiabatic")
+    bath_rate = (0.0 if thermal_control == "adiabatic"
+                 else getattr(args, "bath_rate", 5e9))
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
@@ -319,6 +321,11 @@ def main():
     parser.add_argument("--sink-activation-enthalpy", type=float, default=1.4)
     parser.add_argument("--sink-stress-assisted", action="store_true")
     parser.add_argument("--resume", type=Path)
+    parser.add_argument(
+        "--resume-fork-source-change", action="store_true",
+        help=("Continue a configuration-identical checkpoint under the current "
+              "source while retaining the prior history; the next checkpoint "
+              "is stamped with current provenance."))
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     configuration = _configuration(args)
@@ -353,8 +360,11 @@ def main():
     else:
         state, runtime, start_step, load, initial_volume, saved, saved_provenance = (
             _load_checkpoint(args.resume))
-        if saved != configuration or saved_provenance != provenance:
-            raise ValueError("resume configuration/provenance mismatch")
+        if saved != configuration:
+            raise ValueError("resume configuration mismatch")
+        if (saved_provenance != provenance
+                and not args.resume_fork_source_change):
+            raise ValueError("resume provenance mismatch")
         endpoint = make_endpoint(state, runtime, load, context)
         preparation = json.loads((args.out/"preparation.json").read_text())
         history = json.loads(history_path.read_text())

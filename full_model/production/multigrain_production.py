@@ -1235,6 +1235,33 @@ def advance_multigrain_front(
                 force_rate_converged = True
                 break
     if not force_rate_converged:
+        # The independently reconstructed publication map can differ from the
+        # safeguarded solve by roundoff even when it is smooth and retains the
+        # identical active directions.  Try the public map's own image as the
+        # next iterate before rejecting.  Acceptance still uses the unchanged
+        # pointwise 1e-10 verification; this is not a tolerance relaxation or
+        # a set-valued certificate.
+        for _ in range(4):
+            joint_pressure_factor = float(verification_factor)
+            (directions, independent_pressures, base_requests,
+             channel_records, selected_velocities,
+             cfl_clipped_by_interface,
+             maximum_unclipped_by_interface) = requests_at_force_scale(
+                 joint_pressure_factor)
+            if not base_requests:
+                force_rate_converged = True
+                break
+            verification_factor = complete_direction_factor(
+                base_requests, channel_records, independent_pressures)
+            force_rate_converged = bool(np.isclose(
+                verification_factor, joint_pressure_factor,
+                rtol=1e-10, atol=1e-12))
+            if force_rate_converged:
+                force_rate_closure_classification = (
+                    "POINTWISE_FIXED_POINT_AFTER_PUBLICATION_PICARD")
+                force_rate_closure_bracket = None
+                break
+    if not force_rate_converged:
         low_directions = requests_at_force_scale(
             joint_pressure_factor*(1.0-1e-6))[0]
         high_directions = requests_at_force_scale(

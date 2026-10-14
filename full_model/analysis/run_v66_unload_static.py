@@ -23,7 +23,7 @@ from full_model.analysis.run_v58_three_grain_production import (
     _load_checkpoint, _save_checkpoint,
 )
 from full_model.analysis.run_v66_coupled_rx_asb import (
-    _atomic_json, _physics, _record,
+    _atomic_json, _physics, _record, _source_provenance,
 )
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
@@ -125,8 +125,9 @@ def main():
     args.shear_rate = abs(args.unload_rate)
     args.dt = args.unload_dt
     configuration = _configuration(args)
-    provenance = {"campaign": "V66", "source_commit": "6898699",
-                  "scientific_scope": "retained-state unload and fixed-strain anneal"}
+    provenance = dict(
+        _source_provenance(),
+        scientific_scope="retained-state unload and fixed-strain anneal")
     _, _, _, _, _, _, base_context = _physics(args)
     unload_context = replace(
         base_context, shear_rate_s=-abs(args.unload_rate),
