@@ -331,6 +331,10 @@ def main():
         help=("Continue a configuration-identical checkpoint under the current "
               "source while retaining the prior history; the next checkpoint "
               "is stamped with current provenance."))
+    parser.add_argument(
+        "--resume-extend-target", action="store_true",
+        help=("Permit only an increase of target_steps when continuing a "
+              "completed configuration-identical checkpoint."))
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     configuration = _configuration(args)
@@ -365,7 +369,14 @@ def main():
     else:
         state, runtime, start_step, load, initial_volume, saved, saved_provenance = (
             _load_checkpoint(args.resume))
-        if saved != configuration:
+        saved_for_comparison = dict(saved)
+        if args.resume_extend_target:
+            old_target = int(saved_for_comparison.get("target_steps", -1))
+            if args.steps <= old_target or start_step != old_target:
+                raise ValueError(
+                    "extended resume requires a completed checkpoint and a larger target")
+            saved_for_comparison["target_steps"] = args.steps
+        if saved_for_comparison != configuration:
             raise ValueError("resume configuration mismatch")
         if (saved_provenance != provenance
                 and not args.resume_fork_source_change):
