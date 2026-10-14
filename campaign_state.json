@@ -63,9 +63,12 @@
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": null,
-      "case": null,
-      "status": "available_for_V67_after_process_ownership_audit"
+      "pid": 95664,
+      "case": "v67_growth_reversal_n16_r4e4_7p2_percent",
+      "status": "running_single_local_heavy_solver",
+      "start_local": "2026-10-14T15:50:21-07:00",
+      "source_commit": "14088f9",
+      "output": "full_model/verification/v67_growth_reversal"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
