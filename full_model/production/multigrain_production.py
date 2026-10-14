@@ -94,6 +94,16 @@ class MultiGrainProductionLedger:
     cumulative_mechanical_first_law_residual_J: float = 0.0
     maximum_mechanical_relative_first_law_residual: float = 0.0
     cumulative_front_first_law_residual_J: float = 0.0
+    source_intervals: int = 0
+    source_inactive_intervals: int = 0
+    source_rejected_intervals: int = 0
+    source_event_count: float = 0.0
+    source_created_line_cell_sum_m2: float = 0.0
+    cumulative_source_resolved_work_J: float = 0.0
+    cumulative_source_generated_heat_J: float = 0.0
+    cumulative_source_first_law_residual_J: float = 0.0
+    maximum_source_relative_first_law_residual: float = 0.0
+    maximum_source_line_balance_residual_m2: float = 0.0
 
 
 @dataclass(frozen=True)

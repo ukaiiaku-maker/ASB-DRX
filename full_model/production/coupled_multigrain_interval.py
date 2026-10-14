@@ -27,6 +27,12 @@ from .multigrain_production import (
     advance_energy_qualified_mechanics, advance_multigrain_front_interval,
     multigrain_instantaneous_dissipation_fields,
 )
+from .arrhenius_dislocation_sources import (
+    boundary_tj_site_field, randomized_matched_site_field,
+)
+from .multigrain_source_transaction import (
+    evaluate_multigrain_pair_source_transaction,
+)
 
 
 @dataclass(frozen=True)
@@ -44,6 +50,10 @@ class CoupledMultigrainContext:
     heat_deposition_mode: str = "local_realized_event"
     front_enabled: bool = True
     warm_start_front_factor: bool = False
+    source_parameters: object | None = None
+    source_mode: str = "disabled"
+    source_random_seed: int = 66
+    source_tj_weight: float = 2.0
 
 
 def endpoint_observables(state, load: float,
@@ -160,11 +170,69 @@ def advance_complete_multigrain_interval(
         maximum_mechanical_relative_first_law_residual=max(
             parent.runtime.ledger.maximum_mechanical_relative_first_law_residual,
             mechanical.relative_first_law_residual)))
+    # The Hall--Petch source is a parallel physical channel over this same
+    # interval. It is applied after the mechanical split at the final imposed
+    # strain and before the front. Its joint line-plus-slip proposal owns an
+    # independent complete-energy/heat transaction.
+    source_started = time.perf_counter()
+    source = None
+    source_state = mechanical.state
+    if context.source_mode != "disabled":
+        if context.source_parameters is None:
+            raise ValueError("enabled source mode requires source parameters")
+        boundary_sites = boundary_tj_site_field(
+            source_state.supports, tj_site_weight=context.source_tj_weight)
+        if context.source_mode == "gb_tj_only":
+            source_sites = boundary_sites
+        elif context.source_mode == "matched_random":
+            source_sites = randomized_matched_site_field(
+                boundary_sites, context.source_random_seed)
+        else:
+            raise ValueError("unknown dislocation source mode")
+        source = evaluate_multigrain_pair_source_transaction(
+            source_state, mean_strain=strain1, site_field=source_sites,
+            interval_s=dt, source_parameters=context.source_parameters,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            represented_thickness_m=context.represented_thickness_m,
+            energy_kwargs=context.energy_kwargs, source_mode=context.source_mode)
+        if source.classification in {
+                "REJECTED_FIRST_LAW_CLOSURE"}:
+            raise RuntimeError(
+                "complete coupled interval source failed its hard energy audit")
+        if source.accepted:
+            source_state = source.candidate_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            source_intervals=runtime.ledger.source_intervals+int(source.accepted),
+            source_inactive_intervals=(runtime.ledger.source_inactive_intervals
+                                       +int(not source.accepted)),
+            source_rejected_intervals=runtime.ledger.source_rejected_intervals,
+            source_event_count=(runtime.ledger.source_event_count
+                                +(source.event_count if source.accepted else 0.0)),
+            source_created_line_cell_sum_m2=(
+                runtime.ledger.source_created_line_cell_sum_m2
+                +(source.created_line_cell_sum_m2 if source.accepted else 0.0)),
+            cumulative_source_resolved_work_J=(
+                runtime.ledger.cumulative_source_resolved_work_J
+                +(source.resolved_work_J if source.accepted else 0.0)),
+            cumulative_source_generated_heat_J=(
+                runtime.ledger.cumulative_source_generated_heat_J
+                +(source.generated_heat_J if source.accepted else 0.0)),
+            cumulative_source_first_law_residual_J=(
+                runtime.ledger.cumulative_source_first_law_residual_J
+                +(source.first_law_residual_J if source.accepted else 0.0)),
+            maximum_source_relative_first_law_residual=max(
+                runtime.ledger.maximum_source_relative_first_law_residual,
+                source.relative_first_law_residual if source.accepted else 0.0),
+            maximum_source_line_balance_residual_m2=max(
+                runtime.ledger.maximum_source_line_balance_residual_m2,
+                abs(source.line_balance_residual_m2) if source.accepted else 0.0)))
+    source_wall_time = time.perf_counter()-source_started
     energy_after = dict(context.energy_kwargs, mean_strain=strain1)
     front_started = time.perf_counter()
     if context.front_enabled:
         state, runtime, fronts = advance_multigrain_front_interval(
-            mechanical.state, runtime, kinetics=context.front_kinetics,
+            source_state, runtime, kinetics=context.front_kinetics,
             dt_s=dt, maximum_substep_s=context.maximum_front_substep_s,
             spacing_m=context.spacing_m,
             represented_thickness_m=context.represented_thickness_m,
@@ -184,7 +252,7 @@ def advance_complete_multigrain_interval(
             raise RuntimeError(
                 "complete coupled interval contains a rejected or clipped front trial")
     else:
-        state = mechanical.state
+        state = source_state
         fronts = ()
         runtime = MultiGrainProductionRuntime(runtime.interfaces, replace(
             runtime.ledger, intervals=runtime.ledger.intervals+1,
@@ -226,6 +294,14 @@ def advance_complete_multigrain_interval(
         "mechanical_plastic_work_J": sum(
             item.external_plastic_work_J for item in mechanical.operator_decisions),
         "front_heat_J": float(np.sum(front_heat, dtype=np.longdouble)),
+        "source_resolved_work_J": (0.0 if source is None or not source.accepted
+                                    else source.resolved_work_J),
+        "source_heat_J": (0.0 if source is None or not source.accepted
+                           else source.generated_heat_J),
+        "source_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if source is None or not source.accepted
+            else np.asarray(source.heat_source_J_by_cell)),
         "mechanical_heat_J_m3": mechanical_heat,
         "mechanical_work_J_m3": mechanical_work_density,
         "front_heat_J_by_cell": front_heat,
@@ -263,11 +339,26 @@ def advance_complete_multigrain_interval(
             item.independent_directional_prices for item in fronts],
         "front_joint_capacity_solves": [
             item.joint_capacity_solves for item in fronts],
+        "source_mode": context.source_mode,
+        "source_classification": ("DISABLED" if source is None
+                                  else source.classification),
+        "source_event_count": (0.0 if source is None or not source.accepted
+                               else source.event_count),
+        "source_created_line_cell_sum_m2": (
+            0.0 if source is None or not source.accepted
+            else source.created_line_cell_sum_m2),
+        "source_relative_first_law_residual": (
+            0.0 if source is None or not source.accepted
+            else source.relative_first_law_residual),
+        "source_line_balance_residual_m2": (
+            0.0 if source is None or not source.accepted
+            else source.line_balance_residual_m2),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
+            "source_map": source_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
-            "accounted_total": (mechanical_wall_time+front_wall_time
+            "accounted_total": (mechanical_wall_time+source_wall_time+front_wall_time
                                 +observable_wall_time),
         },
     }

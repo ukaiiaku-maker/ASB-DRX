@@ -255,3 +255,28 @@ experiment, result, limitation, and next branch.
   requires a nonzero mean residual shear stress.
 - Next branch: make the Hall--Petch source hypothesis energy-complete by tying
   line creation to its conjugate slip and stored-energy/heat transaction.
+
+## 2026-10-14T02:15:00Z — conjugate Hall--Petch source implementation
+
+- Goals: G01, G04, G05.
+- Prediction: a boundary or random source can be admitted without invented
+  energy if each idealized grain-spanning pair event creates one line of each
+  sign per `d^2` and simultaneously sweeps `b/d` plastic shear. Opposite line
+  signs then preserve net Burgers content while their conjugate shear adds.
+- Implementation: use the published Hall--Petch Arrhenius hazard for event
+  frequency, the geometric `1/d^2` line increment (not an arbitrary density
+  increment), and the immutable EXP-floor barrier. Compute `tau delta gamma`
+  independently, subtract exact local defect-storage increase, deposit only
+  the nonnegative remainder as heat, and qualify the full elastic/defect/
+  thermal common energy at fixed total strain.
+- Atomic result: signed line, total line, plastic-distortion, and Mura--Nye
+  ledgers close. A stressed event is downhill and closes complete energy;
+  an unstressed thermal attempt is rejected because it cannot pay line storage.
+  The operator is integrated as an optional common-interval channel for both
+  GB/TJ-only and exactly matched random-site modes; the baseline remains off.
+- Limitation: the grain-spanning pair geometry is a declared reduced source
+  closure, not identified by the fixed-state Hall--Petch rate paper or DDD.
+  It must be treated as an ablation until its coupled spatial consequences are
+  discriminated without retuning.
+- Next branch: run matched common-state GB/TJ and random source exposures from
+  the same matured handoff and compare organization, RX front, and heat.

@@ -15,6 +15,8 @@ import math
 
 import numpy as np
 
+from .tensorial_nye import TensorialKinematicState, accept_slip_increment
+
 
 @dataclass(frozen=True)
 class ArrheniusSourceParameters:
@@ -50,6 +52,20 @@ class ArrheniusSourceParameters:
 class PairSourceLedger:
     created_pair_density_m2: float
     annihilated_pair_density_m2: float
+    signed_content_change_m2: float
+    line_content_change_m2: float
+    line_balance_residual_m2: float
+    source_mode: str
+
+
+@dataclass(frozen=True)
+class ConjugatePairSourceLedger:
+    """Joint line-creation/slip event before complete-energy qualification."""
+
+    events_by_family: np.ndarray
+    created_per_sign_m2: np.ndarray
+    slip_increment: np.ndarray
+    resolved_work_density_J_m3: np.ndarray
     signed_content_change_m2: float
     line_content_change_m2: float
     line_balance_residual_m2: float
@@ -212,3 +228,73 @@ def apply_sign_balanced_pair_source(
     return candidate, PairSourceLedger(
         created_pairs, annihilated_pairs, float(signed_after-signed_before),
         line_change, balance, str(source_mode))
+
+
+def apply_conjugate_pair_source_event(
+        state, site_field, resolved_stress_Pa, dt_s, systems, parameters, *,
+        spacing_m, source_mode="unspecified", orientation_spin_weight=1.0,
+        active_mask=None):
+    """Create neutral line pairs together with their conjugate plastic slip.
+
+    One idealized grain-spanning event creates one line of each sign per area
+    ``d^2`` and sweeps shear ``b/d``. Opposite signs move oppositely, so their
+    Burgers contents cancel while their plastic shear adds. The published
+    Hall--Petch hazard supplies the event frequency.
+
+    This function proposes the joint transition and records its independently
+    resolved work density. A caller must still qualify the complete elastic,
+    defect, and thermal energy transaction before publishing it.
+    """
+    state.validate(systems, ())
+    site = _normalize_site_field(site_field)
+    stress = np.asarray(resolved_stress_Pa, dtype=float)
+    if stress.shape != state.mobile_plus_m2.shape or np.any(~np.isfinite(stress)):
+        raise ValueError("resolved source stress requires grid x family layout")
+    dt = float(dt_s)
+    spacing = float(spacing_m)
+    spin = float(orientation_spin_weight)
+    if not math.isfinite(dt) or dt < 0.0:
+        raise ValueError("source interval must be finite and nonnegative")
+    if not math.isfinite(spacing) or spacing <= 0.0:
+        raise ValueError("source spacing must be finite and positive")
+    if not math.isfinite(spin):
+        raise ValueError("orientation spin weight must be finite")
+    hazard = hall_petch_nucleation_hazard_Hz(
+        stress, np.asarray(state.temperature_K)[..., None], parameters)
+    events = dt*site[..., None]*hazard
+    if active_mask is not None:
+        active = np.asarray(active_mask, dtype=bool)
+        if active.shape != site.shape:
+            raise ValueError("source active mask has wrong shape")
+        events = np.where(active[..., None], events, 0.0)
+    created = events/parameters.grain_size_m**2
+    slip_increment = (np.sign(stress)*events
+                      *parameters.burgers_m/parameters.grain_size_m)
+
+    kinematics = TensorialKinematicState(
+        np.asarray(state.slip), np.asarray(state.beta_p),
+        np.asarray(state.alignment_m2), np.asarray(state.family_nye_m1))
+    updated = accept_slip_increment(
+        kinematics, slip_increment, systems, state.orientation_rad, spacing)
+    dbeta = updated.beta_p-np.asarray(state.beta_p)
+    orientation_increment = spin*.5*(dbeta[..., 1, 0]-dbeta[..., 0, 1])
+    candidate = replace(
+        state,
+        mobile_plus_m2=np.asarray(state.mobile_plus_m2)+created,
+        mobile_minus_m2=np.asarray(state.mobile_minus_m2)+created,
+        slip=updated.slip, beta_p=updated.beta_p,
+        alignment_m2=updated.alignment_m2,
+        family_nye_m1=updated.family_nye_m1,
+        orientation_rad=np.asarray(state.orientation_rad)+orientation_increment)
+    candidate.validate(systems, ())
+    signed_before = np.sum(state.mobile_plus_m2-state.mobile_minus_m2)
+    signed_after = np.sum(candidate.mobile_plus_m2-candidate.mobile_minus_m2)
+    line_change = float(np.sum(
+        candidate.mobile_plus_m2+candidate.mobile_minus_m2
+        -state.mobile_plus_m2-state.mobile_minus_m2))
+    created_total = float(2.0*np.sum(created))
+    work_density = np.sum(stress*slip_increment, axis=2)
+    return candidate, ConjugatePairSourceLedger(
+        events, created, slip_increment, work_density,
+        float(signed_after-signed_before), line_change,
+        line_change-created_total, str(source_mode))

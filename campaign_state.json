@@ -52,11 +52,11 @@
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
     "physical_uncertainty": "whether_the_GB_TJ_Hall_Petch_source_hypothesis_can_enter_the_common_energy_ledger_without_invented_work_and_whether_source_geography_changes_RX_ASB_overlap",
-    "next_executable_experiment": "derive_and_test_a_joint_pair_line_creation_plus_conjugate_slip_event_with_geometric_b_over_d_strain_and_one_over_d_squared_line_increment_then_integrate_only_if_complete_energy_closes",
+    "next_executable_experiment": "run_same_state_GB_TJ_only_and_exactly_matched_random_conjugate_source_exposures_and_compare_density_boundary_correlation_front_direction_heat_and_localization_without_retuning",
     "source_identity": "8045f08",
     "expected_discriminatory_observation": "accepted_source_events_preserve_signed_Burgers_content_and_close_elastic_release_line_storage_and_heat_while_GB_TJ_and_matched_random_locations_produce_distinct_common_state_heterogeneity",
     "resource_need": "lightweight_local",
-    "result_status": "near_zero_mean_stress_static_growth_supported_source_energy_discriminator_running"
+    "result_status": "energy_complete_conjugate_source_integrated_matched_location_campaign_running"
   },
   "completion_semantics": {
     "execution_complete": false,

@@ -6,6 +6,9 @@ from full_model.analysis.run_v58_three_grain_production import (
     initialize_network_state, network_interfaces,
 )
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
+from full_model.production.arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters,
+)
 from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.coupled_multigrain_interval import (
     CoupledMultigrainContext, advance_complete_multigrain_interval, make_endpoint,
@@ -71,3 +74,23 @@ def test_disabled_front_channel_has_exact_zero_front_heat():
     assert result.audit["front_subintervals"] == 0
     assert result.audit["front_force_rate_closure_classifications"] == []
     assert result.audit["front_force_rate_closure_brackets"] == []
+
+
+def test_enabled_conjugate_pair_source_is_in_complete_interval_and_ledger():
+    ctx = replace(
+        context(front_enabled=False),
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.5e-6),
+        source_mode="gb_tj_only")
+    before = parent(ctx)
+    result = advance_complete_multigrain_interval(before, 1e-10, ctx)
+    assert result.audit["source_classification"] == (
+        "ACCEPTED_CONJUGATE_PAIR_SOURCE")
+    assert result.audit["source_event_count"] > 0.0
+    assert result.integrals["source_resolved_work_J"] > 0.0
+    assert result.integrals["source_heat_J"] > 0.0
+    assert result.audit["source_relative_first_law_residual"] < .05
+    assert (abs(result.audit["source_line_balance_residual_m2"])
+            < 1e-6*result.audit["source_created_line_cell_sum_m2"])
+    assert result.endpoint.runtime.ledger.source_intervals == 1
+    assert result.endpoint.runtime.ledger.source_event_count > 0.0
+    assert result.endpoint.runtime.ledger.physical_time_s == 1e-10

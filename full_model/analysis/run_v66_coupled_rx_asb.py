@@ -10,7 +10,7 @@ physical dissipation, heat, Nye content, and load.
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import json
 import os
@@ -24,11 +24,15 @@ from full_model.analysis.run_v58_three_grain_production import (
 )
 from full_model.analysis.run_v66_multigrain_handoff import _advance, _initial
 from full_model.production.arrhenius_kinetics import ActivatedProcess, EV_J
+from full_model.production.arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters, boundary_tj_site_field,
+)
 from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.coupled_multigrain_interval import (
     CoupledMultigrainContext, advance_complete_multigrain_interval, make_endpoint,
 )
 from full_model.production.multigrain_common_state import PhysicalTransferLaw
+from full_model.production.multigrain_common_state import reconstruct_multigrain_common
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainProductionRuntime,
 )
@@ -58,6 +62,8 @@ def _configuration(args) -> dict:
         "thermal_diffusivity_m2_s": .15/3.8e6,
         "initial_state": "V66 inherited orientation-gradient matured owner",
         "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+        "source_mode": args.source_mode,
+        "source_grain_size_m": args.source_grain_size,
     }
 
 
@@ -152,6 +158,14 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
             "mechanical_irreversible_heat_J"],
         "front_heat_J": interval.integrals["front_heat_J"],
         "front_directions": interval.audit["front_directions"],
+        "source_mode": interval.audit["source_mode"],
+        "source_classification": interval.audit["source_classification"],
+        "source_event_count": interval.audit["source_event_count"],
+        "source_created_line_cell_sum_m2": interval.audit[
+            "source_created_line_cell_sum_m2"],
+        "source_heat_J": interval.integrals["source_heat_J"],
+        "source_relative_first_law_residual": interval.audit[
+            "source_relative_first_law_residual"],
         "mechanical_subdivision_depth": interval.audit[
             "mechanical_subdivision_depth"],
         "wall_time_s": wall_time_s,
@@ -167,6 +181,18 @@ def _summarize(history, endpoint, initial_volume, preparation, configuration):
     target = np.asarray([row["target_growth_fraction"] for row in history])
     temperatures = np.asarray([row["temperature_contrast_K"] for row in history])
     powers = np.asarray([row["power_localization_ratio"] for row in history])
+    common, _ = reconstruct_multigrain_common(
+        endpoint.state, configuration["length_m"]/configuration["n"])
+    total_density = sum(
+        np.sum(np.asarray(getattr(common, name)), axis=2)
+        for name in ("mobile_plus_m2", "mobile_minus_m2",
+                     "forest_plus_m2", "forest_minus_m2",
+                     "wall_plus_m2", "wall_minus_m2"))
+    boundary = boundary_tj_site_field(endpoint.state.supports, tj_site_weight=2.0)
+    def correlation(a, b):
+        aa = np.ravel(a)-np.mean(a); bb = np.ravel(b)-np.mean(b)
+        scale = np.sqrt(np.sum(aa*aa)*np.sum(bb*bb))
+        return 0.0 if scale == 0.0 else float(np.sum(aa*bb)/scale)
     return {
         "schema": "v66-coupled-rx-asb-result-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -188,6 +214,18 @@ def _summarize(history, endpoint, initial_volume, preparation, configuration):
                 endpoint.runtime.ledger.maximum_relative_energy_closure),
             "accepted_front_events": endpoint.runtime.ledger.accepted_events,
             "rejected_front_events": endpoint.runtime.ledger.rejected_events,
+            "source_intervals": endpoint.runtime.ledger.source_intervals,
+            "source_inactive_intervals": (
+                endpoint.runtime.ledger.source_inactive_intervals),
+            "source_event_count": endpoint.runtime.ledger.source_event_count,
+            "source_created_line_cell_sum_m2": (
+                endpoint.runtime.ledger.source_created_line_cell_sum_m2),
+            "source_generated_heat_J": (
+                endpoint.runtime.ledger.cumulative_source_generated_heat_J),
+            "maximum_source_relative_first_law_residual": (
+                endpoint.runtime.ledger.maximum_source_relative_first_law_residual),
+            "terminal_density_boundary_correlation": correlation(
+                total_density, boundary),
             "cumulative_mechanical_external_work_J": (
                 endpoint.runtime.ledger.cumulative_mechanical_external_work_J),
             "cumulative_mechanical_first_law_residual_J": (
@@ -218,12 +256,22 @@ def main():
     parser.add_argument("--dt", type=float, default=2e-9)
     parser.add_argument("--steps", type=int, default=900)
     parser.add_argument("--checkpoint-every", type=int, default=100)
+    parser.add_argument(
+        "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
+        default="disabled")
+    parser.add_argument("--source-grain-size", type=float, default=2.4e-6)
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     configuration = _configuration(args)
     physics = _physics(args)
     context = physics[-1]
+    if args.source_mode != "disabled":
+        context = replace(
+            context,
+            source_parameters=ArrheniusSourceParameters(
+                grain_size_m=args.source_grain_size),
+            source_mode=args.source_mode)
     provenance = {"campaign": "V66", "source_commit": "bff539c",
                   "scientific_scope": "inherited-subgrain coupled exposure"}
     history_path = args.out/"history.json"

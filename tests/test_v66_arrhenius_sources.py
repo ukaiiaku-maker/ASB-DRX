@@ -3,6 +3,7 @@ import pytest
 
 from full_model.production.arrhenius_dislocation_sources import (
     ArrheniusSourceParameters,
+    apply_conjugate_pair_source_event,
     apply_sign_balanced_pair_source,
     boundary_tj_site_field,
     hall_petch_nucleation_hazard_Hz,
@@ -11,6 +12,9 @@ from full_model.production.arrhenius_dislocation_sources import (
     randomized_matched_site_field,
 )
 from full_model.production.common_tensorial_wall import CommonWallState
+from full_model.production.tensorial_nye import (
+    bcc_four_family_systems, nye_from_plastic_distortion,
+)
 
 
 def _state(n=12):
@@ -88,3 +92,44 @@ def test_location_changes_but_integrated_source_is_matched():
     rr = pair_source_rate_m2_s(random, 3e8, 900.0, p)
     assert np.sum(br) == pytest.approx(np.sum(rr), rel=2e-15)
     assert np.max(np.abs(br-rr)) > 0.0
+
+
+def test_conjugate_pair_event_closes_line_burgers_and_mura_kinematics():
+    systems = bcc_four_family_systems()
+    state = _state(12)
+    p = ArrheniusSourceParameters(
+        grain_size_m=3.0e-6, pair_increment_m2=9.9e19)
+    stress = np.zeros((12, 12, 4))
+    stress[..., 0] = 2.0e9
+    candidate, ledger = apply_conjugate_pair_source_event(
+        state, np.ones((12, 12)), stress, 2e-9, systems, p,
+        spacing_m=p.grain_size_m/12, source_mode="geometric_test")
+    assert ledger.line_content_change_m2 > 0.0
+    assert ledger.line_balance_residual_m2 == pytest.approx(0.0, abs=1e-5)
+    assert ledger.signed_content_change_m2 == pytest.approx(0.0, abs=1e-5)
+    assert np.all(ledger.slip_increment[..., 0] > 0.0)
+    assert np.all(ledger.slip_increment[..., 1:] == 0.0)
+    assert np.all(ledger.resolved_work_density_J_m3 > 0.0)
+    np.testing.assert_allclose(
+        np.sum(candidate.family_nye_m1, axis=2),
+        nye_from_plastic_distortion(candidate.beta_p, p.grain_size_m/12),
+        rtol=2e-12, atol=1e-5)
+
+
+def test_conjugate_pair_event_reverses_slip_not_created_line_with_stress():
+    systems = bcc_four_family_systems()
+    state = _state(8)
+    p = ArrheniusSourceParameters(grain_size_m=2.4e-6)
+    positive = np.full((8, 8, 4), 1.8e9)
+    plus, lp = apply_conjugate_pair_source_event(
+        state, np.ones((8, 8)), positive, 1e-9, systems, p,
+        spacing_m=p.grain_size_m/8)
+    minus, lm = apply_conjugate_pair_source_event(
+        state, np.ones((8, 8)), -positive, 1e-9, systems, p,
+        spacing_m=p.grain_size_m/8)
+    np.testing.assert_allclose(
+        plus.mobile_plus_m2-state.mobile_plus_m2,
+        minus.mobile_plus_m2-state.mobile_plus_m2)
+    np.testing.assert_allclose(lp.slip_increment, -lm.slip_increment)
+    assert np.all(lp.resolved_work_density_J_m3 >= 0.0)
+    assert np.all(lm.resolved_work_density_J_m3 >= 0.0)
