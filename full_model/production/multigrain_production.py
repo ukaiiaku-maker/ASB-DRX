@@ -1241,7 +1241,15 @@ def advance_multigrain_front(
         # next iterate before rejecting.  Acceptance still uses the unchanged
         # pointwise 1e-10 verification; this is not a tolerance relaxation or
         # a set-valued certificate.
-        for _ in range(4):
+        # The independently reconstructed map can be a slowly contracting
+        # map even after the safeguarded solve has crossed a nearby active-set
+        # corner.  Four publication-map iterations were sufficient for the
+        # V64 trajectories but can reject an otherwise smooth continuation
+        # while its residual is still decreasing.  Continue the *unchanged*
+        # public map for a bounded number of iterations.  Acceptance remains
+        # the same pointwise 1e-10 test; this neither relaxes conjugacy nor
+        # turns an active-set bracket into a pointwise certificate.
+        for _ in range(32):
             joint_pressure_factor = float(verification_factor)
             (directions, independent_pressures, base_requests,
              channel_records, selected_velocities,
