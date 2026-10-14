@@ -61,10 +61,10 @@
   "current_task": {
     "goal_ids": ["G01", "G03", "G04", "G05"],
     "hypothesis_ids": ["H1", "H2"],
-    "physical_uncertainty": "which_history_sensitive_operator_prevents_the_matched_thermal_softening_increment_from_converging_after_bulk_and_endpoint_spatial_observables_have_converged",
+    "physical_uncertainty": "which_physical_heterogeneity_or_instability_can_create_a_connected_persistent_power_band_when_the_current_fixed_scale_response_remains_below_twice_mean_power",
     "next_executable_experiment": "final_regression_and_compact_V66_continuation_state_then_diagnose_post_peak_history_sensitivity_in_next_allocation",
     "source_identity": "0253ee6_fixed_physical_interface_width_and_n64_refinement_analysis",
-    "expected_discriminatory_observation": "regression_preservation_and_an_explicit_negative_strict_ASB_classification_without_losing_positive_retained_state_static_RX",
+    "expected_discriminatory_observation": "a_new_mechanism_must_create_resolved_band_morphology_not_merely_another_stress_peak_or_temperature_contrast",
     "resource_need": "no_heavy_solver_until_post_peak_history_sensitivity_is_reformulated",
     "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; fixed_scale_n64_thermal_localization_positive_but_strict_ASB_negative; dynamic_growth_not_sustained"
   },

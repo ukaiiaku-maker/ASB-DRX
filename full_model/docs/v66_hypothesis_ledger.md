@@ -799,6 +799,13 @@ experiment, result, limitation, and next branch.
   threshold. No further refinement is justified until the remaining
   history-sensitivity is diagnosed; resolution will not be extended merely to
   seek a favorable classification.
+- History diagnosis: the complete 48/64 adiabatic and bath stress curves differ
+  by at most 0.118% and 0.133% of the fine-grid peak, respectively; the terminal
+  thermal stress increment is 24.30 versus 24.06 MPa (1.00% difference). The
+  scalar relative-softening metric is sensitive because it subtracts nearby
+  extrema. This does not rescue ASB: at 64 squared cells the endpoint maximum
+  power is only 1.623 times its mean, with no connected region above the
+  predeclared twice-mean threshold. A resolved persistent shear band is absent.
 - Next branch: preserve the positive sequential high-rate-to-static RX model,
   keep G03 and endogenous G05 open, run the final regression, and record the
   compact continuation state for the next mechanism-development allocation.

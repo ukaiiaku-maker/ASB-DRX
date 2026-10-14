@@ -12,6 +12,7 @@ import numpy as np
 
 from full_model.analysis.run_v58_three_grain_production import _load_checkpoint
 from full_model.analysis.run_v66_coupled_rx_asb import _physics
+from full_model.analysis.spatial_localization import spatial_localization_metrics
 from full_model.production.coupled_multigrain_interval import make_endpoint
 
 
@@ -52,6 +53,7 @@ def _endpoint(case: Path) -> dict:
     top_temperature = temperature >= np.quantile(temperature, .9)
     top_power = power >= np.quantile(power, .9)
     response = result["result"]
+    localization = spatial_localization_metrics(power, threshold_multiple=2.0)
     return {
         "case": case.name,
         "n": config["n"],
@@ -78,6 +80,7 @@ def _endpoint(case: Path) -> dict:
             power, config["length_m"]),
         "endpoint_top_decile_overlap": float(
             np.sum(top_temperature & top_power)/max(np.sum(top_power), 1)),
+        "endpoint_power_localization": localization,
     }
 
 
@@ -132,6 +135,45 @@ def main() -> None:
                 if coarse[key] is not None and fine[key] is not None
             }
         convergence.append(row)
+    history_convergence = None
+    paired_grids = sorted(int(key) for key in paired)
+    if len(paired_grids) >= 2:
+        coarse_n, fine_n = paired_grids[-2:]
+        histories = {}
+        for n in (coarse_n, fine_n):
+            stem = ("v66_regime_T1000_r8e4" if n == 16
+                    else f"v66_regime_fixed_n{n}_T1000_r8e4")
+            for control, suffix in (("adiabatic", ""),
+                                    ("strong_bath", "_strong_bath")):
+                rows = json.loads((VERIFY/f"{stem}{suffix}"/"history.json").read_text())
+                histories[(n, control)] = np.asarray(
+                    [row["mean_shear_stress_Pa"] for row in rows])
+        scale = max(float(np.max(np.abs(histories[(fine_n, "adiabatic")]))),
+                    1e-300)
+        controls = {}
+        for control in ("adiabatic", "strong_bath"):
+            delta = (histories[(coarse_n, control)]
+                     -histories[(fine_n, control)])
+            controls[control] = {
+                "maximum_absolute_difference_Pa": float(np.max(np.abs(delta))),
+                "maximum_difference_over_fine_peak_stress": float(
+                    np.max(np.abs(delta))/scale),
+                "rms_difference_over_fine_peak_stress": float(
+                    np.sqrt(np.mean(delta*delta))/scale),
+            }
+        causal_coarse = (histories[(coarse_n, "strong_bath")]
+                         -histories[(coarse_n, "adiabatic")])
+        causal_fine = (histories[(fine_n, "strong_bath")]
+                       -histories[(fine_n, "adiabatic")])
+        history_convergence = {
+            "coarse_n": coarse_n, "fine_n": fine_n, "controls": controls,
+            "terminal_thermal_stress_increment_coarse_Pa": float(causal_coarse[-1]),
+            "terminal_thermal_stress_increment_fine_Pa": float(causal_fine[-1]),
+            "terminal_increment_relative_difference": _relative(
+                causal_coarse[-1], causal_fine[-1]),
+            "maximum_causal_curve_difference_Pa": float(
+                np.max(np.abs(causal_coarse-causal_fine))),
+        }
     latest_pair = paired.get(str(max(map(int, paired))) if paired else "")
     payload = {
         "schema": "v66-asb-spatial-refinement-v1",
@@ -151,6 +193,7 @@ def main() -> None:
                 "protocol confound but are excluded from convergence claims."),
         },
         "successive_grid_relative_differences": convergence,
+        "finest_pair_stress_history_convergence": history_convergence,
         "decision": {
             "matched_thermal_effect_present_on_finest_paired_grid": bool(
                 latest_pair is not None
@@ -160,11 +203,19 @@ def main() -> None:
                 and all(value < .05
                         for metrics in convergence[-1]["controls"].values()
                         for value in metrics.values())),
+            "finest_adiabatic_endpoint_has_2x_mean_power_band": bool(
+                indexed[(max(available), "adiabatic")][
+                    "endpoint_power_localization"]["band_like"]),
+            "stress_histories_converged_below_5_percent_of_peak": bool(
+                history_convergence is not None and all(
+                    value["maximum_difference_over_fine_peak_stress"] < .05
+                    for value in history_convergence["controls"].values())),
             "strict_asb_qualified": False,
             "reason": (
-                "Strict ASB remains false unless the matched thermal effect and "
-                "physical spatial observables converge; a stress peak alone is "
-                "insufficient."),
+                "Strict ASB remains false: although the stress histories and most "
+                "spatial observables converge, the finest endpoint has no connected "
+                "region above twice mean plastic power and the causal softening "
+                "increment remains history-sensitive."),
         },
     }
     out = VERIFY / "v66_asb_spatial_refinement" / "result.json"

@@ -2,6 +2,25 @@
   "cases": [
     {
       "case": "v66_regime_T1000_r8e4",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.7824758511195975,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 319351460419271.25,
+        "positive_mean_W_m3": 179161731823004.62,
+        "signed_min_W_m3": 72114148346676.47,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.7824758511195975,
       "endpoint_power_spectral_length_m": 3.384418114652764e-06,
       "endpoint_temperature_contrast_K": 30.809527485475996,
@@ -26,6 +45,25 @@
     },
     {
       "case": "v66_regime_T1000_r8e4_strong_bath",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.7453646390212358,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 313918468717285.7,
+        "positive_mean_W_m3": 179858387009218.1,
+        "signed_min_W_m3": 75454252951831.25,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.7453646390212358,
       "endpoint_power_spectral_length_m": 3.298129317388688e-06,
       "endpoint_temperature_contrast_K": 0.02601409771273211,
@@ -50,6 +88,25 @@
     },
     {
       "case": "v66_regime_fixed_n24_T1000_r8e4",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.8549958224072234,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 337129029141209.9,
+        "positive_mean_W_m3": 181741125812196.38,
+        "signed_min_W_m3": 66161586873217.14,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.8549958224072234,
       "endpoint_power_spectral_length_m": 3.3096007928874258e-06,
       "endpoint_temperature_contrast_K": 30.762073474693125,
@@ -74,6 +131,25 @@
     },
     {
       "case": "v66_regime_fixed_n24_T1000_r8e4_strong_bath",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.8085318316877925,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 330095707330102.5,
+        "positive_mean_W_m3": 182521369846194.12,
+        "signed_min_W_m3": 69164475812726.91,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.8085318316877925,
       "endpoint_power_spectral_length_m": 3.1876202760213914e-06,
       "endpoint_temperature_contrast_K": 0.02838000044164346,
@@ -98,6 +174,25 @@
     },
     {
       "case": "v66_regime_fixed_n32_T1000_r8e4",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.7127144573579138,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 314013703873925.3,
+        "positive_mean_W_m3": 183342706383370.25,
+        "signed_min_W_m3": 65207143632814.59,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.7127144573579138,
       "endpoint_power_spectral_length_m": 3.2604880018887137e-06,
       "endpoint_temperature_contrast_K": 30.81650479137511,
@@ -122,6 +217,25 @@
     },
     {
       "case": "v66_regime_fixed_n32_T1000_r8e4_strong_bath",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.6640666312245977,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 305469358618267.8,
+        "positive_mean_W_m3": 183567985131383.16,
+        "signed_min_W_m3": 68286017625431.805,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.6640666312245977,
       "endpoint_power_spectral_length_m": 3.1226772617223533e-06,
       "endpoint_temperature_contrast_K": 0.028709610162763965,
@@ -146,6 +260,25 @@
     },
     {
       "case": "v66_regime_fixed_n48_T1000_r8e4",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.6289621735634146,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 300555083397192.06,
+        "positive_mean_W_m3": 184507098000757.62,
+        "signed_min_W_m3": 66932760031112.945,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.6289621735634146,
       "endpoint_power_spectral_length_m": 3.270191646834723e-06,
       "endpoint_temperature_contrast_K": 30.49485667514307,
@@ -170,6 +303,25 @@
     },
     {
       "case": "v66_regime_fixed_n48_T1000_r8e4_strong_bath",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.5815786160131011,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 293353243290675.9,
+        "positive_mean_W_m3": 185481290857466.84,
+        "signed_min_W_m3": 70535025554359.38,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.5815786160131011,
       "endpoint_power_spectral_length_m": 3.1282675228480404e-06,
       "endpoint_temperature_contrast_K": 0.029246099385545676,
@@ -194,6 +346,25 @@
     },
     {
       "case": "v66_regime_fixed_n64_T1000_r8e4",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.6228277385376841,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 301658126762141.6,
+        "positive_mean_W_m3": 185884255980220.75,
+        "signed_min_W_m3": 68808190408864.34,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.6228277385376841,
       "endpoint_power_spectral_length_m": 3.2331094349048634e-06,
       "endpoint_temperature_contrast_K": 30.415165548755795,
@@ -218,6 +389,25 @@
     },
     {
       "case": "v66_regime_fixed_n64_T1000_r8e4_strong_bath",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.57488688253956,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 293795115944705.06,
+        "positive_mean_W_m3": 186549979685493.47,
+        "signed_min_W_m3": 72612942253501.78,
+        "threshold_multiple": 2.0
+      },
       "endpoint_power_maximum_to_mean": 1.57488688253956,
       "endpoint_power_spectral_length_m": 3.086088793964305e-06,
       "endpoint_temperature_contrast_K": 0.030015098035164556,
@@ -241,12 +431,34 @@
       "thermal_control": "strong_bath"
     }
   ],
-  "created_utc": "2026-10-14T08:17:00.113326+00:00",
+  "created_utc": "2026-10-14T08:25:09.689138+00:00",
   "decision": {
+    "finest_adiabatic_endpoint_has_2x_mean_power_band": false,
     "matched_thermal_effect_present_on_finest_paired_grid": true,
-    "reason": "Strict ASB remains false unless the matched thermal effect and physical spatial observables converge; a stress peak alone is insufficient.",
+    "reason": "Strict ASB remains false: although the stress histories and most spatial observables converge, the finest endpoint has no connected region above twice mean plastic power and the causal softening increment remains history-sensitive.",
     "spatially_converged_below_5_percent": false,
+    "stress_histories_converged_below_5_percent_of_peak": true,
     "strict_asb_qualified": false
+  },
+  "finest_pair_stress_history_convergence": {
+    "coarse_n": 48,
+    "controls": {
+      "adiabatic": {
+        "maximum_absolute_difference_Pa": 3027936.4521336555,
+        "maximum_difference_over_fine_peak_stress": 0.0011821478147032403,
+        "rms_difference_over_fine_peak_stress": 0.00047185393732857554
+      },
+      "strong_bath": {
+        "maximum_absolute_difference_Pa": 3407758.013279438,
+        "maximum_difference_over_fine_peak_stress": 0.001330435348336671,
+        "rms_difference_over_fine_peak_stress": 0.0006073709453498082
+      }
+    },
+    "fine_n": 64,
+    "maximum_causal_curve_difference_Pa": 3337709.9575686455,
+    "terminal_increment_relative_difference": 0.010043960217209233,
+    "terminal_thermal_stress_increment_coarse_Pa": 24297312.3967371,
+    "terminal_thermal_stress_increment_fine_Pa": 24055697.923793316
   },
   "matched_pairs": {
     "16": {

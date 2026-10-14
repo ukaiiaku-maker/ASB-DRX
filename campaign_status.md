@@ -79,6 +79,14 @@ Updated: 2026-10-13 (America/Los_Angeles)
   softening increment changes from 0.517% to 0.460%. Strict ASB therefore
   remains false; the model supports thermomechanical localization and a
   positive thermal contribution, but not a fully grid-converged ASB claim.
+- A history-level audit shows that the 48/64 stress curves themselves are
+  converged: maximum differences are only 0.118% and 0.133% of peak stress for
+  adiabatic and bath members, and their terminal thermal stress increment
+  agrees within 1.00%. The remaining relative-softening discrepancy amplifies
+  a small difference of extrema. Even so, the 64x64 endpoint has maximum power
+  only 1.623 times its mean and no connected region above twice mean power.
+  The strict-ASB rejection therefore rests on absent resolved band morphology
+  as well as the history-sensitive scalar, not on unconverged bulk stress.
 - Final-source canonical regression passes 1098 tests in 281.32 s with
   `PYTHONPATH=src:.`. No campaign solver remains active. The earlier root-only
   invocation is rejected as an environment error because it hid the legacy
