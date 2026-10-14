@@ -176,3 +176,27 @@ experiment, result, limitation, and next branch.
   so the target growth is not an isolated planar-front measurement.
 - Next branch: use this exact common state in a coupled mechanics/heat/front
   exposure and then execute a work-ledgered unloading/static continuation.
+
+## 2026-10-14T00:45:00Z — common-state coupled DRX/ASB exposure
+
+- Goals: G01, G02, G03, G04, G06.
+- Prediction: a matured owner and the thermal-localization channels can coexist
+  in one production state, but ongoing deformation may either sustain or erase
+  the owner's stored-energy advantage; that sign must be computed rather than
+  assumed.
+- Experiment: start from the verified complete-energy handoff and advance 900
+  complete mechanics/heat/front intervals at 1000 K and 4e4/s to 7.2% shear on
+  a 16 x 16 mechanism grid. Use local-interface temperature, physical local
+  heat deposition, Peierls/Taylor EXP-floor flow, and the complete front energy.
+- Result: all 920 front transactions were accepted. A stress peak occurred at
+  5.168% strain and 2.478 GPa; terminal softening was 1.45%. Mean temperature
+  rose to 1027.17 K, temperature contrast reached 25.35 K, and peak/mean
+  positive plastic power reached 2.94. The complete state closed mechanics to
+  0.153% and front transactions to 5.72e-7 relative residual. The 15 degree
+  target initially grew, then reversed and ended 1.65% smaller: at this state,
+  dynamic deformation suppresses rather than sustains the inherited RX owner.
+- Limitation: n=16 is a mechanism calculation, not a strict ASB resolution or
+  refinement result. It misses the strict 50 K matched-control criterion and
+  has only 1.45% post-peak softening. RX is still inherited-subgrain growth.
+- Next branch: unload this retained common state through the mechanical work
+  ledger and determine whether zero-rate annealing reactivates the front.

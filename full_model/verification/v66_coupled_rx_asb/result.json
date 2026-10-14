@@ -1,0 +1,49 @@
+{
+  "configuration": {
+    "dt_s": 2e-09,
+    "front_maximum_substep_s": 2e-09,
+    "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+    "initial_state": "V66 inherited orientation-gradient matured owner",
+    "length_m": 4.8e-06,
+    "n": 16,
+    "schema": "v66-coupled-rx-asb-configuration-v1",
+    "shear_rate_s": 40000.0,
+    "target_steps": 900,
+    "temperature_K": 1000.0,
+    "thermal_diffusivity_m2_s": 3.947368421052631e-08
+  },
+  "created_utc": "2026-10-14T00:12:55.343092+00:00",
+  "decision": {
+    "reason": "This common-state exposure tests simultaneous mechanisms; strict ASB still requires persistence/refinement and matched adiabatic/isothermal controls, while RX remains an inherited-subgrain maturation pathway.",
+    "run_complete": true,
+    "same_common_state_carries_drx_and_asb_channels": true,
+    "stress_peak_observed": true,
+    "strict_asb_qualified": false,
+    "sustained_target_growth": false,
+    "thermal_localization_observed": true
+  },
+  "initial_target_volume_m3": 3.705247449950252e-21,
+  "preparation": {
+    "contrast_Pa": 20091220.84542289,
+    "high_density_m2_each": 2242357871713654.5,
+    "low_density_m2_each": 10000000000000.0
+  },
+  "result": {
+    "accepted_front_events": 920,
+    "cumulative_mechanical_external_work_J": 1.6054269412319304e-12,
+    "cumulative_mechanical_first_law_residual_J": 1.8071356795193206e-15,
+    "final_target_growth_fraction": -0.01646186883280624,
+    "final_temperature_mean_K": 1027.1736719513942,
+    "maximum_front_relative_energy_closure": 5.711857098994658e-07,
+    "maximum_mechanical_relative_first_law_residual": 0.001530939240746634,
+    "maximum_power_localization_ratio": 2.9404207298886624,
+    "maximum_temperature_contrast_K": 25.346978489659705,
+    "peak_step": 646,
+    "peak_stress_Pa": 2477974818.99946,
+    "post_peak_softening_fraction": 0.014547692443322092,
+    "rejected_front_events": 0,
+    "steps_completed": 900,
+    "target_growth_monotone": false
+  },
+  "schema": "v66-coupled-rx-asb-result-v1"
+}
