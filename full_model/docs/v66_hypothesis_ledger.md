@@ -935,6 +935,11 @@ experiment, result, limitation, and next branch.
   contrasts are 50.851/0.1256 K, softening is 2.708%/1.740%, and target changes
   remain close at -6.587%/-6.492%. The exact step-675 states are the terminal
   V66 restart points.
+- Same-step convergence: n48-to-n64 relative differences at 10.8% are
+  0.382%/0.355% stress, 0.693%/1.11% temperature contrast, and 0.462%/0.510%
+  target change for adiabatic/bath controls. Power maximum/mean remains less
+  resolved at 10.7%/7.09%. Thus bulk response is already stable while the
+  localization amplitude and geometry remain the refinement-limiting fields.
 
 ## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
 

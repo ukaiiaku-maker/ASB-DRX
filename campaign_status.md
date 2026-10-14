@@ -2747,6 +2747,9 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The terminal n64 prefix reaches 10.8%. Adiabatic/bath hot components contain
   55/5 cells and remain non-banded; heat is accelerating pre-band coalescence.
   Exact step-675 checkpoints are preserved for the next allocation.
+- At the same step, n48-to-n64 stress, temperature contrast, and target change
+  differ by at most 1.11%, while power maximum/mean still differs by
+  10.7%/7.09%. Bulk response is converged earlier than localization geometry.
 - A history audit confirms that scalar maximum/mean power cannot classify a
   band: every case has an early >=2x episode through 2.544% strain, and n64 has
   a late scalar recurrence without connected structure. Connectivity remains
