@@ -43,7 +43,7 @@ def candidate_parameters(spacing_m):
     reduced_modulus = base.c44_Pa/(2.0*np.pi*(1.0-poisson))
     gb2 = reduced_modulus*base.burgers_m**2
     return replace(
-        base, groma_mobile_correlation_energy_J_m=1.25*gb2,
+        base, groma_family_correlation_energy_J_m=1.25*gb2,
         groma_gnd_correlation_energy_J_m=.5*gb2,
         groma_sign_resolved_transport_enabled=True,
         mobile_correlation_diffusivity_m2_s=0.0), gb2

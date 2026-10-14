@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T02:55:00Z",
+  "last_updated_utc": "2026-10-14T03:28:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -42,14 +42,14 @@
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
     "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
-    "H3": "production_Groma_A_D_mobile_Taylor_and_nonlocal_mechanics_select_a_1.6_um_mode; continuous_strain_supply_reaches_14.3_percent_contrast_and_22.9_percent_polarization_and_survives_a_1_ms_complete_reaction_handoff_but_no_physical_wall_is_qualified",
+    "H3": "family_total_Groma_A_D_mobile_Taylor_and_nonlocal_mechanics_select_a_0.8_um_mode; valid_loading_reaches_10.19_percent_contrast_and_13.22_percent_polarization; compatible_absorption_creates_3.089_percent_wall_polarization_but_total_signed_capacity_is_only_0.1122_deg_and_no_physical_wall_is_qualified",
     "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_cost_classified_precursor_prefix"
+      "status": "available_after_valid_10_ms_absorption_discriminator"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -61,12 +61,12 @@
   "current_task": {
     "goal_ids": ["G01", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3"],
-    "physical_uncertainty": "whether_the_1.6_um_mechanics_coupled_signed_mode_survives_when_complete_Arrhenius_reactions_act_concurrently_through_the_full_formation_horizon",
-    "next_executable_experiment": "integrate_the_homogeneous_complete_reaction_slow_state_with_energy_and_timestep_convergence_then_linearize_full_reaction_plus_transport_dynamics_and_run_the_supported_concurrent_branch",
-    "source_identity": "8792806 plus pending nonlinear mechanics and reaction-survival evidence",
-    "expected_discriminatory_observation": "a_finite_interior_mode_remains_positive_after_fast_reaction_modes_equilibrate_and_transfers_signed_content_to_forest_or_wall_without_grid_scale_depletion",
+    "physical_uncertainty": "whether_fixed_Arrhenius_temperature_and_loading_rate_can_make_signed_transport_and_compatible_absorption_outpace_local_recovery_enough_to_exceed_the_Frank_Bilby_wall_capacity_threshold",
+    "next_executable_experiment": "compute_a_fixed_law_temperature_rate_timescale_map_then_run_the_least_cost_concurrent_patterning_condition_or_preserve_a_negative_regime_decision",
+    "source_identity": "ec18927 plus pending family-total correlation and compatible-absorption checkpoint",
+    "expected_discriminatory_observation": "an_interior_signed_mode_and_sign_selective_wall_capacity_grow_concurrently_above_reaction_localization_or_remain_subcritical_across_the_declared_window",
     "resource_need": "one_local_heavy_solver_available",
-    "result_status": "continuous_strain_supply_forms_a_finite_1.6_um_polarized_precursor_and_fast_complete_reactions_preserve_it_but_concurrent_formation_physical_wall_and_RX_remain_pending"
+    "result_status": "corrected_family_total_transport_forms_a_valid_0.8_um_precursor_and_sign_selective_absorption_is_energy_complete_but_maximum_available_structural_capacity_is_0.1122_deg_so_physical_wall_and_RX_remain_unqualified"
   },
   "completion_semantics": {
     "execution_complete": false,

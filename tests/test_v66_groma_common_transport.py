@@ -17,7 +17,7 @@ def candidate_parameters(parameters):
     # Literature-constrained mechanism ablation: A about 1.25 and D in the
     # reported 0.25--0.8 interval. No material calibration is implied.
     return replace(
-        parameters, groma_mobile_correlation_energy_J_m=1.25*gb2,
+        parameters, groma_family_correlation_energy_J_m=1.25*gb2,
         groma_gnd_correlation_energy_J_m=.5*gb2,
         groma_sign_resolved_transport_enabled=True,
         mobile_correlation_diffusivity_m2_s=0.0)
@@ -48,7 +48,11 @@ def test_groma_mobile_chemical_potentials_match_complete_energy_derivative():
     increment = np.zeros_like(state.mobile_plus_m2)
     increment[..., 0] = 1.0e7
     for name, key in (("mobile_plus_m2", "mobile_plus_mu_J_m"),
-                      ("mobile_minus_m2", "mobile_minus_mu_J_m")):
+                      ("mobile_minus_m2", "mobile_minus_mu_J_m"),
+                      ("forest_plus_m2", "forest_plus_mu_J_m"),
+                      ("forest_minus_m2", "forest_minus_mu_J_m"),
+                      ("wall_plus_m2", "wall_plus_mu_J_m"),
+                      ("wall_minus_m2", "wall_minus_mu_J_m")):
         plus = replace(state, **{name: getattr(state, name)+increment})
         minus = replace(state, **{name: getattr(state, name)-increment})
         numerical = (
@@ -58,6 +62,86 @@ def test_groma_mobile_chemical_potentials_match_complete_energy_derivative():
                 minus, parameters, topologies, systems))/(2.0e7)
         np.testing.assert_allclose(
             numerical, chemical[key][..., 0], rtol=3e-7, atol=5e-15)
+
+
+def test_groma_energy_is_invariant_to_internal_reservoir_relabeling():
+    systems, topologies, parameters, state, _ = fixture(n=8)
+    enabled = candidate_parameters(parameters)
+    amount = np.zeros_like(state.mobile_plus_m2)
+    amount[..., 0] = 1.0e10
+    transferred = replace(
+        state, mobile_plus_m2=state.mobile_plus_m2-amount,
+        forest_plus_m2=state.forest_plus_m2+amount)
+    enabled_delta = wall_free_energy_density_J_m3(
+        transferred, enabled, topologies, systems)-wall_free_energy_density_J_m3(
+            state, enabled, topologies, systems)
+    baseline_delta = wall_free_energy_density_J_m3(
+        transferred, parameters, topologies, systems)-wall_free_energy_density_J_m3(
+            state, parameters, topologies, systems)
+    np.testing.assert_allclose(enabled_delta, baseline_delta, rtol=0.0, atol=2e-7)
+
+
+def test_polarized_absorption_nucleates_wall_but_zero_gnd_control_does_not():
+    systems, topologies, parameters, state, _ = fixture(n=8)
+    parameters = replace(
+        candidate_parameters(parameters),
+        polarized_wall_absorption_enabled=True)
+    equal_mobile = np.full_like(state.mobile_plus_m2, 8.0e13)
+    equal_forest = np.full_like(state.forest_plus_m2, 5.0e13)
+    empty_wall = np.zeros_like(state.wall_plus_m2)
+    control = replace(
+        state, mobile_plus_m2=equal_mobile, mobile_minus_m2=equal_mobile,
+        forest_plus_m2=equal_forest, forest_minus_m2=equal_forest,
+        wall_plus_m2=empty_wall, wall_minus_m2=empty_wall,
+        wall_order=np.zeros_like(state.wall_order))
+    driving = CommonWallDriving(
+        resolved_stress_Pa=np.zeros_like(control.mobile_plus_m2))
+    zero_gnd = wall_residual(
+        control, driving, systems, topologies, parameters)
+    np.testing.assert_array_equal(
+        zero_gnd.channel_rates_m2_s["wall_absorption_activity_plus"], 0.0)
+    np.testing.assert_array_equal(
+        zero_gnd.channel_rates_m2_s["wall_absorption_activity_minus"], 0.0)
+    np.testing.assert_array_equal(
+        zero_gnd.channel_rates_m2_s["wall_plus"], 0.0)
+    np.testing.assert_array_equal(
+        zero_gnd.channel_rates_m2_s["wall_minus"], 0.0)
+
+    polarized = replace(
+        control, mobile_plus_m2=control.mobile_plus_m2.copy())
+    polarized.mobile_plus_m2[..., 0] *= 1.25
+    result = wall_residual(
+        polarized, driving, systems, topologies, parameters)
+    activity_plus = result.channel_rates_m2_s["wall_absorption_activity_plus"]
+    activity_minus = result.channel_rates_m2_s["wall_absorption_activity_minus"]
+    assert np.all(activity_plus[..., 0] > 0.0)
+    np.testing.assert_array_equal(activity_minus[..., 0], 0.0)
+    assert np.all(result.channel_rates_m2_s["wall_plus"][..., 0] > 0.0)
+    np.testing.assert_array_equal(result.channel_rates_m2_s[
+        "wall_minus"][..., 0], 0.0)
+    # The new reaction is a signed reservoir relabeling: its affinity-rate
+    # product dissipates and the complete production balance remains closed.
+    assert np.min(result.channel_rates_m2_s[
+        "wall_exchange_dissipation_W_m3"]) >= 0.0
+    assert balance_ledger(
+        polarized, result, systems, topologies
+    )["relative_energy_balance_residual"] < 2e-14
+    reversed_state = replace(
+        polarized,
+        mobile_plus_m2=polarized.mobile_minus_m2.copy(),
+        mobile_minus_m2=polarized.mobile_plus_m2.copy(),
+        forest_plus_m2=polarized.forest_minus_m2.copy(),
+        forest_minus_m2=polarized.forest_plus_m2.copy(),
+        wall_plus_m2=polarized.wall_minus_m2.copy(),
+        wall_minus_m2=polarized.wall_plus_m2.copy())
+    reversed_result = wall_residual(
+        reversed_state, driving, systems, topologies, parameters)
+    np.testing.assert_allclose(
+        reversed_result.channel_rates_m2_s["wall_minus"],
+        result.channel_rates_m2_s["wall_plus"], rtol=2e-15)
+    np.testing.assert_allclose(
+        reversed_result.channel_rates_m2_s["wall_plus"],
+        result.channel_rates_m2_s["wall_minus"], atol=0.0)
 
 
 def test_sign_resolved_arrhenius_transport_conserves_and_closes_energy():
@@ -135,7 +219,11 @@ def test_sign_and_stress_reversal_exchange_positive_negative_transport():
         systems, topologies, parameters)
     reversed_state = replace(
         state, mobile_plus_m2=state.mobile_minus_m2.copy(),
-        mobile_minus_m2=state.mobile_plus_m2.copy())
+        mobile_minus_m2=state.mobile_plus_m2.copy(),
+        forest_plus_m2=state.forest_minus_m2.copy(),
+        forest_minus_m2=state.forest_plus_m2.copy(),
+        wall_plus_m2=state.wall_minus_m2.copy(),
+        wall_minus_m2=state.wall_plus_m2.copy())
     reversed_residual = wall_residual(
         reversed_state, CommonWallDriving(resolved_stress_Pa=-stress),
         systems, topologies, parameters)

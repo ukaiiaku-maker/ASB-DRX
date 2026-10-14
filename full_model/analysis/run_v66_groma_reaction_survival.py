@@ -95,7 +95,8 @@ def _energies(state, driving, systems, topologies, parameters):
     return elastic, defect, thermal
 
 
-def _run(initial, driving, systems, topologies, parameters, maximum_dt):
+def _run(initial, driving, systems, topologies, parameters, maximum_dt, *,
+         hold_time=1.0e-3, record_interval=2.0e-5):
     state = initial
     initial_content = {
         name: float(np.sum(getattr(state, name))) for name in (
@@ -105,8 +106,6 @@ def _run(initial, driving, systems, topologies, parameters, maximum_dt):
     e0 = _energies(state, driving, systems, topologies, parameters)
     records = [{"time_s": 0.0, **_observables(state)}]
     time_s = 0.0
-    hold_time = 1.0e-3
-    record_interval = 2.0e-5
     next_record = record_interval
     accepted_steps = 0
     limited_steps = 0

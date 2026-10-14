@@ -588,3 +588,51 @@ experiment, result, limitation, and next branch.
   linearize the full reaction-plus-transport operator there, and test whether
   the fixed finite-wavelength mode survives concurrent reactions. Only then
   hand its signed content to the qualified absorption--rotation runtime.
+
+## 2026-10-14T03:28:00Z — family-total correlation and compatible absorption
+
+- Goals: G01, G04, G05, G06.
+- Prediction: a correlation energy attached only to the mobile reservoir will
+  create an unphysical affinity when a line is relabelled mobile/forest/wall.
+  After repairing that ownership, the empty-wall degeneracy of the harmonic
+  exchange should still prevent birth of a wall reservoir. A downhill mobility
+  supplied only by locally excess signed family content should overcome the
+  second problem without converting neutral pairs into chosen rotation.
+- Experiment: move the `A rho ln rho` and `D kappa^2/(2 rho)` energy to total
+  signed content per Burgers family across all three reservoirs and verify all
+  six chemical derivatives and exact relabelling invariance. Rerun the
+  production tangent, nonlinear loading, 1 ms complete-reaction survival, and
+  the dependency-correct full reaction tangent. Then add a default-off
+  sign-selective forest-to-wall absorption mobility, test exact zero activity
+  in the high-density/zero-GND control, sign symmetry, content conservation,
+  affinity dissipation, and complete energy, and evolve it for 10 ms from the
+  actual precursor at two timesteps plus a homogeneous control.
+- Result: the corrected production transport tangent selects mode 6, 0.8
+  micrometres, at `1.68261e-3 1/s`. The reaction-disabled loading remains
+  valid to 0.30447% shear with 10.19% density contrast, 13.22% mobile
+  polarization, 0.01405 degree orientation span, `5.21e-16` content error,
+  and `8.35e-6` first-law error. The pattern survives the unchanged complete
+  reactions for 1 ms with a `2.62e-7` energy residual. A dependency-correct
+  full tangent rejects every tested uniform 0--1 eV reservoir-barrier offset:
+  the earlier apparent `+0.25 eV` finite mode was checkpoint-dependent and is
+  withdrawn. The sign-selective absorption run raises mean wall density from
+  `8.0e12` to `8.33586e12 1/m2`, produces 2.011% wall-density contrast and
+  3.089% wall vector polarization, and correlates wall density with the
+  evolved orientation gradient at 0.4312. The homogeneous control stays
+  uniform. Coarse/fine differences are below `4.5e-7` and the fixed-strain
+  adiabatic residual is `3.44e-8`.
+- Decision: the family-total correlation architecture and default-off
+  compatible absorption transaction are promoted as production-capable
+  candidates. No wall or RX is promoted. A generous unit-projection periodic
+  Frank--Bilby audit gives only 0.00632 degree capacity in the absorbed wall
+  and 0.1122 degree in all signed reservoirs, versus the predeclared 2 degree
+  recognition threshold. The structural handoff is therefore forbidden.
+- Limitation: absorption is tested after, not during, precursor formation; the
+  current formation run omits reactions and stops at local signed-population
+  depletion. The 4.8 micrometre wall modulation is box-scale and no closed
+  ordered interface exists. Parameters remain generic and uncalibrated.
+- Next branch: with every barrier fixed, map temperature and loading rate to
+  determine whether Arrhenius transport/absorption can outrun local recovery.
+  If no concurrent regime exists, retain inherited-subgrain H1/H2 as the
+  supported DRX route and classify endogenous H3 initiation negative at the
+  explored conditions rather than retuning reaction barriers.

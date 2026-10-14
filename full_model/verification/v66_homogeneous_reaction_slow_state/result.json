@@ -1,0 +1,111 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_homogeneous_reaction_slow_state/slow_state.npz": "3f96ee903468953d8333079268f394951bde248317ae9aa3f5be73383c7ffe4a",
+    "full_model/verification/v66_homogeneous_reaction_slow_state/slow_state_history.png": "949920de5f9831e6e7c70ec436de8b2834e941ca0aa59ba6b4e35d9a857528dc"
+  },
+  "claim_boundary": "analysis-only homogeneous stiff integration; not a spatial production trajectory or material calibration",
+  "created_utc": "2026-10-14T03:10:49.380517+00:00",
+  "decision": {
+    "energy_gate_passed": true,
+    "five_percent_solver_convergence": true,
+    "production_integrator_qualified": false,
+    "slow_state_reached": false
+  },
+  "energy": {
+    "defect_change_J_m3": -6414.655068873544,
+    "elastic_change_J_m3": -0.41817653499310836,
+    "fixed_strain_adiabatic_residual_J_m3": 0.09193718194728717,
+    "relative_residual": 1.43312259825806e-05,
+    "thermal_change_J_m3": 6415.165182590485
+  },
+  "final": {
+    "nye_rms_m1": 0.0,
+    "orientation_span_deg": 0.0,
+    "reservoirs": {
+      "forest": {
+        "density_contrast": 0.0,
+        "mean_density_m2": 85564133385.1684,
+        "polarization_max_abs": 0.0010868737800555778,
+        "polarization_rms": 0.0007685358201740598
+      },
+      "mobile": {
+        "density_contrast": 0.0,
+        "mean_density_m2": 123859629604593.69,
+        "polarization_max_abs": 0.00018936100989816283,
+        "polarization_rms": 0.00013389845419123535
+      },
+      "wall": {
+        "density_contrast": 0.0,
+        "mean_density_m2": 43436577921296.99,
+        "polarization_max_abs": 0.0003792737047512382,
+        "polarization_rms": 0.00026818700855490345
+      }
+    },
+    "temperature_mean_K": 900.0018329043379,
+    "temperature_range_K": 0.0,
+    "wall_order_max": 4.358041266970932e-08,
+    "wall_order_mean": 4.358041266970932e-08
+  },
+  "final_relative_rate_norms_s": {
+    "alignment_m2": 0.0,
+    "beta_p": 0.0,
+    "family_nye_m1": 0.0,
+    "forest_minus_m2": 86.45975037295308,
+    "forest_plus_m2": 86.45975037295293,
+    "junction_m2": 1.3295541340149276e-17,
+    "mobile_minus_m2": 0.035073101518794995,
+    "mobile_plus_m2": 0.0350731015187951,
+    "multi_hit_coordination": 0.0,
+    "orientation_rad": 0.0,
+    "slip": 0.0,
+    "temperature_K": 4.06765908829878e-06,
+    "wall_minus_m2": 0.10202732233468417,
+    "wall_order": 2.5783247582774092e-08,
+    "wall_plus_m2": 0.10202732233468391
+  },
+  "fixed_engineering_shear": 0.0030446946782113557,
+  "initial": {
+    "nye_rms_m1": 0.0,
+    "orientation_span_deg": 0.0,
+    "reservoirs": {
+      "forest": {
+        "density_contrast": 0.0,
+        "mean_density_m2": 80000000000000.0,
+        "polarization_max_abs": 0.0,
+        "polarization_rms": 0.0
+      },
+      "mobile": {
+        "density_contrast": 0.0,
+        "mean_density_m2": 80000000000000.0,
+        "polarization_max_abs": 5.859375e-16,
+        "polarization_rms": 4.501730692037542e-16
+      },
+      "wall": {
+        "density_contrast": 0.0,
+        "mean_density_m2": 8000000000000.0,
+        "polarization_max_abs": 0.0,
+        "polarization_rms": 0.0
+      }
+    },
+    "temperature_mean_K": 900.0,
+    "temperature_range_K": 0.0,
+    "wall_order_max": 0.0,
+    "wall_order_mean": 0.0
+  },
+  "integration": {
+    "coarse_nfev": 162,
+    "coarse_rtol": 2e-07,
+    "fine_nfev": 218,
+    "fine_rtol": 5e-08,
+    "maximum_component_relative_difference": 7.63156157290723e-06,
+    "method": "scipy_BDF_analysis_only"
+  },
+  "parameters": {
+    "A": 1.25,
+    "D": 0.5,
+    "reduced_modulus_b2_J_m": 1.8005992811386394e-09
+  },
+  "schema": "v66-homogeneous-reaction-slow-state-v1",
+  "source_checkpoint": "full_model/verification/v66_production_groma_loading/final_state.npz",
+  "source_sha256": "41cfaa328f67c6b3e24eadfa6ec13eb898932beb2de54d6fb732612aa5e61ca6"
+}

@@ -2,6 +2,30 @@
 
 Updated: 2026-10-13 (America/Los_Angeles)
 
+## V66 physics-first recrystallization campaign
+
+- The immutable Arrhenius Peierls/EXP-floor, Taylor, Hall--Petch, mechanics,
+  and thermal framework remains intact. The Groma correlation energy is now
+  owned by total signed Burgers-family content across mobile, forest, and wall
+  reservoirs, eliminating an unphysical affinity under internal relabelling.
+- Corrected production transport selects a 0.8 micrometre finite mode. A valid
+  reaction-disabled loading precursor reaches 10.19% density contrast, 13.22%
+  mobile polarization, and 0.01405 degree orientation span with closed content
+  and energy. It survives the unchanged complete reactions for 1 ms. Full
+  concurrent tangents remain negative for an interior mobile mode across the
+  predeclared 0--1 eV uniform reaction-barrier sweep; no barrier retune is
+  promoted.
+- A default-off compatible absorption operator now populates an empty wall
+  from the locally excess sign only. High-density/zero-GND, sign symmetry,
+  conservation, dissipation, energy, and timestep tests pass. Over 10 ms it
+  produces 2.011% wall-density contrast and 3.089% wall polarization while the
+  homogeneous control stays uniform; complete energy closes to `3.44e-8`.
+- This is not yet a physical wall or RX event. The absorbed wall can support at
+  most 0.00632 degree and all available signed content at most 0.1122 degree
+  under a generous Frank--Bilby upper bound, below the fixed 2 degree
+  recognition threshold. Structural handoff and grain allocation remain
+  forbidden. The next branch is a fixed-law temperature/rate competition map.
+
 ## V64 production accuracy and controlled coupled evolution
 
 - A complete coupled interval map and restartable step-doubling controller now

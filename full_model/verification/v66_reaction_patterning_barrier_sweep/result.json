@@ -1,0 +1,378 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_reaction_patterning_barrier_sweep/barrier_dispersion.png": "f9c745fb97f1fb78687c0d70d5a34083daeb796a5fc03f20f634f80a07a85129"
+  },
+  "barrier_offset_eV": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "claim_boundary": "generic 0--1 eV uncertainty sweep; no material calibration and no nonlinear wall or RX claim",
+  "conditions": {
+    "0.0": [
+      {
+        "dominant_coordinate": "('mobile_minus_m2', (3,))",
+        "dominant_weight": 0.3719627449257481,
+        "leading_imaginary_rate_s": -3.3505277735748116e-12,
+        "leading_real_rate_s": 9.364309470641353e-05,
+        "mode_index": 1,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_minus_m2', (3,))",
+        "dominant_weight": 0.3681502758119467,
+        "leading_imaginary_rate_s": 1.2051844541881689e-11,
+        "leading_real_rate_s": 9.342502518282064e-05,
+        "mode_index": 2,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_minus_m2', (3,))",
+        "dominant_weight": 0.3666842975827121,
+        "leading_imaginary_rate_s": 6.802301885947946e-11,
+        "leading_real_rate_s": 9.338238355532355e-05,
+        "mode_index": 3,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_minus_m2', (3,))",
+        "dominant_weight": 0.3653123342954754,
+        "leading_imaginary_rate_s": 9.053341276770222e-11,
+        "leading_real_rate_s": 9.336013053822346e-05,
+        "mode_index": 4,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_plus_m2', (3,))",
+        "dominant_weight": 0.3638437666282614,
+        "leading_imaginary_rate_s": 1.815379364225565e-11,
+        "leading_real_rate_s": 9.334142268310542e-05,
+        "mode_index": 5,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": "('mobile_plus_m2', (3,))",
+        "dominant_weight": 0.36230107839206044,
+        "leading_imaginary_rate_s": 1.2218617859317745e-11,
+        "leading_real_rate_s": 9.332298571257142e-05,
+        "mode_index": 6,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": "('mobile_plus_m2', (3,))",
+        "dominant_weight": 0.36073540333519916,
+        "leading_imaginary_rate_s": 1.3192365578666777e-11,
+        "leading_real_rate_s": 9.330356125910371e-05,
+        "mode_index": 7,
+        "wavelength_m": 6.857142857142856e-07
+      }
+    ],
+    "0.25": [
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.3722192914683592,
+        "leading_imaginary_rate_s": 6.307556815948967e-13,
+        "leading_real_rate_s": 3.7729367162973947e-06,
+        "mode_index": 1,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.39458416167161614,
+        "leading_imaginary_rate_s": 1.865575062798298e-12,
+        "leading_real_rate_s": 3.7721369737158526e-06,
+        "mode_index": 2,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.4002140171898473,
+        "leading_imaginary_rate_s": 9.260566969302373e-13,
+        "leading_real_rate_s": 3.770877243277278e-06,
+        "mode_index": 3,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": "('wall_minus_m2', (3,))",
+        "dominant_weight": 0.40133881623244155,
+        "leading_imaginary_rate_s": 1.5115484490839854e-12,
+        "leading_real_rate_s": 3.769181267654509e-06,
+        "mode_index": 4,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.40075204638093365,
+        "leading_imaginary_rate_s": 1.1161839852112479e-12,
+        "leading_real_rate_s": 3.7671099946086448e-06,
+        "mode_index": 5,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.39932144085960725,
+        "leading_imaginary_rate_s": 1.4147326572254203e-13,
+        "leading_real_rate_s": 3.764717153580861e-06,
+        "mode_index": 6,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.3974096965636213,
+        "leading_imaginary_rate_s": 1.873137256786641e-12,
+        "leading_real_rate_s": 3.76208057641313e-06,
+        "mode_index": 7,
+        "wavelength_m": 6.857142857142856e-07
+      }
+    ],
+    "0.5": [
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.4162266241778498,
+        "leading_imaginary_rate_s": 1.889496588755179e-14,
+        "leading_real_rate_s": 1.5084361753553733e-07,
+        "mode_index": 1,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": "('wall_minus_m2', (3,))",
+        "dominant_weight": 0.41543247670919586,
+        "leading_imaginary_rate_s": 3.4584096902708816e-15,
+        "leading_real_rate_s": 1.5081199864034148e-07,
+        "mode_index": 2,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.4139891055947864,
+        "leading_imaginary_rate_s": -2.736900777673443e-15,
+        "leading_real_rate_s": 1.507606842541721e-07,
+        "mode_index": 3,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": "('wall_minus_m2', (3,))",
+        "dominant_weight": 0.41205115591994107,
+        "leading_imaginary_rate_s": -2.1629067408512417e-15,
+        "leading_real_rate_s": 1.5069151760585004e-07,
+        "mode_index": 4,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.409697230290262,
+        "leading_imaginary_rate_s": 1.0282585506893027e-14,
+        "leading_real_rate_s": 1.5060705428874737e-07,
+        "mode_index": 5,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.40704432242164856,
+        "leading_imaginary_rate_s": -2.7134148260304732e-14,
+        "leading_real_rate_s": 1.505096050415926e-07,
+        "mode_index": 6,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.40418722292886866,
+        "leading_imaginary_rate_s": -6.1338850449070604e-15,
+        "leading_real_rate_s": 1.5040271010340592e-07,
+        "mode_index": 7,
+        "wavelength_m": 6.857142857142856e-07
+      }
+    ],
+    "0.75": [
+      {
+        "dominant_coordinate": "('wall_minus_m2', (3,))",
+        "dominant_weight": 0.41697636417834366,
+        "leading_imaginary_rate_s": -1.816216137253306e-15,
+        "leading_real_rate_s": 6.0251663315737895e-09,
+        "mode_index": 1,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": "('wall_minus_m2', (3,))",
+        "dominant_weight": 0.4169036620210325,
+        "leading_imaginary_rate_s": 3.162799013562587e-16,
+        "leading_real_rate_s": 6.023995757810262e-09,
+        "mode_index": 2,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.41511499000266866,
+        "leading_imaginary_rate_s": 3.947108735907233e-15,
+        "leading_real_rate_s": 6.0220718502354725e-09,
+        "mode_index": 3,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.4133159292383915,
+        "leading_imaginary_rate_s": 1.4053006357872965e-15,
+        "leading_real_rate_s": 6.019483301623046e-09,
+        "mode_index": 4,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (2,))",
+        "dominant_weight": 0.41093286461428624,
+        "leading_imaginary_rate_s": 4.141231714568885e-15,
+        "leading_real_rate_s": 6.016311988404215e-09,
+        "mode_index": 5,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.4087102231769448,
+        "leading_imaginary_rate_s": 3.316401104509065e-15,
+        "leading_real_rate_s": 6.01267915381698e-09,
+        "mode_index": 6,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.40685035961942917,
+        "leading_imaginary_rate_s": 5.4940011689151975e-15,
+        "leading_real_rate_s": 6.008677408034027e-09,
+        "mode_index": 7,
+        "wavelength_m": 6.857142857142856e-07
+      }
+    ],
+    "1.0": [
+      {
+        "dominant_coordinate": "('wall_minus_m2', (3,))",
+        "dominant_weight": 0.4025262042139448,
+        "leading_imaginary_rate_s": -2.909458110987091e-15,
+        "leading_real_rate_s": 2.4065742673977805e-10,
+        "mode_index": 1,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_plus_m2', (3,))",
+        "dominant_weight": 0.47332212653969175,
+        "leading_imaginary_rate_s": 8.286561849166717e-17,
+        "leading_real_rate_s": 2.4061771205696345e-10,
+        "mode_index": 2,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.41540035537020253,
+        "leading_imaginary_rate_s": 2.303389427832199e-15,
+        "leading_real_rate_s": 2.405414613467049e-10,
+        "mode_index": 3,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_minus_m2', (3,))",
+        "dominant_weight": 0.42849206473969703,
+        "leading_imaginary_rate_s": -1.3369472666802843e-16,
+        "leading_real_rate_s": 2.4044800103908636e-10,
+        "mode_index": 4,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": "('mobile_plus_m2', (2,))",
+        "dominant_weight": 0.4623839028218726,
+        "leading_imaginary_rate_s": 1.5784941503514803e-15,
+        "leading_real_rate_s": 2.403212429838402e-10,
+        "mode_index": 5,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": "('wall_plus_m2', (3,))",
+        "dominant_weight": 0.414390757410875,
+        "leading_imaginary_rate_s": 3.481201393318221e-16,
+        "leading_real_rate_s": 2.401944373476949e-10,
+        "mode_index": 6,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": "('mobile_plus_m2', (3,))",
+        "dominant_weight": 0.4704369733623862,
+        "leading_imaginary_rate_s": 3.0919768053043966e-15,
+        "leading_real_rate_s": 2.400487226549259e-10,
+        "mode_index": 7,
+        "wavelength_m": 6.857142857142856e-07
+      }
+    ]
+  },
+  "created_utc": "2026-10-14T03:11:19.172361+00:00",
+  "decision": {
+    "baseline_concurrent_patterning_supported": false,
+    "candidate_concurrent_patterning_supported": false,
+    "minimum_qualifying_uniform_offset_eV": null,
+    "selection_rule": "minimum predeclared uniform barrier offset whose full reaction-plus-transport tangent has a positive interior mobile-dominated mode"
+  },
+  "finite_interior_mobile_mode": {
+    "0.0": false,
+    "0.25": false,
+    "0.5": false,
+    "0.75": false,
+    "1.0": false
+  },
+  "fixed_engineering_shear": 0.00535,
+  "fixed_parameters": {
+    "A": 1.25,
+    "D": 0.5,
+    "exp_floor": 0.05,
+    "glide_barrier_eV": 1.9,
+    "reduced_modulus_b2_J_m": 1.8005992811386394e-09,
+    "taylor_alpha": 0.3
+  },
+  "grid": [
+    16,
+    16
+  ],
+  "maximum_by_offset": {
+    "0.0": {
+      "dominant_coordinate": "('mobile_minus_m2', (3,))",
+      "dominant_weight": 0.3719627449257481,
+      "leading_imaginary_rate_s": -3.3505277735748116e-12,
+      "leading_real_rate_s": 9.364309470641353e-05,
+      "mode_index": 1,
+      "wavelength_m": 4.8e-06
+    },
+    "0.25": {
+      "dominant_coordinate": "('wall_plus_m2', (3,))",
+      "dominant_weight": 0.3722192914683592,
+      "leading_imaginary_rate_s": 6.307556815948967e-13,
+      "leading_real_rate_s": 3.7729367162973947e-06,
+      "mode_index": 1,
+      "wavelength_m": 4.8e-06
+    },
+    "0.5": {
+      "dominant_coordinate": "('wall_plus_m2', (3,))",
+      "dominant_weight": 0.4162266241778498,
+      "leading_imaginary_rate_s": 1.889496588755179e-14,
+      "leading_real_rate_s": 1.5084361753553733e-07,
+      "mode_index": 1,
+      "wavelength_m": 4.8e-06
+    },
+    "0.75": {
+      "dominant_coordinate": "('wall_minus_m2', (3,))",
+      "dominant_weight": 0.41697636417834366,
+      "leading_imaginary_rate_s": -1.816216137253306e-15,
+      "leading_real_rate_s": 6.0251663315737895e-09,
+      "mode_index": 1,
+      "wavelength_m": 4.8e-06
+    },
+    "1.0": {
+      "dominant_coordinate": "('wall_minus_m2', (3,))",
+      "dominant_weight": 0.4025262042139448,
+      "leading_imaginary_rate_s": -2.909458110987091e-15,
+      "leading_real_rate_s": 2.4065742673977805e-10,
+      "mode_index": 1,
+      "wavelength_m": 4.8e-06
+    }
+  },
+  "schema": "v66-reaction-patterning-barrier-sweep-v1",
+  "source_checkpoint": "full_model/verification/v66_homogeneous_reaction_slow_state/slow_state.npz",
+  "source_sha256": "3f96ee903468953d8333079268f394951bde248317ae9aa3f5be73383c7ffe4a",
+  "spacing_m": 3e-07
+}

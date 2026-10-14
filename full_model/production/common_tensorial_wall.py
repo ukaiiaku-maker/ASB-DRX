@@ -130,6 +130,14 @@ class CommonWallParameters:
     wall_order_gradient_J_m: float = 2.0e-7
     wall_order_enabled: bool = True
     extensive_wall_partition_enabled: bool = False
+    # Default-off physical nucleation of a wall reservoir by absorption of
+    # already present polarized lattice content. The legacy harmonic
+    # forest/wall exchange has zero mobility when the target wall is empty;
+    # this branch supplies a downhill mobility from the available source,
+    # weighted by the objective signed-family polarization. It transfers
+    # content only and cannot allocate orientation or phase ownership.
+    polarized_wall_absorption_enabled: bool = False
+    wall_absorption_polarization_power: float = 1.0
     attempt_frequency_s: float = 1.0e7
     critical_stress_Pa: float = 1.5e9
     exp_a: float = 2.2
@@ -162,11 +170,12 @@ class CommonWallParameters:
     bath_rate_s: float = 0.0
     bath_temperature_K: float = 1100.0
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
-    # Default-off Groma--Zaiser sign-resolved correlation branch.  Its A and
-    # D terms apply to each signed mobile family, unlike the legacy common
-    # correlation term, which uses the complete reservoir density.
+    # Default-off Groma--Zaiser sign-resolved correlation branch. Its A and D
+    # terms belong to each signed Burgers family across all internal
+    # reservoirs; mobile/forest/wall relabeling must not change that physical
+    # correlation energy. The resulting chemical force acts on mobile flux.
     groma_sign_resolved_transport_enabled: bool = False
-    groma_mobile_correlation_energy_J_m: float = 0.0
+    groma_family_correlation_energy_J_m: float = 0.0
     groma_gnd_correlation_energy_J_m: float = 0.0
     # Physical depth over which a captured line measure enters the continuum
     # wall reservoir.  This is independent of mesh spacing, interface width,
@@ -201,6 +210,7 @@ class CommonWallParameters:
             self.wall_gate_half_density_ratio,
             self.wall_gate_half_polarization, self.wall_gate_joint_half,
             self.polarization_density_epsilon_ratio,
+            self.wall_absorption_polarization_power,
             self.taylor_regularization_Pa, self.multi_hit_relaxation_s,
             self.multi_hit_collision_scale,
         )
@@ -213,11 +223,11 @@ class CommonWallParameters:
         if self.mobile_correlation_diffusivity_m2_s < 0.0:
             raise ValueError("mobile correlation diffusivity cannot be negative")
         if any(not math.isfinite(float(value)) or value < 0.0 for value in (
-                self.groma_mobile_correlation_energy_J_m,
+                self.groma_family_correlation_energy_J_m,
                 self.groma_gnd_correlation_energy_J_m)):
             raise ValueError("Groma correlation energies cannot be negative")
         if (self.groma_sign_resolved_transport_enabled
-                and (self.groma_mobile_correlation_energy_J_m <= 0.0
+                and (self.groma_family_correlation_energy_J_m <= 0.0
                      or self.groma_gnd_correlation_energy_J_m <= 0.0)):
             raise ValueError("sign-resolved Groma transport requires A and D energies")
         if (self.groma_sign_resolved_transport_enabled
@@ -446,30 +456,40 @@ def wall_free_energy_derivatives(
     partition_direct_mu = (parameters.wall_partition_J_m*partition_offset
                            /parameters.wall_target_m2)
     common_mu = base_mu
-    mobile_rho = state.mobile_plus_m2+state.mobile_minus_m2
-    mobile_kappa = state.mobile_plus_m2-state.mobile_minus_m2
-    safe_mobile = np.maximum(mobile_rho, 1e-30*reference)
-    polarized = mobile_rho > 0.0
+    family_plus = (state.mobile_plus_m2+state.forest_plus_m2
+                   +state.wall_plus_m2)
+    family_minus = (state.mobile_minus_m2+state.forest_minus_m2
+                    +state.wall_minus_m2)
+    family_rho = family_plus+family_minus
+    family_kappa = family_plus-family_minus
+    safe_family = np.maximum(family_rho, 1e-30*reference)
+    polarized = family_rho > 0.0
     ratio = np.divide(
-        mobile_kappa, safe_mobile, out=np.zeros_like(mobile_kappa),
+        family_kappa, safe_family, out=np.zeros_like(family_kappa),
         where=polarized)
-    mobile_common_mu = parameters.groma_mobile_correlation_energy_J_m*(
-        np.log(safe_mobile/reference)+1.0)
+    family_common_mu = parameters.groma_family_correlation_energy_J_m*(
+        np.log(safe_family/reference)+1.0)
     gnd_plus_mu = parameters.groma_gnd_correlation_energy_J_m*(
         ratio-.5*ratio*ratio)
     gnd_minus_mu = parameters.groma_gnd_correlation_energy_J_m*(
         -ratio-.5*ratio*ratio)
-    mobile_plus_mu = common_mu[..., None]+mobile_common_mu+gnd_plus_mu
-    mobile_minus_mu = common_mu[..., None]+mobile_common_mu+gnd_minus_mu
+    family_plus_mu = family_common_mu+gnd_plus_mu
+    family_minus_mu = family_common_mu+gnd_minus_mu
+    mobile_plus_mu = common_mu[..., None]+family_plus_mu
+    mobile_minus_mu = common_mu[..., None]+family_minus_mu
     forest_mu = common_mu+parameters.forest_energy_J_m
+    forest_plus_mu = forest_mu[..., None]+family_plus_mu
+    forest_minus_mu = forest_mu[..., None]+family_minus_mu
     denergy_dgate = (
         -parameters.wall_absent_penalty_J_m3*q*q
         -parameters.wall_order_amplitude_J_m3*h
         -parameters.wall_partition_J_m*partition_offset*h)
-    wall_plus_mu = (common_mu[..., None]+partition_direct_mu[..., None]
+    wall_plus_mu = (common_mu[..., None]+family_plus_mu
+                    +partition_direct_mu[..., None]
                     +denergy_dgate[..., None]
                     *invariants["wall_gate_derivative_plus_m2"])
-    wall_minus_mu = (common_mu[..., None]+partition_direct_mu[..., None]
+    wall_minus_mu = (common_mu[..., None]+family_minus_mu
+                     +partition_direct_mu[..., None]
                      +denergy_dgate[..., None]
                      *invariants["wall_gate_derivative_minus_m2"])
     junction_mu = (multiplicity*common_mu[..., None]
@@ -488,6 +508,8 @@ def wall_free_energy_derivatives(
         "mobile_plus_mu_J_m": mobile_plus_mu,
         "mobile_minus_mu_J_m": mobile_minus_mu,
         "forest_mu_J_m": forest_mu,
+        "forest_plus_mu_J_m": forest_plus_mu,
+        "forest_minus_mu_J_m": forest_minus_mu,
         "wall_plus_mu_J_m": wall_plus_mu,
         "wall_minus_mu_J_m": wall_minus_mu,
         "junction_mu_J_m": junction_mu,
@@ -506,14 +528,18 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     safe = np.maximum(total, 1e-30*reference)
     density = (parameters.line_energy_J_m*total
                +parameters.correlation_energy_J_m*total*np.log(safe/reference))
-    mobile_rho = state.mobile_plus_m2+state.mobile_minus_m2
-    mobile_kappa = state.mobile_plus_m2-state.mobile_minus_m2
-    safe_mobile = np.maximum(mobile_rho, 1e-30*reference)
-    mobile_correlation = parameters.groma_mobile_correlation_energy_J_m*np.sum(
-        mobile_rho*np.log(safe_mobile/reference), axis=2)
+    family_plus = (state.mobile_plus_m2+state.forest_plus_m2
+                   +state.wall_plus_m2)
+    family_minus = (state.mobile_minus_m2+state.forest_minus_m2
+                    +state.wall_minus_m2)
+    family_rho = family_plus+family_minus
+    family_kappa = family_plus-family_minus
+    safe_family = np.maximum(family_rho, 1e-30*reference)
+    family_correlation = parameters.groma_family_correlation_energy_J_m*np.sum(
+        family_rho*np.log(safe_family/reference), axis=2)
     gnd_correlation = .5*parameters.groma_gnd_correlation_energy_J_m*np.sum(
-        np.divide(mobile_kappa*mobile_kappa, safe_mobile,
-                  out=np.zeros_like(mobile_kappa), where=mobile_rho > 0.0),
+        np.divide(family_kappa*family_kappa, safe_family,
+                  out=np.zeros_like(family_kappa), where=family_rho > 0.0),
         axis=2)
     forest = parameters.forest_energy_J_m*np.sum(
         state.forest_plus_m2+state.forest_minus_m2, axis=2)
@@ -534,7 +560,7 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     partition = (.5*parameters.wall_partition_J_m
                  *(wall-gate*h*parameters.wall_target_m2)**2
                  /parameters.wall_target_m2)
-    return (density+mobile_correlation+gnd_correlation
+    return (density+family_correlation+gnd_correlation
             +forest+junction+barrier+absent
             +ordering+partition)
 
@@ -577,6 +603,29 @@ def _biased_exchange_components(source, target, delta_mu_J_m, rate_s,
     forward = pair_mobility*(1.0-bias)
     reverse = pair_mobility*(1.0+bias)
     return forward-reverse, forward+reverse
+
+
+def polarized_absorption_exchange_components(
+        source, target, delta_mu_J_m, rate_s, activity, parameters):
+    """Downhill source/target exchange that can populate an empty wall.
+
+    ``activity`` is a dimensionless objective measure in ``[0, 1]`` derived
+    from signed Burgers-family content. Availability is selected from the
+    reservoir on the downhill side of the declared affinity, so the rate
+    vanishes before it can remove content from an empty reservoir. Hence
+    ``-delta_mu*extent`` is pointwise nonnegative without an undeclared mixing
+    entropy or a target wall seed.
+    """
+    source = np.asarray(source, dtype=float)
+    target = np.asarray(target, dtype=float)
+    delta = np.asarray(delta_mu_J_m, dtype=float)
+    activity = np.asarray(activity, dtype=float)
+    if np.any(activity < 0.0) or np.any(activity > 1.0):
+        raise ValueError("polarized absorption activity must lie in [0,1]")
+    bias = np.tanh(delta/(2.0*parameters.reaction_energy_scale_J_m))
+    availability = np.where(delta <= 0.0, source, target)
+    extent = -rate_s*activity*availability*bias
+    return extent, np.abs(extent)
 
 
 def taylor_resistance_Pa(state, systems, topologies, parameters):
@@ -887,9 +936,9 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
 
     k_lock = exp_floor_rate(stress, temperature, parameters.lock_barrier_eV, parameters)
     k_lock = coordinated(k_lock, parameters.multi_hit_lock_log_factor)
-    delta_lock_p = (chemical["forest_mu_J_m"][..., None]
+    delta_lock_p = (chemical["forest_plus_mu_J_m"]
                     -chemical["mobile_plus_mu_J_m"])
-    delta_lock_m = (chemical["forest_mu_J_m"][..., None]
+    delta_lock_m = (chemical["forest_minus_mu_J_m"]
                     -chemical["mobile_minus_mu_J_m"])
     lock_p, lock_p_turnover = _biased_exchange_components(
         state.mobile_plus_m2, state.forest_plus_m2,
@@ -903,9 +952,9 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     k_wall = exp_floor_rate(stress, temperature, parameters.wall_barrier_eV, parameters)
     k_wall = coordinated(k_wall, parameters.multi_hit_wall_log_factor)
     delta_wall_p = (chemical["wall_plus_mu_J_m"]
-                    -chemical["forest_mu_J_m"][..., None])
+                    -chemical["forest_plus_mu_J_m"])
     delta_wall_m = (chemical["wall_minus_mu_J_m"]
-                    -chemical["forest_mu_J_m"][..., None])
+                    -chemical["forest_minus_mu_J_m"])
     wall_target_plus = state.wall_plus_m2
     wall_target_minus = state.wall_minus_m2
     if parameters.extensive_wall_partition_enabled:
@@ -913,12 +962,42 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         # Capture/release acts only on the disordered (tangle) complement.
         wall_target_plus = wall_target_plus*(1.0-state.wall_order[..., None])
         wall_target_minus = wall_target_minus*(1.0-state.wall_order[..., None])
-    transfer_p, transfer_p_turnover = _biased_exchange_components(
-        state.forest_plus_m2, wall_target_plus,
-        delta_wall_p, k_wall, parameters)
-    transfer_m, transfer_m_turnover = _biased_exchange_components(
-        state.forest_minus_m2, wall_target_minus,
-        delta_wall_m, k_wall, parameters)
+    if parameters.polarized_wall_absorption_enabled:
+        family_plus = (state.mobile_plus_m2+state.forest_plus_m2
+                       +state.wall_plus_m2)
+        family_minus = (state.mobile_minus_m2+state.forest_minus_m2
+                        +state.wall_minus_m2)
+        family_total = family_plus+family_minus
+        family_excess = family_plus-family_minus
+        # Only the locally excess sign is compatible with structural
+        # absorption in this reduced family-wise branch. Equal opposite line
+        # is neutral/extrinsic content and must not be converted into a chosen
+        # wall polarity. This also makes exact sign exchange a symmetry.
+        absorption_activity_plus = np.divide(
+            np.maximum(family_excess, 0.0), family_plus,
+            out=np.zeros_like(family_plus), where=family_plus > 0.0)**(
+                parameters.wall_absorption_polarization_power)
+        absorption_activity_minus = np.divide(
+            np.maximum(-family_excess, 0.0), family_minus,
+            out=np.zeros_like(family_minus), where=family_minus > 0.0)**(
+                parameters.wall_absorption_polarization_power)
+        transfer_p, transfer_p_turnover = (
+            polarized_absorption_exchange_components(
+                state.forest_plus_m2, wall_target_plus,
+                delta_wall_p, k_wall, absorption_activity_plus, parameters))
+        transfer_m, transfer_m_turnover = (
+            polarized_absorption_exchange_components(
+                state.forest_minus_m2, wall_target_minus,
+                delta_wall_m, k_wall, absorption_activity_minus, parameters))
+    else:
+        absorption_activity_plus = np.zeros_like(state.forest_plus_m2)
+        absorption_activity_minus = np.zeros_like(state.forest_minus_m2)
+        transfer_p, transfer_p_turnover = _biased_exchange_components(
+            state.forest_plus_m2, wall_target_plus,
+            delta_wall_p, k_wall, parameters)
+        transfer_m, transfer_m_turnover = _biased_exchange_components(
+            state.forest_minus_m2, wall_target_minus,
+            delta_wall_m, k_wall, parameters)
     fp_rate -= transfer_p; fm_rate -= transfer_m
     wp_rate += transfer_p; wm_rate += transfer_m
 
@@ -972,6 +1051,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
 
     junction_extents = []
     junction_turnovers = []
+    junction_delta_mu = []
     for index, topology in enumerate(topologies):
         first = topology.parent_a; second = topology.parent_b
         source_first = (state.forest_plus_m2[..., first]
@@ -985,8 +1065,13 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
             kf = kf*np.exp(parameters.multi_hit_junction_log_factor
                            *state.multi_hit_coordination)
         source_pair = source_first*source_second/parameters.rho_reference_m2
-        delta_mu = (chemical["junction_mu_J_m"][..., index]
-                    -2.0*chemical["forest_mu_J_m"])
+        first_mu = (chemical["forest_plus_mu_J_m"][..., first]
+                    if topology.sign_a > 0 else
+                    chemical["forest_minus_mu_J_m"][..., first])
+        second_mu = (chemical["forest_plus_mu_J_m"][..., second]
+                     if topology.sign_b > 0 else
+                     chemical["forest_minus_mu_J_m"][..., second])
+        delta_mu = chemical["junction_mu_J_m"][..., index]-first_mu-second_mu
         extent, turnover = _biased_exchange_components(
             source_pair, state.junction_m2[..., index], delta_mu, kf,
             parameters)
@@ -997,13 +1082,13 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         junction_rate[..., index] += extent
         junction_extents.append(extent)
         junction_turnovers.append(turnover)
+        junction_delta_mu.append(delta_mu)
 
     junction_turnover_array = (np.stack(junction_turnovers, axis=2)
                                if junction_turnovers else np.zeros(grid+(0,)))
     junction_dissipation = (np.sum(np.stack([
-        -(chemical["junction_mu_J_m"][..., index]
-          -2.0*chemical["forest_mu_J_m"])*extent
-        for index, extent in enumerate(junction_extents)], axis=2), axis=2)
+        -delta_mu*extent for delta_mu, extent in zip(
+            junction_delta_mu, junction_extents)], axis=2), axis=2)
         if junction_extents else np.zeros(grid))
     collision_frequency = (parameters.multi_hit_collision_scale
                            *np.sum(junction_turnover_array, axis=2)
@@ -1093,7 +1178,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     free_energy_rate = (
         np.sum(chemical["mobile_plus_mu_J_m"]*mp_rate
                +chemical["mobile_minus_mu_J_m"]*mm_rate, axis=2)
-        +chemical["forest_mu_J_m"]*np.sum(fp_rate+fm_rate, axis=2)
+        +np.sum(chemical["forest_plus_mu_J_m"]*fp_rate
+                +chemical["forest_minus_mu_J_m"]*fm_rate, axis=2)
         +np.sum(chemical["wall_plus_mu_J_m"]*wp_rate
                 +chemical["wall_minus_mu_J_m"]*wm_rate, axis=2)
         +np.sum(chemical["junction_mu_J_m"]*junction_rate, axis=2)
@@ -1125,6 +1211,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "transport_mobile_minus_rate_m2_s": transport_mm_rate,
         "lock_plus": lock_p, "lock_minus": lock_m,
         "wall_plus": transfer_p, "wall_minus": transfer_m,
+        "wall_absorption_activity_plus": absorption_activity_plus,
+        "wall_absorption_activity_minus": absorption_activity_minus,
         "lock_plus_turnover": lock_p_turnover,
         "lock_minus_turnover": lock_m_turnover,
         "wall_plus_turnover": transfer_p_turnover,
