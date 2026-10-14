@@ -1,22 +1,28 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T18:11:29Z",
+  "last_updated_utc": "2026-10-14T22:47:15Z",
   "active_allocation": {
-    "campaign": "V66",
-    "start_utc": "2026-10-13T23:31:11Z",
-    "deadline_utc": "2026-10-14T11:31:11Z",
+    "campaign": "V67",
+    "start_utc": "2026-10-14T22:47:15Z",
+    "deadline_utc": "2026-10-15T10:47:15Z",
     "duration_s": 43200,
-    "actual_end_utc": "2026-10-14T11:31:11Z",
-    "status": "completed_at_fixed_deadline",
+    "actual_end_utc": null,
+    "status": "active",
     "execution_location": "local_only",
     "maximum_heavy_campaign_solvers": 1,
     "hpc_authorized": false,
     "paid_compute_authorized": false
   },
   "repository": {
-    "branch": "exp/full-v66-rx-physics-20261013",
-    "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v66-20261013",
-    "base_commit": "f5a6bc6474d70333255a10d19c267648086e2c78"
+    "branch": "exp/full-v67-rx-physics-20261014",
+    "worktree": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014",
+    "base_commit": "876b2f53589978bddb1ac7b8e04c7f3cd7dce150"
+  },
+  "closed_v66_allocation": {
+    "start_utc": "2026-10-13T23:31:11Z",
+    "deadline_utc": "2026-10-14T11:31:11Z",
+    "status": "completed_at_fixed_deadline",
+    "closure_commit": "f2aba141969347b886f335f578354f0a5dd7ee61"
   },
   "immutable_mechanics": {
     "arrhenius_mechanics": true,
@@ -59,7 +65,7 @@
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_completed_n48_matched_16_percent_pair"
+      "status": "available_for_V67_after_process_ownership_audit"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -71,16 +77,16 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "which_common_law_local_formation_absorption_migration_recovery_and_heat_transport_timescales_create_sustained_lower_rate_dynamic_DRX_and_permit_recrystallized_lineage_to_develop_inside_an_active_shear_band",
-    "next_executable_experiment": "under_the_next_separately_authorized_compute_allocation_first_derive_a_same_parameter_timescale_exposure_map_and_extend_rate_downward_by_decades_then_run_common_strain_lower_rate_dynamic_DRX_anchors_with_credible_source_transport_sink_absorption_and_network_operators_enabled; retain_n64_ASB_continuation_as_a_secondary_qualification_task",
-    "source_identity": "post_V66_fixed_law_response_family_requirement_on_f2aba141",
-    "expected_discriminatory_observation": "at_lower_rate_sustained_physical_swept_volume_defect_reduction_and_recrystallized_lineage_occur_during_deformation_while_an_overlap_condition_places_the_same_RX_lineage_inside_a_simultaneously_active_spatially_qualified_band_without_any_rate_switch_or_parameter_change",
-    "resource_need": "fresh_explicit_local_compute_allocation_for_heavy_trajectories; analytical_timescale_derivation_and_lightweight_static_checks_may_precede_it",
-    "result_status": "response_sensitivity_only; sustained_lower_rate_dynamic_DRX_not_demonstrated; dynamic_DRX_inside_an_active_band_not_demonstrated; static_retained_state_growth_supported; strict_ASB_remains_false_due_to_unconverged_band_geometry"
+    "physical_uncertainty": "why_reduced_H1_H2_maturation_is_positive_while_production_prepared_owner_growth_reverses_and_which_common_law_signed_supply_energy_and_exposure_terms_can_sustain_dynamic_RX",
+    "next_executable_experiment": "trace_reduced_and_production_called_operators_then_build_a_production_derived_reduction_and_evaluate_complete_directional_energy_and_exposure_at_pre_growth_reversal_recession_and_static_reactivation_states",
+    "source_identity": "V67_base_876b2f53589978bddb1ac7b8e04c7f3cd7dce150",
+    "expected_discriminatory_observation": "separate_uphill_slow_signed_content_limited_transaction_inconsistent_and_numerically_unresolved_causes_then_integrate_the_missing_physical_operator_into_one_fixed_candidate_before_matched_lower_rate_dynamic_and_retained_state_static_tests",
+    "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
+    "result_status": "V67_activated; source_and_state_audit_in_progress; no_new_physical_claim"
   },
   "completion_semantics": {
-    "execution_complete": true,
-    "implementation_verified": true,
+    "execution_complete": false,
+    "implementation_verified": false,
     "mechanism_supported_at_tested_conditions": false,
     "integrated_response_qualified": false,
     "material_validated": false,
