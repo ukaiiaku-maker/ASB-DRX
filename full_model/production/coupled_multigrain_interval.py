@@ -31,6 +31,7 @@ from .arrhenius_dislocation_sources import (
     boundary_tj_site_field, randomized_matched_site_field,
 )
 from .multigrain_source_transaction import (
+    evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
 )
 
@@ -54,6 +55,10 @@ class CoupledMultigrainContext:
     source_mode: str = "disabled"
     source_random_seed: int = 66
     source_tj_weight: float = 2.0
+    sink_parameters: object | None = None
+    sink_mode: str = "disabled"
+    sink_random_seed: int = 66
+    sink_tj_weight: float = 2.0
 
 
 def endpoint_observables(state, load: float,
@@ -228,11 +233,64 @@ def advance_complete_multigrain_interval(
                 runtime.ledger.maximum_source_line_balance_residual_m2,
                 abs(source.line_balance_residual_m2) if source.accepted else 0.0)))
     source_wall_time = time.perf_counter()-source_started
+    # The neutral sink is a distinct zero-work physical channel. It follows
+    # line creation so a same-site source/sink hypothesis has an unambiguous
+    # operator order and separate line/heat ledgers.
+    sink_started = time.perf_counter()
+    sink = None
+    sink_state = source_state
+    if context.sink_mode != "disabled":
+        if context.sink_parameters is None:
+            raise ValueError("enabled sink mode requires sink parameters")
+        boundary_sites = boundary_tj_site_field(
+            sink_state.supports, tj_site_weight=context.sink_tj_weight)
+        if context.sink_mode == "gb_tj_only":
+            sink_sites = boundary_sites
+        elif context.sink_mode == "matched_random":
+            sink_sites = randomized_matched_site_field(
+                boundary_sites, context.sink_random_seed)
+        else:
+            raise ValueError("unknown dislocation sink mode")
+        sink = evaluate_multigrain_neutral_sink_transaction(
+            sink_state, mean_strain=strain1, site_field=sink_sites,
+            interval_s=dt, sink_parameters=context.sink_parameters,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            represented_thickness_m=context.represented_thickness_m,
+            energy_kwargs=context.energy_kwargs, sink_mode=context.sink_mode)
+        if sink.classification.startswith("REJECTED_NEUTRAL_SINK_FIRST_LAW"):
+            raise RuntimeError(
+                "complete coupled interval sink failed its hard energy audit")
+        if sink.accepted:
+            sink_state = sink.candidate_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            sink_intervals=runtime.ledger.sink_intervals+int(sink.accepted),
+            sink_inactive_intervals=(runtime.ledger.sink_inactive_intervals
+                                     +int(not sink.accepted)),
+            sink_rejected_intervals=(runtime.ledger.sink_rejected_intervals
+                                     +int(sink.classification.startswith(
+                                         "REJECTED"))),
+            sink_annihilated_pair_cell_sum_m2=(
+                runtime.ledger.sink_annihilated_pair_cell_sum_m2
+                +(sink.annihilated_pair_cell_sum_m2 if sink.accepted else 0.0)),
+            cumulative_sink_generated_heat_J=(
+                runtime.ledger.cumulative_sink_generated_heat_J
+                +(sink.generated_heat_J if sink.accepted else 0.0)),
+            cumulative_sink_first_law_residual_J=(
+                runtime.ledger.cumulative_sink_first_law_residual_J
+                +(sink.first_law_residual_J if sink.accepted else 0.0)),
+            maximum_sink_relative_first_law_residual=max(
+                runtime.ledger.maximum_sink_relative_first_law_residual,
+                sink.relative_first_law_residual if sink.accepted else 0.0),
+            maximum_sink_line_balance_residual_m2=max(
+                runtime.ledger.maximum_sink_line_balance_residual_m2,
+                abs(sink.line_balance_residual_m2) if sink.accepted else 0.0)))
+    sink_wall_time = time.perf_counter()-sink_started
     energy_after = dict(context.energy_kwargs, mean_strain=strain1)
     front_started = time.perf_counter()
     if context.front_enabled:
         state, runtime, fronts = advance_multigrain_front_interval(
-            source_state, runtime, kinetics=context.front_kinetics,
+            sink_state, runtime, kinetics=context.front_kinetics,
             dt_s=dt, maximum_substep_s=context.maximum_front_substep_s,
             spacing_m=context.spacing_m,
             represented_thickness_m=context.represented_thickness_m,
@@ -252,7 +310,7 @@ def advance_complete_multigrain_interval(
             raise RuntimeError(
                 "complete coupled interval contains a rejected or clipped front trial")
     else:
-        state = source_state
+        state = sink_state
         fronts = ()
         runtime = MultiGrainProductionRuntime(runtime.interfaces, replace(
             runtime.ledger, intervals=runtime.ledger.intervals+1,
@@ -302,6 +360,12 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if source is None or not source.accepted
             else np.asarray(source.heat_source_J_by_cell)),
+        "sink_heat_J": (0.0 if sink is None or not sink.accepted
+                         else sink.generated_heat_J),
+        "sink_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if sink is None or not sink.accepted
+            else np.asarray(sink.heat_source_J_by_cell)),
         "mechanical_heat_J_m3": mechanical_heat,
         "mechanical_work_J_m3": mechanical_work_density,
         "front_heat_J_by_cell": front_heat,
@@ -353,12 +417,25 @@ def advance_complete_multigrain_interval(
         "source_line_balance_residual_m2": (
             0.0 if source is None or not source.accepted
             else source.line_balance_residual_m2),
+        "sink_mode": context.sink_mode,
+        "sink_classification": ("DISABLED" if sink is None
+                                else sink.classification),
+        "sink_annihilated_pair_cell_sum_m2": (
+            0.0 if sink is None or not sink.accepted
+            else sink.annihilated_pair_cell_sum_m2),
+        "sink_relative_first_law_residual": (
+            0.0 if sink is None or not sink.accepted
+            else sink.relative_first_law_residual),
+        "sink_line_balance_residual_m2": (
+            0.0 if sink is None or not sink.accepted
+            else sink.line_balance_residual_m2),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
+            "sink_map": sink_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
-            "accounted_total": (mechanical_wall_time+source_wall_time+front_wall_time
+            "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time+front_wall_time
                                 +observable_wall_time),
         },
     }

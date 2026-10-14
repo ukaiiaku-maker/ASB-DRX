@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import subprocess
 import time
 
 import numpy as np
@@ -36,6 +37,9 @@ from full_model.production.multigrain_common_state import reconstruct_multigrain
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainProductionRuntime,
 )
+from full_model.production.multigrain_source_transaction import (
+    NeutralBoundarySinkParameters,
+)
 from full_model.production.tensorial_nye import bcc_four_family_systems
 
 
@@ -47,6 +51,19 @@ def _atomic_json(path: Path, payload) -> None:
     temporary = path.with_name(path.name+".tmp")
     temporary.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")
     os.replace(temporary, path)
+
+
+def _source_provenance() -> dict:
+    """Resolve the actually executed checkout rather than a stale label."""
+    source_commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
+        capture_output=True, text=True).stdout.strip()
+    dirty = bool(subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT,
+        check=True, capture_output=True, text=True).stdout.strip())
+    return {"campaign": "V66", "source_commit": source_commit,
+            "source_dirty": dirty,
+            "scientific_scope": "inherited-subgrain coupled exposure"}
 
 
 def _configuration(args) -> dict:
@@ -64,6 +81,9 @@ def _configuration(args) -> dict:
         "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
         "source_mode": args.source_mode,
         "source_grain_size_m": args.source_grain_size,
+        "sink_mode": args.sink_mode,
+        "sink_activation_enthalpy_eV": args.sink_activation_enthalpy,
+        "sink_stress_assisted": args.sink_stress_assisted,
     }
 
 
@@ -166,6 +186,13 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
         "source_heat_J": interval.integrals["source_heat_J"],
         "source_relative_first_law_residual": interval.audit[
             "source_relative_first_law_residual"],
+        "sink_mode": interval.audit["sink_mode"],
+        "sink_classification": interval.audit["sink_classification"],
+        "sink_annihilated_pair_cell_sum_m2": interval.audit[
+            "sink_annihilated_pair_cell_sum_m2"],
+        "sink_heat_J": interval.integrals["sink_heat_J"],
+        "sink_relative_first_law_residual": interval.audit[
+            "sink_relative_first_law_residual"],
         "mechanical_subdivision_depth": interval.audit[
             "mechanical_subdivision_depth"],
         "wall_time_s": wall_time_s,
@@ -224,6 +251,15 @@ def _summarize(history, endpoint, initial_volume, preparation, configuration):
                 endpoint.runtime.ledger.cumulative_source_generated_heat_J),
             "maximum_source_relative_first_law_residual": (
                 endpoint.runtime.ledger.maximum_source_relative_first_law_residual),
+            "sink_intervals": endpoint.runtime.ledger.sink_intervals,
+            "sink_inactive_intervals": (
+                endpoint.runtime.ledger.sink_inactive_intervals),
+            "sink_annihilated_pair_cell_sum_m2": (
+                endpoint.runtime.ledger.sink_annihilated_pair_cell_sum_m2),
+            "sink_generated_heat_J": (
+                endpoint.runtime.ledger.cumulative_sink_generated_heat_J),
+            "maximum_sink_relative_first_law_residual": (
+                endpoint.runtime.ledger.maximum_sink_relative_first_law_residual),
             "terminal_density_boundary_correlation": correlation(
                 total_density, boundary),
             "cumulative_mechanical_external_work_J": (
@@ -260,6 +296,11 @@ def main():
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")
     parser.add_argument("--source-grain-size", type=float, default=2.4e-6)
+    parser.add_argument(
+        "--sink-mode", choices=("disabled", "gb_tj_only", "matched_random"),
+        default="disabled")
+    parser.add_argument("--sink-activation-enthalpy", type=float, default=1.4)
+    parser.add_argument("--sink-stress-assisted", action="store_true")
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -272,8 +313,14 @@ def main():
             source_parameters=ArrheniusSourceParameters(
                 grain_size_m=args.source_grain_size),
             source_mode=args.source_mode)
-    provenance = {"campaign": "V66", "source_commit": "6b104d5",
-                  "scientific_scope": "inherited-subgrain coupled exposure"}
+    if args.sink_mode != "disabled":
+        context = replace(
+            context,
+            sink_parameters=NeutralBoundarySinkParameters(
+                activation_enthalpy_eV=args.sink_activation_enthalpy,
+                stress_assisted=args.sink_stress_assisted),
+            sink_mode=args.sink_mode)
+    provenance = _source_provenance()
     history_path = args.out/"history.json"
     if args.resume is None:
         state, runtime, preparation = _prepared_state(args, physics)

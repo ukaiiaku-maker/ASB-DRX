@@ -14,6 +14,9 @@ from full_model.production.coupled_multigrain_interval import (
     CoupledMultigrainContext, advance_complete_multigrain_interval, make_endpoint,
 )
 from full_model.production.multigrain_common_state import PhysicalTransferLaw
+from full_model.production.multigrain_source_transaction import (
+    NeutralBoundarySinkParameters,
+)
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainProductionRuntime,
 )
@@ -93,4 +96,22 @@ def test_enabled_conjugate_pair_source_is_in_complete_interval_and_ledger():
             < 1e-6*result.audit["source_created_line_cell_sum_m2"])
     assert result.endpoint.runtime.ledger.source_intervals == 1
     assert result.endpoint.runtime.ledger.source_event_count > 0.0
+    assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
+
+
+def test_enabled_neutral_boundary_sink_is_separate_complete_channel():
+    ctx = replace(
+        context(front_enabled=False),
+        sink_parameters=NeutralBoundarySinkParameters(),
+        sink_mode="gb_tj_only")
+    result = advance_complete_multigrain_interval(parent(ctx), 1e-10, ctx)
+    assert result.audit["sink_classification"].startswith(
+        "ACCEPTED_NEUTRAL_BOUNDARY_SINK")
+    assert result.audit["sink_annihilated_pair_cell_sum_m2"] > 0.0
+    assert result.integrals["sink_heat_J"] > 0.0
+    assert result.audit["sink_relative_first_law_residual"] < .05
+    assert (abs(result.audit["sink_line_balance_residual_m2"])
+            <1e-10*result.audit["sink_annihilated_pair_cell_sum_m2"])
+    assert result.endpoint.runtime.ledger.sink_intervals == 1
+    assert result.endpoint.runtime.ledger.source_intervals == 0
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10

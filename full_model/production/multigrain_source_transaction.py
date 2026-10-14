@@ -44,7 +44,7 @@ class MultiGrainSourceDecision:
 
 @dataclass(frozen=True)
 class NeutralBoundarySinkParameters:
-    """Stress-assisted neutral pair annihilation at declared sink sites."""
+    """Thermal neutral-pair annihilation, optionally assisted by stress."""
 
     activation_enthalpy_eV: float = 1.40
     attempt_frequency_s: float = 1.0e12
@@ -245,6 +245,7 @@ def evaluate_multigrain_neutral_sink_transaction(
     annihilated_total = 0.0
     signed_change = 0.0
     line_change = 0.0
+    line_inventory_scale = 0.0
     maximum_fraction = 0.0
     for support, owner, driving in zip(state.supports, state.owners, drivings):
         components = resolved_driving_components(
@@ -278,14 +279,21 @@ def evaluate_multigrain_neutral_sink_transaction(
         after_defect = wall_total_free_energy_density_J_m3(
             proposed, wall_parameters, (), systems)
         defect_drop_density += weight*np.maximum(before_defect-after_defect, 0.0)
-        annihilated_total += float(np.sum(weight[..., None]*neutral))
+        annihilated_total += float(np.sum(
+            weight[..., None]*neutral, dtype=np.longdouble))
         signed_change += float(np.sum(weight[..., None]*(
             (proposed.mobile_plus_m2-proposed.mobile_minus_m2)
-            -(owner.mobile_plus_m2-owner.mobile_minus_m2))))
+            -(owner.mobile_plus_m2-owner.mobile_minus_m2)),
+            dtype=np.longdouble))
         line_change += float(np.sum(weight[..., None]*(
             proposed.mobile_plus_m2+proposed.mobile_minus_m2
-            -owner.mobile_plus_m2-owner.mobile_minus_m2)))
+            -owner.mobile_plus_m2-owner.mobile_minus_m2),
+            dtype=np.longdouble))
         maximum_fraction = max(maximum_fraction, float(np.max(fraction)))
+        line_inventory_scale += float(np.sum(
+            weight[..., None]*(np.asarray(owner.mobile_plus_m2)
+                              +np.asarray(owner.mobile_minus_m2)),
+            dtype=np.longdouble))
     unheated = replace(state, owners=tuple(proposed_owners))
     unheated.validate()
     cold_energy = evaluate_complete_multigrain_energy(unheated, **common_energy)
@@ -305,12 +313,15 @@ def evaluate_multigrain_neutral_sink_transaction(
     scale = max(abs(defect_change), abs(heat_J), 1e-300)
     relative = abs(residual)/scale
     balance = line_change+2.0*annihilated_total
+    balance_tolerance = max(
+        1e-12*max(2.0*annihilated_total, 1.0),
+        4096.0*np.finfo(float).eps*max(line_inventory_scale, 1.0))
     downhill = defect_change <= 1e-12*scale
     accepted = bool(
         maximum_fraction > 0.0 and downhill
         and relative <= maximum_relative_first_law_residual
-        and abs(signed_change) <= 1e-12*max(annihilated_total, 1.0)
-        and abs(balance) <= 1e-12*max(2.0*annihilated_total, 1.0))
+        and abs(signed_change) <= balance_tolerance
+        and abs(balance) <= balance_tolerance)
     if maximum_fraction == 0.0:
         classification = "INACTIVE_NEUTRAL_SINK"
     elif not downhill:
