@@ -25,6 +25,16 @@ Updated: 2026-10-13 (America/Los_Angeles)
   under a generous Frank--Bilby upper bound, below the fixed 2 degree
   recognition threshold. Structural handoff and grain allocation remain
   forbidden. The next branch is a fixed-law temperature/rate competition map.
+- A 700--1500 K fixed-law map finds a positive 0.8 micrometre concurrent mobile
+  tangent at 1500 K/60 MPa, but the nonlinear test does not form a wall. It
+  exposed and repaired unconditional uphill neutral-pair annihilation, then
+  localized a separate explicit wall-ordering overshoot. With ordering frozen
+  at its independently minimized `q=0` asymptote, the 2 ms trajectory closes
+  energy to `3.72e-11` and converges tightly, yet wall polarization matches the
+  homogeneous control and total structural capacity is only `4.35e-5` degree.
+  H3 endogenous initiation is therefore negative at the tested conditions;
+  inherited-subgrain H1/H2 remains the supported route for the next common
+  dynamic/static/ASB regime calculations.
 
 ## V64 production accuracy and controlled coupled evolution
 

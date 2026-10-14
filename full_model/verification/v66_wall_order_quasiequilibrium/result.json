@@ -1,0 +1,119 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_wall_order_quasiequilibrium/ordered_state.npz": "14e979fe296339dca5d2316101fb56a97cdc9afa3940e43bdeb628adcfc641bb",
+    "full_model/verification/v66_wall_order_quasiequilibrium/wall_order_equilibrium.png": "2407900a6813daafd1063df56e386435b4ec09699ffe560f83b924a7cefd8ab5"
+  },
+  "candidates": [
+    {
+      "energy_J_m3": -699212.5614933212,
+      "energy_change_J_m3": 0.0,
+      "function_evaluations": 41,
+      "iterations": 0,
+      "message": "ABNORMAL: ",
+      "projected_gradient_max_scaled": 2.5934137317408336e-10,
+      "q_max": 0.0,
+      "q_mean": 0.0,
+      "q_min": 0.0,
+      "q_std": 0.0,
+      "start": 0.0,
+      "status": 2,
+      "success": false
+    },
+    {
+      "energy_J_m3": -699212.5614933212,
+      "energy_change_J_m3": 0.0,
+      "function_evaluations": 43,
+      "iterations": 2,
+      "message": "ABNORMAL: ",
+      "projected_gradient_max_scaled": 2.5934137317408336e-10,
+      "q_max": 0.0,
+      "q_mean": 0.0,
+      "q_min": 0.0,
+      "q_std": 0.0,
+      "start": 0.01,
+      "status": 2,
+      "success": false
+    },
+    {
+      "energy_J_m3": -699212.5614933212,
+      "energy_change_J_m3": 0.0,
+      "function_evaluations": 43,
+      "iterations": 2,
+      "message": "ABNORMAL: ",
+      "projected_gradient_max_scaled": 2.5934137317408336e-10,
+      "q_max": 0.0,
+      "q_mean": 0.0,
+      "q_min": 0.0,
+      "q_std": 0.0,
+      "start": 0.1,
+      "status": 2,
+      "success": false
+    },
+    {
+      "energy_J_m3": -699212.5614933212,
+      "energy_change_J_m3": 0.0,
+      "function_evaluations": 43,
+      "iterations": 2,
+      "message": "ABNORMAL: ",
+      "projected_gradient_max_scaled": 2.5934137317408336e-10,
+      "q_max": 0.0,
+      "q_mean": 0.0,
+      "q_min": 0.0,
+      "q_std": 0.0,
+      "start": 0.5,
+      "status": 2,
+      "success": false
+    },
+    {
+      "energy_J_m3": -699212.5614933212,
+      "energy_change_J_m3": 0.0,
+      "function_evaluations": 44,
+      "iterations": 3,
+      "message": "ABNORMAL: ",
+      "projected_gradient_max_scaled": 2.5934137317408336e-10,
+      "q_max": 0.0,
+      "q_mean": 0.0,
+      "q_min": 0.0,
+      "q_std": 0.0,
+      "start": 0.9,
+      "status": 2,
+      "success": false
+    }
+  ],
+  "claim_boundary": "fixed-reservoir asymptotic discriminator; no kinetic pathway, physical wall, grain allocation, or RX qualification",
+  "created_utc": "2026-10-14T04:30:12.841967+00:00",
+  "decision": {
+    "all_optimizers_converged": false,
+    "downhill_ordered_state": false,
+    "production_multirate_promotion_allowed": false,
+    "unique_energy_to_1e_6_J_m3": true
+  },
+  "energy_spread_across_starts_J_m3": 0.0,
+  "generated_heat_if_instantaneously_relaxed_J_m3": 0.0,
+  "method": "bounded L-BFGS-B minimization of authoritative wall free energy",
+  "schema": "v66-wall-order-quasiequilibrium-v1",
+  "selected": {
+    "energy_J_m3": -699212.5614933212,
+    "energy_change_J_m3": 0.0,
+    "function_evaluations": 41,
+    "iterations": 0,
+    "message": "ABNORMAL: ",
+    "projected_gradient_max_scaled": 2.5934137317408336e-10,
+    "q_max": 0.0,
+    "q_mean": 0.0,
+    "q_min": 0.0,
+    "q_std": 0.0,
+    "start": 0.0,
+    "status": 2,
+    "success": false
+  },
+  "source_checkpoint": "full_model/verification/v66_concurrent_pattern_absorption_frozen_order/final_state.npz",
+  "source_sha256": "fe6876e4f005cd8e93780a4a0326fdc1ddfb0c2323b11ad91d359c28f1431cb5",
+  "starts": [
+    0.0,
+    0.01,
+    0.1,
+    0.5,
+    0.9
+  ]
+}

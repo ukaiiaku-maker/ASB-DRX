@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T03:28:00Z",
+  "last_updated_utc": "2026-10-14T04:32:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -42,14 +42,14 @@
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
     "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
-    "H3": "family_total_Groma_A_D_mobile_Taylor_and_nonlocal_mechanics_select_a_0.8_um_mode; valid_loading_reaches_10.19_percent_contrast_and_13.22_percent_polarization; compatible_absorption_creates_3.089_percent_wall_polarization_but_total_signed_capacity_is_only_0.1122_deg_and_no_physical_wall_is_qualified",
+    "H3": "family_total_Groma_transport_has_a_positive_0.8_um_high_temperature_tangent_but_the_valid_concurrent_nonlinear_prefix_does_not_separate_wall_polarization_from_control_and_supports_only_4.35e-5_deg_total_signed_capacity; endogenous_wall_formation_is_negative_at_tested_conditions",
     "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_valid_10_ms_absorption_discriminator"
+      "status": "available_after_valid_concurrent_2_ms_prefix"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -61,12 +61,12 @@
   "current_task": {
     "goal_ids": ["G01", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3"],
-    "physical_uncertainty": "whether_fixed_Arrhenius_temperature_and_loading_rate_can_make_signed_transport_and_compatible_absorption_outpace_local_recovery_enough_to_exceed_the_Frank_Bilby_wall_capacity_threshold",
-    "next_executable_experiment": "compute_a_fixed_law_temperature_rate_timescale_map_then_run_the_least_cost_concurrent_patterning_condition_or_preserve_a_negative_regime_decision",
-    "source_identity": "ec18927 plus pending family-total correlation and compatible-absorption checkpoint",
-    "expected_discriminatory_observation": "an_interior_signed_mode_and_sign_selective_wall_capacity_grow_concurrently_above_reaction_localization_or_remain_subcritical_across_the_declared_window",
+    "physical_uncertainty": "which_fixed_temperature_and_loading_rate_regimes_make_the_supported_inherited_subgrain_grow_or_recede_while_thermal_localization_strengthens_or_relaxes",
+    "next_executable_experiment": "commit_the_annihilation_thermodynamic_repair_then_run_a_small_common_driver_temperature_rate_matrix_from_the_same_matured_owner",
+    "source_identity": "5e1533e plus pending affinity-gated annihilation and concurrent-negative checkpoint",
+    "expected_discriminatory_observation": "target_growth_recession_and_temperature_power_localization_switch_across_fixed_law_conditions_without_changing_the_RX_or_ASB_mechanisms",
     "resource_need": "one_local_heavy_solver_available",
-    "result_status": "corrected_family_total_transport_forms_a_valid_0.8_um_precursor_and_sign_selective_absorption_is_energy_complete_but_maximum_available_structural_capacity_is_0.1122_deg_so_physical_wall_and_RX_remain_unqualified"
+    "result_status": "compatible_absorption_is_energy_complete_but_concurrent_endogenous_formation_is_negative; inherited_subgrain_maturation_dynamic_static_growth_and_common_driver_competition_are_the_supported_path"
   },
   "completion_semantics": {
     "execution_complete": false,

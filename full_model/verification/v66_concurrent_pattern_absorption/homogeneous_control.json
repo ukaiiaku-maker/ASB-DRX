@@ -1,0 +1,1528 @@
+{
+  "checkpoint_sha256": "e9a250207b22dae589cef3cb5ff871105acc0fc3364b1f58007309aa5049c131",
+  "ledger": {
+    "accepted_steps": 1000,
+    "energy": {
+      "defect_change_J_m3": -7989.66055185243,
+      "elastic_change_J_m3": -2494.564673237561,
+      "fixed_strain_adiabatic_residual_J_m3": 1.1802709195762873e-05,
+      "relative_residual": 1.1257588356868363e-09,
+      "thermal_change_J_m3": 10484.2252368927
+    },
+    "final": {
+      "nye_rms_m1": 0.0,
+      "orientation_span_deg": 0.0,
+      "reservoirs": {
+        "forest": {
+          "density_contrast": 0.0,
+          "mean_density_m2": 607646040008.8292,
+          "polarization_max_abs": 0.00024333277625096704,
+          "polarization_rms": 0.00017206225617200766
+        },
+        "mobile": {
+          "density_contrast": 0.0,
+          "mean_density_m2": 159407882387235.16,
+          "polarization_max_abs": 0.0001938798383713377,
+          "polarization_rms": 0.0001370937484477247
+        },
+        "wall": {
+          "density_contrast": 1.2200211978931756e-16,
+          "mean_density_m2": 8004471575464.439,
+          "polarization_max_abs": 0.0011166455748707917,
+          "polarization_rms": 0.0007895876581730874
+        }
+      },
+      "temperature_mean_K": 1500.0029954929248,
+      "temperature_range_K": 0.0,
+      "time_s": 0.0020000000000000026,
+      "wall_order_max": 1.2747130177511474e-08,
+      "wall_order_mean": 1.2747130177511474e-08
+    },
+    "integrator": "same_residual_RK4",
+    "maximum_dt_s": 2e-06,
+    "records": [
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 80000000000000.0,
+            "polarization_max_abs": 0.0,
+            "polarization_rms": 0.0
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 80000000000000.0,
+            "polarization_max_abs": 0.0,
+            "polarization_rms": 0.0
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8000000000000.0,
+            "polarization_max_abs": 0.0,
+            "polarization_rms": 0.0
+          }
+        },
+        "temperature_mean_K": 1500.0,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0,
+        "wall_order_max": 0.0,
+        "wall_order_mean": 0.0
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 75566026451034.31,
+            "polarization_max_abs": 0.00045273767951261684,
+            "polarization_rms": 0.00032013388328203324
+          },
+          "mobile": {
+            "density_contrast": 1.8501759091432828e-16,
+            "mean_density_m2": 84451429308876.36,
+            "polarization_max_abs": 8.19621075744309e-06,
+            "polarization_rms": 5.795596206622137e-06
+          },
+          "wall": {
+            "density_contrast": 1.220670745265109e-16,
+            "mean_density_m2": 8000212209459.538,
+            "polarization_max_abs": 5.304955048077861e-05,
+            "polarization_rms": 3.751169688385663e-05
+          }
+        },
+        "temperature_mean_K": 1500.000149055969,
+        "temperature_range_K": 0.0,
+        "time_s": 4e-05,
+        "wall_order_max": 2.2004481242676384e-11,
+        "wall_order_mean": 2.2004481242676384e-11
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 71143552263740.75,
+            "polarization_max_abs": 0.0005128729777846252,
+            "polarization_rms": 0.00036265596047884606
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 88875646840561.45,
+            "polarization_max_abs": 2.1391912967447934e-05,
+            "polarization_rms": 1.5126366721834876e-05
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8000539590927.998,
+            "polarization_max_abs": 0.0001348795370558087,
+            "polarization_rms": 9.537423529546456e-05
+          }
+        },
+        "temperature_mean_K": 1500.0002870274811,
+        "temperature_range_K": 0.0,
+        "time_s": 8e-05,
+        "wall_order_max": 1.6559514522005999e-10,
+        "wall_order_mean": 1.6559514522005996e-10
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 2.340002009893033e-16,
+            "mean_density_m2": 66773446919877.89,
+            "polarization_max_abs": 0.000523630837415706,
+            "polarization_rms": 0.00037026291597503627
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 93245662877627.36,
+            "polarization_max_abs": 3.4808490430456245e-05,
+            "polarization_rms": 2.461331962624266e-05
+          },
+          "wall": {
+            "density_contrast": 1.220571749209432e-16,
+            "mean_density_m2": 8000861077052.804,
+            "polarization_max_abs": 0.00021522293231861946,
+            "polarization_rms": 0.0001521855949093492
+          }
+        },
+        "temperature_mean_K": 1500.0004226519684,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00012000000000000002,
+        "wall_order_max": 4.415230313893524e-10,
+        "wall_order_mean": 4.4152303138935235e-10
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 2.500685276768619e-16,
+            "mean_density_m2": 62482872775540.14,
+            "polarization_max_abs": 0.0005280560039563745,
+            "polarization_rms": 0.0003733919812438228
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 97535960175180.61,
+            "polarization_max_abs": 4.780404598070238e-05,
+            "polarization_rms": 3.380256508110817e-05
+          },
+          "wall": {
+            "density_contrast": 2.4410511364954106e-16,
+            "mean_density_m2": 8001163805212.533,
+            "polarization_max_abs": 0.0002908666750957538,
+            "polarization_rms": 0.00020567379838139178
+          }
+        },
+        "temperature_mean_K": 1500.0005563159373,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00016,
+        "wall_order_max": 8.235876732243617e-10,
+        "wall_order_mean": 8.235876732243617e-10
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.340152019137023e-16,
+            "mean_density_m2": 58295625335331.57,
+            "polarization_max_abs": 0.0005312297511539288,
+            "polarization_rms": 0.00037563615940898525
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 101722927485827.0,
+            "polarization_max_abs": 6.025044292709523e-05,
+            "polarization_rms": 4.26034967632421e-05
+          },
+          "wall": {
+            "density_contrast": 2.44096479611399e-16,
+            "mean_density_m2": 8001446817706.549,
+            "polarization_max_abs": 0.0003615736438501592,
+            "polarization_rms": 0.00025567117546477716
+          }
+        },
+        "temperature_mean_K": 1500.0006874551343,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0002,
+        "wall_order_max": 1.287967890891595e-09,
+        "wall_order_mean": 1.2879678908915948e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 54232967747876.74,
+            "polarization_max_abs": 0.0005337130229179698,
+            "polarization_rms": 0.0003773920977128677
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 105785321707776.0,
+            "polarization_max_abs": 7.208996501502638e-05,
+            "polarization_rms": 5.0975303117626125e-05
+          },
+          "wall": {
+            "density_contrast": 1.2204421785433528e-16,
+            "mean_density_m2": 8001710504348.243,
+            "polarization_max_abs": 0.0004274433011547829,
+            "polarization_rms": 0.0003022480568193106
+          }
+        },
+        "temperature_mean_K": 1500.0008154576988,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00024,
+        "wall_order_max": 1.8139143684138022e-09,
+        "wall_order_mean": 1.8139143684138024e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.5527669525086024e-16,
+            "mean_density_m2": 50313409796482.12,
+            "polarization_max_abs": 0.0005355402187470151,
+            "polarization_rms": 0.0003786841202741414
+          },
+          "mobile": {
+            "density_contrast": 1.424278932218492e-16,
+            "mean_density_m2": 109704634721108.4,
+            "polarization_max_abs": 8.328338593852083e-05,
+            "polarization_rms": 5.889024695730443e-05
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8001955478219.116,
+            "polarization_max_abs": 0.0004886306781169903,
+            "polarization_rms": 0.000345514065992305
+          }
+        },
+        "temperature_mean_K": 1500.000939775113,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00028000000000000003,
+        "wall_order_max": 2.3832306895630756e-09,
+        "wall_order_mean": 2.383230689563076e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 46552476375633.49,
+            "polarization_max_abs": 0.0005366933032656286,
+            "polarization_rms": 0.00037949947415653423
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 113465341178383.62,
+            "polarization_max_abs": 9.380388384199396e-05,
+            "polarization_rms": 6.632936236630914e-05
+          },
+          "wall": {
+            "density_contrast": 1.2203702010189265e-16,
+            "mean_density_m2": 8002182445823.705,
+            "polarization_max_abs": 0.0005453139264011929,
+            "polarization_rms": 0.0003855951752337454
+          }
+        },
+        "temperature_mean_K": 1500.0010599408486,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00032,
+        "wall_order_max": 2.9801249702458656e-09,
+        "wall_order_mean": 2.9801249702458652e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.818442784055344e-16,
+            "mean_density_m2": 42962583527523.445,
+            "polarization_max_abs": 0.0005371578410995669,
+            "polarization_rms": 0.00037982795200902967
+          },
+          "mobile": {
+            "density_contrast": 1.3348423183441247e-16,
+            "mean_density_m2": 117055024292178.97,
+            "polarization_max_abs": 0.00010363597228818996,
+            "polarization_rms": 7.328169877984024e-05
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8002392180631.502,
+            "polarization_max_abs": 0.0005976877136324898,
+            "polarization_rms": 0.0004226290353414168
+          }
+        },
+        "temperature_mean_K": 1500.0011755756207,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00036,
+        "wall_order_max": 3.5911111715468745e-09,
+        "wall_order_mean": 3.5911111715468745e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 39553028536239.5,
+            "polarization_max_abs": 0.0005369290238433676,
+            "polarization_rms": 0.0003796661537755187
+          },
+          "mobile": {
+            "density_contrast": 2.594127696060351e-16,
+            "mean_density_m2": 120464385957016.47,
+            "polarization_max_abs": 0.00011277471727328057,
+            "polarization_rms": 7.974376733033236e-05
+          },
+          "wall": {
+            "density_contrast": 2.440617470751303e-16,
+            "mean_density_m2": 8002585507178.08,
+            "polarization_max_abs": 0.000645959261443644,
+            "polarization_rms": 0.00045676217413705464
+          }
+        },
+        "temperature_mean_K": 1500.001286388239,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0004,
+        "wall_order_max": 4.20488325487674e-09,
+        "wall_order_mean": 4.20488325487674e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 36330082715261.5,
+            "polarization_max_abs": 0.000536011502292453,
+            "polarization_rms": 0.00037901736806498224
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 123687153998735.12,
+            "polarization_max_abs": 0.00012122475499336476,
+            "polarization_rms": 8.571884630348601e-05
+          },
+          "wall": {
+            "density_contrast": 1.220281626532693e-16,
+            "mean_density_m2": 8002763286494.804,
+            "polarization_max_abs": 0.0006903447186413606,
+            "polarization_rms": 0.00048814743190762525
+          }
+        },
+        "temperature_mean_K": 1500.0013921733703,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00044,
+        "wall_order_max": 4.812158132447391e-09,
+        "wall_order_mean": 4.812158132447391e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 33297169846345.445,
+            "polarization_max_abs": 0.000534418317729144,
+            "polarization_rms": 0.00037789081645658466
+          },
+          "mobile": {
+            "density_contrast": 1.2330343961270092e-16,
+            "mean_density_m2": 126719903751902.64,
+            "polarization_max_abs": 0.00012899912544522713,
+            "polarization_rms": 9.121615636945421e-05
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8002926402296.88,
+            "polarization_max_abs": 0.0007310657261149525,
+            "polarization_rms": 0.0005169415324289501
+          }
+        },
+        "temperature_mean_K": 1500.0014928068258,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00048,
+        "wall_order_max": 5.405495593503198e-09,
+        "wall_order_mean": 5.405495593503198e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 2.5652508973714503e-16,
+            "mean_density_m2": 30455110679447.68,
+            "polarization_max_abs": 0.0005321696347585077,
+            "polarization_rms": 0.000376300757479309
+          },
+          "mobile": {
+            "density_contrast": 1.2059880584490205e-16,
+            "mean_density_m2": 129561813572969.97,
+            "polarization_max_abs": 0.00013611799351607805,
+            "polarization_rms": 9.62499562567253e-05
+          },
+          "wall": {
+            "density_contrast": 1.2202339834430766e-16,
+            "mean_density_m2": 8003075748181.342,
+            "polarization_max_abs": 0.0007683462354511839,
+            "polarization_rms": 0.0005433028333866877
+          }
+        },
+        "temperature_mean_K": 1500.0015882389139,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0005200000000000001,
+        "wall_order_max": 5.979104570992242e-09,
+        "wall_order_mean": 5.9791045709922404e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 27802413322054.156,
+            "polarization_max_abs": 0.0005292914230063669,
+            "polarization_rms": 0.0003742655544316794
+          },
+          "mobile": {
+            "density_contrast": 1.1817928317945643e-16,
+            "mean_density_m2": 132214374462512.86,
+            "polarization_max_abs": 0.00014260732926724587,
+            "polarization_rms": 0.00010083860957177236
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8003212216086.774,
+            "polarization_max_abs": 0.0008024096434023624,
+            "polarization_rms": 0.00056738930013929
+          }
+        },
+        "temperature_mean_K": 1500.0016784864456,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0005600000000000001,
+        "wall_order_max": 6.528644318796518e-09,
+        "wall_order_mean": 6.528644318796518e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 25335590307714.625,
+            "polarization_max_abs": 0.0005258141586875964,
+            "polarization_rms": 0.0003718067572518988
+          },
+          "mobile": {
+            "density_contrast": 1.160148167160044e-16,
+            "mean_density_m2": 134681073006811.11,
+            "polarization_max_abs": 0.00014849760933363093,
+            "polarization_rms": 0.00010500366654980119
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8003336686183.609,
+            "polarization_max_abs": 0.0008334762837024167,
+            "polarization_rms": 0.0005893567321641416
+          }
+        },
+        "temperature_mean_K": 1500.0017636239338,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0006000000000000001,
+        "wall_order_max": 7.051027764181447e-09,
+        "wall_order_mean": 7.051027764181447e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 23049485222764.19,
+            "polarization_max_abs": 0.0005217715964182858,
+            "polarization_rms": 0.0003689482340579004
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 136967064759722.22,
+            "polarization_max_abs": 0.0001538225887167292,
+            "polarization_rms": 0.00010876899558126853
+          },
+          "wall": {
+            "density_contrast": 1.220176920914879e-16,
+            "mean_density_m2": 8003450018279.163,
+            "polarization_max_abs": 0.000861761296734574,
+            "polarization_rms": 0.0006093572566851299
+          }
+        },
+        "temperature_mean_K": 1500.0018437744702,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00064,
+        "wall_order_max": 7.544232819424005e-09,
+        "wall_order_mean": 7.544232819424005e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 20937594563047.95,
+            "polarization_max_abs": 0.0005171996473377495,
+            "polarization_rms": 0.0003657153778598136
+          },
+          "mobile": {
+            "density_contrast": 1.123463397285224e-16,
+            "mean_density_m2": 139078852393026.72,
+            "polarization_max_abs": 0.00015861817890605712,
+            "polarization_rms": 0.00011215998992393398
+          },
+          "wall": {
+            "density_contrast": 2.4403224281517294e-16,
+            "mean_density_m2": 8003553044747.752,
+            "polarization_max_abs": 0.0008874728792253392,
+            "polarization_rms": 0.0006275380910193872
+          }
+        },
+        "temperature_mean_K": 1500.0019191006943,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00068,
+        "wall_order_max": 8.007125941833234e-09,
+        "wall_order_mean": 8.007125941833234e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 2.056746608984149e-16,
+            "mean_density_m2": 18992373600797.34,
+            "polarization_max_abs": 0.0005121353867332044,
+            "polarization_rms": 0.0003621344048446439
+          },
+          "mobile": {
+            "density_contrast": 2.2159351931870403e-16,
+            "mean_density_m2": 141023979835146.22,
+            "polarization_max_abs": 0.00016292145550665077,
+            "polarization_rms": 0.00011520286598953513
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8003646564936.21,
+            "polarization_max_abs": 0.0009108109012784602,
+            "polarization_rms": 0.0006440405646726304
+          }
+        },
+        "temperature_mean_K": 1500.0019897961813,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00072,
+        "wall_order_max": 8.43930083208709e-09,
+        "wall_order_mean": 8.439300832087092e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.1351736014475923e-16,
+            "mean_density_m2": 17205518147262.607,
+            "polarization_max_abs": 0.000506616203066784,
+            "polarization_rms": 0.000358231752647504
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 142810750512725.16,
+            "polarization_max_abs": 0.00016676980726865046,
+            "polarization_rms": 0.00011792406161683631
+          },
+          "wall": {
+            "density_contrast": 2.4402680659796204e-16,
+            "mean_density_m2": 8003731340949.783,
+            "polarization_max_abs": 0.0009319658668456593,
+            "polarization_rms": 0.0006589993842809646
+          }
+        },
+        "temperature_mean_K": 1500.0020560774735,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00076,
+        "wall_order_max": 8.840933928677217e-09,
+        "wall_order_mean": 8.840933928677217e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 15568216966139.531,
+            "polarization_max_abs": 0.0005006790909518649,
+            "polarization_rms": 0.0003540335804103799
+          },
+          "mobile": {
+            "density_contrast": 2.1634086606575813e-16,
+            "mean_density_m2": 144447974940163.97,
+            "polarization_max_abs": 0.00017020022906403718,
+            "polarization_rms": 0.00012034973613068441
+          },
+          "wall": {
+            "density_contrast": 1.2201223323278064e-16,
+            "mean_density_m2": 8003808094692.181,
+            "polarization_max_abs": 0.0009511181860163975,
+            "polarization_rms": 0.0006725421190420428
+          }
+        },
+        "temperature_mean_K": 1500.002118176922,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0008,
+        "wall_order_max": 9.21265733009285e-09,
+        "wall_order_mean": 9.212657330092848e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 14071372078399.732,
+            "polarization_max_abs": 0.0004943600834081275,
+            "polarization_rms": 0.0003495653673258342
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 145944750416639.5,
+            "polarization_max_abs": 0.0001732487541459462,
+            "polarization_rms": 0.00012250536888871953
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8003877506014.797,
+            "polarization_max_abs": 0.0009684377229253189,
+            "polarization_rms": 0.0006847888810373518
+          }
+        },
+        "temperature_mean_K": 1500.0021763364111,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00084,
+        "wall_order_max": 9.555448968172814e-09,
+        "wall_order_mean": 9.555448968172814e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.537193342433507e-16,
+            "mean_density_m2": 12705786227957.752,
+            "polarization_max_abs": 0.00048769381357949466,
+            "polarization_rms": 0.0003448516027247886
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 147310273561332.66,
+            "polarization_max_abs": 0.00017595001586811565,
+            "polarization_rms": 0.00012441544937022523
+          },
+          "wall": {
+            "density_contrast": 1.220102192364659e-16,
+            "mean_density_m2": 8003940211822.268,
+            "polarization_max_abs": 0.0009840835811264761,
+            "polarization_rms": 0.0006958521734688732
+          }
+        },
+        "temperature_mean_K": 1500.002230802002,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00088,
+        "wall_order_max": 9.87053925781652e-09,
+        "wall_order_mean": 9.87053925781652e-09
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 11462318335929.508,
+            "polarization_max_abs": 0.0004807131927982133,
+            "polarization_rms": 0.0003399155584334528
+          },
+          "mobile": {
+            "density_contrast": 2.1036166170907334e-16,
+            "mean_density_m2": 148553684859260.28,
+            "polarization_max_abs": 0.00017833692575019208,
+            "polarization_rms": 0.00012610324953392265
+          },
+          "wall": {
+            "density_contrast": 1.220093565342474e-16,
+            "mean_density_m2": 8003996805981.712,
+            "polarization_max_abs": 0.0009982040884102187,
+            "polarization_rms": 0.0007058368799230017
+          }
+        },
+        "temperature_mean_K": 1500.0022818194652,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00092,
+        "wall_order_max": 1.0159333038462038e-08,
+        "wall_order_mean": 1.015933303846204e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.8903632597847603e-16,
+            "mean_density_m2": 10332008887129.904,
+            "polarization_max_abs": 0.0004734491901413849,
+            "polarization_rms": 0.0003347791328962524
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 149683943274210.72,
+            "polarization_max_abs": 0.00018044045303722834,
+            "polarization_rms": 0.0001275906679429969
+          },
+          "wall": {
+            "density_contrast": 1.220085786010798e-16,
+            "mean_density_m2": 8004047839889.819,
+            "polarization_max_abs": 0.0010109369447318457,
+            "polarization_rms": 0.0007148403689718981
+          }
+        },
+        "temperature_mean_K": 1500.0023296306592,
+        "temperature_range_K": 0.0,
+        "time_s": 0.00096,
+        "wall_order_max": 1.0423345373294642e-08,
+        "wall_order_mean": 1.0423345373294642e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 9306177919787.68,
+            "polarization_max_abs": 0.0004659306981031458,
+            "polarization_rms": 0.00032946275619171643
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 150709728257939.03,
+            "polarization_max_abs": 0.00018228949037304445,
+            "polarization_rms": 0.00012889813478181961
+          },
+          "wall": {
+            "density_contrast": 2.440157553188997e-16,
+            "mean_density_m2": 8004093823562.732,
+            "polarization_max_abs": 0.0010224094996576247,
+            "polarization_rms": 0.0007229526903574516
+          }
+        },
+        "temperature_mean_K": 1500.002374470678,
+        "temperature_range_K": 0.0,
+        "time_s": 0.001,
+        "wall_order_max": 1.0664149651514772e-08,
+        "wall_order_mean": 1.0664149651514772e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 2.331672302714834e-16,
+            "mean_density_m2": 8376498694631.83,
+            "polarization_max_abs": 0.00045818446939849424,
+            "polarization_rms": 0.0003239853453460354
+          },
+          "mobile": {
+            "density_contrast": 2.0608105143092046e-16,
+            "mean_density_m2": 151639366079589.22,
+            "polarization_max_abs": 0.0001839107906066259,
+            "polarization_rms": 0.00013004456717132437
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004135227127.417,
+            "polarization_max_abs": 0.0010327391291385974,
+            "polarization_rms": 0.0007302568414105918
+          }
+        },
+        "temperature_mean_K": 1500.0024165656887,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0010400000000000001,
+        "wall_order_max": 1.0883336417445871e-08,
+        "wall_order_mean": 1.0883336417445873e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 7535050271582.187,
+            "polarization_max_abs": 0.00045023511090897753,
+            "polarization_rms": 0.0003183643000520153
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 152480777247217.34,
+            "polarization_max_abs": 0.00018532896073861156,
+            "polarization_rms": 0.00013104736488852767
+          },
+          "wall": {
+            "density_contrast": 1.2200667865690637e-16,
+            "mean_density_m2": 8004172482607.944,
+            "polarization_max_abs": 0.0010420336851288171,
+            "polarization_rms": 0.0007368290849793942
+          }
+        },
+        "temperature_mean_K": 1500.0024561313608,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0010800000000000002,
+        "wall_order_max": 1.1082481399957035e-08,
+        "wall_order_mean": 1.1082481399957035e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.4415585035197437e-16,
+            "mean_density_m2": 6774352186301.157,
+            "polarization_max_abs": 0.00044210512216827743,
+            "polarization_rms": 0.000312615529882496
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 153241441829250.0,
+            "polarization_max_abs": 0.00018656650040794237,
+            "polarization_rms": 0.0001319224375806988
+          },
+          "wall": {
+            "density_contrast": 1.2200616797199166e-16,
+            "mean_density_m2": 8004205985915.274,
+            "polarization_max_abs": 0.0010503919953340087,
+            "polarization_rms": 0.0007427393028047459
+          }
+        },
+        "temperature_mean_K": 1500.002493371806,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0011200000000000003,
+        "wall_order_max": 1.12631213136167e-08,
+        "wall_order_mean": 1.1263121313616702e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 6087384251973.392,
+            "polarization_max_abs": 0.00043381496735066255,
+            "polarization_rms": 0.0003067535051938742
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 153928379650588.1,
+            "polarization_max_abs": 0.00018764387388337788,
+            "polarization_rms": 0.0001326842556710498
+          },
+          "wall": {
+            "density_contrast": 1.2200570896783313e-16,
+            "mean_density_m2": 8004236098963.788,
+            "polarization_max_abs": 0.0010579043940200149,
+            "polarization_rms": 0.0007480513708585977
+          }
+        },
+        "temperature_mean_K": 1500.0025284789424,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0011600000000000004,
+        "wall_order_max": 1.1426736130084998e-08,
+        "wall_order_mean": 1.1426736130084998e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 5467594261345.023,
+            "polarization_max_abs": 0.00042538317134622415,
+            "polarization_rms": 0.0003007913250615542
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 154548142588387.66,
+            "polarization_max_abs": 0.00018857960613844504,
+            "polarization_rms": 0.00013334591829398276
+          },
+          "wall": {
+            "density_contrast": 1.2200529661173423e-16,
+            "mean_density_m2": 8004263151851.361,
+            "polarization_max_abs": 0.0010646532682027268,
+            "polarization_rms": 0.0007528235455585682
+          }
+        },
+        "temperature_mean_K": 1500.0025616322023,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0012000000000000005,
+        "wall_order_max": 1.1574736659894786e-08,
+        "wall_order_mean": 1.1574736659894786e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 4908896067810.567,
+            "polarization_max_abs": 0.0004168264320697995,
+            "polarization_rms": 0.00029474079669434904
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 155106816488779.88,
+            "polarization_max_abs": 0.0001893903951614477,
+            "polarization_rms": 0.00013391923271025957
+          },
+          "wall": {
+            "density_contrast": 1.2200492632278673e-16,
+            "mean_density_m2": 8004287445052.196,
+            "polarization_max_abs": 0.0010707136066105706,
+            "polarization_rms": 0.0007571088519430399
+          }
+        },
+        "temperature_mean_K": 1500.0025929985204,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0012400000000000007,
+        "wall_order_max": 1.1708456430032319e-08,
+        "wall_order_mean": 1.1708456430032317e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 4405660210468.353,
+            "polarization_max_abs": 0.0004081597426064329,
+            "polarization_rms": 0.00028861252180436447
+          },
+          "mobile": {
+            "density_contrast": 2.008225298306675e-16,
+            "mean_density_m2": 155610030539650.28,
+            "polarization_max_abs": 0.00019009123410240427,
+            "polarization_rms": 0.00013441480067792957
+          },
+          "wall": {
+            "density_contrast": 1.2200459393881316e-16,
+            "mean_density_m2": 8004309251582.431,
+            "polarization_max_abs": 0.0010761535415195504,
+            "polarization_rms": 0.0007609554668063928
+          }
+        },
+        "temperature_mean_K": 1500.0026227325309,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0012800000000000008,
+        "wall_order_max": 1.1829146984087394e-08,
+        "wall_order_mean": 1.1829146984087396e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 3952698936808.7935,
+            "polarization_max_abs": 0.0003993965181006075,
+            "polarization_rms": 0.0002824159863312352
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 156062972245842.47,
+            "polarization_max_abs": 0.0001906955381633587,
+            "polarization_rms": 0.000134842108177329
+          },
+          "wall": {
+            "density_contrast": 1.2200429568419728e-16,
+            "mean_density_m2": 8004328819108.049,
+            "polarization_max_abs": 0.001081034875905081,
+            "polarization_rms": 0.0007644070914516406
+          }
+        },
+        "temperature_mean_K": 1500.0026509769332,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0013200000000000009,
+        "wall_order_max": 1.1937975864260296e-08,
+        "wall_order_mean": 1.1937975864260298e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 3545247181640.2227,
+            "polarization_max_abs": 0.0003905487234281972,
+            "polarization_rms": 0.0002761596507198277
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 156470406448204.5,
+            "polarization_max_abs": 0.0001912152722712059,
+            "polarization_rms": 0.0001352096156894017
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004346371972.567,
+            "polarization_max_abs": 0.0010854135903399823,
+            "polarization_rms": 0.0007675033101214388
+          }
+        },
+        "temperature_mean_K": 1500.002677862976,
+        "temperature_range_K": 0.0,
+        "time_s": 0.001360000000000001,
+        "wall_order_max": 1.2036026655100777e-08,
+        "wall_order_mean": 1.2036026655100777e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 3178940790335.2104,
+            "polarization_max_abs": 0.0003816269986633415,
+            "polarization_rms": 0.0002698510386387183
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 156836697098411.28,
+            "polarization_max_abs": 0.0001916610765440869,
+            "polarization_rms": 0.00013552484691383782
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004362113128.634,
+            "polarization_max_abs": 0.001089340325724288,
+            "polarization_rms": 0.0007702799313396066
+          }
+        },
+        "temperature_mean_K": 1500.0027035110188,
+        "temperature_range_K": 0.0,
+        "time_s": 0.001400000000000001,
+        "wall_order_max": 1.2124300576316689e-08,
+        "wall_order_mean": 1.2124300576316689e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 2849793032871.07,
+            "polarization_max_abs": 0.0003726407801554715,
+            "polarization_rms": 0.00026349682259457937
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 157165830743098.5,
+            "polarization_max_abs": 0.00019204238737077404,
+            "polarization_rms": 0.00013579447438512814
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004376225963.149,
+            "polarization_max_abs": 0.001092860839292598,
+            "polarization_rms": 0.0007727693103570178
+          }
+        },
+        "temperature_mean_K": 1500.0027280311538,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0014400000000000012,
+        "wall_order_max": 1.2203719205998594e-08,
+        "wall_order_mean": 1.2203719205998594e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 2554170243946.369,
+            "polarization_max_abs": 0.00036359841569849686,
+            "polarization_rms": 0.00025710290536909235
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 157461440882033.66,
+            "polarization_max_abs": 0.0001923675525798581,
+            "polarization_rms": 0.0001360244009094774
+          },
+          "wall": {
+            "density_contrast": 2.4400676057278193e-16,
+            "mean_density_m2": 8004388876009.955,
+            "polarization_max_abs": 0.001096016432432674,
+            "polarization_rms": 0.0007750006516650313
+          }
+        },
+        "temperature_mean_K": 1500.0027515238505,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0014800000000000013,
+        "wall_order_max": 1.227512799631061e-08,
+        "wall_order_mean": 1.2275127996310611e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 2288767243211.2456,
+            "polarization_max_abs": 0.00035450727280195355,
+            "polarization_rms": 0.00025067449657821067
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 157726832546288.25,
+            "polarization_max_abs": 0.000192643939710794,
+            "polarization_rms": 0.0001362198361239949
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004400212547.561,
+            "polarization_max_abs": 0.0010988443497162773,
+            "polarization_rms": 0.0007770002911529017
+          }
+        },
+        "temperature_mean_K": 1500.0027740806117,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0015200000000000014,
+        "wall_order_max": 1.2339300312399451e-08,
+        "wall_order_mean": 1.2339300312399453e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 2050583036610.7825,
+            "polarization_max_abs": 0.0003453738394934833,
+            "polarization_rms": 0.00024421618395027624
+          },
+          "mobile": {
+            "density_contrast": 1.978286246652038e-16,
+            "mean_density_m2": 157965006595410.97,
+            "polarization_max_abs": 0.00019287803681643234,
+            "polarization_rms": 0.0001363853677748479
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004410370082.085,
+            "polarization_max_abs": 0.001101378149211593,
+            "polarization_rms": 0.0007787919579582067
+          }
+        },
+        "temperature_mean_K": 1500.0027957846285,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0015600000000000015,
+        "wall_order_max": 1.2396941782812968e-08,
+        "wall_order_mean": 1.239694178281297e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.329092497130721e-16,
+            "mean_density_m2": 1836897172522.2817,
+            "polarization_max_abs": 0.0003362038174035519,
+            "polarization_rms": 0.00023773199914685537
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 158178683359920.25,
+            "polarization_max_abs": 0.00019307554555083011,
+            "polarization_rms": 0.00013652502754028412
+          },
+          "wall": {
+            "density_contrast": 1.2200291397702562e-16,
+            "mean_density_m2": 8004419469717.721,
+            "polarization_max_abs": 0.0011036480446517808,
+            "polarization_rms": 0.0007803970164165478
+          }
+        },
+        "temperature_mean_K": 1500.0028167114144,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0016000000000000016,
+        "wall_order_max": 1.2448694797369375e-08,
+        "wall_order_mean": 1.2448694797369375e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.4839147054914956e-16,
+            "mean_density_m2": 1645247021924.598,
+            "polarization_max_abs": 0.0003270022071332838,
+            "polarization_rms": 0.000231225478126913
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 158370325359873.47,
+            "polarization_max_abs": 0.00019324146653419452,
+            "polarization_rms": 0.00013664235139276224
+          },
+          "wall": {
+            "density_contrast": 1.2200278974462852e-16,
+            "mean_density_m2": 8004427620418.373,
+            "polarization_max_abs": 0.0011056812204065236,
+            "polarization_rms": 0.0007818346887800705
+          }
+        },
+        "temperature_mean_K": 1500.0028369294255,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0016400000000000017,
+        "wall_order_max": 1.2495143027671375e-08,
+        "wall_order_mean": 1.2495143027671373e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.6569811530073668e-16,
+            "mean_density_m2": 1473406167335.6558,
+            "polarization_max_abs": 0.0003177733860750719,
+            "polarization_rms": 0.00022469971617429416
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 158542158914771.34,
+            "polarization_max_abs": 0.00019338017717585032,
+            "polarization_rms": 0.00013674043462809978
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004434920165.339,
+            "polarization_max_abs": 0.0011075021204628567,
+            "polarization_rms": 0.0007831222595577666
+          }
+        },
+        "temperature_mean_K": 1500.0028565006394,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0016800000000000018,
+        "wall_order_max": 1.2536815877171052e-08,
+        "wall_order_mean": 1.253681587717105e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 1319364017843.6135,
+            "polarization_max_abs": 0.000308521178990831,
+            "polarization_rms": 0.00021815741780408524
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 158696194527467.9,
+            "polarization_max_abs": 0.0001934955022529517,
+            "polarization_rms": 0.00013682198177215904
+          },
+          "wall": {
+            "density_contrast": 1.220025788487682e-16,
+            "mean_density_m2": 8004441457016.462,
+            "polarization_max_abs": 0.0011091327127983,
+            "polarization_rms": 0.0007842752624555094
+          }
+        },
+        "temperature_mean_K": 1500.0028754811128,
+        "temperature_range_K": 0.0,
+        "time_s": 0.001720000000000002,
+        "wall_order_max": 1.2574192793365658e-08,
+        "wall_order_mean": 1.2574192793365657e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 1181306714583.5574,
+            "polarization_max_abs": 0.00029924892173421473,
+            "polarization_rms": 0.00021160094182102565
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 158834245977726.97,
+            "polarization_max_abs": 0.00019359077763078558,
+            "polarization_rms": 0.0001368893516379055
+          },
+          "wall": {
+            "density_contrast": 1.2200248963736693e-16,
+            "mean_density_m2": 8004447310072.748,
+            "polarization_max_abs": 0.0011105927306279061,
+            "polarization_rms": 0.0007853076509634772
+          }
+        },
+        "temperature_mean_K": 1500.0028939215006,
+        "temperature_range_K": 0.0,
+        "time_s": 0.001760000000000002,
+        "wall_order_max": 1.260770739499004e-08,
+        "wall_order_mean": 1.2607707394990042e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.1542207594142824e-16,
+            "mean_density_m2": 1057599350075.3309,
+            "polarization_max_abs": 0.0002899595185503494,
+            "polarization_rms": 0.00020503234183653858
+          },
+          "mobile": {
+            "density_contrast": 1.965928748649086e-16,
+            "mean_density_m2": 158957948102004.47,
+            "polarization_max_abs": 0.00019366890756496543,
+            "polarization_rms": 0.0001369445978441777
+          },
+          "wall": {
+            "density_contrast": 1.2200240976583238e-16,
+            "mean_density_m2": 8004452550358.502,
+            "polarization_max_abs": 0.0011118998920594315,
+            "polarization_rms": 0.0007862319536758143
+          }
+        },
+        "temperature_mean_K": 1500.0029118675402,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0018000000000000021,
+        "wall_order_max": 1.2637751383161702e-08,
+        "wall_order_mean": 1.2637751383161702e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.2893350841677326e-16,
+            "mean_density_m2": 946769493818.5642,
+            "polarization_max_abs": 0.0002806554934261142,
+            "polarization_rms": 0.00019845340257886187
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 159068773267053.22,
+            "polarization_max_abs": 0.0001937324160516388,
+            "polarization_rms": 0.00013698950512576734
+          },
+          "wall": {
+            "density_contrast": 1.2200233826250214e-16,
+            "mean_density_m2": 8004457241621.163,
+            "polarization_max_abs": 0.001113070099696983,
+            "polarization_rms": 0.0007870594154317231
+          }
+        },
+        "temperature_mean_K": 1500.002929360502,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0018400000000000022,
+        "wall_order_max": 1.266467821786603e-08,
+        "wall_order_mean": 1.266467821786603e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 847491993598.6329,
+            "polarization_max_abs": 0.000271339035958711,
+            "polarization_rms": 0.00019186567232702502
+          },
+          "mobile": {
+            "density_contrast": 1.9633337641465988e-16,
+            "mean_density_m2": 159168046567891.72,
+            "polarization_max_abs": 0.00019378349269495598,
+            "polarization_rms": 0.00013702562176661718
+          },
+          "wall": {
+            "density_contrast": 2.440045485111492e-16,
+            "mean_density_m2": 8004461441056.936,
+            "polarization_max_abs": 0.0011141176217084015,
+            "polarization_rms": 0.0007878001253494394
+          }
+        },
+        "temperature_mean_K": 1500.0029464376023,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0018800000000000023,
+        "wall_order_max": 1.2688806550764886e-08,
+        "wall_order_mean": 1.2688806550764885e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.609205571125294e-16,
+            "mean_density_m2": 758575005520.5067,
+            "polarization_max_abs": 0.00026201204221660825,
+            "polarization_rms": 0.00018527049180389965
+          },
+          "mobile": {
+            "density_contrast": 1.962237634060784e-16,
+            "mean_density_m2": 159256959797112.78,
+            "polarization_max_abs": 0.00019382403356894943,
+            "polarization_rms": 0.00013705428849353316
+          },
+          "wall": {
+            "density_contrast": 1.2200221696309003e-16,
+            "mean_density_m2": 8004465199968.002,
+            "polarization_max_abs": 0.0011150552558270236,
+            "polarization_rms": 0.0007884631327929889
+          }
+        },
+        "temperature_mean_K": 1500.0029631323885,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0019200000000000024,
+        "wall_order_max": 1.2710423412508328e-08,
+        "wall_order_mean": 1.2710423412508328e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 1.7979352957533802e-16,
+            "mean_density_m2": 678947194530.9882,
+            "polarization_max_abs": 0.0002526761510451339,
+            "polarization_rms": 0.0001786690198481305
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 159336584243767.0,
+            "polarization_max_abs": 0.0001938556775244461,
+            "polarization_rms": 0.00013707666414904842
+          },
+          "wall": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 8004468564357.0625,
+            "polarization_max_abs": 0.0011158944776933702,
+            "polarization_rms": 0.0007890565522656027
+          }
+        },
+        "temperature_mean_K": 1500.0029794750865,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0019600000000000025,
+        "wall_order_max": 1.2729787158076515e-08,
+        "wall_order_mean": 1.2729787158076518e-08
+      },
+      {
+        "nye_rms_m1": 0.0,
+        "orientation_span_deg": 0.0,
+        "reservoirs": {
+          "forest": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 607646040008.8292,
+            "polarization_max_abs": 0.00024333277625096704,
+            "polarization_rms": 0.00017206225617200766
+          },
+          "mobile": {
+            "density_contrast": 0.0,
+            "mean_density_m2": 159407882387235.16,
+            "polarization_max_abs": 0.0001938798383713377,
+            "polarization_rms": 0.0001370937484477247
+          },
+          "wall": {
+            "density_contrast": 1.2200211978931756e-16,
+            "mean_density_m2": 8004471575464.439,
+            "polarization_max_abs": 0.0011166455748707917,
+            "polarization_rms": 0.0007895876581730874
+          }
+        },
+        "temperature_mean_K": 1500.0029954929248,
+        "temperature_range_K": 0.0,
+        "time_s": 0.0020000000000000026,
+        "wall_order_max": 1.2747130177511474e-08,
+        "wall_order_mean": 1.2747130177511474e-08
+      }
+    ],
+    "rejected_steps": 0
+  },
+  "name": "homogeneous_control",
+  "schema": "v66-concurrent-pattern-branch-v1"
+}

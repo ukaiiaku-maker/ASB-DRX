@@ -144,6 +144,33 @@ def test_polarized_absorption_nucleates_wall_but_zero_gnd_control_does_not():
         result.channel_rates_m2_s["wall_minus"], atol=0.0)
 
 
+def test_neutral_pair_annihilation_cannot_run_uphill_in_declared_energy():
+    systems, topologies, parameters, state, _ = fixture(n=8)
+    parameters = candidate_parameters(parameters)
+    # The low-density family-correlation branch has a negative neutral-pair
+    # chemical potential. Unconditional mass-action annihilation would then
+    # increase the complete free energy and report negative dissipation.
+    dilute = replace(
+        state,
+        mobile_plus_m2=np.full_like(state.mobile_plus_m2, 1.0e12),
+        mobile_minus_m2=np.full_like(state.mobile_minus_m2, 1.0e12),
+        forest_plus_m2=np.zeros_like(state.forest_plus_m2),
+        forest_minus_m2=np.zeros_like(state.forest_minus_m2),
+        wall_plus_m2=np.zeros_like(state.wall_plus_m2),
+        wall_minus_m2=np.zeros_like(state.wall_minus_m2),
+        junction_m2=np.zeros_like(state.junction_m2),
+        wall_order=np.zeros_like(state.wall_order))
+    residual = wall_residual(
+        dilute, CommonWallDriving(resolved_stress_Pa=np.zeros_like(
+            dilute.mobile_plus_m2)), systems, topologies, parameters)
+    np.testing.assert_array_equal(
+        residual.channel_rates_m2_s["annihilation_affinity_factor"], 0.0)
+    np.testing.assert_array_equal(
+        residual.channel_rates_m2_s["annihilation_pairs"], 0.0)
+    assert np.min(residual.channel_rates_m2_s[
+        "neutral_pair_annihilation_dissipation_W_m3"]) >= 0.0
+
+
 def test_sign_resolved_arrhenius_transport_conserves_and_closes_energy():
     systems, topologies, parameters, state, _ = fixture(n=32)
     parameters = candidate_parameters(parameters)

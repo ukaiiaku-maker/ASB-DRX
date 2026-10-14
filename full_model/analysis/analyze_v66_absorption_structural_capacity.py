@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 from dataclasses import fields
 from datetime import datetime, timezone
 import hashlib
@@ -15,10 +16,10 @@ from full_model.production.common_tensorial_wall import CommonWallState
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = (ROOT/"full_model"/"verification"/"v66_polarized_absorption_handoff"
-          /"final_state.npz")
-OUT = (ROOT/"full_model"/"verification"/
-       "v66_absorption_structural_capacity.json")
+DEFAULT_SOURCE = (ROOT/"full_model"/"verification"/
+                  "v66_polarized_absorption_handoff"/"final_state.npz")
+DEFAULT_OUT = (ROOT/"full_model"/"verification"/
+               "v66_absorption_structural_capacity.json")
 BURGERS_M = 2.48e-10
 SPACING_M = 2.0e-7
 
@@ -54,7 +55,13 @@ def _periodic_separation_capacity_m1(signed_density_m2):
 
 
 def main():
-    with np.load(SOURCE) as data:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    args = parser.parse_args()
+    source = args.source.resolve()
+    out = args.out.resolve()
+    with np.load(source) as data:
         state = CommonWallState(**{
             item.name: np.asarray(data[item.name]).copy()
             for item in fields(CommonWallState)})
@@ -72,8 +79,8 @@ def main():
     result = {
         "schema": "v66-absorption-structural-capacity-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
-        "source_checkpoint": str(SOURCE.relative_to(ROOT)),
-        "source_sha256": _sha(SOURCE),
+        "source_checkpoint": str(source.relative_to(ROOT)),
+        "source_sha256": _sha(source),
         "method": (
             "periodic cumulative range of zero-mean signed density by family "
             "and candidate wall normal; unit crystallographic projection gives "
@@ -107,7 +114,8 @@ def main():
             "no sign selection, no imposed rotation, no grain allocation; "
             "crystallographic projection and closure can only reduce capacity"),
     }
-    OUT.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
     print(json.dumps(result, indent=2))
 
 

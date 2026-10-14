@@ -1004,8 +1004,20 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     k_ann = exp_floor_rate(stress, temperature,
                            parameters.annihilation_barrier_eV, parameters)
     k_ann = coordinated(k_ann, parameters.multi_hit_annihilation_log_factor)
+    annihilation_pair_mu = (
+        chemical["mobile_plus_mu_J_m"]
+        +chemical["mobile_minus_mu_J_m"])
+    # Neutral-pair annihilation is irreversible in the represented state, so
+    # it may operate only when removal lowers the declared Helmholtz energy.
+    # The previous unconditional mass-action term produced negative physical
+    # dissipation at high temperature/low density. The smooth positive
+    # affinity factor uses the same energy scale as every reversible exchange
+    # and approaches the legacy rate for a strongly favorable removal.
+    annihilation_affinity_factor = np.maximum(np.tanh(
+        annihilation_pair_mu/(2.0*parameters.reaction_energy_scale_J_m)), 0.0)
     annihilation = (k_ann*state.mobile_plus_m2*state.mobile_minus_m2
-                    /parameters.rho_reference_m2)
+                    /parameters.rho_reference_m2
+                    *annihilation_affinity_factor)
     mp_rate -= annihilation; mm_rate -= annihilation
 
     # Loop multiplication creates equal positive/negative content.  It raises
@@ -1025,9 +1037,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     transport_free_energy_rate = np.sum(
         chemical["mobile_plus_mu_J_m"]*transport_mp_rate
         +chemical["mobile_minus_mu_J_m"]*transport_mm_rate, axis=2)
-    multiplication_pair_mu = (
-        chemical["mobile_plus_mu_J_m"]
-        +chemical["mobile_minus_mu_J_m"])
+    multiplication_pair_mu = annihilation_pair_mu
     multiplication_cost = np.sum(
         np.maximum(multiplication_pair_mu, 0.0)*multiplication, axis=2)
     transport_driving_power = parameters.burgers_m*np.sum(
@@ -1218,6 +1228,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "wall_plus_turnover": transfer_p_turnover,
         "wall_minus_turnover": transfer_m_turnover,
         "annihilation_pairs": annihilation,
+        "annihilation_affinity_factor": annihilation_affinity_factor,
         "multiplication_pairs": multiplication,
         "junction": (np.stack(junction_extents, axis=2)
                      if junction_extents else np.zeros(grid+(0,))),

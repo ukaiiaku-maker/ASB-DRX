@@ -636,3 +636,47 @@ experiment, result, limitation, and next branch.
   If no concurrent regime exists, retain inherited-subgrain H1/H2 as the
   supported DRX route and classify endogenous H3 initiation negative at the
   explored conditions rather than retuning reaction barriers.
+
+## 2026-10-14T04:32:00Z — concurrent H3/H1 test and thermodynamic repair
+
+- Goals: G01, G04, G05.
+- Prediction: the unchanged Arrhenius hierarchy may expose a high-temperature
+  window where the finite transport mode, reservoir reactions, and compatible
+  absorption act on comparable physical times. A favorable tangent must then
+  amplify a nonlinear perturbation under nonlocal mechanics, complete energy,
+  and a homogeneous control; otherwise it is not a formation result.
+- Experiment: map 700--1500 K and 40--80 MPa with the production mobile
+  transport and full mobile-projected Jacobians. At the prospectively selected
+  1500 K/60 MPa condition, integrate broadband signed noise for 2 ms at two
+  timesteps with all reactions and absorption active from time zero. Diagnose
+  every failed energy channel, then rerun a wall-order-frozen isolation with a
+  fourth-order same-residual integrator and quantify Frank--Bilby capacity.
+- Thermodynamic repair: the original unconditional neutral-pair annihilation
+  ran uphill when the declared pair chemical potential was negative, producing
+  `-10.39 MW/m3` in its named dissipation channel. An affinity factor now makes
+  this irreversible process exactly inactive unless pair removal lowers the
+  same family-total free energy. This is a second-law hard-gate repair, not a
+  rate fit. Eighty-one focused tests pass, including a new uphill control.
+- Result: after the repair, the fixed-law map retains a mode-6, 0.8 micrometre
+  transport rate of `30.3243 1/s`; the full mobile projection is positive at
+  `726.518 1/s`, and 10% polarized absorption acts at `447.308 1/s`. The
+  fully coupled explicit-order trajectory is rejected: an unresolved initial
+  order excursion to `q=0.149` creates a roughly `4.9 MJ/m3` thermal error and
+  fails orientation refinement. Multi-start minimization of the authoritative
+  wall energy instead returns effectively `q=0`; the excursion is numerical,
+  not metastable ordering. With order frozen at its valid asymptotic value,
+  the same 2 ms transport/absorption trajectory closes energy to `3.72e-11`
+  and all reported refinement errors to below `1.3e-10`. Mobile polarization
+  rises only 1.99-fold, wall polarization is not separated from the homogeneous
+  control, and its dominant wavelength is a near-grid 0.383 micrometre mode.
+  The generous structural-capacity bounds are only `1.04e-5` degree in the
+  wall and `4.35e-5` degree in all signed content.
+- Decision: reject nonlinear wall formation at this fixed-law condition. The
+  correlation/absorption operators remain credible candidates, but H3 has not
+  created an endogenous structural boundary. Wall ordering requires an
+  implicit or asymptotic production integrator before a stronger precursor can
+  be tested. No barrier, threshold, or grain label was altered.
+- Next branch: follow the directive's negative-H3 path: retain H1/H2 inherited
+  subgrain maturation as the supported RX initiation route and execute a small
+  fixed-law common-driver temperature/rate matrix to discriminate dynamic
+  growth/recession, static viability, and thermal localization/ASB competition.

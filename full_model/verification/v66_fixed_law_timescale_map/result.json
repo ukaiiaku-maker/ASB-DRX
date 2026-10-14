@@ -1,0 +1,759 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_fixed_law_timescale_map/timescale_competition.png": "dd35f10b656db18bf3d8af65ed15f63bd461d6437bd06b634ac605e07cc48d03"
+  },
+  "claim_boundary": "homogeneous fixed-state timescale discriminator; rate exposure is an analytical residence estimate, not nonlinear wall or RX evidence",
+  "created_utc": "2026-10-14T04:19:49.889909+00:00",
+  "decision": {
+    "concurrent_interior_mode_selected": true,
+    "nonlinear_concurrent_run_authorized": true,
+    "positive_concurrent_mobile_projection": true,
+    "positive_transport_conditions": 10
+  },
+  "extrema": {
+    "best_concurrent_mobile_projection": {
+      "five_efold_time_s": 0.1648842003841103,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 726.5178763066804,
+      "full_mobile_projected_selected_growth_s_inv": 726.5178763066804,
+      "full_mobile_projected_selected_mode": 6,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.54404289278307,
+        "lock_gross_s_inv": 27871.2450955025,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.129650339844805,
+        "lock_net_s_inv": 1392.4021130240887,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.06064862477244174,
+      "reaction_shift_at_transport_mode_s_inv": 696.1935639204595,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.30765378072476,
+      "transport_growth_rate_s_inv": 30.32431238622087,
+      "transport_retention_ratio": 23.95826381991779
+    },
+    "fastest_transport_growth": {
+      "five_efold_time_s": 0.1648842003841103,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 726.5178763066804,
+      "full_mobile_projected_selected_growth_s_inv": 726.5178763066804,
+      "full_mobile_projected_selected_mode": 6,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.54404289278307,
+        "lock_gross_s_inv": 27871.2450955025,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.129650339844805,
+        "lock_net_s_inv": 1392.4021130240887,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.06064862477244174,
+      "reaction_shift_at_transport_mode_s_inv": 696.1935639204595,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.30765378072476,
+      "transport_growth_rate_s_inv": 30.32431238622087,
+      "transport_retention_ratio": 23.95826381991779
+    }
+  },
+  "fixed_parameters": {
+    "A": 1.25,
+    "D": 0.5,
+    "annihilation_barrier_eV": 1.2,
+    "exp_a": 2.2,
+    "exp_floor": 0.05,
+    "exp_n": 2.5,
+    "glide_barrier_eV": 1.9,
+    "junction_barrier_eV": 0.85,
+    "lock_barrier_eV": 0.85,
+    "order_barrier_eV": 0.7,
+    "reduced_modulus_b2_J_m": 1.8005992811386394e-09,
+    "taylor_alpha": 0.3,
+    "wall_barrier_eV": 0.8
+  },
+  "grid": [
+    24,
+    24
+  ],
+  "loading_exposure_rule": {
+    "maximum_shear_rate": "lambda * strain_window / target_efolds",
+    "strain_window": 0.01,
+    "target_efolds": 5.0
+  },
+  "records": [
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 0.3792081383143125,
+      "full_mobile_projected_selected_growth_s_inv": 0.37920813854166696,
+      "full_mobile_projected_selected_mode": 8,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.014458060674610227,
+        "lock_gross_s_inv": 15.180963708340741,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.014232348536572775,
+        "lock_net_s_inv": 0.7584162771632562,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 0.3792081383143125,
+      "resolved_stress_Pa": 40000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 700.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 0.3790868329333927,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 3.792081383143125e+299
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 0.3792081383143125,
+      "full_mobile_projected_selected_growth_s_inv": 0.37920813854166696,
+      "full_mobile_projected_selected_mode": 8,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.014458060674610227,
+        "lock_gross_s_inv": 15.180963708340741,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.014232348536572775,
+        "lock_net_s_inv": 0.7584162771632562,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 0.3792081383143125,
+      "resolved_stress_Pa": 50000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 700.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 0.3790868329333927,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 3.792081383143125e+299
+    },
+    {
+      "five_efold_time_s": 3257249.409939631,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 0.379209448124055,
+      "full_mobile_projected_selected_growth_s_inv": 0.3792094535891451,
+      "full_mobile_projected_selected_mode": 5,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.014458109105198867,
+        "lock_gross_s_inv": 15.181014628248915,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.014232396211086863,
+        "lock_net_s_inv": 0.7584188210391203,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 3.0700750054584667e-09,
+      "reaction_shift_at_transport_mode_s_inv": 0.3792079130865523,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 700.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 0.3790921275065114,
+      "transport_growth_rate_s_inv": 1.5350375027292333e-06,
+      "transport_retention_ratio": 247035.95022912225
+    },
+    {
+      "five_efold_time_s": 57178801.34315712,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 0.37927891607576786,
+      "full_mobile_projected_selected_growth_s_inv": 0.3792789960273908,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.014460761816786386,
+        "lock_gross_s_inv": 15.183800664105128,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.014235007509844718,
+        "lock_net_s_inv": 0.7585580068630718,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 1.748899900854034e-10,
+      "reaction_shift_at_transport_mode_s_inv": 0.37927882863077284,
+      "resolved_stress_Pa": 70000000.0,
+      "selected_mode": 2,
+      "selected_wavelength_m": 2.4e-06,
+      "temperature_K": 700.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 0.3791614389654294,
+      "transport_growth_rate_s_inv": 8.74449950427017e-08,
+      "transport_retention_ratio": 4337342.759188859
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 0.37951615147222506,
+      "full_mobile_projected_selected_growth_s_inv": 0.37951615147222506,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.014469802600287107,
+        "lock_gross_s_inv": 15.193294557800744,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.014243907153076395,
+        "lock_net_s_inv": 0.7590323063641281,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 0.37951619996837793,
+      "resolved_stress_Pa": 80000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 700.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 0.3793955024590955,
+      "transport_growth_rate_s_inv": -4.8496152858744364e-08,
+      "transport_retention_ratio": 3.795161514722251e+299
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 8.685959395717894,
+      "full_mobile_projected_selected_growth_s_inv": 8.685959405055083,
+      "full_mobile_projected_selected_mode": 3,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.33116939008398116,
+        "lock_gross_s_inv": 347.7278595881802,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.32599933631462036,
+        "lock_net_s_inv": 17.37191879260735,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 8.685959395717894,
+      "resolved_stress_Pa": 40000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 900.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 7.222413782754579,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 8.685959395717895e+300
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 8.685959395717894,
+      "full_mobile_projected_selected_growth_s_inv": 8.685959405055083,
+      "full_mobile_projected_selected_mode": 3,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.33116939008398116,
+        "lock_gross_s_inv": 347.7278595881802,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.32599933631462036,
+        "lock_net_s_inv": 17.37191879260735,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 8.685959395717894,
+      "resolved_stress_Pa": 50000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 900.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 7.222413782754579,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 8.685959395717895e+300
+    },
+    {
+      "five_efold_time_s": 2971.581819253451,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 8.687517920421211,
+      "full_mobile_projected_selected_growth_s_inv": 8.687517920421211,
+      "full_mobile_projected_selected_mode": 6,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.33117025289416335,
+        "lock_gross_s_inv": 347.728766746579,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.3260001856550341,
+        "lock_net_s_inv": 17.3719641127668,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 3.3652110587055264e-06,
+      "reaction_shift_at_transport_mode_s_inv": 8.685835314891857,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 900.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 7.222492239352675,
+      "transport_growth_rate_s_inv": 0.0016826055293527632,
+      "transport_retention_ratio": 5163.1340613524435
+    },
+    {
+      "five_efold_time_s": 52444.10273354832,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 8.687196495533811,
+      "full_mobile_projected_selected_growth_s_inv": 8.687196495533811,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.3312175110243086,
+        "lock_gross_s_inv": 347.778400051951,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.3260467060144758,
+        "lock_net_s_inv": 17.374443712046975,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 1.9067920850523072e-07,
+      "reaction_shift_at_transport_mode_s_inv": 8.68710115592956,
+      "resolved_stress_Pa": 70000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 900.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 7.223519295217589,
+      "transport_growth_rate_s_inv": 9.533960425261535e-05,
+      "transport_retention_ratio": 91118.44509565923
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 8.691369737903665,
+      "full_mobile_projected_selected_growth_s_inv": 8.691369737903665,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 0.3313785583636363,
+        "lock_gross_s_inv": 347.9475188335822,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 0.3262052391618864,
+        "lock_net_s_inv": 17.382892611552126,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 8.691422821733706,
+      "resolved_stress_Pa": 80000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 900.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 7.2269873352806835,
+      "transport_growth_rate_s_inv": -5.308383004138553e-05,
+      "transport_retention_ratio": 8.691369737903665e+300
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 63.71390898278173,
+      "full_mobile_projected_selected_growth_s_inv": 63.7139090666667,
+      "full_mobile_projected_selected_mode": 8,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 2.429218860250363,
+        "lock_gross_s_inv": 2550.679803262881,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 2.391295089210247,
+        "lock_net_s_inv": 127.4278180088988,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 63.71390898278173,
+      "resolved_stress_Pa": 40000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1100.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 47.11855592797141,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 6.371390898278173e+301
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 63.71390898278173,
+      "full_mobile_projected_selected_growth_s_inv": 63.7139090666667,
+      "full_mobile_projected_selected_mode": 8,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 2.429218860250363,
+        "lock_gross_s_inv": 2550.679803262881,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 2.391295089210247,
+        "lock_net_s_inv": 127.4278180088988,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 63.71390898278173,
+      "resolved_stress_Pa": 50000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1100.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 47.11855592797141,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 6.371390898278173e+301
+    },
+    {
+      "five_efold_time_s": 34.5564575215139,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 63.85780444857747,
+      "full_mobile_projected_selected_growth_s_inv": 63.85780444857747,
+      "full_mobile_projected_selected_mode": 6,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 2.429224038481588,
+        "lock_gross_s_inv": 2550.685247653829,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 2.3913001866014723,
+        "lock_net_s_inv": 127.428090001823,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.00028938151411423687,
+      "reaction_shift_at_transport_mode_s_inv": 63.71311369152035,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 1100.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 47.11897471042225,
+      "transport_growth_rate_s_inv": 0.14469075705711842,
+      "transport_retention_ratio": 441.33990136888167
+    },
+    {
+      "five_efold_time_s": 611.4773156786431,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 63.72234908041501,
+      "full_mobile_projected_selected_growth_s_inv": 63.72234908041501,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 2.42950765856139,
+        "lock_gross_s_inv": 2550.983122367304,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 2.3915793789439683,
+        "lock_net_s_inv": 127.4429713384494,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 1.635383642793287e-05,
+      "reaction_shift_at_transport_mode_s_inv": 63.71417216220104,
+      "resolved_stress_Pa": 70000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1100.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 47.12445681132829,
+      "transport_growth_rate_s_inv": 0.008176918213966435,
+      "transport_retention_ratio": 7792.9541928859235
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 63.69446856004135,
+      "full_mobile_projected_selected_growth_s_inv": 63.69446856004135,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 2.4304741303199546,
+        "lock_gross_s_inv": 2551.998032175846,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 2.3925307626203973,
+        "lock_net_s_inv": 127.4936745832128,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 63.699029279558076,
+      "resolved_stress_Pa": 80000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1100.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 47.14296707044241,
+      "transport_growth_rate_s_inv": -0.004560719516723398,
+      "transport_retention_ratio": 6.369446856004135e+301
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 253.1446308767653,
+      "full_mobile_projected_selected_growth_s_inv": 253.14463098208878,
+      "full_mobile_projected_selected_mode": 3,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 9.651639983160935,
+        "lock_gross_s_inv": 10134.221982318983,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 9.500963322909215,
+        "lock_net_s_inv": 506.2892616990816,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 253.1446308767653,
+      "resolved_stress_Pa": 40000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1300.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 172.61686997618804,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 2.531446308767653e+302
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 253.1446308767653,
+      "full_mobile_projected_selected_growth_s_inv": 253.14463098208878,
+      "full_mobile_projected_selected_mode": 3,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 9.651639983160935,
+        "lock_gross_s_inv": 10134.221982318983,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 9.500963322909215,
+        "lock_net_s_inv": 506.2892616990816,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 253.1446308767653,
+      "resolved_stress_Pa": 50000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1300.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 172.61686997618804,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 2.531446308767653e+302
+    },
+    {
+      "five_efold_time_s": 1.5822996456472993,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 256.30190458716584,
+      "full_mobile_projected_selected_growth_s_inv": 256.30190458716584,
+      "full_mobile_projected_selected_mode": 6,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 9.651657391814002,
+        "lock_gross_s_inv": 10134.240285772226,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 9.500980459786941,
+        "lock_net_s_inv": 506.2901761098624,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.006319915464500482,
+      "reaction_shift_at_transport_mode_s_inv": 253.1419468549156,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 1300.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 172.61816813783935,
+      "transport_growth_rate_s_inv": 3.1599577322502412,
+      "transport_retention_ratio": 81.10928256140008
+    },
+    {
+      "five_efold_time_s": 28.05002710421236,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 253.2999885734927,
+      "full_mobile_projected_selected_growth_s_inv": 253.3049267931095,
+      "full_mobile_projected_selected_mode": 2,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 9.652610883113777,
+        "lock_gross_s_inv": 10135.241699167102,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 9.501919065649126,
+        "lock_net_s_inv": 506.3402050957304,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0003565058943739227,
+      "reaction_shift_at_transport_mode_s_inv": 253.12173562630574,
+      "resolved_stress_Pa": 70000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1300.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 172.63516164985626,
+      "transport_growth_rate_s_inv": 0.17825294718696133,
+      "transport_retention_ratio": 1421.0143089966302
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 252.99507329599376,
+      "full_mobile_projected_selected_growth_s_inv": 252.99507329599376,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 9.655859898289139,
+        "lock_gross_s_inv": 10138.653549863091,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 9.505117358796257,
+        "lock_net_s_inv": 506.5106556121016,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 253.09461511424837,
+      "resolved_stress_Pa": 80000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1300.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 172.69253782705673,
+      "transport_growth_rate_s_inv": -0.0995418182546126,
+      "transport_retention_ratio": 2.5299507329599374e+302
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 696.1999670271828,
+      "full_mobile_projected_selected_growth_s_inv": 696.1999674666671,
+      "full_mobile_projected_selected_mode": 8,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.544001399051893,
+        "lock_gross_s_inv": 27871.20146900447,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.129609493893373,
+        "lock_net_s_inv": 1392.399933515141,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 696.1999670271828,
+      "resolved_stress_Pa": 40000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.30473836217686,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 6.961999670271827e+302
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 696.1999670271828,
+      "full_mobile_projected_selected_growth_s_inv": 696.1999674666671,
+      "full_mobile_projected_selected_mode": 8,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.544001399051893,
+        "lock_gross_s_inv": 27871.20146900447,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.129609493893373,
+        "lock_net_s_inv": 1392.399933515141,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 696.1999670271828,
+      "resolved_stress_Pa": 50000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.30473836217686,
+      "transport_growth_rate_s_inv": 0.0,
+      "transport_retention_ratio": 6.961999670271827e+302
+    },
+    {
+      "five_efold_time_s": 0.1648842003841103,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 726.5178763066804,
+      "full_mobile_projected_selected_growth_s_inv": 726.5178763066804,
+      "full_mobile_projected_selected_mode": 6,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.54404289278307,
+        "lock_gross_s_inv": 27871.2450955025,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.129650339844805,
+        "lock_net_s_inv": 1392.4021130240887,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.06064862477244174,
+      "reaction_shift_at_transport_mode_s_inv": 696.1935639204595,
+      "resolved_stress_Pa": 60000000.0,
+      "selected_mode": 6,
+      "selected_wavelength_m": 8e-07,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.30765378072476,
+      "transport_growth_rate_s_inv": 30.32431238622087,
+      "transport_retention_ratio": 23.95826381991779
+    },
+    {
+      "five_efold_time_s": 2.9268930754230817,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 697.8406761418016,
+      "full_mobile_projected_selected_growth_s_inv": 697.8496745945712,
+      "full_mobile_projected_selected_mode": 2,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.546315535371694,
+        "lock_gross_s_inv": 27873.6319602029,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.1318875030542,
+        "lock_net_s_inv": 1392.5213569057648,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0034165921823278433,
+      "reaction_shift_at_transport_mode_s_inv": 696.1323800506377,
+      "resolved_stress_Pa": 70000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.34581763350855,
+      "transport_growth_rate_s_inv": 1.7082960911639218,
+      "transport_retention_ratio": 408.5010085496001
+    },
+    {
+      "five_efold_time_s": null,
+      "full_mobile_projected_growth_at_transport_mode_s_inv": 695.1259553140153,
+      "full_mobile_projected_selected_growth_s_inv": 695.1259553140153,
+      "full_mobile_projected_selected_mode": 1,
+      "gross_turnover_rates": {
+        "junction_gross_s_inv": 26.554059324921408,
+        "lock_gross_s_inv": 27881.763856232126,
+        "wall_exchange_gross_s_inv": 0.0
+      },
+      "local_fractional_rates": {
+        "annihilation_s_inv": 0.0,
+        "junction_net_s_inv": 26.139510400367044,
+        "lock_net_s_inv": 1392.9276132167113,
+        "wall_exchange_net_s_inv": 0.0
+      },
+      "one_percent_window_maximum_shear_rate_s_inv": 0.0,
+      "reaction_shift_at_transport_mode_s_inv": 696.0807686136624,
+      "resolved_stress_Pa": 80000000.0,
+      "selected_mode": 1,
+      "selected_wavelength_m": 4.8e-06,
+      "temperature_K": 1500.0,
+      "ten_percent_polarization_absorption_rate_s_inv": 447.4746687560423,
+      "transport_growth_rate_s_inv": -0.9548132996470207,
+      "transport_retention_ratio": 6.951259553140153e+302
+    }
+  ],
+  "resolved_stresses_Pa": [
+    40000000.0,
+    50000000.0,
+    60000000.0,
+    70000000.0,
+    80000000.0
+  ],
+  "schema": "v66-fixed-law-timescale-map-v1",
+  "spacing_m": 2e-07,
+  "temperatures_K": [
+    700.0,
+    900.0,
+    1100.0,
+    1300.0,
+    1500.0
+  ]
+}

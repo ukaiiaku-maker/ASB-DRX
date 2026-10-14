@@ -1,0 +1,67 @@
+{
+  "all_family_reservoirs": {
+    "all_axes": [
+      {
+        "family": 3,
+        "maximum_separable_signed_content_m1": 3063.6583386861403,
+        "normal_axis": 0,
+        "transverse_index": 22
+      },
+      {
+        "family": 1,
+        "maximum_separable_signed_content_m1": 2838.0205325165975,
+        "normal_axis": 1,
+        "transverse_index": 20
+      }
+    ],
+    "best": {
+      "family": 3,
+      "maximum_separable_signed_content_m1": 3063.6583386861403,
+      "normal_axis": 0,
+      "transverse_index": 22
+    },
+    "misorientation_upper_bound_deg": 4.3532603783840744e-05,
+    "misorientation_upper_bound_rad": 7.597872679941629e-07
+  },
+  "burgers_m": 2.48e-10,
+  "claim_boundary": "no sign selection, no imposed rotation, no grain allocation; crystallographic projection and closure can only reduce capacity",
+  "created_utc": "2026-10-14T04:29:12.424643+00:00",
+  "decision": {
+    "absorbed_wall_content_can_support_recognition_threshold": false,
+    "all_signed_content_can_support_recognition_threshold": false,
+    "reason": "capacity is an upper bound and no closed ordered interface or two-degree compatible plateau is present",
+    "structural_handoff_allowed": false
+  },
+  "method": "periodic cumulative range of zero-mean signed density by family and candidate wall normal; unit crystallographic projection gives a generous Frank--Bilby upper bound",
+  "observed_orientation_span_deg": 9.096796795483306e-07,
+  "observed_orientation_span_rad": 1.5876905546605293e-08,
+  "recognition_threshold_deg": 2.0,
+  "schema": "v66-absorption-structural-capacity-v1",
+  "source_checkpoint": "full_model/verification/v66_concurrent_pattern_absorption_frozen_order/final_state.npz",
+  "source_sha256": "fe6876e4f005cd8e93780a4a0326fdc1ddfb0c2323b11ad91d359c28f1431cb5",
+  "spacing_m": 2e-07,
+  "wall_reservoir": {
+    "all_axes": [
+      {
+        "family": 3,
+        "maximum_separable_signed_content_m1": 733.9538185459992,
+        "normal_axis": 0,
+        "transverse_index": 22
+      },
+      {
+        "family": 1,
+        "maximum_separable_signed_content_m1": 658.3776318642103,
+        "normal_axis": 1,
+        "transverse_index": 20
+      }
+    ],
+    "best": {
+      "family": 3,
+      "maximum_separable_signed_content_m1": 733.9538185459992,
+      "normal_axis": 0,
+      "transverse_index": 22
+    },
+    "misorientation_upper_bound_deg": 1.0429009127728707e-05,
+    "misorientation_upper_bound_rad": 1.820205469994078e-07
+  }
+}
