@@ -13,6 +13,8 @@ from full_model.production.structural_interface_network import (
     network_boundary_energy_J_per_m,
     network_junction_disclination_energy_J_per_m,
     JunctionDisclinationParameters,
+    JunctionReactionParameters,
+    relax_junction_cycle_interval,
     project_content_to_compatible_orientations,
 )
 from full_model.analysis.run_v66_multigrain_handoff import _initial
@@ -140,6 +142,66 @@ def test_junction_disclination_energy_is_zero_for_compatible_cycle_and_quadratic
         ids, tuple(adjusted), changed, B, p)
     assert e1 > 0.0
     assert e2 == pytest.approx(.25*e1, rel=1e-12)
+
+
+def test_arrhenius_cycle_reaction_is_downhill_heat_complete_and_reduces_closure():
+    ids = (10, 20, 30)
+    old_lengths = np.array((4e-6, 5e-6, 6e-6))
+    changed = old_lengths*np.array((.7, 1.1, .95))
+    interfaces = initialize_structural_interfaces(
+        ids, np.radians((0.0, 2.0, 5.0)),
+        ((10, 20), (20, 30), (10, 30)), old_lengths, B)
+    before = audit_network_compatibility(ids, interfaces, changed, B)
+    ledger = relax_junction_cycle_interval(
+        ids, interfaces, changed, B, temperature_K=1000.0, dt_s=1e-3,
+        represented_thickness_m=2*B,
+        reaction_parameters=JunctionReactionParameters(
+            maximum_fraction_per_interval=.1))
+    after = audit_network_compatibility(
+        ids, ledger.committed_interfaces, changed, B)
+    assert ledger.accepted
+    assert ledger.reacted_fraction == pytest.approx(.1)
+    assert after.maximum_cycle_residual_rad == pytest.approx(
+        .9*before.maximum_cycle_residual_rad, rel=1e-12)
+    assert ledger.generated_heat_J == pytest.approx(-ledger.delta_helmholtz_J)
+    assert ledger.absolute_reacted_content > 0.0
+
+
+def test_arrhenius_cycle_reaction_rolls_back_uphill_boundary_projection():
+    # Actual V66 prepared-handoff lengths: its least-squares compatible
+    # boundary state is more expensive than the tiny cycle energy.
+    ids = (10, 20, 30)
+    old_lengths = np.array((3.961135857179654e-6,
+                            3.961135857179654e-6,
+                            4.208419290715075e-6))
+    changed = np.array((3.961194833151073e-6,
+                        3.961020965551564e-6,
+                        4.2084570361496004e-6))
+    interfaces = initialize_structural_interfaces(
+        ids, np.radians((0.0, 2.5, 5.0)),
+        ((10, 20), (10, 30), (20, 30)), old_lengths, B)
+    ledger = relax_junction_cycle_interval(
+        ids, interfaces, changed, B, temperature_K=1000.0, dt_s=1e-3,
+        represented_thickness_m=2*B)
+    assert not ledger.accepted
+    assert ledger.classification == "REJECTED_UPHILL_JUNCTION_RELAXATION"
+    assert ledger.committed_interfaces == interfaces
+    assert ledger.generated_heat_J == 0.0
+    assert np.max(np.abs(ledger.signed_edge_content_change)) == 0.0
+
+
+def test_compatible_cycle_has_no_reaction_or_owner_allocation():
+    ids = (10, 20, 30)
+    lengths = np.array((4e-6, 5e-6, 6e-6))
+    interfaces = initialize_structural_interfaces(
+        ids, np.radians((0.0, 2.0, 5.0)),
+        ((10, 20), (20, 30), (10, 30)), lengths, B)
+    ledger = relax_junction_cycle_interval(
+        ids, interfaces, lengths, B, temperature_K=1000.0, dt_s=1.0,
+        represented_thickness_m=2*B)
+    assert not ledger.accepted
+    assert ledger.classification == "NO_CYCLE_REACTION"
+    assert ledger.committed_interfaces == interfaces
 
 
 def test_diffuse_pair_length_is_owner_swap_and_translation_invariant():

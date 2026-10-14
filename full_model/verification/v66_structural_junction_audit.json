@@ -18,6 +18,17 @@
         "R1e-07_m": 1.2955829923449454e-13,
         "R5e-07_m": 3.2389574808623634e-12
       },
+      "one_microsecond_arrhenius_reaction": {
+        "absolute_reacted_content": 0.03470369429624043,
+        "accepted": true,
+        "activation_enthalpy_eV": 1.4999993657837327,
+        "classification": "ACCEPTED_DOWNHILL_JUNCTION_RELAXATION",
+        "delta_helmholtz_J": -6.835807241531932e-21,
+        "frank_backstress_Pa": 661355.1427372234,
+        "generated_heat_J": 6.835807241531932e-21,
+        "rate_s": 27563.59869590253,
+        "reacted_fraction": 0.027187189040135812
+      },
       "projection_content_balance_max_abs": 0.0
     },
     "prepared_static_handoff": {
@@ -38,10 +49,21 @@
         "R1e-07_m": 2.6924809173654775e-16,
         "R5e-07_m": 6.7312022934136936e-15
       },
+      "one_microsecond_arrhenius_reaction": {
+        "absolute_reacted_content": 0.0,
+        "accepted": false,
+        "activation_enthalpy_eV": 1.4999999986819712,
+        "classification": "REJECTED_UPHILL_JUNCTION_RELAXATION",
+        "delta_helmholtz_J": 3.0770405451061028e-22,
+        "frank_backstress_Pa": 30149.383280567297,
+        "generated_heat_J": 0.0,
+        "rate_s": 27563.39625637204,
+        "reacted_fraction": 0.02718699210434717
+      },
       "projection_content_balance_max_abs": 0.0
     }
   },
-  "created_utc": "2026-10-14T01:32:23.943694+00:00",
+  "created_utc": "2026-10-14T01:35:19.589099+00:00",
   "decision": {
     "conservative_cycle_reservoir_required": true,
     "fixed_labels_rejected": true,

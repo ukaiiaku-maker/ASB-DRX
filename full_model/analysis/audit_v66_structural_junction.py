@@ -13,7 +13,7 @@ from full_model.production.structural_boundary import StructuralBoundaryParamete
 from full_model.production.structural_interface_network import (
     JunctionDisclinationParameters, initialize_structural_interfaces,
     network_junction_disclination_energy_J_per_m,
-    project_content_to_compatible_orientations,
+    project_content_to_compatible_orientations, relax_junction_cycle_interval,
 )
 
 
@@ -47,6 +47,11 @@ def main():
         extrinsic = (boundary.extrinsic_line_energy_J_m
                      *float(np.sum(np.abs(
                          projection.junction_reservoir_change))))
+        reaction = relax_junction_cycle_interval(
+            ids, interfaces, new_lengths, boundary.burgers_m,
+            temperature_K=1000.0, dt_s=1e-6,
+            represented_thickness_m=2*boundary.burgers_m,
+            boundary_parameters=boundary)
         cases[name] = {
             "fundamental_cycle_residual_deg": np.degrees(
                 projection.before_compatibility.fundamental_cycle_residual_rad
@@ -63,6 +68,18 @@ def main():
                 projection.delta_boundary_energy_J_per_m+extrinsic),
             "projection_content_balance_max_abs": float(np.max(np.abs(
                 projection.content_balance_residual))),
+            "one_microsecond_arrhenius_reaction": {
+                "classification": reaction.classification,
+                "accepted": reaction.accepted,
+                "frank_backstress_Pa": reaction.frank_backstress_Pa,
+                "activation_enthalpy_eV": (
+                    reaction.activation_enthalpy_J/1.602176634e-19),
+                "rate_s": reaction.rate_s,
+                "reacted_fraction": reaction.reacted_fraction,
+                "absolute_reacted_content": reaction.absolute_reacted_content,
+                "delta_helmholtz_J": reaction.delta_helmholtz_J,
+                "generated_heat_J": reaction.generated_heat_J,
+            },
         }
     payload = {
         "schema": "v66-structural-junction-audit-v1",
@@ -81,9 +98,9 @@ def main():
             "silent_projection_rejected": True,
             "conservative_cycle_reservoir_required": True,
             "production_status": (
-                "junction energy is evaluable in the complete functional; "
-                "junction relaxation kinetics remain disabled pending a "
-                "resolved downhill complete-energy event"),
+                "bounded EXP-floor reaction is evaluable and discriminates "
+                "an uphill static rollback from a downhill deformed-state "
+                "event; coupled runtime promotion is next"),
         },
     }
     OUT.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")

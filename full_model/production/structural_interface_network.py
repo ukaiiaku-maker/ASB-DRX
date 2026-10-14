@@ -11,13 +11,16 @@ change.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import math
 
 import numpy as np
 
 from .structural_boundary import (
     StructuralBoundaryParameters, read_shockley_energy_J_m2,
+)
+from .arrhenius_kinetics import (
+    ActivatedProcess, EV_J, activated_rate_s, exp_floor_enthalpy_j,
 )
 from .tensorial_nye import spectral_derivatives
 
@@ -100,6 +103,52 @@ class CompatibilityReactionLedger:
     delta_boundary_energy_J_per_m: float
     before_compatibility: StructuralNetworkAudit
     candidate_compatibility: StructuralNetworkAudit
+
+
+@dataclass(frozen=True)
+class JunctionReactionParameters:
+    """Bounded EXP-floor kinetics for common-axis junction relaxation."""
+
+    process: ActivatedProcess = field(default_factory=lambda: ActivatedProcess(
+        "structural-junction-relaxation", 1.0e12, 0.0, 1.0e12))
+    activation_enthalpy_eV: float = 1.50
+    critical_backstress_Pa: float = 1.0e9
+    exp_a: float = 1.0
+    exp_n: float = 2.0
+    barrier_floor_fraction: float = 0.05/1.50
+    maximum_fraction_per_interval: float = 0.10
+
+    def __post_init__(self):
+        values = (self.activation_enthalpy_eV, self.critical_backstress_Pa,
+                  self.exp_a, self.exp_n, self.maximum_fraction_per_interval)
+        if any(not math.isfinite(value) or value <= 0.0 for value in values):
+            raise ValueError("junction reaction parameters must be positive finite")
+        if self.exp_n < 1.0:
+            raise ValueError("EXP-floor exponent must be at least one")
+        if not 0.0 <= self.barrier_floor_fraction <= 1.0:
+            raise ValueError("barrier floor fraction must lie in [0, 1]")
+        if self.maximum_fraction_per_interval > 1.0:
+            raise ValueError("maximum reaction fraction cannot exceed one")
+
+
+@dataclass(frozen=True)
+class JunctionReactionLedger:
+    before_interfaces: tuple[StructuralInterface, ...]
+    candidate_interfaces: tuple[StructuralInterface, ...]
+    committed_interfaces: tuple[StructuralInterface, ...]
+    temperature_K: float
+    frank_backstress_Pa: float
+    activation_enthalpy_J: float
+    rate_s: float
+    reacted_fraction: float
+    signed_edge_content_change: np.ndarray
+    absolute_reacted_content: float
+    energy_before_J_per_m: float
+    energy_candidate_J_per_m: float
+    delta_helmholtz_J: float
+    generated_heat_J: float
+    accepted: bool
+    classification: str
 
 
 def pair_interface_length_m(supports, owner_a, owner_b, spacing_m):
@@ -331,3 +380,86 @@ def project_content_to_compatible_orientations(
         tuple(interfaces), candidate, edge_change, reservoir_change, residual,
         before_energy, candidate_energy, candidate_energy-before_energy,
         before, after)
+
+
+def relax_junction_cycle_interval(
+        owner_ids, interfaces, lengths_m, burgers_m, *, temperature_K, dt_s,
+        represented_thickness_m, boundary_parameters=StructuralBoundaryParameters(),
+        disclination_parameters=JunctionDisclinationParameters(),
+        reaction_parameters=JunctionReactionParameters(),
+        energy_tolerance_J=1e-24):
+    """Attempt one energy-complete Arrhenius junction-cycle relaxation.
+
+    Edge-content changes are declared as a junction reaction term; they are not
+    conservative interface motion. The transaction has no external work, so a
+    committed Helmholtz decrease is deposited as heat. Uphill candidates roll
+    back atomically. This common-axis operator never allocates an owner.
+    """
+    temperature = float(temperature_K)
+    dt = float(dt_s)
+    thickness = float(represented_thickness_m)
+    if not math.isfinite(temperature) or temperature <= 0.0:
+        raise ValueError("temperature must be positive finite")
+    if not math.isfinite(dt) or dt < 0.0:
+        raise ValueError("time interval must be finite and nonnegative")
+    if not math.isfinite(thickness) or thickness <= 0.0:
+        raise ValueError("represented thickness must be positive finite")
+    projection = project_content_to_compatible_orientations(
+        owner_ids, interfaces, lengths_m, burgers_m,
+        parameters=boundary_parameters)
+    omega = projection.before_compatibility.fundamental_cycle_residual_rad
+    maximum_omega = float(np.max(np.abs(omega))) if len(omega) else 0.0
+    cycle_resolution = (4096.0*np.finfo(float).eps
+                        *max(float(np.max(np.abs(
+                            projection.before_compatibility.
+                            implied_edge_misorientation_rad), initial=0.0)), 1.0))
+    if maximum_omega <= cycle_resolution:
+        maximum_omega = 0.0
+    backstress = (disclination_parameters.shear_modulus_Pa*maximum_omega
+                  /(4.0*math.pi*(1.0-disclination_parameters.poisson_ratio)))
+    enthalpy = exp_floor_enthalpy_j(
+        backstress, reaction_parameters.activation_enthalpy_eV*EV_J,
+        reaction_parameters.critical_backstress_Pa,
+        reaction_parameters.exp_a, reaction_parameters.exp_n,
+        reaction_parameters.barrier_floor_fraction)
+    rate = activated_rate_s(
+        reaction_parameters.process, enthalpy, temperature)
+    fraction = min(
+        -math.expm1(-rate*dt), reaction_parameters.maximum_fraction_per_interval)
+    old_content = np.asarray(
+        [item.signed_integrated_content for item in interfaces], dtype=float)
+    target_content = np.asarray(
+        [item.signed_integrated_content
+         for item in projection.candidate_interfaces], dtype=float)
+    candidate_content = old_content+fraction*(target_content-old_content)
+    candidate = tuple(
+        StructuralInterface(item.interface_id, item.owner_a, item.owner_b,
+                            float(content))
+        for item, content in zip(interfaces, candidate_content))
+
+    def energy(items):
+        return (network_boundary_energy_J_per_m(
+                    items, lengths_m, burgers_m, boundary_parameters)
+                +network_junction_disclination_energy_J_per_m(
+                    owner_ids, items, lengths_m, burgers_m,
+                    disclination_parameters))
+
+    before_energy = energy(interfaces)
+    candidate_energy = energy(candidate)
+    delta_J = (candidate_energy-before_energy)*thickness
+    active = fraction > 0.0 and maximum_omega > 0.0
+    accepted = active and delta_J <= float(energy_tolerance_J)
+    if not active:
+        classification = "NO_CYCLE_REACTION"
+    elif accepted:
+        classification = "ACCEPTED_DOWNHILL_JUNCTION_RELAXATION"
+    else:
+        classification = "REJECTED_UPHILL_JUNCTION_RELAXATION"
+    committed = candidate if accepted else tuple(interfaces)
+    change = candidate_content-old_content if accepted else np.zeros_like(old_content)
+    heat = max(-delta_J, 0.0) if accepted else 0.0
+    return JunctionReactionLedger(
+        tuple(interfaces), candidate, committed, temperature, backstress,
+        enthalpy, rate, fraction, change, float(np.sum(np.abs(change))),
+        before_energy, candidate_energy, delta_J, heat, accepted,
+        classification)

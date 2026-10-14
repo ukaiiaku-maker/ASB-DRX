@@ -349,3 +349,26 @@ experiment, result, limitation, and next branch.
 - Next branch: implement a bounded Arrhenius cycle-relaxation event with exact
   reservoir, heat, and rollback ledgers; then determine whether it is active
   and downhill on the retained common trajectory.
+
+## 2026-10-14T01:36:00Z — Arrhenius junction-cycle reaction discriminator
+
+- Goals: G01, G02, G05, G06.
+- Prediction: the same finite-rate junction reaction can be unfavorable in a
+  nearly compatible static handoff and favorable after deformation changes the
+  three interface measures; acceptance must follow the full structural energy,
+  not cycle-error minimization alone.
+- Experiment: drive the minimum length-weighted compatibility reaction with a
+  bounded EXP-floor rate based on the declared Frank backstress, at 1000 K for
+  one microsecond. Include Read--Shockley and wedge-disclination energies,
+  deposit a committed energy decrease as heat, and roll back uphill events.
+- Result: both geometries give a 2.72% kinetic proposal without retuning. The
+  static handoff candidate is uphill by 3.08e-22 J and rolls back exactly. The
+  4%-shear geometry accepts, reacts 0.0347 absolute line-count units, lowers
+  Helmholtz energy by 6.84e-21 J, and generates exactly that heat. The cycle
+  reaction tests pass direction reversal, zero-cycle inactivity, quadratic
+  disclination energy, downhill heat closure, and uphill rollback.
+- Limitation: this is the common-axis structural subsystem. The accepted event
+  is not yet coupled to derived owner orientations and common-state thermal
+  deposition, and therefore is not yet a production DRX claim.
+- Next branch: promote the event through a structural multigrain runtime and
+  re-evaluate the complete common energy before publication.

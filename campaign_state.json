@@ -51,12 +51,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_an_explicit_polycrystal_Frank_cycle_reservoir_can_relax_by_a_bounded_energy_complete_Arrhenius_junction_reaction_on_the_retained_common_trajectory",
-    "next_executable_experiment": "implement_cycle_reaction_kinetics_with_exact_content_heat_and_rollback_ledgers_then_exercise_on_the_retained_three_owner_front",
-    "source_identity": "2be1347+structural-development",
-    "expected_discriminatory_observation": "a_junction_reaction_is_accepted_only_when_complete_boundary_plus_disclination_energy_falls_and_its_cycle_residual_decays_without_silent_owner_rotation_or_line_loss",
+    "physical_uncertainty": "whether_the_downhill_deformed_state_cycle_reaction_remains_energy_complete_when_promoted_with_derived_owner_rotation_and_thermal_deposition_in_the_coupled_runtime",
+    "next_executable_experiment": "integrate_the_structural_runtime_around_the_complete_front_then_verify_full_energy_heat_restart_and_static_rollback",
+    "source_identity": "a2a1533+cycle-reaction-development",
+    "expected_discriminatory_observation": "the_deformed_geometry_reaction_reduces_Frank_closure_and_heats_the_common_state_while_the_uphill_static_candidate_atomically_rolls_back",
     "resource_need": "lightweight_local",
-    "result_status": "bicrystal_Ltheta_conservation_qualified_polycrystal_cycle_reservoir_energetic_implemented_reaction_kinetics_next"
+    "result_status": "bicrystal_Ltheta_conservation_qualified_polycrystal_EXP_floor_cycle_reaction_discriminates_deformed_acceptance_from_static_rollback_runtime_promotion_next"
   },
   "completion_semantics": {
     "execution_complete": false,
