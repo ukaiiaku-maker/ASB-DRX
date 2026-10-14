@@ -1,0 +1,193 @@
+{
+  "arrhenius_prediction": {
+    "by_temperature": {
+      "1000_K": {
+        "beta": -0.049945073706355154,
+        "growth_rate": 0.03776204896139742,
+        "homogeneous_speed": 0.0248307905067692,
+        "mobility_tangent": 0.3306565393036004,
+        "unstable": true,
+        "wavelength": 18.592622470276886,
+        "wavenumber": 0.3379397025472983
+      },
+      "1200_K": {
+        "beta": -0.10808286159174457,
+        "growth_rate": 0.05497054664776614,
+        "homogeneous_speed": 0.04393183954147393,
+        "mobility_tangent": 0.49154896659617253,
+        "unstable": true,
+        "wavelength": 18.788764984635232,
+        "wavenumber": 0.33441183134270647
+      },
+      "800_K": {
+        "beta": -0.014138664227047874,
+        "growth_rate": 0.020293473565630705,
+        "homogeneous_speed": 0.010551331834590281,
+        "mobility_tangent": 0.17417747855390936,
+        "unstable": true,
+        "wavelength": 18.407621381636936,
+        "wavenumber": 0.3413360790573171
+      }
+    },
+    "density_contrast_refinement_difference": 0.016160452613485435,
+    "immutable_shape": {
+      "applied_over_critical_stress": 2.0,
+      "barrier_eV": 1.9,
+      "exp_a": 2.2,
+      "exp_n": 2.5,
+      "floor_fraction": 0.05,
+      "friction_over_critical_stress": 1.0
+    },
+    "nonlinear_1000K_high_stress_control_n256": {
+      "density_contrast": 8.987936348636705e-05,
+      "maximum_polarization": 2.7450233777357224e-05,
+      "minimum_density": 0.9999554397921612,
+      "n": 256,
+      "selected_mode": 1,
+      "selected_wavelength": 128.0,
+      "signed_content_residual": 9.215718466126788e-19,
+      "total_content_residual": 0.0
+    },
+    "nonlinear_1000K_n128": {
+      "density_contrast": 0.0038532702807143604,
+      "maximum_polarization": 0.0012920358535197316,
+      "minimum_density": 0.9980914462322708,
+      "n": 128,
+      "selected_mode": 6,
+      "selected_wavelength": 21.333333333333332,
+      "signed_content_residual": 1.9651164376299768e-19,
+      "total_content_residual": 9.947598300641403e-14
+    },
+    "nonlinear_1000K_n256": {
+      "density_contrast": 0.004093712230141877,
+      "maximum_polarization": 0.001389272811130181,
+      "minimum_density": 0.9979767456651858,
+      "n": 256,
+      "selected_mode": 6,
+      "selected_wavelength": 21.333333333333332,
+      "signed_content_residual": 2.5370330836160804e-17,
+      "total_content_residual": -2.842170943040401e-14
+    },
+    "nonlinear_1000K_n512": {
+      "density_contrast": 0.004160955148648449,
+      "maximum_polarization": 0.0014121772084166602,
+      "minimum_density": 0.9979461728279605,
+      "n": 512,
+      "selected_mode": 6,
+      "selected_wavelength": 21.333333333333332,
+      "signed_content_residual": 3.903127820947816e-18,
+      "total_content_residual": 0.0
+    }
+  },
+  "created_utc": "2026-10-14T02:19:11.466387+00:00",
+  "decision": {
+    "content_conserved": true,
+    "exp_floor_arrhenius_instability_survives": true,
+    "finite_wavelength_selected": true,
+    "grid_refinement_below_5_percent": true,
+    "reason": "The correlation-derived conservative transport selects a grid-convergent wavelength without a density double well, but this 1-D single-slip density modulation is not yet a closed GND-bearing wall or RX boundary.",
+    "rx_or_wall_claimed": false,
+    "stable_control_damped_relative_to_patterning": true
+  },
+  "linear_prediction": {
+    "beta": -0.312499999988732,
+    "growth_rate": 0.07812499999818907,
+    "homogeneous_speed": 0.25,
+    "mobility_tangent": 0.9999999999871223,
+    "unstable": true,
+    "wavelength": 22.479407139446117,
+    "wavenumber": 0.27950849718603393
+  },
+  "nonlinear": {
+    "density_contrast_refinement_difference": 0.016226711819071205,
+    "n128": {
+      "density_contrast": 0.010518997787036133,
+      "maximum_polarization": 0.002488678454322261,
+      "minimum_density": 0.9948797558574791,
+      "n": 128,
+      "selected_mode": 6,
+      "selected_wavelength": 21.333333333333332,
+      "signed_content_residual": -1.8505975831611954e-17,
+      "total_content_residual": 4.263256414560601e-14
+    },
+    "n256": {
+      "density_contrast": 0.011221730370836291,
+      "maximum_polarization": 0.002665362485288069,
+      "minimum_density": 0.9945279872784801,
+      "n": 256,
+      "selected_mode": 6,
+      "selected_wavelength": 21.333333333333332,
+      "signed_content_residual": 9.75781955236954e-18,
+      "total_content_residual": 0.0
+    },
+    "n512": {
+      "density_contrast": 0.01140682564332085,
+      "maximum_polarization": 0.0027076839118136357,
+      "minimum_density": 0.994435083918652,
+      "n": 512,
+      "selected_mode": 6,
+      "selected_wavelength": 21.333333333333332,
+      "signed_content_residual": 2.8189256484623115e-17,
+      "total_content_residual": 0.0
+    },
+    "selected_wavelength_relative_error": 0.05098327544865241,
+    "stable_control_n256": {
+      "density_contrast": 8.434028223092138e-05,
+      "maximum_polarization": 1.1193396136242564e-05,
+      "minimum_density": 0.999963952552063,
+      "n": 256,
+      "selected_mode": 1,
+      "selected_wavelength": 128.0,
+      "signed_content_residual": -6.657678965418801e-19,
+      "total_content_residual": -2.842170943040401e-14
+    }
+  },
+  "parameters": {
+    "domain_length_in_reference_dislocation_spacings": 128.0,
+    "dt_by_grid": {
+      "128": 0.02,
+      "256": 0.02,
+      "512": 0.01
+    },
+    "final_dimensionless_time": 60.0,
+    "initial_noise_rms": 0.0001,
+    "stable_control": {
+      "applied_stress": 1.75,
+      "arrhenius_a": 2.2,
+      "arrhenius_critical_stress": 1.0,
+      "arrhenius_floor": 0.05,
+      "arrhenius_inverse_temperature": 10.0,
+      "arrhenius_n": 2.5,
+      "arrhenius_speed_scale": 1.0,
+      "density_diffusion": 1.0,
+      "friction_coefficient": 1.0,
+      "gnd_backstress": 1.0,
+      "minimum_density": 1e-08,
+      "mobility_law": "linear"
+    },
+    "unstable": {
+      "applied_stress": 1.25,
+      "arrhenius_a": 2.2,
+      "arrhenius_critical_stress": 1.0,
+      "arrhenius_floor": 0.05,
+      "arrhenius_inverse_temperature": 10.0,
+      "arrhenius_n": 2.5,
+      "arrhenius_speed_scale": 1.0,
+      "density_diffusion": 1.0,
+      "friction_coefficient": 1.0,
+      "gnd_backstress": 1.0,
+      "minimum_density": 1e-08,
+      "mobility_law": "linear"
+    }
+  },
+  "physical_scaling_examples": {
+    "rho0_1e13_m2_wavelength_m": 6.746192341692542e-06,
+    "rho0_1e14_m2_wavelength_m": 2.1333333333333334e-06
+  },
+  "schema": "v66-groma-patterning-oracle-v1",
+  "source": {
+    "citation": "Groma, Zaiser, and Ispanovity, Physical Review B 93, 214110 (2016), arXiv:1601.07831",
+    "equations": "dimensionless one-dimensional reduction of Eq. 38",
+    "production_status": "mechanism_oracle_not_promoted"
+  }
+}

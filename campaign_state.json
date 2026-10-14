@@ -41,7 +41,7 @@
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
     "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
-    "H3": "interaction_and_transport_can_organize_dislocations_without_an_RX_nucleation_double_well",
+    "H3": "Groma_correlation_backstress_and_density_diffusion_select_a_finite_wavelength_under_linear_and_EXP_floor_mobility_but_2D_GND_wall_formation_is_unqualified",
     "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
   },
   "resource_ownership": {
@@ -62,7 +62,7 @@
     "source_identity": "96e75b4 plus checkpoint 0c27fee265993da89e243733f4f4c6305e5dd9fbd6f5a23347505f7050db14b0",
     "expected_discriminatory_observation": "a_new_closed_GND_bearing_interface_with_compatible_Burgers_content_persists_at_fixed_grid_scale_and_can_mature_by_the_qualified_absorption_rotation_law",
     "resource_need": "one_local_heavy_solver_running_plus_lightweight_analysis",
-    "result_status": "common_axis_structural_runtime_qualified_GB_TJ_sink_is_energy_complete_but_generic_1p4eV_sink_dominates_high_temperature_mobile_content_fresh_one_grain_precursor_run_active"
+    "result_status": "interaction_derived_finite_wavelength_oracle_passes_512_refinement_and_EXP_floor_test_but_remains_low_polarization_fresh_one_grain_precursor_run_active"
   },
   "completion_semantics": {
     "execution_complete": false,

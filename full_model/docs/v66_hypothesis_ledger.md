@@ -465,3 +465,42 @@ experiment, result, limitation, and next branch.
 - Next branch: finish the fresh current-source one-grain trajectory, then use
   its resolved organization (or valid negative result) to decide whether a
   structural-absorption continuation is physically available.
+
+## 2026-10-14T02:19:00Z — interaction-derived finite-wavelength oracle
+
+- Goals: G01, G04, G05.
+- Prediction: the current common closure's nearly wave-number-independent
+  exchange instability cannot select wall spacing, but the correlation-derived
+  backstress and density-diffusion stress in the Groma--Zaiser--Ispanovity
+  equations can select a finite wavelength without a scalar density double
+  well. The selection must survive the campaign's EXP-floor Arrhenius mobility
+  before it can become a production candidate.
+- Experiment: implement a conservative 1-D single-slip reduction of Eq. 38 in
+  Groma, Zaiser, and Ispanovity, PRB 93, 214110 (2016). Use face-consistent
+  total/GND fluxes, no positivity projection, `A=D=1`, and a broadband
+  perturbation. Compare the analytic dispersion with nonlinear 128/256/512
+  calculations and a stable high-stress control. Then replace linear mobility
+  by the immutable 1.9 eV EXP-floor shape (`a=2.2`, `n=2.5`, floor 0.05) and
+  repeat the nonlinear refinement at the 1000 K inverse temperature.
+- Result: the linear oracle predicts 22.48 reference dislocation spacings and
+  selects 21.33; the 256-to-512 density-contrast difference is 1.62%, and total
+  and signed content close to roundoff. The high-stress linear control damps.
+  With EXP-floor mobility, the 800/1000/1200 K dispersion predicts 18.41,
+  18.59, and 18.79 spacings while growth rate increases with temperature. The
+  1000 K nonlinear case again selects mode 6 (21.33 spacings), amplifies
+  density contrast to 0.00416, and passes 256-to-512 refinement at 1.62%; its
+  higher-stress control decays to below the initial contrast.
+- Decision: H3 is no longer rejected in general. A specific conservative
+  correlation-stress closure is supported as a finite-wavelength mechanism
+  oracle and remains compatible with immutable Arrhenius mobility. It is not
+  promoted yet: final polarization is only 0.141%, so the result is a total-
+  density modulation, not a closed GND-bearing wall, subgrain, or RX event.
+- Limitation: `A` and `D` are assumed order-one dimensionless coefficients,
+  not constrained by the available single-glider DDD; the calculation is 1-D
+  single slip and its time scale is normalized. The wavelength examples
+  (2.13 micrometres at `rho0=1e14 1/m2`) are scaling consequences, not a
+  material prediction.
+- Next branch: add the correlation stresses as a default-off multi-family
+  production ablation while preserving EXP-floor mobility and complete energy,
+  then test whether 2-D signed transport develops polarization rather than
+  only a total-density band.
