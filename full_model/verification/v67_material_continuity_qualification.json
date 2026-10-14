@@ -1,0 +1,145 @@
+{
+  "cases": {
+    "legacy_receiver_dormant": {
+      "checkpoint": {
+        "applied_shear_strain": 0.07199999999999841,
+        "source_provenance": {
+          "campaign": "V66",
+          "scientific_scope": "inherited-subgrain coupled exposure",
+          "source_commit": "bff539c"
+        },
+        "step": 900
+      },
+      "configuration": {
+        "dt_s": 2e-09,
+        "front_maximum_substep_s": 2e-09,
+        "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+        "initial_state": "V66 inherited orientation-gradient matured owner",
+        "length_m": 4.8e-06,
+        "n": 16,
+        "schema": "v66-coupled-rx-asb-configuration-v1",
+        "shear_rate_s": 40000.0,
+        "target_steps": 900,
+        "temperature_K": 1000.0,
+        "thermal_diffusivity_m2_s": 3.947368421052631e-08
+      },
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v66-20261013/full_model/verification/v66_coupled_rx_asb",
+      "files": {
+        "checkpoint_latest.npz": {
+          "bytes": 708866,
+          "sha256": "a0ad0d3f0dacfe67303b3a928349fd6c2f2ea490ba2bc66b5b4709bf3e0bbb53"
+        },
+        "history.json": {
+          "bytes": 1109558,
+          "sha256": "3528929178d3581c40726c403486fd2d2426080bbbef2903eff556634b8d22cc"
+        },
+        "result.json": {
+          "bytes": 2041,
+          "sha256": "5f4610bf7cb8c4816de9d61c149691782b0673ba854b2a7b6867b1c670b3e277"
+        }
+      },
+      "nye_audit_rms_m1": {
+        "discrete_representation_residual": 8265.953601305147,
+        "exact_reconstructed": 5976.830659965182,
+        "owner_curl_weighted": 18312.826669218804,
+        "owner_reservoir_mismatch": 2.0743615587211244e-10,
+        "owner_reservoir_mismatch_over_owner_curl": 1.1327369587393213e-14,
+        "representation_residual_over_exact": 1.382999464360481
+      },
+      "response": {
+        "accepted_front_events": 920,
+        "final_target_growth_fraction": -0.01646186883280624,
+        "maximum_front_relative_energy_closure": 5.711857098994658e-07,
+        "maximum_mechanical_relative_first_law_residual": 0.001530939240746634,
+        "minimum_increment": -9.060979144094247e-05,
+        "negative_increment_count": 621,
+        "peak_target_growth_fraction": 4.868807324083344e-05,
+        "peak_target_growth_step": 279,
+        "stationary_front_intervals": 0,
+        "stress_peak_observed": true
+      }
+    },
+    "material_continuity": {
+      "checkpoint": {
+        "applied_shear_strain": 0.07199999999999841,
+        "source_provenance": {
+          "campaign": "V66",
+          "scientific_scope": "inherited-subgrain coupled exposure",
+          "source_commit": "1817ee1f3deb3b8b8b1b7f4fc151c6c43bcf8b8a",
+          "source_dirty": false
+        },
+        "step": 900
+      },
+      "configuration": {
+        "dt_s": 2e-09,
+        "front_maximum_substep_s": 2e-09,
+        "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+        "initial_state": "V66 inherited orientation-gradient matured owner",
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 16,
+        "plastic_history_mode": "material_continuity",
+        "schema": "v66-coupled-rx-asb-configuration-v1",
+        "shear_rate_s": 40000.0,
+        "sink_activation_enthalpy_eV": 1.4,
+        "sink_mode": "disabled",
+        "sink_stress_assisted": false,
+        "source_grain_size_m": 2.4e-06,
+        "source_mode": "disabled",
+        "target_steps": 900,
+        "temperature_K": 1000.0,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_bath_temperature_K": 1000.0,
+        "thermal_control": "adiabatic",
+        "thermal_diffusivity_m2_s": 3.947368421052631e-08
+      },
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_material_continuity_r4e4",
+      "files": {
+        "checkpoint_latest.npz": {
+          "bytes": 713924,
+          "sha256": "491de3af590422a426395201a301b00b920992e42e59fe4a7aa449243ac79831"
+        },
+        "history.json": {
+          "bytes": 1471642,
+          "sha256": "4ca8d21424d28ce87eed6aedf1e9ab303e8c1c44099612e9a0b27b47d48a96cf"
+        },
+        "result.json": {
+          "bytes": 2936,
+          "sha256": "32566c47cf17b517ee4ec9e235983015ea67bb4c0a4920a492ad1ad0f209038e"
+        }
+      },
+      "nye_audit_rms_m1": {
+        "discrete_representation_residual": 7155.542552076436,
+        "exact_reconstructed": 6130.036720846617,
+        "owner_curl_weighted": 17933.879480124044,
+        "owner_reservoir_mismatch": 0.587061490921985,
+        "owner_reservoir_mismatch_over_owner_curl": 3.2734773955218106e-05,
+        "representation_residual_over_exact": 1.1672919556488703
+      },
+      "response": {
+        "accepted_front_events": 920,
+        "final_target_growth_fraction": 0.0001106086982707921,
+        "maximum_front_relative_energy_closure": 2.0514414543178578e-06,
+        "maximum_mechanical_relative_first_law_residual": 0.001526277088867621,
+        "minimum_increment": 0.0,
+        "negative_increment_count": 0,
+        "peak_target_growth_fraction": 0.0001106086982707921,
+        "peak_target_growth_step": 900,
+        "stationary_front_intervals": 3,
+        "stress_peak_observed": true
+      }
+    }
+  },
+  "created_utc": "2026-10-14T23:29:31.899902+00:00",
+  "decision": {
+    "legacy_reversal_reproduced": true,
+    "macroscopic_drx_transformation_qualified": false,
+    "matched_endpoint_reached": true,
+    "material_continuity_prevents_reversal": true,
+    "nye_owner_reservoir_consistent": true,
+    "reason": "Exact laboratory-frame plastic-history continuity removes the legacy elastic growth reversal at the matched 7.2% endpoint without material Nye-reservoir drift. The transformed fraction remains too small to qualify macroscopic DRX, and the prepared target remains an inherited-subgrain control rather than an endogenous initiation result.",
+    "sustained_dynamic_front_motion_demonstrated": true
+  },
+  "schema": "v67-material-continuity-qualification-v1"
+}
