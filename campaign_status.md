@@ -2740,3 +2740,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   connected band (one/two cells above twice mean power), while adiabatic heat
   already adds 0.786 percentage point of softening. Exact restart checkpoints
   are preserved for continuation to the decisive 16% horizon.
+- A history audit confirms that scalar maximum/mean power cannot classify a
+  band: every case has an early >=2x episode through 2.544% strain, and n64 has
+  a late scalar recurrence without connected structure. Connectivity remains
+  authoritative.

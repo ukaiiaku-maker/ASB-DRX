@@ -874,7 +874,7 @@ experiment, result, limitation, and next branch.
   discriminator is a physical n64 matched continuation to 16% strain; a
   finer visualization or threshold postprocessing cannot substitute for it.
 
-## 2026-10-14T11:02:00Z — shared-band carrier audit
+## 2026-10-14T10:52:00Z — shared-band carrier audit
 
 - Goals: G01, G03, G04.
 - Prediction: if heat amplifies a mechanically organized band, adiabatic and
@@ -902,7 +902,7 @@ experiment, result, limitation, and next branch.
   pushed source `64301aa`, with `src` and the repository root on
   `PYTHONPATH`.
 
-## 2026-10-14T11:14:00Z — checksum-bound n64 matched prefix
+## 2026-10-14T11:02:00Z — checksum-bound n64 matched prefix
 
 - Goals: G03, G04.
 - Prediction: continuing the existing fixed-width n64 checkpoints beyond the
@@ -922,3 +922,17 @@ experiment, result, limitation, and next branch.
   the physical refinement and bounds onset to a later horizon but cannot decide
   the 16% n32/n48 geometry discrepancy. Continue both checksum-bound n64 states
   toward 16% in the next authorized allocation.
+
+## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
+
+- Goals: G03, G04.
+- Experiment and result: enumerate every contiguous history episode at or above
+  twice mean positive power for n32, n48, and the current n64 prefix. All six
+  cases share an initial episode from the first interval through 2.544% strain.
+  Late scalar recurrence starts at 9.04%/about 11.1% on n32, 10.13%/10.88% on
+  n48, and 9.55%/9.50% on the incomplete n64 adiabatic/bath histories. Yet the
+  n64 spatial endpoint has only one/two isolated cells above threshold.
+- Decision: maximum/mean power is an amplitude diagnostic, not a band
+  classifier. Preserve connected-component geometry and persistence as the
+  authoritative spatial evidence; do not infer an earlier n64 ASB onset from
+  the scalar recurrence.

@@ -1,0 +1,145 @@
+{
+  "cases": {
+    "n32_adiabatic": {
+      "episodes_at_or_above_2x_mean_power": [
+        {
+          "first_step": 1,
+          "first_strain": 0.00016,
+          "interval_count": 159,
+          "last_step": 159,
+          "last_strain": 0.025440000000000056
+        },
+        {
+          "first_step": 565,
+          "first_strain": 0.09039999999999901,
+          "interval_count": 436,
+          "last_step": 1000,
+          "last_strain": 0.15999999999999617
+        }
+      ],
+      "steps": 1000
+    },
+    "n32_strong_bath": {
+      "episodes_at_or_above_2x_mean_power": [
+        {
+          "first_step": 1,
+          "first_strain": 0.00016,
+          "interval_count": 159,
+          "last_step": 159,
+          "last_strain": 0.025440000000000056
+        },
+        {
+          "first_step": 600,
+          "first_strain": 0.09599999999999878,
+          "interval_count": 2,
+          "last_step": 601,
+          "last_strain": 0.09615999999999877
+        },
+        {
+          "first_step": 604,
+          "first_strain": 0.09663999999999875,
+          "interval_count": 1,
+          "last_step": 604,
+          "last_strain": 0.09663999999999875
+        },
+        {
+          "first_step": 606,
+          "first_strain": 0.09695999999999874,
+          "interval_count": 49,
+          "last_step": 654,
+          "last_strain": 0.10463999999999843
+        },
+        {
+          "first_step": 694,
+          "first_strain": 0.11103999999999817,
+          "interval_count": 307,
+          "last_step": 1000,
+          "last_strain": 0.15999999999999617
+        }
+      ],
+      "steps": 1000
+    },
+    "n48_adiabatic": {
+      "episodes_at_or_above_2x_mean_power": [
+        {
+          "first_step": 1,
+          "first_strain": 0.00016,
+          "interval_count": 159,
+          "last_step": 159,
+          "last_strain": 0.025440000000000056
+        },
+        {
+          "first_step": 633,
+          "first_strain": 0.10127999999999857,
+          "interval_count": 368,
+          "last_step": 1000,
+          "last_strain": 0.15999999999999617
+        }
+      ],
+      "steps": 1000
+    },
+    "n48_strong_bath": {
+      "episodes_at_or_above_2x_mean_power": [
+        {
+          "first_step": 1,
+          "first_strain": 0.00016,
+          "interval_count": 159,
+          "last_step": 159,
+          "last_strain": 0.025440000000000056
+        },
+        {
+          "first_step": 680,
+          "first_strain": 0.10879999999999826,
+          "interval_count": 321,
+          "last_step": 1000,
+          "last_strain": 0.15999999999999617
+        }
+      ],
+      "steps": 1000
+    },
+    "n64_adiabatic": {
+      "episodes_at_or_above_2x_mean_power": [
+        {
+          "first_step": 1,
+          "first_strain": 0.00016,
+          "interval_count": 159,
+          "last_step": 159,
+          "last_strain": 0.025440000000000056
+        },
+        {
+          "first_step": 597,
+          "first_strain": 0.0955199999999988,
+          "interval_count": 4,
+          "last_step": 600,
+          "last_strain": 0.09599999999999878
+        }
+      ],
+      "steps": 600
+    },
+    "n64_strong_bath": {
+      "episodes_at_or_above_2x_mean_power": [
+        {
+          "first_step": 1,
+          "first_strain": 0.00016,
+          "interval_count": 159,
+          "last_step": 159,
+          "last_strain": 0.025440000000000056
+        },
+        {
+          "first_step": 594,
+          "first_strain": 0.09503999999999882,
+          "interval_count": 7,
+          "last_step": 600,
+          "last_strain": 0.09599999999999878
+        }
+      ],
+      "steps": 600
+    }
+  },
+  "created_utc": "2026-10-14T11:04:22.196023+00:00",
+  "decision": {
+    "reason": "Every grid and thermal control has the same early scalar episode through 2.544% strain, yet the spatial endpoint audit does not identify a connected late band at n64/9.6%. Scalar maximum-to-mean power is therefore an onset diagnostic only.",
+    "scalar_amplitude_is_a_band_classifier": false
+  },
+  "schema": "v66-power-amplitude-history-v1"
+}
