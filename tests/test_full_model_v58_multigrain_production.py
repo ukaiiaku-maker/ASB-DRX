@@ -441,6 +441,31 @@ def test_energy_qualified_zero_load_hold_is_not_bisected_below_roundoff():
     assert result.relative_first_law_residual <= .05
 
 
+def test_dissipative_zero_work_hold_uses_resolved_energy_turnover_scale():
+    spacing = 2e-8
+    state = _state(8)
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=1e-7)
+    # This fixed high strain activates plastic relaxation: recoverable and
+    # defect energy fall while thermal energy rises, although external work is
+    # exactly zero during the hold.
+    strain = np.array([[0.0, .02], [.02, 0.0]])
+    result = advance_energy_qualified_mechanics(
+        state, mean_strain_before=strain, mean_strain_candidate=strain,
+        systems=systems, topologies=(), wall_parameters=parameters,
+        dt_s=1e-11, represented_thickness_m=5e-10,
+        energy_kwargs=dict(reference_temperature_K=900.0),
+        maximum_relative_first_law_residual=.05)
+    assert result.external_work_J == 0.0
+    assert sum(item.irreversible_heat_J for item in result.operator_decisions) > 0.0
+    assert result.relative_first_law_residual <= .05
+    assert all(balance.first_law_scale_J >= abs(balance.internal_energy_change_J)
+               for balance in result.energy_balances)
+
+
 def test_active_mask_cannot_age_dormant_owner_cells_or_limit_step():
     spacing = 2e-8
     state = _state(8).owners[0]

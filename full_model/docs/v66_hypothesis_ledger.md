@@ -200,3 +200,35 @@ experiment, result, limitation, and next branch.
   has only 1.45% post-peak softening. RX is still inherited-subgrain growth.
 - Next branch: unload this retained common state through the mechanical work
   ledger and determine whether zero-rate annealing reactivates the front.
+
+## 2026-10-14T01:20:00Z — retained-state unload and static reactivation
+
+- Goals: G01, G02, G04, G06.
+- Prediction: if the target's dynamic recession is caused by the instantaneous
+  common mechanical affinity rather than irreversible loss of the RX pathway,
+  unloading should reverse the front and a zero-rate hold should sustain it.
+- Experiment: continue the exact 7.2% loading checkpoint through 900 complete
+  reverse-rate intervals to zero imposed shear strain, then hold that strain
+  for 6 microseconds with zero imposed rate. Preserve residual stress, heat,
+  signed defects, owners, and all front history.
+- Result: the target first receded to -0.807% relative to its loaded size while
+  positive stress relaxed, then reversed as residual stress changed sign and
+  reached +0.596% at zero imposed strain. During the subsequent zero-work hold,
+  edge 10--20 selected target growth in all 300 intervals and the target grew
+  monotonically to +3.279%, a further +2.683% after unloading. All 2120 total
+  front events were accepted; maximum front closure was 5.72e-7 and maximum
+  mechanical first-law residual was 0.331%.
+- Numerical repair: the first attempted zero-work hold exposed an invalid
+  relative normalization: finite defect/elastic-to-heat turnover has nearly
+  zero net internal change and exactly zero work, so dividing its truncation
+  residual by the net change reports 100% at every timestep. The signed
+  residual was not changed. Its relative audit now uses the independently
+  evaluated gross component turnover, and a dissipative zero-work regression
+  test verifies the same 5% criterion.
+- Limitation: zero imposed strain retains -1.679 GPa residual shear stress and
+  is therefore not called stress-free annealing. The horizon is 6 microseconds
+  on a 16 x 16 mechanism grid; long static completion and spatial refinement
+  remain open.
+- Next branch: discriminate residual-stress-assisted static growth from a true
+  zero-mean-stress anneal, then integrate or reject a source-location closure
+  using a complete work/heat transaction.

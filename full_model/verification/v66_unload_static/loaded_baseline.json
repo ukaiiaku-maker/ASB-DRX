@@ -1,0 +1,10 @@
+{
+  "load": 0.07199999999999841,
+  "loaded_volume_m3": [
+    3.979837920978779e-21,
+    3.644252152436081e-21,
+    3.80374992658514e-21
+  ],
+  "source": "full_model/verification/v66_coupled_rx_asb/checkpoint_latest.npz",
+  "source_physical_time_s": 2.200000000000003e-06
+}

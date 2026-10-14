@@ -32,11 +32,11 @@
   },
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "complete_energy_handoff_grows_statically_but_reverses_under_7p2_percent_high_rate_deformation",
+    "G02": "complete_energy_handoff_recedes_dynamically_then_reactivates_monotonically_during_unload_and_zero_rate_hold",
     "G03": "common_state_thermal_localization_and_stress_peak_observed_but_strict_ASB_persistence_controls_and_refinement_not_qualified",
     "G04": "fixed_law_reduced_temperature_rate_switch_demonstrated_not_material_validated",
     "G05": "inherited_subgrain_maturation_supported_new_boundary_formation_not_established",
-    "G06": "static_maturation_supported_and_loaded_endpoint_retained_for_work_ledgered_unload_test"
+    "G06": "work_ledgered_unload_and_six_microsecond_fixed_zero_strain_static_growth_supported_residual_stress_remains"
   },
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
@@ -51,12 +51,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_dynamically_suppressed_inherited_RX_owner_reactivates_after_work_ledgered_unloading_or_has_lost_its_stored_energy_advantage_irreversibly",
-    "next_executable_experiment": "unload_the_retained_7p2_percent_common_state_to_zero_applied_strain_with_negative_rate_then_continue_zero_rate_static_annealing",
-    "source_identity": "bff539c",
-    "expected_discriminatory_observation": "front_direction_or_target_volume_reverses_after_load_removal_while_the_retained_temperature_defect_and_owner_states_remain_common_and_energy_closed",
+    "physical_uncertainty": "how_much_of_the_static_target_growth_is_residual_stress_assisted_and_whether_the_GB_TJ_source_hypothesis_can_enter_the_common_energy_ledger_without_invented_work",
+    "next_executable_experiment": "construct_a_zero_mean_stress_relaxation_control_and_derive_a_source_event_transition_whose_line_creation_is_paid_by_resolved_mechanical_work_or_reject_production_integration",
+    "source_identity": "6898699",
+    "expected_discriminatory_observation": "target_growth_persists_or_arrests_after_mean_stress_removal_and_any_accepted_source_event_closes_signed_line_external_work_stored_energy_and_heat_ledgers",
     "resource_need": "lightweight_local",
-    "result_status": "coupled_exposure_complete_dynamic_RX_suppression_found_unload_test_running"
+    "result_status": "unload_static_reactivation_passed_residual_stress_and_source_energy_discriminators_running"
   },
   "completion_semantics": {
     "execution_complete": false,

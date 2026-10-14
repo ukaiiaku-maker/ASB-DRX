@@ -98,6 +98,7 @@ class MultiGrainMechanicalEnergyBalance:
     external_work_J: float
     internal_energy_change_J: float
     first_law_residual_J: float
+    first_law_scale_J: float
     relative_first_law_residual: float
     mean_stress_before_Pa: np.ndarray
     mean_stress_candidate_Pa: np.ndarray
@@ -166,7 +167,7 @@ def evaluate_multigrain_mechanical_interval(
             average_stress*(eigenstrain_candidate-eigenstrain_before),
             dtype=np.longdouble)
         *float(spacing_m)**2*float(represented_thickness_m))
-    nonelastic_change = sum((
+    nonelastic_components = (
         candidate.defect_storage_J-before.defect_storage_J,
         candidate.signed_junction_storage_J-before.signed_junction_storage_J,
         candidate.boundary_excess_J-before.boundary_excess_J,
@@ -174,7 +175,8 @@ def evaluate_multigrain_mechanical_interval(
         candidate.phase_gradient_J-before.phase_gradient_J,
         candidate.thermal_internal_J-before.thermal_internal_J,
         candidate.numerical_constraint_J-before.numerical_constraint_J,
-    ))
+    )
+    nonelastic_change = sum(nonelastic_components)
     delta_internal = elastic_change+nonelastic_change
     residual = delta_internal-work
     # A hold can exchange defect/elastic energy with the thermal reservoir
@@ -187,10 +189,19 @@ def evaluate_multigrain_mechanical_interval(
     roundoff_floor = (4096.0*np.finfo(float).eps
                       *max(abs(before.internal_J),
                            abs(candidate.internal_J), 1e-300))
-    scale = max(abs(delta_internal), abs(work), roundoff_floor, 1e-300)
+    # During a fixed-strain hold, recoverable elastic/defect energy is converted
+    # to heat while both net internal-energy change and external work approach
+    # zero.  Normalizing by either net alone makes every finite-order truncation
+    # read as a 100% first-law error.  The gross independently evaluated energy
+    # turnover is the physically resolved scale for that cancellation.  It is
+    # not a residual correction: the signed residual remains unchanged.
+    gross_internal_turnover = abs(elastic_change)+sum(
+        abs(value) for value in nonelastic_components)
+    scale = max(abs(delta_internal), abs(work), gross_internal_turnover,
+                roundoff_floor, 1e-300)
     return MultiGrainMechanicalEnergyBalance(
         before, candidate, work, delta_internal, residual,
-        abs(residual)/scale, stress_before, stress_candidate)
+        scale, abs(residual)/scale, stress_before, stress_candidate)
 
 
 def _config_digest(values):

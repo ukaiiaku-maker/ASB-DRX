@@ -1,0 +1,47 @@
+{
+  "configuration": {
+    "hold_constraint": "fixed zero macroscopic shear strain; residual stress retained",
+    "hold_dt_s": 2e-08,
+    "hold_rate_s": 0.0,
+    "hold_steps": 300,
+    "length_m": 4.8e-06,
+    "n": 16,
+    "schema": "v66-unload-static-configuration-v1",
+    "source_checkpoint": "full_model/verification/v66_coupled_rx_asb/checkpoint_latest.npz",
+    "temperature_parameter_K": 1000.0,
+    "unload_dt_s": 2e-09,
+    "unload_rate_s": -40000.0,
+    "unload_steps": 900
+  },
+  "created_utc": "2026-10-14T00:27:10.211660+00:00",
+  "decision": {
+    "reason": "The protocol removes imposed strain through the complete mechanical ledger and then holds zero strain. Any residual internal stress remains a physical driver, so this is not called a zero-stress anneal.",
+    "retained_loaded_state_used": true,
+    "run_complete": true,
+    "static_front_active": true,
+    "static_target_reactivated": true,
+    "stress_free_claim": false
+  },
+  "loaded_target_volume_m3": 3.644252152436081e-21,
+  "result": {
+    "accepted_front_events_total": 2120,
+    "final_residual_shear_stress_Pa": -1678638286.0445065,
+    "final_temperature_contrast_K": 22.289596148640157,
+    "final_temperature_mean_K": 1041.9228900526164,
+    "hold_edge_10_20_direction_counts": {
+      "a_to_b": 300
+    },
+    "hold_external_work_J": 0.0,
+    "hold_target_change_fraction": 0.03278826626484275,
+    "hold_target_change_from_unloaded_fraction": 0.026827066493267448,
+    "hold_target_monotone": true,
+    "maximum_front_relative_energy_closure": 5.711857098994658e-07,
+    "maximum_mechanical_relative_first_law_residual": 0.003311537651501505,
+    "rejected_front_events_total": 0,
+    "unload_target_change_fraction": 0.005961199771575301,
+    "unload_terminal_shear_stress_Pa": -2076290889.502883,
+    "unloading_external_work_J": 3.915798607664559e-13,
+    "zero_strain_reached": true
+  },
+  "schema": "v66-unload-static-result-v1"
+}

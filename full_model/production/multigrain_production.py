@@ -503,7 +503,12 @@ def advance_energy_qualified_mechanics(
     roundoff_floor = (4096.0*np.finfo(float).eps
                       *max(abs(balances[0].before.internal_J),
                            abs(balances[-1].candidate.internal_J), 1e-300))
-    scale = max(abs(delta_internal), abs(work), roundoff_floor, 1e-300)
+    # Sum accepted leaf turnover scales so a zero-work hold is judged against
+    # the defect/elastic-to-thermal energy actually exchanged, not against its
+    # (correctly near-zero) net endpoint change.
+    resolved_turnover = sum(value.first_law_scale_J for value in balances)
+    scale = max(abs(delta_internal), abs(work), resolved_turnover,
+                roundoff_floor, 1e-300)
     relative = abs(residual)/scale
     if relative > float(maximum_relative_first_law_residual):
         raise RuntimeError(
