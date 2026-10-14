@@ -87,7 +87,7 @@ def _relative(a, b) -> float:
 
 def main() -> None:
     paths = []
-    for n in (16, 24, 32, 48):
+    for n in (16, 24, 32, 48, 64):
         stem = ("v66_regime_T1000_r8e4" if n == 16
                 else f"v66_regime_fixed_n{n}_T1000_r8e4")
         for suffix in ("", "_strong_bath"):
