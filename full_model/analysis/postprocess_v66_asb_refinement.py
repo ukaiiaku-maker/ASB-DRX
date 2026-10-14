@@ -55,6 +55,8 @@ def _endpoint(case: Path) -> dict:
     return {
         "case": case.name,
         "n": config["n"],
+        "interface_width_m": config.get(
+            "interface_width_m", 2.0*config["length_m"]/config["n"]),
         "thermal_control": config.get("thermal_control", "adiabatic"),
         "steps": step,
         "source_provenance": provenance,
@@ -85,8 +87,9 @@ def _relative(a, b) -> float:
 
 def main() -> None:
     paths = []
-    for n in (16, 24, 32):
-        stem = "v66_regime_T1000_r8e4" if n == 16 else f"v66_regime_n{n}_T1000_r8e4"
+    for n in (16, 24, 32, 48):
+        stem = ("v66_regime_T1000_r8e4" if n == 16
+                else f"v66_regime_fixed_n{n}_T1000_r8e4")
         for suffix in ("", "_strong_bath"):
             path = VERIFY / f"{stem}{suffix}"
             if (path / "result.json").exists() and json.loads(
@@ -135,6 +138,18 @@ def main() -> None:
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "cases": cases,
         "matched_pairs": paired,
+        "rejected_refinement_protocol": {
+            "directories": [
+                "v66_regime_n24_T1000_r8e4",
+                "v66_regime_n24_T1000_r8e4_strong_bath",
+                "v66_regime_n32_T1000_r8e4",
+                "v66_regime_n32_T1000_r8e4_strong_bath",
+            ],
+            "reason": (
+                "These diagnostic runs fixed the interface at two cells, so its "
+                "physical width changed with grid spacing. They identify the "
+                "protocol confound but are excluded from convergence claims."),
+        },
         "successive_grid_relative_differences": convergence,
         "decision": {
             "matched_thermal_effect_present_on_finest_paired_grid": bool(
