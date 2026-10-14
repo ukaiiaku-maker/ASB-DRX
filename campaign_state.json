@@ -51,12 +51,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_downhill_deformed_state_cycle_reaction_remains_energy_complete_when_promoted_with_derived_owner_rotation_and_thermal_deposition_in_the_coupled_runtime",
-    "next_executable_experiment": "integrate_the_structural_runtime_around_the_complete_front_then_verify_full_energy_heat_restart_and_static_rollback",
-    "source_identity": "a2a1533+cycle-reaction-development",
-    "expected_discriminatory_observation": "the_deformed_geometry_reaction_reduces_Frank_closure_and_heats_the_common_state_while_the_uphill_static_candidate_atomically_rolls_back",
+    "physical_uncertainty": "whether_signed_spatial_organization_can_form_a_new_structural_subgrain_boundary_without_label_allocation_or_a_scalar_density_double_well",
+    "next_executable_experiment": "connect_tensorial_Nye_and_polarized_signed_density_to_a_zero_label_structural_precursor_then_test_emergence_persistence_and_energy_before_any_owner_promotion",
+    "source_identity": "aa12308+common-structural-runtime-development",
+    "expected_discriminatory_observation": "a_new_closed_GND_bearing_interface_with_compatible_Burgers_content_persists_at_fixed_grid_scale_and_can_mature_by_the_qualified_absorption_rotation_law",
     "resource_need": "lightweight_local",
-    "result_status": "bicrystal_Ltheta_conservation_qualified_polycrystal_EXP_floor_cycle_reaction_discriminates_deformed_acceptance_from_static_rollback_runtime_promotion_next"
+    "result_status": "common_axis_structural_front_and_cycle_reaction_are_complete_energy_runtime_capable_new_boundary_birth_remains_primary_gap"
   },
   "completion_semantics": {
     "execution_complete": false,

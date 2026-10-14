@@ -372,3 +372,33 @@ experiment, result, limitation, and next branch.
   deposition, and therefore is not yet a production DRX claim.
 - Next branch: promote the event through a structural multigrain runtime and
   re-evaluate the complete common energy before publication.
+
+## 2026-10-14T01:43:00Z — complete common-state structural runtime
+
+- Goals: G01, G02, G05, G06.
+- Prediction: the deformed-state junction reaction should remain downhill when
+  owner angles are derived from structural compatibility and the entire common
+  elastic/defect/thermal energy is evaluated; the prepared static candidate
+  should remain an atomic rollback.
+- Experiment: add a persistent structural runtime around the complete
+  multigrain energy. Derive uniform common-axis owner angles from the graph,
+  price the finite Arrhenius content proposal, deposit accepted zero-work
+  energy release into the common temperature fields, and re-evaluate the first
+  law. Repeat one 1 microsecond interval as two half intervals.
+- Result: the static handoff rolled back with unchanged 0.000205 degree cycle
+  residual. The retained 4%-shear state accepted, reduced the cycle residual
+  from 0.004490 to 0.004352 degrees, reacted 0.03921 absolute line-count units,
+  and deposited 7.724e-21 J heat. Complete first-law relative residual was
+  3.92e-8. Two half intervals agreed in structural content to 1.44e-12
+  relative. The moving bicrystal wrapper also retained exact `L theta` while
+  deriving the changed owner angle and allocating no owner.
+- Decision: the common-axis structural content, junction reservoir, and
+  reaction are promoted to a complete-energy production-capable module. They
+  remain opt-in while a continuous coupled trajectory and general 3-D
+  compatibility are unqualified.
+- Limitation: the retained 4%-shear fields were reinterpreted as a low-angle
+  common-axis structural ablation; this is not the mature 15-degree production
+  owner's calibrated boundary state. No new boundary was born.
+- Next branch: use the new structural front runtime on a continuous low-angle
+  three-owner trajectory, then return to the primary missing mechanism:
+  formation of a new subgrain boundary from signed spatial organization.

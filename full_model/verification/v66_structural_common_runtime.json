@@ -1,0 +1,73 @@
+{
+  "cases": {
+    "deformed_four_percent_shear": {
+      "absolute_reacted_content": 0.03921353022974472,
+      "accepted": true,
+      "classification": "ACCEPTED_COMPLETE_JUNCTION_RELAXATION",
+      "cycle_residual_after_deg": 0.004351733317541873,
+      "cycle_residual_before_deg": 0.004489656626124693,
+      "frank_backstress_Pa": 661355.1427372234,
+      "generated_heat_J": 7.723972039485614e-21,
+      "owner_orientation_before_deg": [
+        0.0,
+        2.501533555575565,
+        4.998903229756253
+      ],
+      "owner_orientation_candidate_deg": [
+        0.0,
+        2.501533555575565,
+        4.998903229756253
+      ],
+      "physical_grain_count_change": 0,
+      "reacted_fraction": 0.030720235436216475,
+      "relative_first_law_residual": 3.92184987278957e-08,
+      "split_both_accepted": true,
+      "split_content_relative_error": 1.4400744297114558e-12,
+      "split_temperature_relative_error": 0.0
+    },
+    "prepared_static_handoff": {
+      "absolute_reacted_content": 0.0,
+      "accepted": false,
+      "classification": "REJECTED_COMPLETE_ENERGY_UPHILL",
+      "cycle_residual_after_deg": 0.00020467124192750827,
+      "cycle_residual_before_deg": 0.00020467124192750827,
+      "frank_backstress_Pa": 30149.383280567297,
+      "generated_heat_J": 0.0,
+      "owner_orientation_before_deg": [
+        0.0,
+        2.5000323644557785,
+        5.000075439211129
+      ],
+      "owner_orientation_candidate_deg": [
+        0.0,
+        2.50003236445578,
+        5.000075439211131
+      ],
+      "physical_grain_count_change": 0,
+      "reacted_fraction": 0.027186995282880738,
+      "relative_first_law_residual": 0.0,
+      "split_both_accepted": false,
+      "split_content_relative_error": 0.0,
+      "split_temperature_relative_error": 0.0
+    }
+  },
+  "configuration": {
+    "grid": [
+      16,
+      16
+    ],
+    "mechanics": "retained Peierls/Taylor/EXP-floor common state",
+    "reaction_interval_s": 1e-06,
+    "structural_scope": "low-angle common-axis ablation",
+    "temperature_K": 1000.0
+  },
+  "created_utc": "2026-10-14T01:42:58.063360+00:00",
+  "decision": {
+    "derived_not_imposed_owner_rotation": true,
+    "full_common_energy_discriminates_state": true,
+    "new_owner_allocated": false,
+    "production_claim": "structural cycle reaction is common-energy and heat complete; scalar common-axis scope and no new-boundary birth remain"
+  },
+  "schema": "v66-structural-common-runtime-v1",
+  "source_commit": "aa12308+runtime-development"
+}
