@@ -15,14 +15,14 @@
     "sink_stress_assisted": false,
     "source_grain_size_m": 2.4e-06,
     "source_mode": "disabled",
-    "target_steps": 600,
+    "target_steps": 650,
     "temperature_K": 1000.0,
     "thermal_bath_rate_s": 0.0,
     "thermal_bath_temperature_K": 1000.0,
     "thermal_control": "adiabatic",
     "thermal_diffusivity_m2_s": 3.947368421052631e-08
   },
-  "created_utc": "2026-10-14T10:54:32.764918+00:00",
+  "created_utc": "2026-10-14T11:09:25.240965+00:00",
   "decision": {
     "reason": "This common-state exposure tests simultaneous mechanisms; strict ASB still requires persistence/refinement and matched adiabatic/isothermal controls, while RX remains an inherited-subgrain maturation pathway.",
     "run_complete": true,
@@ -39,20 +39,20 @@
     "low_density_m2_each": 10000000000000.0
   },
   "result": {
-    "accepted_front_events": 620,
-    "cumulative_mechanical_external_work_J": 2.338240307335572e-12,
-    "cumulative_mechanical_first_law_residual_J": 2.5404303577664375e-15,
-    "final_target_growth_fraction": -0.03699979339266411,
-    "final_temperature_mean_K": 1043.3604934003808,
-    "maximum_front_relative_energy_closure": 0.0005211510100767092,
+    "accepted_front_events": 670,
+    "cumulative_mechanical_external_work_J": 2.5675166922287505e-12,
+    "cumulative_mechanical_first_law_residual_J": 2.586472332188992e-15,
+    "final_target_growth_fraction": -0.05499097595197183,
+    "final_temperature_mean_K": 1048.660442722965,
+    "maximum_front_relative_energy_closure": 0.000907321593771801,
     "maximum_mechanical_relative_first_law_residual": 0.019060390859030968,
     "maximum_power_localization_ratio": 2.971571410807076,
     "maximum_sink_relative_first_law_residual": 0.0,
     "maximum_source_relative_first_law_residual": 0.0,
-    "maximum_temperature_contrast_K": 39.635749882808454,
+    "maximum_temperature_contrast_K": 47.08944122750654,
     "peak_step": 348,
     "peak_stress_Pa": 2561385652.8540564,
-    "post_peak_softening_fraction": 0.019387109066732137,
+    "post_peak_softening_fraction": 0.024142451021625787,
     "rejected_front_events": 0,
     "sink_annihilated_pair_cell_sum_m2": 0.0,
     "sink_generated_heat_J": 0.0,
@@ -63,9 +63,9 @@
     "source_generated_heat_J": 0.0,
     "source_inactive_intervals": 0,
     "source_intervals": 0,
-    "steps_completed": 600,
+    "steps_completed": 650,
     "target_growth_monotone": false,
-    "terminal_density_boundary_correlation": -0.10704424924807462
+    "terminal_density_boundary_correlation": -0.13122130761705952
   },
   "schema": "v66-coupled-rx-asb-result-v1"
 }

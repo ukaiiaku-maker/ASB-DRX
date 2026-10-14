@@ -922,6 +922,14 @@ experiment, result, limitation, and next branch.
   the physical refinement and bounds onset to a later horizon but cannot decide
   the 16% n32/n48 geometry discrepancy. Continue both checksum-bound n64 states
   toward 16% in the next authorized allocation.
+- Follow-on to 10.4%: both exact states reach step 650. The adiabatic member has
+  developed a 28-cell hot component spanning 7.81% by 14.06% of the domain;
+  the bath member retains only a two-cell component spanning 1.56% by 3.13%.
+  Neither meets the band criterion. Heat therefore accelerates pre-band spatial
+  organization at n64, while the n48 16% control still proves it is not
+  required for eventual band formation. Softening is 2.414%/1.496%, giving a
+  0.918 percentage-point thermal increment; target changes remain close at
+  -5.499%/-5.414%.
 
 ## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
 

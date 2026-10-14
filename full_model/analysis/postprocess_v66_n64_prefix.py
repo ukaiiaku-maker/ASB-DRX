@@ -19,6 +19,8 @@ def main() -> None:
     bath = _endpoint(VERIFY/"v66_regime_fixed_n64_T1000_r8e4_strong_bath")
     if adiabatic["steps"] != bath["steps"]:
         raise RuntimeError("matched n64 members require a common endpoint")
+    ad_local = adiabatic["endpoint_power_localization"]
+    bath_local = bath["endpoint_power_localization"]
     payload = {
         "schema": "v66-n64-prefix-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -43,8 +45,11 @@ def main() -> None:
                 "endpoint_power_localization"]["band_like"],
             "classification": "NO_CONNECTED_BAND_AT_N64_PREFIX",
             "reason": (
-                "At 9.6% strain only one adiabatic cell and two bath cells exceed "
-                "twice mean power. The checksum-bound prefix advances the physical "
+                f"At {100.0*adiabatic['applied_shear_strain']:.1f}% strain the "
+                f"largest adiabatic/bath components contain "
+                f"{ad_local['largest_component_cells']}/"
+                f"{bath_local['largest_component_cells']} cells and neither is "
+                "band-like. The checksum-bound prefix advances the physical "
                 "refinement but cannot decide 16% band geometry."),
         },
     }
