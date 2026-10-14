@@ -280,3 +280,39 @@ experiment, result, limitation, and next branch.
   discriminated without retuning.
 - Next branch: run matched common-state GB/TJ and random source exposures from
   the same matured handoff and compare organization, RX front, and heat.
+
+## 2026-10-14T03:10:00Z — production source-location discriminator
+
+- Goals: G01, G03, G04, G05.
+- Prediction: exact source-location matching should preserve integrated source
+  opportunity while producing source-aligned density increments; if location
+  is a leading RX/ASB mechanism, the GB/TJ and random cases should also diverge
+  macroscopically over the same physical horizon.
+- Experiment: run source-disabled, GB/TJ-only, and exact-permutation random
+  cases from the identical matured common state through 4% shear at 1000 K and
+  4e4/s. No amplitude or constitutive parameter was retuned. Twenty early
+  intervals remained inactive because their event energy was below the
+  independently computed complete-energy resolution; the following 480
+  source intervals were energy qualified.
+- Result: GB/TJ and random cases accumulated 13.3787 and 13.3782 expected
+  events, only 3.59e-5 relative difference after nonlinear feedback. Source
+  transactions created 4.645e12 line-cell content and generated about
+  1.5e-17 J heat, with maximum first-law residuals 1.79% and 2.60%. The
+  source-induced density increment correlated 0.938 with GB/TJ sites in the
+  boundary case and 0.891 with its permuted sites in the random case; the
+  random increment correlated only 0.079 with boundaries. Nye perturbations
+  also differed (0.652 versus 1.450 1/m RMS).
+- Macroscopic decision: location changed the spatial perturbation but not the
+  response family over this horizon. GB-minus-random stress differed by only
+  535 Pa, target-growth effects differed by 4.94e-10, and their density-field
+  difference was 2.82e-6 of baseline RMS. The physically derived source is
+  therefore retained as an optional ablation, not promoted as a wall or RX
+  nucleation forcing mechanism.
+- Numerical note: attempts whose complete transaction energy is below the
+  independently calculated floating-point energy resolution are now marked
+  inactive rather than divided by an unresolved near-zero scale. Resolved
+  events retain the unchanged 5% hard closure requirement.
+- Next branch: improve the primary H1/H2 route by carrying explicit structural
+  boundary content and Frank compatibility with the migrating owner geometry,
+  then test whether growth changes misorientation by conservation rather than
+  by a prescribed owner angle.

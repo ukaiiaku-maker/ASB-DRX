@@ -60,6 +60,9 @@ def test_unstressed_thermal_attempt_cannot_invent_line_storage_energy():
         wall_parameters=wall, represented_thickness_m=4.96e-10,
         energy_kwargs=energy, source_mode="gb_tj_only")
     assert not result.accepted
-    assert result.classification == "REJECTED_INSUFFICIENT_RESOLVED_WORK"
+    assert result.classification in {
+        "REJECTED_INSUFFICIENT_RESOLVED_WORK",
+        "INACTIVE_BELOW_ENERGY_RESOLUTION",
+    }
     assert result.candidate_state is state
     assert result.generated_heat_J == 0.0

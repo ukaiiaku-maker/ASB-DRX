@@ -1,0 +1,66 @@
+{
+  "cases": {
+    "gb_tj_only": {
+      "beta_p_delta_rms": 2.1349289723592188e-07,
+      "created_line_cell_sum_m2": 4645371684458.919,
+      "density_delta_boundary_correlation": 0.937743057441688,
+      "density_delta_own_site_correlation": 0.937743057441688,
+      "density_delta_structure_factor_peak_index": 1.4142135623730951,
+      "maximum_source_relative_first_law_residual": 0.01790561488168787,
+      "mobile_density_delta_mean_m2": 5903169631.540558,
+      "nye_delta_rms_m1": 0.6520592978540963,
+      "source_event_count": 13.378670452029407,
+      "source_generated_heat_J": 1.5294221929760332e-17,
+      "stress_delta_from_disabled_Pa": -3249.6895446777344,
+      "support_delta_rms": 3.723368473898802e-08,
+      "target_growth_delta_from_disabled": 9.639189703424065e-08,
+      "temperature_delta_mean_K": -8.776233149587753e-05,
+      "temperature_delta_rms_K": 0.00018951882767598565,
+      "total_density_delta_mean_m2": 6015824938.97229,
+      "total_density_delta_rms_m2": 7213752027.495021
+    },
+    "matched_random": {
+      "beta_p_delta_rms": 2.145020646218162e-07,
+      "created_line_cell_sum_m2": 4645205080471.679,
+      "density_delta_boundary_correlation": 0.07941378533085143,
+      "density_delta_own_site_correlation": 0.890974586085896,
+      "density_delta_structure_factor_peak_index": 1.0,
+      "maximum_source_relative_first_law_residual": 0.025979516264858796,
+      "mobile_density_delta_mean_m2": 5836817615.10997,
+      "nye_delta_rms_m1": 1.4496293207438242,
+      "source_event_count": 13.3781906325871,
+      "source_generated_heat_J": 1.5123393337714582e-17,
+      "stress_delta_from_disabled_Pa": -3784.270588874817,
+      "support_delta_rms": 3.8159781642690966e-08,
+      "target_growth_delta_from_disabled": 9.589801350023616e-08,
+      "temperature_delta_mean_K": -8.089461851934487e-05,
+      "temperature_delta_rms_K": 0.00017258190712667883,
+      "total_density_delta_mean_m2": 5950773435.406311,
+      "total_density_delta_rms_m2": 6721271508.713704
+    }
+  },
+  "comparison": {
+    "gb_minus_random_density_delta_relative_to_baseline_rms": 2.820267598748724e-06,
+    "gb_minus_random_density_delta_rms_m2": 4614698688.134745,
+    "interpretation": "The energy-complete geometric source produces a resolvable spatial perturbation but its location has negligible macroscopic effect over 4% shear; it is not a wall/nucleation forcing mechanism.",
+    "macroscopic_location_effect_detected": false,
+    "physical_wall_claim": false,
+    "source_event_count_relative_difference": 3.5864508661646814e-05,
+    "spatial_location_effect_detected": true
+  },
+  "created_utc": "2026-10-14T01:14:07.708117+00:00",
+  "protocol": {
+    "grid": [
+      16,
+      16
+    ],
+    "retuning": false,
+    "shear_rate_s": 40000.0,
+    "source_amplitude": "geometric 1/d^2 line per sign and b/d slip",
+    "source_site_control": "matched_random is an exact permutation of current GB/TJ weights",
+    "temperature_K": 1000.0,
+    "terminal_strain": 0.04
+  },
+  "schema": "v66-common-source-location-comparison-v1",
+  "source_commit": "6b104d5"
+}

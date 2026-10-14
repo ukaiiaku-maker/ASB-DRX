@@ -35,6 +35,7 @@ class MultiGrainSourceDecision:
     internal_energy_change_J: float
     first_law_residual_J: float
     relative_first_law_residual: float
+    energy_resolution_floor_J: float
     heat_source_J_by_cell: np.ndarray
 
 
@@ -127,6 +128,10 @@ def evaluate_multigrain_pair_source_transaction(
     residual = delta_internal  # fixed total strain: external boundary work is zero
     scale = max(abs(work_J), abs(defect_J), abs(heat_J),
                 abs(delta_helmholtz), 1e-300)
+    resolution_floor = (4096.0*np.finfo(float).eps
+                        *max(abs(before_energy.internal_J),
+                             abs(candidate_energy.internal_J), 1e-300))
+    resolved = scale >= resolution_floor
     relative = abs(residual)/scale
     event_count = float(sum(np.sum(item.events_by_family, dtype=np.longdouble)
                             for item in ledgers))
@@ -135,9 +140,11 @@ def evaluate_multigrain_pair_source_transaction(
     line_residual = float(sum(item.line_balance_residual_m2 for item in ledgers))
     downhill = delta_helmholtz <= 1e-12*scale
     accepted = bool(
-        local_heat_valid and downhill
+        resolved and local_heat_valid and downhill
         and relative <= float(maximum_relative_first_law_residual))
-    if not local_heat_valid:
+    if not resolved:
+        classification = "INACTIVE_BELOW_ENERGY_RESOLUTION"
+    elif not local_heat_valid:
         classification = "REJECTED_INSUFFICIENT_RESOLVED_WORK"
     elif not downhill:
         classification = "REJECTED_UPHILL_COMPLETE_HELMHOLTZ"
@@ -149,4 +156,4 @@ def evaluate_multigrain_pair_source_transaction(
         accepted, classification, candidate if accepted else state,
         event_count, line_change, signed_change, line_residual,
         work_J, defect_J, heat_J, delta_helmholtz, delta_internal,
-        residual, relative, heat_density*cell_volume)
+        residual, relative, resolution_floor, heat_density*cell_volume)
