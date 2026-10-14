@@ -873,3 +873,28 @@ experiment, result, limitation, and next branch.
   component counter. Do not promote the ASB classification. The next valid
   discriminator is a physical n64 matched continuation to 16% strain; a
   finer visualization or threshold postprocessing cannot substitute for it.
+
+## 2026-10-14T11:02:00Z — shared-band carrier audit
+
+- Goals: G01, G03, G04.
+- Prediction: if heat amplifies a mechanically organized band, adiabatic and
+  bath power fields should retain a strong spatial correspondence, and power
+  should associate more directly with slip-rate magnitude than with
+  temperature, total density, or Nye magnitude. A density or GND wall instead
+  predicts enrichment of the corresponding field inside the power band.
+- Experiment: reconstruct both n48 endpoints on their authoritative common
+  states. Compare full power fields and twice-mean masks, then measure Pearson
+  association, top-decile overlap, and band/domain mean ratios for signed slip
+  rate, shear stress, Nye norm, signed density, total density, boundary/TJ
+  sites, and temperature. These are associations, not causal interventions.
+- Result: adiabatic and bath power fields have 0.98194 Pearson correlation and
+  0.78754 mask Jaccard overlap. Signed-slip-rate norm is the dominant reported
+  associate in both controls (0.97094/0.97155 correlation and 2.466/2.494
+  band/domain ratio). Nye correlations are only 0.1098/0.1350. Total density
+  is anticorrelated with power (-0.2880/-0.3041) and depleted to 0.837/0.822
+  of its domain mean inside the band. Shear-stress correlations are moderate
+  at 0.4040/0.3987.
+- Decision: classify the endpoint structure as a shared but heat-modified
+  high-slip-rate mechanical band. Reject descriptions of it as a scalar
+  high-density band or a GND wall. This strengthens the causal interpretation
+  but does not repair the n32-to-n48 geometry error or qualify strict ASB.

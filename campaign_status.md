@@ -2730,3 +2730,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   component-area and 24--34% span differences. The failed geometry criterion
   is therefore trajectory-level rather than a pixel-count artifact; physical
   n64 continuation is required before promotion.
+- At n48 the matched power fields correlate 0.982 and their band masks have
+  0.788 Jaccard overlap. Power is carried by signed slip-rate magnitude
+  (correlation about 0.971; 2.47x band enrichment), not a GND wall (correlation
+  0.11--0.14) or scalar density band (0.82--0.84x density depletion).

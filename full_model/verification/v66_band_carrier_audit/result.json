@@ -1,0 +1,125 @@
+{
+  "cases": {
+    "adiabatic": {
+      "case": "v66_regime_fixed_n48_T1000_r8e4",
+      "field_association": {
+        "absolute_shear_stress": {
+          "band_to_domain_mean_ratio": 1.0930709492788138,
+          "pearson_with_power": 0.4040437532025744,
+          "top_decile_overlap_with_power_band": 0.3037974683544304
+        },
+        "boundary_tj_site": {
+          "band_to_domain_mean_ratio": 1.0996346994746833,
+          "pearson_with_power": 0.24182127216453475,
+          "top_decile_overlap_with_power_band": 0.1550632911392405
+        },
+        "nye_norm": {
+          "band_to_domain_mean_ratio": 1.2312267673705588,
+          "pearson_with_power": 0.10981048850985169,
+          "top_decile_overlap_with_power_band": 0.12658227848101267
+        },
+        "signed_density_norm": {
+          "band_to_domain_mean_ratio": 0.9788985855908665,
+          "pearson_with_power": -0.006604290589276471,
+          "top_decile_overlap_with_power_band": 0.12025316455696203
+        },
+        "signed_slip_rate_norm": {
+          "band_to_domain_mean_ratio": 2.4655055744736782,
+          "pearson_with_power": 0.9709388024075069,
+          "top_decile_overlap_with_power_band": 0.6550632911392406
+        },
+        "temperature": {
+          "band_to_domain_mean_ratio": 1.0200530954013618,
+          "pearson_with_power": 0.5072545279838957,
+          "top_decile_overlap_with_power_band": 0.2879746835443038
+        },
+        "total_density": {
+          "band_to_domain_mean_ratio": 0.8368393107116698,
+          "pearson_with_power": -0.28804234475583695,
+          "top_decile_overlap_with_power_band": 0.0031645569620253164
+        }
+      },
+      "power_band_fraction": 0.1371527777777778,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "4b521c70a540c68ee2655cf935e522de8170dad7",
+        "source_dirty": true
+      },
+      "steps": 1000,
+      "strain": 0.15999999999999617
+    },
+    "strong_bath": {
+      "case": "v66_regime_fixed_n48_T1000_r8e4_strong_bath",
+      "field_association": {
+        "absolute_shear_stress": {
+          "band_to_domain_mean_ratio": 1.0852895516568837,
+          "pearson_with_power": 0.3986715840935764,
+          "top_decile_overlap_with_power_band": 0.3111111111111111
+        },
+        "boundary_tj_site": {
+          "band_to_domain_mean_ratio": 1.0745705223472313,
+          "pearson_with_power": 0.22622551986778286,
+          "top_decile_overlap_with_power_band": 0.14603174603174604
+        },
+        "nye_norm": {
+          "band_to_domain_mean_ratio": 1.2862044991268045,
+          "pearson_with_power": 0.1349557793625363,
+          "top_decile_overlap_with_power_band": 0.13968253968253969
+        },
+        "signed_density_norm": {
+          "band_to_domain_mean_ratio": 0.9955199992775877,
+          "pearson_with_power": 0.003265771110688284,
+          "top_decile_overlap_with_power_band": 0.11428571428571428
+        },
+        "signed_slip_rate_norm": {
+          "band_to_domain_mean_ratio": 2.493599229173411,
+          "pearson_with_power": 0.9715460446983843,
+          "top_decile_overlap_with_power_band": 0.6698412698412698
+        },
+        "temperature": {
+          "band_to_domain_mean_ratio": 1.0000229662670168,
+          "pearson_with_power": 0.3716406410341806,
+          "top_decile_overlap_with_power_band": 0.21904761904761905
+        },
+        "total_density": {
+          "band_to_domain_mean_ratio": 0.8221927770234798,
+          "pearson_with_power": -0.30408152854509873,
+          "top_decile_overlap_with_power_band": 0.012698412698412698
+        }
+      },
+      "power_band_fraction": 0.13671875,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "4b521c70a540c68ee2655cf935e522de8170dad7",
+        "source_dirty": true
+      },
+      "steps": 1000,
+      "strain": 0.15999999999999617
+    }
+  },
+  "created_utc": "2026-10-14T10:40:11.545040+00:00",
+  "decision": {
+    "dominant_reported_association_in_both_controls": "signed_slip_rate_norm",
+    "high_total_density_band": false,
+    "interpretation": "Associations diagnose carriers but do not establish causation. The strongly correlated but nonidentical adiabatic/bath power patterns support a shared high-slip-rate mechanical organizer that is modified and amplified by heat. Weak Nye association and density depletion reject a GND-wall or scalar high-density classification for this endpoint band.",
+    "power_band_mask_jaccard": 0.7875354107648725,
+    "power_field_correlation_above_0p95": true,
+    "shared_but_not_identical_power_pattern": true
+  },
+  "matched_cross_control": {
+    "field_pearson": {
+      "absolute_shear_stress": 0.9966902144894006,
+      "boundary_tj_site": 0.9999650830377944,
+      "nye_norm": 0.9969117501897843,
+      "signed_density_norm": 0.9833306755041756,
+      "signed_slip_rate_norm": 0.9756825522583138,
+      "temperature": 0.7499492187592793,
+      "total_density": 0.9993152772551896
+    },
+    "power_band_mask_jaccard": 0.7875354107648725,
+    "power_field_pearson": 0.9819360702167983
+  },
+  "schema": "v66-band-carrier-audit-v1"
+}

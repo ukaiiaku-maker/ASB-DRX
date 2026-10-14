@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T10:48:00Z",
+  "last_updated_utc": "2026-10-14T11:02:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -66,7 +66,7 @@
     "source_identity": "v66_matched_n32_n48_long_horizon_on_4b521c7_restart_source",
     "expected_discriminatory_observation": "component_area_and_transverse_span_converge_below_5_percent_while_the_bath_band_persists_if_localization_is_mechanically_formed",
     "resource_need": "future_authorized_heavy_local_solver_for_n64_matched_continuation",
-    "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; mechanically_formed_connected_localization_candidate_with_thermal_amplification; strict_ASB_false_due_unconverged_band_geometry; dynamic_growth_not_sustained"
+    "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; matched_n48_band_is_shared_heat_modified_high_slip_rate_structure_not_GND_or_high_density_wall; strict_ASB_false_due_unconverged_band_geometry; dynamic_growth_not_sustained"
   },
   "completion_semantics": {
     "execution_complete": false,
