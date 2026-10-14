@@ -162,10 +162,11 @@ class CommonWallParameters:
     bath_rate_s: float = 0.0
     bath_temperature_K: float = 1100.0
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
-    # Default-off Groma--Zaiser sign-resolved correlation branch.  The
-    # existing ``correlation_energy_J_m`` is the A*rho*log(rho/rho0) term;
-    # this coefficient supplies the independent D*kappa^2/(2*rho) term.
+    # Default-off Groma--Zaiser sign-resolved correlation branch.  Its A and
+    # D terms apply to each signed mobile family, unlike the legacy common
+    # correlation term, which uses the complete reservoir density.
     groma_sign_resolved_transport_enabled: bool = False
+    groma_mobile_correlation_energy_J_m: float = 0.0
     groma_gnd_correlation_energy_J_m: float = 0.0
     # Physical depth over which a captured line measure enters the continuum
     # wall reservoir.  This is independent of mesh spacing, interface width,
@@ -211,12 +212,14 @@ class CommonWallParameters:
             raise ValueError("bound active tolerance must lie in (0,0.5)")
         if self.mobile_correlation_diffusivity_m2_s < 0.0:
             raise ValueError("mobile correlation diffusivity cannot be negative")
-        if (not math.isfinite(float(self.groma_gnd_correlation_energy_J_m))
-                or self.groma_gnd_correlation_energy_J_m < 0.0):
-            raise ValueError("Groma GND correlation energy cannot be negative")
+        if any(not math.isfinite(float(value)) or value < 0.0 for value in (
+                self.groma_mobile_correlation_energy_J_m,
+                self.groma_gnd_correlation_energy_J_m)):
+            raise ValueError("Groma correlation energies cannot be negative")
         if (self.groma_sign_resolved_transport_enabled
-                and self.groma_gnd_correlation_energy_J_m <= 0.0):
-            raise ValueError("sign-resolved Groma transport requires D energy")
+                and (self.groma_mobile_correlation_energy_J_m <= 0.0
+                     or self.groma_gnd_correlation_energy_J_m <= 0.0)):
+            raise ValueError("sign-resolved Groma transport requires A and D energies")
         if (self.groma_sign_resolved_transport_enabled
                 and self.transport_scheme != "spectral"):
             raise ValueError(
@@ -450,12 +453,14 @@ def wall_free_energy_derivatives(
     ratio = np.divide(
         mobile_kappa, safe_mobile, out=np.zeros_like(mobile_kappa),
         where=polarized)
+    mobile_common_mu = parameters.groma_mobile_correlation_energy_J_m*(
+        np.log(safe_mobile/reference)+1.0)
     gnd_plus_mu = parameters.groma_gnd_correlation_energy_J_m*(
         ratio-.5*ratio*ratio)
     gnd_minus_mu = parameters.groma_gnd_correlation_energy_J_m*(
         -ratio-.5*ratio*ratio)
-    mobile_plus_mu = common_mu[..., None]+gnd_plus_mu
-    mobile_minus_mu = common_mu[..., None]+gnd_minus_mu
+    mobile_plus_mu = common_mu[..., None]+mobile_common_mu+gnd_plus_mu
+    mobile_minus_mu = common_mu[..., None]+mobile_common_mu+gnd_minus_mu
     forest_mu = common_mu+parameters.forest_energy_J_m
     denergy_dgate = (
         -parameters.wall_absent_penalty_J_m3*q*q
@@ -504,6 +509,8 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     mobile_rho = state.mobile_plus_m2+state.mobile_minus_m2
     mobile_kappa = state.mobile_plus_m2-state.mobile_minus_m2
     safe_mobile = np.maximum(mobile_rho, 1e-30*reference)
+    mobile_correlation = parameters.groma_mobile_correlation_energy_J_m*np.sum(
+        mobile_rho*np.log(safe_mobile/reference), axis=2)
     gnd_correlation = .5*parameters.groma_gnd_correlation_energy_J_m*np.sum(
         np.divide(mobile_kappa*mobile_kappa, safe_mobile,
                   out=np.zeros_like(mobile_kappa), where=mobile_rho > 0.0),
@@ -527,7 +534,8 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     partition = (.5*parameters.wall_partition_J_m
                  *(wall-gate*h*parameters.wall_target_m2)**2
                  /parameters.wall_target_m2)
-    return (density+gnd_correlation+forest+junction+barrier+absent
+    return (density+mobile_correlation+gnd_correlation
+            +forest+junction+barrier+absent
             +ordering+partition)
 
 
@@ -576,6 +584,12 @@ def taylor_resistance_Pa(state, systems, topologies, parameters):
     obstacle = (state.forest_plus_m2+state.forest_minus_m2
                 +parameters.taylor_wall_weight
                 *(state.wall_plus_m2+state.wall_minus_m2))
+    # The Groma correlation theory's Taylor friction is alpha*G*b*sqrt(rho)
+    # for the transported positive/negative population itself.  The legacy
+    # production law intentionally excluded mobile self-content; retain that
+    # exact baseline unless the complete sign-resolved branch is enabled.
+    if parameters.groma_sign_resolved_transport_enabled:
+        obstacle = obstacle+state.mobile_plus_m2+state.mobile_minus_m2
     obstacle = obstacle.copy()
     for index, topology in enumerate(topologies):
         contribution = (parameters.taylor_junction_weight
@@ -729,15 +743,23 @@ def resolved_driving_components(
         thermodynamic_plus = raw-plus_gradient/parameters.burgers_m
         thermodynamic_minus = raw+minus_gradient/parameters.burgers_m
 
-        def resisted(value):
-            if parameters.taylor_alpha == 0.0:
-                return value.copy()
-            smooth = np.sqrt(value*value+resistance*resistance
-                             +parameters.taylor_regularization_Pa**2)
-            return value*(1.0-resistance/smooth)
-
-        effective_plus = resisted(thermodynamic_plus)
-        effective_minus = resisted(thermodynamic_minus)
+        # The correlation theory's density-dependent friction acts on each
+        # signed population as (1-/+ kappa/rho)*tau_f.  This is the missing
+        # coupling that produces its finite-wavelength instability; merely
+        # adding the convex correlation energy to the legacy smooth Taylor
+        # map cannot do so.  ``resistance`` remains the production Taylor law
+        # and the sign factor makes friction oppose local glide under exact
+        # stress/sign reversal.
+        mobile_total = state.mobile_plus_m2+state.mobile_minus_m2
+        polarization = np.divide(
+            state.mobile_plus_m2-state.mobile_minus_m2, mobile_total,
+            out=np.zeros_like(mobile_total), where=mobile_total > 0.0)
+        plus_excess = np.maximum(
+            np.abs(thermodynamic_plus)-(1.0-polarization)*resistance, 0.0)
+        minus_excess = np.maximum(
+            np.abs(thermodynamic_minus)-(1.0+polarization)*resistance, 0.0)
+        effective_plus = np.sign(thermodynamic_plus)*plus_excess
+        effective_minus = np.sign(thermodynamic_minus)*minus_excess
         temperature = channel_temperature_K(
             state, parameters, "flow")[..., None]
 
@@ -750,7 +772,6 @@ def resolved_driving_components(
 
         speed_plus = arrhenius_velocity(effective_plus)
         speed_minus = arrhenius_velocity(effective_minus)
-        mobile_total = state.mobile_plus_m2+state.mobile_minus_m2
         speed = np.divide(
             speed_plus*state.mobile_plus_m2+speed_minus*state.mobile_minus_m2,
             mobile_total, out=np.zeros_like(mobile_total),
@@ -939,9 +960,13 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         transport_driving_power, 0.0)
     multiplication_budget_scale = np.ones(grid)
     if parameters.enforce_multiplication_energy_budget:
-        multiplication_budget_scale = np.minimum(
-            1.0, multiplication_power_available
-            /np.maximum(multiplication_cost, 1e-300))
+        # Ratios above one all map to the same inactive budget bound. Avoid a
+        # benign overflow when a tangent perturbation makes the positive cost
+        # subnormal while finite mechanical power remains available.
+        with np.errstate(over="ignore"):
+            multiplication_budget_scale = np.minimum(
+                1.0, multiplication_power_available
+                /np.maximum(multiplication_cost, 1e-300))
         multiplication *= multiplication_budget_scale[..., None]
     mp_rate += multiplication; mm_rate += multiplication
 

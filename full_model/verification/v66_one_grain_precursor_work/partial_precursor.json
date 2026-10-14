@@ -1,0 +1,200 @@
+{
+  "case_dir": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical",
+  "created_utc": "2026-10-14T02:28:53.746516+00:00",
+  "decision": {
+    "claim_boundary": "fresh current-source one-grain evolution; a precursor is not a promoted grain, sustained DRX, or material calibration",
+    "classification": "NO_RESOLVED_GND_BEARING_PRECURSOR",
+    "gnd_bearing_closed_precursor_detected": false,
+    "physical_grain_count_change": 0,
+    "strict_new_boundary_qualified": false
+  },
+  "grid": [
+    32,
+    32
+  ],
+  "records": [
+    {
+      "applied_strain": 0.010879999999999973,
+      "checkpoint": "checkpoint_step_000000044_strain_0.01088000.npz",
+      "orientation_span_deg": 2.19366228214927e-05,
+      "physical_time_s": 1.0879999999999972e-06,
+      "precursor_thresholds": {
+        "0.25_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "0.5_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "1_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "2_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        }
+      },
+      "sha256": "0c27fee265993da89e243733f4f4c6305e5dd9fbd6f5a23347505f7050db14b0",
+      "step": 44,
+      "strict_boundary": {
+        "qualified": false,
+        "reason": "no_resolved_orientation_plateau"
+      }
+    },
+    {
+      "applied_strain": 0.011459999999999955,
+      "checkpoint": "checkpoint_step_000000073_strain_0.01146000.npz",
+      "orientation_span_deg": 4.630603509865647e-05,
+      "physical_time_s": 1.1459999999999955e-06,
+      "precursor_thresholds": {
+        "0.25_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "0.5_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "1_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "2_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        }
+      },
+      "sha256": "8fd47a969f6154983c9cba6afc4b13bd26f6a5708e94db37467fa723bc546f5e",
+      "step": 73,
+      "strict_boundary": {
+        "qualified": false,
+        "reason": "no_resolved_orientation_plateau"
+      }
+    },
+    {
+      "applied_strain": 0.011499999999999953,
+      "checkpoint": "checkpoint_step_000000075_strain_0.01150000.npz",
+      "orientation_span_deg": 4.839860074792152e-05,
+      "physical_time_s": 1.1499999999999953e-06,
+      "precursor_thresholds": {
+        "0.25_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "0.5_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "1_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "2_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        }
+      },
+      "sha256": "ef8d31ff0bf1f9f9ebbe9bb878bd717183167f5c2ec5e594bec0a21048361419",
+      "step": 75,
+      "strict_boundary": {
+        "qualified": false,
+        "reason": "no_resolved_orientation_plateau"
+      }
+    },
+    {
+      "applied_strain": 0.011539999999999951,
+      "checkpoint": "checkpoint_step_000000077_strain_0.01154000.npz",
+      "orientation_span_deg": 5.0553344265222234e-05,
+      "physical_time_s": 1.1539999999999952e-06,
+      "precursor_thresholds": {
+        "0.25_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "0.5_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "1_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "2_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        }
+      },
+      "sha256": "3109a6588830faf568edfc15ec04ede083f35926f032e0664da7a2d14096d270",
+      "step": 77,
+      "strict_boundary": {
+        "qualified": false,
+        "reason": "no_resolved_orientation_plateau"
+      }
+    },
+    {
+      "applied_strain": 0.01159999999999995,
+      "checkpoint": "checkpoint_step_000000080_strain_0.01160000.npz",
+      "orientation_span_deg": 5.390612454516412e-05,
+      "physical_time_s": 1.159999999999995e-06,
+      "precursor_thresholds": {
+        "0.25_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "0.5_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "1_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "2_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        }
+      },
+      "sha256": "da9cd6b6363008880b32f69752c4b1c0f98e43480748ff3b5a317f965b2d5611",
+      "step": 80,
+      "strict_boundary": {
+        "qualified": false,
+        "reason": "no_resolved_orientation_plateau"
+      }
+    },
+    {
+      "applied_strain": 0.011639999999999949,
+      "checkpoint": "checkpoint_step_000000082_strain_0.01164000.npz",
+      "orientation_span_deg": 5.6224566756159327e-05,
+      "physical_time_s": 1.163999999999995e-06,
+      "precursor_thresholds": {
+        "0.25_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "0.5_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "1_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        },
+        "2_deg": {
+          "qualified": false,
+          "reason": "no_resolved_orientation_plateau"
+        }
+      },
+      "sha256": "ac5a1bc5f3ebf588c0431610e7e9413ed0b38867cdcb8065ef43a49e32c8dc8d",
+      "step": 82,
+      "strict_boundary": {
+        "qualified": false,
+        "reason": "no_resolved_orientation_plateau"
+      }
+    }
+  ],
+  "schema": "v66-one-grain-structural-precursor-v1",
+  "source_commit": "96e75b4+precursor-analysis",
+  "spacing_m": 3.125e-07
+}

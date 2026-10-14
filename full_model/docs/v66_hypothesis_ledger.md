@@ -504,3 +504,40 @@ experiment, result, limitation, and next branch.
   production ablation while preserving EXP-floor mobility and complete energy,
   then test whether 2-D signed transport develops polarization rather than
   only a total-density band.
+
+## 2026-10-14T02:35:00Z — production correlation closure and tangent
+
+- Goals: G01, G04, G05, G06.
+- Prediction: the reduced finite-wavelength oracle will survive in the common
+  production residual only if its mobile `A rho ln rho`, signed
+  `D kappa^2/(2 rho)`, and mobile-density Taylor friction enter the same
+  sign-resolved Arrhenius flux. Adding only the convex correlation energy to
+  the legacy common-speed transport will remain stable.
+- Experiment: implement the three terms as a default-off branch of the
+  authoritative four-family common-wall residual. Preserve the baseline
+  Peierls/EXP-floor kinetics and Taylor law; use the Taylor law additionally on
+  mobile self-content only inside this ablation. Differentiate the actual
+  production residual and separately extract its signed-mobile transport
+  sub-block over a 4.8 micrometre periodic domain. Use literature-range
+  `A=1.25`, `D=0.5`, no fitted PF target, and 900 K.
+- Result: the first two partial implementations were correctly negative. The
+  legacy Taylor resistance excludes mobile content, so their transport
+  tangents decayed at every tested stress; their positive full-state modes
+  were the old nearly wave-number-independent reservoir reactions. With the
+  missing mobile Taylor content included, the 60 MPa transport tangent is
+  positive from 4.8 to 0.96 micrometres, selects the interior mode at 1.6
+  micrometres (`7.9849e-4 1/s`), and becomes negative by 0.8 micrometres. The
+  zero-stress branch is exactly stationary and 80 MPa and above are stable.
+  All signed-content, stress/sign symmetry, finite-difference energy, heat,
+  and common regression checks pass (66 focused tests).
+- Decision: promote this as an opt-in production-capable H3 mechanism
+  candidate, not as a production default or calibration. The immutable
+  Arrhenius Peierls/Taylor framework is retained; the new result establishes a
+  narrow near-flow-threshold patterning regime rather than replacing it.
+- Limitation: this is a linear production tangent. Its fastest e-folding time
+  is about 1252 s at 900 K, while the current reservoir reactions have much
+  faster local modes. It does not establish nonlinear saturation,
+  polarization, a GND-bearing wall, a subgrain, or RX.
+- Next branch: run a nonlinear signed-transport trajectory at fixed parameters
+  and then reintroduce the complete reactions without retuning. Classify any
+  total-density band separately from polarization and closed orientation.

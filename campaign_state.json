@@ -1,5 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
+  "last_updated_utc": "2026-10-14T02:36:55Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -41,32 +42,35 @@
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
     "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
-    "H3": "Groma_correlation_backstress_and_density_diffusion_select_a_finite_wavelength_under_linear_and_EXP_floor_mobility_but_2D_GND_wall_formation_is_unqualified",
+    "H3": "production_sign_resolved_Groma_A_D_energy_and_mobile_Taylor_friction_select_a_1.6_um_transport_mode_near_threshold_under_EXP_floor_mobility_but_nonlinear_GND_wall_formation_is_unqualified",
     "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 70552,
-      "case": "v66_one_grain_precursor_work/n32_mechanical",
-      "source": "96e75b4",
-      "target_strain": 0.05,
-      "checkpointed_restart": true
+      "pid": null,
+      "case": null,
+      "status": "available_after_cost_classified_precursor_prefix"
     },
-    "unrelated_processes_preserved": [34369, 34370, 71220, 94577]
+    "preserved_precursor_checkpoint": {
+      "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
+      "sha256": "ac5a1bc5f3ebf588c0431610e7e9413ed0b38867cdcb8065ef43a49e32c8dc8d",
+      "classification": "NO_RESOLVED_GND_BEARING_PRECURSOR"
+    },
+    "unrelated_processes_preserved": [34369, 34370, 53513, 53514, 71220, 94577]
   },
   "current_task": {
-    "goal_ids": ["G01", "G02", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_fresh_current_source_one_grain_Mura_evolution_forms_a_resolved_GND_bearing_closed_precursor_or_only_polarized_unresolved_wall_content",
-    "next_executable_experiment": "finish_checksum_bound_n32_mechanical_heterogeneity_to_five_percent_then_apply_multithreshold_geometry_Frank_GND_order_and_density_gates",
-    "source_identity": "96e75b4 plus checkpoint 0c27fee265993da89e243733f4f4c6305e5dd9fbd6f5a23347505f7050db14b0",
-    "expected_discriminatory_observation": "a_new_closed_GND_bearing_interface_with_compatible_Burgers_content_persists_at_fixed_grid_scale_and_can_mature_by_the_qualified_absorption_rotation_law",
-    "resource_need": "one_local_heavy_solver_running_plus_lightweight_analysis",
-    "result_status": "interaction_derived_finite_wavelength_oracle_passes_512_refinement_and_EXP_floor_test_but_remains_low_polarization_fresh_one_grain_precursor_run_active"
+    "goal_ids": ["G01", "G04", "G05", "G06"],
+    "hypothesis_ids": ["H1", "H2", "H3"],
+    "physical_uncertainty": "whether_the_production_finite_wavelength_mobile_tangent_saturates_nonlinearly_into_polarized_GND_content_and_survives_unretuned_reservoir_reactions",
+    "next_executable_experiment": "run_nonlinear_2D_signed_transport_at_the_fixed_60_MPa_near_threshold_candidate_then_repeat_with_complete_reactions_and_classify_density_polarization_Nye_orientation_and_energy",
+    "source_identity": "668253b plus pending production mobile Taylor and A_D closure",
+    "expected_discriminatory_observation": "finite_grid_stable_spacing_with_growing_signed_polarization_precedes_any_structural_absorption_or_subgrain_maturation_claim",
+    "resource_need": "one_local_heavy_solver_available",
+    "result_status": "production_transport_tangent_selects_1.6_um_mode_at_60_MPa_and_900_K; nonlinear_saturation_and_complete_reaction_survival_pending"
   },
   "completion_semantics": {
     "execution_complete": false,
-    "implementation_verified": false,
+    "implementation_verified": true,
     "mechanism_supported_at_tested_conditions": false,
     "integrated_response_qualified": false,
     "material_validated": false,

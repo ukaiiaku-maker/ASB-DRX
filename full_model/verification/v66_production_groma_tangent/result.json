@@ -1,0 +1,2003 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_production_groma_tangent/production_mobile_tangent.png": "cab1cd6bca1fbe7a4a0e63e75beb50c51cd970dcd193a611b14f5ed80451a62b"
+  },
+  "base_mobile_density_per_sign_family_m2": 10000000000000.0,
+  "base_temperature_K": 900.0,
+  "claim_boundary": "a positive mobile tangent is neither nonlinear saturation, a GND-bearing wall, a subgrain, nor recrystallization",
+  "conditions": {
+    "0": [
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 2.5559801189148043e-14,
+        "leading_real_rate_s": 167.95136102619216,
+        "mode_index": 1,
+        "negative_population_weight": 0.5000000000000007,
+        "positive_population_weight": 0.4999999999999993,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 3.6908747663094094e-14,
+        "leading_real_rate_s": 167.95136103265725,
+        "mode_index": 2,
+        "negative_population_weight": 0.5000000000000098,
+        "positive_population_weight": 0.49999999999999,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "leading_imaginary_rate_s": 7.475501699142724e-14,
+        "leading_real_rate_s": 167.9513610568678,
+        "mode_index": 3,
+        "negative_population_weight": 0.5000000000000006,
+        "positive_population_weight": 0.4999999999999992,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.869014082315409e-14,
+        "leading_real_rate_s": 167.95136106666655,
+        "mode_index": 4,
+        "negative_population_weight": 0.5000000000000014,
+        "positive_population_weight": 0.49999999999999867,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 8.314953663873195e-14,
+        "leading_real_rate_s": 167.9513610261923,
+        "mode_index": 5,
+        "negative_population_weight": 0.5000000000000009,
+        "positive_population_weight": 0.4999999999999991,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.6284819470280985e-13,
+        "leading_real_rate_s": 167.951361075,
+        "mode_index": 6,
+        "negative_population_weight": 0.4999999999999982,
+        "positive_population_weight": 0.5000000000000019,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 8.475936002443835e-14,
+        "leading_real_rate_s": 167.95136102619216,
+        "mode_index": 7,
+        "negative_population_weight": 0.49999999999999695,
+        "positive_population_weight": 0.500000000000003,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 1.5418530649766498e-13,
+        "leading_real_rate_s": 167.95136106666678,
+        "mode_index": 8,
+        "negative_population_weight": 0.5000000000000024,
+        "positive_population_weight": 0.4999999999999977,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 1.3409026975194947e-13,
+        "leading_real_rate_s": 167.95136105686777,
+        "mode_index": 9,
+        "negative_population_weight": 0.4999999999999907,
+        "positive_population_weight": 0.5000000000000093,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 2.4081970985258105e-13,
+        "leading_real_rate_s": 167.9513610326572,
+        "mode_index": 10,
+        "negative_population_weight": 0.5000000000000001,
+        "positive_population_weight": 0.5000000000000001,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          1
+        ],
+        "leading_imaginary_rate_s": 7.775508632019193e-13,
+        "leading_real_rate_s": 167.951361026192,
+        "mode_index": 11,
+        "negative_population_weight": 0.5000000000000036,
+        "positive_population_weight": 0.49999999999999667,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "100000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.7154556300742146e-14,
+        "leading_real_rate_s": 168.47202852183696,
+        "mode_index": 1,
+        "negative_population_weight": 0.4999999999999928,
+        "positive_population_weight": 0.5000000000000072,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.001262573642114413,
+        "transport_leading_real_rate_s": -0.00011356472703170095,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 3.6358046840302683e-14,
+        "leading_real_rate_s": 168.47177994455961,
+        "mode_index": 2,
+        "negative_population_weight": 0.4999999999999999,
+        "positive_population_weight": 0.5000000000000007,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.002519512425402862,
+        "transport_leading_real_rate_s": -0.0004542589053565875,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 6.855152475312154e-14,
+        "leading_real_rate_s": 168.47136573212308,
+        "mode_index": 3,
+        "negative_population_weight": 0.49999999999999095,
+        "positive_population_weight": 0.5000000000000092,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.0037651393400184602,
+        "transport_leading_real_rate_s": -0.0010220825417597155,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 9.363021788186847e-14,
+        "leading_real_rate_s": 168.47078583318958,
+        "mode_index": 4,
+        "negative_population_weight": 0.4999999999999995,
+        "positive_population_weight": 0.5000000000000003,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.0049936916951563905,
+        "transport_leading_real_rate_s": -0.001817035623912628,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 7.509325884600073e-14,
+        "leading_real_rate_s": 168.47004026020753,
+        "mode_index": 5,
+        "negative_population_weight": 0.4999999999999923,
+        "positive_population_weight": 0.500000000000008,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.006199274857694391,
+        "transport_leading_real_rate_s": -0.00283911816327888,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.6522288477074756e-13,
+        "leading_real_rate_s": 168.46912912075211,
+        "mode_index": 6,
+        "negative_population_weight": 0.499999999999998,
+        "positive_population_weight": 0.500000000000002,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.007375811617388555,
+        "transport_leading_real_rate_s": -0.004088330157742188,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 8.043289232714949e-14,
+        "leading_real_rate_s": 168.46805229655095,
+        "mode_index": 7,
+        "negative_population_weight": 0.4999999999999908,
+        "positive_population_weight": 0.5000000000000091,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.008516985183980075,
+        "transport_leading_real_rate_s": -0.005564671599601879,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.56519168483535e-13,
+        "leading_real_rate_s": 168.46680994569587,
+        "mode_index": 8,
+        "negative_population_weight": 0.5000000000000041,
+        "positive_population_weight": 0.4999999999999959,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.009616173356294385,
+        "transport_leading_real_rate_s": -0.007268142484286311,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.301560678265999e-13,
+        "leading_real_rate_s": 168.46540205392148,
+        "mode_index": 9,
+        "negative_population_weight": 0.499999999999996,
+        "positive_population_weight": 0.5000000000000038,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.010666370945331115,
+        "transport_leading_real_rate_s": -0.009198742864368135,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 2.301580518186295e-13,
+        "leading_real_rate_s": 168.46382861989082,
+        "mode_index": 10,
+        "negative_population_weight": 0.5000000000000075,
+        "positive_population_weight": 0.49999999999999256,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.011660095716348687,
+        "transport_leading_real_rate_s": -0.011356472675418427,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.752106262889532e-13,
+        "leading_real_rate_s": 168.4620898436469,
+        "mode_index": 11,
+        "negative_population_weight": 0.500000000000004,
+        "positive_population_weight": 0.49999999999999595,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.0125892727099875,
+        "transport_leading_real_rate_s": -0.013741331938245763,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "1000000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.2860449162205868e-11,
+        "leading_real_rate_s": 28568.382443055714,
+        "mode_index": 1,
+        "negative_population_weight": 0.5000000000000018,
+        "positive_population_weight": 0.4999999999999983,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -2629.016176245073,
+        "transport_leading_real_rate_s": -220.35196432578707,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -3809.933202309614,
+        "leading_real_rate_s": 24636.85494001865,
+        "mode_index": 2,
+        "negative_population_weight": 0.4999999999899878,
+        "positive_population_weight": 0.5000000000100124,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -5247.845752025423,
+        "transport_leading_real_rate_s": -881.4078436773601,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -7494.649977245761,
+        "leading_real_rate_s": 23535.030830136282,
+        "mode_index": 3,
+        "negative_population_weight": 0.4999999999836428,
+        "positive_population_weight": 0.5000000000163571,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -7846.2360065611265,
+        "transport_leading_real_rate_s": -1983.167661417658,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -10664.727689878913,
+        "leading_real_rate_s": 21992.477013333355,
+        "mode_index": 4,
+        "negative_population_weight": 0.4999999999836918,
+        "positive_population_weight": 0.5000000000163081,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -10413.800158665998,
+        "transport_leading_real_rate_s": -3525.6314072645737,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -13655.265910443082,
+        "leading_real_rate_s": 20009.19349919345,
+        "mode_index": 5,
+        "negative_population_weight": 0.4999999999992286,
+        "positive_population_weight": 0.5000000000007718,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -12939.945652050415,
+        "transport_leading_real_rate_s": -5508.799079654762,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": -16534.693933813254,
+        "leading_real_rate_s": 17585.18038400001,
+        "mode_index": 6,
+        "negative_population_weight": 0.5000000000005363,
+        "positive_population_weight": 0.4999999999994636,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -15413.796633042753,
+        "transport_leading_real_rate_s": -7932.670652915604,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": -19321.650181065972,
+        "leading_real_rate_s": 14720.59290498897,
+        "mode_index": 7,
+        "negative_population_weight": 0.14512741422224779,
+        "positive_population_weight": 0.8548725857777523,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -17824.107906998273,
+        "transport_leading_real_rate_s": -10797.246181012164,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": -22020.516728272443,
+        "leading_real_rate_s": 11415.313433600022,
+        "mode_index": 8,
+        "negative_population_weight": 0.1461136629071659,
+        "positive_population_weight": 0.853886337092834,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -20159.16745459058,
+        "transport_leading_real_rate_s": -14102.52564520287,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "leading_imaginary_rate_s": -24627.333266218295,
+        "leading_real_rate_s": 7669.33015028611,
+        "mode_index": 9,
+        "negative_population_weight": 0.14819569024275628,
+        "positive_population_weight": 0.8518043097572436,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -22406.683499283165,
+        "transport_leading_real_rate_s": -17848.508972120417,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": -27135.106483839227,
+        "leading_real_rate_s": 3482.642763801279,
+        "mode_index": 10,
+        "negative_population_weight": 0.1511346739480322,
+        "positive_population_weight": 0.8488653260519676,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -24553.65147552088,
+        "transport_leading_real_rate_s": -22035.196312720625,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": -29534.64361903171,
+        "leading_real_rate_s": -1144.7484520249998,
+        "mode_index": 11,
+        "negative_population_weight": 0.15480434062970194,
+        "positive_population_weight": 0.8451956593702978,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -26586.19329222388,
+        "transport_leading_real_rate_s": -26662.58752928872,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "180000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 2.6548838856506718e-14,
+        "leading_real_rate_s": 175.43068533633442,
+        "mode_index": 1,
+        "negative_population_weight": 0.4999999999999959,
+        "positive_population_weight": 0.5000000000000042,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.003647011364034393,
+        "transport_leading_real_rate_s": -0.00015113851386197195,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 3.575504519755982e-14,
+        "leading_real_rate_s": 175.42972707462144,
+        "mode_index": 2,
+        "negative_population_weight": 0.500000000000002,
+        "positive_population_weight": 0.49999999999999806,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.007290570615593642,
+        "transport_leading_real_rate_s": -0.000604554062060901,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.193630812376188e-14,
+        "leading_real_rate_s": 175.42812986610718,
+        "mode_index": 3,
+        "negative_population_weight": 0.5000000000000008,
+        "positive_population_weight": 0.49999999999999944,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.010927220235068202,
+        "transport_leading_real_rate_s": -0.0013602466384753011,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 6.069854924166067e-14,
+        "leading_real_rate_s": 175.42589361681243,
+        "mode_index": 4,
+        "negative_population_weight": 0.5000000000000042,
+        "positive_population_weight": 0.49999999999999567,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.014553491655783415,
+        "transport_leading_real_rate_s": -0.0024182162706807963,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 6.761131688317019e-14,
+        "leading_real_rate_s": 175.4230179718037,
+        "mode_index": 5,
+        "negative_population_weight": 0.49999999999999306,
+        "positive_population_weight": 0.5000000000000069,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.018165899971908105,
+        "transport_leading_real_rate_s": -0.0037784629279266797,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.8208803129151207e-13,
+        "leading_real_rate_s": 175.41950297680262,
+        "mode_index": 6,
+        "negative_population_weight": 0.5000000000000007,
+        "positive_population_weight": 0.4999999999999992,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.021760937915632786,
+        "transport_leading_real_rate_s": -0.005440986583692693,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.0660437635096575e-13,
+        "leading_real_rate_s": 175.41534783320608,
+        "mode_index": 7,
+        "negative_population_weight": 0.5000000000000053,
+        "positive_population_weight": 0.49999999999999456,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.025335070379338742,
+        "transport_leading_real_rate_s": -0.007405787300845831,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.820411848290053e-13,
+        "leading_real_rate_s": 175.41055277467805,
+        "mode_index": 8,
+        "negative_population_weight": 0.499999999999999,
+        "positive_population_weight": 0.5000000000000007,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.028884728082882075,
+        "transport_leading_real_rate_s": -0.009672865025535625,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.32366000622776e-13,
+        "leading_real_rate_s": 175.405116901707,
+        "mode_index": 9,
+        "negative_population_weight": 0.49999999999999656,
+        "positive_population_weight": 0.5000000000000034,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.0324063016926322,
+        "transport_leading_real_rate_s": -0.012242219819125606,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 2.5228470466658113e-13,
+        "leading_real_rate_s": 175.3990400036697,
+        "mode_index": 10,
+        "negative_population_weight": 0.5000000000000011,
+        "positive_population_weight": 0.49999999999999856,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.03589613480538653,
+        "transport_leading_real_rate_s": -0.015113851659458027,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 8.565169665262592e-13,
+        "leading_real_rate_s": 175.39232138127616,
+        "mode_index": 11,
+        "negative_population_weight": 0.5000000000000016,
+        "positive_population_weight": 0.4999999999999984,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.039350517621831796,
+        "transport_leading_real_rate_s": -0.018287760488562045,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "2000000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 281188276.0816069,
+        "leading_real_rate_s": 1865204.9312444003,
+        "mode_index": 1,
+        "negative_population_weight": 0.4999999999643117,
+        "positive_population_weight": 0.5000000000356885,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -281178774.2452166,
+        "transport_leading_real_rate_s": -2702733.709893644,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -562362353.0373226,
+        "leading_real_rate_s": -6242995.922662497,
+        "mode_index": 2,
+        "negative_population_weight": 0.4999999999568732,
+        "positive_population_weight": 0.500000000043127,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -562343233.2267258,
+        "transport_leading_real_rate_s": -10810934.562615633,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -843507773.7530372,
+        "leading_real_rate_s": -19756664.262062192,
+        "mode_index": 3,
+        "negative_population_weight": 0.4999999999305561,
+        "positive_population_weight": 0.5000000000694438,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -843479060.6899372,
+        "transport_leading_real_rate_s": -24324602.906041145,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": -1124610238.9764595,
+        "leading_real_rate_s": -38675799.71065116,
+        "mode_index": 4,
+        "negative_population_weight": 0.5000000000441213,
+        "positive_population_weight": 0.4999999999558786,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -1124571937.6258621,
+        "transport_leading_real_rate_s": -43243738.35287523,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": -1405655430.7865686,
+        "leading_real_rate_s": -63000402.622472525,
+        "mode_index": 5,
+        "negative_population_weight": 0.5000000000560771,
+        "positive_population_weight": 0.49999999994392286,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "transport_leading_imaginary_rate_s": -1405607541.7641103,
+        "transport_leading_real_rate_s": -67568341.26444888,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": -1686629023.6845024,
+        "leading_real_rate_s": -92730472.60036922,
+        "mode_index": 6,
+        "negative_population_weight": 0.5000000000280963,
+        "positive_population_weight": 0.49999999997190336,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "transport_leading_imaginary_rate_s": -1686571545.836313,
+        "transport_leading_real_rate_s": -97298411.24208802,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": -1967516685.012788,
+        "leading_real_rate_s": -127866009.68622112,
+        "mode_index": 7,
+        "negative_population_weight": 0.5000000000524483,
+        "positive_population_weight": 0.4999999999475517,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "transport_leading_imaginary_rate_s": -1967449616.1423843,
+        "transport_leading_real_rate_s": -132433948.328233,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -2248304074.627185,
+        "leading_real_rate_s": -168407014.86912632,
+        "mode_index": 8,
+        "negative_population_weight": 0.49999999998420036,
+        "positive_population_weight": 0.5000000000157997,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "transport_leading_imaginary_rate_s": -2248227411.7684903,
+        "transport_leading_real_rate_s": -172974953.5122683,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -2528976843.77474,
+        "leading_real_rate_s": -214353486.18881273,
+        "mode_index": 9,
+        "negative_population_weight": 0.49999999997556926,
+        "positive_population_weight": 0.5000000000244309,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -2528890583.3264275,
+        "transport_leading_real_rate_s": -218921424.8325019,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": -2809520635.2646847,
+        "leading_real_rate_s": -265705425.17330456,
+        "mode_index": 10,
+        "negative_population_weight": 0.5000000000137826,
+        "positive_population_weight": 0.4999999999862173,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -2809424773.0371366,
+        "transport_leading_real_rate_s": -270273363.8146839,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": -3089921077.861553,
+        "leading_real_rate_s": -322462832.21539307,
+        "mode_index": 11,
+        "negative_population_weight": 0.4999999999598646,
+        "positive_population_weight": 0.5000000000401358,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "transport_leading_imaginary_rate_s": -3089815609.1124234,
+        "transport_leading_real_rate_s": -327030770.8571744,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "50000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 2.5559801189148043e-14,
+        "leading_real_rate_s": 167.95136102619216,
+        "mode_index": 1,
+        "negative_population_weight": 0.5000000000000007,
+        "positive_population_weight": 0.4999999999999993,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 3.6908747663094094e-14,
+        "leading_real_rate_s": 167.95136103265725,
+        "mode_index": 2,
+        "negative_population_weight": 0.5000000000000098,
+        "positive_population_weight": 0.49999999999999,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "leading_imaginary_rate_s": 7.475501699142724e-14,
+        "leading_real_rate_s": 167.9513610568678,
+        "mode_index": 3,
+        "negative_population_weight": 0.5000000000000006,
+        "positive_population_weight": 0.4999999999999992,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.869014082315409e-14,
+        "leading_real_rate_s": 167.95136106666655,
+        "mode_index": 4,
+        "negative_population_weight": 0.5000000000000014,
+        "positive_population_weight": 0.49999999999999867,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 8.314953663873195e-14,
+        "leading_real_rate_s": 167.9513610261923,
+        "mode_index": 5,
+        "negative_population_weight": 0.5000000000000009,
+        "positive_population_weight": 0.4999999999999991,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.6284819470280985e-13,
+        "leading_real_rate_s": 167.951361075,
+        "mode_index": 6,
+        "negative_population_weight": 0.4999999999999982,
+        "positive_population_weight": 0.5000000000000019,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 8.475936002443835e-14,
+        "leading_real_rate_s": 167.95136102619216,
+        "mode_index": 7,
+        "negative_population_weight": 0.49999999999999695,
+        "positive_population_weight": 0.500000000000003,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 1.5418530649766498e-13,
+        "leading_real_rate_s": 167.95136106666678,
+        "mode_index": 8,
+        "negative_population_weight": 0.5000000000000024,
+        "positive_population_weight": 0.4999999999999977,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 1.3409026975194947e-13,
+        "leading_real_rate_s": 167.95136105686777,
+        "mode_index": 9,
+        "negative_population_weight": 0.4999999999999907,
+        "positive_population_weight": 0.5000000000000093,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "leading_imaginary_rate_s": 2.4081970985258105e-13,
+        "leading_real_rate_s": 167.9513610326572,
+        "mode_index": 10,
+        "negative_population_weight": 0.5000000000000001,
+        "positive_population_weight": 0.5000000000000001,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          1
+        ],
+        "leading_imaginary_rate_s": 7.775508632019193e-13,
+        "leading_real_rate_s": 167.951361026192,
+        "mode_index": 11,
+        "negative_population_weight": 0.5000000000000036,
+        "positive_population_weight": 0.49999999999999667,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0,
+        "transport_leading_real_rate_s": 0.0,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "500000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 5.94488494988524e-14,
+        "leading_real_rate_s": 469.64088947356237,
+        "mode_index": 1,
+        "negative_population_weight": 0.49999999999999845,
+        "positive_population_weight": 0.5000000000000016,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.12061376535077359,
+        "transport_leading_real_rate_s": -0.006871288426145882,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.6326004322954191e-13,
+        "leading_real_rate_s": 469.5876150653068,
+        "mode_index": 2,
+        "negative_population_weight": 0.4999999999999985,
+        "positive_population_weight": 0.5000000000000013,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.24101173553048374,
+        "transport_leading_real_rate_s": -0.027485153157228513,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 2.621904900856866e-13,
+        "leading_real_rate_s": 469.4987731629187,
+        "mode_index": 3,
+        "negative_population_weight": 0.5000000000000003,
+        "positive_population_weight": 0.49999999999999956,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.3609774709026421,
+        "transport_leading_real_rate_s": -0.061841596220465506,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 2.129369461631651e-13,
+        "leading_real_rate_s": 469.37428711129814,
+        "mode_index": 4,
+        "negative_population_weight": 0.5000000000000002,
+        "positive_population_weight": 0.49999999999999944,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.4802932324524946,
+        "transport_leading_real_rate_s": -0.10994061438532589,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.9172913127288455e-13,
+        "leading_real_rate_s": 469.2140482426672,
+        "mode_index": 5,
+        "negative_population_weight": 0.500000000000001,
+        "positive_population_weight": 0.4999999999999992,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.5987393153706848,
+        "transport_leading_real_rate_s": -0.17178221047504494,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 2.8534224570085807e-13,
+        "leading_real_rate_s": 469.01791553734336,
+        "mode_index": 6,
+        "negative_population_weight": 0.49999999999990374,
+        "positive_population_weight": 0.5000000000000959,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.7160933487049632,
+        "transport_leading_real_rate_s": -0.24736638084647644,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 4.074955507488895e-13,
+        "leading_real_rate_s": 468.78571463234874,
+        "mode_index": 7,
+        "negative_population_weight": 0.500000000000035,
+        "positive_population_weight": 0.49999999999996503,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.8321295756303319,
+        "transport_leading_real_rate_s": -0.33669313207827734,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 5.468547037052152e-13,
+        "leading_real_rate_s": 468.51723599926805,
+        "mode_index": 8,
+        "negative_population_weight": 0.5000000000000011,
+        "positive_population_weight": 0.4999999999999992,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.9466180632062462,
+        "transport_leading_real_rate_s": -0.43976245880823006,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 2.2268728826051915e-13,
+        "leading_real_rate_s": 468.2122332855311,
+        "mode_index": 9,
+        "negative_population_weight": 0.49999999999999956,
+        "positive_population_weight": 0.5000000000000007,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -1.0593238851853402,
+        "transport_leading_real_rate_s": -0.5565743609382128,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 4.905345988871943e-13,
+        "leading_real_rate_s": 467.87042312737236,
+        "mode_index": 10,
+        "negative_population_weight": 0.5,
+        "positive_population_weight": 0.4999999999999996,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -1.1700062171190146,
+        "transport_leading_real_rate_s": -0.6871288398937643,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 2.0668206930715876e-12,
+        "leading_real_rate_s": 467.4914793252485,
+        "mode_index": 11,
+        "negative_population_weight": 0.5000000000000003,
+        "positive_population_weight": 0.49999999999999967,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -1.2784173294695058,
+        "transport_leading_real_rate_s": -0.83142589783251,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "60000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.6368537043185183e-14,
+        "leading_real_rate_s": 167.95173650213343,
+        "mode_index": 1,
+        "negative_population_weight": 0.5000000000032212,
+        "positive_population_weight": 0.49999999999677863,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": 1.519819434128182e-19,
+        "transport_leading_real_rate_s": 0.00047277931852274734,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 3.605960404446885e-14,
+        "leading_real_rate_s": 167.9515467758938,
+        "mode_index": 2,
+        "negative_population_weight": 0.5000000000007025,
+        "positive_population_weight": 0.49999999999929706,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 7.622839392553681e-19,
+        "transport_leading_real_rate_s": 0.0007352137225600132,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.918965871555481e-14,
+        "leading_real_rate_s": 167.95123055180673,
+        "mode_index": 3,
+        "negative_population_weight": 0.5000000000000748,
+        "positive_population_weight": 0.4999999999999257,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 9.717376002274604e-21,
+        "transport_leading_real_rate_s": 0.0007984948768332784,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 5.870565295317797e-14,
+        "leading_real_rate_s": 167.95078787131854,
+        "mode_index": 4,
+        "negative_population_weight": 0.5000000000000089,
+        "positive_population_weight": 0.4999999999999908,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 6.751200277399919e-19,
+        "transport_leading_real_rate_s": 0.0006731188430785865,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 8.395204713889656e-14,
+        "leading_real_rate_s": 167.95021873073787,
+        "mode_index": 5,
+        "negative_population_weight": 0.4999999999999383,
+        "positive_population_weight": 0.5000000000000612,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": 2.442978701881437e-18,
+        "transport_leading_real_rate_s": 0.0003686464242467566,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.627780653983697e-13,
+        "leading_real_rate_s": 167.94952306492004,
+        "mode_index": 6,
+        "negative_population_weight": 0.49999999999989553,
+        "positive_population_weight": 0.5000000000001042,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -1.3285569867829057e-18,
+        "transport_leading_real_rate_s": -0.0001064372099994894,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 8.179431955288885e-14,
+        "leading_real_rate_s": 167.94870093662223,
+        "mode_index": 7,
+        "negative_population_weight": 0.49999999999991696,
+        "positive_population_weight": 0.5000000000000832,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 5.175342150942661e-19,
+        "transport_leading_real_rate_s": -0.0007447681113312371,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.5403736866149368e-13,
+        "leading_real_rate_s": 167.94775236089356,
+        "mode_index": 8,
+        "negative_population_weight": 0.5000000000001261,
+        "positive_population_weight": 0.499999999999874,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -1.1252388984341874e-18,
+        "transport_leading_real_rate_s": -0.0015400727340357267,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.3245119637129905e-13,
+        "leading_real_rate_s": 167.9466772335773,
+        "mode_index": 9,
+        "negative_population_weight": 0.499999999999985,
+        "positive_population_weight": 0.5000000000000142,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -2.6351455929815524e-18,
+        "transport_leading_real_rate_s": -0.0024870846643466516,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 2.390382472613475e-13,
+        "leading_real_rate_s": 167.94547567257547,
+        "mode_index": 10,
+        "negative_population_weight": 0.4999999999999073,
+        "positive_population_weight": 0.5000000000000926,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -6.065761604708574e-18,
+        "transport_leading_real_rate_s": -0.003581432304740659,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.780083254307685e-13,
+        "leading_real_rate_s": 167.9441476179005,
+        "mode_index": 11,
+        "negative_population_weight": 0.5000000000002005,
+        "positive_population_weight": 0.49999999999979916,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -2.273860229639581e-17,
+        "transport_leading_real_rate_s": -0.0048195160136213135,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ],
+    "80000000": [
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.512772890939114e-14,
+        "leading_real_rate_s": 168.05740526578077,
+        "mode_index": 1,
+        "negative_population_weight": 0.5000000000000017,
+        "positive_population_weight": 0.4999999999999983,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.0006332806926679578,
+        "transport_leading_real_rate_s": -0.0001114760440041259,
+        "wavelength_m": 4.8e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 3.8017555561280735e-14,
+        "leading_real_rate_s": 168.05720681743563,
+        "mode_index": 2,
+        "negative_population_weight": 0.4999999999978405,
+        "positive_population_weight": 0.5000000000021592,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.0012557021208466166,
+        "transport_leading_real_rate_s": -0.000445904178234093,
+        "wavelength_m": 2.4e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 7.960866973184414e-14,
+        "leading_real_rate_s": 168.05687620416217,
+        "mode_index": 3,
+        "negative_population_weight": 0.49999999999999445,
+        "positive_population_weight": 0.5000000000000053,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.0018560873924581534,
+        "transport_leading_real_rate_s": -0.0010032843971799267,
+        "wavelength_m": 1.6e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 8.048292485556787e-14,
+        "leading_real_rate_s": 168.05641328722317,
+        "mode_index": 4,
+        "negative_population_weight": 0.500000000000002,
+        "positive_population_weight": 0.4999999999999983,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.0024225838604244447,
+        "transport_leading_real_rate_s": -0.0017836167046194988,
+        "wavelength_m": 1.2e-06
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 8.68119029383083e-14,
+        "leading_real_rate_s": 168.0558181013449,
+        "mode_index": 5,
+        "negative_population_weight": 0.5000000000000004,
+        "positive_population_weight": 0.49999999999999994,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.0029422125764552946,
+        "transport_leading_real_rate_s": -0.0027869011003744397,
+        "wavelength_m": 9.6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.618152451457765e-13,
+        "leading_real_rate_s": 168.05509073381256,
+        "mode_index": 6,
+        "negative_population_weight": 0.49999999999999856,
+        "positive_population_weight": 0.5000000000000016,
+        "transport_dominant_coordinate": [
+          "mobile_minus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": 0.003400243812202819,
+        "transport_leading_real_rate_s": -0.004013137588765117,
+        "wavelength_m": 8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 7.497793546083275e-14,
+        "leading_real_rate_s": 168.05423105670062,
+        "mode_index": 7,
+        "negative_population_weight": 0.5000000000000022,
+        "positive_population_weight": 0.49999999999999806,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.0037792529635159535,
+        "transport_leading_real_rate_s": -0.005462326154346321,
+        "wavelength_m": 6.857142857142857e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          3
+        ],
+        "leading_imaginary_rate_s": 1.5666365410275843e-13,
+        "leading_real_rate_s": 168.0532391881138,
+        "mode_index": 8,
+        "negative_population_weight": 0.4999999999988388,
+        "positive_population_weight": 0.5000000000011613,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.004057564604679532,
+        "transport_leading_real_rate_s": -0.007134466816828369,
+        "wavelength_m": 6e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 1.25918041714524e-13,
+        "leading_real_rate_s": 168.05211506784693,
+        "mode_index": 9,
+        "negative_population_weight": 0.4999999999999952,
+        "positive_population_weight": 0.5000000000000049,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          0
+        ],
+        "transport_leading_imaginary_rate_s": -0.004206428658839224,
+        "transport_leading_real_rate_s": -0.009029559580196158,
+        "wavelength_m": 5.333333333333333e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_minus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 2.4089340511300626e-13,
+        "leading_real_rate_s": 168.0508587102816,
+        "mode_index": 10,
+        "negative_population_weight": 0.499999999999994,
+        "positive_population_weight": 0.5000000000000059,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.0041842274186004265,
+        "transport_leading_real_rate_s": -0.011147604397395145,
+        "wavelength_m": 4.8e-07
+      },
+      {
+        "dominant_coordinate": [
+          "mobile_plus_m2",
+          2
+        ],
+        "leading_imaginary_rate_s": 7.88667757682543e-13,
+        "leading_real_rate_s": 168.0494701447107,
+        "mode_index": 11,
+        "negative_population_weight": 0.4999999999999927,
+        "positive_population_weight": 0.5000000000000071,
+        "transport_dominant_coordinate": [
+          "mobile_plus_m2",
+          1
+        ],
+        "transport_leading_imaginary_rate_s": -0.003922317271897494,
+        "transport_leading_real_rate_s": -0.013488601324172227,
+        "wavelength_m": 4.3636363636363636e-07
+      }
+    ]
+  },
+  "created_utc": "2026-10-14T02:36:44.738829+00:00",
+  "finite_interior_mode_selected": {
+    "0": false,
+    "100000000": false,
+    "1000000000": false,
+    "180000000": false,
+    "2000000000": false,
+    "50000000": false,
+    "500000000": false,
+    "60000000": true,
+    "80000000": false
+  },
+  "grid": [
+    24,
+    24
+  ],
+  "maximum_by_stress": {
+    "0": {
+      "dominant_coordinate": [
+        "mobile_minus_m2",
+        0
+      ],
+      "leading_imaginary_rate_s": 2.5559801189148043e-14,
+      "leading_real_rate_s": 167.95136102619216,
+      "mode_index": 1,
+      "negative_population_weight": 0.5000000000000007,
+      "positive_population_weight": 0.4999999999999993,
+      "transport_dominant_coordinate": [
+        "mobile_plus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": 0.0,
+      "transport_leading_real_rate_s": 0.0,
+      "wavelength_m": 4.8e-06
+    },
+    "100000000": {
+      "dominant_coordinate": [
+        "mobile_plus_m2",
+        3
+      ],
+      "leading_imaginary_rate_s": 1.7154556300742146e-14,
+      "leading_real_rate_s": 168.47202852183696,
+      "mode_index": 1,
+      "negative_population_weight": 0.4999999999999928,
+      "positive_population_weight": 0.5000000000000072,
+      "transport_dominant_coordinate": [
+        "mobile_minus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": 0.001262573642114413,
+      "transport_leading_real_rate_s": -0.00011356472703170095,
+      "wavelength_m": 4.8e-06
+    },
+    "1000000000": {
+      "dominant_coordinate": [
+        "mobile_minus_m2",
+        2
+      ],
+      "leading_imaginary_rate_s": 1.2860449162205868e-11,
+      "leading_real_rate_s": 28568.382443055714,
+      "mode_index": 1,
+      "negative_population_weight": 0.5000000000000018,
+      "positive_population_weight": 0.4999999999999983,
+      "transport_dominant_coordinate": [
+        "mobile_plus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": -2629.016176245073,
+      "transport_leading_real_rate_s": -220.35196432578707,
+      "wavelength_m": 4.8e-06
+    },
+    "180000000": {
+      "dominant_coordinate": [
+        "mobile_plus_m2",
+        3
+      ],
+      "leading_imaginary_rate_s": 2.6548838856506718e-14,
+      "leading_real_rate_s": 175.43068533633442,
+      "mode_index": 1,
+      "negative_population_weight": 0.4999999999999959,
+      "positive_population_weight": 0.5000000000000042,
+      "transport_dominant_coordinate": [
+        "mobile_minus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": 0.003647011364034393,
+      "transport_leading_real_rate_s": -0.00015113851386197195,
+      "wavelength_m": 4.8e-06
+    },
+    "2000000000": {
+      "dominant_coordinate": [
+        "mobile_plus_m2",
+        2
+      ],
+      "leading_imaginary_rate_s": 281188276.0816069,
+      "leading_real_rate_s": 1865204.9312444003,
+      "mode_index": 1,
+      "negative_population_weight": 0.4999999999643117,
+      "positive_population_weight": 0.5000000000356885,
+      "transport_dominant_coordinate": [
+        "mobile_minus_m2",
+        2
+      ],
+      "transport_leading_imaginary_rate_s": -281178774.2452166,
+      "transport_leading_real_rate_s": -2702733.709893644,
+      "wavelength_m": 4.8e-06
+    },
+    "50000000": {
+      "dominant_coordinate": [
+        "mobile_minus_m2",
+        0
+      ],
+      "leading_imaginary_rate_s": 2.5559801189148043e-14,
+      "leading_real_rate_s": 167.95136102619216,
+      "mode_index": 1,
+      "negative_population_weight": 0.5000000000000007,
+      "positive_population_weight": 0.4999999999999993,
+      "transport_dominant_coordinate": [
+        "mobile_plus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": 0.0,
+      "transport_leading_real_rate_s": 0.0,
+      "wavelength_m": 4.8e-06
+    },
+    "500000000": {
+      "dominant_coordinate": [
+        "mobile_plus_m2",
+        3
+      ],
+      "leading_imaginary_rate_s": 5.94488494988524e-14,
+      "leading_real_rate_s": 469.64088947356237,
+      "mode_index": 1,
+      "negative_population_weight": 0.49999999999999845,
+      "positive_population_weight": 0.5000000000000016,
+      "transport_dominant_coordinate": [
+        "mobile_plus_m2",
+        1
+      ],
+      "transport_leading_imaginary_rate_s": -0.12061376535077359,
+      "transport_leading_real_rate_s": -0.006871288426145882,
+      "wavelength_m": 4.8e-06
+    },
+    "60000000": {
+      "dominant_coordinate": [
+        "mobile_minus_m2",
+        2
+      ],
+      "leading_imaginary_rate_s": 7.918965871555481e-14,
+      "leading_real_rate_s": 167.95123055180673,
+      "mode_index": 3,
+      "negative_population_weight": 0.5000000000000748,
+      "positive_population_weight": 0.4999999999999257,
+      "transport_dominant_coordinate": [
+        "mobile_plus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": 9.717376002274604e-21,
+      "transport_leading_real_rate_s": 0.0007984948768332784,
+      "wavelength_m": 1.6e-06
+    },
+    "80000000": {
+      "dominant_coordinate": [
+        "mobile_minus_m2",
+        2
+      ],
+      "leading_imaginary_rate_s": 1.512772890939114e-14,
+      "leading_real_rate_s": 168.05740526578077,
+      "mode_index": 1,
+      "negative_population_weight": 0.5000000000000017,
+      "positive_population_weight": 0.4999999999999983,
+      "transport_dominant_coordinate": [
+        "mobile_plus_m2",
+        0
+      ],
+      "transport_leading_imaginary_rate_s": -0.0006332806926679578,
+      "transport_leading_real_rate_s": -0.0001114760440041259,
+      "wavelength_m": 4.8e-06
+    }
+  },
+  "parameters": {
+    "A": 1.25,
+    "D": 0.5,
+    "arrhenius_glide_barrier_eV": 1.9,
+    "exp_a": 2.2,
+    "exp_floor": 0.05,
+    "exp_n": 2.5,
+    "reduced_modulus_b2_J_m": 1.8005992811386394e-09,
+    "taylor_alpha": 0.3
+  },
+  "schema": "v66-production-groma-mobile-tangent-v1",
+  "source_scope": "signed-mobile sub-block of authoritative production residual; other common-state coordinates held fixed",
+  "spacing_m": 2e-07
+}
