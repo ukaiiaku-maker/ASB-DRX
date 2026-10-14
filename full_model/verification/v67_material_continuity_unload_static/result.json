@@ -1,0 +1,48 @@
+{
+  "configuration": {
+    "hold_constraint": "fixed zero macroscopic shear strain; residual stress retained",
+    "hold_dt_s": 2e-08,
+    "hold_rate_s": 0.0,
+    "hold_steps": 300,
+    "length_m": 4.8e-06,
+    "n": 16,
+    "plastic_history_mode": "material_continuity",
+    "schema": "v66-unload-static-configuration-v1",
+    "source_checkpoint": "full_model/verification/v67_material_continuity_r4e4/checkpoint_latest.npz",
+    "temperature_parameter_K": 1000.0,
+    "unload_dt_s": 2e-09,
+    "unload_rate_s": -40000.0,
+    "unload_steps": 900
+  },
+  "created_utc": "2026-10-14T23:49:33.442277+00:00",
+  "decision": {
+    "reason": "The protocol removes imposed strain through the complete mechanical ledger and then holds zero strain. Any residual internal stress remains a physical driver, so this is not called a zero-stress anneal.",
+    "retained_loaded_state_used": true,
+    "run_complete": true,
+    "static_front_active": true,
+    "static_target_reactivated": false,
+    "stress_free_claim": false
+  },
+  "loaded_target_volume_m3": 3.705657282547462e-21,
+  "result": {
+    "accepted_front_events_total": 2122,
+    "final_residual_shear_stress_Pa": -1701742097.2459455,
+    "final_temperature_contrast_K": 23.31163452133751,
+    "final_temperature_mean_K": 1041.2934590710545,
+    "hold_edge_10_20_direction_counts": {
+      "a_to_b": 300
+    },
+    "hold_external_work_J": 0.0,
+    "hold_target_change_fraction": -7.371878105567325e-05,
+    "hold_target_change_from_unloaded_fraction": -6.499966684984784e-05,
+    "hold_target_monotone": false,
+    "maximum_front_relative_energy_closure": 5.0837236777439104e-06,
+    "maximum_mechanical_relative_first_law_residual": 0.0026812403386269677,
+    "rejected_front_events_total": 0,
+    "unload_target_change_fraction": -8.71911420582542e-06,
+    "unload_terminal_shear_stress_Pa": -2078716294.8616242,
+    "unloading_external_work_J": 3.680479773931835e-13,
+    "zero_strain_reached": true
+  },
+  "schema": "v66-unload-static-result-v1"
+}

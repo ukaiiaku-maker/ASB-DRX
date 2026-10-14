@@ -1,0 +1,10 @@
+{
+  "load": 0.07199999999999841,
+  "loaded_volume_m3": [
+    4.0171910765957935e-21,
+    3.705657282547462e-21,
+    3.7049916408567435e-21
+  ],
+  "source": "full_model/verification/v67_material_continuity_r4e4/checkpoint_latest.npz",
+  "source_physical_time_s": 2.2000000000000035e-06
+}

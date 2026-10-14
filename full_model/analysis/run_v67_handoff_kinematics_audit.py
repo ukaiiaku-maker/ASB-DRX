@@ -109,7 +109,8 @@ def _evaluate(state, capacity, *, spacing, thickness, wall, energy, dt):
     }
 
 
-def audit_checkpoint(path: Path, *, fraction: float) -> dict:
+def audit_checkpoint(path: Path, *, fraction: float,
+                     target_receiver_id: int | None = 20) -> dict:
     state, runtime, step, gamma, _, configuration, provenance = _load_checkpoint(
         path)
     n = int(configuration.get("n", state.supports.shape[1]))
@@ -118,6 +119,11 @@ def audit_checkpoint(path: Path, *, fraction: float) -> dict:
         "temperature_K", configuration.get("temperature_parameter_K", 1000.0)))
     spacing, thickness, systems, wall, kinetics, energy0 = _physics(
         n, length, temperature)
+    history_mode = configuration.get("plastic_history_mode", "receiver_dormant")
+    kinetics = replace(
+        kinetics,
+        transfer_law=replace(
+            kinetics.transfer_law, plastic_history_mode=history_mode))
     energy = dict(
         energy0, mean_strain=np.array([[0.0, .5 * gamma],
                                       [.5 * gamma, 0.0]]))
@@ -128,7 +134,8 @@ def audit_checkpoint(path: Path, *, fraction: float) -> dict:
         for donor_id, receiver_id, direction in (
                 (interface.grain_a_id, interface.grain_b_id, "a_to_b"),
                 (interface.grain_b_id, interface.grain_a_id, "b_to_a")):
-            if receiver_id != 20:
+            if (target_receiver_id is not None
+                    and receiver_id != target_receiver_id):
                 continue
             donor = state.owners[index[donor_id]]
             weight = _geometric_sweep_weight(
@@ -140,8 +147,9 @@ def audit_checkpoint(path: Path, *, fraction: float) -> dict:
                 law=kinetics.transfer_law, interval_s=float(
                     configuration.get("dt_s", configuration.get(
                         "hold_dt_s", 2e-9))), systems=systems)
+            configured_variant = f"authoritative_{history_mode}"
             variants = {
-                "authoritative_receiver_dormant_history": (
+                configured_variant: (
                     proposal.product_owner, None),
                 "exact_donor_beta_energy_control": (
                     replace(proposal.product_owner,
@@ -176,6 +184,7 @@ def audit_checkpoint(path: Path, *, fraction: float) -> dict:
         "parent_source_commit": (provenance or {}).get("source_commit"),
         "step": step, "applied_shear_strain": gamma,
         "configuration_schema": configuration.get("schema"),
+        "configured_plastic_history_mode": history_mode,
         "target_growth_directions": rows,
     }
 
