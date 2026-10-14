@@ -970,6 +970,37 @@ experiment, result, limitation, and next branch.
   a simultaneously qualified band. The n64 ASB continuation remains useful
   secondary qualification work rather than the entire mission.
 
+## 2026-10-14T23:00:04Z — V67 complete-energy growth-reversal diagnosis
+
+- Goals: G01, G02, G04, and G05.
+- Prediction: if reduced-network success and production recession differ
+  because of an omitted structural energy, adding conserved common-axis
+  Read--Shockley content to the same immutable directional price should change
+  or dominate the growth affinity. If continued deformation instead creates a
+  recoverable-elastic incompatibility, that component should reverse the
+  target-growth direction while the defect-storage term remains favorable.
+- Experiment: reproduce the unchanged n16, 1000 K, 40,000/s production
+  trajectory to 7.2% shear and evaluate both directions of every interface at
+  the initial, peak-growth, post-reversal, and terminal states. Decompose the
+  authoritative complete Helmholtz price term by term. Repeat each read-only
+  price with conserved common-axis structural content and its junction-cycle
+  energy; never publish the virtual states.
+- Result: the target peaks at step 279 (2.232% shear), crosses below its
+  initial volume at step 354, and ends 1.6464% smaller. At 7.2% shear, target
+  growth remains defect-storage favorable by about 1.2--1.4 MPa but incurs
+  recoverable-elastic penalties of 52.30 MPa and 331.56 MPa on its two sides.
+  Both target-growth directions are consequently uphill. Conserved structural
+  content changes the directional prices by less than 0.07 MPa and does not
+  cause or repair the reversal. Energy closure and the reproduced growth
+  history remain unchanged.
+- Decision: classify the current production recession as a complete-energy
+  uphill event dominated by recoverable elasticity, not a slow downhill front,
+  lost defect contrast, or omitted Read--Shockley storage. The reduced model
+  differs because it prescribes differential stored work and has no production
+  elastic/plastic handoff. Next test whether the large elastic penalty is
+  physical or follows from assigning the receiver owner's dormant plastic
+  history to newly swept material.
+
 ## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
 
 - Goals: G03, G04.

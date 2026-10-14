@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T22:47:15Z",
+  "last_updated_utc": "2026-10-14T23:00:04Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -63,12 +63,13 @@
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 95664,
-      "case": "v67_growth_reversal_n16_r4e4_7p2_percent",
-      "status": "running_single_local_heavy_solver",
-      "start_local": "2026-10-14T15:50:21-07:00",
-      "source_commit": "14088f9",
-      "output": "full_model/verification/v67_growth_reversal"
+      "pid": null,
+      "case": null,
+      "status": "available_after_completed_growth_reversal_audit",
+      "last_case": "v67_growth_reversal_n16_r4e4_7p2_percent",
+      "last_start_local": "2026-10-14T15:50:21-07:00",
+      "last_source_commit": "14088f9",
+      "last_output": "full_model/verification/v67_growth_reversal"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -80,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "why_reduced_H1_H2_maturation_is_positive_while_production_prepared_owner_growth_reverses_and_which_common_law_signed_supply_energy_and_exposure_terms_can_sustain_dynamic_RX",
-    "next_executable_experiment": "trace_reduced_and_production_called_operators_then_build_a_production_derived_reduction_and_evaluate_complete_directional_energy_and_exposure_at_pre_growth_reversal_recession_and_static_reactivation_states",
-    "source_identity": "V67_base_876b2f53589978bddb1ac7b8e04c7f3cd7dce150",
-    "expected_discriminatory_observation": "separate_uphill_slow_signed_content_limited_transaction_inconsistent_and_numerically_unresolved_causes_then_integrate_the_missing_physical_operator_into_one_fixed_candidate_before_matched_lower_rate_dynamic_and_retained_state_static_tests",
+    "physical_uncertainty": "whether_the_52_to_332_MPa_recoverable_elastic_penalty_that_makes_terminal_target_growth_uphill_is_physical_or_is_created_by_assigning_receiver_dormant_plastic_history_to_newly_swept_material",
+    "next_executable_experiment": "on_checksum_bound_dynamic_and_static_retained_states_compare_the_authoritative_handoff_with_a_read_only_donor_beta_preserving_compatible_kinematic_control_then_integrate_only_the_physically_supported_accommodation_path",
+    "source_identity": "V67_growth_reversal_audit_e856b6c44bc9d4019784d69251a220ef732ea8bcec41653102c16125c4b7a665_started_on_14088f9",
+    "expected_discriminatory_observation": "if_preserving_the_material_plastic_distortion_removes_the_large_positive_elastic_term_while_defect_reduction_remains_downhill_the_reversal_is_a_handoff_kinematic_inconsistency_not_insufficient_front_mobility_or_structural_boundary_energy",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "V67_activated; source_and_state_audit_in_progress; no_new_physical_claim"
+    "result_status": "production_reversal_is_complete_energy_uphill; terminal_target_growth_has_favorable_defect_storage_but_is_overwhelmed_by_approximately_52_and_332_MPa_recoverable_elastic_penalties; conserved_common_axis_structural_energy_changes_force_by_less_than_0p07_MPa_and_is_not_the_cause"
   },
   "completion_semantics": {
     "execution_complete": false,
