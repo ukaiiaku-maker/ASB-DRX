@@ -542,7 +542,7 @@ def advance_energy_qualified_mechanics(
                 roundoff_floor, 1e-300)
     relative = abs(residual)/scale
     if relative > float(maximum_relative_first_law_residual):
-        raise FrontForceRateConvergenceError(
+        raise RuntimeError(
             "subdivided mechanical interval fails cumulative first-law audit")
     return EnergyQualifiedMechanicalResult(
         candidate, operators, balances, depth, work, thermostat, delta_internal,
@@ -1278,7 +1278,7 @@ def advance_multigrain_front(
             joint_pressure_factor*(1.0-1e-6))[0]
         high_directions = requests_at_force_scale(
             joint_pressure_factor*(1.0+1e-6))[0]
-        raise RuntimeError(
+        raise FrontForceRateConvergenceError(
             "joint front force-rate fixed point did not converge: "
             f"factor={joint_pressure_factor:.17g}, "
             f"verification={verification_factor:.17g}, "
