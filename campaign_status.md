@@ -2758,3 +2758,24 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   band: every case has an early >=2x episode through 2.544% strain, and n64 has
   a late scalar recurrence without connected structure. Connectivity remains
   authoritative.
+
+## Post-V66 standing fixed-law coexistence requirement (2026-10-14)
+
+- The campaign now has an overarching C00 constraint: one immutable Arrhenius
+  EXP-floor Peierls--Taylor--Hall--Petch framework and one physical
+  parameterization must produce lower-rate DRX, higher-rate ASB, and DRX
+  developing inside an active shear band in an overlap regime.
+- Rate-dependent mechanism switches, per-condition fits, and use of static RX
+  as a substitute for dynamic coexistence are prohibited. Both mechanisms are
+  evaluated independently at every condition under a common thermal-boundary
+  law and common strain landmarks.
+- V66 is classified precisely as response sensitivity demonstrated; required
+  regime switching and dynamic spatial coexistence not yet demonstrated.
+  Sustained lower-rate dynamic DRX is absent, the n48 band geometry is not
+  converged, and the n64 pair ends at 10.8% strain.
+- The next authorized compute cycle starts with a physical timescale/exposure
+  map and rates extended downward by decades, followed by same-parameter,
+  common-strain dynamic-RX anchors with source/transport/sink/absorption and
+  network evolution enabled. Qualification of the saved n64 ASB trajectory is
+  retained as a secondary task. This standing update launches no solver and
+  does not extend the closed V66 allocation.

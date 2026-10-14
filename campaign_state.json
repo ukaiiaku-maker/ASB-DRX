@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T11:31:11Z",
+  "last_updated_utc": "2026-10-14T18:11:29Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -26,6 +26,14 @@
     "hall_petch_boundary_interactions": true,
     "thermal_and_rate_coupling": true
   },
+  "standing_requirements": {
+    "C00": "one_immutable_Arrhenius_Peierls_Taylor_Hall_Petch_EXP_floor_framework_and_one_documented_parameterization_must_endogenously_produce_lower_rate_DRX_higher_rate_ASB_and_dynamic_DRX_inside_active_shear_bands",
+    "rate_dependent_mechanism_switches_forbidden": true,
+    "per_condition_parameter_fits_forbidden": true,
+    "both_DRX_and_ASB_observables_evaluated_at_every_condition": true,
+    "static_RX_does_not_satisfy_dynamic_coexistence": true,
+    "common_thermal_boundary_law_across_rate_comparisons": true
+  },
   "frozen_v65": {
     "closure_commit": "f5a6bc6474d70333255a10d19c267648086e2c78",
     "production_source": "6debbe0813ca0c365abcf473e5106cb90dbdd75a",
@@ -37,7 +45,7 @@
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
     "G02": "dynamic_target_growth_is_transient_from_10k_to_80k_per_s_but_retained_high_rate_state_grows_3p368_percent_through_unload_and_fixed_strain_hold",
     "G03": "matched_n32_n48_16_percent_horizon_forms_connected_bands_with_and_without_heat; thermal_amplification_positive_but_strict_ASB_false_because_band_geometry_is_not_spatially_converged",
-    "G04": "fixed_law_temperature_rate_response_family_and_matched_thermal_causality_demonstrated_not_material_validated",
+    "G04": "response_sensitivity_demonstrated; required_regime_switching_and_dynamic_spatial_coexistence_not_yet_demonstrated",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "high_rate_retained_state_grows_monotonically_during_six_microsecond_hold_and_continues_after_release_to_704_Pa_mean_stress"
   },
@@ -61,14 +69,14 @@
     "unrelated_processes_preserved": [34369, 34370, 53513, 53514, 71220, 94577]
   },
   "current_task": {
-    "goal_ids": ["G01", "G03", "G04", "G05"],
-    "hypothesis_ids": ["H1", "H2"],
-    "physical_uncertainty": "whether_physical_n64_evolution_converges_the_16_percent_connected_power_band_component_area_and_transverse_span; common_grid_resampling_has_ruled_out_simple_pixel_sampling_error",
-    "next_executable_experiment": "continue_the_checksum_bound_fixed_width_n64_adiabatic_and_bath_states_from_10p8_to_16_percent",
-    "source_identity": "v66_matched_n32_n48_long_horizon_on_4b521c7_restart_source",
-    "expected_discriminatory_observation": "component_area_and_transverse_span_converge_below_5_percent_while_the_bath_band_persists_if_localization_is_mechanically_formed",
-    "resource_need": "future_authorized_heavy_local_solver_for_n64_matched_continuation_from_step_675",
-    "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; matched_n48_band_is_shared_heat_modified_high_slip_rate_structure_not_GND_or_high_density_wall; strict_ASB_false_due_unconverged_band_geometry; dynamic_growth_not_sustained"
+    "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
+    "hypothesis_ids": ["H1", "H2", "H3", "H4"],
+    "physical_uncertainty": "which_common_law_local_formation_absorption_migration_recovery_and_heat_transport_timescales_create_sustained_lower_rate_dynamic_DRX_and_permit_recrystallized_lineage_to_develop_inside_an_active_shear_band",
+    "next_executable_experiment": "under_the_next_separately_authorized_compute_allocation_first_derive_a_same_parameter_timescale_exposure_map_and_extend_rate_downward_by_decades_then_run_common_strain_lower_rate_dynamic_DRX_anchors_with_credible_source_transport_sink_absorption_and_network_operators_enabled; retain_n64_ASB_continuation_as_a_secondary_qualification_task",
+    "source_identity": "post_V66_fixed_law_response_family_requirement_on_f2aba141",
+    "expected_discriminatory_observation": "at_lower_rate_sustained_physical_swept_volume_defect_reduction_and_recrystallized_lineage_occur_during_deformation_while_an_overlap_condition_places_the_same_RX_lineage_inside_a_simultaneously_active_spatially_qualified_band_without_any_rate_switch_or_parameter_change",
+    "resource_need": "fresh_explicit_local_compute_allocation_for_heavy_trajectories; analytical_timescale_derivation_and_lightweight_static_checks_may_precede_it",
+    "result_status": "response_sensitivity_only; sustained_lower_rate_dynamic_DRX_not_demonstrated; dynamic_DRX_inside_an_active_band_not_demonstrated; static_retained_state_growth_supported; strict_ASB_remains_false_due_to_unconverged_band_geometry"
   },
   "completion_semantics": {
     "execution_complete": true,

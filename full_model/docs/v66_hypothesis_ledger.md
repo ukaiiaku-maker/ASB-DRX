@@ -941,6 +941,35 @@ experiment, result, limitation, and next branch.
   resolved at 10.7%/7.09%. Thus bulk response is already stable while the
   localization amplitude and geometry remain the refinement-limiting fields.
 
+## 2026-10-14T18:11:29Z — standing fixed-law response-family requirement
+
+- Goals: C00 and G01--G06, with G02--G04 controlling the next physical
+  experiment.
+- Requirement: one immutable Arrhenius EXP-floor Peierls--Taylor--Hall--Petch
+  framework and one parameterization must generate lower-rate DRX, higher-rate
+  ASB, and a true overlap in which recrystallized lineage develops inside an
+  active shear band. Local state, exposure, structural kinetics, and heat
+  transport select the response; loading rate may not select a mechanism or a
+  parameter set.
+- Existing evidence: V66 tested 10,000--80,000/s and found only transient
+  dynamic prepared-boundary growth, retained-state static growth, and
+  high-rate band candidates whose geometry is not converged. The common matrix
+  disabled source/sink evolution, no endogenous new boundary formed, and the
+  n64 ASB pair stops at 10.8% strain. These results establish sensitivity but
+  not sustained lower-rate DRX, a qualified rate transition, or dynamic
+  spatial coexistence.
+- Decision: set G04 to `response sensitivity demonstrated; required regime
+  switching and dynamic spatial coexistence not yet demonstrated`. Preserve
+  static RX as G06 evidence only. Do not interpret a bath-persistent endpoint
+  band as proof that heat was irrelevant to onset.
+- Next branch: no new compute allocation is created by this standing change.
+  In the next authorized allocation, first derive the common-law timescale and
+  exposure map, extend rate downward by physically selected decades, and test
+  matched common-strain dynamic-RX anchors with credible source, transport,
+  sink, absorption, and network evolution active. Then test RX lineage inside
+  a simultaneously qualified band. The n64 ASB continuation remains useful
+  secondary qualification work rather than the entire mission.
+
 ## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
 
 - Goals: G03, G04.
