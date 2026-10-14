@@ -272,7 +272,7 @@ def main():
             source_parameters=ArrheniusSourceParameters(
                 grain_size_m=args.source_grain_size),
             source_mode=args.source_mode)
-    provenance = {"campaign": "V66", "source_commit": "bff539c",
+    provenance = {"campaign": "V66", "source_commit": "6b104d5",
                   "scientific_scope": "inherited-subgrain coupled exposure"}
     history_path = args.out/"history.json"
     if args.resume is None:
