@@ -32,11 +32,11 @@
   },
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "reduced_matured_HAGB_handoff_sustained_but_full_multigrain_requalification_pending",
+    "G02": "matured_HAGB_handoff_sustained_in_complete_energy_multigrain_front_short_horizon_long_retained_history_pending",
     "G03": "not_qualified_in_V65",
     "G04": "fixed_law_reduced_temperature_rate_switch_demonstrated_not_material_validated",
     "G05": "inherited_subgrain_maturation_supported_new_boundary_formation_not_established",
-    "G06": "reduced_static_maturation_and_growth_supported_full_unload_protocol_pending"
+    "G06": "static_maturation_and_complete_energy_multigrain_growth_supported_full_unload_protocol_pending"
   },
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
@@ -51,12 +51,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_reduced_orientation_gradient_maturation_and_HAGB_handoff_can_be_embedded_in_the_full_multigrain_owner_front_state_without_energy_or_Nye_inconsistency",
-    "next_executable_experiment": "implement_multigrain_structural_interface_state_and_exercise_one_coupled_maturation_to_front_case_then_reassess_ASB_overlap",
-    "source_identity": "5fdacc84a4c0f1a9a7c7471b515d4c30881c3aab",
-    "expected_discriminatory_observation": "production_owner_state_reaches_HAGB_by_cell_elimination_then_sustains_energy_qualified_front_motion_with_common_heat_and_defect_ledgers",
+    "physical_uncertainty": "whether_the_energy_qualified_matured_owner_can_grow_while_the_same_common_state_deforms_heats_and_localizes_and_then_continue_after_work_ledgered_unloading",
+    "next_executable_experiment": "advance_the_verified_multigrain_handoff_state_with_the_complete_coupled_mechanics_heat_front_driver_then_fork_a_true_unload_and_static_anneal_continuation",
+    "source_identity": "6b4fc0b",
+    "expected_discriminatory_observation": "simultaneous_energy_closed_target_growth_plastic_dissipation_and_temperature_heterogeneity_followed_by_retained_state_zero_rate_growth_without_owner_allocation",
     "resource_need": "lightweight_local",
-    "result_status": "running"
+    "result_status": "multigrain_handoff_passed_coupled_exposure_running"
   },
   "completion_semantics": {
     "execution_complete": false,

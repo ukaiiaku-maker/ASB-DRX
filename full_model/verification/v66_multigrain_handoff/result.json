@@ -1,0 +1,59 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_multigrain_handoff/multigrain_handoff_fields.png": "0c4854d80b423574064fb4a9bf13d26cd2a35a603db15bef93b56ae2f3b7429b"
+  },
+  "created_utc": "2026-10-13T23:59:07.519238+00:00",
+  "decision": {
+    "G02_qualified": false,
+    "G06_qualified": false,
+    "full_multigrain_handoff_exercised": true,
+    "reason": "the mature inherited orientation survives an exact restart and grows monotonically through the full complete-energy owner/front transaction, but the 0.4 microsecond converted handoff is not yet a retained-history long-horizon static RX qualification",
+    "sustained_over_tested_horizon": true,
+    "target_consumes_both_high_defect_neighbors": true
+  },
+  "handoff_mapping": {
+    "high_reservoir_density_m2_each": 2242357871713654.5,
+    "low_reservoir_density_m2_each": 10000000000000.0,
+    "new_owner_allocated": false,
+    "orientations_deg": [
+      0.0,
+      15.0,
+      30.0
+    ],
+    "stored_energy_contrast_Pa": 20091220.84542289,
+    "support_geometry": "resolved three-owner smooth Voronoi",
+    "target_owner": 20
+  },
+  "numerics": {
+    "dt_s": 2e-08,
+    "duration_s": 4e-07,
+    "grid": [
+      16,
+      16
+    ],
+    "length_m": 4.8e-06,
+    "steps": 20
+  },
+  "result": {
+    "accepted_front_events": 20,
+    "all_intervals_accepted": true,
+    "complete_helmholtz_change_J": -2.9995296944721354e-19,
+    "continuous_restart_exact": true,
+    "final_state_digest": "65783617faae695dc465921a539cf207e9502c0b319281fce5d82ec3b145f51a",
+    "final_target_volume_m3": 3.705247449950113e-21,
+    "generated_heat_J": 2.9572909454499354e-19,
+    "initial_state_digest": "5fe16cdfe526d3871f0f4521eb94fe16f302863f66b420110d857b06d215ab2c",
+    "initial_target_volume_m3": 3.705112638548165e-21,
+    "maximum_relative_energy_closure": 3.8535579907339896e-08,
+    "restarted_state_digest": "65783617faae695dc465921a539cf207e9502c0b319281fce5d82ec3b145f51a",
+    "target_growth_fraction": 3.63852371302276e-05,
+    "target_growth_monotone": true,
+    "terminal_incident_directions": {
+      "edge-10-20": "a_to_b",
+      "edge-10-30": "b_to_a",
+      "edge-20-30": "b_to_a"
+    }
+  },
+  "schema": "v66-full-multigrain-handoff-v1",
+  "source_reduced_case": "T1000_rate1"
+}

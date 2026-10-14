@@ -155,3 +155,24 @@ experiment, result, limitation, and next branch.
   and tensorial production-owner integration remain open.
 - Next branch: embed this maturation/handoff state transition in the multigrain
   owner/front path, then exercise a nontrivial coupled DRX/ASB case.
+
+## 2026-10-14T00:20:00Z — complete-energy multigrain handoff
+
+- Goals: G01, G02, G05, G06.
+- Prediction: the inherited orientation-gradient endpoint can be represented by
+  existing production owners, without allocating a label, and should consume
+  high-defect neighbors through the same complete-energy bidirectional front
+  transaction used by the common DRX/ASB state.
+- Experiment: map the reduced 0/15/30 degree endpoint onto a resolved 16 x 16
+  three-owner geometry, set the six signed reservoirs to reproduce the reduced
+  stored-energy contrast, and advance the authoritative complete-energy front
+  for 0.4 microseconds. Repeat through a halfway checkpoint/restart.
+- Result: the 15 degree owner consumed both high-defect neighbors monotonically
+  in all 20 accepted intervals. Complete Helmholtz energy fell by 3.00e-19 J,
+  generated heat was 2.96e-19 J, maximum relative closure was 3.86e-8, and the
+  continuous and restarted state digests were identical. No owner was created.
+- Limitation: this is a short converted handoff, not retained-history formation
+  or a long static-anneal qualification. A periodic third interface also moved,
+  so the target growth is not an isolated planar-front measurement.
+- Next branch: use this exact common state in a coupled mechanics/heat/front
+  exposure and then execute a work-ledgered unloading/static continuation.
