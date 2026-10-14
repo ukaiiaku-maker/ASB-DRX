@@ -1297,7 +1297,7 @@ def advance_multigrain_front(
                 MultiGrainProductionDecision(
                     True, "STATIONARY_FORCE_RATE_ACTIVE_SET", directions,
                     {}, {}, {}, None, 0,
-                    force_rate_converged=True,
+                    selected_rate_conjugate_to_recorded_force=True,
                     force_rate_closure_classification=(
                         "STATIONARY_FORCE_RATE_ACTIVE_SET"),
                     force_rate_closure_bracket=force_rate_closure_bracket,
