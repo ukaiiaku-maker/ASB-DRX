@@ -21,6 +21,17 @@ from full_model.production.structural_multigrain_runtime import (
 from full_model.production.tensorial_nye import bcc_four_family_systems
 
 
+def test_fixed_physical_interface_width_has_grid_convergent_target_area():
+    length = 4.8e-6
+    width = 6e-7
+    areas = []
+    for n in (16, 24, 32):
+        state, _, _ = _initial(
+            n, length, 1000.0, 2e7, interface_width_m=width)
+        areas.append(float(np.sum(state.supports[1])*(length/n)**2))
+    assert (max(areas)-min(areas))/areas[-1] < .002
+
+
 def _fixture(scale):
     n = 8
     length = 4.8e-6

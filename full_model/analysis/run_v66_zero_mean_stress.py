@@ -56,7 +56,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     physical_args = SimpleNamespace(
         n=16, length=4.8e-6, temperature=1000.0,
-        shear_rate=0.0, dt=args.dt)
+        shear_rate=0.0, dt=args.dt, interface_width=6e-7)
     _, _, _, _, _, _, base_context = _physics(physical_args)
     state, runtime, _, load, _, _, _ = _load_checkpoint(args.source)
     endpoint = make_endpoint(state, runtime, load, base_context)

@@ -109,6 +109,7 @@ def main():
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--n", type=int, default=16)
     parser.add_argument("--length", type=float, default=4.8e-6)
+    parser.add_argument("--interface-width", type=float, default=6e-7)
     parser.add_argument("--temperature", type=float, default=1000.0)
     parser.add_argument("--unload-rate", type=float, default=4e4)
     parser.add_argument("--unload-dt", type=float, default=2e-9)

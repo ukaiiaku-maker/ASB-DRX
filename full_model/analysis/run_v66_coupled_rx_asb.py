@@ -72,6 +72,7 @@ def _configuration(args) -> dict:
         "schema": "v66-coupled-rx-asb-configuration-v1",
         "n": args.n,
         "length_m": args.length,
+        "interface_width_m": args.interface_width,
         "temperature_K": args.temperature,
         "shear_rate_s": args.shear_rate,
         "dt_s": args.dt,
@@ -134,7 +135,8 @@ def _prepared_state(args, physics):
     ).read_text())
     contrast = reduced["cases"]["T1000_rate1"]["stored_energy_contrast_Pa"]
     state, high, low = _initial(
-        args.n, args.length, args.temperature, contrast)
+        args.n, args.length, args.temperature, contrast,
+        interface_width_m=args.interface_width)
     runtime = MultiGrainProductionRuntime(network_interfaces(state))
     state, runtime, _, _ = _advance(
         state, runtime, 20, 2e-8, spacing=spacing, thickness=thickness,
@@ -296,6 +298,9 @@ def main():
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--n", type=int, default=16)
     parser.add_argument("--length", type=float, default=4.8e-6)
+    parser.add_argument(
+        "--interface-width", type=float, default=6e-7,
+        help="Physical diffuse-interface width, held fixed under grid refinement.")
     parser.add_argument("--temperature", type=float, default=1000.0)
     parser.add_argument("--shear-rate", type=float, default=4e4)
     parser.add_argument("--dt", type=float, default=2e-9)

@@ -47,10 +47,13 @@ def _sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _initial(n, length_m, temperature, contrast_Pa):
+def _initial(n, length_m, temperature, contrast_Pa, interface_width_m=None):
     spacing = length_m/n
+    interface_width = (2*spacing if interface_width_m is None
+                       else float(interface_width_m))
     template = initialize_state(
-        n, temperature, spacing_m=spacing, interface_width_m=2*spacing)
+        n, temperature, spacing_m=spacing,
+        interface_width_m=interface_width)
     line_energy = 1.5e-9
     low = 1e13
     high = low+contrast_Pa/(6.0*line_energy)
