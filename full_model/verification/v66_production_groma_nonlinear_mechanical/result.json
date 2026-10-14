@@ -1,0 +1,396 @@
+{
+  "artifacts": {
+    "full_model/verification/v66_production_groma_nonlinear_mechanical/nonlinear_transport_history.png": "2ac9d7e9f5f42169f342634f1f83c101c1f067c0deb848a8d802b631180abcb9"
+  },
+  "claim_boundary": "no reservoir reactions, front motion, grain allocation, or material calibration",
+  "created_utc": "2026-10-14T02:46:01.266627+00:00",
+  "decision": {
+    "finite_wavelength_nonlinear_amplification": false,
+    "gnd_bearing_wall_qualified": false,
+    "reason": "reaction-disabled mechanism discriminator cannot qualify a wall or RX",
+    "recrystallization_qualified": false
+  },
+  "fixed_engineering_shear": 0.00165,
+  "grid": [
+    24,
+    24
+  ],
+  "initial_noise_fraction": 0.001,
+  "ledger": {
+    "completed_time_s": 12000.0,
+    "defect_free_energy_change_J_m3": 0.06324755807872862,
+    "endpoint_fixed_strain_first_law_residual_J_m3": 0.00015647793588868808,
+    "endpoint_fixed_strain_relative_first_law_residual": 1.5570292468559403e-08,
+    "external_work_J_m3": 10049.774827522633,
+    "first_law_residual_J_m3": -9.286102795158513e-06,
+    "interpretation_of_external_work": "integrated plastic power / recoverable elastic release at fixed strain",
+    "irreversible_heat_J_m3": 10049.711589250657,
+    "maximum_relative_family_content_error": 1.0416666666666661e-15,
+    "recoverable_elastic_energy_change_J_m3": -10049.774993286672,
+    "rejected_steps": 0,
+    "relative_first_law_residual": 9.240110305483956e-10,
+    "termination_reason": "target_time_reached"
+  },
+  "parameters": {
+    "A": 1.25,
+    "D": 0.5,
+    "reduced_modulus_b2_J_m": 1.8005992811386394e-09
+  },
+  "records": [
+    {
+      "density_contrast": 0.000364457195192462,
+      "family_polarization_max_abs": 0.0023063617160496673,
+      "family_polarization_rms": 0.0006956855545521908,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 0.0,
+      "orientation_span_deg": 0.0,
+      "peak_mode": [
+        11,
+        -4
+      ],
+      "peak_wavelength_m": 4.1009167570404524e-07,
+      "time_s": 0.0
+    },
+    {
+      "density_contrast": 0.00033608155592525587,
+      "family_polarization_max_abs": 0.002220797318132099,
+      "family_polarization_rms": 0.0006226152151846573,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 1.1857155520673361,
+      "orientation_span_deg": 3.128646702372928e-05,
+      "peak_mode": [
+        6,
+        -10
+      ],
+      "peak_wavelength_m": 4.115966043420212e-07,
+      "time_s": 500.0
+    },
+    {
+      "density_contrast": 0.00040844752253668394,
+      "family_polarization_max_abs": 0.00224940500781019,
+      "family_polarization_rms": 0.0006627829603942403,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 1.5436680412996715,
+      "orientation_span_deg": 4.879438316898257e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 1000.0
+    },
+    {
+      "density_contrast": 0.0004671861314209164,
+      "family_polarization_max_abs": 0.0025159016993652715,
+      "family_polarization_rms": 0.0007090445053431646,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.0454342346348295,
+      "orientation_span_deg": 7.486413534486641e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 1500.0
+    },
+    {
+      "density_contrast": 0.000490888686879534,
+      "family_polarization_max_abs": 0.002804532977594255,
+      "family_polarization_rms": 0.0007346783144792586,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.290850493721432,
+      "orientation_span_deg": 8.362813620043017e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 2000.0
+    },
+    {
+      "density_contrast": 0.0004993534835155678,
+      "family_polarization_max_abs": 0.002933123033513442,
+      "family_polarization_rms": 0.0007455663696388975,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.3747086686271364,
+      "orientation_span_deg": 8.625518752054497e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 2500.0
+    },
+    {
+      "density_contrast": 0.0005025413603030184,
+      "family_polarization_max_abs": 0.002969182131491156,
+      "family_polarization_rms": 0.000750021215198199,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.404401683506223,
+      "orientation_span_deg": 8.841711738106393e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 3000.0
+    },
+    {
+      "density_contrast": 0.0005038038076716703,
+      "family_polarization_max_abs": 0.002983554212379313,
+      "family_polarization_rms": 0.0007518166139968685,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.415604858990217,
+      "orientation_span_deg": 8.949487144033568e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 3500.0
+    },
+    {
+      "density_contrast": 0.0005043184527823955,
+      "family_polarization_max_abs": 0.002991700585138714,
+      "family_polarization_rms": 0.0007525620890663647,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4199629927369353,
+      "orientation_span_deg": 8.991341736776428e-05,
+      "peak_mode": [
+        -3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 4000.0
+    },
+    {
+      "density_contrast": 0.0005045371220711618,
+      "family_polarization_max_abs": 0.0029959979511636923,
+      "family_polarization_rms": 0.0007528933618164616,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4217573482368695,
+      "orientation_span_deg": 9.005177349459183e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 4500.0
+    },
+    {
+      "density_contrast": 0.0005046341299645759,
+      "family_polarization_max_abs": 0.0029980805342627306,
+      "family_polarization_rms": 0.000753052338624566,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.422560786695567,
+      "orientation_span_deg": 9.008945585995154e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 5000.0
+    },
+    {
+      "density_contrast": 0.0005046807368833324,
+      "family_polarization_max_abs": 0.0029989541428066028,
+      "family_polarization_rms": 0.0007531306984802491,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.422918866270779,
+      "orientation_span_deg": 9.010315632337283e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 5500.0
+    },
+    {
+      "density_contrast": 0.0005047041327350791,
+      "family_polarization_max_abs": 0.002999197318583199,
+      "family_polarization_rms": 0.0007531689417317642,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.423069587317615,
+      "orientation_span_deg": 9.010915092242943e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 6000.0
+    },
+    {
+      "density_contrast": 0.0005047164696254895,
+      "family_polarization_max_abs": 0.0029992156922519155,
+      "family_polarization_rms": 0.0007531874811780084,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231308121222757,
+      "orientation_span_deg": 9.011237369423256e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 6500.0
+    },
+    {
+      "density_contrast": 0.0005047231780985355,
+      "family_polarization_max_abs": 0.0029992121685505886,
+      "family_polarization_rms": 0.000753196830574008,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231569757185514,
+      "orientation_span_deg": 9.011442520830244e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 7000.0
+    },
+    {
+      "density_contrast": 0.0005047270341377473,
+      "family_polarization_max_abs": 0.002999214359861746,
+      "family_polarization_rms": 0.0007532020154760126,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231708828572285,
+      "orientation_span_deg": 9.011581180411213e-05,
+      "peak_mode": [
+        -3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 7500.0
+    },
+    {
+      "density_contrast": 0.0005047292438967747,
+      "family_polarization_max_abs": 0.0029992158877350365,
+      "family_polarization_rms": 0.0007532049721833706,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231789215928967,
+      "orientation_span_deg": 9.011672087735425e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 8000.0
+    },
+    {
+      "density_contrast": 0.0005047305143494452,
+      "family_polarization_max_abs": 0.0029992167983072795,
+      "family_polarization_rms": 0.0007532066524469058,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231836214001206,
+      "orientation_span_deg": 9.011729445366365e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 8500.0
+    },
+    {
+      "density_contrast": 0.000504731247179487,
+      "family_polarization_max_abs": 0.0029992173381768955,
+      "family_polarization_rms": 0.0007532076158055662,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231864065666513,
+      "orientation_span_deg": 9.011764949057787e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 9000.0
+    },
+    {
+      "density_contrast": 0.0005047316712698351,
+      "family_polarization_max_abs": 0.0029992176597248674,
+      "family_polarization_rms": 0.0007532081721839985,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231880682584293,
+      "orientation_span_deg": 9.011786841088951e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 9500.0
+    },
+    {
+      "density_contrast": 0.0005047319166048206,
+      "family_polarization_max_abs": 0.0029992178517981214,
+      "family_polarization_rms": 0.0007532084944865482,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231890608975855,
+      "orientation_span_deg": 9.0118001274732e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 10000.0
+    },
+    {
+      "density_contrast": 0.000504732058442473,
+      "family_polarization_max_abs": 0.0029992179668919664,
+      "family_polarization_rms": 0.0007532086816584169,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231896530789725,
+      "orientation_span_deg": 9.011808107674828e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 10500.0
+    },
+    {
+      "density_contrast": 0.0005047321404537279,
+      "family_polarization_max_abs": 0.0029992180359445686,
+      "family_polarization_rms": 0.0007532087903729148,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231900049810218,
+      "orientation_span_deg": 9.011812868845488e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 11000.0
+    },
+    {
+      "density_contrast": 0.0005047321878728142,
+      "family_polarization_max_abs": 0.002999218077325446,
+      "family_polarization_rms": 0.0007532088535037497,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.423190213237475,
+      "orientation_span_deg": 9.011815693443881e-05,
+      "peak_mode": [
+        -3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 11500.0
+    },
+    {
+      "density_contrast": 0.0005047322152767854,
+      "family_polarization_max_abs": 0.002999218102048941,
+      "family_polarization_rms": 0.0007532088901619248,
+      "mean_total_mobile_density_m2": 80000000000000.0,
+      "nye_rms_m1": 2.4231903361971066,
+      "orientation_span_deg": 9.011817360340946e-05,
+      "peak_mode": [
+        3,
+        0
+      ],
+      "peak_wavelength_m": 1.6e-06,
+      "time_s": 12000.0
+    }
+  ],
+  "schema": "v66-production-groma-nonlinear-v1",
+  "scope": "reaction-disabled production signed transport with compatible kinematics and nonlocal fixed-strain elastic feedback",
+  "seed": 66024,
+  "spacing_m": 2e-07,
+  "temperature_K": 900.0
+}

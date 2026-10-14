@@ -541,3 +541,50 @@ experiment, result, limitation, and next branch.
 - Next branch: run a nonlinear signed-transport trajectory at fixed parameters
   and then reintroduce the complete reactions without retuning. Classify any
   total-density band separately from polarization and closed orientation.
+
+## 2026-10-14T02:55:00Z — nonlinear mechanics and reaction handoff
+
+- Goals: G01, G04, G05, G06.
+- Prediction: prescribed resolved stress will reproduce the linear growth but
+  cannot establish physical two-dimensional organization; nonlocal elastic
+  feedback must remove transverse degeneracy. Continuous strain supply may
+  sustain the near-threshold mode that a fixed-strain hold relaxes away. The
+  unchanged Arrhenius reservoir reactions must then preserve signed content
+  for an absorption/maturation path to remain possible.
+- Experiment: evolve the authoritative sign-resolved production flux with
+  compatible slip, plastic distortion, Mura--Nye, and spin, first under fixed
+  strain and then at the independently computed initial plastic shear rate
+  `3.12594e-7 1/s`. Use the same 900 K, `A=1.25`, `D=0.5`, and no reaction
+  retuning. Audit the 2-D tangent, fixed-scale nonlinear energy, and an
+  adiabatic 1 ms complete-reaction handoff against a homogenized control and a
+  half timestep.
+- Result: the prescribed-stress calculation exposed a transverse degeneracy:
+  modes `(3,0)`, `(11,8)`, and `(19,16)` share the same growth when their
+  projection on one slip direction is equal. Nonlocal fixed-strain mechanics
+  suppresses the oblique modes and selects the physical 1.6 micrometre axial
+  band. A fixed-strain trajectory then plateaus at only 0.0505% contrast,
+  0.0753% polarization, and `9.01e-5` degree orientation span, with endpoint
+  first-law residual `1.56e-8`. With continuous strain supply, the same mode
+  reaches 14.3% contrast and 22.9% polarization at 11,049 s before an
+  unprojected signed population approaches depletion; content closes at
+  `1.22e-15` and the first-law residual is `1.58e-5`. The 1 ms complete-
+  reaction handoff retains 11.7% mobile contrast and 19.9% polarization and
+  transfers signed structure into forest content (3.96% polarization), while
+  the homogeneous controls remain effectively unpolarized. Timestep
+  differences are below 0.29% and the fixed-strain adiabatic residual is
+  `6.72e-5`.
+- Decision: H3 now supplies a finite-spacing, mechanics-coupled, strongly
+  polarized deformation precursor under continuous strain supply. It remains
+  an opt-in hypothesis and is not yet a physical wall: orientation is only
+  0.0386 degree, the integrated Nye RMS is small, the wall reservoir receives
+  negligible polarization in the first millisecond, and the formation run
+  omitted reactions. The complete reactions demonstrably do not erase a
+  pre-existing pattern on their fast initial timescale.
+- Limitation: reaction survival after formation is not concurrent formation.
+  The long reaction-disabled run ends at population depletion rather than a
+  saturated positive state. No boundary, new owner, RX event, or material
+  calibration is claimed.
+- Next branch: compute the homogeneous complete-reaction slow state accurately,
+  linearize the full reaction-plus-transport operator there, and test whether
+  the fixed finite-wavelength mode survives concurrent reactions. Only then
+  hand its signed content to the qualified absorption--rotation runtime.

@@ -52,10 +52,12 @@ def candidate_parameters(spacing_m):
 def mobile_symbol(state, driving, systems, topologies, parameters, mode):
     """Return full and transport-only signed-mobile production projections."""
     n = state.orientation_rad.shape[0]
+    mx, my = ((int(mode), 0) if np.isscalar(mode) else map(int, mode))
     x = np.arange(n)[:, None]/n
-    phase = 2.0*np.pi*mode*x
-    cosine = np.broadcast_to(np.cos(phase), (n, n))
-    sine = np.broadcast_to(np.sin(phase), (n, n))
+    y = np.arange(n)[None, :]/n
+    phase = 2.0*np.pi*(mx*x+my*y)
+    cosine = np.cos(phase)
+    sine = np.sin(phase)
     norm = float(np.mean(cosine*cosine))
     coordinates = tuple(
         (name, family) for name in ("mobile_plus_m2", "mobile_minus_m2")

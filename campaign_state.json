@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T02:36:55Z",
+  "last_updated_utc": "2026-10-14T02:55:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -42,7 +42,7 @@
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
     "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
-    "H3": "production_sign_resolved_Groma_A_D_energy_and_mobile_Taylor_friction_select_a_1.6_um_transport_mode_near_threshold_under_EXP_floor_mobility_but_nonlinear_GND_wall_formation_is_unqualified",
+    "H3": "production_Groma_A_D_mobile_Taylor_and_nonlocal_mechanics_select_a_1.6_um_mode; continuous_strain_supply_reaches_14.3_percent_contrast_and_22.9_percent_polarization_and_survives_a_1_ms_complete_reaction_handoff_but_no_physical_wall_is_qualified",
     "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
   },
   "resource_ownership": {
@@ -61,12 +61,12 @@
   "current_task": {
     "goal_ids": ["G01", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3"],
-    "physical_uncertainty": "whether_the_production_finite_wavelength_mobile_tangent_saturates_nonlinearly_into_polarized_GND_content_and_survives_unretuned_reservoir_reactions",
-    "next_executable_experiment": "run_nonlinear_2D_signed_transport_at_the_fixed_60_MPa_near_threshold_candidate_then_repeat_with_complete_reactions_and_classify_density_polarization_Nye_orientation_and_energy",
-    "source_identity": "668253b plus pending production mobile Taylor and A_D closure",
-    "expected_discriminatory_observation": "finite_grid_stable_spacing_with_growing_signed_polarization_precedes_any_structural_absorption_or_subgrain_maturation_claim",
+    "physical_uncertainty": "whether_the_1.6_um_mechanics_coupled_signed_mode_survives_when_complete_Arrhenius_reactions_act_concurrently_through_the_full_formation_horizon",
+    "next_executable_experiment": "integrate_the_homogeneous_complete_reaction_slow_state_with_energy_and_timestep_convergence_then_linearize_full_reaction_plus_transport_dynamics_and_run_the_supported_concurrent_branch",
+    "source_identity": "8792806 plus pending nonlinear mechanics and reaction-survival evidence",
+    "expected_discriminatory_observation": "a_finite_interior_mode_remains_positive_after_fast_reaction_modes_equilibrate_and_transfers_signed_content_to_forest_or_wall_without_grid_scale_depletion",
     "resource_need": "one_local_heavy_solver_available",
-    "result_status": "production_transport_tangent_selects_1.6_um_mode_at_60_MPa_and_900_K; nonlinear_saturation_and_complete_reaction_survival_pending"
+    "result_status": "continuous_strain_supply_forms_a_finite_1.6_um_polarized_precursor_and_fast_complete_reactions_preserve_it_but_concurrent_formation_physical_wall_and_RX_remain_pending"
   },
   "completion_semantics": {
     "execution_complete": false,
