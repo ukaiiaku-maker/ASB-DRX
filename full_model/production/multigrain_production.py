@@ -32,6 +32,10 @@ from .multigrain_common_state import (
 )
 
 
+class FrontForceRateConvergenceError(RuntimeError):
+    """The exact front force/rate map lacks a pointwise certificate."""
+
+
 @dataclass(frozen=True)
 class MultiGrainInterface:
     component_id: str
@@ -538,7 +542,7 @@ def advance_energy_qualified_mechanics(
                 roundoff_floor, 1e-300)
     relative = abs(residual)/scale
     if relative > float(maximum_relative_first_law_residual):
-        raise RuntimeError(
+        raise FrontForceRateConvergenceError(
             "subdivided mechanical interval fails cumulative first-law audit")
     return EnergyQualifiedMechanicalResult(
         candidate, operators, balances, depth, work, thermostat, delta_internal,
@@ -1396,14 +1400,36 @@ def advance_multigrain_front_interval(
 
     def advance_without_cfl_clipping(accepted, accepted_runtime, interval,
                                      hint, depth=0):
-        trial, trial_runtime, decision = advance_multigrain_front(
-            accepted, accepted_runtime, kinetics=kinetics, dt_s=interval,
-            spacing_m=spacing_m,
-            represented_thickness_m=represented_thickness_m,
-            wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
-            applied_shear_rate_s=applied_shear_rate_s, systems=systems,
-            heat_deposition_mode=heat_deposition_mode,
-            initial_joint_pressure_factor=hint)
+        try:
+            trial, trial_runtime, decision = advance_multigrain_front(
+                accepted, accepted_runtime, kinetics=kinetics, dt_s=interval,
+                spacing_m=spacing_m,
+                represented_thickness_m=represented_thickness_m,
+                wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
+                applied_shear_rate_s=applied_shear_rate_s, systems=systems,
+                heat_deposition_mode=heat_deposition_mode,
+                initial_joint_pressure_factor=hint)
+        except FrontForceRateConvergenceError:
+            # A finite transaction can straddle a nonsmooth active-set corner
+            # even though each smaller physical increment has an independently
+            # verifiable conjugate force/rate fixed point.  Refine physical
+            # time and recompute both half transactions from their accepted
+            # states.  No failed proposal is published and the pointwise
+            # closure tolerance remains unchanged.
+            if depth >= 32:
+                raise
+            first_state, first_runtime, first_decisions = (
+                advance_without_cfl_clipping(
+                    accepted, accepted_runtime, .5*interval, hint, depth+1))
+            second_hint = hint
+            if warm_start_joint_pressure_factor and first_decisions:
+                second_hint = first_decisions[-1].joint_pressure_factor
+            second_state, second_runtime, second_decisions = (
+                advance_without_cfl_clipping(
+                    first_state, first_runtime, .5*interval, second_hint,
+                    depth+1))
+            return (second_state, second_runtime,
+                    first_decisions+second_decisions)
         if not decision.contour_cfl_clipped:
             return trial, trial_runtime, (decision,)
         if depth >= 32:

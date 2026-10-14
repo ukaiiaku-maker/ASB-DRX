@@ -11,6 +11,7 @@ from full_model.production.complete_multigrain_energy import (
     evaluate_multigrain_mechanical_interval,
 )
 from full_model.production.multigrain_production import (
+    FrontForceRateConvergenceError,
     MultiGrainFrontKinetics, MultiGrainInterface,
     MultiGrainProductionDecision, MultiGrainProductionRuntime,
     advance_multigrain_front,
@@ -324,6 +325,46 @@ def test_front_interval_adaptively_removes_contour_cfl_clipping(monkeypatch):
         applied_shear_rate_s=2e4)
     assert len(decisions) == 4
     assert all(not decision.contour_cfl_clipped for decision in decisions)
+    assert evolved_runtime.ledger.physical_time_s == 1e-8
+    assert evolved_runtime.ledger.applied_shear_strain == 2e-4
+
+
+def test_front_interval_refines_unresolved_force_rate_corner(monkeypatch):
+    import full_model.production.multigrain_production as production
+
+    threshold = 2.5e-9
+    attempted = []
+
+    def fake_front(state, runtime, *, dt_s, applied_shear_rate_s=0.0,
+                   **unused):
+        attempted.append(dt_s)
+        if dt_s > threshold:
+            raise FrontForceRateConvergenceError("synthetic active-set corner")
+        ledger = replace(
+            runtime.ledger,
+            intervals=runtime.ledger.intervals+1,
+            physical_time_s=runtime.ledger.physical_time_s+dt_s,
+            applied_shear_strain=(runtime.ledger.applied_shear_strain
+                                  +applied_shear_rate_s*dt_s))
+        decision = MultiGrainProductionDecision(
+            True, "SYNTHETIC", {}, {}, {}, {}, None, 0,
+            joint_pressure_factor=1.0)
+        return state, replace(runtime, ledger=ledger), decision
+
+    monkeypatch.setattr(production, "advance_multigrain_front", fake_front)
+    spacing = 2e-8
+    state = _state(4)
+    wall, kinetics = _front_parameters(spacing)
+    runtime = MultiGrainProductionRuntime(())
+    _, evolved_runtime, decisions = advance_multigrain_front_interval(
+        state, runtime, kinetics=kinetics, dt_s=1e-8,
+        maximum_substep_s=1e-8, spacing_m=spacing,
+        represented_thickness_m=5e-10, wall_parameters=wall,
+        applied_shear_rate_s=2e4)
+    assert len(decisions) == 4
+    assert max(attempted) == 1e-8
+    assert all(decision.selected_rate_conjugate_to_recorded_force
+               for decision in decisions)
     assert evolved_runtime.ledger.physical_time_s == 1e-8
     assert evolved_runtime.ledger.applied_shear_strain == 2e-4
 
