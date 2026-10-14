@@ -162,6 +162,11 @@ class CommonWallParameters:
     bath_rate_s: float = 0.0
     bath_temperature_K: float = 1100.0
     mobile_correlation_diffusivity_m2_s: float = 1.0e-12
+    # Default-off Groma--Zaiser sign-resolved correlation branch.  The
+    # existing ``correlation_energy_J_m`` is the A*rho*log(rho/rho0) term;
+    # this coefficient supplies the independent D*kappa^2/(2*rho) term.
+    groma_sign_resolved_transport_enabled: bool = False
+    groma_gnd_correlation_energy_J_m: float = 0.0
     # Physical depth over which a captured line measure enters the continuum
     # wall reservoir.  This is independent of mesh spacing, interface width,
     # and atomistic core radius. Zero retains legacy one-cell deposition.
@@ -206,6 +211,17 @@ class CommonWallParameters:
             raise ValueError("bound active tolerance must lie in (0,0.5)")
         if self.mobile_correlation_diffusivity_m2_s < 0.0:
             raise ValueError("mobile correlation diffusivity cannot be negative")
+        if (not math.isfinite(float(self.groma_gnd_correlation_energy_J_m))
+                or self.groma_gnd_correlation_energy_J_m < 0.0):
+            raise ValueError("Groma GND correlation energy cannot be negative")
+        if (self.groma_sign_resolved_transport_enabled
+                and self.groma_gnd_correlation_energy_J_m <= 0.0):
+            raise ValueError("sign-resolved Groma transport requires D energy")
+        if (self.groma_sign_resolved_transport_enabled
+                and self.transport_scheme != "spectral"):
+            raise ValueError(
+                "sign-resolved Groma transport currently requires the "
+                "periodic spectral transport scheme")
         if (not math.isfinite(float(self.capture_deposition_length_m))
                 or self.capture_deposition_length_m < 0.0):
             raise ValueError("capture deposition length must be finite and nonnegative")
@@ -427,6 +443,19 @@ def wall_free_energy_derivatives(
     partition_direct_mu = (parameters.wall_partition_J_m*partition_offset
                            /parameters.wall_target_m2)
     common_mu = base_mu
+    mobile_rho = state.mobile_plus_m2+state.mobile_minus_m2
+    mobile_kappa = state.mobile_plus_m2-state.mobile_minus_m2
+    safe_mobile = np.maximum(mobile_rho, 1e-30*reference)
+    polarized = mobile_rho > 0.0
+    ratio = np.divide(
+        mobile_kappa, safe_mobile, out=np.zeros_like(mobile_kappa),
+        where=polarized)
+    gnd_plus_mu = parameters.groma_gnd_correlation_energy_J_m*(
+        ratio-.5*ratio*ratio)
+    gnd_minus_mu = parameters.groma_gnd_correlation_energy_J_m*(
+        -ratio-.5*ratio*ratio)
+    mobile_plus_mu = common_mu[..., None]+gnd_plus_mu
+    mobile_minus_mu = common_mu[..., None]+gnd_minus_mu
     forest_mu = common_mu+parameters.forest_energy_J_m
     denergy_dgate = (
         -parameters.wall_absent_penalty_J_m3*q*q
@@ -450,7 +479,10 @@ def wall_free_energy_derivatives(
     return {
         "total_density_m2": total, "wall_density_m2": wall,
         **invariants,
-        "mobile_mu_J_m": common_mu, "forest_mu_J_m": forest_mu,
+        "mobile_mu_J_m": common_mu,
+        "mobile_plus_mu_J_m": mobile_plus_mu,
+        "mobile_minus_mu_J_m": mobile_minus_mu,
+        "forest_mu_J_m": forest_mu,
         "wall_plus_mu_J_m": wall_plus_mu,
         "wall_minus_mu_J_m": wall_minus_mu,
         "junction_mu_J_m": junction_mu,
@@ -469,6 +501,13 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     safe = np.maximum(total, 1e-30*reference)
     density = (parameters.line_energy_J_m*total
                +parameters.correlation_energy_J_m*total*np.log(safe/reference))
+    mobile_rho = state.mobile_plus_m2+state.mobile_minus_m2
+    mobile_kappa = state.mobile_plus_m2-state.mobile_minus_m2
+    safe_mobile = np.maximum(mobile_rho, 1e-30*reference)
+    gnd_correlation = .5*parameters.groma_gnd_correlation_energy_J_m*np.sum(
+        np.divide(mobile_kappa*mobile_kappa, safe_mobile,
+                  out=np.zeros_like(mobile_kappa), where=mobile_rho > 0.0),
+        axis=2)
     forest = parameters.forest_energy_J_m*np.sum(
         state.forest_plus_m2+state.forest_minus_m2, axis=2)
     multiplicity = (np.asarray(
@@ -488,7 +527,8 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
     partition = (.5*parameters.wall_partition_J_m
                  *(wall-gate*h*parameters.wall_target_m2)**2
                  /parameters.wall_target_m2)
-    return density+forest+junction+barrier+absent+ordering+partition
+    return (density+gnd_correlation+forest+junction+barrier+absent
+            +ordering+partition)
 
 
 def wall_total_free_energy_density_J_m3(
@@ -668,10 +708,73 @@ def resolved_driving_components(
         speed = np.asarray(driving.glide_speed_m_s, dtype=float)
     if speed.shape != family_shape:
         raise ValueError("glide speed requires grid x family layout")
+    thermodynamic_plus = thermodynamic_stress
+    thermodynamic_minus = thermodynamic_stress
+    effective_plus = effective
+    effective_minus = effective
+    speed_plus = speed
+    speed_minus = speed
+    if parameters.groma_sign_resolved_transport_enabled:
+        if driving.glide_speed_m_s is not None:
+            raise ValueError(
+                "sign-resolved Groma transport requires Arrhenius glide")
+        plus_mu_x, plus_mu_y = _spectral_gradient(
+            chemical["mobile_plus_mu_J_m"], parameters.spacing_m)
+        minus_mu_x, minus_mu_y = _spectral_gradient(
+            chemical["mobile_minus_mu_J_m"], parameters.spacing_m)
+        plus_gradient = (plus_mu_x*directions[..., 0]
+                         +plus_mu_y*directions[..., 1])
+        minus_gradient = (minus_mu_x*directions[..., 0]
+                          +minus_mu_y*directions[..., 1])
+        thermodynamic_plus = raw-plus_gradient/parameters.burgers_m
+        thermodynamic_minus = raw+minus_gradient/parameters.burgers_m
+
+        def resisted(value):
+            if parameters.taylor_alpha == 0.0:
+                return value.copy()
+            smooth = np.sqrt(value*value+resistance*resistance
+                             +parameters.taylor_regularization_Pa**2)
+            return value*(1.0-resistance/smooth)
+
+        effective_plus = resisted(thermodynamic_plus)
+        effective_minus = resisted(thermodynamic_minus)
+        temperature = channel_temperature_K(
+            state, parameters, "flow")[..., None]
+
+        def arrhenius_velocity(value):
+            activation = exp_floor_rate(
+                value, temperature, parameters.glide_barrier_eV,
+                parameters)/parameters.attempt_frequency_s
+            return (parameters.glide_speed_attempt_m_s*activation
+                    *np.tanh(value/parameters.critical_stress_Pa))
+
+        speed_plus = arrhenius_velocity(effective_plus)
+        speed_minus = arrhenius_velocity(effective_minus)
+        mobile_total = state.mobile_plus_m2+state.mobile_minus_m2
+        speed = np.divide(
+            speed_plus*state.mobile_plus_m2+speed_minus*state.mobile_minus_m2,
+            mobile_total, out=np.zeros_like(mobile_total),
+            where=mobile_total > 0.0)
+        thermodynamic_stress = np.divide(
+            thermodynamic_plus*state.mobile_plus_m2
+            +thermodynamic_minus*state.mobile_minus_m2,
+            mobile_total, out=np.zeros_like(mobile_total),
+            where=mobile_total > 0.0)
+        effective = np.divide(
+            effective_plus*state.mobile_plus_m2
+            +effective_minus*state.mobile_minus_m2,
+            mobile_total, out=np.zeros_like(mobile_total),
+            where=mobile_total > 0.0)
     return {"speed_m_s": speed, "raw_stress_Pa": raw,
             "chemical_backstress_Pa": chemical_backstress,
             "thermodynamic_stress_Pa": thermodynamic_stress,
             "effective_stress_Pa": effective,
+            "speed_plus_m_s": speed_plus,
+            "speed_minus_m_s": speed_minus,
+            "thermodynamic_stress_plus_Pa": thermodynamic_plus,
+            "thermodynamic_stress_minus_Pa": thermodynamic_minus,
+            "effective_stress_plus_Pa": effective_plus,
+            "effective_stress_minus_Pa": effective_minus,
             "taylor_resistance_Pa": resistance,
             "stress_tensor_Pa": stress_tensor,
             "compatible_strain": compatible_strain,
@@ -701,11 +804,13 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         state, driving, systems, topologies, parameters,
         _chemical=chemical, _rotated_fields=rotated_fields)
     speed = drive["speed_m_s"]
+    speed_plus = drive["speed_plus_m_s"]
+    speed_minus = drive["speed_minus_m_s"]
     stress = drive["effective_stress_Pa"]
     _, directions, _ = rotated_fields
     planar = directions[..., :2]
-    flux_plus = state.mobile_plus_m2[..., None]*speed[..., None]*planar
-    flux_minus = -state.mobile_minus_m2[..., None]*speed[..., None]*planar
+    flux_plus = state.mobile_plus_m2[..., None]*speed_plus[..., None]*planar
+    flux_minus = -state.mobile_minus_m2[..., None]*speed_minus[..., None]*planar
     if parameters.mobile_correlation_diffusivity_m2_s:
         for family in range(len(systems)):
             gx, gy = _spectral_gradient(
@@ -718,10 +823,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
             flux_minus[..., family, 1] -= parameters.mobile_correlation_diffusivity_m2_s*gy
     if parameters.transport_scheme == "upwind":
         mp_rate = _periodic_upwind_rate(
-            state.mobile_plus_m2, speed[..., None]*planar,
+            state.mobile_plus_m2, speed_plus[..., None]*planar,
             parameters.spacing_m, driving.material_support)
         mm_rate = _periodic_upwind_rate(
-            state.mobile_minus_m2, -speed[..., None]*planar,
+            state.mobile_minus_m2, -speed_minus[..., None]*planar,
             parameters.spacing_m, driving.material_support)
     else:
         if driving.material_support is None:
@@ -744,8 +849,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # transaction; no channel is inferred from the final balance residual.
     transport_mp_rate = mp_rate.copy()
     transport_mm_rate = mm_rate.copy()
-    slip_rate = (parameters.burgers_m*speed
-                 *(state.mobile_plus_m2+state.mobile_minus_m2))
+    slip_rate = parameters.burgers_m*(
+        speed_plus*state.mobile_plus_m2+speed_minus*state.mobile_minus_m2)
     fp_rate = np.zeros(family_shape); fm_rate = np.zeros(family_shape)
     wp_rate = np.zeros(family_shape); wm_rate = np.zeros(family_shape)
     junction_rate = np.zeros(grid+(len(topologies),))
@@ -761,13 +866,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
 
     k_lock = exp_floor_rate(stress, temperature, parameters.lock_barrier_eV, parameters)
     k_lock = coordinated(k_lock, parameters.multi_hit_lock_log_factor)
-    delta_lock = chemical["forest_mu_J_m"]-chemical["mobile_mu_J_m"]
+    delta_lock_p = (chemical["forest_mu_J_m"][..., None]
+                    -chemical["mobile_plus_mu_J_m"])
+    delta_lock_m = (chemical["forest_mu_J_m"][..., None]
+                    -chemical["mobile_minus_mu_J_m"])
     lock_p, lock_p_turnover = _biased_exchange_components(
         state.mobile_plus_m2, state.forest_plus_m2,
-        delta_lock[..., None], k_lock, parameters)
+        delta_lock_p, k_lock, parameters)
     lock_m, lock_m_turnover = _biased_exchange_components(
         state.mobile_minus_m2, state.forest_minus_m2,
-        delta_lock[..., None], k_lock, parameters)
+        delta_lock_m, k_lock, parameters)
     mp_rate -= lock_p; mm_rate -= lock_m
     fp_rate += lock_p; fm_rate += lock_m
 
@@ -814,12 +922,19 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # declared chemical potential and unconstrained accepted extent, not a
     # posteriori first-law residual correction.
     plastic_power = np.sum(drive["raw_stress_Pa"]*slip_rate, axis=2)
-    transport_free_energy_rate = chemical["mobile_mu_J_m"]*np.sum(
-        transport_mp_rate+transport_mm_rate, axis=2)
-    multiplication_cost = (2.0*np.maximum(chemical["mobile_mu_J_m"], 0.0)
-                           *np.sum(multiplication, axis=2))
-    transport_driving_power = np.sum(
-        drive["thermodynamic_stress_Pa"]*slip_rate, axis=2)
+    transport_free_energy_rate = np.sum(
+        chemical["mobile_plus_mu_J_m"]*transport_mp_rate
+        +chemical["mobile_minus_mu_J_m"]*transport_mm_rate, axis=2)
+    multiplication_pair_mu = (
+        chemical["mobile_plus_mu_J_m"]
+        +chemical["mobile_minus_mu_J_m"])
+    multiplication_cost = np.sum(
+        np.maximum(multiplication_pair_mu, 0.0)*multiplication, axis=2)
+    transport_driving_power = parameters.burgers_m*np.sum(
+        drive["thermodynamic_stress_plus_Pa"]*speed_plus
+        *state.mobile_plus_m2
+        +drive["thermodynamic_stress_minus_Pa"]*speed_minus
+        *state.mobile_minus_m2, axis=2)
     multiplication_power_available = np.maximum(
         transport_driving_power, 0.0)
     multiplication_budget_scale = np.ones(grid)
@@ -937,20 +1052,22 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # rate.  Their algebraic sum is identically plastic_power-dF/dt, but no
     # individual term is defined by that residual.  A negative contribution
     # is intentionally retained so the thermodynamic hard gate fails loudly.
-    multiplication_free_energy_rate = chemical["mobile_mu_J_m"]*2.0*np.sum(
-        multiplication, axis=2)
+    multiplication_free_energy_rate = np.sum(
+        multiplication_pair_mu*multiplication, axis=2)
     plastic_drag_dissipation = (transport_driving_power
                                 -multiplication_free_energy_rate)
-    lock_dissipation = -delta_lock*np.sum(lock_p+lock_m, axis=2)
+    lock_dissipation = -np.sum(
+        delta_lock_p*lock_p+delta_lock_m*lock_m, axis=2)
     wall_exchange_dissipation = -np.sum(
         delta_wall_p*transfer_p+delta_wall_m*transfer_m, axis=2)
-    annihilation_dissipation = (2.0*chemical["mobile_mu_J_m"]
-                                *np.sum(annihilation, axis=2))
+    annihilation_dissipation = np.sum(
+        multiplication_pair_mu*annihilation, axis=2)
     order_dissipation = -q_chemical_potential*q_rate
     # Exact directional derivative of the declared defect free-energy
     # functional.  The q term includes the variational gradient contribution.
     free_energy_rate = (
-        chemical["mobile_mu_J_m"]*np.sum(mp_rate+mm_rate, axis=2)
+        np.sum(chemical["mobile_plus_mu_J_m"]*mp_rate
+               +chemical["mobile_minus_mu_J_m"]*mm_rate, axis=2)
         +chemical["forest_mu_J_m"]*np.sum(fp_rate+fm_rate, axis=2)
         +np.sum(chemical["wall_plus_mu_J_m"]*wp_rate
                 +chemical["wall_minus_mu_J_m"]*wm_rate, axis=2)
@@ -979,6 +1096,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         alignment_rate, family_nye_rate, orientation_rate,
         np.real(temperature_rate))
     channels = {
+        "transport_mobile_plus_rate_m2_s": transport_mp_rate,
+        "transport_mobile_minus_rate_m2_s": transport_mm_rate,
         "lock_plus": lock_p, "lock_minus": lock_m,
         "wall_plus": transfer_p, "wall_minus": transfer_m,
         "lock_plus_turnover": lock_p_turnover,
@@ -1003,6 +1122,12 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "wall_order_dissipation_W_m3": order_dissipation,
         "transport_free_energy_rate_W_m3": transport_free_energy_rate,
         "chemical_backstress_Pa": drive["chemical_backstress_Pa"],
+        "thermodynamic_stress_plus_Pa": drive[
+            "thermodynamic_stress_plus_Pa"],
+        "thermodynamic_stress_minus_Pa": drive[
+            "thermodynamic_stress_minus_Pa"],
+        "speed_plus_m_s": speed_plus,
+        "speed_minus_m_s": speed_minus,
         "transport_driving_power_W_m3": transport_driving_power,
         "defect_energy_flux_divergence_W_m3": (
             defect_energy_flux_divergence),
