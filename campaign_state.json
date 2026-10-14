@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T05:28:00Z",
+  "last_updated_utc": "2026-10-14T08:23:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -34,7 +34,7 @@
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
     "G02": "dynamic_target_growth_is_transient_from_10k_to_80k_per_s_but_retained_high_rate_state_grows_3p368_percent_through_unload_and_fixed_strain_hold",
-    "G03": "matched_strong_bath_control_supports_a_thermal_contribution_to_high_rate_softening_but_strict_ASB_is_unqualified_without_spatial_refinement",
+    "G03": "fixed_scale_n16_to_n64_pair_supports_thermal_localization_contribution_but_strict_ASB_remains_false_due_softening_and_causal_increment_refinement",
     "G04": "fixed_law_temperature_rate_response_family_and_matched_thermal_causality_demonstrated_not_material_validated",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "high_rate_retained_state_grows_monotonically_during_six_microsecond_hold_and_continues_after_release_to_704_Pa_mean_stress"
@@ -61,12 +61,12 @@
   "current_task": {
     "goal_ids": ["G01", "G03", "G04", "G05"],
     "hypothesis_ids": ["H1", "H2"],
-    "physical_uncertainty": "whether_the_matched_high_rate_thermal_softening_increment_and_localization_signals_persist_under_spatial_refinement",
-    "next_executable_experiment": "run_1000_K_80000_per_s_adiabatic_and_strong_bath_cases_at_n24_then_conditionally_n32",
-    "source_identity": "565e880_with_thermostat_balance_and_public_front_closure_repairs",
-    "expected_discriminatory_observation": "convergent_peak_softening_temperature_contrast_and_spatial_localization_difference_between_adiabatic_and_bath_members",
-    "resource_need": "one_local_heavy_solver_available",
-    "result_status": "endogenous_H3_formation_negative; inherited_H1_H2_and_high_rate_to_static_RX_sequence_supported; thermal_softening_contribution_supported_but_strict_ASB_false; dynamic_growth_not_sustained_from_10000_to_80000_per_s"
+    "physical_uncertainty": "which_history_sensitive_operator_prevents_the_matched_thermal_softening_increment_from_converging_after_bulk_and_endpoint_spatial_observables_have_converged",
+    "next_executable_experiment": "final_regression_and_compact_V66_continuation_state_then_diagnose_post_peak_history_sensitivity_in_next_allocation",
+    "source_identity": "0253ee6_fixed_physical_interface_width_and_n64_refinement_analysis",
+    "expected_discriminatory_observation": "regression_preservation_and_an_explicit_negative_strict_ASB_classification_without_losing_positive_retained_state_static_RX",
+    "resource_need": "no_heavy_solver_until_post_peak_history_sensitivity_is_reformulated",
+    "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; fixed_scale_n64_thermal_localization_positive_but_strict_ASB_negative; dynamic_growth_not_sustained"
   },
   "completion_semantics": {
     "execution_complete": false,

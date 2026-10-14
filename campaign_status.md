@@ -68,6 +68,21 @@ Updated: 2026-10-13 (America/Los_Angeles)
   reaches -704 Pa mean shear stress and the target continues growing by
   0.01545% after first entering the 10 MPa band. This supports a common-state
   high-rate-deformation-to-static-RX sequence, not a truly stress-free claim.
+- The first 16/24/32 ASB refinement was rejected because it kept the diffuse
+  boundary two cells wide, shrinking its physical width with grid spacing.
+  A production option now holds the physical width at 0.60 micrometres; target
+  area then agrees within 0.2% across the initializer grids. The corrected
+  16/24/32/48/64 matched adiabatic/strong-bath sequence has converged peak
+  stress, temperature contrast, target recession, and endpoint thermal/power
+  spectral lengths. From 48 to 64, these differ by at most 2.56%. The remaining
+  adiabatic post-peak softening difference is 5.85%, and the matched thermal
+  softening increment changes from 0.517% to 0.460%. Strict ASB therefore
+  remains false; the model supports thermomechanical localization and a
+  positive thermal contribution, but not a fully grid-converged ASB claim.
+- Final-source canonical regression passes 1098 tests in 281.32 s with
+  `PYTHONPATH=src:.`. No campaign solver remains active. The earlier root-only
+  invocation is rejected as an environment error because it hid the legacy
+  `src/asb_drx` package during collection.
 
 ## V64 production accuracy and controlled coupled evolution
 

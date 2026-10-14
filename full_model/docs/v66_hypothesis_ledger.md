@@ -770,3 +770,39 @@ experiment, result, limitation, and next branch.
   open; strict ASB remains false pending spatial refinement.
 - Next branch: spatially refine the matched 1000 K/80,000/s adiabatic/strong-
   bath pair while preserving the now-demonstrated retained-state RX sequence.
+
+## 2026-10-14T08:23:00Z — fixed-scale matched ASB refinement
+
+- Goals: G01, G03, G04.
+- Protocol repair: the initial 16/24/32 study kept the diffuse owner interface
+  two cells wide, so its physical width fell from 0.60 to 0.30 micrometres.
+  The resulting growth and temperature divergence was a grid-dependent initial
+  condition, not a valid refinement result. The production driver now accepts
+  a physical interface width and holds it at 0.60 micrometres. Initial target
+  area varies by less than 0.2% across 16/24/32 grids. The cell-scaled runs are
+  retained only as rejected-protocol diagnostics and excluded from claims.
+- Experiment: rerun the 1000 K/80,000/s adiabatic and strong-bath pair at
+  24, 32, 48, and 64 squared cells, using the original 16 squared case as the
+  same-physical-width coarse member. Preserve all Arrhenius, Peierls, Taylor,
+  Hall--Petch, front, defect, and thermal parameters.
+- Result: corrected endpoints are stable. From 48 to 64, relative differences
+  are 0.05% peak stress, 0.26% temperature contrast, 0.48% target recession,
+  1.15% power spectral length, and 0.46% thermal spectral length for the
+  adiabatic member; bath quantities are also below 2.56%. Energy residuals
+  remain below 1.91% mechanical and `5.35e-6` front closure. The matched
+  temperature contrast ratio remains above 1000. Thermal softening increments
+  across 16/24/32/48/64 are 0.524%, 0.519%, 0.491%, 0.517%, and 0.460%.
+- Decision: most physical response and spatial observables converge, and heat
+  feedback makes a repeatable positive contribution. Strict ASB is nonetheless
+  false because adiabatic post-peak softening changes 5.85% from 48 to 64 and
+  the matched increment itself is not below the provisional 5% refinement
+  threshold. No further refinement is justified until the remaining
+  history-sensitivity is diagnosed; resolution will not be extended merely to
+  seek a favorable classification.
+- Next branch: preserve the positive sequential high-rate-to-static RX model,
+  keep G03 and endogenous G05 open, run the final regression, and record the
+  compact continuation state for the next mechanism-development allocation.
+- Regression: 1098 tests pass in 281.32 s on the final source with both
+  `src` and the repository root on `PYTHONPATH`. A preceding root-only command
+  is excluded because it hid the separately packaged legacy module and failed
+  collection before executing tests.
