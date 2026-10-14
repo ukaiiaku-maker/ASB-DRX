@@ -441,6 +441,33 @@ def test_energy_qualified_zero_load_hold_is_not_bisected_below_roundoff():
     assert result.relative_first_law_residual <= .05
 
 
+def test_energy_qualified_mechanics_ledgers_thermostat_exchange():
+    spacing = 2e-8
+    state = _state(8)
+    initial = np.full((8, 8), 910.0)
+    state = replace(state, owners=tuple(
+        replace(owner, temperature_K=initial.copy())
+        for owner in state.owners))
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        bath_rate_s=5e9, bath_temperature_K=900.0)
+    strain = np.zeros((2, 2))
+    result = advance_energy_qualified_mechanics(
+        state, mean_strain_before=strain, mean_strain_candidate=strain,
+        systems=bcc_four_family_systems(), topologies=(),
+        wall_parameters=parameters, dt_s=2e-9,
+        represented_thickness_m=5e-10,
+        energy_kwargs=dict(reference_temperature_K=900.0),
+        maximum_relative_first_law_residual=.05)
+    assert result.thermostat_exchange_J < 0.0
+    assert result.relative_first_law_residual <= .05
+    np.testing.assert_allclose(
+        result.internal_energy_change_J,
+        result.external_work_J+result.thermostat_exchange_J,
+        rtol=.05, atol=1e-30)
+
+
 def test_dissipative_zero_work_hold_uses_resolved_energy_turnover_scale():
     spacing = 2e-8
     state = _state(8)

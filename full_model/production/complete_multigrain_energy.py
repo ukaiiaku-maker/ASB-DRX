@@ -101,6 +101,7 @@ class MultiGrainMechanicalEnergyBalance:
     before: CompleteFrontEnergy
     candidate: CompleteFrontEnergy
     external_work_J: float
+    thermostat_exchange_J: float
     internal_energy_change_J: float
     first_law_residual_J: float
     first_law_scale_J: float
@@ -131,7 +132,7 @@ def _mean_mechanical_stress(state, spacing_m, wall_parameters, mean_strain):
 def evaluate_multigrain_mechanical_interval(
         before_state, candidate_state, *, mean_strain_before,
         mean_strain_candidate, spacing_m, represented_thickness_m,
-        wall_parameters, energy_kwargs=None):
+        wall_parameters, energy_kwargs=None, thermostat_exchange_J=0.0):
     """Independently audit strain-controlled work across one owner step."""
     options = {} if energy_kwargs is None else dict(energy_kwargs)
     options.pop("mean_strain", None)
@@ -185,7 +186,11 @@ def evaluate_multigrain_mechanical_interval(
     )
     nonelastic_change = sum(nonelastic_components)
     delta_internal = elastic_change+nonelastic_change
-    residual = delta_internal-work
+    # Thermostat exchange is positive into the represented material.  The
+    # production thermal operator records cooling as a negative increment, so
+    # the open-system first law is Delta U = W + Q_thermostat.
+    thermostat = float(thermostat_exchange_J)
+    residual = delta_internal-work-thermostat
     # A hold can exchange defect/elastic energy with the thermal reservoir
     # while its exact external work is zero.  The endpoint totals are O(1e-11)
     # J in the production patch, so their floating-point subtraction cannot
@@ -204,10 +209,11 @@ def evaluate_multigrain_mechanical_interval(
     # not a residual correction: the signed residual remains unchanged.
     gross_internal_turnover = abs(elastic_change)+sum(
         abs(value) for value in nonelastic_components)
-    scale = max(abs(delta_internal), abs(work), gross_internal_turnover,
+    scale = max(abs(delta_internal), abs(work), abs(thermostat),
+                gross_internal_turnover,
                 roundoff_floor, 1e-300)
     return MultiGrainMechanicalEnergyBalance(
-        before, candidate, work, delta_internal, residual,
+        before, candidate, work, thermostat, delta_internal, residual,
         scale, abs(residual)/scale, stress_before, stress_candidate)
 
 

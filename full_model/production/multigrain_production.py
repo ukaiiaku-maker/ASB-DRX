@@ -172,6 +172,7 @@ class EnergyQualifiedMechanicalResult:
     energy_balances: tuple[object, ...]
     subdivisions: int
     external_work_J: float
+    thermostat_exchange_J: float
     internal_energy_change_J: float
     first_law_residual_J: float
     relative_first_law_residual: float
@@ -489,12 +490,18 @@ def advance_energy_qualified_mechanics(
             if not adaptive_failure or depth >= int(maximum_subdivisions):
                 raise
             return bisect_interval()
+        cell_volume = (float(wall_parameters.spacing_m)**2
+                       *float(represented_thickness_m))
+        thermostat_exchange = float(np.sum(
+            operator.thermal_bath_exchange_J_m3_cells,
+            dtype=np.longdouble)*cell_volume)
         balance = evaluate_multigrain_mechanical_interval(
             accepted, candidate, mean_strain_before=left,
             mean_strain_candidate=right,
             spacing_m=wall_parameters.spacing_m,
             represented_thickness_m=represented_thickness_m,
-            wall_parameters=wall_parameters, energy_kwargs=energy_kwargs)
+            wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
+            thermostat_exchange_J=thermostat_exchange)
         if balance.relative_first_law_residual <= float(
                 maximum_relative_first_law_residual):
             return candidate, (operator,), (balance,), depth
@@ -512,12 +519,13 @@ def advance_energy_qualified_mechanics(
     candidate, operators, balances, depth = recurse(
         state, strain0, strain1, float(dt_s), 0)
     work = sum(value.external_work_J for value in balances)
+    thermostat = sum(value.thermostat_exchange_J for value in balances)
     # Sum the cancellation-stable leaf evaluations.  Re-subtracting the two
     # O(1e-11 J) endpoint totals here would discard the accuracy recovered by
     # the exact quadratic elastic identity used in each accepted leaf.
     delta_internal = sum(value.internal_energy_change_J
                          for value in balances)
-    residual = delta_internal-work
+    residual = delta_internal-work-thermostat
     roundoff_floor = (4096.0*np.finfo(float).eps
                       *max(abs(balances[0].before.internal_J),
                            abs(balances[-1].candidate.internal_J), 1e-300))
@@ -525,14 +533,15 @@ def advance_energy_qualified_mechanics(
     # the defect/elastic-to-thermal energy actually exchanged, not against its
     # (correctly near-zero) net endpoint change.
     resolved_turnover = sum(value.first_law_scale_J for value in balances)
-    scale = max(abs(delta_internal), abs(work), resolved_turnover,
+    scale = max(abs(delta_internal), abs(work), abs(thermostat),
+                resolved_turnover,
                 roundoff_floor, 1e-300)
     relative = abs(residual)/scale
     if relative > float(maximum_relative_first_law_residual):
         raise RuntimeError(
             "subdivided mechanical interval fails cumulative first-law audit")
     return EnergyQualifiedMechanicalResult(
-        candidate, operators, balances, depth, work, delta_internal,
+        candidate, operators, balances, depth, work, thermostat, delta_internal,
         residual, relative)
 
 
