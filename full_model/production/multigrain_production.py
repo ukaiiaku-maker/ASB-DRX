@@ -1284,6 +1284,29 @@ def advance_multigrain_front(
             f"verification={verification_factor:.17g}, "
             f"directions={directions}, low={low_directions}, "
             f"high={high_directions}")
+    if not base_requests:
+        # The complete pressure correction can move every channel onto the
+        # zero-rate branch even when the independently priced scale-one map
+        # was initially active.  This is a physically stationary interval,
+        # not an infeasible empty material transaction.  Publish no support,
+        # inventory, work, or heat change and advance only the declared clock.
+        stationary_ledger = replace(
+            next_ledger,
+            stationary_intervals=next_ledger.stationary_intervals+1)
+        return (state, replace(runtime, ledger=stationary_ledger),
+                MultiGrainProductionDecision(
+                    True, "STATIONARY_FORCE_RATE_ACTIVE_SET", directions,
+                    {}, {}, {}, None, 0,
+                    force_rate_converged=True,
+                    force_rate_closure_classification=(
+                        "STATIONARY_FORCE_RATE_ACTIVE_SET"),
+                    force_rate_closure_bracket=force_rate_closure_bracket,
+                    force_rate_iterations=force_rate_iterations,
+                    complete_energy_evaluations=complete_energy_evaluations,
+                    independent_directional_prices=(
+                        independent_directional_prices),
+                    joint_capacity_solves=max(
+                        complete_energy_evaluations-1, 0)))
     pressures = {key: value*joint_pressure_factor
                  for key, value in independent_pressures.items()}
 
