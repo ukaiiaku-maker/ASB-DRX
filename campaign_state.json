@@ -1,11 +1,13 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T11:20:00Z",
+  "last_updated_utc": "2026-10-14T11:31:11Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
     "deadline_utc": "2026-10-14T11:31:11Z",
     "duration_s": 43200,
+    "actual_end_utc": "2026-10-14T11:31:11Z",
+    "status": "completed_at_fixed_deadline",
     "execution_location": "local_only",
     "maximum_heavy_campaign_solvers": 1,
     "hpc_authorized": false,
@@ -69,7 +71,7 @@
     "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; matched_n48_band_is_shared_heat_modified_high_slip_rate_structure_not_GND_or_high_density_wall; strict_ASB_false_due_unconverged_band_geometry; dynamic_growth_not_sustained"
   },
   "completion_semantics": {
-    "execution_complete": false,
+    "execution_complete": true,
     "implementation_verified": true,
     "mechanism_supported_at_tested_conditions": false,
     "integrated_response_qualified": false,

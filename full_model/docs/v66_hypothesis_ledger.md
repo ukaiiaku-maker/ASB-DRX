@@ -954,3 +954,10 @@ experiment, result, limitation, and next branch.
   classifier. Preserve connected-component geometry and persistence as the
   authoritative spatial evidence; do not infer an earlier n64 ASB onset from
   the scalar recurrence.
+
+## 2026-10-14T11:31:11Z — fixed allocation closure
+
+- The fresh 12-hour local-only V66 allocation ended at its recorded deadline.
+  No solver remains active. Pushed source/evidence is regression-clean, and
+  the exact matched n64 step-675 checkpoints are the next physical restart
+  states. This is execution closure, not full-charter or material validation.

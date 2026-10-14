@@ -2750,6 +2750,10 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - At the same step, n48-to-n64 stress, temperature contrast, and target change
   differ by at most 1.11%, while power maximum/mean still differs by
   10.7%/7.09%. Bulk response is converged earlier than localization geometry.
+- The fresh 12-hour V66 allocation closed at its fixed 11:31:11Z deadline.
+  No campaign solver remains active. Full-charter completion, strict ASB,
+  sustained dynamic DRX, spontaneous grain birth, and material validation are
+  not claimed; the exact continuation state is `campaign_state.json`.
 - A history audit confirms that scalar maximum/mean power cannot classify a
   band: every case has an early >=2x episode through 2.544% strain, and n64 has
   a late scalar recurrence without connected structure. Connectivity remains
