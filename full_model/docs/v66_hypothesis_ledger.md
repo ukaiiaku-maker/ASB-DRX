@@ -232,3 +232,26 @@ experiment, result, limitation, and next branch.
 - Next branch: discriminate residual-stress-assisted static growth from a true
   zero-mean-stress anneal, then integrate or reject a source-location closure
   using a complete work/heat transaction.
+
+## 2026-10-14T01:50:00Z — near-zero-mean-stress static control
+
+- Goals: G01, G02, G06.
+- Prediction: if stored defect/interface energy, rather than mean residual
+  stress alone, sustains the RX front, the target should continue growing after
+  a work-ledgered release reduces mean shear stress below 10 MPa.
+- Experiment: continue the exact terminal fixed-strain state with a bounded
+  local elastic-secant controller. Every controller strain increment passes
+  through the complete mechanical work/heat/front map; no state is projected.
+  After reaching near-zero mean stress, continue for the balance of 500
+  two-nanosecond intervals.
+- Result: mean stress first fell below 10 MPa at interval 38 and ended at
+  -730 Pa. After that point the inherited target continued to grow by
+  6.38e-5 of its control-start volume through 0.924 microseconds. No front
+  transaction was rejected, and inherited maximum mechanical/front closures
+  remained 0.331% and 5.72e-7. The controller extracted 1.81e-13 J net work.
+- Limitation: zero *mean* stress is not zero local stress, the target increment
+  is small, and this is neither a long anneal nor a grid-converged growth rate.
+  It does, however, reject the hypothesis that the observed static direction
+  requires a nonzero mean residual shear stress.
+- Next branch: make the Hall--Petch source hypothesis energy-complete by tying
+  line creation to its conjugate slip and stored-energy/heat transaction.
