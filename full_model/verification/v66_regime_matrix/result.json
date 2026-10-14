@@ -19,6 +19,24 @@
       "thermal_control": "adiabatic"
     },
     {
+      "case": "v66_regime_T1000_r1e4",
+      "final_strain": 0.03999999999999871,
+      "final_target_growth_fraction": -0.0032912590530734106,
+      "first_recession_strain": 0.027019999999999236,
+      "maximum_front_relative_energy_closure": 6.736013701622158e-07,
+      "maximum_mechanical_relative_first_law_residual": 0.0009139898693834739,
+      "maximum_power_localization_ratio": 2.938641079596702,
+      "maximum_temperature_contrast_K": 7.326754921927886,
+      "peak_stress_Pa": 2294466138.508365,
+      "peak_stress_strain": 0.03999999999999871,
+      "peak_target_growth_fraction": 0.0001846284193193613,
+      "peak_target_growth_strain": 0.021219999999999472,
+      "post_peak_softening_fraction": 0.0,
+      "shear_rate_s": 10000.0,
+      "temperature_K": 1000.0,
+      "thermal_control": "adiabatic"
+    },
+    {
       "case": "v66_regime_T1000_r4e4",
       "final_strain": 0.039999999999999716,
       "final_target_growth_fraction": -0.0006967893267697098,
@@ -91,7 +109,7 @@
       "thermal_control": "strong_bath"
     }
   ],
-  "created_utc": "2026-10-14T04:59:47.962155+00:00",
+  "created_utc": "2026-10-14T05:17:33.661600+00:00",
   "decision": {
     "fixed_law_regime_difference_observed": true,
     "high_rate_stress_peak_observed": true,

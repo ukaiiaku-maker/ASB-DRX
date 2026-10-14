@@ -1,0 +1,10 @@
+{
+  "load": 0.07999999999999943,
+  "loaded_volume_m3": [
+    3.988409712865031e-21,
+    3.6514809681602234e-21,
+    3.787949318974746e-21
+  ],
+  "source": "full_model/verification/v66_regime_T1000_r8e4/checkpoint_latest.npz",
+  "source_physical_time_s": 1.3999999999999965e-06
+}

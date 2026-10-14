@@ -53,6 +53,21 @@ Updated: 2026-10-13 (America/Los_Angeles)
   The control exposed and repaired an open-system energy-audit omission:
   thermostat exchange was already computed but is now included explicitly in
   `delta U = W + Q_bath`. Thirty-two focused common-state/front tests pass.
+- Lowering the fixed-law dynamic rate to 10,000/s increases peak transient
+  target growth to 0.01846%, but does not sustain it: reversal begins near
+  2.70% strain and the target ends at -0.3291% by 4% strain. A roundoff-edge
+  public front-map closure was stabilized by additional Picard publication
+  iterations while retaining the unchanged `1e-10` pointwise tolerance; the
+  configuration-identical checkpoint continuation completed with closed
+  energy.
+- The 80,000/s loaded state was then unloaded and annealed without resetting
+  any owner, defect, thermal, or front history. It regrows by 0.510% during
+  unloading and reaches +3.368% relative to the loaded state after a monotone
+  6 microsecond fixed-zero-strain hold. Because residual mean stress is still
+  -1.71 GPa, a subsequent work-ledgered release controller was applied. It
+  reaches -704 Pa mean shear stress and the target continues growing by
+  0.01545% after first entering the 10 MPa band. This supports a common-state
+  high-rate-deformation-to-static-RX sequence, not a truly stress-free claim.
 
 ## V64 production accuracy and controlled coupled evolution
 

@@ -1,0 +1,33 @@
+{
+  "configuration": {
+    "controller": "bounded local elastic secant; complete work-ledgered interval",
+    "dt_s": 2e-09,
+    "maximum_strain_change_per_interval": 0.0005,
+    "probe_strain": 0.0001,
+    "schema": "v66-zero-mean-stress-feedback-v1",
+    "source_checkpoint": "full_model/verification/v66_high_rate_unload_static/checkpoint_latest.npz",
+    "steps": 500
+  },
+  "created_utc": "2026-10-14T05:27:12.090566+00:00",
+  "decision": {
+    "near_zero_mean_stress_reached": true,
+    "reason": "Mean stress is feedback-controlled by work-ledgered strain increments; local residual stresses and finite controller error remain.",
+    "run_complete": true,
+    "static_rx_at_near_zero_mean_stress_supported": true,
+    "stress_free_claim": false
+  },
+  "result": {
+    "cumulative_external_work_J": -1.8790335064649471e-13,
+    "final_applied_shear_strain": 0.01921454947960592,
+    "final_mean_shear_stress_Pa": -704.495816223789,
+    "final_target_change_fraction": 0.00031124126034219677,
+    "first_step_below_10MPa": 39,
+    "maximum_front_relative_energy_closure": 5.58283821849631e-07,
+    "maximum_mechanical_relative_first_law_residual": 0.003206287873200383,
+    "minimum_absolute_mean_shear_stress_Pa": 704.495816223789,
+    "rejected_front_events_total": 0,
+    "steps_completed": 500,
+    "target_change_after_first_below_10MPa": 0.00015447137619496956
+  },
+  "schema": "v66-zero-mean-stress-result-v1"
+}

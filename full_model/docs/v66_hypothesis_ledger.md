@@ -738,3 +738,35 @@ experiment, result, limitation, and next branch.
 - Next branch: pursue the primary RX objective by lowering rate at fixed law
   and extending to the same 4% strain, asking whether migration time can turn
   transient inherited-subgrain advance into sustained dynamic growth.
+
+## 2026-10-14T05:28:00Z — slow dynamic rejection and retained-history RX
+
+- Goals: G01, G02, G04, G06.
+- Dynamic discriminator: at 1000 K and 10,000/s, the same owner reaches
+  0.01846% peak growth at 2.122% strain, 3.79 times the 40,000/s peak, but
+  reverses near 2.70% strain and ends at -0.3291% by 4% strain. More migration
+  time amplifies both advance and later recession; it does not make dynamic
+  growth sustained under the unchanged force law.
+- Numerical repair: the long slow-rate run encountered a smooth, direction-
+  invariant public front-factor mismatch of `1.42e-10`. Additional direct
+  Picard publication iterates now seek the same unchanged `1e-10` pointwise
+  closure before rejection. Forty focused tests pass, and a provenance-forked
+  continuation from the exact 2.4% checkpoint completes without changing
+  configuration or tolerance.
+- Retained-history experiment: unload the completed 1000 K/80,000/s state to
+  zero imposed strain, then hold for 6 microseconds, without resetting owner
+  supports, density, orientation, temperature, or runtime ledgers. The target
+  changes by +0.510% during unload and then grows monotonically to +3.368%
+  relative to the loaded target. Complete mechanical/front residual maxima are
+  0.321% and `5.59e-7`; no events are rejected.
+- Near-zero-mean-stress discriminator: a work-ledgered elastic-secant release
+  reaches the 10 MPa band at step 39 and -704 Pa terminal mean shear stress.
+  The target grows another 0.01545% after first entering that band. Local
+  residual stress remains and no exactly stress-free claim is made.
+- Decision: reject low-rate exposure alone as a route to sustained dynamic
+  growth for this inherited owner, but support the sequential common-state
+  pathway from high-rate thermomechanical localization through retained-state
+  unloading to static RX. The target is inherited, so endogenous G05 remains
+  open; strict ASB remains false pending spatial refinement.
+- Next branch: spatially refine the matched 1000 K/80,000/s adiabatic/strong-
+  bath pair while preserving the now-demonstrated retained-state RX sequence.
