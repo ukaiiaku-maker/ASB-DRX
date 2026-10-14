@@ -2726,3 +2726,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   55.8%/7.14%. The result is a mechanically formed banded-localization
   candidate with thermal amplification, not a spatially converged or
   material-validated ASB result. No heavy campaign solver remains active.
+- A periodic common-grid audit preserves both bands but leaves 27--32%
+  component-area and 24--34% span differences. The failed geometry criterion
+  is therefore trajectory-level rather than a pixel-count artifact; physical
+  n64 continuation is required before promotion.

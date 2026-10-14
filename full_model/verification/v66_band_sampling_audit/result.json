@@ -1,0 +1,214 @@
+{
+  "cases": {
+    "adiabatic": {
+      "32": {
+        "common_grid": {
+          "above_threshold_fraction": 0.1187744140625,
+          "band_like": true,
+          "component_span_fraction": [
+            0.3854166666666667,
+            0.7317708333333334
+          ],
+          "largest_component_cells": 11402,
+          "largest_component_fraction": 0.07732476128472222,
+          "maximum_to_mean": 5.019611858596199,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 417137261482331.44,
+          "positive_mean_W_m3": 83101497333498.89,
+          "signed_min_W_m3": 253830264947.12128,
+          "threshold_multiple": 2.0
+        },
+        "raw": {
+          "above_threshold_fraction": 0.140625,
+          "band_like": true,
+          "component_span_fraction": [
+            0.84375,
+            1.0
+          ],
+          "largest_component_cells": 141,
+          "largest_component_fraction": 0.1376953125,
+          "maximum_to_mean": 5.141781569217511,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 427289747363762.75,
+          "positive_mean_W_m3": 83101497333498.89,
+          "signed_min_W_m3": 5218991.591959279,
+          "threshold_multiple": 2.0
+        }
+      },
+      "48": {
+        "common_grid": {
+          "above_threshold_fraction": 0.13083902994791666,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5104166666666666,
+            0.9817708333333334
+          ],
+          "largest_component_cells": 15707,
+          "largest_component_fraction": 0.10651991102430555,
+          "maximum_to_mean": 5.445857616714049,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 427169398232969.7,
+          "positive_mean_W_m3": 78439325501631.0,
+          "signed_min_W_m3": 813267081.7921419,
+          "threshold_multiple": 2.0
+        },
+        "raw": {
+          "above_threshold_fraction": 0.1371527777777778,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5416666666666666,
+            0.9791666666666666
+          ],
+          "largest_component_cells": 245,
+          "largest_component_fraction": 0.10633680555555555,
+          "maximum_to_mean": 5.568315029576028,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 436774875100538.1,
+          "positive_mean_W_m3": 78439325501631.0,
+          "signed_min_W_m3": 423134431.31419885,
+          "threshold_multiple": 2.0
+        }
+      }
+    },
+    "strong_bath": {
+      "32": {
+        "common_grid": {
+          "above_threshold_fraction": 0.11808946397569445,
+          "band_like": true,
+          "component_span_fraction": [
+            0.3776041666666667,
+            0.6979166666666666
+          ],
+          "largest_component_cells": 11031,
+          "largest_component_fraction": 0.07480875651041667,
+          "maximum_to_mean": 5.042938946387247,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 421277862362475.6,
+          "positive_mean_W_m3": 83538164320684.14,
+          "signed_min_W_m3": 274859083258.1102,
+          "threshold_multiple": 2.0
+        },
+        "raw": {
+          "above_threshold_fraction": 0.1357421875,
+          "band_like": true,
+          "component_span_fraction": [
+            0.625,
+            1.0
+          ],
+          "largest_component_cells": 126,
+          "largest_component_fraction": 0.123046875,
+          "maximum_to_mean": 5.141227638516159,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 429488719276405.75,
+          "positive_mean_W_m3": 83538164320684.14,
+          "signed_min_W_m3": 869477.1021727384,
+          "threshold_multiple": 2.0
+        }
+      },
+      "48": {
+        "common_grid": {
+          "above_threshold_fraction": 0.1327582465277778,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5729166666666666,
+            0.9739583333333334
+          ],
+          "largest_component_cells": 16239,
+          "largest_component_fraction": 0.11012776692708333,
+          "maximum_to_mean": 5.206799261944324,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 406000317475595.94,
+          "positive_mean_W_m3": 77975027853097.45,
+          "signed_min_W_m3": 579284460.271246,
+          "threshold_multiple": 2.0
+        },
+        "raw": {
+          "above_threshold_fraction": 0.13671875,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5833333333333334,
+            0.9791666666666666
+          ],
+          "largest_component_cells": 256,
+          "largest_component_fraction": 0.1111111111111111,
+          "maximum_to_mean": 5.270006137908934,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 410928875389443.6,
+          "positive_mean_W_m3": 77975027853097.45,
+          "signed_min_W_m3": 75473010.05851191,
+          "threshold_multiple": 2.0
+        }
+      }
+    }
+  },
+  "common_periodic_bilinear_grid_n": 384,
+  "created_utc": "2026-10-14T10:38:01.251435+00:00",
+  "decision": {
+    "common_grid_geometry_converged_below_5_percent": false,
+    "reason": "Common-grid interpolation removes cell-count sampling as the explanation only if all geometry differences fall below 5%. Otherwise the endpoint trajectories themselves remain spatially distinct and require physical-grid refinement.",
+    "trajectory_difference_persists_after_common_sampling": true
+  },
+  "n32_to_n48_relative_differences": {
+    "adiabatic": {
+      "common_grid": {
+        "above_threshold_fraction": 0.09220960970300103,
+        "largest_component_fraction": 0.27408161966002415,
+        "sorted_component_span_fraction": [
+          0.24489795918367338,
+          0.2546419098143236
+        ]
+      },
+      "raw": {
+        "above_threshold_fraction": 0.02531645569620244,
+        "largest_component_fraction": 0.2948979591836735,
+        "sorted_component_span_fraction": [
+          0.5576923076923078,
+          0.02127659574468089
+        ]
+      }
+    },
+    "strong_bath": {
+      "common_grid": {
+        "above_threshold_fraction": 0.11049243972210876,
+        "largest_component_fraction": 0.32070940328837977,
+        "sorted_component_span_fraction": [
+          0.34090909090909083,
+          0.2834224598930482
+        ]
+      },
+      "raw": {
+        "above_threshold_fraction": 0.007142857142857143,
+        "largest_component_fraction": 0.10742187500000006,
+        "sorted_component_span_fraction": [
+          0.07142857142857136,
+          0.02127659574468089
+        ]
+      }
+    }
+  },
+  "schema": "v66-band-sampling-audit-v1"
+}

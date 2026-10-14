@@ -851,3 +851,25 @@ experiment, result, limitation, and next branch.
   horizon or develop a cheaper frozen-state geometry refinement. The deciding
   observation is convergence of component area and transverse span, not a
   larger scalar temperature contrast or another stress peak.
+
+## 2026-10-14T10:48:00Z — common-grid band-sampling audit
+
+- Goals: G03, G04.
+- Prediction: if the failed n32-to-n48 geometry criterion is mainly a pixel
+  sampling artifact, periodic subcell interpolation of both endpoint power
+  fields onto the same 384 squared grid should reduce component-area and span
+  discrepancies below 5% without changing either physical trajectory.
+- Experiment: reconstruct plastic power from each checksum-bound endpoint,
+  apply a cell-centred periodic bilinear interpolation to a common 384 squared
+  grid, and repeat the unchanged twice-mean connected-component classifier.
+  Exact identity, constant-field, and mean-preservation tests guard the
+  interpolation. This audit is diagnostic and does not replace physical-grid
+  evolution.
+- Result: both interpolated controls remain band-like, but n32-to-n48 largest-
+  component differences are 27.4% adiabatic and 32.1% with the bath. Sorted
+  span differences are 24.5%/25.5% and 34.1%/28.3%, respectively. Common-grid
+  sampling therefore does not close the geometry discrepancy.
+- Decision: the remaining error is trajectory-level, not merely the discrete
+  component counter. Do not promote the ASB classification. The next valid
+  discriminator is a physical n64 matched continuation to 16% strain; a
+  finer visualization or threshold postprocessing cannot substitute for it.

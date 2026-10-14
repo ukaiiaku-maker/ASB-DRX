@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T10:38:00Z",
+  "last_updated_utc": "2026-10-14T10:48:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -61,8 +61,8 @@
   "current_task": {
     "goal_ids": ["G01", "G03", "G04", "G05"],
     "hypothesis_ids": ["H1", "H2"],
-    "physical_uncertainty": "whether_the_16_percent_connected_power_band_has_grid_convergent_component_area_and_transverse_span",
-    "next_executable_experiment": "extend_the_existing_fixed_width_n64_adiabatic_and_bath_checkpoints_to_16_percent_or_run_an_equivalent_cheaper_frozen_state_geometry_refinement",
+    "physical_uncertainty": "whether_physical_n64_evolution_converges_the_16_percent_connected_power_band_component_area_and_transverse_span; common_grid_resampling_has_ruled_out_simple_pixel_sampling_error",
+    "next_executable_experiment": "extend_the_existing_fixed_width_n64_adiabatic_and_bath_checkpoints_to_16_percent",
     "source_identity": "v66_matched_n32_n48_long_horizon_on_4b521c7_restart_source",
     "expected_discriminatory_observation": "component_area_and_transverse_span_converge_below_5_percent_while_the_bath_band_persists_if_localization_is_mechanically_formed",
     "resource_need": "future_authorized_heavy_local_solver_for_n64_matched_continuation",
