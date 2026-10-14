@@ -28,6 +28,9 @@ from full_model.analysis.run_v66_coupled_rx_asb import (
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
 )
+from full_model.production.multigrain_source_transaction import (
+    NeutralBoundarySinkParameters,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -48,6 +51,7 @@ def _configuration(args):
         "hold_dt_s": args.hold_dt,
         "hold_steps": args.hold_steps,
         "plastic_history_mode": args.plastic_history_mode,
+        "interface_sink_mode": args.interface_sink_mode,
         "hold_constraint": "fixed zero macroscopic shear strain; residual stress retained",
     }
 
@@ -121,6 +125,9 @@ def main():
         "--plastic-history-mode",
         choices=("receiver_dormant", "material_continuity"),
         default="receiver_dormant")
+    parser.add_argument(
+        "--interface-sink-mode", choices=("disabled", "neutral_pair"),
+        default="disabled")
     parser.add_argument("--checkpoint-every", type=int, default=100)
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
@@ -135,6 +142,11 @@ def main():
         _source_provenance(),
         scientific_scope="retained-state unload and fixed-strain anneal")
     _, _, _, _, _, _, base_context = _physics(args)
+    if args.interface_sink_mode != "disabled":
+        base_context = replace(
+            base_context,
+            interface_sink_parameters=NeutralBoundarySinkParameters(),
+            interface_sink_mode=args.interface_sink_mode)
     unload_context = replace(
         base_context, shear_rate_s=-abs(args.unload_rate),
         maximum_front_substep_s=args.unload_dt)

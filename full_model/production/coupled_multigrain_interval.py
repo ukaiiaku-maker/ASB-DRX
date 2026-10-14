@@ -31,6 +31,7 @@ from .arrhenius_dislocation_sources import (
     boundary_tj_site_field, randomized_matched_site_field,
 )
 from .multigrain_source_transaction import (
+    evaluate_interface_neutral_sink_transaction,
     evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
 )
@@ -59,6 +60,8 @@ class CoupledMultigrainContext:
     sink_mode: str = "disabled"
     sink_random_seed: int = 66
     sink_tj_weight: float = 2.0
+    interface_sink_parameters: object | None = None
+    interface_sink_mode: str = "disabled"
 
 
 def endpoint_observables(state, load: float,
@@ -286,11 +289,68 @@ def advance_complete_multigrain_interval(
                 runtime.ledger.maximum_sink_line_balance_residual_m2,
                 abs(sink.line_balance_residual_m2) if sink.accepted else 0.0)))
     sink_wall_time = time.perf_counter()-sink_started
+    # Moving fronts own explicit interfacial line reservoirs.  Neutral pairs
+    # already stored there can recover while the boundary is stationary; this
+    # channel is separate from lattice absorption/rotation and therefore
+    # preserves the signed interface Burgers residual exactly.
+    interface_sink_started = time.perf_counter()
+    interface_sink = None
+    interface_sink_state = sink_state
+    if context.interface_sink_mode != "disabled":
+        if context.interface_sink_parameters is None:
+            raise ValueError(
+                "enabled interface sink requires interface sink parameters")
+        if context.interface_sink_mode != "neutral_pair":
+            raise ValueError("unknown interface sink mode")
+        interface_sink = evaluate_interface_neutral_sink_transaction(
+            interface_sink_state, mean_strain=strain1, interval_s=dt,
+            sink_parameters=context.interface_sink_parameters,
+            wall_parameters=context.wall_parameters,
+            represented_thickness_m=context.represented_thickness_m,
+            energy_kwargs=context.energy_kwargs,
+            sink_mode=context.interface_sink_mode)
+        if interface_sink.classification.startswith(
+                "REJECTED_INTERFACE_NEUTRAL_SINK_FIRST_LAW"):
+            raise RuntimeError(
+                "interface sink failed its hard energy audit")
+        if interface_sink.accepted:
+            interface_sink_state = interface_sink.candidate_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            interface_sink_intervals=(runtime.ledger.interface_sink_intervals
+                                      +int(interface_sink.accepted)),
+            interface_sink_inactive_intervals=(
+                runtime.ledger.interface_sink_inactive_intervals
+                +int(not interface_sink.accepted)),
+            interface_sink_rejected_intervals=(
+                runtime.ledger.interface_sink_rejected_intervals
+                +int(interface_sink.classification.startswith("REJECTED"))),
+            interface_sink_annihilated_pair_cell_sum_m2=(
+                runtime.ledger.interface_sink_annihilated_pair_cell_sum_m2
+                +(interface_sink.annihilated_pair_cell_sum_m2
+                  if interface_sink.accepted else 0.0)),
+            cumulative_interface_sink_generated_heat_J=(
+                runtime.ledger.cumulative_interface_sink_generated_heat_J
+                +(interface_sink.generated_heat_J
+                  if interface_sink.accepted else 0.0)),
+            cumulative_interface_sink_first_law_residual_J=(
+                runtime.ledger.cumulative_interface_sink_first_law_residual_J
+                +(interface_sink.first_law_residual_J
+                  if interface_sink.accepted else 0.0)),
+            maximum_interface_sink_relative_first_law_residual=max(
+                runtime.ledger.maximum_interface_sink_relative_first_law_residual,
+                interface_sink.relative_first_law_residual
+                if interface_sink.accepted else 0.0),
+            maximum_interface_sink_line_balance_residual_m2=max(
+                runtime.ledger.maximum_interface_sink_line_balance_residual_m2,
+                abs(interface_sink.line_balance_residual_m2)
+                if interface_sink.accepted else 0.0)))
+    interface_sink_wall_time = time.perf_counter()-interface_sink_started
     energy_after = dict(context.energy_kwargs, mean_strain=strain1)
     front_started = time.perf_counter()
     if context.front_enabled:
         state, runtime, fronts = advance_multigrain_front_interval(
-            sink_state, runtime, kinetics=context.front_kinetics,
+            interface_sink_state, runtime, kinetics=context.front_kinetics,
             dt_s=dt, maximum_substep_s=context.maximum_front_substep_s,
             spacing_m=context.spacing_m,
             represented_thickness_m=context.represented_thickness_m,
@@ -310,7 +370,7 @@ def advance_complete_multigrain_interval(
             raise RuntimeError(
                 "complete coupled interval contains a rejected or clipped front trial")
     else:
-        state = sink_state
+        state = interface_sink_state
         fronts = ()
         runtime = MultiGrainProductionRuntime(runtime.interfaces, replace(
             runtime.ledger, intervals=runtime.ledger.intervals+1,
@@ -366,6 +426,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if sink is None or not sink.accepted
             else np.asarray(sink.heat_source_J_by_cell)),
+        "interface_sink_heat_J": (
+            0.0 if interface_sink is None or not interface_sink.accepted
+            else interface_sink.generated_heat_J),
+        "interface_sink_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if interface_sink is None or not interface_sink.accepted
+            else np.asarray(interface_sink.heat_source_J_by_cell)),
         "mechanical_heat_J_m3": mechanical_heat,
         "mechanical_work_J_m3": mechanical_work_density,
         "front_heat_J_by_cell": front_heat,
@@ -429,13 +496,28 @@ def advance_complete_multigrain_interval(
         "sink_line_balance_residual_m2": (
             0.0 if sink is None or not sink.accepted
             else sink.line_balance_residual_m2),
+        "interface_sink_mode": context.interface_sink_mode,
+        "interface_sink_classification": (
+            "DISABLED" if interface_sink is None
+            else interface_sink.classification),
+        "interface_sink_annihilated_pair_cell_sum_m2": (
+            0.0 if interface_sink is None or not interface_sink.accepted
+            else interface_sink.annihilated_pair_cell_sum_m2),
+        "interface_sink_relative_first_law_residual": (
+            0.0 if interface_sink is None or not interface_sink.accepted
+            else interface_sink.relative_first_law_residual),
+        "interface_sink_line_balance_residual_m2": (
+            0.0 if interface_sink is None or not interface_sink.accepted
+            else interface_sink.line_balance_residual_m2),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
             "sink_map": sink_wall_time,
+            "interface_sink_map": interface_sink_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
-            "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time+front_wall_time
+            "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time
+                                +interface_sink_wall_time+front_wall_time
                                 +observable_wall_time),
         },
     }

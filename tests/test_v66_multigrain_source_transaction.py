@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 
 from full_model.analysis.run_v66_multigrain_handoff import _initial
@@ -6,9 +8,12 @@ from full_model.production.arrhenius_dislocation_sources import (
 )
 from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.multigrain_source_transaction import (
-    NeutralBoundarySinkParameters, evaluate_multigrain_neutral_sink_transaction,
+    NeutralBoundarySinkParameters,
+    evaluate_interface_neutral_sink_transaction,
+    evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
 )
+from full_model.production.multigrain_common_state import InterfaceComponentState
 from full_model.production.tensorial_nye import bcc_four_family_systems
 
 
@@ -84,6 +89,37 @@ def test_neutral_boundary_sink_closes_line_energy_and_heat_at_zero_work():
     assert result.relative_first_law_residual < .05
     assert abs(result.signed_content_change_m2) < 1e-12*max(
         result.annihilated_pair_cell_sum_m2, 1.0)
+    assert abs(result.line_balance_residual_m2) < 1e-12*max(
+        2.0*result.annihilated_pair_cell_sum_m2, 1.0)
+
+
+def test_stationary_interface_sink_preserves_signed_burgers_and_closes_heat():
+    state, _, wall, energy, _, _ = _fixture()
+    grid = state.supports.shape[1:]
+    plus = np.full(grid+(3, 4), 1.0e14)
+    minus = np.full(grid+(3, 4), .8e14)
+    burgers = np.arange(np.prod(grid)*9, dtype=float).reshape(grid+(3, 3))
+    component = InterfaceComponentState(
+        "edge-10-20", 10, 20, np.zeros(grid), np.zeros(grid), plus,
+        minus, np.zeros(grid+(3, 1)), boundary_burgers_m1=burgers)
+    state = replace(state, interfaces=(component,))
+    result = evaluate_interface_neutral_sink_transaction(
+        state, mean_strain=np.zeros((2, 2)), interval_s=2e-8,
+        sink_parameters=NeutralBoundarySinkParameters(),
+        wall_parameters=wall, represented_thickness_m=4.96e-10,
+        energy_kwargs=energy)
+    assert result.accepted
+    assert result.classification.startswith("ACCEPTED_INTERFACE_NEUTRAL_SINK")
+    assert result.annihilated_pair_cell_sum_m2 > 0.0
+    assert result.defect_storage_change_J < 0.0
+    assert result.generated_heat_J > 0.0
+    assert result.relative_first_law_residual < .05
+    np.testing.assert_array_equal(
+        result.candidate_state.interfaces[0].boundary_burgers_m1, burgers)
+    np.testing.assert_allclose(
+        result.candidate_state.interfaces[0].boundary_plus_m2
+        -result.candidate_state.interfaces[0].boundary_minus_m2,
+        plus-minus, rtol=0.0, atol=1e-2)
     assert abs(result.line_balance_residual_m2) < 1e-12*max(
         2.0*result.annihilated_pair_cell_sum_m2, 1.0)
 

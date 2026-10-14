@@ -116,6 +116,14 @@ class MultiGrainProductionLedger:
     cumulative_sink_first_law_residual_J: float = 0.0
     maximum_sink_relative_first_law_residual: float = 0.0
     maximum_sink_line_balance_residual_m2: float = 0.0
+    interface_sink_intervals: int = 0
+    interface_sink_inactive_intervals: int = 0
+    interface_sink_rejected_intervals: int = 0
+    interface_sink_annihilated_pair_cell_sum_m2: float = 0.0
+    cumulative_interface_sink_generated_heat_J: float = 0.0
+    cumulative_interface_sink_first_law_residual_J: float = 0.0
+    maximum_interface_sink_relative_first_law_residual: float = 0.0
+    maximum_interface_sink_line_balance_residual_m2: float = 0.0
 
 
 @dataclass(frozen=True)

@@ -90,6 +90,7 @@ def _configuration(args) -> dict:
         "sink_mode": args.sink_mode,
         "sink_activation_enthalpy_eV": args.sink_activation_enthalpy,
         "sink_stress_assisted": args.sink_stress_assisted,
+        "interface_sink_mode": getattr(args, "interface_sink_mode", "disabled"),
     }
     history_mode = getattr(args, "plastic_history_mode", "receiver_dormant")
     if history_mode != "receiver_dormant":
@@ -212,6 +213,14 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
         "sink_heat_J": interval.integrals["sink_heat_J"],
         "sink_relative_first_law_residual": interval.audit[
             "sink_relative_first_law_residual"],
+        "interface_sink_mode": interval.audit["interface_sink_mode"],
+        "interface_sink_classification": interval.audit[
+            "interface_sink_classification"],
+        "interface_sink_annihilated_pair_cell_sum_m2": interval.audit[
+            "interface_sink_annihilated_pair_cell_sum_m2"],
+        "interface_sink_heat_J": interval.integrals["interface_sink_heat_J"],
+        "interface_sink_relative_first_law_residual": interval.audit[
+            "interface_sink_relative_first_law_residual"],
         "mechanical_subdivision_depth": interval.audit[
             "mechanical_subdivision_depth"],
         "wall_time_s": wall_time_s,
@@ -279,6 +288,16 @@ def _summarize(history, endpoint, initial_volume, preparation, configuration):
                 endpoint.runtime.ledger.cumulative_sink_generated_heat_J),
             "maximum_sink_relative_first_law_residual": (
                 endpoint.runtime.ledger.maximum_sink_relative_first_law_residual),
+            "interface_sink_intervals": (
+                endpoint.runtime.ledger.interface_sink_intervals),
+            "interface_sink_inactive_intervals": (
+                endpoint.runtime.ledger.interface_sink_inactive_intervals),
+            "interface_sink_annihilated_pair_cell_sum_m2": (
+                endpoint.runtime.ledger.interface_sink_annihilated_pair_cell_sum_m2),
+            "interface_sink_generated_heat_J": (
+                endpoint.runtime.ledger.cumulative_interface_sink_generated_heat_J),
+            "maximum_interface_sink_relative_first_law_residual": (
+                endpoint.runtime.ledger.maximum_interface_sink_relative_first_law_residual),
             "terminal_density_boundary_correlation": correlation(
                 total_density, boundary),
             "cumulative_mechanical_external_work_J": (
@@ -340,6 +359,11 @@ def main():
         default="disabled")
     parser.add_argument("--sink-activation-enthalpy", type=float, default=1.4)
     parser.add_argument("--sink-stress-assisted", action="store_true")
+    parser.add_argument(
+        "--interface-sink-mode", choices=("disabled", "neutral_pair"),
+        default="disabled",
+        help=("Stationary neutral-pair recovery in explicit moving-front "
+              "reservoirs; it preserves signed interface Burgers content."))
     parser.add_argument("--resume", type=Path)
     parser.add_argument(
         "--resume-fork-source-change", action="store_true",
@@ -371,6 +395,13 @@ def main():
                 activation_enthalpy_eV=args.sink_activation_enthalpy,
                 stress_assisted=args.sink_stress_assisted),
             sink_mode=args.sink_mode)
+    if args.interface_sink_mode != "disabled":
+        context = replace(
+            context,
+            interface_sink_parameters=NeutralBoundarySinkParameters(
+                activation_enthalpy_eV=args.sink_activation_enthalpy,
+                stress_assisted=False),
+            interface_sink_mode=args.interface_sink_mode)
     provenance = _source_provenance()
     history_path = args.out/"history.json"
     if args.resume is None:

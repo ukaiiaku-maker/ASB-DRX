@@ -337,3 +337,110 @@ def evaluate_multigrain_neutral_sink_transaction(
         candidate if accepted else state, annihilated_total, signed_change,
         balance, defect_change, heat_J, residual, relative, maximum_fraction,
         heat_by_cell)
+
+
+def evaluate_interface_neutral_sink_transaction(
+        state, *, mean_strain, interval_s, sink_parameters,
+        wall_parameters, represented_thickness_m, energy_kwargs=None,
+        sink_mode="interface_neutral_pair_sink",
+        maximum_relative_first_law_residual=.05):
+    """Annihilate only neutral line pairs already stored by moving fronts.
+
+    This is a stationary GB reservoir reaction, not lattice absorption and not
+    structural rotation.  Removing equal positive/negative content preserves
+    every interface Burgers residual exactly.  The independently known line
+    energy release is deposited locally as heat and checked against the same
+    complete common-state functional used by front publication.
+    """
+    dt = float(interval_s)
+    if not math.isfinite(dt) or dt <= 0.0:
+        raise ValueError("interface sink interval must be positive and finite")
+    if sink_parameters.stress_assisted:
+        raise ValueError(
+            "interface neutral sink has no declared conjugate resolved stress")
+    spacing = float(wall_parameters.spacing_m)
+    thickness = float(represented_thickness_m)
+    cell_volume = spacing*spacing*thickness
+    options = {} if energy_kwargs is None else dict(energy_kwargs)
+    options.pop("mean_strain", None)
+    common_energy = dict(
+        spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
+        **options)
+    before_energy = evaluate_complete_multigrain_energy(state, **common_energy)
+    common, _ = reconstruct_multigrain_common(state, spacing)
+    process = ActivatedProcess(
+        "interface-neutral-pair-sink", sink_parameters.attempt_frequency_s,
+        0.0, sink_parameters.attempt_frequency_s)
+    enthalpy = sink_parameters.activation_enthalpy_eV*EV_J
+    rate = activated_rate_array_s(
+        process, np.full_like(common.temperature_K, enthalpy),
+        common.temperature_K)
+    fraction = np.minimum(
+        -np.expm1(-rate*dt), sink_parameters.maximum_fraction_per_interval)
+    maximum_fraction = float(np.max(fraction, initial=0.0))
+    interfaces = []
+    heat_density = np.zeros_like(common.temperature_K, dtype=float)
+    annihilated_total = 0.0
+    signed_change = 0.0
+    line_change = 0.0
+    inventory_scale = 0.0
+    line_energy = float(wall_parameters.line_energy_J_m)
+    for interface in state.interfaces:
+        plus = np.asarray(interface.boundary_plus_m2, dtype=float)
+        minus = np.asarray(interface.boundary_minus_m2, dtype=float)
+        neutral = np.minimum(plus, minus)*fraction[..., None, None]
+        next_plus = plus-neutral
+        next_minus = minus-neutral
+        interfaces.append(replace(
+            interface, boundary_plus_m2=next_plus,
+            boundary_minus_m2=next_minus))
+        pair_sum = np.sum(neutral, axis=(2, 3))
+        heat_density += 2.0*line_energy*pair_sum
+        annihilated_total += float(np.sum(neutral, dtype=np.longdouble))
+        signed_change += float(np.sum(
+            (next_plus-next_minus)-(plus-minus), dtype=np.longdouble))
+        line_change += float(np.sum(
+            next_plus+next_minus-plus-minus, dtype=np.longdouble))
+        inventory_scale += float(np.sum(plus+minus, dtype=np.longdouble))
+    unheated = replace(state, interfaces=tuple(interfaces))
+    unheated.validate()
+    cold_energy = evaluate_complete_multigrain_energy(unheated, **common_energy)
+    heat_by_cell = heat_density*cell_volume
+    temperature = (np.asarray(common.temperature_K)
+                   +heat_density/wall_parameters.volumetric_heat_capacity_J_m3_K)
+    candidate = replace(unheated, owners=tuple(
+        replace(owner, temperature_K=temperature.copy())
+        for owner in unheated.owners))
+    candidate.validate()
+    after_energy = evaluate_complete_multigrain_energy(candidate, **common_energy)
+    defect_change = cold_energy.helmholtz_J-before_energy.helmholtz_J
+    heat_J = float(np.sum(heat_by_cell, dtype=np.longdouble))
+    residual = after_energy.internal_J-before_energy.internal_J
+    scale = max(abs(defect_change), abs(heat_J), 1e-300)
+    relative = abs(residual)/scale
+    balance = line_change+2.0*annihilated_total
+    tolerance = max(
+        1e-12*max(2.0*annihilated_total, 1.0),
+        4096.0*np.finfo(float).eps*max(inventory_scale, 1.0))
+    active = annihilated_total > tolerance
+    downhill = defect_change <= 1e-12*scale
+    accepted = bool(
+        active and downhill
+        and relative <= maximum_relative_first_law_residual
+        and abs(signed_change) <= tolerance and abs(balance) <= tolerance)
+    if not active:
+        classification = "INACTIVE_INTERFACE_NEUTRAL_SINK"
+    elif not downhill:
+        classification = "REJECTED_UPHILL_INTERFACE_NEUTRAL_SINK"
+    elif relative > maximum_relative_first_law_residual:
+        classification = "REJECTED_INTERFACE_NEUTRAL_SINK_FIRST_LAW"
+    elif not accepted:
+        classification = "REJECTED_INTERFACE_NEUTRAL_SINK_BALANCE"
+    else:
+        classification = "ACCEPTED_INTERFACE_NEUTRAL_SINK"
+    return MultiGrainSinkDecision(
+        accepted, f"{classification}:{sink_mode}",
+        candidate if accepted else state, annihilated_total, signed_change,
+        balance, defect_change, heat_J, residual, relative, maximum_fraction,
+        heat_by_cell)
