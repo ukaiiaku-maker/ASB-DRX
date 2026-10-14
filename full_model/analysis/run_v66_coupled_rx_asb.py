@@ -68,7 +68,7 @@ def _source_provenance() -> dict:
 
 def _configuration(args) -> dict:
     bath_rate = 0.0 if args.thermal_control == "adiabatic" else args.bath_rate
-    return {
+    configuration = {
         "schema": "v66-coupled-rx-asb-configuration-v1",
         "n": args.n,
         "length_m": args.length,
@@ -91,6 +91,10 @@ def _configuration(args) -> dict:
         "sink_activation_enthalpy_eV": args.sink_activation_enthalpy,
         "sink_stress_assisted": args.sink_stress_assisted,
     }
+    history_mode = getattr(args, "plastic_history_mode", "receiver_dormant")
+    if history_mode != "receiver_dormant":
+        configuration["plastic_history_mode"] = history_mode
+    return configuration
 
 
 def _physics(args):
@@ -109,7 +113,11 @@ def _physics(args):
         bath_temperature_K=args.temperature)
     kinetics = MultiGrainFrontKinetics(
         ActivatedProcess("V66 coupled matured HAGB", 1e10, 0.0, 1e10),
-        PhysicalTransferLaw(.55, .08, .02), .35*EV_J, 1e9,
+        PhysicalTransferLaw(
+            .55, .08, .02,
+            plastic_history_mode=getattr(
+                args, "plastic_history_mode", "receiver_dormant")),
+        .35*EV_J, 1e9,
         2.0, 1.5, .10, wall.burgers_m**3, wall.burgers_m,
         virtual_fraction=2e-4, maximum_fraction_per_step=.01,
         closure_fraction=.05, maximum_backtracks=14,
@@ -319,6 +327,13 @@ def main():
     parser.add_argument(
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")
+    parser.add_argument(
+        "--plastic-history-mode",
+        choices=("receiver_dormant", "material_continuity"),
+        default="receiver_dormant",
+        help=("Physical ownership of accumulated plastic history in swept "
+              "material. The V66 baseline is receiver_dormant; V67 tests "
+              "exact lab-frame material continuity."))
     parser.add_argument("--source-grain-size", type=float, default=2.4e-6)
     parser.add_argument(
         "--sink-mode", choices=("disabled", "gb_tj_only", "matched_random"),

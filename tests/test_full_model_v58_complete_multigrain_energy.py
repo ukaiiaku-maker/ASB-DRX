@@ -396,6 +396,37 @@ def test_physical_transfer_derives_product_channels_and_recurrent_history():
         recurrent.cumulative_signed_sweep_fraction)
 
 
+def test_material_continuity_transfer_preserves_exact_lab_frame_history():
+    state = _state(8)
+    donor = replace(
+        state.owners[0], slip=np.full_like(state.owners[0].slip, .03),
+        beta_p=np.full_like(state.owners[0].beta_p, .02),
+        alignment_m2=np.full_like(state.owners[0].alignment_m2, 4e6),
+        family_nye_m1=np.full_like(state.owners[0].family_nye_m1, 3e5))
+    state = replace(state, owners=(donor, state.owners[1], state.owners[2]))
+    request = np.zeros((8, 8)); request[3:5, :] = .2
+    proposal = derive_physical_transfer_proposal(
+        state, interface_id="junction-arm-a", donor_id=10, receiver_id=20,
+        requested_fraction=request,
+        law=PhysicalTransferLaw(
+            .5, .1, .05, plastic_history_mode="material_continuity"),
+        interval_s=2e-9, systems=bcc_four_family_systems())
+    np.testing.assert_array_equal(
+        proposal.product_owner.orientation_rad,
+        state.owners[1].orientation_rad)
+    for name in ("slip", "beta_p", "alignment_m2", "family_nye_m1"):
+        np.testing.assert_array_equal(
+            getattr(proposal.product_owner, name), getattr(donor, name))
+    # The material history is not attenuated by the line-transmission factor.
+    assert np.max(proposal.product_owner.beta_p) == pytest.approx(.02)
+
+
+def test_physical_transfer_rejects_unknown_plastic_history_mode():
+    with pytest.raises(ValueError, match="plastic-history"):
+        PhysicalTransferLaw(
+            .5, .1, .05, plastic_history_mode="desired_RX").validate()
+
+
 def test_two_physical_incident_edges_share_capacity_and_keep_histories():
     state = _state(8)
     request = np.zeros((8, 8)); request[:4] = .8

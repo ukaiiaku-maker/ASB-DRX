@@ -88,6 +88,7 @@ class PhysicalTransferLaw:
     boundary_storage_fraction: float
     neutral_sink_fraction: float
     signed_sink_fraction: float = 0.0
+    plastic_history_mode: str = "receiver_dormant"
 
     def validate(self):
         transmission = np.asarray(self.transmission_fraction, dtype=float)
@@ -101,6 +102,9 @@ class PhysicalTransferLaw:
             raise ValueError("transfer channel fractions must lie in [0,1]")
         if self.boundary_storage_fraction+self.neutral_sink_fraction > 1.0:
             raise ValueError("neutral boundary and sink fractions exceed unity")
+        if self.plastic_history_mode not in {
+                "receiver_dormant", "material_continuity"}:
+            raise ValueError("unknown plastic-history transfer mode")
 
 
 @dataclass(frozen=True)
@@ -185,7 +189,9 @@ class JointTransferResult:
     physical_channel_cell_sums_m2: dict[str, float]
 
 
-def _scaled_product_owner(donor, receiver, transmission, systems=None):
+def _scaled_product_owner(
+        donor, receiver, transmission, systems=None, *,
+        plastic_history_mode="receiver_dormant"):
     """Derive the swept product without a caller-selected low-density state."""
     scalar = np.mean(transmission, axis=2)
     arrays = {}
@@ -234,14 +240,22 @@ def _scaled_product_owner(donor, receiver, transmission, systems=None):
             arrays[item.name] = signed_products[item.name]
             continue
         if item.name in ("slip", "beta_p", "alignment_m2", "family_nye_m1"):
-            # A migrating boundary enlarges the persistent receiver crystal.
-            # Its kinematic history is the receiver owner's dormant history
-            # at that material point, not a scaled copy of the donor plastic
-            # distortion.  Transmitted donor line inventory is handled
-            # independently above.  The crystal incompatibility consequently
-            # remains in the explicit support-gradient/interface Nye term.
-            arrays[item.name] = np.asarray(
-                getattr(receiver, item.name), dtype=float).copy()
+            if plastic_history_mode == "receiver_dormant":
+                # Legacy representation: expanding support reveals the
+                # receiver owner's dormant history at that material point.
+                arrays[item.name] = np.asarray(
+                    getattr(receiver, item.name), dtype=float).copy()
+            elif plastic_history_mode == "material_continuity":
+                # A migrating boundary changes lattice identity and defect
+                # reservoirs but cannot erase the macroscopic plastic shape
+                # already carried by the swept material. Preserve the exact
+                # lab-frame history (never a scaled interpolation). Future
+                # increments use the receiver orientation and systems. Nye
+                # product-rule/interface terms remain independently audited.
+                arrays[item.name] = np.asarray(
+                    getattr(donor, item.name), dtype=float).copy()
+            else:  # fail closed for direct internal calls
+                raise ValueError("unknown plastic-history transfer mode")
         elif item.name in LINE_FIELDS:
             if item.name in ("mobile_plus_m2", "mobile_minus_m2",
                              "forest_plus_m2", "forest_minus_m2",
@@ -280,7 +294,8 @@ def derive_physical_transfer_proposal(
     transmission = np.broadcast_to(
         np.asarray(law.transmission_fraction, dtype=float), shape)
     product, boundary_burgers = _scaled_product_owner(
-        donor, receiver, transmission, systems)
+        donor, receiver, transmission, systems,
+        plastic_history_mode=law.plastic_history_mode)
     boundary_plus = np.zeros(shape[:2]+(3, shape[2]))
     boundary_minus = np.zeros_like(boundary_plus)
     annihilated = np.zeros(shape[:2])

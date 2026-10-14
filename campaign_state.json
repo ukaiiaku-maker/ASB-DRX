@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T23:00:04Z",
+  "last_updated_utc": "2026-10-14T23:08:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -81,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_52_to_332_MPa_recoverable_elastic_penalty_that_makes_terminal_target_growth_uphill_is_physical_or_is_created_by_assigning_receiver_dormant_plastic_history_to_newly_swept_material",
-    "next_executable_experiment": "on_checksum_bound_dynamic_and_static_retained_states_compare_the_authoritative_handoff_with_a_read_only_donor_beta_preserving_compatible_kinematic_control_then_integrate_only_the_physically_supported_accommodation_path",
-    "source_identity": "V67_growth_reversal_audit_e856b6c44bc9d4019784d69251a220ef732ea8bcec41653102c16125c4b7a665_started_on_14088f9",
-    "expected_discriminatory_observation": "if_preserving_the_material_plastic_distortion_removes_the_large_positive_elastic_term_while_defect_reduction_remains_downhill_the_reversal_is_a_handoff_kinematic_inconsistency_not_insufficient_front_mobility_or_structural_boundary_energy",
+    "physical_uncertainty": "whether_exact_lab_frame_material_continuity_remains_energy_consistent_and_sustains_growth_on_trajectory_when_future_Peierls_Taylor_slip_increments_use_the_receiver_orientation",
+    "next_executable_experiment": "run_the_same_n16_1000K_40000_per_s_7p2_percent_trajectory_with_the_single_versioned_material_continuity_handoff_then_compare_target_growth_energy_closure_Nye_mismatch_and_restart_before_selecting_lower_rates",
+    "source_identity": "V67_handoff_causal_audit_bda59d50be5855eb535bad5b8382ca11765de017a23716c7ae898fc91eec11eb",
+    "expected_discriminatory_observation": "sustained_target_growth_with_complete_energy_closure_and_no_growth_of_owner_Curl_beta_minus_family_Nye_mismatch_would_support_the_handoff_repair;_persistent_recession_or_growing_mismatch_would_reject_it",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "production_reversal_is_complete_energy_uphill; terminal_target_growth_has_favorable_defect_storage_but_is_overwhelmed_by_approximately_52_and_332_MPa_recoverable_elastic_penalties; conserved_common_axis_structural_energy_changes_force_by_less_than_0p07_MPa_and_is_not_the_cause"
+    "result_status": "same_state_causal_control_changes_terminal_target_growth_prices_from_plus51_and_plus331_MPa_to_minus1p15_and_minus0p51_MPa_when_exact_donor_beta_is_preserved; receiver_slip_projection_is_incomplete; versioned_material_continuity_mode_implemented_and_52_focused_tests_pass"
   },
   "completion_semantics": {
     "execution_complete": false,

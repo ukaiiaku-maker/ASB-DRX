@@ -1001,6 +1001,36 @@ experiment, result, limitation, and next branch.
   physical or follows from assigning the receiver owner's dormant plastic
   history to newly swept material.
 
+## 2026-10-14T23:08:00Z — V67 plastic-history handoff causal control
+
+- Goals: G01, G02, and G04.
+- Prediction: if the dynamic reversal is caused by erasing accumulated
+  lab-frame plastic distortion when the front changes crystal ownership, an
+  immutable same-state control that preserves donor `beta_p` should remove the
+  large elastic penalty without changing defect transfer, mobility, or any
+  Arrhenius coefficient.
+- Experiment: on checksum-bound 40,000/s, 10,000/s, unloaded/static, and
+  near-zero-mean-stress V66 endpoints, price each target-growth direction
+  three ways: the authoritative dormant-receiver history, exact donor-beta
+  continuity, and a least-squares projection onto the four receiver-oriented
+  slip dyads. These are read-only virtual extents.
+- Result: at the 7.2% dynamic endpoint, exact material continuity changes the
+  two target-growth prices from +51.14/+331.05 MPa to -1.154/-0.511 MPa by
+  reducing the elastic increment to zero while preserving the favorable
+  defect term. The four-family receiver projection leaves 15.9%/39.6% tensor
+  residual and remains uphill at +6.34/+135.31 MPa. Exact continuity also
+  makes both target-growth directions downhill at the 10,000/s, unloaded, and
+  near-zero-stress endpoints.
+- Decision and implementation: the current fixed four-family basis cannot
+  represent the pre-existing donor plastic tensor after a 15-degree lattice
+  ownership change. Add a versioned `material_continuity` transfer mode that
+  preserves the exact unscaled lab-frame kinematic history while future slip
+  increments use the receiver orientation. Keep the V66 dormant-history mode
+  as the default and regression reference. Fifty-two focused production and
+  interval tests pass. A trajectory test must now decide energy closure, Nye
+  consistency, and sustained growth; the same-state control alone is not a
+  promoted physical result.
+
 ## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
 
 - Goals: G03, G04.
