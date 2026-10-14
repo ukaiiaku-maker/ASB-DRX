@@ -101,12 +101,13 @@ def main() -> None:
                 case["final_target_growth_fraction"] > 0.0 for case in cases),
             "high_rate_stress_peak_observed": bool(
                 high["post_peak_softening_fraction"] > 0.0),
-            "strict_asb_qualified": bool(
+            "thermal_contribution_to_softening_supported": bool(
                 paired is not None and paired["thermal_causality_supported"]),
+            "strict_asb_qualified": False,
             "qualification_limit": (
-                "A positive matched thermal-causality result is still a finite-grid "
-                "mechanism qualification, not a material calibration or full ASB "
-                "resolution/persistence study."),
+                "The matched pair is a finite-grid causal mechanism test only. "
+                "The 16x16 grid has no spatial-refinement certificate, and the "
+                "strong-bath member also retains a nonthermal stress peak."),
         },
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)

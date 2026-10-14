@@ -44,6 +44,15 @@ Updated: 2026-10-13 (America/Los_Angeles)
   recession. Complete mechanical and front-energy residuals remain below
   0.278% and `1.36e-6`. A matched ledgered strong-bath control is next; strict
   ASB remains unqualified until that causal comparison is complete.
+- The 1000 K/80,000/s strong-bath control suppresses maximum temperature
+  contrast from 30.81 K to 0.0260 K. Relative to it, the adiabatic member
+  peaks 0.128% strain earlier, 11.1 MPa lower, and softens an additional
+  0.524 percentage point. Thermal feedback therefore contributes causally to
+  the high-rate response, although both members retain a stress peak and the
+  16x16 grid has no spatial-refinement certificate; strict ASB remains false.
+  The control exposed and repaired an open-system energy-audit omission:
+  thermostat exchange was already computed but is now included explicitly in
+  `delta U = W + Q_bath`. Thirty-two focused common-state/front tests pass.
 
 ## V64 production accuracy and controlled coupled evolution
 

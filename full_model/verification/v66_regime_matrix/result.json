@@ -71,16 +71,41 @@
       "shear_rate_s": 80000.0,
       "temperature_K": 1000.0,
       "thermal_control": "adiabatic"
+    },
+    {
+      "case": "v66_regime_T1000_r8e4_strong_bath",
+      "final_strain": 0.07999999999999943,
+      "final_target_growth_fraction": -0.014254555265572063,
+      "first_recession_strain": 0.029120000000000066,
+      "maximum_front_relative_energy_closure": 4.880442933219003e-07,
+      "maximum_mechanical_relative_first_law_residual": 0.00274781383786539,
+      "maximum_power_localization_ratio": 2.941077659371522,
+      "maximum_temperature_contrast_K": 0.02601409771273211,
+      "peak_stress_Pa": 2566912195.1671095,
+      "peak_stress_strain": 0.05504000000000013,
+      "peak_target_growth_fraction": 2.4968325316817733e-05,
+      "peak_target_growth_strain": 0.02288000000000005,
+      "post_peak_softening_fraction": 0.01137204145491287,
+      "shear_rate_s": 80000.0,
+      "temperature_K": 1000.0,
+      "thermal_control": "strong_bath"
     }
   ],
-  "created_utc": "2026-10-14T04:49:06.613325+00:00",
+  "created_utc": "2026-10-14T04:59:47.962155+00:00",
   "decision": {
     "fixed_law_regime_difference_observed": true,
     "high_rate_stress_peak_observed": true,
-    "qualification_limit": "A positive matched thermal-causality result is still a finite-grid mechanism qualification, not a material calibration or full ASB resolution/persistence study.",
+    "qualification_limit": "The matched pair is a finite-grid causal mechanism test only. The 16x16 grid has no spatial-refinement certificate, and the strong-bath member also retains a nonthermal stress peak.",
     "strict_asb_qualified": false,
-    "sustained_dynamic_target_growth_observed": false
+    "sustained_dynamic_target_growth_observed": false,
+    "thermal_contribution_to_softening_supported": true
   },
-  "matched_high_rate_pair": null,
+  "matched_high_rate_pair": {
+    "peak_stress_difference_Pa": -11110732.418418407,
+    "softening_difference_fraction": 0.0052414986677526525,
+    "target_growth_difference_fraction": -0.0002563465071963294,
+    "temperature_contrast_ratio_adiabatic_to_control": 1184.3396540483068,
+    "thermal_causality_supported": true
+  },
   "schema": "v66-fixed-law-regime-matrix-v1"
 }

@@ -710,3 +710,31 @@ experiment, result, limitation, and next branch.
 - Next branch: run only the 1000 K/80,000/s matched strong-bath control, then
   classify the paired stress, heat, localization, and target histories before
   choosing any longer or refined calculation.
+
+## 2026-10-14T05:06:00Z — matched thermal-causality control
+
+- Goals: G01, G03, G04.
+- Prediction: if thermal feedback contributes to the high-rate peak, a
+  ledgered strong bath will suppress temperature contrast and delay/reduce
+  softening without changing the Arrhenius resistance or initial state.
+- Audit repair: the first two control attempts were rejected near 2.1% strain.
+  Their residual converged to the 5% threshold under deeper subdivision,
+  revealing that the thermal operator recorded bath export but the mechanical
+  gate still imposed the closed-system identity `delta U = W`. The gate now
+  uses the open-system identity `delta U = W + Q_bath`, with the independently
+  integrated thermostat exchange and unchanged 5% tolerance. A dedicated
+  thermostat regression and 31 related tests pass.
+- Result: the completed strong-bath case limits maximum temperature contrast
+  to 0.0260 K versus 30.81 K adiabatic. The adiabatic member peaks at 5.376%
+  strain versus 5.504%, peaks 11.1 MPa lower, and softens 1.661% versus
+  1.137%. Its inherited target recedes only 0.0256 percentage point more, so
+  the thermal effect on boundary competition is presently weak. Mechanical
+  and front closures remain below 0.275% and `4.89e-7` in the control.
+- Decision: thermal feedback causally adds 0.524 percentage point of
+  high-rate softening, but the peak is not exclusively thermal. Strict ASB is
+  still false because this is a 16x16 finite-grid pair without spatial
+  refinement, and the bath control also peaks. The result is a qualified
+  mechanism contribution, not material validation or resolved ASB.
+- Next branch: pursue the primary RX objective by lowering rate at fixed law
+  and extending to the same 4% strain, asking whether migration time can turn
+  transient inherited-subgrain advance into sustained dynamic growth.
