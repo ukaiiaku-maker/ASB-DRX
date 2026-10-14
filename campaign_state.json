@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T11:12:00Z",
+  "last_updated_utc": "2026-10-14T11:14:00Z",
   "active_allocation": {
     "campaign": "V66",
     "start_utc": "2026-10-13T23:31:11Z",
@@ -62,10 +62,10 @@
     "goal_ids": ["G01", "G03", "G04", "G05"],
     "hypothesis_ids": ["H1", "H2"],
     "physical_uncertainty": "whether_physical_n64_evolution_converges_the_16_percent_connected_power_band_component_area_and_transverse_span; common_grid_resampling_has_ruled_out_simple_pixel_sampling_error",
-    "next_executable_experiment": "extend_the_existing_fixed_width_n64_adiabatic_and_bath_checkpoints_to_16_percent",
+    "next_executable_experiment": "continue_the_checksum_bound_fixed_width_n64_adiabatic_and_bath_states_from_9p6_to_16_percent",
     "source_identity": "v66_matched_n32_n48_long_horizon_on_4b521c7_restart_source",
     "expected_discriminatory_observation": "component_area_and_transverse_span_converge_below_5_percent_while_the_bath_band_persists_if_localization_is_mechanically_formed",
-    "resource_need": "future_authorized_heavy_local_solver_for_n64_matched_continuation",
+    "resource_need": "future_authorized_heavy_local_solver_for_n64_matched_continuation_from_step_600",
     "result_status": "endogenous_H3_negative; inherited_H1_H2_and_high_rate_to_static_RX_positive; matched_n48_band_is_shared_heat_modified_high_slip_rate_structure_not_GND_or_high_density_wall; strict_ASB_false_due_unconverged_band_geometry; dynamic_growth_not_sustained"
   },
   "completion_semantics": {

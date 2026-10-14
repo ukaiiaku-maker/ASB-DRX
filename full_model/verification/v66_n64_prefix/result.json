@@ -1,0 +1,101 @@
+{
+  "cases": {
+    "adiabatic": {
+      "applied_shear_strain": 0.09599999999999878,
+      "case": "v66_regime_fixed_n64_T1000_r8e4",
+      "checkpoint_sha256": "645c5beb5226d757f2e2a53cb658e73439db4e3567551ce47655216afff298ed",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.000244140625,
+        "band_like": false,
+        "component_span_fraction": [
+          0.015625,
+          0.015625
+        ],
+        "largest_component_cells": 1,
+        "largest_component_fraction": 0.000244140625,
+        "maximum_to_mean": 2.1150426556262656,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 337032906742977.06,
+        "positive_mean_W_m3": 159350406407374.03,
+        "signed_min_W_m3": 49428209476334.484,
+        "threshold_multiple": 2.0
+      },
+      "endpoint_power_maximum_to_mean": 2.1150426556262656,
+      "endpoint_temperature_contrast_K": 39.635749882808454,
+      "final_target_growth_fraction": -0.03699979339266411,
+      "maximum_front_relative_energy_closure": 0.0005211510100767092,
+      "maximum_mechanical_relative_first_law_residual": 0.019060390859030968,
+      "maximum_temperature_contrast_K": 39.635749882808454,
+      "n": 64,
+      "peak_stress_Pa": 2561385652.8540564,
+      "post_peak_softening_fraction": 0.019387109066732137,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "66c359c8d50b9f0a4d5705045274daa56ab365ec",
+        "source_dirty": false
+      },
+      "steps": 600,
+      "thermal_control": "adiabatic"
+    },
+    "strong_bath": {
+      "applied_shear_strain": 0.09599999999999878,
+      "case": "v66_regime_fixed_n64_T1000_r8e4_strong_bath",
+      "checkpoint_sha256": "2290f3d2d9b8ef55bd8030502a0cff621641288cd1b3d00e3e02cf3a3308e0e6",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.00048828125,
+        "band_like": false,
+        "component_span_fraction": [
+          0.015625,
+          0.03125
+        ],
+        "largest_component_cells": 2,
+        "largest_component_fraction": 0.00048828125,
+        "maximum_to_mean": 2.2993867914000456,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 368791853419812.1,
+        "positive_mean_W_m3": 160387045276216.0,
+        "signed_min_W_m3": 55404487321129.7,
+        "threshold_multiple": 2.0
+      },
+      "endpoint_power_maximum_to_mean": 2.2993867914000456,
+      "endpoint_temperature_contrast_K": 0.07526587580832711,
+      "final_target_growth_fraction": -0.03635848149495596,
+      "maximum_front_relative_energy_closure": 0.0005034406257523318,
+      "maximum_mechanical_relative_first_law_residual": 0.00534387732038701,
+      "maximum_temperature_contrast_K": 0.07526587580832711,
+      "n": 64,
+      "peak_stress_Pa": 2573732089.7736397,
+      "post_peak_softening_fraction": 0.01152273218402433,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "66c359c8d50b9f0a4d5705045274daa56ab365ec",
+        "source_dirty": true
+      },
+      "steps": 600,
+      "thermal_control": "strong_bath"
+    }
+  },
+  "created_utc": "2026-10-14T11:03:19.109582+00:00",
+  "decision": {
+    "adiabatic_connected_2x_mean_power_band": false,
+    "bath_connected_2x_mean_power_band": false,
+    "classification": "NO_CONNECTED_BAND_AT_N64_PREFIX",
+    "common_endpoint_steps": 600,
+    "common_endpoint_strain": 0.09599999999999878,
+    "reason": "At 9.6% strain only one adiabatic cell and two bath cells exceed twice mean power. The checksum-bound prefix advances the physical refinement but cannot decide 16% band geometry."
+  },
+  "matched": {
+    "temperature_contrast_ratio": 526.6098275896674,
+    "terminal_target_difference": -0.0006413118977081494,
+    "thermal_softening_increment": 0.007864376882707807
+  },
+  "schema": "v66-n64-prefix-v1"
+}

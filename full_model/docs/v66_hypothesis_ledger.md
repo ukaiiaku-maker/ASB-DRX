@@ -901,3 +901,24 @@ experiment, result, limitation, and next branch.
 - Regression: the canonical suite passes 1102 tests in 286.75 seconds on
   pushed source `64301aa`, with `src` and the repository root on
   `PYTHONPATH`.
+
+## 2026-10-14T11:14:00Z — checksum-bound n64 matched prefix
+
+- Goals: G03, G04.
+- Prediction: continuing the existing fixed-width n64 checkpoints beyond the
+  negative 8% endpoint can determine whether connected localization is already
+  present near the n32/n48 onset while preserving a restartable path to 16%.
+- Experiment: extend the exact n64 adiabatic and bath states from 500 to 600
+  intervals (8.0% to 9.6% strain), checkpointing every 25 intervals. Preserve
+  each checkpoint's original mechanical-subdivision setting and every physical
+  parameter. One initial adiabatic command with a mismatched setting was
+  rejected before publication; the exact-config relaunch completed normally.
+- Result: at 9.6%, adiabatic/bath temperature contrasts are 39.636/0.0753 K,
+  softening is 1.939%/1.152%, and target changes are -3.700%/-3.636%. Endpoint
+  maximum/mean power is 2.115/2.299, but only one/two cells exceed twice mean
+  power, with no connected band in either member. The matched thermal
+  softening increment is already 0.786 percentage point.
+- Decision: classify this prefix as no connected n64 band at 9.6%. It advances
+  the physical refinement and bounds onset to a later horizon but cannot decide
+  the 16% n32/n48 geometry discrepancy. Continue both checksum-bound n64 states
+  toward 16% in the next authorized allocation.

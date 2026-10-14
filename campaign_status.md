@@ -2736,3 +2736,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   0.11--0.14) or scalar density band (0.82--0.84x density depletion).
 - Final canonical regression on pushed carrier-audit source: 1102 tests pass
   in 286.75 seconds.
+- The matched n64 refinement now reaches 9.6% strain. Neither control has a
+  connected band (one/two cells above twice mean power), while adiabatic heat
+  already adds 0.786 percentage point of softening. Exact restart checkpoints
+  are preserved for continuation to the decisive 16% horizon.
