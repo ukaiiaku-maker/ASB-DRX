@@ -45,18 +45,24 @@
     "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
   },
   "resource_ownership": {
-    "heavy_campaign_solver": null,
+    "heavy_campaign_solver": {
+      "pid": 70552,
+      "case": "v66_one_grain_precursor_work/n32_mechanical",
+      "source": "96e75b4",
+      "target_strain": 0.05,
+      "checkpointed_restart": true
+    },
     "unrelated_processes_preserved": [34369, 34370, 71220, 94577]
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_signed_spatial_organization_can_form_a_new_structural_subgrain_boundary_without_label_allocation_or_a_scalar_density_double_well",
-    "next_executable_experiment": "connect_tensorial_Nye_and_polarized_signed_density_to_a_zero_label_structural_precursor_then_test_emergence_persistence_and_energy_before_any_owner_promotion",
-    "source_identity": "aa12308+common-structural-runtime-development",
+    "physical_uncertainty": "whether_fresh_current_source_one_grain_Mura_evolution_forms_a_resolved_GND_bearing_closed_precursor_or_only_polarized_unresolved_wall_content",
+    "next_executable_experiment": "finish_checksum_bound_n32_mechanical_heterogeneity_to_five_percent_then_apply_multithreshold_geometry_Frank_GND_order_and_density_gates",
+    "source_identity": "96e75b4 plus checkpoint 0c27fee265993da89e243733f4f4c6305e5dd9fbd6f5a23347505f7050db14b0",
     "expected_discriminatory_observation": "a_new_closed_GND_bearing_interface_with_compatible_Burgers_content_persists_at_fixed_grid_scale_and_can_mature_by_the_qualified_absorption_rotation_law",
-    "resource_need": "lightweight_local",
-    "result_status": "common_axis_structural_front_and_cycle_reaction_are_complete_energy_runtime_capable_new_boundary_birth_remains_primary_gap"
+    "resource_need": "one_local_heavy_solver_running_plus_lightweight_analysis",
+    "result_status": "common_axis_structural_runtime_qualified_GB_TJ_sink_geography_changes_stored_energy_but_not_GND_fresh_one_grain_precursor_run_active"
   },
   "completion_semantics": {
     "execution_complete": false,

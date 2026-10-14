@@ -8,6 +8,9 @@ import math
 import numpy as np
 
 from .arrhenius_dislocation_sources import apply_conjugate_pair_source_event
+from .arrhenius_kinetics import (
+    ActivatedProcess, EV_J, activated_rate_array_s, exp_floor_enthalpy_j,
+)
 from .common_tensorial_wall import (
     CommonWallDriving, resolved_driving_components,
     wall_total_free_energy_density_J_m3,
@@ -36,6 +39,47 @@ class MultiGrainSourceDecision:
     first_law_residual_J: float
     relative_first_law_residual: float
     energy_resolution_floor_J: float
+    heat_source_J_by_cell: np.ndarray
+
+
+@dataclass(frozen=True)
+class NeutralBoundarySinkParameters:
+    """Stress-assisted neutral pair annihilation at declared sink sites."""
+
+    activation_enthalpy_eV: float = 1.40
+    attempt_frequency_s: float = 1.0e12
+    critical_stress_Pa: float = 1.0e9
+    exp_a: float = 1.0
+    exp_n: float = 2.0
+    barrier_floor_fraction: float = 0.05/1.40
+    maximum_fraction_per_interval: float = 0.10
+    stress_assisted: bool = False
+
+    def __post_init__(self):
+        values = (self.activation_enthalpy_eV, self.attempt_frequency_s,
+                  self.critical_stress_Pa, self.exp_a, self.exp_n,
+                  self.maximum_fraction_per_interval)
+        if any(not math.isfinite(value) or value <= 0.0 for value in values):
+            raise ValueError("neutral sink parameters must be positive finite")
+        if self.exp_n < 1.0 or not 0.0 <= self.barrier_floor_fraction <= 1.0:
+            raise ValueError("invalid neutral sink EXP-floor shape")
+        if self.maximum_fraction_per_interval > 1.0:
+            raise ValueError("neutral sink fraction cannot exceed one")
+
+
+@dataclass(frozen=True)
+class MultiGrainSinkDecision:
+    accepted: bool
+    classification: str
+    candidate_state: object
+    annihilated_pair_cell_sum_m2: float
+    signed_content_change_m2: float
+    line_balance_residual_m2: float
+    defect_storage_change_J: float
+    generated_heat_J: float
+    first_law_residual_J: float
+    relative_first_law_residual: float
+    maximum_fraction: float
     heat_source_J_by_cell: np.ndarray
 
 
@@ -157,3 +201,128 @@ def evaluate_multigrain_pair_source_transaction(
         event_count, line_change, signed_change, line_residual,
         work_J, defect_J, heat_J, delta_helmholtz, delta_internal,
         residual, relative, resolution_floor, heat_density*cell_volume)
+
+
+def evaluate_multigrain_neutral_sink_transaction(
+        state, *, mean_strain, site_field, interval_s, sink_parameters,
+        systems, wall_parameters, represented_thickness_m,
+        energy_kwargs=None, sink_mode="gb_tj_neutral_pair_sink",
+        maximum_relative_first_law_residual=.05):
+    """Energy-complete opposite-sign annihilation at boundary or control sites.
+
+    Equal positive/negative mobile content is removed family by family, so the
+    process has no net Burgers or atom-count source.  It represents a GB/TJ
+    annihilation sink, not absorption into an untracked structural boundary.
+    The independently evaluated defect-energy release is deposited locally as
+    heat; no external work or unlimited vacancy reservoir is invoked.
+    """
+    dt = float(interval_s)
+    if not math.isfinite(dt) or dt <= 0.0:
+        raise ValueError("sink interval must be positive and finite")
+    site = np.asarray(site_field, dtype=float)
+    if (site.shape != state.supports.shape[1:] or np.any(~np.isfinite(site))
+            or np.any(site < 0.0) or np.mean(site) <= 0.0):
+        raise ValueError("sink site field must be positive finite on the grid")
+    site = site/np.mean(site)
+    spacing = float(wall_parameters.spacing_m)
+    thickness = float(represented_thickness_m)
+    cell_volume = spacing*spacing*thickness
+    options = {} if energy_kwargs is None else dict(energy_kwargs)
+    options.pop("mean_strain", None)
+    common_energy = dict(
+        spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
+        **options)
+    before_energy = evaluate_complete_multigrain_energy(state, **common_energy)
+    drivings = _owner_drivings_from_common_stress(
+        state, CommonWallDriving(mean_strain=np.asarray(mean_strain)),
+        systems, wall_parameters)
+    process = ActivatedProcess(
+        "neutral-boundary-pair-sink", sink_parameters.attempt_frequency_s,
+        0.0, sink_parameters.attempt_frequency_s)
+    proposed_owners = []
+    defect_drop_density = np.zeros(site.shape)
+    annihilated_total = 0.0
+    signed_change = 0.0
+    line_change = 0.0
+    maximum_fraction = 0.0
+    for support, owner, driving in zip(state.supports, state.owners, drivings):
+        components = resolved_driving_components(
+            owner, driving, systems, (), wall_parameters)
+        stress = (np.abs(np.asarray(components["raw_stress_Pa"]))
+                  if sink_parameters.stress_assisted
+                  else np.zeros_like(components["raw_stress_Pa"]))
+        enthalpy = exp_floor_enthalpy_j(
+            stress, sink_parameters.activation_enthalpy_eV*EV_J,
+            sink_parameters.critical_stress_Pa, sink_parameters.exp_a,
+            sink_parameters.exp_n, sink_parameters.barrier_floor_fraction)
+        rate = activated_rate_array_s(
+            process, enthalpy, np.asarray(owner.temperature_K)[..., None])
+        fraction = np.minimum(
+            -np.expm1(-rate*dt*site[..., None]),
+            sink_parameters.maximum_fraction_per_interval)
+        active = np.asarray(support) > 256*np.finfo(float).eps
+        fraction = np.where(active[..., None], fraction, 0.0)
+        neutral = np.minimum(
+            np.asarray(owner.mobile_plus_m2),
+            np.asarray(owner.mobile_minus_m2))*fraction
+        proposed = replace(
+            owner,
+            mobile_plus_m2=np.asarray(owner.mobile_plus_m2)-neutral,
+            mobile_minus_m2=np.asarray(owner.mobile_minus_m2)-neutral)
+        proposed.validate(systems, ())
+        proposed_owners.append(proposed)
+        weight = np.asarray(support)
+        before_defect = wall_total_free_energy_density_J_m3(
+            owner, wall_parameters, (), systems)
+        after_defect = wall_total_free_energy_density_J_m3(
+            proposed, wall_parameters, (), systems)
+        defect_drop_density += weight*np.maximum(before_defect-after_defect, 0.0)
+        annihilated_total += float(np.sum(weight[..., None]*neutral))
+        signed_change += float(np.sum(weight[..., None]*(
+            (proposed.mobile_plus_m2-proposed.mobile_minus_m2)
+            -(owner.mobile_plus_m2-owner.mobile_minus_m2))))
+        line_change += float(np.sum(weight[..., None]*(
+            proposed.mobile_plus_m2+proposed.mobile_minus_m2
+            -owner.mobile_plus_m2-owner.mobile_minus_m2)))
+        maximum_fraction = max(maximum_fraction, float(np.max(fraction)))
+    unheated = replace(state, owners=tuple(proposed_owners))
+    unheated.validate()
+    cold_energy = evaluate_complete_multigrain_energy(unheated, **common_energy)
+    heat_density = defect_drop_density
+    heat_by_cell = heat_density*cell_volume
+    common, _ = reconstruct_multigrain_common(unheated, spacing)
+    temperature = (np.asarray(common.temperature_K)
+                   +heat_density/wall_parameters.volumetric_heat_capacity_J_m3_K)
+    candidate = replace(unheated, owners=tuple(
+        replace(owner, temperature_K=temperature.copy())
+        for owner in unheated.owners))
+    candidate.validate()
+    after_energy = evaluate_complete_multigrain_energy(candidate, **common_energy)
+    defect_change = cold_energy.helmholtz_J-before_energy.helmholtz_J
+    heat_J = float(np.sum(heat_by_cell, dtype=np.longdouble))
+    residual = after_energy.internal_J-before_energy.internal_J
+    scale = max(abs(defect_change), abs(heat_J), 1e-300)
+    relative = abs(residual)/scale
+    balance = line_change+2.0*annihilated_total
+    downhill = defect_change <= 1e-12*scale
+    accepted = bool(
+        maximum_fraction > 0.0 and downhill
+        and relative <= maximum_relative_first_law_residual
+        and abs(signed_change) <= 1e-12*max(annihilated_total, 1.0)
+        and abs(balance) <= 1e-12*max(2.0*annihilated_total, 1.0))
+    if maximum_fraction == 0.0:
+        classification = "INACTIVE_NEUTRAL_SINK"
+    elif not downhill:
+        classification = "REJECTED_UPHILL_NEUTRAL_SINK"
+    elif relative > maximum_relative_first_law_residual:
+        classification = "REJECTED_NEUTRAL_SINK_FIRST_LAW"
+    elif not accepted:
+        classification = "REJECTED_NEUTRAL_SINK_BALANCE"
+    else:
+        classification = "ACCEPTED_NEUTRAL_BOUNDARY_SINK"
+    return MultiGrainSinkDecision(
+        accepted, f"{classification}:{sink_mode}",
+        candidate if accepted else state, annihilated_total, signed_change,
+        balance, defect_change, heat_J, residual, relative, maximum_fraction,
+        heat_by_cell)

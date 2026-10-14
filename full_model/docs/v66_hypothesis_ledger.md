@@ -402,3 +402,33 @@ experiment, result, limitation, and next branch.
 - Next branch: use the new structural front runtime on a continuous low-angle
   three-owner trajectory, then return to the primary missing mechanism:
   formation of a new subgrain boundary from signed spatial organization.
+
+## 2026-10-14T01:53:00Z — boundary/TJ source-plus-sink geography
+
+- Goals: G01, G04, G05.
+- Prediction: making GB/TJ regions both neutral-pair sources and sinks can
+  create a stored-energy geography distinct from matched random sites, but a
+  sign-balanced sink cannot by itself create a GND-bearing structural wall.
+- Experiment: add an energy-complete thermally activated neutral sink that
+  removes equal positive/negative mobile content family by family. It invokes
+  no net Burgers or atom source, evaluates the defect-energy decrease
+  independently, and deposits it locally as heat. Compare a 1 microsecond
+  GB/TJ source-plus-sink transaction with an exact-permutation random control
+  at 1000 K and 4% engineering shear.
+- Result: both controls had exactly 15.3014 source events and created
+  5.313e12 line-cell content. The GB/TJ and random sinks annihilated 2.903e15
+  and 2.951e15 neutral pairs. Sink first-law residuals were 2.3e-13 relative,
+  and line ledgers closed to 2 parts in 2.9e15. The density-change correlation
+  with the boundary field was -0.625 for GB/TJ sites and +0.044 for random
+  sites. Yet source-induced Nye remained only 1.13--3.34 1/m RMS and
+  orientation-change span only 2.6e-5--3.3e-5 degrees.
+- Decision: source/sink geography is a credible mechanism for stored-energy
+  heterogeneity and is retained as an opt-in ablation. It does not form a
+  physical wall at this exposure, confirming that neutral density depletion
+  must not be relabelled as a subgrain boundary.
+- Limitation: the 1.4 eV neutral-sink barrier is a documented generic
+  hypothesis, not calibration. The sink is stress-independent in the baseline;
+  its separately available stress-assisted option remains unexercised.
+- Next branch: complete the fresh current-source one-grain Mura trajectory and
+  classify GND closure, resolved geometry, wall order, and lower-energy
+  interior separately.

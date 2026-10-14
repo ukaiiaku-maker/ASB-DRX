@@ -208,6 +208,16 @@ def recognize_common_orientation_plateau(
             and fb_residual <= maximum_frank_bilby_relative_residual
             and np.mean(density[interior]) < np.mean(density[~component])),
         "read_only": True,
+        "gate_status": {
+            "geometry_resolved": True,
+            "misorientation": bool(misorientation >= threshold),
+            "ordered_boundary": bool(
+                ordered_fraction >= minimum_ordered_fraction),
+            "frank_bilby": bool(
+                fb_residual <= maximum_frank_bilby_relative_residual),
+            "lower_density_interior": bool(
+                np.mean(density[interior]) < np.mean(density[~component])),
+        },
         "misorientation_rad": misorientation,
         "misorientation_deg": math.degrees(misorientation),
         "area_m2": float(np.sum(component)*float(spacing_m)**2),

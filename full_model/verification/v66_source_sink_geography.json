@@ -1,0 +1,71 @@
+{
+  "cases": {
+    "gb_tj": {
+      "fields": {
+        "density_boundary_correlation": -0.052786285681114896,
+        "density_change_boundary_correlation": -0.6247984134896515,
+        "density_change_rms_m2": 25364737714729.004,
+        "gnd_change_rms_m1": 1.126711933987489,
+        "gnd_rms_m1": 1.126711933987489,
+        "mean_total_density_m2": 1489065077688761.0,
+        "orientation_change_span_deg": 2.5725580594929425e-05,
+        "orientation_span_deg": 28.214404526141436,
+        "temperature_rise_mean_K": 0.011931511490047342,
+        "total_density_cv": 0.4055524720603253
+      },
+      "sink_annihilated_pair_cell_sum_m2": 2902957797010300.0,
+      "sink_heat_J": 4.400932892580868e-16,
+      "sink_line_balance_residual_m2": -2.0,
+      "sink_relative_first_law_residual": 2.294381630733627e-13,
+      "source_created_line_cell_sum_m2": 5312995481466.46,
+      "source_event_count": 15.301426986624621,
+      "source_heat_J": 3.713662567724295e-17,
+      "source_relative_first_law_residual": 1.6886506610789354e-05
+    },
+    "matched_random": {
+      "fields": {
+        "density_boundary_correlation": -0.040256677393268686,
+        "density_change_boundary_correlation": 0.04361762960044494,
+        "density_change_rms_m2": 26526898728737.84,
+        "gnd_change_rms_m1": 3.3438345727385936,
+        "gnd_rms_m1": 3.3438345727385936,
+        "mean_total_density_m2": 1488692820287593.5,
+        "orientation_change_span_deg": 3.292577587256126e-05,
+        "orientation_span_deg": 28.21440070279922,
+        "temperature_rise_mean_K": 0.0121001048752305,
+        "total_density_cv": 0.40378660103859326
+      },
+      "sink_annihilated_pair_cell_sum_m2": 2950595683232204.5,
+      "sink_heat_J": 4.473261658101777e-16,
+      "sink_line_balance_residual_m2": -1.0,
+      "sink_relative_first_law_residual": 2.2572834675434073e-13,
+      "source_created_line_cell_sum_m2": 5312995481466.46,
+      "source_event_count": 15.301426986624621,
+      "source_heat_J": 3.6647052932647505e-17,
+      "source_relative_first_law_residual": 1.6784527590459263e-05
+    }
+  },
+  "configuration": {
+    "duration_s": 1e-06,
+    "engineering_shear": 0.04,
+    "grid": [
+      16,
+      16
+    ],
+    "matched_site_histograms": true,
+    "sink_activation_enthalpy_eV": 1.4,
+    "sink_stress_assisted": false,
+    "source_grain_size_m": 2.4e-06,
+    "temperature_K": 1000.0
+  },
+  "created_utc": "2026-10-14T01:52:49.495493+00:00",
+  "decision": {
+    "geography_changes_density_heterogeneity": true,
+    "interpretation": "neutral sink geography can create stored-energy heterogeneity but cannot by itself create signed GND or a structural wall",
+    "physical_wall_claim": false,
+    "source_and_sink_burgers_neutral": true,
+    "source_and_sink_energy_complete": true
+  },
+  "schema": "v66-source-sink-geography-v1",
+  "source_commit": "96e75b4+neutral-sink-development"
+}
