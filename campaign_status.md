@@ -2744,6 +2744,9 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   like, but the adiabatic hot component has grown to 28 cells versus two with
   the bath. Heat accelerates pre-band geometry without being required for the
   eventual n48 band.
+- The terminal n64 prefix reaches 10.8%. Adiabatic/bath hot components contain
+  55/5 cells and remain non-banded; heat is accelerating pre-band coalescence.
+  Exact step-675 checkpoints are preserved for the next allocation.
 - A history audit confirms that scalar maximum/mean power cannot classify a
   band: every case has an early >=2x episode through 2.544% strain, and n64 has
   a late scalar recurrence without connected structure. Connectivity remains

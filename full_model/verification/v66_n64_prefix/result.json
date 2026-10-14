@@ -1,101 +1,101 @@
 {
   "cases": {
     "adiabatic": {
-      "applied_shear_strain": 0.10399999999999845,
+      "applied_shear_strain": 0.10799999999999829,
       "case": "v66_regime_fixed_n64_T1000_r8e4",
-      "checkpoint_sha256": "9cd1f685276c7a646eb162f2925b4c6ca860d5c30f73adf32fbfc35067c4ee08",
+      "checkpoint_sha256": "a195fb78ca7c3b7f00ea8ea8ddaff1abc95561cb7c8c146a15b3c3ca36fa8306",
       "endpoint_power_localization": {
-        "above_threshold_fraction": 0.007568359375,
+        "above_threshold_fraction": 0.01416015625,
         "band_like": false,
         "component_span_fraction": [
-          0.078125,
-          0.140625
+          0.125,
+          0.1875
         ],
-        "largest_component_cells": 28,
-        "largest_component_fraction": 0.0068359375,
-        "maximum_to_mean": 2.63022030837734,
+        "largest_component_cells": 55,
+        "largest_component_fraction": 0.013427734375,
+        "maximum_to_mean": 2.392159043007917,
         "periodic_winding": [
           false,
           false
         ],
-        "positive_max_W_m3": 371133401497223.2,
-        "positive_mean_W_m3": 141103541902992.25,
-        "signed_min_W_m3": 40531010258152.36,
+        "positive_max_W_m3": 315212664948465.25,
+        "positive_mean_W_m3": 131769108692754.25,
+        "signed_min_W_m3": 35466375007264.3,
         "threshold_multiple": 2.0
       },
-      "endpoint_power_maximum_to_mean": 2.63022030837734,
-      "endpoint_temperature_contrast_K": 47.08944122750654,
-      "final_target_growth_fraction": -0.05499097595197183,
-      "maximum_front_relative_energy_closure": 0.000907321593771801,
+      "endpoint_power_maximum_to_mean": 2.392159043007917,
+      "endpoint_temperature_contrast_K": 50.850840683974866,
+      "final_target_growth_fraction": -0.06587121939826553,
+      "maximum_front_relative_energy_closure": 0.0010558934264594617,
       "maximum_mechanical_relative_first_law_residual": 0.019060390859030968,
-      "maximum_temperature_contrast_K": 47.08944122750654,
+      "maximum_temperature_contrast_K": 50.850840683974866,
       "n": 64,
       "peak_stress_Pa": 2561385652.8540564,
-      "post_peak_softening_fraction": 0.024142451021625787,
+      "post_peak_softening_fraction": 0.02708123912848337,
       "source_provenance": {
         "campaign": "V66",
         "scientific_scope": "inherited-subgrain coupled exposure",
-        "source_commit": "e2b0b900290b9e0e27c524e380f9c27fa866dae6",
+        "source_commit": "046db867418c78ebdb9e7d27eb8de0f6a9ea57cc",
         "source_dirty": false
       },
-      "steps": 650,
+      "steps": 675,
       "thermal_control": "adiabatic"
     },
     "strong_bath": {
-      "applied_shear_strain": 0.10399999999999845,
+      "applied_shear_strain": 0.10799999999999829,
       "case": "v66_regime_fixed_n64_T1000_r8e4_strong_bath",
-      "checkpoint_sha256": "6f2f5e50be7e583b357eede586ab40dd9569ebe650b8b0919abb7b6a1a23fc01",
+      "checkpoint_sha256": "096bc62256a6fe94a999ed2f5e1f0dcfbadc424179140279723812682b10aa0a",
       "endpoint_power_localization": {
-        "above_threshold_fraction": 0.00048828125,
+        "above_threshold_fraction": 0.001708984375,
         "band_like": false,
         "component_span_fraction": [
-          0.015625,
-          0.03125
+          0.03125,
+          0.046875
         ],
-        "largest_component_cells": 2,
-        "largest_component_fraction": 0.00048828125,
-        "maximum_to_mean": 2.265205355535083,
+        "largest_component_cells": 5,
+        "largest_component_fraction": 0.001220703125,
+        "maximum_to_mean": 2.1347161368641463,
         "periodic_winding": [
           false,
           false
         ],
-        "positive_max_W_m3": 322834892928270.9,
-        "positive_mean_W_m3": 142519040112374.88,
-        "signed_min_W_m3": 44416857847914.945,
+        "positive_max_W_m3": 284129680623362.5,
+        "positive_mean_W_m3": 133099514130596.81,
+        "signed_min_W_m3": 38663576520873.125,
         "threshold_multiple": 2.0
       },
-      "endpoint_power_maximum_to_mean": 2.265205355535083,
-      "endpoint_temperature_contrast_K": 0.10784553515873085,
-      "final_target_growth_fraction": -0.0541442494044212,
-      "maximum_front_relative_energy_closure": 0.0008822406148890134,
+      "endpoint_power_maximum_to_mean": 2.1347161368641463,
+      "endpoint_temperature_contrast_K": 0.125636085035012,
+      "final_target_growth_fraction": -0.06491938584011207,
+      "maximum_front_relative_energy_closure": 0.0010640909766957095,
       "maximum_mechanical_relative_first_law_residual": 0.00534387732038701,
-      "maximum_temperature_contrast_K": 0.10784553515873085,
+      "maximum_temperature_contrast_K": 0.125636085035012,
       "n": 64,
       "peak_stress_Pa": 2573732089.7736397,
-      "post_peak_softening_fraction": 0.014960308458116231,
+      "post_peak_softening_fraction": 0.017401290091925942,
       "source_provenance": {
         "campaign": "V66",
         "scientific_scope": "inherited-subgrain coupled exposure",
-        "source_commit": "e2b0b900290b9e0e27c524e380f9c27fa866dae6",
+        "source_commit": "046db867418c78ebdb9e7d27eb8de0f6a9ea57cc",
         "source_dirty": true
       },
-      "steps": 650,
+      "steps": 675,
       "thermal_control": "strong_bath"
     }
   },
-  "created_utc": "2026-10-14T11:14:10.138345+00:00",
+  "created_utc": "2026-10-14T11:19:33.103867+00:00",
   "decision": {
     "adiabatic_connected_2x_mean_power_band": false,
     "bath_connected_2x_mean_power_band": false,
     "classification": "NO_CONNECTED_BAND_AT_N64_PREFIX",
-    "common_endpoint_steps": 650,
-    "common_endpoint_strain": 0.10399999999999845,
-    "reason": "At 10.4% strain the largest adiabatic/bath components contain 28/2 cells and neither is band-like. The checksum-bound prefix advances the physical refinement but cannot decide 16% band geometry."
+    "common_endpoint_steps": 675,
+    "common_endpoint_strain": 0.10799999999999829,
+    "reason": "At 10.8% strain the largest adiabatic/bath components contain 55/5 cells and neither is band-like. The checksum-bound prefix advances the physical refinement but cannot decide 16% band geometry."
   },
   "matched": {
-    "temperature_contrast_ratio": 436.63783723821894,
-    "terminal_target_difference": -0.0008467265475506289,
-    "thermal_softening_increment": 0.009182142563509556
+    "temperature_contrast_ratio": 404.7470969013708,
+    "terminal_target_difference": -0.0009518335581534532,
+    "thermal_softening_increment": 0.009679949036557427
   },
   "schema": "v66-n64-prefix-v1"
 }

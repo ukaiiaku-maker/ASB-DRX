@@ -930,6 +930,11 @@ experiment, result, limitation, and next branch.
   required for eventual band formation. Softening is 2.414%/1.496%, giving a
   0.918 percentage-point thermal increment; target changes remain close at
   -5.499%/-5.414%.
+- Final prefix at 10.8%: the adiabatic/bath components grow to 55/5 cells and
+  span 12.5% by 18.75% / 3.13% by 4.69%. Neither is band-like. Temperature
+  contrasts are 50.851/0.1256 K, softening is 2.708%/1.740%, and target changes
+  remain close at -6.587%/-6.492%. The exact step-675 states are the terminal
+  V66 restart points.
 
 ## 2026-10-14T11:04:00Z — scalar power-amplitude history audit
 
