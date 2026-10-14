@@ -432,3 +432,36 @@ experiment, result, limitation, and next branch.
 - Next branch: complete the fresh current-source one-grain Mura trajectory and
   classify GND closure, resolved geometry, wall order, and lower-energy
   interior separately.
+
+## 2026-10-14T02:04:00Z — fixed-law source/sink competition
+
+- Goals: G01, G04, G05, G06.
+- Prediction: the immutable nucleation-controlled Hall--Petch source and the
+  generic thermal neutral sink will have a strong temperature-dependent
+  crossover. The sink may erase mobile content faster than the source can
+  replenish it at high temperature even when the source barrier has reached
+  its EXP floor.
+- Experiment: evaluate the published `N=b^2/d^2`, `phi=sqrt(d/b)`, and
+  `delta gamma=b/d` Hall--Petch source over 650--1200 K and 0.5--10 micrometre
+  grain size. Compare its maximum per-sign density supply `hazard/d^2` with
+  the independently declared 1.4 eV thermal neutral-pair sink. No parameter
+  was fitted and no spatial result was used to select the rates.
+- Result: for `d=2.4 micrometres`, the source reaches its 0.05 eV floor at
+  197.5 MPa. Its per-family event rate changes only from 4.37e3 to 6.58e3 1/s
+  between 650 and 1200 K, while the sink rises from 14.0 to 1.32e6 1/s. The
+  upper-bound steady mobile density per sign/family consequently falls from
+  5.44e13 to 8.67e8 1/m2. At 1000 K it is 1.18e10 1/m2 and the neutral-pair
+  half-life is 7.88 microseconds. Complete-energy rejection can only reduce
+  the accepted source below this upper bound.
+- Decision: the GB/TJ sink remains an optional spatial hypothesis, not a
+  production RX default. With the generic barriers it competes strongly
+  against inherited mobile content at annealing temperatures and can change
+  recovery-versus-maturation selection. Future dynamic/static comparisons
+  must use one fixed source/sink parameter set and explicitly report this
+  time-scale competition; enabling the sink case by case would be tuning.
+- Limitation: this is a fixed-state mean-field competition. It omits transport
+  supply to the boundary, evolving stress and density, source transaction
+  rejection, and structural absorption. It is not a material calibration.
+- Next branch: finish the fresh current-source one-grain trajectory, then use
+  its resolved organization (or valid negative result) to decide whether a
+  structural-absorption continuation is physically available.
