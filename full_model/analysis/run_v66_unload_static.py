@@ -47,6 +47,7 @@ def _configuration(args):
         "hold_rate_s": 0.0,
         "hold_dt_s": args.hold_dt,
         "hold_steps": args.hold_steps,
+        "plastic_history_mode": args.plastic_history_mode,
         "hold_constraint": "fixed zero macroscopic shear strain; residual stress retained",
     }
 
@@ -116,6 +117,10 @@ def main():
     parser.add_argument("--unload-steps", type=int, default=900)
     parser.add_argument("--hold-dt", type=float, default=2e-8)
     parser.add_argument("--hold-steps", type=int, default=300)
+    parser.add_argument(
+        "--plastic-history-mode",
+        choices=("receiver_dormant", "material_continuity"),
+        default="receiver_dormant")
     parser.add_argument("--checkpoint-every", type=int, default=100)
     parser.add_argument("--resume", type=Path)
     args = parser.parse_args()
