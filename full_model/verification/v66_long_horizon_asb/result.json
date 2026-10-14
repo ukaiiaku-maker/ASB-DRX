@@ -1,0 +1,236 @@
+{
+  "cases": [
+    {
+      "applied_shear_strain": 0.15999999999999617,
+      "case": "v66_regime_fixed_n32_T1000_r8e4",
+      "checkpoint_sha256": "996fabeec52831b7974ab35a6ff8be6e20a0612db989f469963ae8b010da2d3b",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.140625,
+        "band_like": true,
+        "component_span_fraction": [
+          0.84375,
+          1.0
+        ],
+        "largest_component_cells": 141,
+        "largest_component_fraction": 0.1376953125,
+        "maximum_to_mean": 5.141781569217511,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 427289747363762.75,
+        "positive_mean_W_m3": 83101497333498.89,
+        "signed_min_W_m3": 5218991.591959279,
+        "threshold_multiple": 2.0
+      },
+      "endpoint_power_maximum_to_mean": 5.141781569217511,
+      "endpoint_temperature_contrast_K": 109.27888939310674,
+      "final_target_growth_fraction": -0.2751341904691155,
+      "maximum_front_relative_energy_closure": 0.003934412904661554,
+      "maximum_mechanical_relative_first_law_residual": 0.0028346376081177954,
+      "maximum_temperature_contrast_K": 109.27888939310674,
+      "n": 32,
+      "peak_stress_Pa": 2556867873.1127787,
+      "post_peak_softening_fraction": 0.16970800961452245,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "4b521c70a540c68ee2655cf935e522de8170dad7",
+        "source_dirty": false
+      },
+      "steps": 1000,
+      "thermal_control": "adiabatic"
+    },
+    {
+      "applied_shear_strain": 0.15999999999999617,
+      "case": "v66_regime_fixed_n32_T1000_r8e4_strong_bath",
+      "checkpoint_sha256": "ac0696d82130d84869e64cb9ca066191f206fc135592a90c420215ace30471bc",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.1357421875,
+        "band_like": true,
+        "component_span_fraction": [
+          0.625,
+          1.0
+        ],
+        "largest_component_cells": 126,
+        "largest_component_fraction": 0.123046875,
+        "maximum_to_mean": 5.141227638516159,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 429488719276405.75,
+        "positive_mean_W_m3": 83538164320684.14,
+        "signed_min_W_m3": 869477.1021727384,
+        "threshold_multiple": 2.0
+      },
+      "endpoint_power_maximum_to_mean": 5.141227638516159,
+      "endpoint_temperature_contrast_K": 0.22640972626982148,
+      "final_target_growth_fraction": -0.275073873234428,
+      "maximum_front_relative_energy_closure": 0.003838447272552795,
+      "maximum_mechanical_relative_first_law_residual": 0.0027609109112691787,
+      "maximum_temperature_contrast_K": 0.24787697436624967,
+      "n": 32,
+      "peak_stress_Pa": 2568239070.2872877,
+      "post_peak_softening_fraction": 0.1493970360184298,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "4b521c70a540c68ee2655cf935e522de8170dad7",
+        "source_dirty": true
+      },
+      "steps": 1000,
+      "thermal_control": "strong_bath"
+    },
+    {
+      "applied_shear_strain": 0.15999999999999617,
+      "case": "v66_regime_fixed_n48_T1000_r8e4",
+      "checkpoint_sha256": "33f8eeda0db7ccfbeb4d20878b2c54d2113ce9e0d3b3b69895471220aafac8f3",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.1371527777777778,
+        "band_like": true,
+        "component_span_fraction": [
+          0.5416666666666666,
+          0.9791666666666666
+        ],
+        "largest_component_cells": 245,
+        "largest_component_fraction": 0.10633680555555555,
+        "maximum_to_mean": 5.568315029576028,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 436774875100538.1,
+        "positive_mean_W_m3": 78439325501631.0,
+        "signed_min_W_m3": 423134431.31419885,
+        "threshold_multiple": 2.0
+      },
+      "endpoint_power_maximum_to_mean": 5.568315029576028,
+      "endpoint_temperature_contrast_K": 109.33925693799506,
+      "final_target_growth_fraction": -0.2791027836223898,
+      "maximum_front_relative_energy_closure": 0.001830395550343903,
+      "maximum_mechanical_relative_first_law_residual": 0.004000379939077725,
+      "maximum_temperature_contrast_K": 109.33925693799506,
+      "n": 48,
+      "peak_stress_Pa": 2560104511.4463425,
+      "post_peak_softening_fraction": 0.16317334325960464,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "4b521c70a540c68ee2655cf935e522de8170dad7",
+        "source_dirty": true
+      },
+      "steps": 1000,
+      "thermal_control": "adiabatic"
+    },
+    {
+      "applied_shear_strain": 0.15999999999999617,
+      "case": "v66_regime_fixed_n48_T1000_r8e4_strong_bath",
+      "checkpoint_sha256": "25c90527afce6e663ac58756144c214c0042c32f88a27c684cf6344f7d55f0df",
+      "endpoint_power_localization": {
+        "above_threshold_fraction": 0.13671875,
+        "band_like": true,
+        "component_span_fraction": [
+          0.5833333333333334,
+          0.9791666666666666
+        ],
+        "largest_component_cells": 256,
+        "largest_component_fraction": 0.1111111111111111,
+        "maximum_to_mean": 5.270006137908934,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 410928875389443.6,
+        "positive_mean_W_m3": 77975027853097.45,
+        "signed_min_W_m3": 75473010.05851191,
+        "threshold_multiple": 2.0
+      },
+      "endpoint_power_maximum_to_mean": 5.270006137908934,
+      "endpoint_temperature_contrast_K": 0.21702873285619262,
+      "final_target_growth_fraction": -0.2785981597580129,
+      "maximum_front_relative_energy_closure": 0.0018413700391058554,
+      "maximum_mechanical_relative_first_law_residual": 0.004874471426127041,
+      "maximum_temperature_contrast_K": 0.23872743422714393,
+      "n": 48,
+      "peak_stress_Pa": 2571239969.134246,
+      "post_peak_softening_fraction": 0.14390994173057853,
+      "source_provenance": {
+        "campaign": "V66",
+        "scientific_scope": "inherited-subgrain coupled exposure",
+        "source_commit": "4b521c70a540c68ee2655cf935e522de8170dad7",
+        "source_dirty": true
+      },
+      "steps": 1000,
+      "thermal_control": "strong_bath"
+    }
+  ],
+  "created_utc": "2026-10-14T10:36:57.443346+00:00",
+  "decision": {
+    "band_geometry_converged_below_5_percent": false,
+    "classification": "mechanically_formed_banded_localization_candidate_with_thermal_amplification",
+    "connected_2x_mean_power_band_on_finest_adiabatic_grid": true,
+    "connected_2x_mean_power_band_on_finest_bath_grid": true,
+    "material_validated": false,
+    "reason": "A connected power band exists with and without heat retention; therefore temperature does not trigger the band in this matched experiment. Positive additional adiabatic softening quantifies thermal amplification, not thermally caused ASB. N32-to-n48 band geometry does not meet the 5% convergence threshold, so the localization remains a spatially unqualified candidate.",
+    "spatially_qualified_localization": false,
+    "thermal_softening_increment_positive": true,
+    "thermally_triggered_asb_qualified": false
+  },
+  "matched_pairs": {
+    "32": {
+      "adiabatic_band_like": true,
+      "bath_band_like": true,
+      "maximum_thermal_stress_increment_Pa": 61604849.88014746,
+      "temperature_contrast_ratio": 440.85938063630766,
+      "terminal_thermal_stress_increment_Pa": 61604849.88014746,
+      "thermal_softening_increment": 0.020310973596092657
+    },
+    "48": {
+      "adiabatic_band_like": true,
+      "bath_band_like": true,
+      "maximum_thermal_stress_increment_Pa": 58849275.78115606,
+      "temperature_contrast_ratio": 458.00876339148,
+      "terminal_thermal_stress_increment_Pa": 58849275.78115606,
+      "thermal_softening_increment": 0.019263401529026114
+    }
+  },
+  "n32_to_n48_relative_differences": {
+    "adiabatic": {
+      "band_geometry": {
+        "above_threshold_fraction": 0.02531645569620244,
+        "largest_component_fraction": 0.2948979591836735,
+        "sorted_component_span_fraction": [
+          0.5576923076923078,
+          0.02127659574468089
+        ]
+      },
+      "endpoint_power_maximum_to_mean": 0.07660009501850921,
+      "final_target_growth_fraction": 0.014219109898393499,
+      "maximum_stress_curve_difference_over_fine_peak": 0.008596998992767545,
+      "maximum_temperature_contrast_K": 0.0005521122657944894,
+      "peak_stress_Pa": 0.0012642602358976553,
+      "post_peak_softening_fraction": 0.04004738901820087,
+      "rms_stress_curve_difference_over_fine_peak": 0.004720126658711047
+    },
+    "strong_bath": {
+      "band_geometry": {
+        "above_threshold_fraction": 0.007142857142857143,
+        "largest_component_fraction": 0.10742187500000006,
+        "sorted_component_span_fraction": [
+          0.07142857142857136,
+          0.02127659574468089
+        ]
+      },
+      "endpoint_power_maximum_to_mean": 0.02443611943189734,
+      "final_target_growth_fraction": 0.012650071079600955,
+      "maximum_stress_curve_difference_over_fine_peak": 0.007844007141105237,
+      "maximum_temperature_contrast_K": 0.03832630367233014,
+      "peak_stress_Pa": 0.0011671018197374177,
+      "post_peak_softening_fraction": 0.03812866728918528,
+      "rms_stress_curve_difference_over_fine_peak": 0.004284463858738447
+    }
+  },
+  "schema": "v66-long-horizon-asb-v1",
+  "scope": "A matched 16% strain causal continuation from the qualified 8% fixed-interface states; it does not replace the frozen 8% result."
+}

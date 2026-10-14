@@ -813,3 +813,41 @@ experiment, result, limitation, and next branch.
   `src` and the repository root on `PYTHONPATH`. A preceding root-only command
   is excluded because it hid the separately packaged legacy module and failed
   collection before executing tests.
+
+## 2026-10-14T10:38:00Z — matched long-horizon localization discriminator
+
+- Goals: G01, G03, G04.
+- Prediction: extending the fixed-interface 1000 K/80,000/s matched pair from
+  8% to 16% strain will distinguish a thermally triggered band from mechanical
+  organization that merely receives thermal amplification. A band unique to
+  the adiabatic member would support the former; a connected band in both
+  members would reject it under this fixed hypothesis.
+- Experiment: provenance-fork the completed n32 and n48 adiabatic/strong-bath
+  checkpoints to exactly 1000 intervals without changing mechanics, the 0.60
+  micrometre interface width, source/sink state, load, timestep, or any
+  Arrhenius parameter. Measure endpoint connected components above twice mean
+  positive plastic power and compare complete stress histories and n32-to-n48
+  geometry. The production restart now permits only a larger target-step count
+  after proving all physical configuration fields identical.
+- Result: at n48, the adiabatic/bath endpoints reach 109.34/0.239 K maximum
+  temperature contrast, 16.317%/14.391% post-peak softening, and -27.910%/
+  -27.860% target change. Heat retention therefore adds 1.926 percentage
+  points of softening and 58.85 MPa terminal stress loss while changing target
+  recession by only 0.0505 percentage point. Both n48 members form connected
+  regions above twice mean power: the largest components occupy 10.63% and
+  11.11% of the domain and span 54.2%/97.9% and 58.3%/97.9% of its axes.
+  N32 and n48 stress histories differ by at most 0.860% and 0.784% of the fine
+  peak, but adiabatic largest-component fraction and minor span change 29.5%
+  and 55.8%; bath values change 10.7% and 7.14%.
+- Decision: temperature does not trigger the observed band under this fixed
+  model because the near-isothermal control forms it too. Classify the result
+  as a mechanically formed banded-localization candidate with thermal
+  amplification. Do not claim physically qualified ASB: band geometry fails
+  the declared 5% spatial criterion, and no material calibration is implied.
+  Dynamic prepared-boundary growth remains unsustained, whereas the previously
+  qualified retained-state unload/static sequence remains positive.
+- Next branch: preserve this common-horizon pair and, in a future authorized
+  allocation, extend the existing n64 matched checkpoints to the same 16%
+  horizon or develop a cheaper frozen-state geometry refinement. The deciding
+  observation is convergence of component area and transverse span, not a
+  larger scalar temperature contrast or another stress peak.

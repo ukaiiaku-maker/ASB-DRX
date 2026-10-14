@@ -2699,3 +2699,30 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   episode and no demonstrated spontaneous grain birth. The controlled run is
   continuing locally under source `4789cd2`; this is not a terminal physical
   classification.
+
+## V66 RX-physics and common-response campaign (2026-10-13/14)
+
+- The immutable common mechanics remain the Arrhenius EXP-floor formulation
+  with Peierls, Taylor, Hall--Petch, rate, and temperature dependence. Source
+  and sink alternatives are explicit transactions; no scalar double well or
+  strain-free grain insertion was introduced.
+- Inherited-subgrain absorption/maturation remains a viable initiation route,
+  but the tested production Groma branch did not form an endogenous
+  GND-bearing wall. Dynamic prepared-boundary growth is transient from
+  10,000--80,000/s. The retained 80,000/s state instead grows 3.368% through
+  unload and a 6 microsecond hold, and continues growing after mean stress is
+  reduced to -704 Pa.
+- A corrected fixed-physical-interface refinement at 8% strain converges the
+  stress curves and most spatial observables through n64. It confirms a
+  positive thermal contribution but no connected >2x-mean-power band at that
+  horizon. The complete canonical regression has 1098 passing tests.
+- A provenance-safe matched n32/n48 continuation reaches 16% strain. At n48,
+  adiabatic/bath temperature contrasts are 109.34/0.239 K, softening is
+  16.317%/14.391%, and terminal thermal stress loss is 58.85 MPa. Both members
+  contain a connected >2x-mean-power band, so heat amplifies rather than
+  triggers localization under this fixed model.
+- Strict ASB remains unqualified: n32-to-n48 largest-component fraction changes
+  29.5% adiabatically and 10.7% with the bath, and transverse span changes
+  55.8%/7.14%. The result is a mechanically formed banded-localization
+  candidate with thermal amplification, not a spatially converged or
+  material-validated ASB result. No heavy campaign solver remains active.
