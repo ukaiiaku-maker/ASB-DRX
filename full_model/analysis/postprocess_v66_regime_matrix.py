@@ -63,6 +63,9 @@ def main() -> None:
         "v66_regime_T800_r4e4", "v66_regime_T1000_r4e4",
         "v66_regime_T1200_r4e4", "v66_regime_T1000_r8e4",
     ]
+    slow = args.root / "v66_regime_T1000_r1e4"
+    if (slow / "result.json").exists():
+        names.insert(1, slow.name)
     control = args.root / "v66_regime_T1000_r8e4_strong_bath"
     if (control / "result.json").exists():
         names.append(control.name)

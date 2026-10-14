@@ -25,7 +25,7 @@ from full_model.analysis.run_v58_three_grain_production import (
     _load_checkpoint, _save_checkpoint,
 )
 from full_model.analysis.run_v66_coupled_rx_asb import (
-    _atomic_json, _physics, _record,
+    _atomic_json, _physics, _record, _source_provenance,
 )
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
@@ -71,8 +71,9 @@ def main():
         "maximum_strain_change_per_interval": args.maximum_strain_change,
         "controller": "bounded local elastic secant; complete work-ledgered interval",
     }
-    provenance = {"campaign": "V66", "source_commit": "8045f08",
-                  "scientific_scope": "near-zero-mean-stress discriminator"}
+    provenance = dict(
+        _source_provenance(),
+        scientific_scope="near-zero-mean-stress discriminator")
     history = []
     for step in range(1, args.steps+1):
         stress0 = _mean_shear(endpoint)
