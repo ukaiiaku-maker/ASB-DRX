@@ -67,6 +67,7 @@ def _source_provenance() -> dict:
 
 
 def _configuration(args) -> dict:
+    bath_rate = 0.0 if args.thermal_control == "adiabatic" else args.bath_rate
     return {
         "schema": "v66-coupled-rx-asb-configuration-v1",
         "n": args.n,
@@ -77,6 +78,9 @@ def _configuration(args) -> dict:
         "target_steps": args.steps,
         "front_maximum_substep_s": args.dt,
         "thermal_diffusivity_m2_s": .15/3.8e6,
+        "thermal_control": args.thermal_control,
+        "thermal_bath_rate_s": bath_rate,
+        "thermal_bath_temperature_K": args.temperature,
         "initial_state": "V66 inherited orientation-gradient matured owner",
         "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
         "source_mode": args.source_mode,
@@ -91,12 +95,14 @@ def _physics(args):
     spacing = args.length/args.n
     thickness = 2.0*2.48e-10
     systems = bcc_four_family_systems()
+    bath_rate = 0.0 if args.thermal_control == "adiabatic" else args.bath_rate
     wall = CommonWallParameters(
         spacing_m=spacing, elastic_iterations=2,
         mobile_correlation_diffusivity_m2_s=0.0,
         transport_scheme="upwind", maximum_fraction_per_step=.10,
         volumetric_heat_capacity_J_m3_K=3.8e6,
-        thermal_diffusivity_m2_s=.15/3.8e6, bath_rate_s=0.0)
+        thermal_diffusivity_m2_s=.15/3.8e6, bath_rate_s=bath_rate,
+        bath_temperature_K=args.temperature)
     kinetics = MultiGrainFrontKinetics(
         ActivatedProcess("V66 coupled matured HAGB", 1e10, 0.0, 1e10),
         PhysicalTransferLaw(.55, .08, .02), .35*EV_J, 1e9,
@@ -292,6 +298,13 @@ def main():
     parser.add_argument("--dt", type=float, default=2e-9)
     parser.add_argument("--steps", type=int, default=900)
     parser.add_argument("--checkpoint-every", type=int, default=100)
+    parser.add_argument(
+        "--thermal-control", choices=("adiabatic", "strong_bath"),
+        default="adiabatic",
+        help="Strong-bath is the matched near-isothermal causal control.")
+    parser.add_argument(
+        "--bath-rate", type=float, default=5e11,
+        help="Bath relaxation rate used only by --thermal-control strong_bath.")
     parser.add_argument(
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")

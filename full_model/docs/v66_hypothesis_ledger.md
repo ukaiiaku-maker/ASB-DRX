@@ -680,3 +680,33 @@ experiment, result, limitation, and next branch.
   subgrain maturation as the supported RX initiation route and execute a small
   fixed-law common-driver temperature/rate matrix to discriminate dynamic
   growth/recession, static viability, and thermal localization/ASB competition.
+
+## 2026-10-14T04:50:00Z — fixed-law common-state regime matrix
+
+- Goals: G01, G02, G03, G04.
+- Prediction: under one unchanged Arrhenius Peierls/Taylor/Hall--Petch law,
+  hotter conditions should accelerate early inherited-subgrain motion while
+  increasing rate should shorten the available migration time per strain and
+  strengthen thermomechanical localization. Sustained DRX and causal ASB are
+  outcomes to test, not imposed classifications.
+- Experiment: from the identical matured V66 owner, run 500 complete common
+  intervals at 800, 1000, and 1200 K at 40,000/s and at 1000 K/80,000/s. Keep
+  source and sink transactions disabled so only the already-qualified common
+  mechanics, front, defect, and heat channels differ through fixed-law state
+  dependence. Record all 500 physical intervals and complete-energy ledgers.
+- Result: all cases grow the target initially and reverse near 2.7--3.0%
+  strain. Peak early growth rises from `2.370e-5` at 800 K to `7.440e-5` at
+  1200 K, but final target changes at 4% strain are -0.0278%, -0.0697%, and
+  -0.1251%, respectively. The 80,000/s case reaches 8% strain, peaks at
+  2.5558 GPa and 5.376% strain, softens by 1.661%, develops 30.81 K maximum
+  temperature contrast, and ends at -1.451% target change. Mechanical
+  first-law and front closure maxima remain below 0.278% and `1.36e-6`.
+- Decision: the fixed law generates a real temperature/rate response family,
+  but none of these dynamic exposures sustains existing-boundary DRX. The
+  high-rate peak is an ASB candidate only; a matched strong-bath control is
+  required to attribute its softening to thermal feedback. Static growth and
+  inherited-subgrain maturation remain supported by their separate common-law
+  protocols. No material calibration or spontaneous grain birth is claimed.
+- Next branch: run only the 1000 K/80,000/s matched strong-bath control, then
+  classify the paired stress, heat, localization, and target histories before
+  choosing any longer or refined calculation.

@@ -35,6 +35,15 @@ Updated: 2026-10-13 (America/Los_Angeles)
   H3 endogenous initiation is therefore negative at the tested conditions;
   inherited-subgrain H1/H2 remains the supported route for the next common
   dynamic/static/ASB regime calculations.
+- A same-source, fixed-law common-state matrix now spans 800, 1000, and 1200 K
+  at 40,000/s plus 1000 K at 80,000/s. Every inherited target grows briefly
+  and then recedes; the maximum early growth rises from 0.00237% to 0.00744%
+  with temperature, but none sustains growth through 4% strain. At 80,000/s
+  the trajectory reaches 8% strain, 30.81 K temperature contrast, a stress
+  peak at 5.376% strain, 1.661% subsequent softening, and 1.451% target
+  recession. Complete mechanical and front-energy residuals remain below
+  0.278% and `1.36e-6`. A matched ledgered strong-bath control is next; strict
+  ASB remains unqualified until that causal comparison is complete.
 
 ## V64 production accuracy and controlled coupled evolution
 
