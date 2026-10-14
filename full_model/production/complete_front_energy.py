@@ -46,12 +46,15 @@ class CompleteFrontEnergy:
     phase_gradient_J: float
     thermal_internal_J: float
     numerical_constraint_J: float = 0.0
+    structural_boundary_J: float = 0.0
+    structural_junction_J: float = 0.0
 
     @property
     def helmholtz_J(self):
         return (self.defect_storage_J+self.signed_junction_storage_J
                 +self.boundary_excess_J+self.recoverable_elastic_J
-                +self.phase_local_J+self.phase_gradient_J)
+                +self.phase_local_J+self.phase_gradient_J
+                +self.structural_boundary_J+self.structural_junction_J)
 
     @property
     def internal_J(self):

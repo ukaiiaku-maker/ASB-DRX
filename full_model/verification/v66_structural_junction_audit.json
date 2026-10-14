@@ -1,0 +1,60 @@
+{
+  "cases": {
+    "coupled_four_percent_shear": {
+      "conservative_boundary_energy_change_J_per_m": 1.0989805256720177e-10,
+      "fundamental_cycle_residual_deg": [
+        -0.004489656626124693
+      ],
+      "instant_projection_boundary_energy_change_J_per_m": -5.006813993756838e-10,
+      "instant_projection_edge_content_change": [
+        -0.42549077367607424,
+        0.4254907736749374,
+        -0.4254907736757332
+      ],
+      "instant_projection_extrinsic_reservoir_energy_J_per_m": 1.914708481540117e-09,
+      "instant_projection_total_change_J_per_m": 1.4140270821644332e-09,
+      "junction_disclination_energy_J_per_m_by_cutoff": {
+        "R1e-06_m": 1.2955829923449454e-11,
+        "R1e-07_m": 1.2955829923449454e-13,
+        "R5e-07_m": 3.2389574808623634e-12
+      },
+      "projection_content_balance_max_abs": 0.0
+    },
+    "prepared_static_handoff": {
+      "conservative_boundary_energy_change_J_per_m": -1.1088815916756006e-11,
+      "fundamental_cycle_residual_deg": [
+        0.00020467124192750827
+      ],
+      "instant_projection_boundary_energy_change_J_per_m": 2.2831648538738838e-11,
+      "instant_projection_edge_content_change": [
+        0.019398619864091415,
+        -0.01939861986352298,
+        0.01939861986352298
+      ],
+      "instant_projection_extrinsic_reservoir_energy_J_per_m": 8.729378938670607e-11,
+      "instant_projection_total_change_J_per_m": 1.1012543792544491e-10,
+      "junction_disclination_energy_J_per_m_by_cutoff": {
+        "R1e-06_m": 2.6924809173654774e-14,
+        "R1e-07_m": 2.6924809173654775e-16,
+        "R5e-07_m": 6.7312022934136936e-15
+      },
+      "projection_content_balance_max_abs": 0.0
+    }
+  },
+  "created_utc": "2026-10-14T01:32:23.943694+00:00",
+  "decision": {
+    "conservative_cycle_reservoir_required": true,
+    "fixed_labels_rejected": true,
+    "production_status": "junction energy is evaluable in the complete functional; junction relaxation kinetics remain disabled pending a resolved downhill complete-energy event",
+    "silent_projection_rejected": true
+  },
+  "model": {
+    "cutoff_interpretation": "declared screening radius; sensitivity, not calibration",
+    "cycle_measure": "fundamental scalar common-axis Frank closure",
+    "poisson_ratio": 0.34,
+    "shear_modulus_Pa": 70000000000.0,
+    "wedge_energy": "mu*Omega^2*R^2/[16*pi*(1-nu)]"
+  },
+  "schema": "v66-structural-junction-audit-v1",
+  "source_commit": "2be1347+structural-development"
+}

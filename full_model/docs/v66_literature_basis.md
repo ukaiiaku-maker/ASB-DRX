@@ -91,6 +91,22 @@ a grid-scale diffusion coefficient would not test the cited mechanism.
 
 ## Current decision
 
+### Triple-junction rotational incompatibility
+
+Upadhyay, Capolungo, Taupin, and Fressengeas, *International Journal of Solids
+and Structures* 48 (2011), 3176--3193,
+doi:10.1016/j.ijsolstr.2011.07.009, explicitly treat rotational
+incompatibility, internal stress, and excess energy at grain-boundary triple
+junctions with disclination mechanics. This supports retaining a Frank-closure
+defect as an energetic state rather than silently projecting independently
+conserved interfaces back onto fixed grain labels. For the present scalar
+common-axis audit, V66 uses the declared isotropic wedge upper bound
+`E_line = mu Omega^2 R^2/[16 pi (1-nu)]`, where `R` is a reported screening
+cutoff. This is a sensitivity model, not a material calibration or a general
+3-D generalized-disclination closure.
+
+### Path decision
+
 H1/H2 (compatible absorption plus selective inherited-subgrain growth) remain
 the primary RX path.  H3 is a separately testable organization path, not a
 device for forcing nucleation.  Boundary/TJ-only and matched random sources

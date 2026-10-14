@@ -1,0 +1,57 @@
+{
+  "cases": {
+    "conserved_structural_content": {
+      "L_theta_relative_change": 0.0,
+      "accepted_events": 200,
+      "final_interface_length_m": 7.386961621336542e-06,
+      "final_misorientation_deg": 2.4993950163393026,
+      "final_structural_boundary_J": 8.522692317031239e-16,
+      "generated_heat_J": 2.3113048861552496e-18,
+      "initial_interface_length_m": 7.385182983566301e-06,
+      "initial_misorientation_deg": 2.4999969673523927,
+      "maximum_relative_energy_closure": 7.687511718315735e-08,
+      "rotation_complete_energy_residual_J": 0.0,
+      "target_growth_fraction": 0.00042690947614837567,
+      "target_growth_monotone": true
+    },
+    "fixed_label_no_structural_energy": {
+      "L_theta_relative_change": 0.000259653132831418,
+      "accepted_events": 200,
+      "final_interface_length_m": 7.387101269718791e-06,
+      "final_misorientation_deg": 2.5,
+      "final_structural_boundary_J": 0.0,
+      "generated_heat_J": 2.571204081459507e-18,
+      "initial_interface_length_m": 7.385183683638799e-06,
+      "initial_misorientation_deg": 2.5,
+      "maximum_relative_energy_closure": 8.535003674235906e-08,
+      "rotation_complete_energy_residual_J": 0.0,
+      "target_growth_fraction": 0.0004602661240867425,
+      "target_growth_monotone": true
+    }
+  },
+  "configuration": {
+    "dt_s": 2e-08,
+    "duration_s": 4e-06,
+    "generic_phase_boundary_energy_disabled": true,
+    "grid": [
+      24,
+      24
+    ],
+    "high_density_m2_each": 2242357871713654.5,
+    "initial_misorientation_deg": 2.5,
+    "length_m": 4.8e-06,
+    "low_density_m2_each": 10000000000000.0,
+    "steps": 200,
+    "temperature_K": 1000.0
+  },
+  "created_utc": "2026-10-14T01:28:26.444952+00:00",
+  "decision": {
+    "conservative_rotation_exercised": true,
+    "double_counted_generic_boundary_energy": false,
+    "physical_grain_count_change": 0,
+    "scope": "exact common-axis two-owner conservative limit; junction-cycle redistribution/reaction remains required for polycrystal promotion",
+    "structural_energy_in_complete_front_functional": true
+  },
+  "schema": "v66-structural-bicrystal-front-v1",
+  "source_commit": "2be1347+structural-development"
+}

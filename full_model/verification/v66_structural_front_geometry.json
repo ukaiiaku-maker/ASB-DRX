@@ -1,0 +1,183 @@
+{
+  "created_utc": "2026-10-14T01:19:24.221402+00:00",
+  "decision": {
+    "conservative_motion_generates_rotation": true,
+    "differential_edge_motion_generates_cycle_residual": true,
+    "fixed_owner_labels_conserve_structural_content": false,
+    "production_implication": "A front cannot simultaneously keep every owner angle fixed, conserve each edge's structural content, and preserve Frank compatibility after differential interface motion. Production needs a structural-content state plus conservative redistribution/reaction at network cycles."
+  },
+  "geometry": {
+    "edge_order": [
+      [
+        10,
+        20
+      ],
+      [
+        10,
+        30
+      ],
+      [
+        20,
+        30
+      ]
+    ],
+    "grid": [
+      16,
+      16
+    ],
+    "interface_measure": "symmetric diffuse pair-contour length",
+    "spacing_m": 3e-07
+  },
+  "low_angle_structural_test": {
+    "coupled_four_percent_shear": {
+      "conservative_boundary_energy_change_J_per_m": 1.0989805256720177e-10,
+      "conservative_new_misorientation_deg": [
+        2.5030617190188464,
+        4.997377669075279,
+        2.498805606682557
+      ],
+      "conservative_old_misorientation_deg": [
+        2.5,
+        5.0,
+        2.5
+      ],
+      "edge_compatibility_residual_deg": [
+        -0.0015281634432812955,
+        0.0015255606809733483,
+        -0.0014359325018700492
+      ],
+      "fitted_owner_orientations_deg": [
+        0.0,
+        2.501533555575565,
+        4.998903229756253
+      ],
+      "fixed_label_content_change": [
+        -0.8524828936559743,
+        0.7313885497358115,
+        0.3539186807529404
+      ],
+      "fixed_label_content_relative_change": [
+        -0.0012231895824153345,
+        0.0005247413940612037,
+        0.00047798568814194094
+      ],
+      "maximum_cycle_residual_deg": 0.0015281634432812955,
+      "new_lengths_m": [
+        3.956349540897245e-06,
+        3.963099477214933e-06,
+        4.21046861838204e-06
+      ],
+      "old_lengths_m": [
+        3.961194833151073e-06,
+        3.961020965551564e-06,
+        4.2084570361496004e-06
+      ],
+      "weighted_rms_compatibility_residual_deg": 0.0014959251638281038
+    },
+    "initial_owner_orientations_deg": [
+      0.0,
+      2.5,
+      5.0
+    ],
+    "prepared_static_handoff": {
+      "conservative_boundary_energy_change_J_per_m": -1.1088815916756006e-11,
+      "conservative_new_misorientation_deg": [
+        2.4999627789253602,
+        5.000145027795977,
+        2.4999775776286888
+      ],
+      "conservative_old_misorientation_deg": [
+        2.5,
+        5.0,
+        2.5
+      ],
+      "edge_compatibility_residual_deg": [
+        6.958553041824717e-05,
+        -6.958858484763518e-05,
+        6.549712666162592e-05
+      ],
+      "fitted_owner_orientations_deg": [
+        0.0,
+        2.5000323644557785,
+        5.000075439211129
+      ],
+      "fixed_label_content_change": [
+        0.010376258879205125,
+        -0.040428169216966126,
+        0.006640948690005644
+      ],
+      "fixed_label_content_relative_change": [
+        1.4888651524469605e-05,
+        -2.900471789741083e-05,
+        8.96902896719017e-06
+      ],
+      "maximum_cycle_residual_deg": 6.958858484763518e-05,
+      "new_lengths_m": [
+        3.961194833151073e-06,
+        3.961020965551564e-06,
+        4.2084570361496004e-06
+      ],
+      "old_lengths_m": [
+        3.961135857179654e-06,
+        3.961135857179654e-06,
+        4.208419290715075e-06
+      ],
+      "weighted_rms_compatibility_residual_deg": 6.819594320484513e-05
+    }
+  },
+  "mature_owner_geometry_only_diagnostic": {
+    "coupled_four_percent_shear": {
+      "conservative_boundary_energy_change_J_per_m": -3.778394793196429e-10,
+      "conservative_new_misorientation_deg": [
+        15.018370314113078,
+        29.984266014451673,
+        14.992833640095341
+      ],
+      "conservative_old_misorientation_deg": [
+        14.999999999999998,
+        29.999999999999996,
+        14.999999999999998
+      ],
+      "edge_compatibility_residual_deg": [
+        -0.009168980659685388,
+        0.00915336408584486,
+        -0.008615595011213933
+      ],
+      "fitted_owner_orientations_deg": [
+        0.0,
+        15.009201333453392,
+        29.99341937853752
+      ],
+      "fixed_label_content_change": [
+        -5.114897361935618,
+        4.388331298416233,
+        2.1235120845176425
+      ],
+      "fixed_label_content_relative_change": [
+        -0.0012231895824152802,
+        0.0005247413940613669,
+        0.00047798568814194094
+      ],
+      "maximum_cycle_residual_deg": 0.009168980659685388,
+      "new_lengths_m": [
+        3.956349540897245e-06,
+        3.963099477214933e-06,
+        4.21046861838204e-06
+      ],
+      "old_lengths_m": [
+        3.961194833151073e-06,
+        3.961020965551564e-06,
+        4.2084570361496004e-06
+      ],
+      "weighted_rms_compatibility_residual_deg": 0.008975550982967298
+    },
+    "initial_owner_orientations_deg": [
+      0.0,
+      15.0,
+      30.0
+    ],
+    "scope": "geometry/content conservation diagnostic only; scalar low-angle Read-Shockley structure is not asserted for the 30 degree edge"
+  },
+  "schema": "v66-structural-front-geometry-audit-v1",
+  "source_commit": "2be1347"
+}

@@ -19,6 +19,11 @@ from .common_tensorial_wall import wall_total_free_energy_density_J_m3
 from .complete_front_energy import CompleteFrontEnergy
 from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstrain
 from .tensorial_nye import spectral_derivatives
+from .structural_interface_network import (
+    JunctionDisclinationParameters, StructuralBoundaryParameters,
+    interface_lengths_m, network_boundary_energy_J_per_m,
+    network_junction_disclination_energy_J_per_m,
+)
 from .multigrain_common_state import (
     LINE_FIELDS, JointTransferResult, MultiGrainCommonState,
     multigrain_state_digest, reconstruct_multigrain_common,
@@ -173,6 +178,8 @@ def evaluate_multigrain_mechanical_interval(
         candidate.boundary_excess_J-before.boundary_excess_J,
         candidate.phase_local_J-before.phase_local_J,
         candidate.phase_gradient_J-before.phase_gradient_J,
+        candidate.structural_boundary_J-before.structural_boundary_J,
+        candidate.structural_junction_J-before.structural_junction_J,
         candidate.thermal_internal_J-before.thermal_internal_J,
         candidate.numerical_constraint_J-before.numerical_constraint_J,
     )
@@ -225,7 +232,9 @@ def evaluate_complete_multigrain_energy(
         mean_strain=None, topologies=(), systems=None,
         phase_barrier_J_m3=0.0, phase_gradient_J_m=0.0,
         boundary_line_energy_J_m=None, boundary_junction_energy_J_m=None,
-        reference_temperature_K=0.0):
+        reference_temperature_K=0.0, structural_interfaces=(),
+        structural_burgers_m=None, structural_parameters=None,
+        junction_disclination_parameters=None):
     """Evaluate the complete shared functional on one multi-owner state."""
     state.validate()
     spacing = float(spacing_m)
@@ -306,9 +315,32 @@ def evaluate_complete_multigrain_energy(
         wall_parameters.volumetric_heat_capacity_J_m3_K
         *np.sum(mixture.temperature_K-float(reference_temperature_K),
                 dtype=np.longdouble)*volume)
+    structural_J = 0.0
+    structural_junction_J = 0.0
+    if structural_interfaces:
+        if structural_burgers_m is None:
+            raise ValueError(
+                "structural interface energy requires a Burgers magnitude")
+        parameters = (StructuralBoundaryParameters()
+                      if structural_parameters is None
+                      else structural_parameters)
+        lengths = interface_lengths_m(
+            state.supports, structural_interfaces, state.grain_ids, spacing)
+        structural_J = (network_boundary_energy_J_per_m(
+            structural_interfaces, lengths, float(structural_burgers_m),
+            parameters)*thickness)
+        if junction_disclination_parameters is not None:
+            junction_parameters = junction_disclination_parameters
+            if not isinstance(junction_parameters, JunctionDisclinationParameters):
+                raise TypeError("invalid junction disclination parameters")
+            structural_junction_J = (
+                network_junction_disclination_energy_J_per_m(
+                    state.grain_ids, structural_interfaces, lengths,
+                    float(structural_burgers_m), junction_parameters)*thickness)
     return CompleteFrontEnergy(
         total_defect_J-junction_J, junction_J, boundary_J, elastic_J,
-        phase_local_J, phase_gradient_J, thermal_J, 0.0)
+        phase_local_J, phase_gradient_J, thermal_J, 0.0, structural_J,
+        structural_junction_J)
 
 
 def evaluate_joint_multigrain_transaction(

@@ -35,7 +35,7 @@
     "G02": "complete_energy_handoff_recedes_dynamically_then_reactivates_monotonically_during_unload_and_zero_rate_hold",
     "G03": "common_state_thermal_localization_and_stress_peak_observed_but_strict_ASB_persistence_controls_and_refinement_not_qualified",
     "G04": "fixed_law_reduced_temperature_rate_switch_demonstrated_not_material_validated",
-    "G05": "inherited_subgrain_maturation_supported_energy_complete_source_location_changes_spatial_organization_but_new_boundary_formation_not_established",
+    "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "work_ledgered_unload_fixed_strain_growth_and_short_near_zero_mean_stress_static_growth_supported"
   },
   "active_hypotheses": {
@@ -51,12 +51,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "how_to_carry_explicit_Frank_compatible_structural_boundary_content_with_migrating_owner_geometry_so_misorientation_changes_by_conservation_or_reaction_not_fixed_owner_labels",
-    "next_executable_experiment": "implement_a_geometry_aware_structural_content_ledger_with_L_theta_conservation_for_no_reaction_motion_and_a_separate_Arrhenius_reaction_then_exercise_it_on_the_common_front",
-    "source_identity": "6b104d5",
-    "expected_discriminatory_observation": "conservative_boundary_motion_preserves_integrated_structural_Burgers_content_and_changes_theta_with_boundary_measure_while_reaction_changes_content_with_separate_energy_and_heat_ledgers",
+    "physical_uncertainty": "whether_an_explicit_polycrystal_Frank_cycle_reservoir_can_relax_by_a_bounded_energy_complete_Arrhenius_junction_reaction_on_the_retained_common_trajectory",
+    "next_executable_experiment": "implement_cycle_reaction_kinetics_with_exact_content_heat_and_rollback_ledgers_then_exercise_on_the_retained_three_owner_front",
+    "source_identity": "2be1347+structural-development",
+    "expected_discriminatory_observation": "a_junction_reaction_is_accepted_only_when_complete_boundary_plus_disclination_energy_falls_and_its_cycle_residual_decays_without_silent_owner_rotation_or_line_loss",
     "resource_need": "lightweight_local",
-    "result_status": "source_location_ablation_complete_macroscopically_weak_geometry_aware_structural_boundary_running"
+    "result_status": "bicrystal_Ltheta_conservation_qualified_polycrystal_cycle_reservoir_energetic_implemented_reaction_kinetics_next"
   },
   "completion_semantics": {
     "execution_complete": false,

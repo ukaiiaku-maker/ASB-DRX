@@ -316,3 +316,36 @@ experiment, result, limitation, and next branch.
   boundary content and Frank compatibility with the migrating owner geometry,
   then test whether growth changes misorientation by conservation rather than
   by a prescribed owner angle.
+
+## 2026-10-14T01:33:00Z — geometry-aware structural content and cycle audit
+
+- Goals: G01, G02, G05, G06.
+- Prediction: conservative motion of an isolated low-angle boundary must keep
+  its signed structural content fixed and change misorientation through
+  `L theta = b C`; in a polycrystal, differential motion of three interfaces
+  will generally create a nonzero Frank-cycle closure defect unless a separate
+  junction reaction occurs.
+- Experiment: add structural interface content and Read--Shockley energy to the
+  complete multigrain functional. Evolve a two-owner 2.5 degree bicrystal for
+  4 microseconds with generic phase boundary energy disabled, and compare it
+  with a fixed-label/no-structural-energy control. Audit the actual three-owner
+  prepared and 4%-shear geometries with a fundamental-cycle closure and a
+  declared wedge-disclination energy sensitivity.
+- Result: all 200 bicrystal front events were accepted, target growth was
+  monotone, `L theta` closed exactly, and misorientation decreased from
+  2.5000 to 2.4994 degrees as the growing target perimeter increased. Maximum
+  complete-energy residual was 7.69e-8. The fixed-label control instead
+  created 2.60e-4 relative structural content. The actual three-owner geometry
+  produced Frank closure defects of 0.000205 degrees after the static handoff
+  and -0.00449 degrees after 4% shear. At a 0.5 micrometre screening radius,
+  their declared disclination energies are 6.73e-15 and 3.24e-12 J/m.
+- Decision: the exact bicrystal conservative limit is promoted. Fixed labels
+  and silent least-squares projection are rejected. The polycrystal must retain
+  a junction/cycle reservoir in the complete energy until an independently
+  energy-qualified Arrhenius junction reaction relaxes it.
+- Limitation: the current network is scalar and common-axis; the isotropic
+  wedge energy is a cutoff sensitivity, not calibration or general 3-D
+  Frank--Bilby mechanics. No spontaneous boundary or owner was created.
+- Next branch: implement a bounded Arrhenius cycle-relaxation event with exact
+  reservoir, heat, and rollback ledgers; then determine whether it is active
+  and downhill on the retained common trajectory.
