@@ -81,6 +81,7 @@ def _configuration(args) -> dict:
         "thermal_control": args.thermal_control,
         "thermal_bath_rate_s": bath_rate,
         "thermal_bath_temperature_K": args.temperature,
+        "maximum_mechanical_subdivisions": args.maximum_mechanical_subdivisions,
         "initial_state": "V66 inherited orientation-gradient matured owner",
         "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
         "source_mode": args.source_mode,
@@ -303,8 +304,11 @@ def main():
         default="adiabatic",
         help="Strong-bath is the matched near-isothermal causal control.")
     parser.add_argument(
-        "--bath-rate", type=float, default=5e11,
+        "--bath-rate", type=float, default=5e9,
         help="Bath relaxation rate used only by --thermal-control strong_bath.")
+    parser.add_argument(
+        "--maximum-mechanical-subdivisions", type=int, default=10,
+        help="Numerical rollback depth; does not relax the energy tolerance.")
     parser.add_argument(
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")
@@ -320,6 +324,9 @@ def main():
     configuration = _configuration(args)
     physics = _physics(args)
     context = physics[-1]
+    context = replace(
+        context,
+        maximum_mechanical_subdivisions=args.maximum_mechanical_subdivisions)
     if args.source_mode != "disabled":
         context = replace(
             context,
