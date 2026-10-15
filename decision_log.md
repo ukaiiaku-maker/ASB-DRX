@@ -407,3 +407,31 @@ qualified finite width, orientation jump, persistence result, or convergence
 evidence. Do not spend HPC resources repeating slow/intermediate cases until a
 physical saturation mechanism and higher-order line-orientation state replace
 the invalid finite-amplitude closure.
+
+## ADR-0031: Reject explicit-interface capacity as the sustained DRX control
+
+Status: production-integrated negative at clean commit `9bc7f10`, 2026-10-15.
+
+Connect the exact laboratory-frame `boundary_burgers_m1` reservoir to the
+common-axis structural edge by local Frank projection. Debit explicit
+positive/negative interface line inventory, leave tangential content in its
+original reservoir, derive owner-mean rotation without erasing intragranular
+orientation fluctuations, and price Read--Shockley, cycle-disclination,
+elastic, defect, and thermal energy atomically. Preserve supports, owner labels,
+the Arrhenius EXP-floor Peierls--Taylor--Hall--Petch mechanics, and full heat and
+Burgers ledgers.
+
+Fifty retained post-reversal intervals accept and close, but change the target
+growth-minus-shrink directional bias from 0.891885 to 0.900213 MPa and do not
+reverse the 20--30 selection. The complete-energy cycle redistribution is
+rejected. In the clean 1,000 s^-1 production trajectory, 499 active absorption
+events absorb 5.18582e-11 m represented line and generate 7.77816e-20 J heat;
+growth peaks at 0.202037% at 3.64% strain and reverses to 0.198602% at 4%.
+Therefore explicit-interface absorption is a valid, conservative but
+capacity-limited reaction, not the missing sustained-DRX mechanism.
+
+A separate capacity audit finds 4.71e4--8.02e5 more projected content in the
+near-boundary signed lattice field than in the explicit interface reservoir.
+Advance to a Mura-consistent lattice-to-boundary flux that updates plastic
+distortion and Nye from one flux, jointly limits incident-edge capacity, and
+retains incompatible Burgers content. Do not promote a scalar density sink.

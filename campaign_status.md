@@ -2779,3 +2779,26 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   network evolution enabled. Qualification of the saved n64 ASB trajectory is
   retained as a secondary task. This standing update launches no solver and
   does not extend the closed V66 allocation.
+
+## V67 signed-reservoir structural bridge (2026-10-15)
+
+- The explicit moving-front Burgers reservoir is now connected to conserved
+  common-axis structural edge content by a local Frank projection. Tangential
+  content remains explicit; line, signed content, vector Burgers, complete
+  energy, heat, owner labels, and supports are ledgered atomically.
+- Production structural synchronization preserves the laboratory-frame
+  reference and every intragranular orientation fluctuation. The immutable
+  Arrhenius EXP-floor Peierls--Taylor--Hall--Petch mechanics is unchanged.
+- Fifty post-reversal stationary intervals accept with hard balances closed,
+  but the edge-20--30 target growth-minus-shrink bias changes from 0.891885 to
+  0.900213 MPa. The complete-energy cycle redistribution is rejected.
+- A clean-source (`9bc7f10`) 1,000 s^-1 production trajectory completes 500
+  intervals. Target growth peaks at 0.202037% at 3.64% strain and reverses to
+  0.198602% at 4%; 499 absorption events consume 5.18582e-11 m represented
+  line and generate 7.77816e-20 J heat. Explicit-interface absorption is
+  physically valid but insufficient for sustained dynamic DRX.
+- The near-boundary signed lattice field has 4.71e4--8.02e5 more projected
+  common-axis capacity than the explicit interface reservoir. This selects a
+  Mura-consistent lattice-to-boundary flux as the next hypothesis; a scalar
+  density sink is not authorized because it would desynchronize beta-p/Nye.
+- The canonical regression passes 1,111 tests in 365.13 seconds.

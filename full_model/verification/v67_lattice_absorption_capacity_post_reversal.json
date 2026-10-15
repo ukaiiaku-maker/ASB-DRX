@@ -1,0 +1,79 @@
+{
+  "applied_shear_strain": 0.07999999999999809,
+  "capture_band": "4 eta_a eta_b; symmetric diffuse-interface capacity",
+  "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_material_continuity_interface_sink_r1e3_screen/checkpoint_latest.npz",
+  "checkpoint_provenance": {
+    "campaign": "V66",
+    "scientific_scope": "inherited-subgrain coupled exposure",
+    "source_commit": "7c284cdb8a1a507bb725f98ced29cf2242895e3b",
+    "source_dirty": false
+  },
+  "checkpoint_step": 1000,
+  "created_utc": "2026-10-15T17:14:02.724400+00:00",
+  "decision": {
+    "interface_reservoir_capacity_is_rate_limiting": true,
+    "next_hypothesis": "energy-complete selective lattice-to-structural absorption with joint owner capacity and explicit incompatible residual",
+    "production_promotion": false,
+    "reason": "This audit establishes accessible signed capacity only. A production reaction must jointly debit positive/negative owner inventories, conserve the full Burgers vector, retain tangential content, and pass complete work/heat accounting."
+  },
+  "interfaces": [
+    {
+      "absolute_lattice_over_explicit_ratio": 801633.8074047805,
+      "explicit_interface_signed_capacity": 0.00047998363758741647,
+      "interface": "edge-10-20",
+      "lattice_absolute_common_axis_capacity": 384.771110891197,
+      "lattice_signed_common_axis_content": 350.8315150800396,
+      "owner_contributions": [
+        {
+          "absolute_common_axis_capacity": 382.33654107336355,
+          "owner_id": 10,
+          "signed_common_axis_content": 352.6802696534518
+        },
+        {
+          "absolute_common_axis_capacity": 2.4345698178334443,
+          "owner_id": 20,
+          "signed_common_axis_content": -1.8487545734121908
+        }
+      ]
+    },
+    {
+      "absolute_lattice_over_explicit_ratio": 47089.2753161374,
+      "explicit_interface_signed_capacity": 0.026498990373027147,
+      "interface": "edge-10-30",
+      "lattice_absolute_common_axis_capacity": 1247.8182532751498,
+      "lattice_signed_common_axis_content": -564.8585753233871,
+      "owner_contributions": [
+        {
+          "absolute_common_axis_capacity": 368.2076488188669,
+          "owner_id": 10,
+          "signed_common_axis_content": 307.9904946415245
+        },
+        {
+          "absolute_common_axis_capacity": 879.6106044562828,
+          "owner_id": 30,
+          "signed_common_axis_content": -872.8490699649116
+        }
+      ]
+    },
+    {
+      "absolute_lattice_over_explicit_ratio": 407743.5901983943,
+      "explicit_interface_signed_capacity": 0.002174541182746219,
+      "interface": "edge-20-30",
+      "lattice_absolute_common_axis_capacity": 886.655228887206,
+      "lattice_signed_common_axis_content": -731.9965926500855,
+      "owner_contributions": [
+        {
+          "absolute_common_axis_capacity": 4.444615427690976,
+          "owner_id": 20,
+          "signed_common_axis_content": 4.351368994030381
+        },
+        {
+          "absolute_common_axis_capacity": 882.210613459515,
+          "owner_id": 30,
+          "signed_common_axis_content": -736.3479616441159
+        }
+      ]
+    }
+  ],
+  "schema": "v67-lattice-versus-interface-absorption-capacity-v1"
+}
