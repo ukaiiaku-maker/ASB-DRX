@@ -307,7 +307,8 @@ def _summarize(history, endpoint, initial_volume, preparation, configuration):
         },
         "decision": {
             "same_common_state_carries_drx_and_asb_channels": True,
-            "sustained_target_growth": bool(target[-1] > 0.0),
+            "sustained_target_growth": bool(
+                target[-1] > 0.0 and np.all(np.diff(target) >= -1e-12)),
             "stress_peak_observed": bool(peak < len(history)-1),
             "thermal_localization_observed": bool(np.max(temperatures) > 1.0),
             "strict_asb_qualified": False,

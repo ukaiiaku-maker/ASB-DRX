@@ -1,0 +1,33 @@
+{
+  "cases": {
+    "r1000": {
+      "final_growth_fraction": 0.0008793110984448957,
+      "final_strain": 0.07999999999999809,
+      "negative_growth_increments": 517,
+      "peak_growth_fraction": 0.0022935040778240302,
+      "peak_step": 481,
+      "peak_strain": 0.03847999999999978,
+      "physical_time_s": 8e-05,
+      "rate_s": 1000.0,
+      "result_sha256": "12c98d19c6bc779d3266fbc5c3866bfb7471c69afabbb324c84a3efad80633f2"
+    },
+    "r40000": {
+      "final_growth_fraction": 0.00011067951411572241,
+      "final_strain": 0.07199999999999841,
+      "negative_growth_increments": 0,
+      "peak_growth_fraction": 0.00011067951411572241,
+      "peak_step": 900,
+      "peak_strain": 0.07199999999999841,
+      "physical_time_s": 1.8000000000000001e-06,
+      "rate_s": 40000.0,
+      "result_sha256": "4ca775759bef1bfdb8a19aefe885ff4191457a2ab1324583d28ca3c6b1ed9789"
+    }
+  },
+  "decision": {
+    "lower_rate_early_growth_amplified": true,
+    "lower_rate_sustained_growth": false,
+    "macroscopic_drx_qualified": false,
+    "reversal_cause_scope": "Additional physical exposure increases early migration, but evolving interface/neighbor competition reverses the target near 3.8% strain; mobility alone is rejected as sufficient."
+  },
+  "schema": "v67-rate-exposure-comparison-v1"
+}
