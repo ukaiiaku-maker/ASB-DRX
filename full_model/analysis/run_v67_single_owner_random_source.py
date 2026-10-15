@@ -104,13 +104,15 @@ def main():
         default="random_bulk")
     parser.add_argument("--source-site-density-m2", type=float, default=1e12)
     parser.add_argument(
-        "--initial-state", choices=("retained_owner", "uniform_single_crystal"),
+        "--initial-state", choices=(
+            "retained_owner", "uniform_single_crystal",
+            "continued_single_crystal"),
         default="retained_owner")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
-    state, _, step, load, initial_volume, configuration, provenance = (
+    state, loaded_runtime, step, load, initial_volume, configuration, provenance = (
         _load_checkpoint(args.checkpoint))
     try:
         owner_index = state.grain_ids.index(args.owner_id)
@@ -118,7 +120,7 @@ def main():
         raise ValueError("requested material owner is absent") from error
     retained_owner = state.owners[owner_index]
     grid = retained_owner.temperature_K.shape
-    if args.initial_state == "retained_owner":
+    if args.initial_state in {"retained_owner", "continued_single_crystal"}:
         owner = retained_owner
         initial_load = load
         active_owner_id = args.owner_id
@@ -142,7 +144,8 @@ def main():
     spacing, thickness, systems, wall, _, _, context = _physics(
         _args_from_configuration(configuration))
     wall_updates = {"wall_nye_match_coefficient_J_m": 2.0e-5}
-    if args.initial_state == "uniform_single_crystal":
+    if args.initial_state in {
+            "uniform_single_crystal", "continued_single_crystal"}:
         poisson = wall.c12_Pa/(wall.c11_Pa+wall.c12_Pa)
         reduced_modulus = wall.c44_Pa/(2.0*np.pi*(1.0-poisson))
         gb2 = reduced_modulus*wall.burgers_m**2
@@ -168,8 +171,10 @@ def main():
         wall_orientation_relaxation_mode="ordered_nye",
         wall_orientation_relaxation_parameters=(
             WallOrientationRelaxationParameters()))
-    endpoint = make_endpoint(
-        single, MultiGrainProductionRuntime(()), initial_load, context)
+    runtime = (loaded_runtime
+               if args.initial_state == "continued_single_crystal"
+               else MultiGrainProductionRuntime(()))
+    endpoint = make_endpoint(single, runtime, initial_load, context)
     initial = owner
     records = []
     for index in range(1, args.intervals+1):
