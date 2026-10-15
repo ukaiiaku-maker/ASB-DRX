@@ -1,7 +1,7 @@
 {
   "active_band_intervals": 25,
   "artifacts": {
-    "checkpoint_latest.npz": "96764d3437878c096b4dda48746c6bc33aaa068e0ae175980ebca1bdd3c7cd57"
+    "checkpoint_latest.npz": "0e8e466f6ff0b868f826f26336d3fe996b59803243fcc2c1a54d09c16fc88563"
   },
   "claim_boundary": "Prepared high-rate localization endpoint with existing grain owners; this tests spatial coexistence, not spontaneous nucleation or grid convergence of the inherited band.",
   "configuration": {
@@ -9,6 +9,7 @@
     "front_maximum_substep_s": 2e-09,
     "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
     "initial_state": "V66 inherited orientation-gradient matured owner",
+    "interface_neutral_sink_enabled": false,
     "interface_width_m": 6e-07,
     "lattice_absorption_mode": "one_flux_mura",
     "lattice_capture_distance_m": 5e-07,
@@ -16,6 +17,7 @@
     "maximum_mechanical_subdivisions": 10,
     "n": 48,
     "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v66-20261013/full_model/verification/v66_regime_fixed_n48_T1000_r8e4/checkpoint_latest.npz",
+    "rx_enabled": true,
     "schema": "v67-drx-asb-overlap-v1",
     "shear_rate_s": 80000.0,
     "sink_activation_enthalpy_eV": 1.4,
@@ -31,7 +33,7 @@
     "thermal_control": "adiabatic",
     "thermal_diffusivity_m2_s": 3.947368421052631e-08
   },
-  "created_utc": "2026-10-15T20:47:16.593848+00:00",
+  "created_utc": "2026-10-15T21:11:15.727823+00:00",
   "decision": {
     "all_hard_absorption_balances_passed": true,
     "any_owner_net_growth": true,
@@ -39,7 +41,10 @@
     "final_connected_band": true,
     "grain_ids_unchanged": true,
     "growing_owner_intersects_active_band": true,
-    "initial_connected_band": true
+    "initial_connected_band": true,
+    "interface_neutral_sink_enabled": false,
+    "lattice_absorption_occurs_inside_active_band": true,
+    "rx_pathway_enabled": true
   },
   "final_power_localization": {
     "above_threshold_fraction": 0.1480034722222222,
@@ -79,6 +84,12 @@
     "positive_mean_W_m3": 78439325501631.0,
     "signed_min_W_m3": 423134431.31419885,
     "threshold_multiple": 2.0
+  },
+  "lattice_absorption_heat_overlap": {
+    "inside_active_band_J": 6.420772830142206e-16,
+    "inside_active_band_fraction": 0.057429225877997106,
+    "inside_band_enrichment": 0.6332165793592329,
+    "outside_active_band_J": 1.0538245509047304e-14
   },
   "ledger": {
     "accepted_events": 1323,
@@ -134,10 +145,12 @@
     "structural_absorption_rejected_intervals": 0,
     "transformed_volume_m3": 1.3456664718278193e-21
   },
+  "mean_active_largest_band_area_fraction": 0.09069444444444447,
   "owner_results": {
     "10": {
       "area_after_m2": 7.714665450766735e-12,
       "area_before_m2": 7.719587818945334e-12,
+      "growth_inside_band_enrichment": 1.7213496701855102,
       "mean_orientation_change_rad": 0.002087953287753172,
       "net_area_change_m2": -4.922368178599039e-15,
       "positive_front_growth_inside_active_band_m2": 5.988119393782121e-16,
@@ -148,6 +161,7 @@
     "20": {
       "area_after_m2": 5.255763679317237e-12,
       "area_before_m2": 5.378983492661771e-12,
+      "growth_inside_band_enrichment": 0.0,
       "mean_orientation_change_rad": 0.0016192989669124858,
       "net_area_change_m2": -1.2321981334453429e-13,
       "positive_front_growth_inside_active_band_m2": 0.0,
@@ -158,6 +172,7 @@
     "30": {
       "area_after_m2": 1.0069570869916024e-11,
       "area_before_m2": 9.941428688392888e-12,
+      "growth_inside_band_enrichment": 1.2531553665945292,
       "mean_orientation_change_rad": 0.0005318537308425242,
       "net_area_change_m2": 1.2814218152313656e-13,
       "positive_front_growth_inside_active_band_m2": 1.4563900942810943e-14,
@@ -297,6 +312,6 @@
     }
   ],
   "schema": "v67-drx-asb-overlap-v1",
-  "source_commit": "2fae96f7c5b03b73c93615f94fb945cf8db8ccba",
+  "source_commit": "1556ffe5268f5e0686fe9a6c95111b349fc89d2a",
   "source_tree_clean": true
 }
