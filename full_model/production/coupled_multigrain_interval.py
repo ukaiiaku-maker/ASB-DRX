@@ -38,6 +38,9 @@ from .multigrain_source_transaction import (
 from .interface_structural_absorption import (
     evaluate_interface_structural_absorption,
 )
+from .lattice_interface_absorption import (
+    evaluate_lattice_interface_absorption,
+)
 from .structural_interface_network import (
     JunctionDisclinationParameters, initialize_structural_interfaces,
     interface_lengths_m,
@@ -74,6 +77,8 @@ class CoupledMultigrainContext:
     interface_sink_mode: str = "disabled"
     structural_absorption_parameters: object | None = None
     structural_absorption_mode: str = "disabled"
+    lattice_absorption_parameters: object | None = None
+    lattice_absorption_mode: str = "disabled"
 
 
 def endpoint_observables(state, load: float,
@@ -443,7 +448,53 @@ def advance_complete_multigrain_interval(
                 abs(interface_sink.line_balance_residual_m2)
                 if interface_sink.accepted else 0.0)))
     interface_sink_wall_time = time.perf_counter()-interface_sink_started
+    lattice_absorption_started = time.perf_counter()
+    lattice_absorption = None
     structural_state = interface_sink_state
+    if context.lattice_absorption_mode != "disabled":
+        if context.lattice_absorption_mode != "one_flux_mura":
+            raise ValueError("unknown lattice absorption mode")
+        if context.lattice_absorption_parameters is None:
+            raise ValueError("enabled lattice absorption requires parameters")
+        lattice_absorption = evaluate_lattice_interface_absorption(
+            structural_state, mean_strain=strain1, interval_s=dt,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base,
+            parameters=context.lattice_absorption_parameters)
+        if lattice_absorption.classification in {
+                "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+                "REJECTED_COMPLETE_FIRST_LAW"}:
+            raise RuntimeError("lattice absorption failed a hard balance audit")
+        if lattice_absorption.accepted:
+            structural_state = lattice_absorption.committed_state
+        absorbed = (lattice_absorption.projection.removed_plus_line_m
+                    +lattice_absorption.projection.removed_minus_line_m)
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            lattice_absorption_intervals=(
+                runtime.ledger.lattice_absorption_intervals
+                +int(lattice_absorption.accepted)),
+            lattice_absorption_inactive_intervals=(
+                runtime.ledger.lattice_absorption_inactive_intervals
+                +int(lattice_absorption.classification.startswith("INACTIVE"))),
+            lattice_absorption_rejected_intervals=(
+                runtime.ledger.lattice_absorption_rejected_intervals
+                +int(lattice_absorption.classification.startswith("REJECTED"))),
+            lattice_absorbed_line_length_m=(
+                runtime.ledger.lattice_absorbed_line_length_m
+                +(absorbed if lattice_absorption.accepted else 0.0)),
+            cumulative_lattice_absorption_heat_J=(
+                runtime.ledger.cumulative_lattice_absorption_heat_J
+                +(lattice_absorption.generated_heat_J
+                  if lattice_absorption.accepted else 0.0)),
+            maximum_lattice_absorption_first_law_residual=max(
+                runtime.ledger.maximum_lattice_absorption_first_law_residual,
+                lattice_absorption.relative_first_law_residual
+                if lattice_absorption.accepted else 0.0)))
+    lattice_absorption_wall_time = (
+        time.perf_counter()-lattice_absorption_started)
     energy_after = dict(energy_base, mean_strain=strain1)
     front_started = time.perf_counter()
     if context.front_enabled:
@@ -541,6 +592,13 @@ def advance_complete_multigrain_interval(
             0.0 if structural_absorption is None
             or not structural_absorption.accepted
             else structural_absorption.generated_heat_J),
+        "lattice_absorption_heat_J": (
+            0.0 if lattice_absorption is None or not lattice_absorption.accepted
+            else lattice_absorption.generated_heat_J),
+        "lattice_absorption_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if lattice_absorption is None or not lattice_absorption.accepted
+            else np.asarray(lattice_absorption.heat_source_J_by_cell)),
         "mechanical_heat_J_m3": mechanical_heat,
         "mechanical_work_J_m3": mechanical_work_density,
         "front_heat_J_by_cell": front_heat,
@@ -631,17 +689,36 @@ def advance_complete_multigrain_interval(
             0.0 if structural_absorption is None
             or not structural_absorption.accepted
             else structural_absorption.relative_first_law_residual),
+        "lattice_absorption_mode": context.lattice_absorption_mode,
+        "lattice_absorption_classification": (
+            "DISABLED" if lattice_absorption is None
+            else lattice_absorption.classification),
+        "lattice_absorption_fraction": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.kinetic_fraction),
+        "lattice_absorption_removed_line_m": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.projection.removed_plus_line_m
+            +lattice_absorption.projection.removed_minus_line_m),
+        "lattice_absorption_mura_relative_residual": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.projection.maximum_mura_relative_residual),
+        "lattice_absorption_relative_first_law_residual": (
+            0.0 if lattice_absorption is None or not lattice_absorption.accepted
+            else lattice_absorption.relative_first_law_residual),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
             "structural_absorption_map": structural_absorption_wall_time,
+            "lattice_absorption_map": lattice_absorption_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time
                                 +interface_sink_wall_time
                                 +structural_absorption_wall_time+front_wall_time
+                                +lattice_absorption_wall_time
                                 +observable_wall_time),
         },
     }

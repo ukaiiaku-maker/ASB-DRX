@@ -130,6 +130,12 @@ class MultiGrainProductionLedger:
     structural_absorbed_line_length_m: float = 0.0
     cumulative_structural_absorption_heat_J: float = 0.0
     maximum_structural_absorption_first_law_residual: float = 0.0
+    lattice_absorption_intervals: int = 0
+    lattice_absorption_inactive_intervals: int = 0
+    lattice_absorption_rejected_intervals: int = 0
+    lattice_absorbed_line_length_m: float = 0.0
+    cumulative_lattice_absorption_heat_J: float = 0.0
+    maximum_lattice_absorption_first_law_residual: float = 0.0
 
 
 @dataclass(frozen=True)
