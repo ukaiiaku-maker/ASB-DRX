@@ -16,7 +16,9 @@ import math
 import numpy as np
 
 from .complete_multigrain_energy import evaluate_complete_multigrain_energy
+from .common_tensorial_wall import CommonWallDriving, resolved_driving_components
 from .mura_kinematics import accept_family_mura_step
+from .multigrain_production import _owner_drivings_from_common_stress
 from .structural_boundary import (
     StructuralBoundaryParameters, exp_floor_event_rate_Hz,
 )
@@ -99,7 +101,8 @@ def _edge_geometry(state, spacing_m):
 
 
 def project_lattice_line_to_interfaces(
-        state, *, systems, spacing_m, fraction, parameters):
+        state, *, systems, spacing_m, fraction, parameters,
+        stress_direction_by_owner=None):
     """Apply a finite signed-line/swept-area event without pricing it."""
     state.validate()
     spacing = float(spacing_m)
@@ -116,6 +119,15 @@ def project_lattice_line_to_interfaces(
             or np.any(extents > 1.0)):
         raise ValueError("fraction must lie in [0,1]")
     geometry = _edge_geometry(state, spacing)
+    if stress_direction_by_owner is not None:
+        stress_directions = tuple(
+            np.asarray(value, dtype=float) for value in stress_direction_by_owner)
+        if (len(stress_directions) != len(state.owners)
+                or any(value.shape != state.owners[0].mobile_plus_m2.shape
+                       for value in stress_directions)):
+            raise ValueError("stress directions require owner x grid x family")
+    else:
+        stress_directions = None
     owner_dplus = [np.zeros_like(owner.mobile_plus_m2) for owner in state.owners]
     owner_dminus = [np.zeros_like(owner.mobile_minus_m2) for owner in state.owners]
     owner_flow = [np.zeros_like(owner.family_nye_m1) for owner in state.owners]
@@ -136,10 +148,24 @@ def project_lattice_line_to_interfaces(
             burgers, slip, plane = rotated_system_fields(
                 systems, owner.orientation_rad)
             line = np.cross(plane, slip)
-            crossing = np.abs(np.sum(slip*outward[..., None, :], axis=-1))
-            local = extent*contact[..., None]*crossing
-            cap_plus = local*np.asarray(owner.mobile_plus_m2)
-            cap_minus = local*np.asarray(owner.mobile_minus_m2)
+            incidence = np.sum(slip*outward[..., None, :], axis=-1)
+            if stress_directions is None:
+                # Manufactured zero-force fixture: symmetric thermal access.
+                crossing_plus = crossing_minus = np.abs(incidence)
+                direction_plus = direction_minus = np.sign(incidence)
+            else:
+                sign_speed = np.sign(stress_directions[owner_index])
+                # The codebase Mura convention transports kappa with -v.
+                # Positive and negative Burgers populations have opposite v
+                # under the same resolved stress.
+                crossing_plus = np.maximum(-sign_speed*incidence, 0.0)
+                crossing_minus = np.maximum(sign_speed*incidence, 0.0)
+                direction_plus = sign_speed
+                direction_minus = -sign_speed
+            local_plus = extent*contact[..., None]*crossing_plus
+            local_minus = extent*contact[..., None]*crossing_minus
+            cap_plus = local_plus*np.asarray(owner.mobile_plus_m2)
+            cap_minus = local_minus*np.asarray(owner.mobile_minus_m2)
             owner_dplus[owner_index] += cap_plus
             owner_dminus[owner_index] += cap_minus
             support = np.asarray(state.supports[owner_index])[..., None]
@@ -152,13 +178,13 @@ def project_lattice_line_to_interfaces(
             # Edge line ``plane x slip`` glides along +/- slip toward the GB.
             # The captured fraction traverses the declared physical capture
             # distance.  This swept area is the sole source of beta and Nye.
-            direction_sign = np.sign(np.sum(
-                slip*outward[..., None, :], axis=-1))
-            displacement = (parameters.capture_distance_m*local
-                            *direction_sign)[..., None]*slip
-            swept_plus = np.cross(displacement,
+            displacement_plus = (parameters.capture_distance_m*local_plus
+                                 *direction_plus)[..., None]*slip
+            displacement_minus = (parameters.capture_distance_m*local_minus
+                                  *direction_minus)[..., None]*slip
+            swept_plus = np.cross(displacement_plus,
                                   np.asarray(owner.mobile_plus_m2)[..., None]*line)
-            swept_minus = np.cross(displacement,
+            swept_minus = np.cross(displacement_minus,
                                    np.asarray(owner.mobile_minus_m2)[..., None]*line)
             owner_flow[owner_index] += np.einsum(
                 "...ai,...al->...ail", burgers, swept_plus-swept_minus)
@@ -244,6 +270,13 @@ def evaluate_lattice_interface_absorption(
         wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
         **options)
     before = evaluate_complete_multigrain_energy(state, **common)
+    owner_drivings = _owner_drivings_from_common_stress(
+        state, CommonWallDriving(mean_strain=np.asarray(mean_strain)),
+        systems, wall_parameters)
+    stress_directions = tuple(
+        resolved_driving_components(
+            owner, driving, systems, (), wall_parameters)["speed_m_s"]
+        for owner, driving in zip(state.owners, owner_drivings))
     temperature = float(np.mean([
         np.mean(owner.temperature_K) for owner in state.owners]))
     edge_fractions = []
@@ -256,7 +289,8 @@ def evaluate_lattice_interface_absorption(
         trial_extent[edge_index] = parameters.maximum_fraction_per_interval
         edge_trial = project_lattice_line_to_interfaces(
             state, systems=systems, spacing_m=spacing,
-            fraction=trial_extent, parameters=parameters)
+            fraction=trial_extent, parameters=parameters,
+            stress_direction_by_owner=stress_directions)
         edge_energy = evaluate_complete_multigrain_energy(
             edge_trial.candidate_state, **common)
         edge_line_m = thickness*(
@@ -277,7 +311,7 @@ def evaluate_lattice_interface_absorption(
     fraction = max(edge_fractions, default=0.0)
     projection = project_lattice_line_to_interfaces(
         state, systems=systems, spacing_m=spacing, fraction=edge_fractions,
-        parameters=parameters)
+        parameters=parameters, stress_direction_by_owner=stress_directions)
     cold = projection.candidate_state
     cold_energy = evaluate_complete_multigrain_energy(cold, **common)
     delta = cold_energy.helmholtz_J-before.helmholtz_J
