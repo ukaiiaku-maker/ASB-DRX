@@ -142,6 +142,10 @@ class CommonWallParameters:
     # weighted by the objective signed-family polarization. It transfers
     # content only and cannot allocate orientation or phase ownership.
     polarized_wall_absorption_enabled: bool = False
+    # Direct capture of gliding polarized line at a structural wall.  This is
+    # distinct from forest-to-wall recovery and remains default-off so the
+    # qualified baseline is unchanged.
+    polarized_mobile_wall_absorption_enabled: bool = False
     wall_absorption_polarization_power: float = 1.0
     attempt_frequency_s: float = 1.0e7
     critical_stress_Pa: float = 1.5e9
@@ -1041,6 +1045,30 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
             polarized_absorption_exchange_components(
                 state.forest_minus_m2, wall_target_minus,
                 delta_wall_m, k_wall, absorption_activity_minus, parameters))
+        if parameters.polarized_mobile_wall_absorption_enabled:
+            delta_mobile_wall_p = (
+                chemical["wall_plus_mu_J_m"]
+                -chemical["mobile_plus_mu_J_m"])
+            delta_mobile_wall_m = (
+                chemical["wall_minus_mu_J_m"]
+                -chemical["mobile_minus_mu_J_m"])
+            mobile_wall_p, mobile_wall_p_turnover = (
+                polarized_absorption_exchange_components(
+                    state.mobile_plus_m2, wall_target_plus,
+                    delta_mobile_wall_p, k_wall,
+                    absorption_activity_plus, parameters))
+            mobile_wall_m, mobile_wall_m_turnover = (
+                polarized_absorption_exchange_components(
+                    state.mobile_minus_m2, wall_target_minus,
+                    delta_mobile_wall_m, k_wall,
+                    absorption_activity_minus, parameters))
+        else:
+            delta_mobile_wall_p = np.zeros_like(delta_wall_p)
+            delta_mobile_wall_m = np.zeros_like(delta_wall_m)
+            mobile_wall_p = np.zeros_like(transfer_p)
+            mobile_wall_m = np.zeros_like(transfer_m)
+            mobile_wall_p_turnover = np.zeros_like(transfer_p_turnover)
+            mobile_wall_m_turnover = np.zeros_like(transfer_m_turnover)
     else:
         absorption_activity_plus = np.zeros_like(state.forest_plus_m2)
         absorption_activity_minus = np.zeros_like(state.forest_minus_m2)
@@ -1050,8 +1078,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         transfer_m, transfer_m_turnover = _biased_exchange_components(
             state.forest_minus_m2, wall_target_minus,
             delta_wall_m, k_wall, parameters)
+        delta_mobile_wall_p = np.zeros_like(delta_wall_p)
+        delta_mobile_wall_m = np.zeros_like(delta_wall_m)
+        mobile_wall_p = np.zeros_like(transfer_p)
+        mobile_wall_m = np.zeros_like(transfer_m)
+        mobile_wall_p_turnover = np.zeros_like(transfer_p_turnover)
+        mobile_wall_m_turnover = np.zeros_like(transfer_m_turnover)
     fp_rate -= transfer_p; fm_rate -= transfer_m
-    wp_rate += transfer_p; wm_rate += transfer_m
+    mp_rate -= mobile_wall_p; mm_rate -= mobile_wall_m
+    wp_rate += transfer_p+mobile_wall_p
+    wm_rate += transfer_m+mobile_wall_m
 
     k_ann = exp_floor_rate(stress, temperature,
                            parameters.annihilation_barrier_eV, parameters)
@@ -1231,7 +1267,9 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     lock_dissipation = -np.sum(
         delta_lock_p*lock_p+delta_lock_m*lock_m, axis=2)
     wall_exchange_dissipation = -np.sum(
-        delta_wall_p*transfer_p+delta_wall_m*transfer_m, axis=2)
+        delta_wall_p*transfer_p+delta_wall_m*transfer_m
+        +delta_mobile_wall_p*mobile_wall_p
+        +delta_mobile_wall_m*mobile_wall_m, axis=2)
     annihilation_dissipation = np.sum(
         multiplication_pair_mu*annihilation, axis=2)
     order_dissipation = -q_chemical_potential*q_rate
@@ -1273,12 +1311,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "transport_mobile_minus_rate_m2_s": transport_mm_rate,
         "lock_plus": lock_p, "lock_minus": lock_m,
         "wall_plus": transfer_p, "wall_minus": transfer_m,
+        "mobile_wall_plus": mobile_wall_p,
+        "mobile_wall_minus": mobile_wall_m,
         "wall_absorption_activity_plus": absorption_activity_plus,
         "wall_absorption_activity_minus": absorption_activity_minus,
         "lock_plus_turnover": lock_p_turnover,
         "lock_minus_turnover": lock_m_turnover,
         "wall_plus_turnover": transfer_p_turnover,
         "wall_minus_turnover": transfer_m_turnover,
+        "mobile_wall_plus_turnover": mobile_wall_p_turnover,
+        "mobile_wall_minus_turnover": mobile_wall_m_turnover,
         "annihilation_pairs": annihilation,
         "annihilation_affinity_factor": annihilation_affinity_factor,
         "multiplication_pairs": multiplication,

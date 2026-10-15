@@ -144,6 +144,41 @@ def test_polarized_absorption_nucleates_wall_but_zero_gnd_control_does_not():
         result.channel_rates_m2_s["wall_minus"], atol=0.0)
 
 
+def test_isolated_mobile_wall_capture_cannot_bypass_nucleation_barrier():
+    systems, topologies, parameters, state, _ = fixture(n=8)
+    parameters = replace(
+        candidate_parameters(parameters),
+        polarized_wall_absorption_enabled=True,
+        polarized_mobile_wall_absorption_enabled=True)
+    zero = np.zeros_like(state.wall_plus_m2)
+    polarized = replace(
+        state,
+        mobile_plus_m2=np.full_like(state.mobile_plus_m2, 1.2e14),
+        mobile_minus_m2=np.full_like(state.mobile_minus_m2, 8.0e13),
+        forest_plus_m2=np.zeros_like(state.forest_plus_m2),
+        forest_minus_m2=np.zeros_like(state.forest_minus_m2),
+        wall_plus_m2=zero, wall_minus_m2=zero,
+        wall_order=np.zeros_like(state.wall_order))
+    driving = CommonWallDriving(
+        resolved_stress_Pa=np.zeros_like(polarized.mobile_plus_m2))
+    result = wall_residual(
+        polarized, driving, systems, topologies, parameters)
+    capture = result.channel_rates_m2_s["mobile_wall_plus"]
+    np.testing.assert_array_equal(capture, 0.0)
+    np.testing.assert_array_equal(
+        result.channel_rates_m2_s["mobile_wall_minus"], 0.0)
+    reversed_state = replace(
+        polarized,
+        mobile_plus_m2=polarized.mobile_minus_m2,
+        mobile_minus_m2=polarized.mobile_plus_m2)
+    reversed_result = wall_residual(
+        reversed_state, driving, systems, topologies, parameters)
+    np.testing.assert_array_equal(
+        reversed_result.channel_rates_m2_s["mobile_wall_minus"], 0.0)
+    np.testing.assert_array_equal(
+        reversed_result.channel_rates_m2_s["mobile_wall_plus"], 0.0)
+
+
 def test_neutral_pair_annihilation_cannot_run_uphill_in_declared_energy():
     systems, topologies, parameters, state, _ = fixture(n=8)
     parameters = candidate_parameters(parameters)

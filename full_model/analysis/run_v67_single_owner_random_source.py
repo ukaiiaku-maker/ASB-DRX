@@ -37,6 +37,9 @@ from full_model.production.common_subgrain_recognition import (
     recognize_common_orientation_plateau,
 )
 from full_model.production.common_tensorial_wall import CommonWallState
+from full_model.production.collective_wall_nucleation import (
+    CollectiveWallNucleationParameters, evaluate_collective_wall_nucleation,
+)
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
 )
@@ -103,6 +106,7 @@ def main():
         "--source-mode", choices=("random_bulk", "random_discrete_bulk"),
         default="random_bulk")
     parser.add_argument("--source-site-density-m2", type=float, default=1e12)
+    parser.add_argument("--collective-wall-nucleation", action="store_true")
     parser.add_argument(
         "--initial-state", choices=(
             "retained_owner", "uniform_single_crystal",
@@ -151,6 +155,7 @@ def main():
         gb2 = reduced_modulus*wall.burgers_m**2
         wall_updates.update(
             polarized_wall_absorption_enabled=True,
+            polarized_mobile_wall_absorption_enabled=True,
             groma_family_correlation_energy_J_m=1.25*gb2,
             groma_gnd_correlation_energy_J_m=.5*gb2,
             groma_sign_resolved_transport_enabled=True,
@@ -181,6 +186,26 @@ def main():
         interval = advance_complete_multigrain_interval(
             endpoint, args.dt, context)
         endpoint = interval.endpoint
+        nucleus = None
+        if args.collective_wall_nucleation:
+            draw = float(np.random.default_rng(
+                args.source_seed+endpoint.runtime.ledger.intervals).random())
+            nucleus = evaluate_collective_wall_nucleation(
+                endpoint.state, interval_s=args.dt,
+                mean_strain=np.array([
+                    [0.0, .5*endpoint.load], [.5*endpoint.load, 0.0]]),
+                spacing_m=spacing, represented_thickness_m=thickness,
+                systems=systems, wall_parameters=wall,
+                energy_kwargs=context.energy_kwargs, random_uniform=draw,
+                parameters=CollectiveWallNucleationParameters(
+                    source_site_density_m2=args.source_site_density_m2,
+                    source_seed=args.source_seed))
+            if nucleus.classification == "REJECTED_CLOSED_WALL_FIRST_LAW":
+                raise RuntimeError("collective wall nucleus failed first law")
+            if nucleus.accepted:
+                endpoint = make_endpoint(
+                    nucleus.committed_state, endpoint.runtime, endpoint.load,
+                    context, numerical_hints=endpoint.numerical_hints)
         current = endpoint.state.owners[0]
         compatibility = evaluate_orientation_wall_compatibility(
             current, systems, np.ones(grid, dtype=bool), spacing)
@@ -211,6 +236,18 @@ def main():
             "wall_order_mean": float(np.mean(current.wall_order)),
             "wall_order_range": [float(np.min(current.wall_order)),
                                  float(np.max(current.wall_order))],
+            "collective_wall_classification": (
+                "DISABLED" if nucleus is None else nucleus.classification),
+            "collective_wall_downhill_candidates": (
+                0 if nucleus is None else nucleus.downhill_candidate_count),
+            "collective_wall_event_probability": (
+                0.0 if nucleus is None else nucleus.event_probability),
+            "collective_wall_selected_radius_m": (
+                0.0 if nucleus is None else nucleus.selected_radius_m),
+            "collective_wall_delta_helmholtz_J": (
+                0.0 if nucleus is None else nucleus.delta_helmholtz_J),
+            "collective_wall_first_law_relative_residual": (
+                0.0 if nucleus is None else nucleus.relative_first_law_residual),
         })
         print(json.dumps(records[-1]), flush=True)
     final = endpoint.state.owners[0]
@@ -222,6 +259,7 @@ def main():
         shear_rate_s=args.shear_rate, source_mode=args.source_mode,
         source_seed=args.source_seed,
         source_bulk_site_density_m2=args.source_site_density_m2,
+        collective_wall_nucleation=args.collective_wall_nucleation,
         wall_nye_match_coefficient_J_m=2.0e-5)
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
@@ -253,10 +291,13 @@ def main():
                 args.intervals*args.dt*args.shear_rate),
             "source_mode": args.source_mode, "source_seed": args.source_seed,
             "source_bulk_site_density_m2": args.source_site_density_m2,
+            "collective_wall_nucleation": args.collective_wall_nucleation,
             "source_parameters": asdict(source_parameters),
             "wall_nye_match_coefficient_J_m": 2.0e-5,
             "polarized_wall_absorption_enabled": (
                 wall.polarized_wall_absorption_enabled),
+            "polarized_mobile_wall_absorption_enabled": (
+                wall.polarized_mobile_wall_absorption_enabled),
             "groma_sign_resolved_transport_enabled": (
                 wall.groma_sign_resolved_transport_enabled),
         },
@@ -275,6 +316,10 @@ def main():
             "all_hard_balances_passed": all(
                 row["source_relative_first_law_residual"] < .05
                 and row["mechanical_relative_first_law_residual"] < .05
+                and row["collective_wall_first_law_relative_residual"] < .05
+                for row in records),
+            "accepted_collective_wall_events": sum(
+                row["collective_wall_classification"].startswith("ACCEPTED")
                 for row in records),
             "strict_plastic_nye_subgrain": bool(
                 recognitions["plastic_incompatibility_nye"].get(
