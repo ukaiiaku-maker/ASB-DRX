@@ -28,7 +28,8 @@ from .multigrain_production import (
     multigrain_instantaneous_dissipation_fields,
 )
 from .arrhenius_dislocation_sources import (
-    boundary_tj_site_field, randomized_matched_site_field,
+    boundary_tj_site_field, random_bulk_site_field,
+    randomized_matched_site_field,
 )
 from .multigrain_source_transaction import (
     evaluate_interface_neutral_sink_transaction,
@@ -295,13 +296,23 @@ def advance_complete_multigrain_interval(
     if context.source_mode != "disabled":
         if context.source_parameters is None:
             raise ValueError("enabled source mode requires source parameters")
-        boundary_sites = boundary_tj_site_field(
-            source_state.supports, tj_site_weight=context.source_tj_weight)
         if context.source_mode == "gb_tj_only":
-            source_sites = boundary_sites
+            source_sites = boundary_tj_site_field(
+                source_state.supports,
+                tj_site_weight=context.source_tj_weight)
         elif context.source_mode == "matched_random":
+            boundary_sites = boundary_tj_site_field(
+                source_state.supports,
+                tj_site_weight=context.source_tj_weight)
             source_sites = randomized_matched_site_field(
                 boundary_sites, context.source_random_seed)
+        elif context.source_mode == "random_bulk":
+            # A physical bulk-source hypothesis, not the shuffled GB/TJ
+            # geography control.  This remains meaningful for a single
+            # crystal, where the boundary measure is identically zero.
+            source_sites = random_bulk_site_field(
+                source_state.supports.shape[1:],
+                context.source_random_seed)
         else:
             raise ValueError("unknown dislocation source mode")
         source = evaluate_multigrain_pair_source_transaction(

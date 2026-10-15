@@ -102,6 +102,31 @@ def test_enabled_conjugate_pair_source_is_in_complete_interval_and_ledger():
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
 
 
+def test_random_bulk_source_is_available_without_a_grain_boundary():
+    ctx = replace(
+        context(front_enabled=False),
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.5e-6),
+        source_mode="random_bulk", source_random_seed=67)
+    multi = parent(ctx)
+    owner = multi.state.owners[0]
+    one = replace(
+        multi.state, grain_ids=(1,),
+        supports=np.ones((1,)+owner.temperature_K.shape),
+        owners=(owner,), interfaces=())
+    one.validate()
+    endpoint = make_endpoint(
+        one, MultiGrainProductionRuntime(()), multi.load, ctx)
+    result = advance_complete_multigrain_interval(endpoint, 1e-10, ctx)
+    assert result.audit["source_mode"] == "random_bulk"
+    assert result.audit["source_classification"] == (
+        "ACCEPTED_CONJUGATE_PAIR_SOURCE")
+    assert result.audit["source_event_count"] > 0.0
+    # The exact signed update is performed atop O(1e15 m^-2) reservoirs;
+    # subtraction of the O(1e5 m^-2) increment is roundoff-limited.
+    assert (abs(result.audit["source_line_balance_residual_m2"])
+            <1e-5*result.audit["source_created_line_cell_sum_m2"])
+
+
 def test_enabled_neutral_boundary_sink_is_separate_complete_channel():
     ctx = replace(
         context(front_enabled=False),
