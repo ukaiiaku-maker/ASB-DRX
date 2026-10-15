@@ -8,6 +8,7 @@ from full_model.production.arrhenius_dislocation_sources import (
 )
 from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.multigrain_source_transaction import (
+    advance_energy_qualified_pair_source_transaction,
     NeutralBoundarySinkParameters,
     evaluate_interface_neutral_sink_transaction,
     evaluate_multigrain_neutral_sink_transaction,
@@ -72,6 +73,28 @@ def test_unstressed_thermal_attempt_cannot_invent_line_storage_energy():
     }
     assert result.candidate_state is state
     assert result.generated_heat_J == 0.0
+
+
+def test_sparse_source_burst_is_energy_qualified_by_time_subdivision():
+    state, systems, wall, energy, source, sites = _fixture()
+    sparse = np.zeros_like(sites)
+    sparse[3, 4] = sparse.size
+    kwargs = dict(
+        mean_strain=np.array([[0.0, .01], [.01, 0.0]]),
+        site_field=sparse, interval_s=2e-4,
+        source_parameters=source, systems=systems, wall_parameters=wall,
+        represented_thickness_m=4.96e-10, energy_kwargs=energy,
+        source_mode="random_discrete_bulk")
+    coarse = evaluate_multigrain_pair_source_transaction(state, **kwargs)
+    assert not coarse.accepted
+    accepted = advance_energy_qualified_pair_source_transaction(
+        state, maximum_subdivisions=8, **kwargs)
+    assert accepted.accepted
+    assert accepted.classification == (
+        "ACCEPTED_CONJUGATE_PAIR_SOURCE_SUBDIVIDED")
+    assert accepted.subdivisions > 0
+    assert accepted.event_count > 0.0
+    assert accepted.relative_first_law_residual < .05
 
 
 def test_neutral_boundary_sink_closes_line_energy_and_heat_at_zero_work():

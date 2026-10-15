@@ -13,7 +13,7 @@ from .arrhenius_kinetics import (
 )
 from .common_tensorial_wall import (
     CommonWallDriving, resolved_driving_components,
-    wall_total_free_energy_density_J_m3,
+    wall_free_energy_derivatives, wall_total_free_energy_density_J_m3,
 )
 from .complete_multigrain_energy import evaluate_complete_multigrain_energy
 from .multigrain_common_state import reconstruct_multigrain_common
@@ -40,6 +40,7 @@ class MultiGrainSourceDecision:
     relative_first_law_residual: float
     energy_resolution_floor_J: float
     heat_source_J_by_cell: np.ndarray
+    subdivisions: int = 0
 
 
 @dataclass(frozen=True)
@@ -122,11 +123,28 @@ def evaluate_multigrain_pair_source_transaction(
     for support, owner, driving in zip(state.supports, state.owners, drivings):
         components = resolved_driving_components(
             owner, driving, systems, (), wall_parameters)
+        chemical = wall_free_energy_derivatives(
+            owner, wall_parameters, (), systems)
+        # A source opportunity becomes an irreversible expanding event only
+        # where its conjugate slip work pays the first-variation cost of the
+        # positive/negative line pair.  The Arrhenius Hall--Petch hazard still
+        # sets exposure on those sites; this mask prevents a deterministic
+        # expected-value update from inventing stored line energy at a
+        # thermodynamically inaccessible quenched source.
+        work_per_event_J_m3 = (
+            np.abs(components["raw_stress_Pa"])
+            *source_parameters.burgers_m/source_parameters.grain_size_m)
+        storage_per_event_J_m3 = (
+            chemical["mobile_plus_mu_J_m"]
+            +chemical["mobile_minus_mu_J_m"]
+        )/source_parameters.grain_size_m**2
+        accessible_family = work_per_event_J_m3 >= storage_per_event_J_m3
         proposed, ledger = apply_conjugate_pair_source_event(
             owner, site, components["raw_stress_Pa"], dt, systems,
             source_parameters, spacing_m=spacing, source_mode=source_mode,
             orientation_spin_weight=wall_parameters.orientation_spin_weight,
-            active_mask=np.asarray(support) > 256*np.finfo(float).eps)
+            active_mask=np.asarray(support) > 256*np.finfo(float).eps,
+            active_family_mask=accessible_family)
         proposed = _masked_owner_update(
             owner, proposed,
             np.asarray(support) > 256*np.finfo(float).eps,
@@ -145,13 +163,25 @@ def evaluate_multigrain_pair_source_transaction(
     unheated.validate()
     unheated_energy = evaluate_complete_multigrain_energy(
         unheated, **common_energy)
-    heat_density = work_density-defect_change_density
+    raw_heat_density = work_density-defect_change_density
     local_scale = np.maximum.reduce((
         np.abs(work_density), np.abs(defect_change_density),
         np.ones_like(work_density)))
-    local_heat_valid = bool(np.all(
-        heat_density >= -1e-12*local_scale))
-    heat_density = np.maximum(heat_density, 0.0)
+    # Source work is localized at the slip event whereas its compatible Nye
+    # increment and recoverable elastic response are nonlocal.  Requiring the
+    # work-minus-storage remainder to be nonnegative in every neighboring cell
+    # wrongly rejects sparse sources even when the independently evaluated
+    # global transaction is strongly dissipative.  Conserve that global
+    # remainder and deposit it over the nonnegative resolved-work measure.
+    raw_heat_sum = float(np.sum(raw_heat_density, dtype=np.longdouble))
+    heat_tolerance = 1e-12*float(np.sum(local_scale, dtype=np.longdouble))
+    local_heat_valid = bool(raw_heat_sum >= -heat_tolerance)
+    positive_work = np.maximum(work_density, 0.0)
+    work_sum = float(np.sum(positive_work, dtype=np.longdouble))
+    if local_heat_valid and raw_heat_sum > 0.0 and work_sum > 0.0:
+        heat_density = raw_heat_sum*positive_work/work_sum
+    else:
+        heat_density = np.zeros_like(raw_heat_density)
     common_before, _ = reconstruct_multigrain_common(unheated, spacing)
     temperature = (np.asarray(common_before.temperature_K)
                    +heat_density/wall_parameters.volumetric_heat_capacity_J_m3_K)
@@ -201,6 +231,64 @@ def evaluate_multigrain_pair_source_transaction(
         event_count, line_change, signed_change, line_residual,
         work_J, defect_J, heat_J, delta_helmholtz, delta_internal,
         residual, relative, resolution_floor, heat_density*cell_volume)
+
+
+def advance_energy_qualified_pair_source_transaction(
+        state, *, maximum_subdivisions=6, **kwargs):
+    """Apply the source transaction with rollback and physical-time bisection.
+
+    Sparse source fields can concentrate an otherwise admissible interval
+    measure into a large simultaneous burst.  Bisection represents the same
+    activated hazard as sequential events at fixed imposed strain.  Every leaf
+    is independently accepted by :func:`evaluate_multigrain_pair_source_transaction`;
+    no rejected leaf is published and the summed leaf durations equal the
+    requested physical interval exactly.
+    """
+    total_dt = float(kwargs["interval_s"])
+
+    def recurse(accepted, interval, depth):
+        trial = evaluate_multigrain_pair_source_transaction(
+            accepted, **dict(kwargs, interval_s=interval))
+        if trial.accepted or trial.classification.startswith("INACTIVE"):
+            return trial
+        recoverable = trial.classification in {
+            "REJECTED_INSUFFICIENT_RESOLVED_WORK",
+            "REJECTED_FIRST_LAW_CLOSURE",
+            "REJECTED_UPHILL_COMPLETE_HELMHOLTZ",
+        }
+        if not recoverable or depth >= int(maximum_subdivisions):
+            return trial
+        left = recurse(accepted, .5*interval, depth+1)
+        if not left.accepted:
+            return left
+        right = recurse(left.candidate_state, .5*interval, depth+1)
+        if not right.accepted:
+            return right
+        scale = max(
+            abs(left.resolved_work_J)+abs(right.resolved_work_J),
+            abs(left.defect_storage_change_J)+abs(right.defect_storage_change_J),
+            abs(left.generated_heat_J)+abs(right.generated_heat_J), 1e-300)
+        residual = left.first_law_residual_J+right.first_law_residual_J
+        return MultiGrainSourceDecision(
+            True, "ACCEPTED_CONJUGATE_PAIR_SOURCE_SUBDIVIDED",
+            right.candidate_state,
+            left.event_count+right.event_count,
+            left.created_line_cell_sum_m2+right.created_line_cell_sum_m2,
+            left.signed_content_change_m2+right.signed_content_change_m2,
+            left.line_balance_residual_m2+right.line_balance_residual_m2,
+            left.resolved_work_J+right.resolved_work_J,
+            left.defect_storage_change_J+right.defect_storage_change_J,
+            left.generated_heat_J+right.generated_heat_J,
+            left.delta_helmholtz_before_heat_J+right.delta_helmholtz_before_heat_J,
+            left.internal_energy_change_J+right.internal_energy_change_J,
+            residual, abs(residual)/scale,
+            left.energy_resolution_floor_J+right.energy_resolution_floor_J,
+            np.asarray(left.heat_source_J_by_cell)
+            +np.asarray(right.heat_source_J_by_cell),
+            max(left.subdivisions, right.subdivisions, depth+1))
+
+    result = recurse(state, total_dt, 0)
+    return result
 
 
 def evaluate_multigrain_neutral_sink_transaction(

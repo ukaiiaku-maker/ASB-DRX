@@ -33,6 +33,7 @@ from .arrhenius_dislocation_sources import (
     randomized_matched_site_field,
 )
 from .multigrain_source_transaction import (
+    advance_energy_qualified_pair_source_transaction,
     evaluate_interface_neutral_sink_transaction,
     evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
@@ -75,6 +76,7 @@ class CoupledMultigrainContext:
     source_random_seed: int = 66
     source_tj_weight: float = 2.0
     source_bulk_site_density_m2: float = 1.0e12
+    maximum_source_subdivisions: int = 6
     sink_parameters: object | None = None
     sink_mode: str = "disabled"
     sink_random_seed: int = 66
@@ -322,12 +324,13 @@ def advance_complete_multigrain_interval(
                 context.source_random_seed)
         else:
             raise ValueError("unknown dislocation source mode")
-        source = evaluate_multigrain_pair_source_transaction(
+        source = advance_energy_qualified_pair_source_transaction(
             source_state, mean_strain=strain1, site_field=source_sites,
             interval_s=dt, source_parameters=context.source_parameters,
             systems=context.systems, wall_parameters=context.wall_parameters,
             represented_thickness_m=context.represented_thickness_m,
-            energy_kwargs=energy_base, source_mode=context.source_mode)
+            energy_kwargs=energy_base, source_mode=context.source_mode,
+            maximum_subdivisions=context.maximum_source_subdivisions)
         if source.classification in {
                 "REJECTED_FIRST_LAW_CLOSURE"}:
             raise RuntimeError(
@@ -709,6 +712,7 @@ def advance_complete_multigrain_interval(
         "source_mode": context.source_mode,
         "source_classification": ("DISABLED" if source is None
                                   else source.classification),
+        "source_subdivisions": (0 if source is None else source.subdivisions),
         "source_event_count": (0.0 if source is None or not source.accepted
                                else source.event_count),
         "source_created_line_cell_sum_m2": (

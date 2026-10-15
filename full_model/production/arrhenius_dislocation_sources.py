@@ -260,7 +260,7 @@ def apply_sign_balanced_pair_source(
 def apply_conjugate_pair_source_event(
         state, site_field, resolved_stress_Pa, dt_s, systems, parameters, *,
         spacing_m, source_mode="unspecified", orientation_spin_weight=1.0,
-        active_mask=None):
+        active_mask=None, active_family_mask=None):
     """Create neutral line pairs together with their conjugate plastic slip.
 
     One idealized grain-spanning event creates one line of each sign per area
@@ -294,6 +294,11 @@ def apply_conjugate_pair_source_event(
         if active.shape != site.shape:
             raise ValueError("source active mask has wrong shape")
         events = np.where(active[..., None], events, 0.0)
+    if active_family_mask is not None:
+        family_active = np.asarray(active_family_mask, dtype=bool)
+        if family_active.shape != stress.shape:
+            raise ValueError("source family-active mask has wrong shape")
+        events = np.where(family_active, events, 0.0)
     created = events/parameters.grain_size_m**2
     slip_increment = (np.sign(stress)*events
                       *parameters.burgers_m/parameters.grain_size_m)
