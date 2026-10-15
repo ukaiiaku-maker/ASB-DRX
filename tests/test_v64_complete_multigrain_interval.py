@@ -14,6 +14,9 @@ from full_model.production.coupled_multigrain_interval import (
     CoupledMultigrainContext, advance_complete_multigrain_interval, make_endpoint,
 )
 from full_model.production.multigrain_common_state import PhysicalTransferLaw
+from full_model.production.interface_structural_absorption import (
+    InterfaceStructuralAbsorptionParameters,
+)
 from full_model.production.multigrain_source_transaction import (
     NeutralBoundarySinkParameters,
 )
@@ -114,4 +117,19 @@ def test_enabled_neutral_boundary_sink_is_separate_complete_channel():
             <1e-10*result.audit["sink_annihilated_pair_cell_sum_m2"])
     assert result.endpoint.runtime.ledger.sink_intervals == 1
     assert result.endpoint.runtime.ledger.source_intervals == 0
+    assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
+
+
+def test_common_axis_structural_absorption_is_persistent_production_state():
+    ctx = replace(
+        context(front_enabled=False),
+        structural_absorption_parameters=(
+            InterfaceStructuralAbsorptionParameters()),
+        structural_absorption_mode="common_axis")
+    result = advance_complete_multigrain_interval(parent(ctx), 1e-10, ctx)
+    assert result.audit["structural_absorption_classification"] == (
+        "INACTIVE_NO_COMPATIBLE_INTERFACE_BURGERS")
+    assert len(result.endpoint.runtime.structural_interfaces) == len(
+        result.endpoint.runtime.interfaces)
+    assert result.endpoint.runtime.ledger.structural_absorption_inactive_intervals == 1
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10

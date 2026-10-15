@@ -65,12 +65,14 @@ class StructuralFrontDecision:
 
 
 def _uniform_owner_orientations(state, orientation_rad):
+    """Shift each owner mean without erasing intragranular orientation."""
     values = np.asarray(orientation_rad, dtype=float)
     if values.shape != (len(state.owners),):
         raise ValueError("one derived orientation per owner is required")
     owners = tuple(
-        replace(owner, orientation_rad=np.full_like(
-            owner.orientation_rad, values[index], dtype=float))
+        replace(owner, orientation_rad=(
+            np.asarray(owner.orientation_rad, dtype=float)
+            +values[index]-float(np.mean(owner.orientation_rad))))
         for index, owner in enumerate(state.owners))
     candidate = replace(state, owners=owners)
     candidate.validate()
@@ -80,11 +82,17 @@ def _uniform_owner_orientations(state, orientation_rad):
 def synchronize_structural_owner_orientations(
         state, runtime, *, spacing_m,
         burgers_m=StructuralBoundaryParameters().burgers_m):
-    """Explicitly derive uniform common-axis owner angles from structural state."""
+    """Derive common-axis owner means while preserving local fluctuations."""
     lengths = interface_lengths_m(
         state.supports, runtime.interfaces, state.grain_ids, spacing_m)
+    # The structural graph fixes only relative rotations. Preserve the current
+    # laboratory-frame angle of the reference owner; pinning it to zero would
+    # apply an unpriced rigid rotation and change all resolved slip systems.
+    reference_orientation = float(np.mean(state.owners[0].orientation_rad))
     audit = audit_network_compatibility(
-        state.grain_ids, runtime.interfaces, lengths, burgers_m)
+        state.grain_ids, runtime.interfaces, lengths, burgers_m,
+        reference_owner=state.grain_ids[0],
+        reference_orientation_rad=reference_orientation)
     return _uniform_owner_orientations(state, audit.fitted_orientation_rad)
 
 

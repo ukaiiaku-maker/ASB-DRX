@@ -34,6 +34,9 @@ from full_model.production.coupled_multigrain_interval import (
 )
 from full_model.production.multigrain_common_state import PhysicalTransferLaw
 from full_model.production.multigrain_common_state import reconstruct_multigrain_common
+from full_model.production.interface_structural_absorption import (
+    InterfaceStructuralAbsorptionParameters,
+)
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainProductionRuntime,
 )
@@ -91,6 +94,8 @@ def _configuration(args) -> dict:
         "sink_activation_enthalpy_eV": args.sink_activation_enthalpy,
         "sink_stress_assisted": args.sink_stress_assisted,
         "interface_sink_mode": getattr(args, "interface_sink_mode", "disabled"),
+        "structural_absorption_mode": getattr(
+            args, "structural_absorption_mode", "disabled"),
     }
     history_mode = getattr(args, "plastic_history_mode", "receiver_dormant")
     if history_mode != "receiver_dormant":
@@ -221,6 +226,16 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
         "interface_sink_heat_J": interval.integrals["interface_sink_heat_J"],
         "interface_sink_relative_first_law_residual": interval.audit[
             "interface_sink_relative_first_law_residual"],
+        "structural_absorption_mode": interval.audit[
+            "structural_absorption_mode"],
+        "structural_absorption_classification": interval.audit[
+            "structural_absorption_classification"],
+        "structural_absorption_content_change": interval.audit[
+            "structural_absorption_content_change"],
+        "structural_absorption_heat_J": interval.integrals[
+            "structural_absorption_heat_J"],
+        "structural_absorption_relative_first_law_residual": interval.audit[
+            "structural_absorption_relative_first_law_residual"],
         "mechanical_subdivision_depth": interval.audit[
             "mechanical_subdivision_depth"],
         "wall_time_s": wall_time_s,
@@ -298,6 +313,19 @@ def _summarize(history, endpoint, initial_volume, preparation, configuration):
                 endpoint.runtime.ledger.cumulative_interface_sink_generated_heat_J),
             "maximum_interface_sink_relative_first_law_residual": (
                 endpoint.runtime.ledger.maximum_interface_sink_relative_first_law_residual),
+            "structural_absorption_intervals": (
+                endpoint.runtime.ledger.structural_absorption_intervals),
+            "structural_absorption_inactive_intervals": (
+                endpoint.runtime.ledger.structural_absorption_inactive_intervals),
+            "structural_absorption_rejected_intervals": (
+                endpoint.runtime.ledger.structural_absorption_rejected_intervals),
+            "structural_absorbed_line_length_m": (
+                endpoint.runtime.ledger.structural_absorbed_line_length_m),
+            "structural_absorption_heat_J": (
+                endpoint.runtime.ledger.cumulative_structural_absorption_heat_J),
+            "maximum_structural_absorption_first_law_residual": (
+                endpoint.runtime.ledger.
+                maximum_structural_absorption_first_law_residual),
             "terminal_density_boundary_correlation": correlation(
                 total_density, boundary),
             "cumulative_mechanical_external_work_J": (
@@ -365,6 +393,11 @@ def main():
         default="disabled",
         help=("Stationary neutral-pair recovery in explicit moving-front "
               "reservoirs; it preserves signed interface Burgers content."))
+    parser.add_argument(
+        "--structural-absorption-mode", choices=("disabled", "common_axis"),
+        default="disabled",
+        help=("Convert only the local Frank-compatible projection of explicit "
+              "interface Burgers content into conserved common-axis edge content."))
     parser.add_argument("--resume", type=Path)
     parser.add_argument(
         "--resume-fork-source-change", action="store_true",
@@ -403,6 +436,12 @@ def main():
                 activation_enthalpy_eV=args.sink_activation_enthalpy,
                 stress_assisted=False),
             interface_sink_mode=args.interface_sink_mode)
+    if args.structural_absorption_mode != "disabled":
+        context = replace(
+            context,
+            structural_absorption_parameters=(
+                InterfaceStructuralAbsorptionParameters()),
+            structural_absorption_mode=args.structural_absorption_mode)
     provenance = _source_provenance()
     history_path = args.out/"history.json"
     if args.resume is None:

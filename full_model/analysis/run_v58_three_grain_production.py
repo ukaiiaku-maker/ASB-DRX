@@ -213,6 +213,8 @@ def _save_checkpoint(path, state, runtime, step, gamma, initial_volume,
         "step": int(step), "gamma": float(gamma),
         "ledger": asdict(runtime.ledger),
         "interfaces": [asdict(item) for item in runtime.interfaces],
+        "structural_interfaces": [asdict(item)
+                                  for item in runtime.structural_interfaces],
         "configuration": configuration,
         "provenance": provenance,
     }, sort_keys=True))
@@ -233,9 +235,12 @@ def _load_checkpoint(path):
         state = multigrain_from_checkpoint(str(data["metadata_json"]), arrays)
         meta = json.loads(str(data["runtime_json"]))
         initial_volume = np.asarray(data["initial_grain_volume_m3"]).copy()
+    from full_model.production.structural_interface_network import StructuralInterface
     runtime = MultiGrainProductionRuntime(
         tuple(MultiGrainInterface(**item) for item in meta["interfaces"]),
-        MultiGrainProductionLedger(**meta["ledger"]))
+        MultiGrainProductionLedger(**meta["ledger"]),
+        tuple(StructuralInterface(**item)
+              for item in meta.get("structural_interfaces", ())))
     return (state, runtime, int(meta["step"]), float(meta["gamma"]),
             initial_volume, meta.get("configuration"),
             meta.get("provenance"))

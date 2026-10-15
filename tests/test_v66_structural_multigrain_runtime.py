@@ -80,6 +80,28 @@ def test_complete_runtime_accepts_downhill_reaction_and_deposits_exact_heat():
     assert evolved.grain_ids == state.grain_ids
 
 
+def test_structural_synchronization_preserves_rigid_frame_rotation():
+    state, runtime, spacing, _, _, _ = _fixture(1.0)
+    rigid = .37
+    pattern = np.arange(state.supports.shape[1]*state.supports.shape[2],
+                        dtype=float).reshape(state.supports.shape[1:])
+    pattern = 1e-3*(pattern-np.mean(pattern))/max(np.ptp(pattern), 1.0)
+    rotated = replace(state, owners=tuple(
+        replace(owner, orientation_rad=(np.asarray(owner.orientation_rad)
+                                        +rigid+pattern))
+        for owner in state.owners))
+    synchronized = synchronize_structural_owner_orientations(
+        rotated, runtime, spacing_m=spacing)
+    np.testing.assert_allclose(
+        np.mean(synchronized.owners[0].orientation_rad),
+        np.mean(rotated.owners[0].orientation_rad), rtol=0.0, atol=1e-14)
+    for before, after in zip(rotated.owners, synchronized.owners):
+        np.testing.assert_allclose(
+            np.asarray(after.orientation_rad)-np.mean(after.orientation_rad),
+            np.asarray(before.orientation_rad)-np.mean(before.orientation_rad),
+            rtol=0.0, atol=2e-16)
+
+
 def test_complete_runtime_rolls_back_uphill_reaction():
     state, runtime, spacing, thickness, wall, energy = _fixture(.98)
     evolved, after, decision = advance_structural_junction_interval(

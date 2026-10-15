@@ -124,12 +124,19 @@ class MultiGrainProductionLedger:
     cumulative_interface_sink_first_law_residual_J: float = 0.0
     maximum_interface_sink_relative_first_law_residual: float = 0.0
     maximum_interface_sink_line_balance_residual_m2: float = 0.0
+    structural_absorption_intervals: int = 0
+    structural_absorption_inactive_intervals: int = 0
+    structural_absorption_rejected_intervals: int = 0
+    structural_absorbed_line_length_m: float = 0.0
+    cumulative_structural_absorption_heat_J: float = 0.0
+    maximum_structural_absorption_first_law_residual: float = 0.0
 
 
 @dataclass(frozen=True)
 class MultiGrainProductionRuntime:
     interfaces: tuple[MultiGrainInterface, ...]
     ledger: MultiGrainProductionLedger = MultiGrainProductionLedger()
+    structural_interfaces: tuple = ()
 
 
 @dataclass(frozen=True)

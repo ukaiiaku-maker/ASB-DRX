@@ -141,3 +141,15 @@ completed individual runs do not require renewed approval. At the deadline,
 checkpoint safely and leave an executable continuation. Do not imply that a
 shell monitor performs open-ended scientific reasoning when no reasoning agent
 is active.
+
+### Executable continuation rule
+
+During an authorized work cycle, execute a useful in-scope next task rather
+than merely recording it. The operating loop is research, derive, implement,
+test, interpret, select the next discriminating experiment, and execute it. A
+valid negative result selects the next experiment; a passing test or commit
+selects the physical integration test. Failed conservation, kinematic, work,
+or heat invariants block acceptance of the affected result but trigger
+diagnosis and repair rather than a documentation-only stop. After reconnection,
+recover the compact state and resume its next executable action without asking
+for renewed permission for the same authorized scope.

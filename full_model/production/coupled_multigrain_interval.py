@@ -35,6 +35,16 @@ from .multigrain_source_transaction import (
     evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
 )
+from .interface_structural_absorption import (
+    evaluate_interface_structural_absorption,
+)
+from .structural_interface_network import (
+    JunctionDisclinationParameters, initialize_structural_interfaces,
+    interface_lengths_m,
+)
+from .structural_multigrain_runtime import (
+    StructuralMultigrainRuntime, synchronize_structural_owner_orientations,
+)
 
 
 @dataclass(frozen=True)
@@ -62,6 +72,8 @@ class CoupledMultigrainContext:
     sink_tj_weight: float = 2.0
     interface_sink_parameters: object | None = None
     interface_sink_mode: str = "disabled"
+    structural_absorption_parameters: object | None = None
+    structural_absorption_mode: str = "disabled"
 
 
 def endpoint_observables(state, load: float,
@@ -138,10 +150,95 @@ def advance_complete_multigrain_interval(
     gamma1 = gamma0+float(context.shear_rate_s)*dt
     strain0 = np.array([[0.0, .5*gamma0], [.5*gamma0, 0.0]])
     strain1 = np.array([[0.0, .5*gamma1], [.5*gamma1, 0.0]])
-    energy_before = dict(context.energy_kwargs, mean_strain=strain0)
+    runtime = parent.runtime
+    structural_interfaces = tuple(runtime.structural_interfaces)
+    if context.structural_absorption_mode != "disabled":
+        if context.structural_absorption_mode != "common_axis":
+            raise ValueError("unknown structural absorption mode")
+        if context.structural_absorption_parameters is None:
+            raise ValueError(
+                "enabled structural absorption requires kinetic parameters")
+        if not structural_interfaces:
+            lengths = interface_lengths_m(
+                parent.state.supports, runtime.interfaces,
+                parent.state.grain_ids, context.spacing_m)
+            orientations = np.asarray([
+                np.mean(owner.orientation_rad) for owner in parent.state.owners])
+            structural_interfaces = initialize_structural_interfaces(
+                parent.state.grain_ids, orientations,
+                tuple((item.grain_a_id, item.grain_b_id)
+                      for item in runtime.interfaces), lengths,
+                context.structural_absorption_parameters.boundary.burgers_m)
+            runtime = replace(runtime, structural_interfaces=structural_interfaces)
+    energy_base = dict(context.energy_kwargs)
+    if structural_interfaces:
+        energy_base.update(
+            structural_interfaces=structural_interfaces,
+            structural_burgers_m=(
+                context.structural_absorption_parameters.boundary.burgers_m),
+            structural_parameters=(
+                context.structural_absorption_parameters.boundary),
+            junction_disclination_parameters=JunctionDisclinationParameters())
+    # React the reservoir present at the accepted interval start.  Doing this
+    # before the mechanical map keeps the structural edge and owner angles
+    # synchronized; front-generated content becomes available on the next
+    # physical interval rather than being consumed in the event that created it.
+    structural_absorption_started = time.perf_counter()
+    structural_absorption = None
+    mechanical_parent_state = parent.state
+    if context.structural_absorption_mode != "disabled":
+        structural_absorption = evaluate_interface_structural_absorption(
+            mechanical_parent_state, structural_interfaces, mean_strain=strain0,
+            interval_s=dt, spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            wall_parameters=context.wall_parameters, energy_kwargs=energy_base,
+            parameters=context.structural_absorption_parameters)
+        if structural_absorption.classification in {
+                "REJECTED_BURGERS_OR_LINE_BALANCE",
+                "REJECTED_COMPLETE_FIRST_LAW"}:
+            raise RuntimeError(
+                "structural absorption failed a hard balance audit")
+        if structural_absorption.accepted:
+            mechanical_parent_state = structural_absorption.committed_state
+            structural_interfaces = structural_absorption.committed_interfaces
+        runtime = replace(runtime, structural_interfaces=structural_interfaces,
+                          ledger=replace(
+            runtime.ledger,
+            structural_absorption_intervals=(
+                runtime.ledger.structural_absorption_intervals
+                +int(structural_absorption.accepted)),
+            structural_absorption_inactive_intervals=(
+                runtime.ledger.structural_absorption_inactive_intervals
+                +int(structural_absorption.classification.startswith("INACTIVE"))),
+            structural_absorption_rejected_intervals=(
+                runtime.ledger.structural_absorption_rejected_intervals
+                +int(structural_absorption.classification.startswith("REJECTED"))),
+            structural_absorbed_line_length_m=(
+                runtime.ledger.structural_absorbed_line_length_m
+                +(structural_absorption.projection.removed_line_length_m
+                  *context.represented_thickness_m
+                  if structural_absorption.accepted else 0.0)),
+            cumulative_structural_absorption_heat_J=(
+                runtime.ledger.cumulative_structural_absorption_heat_J
+                +(structural_absorption.generated_heat_J
+                  if structural_absorption.accepted else 0.0)),
+            maximum_structural_absorption_first_law_residual=max(
+                runtime.ledger.maximum_structural_absorption_first_law_residual,
+                structural_absorption.relative_first_law_residual
+                if structural_absorption.accepted else 0.0)))
+        energy_base.update(
+            structural_interfaces=structural_interfaces,
+            structural_burgers_m=(
+                context.structural_absorption_parameters.boundary.burgers_m),
+            structural_parameters=(
+                context.structural_absorption_parameters.boundary),
+            junction_disclination_parameters=JunctionDisclinationParameters())
+    structural_absorption_wall_time = (
+        time.perf_counter()-structural_absorption_started)
+    energy_before = dict(energy_base, mean_strain=strain0)
     mechanical_started = time.perf_counter()
     mechanical = advance_energy_qualified_mechanics(
-        parent.state, mean_strain_before=strain0,
+        mechanical_parent_state, mean_strain_before=strain0,
         mean_strain_candidate=strain1, systems=context.systems,
         topologies=context.topologies, wall_parameters=context.wall_parameters,
         dt_s=dt, represented_thickness_m=context.represented_thickness_m,
@@ -164,19 +261,19 @@ def advance_complete_multigrain_interval(
         (np.asarray(item.thermal_bath_exchange_J_m3_cells)
          for item in mechanical.operator_decisions),
         start=np.zeros(parent.state.supports.shape[1:], dtype=float))
-    runtime = replace(parent.runtime, ledger=replace(
-        parent.runtime.ledger,
+    runtime = replace(runtime, ledger=replace(
+        runtime.ledger,
         cumulative_mechanical_external_work_J=(
-            parent.runtime.ledger.cumulative_mechanical_external_work_J
+            runtime.ledger.cumulative_mechanical_external_work_J
             +mechanical.external_work_J),
         cumulative_mechanical_internal_energy_change_J=(
-            parent.runtime.ledger.cumulative_mechanical_internal_energy_change_J
+            runtime.ledger.cumulative_mechanical_internal_energy_change_J
             +mechanical.internal_energy_change_J),
         cumulative_mechanical_first_law_residual_J=(
-            parent.runtime.ledger.cumulative_mechanical_first_law_residual_J
+            runtime.ledger.cumulative_mechanical_first_law_residual_J
             +mechanical.first_law_residual_J),
         maximum_mechanical_relative_first_law_residual=max(
-            parent.runtime.ledger.maximum_mechanical_relative_first_law_residual,
+            runtime.ledger.maximum_mechanical_relative_first_law_residual,
             mechanical.relative_first_law_residual)))
     # The Hall--Petch source is a parallel physical channel over this same
     # interval. It is applied after the mechanical split at the final imposed
@@ -202,7 +299,7 @@ def advance_complete_multigrain_interval(
             interval_s=dt, source_parameters=context.source_parameters,
             systems=context.systems, wall_parameters=context.wall_parameters,
             represented_thickness_m=context.represented_thickness_m,
-            energy_kwargs=context.energy_kwargs, source_mode=context.source_mode)
+            energy_kwargs=energy_base, source_mode=context.source_mode)
         if source.classification in {
                 "REJECTED_FIRST_LAW_CLOSURE"}:
             raise RuntimeError(
@@ -259,7 +356,7 @@ def advance_complete_multigrain_interval(
             interval_s=dt, sink_parameters=context.sink_parameters,
             systems=context.systems, wall_parameters=context.wall_parameters,
             represented_thickness_m=context.represented_thickness_m,
-            energy_kwargs=context.energy_kwargs, sink_mode=context.sink_mode)
+            energy_kwargs=energy_base, sink_mode=context.sink_mode)
         if sink.classification.startswith("REJECTED_NEUTRAL_SINK_FIRST_LAW"):
             raise RuntimeError(
                 "complete coupled interval sink failed its hard energy audit")
@@ -307,7 +404,7 @@ def advance_complete_multigrain_interval(
             sink_parameters=context.interface_sink_parameters,
             wall_parameters=context.wall_parameters,
             represented_thickness_m=context.represented_thickness_m,
-            energy_kwargs=context.energy_kwargs,
+            energy_kwargs=energy_base,
             sink_mode=context.interface_sink_mode)
         if interface_sink.classification.startswith(
                 "REJECTED_INTERFACE_NEUTRAL_SINK_FIRST_LAW"):
@@ -346,11 +443,12 @@ def advance_complete_multigrain_interval(
                 abs(interface_sink.line_balance_residual_m2)
                 if interface_sink.accepted else 0.0)))
     interface_sink_wall_time = time.perf_counter()-interface_sink_started
-    energy_after = dict(context.energy_kwargs, mean_strain=strain1)
+    structural_state = interface_sink_state
+    energy_after = dict(energy_base, mean_strain=strain1)
     front_started = time.perf_counter()
     if context.front_enabled:
         state, runtime, fronts = advance_multigrain_front_interval(
-            interface_sink_state, runtime, kinetics=context.front_kinetics,
+            structural_state, runtime, kinetics=context.front_kinetics,
             dt_s=dt, maximum_substep_s=context.maximum_front_substep_s,
             spacing_m=context.spacing_m,
             represented_thickness_m=context.represented_thickness_m,
@@ -370,14 +468,20 @@ def advance_complete_multigrain_interval(
             raise RuntimeError(
                 "complete coupled interval contains a rejected or clipped front trial")
     else:
-        state = interface_sink_state
+        state = structural_state
         fronts = ()
         runtime = MultiGrainProductionRuntime(runtime.interfaces, replace(
             runtime.ledger, intervals=runtime.ledger.intervals+1,
             physical_time_s=runtime.ledger.physical_time_s+dt,
             applied_shear_strain=(runtime.ledger.applied_shear_strain
                                   +context.shear_rate_s*dt),
-            stationary_intervals=runtime.ledger.stationary_intervals+1))
+            stationary_intervals=runtime.ledger.stationary_intervals+1),
+            runtime.structural_interfaces)
+    if structural_interfaces:
+        state = synchronize_structural_owner_orientations(
+            state, StructuralMultigrainRuntime(structural_interfaces),
+            spacing_m=context.spacing_m,
+            burgers_m=context.structural_absorption_parameters.boundary.burgers_m)
     front_wall_time = time.perf_counter()-front_started
     front_sources = [
         np.asarray(item.heat_source_J_by_cell, dtype=float)
@@ -433,6 +537,10 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if interface_sink is None or not interface_sink.accepted
             else np.asarray(interface_sink.heat_source_J_by_cell)),
+        "structural_absorption_heat_J": (
+            0.0 if structural_absorption is None
+            or not structural_absorption.accepted
+            else structural_absorption.generated_heat_J),
         "mechanical_heat_J_m3": mechanical_heat,
         "mechanical_work_J_m3": mechanical_work_density,
         "front_heat_J_by_cell": front_heat,
@@ -509,15 +617,31 @@ def advance_complete_multigrain_interval(
         "interface_sink_line_balance_residual_m2": (
             0.0 if interface_sink is None or not interface_sink.accepted
             else interface_sink.line_balance_residual_m2),
+        "structural_absorption_mode": context.structural_absorption_mode,
+        "structural_absorption_classification": (
+            "DISABLED" if structural_absorption is None
+            else structural_absorption.classification),
+        "structural_absorption_fraction": (
+            0.0 if structural_absorption is None
+            else structural_absorption.kinetic_fraction),
+        "structural_absorption_content_change": (
+            [] if structural_absorption is None
+            else structural_absorption.projection.structural_content_change.tolist()),
+        "structural_absorption_relative_first_law_residual": (
+            0.0 if structural_absorption is None
+            or not structural_absorption.accepted
+            else structural_absorption.relative_first_law_residual),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
+            "structural_absorption_map": structural_absorption_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time
-                                +interface_sink_wall_time+front_wall_time
+                                +interface_sink_wall_time
+                                +structural_absorption_wall_time+front_wall_time
                                 +observable_wall_time),
         },
     }

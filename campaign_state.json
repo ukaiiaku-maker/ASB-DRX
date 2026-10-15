@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-15T00:52:00Z",
+  "last_updated_utc": "2026-10-15T17:12:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -81,12 +81,18 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "which_signed_interface_absorption_or_structural_redistribution_path_can_prevent_the_low_density_target_from_being_consumed_by_grain_30_after_3p848_percent_strain_without_inventing_Burgers_content",
-    "next_executable_experiment": "build_a_common_axis_production_bridge_from_explicit_interface_boundary_Burgers_reservoirs_to_conserved_structural_edge_content_then_price_stationary_absorption_and_cycle_redistribution_on_the_retained_r1e3_pre_reversal_and_post_reversal_states",
-    "source_identity": "V67_rate_exposure_comparison_at_commit_432adcd",
-    "expected_discriminatory_observation": "a_valid_signed_structural_reaction_must_reduce_the_0p90_MPa_incoming_boundary_storage_penalty_or_reverse_the_edge_20_30_neighbor_selection_while_closing_line_Burgers_energy_and_heat;_neutral_pair_recovery_alone_is_rejected",
+    "physical_uncertainty": "whether_continuous_common_axis_absorption_during_loading_can_change_the_1k_per_s_growth_reversal_even_though_50_post_reversal_stationary_absorption_intervals_do_not_reverse_edge_20_30_competition",
+    "next_executable_experiment": "complete_and_postprocess_the_running_500_interval_r1e3_bridge_enabled_common_production_trajectory_then_execute_the_next_energy_consistent_organization_hypothesis_if_reversal_persists",
+    "source_identity": "V67_signed_reservoir_common_axis_bridge_worktree_after_98d8b30",
+    "expected_discriminatory_observation": "sustained_target_growth_past_the_baseline_3p848_percent_peak_requires_a_measurable_change_in_edge_20_30_directional_selection_with_exact_line_Burgers_energy_and_heat_closure",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "material_continuity_removes_the_40k_elastic_reversal_and_is_Nye_consistent_but_growth_is_only_0p0111_percent;_static_target_recedes;_verified_interface_neutral_recovery_is_too_weak;_r1e3_early_growth_reaches_0p22935_percent_then_reverses_at_3p848_percent_so_mobility_and_exposure_alone_are_rejected"
+    "result_status": "common_axis_bridge_is_implemented_in_the_production_interval_and_checkpoint;_50_post_reversal_absorption_intervals_pass_balances_but_change_the_20_30_bias_only_from_0p891885_to_0p890919_MPa_without_reversal;_cycle_relaxation_is_complete_energy_rejected;_dynamic_bridge_trajectory_is_running"
+  },
+  "continuation_rule": {
+    "active": true,
+    "instruction": "execute_each_useful_in_scope_next_task_through_research_derive_implement_test_interpret_select_and_execute;_ordinary_negative_results_tests_commits_and_subtask_completion_are_not_stopping_conditions",
+    "hard_invariants": ["conservation", "kinematic_consistency", "work_heat_accounting"],
+    "reconnect_behavior": "recover_compact_state_and_resume_next_action_without_a_new_permission_request"
   },
   "completion_semantics": {
     "execution_complete": false,
