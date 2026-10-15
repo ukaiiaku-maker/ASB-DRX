@@ -123,6 +123,33 @@ def random_bulk_site_field(shape, seed, *, spectral_cutoff_cells=2.0):
     return _normalize_site_field(np.exp(smooth/standard))
 
 
+def random_discrete_bulk_site_field(
+        shape, spacing_m, site_density_m2, seed):
+    """Return a quenched discrete bulk-source population with unit mean.
+
+    ``site_density_m2`` is the physical areal density of source opportunities
+    in the represented 2-D section.  The nearest integer number of sites is
+    sampled without replacement.  Normalization preserves the same integrated
+    Hall--Petch opportunity measure as the diffuse and boundary controls, so
+    this changes geography rather than silently changing the mean hazard.
+    """
+    if len(shape) != 2 or any(int(n) < 2 for n in shape):
+        raise ValueError("a two-dimensional shape of at least 2x2 is required")
+    spacing = float(spacing_m)
+    density = float(site_density_m2)
+    if (not math.isfinite(spacing) or spacing <= 0.0
+            or not math.isfinite(density) or density <= 0.0):
+        raise ValueError("spacing and bulk source-site density must be positive")
+    cells = int(np.prod(shape))
+    represented_area = cells*spacing*spacing
+    count = int(np.clip(round(density*represented_area), 1, cells))
+    rng = np.random.default_rng(int(seed))
+    selected = rng.choice(cells, size=count, replace=False)
+    field = np.zeros(cells)
+    field[selected] = cells/count
+    return field.reshape(tuple(map(int, shape)))
+
+
 def randomized_matched_site_field(reference_field, seed):
     """Randomly relocate an existing site-strength distribution exactly.
 

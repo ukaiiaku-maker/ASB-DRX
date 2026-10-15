@@ -29,6 +29,7 @@ from .multigrain_production import (
 )
 from .arrhenius_dislocation_sources import (
     boundary_tj_site_field, random_bulk_site_field,
+    random_discrete_bulk_site_field,
     randomized_matched_site_field,
 )
 from .multigrain_source_transaction import (
@@ -73,6 +74,7 @@ class CoupledMultigrainContext:
     source_mode: str = "disabled"
     source_random_seed: int = 66
     source_tj_weight: float = 2.0
+    source_bulk_site_density_m2: float = 1.0e12
     sink_parameters: object | None = None
     sink_mode: str = "disabled"
     sink_random_seed: int = 66
@@ -312,6 +314,11 @@ def advance_complete_multigrain_interval(
             # crystal, where the boundary measure is identically zero.
             source_sites = random_bulk_site_field(
                 source_state.supports.shape[1:],
+                context.source_random_seed)
+        elif context.source_mode == "random_discrete_bulk":
+            source_sites = random_discrete_bulk_site_field(
+                source_state.supports.shape[1:], context.spacing_m,
+                context.source_bulk_site_density_m2,
                 context.source_random_seed)
         else:
             raise ValueError("unknown dislocation source mode")

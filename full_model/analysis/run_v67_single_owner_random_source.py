@@ -98,6 +98,10 @@ def main():
     parser.add_argument("--dt", type=float, default=8e-4)
     parser.add_argument("--shear-rate", type=float, default=10.0)
     parser.add_argument("--source-seed", type=int, default=67)
+    parser.add_argument(
+        "--source-mode", choices=("random_bulk", "random_discrete_bulk"),
+        default="random_bulk")
+    parser.add_argument("--source-site-density-m2", type=float, default=1e12)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     source_status = subprocess.check_output(
@@ -122,7 +126,8 @@ def main():
     context = replace(
         context, wall_parameters=wall, shear_rate_s=args.shear_rate,
         front_enabled=False, source_parameters=source_parameters,
-        source_mode="random_bulk", source_random_seed=args.source_seed,
+        source_mode=args.source_mode, source_random_seed=args.source_seed,
+        source_bulk_site_density_m2=args.source_site_density_m2,
         sink_mode="disabled", interface_sink_mode="disabled",
         structural_absorption_mode="disabled",
         lattice_absorption_mode="disabled",
@@ -173,8 +178,9 @@ def main():
     result_configuration.update(
         schema="v67-single-owner-random-source-v1",
         owner_id=args.owner_id, intervals=args.intervals, dt_s=args.dt,
-        shear_rate_s=args.shear_rate, source_mode="random_bulk",
+        shear_rate_s=args.shear_rate, source_mode=args.source_mode,
         source_seed=args.source_seed,
+        source_bulk_site_density_m2=args.source_site_density_m2,
         wall_nye_match_coefficient_J_m=2.0e-5)
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
@@ -203,7 +209,8 @@ def main():
             "shear_rate_s": args.shear_rate,
             "added_engineering_shear": (
                 args.intervals*args.dt*args.shear_rate),
-            "source_mode": "random_bulk", "source_seed": args.source_seed,
+            "source_mode": args.source_mode, "source_seed": args.source_seed,
+            "source_bulk_site_density_m2": args.source_site_density_m2,
             "source_parameters": asdict(source_parameters),
             "wall_nye_match_coefficient_J_m": 2.0e-5,
         },
