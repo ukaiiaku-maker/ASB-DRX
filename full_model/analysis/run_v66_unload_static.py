@@ -65,7 +65,9 @@ def _summary(history, endpoint, loaded_volume, configuration):
     unloading_work = sum(
         row["mechanical_external_work_J"] for row in history[:unload_steps])
     hold_work = sum(row["mechanical_external_work_J"] for row in hold)
-    directions = [row["front_directions"].get("edge-10-20") for row in hold]
+    directions = [
+        (row["front_directions"].get("edge-10-20") or "stationary")
+        for row in hold]
     return {
         "schema": "v66-unload-static-result-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -130,6 +132,7 @@ def main():
         default="disabled")
     parser.add_argument("--checkpoint-every", type=int, default=100)
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--resume-fork-source-change", action="store_true")
     args = parser.parse_args()
     args.source = args.source.resolve()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -174,8 +177,11 @@ def main():
     else:
         state, runtime, start_step, load, loaded_volume, saved, saved_provenance = (
             _load_checkpoint(args.resume))
-        if saved != configuration or saved_provenance != provenance:
-            raise ValueError("resume configuration/provenance mismatch")
+        if saved != configuration:
+            raise ValueError("resume configuration mismatch")
+        if (saved_provenance != provenance
+                and not args.resume_fork_source_change):
+            raise ValueError("resume provenance mismatch")
         context = unload_context if start_step < args.unload_steps else hold_context
         endpoint = make_endpoint(state, runtime, load, context)
         history = json.loads(history_path.read_text())
