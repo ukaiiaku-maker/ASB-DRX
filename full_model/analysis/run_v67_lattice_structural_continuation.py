@@ -47,6 +47,7 @@ def main():
     parser.add_argument("--intervals", type=int, default=50)
     parser.add_argument("--capture-distance", type=float, default=5e-7)
     parser.add_argument("--dynamic", action="store_true")
+    parser.add_argument("--front-enabled", action="store_true")
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -57,8 +58,9 @@ def main():
     spacing, _, _, _, _, _, context = _physics(physics_args)
     imposed_rate = (float(configuration.get("shear_rate_s", 0.0))
                     if args.dynamic else 0.0)
+    fronts_enabled = bool(args.dynamic or args.front_enabled)
     context = replace(
-        context, shear_rate_s=imposed_rate, front_enabled=bool(args.dynamic),
+        context, shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
         source_mode="disabled", sink_mode="disabled",
         interface_sink_mode="disabled", interface_sink_parameters=None,
         structural_absorption_mode="common_axis",
@@ -106,7 +108,7 @@ def main():
         schema="v67-one-flux-lattice-structural-continuation-v1",
         parent_checkpoint=str(args.checkpoint.resolve()),
         target_steps=args.intervals, shear_rate_s=imposed_rate,
-        front_enabled=bool(args.dynamic),
+        front_enabled=fronts_enabled,
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
         structural_absorption_mode="common_axis")
@@ -130,7 +132,7 @@ def main():
         "configuration": {
             "intervals": args.intervals, "dt_s": dt,
             "capture_distance_m": args.capture_distance,
-            "shear_rate_s": imposed_rate, "front_enabled": bool(args.dynamic),
+            "shear_rate_s": imposed_rate, "front_enabled": fronts_enabled,
             "lattice_absorption": "one_flux_mura",
             "structural_absorption": "common_axis",
         },
