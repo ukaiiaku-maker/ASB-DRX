@@ -31,6 +31,9 @@ from full_model.production.interface_structural_absorption import (
 from full_model.production.lattice_interface_absorption import (
     LatticeInterfaceAbsorptionParameters,
 )
+from full_model.production.multigrain_source_transaction import (
+    NeutralBoundarySinkParameters,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -81,6 +84,7 @@ def main():
     parser.add_argument("--intervals", type=int, default=50)
     parser.add_argument("--capture-distance", type=float, default=5e-7)
     parser.add_argument("--disable-rx", action="store_true")
+    parser.add_argument("--interface-neutral-sink", action="store_true")
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -94,7 +98,10 @@ def main():
     context = replace(
         base_context, shear_rate_s=float(configuration["shear_rate_s"]),
         front_enabled=True, source_mode="disabled", sink_mode="disabled",
-        interface_sink_mode="disabled", interface_sink_parameters=None,
+        interface_sink_mode=("neutral_pair" if args.interface_neutral_sink
+                             else "disabled"),
+        interface_sink_parameters=(NeutralBoundarySinkParameters()
+                                   if args.interface_neutral_sink else None),
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"),
         structural_absorption_parameters=(
             InterfaceStructuralAbsorptionParameters() if rx_enabled else None),
@@ -157,6 +164,7 @@ def main():
         schema="v67-drx-asb-overlap-v1", target_steps=args.intervals,
         parent_checkpoint=str(args.checkpoint.resolve()),
         rx_enabled=rx_enabled,
+        interface_neutral_sink_enabled=bool(args.interface_neutral_sink),
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
         lattice_capture_distance_m=args.capture_distance,
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
@@ -203,6 +211,8 @@ def main():
         "decision": {
             "initial_connected_band": bool(initial_metrics["band_like"]),
             "rx_pathway_enabled": rx_enabled,
+            "interface_neutral_sink_enabled": bool(
+                args.interface_neutral_sink),
             "final_connected_band": bool(final_metrics["band_like"]),
             "band_persisted_every_interval": active_band_intervals == args.intervals,
             "any_owner_net_growth": bool(growing),
