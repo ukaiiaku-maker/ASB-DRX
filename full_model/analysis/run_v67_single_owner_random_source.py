@@ -36,6 +36,7 @@ from full_model.production.arrhenius_dislocation_sources import (
 from full_model.production.common_subgrain_recognition import (
     recognize_common_orientation_plateau,
 )
+from full_model.production.common_tensorial_wall import CommonWallState
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
 )
@@ -102,6 +103,9 @@ def main():
         "--source-mode", choices=("random_bulk", "random_discrete_bulk"),
         default="random_bulk")
     parser.add_argument("--source-site-density-m2", type=float, default=1e12)
+    parser.add_argument(
+        "--initial-state", choices=("retained_owner", "uniform_single_crystal"),
+        default="retained_owner")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     source_status = subprocess.check_output(
@@ -112,14 +116,44 @@ def main():
         owner_index = state.grain_ids.index(args.owner_id)
     except ValueError as error:
         raise ValueError("requested material owner is absent") from error
-    owner = state.owners[owner_index]
-    grid = owner.temperature_K.shape
+    retained_owner = state.owners[owner_index]
+    grid = retained_owner.temperature_K.shape
+    if args.initial_state == "retained_owner":
+        owner = retained_owner
+        initial_load = load
+        active_owner_id = args.owner_id
+    else:
+        family = grid+(len(retained_owner.mobile_plus_m2[0, 0]),)
+        zfamily = np.zeros(family)
+        temperature = float(configuration.get("temperature_K", 1000.0))
+        owner = CommonWallState(
+            np.full(family, 1.0e13), np.full(family, 1.0e13),
+            np.full(family, 1.0e13), np.full(family, 1.0e13),
+            np.full(family, 1.0e12), np.full(family, 1.0e12),
+            np.zeros(grid+(0,)), np.zeros(grid), np.zeros(grid),
+            zfamily.copy(), np.zeros(grid+(3, 3)),
+            np.zeros(family+(3,)), np.zeros(family+(3, 3)),
+            np.zeros(grid), np.full(grid, temperature))
+        initial_load = 0.0
+        active_owner_id = 1
     single = MultiGrainCommonState(
-        (args.owner_id,), np.ones((1,)+grid), (owner,))
+        (active_owner_id,), np.ones((1,)+grid), (owner,))
     single.validate()
     spacing, thickness, systems, wall, _, _, context = _physics(
         _args_from_configuration(configuration))
-    wall = replace(wall, wall_nye_match_coefficient_J_m=2.0e-5)
+    wall_updates = {"wall_nye_match_coefficient_J_m": 2.0e-5}
+    if args.initial_state == "uniform_single_crystal":
+        poisson = wall.c12_Pa/(wall.c11_Pa+wall.c12_Pa)
+        reduced_modulus = wall.c44_Pa/(2.0*np.pi*(1.0-poisson))
+        gb2 = reduced_modulus*wall.burgers_m**2
+        wall_updates.update(
+            polarized_wall_absorption_enabled=True,
+            groma_family_correlation_energy_J_m=1.25*gb2,
+            groma_gnd_correlation_energy_J_m=.5*gb2,
+            groma_sign_resolved_transport_enabled=True,
+            mobile_correlation_diffusivity_m2_s=0.0,
+            transport_scheme="spectral")
+    wall = replace(wall, **wall_updates)
     source_parameters = ArrheniusSourceParameters(
         grain_size_m=float(configuration.get("length_m", spacing*grid[0])),
         pair_increment_m2=1.0e10)
@@ -135,7 +169,7 @@ def main():
         wall_orientation_relaxation_parameters=(
             WallOrientationRelaxationParameters()))
     endpoint = make_endpoint(
-        single, MultiGrainProductionRuntime(()), load, context)
+        single, MultiGrainProductionRuntime(()), initial_load, context)
     initial = owner
     records = []
     for index in range(1, args.intervals+1):
@@ -160,10 +194,11 @@ def main():
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fraction": interval.audit[
-                "wall_orientation_relaxation_fractions"].get(args.owner_id, 0.0),
+                "wall_orientation_relaxation_fractions"].get(
+                    active_owner_id, 0.0),
             "wall_orientation_affinity_J_m": interval.audit[
                 "wall_orientation_relaxation_affinities_J_m"].get(
-                    args.owner_id, 0.0),
+                    active_owner_id, 0.0),
             "orientation_span_deg": float(np.degrees(np.ptp(
                 current.orientation_rad))),
             "compatible_target_span_deg": float(np.degrees(
@@ -177,7 +212,8 @@ def main():
     result_configuration = dict(configuration)
     result_configuration.update(
         schema="v67-single-owner-random-source-v1",
-        owner_id=args.owner_id, intervals=args.intervals, dt_s=args.dt,
+        owner_id=active_owner_id, initial_state=args.initial_state,
+        intervals=args.intervals, dt_s=args.dt,
         shear_rate_s=args.shear_rate, source_mode=args.source_mode,
         source_seed=args.source_seed,
         source_bulk_site_density_m2=args.source_site_density_m2,
@@ -202,7 +238,8 @@ def main():
         "parent_checkpoint_sha256": _sha(args.checkpoint),
         "scope": "prepared retained-material one-owner mechanism control",
         "configuration": {
-            "owner_id": args.owner_id, "grid": list(grid),
+            "owner_id": active_owner_id, "grid": list(grid),
+            "initial_state": args.initial_state,
             "spacing_m": spacing, "represented_thickness_m": thickness,
             "intervals": args.intervals, "dt_s": args.dt,
             "added_physical_time_s": args.intervals*args.dt,
@@ -213,6 +250,10 @@ def main():
             "source_bulk_site_density_m2": args.source_site_density_m2,
             "source_parameters": asdict(source_parameters),
             "wall_nye_match_coefficient_J_m": 2.0e-5,
+            "polarized_wall_absorption_enabled": (
+                wall.polarized_wall_absorption_enabled),
+            "groma_sign_resolved_transport_enabled": (
+                wall.groma_sign_resolved_transport_enabled),
         },
         "initial": {
             "orientation_span_deg": float(np.degrees(np.ptp(
