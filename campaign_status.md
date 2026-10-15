@@ -2805,7 +2805,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - A production one-flux lattice-to-interface operator now transfers signed
   mobile line and Burgers content while advancing beta-p and family Nye from
   the identical swept-area increment. The complete regression passes 1,113
-  tests in 316.81 seconds; focused integration tests pass 10/10 after the
+  tests in 368.69 seconds; focused integration tests pass 10/10 after the
   line-unit repair.
 - Global and edge-local thermal capture are valid negative controls: all edges
   are individually downhill, but the 20--30 bias worsens. Stress-directed
