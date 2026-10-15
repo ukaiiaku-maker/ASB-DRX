@@ -1,0 +1,186 @@
+{
+  "cases": {
+    "v67_material_continuity_interface_sink_r4e4": {
+      "decision": {
+        "reason": "This common-state exposure tests simultaneous mechanisms; strict ASB still requires persistence/refinement and matched adiabatic/isothermal controls, while RX remains an inherited-subgrain maturation pathway.",
+        "run_complete": true,
+        "same_common_state_carries_drx_and_asb_channels": true,
+        "stress_peak_observed": true,
+        "strict_asb_qualified": false,
+        "sustained_target_growth": true,
+        "thermal_localization_observed": true
+      },
+      "interface_sink": {
+        "accepted_intervals": 900,
+        "annihilated_pair_cell_sum_m2": 71438754048.04765,
+        "generated_heat_J": 9.567077942114545e-21,
+        "maximum_relative_first_law_residual": 0.0006150156166030356
+      },
+      "result": {
+        "accepted_front_events": 923,
+        "cumulative_mechanical_external_work_J": 1.6069469692251525e-12,
+        "cumulative_mechanical_first_law_residual_J": 1.8921936142266006e-15,
+        "final_target_growth_fraction": 0.00011067951411572241,
+        "final_temperature_mean_K": 1027.1517744111247,
+        "interface_sink_annihilated_pair_cell_sum_m2": 71438754048.04765,
+        "interface_sink_generated_heat_J": 9.567077942114545e-21,
+        "interface_sink_inactive_intervals": 0,
+        "interface_sink_intervals": 900,
+        "maximum_front_relative_energy_closure": 2.997808770353809e-06,
+        "maximum_interface_sink_relative_first_law_residual": 0.0006150156166030356,
+        "maximum_mechanical_relative_first_law_residual": 0.0015262771830238712,
+        "maximum_power_localization_ratio": 2.9404207461384155,
+        "maximum_sink_relative_first_law_residual": 0.0,
+        "maximum_source_relative_first_law_residual": 0.0,
+        "maximum_temperature_contrast_K": 26.73532803127307,
+        "peak_step": 651,
+        "peak_stress_Pa": 2480184866.7927694,
+        "post_peak_softening_fraction": 0.010474545985368327,
+        "rejected_front_events": 0,
+        "sink_annihilated_pair_cell_sum_m2": 0.0,
+        "sink_generated_heat_J": 0.0,
+        "sink_inactive_intervals": 0,
+        "sink_intervals": 0,
+        "source_created_line_cell_sum_m2": 0.0,
+        "source_event_count": 0.0,
+        "source_generated_heat_J": 0.0,
+        "source_inactive_intervals": 0,
+        "source_intervals": 0,
+        "steps_completed": 900,
+        "target_growth_monotone": true,
+        "terminal_density_boundary_correlation": -0.030832888707796012
+      },
+      "result_sha256": "4ca775759bef1bfdb8a19aefe885ff4191457a2ab1324583d28ca3c6b1ed9789"
+    },
+    "v67_material_continuity_interface_sink_unload_static": {
+      "decision": {
+        "reason": "The protocol removes imposed strain through the complete mechanical ledger and then holds zero strain. Any residual internal stress remains a physical driver, so this is not called a zero-stress anneal.",
+        "retained_loaded_state_used": true,
+        "run_complete": true,
+        "static_front_active": true,
+        "static_target_reactivated": false,
+        "stress_free_claim": false
+      },
+      "interface_sink": {
+        "accepted_intervals": 2100,
+        "annihilated_pair_cell_sum_m2": 648977451882.0026,
+        "generated_heat_J": 8.691106035603775e-20,
+        "maximum_relative_first_law_residual": 0.0006150156166030356
+      },
+      "result": {
+        "accepted_front_events_total": 2120,
+        "final_residual_shear_stress_Pa": -1701742473.3877063,
+        "final_temperature_contrast_K": 23.31165766939762,
+        "final_temperature_mean_K": 1041.2935046407479,
+        "hold_edge_10_20_direction_counts": {
+          "a_to_b": 299,
+          "stationary": 1
+        },
+        "hold_external_work_J": 0.0,
+        "hold_target_change_fraction": -7.355356406920675e-05,
+        "hold_target_change_from_unloaded_fraction": -6.483123790499836e-05,
+        "hold_target_monotone": false,
+        "maximum_front_relative_energy_closure": 4.857096914568159e-06,
+        "maximum_mechanical_relative_first_law_residual": 0.0026812358926304814,
+        "rejected_front_events_total": 0,
+        "unload_target_change_fraction": -8.722326164208393e-06,
+        "unload_terminal_shear_stress_Pa": -2078716716.7406688,
+        "unloading_external_work_J": 3.6804989559706646e-13,
+        "zero_strain_reached": true
+      },
+      "result_sha256": "da3e4b2798d9a01b41c843e35434868e36144e58a4a4d5b8174610b9b808ac2a"
+    },
+    "v67_material_continuity_r4e4": {
+      "decision": {
+        "reason": "This common-state exposure tests simultaneous mechanisms; strict ASB still requires persistence/refinement and matched adiabatic/isothermal controls, while RX remains an inherited-subgrain maturation pathway.",
+        "run_complete": true,
+        "same_common_state_carries_drx_and_asb_channels": true,
+        "stress_peak_observed": true,
+        "strict_asb_qualified": false,
+        "sustained_target_growth": true,
+        "thermal_localization_observed": true
+      },
+      "interface_sink": {
+        "accepted_intervals": 0,
+        "annihilated_pair_cell_sum_m2": 0.0,
+        "generated_heat_J": 0.0,
+        "maximum_relative_first_law_residual": 0.0
+      },
+      "result": {
+        "accepted_front_events": 920,
+        "cumulative_mechanical_external_work_J": 1.6069469916251814e-12,
+        "cumulative_mechanical_first_law_residual_J": 1.892111805671251e-15,
+        "final_target_growth_fraction": 0.0001106086982707921,
+        "final_temperature_mean_K": 1027.1517432457667,
+        "maximum_front_relative_energy_closure": 2.0514414543178578e-06,
+        "maximum_mechanical_relative_first_law_residual": 0.001526277088867621,
+        "maximum_power_localization_ratio": 2.940420746826678,
+        "maximum_sink_relative_first_law_residual": 0.0,
+        "maximum_source_relative_first_law_residual": 0.0,
+        "maximum_temperature_contrast_K": 26.735297844736124,
+        "peak_step": 651,
+        "peak_stress_Pa": 2480184866.926443,
+        "post_peak_softening_fraction": 0.010472835746260784,
+        "rejected_front_events": 0,
+        "sink_annihilated_pair_cell_sum_m2": 0.0,
+        "sink_generated_heat_J": 0.0,
+        "sink_inactive_intervals": 0,
+        "sink_intervals": 0,
+        "source_created_line_cell_sum_m2": 0.0,
+        "source_event_count": 0.0,
+        "source_generated_heat_J": 0.0,
+        "source_inactive_intervals": 0,
+        "source_intervals": 0,
+        "steps_completed": 900,
+        "target_growth_monotone": true,
+        "terminal_density_boundary_correlation": -0.030832978832590438
+      },
+      "result_sha256": "32566c47cf17b517ee4ec9e235983015ea67bb4c0a4920a492ad1ad0f209038e"
+    },
+    "v67_material_continuity_unload_static": {
+      "decision": {
+        "reason": "The protocol removes imposed strain through the complete mechanical ledger and then holds zero strain. Any residual internal stress remains a physical driver, so this is not called a zero-stress anneal.",
+        "retained_loaded_state_used": true,
+        "run_complete": true,
+        "static_front_active": true,
+        "static_target_reactivated": false,
+        "stress_free_claim": false
+      },
+      "interface_sink": {
+        "accepted_intervals": 0,
+        "annihilated_pair_cell_sum_m2": 0.0,
+        "generated_heat_J": 0.0,
+        "maximum_relative_first_law_residual": 0.0
+      },
+      "result": {
+        "accepted_front_events_total": 2122,
+        "final_residual_shear_stress_Pa": -1701742097.2459455,
+        "final_temperature_contrast_K": 23.31163452133751,
+        "final_temperature_mean_K": 1041.2934590710545,
+        "hold_edge_10_20_direction_counts": {
+          "a_to_b": 300
+        },
+        "hold_external_work_J": 0.0,
+        "hold_target_change_fraction": -7.371878105567325e-05,
+        "hold_target_change_from_unloaded_fraction": -6.499966684984784e-05,
+        "hold_target_monotone": false,
+        "maximum_front_relative_energy_closure": 5.0837236777439104e-06,
+        "maximum_mechanical_relative_first_law_residual": 0.0026812403386269677,
+        "rejected_front_events_total": 0,
+        "unload_target_change_fraction": -8.71911420582542e-06,
+        "unload_terminal_shear_stress_Pa": -2078716294.8616242,
+        "unloading_external_work_J": 3.680479773931835e-13,
+        "zero_strain_reached": true
+      },
+      "result_sha256": "ed1967462b803cc2d8961cbf5ce9824e879a39ea9fe1c263e4584d620a4352c5"
+    }
+  },
+  "decision": {
+    "dynamic_40k_material_effect": "NEGLIGIBLE_AT_1P8_US",
+    "macroscopic_drx_qualified": false,
+    "mechanism_conclusion": "Neutral recovery of explicit interface pairs is valid and rate-sensitive but insufficient to select sustained growth of the low-density target. Signed absorption/structural redistribution remains missing.",
+    "operator_verified": true,
+    "static_6us_target_reactivated": false
+  },
+  "schema": "v67-interface-neutral-recovery-comparison-v1"
+}

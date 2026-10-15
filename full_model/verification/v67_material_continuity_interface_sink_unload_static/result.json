@@ -1,0 +1,50 @@
+{
+  "configuration": {
+    "hold_constraint": "fixed zero macroscopic shear strain; residual stress retained",
+    "hold_dt_s": 2e-08,
+    "hold_rate_s": 0.0,
+    "hold_steps": 300,
+    "interface_sink_mode": "neutral_pair",
+    "length_m": 4.8e-06,
+    "n": 16,
+    "plastic_history_mode": "material_continuity",
+    "schema": "v66-unload-static-configuration-v1",
+    "source_checkpoint": "full_model/verification/v67_material_continuity_interface_sink_r4e4/checkpoint_latest.npz",
+    "temperature_parameter_K": 1000.0,
+    "unload_dt_s": 2e-09,
+    "unload_rate_s": -40000.0,
+    "unload_steps": 900
+  },
+  "created_utc": "2026-10-15T00:44:12.122223+00:00",
+  "decision": {
+    "reason": "The protocol removes imposed strain through the complete mechanical ledger and then holds zero strain. Any residual internal stress remains a physical driver, so this is not called a zero-stress anneal.",
+    "retained_loaded_state_used": true,
+    "run_complete": true,
+    "static_front_active": true,
+    "static_target_reactivated": false,
+    "stress_free_claim": false
+  },
+  "loaded_target_volume_m3": 3.705657544937691e-21,
+  "result": {
+    "accepted_front_events_total": 2120,
+    "final_residual_shear_stress_Pa": -1701742473.3877063,
+    "final_temperature_contrast_K": 23.31165766939762,
+    "final_temperature_mean_K": 1041.2935046407479,
+    "hold_edge_10_20_direction_counts": {
+      "a_to_b": 299,
+      "stationary": 1
+    },
+    "hold_external_work_J": 0.0,
+    "hold_target_change_fraction": -7.355356406920675e-05,
+    "hold_target_change_from_unloaded_fraction": -6.483123790499836e-05,
+    "hold_target_monotone": false,
+    "maximum_front_relative_energy_closure": 4.857096914568159e-06,
+    "maximum_mechanical_relative_first_law_residual": 0.0026812358926304814,
+    "rejected_front_events_total": 0,
+    "unload_target_change_fraction": -8.722326164208393e-06,
+    "unload_terminal_shear_stress_Pa": -2078716716.7406688,
+    "unloading_external_work_J": 3.6804989559706646e-13,
+    "zero_strain_reached": true
+  },
+  "schema": "v66-unload-static-result-v1"
+}
