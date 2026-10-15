@@ -341,6 +341,9 @@
     },
     "target_volume_m3": 3.712100193176014e-21
   },
+  "artifacts": {
+    "checkpoint_latest.npz": "d212222fca8ed38b7ac949cc021dfa7e44d65612419a6cddc270d14684455f78"
+  },
   "before_directional_audit": {
     "directional_prices": [
       {
@@ -693,7 +696,7 @@
     "shear_rate_s": 1000.0,
     "structural_absorption": "common_axis"
   },
-  "created_utc": "2026-10-15T17:57:34.235754+00:00",
+  "created_utc": "2026-10-15T17:59:13.251075+00:00",
   "decision": {
     "accepted_lattice_intervals": 50,
     "accepted_structural_intervals": 50,
@@ -1959,6 +1962,23 @@
     "structural_absorption_rejected_intervals": 0,
     "transformed_volume_m3": 1.4143329616281826e-23
   },
+  "owner_area_m2": {
+    "10": {
+      "after": 8.08343680771475e-12,
+      "before": 8.083432883910384e-12,
+      "change": 3.9238043651969024e-18
+    },
+    "20": {
+      "after": 7.48407297011293e-12,
+      "before": 7.485093010168732e-12,
+      "change": -1.020040055801847e-15
+    },
+    "30": {
+      "after": 7.472490222172317e-12,
+      "before": 7.471474105920879e-12,
+      "change": 1.0161162514382657e-15
+    }
+  },
   "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_interface_structural_bridge_dynamic_r1e3_clean/checkpoint_latest.npz",
   "parent_checkpoint_sha256": "58802f9269f00d823d8a8c1b24a4ae75a778975d391610ab9a7a5c9217177b15",
   "parent_provenance": {
@@ -1968,6 +1988,6 @@
     "source_dirty": false
   },
   "schema": "v67-one-flux-lattice-structural-continuation-v1",
-  "source_commit": "6bb859785968fae3274d37a11524a76a0b8f4daf",
+  "source_commit": "ad81c8c5efecb04a9d374754cc2ac95c8acc27a7",
   "source_tree_clean": true
 }
