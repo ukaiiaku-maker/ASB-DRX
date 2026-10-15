@@ -128,6 +128,11 @@ class CommonWallParameters:
     wall_density_center_ratio: float = 1.3
     wall_density_width_ratio: float = 0.3
     wall_order_gradient_J_m: float = 2.0e-7
+    # Common-axis Frank--Bilby compatibility between the conservative ordered
+    # wall inventory and the evolved lattice-orientation gradient.  Zero
+    # retains the qualified baseline; 2e-5 J/m is the pre-existing extensive-
+    # wall parameterization used by the V23--V49 branch.
+    wall_nye_match_coefficient_J_m: float = 0.0
     wall_order_enabled: bool = True
     extensive_wall_partition_enabled: bool = False
     # Default-off physical nucleation of a wall reservoir by absorption of
@@ -224,7 +229,8 @@ class CommonWallParameters:
             raise ValueError("mobile correlation diffusivity cannot be negative")
         if any(not math.isfinite(float(value)) or value < 0.0 for value in (
                 self.groma_family_correlation_energy_J_m,
-                self.groma_gnd_correlation_energy_J_m)):
+                self.groma_gnd_correlation_energy_J_m,
+                self.wall_nye_match_coefficient_J_m)):
             raise ValueError("Groma correlation energies cannot be negative")
         if (self.groma_sign_resolved_transport_enabled
                 and (self.groma_family_correlation_energy_J_m <= 0.0
@@ -421,6 +427,32 @@ def wall_polarization_invariants(
     }
 
 
+def ordered_wall_orientation_mismatch(state, systems, parameters,
+                                      _rotated_fields=None):
+    """Common-axis ordered-wall Nye minus the lattice Frank--Bilby target.
+
+    This is the production equivalent of the extensive-wall compatibility
+    term.  Ordered content is a partition of existing wall line and the line
+    direction is the declared invariant z axis of the 2.5-D model.
+    """
+    if _rotated_fields is None:
+        _rotated_fields = rotated_system_fields(systems, state.orientation_rad)
+    burgers = _rotated_fields[0]
+    basis = np.zeros(burgers.shape+(3,))
+    basis[..., :, :, 2] = burgers
+    signed_wall = np.asarray(state.wall_plus_m2)-np.asarray(state.wall_minus_m2)
+    ordered_signed = np.asarray(state.wall_order)[..., None]*signed_wall
+    ordered_nye = np.einsum("...a,...aij->...ij", ordered_signed, basis)
+    theta = np.asarray(state.orientation_rad)
+    tx, ty = _spectral_gradient(theta, parameters.spacing_m)
+    c, s = np.cos(theta), np.sin(theta)
+    dR_ey = np.stack((-c, -s, np.zeros_like(theta)), axis=-1)
+    dR_ex = np.stack((-s, c, np.zeros_like(theta)), axis=-1)
+    target = np.zeros(theta.shape+(3, 3))
+    target[..., :, 2] = tx[..., None]*dR_ey-ty[..., None]*dR_ex
+    return ordered_nye-target, basis, signed_wall
+
+
 def wall_free_energy_derivatives(
         state, parameters, topologies=(), systems=None, *,
         _rotated_fields=None):
@@ -492,6 +524,24 @@ def wall_free_energy_derivatives(
                      +partition_direct_mu[..., None]
                      +denergy_dgate[..., None]
                      *invariants["wall_gate_derivative_minus_m2"])
+    match_coefficient = parameters.wall_nye_match_coefficient_J_m
+    if match_coefficient > 0.0:
+        mismatch, match_basis, signed_wall = ordered_wall_orientation_mismatch(
+            state, systems, parameters, _rotated_fields=_rotated_fields)
+        match_family_derivative = match_coefficient*np.einsum(
+            "...ij,...aij->...a", mismatch, match_basis)
+        wall_plus_mu = (wall_plus_mu
+                        +q[..., None]*match_family_derivative)
+        wall_minus_mu = (wall_minus_mu
+                         -q[..., None]*match_family_derivative)
+        match_q_derivative = match_coefficient*np.einsum(
+            "...ij,...ij->...", mismatch,
+            np.einsum("...a,...aij->...ij", signed_wall, match_basis))
+        match_energy = .5*match_coefficient*np.sum(
+            mismatch*mismatch, axis=(-2, -1))
+    else:
+        match_q_derivative = np.zeros_like(q)
+        match_energy = np.zeros_like(q)
     junction_mu = (multiplicity*common_mu[..., None]
                    +multiplicity*parameters.junction_energy_J_m
                    +topology_energy)
@@ -500,7 +550,8 @@ def wall_free_energy_derivatives(
     dq = (barrier_derivative
           +2.0*parameters.wall_absent_penalty_J_m3*(1.0-gate)*q
           -parameters.wall_order_amplitude_J_m3*gate*dh
-          -parameters.wall_partition_J_m*partition_offset*gate*dh)
+          -parameters.wall_partition_J_m*partition_offset*gate*dh
+          +match_q_derivative)
     return {
         "total_density_m2": total, "wall_density_m2": wall,
         **invariants,
@@ -514,6 +565,7 @@ def wall_free_energy_derivatives(
         "wall_minus_mu_J_m": wall_minus_mu,
         "junction_mu_J_m": junction_mu,
         "wall_order_derivative_J_m3": dq,
+        "wall_nye_match_energy_J_m3": match_energy,
     }
 
 
@@ -562,7 +614,7 @@ def wall_free_energy_density_J_m3(state, parameters, topologies=(), systems=None
                  /parameters.wall_target_m2)
     return (density+family_correlation+gnd_correlation
             +forest+junction+barrier+absent
-            +ordering+partition)
+            +ordering+partition+chemical["wall_nye_match_energy_J_m3"])
 
 
 def wall_total_free_energy_density_J_m3(

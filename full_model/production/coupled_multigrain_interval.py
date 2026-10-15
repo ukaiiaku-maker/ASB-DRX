@@ -41,6 +41,9 @@ from .interface_structural_absorption import (
 from .lattice_interface_absorption import (
     evaluate_lattice_interface_absorption,
 )
+from .wall_orientation_relaxation import (
+    evaluate_wall_orientation_relaxation,
+)
 from .structural_interface_network import (
     JunctionDisclinationParameters, initialize_structural_interfaces,
     interface_lengths_m,
@@ -79,6 +82,8 @@ class CoupledMultigrainContext:
     structural_absorption_mode: str = "disabled"
     lattice_absorption_parameters: object | None = None
     lattice_absorption_mode: str = "disabled"
+    wall_orientation_relaxation_parameters: object | None = None
+    wall_orientation_relaxation_mode: str = "disabled"
 
 
 def endpoint_observables(state, load: float,
@@ -496,6 +501,45 @@ def advance_complete_multigrain_interval(
                 if lattice_absorption.accepted else 0.0)))
     lattice_absorption_wall_time = (
         time.perf_counter()-lattice_absorption_started)
+    wall_orientation_started = time.perf_counter()
+    wall_orientation = None
+    if context.wall_orientation_relaxation_mode != "disabled":
+        if context.wall_orientation_relaxation_mode != "ordered_nye":
+            raise ValueError("unknown wall orientation relaxation mode")
+        if context.wall_orientation_relaxation_parameters is None:
+            raise ValueError(
+                "enabled wall orientation relaxation requires parameters")
+        wall_orientation = evaluate_wall_orientation_relaxation(
+            structural_state, interval_s=dt, spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=dict(energy_base, mean_strain=strain1),
+            parameters=context.wall_orientation_relaxation_parameters)
+        if wall_orientation.classification == "REJECTED_COMPLETE_FIRST_LAW":
+            raise RuntimeError(
+                "wall orientation relaxation failed its hard energy audit")
+        if wall_orientation.accepted:
+            structural_state = wall_orientation.committed_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            wall_orientation_relaxation_intervals=(
+                runtime.ledger.wall_orientation_relaxation_intervals
+                +int(wall_orientation.accepted)),
+            wall_orientation_relaxation_inactive_intervals=(
+                runtime.ledger.wall_orientation_relaxation_inactive_intervals
+                +int(wall_orientation.classification.startswith("INACTIVE"))),
+            wall_orientation_relaxation_rejected_intervals=(
+                runtime.ledger.wall_orientation_relaxation_rejected_intervals
+                +int(wall_orientation.classification.startswith("REJECTED"))),
+            cumulative_wall_orientation_relaxation_heat_J=(
+                runtime.ledger.cumulative_wall_orientation_relaxation_heat_J
+                +(wall_orientation.generated_heat_J
+                  if wall_orientation.accepted else 0.0)),
+            maximum_wall_orientation_relaxation_first_law_residual=max(
+                runtime.ledger.maximum_wall_orientation_relaxation_first_law_residual,
+                wall_orientation.relative_first_law_residual
+                if wall_orientation.accepted else 0.0)))
+    wall_orientation_wall_time = time.perf_counter()-wall_orientation_started
     energy_after = dict(energy_base, mean_strain=strain1)
     front_started = time.perf_counter()
     if context.front_enabled:
@@ -600,6 +644,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if lattice_absorption is None or not lattice_absorption.accepted
             else np.asarray(lattice_absorption.heat_source_J_by_cell)),
+        "wall_orientation_relaxation_heat_J": (
+            0.0 if wall_orientation is None or not wall_orientation.accepted
+            else wall_orientation.generated_heat_J),
+        "wall_orientation_relaxation_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if wall_orientation is None or not wall_orientation.accepted
+            else np.asarray(wall_orientation.heat_source_J_by_cell)),
         "mechanical_heat_J_m3": mechanical_heat,
         "mechanical_work_J_m3": mechanical_work_density,
         "front_heat_J_by_cell": front_heat,
@@ -714,6 +765,20 @@ def advance_complete_multigrain_interval(
         "lattice_absorption_relative_first_law_residual": (
             0.0 if lattice_absorption is None or not lattice_absorption.accepted
             else lattice_absorption.relative_first_law_residual),
+        "wall_orientation_relaxation_mode": (
+            context.wall_orientation_relaxation_mode),
+        "wall_orientation_relaxation_classification": (
+            "DISABLED" if wall_orientation is None
+            else wall_orientation.classification),
+        "wall_orientation_relaxation_fractions": (
+            {} if wall_orientation is None
+            else wall_orientation.owner_fraction_by_id),
+        "wall_orientation_relaxation_affinities_J_m": (
+            {} if wall_orientation is None
+            else wall_orientation.owner_affinity_J_m_by_id),
+        "wall_orientation_relaxation_relative_first_law_residual": (
+            0.0 if wall_orientation is None or not wall_orientation.accepted
+            else wall_orientation.relative_first_law_residual),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
@@ -721,12 +786,14 @@ def advance_complete_multigrain_interval(
             "interface_sink_map": interface_sink_wall_time,
             "structural_absorption_map": structural_absorption_wall_time,
             "lattice_absorption_map": lattice_absorption_wall_time,
+            "wall_orientation_relaxation_map": wall_orientation_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time
                                 +interface_sink_wall_time
                                 +structural_absorption_wall_time+front_wall_time
                                 +lattice_absorption_wall_time
+                                +wall_orientation_wall_time
                                 +observable_wall_time),
         },
     }

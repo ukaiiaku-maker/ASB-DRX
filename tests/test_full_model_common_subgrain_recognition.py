@@ -50,6 +50,31 @@ def test_common_recognition_is_read_only_and_frank_bilby_qualified():
         np.testing.assert_array_equal(actual, expected)
 
 
+def test_owner_domain_mask_preserves_interior_plateau_qualification():
+    theta, family, order, density = manufactured_plateau()
+    domain = np.zeros_like(theta, dtype=bool)
+    domain[4:-4, 4:-4] = True
+    result = recognize_common_orientation_plateau(
+        theta, family, order, density, 1.0e-7, domain_mask=domain)
+    assert result["qualified"]
+    assert result["gate_status"]["intragranular_enclosure"]
+    np.testing.assert_allclose(
+        result["domain_area_m2"], np.sum(domain)*1.0e-14)
+
+
+def test_plateau_touching_owner_boundary_is_not_intragranular():
+    theta, family, order, density = manufactured_plateau()
+    domain = np.ones_like(theta, dtype=bool)
+    domain[:theta.shape[0]//3+1] = False
+    result = recognize_common_orientation_plateau(
+        theta, family, order, density, 1.0e-7, domain_mask=domain)
+    if "gate_status" in result:
+        assert not result["qualified"]
+        assert not result["gate_status"]["intragranular_enclosure"]
+    else:
+        assert not result["qualified"]
+
+
 def test_neutral_handoff_does_not_change_common_state():
     systems = bcc_four_family_systems()
     common = zero_common(32)

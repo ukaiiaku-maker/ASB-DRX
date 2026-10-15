@@ -117,6 +117,45 @@ def test_wall_order_residual_is_derivative_of_same_free_energy():
     assert np.all(residual.state_rate.wall_order*derivative <= 1e-8)
 
 
+def test_wall_nye_match_wall_and_order_derivatives_share_complete_energy():
+    systems, topologies, p, state, _ = fixture(n=8)
+    p = replace(p, wall_nye_match_coefficient_J_m=2.0e-5)
+    x = np.arange(8)[:, None]
+    orientation = .03*np.sin(2*np.pi*x/8.0)
+    state = replace(
+        state,
+        orientation_rad=np.broadcast_to(orientation, (8, 8)).copy(),
+        wall_plus_m2=np.asarray(state.wall_plus_m2).copy())
+    state.wall_plus_m2[..., 0] *= (
+        1.0+.2*np.cos(2*np.pi*np.arange(8)[None, :]/8.0))
+    chemical = wall_free_energy_derivatives(
+        state, p, topologies, systems)
+    h_rho = 1.0e7
+    plus_wall = replace(
+        state, wall_plus_m2=np.asarray(state.wall_plus_m2).copy())
+    minus_wall = replace(
+        state, wall_plus_m2=np.asarray(state.wall_plus_m2).copy())
+    plus_wall.wall_plus_m2[..., 0] += h_rho
+    minus_wall.wall_plus_m2[..., 0] -= h_rho
+    numerical_wall = (
+        wall_free_energy_density_J_m3(plus_wall, p, topologies, systems)
+        -wall_free_energy_density_J_m3(minus_wall, p, topologies, systems)
+    )/(2*h_rho)
+    np.testing.assert_allclose(
+        chemical["wall_plus_mu_J_m"][..., 0], numerical_wall,
+        rtol=3e-7, atol=2e-11)
+    h_q = 1e-6
+    plus_q = replace(state, wall_order=state.wall_order+h_q)
+    minus_q = replace(state, wall_order=state.wall_order-h_q)
+    numerical_q = (
+        wall_free_energy_density_J_m3(plus_q, p, topologies, systems)
+        -wall_free_energy_density_J_m3(minus_q, p, topologies, systems)
+    )/(2*h_q)
+    np.testing.assert_allclose(
+        chemical["wall_order_derivative_J_m3"], numerical_q,
+        rtol=3e-7, atol=2.0)
+
+
 def test_reported_defect_energy_rate_is_directional_derivative():
     systems, topologies, p, state, driving = fixture()
     residual = wall_residual(state, driving, systems, topologies, p)

@@ -31,6 +31,9 @@ from full_model.production.interface_structural_absorption import (
 from full_model.production.lattice_interface_absorption import (
     LatticeInterfaceAbsorptionParameters,
 )
+from full_model.production.wall_orientation_relaxation import (
+    WallOrientationRelaxationParameters,
+)
 from full_model.production.multigrain_source_transaction import (
     NeutralBoundarySinkParameters,
 )
@@ -85,6 +88,7 @@ def main():
     parser.add_argument("--capture-distance", type=float, default=5e-7)
     parser.add_argument("--disable-rx", action="store_true")
     parser.add_argument("--interface-neutral-sink", action="store_true")
+    parser.add_argument("--wall-orientation-relaxation", action="store_true")
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -95,8 +99,13 @@ def main():
     physics_args.shear_rate = float(configuration["shear_rate_s"])
     spacing, _, _, _, _, _, base_context = _physics(physics_args)
     rx_enabled = not args.disable_rx
+    wall_parameters = base_context.wall_parameters
+    if args.wall_orientation_relaxation:
+        wall_parameters = replace(
+            wall_parameters, wall_nye_match_coefficient_J_m=2.0e-5)
     context = replace(
-        base_context, shear_rate_s=float(configuration["shear_rate_s"]),
+        base_context, wall_parameters=wall_parameters,
+        shear_rate_s=float(configuration["shear_rate_s"]),
         front_enabled=True, source_mode="disabled", sink_mode="disabled",
         interface_sink_mode=("neutral_pair" if args.interface_neutral_sink
                              else "disabled"),
@@ -109,7 +118,12 @@ def main():
         lattice_absorption_parameters=(
             LatticeInterfaceAbsorptionParameters(
                 capture_distance_m=args.capture_distance)
-            if rx_enabled else None))
+            if rx_enabled else None),
+        wall_orientation_relaxation_mode=(
+            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+        wall_orientation_relaxation_parameters=(
+            WallOrientationRelaxationParameters()
+            if args.wall_orientation_relaxation else None))
     endpoint = make_endpoint(state, runtime, load, context)
     initial_supports = np.asarray(state.supports).copy()
     initial_orientations = np.asarray([
@@ -151,6 +165,10 @@ def main():
                 "structural_classification": interval.audit[
                     "structural_absorption_classification"],
                 "front_directions": interval.audit["front_directions"],
+                "wall_orientation_classification": interval.audit[
+                    "wall_orientation_relaxation_classification"],
+                "wall_orientation_fractions": interval.audit[
+                    "wall_orientation_relaxation_fractions"],
             })
     final_power, final_band, final_metrics = _band(endpoint)
     final_supports = np.asarray(endpoint.state.supports)
@@ -183,6 +201,11 @@ def main():
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
         lattice_capture_distance_m=args.capture_distance,
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
+    output_configuration.update(
+        wall_orientation_relaxation_mode=(
+            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+        wall_nye_match_coefficient_J_m=(
+            wall_parameters.wall_nye_match_coefficient_J_m))
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(

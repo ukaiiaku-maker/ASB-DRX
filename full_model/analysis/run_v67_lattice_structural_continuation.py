@@ -31,6 +31,9 @@ from full_model.production.interface_structural_absorption import (
 from full_model.production.lattice_interface_absorption import (
     LatticeInterfaceAbsorptionParameters,
 )
+from full_model.production.wall_orientation_relaxation import (
+    WallOrientationRelaxationParameters,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -49,6 +52,7 @@ def main():
     parser.add_argument("--dynamic", action="store_true")
     parser.add_argument("--front-enabled", action="store_true")
     parser.add_argument("--shear-rate", type=float)
+    parser.add_argument("--wall-orientation-relaxation", action="store_true")
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -62,15 +66,25 @@ def main():
                           if args.dynamic else 0.0))
     fronts_enabled = bool(args.dynamic or args.front_enabled
                           or args.shear_rate is not None)
+    wall_parameters = context.wall_parameters
+    if args.wall_orientation_relaxation:
+        wall_parameters = replace(
+            wall_parameters, wall_nye_match_coefficient_J_m=2.0e-5)
     context = replace(
-        context, shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
+        context, wall_parameters=wall_parameters,
+        shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
         source_mode="disabled", sink_mode="disabled",
         interface_sink_mode="disabled", interface_sink_parameters=None,
         structural_absorption_mode="common_axis",
         structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(),
         lattice_absorption_mode="one_flux_mura",
         lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
-            capture_distance_m=args.capture_distance))
+            capture_distance_m=args.capture_distance),
+        wall_orientation_relaxation_mode=(
+            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+        wall_orientation_relaxation_parameters=(
+            WallOrientationRelaxationParameters()
+            if args.wall_orientation_relaxation else None))
     endpoint = make_endpoint(state, runtime, load, context)
     before = _directional_audit(endpoint, context, fraction=2e-4)
     records = []
@@ -97,6 +111,14 @@ def main():
                 "structural_absorption_classification"],
             "structural_content_change": interval.audit[
                 "structural_absorption_content_change"],
+            "wall_orientation_classification": interval.audit[
+                "wall_orientation_relaxation_classification"],
+            "wall_orientation_fractions": interval.audit[
+                "wall_orientation_relaxation_fractions"],
+            "wall_orientation_affinities_J_m": interval.audit[
+                "wall_orientation_relaxation_affinities_J_m"],
+            "wall_orientation_first_law_relative_residual": interval.audit[
+                "wall_orientation_relaxation_relative_first_law_residual"],
         })
     after = _directional_audit(endpoint, context, fraction=2e-4)
     commit = subprocess.check_output(
@@ -114,7 +136,11 @@ def main():
         front_enabled=fronts_enabled,
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
-        structural_absorption_mode="common_axis")
+        structural_absorption_mode="common_axis",
+        wall_orientation_relaxation_mode=(
+            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+        wall_nye_match_coefficient_J_m=(
+            wall_parameters.wall_nye_match_coefficient_J_m))
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
@@ -138,6 +164,10 @@ def main():
             "shear_rate_s": imposed_rate, "front_enabled": fronts_enabled,
             "lattice_absorption": "one_flux_mura",
             "structural_absorption": "common_axis",
+            "wall_orientation_relaxation": bool(
+                args.wall_orientation_relaxation),
+            "wall_nye_match_coefficient_J_m": (
+                wall_parameters.wall_nye_match_coefficient_J_m),
         },
         "before_directional_audit": before,
         "after_directional_audit": after,
@@ -152,6 +182,9 @@ def main():
         "decision": {
             "accepted_lattice_intervals": accepted_lattice,
             "accepted_structural_intervals": accepted_structural,
+            "accepted_wall_orientation_intervals": sum(
+                row["wall_orientation_classification"].startswith("ACCEPTED")
+                for row in records),
             "mura_hard_balance_passed": bool(all(
                 row["lattice_mura_relative_residual"] < 2e-11
                 for row in records)),
