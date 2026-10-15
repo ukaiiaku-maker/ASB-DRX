@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-15T18:06:18Z",
+  "last_updated_utc": "2026-10-15T18:19:42Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -81,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_qualified_stress_directed_one_flux_absorption_pathway_produces_common_origin_lower_rate_dynamic_RX_and_overlap_with_active_shear_localization_without_parameter_or_mechanism_switches",
-    "next_executable_experiment": "run_matched_common_origin_rate_and_temperature_continuations_with_the_unchanged_stress_directed_absorption_parameterization_and_measure_owner_growth_front_persistence_and_ASB_connectivity_together",
-    "source_identity": "V67_stress_directed_dynamic_to_static_RX_commit_8a0b899",
-    "expected_discriminatory_observation": "lower_rate_anchors_must_show_sustained_dynamic_owner_growth_while_higher_rate_anchors_retain_localization_and_the_overlap_condition_must_show_RX_growth_inside_the_active_band",
+    "physical_uncertainty": "whether_the_rate_ordered_stress_directed_RX_pathway_coexists_spatially_with_the_active_high_rate_shear_band_under_the_same_parameterization_and_common_thermal_boundary_law",
+    "next_executable_experiment": "enable_the_qualified_one_flux_absorption_pathway_on_a_saved_high_rate_localization_anchor_and_measure_RX_owner_growth_and_front_motion_inside_versus_outside_the_connected_power_band_at_common_strain_landmarks",
+    "source_identity": "V67_matched_incremental_strain_rate_ordering_commit_1a3d1ab",
+    "expected_discriminatory_observation": "the_overlap_anchor_must_retain_a_connected_active_power_band_while_showing_energy_accepted_RX_growth_spatially_intersecting_that_band_without_parameter_or_mechanism_switches",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "stress_directed_one_flux_lattice_to_interface_absorption_is_production_integrated_and_conservative;_at_r1e3_the_10_20_bias_reverses_and_grain30_grows_during_loading_and_zero_rate_hold;_an_additional_200_interval_hold_grows_grain30_0p06157_percent_and_grain10_0p02204_percent_while_grain20_shrinks_0p08530_percent;_rate_ordering_and_DRX_ASB_coexistence_remain_unqualified"
+    "result_status": "stress_directed_one_flux_absorption_is_conservative_and_sustains_dynamic_to_static_RX;_matched_additional_strain_from_one_retained_state_grows_grain30_0p14075_percent_at_r1e2_versus_0p01360_percent_at_r1e3_for_a_10p35x_lower_rate_advantage;_virgin_path_rate_mapping_percent_scale_DRX_and_DRX_ASB_spatial_coexistence_remain_unqualified"
   },
   "continuation_rule": {
     "active": true,

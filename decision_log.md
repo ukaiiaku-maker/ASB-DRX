@@ -463,3 +463,12 @@ the tested retained state. It does not yet qualify percent-scale DRX, common-
 origin rate ordering, spontaneous grain birth, or DRX/ASB coexistence. Advance
 the unchanged parameterization to matched rate/temperature continuations; do
 not retune capture distance or introduce a rate-dependent switch.
+
+A common-origin incremental-strain comparison subsequently supports the
+expected rate ordering. From the identical retained checkpoint, 500 intervals
+at 100/s and 50 intervals at 1,000/s impose the same additional strain. Grain
+30 grows 0.14075% at 100/s versus 0.01360% at 1,000/s; grain 20 shrinks
+0.17749% versus 0.01363%. The approximately tenfold separation follows the
+available physical time under one kinetic law, not a rate switch. Because the
+common origin inherited prior 1,000/s history and growth remains sub-percent,
+classify this as rate-ordering evidence rather than a virgin-path DRX map.

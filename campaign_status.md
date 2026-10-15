@@ -2822,3 +2822,9 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - This is sustained dynamic-to-static RX at small amplitude, not yet a claim
   of percent-scale DRX, spontaneous nucleation, rate ordering, or DRX inside a
   qualified ASB. Exact dynamic and long-hold restart checkpoints are retained.
+- A matched incremental-strain discriminator starts both rates from the same
+  retained checkpoint. At 100/s, grain 30 grows 0.14075% and grain 20 shrinks
+  0.17749%; at 1,000/s the corresponding magnitudes are 0.01360% and 0.01363%.
+  Thus the unchanged Arrhenius mechanics gives a 10.35x lower-rate growth
+  advantage through physical exposure time. The inherited prehistory and
+  sub-percent response prevent promotion to a virgin-path DRX regime map.
