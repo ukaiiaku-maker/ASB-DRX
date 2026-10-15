@@ -15,7 +15,10 @@ import math
 
 import numpy as np
 
-from .complete_multigrain_energy import evaluate_complete_multigrain_energy
+from .complete_multigrain_energy import (
+    evaluate_complete_multigrain_energy,
+    evaluate_complete_multigrain_local_fields,
+)
 from .common_tensorial_wall import CommonWallDriving, resolved_driving_components
 from .mura_kinematics import accept_family_mura_step
 from .multigrain_production import _owner_drivings_from_common_stress
@@ -50,6 +53,7 @@ class LatticeInterfaceProjection:
     maximum_mura_relative_residual: float
     maximum_incident_capacity: float
     capture_activity_m2: np.ndarray
+    capture_activity_m2_by_interface: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -69,6 +73,9 @@ class LatticeInterfaceAbsorptionDecision:
     heat_source_J_by_cell: np.ndarray
     edge_fraction_by_interface: dict[str, float]
     edge_affinity_J_m_by_interface: dict[str, float]
+    edge_fraction_field_by_interface: dict[str, np.ndarray]
+    edge_affinity_field_J_m_by_interface: dict[str, np.ndarray]
+    local_kinetics_mode: str
 
 
 def _edge_geometry(state, spacing_m):
@@ -109,12 +116,19 @@ def project_lattice_line_to_interfaces(
     raw_extent = np.asarray(fraction, dtype=float)
     if not math.isfinite(spacing) or spacing <= 0.0:
         raise ValueError("spacing must be positive finite")
+    grid_shape = state.supports.shape[1:]
     if raw_extent.ndim == 0:
-        extents = np.full(len(state.interfaces), float(raw_extent))
+        extents = np.full((len(state.interfaces),)+grid_shape,
+                          float(raw_extent))
     elif raw_extent.shape == (len(state.interfaces),):
+        extents = np.broadcast_to(
+            raw_extent[:, None, None], (len(state.interfaces),)+grid_shape)
+    elif raw_extent.shape == (len(state.interfaces),)+grid_shape:
         extents = raw_extent
     else:
-        raise ValueError("fraction requires one scalar or one value per interface")
+        raise ValueError(
+            "fraction requires a scalar, one value per interface, or one "
+            "spatial field per interface")
     if (np.any(~np.isfinite(extents)) or np.any(extents < 0.0)
             or np.any(extents > 1.0)):
         raise ValueError("fraction must lie in [0,1]")
@@ -134,6 +148,7 @@ def project_lattice_line_to_interfaces(
     interface_plus = []
     interface_minus = []
     interface_burgers = []
+    interface_activity = []
     b = float(parameters.boundary.burgers_m)
 
     for component, (ia, ib, normal, wa, wb), extent in zip(
@@ -142,6 +157,7 @@ def project_lattice_line_to_interfaces(
         add_minus = np.zeros_like(component.boundary_minus_m2)
         add_burgers = np.zeros(
             state.supports.shape[1:]+(3, 3), dtype=float)
+        edge_activity = np.zeros(grid_shape, dtype=float)
         for owner_index, outward, contact in (
                 (ia, normal, wa), (ib, -normal, wb)):
             owner = state.owners[owner_index]
@@ -162,13 +178,15 @@ def project_lattice_line_to_interfaces(
                 crossing_minus = np.maximum(sign_speed*incidence, 0.0)
                 direction_plus = sign_speed
                 direction_minus = -sign_speed
-            local_plus = extent*contact[..., None]*crossing_plus
-            local_minus = extent*contact[..., None]*crossing_minus
+            local_plus = extent[..., None]*contact[..., None]*crossing_plus
+            local_minus = extent[..., None]*contact[..., None]*crossing_minus
             cap_plus = local_plus*np.asarray(owner.mobile_plus_m2)
             cap_minus = local_minus*np.asarray(owner.mobile_minus_m2)
             owner_dplus[owner_index] += cap_plus
             owner_dminus[owner_index] += cap_minus
             support = np.asarray(state.supports[owner_index])[..., None]
+            edge_activity += np.sum(
+                support*(cap_plus+cap_minus), axis=2)
             add_plus[..., 0, :] += support*cap_plus
             add_minus[..., 0, :] += support*cap_minus
             signed_extensive = support*(cap_plus-cap_minus)
@@ -191,6 +209,7 @@ def project_lattice_line_to_interfaces(
         interface_plus.append(add_plus)
         interface_minus.append(add_minus)
         interface_burgers.append(add_burgers)
+        interface_activity.append(edge_activity)
 
     owners = []
     maximum_mura = 0.0
@@ -241,10 +260,8 @@ def project_lattice_line_to_interfaces(
                       for value in interface_plus)
     stored_minus = sum(float(np.sum(value, dtype=np.longdouble)*area)
                        for value in interface_minus)
-    activity = sum(
-        (np.asarray(state.supports[i])[..., None]
-         *(owner_dplus[i]+owner_dminus[i])).sum(axis=2)
-        for i in range(len(owners)))
+    activity_by_interface = np.asarray(interface_activity)
+    activity = np.sum(activity_by_interface, axis=0)
     # Burgers is built from the very same signed extensive debit.
     burgers_balance = 0.0
     max_capacity = max((float(np.max(dp/np.maximum(
@@ -252,7 +269,8 @@ def project_lattice_line_to_interfaces(
         for i, dp in enumerate(owner_dplus)), default=0.0)
     return LatticeInterfaceProjection(
         candidate, removed_plus, removed_minus, stored_plus, stored_minus,
-        burgers_balance, maximum_mura, max_capacity, activity)
+        burgers_balance, maximum_mura, max_capacity, activity,
+        activity_by_interface)
 
 
 def evaluate_lattice_interface_absorption(
@@ -270,6 +288,14 @@ def evaluate_lattice_interface_absorption(
         wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
         **options)
     before = evaluate_complete_multigrain_energy(state, **common)
+    before_local = evaluate_complete_multigrain_local_fields(
+        state, spacing_m=spacing, wall_parameters=wall_parameters,
+        mean_strain=np.asarray(mean_strain),
+        topologies=options.get("topologies", ()),
+        systems=options.get("systems", systems),
+        boundary_line_energy_J_m=options.get("boundary_line_energy_J_m"),
+        boundary_junction_energy_J_m=options.get(
+            "boundary_junction_energy_J_m"))
     owner_drivings = _owner_drivings_from_common_stress(
         state, CommonWallDriving(mean_strain=np.asarray(mean_strain)),
         systems, wall_parameters)
@@ -277,13 +303,19 @@ def evaluate_lattice_interface_absorption(
         resolved_driving_components(
             owner, driving, systems, (), wall_parameters)["speed_m_s"]
         for owner, driving in zip(state.owners, owner_drivings))
-    temperature = float(np.mean([
-        np.mean(owner.temperature_K) for owner in state.owners]))
+    temperature = np.sum(
+        np.asarray(state.supports)*np.asarray([
+            owner.temperature_K for owner in state.owners]), axis=0)
     edge_fractions = []
     edge_affinities = []
     edge_rates = []
-    # Price each interface from the immutable accepted state.  A favorable
-    # edge cannot subsidize an uphill reaction on another edge.
+    edge_fraction_fields = []
+    edge_affinity_fields = []
+    # Price each interface from the immutable accepted state.  The local
+    # affinity is the exact local storage change plus the equilibrium elastic
+    # first variation sigma:delta(eigenstrain), divided by the local captured
+    # line.  The finite combined event still faces the complete-energy gate
+    # below, so this kinetic localization cannot accept an uphill transaction.
     for edge_index in range(len(state.interfaces)):
         trial_extent = np.zeros(len(state.interfaces))
         trial_extent[edge_index] = parameters.maximum_fraction_per_interval
@@ -291,26 +323,60 @@ def evaluate_lattice_interface_absorption(
             state, systems=systems, spacing_m=spacing,
             fraction=trial_extent, parameters=parameters,
             stress_direction_by_owner=stress_directions)
-        edge_energy = evaluate_complete_multigrain_energy(
-            edge_trial.candidate_state, **common)
-        edge_line_m = thickness*(
-            edge_trial.removed_plus_line_per_thickness
-            +edge_trial.removed_minus_line_per_thickness)
-        edge_affinity = ((before.helmholtz_J-edge_energy.helmholtz_J)/edge_line_m
-                         if edge_line_m > 0.0 else 0.0)
-        edge_rate = float(exp_floor_event_rate_Hz(
-            max(edge_affinity, 0.0), temperature, parameters.boundary))
-        edge_fraction = (min(-math.expm1(-edge_rate*dt),
-                             parameters.maximum_fraction_per_interval)
-                         if edge_line_m > 0.0 and edge_affinity >= 0.0 else 0.0)
+        edge_local = evaluate_complete_multigrain_local_fields(
+            edge_trial.candidate_state, spacing_m=spacing,
+            wall_parameters=wall_parameters,
+            mean_strain=np.asarray(mean_strain),
+            topologies=options.get("topologies", ()),
+            systems=options.get("systems", systems),
+            boundary_line_energy_J_m=options.get(
+                "boundary_line_energy_J_m"),
+            boundary_junction_energy_J_m=options.get(
+                "boundary_junction_energy_J_m"))
+        activity = edge_trial.capture_activity_m2_by_interface[edge_index]
+        storage_before = (before_local.defect_storage_J_m3
+                          +before_local.signed_junction_storage_J_m3
+                          +before_local.boundary_excess_J_m3)
+        storage_after = (edge_local.defect_storage_J_m3
+                         +edge_local.signed_junction_storage_J_m3
+                         +edge_local.boundary_excess_J_m3)
+        delta_eigenstrain = edge_local.eigenstrain-before_local.eigenstrain
+        elastic_release = np.einsum(
+            "...ij,...ij->...", before_local.stress_Pa, delta_eigenstrain)
+        release_density = storage_before-storage_after+elastic_release
+        affinity_field = np.divide(
+            release_density, activity, out=np.zeros_like(release_density),
+            where=activity > 0.0)
+        accessible = (activity > 0.0) & (affinity_field >= 0.0)
+        rate_field = exp_floor_event_rate_Hz(
+            np.maximum(affinity_field, 0.0), temperature,
+            parameters.boundary)
+        fraction_field = np.where(
+            accessible,
+            np.minimum(-np.expm1(-rate_field*dt),
+                       parameters.maximum_fraction_per_interval),
+            0.0)
+        activity_sum = float(np.sum(activity, dtype=np.longdouble))
+        if activity_sum > 0.0:
+            edge_affinity = float(np.sum(
+                activity*affinity_field, dtype=np.longdouble)/activity_sum)
+            edge_fraction = float(np.sum(
+                activity*fraction_field, dtype=np.longdouble)/activity_sum)
+            edge_rate = float(np.sum(
+                activity*rate_field, dtype=np.longdouble)/activity_sum)
+        else:
+            edge_affinity = edge_fraction = edge_rate = 0.0
         edge_affinities.append(edge_affinity)
         edge_rates.append(edge_rate)
         edge_fractions.append(edge_fraction)
+        edge_affinity_fields.append(affinity_field)
+        edge_fraction_fields.append(fraction_field)
     affinity = max(edge_affinities, default=0.0)
     rate = max(edge_rates, default=0.0)
     fraction = max(edge_fractions, default=0.0)
     projection = project_lattice_line_to_interfaces(
-        state, systems=systems, spacing_m=spacing, fraction=edge_fractions,
+        state, systems=systems, spacing_m=spacing,
+        fraction=np.asarray(edge_fraction_fields),
         parameters=parameters, stress_direction_by_owner=stress_directions)
     cold = projection.candidate_state
     cold_energy = evaluate_complete_multigrain_energy(cold, **common)
@@ -369,4 +435,9 @@ def evaluate_lattice_interface_absorption(
         {component.component_id: float(value)
          for component, value in zip(state.interfaces, edge_fractions)},
         {component.component_id: float(value)
-         for component, value in zip(state.interfaces, edge_affinities)})
+         for component, value in zip(state.interfaces, edge_affinities)},
+        {component.component_id: np.asarray(value)
+         for component, value in zip(state.interfaces, edge_fraction_fields)},
+        {component.component_id: np.asarray(value)
+         for component, value in zip(state.interfaces, edge_affinity_fields)},
+        "LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION")

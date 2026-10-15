@@ -110,6 +110,94 @@ class MultiGrainMechanicalEnergyBalance:
     mean_stress_candidate_Pa: np.ndarray
 
 
+@dataclass(frozen=True)
+class CompleteMultiGrainLocalFields:
+    """Spatial terms conjugate to a stationary lattice/GB transaction.
+
+    Each energy field is in J m^-3.  The split integrates exactly to the
+    corresponding entries of :class:`CompleteFrontEnergy`; it is therefore a
+    diagnostic/kinetic view of the same functional, not a second energy law.
+    """
+
+    defect_storage_J_m3: np.ndarray
+    signed_junction_storage_J_m3: np.ndarray
+    boundary_excess_J_m3: np.ndarray
+    recoverable_elastic_J_m3: np.ndarray
+    stress_Pa: np.ndarray
+    eigenstrain: np.ndarray
+
+    @property
+    def absorption_helmholtz_J_m3(self):
+        return (self.defect_storage_J_m3
+                +self.signed_junction_storage_J_m3
+                +self.boundary_excess_J_m3
+                +self.recoverable_elastic_J_m3)
+
+
+def evaluate_complete_multigrain_local_fields(
+        state, *, spacing_m, wall_parameters, mean_strain=None,
+        topologies=(), systems=None, boundary_line_energy_J_m=None,
+        boundary_junction_energy_J_m=None):
+    """Return the local terms changed by lattice/interface absorption.
+
+    The nonlocal elastic solve remains global; its returned density is the
+    equilibrium density for the declared common state.  Local kinetics uses
+    the exact first variation ``sigma:delta(eigenstrain)`` while the final
+    transaction is still accepted only against the complete finite energy.
+    """
+    state.validate()
+    spacing = float(spacing_m)
+    if not math.isfinite(spacing) or spacing <= 0.0:
+        raise ValueError("positive finite spacing required")
+    mixture, _ = reconstruct_multigrain_common(state, spacing)
+    grid_shape = state.supports.shape[1:]
+    defect = np.zeros(grid_shape, dtype=float)
+    junction = np.zeros(grid_shape, dtype=float)
+    multiplicity = (np.asarray([t.product_line_multiplicity for t in topologies])
+                    if topologies else np.ones(mixture.junction_m2.shape[2]))
+    reaction = (np.asarray([t.delta_free_energy_J_m for t in topologies])
+                if topologies else np.zeros(mixture.junction_m2.shape[2]))
+    for support, owner in zip(state.supports, state.owners):
+        weight = np.asarray(support, dtype=float)
+        local = wall_total_free_energy_density_J_m3(
+            owner, wall_parameters, topologies, systems)
+        local_junction = np.sum(
+            owner.junction_m2
+            *(multiplicity*wall_parameters.junction_energy_J_m+reaction),
+            axis=2)
+        defect += weight*(local-local_junction)
+        junction += weight*local_junction
+
+    line_energy = (wall_parameters.line_energy_J_m
+                   if boundary_line_energy_J_m is None
+                   else float(boundary_line_energy_J_m))
+    junction_energy = (wall_parameters.junction_energy_J_m
+                       if boundary_junction_energy_J_m is None
+                       else float(boundary_junction_energy_J_m))
+    boundary = np.zeros(grid_shape, dtype=float)
+    for interface in state.interfaces:
+        line_density = np.sum(
+            interface.boundary_plus_m2+interface.boundary_minus_m2,
+            axis=tuple(range(2, interface.boundary_plus_m2.ndim)))
+        junction_density = np.sum(
+            interface.boundary_junction_m2,
+            axis=tuple(range(2, interface.boundary_junction_m2.ndim)))
+        boundary += line_energy*line_density+junction_energy*junction_density
+
+    beta = np.asarray(mixture.beta_p)
+    eigenstrain = .5*(beta[..., :2, :2]
+                      +np.swapaxes(beta[..., :2, :2], -1, -2))
+    mean = np.zeros((2, 2)) if mean_strain is None else np.asarray(
+        mean_strain, dtype=float)
+    stress, strain = solve_periodic_eigenstrain(
+        eigenstrain, mean, spacing, wall_parameters.c11_Pa,
+        wall_parameters.c12_Pa, wall_parameters.c44_Pa,
+        iterations=wall_parameters.elastic_iterations)
+    elastic = elastic_energy_density(stress, strain, eigenstrain)
+    return CompleteMultiGrainLocalFields(
+        defect, junction, boundary, elastic, stress, eigenstrain)
+
+
 def _mechanical_stress_and_eigenstrain(
         state, spacing_m, wall_parameters, mean_strain):
     mixture, _ = reconstruct_multigrain_common(state, spacing_m)
