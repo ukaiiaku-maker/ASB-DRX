@@ -158,7 +158,7 @@ def recognize_common_orientation_plateau(
         minimum_boundary_order=0.45, minimum_ordered_fraction=0.70,
         maximum_frank_bilby_relative_residual=0.20,
         interior_distance_m=2.0e-7, boundary_shell_thickness_m=2.0e-7,
-        circuit_half_width_m=1.0e-7):
+        circuit_half_width_m=1.0e-7, domain_mask=None):
     """Recognize a resolved intragranular plateau without mutating state."""
     orientation = np.asarray(orientation_rad, dtype=float)
     family_nye = np.asarray(family_nye_m1, dtype=float)
@@ -168,12 +168,18 @@ def recognize_common_orientation_plateau(
             or family_nye.shape[-2:] != (3, 3) or order.shape != orientation.shape \
             or density.shape != orientation.shape:
         raise ValueError("common-state recognition fields are inconsistent")
+    domain = (np.ones_like(orientation, dtype=bool) if domain_mask is None
+              else np.asarray(domain_mask, dtype=bool))
+    if domain.shape != orientation.shape:
+        raise ValueError("recognition domain mask must match the grid")
+    if np.count_nonzero(domain) < 2:
+        return {"qualified": False, "reason": "unresolved_owner_interior"}
     alpha = np.sum(family_nye, axis=2) if family_nye.ndim == 5 else family_nye
-    reference = _circular_mean(orientation)
+    reference = _circular_mean(orientation[domain])
     contrast = np.abs(_periodic_angle_delta(orientation, reference))
     threshold = math.radians(float(minimum_misorientation_deg))
-    maximum = float(np.max(contrast))
-    candidate = contrast >= max(threshold, 0.75*maximum)
+    maximum = float(np.max(contrast[domain]))
+    candidate = domain & (contrast >= max(threshold, 0.75*maximum))
     component = _largest_periodic_component(candidate)
     if component is None:
         return {"qualified": False, "reason": "no_resolved_orientation_plateau"}
@@ -184,11 +190,14 @@ def recognize_common_orientation_plateau(
         component, interior_pixels, ndimage.binary_erosion)
     dilated = _periodic_binary_operation(
         component, shell_pixels, ndimage.binary_dilation)
-    shell = dilated & ~interior
-    if not np.any(interior) or not np.any(~component) or not np.any(shell):
+    enclosed = not bool(np.any(dilated & ~domain))
+    interior &= domain
+    shell = dilated & ~interior & domain
+    exterior = domain & ~component
+    if not np.any(interior) or not np.any(exterior) or not np.any(shell):
         return {"qualified": False, "reason": "unresolved_interior_or_boundary"}
     theta_in = _circular_mean(orientation[interior])
-    theta_out = _circular_mean(orientation[~component])
+    theta_out = _circular_mean(orientation[exterior])
     misorientation = abs(float(_periodic_angle_delta(theta_in, theta_out)))
     ordered_fraction = float(np.mean(order[shell] >= minimum_boundary_order))
     center = _periodic_component_center(interior)
@@ -203,20 +212,21 @@ def recognize_common_orientation_plateau(
     fb_residual = float(max(fb_residuals)) if rays else math.inf
     result = {
         "qualified": bool(
-            misorientation >= threshold
+            enclosed and misorientation >= threshold
             and ordered_fraction >= minimum_ordered_fraction
             and fb_residual <= maximum_frank_bilby_relative_residual
-            and np.mean(density[interior]) < np.mean(density[~component])),
+            and np.mean(density[interior]) < np.mean(density[exterior])),
         "read_only": True,
         "gate_status": {
             "geometry_resolved": True,
+            "intragranular_enclosure": enclosed,
             "misorientation": bool(misorientation >= threshold),
             "ordered_boundary": bool(
                 ordered_fraction >= minimum_ordered_fraction),
             "frank_bilby": bool(
                 fb_residual <= maximum_frank_bilby_relative_residual),
             "lower_density_interior": bool(
-                np.mean(density[interior]) < np.mean(density[~component])),
+                np.mean(density[interior]) < np.mean(density[exterior])),
         },
         "misorientation_rad": misorientation,
         "misorientation_deg": math.degrees(misorientation),
@@ -226,6 +236,8 @@ def recognize_common_orientation_plateau(
         "boundary_order_mean": float(np.mean(order[shell])),
         "boundary_order_closure_fraction": ordered_fraction,
         "periodic_component_geometry": True,
+        "intragranular_enclosure": enclosed,
+        "domain_area_m2": float(np.sum(domain)*float(spacing_m)**2),
         "interior_distance_m": float(interior_pixels*spacing_m),
         "boundary_shell_thickness_m": float(shell_pixels*spacing_m),
         "circuit_half_width_m": float(half_width*spacing_m),
@@ -235,9 +247,9 @@ def recognize_common_orientation_plateau(
         "frank_bilby_median_projected_relative_residual": fb_residual,
         "frank_bilby_rays": rays,
         "interior_total_density_m2": float(np.mean(density[interior])),
-        "exterior_total_density_m2": float(np.mean(density[~component])),
+        "exterior_total_density_m2": float(np.mean(density[exterior])),
         "lower_density_interior": bool(
-            np.mean(density[interior]) < np.mean(density[~component])),
+            np.mean(density[interior]) < np.mean(density[exterior])),
         "component_mask": component,
         "interior_mask": interior,
         "shell_mask": shell,
