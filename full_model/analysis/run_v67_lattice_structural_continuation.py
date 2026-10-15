@@ -8,12 +8,15 @@ from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 
 import numpy as np
 
-from full_model.analysis.run_v58_three_grain_production import _load_checkpoint
+from full_model.analysis.run_v58_three_grain_production import (
+    _load_checkpoint, _save_checkpoint,
+)
 from full_model.analysis.run_v66_coupled_rx_asb import _physics
 from full_model.analysis.run_v67_growth_reversal_audit import _directional_audit
 from full_model.analysis.run_v67_interface_structural_bridge import (
@@ -48,8 +51,8 @@ def main():
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
     args.out.mkdir(parents=True, exist_ok=True)
-    state, runtime, _, load, _, configuration, provenance = _load_checkpoint(
-        args.checkpoint)
+    state, runtime, step, load, initial_volume, configuration, provenance = (
+        _load_checkpoint(args.checkpoint))
     physics_args = _args_from_configuration(configuration)
     spacing, _, _, _, _, _, context = _physics(physics_args)
     imposed_rate = (float(configuration.get("shear_rate_s", 0.0))
@@ -98,6 +101,24 @@ def main():
     accepted_structural = sum(
         row["structural_classification"].startswith("ACCEPTED")
         for row in records)
+    continuation_configuration = dict(configuration)
+    continuation_configuration.update(
+        schema="v67-one-flux-lattice-structural-continuation-v1",
+        parent_checkpoint=str(args.checkpoint.resolve()),
+        target_steps=args.intervals, shear_rate_s=imposed_rate,
+        front_enabled=bool(args.dynamic),
+        lattice_absorption_mode="one_flux_mura",
+        lattice_capture_distance_m=args.capture_distance,
+        structural_absorption_mode="common_axis")
+    checkpoint = args.out/"checkpoint_latest.npz"
+    temporary = args.out/"checkpoint_latest.tmp.npz"
+    _save_checkpoint(
+        temporary, endpoint.state, endpoint.runtime, step+args.intervals,
+        endpoint.load, initial_volume, continuation_configuration,
+        {"source_commit": commit, "parent_provenance": provenance})
+    os.replace(temporary, checkpoint)
+    initial_owner_areas = np.sum(state.supports, axis=(1, 2))*spacing**2
+    final_owner_areas = np.sum(endpoint.state.supports, axis=(1, 2))*spacing**2
     payload = {
         "schema": "v67-one-flux-lattice-structural-continuation-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -117,6 +138,12 @@ def main():
         "after_directional_audit": after,
         "interval_records": records,
         "ledger": asdict(endpoint.runtime.ledger),
+        "owner_area_m2": {
+            str(grain): {"before": float(initial_owner_areas[index]),
+                         "after": float(final_owner_areas[index]),
+                         "change": float(final_owner_areas[index]
+                                         -initial_owner_areas[index])}
+            for index, grain in enumerate(state.grain_ids)},
         "decision": {
             "accepted_lattice_intervals": accepted_lattice,
             "accepted_structural_intervals": accepted_structural,
@@ -136,6 +163,7 @@ def main():
         "claim_boundary": (
             "Retained-state stationary production discriminator. It qualifies "
             "the coupled absorption path but not sustained dynamic DRX."),
+        "artifacts": {"checkpoint_latest.npz": _sha(checkpoint)},
     }
     (args.out/"result.json").write_text(
         json.dumps(payload, indent=2, sort_keys=True)+"\n")
