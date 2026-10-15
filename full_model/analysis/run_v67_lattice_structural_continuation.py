@@ -52,6 +52,7 @@ def main():
     parser.add_argument("--dynamic", action="store_true")
     parser.add_argument("--front-enabled", action="store_true")
     parser.add_argument("--shear-rate", type=float)
+    parser.add_argument("--dt", type=float)
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
     args = parser.parse_args()
     source_status = subprocess.check_output(
@@ -85,10 +86,13 @@ def main():
         wall_orientation_relaxation_parameters=(
             WallOrientationRelaxationParameters()
             if args.wall_orientation_relaxation else None))
+    dt = (float(args.dt) if args.dt is not None
+          else float(configuration["dt_s"]))
+    if not np.isfinite(dt) or dt <= 0.0:
+        raise ValueError("continuation dt must be positive finite")
     endpoint = make_endpoint(state, runtime, load, context)
     before = _directional_audit(endpoint, context, fraction=2e-4)
     records = []
-    dt = float(configuration["dt_s"])
     for index in range(1, args.intervals+1):
         interval = advance_complete_multigrain_interval(endpoint, dt, context)
         endpoint = interval.endpoint
@@ -132,7 +136,7 @@ def main():
     continuation_configuration.update(
         schema="v67-one-flux-lattice-structural-continuation-v1",
         parent_checkpoint=str(args.checkpoint.resolve()),
-        target_steps=args.intervals, shear_rate_s=imposed_rate,
+        target_steps=args.intervals, shear_rate_s=imposed_rate, dt_s=dt,
         front_enabled=fronts_enabled,
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
