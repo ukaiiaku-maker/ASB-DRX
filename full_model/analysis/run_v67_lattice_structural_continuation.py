@@ -48,6 +48,7 @@ def main():
     parser.add_argument("--capture-distance", type=float, default=5e-7)
     parser.add_argument("--dynamic", action="store_true")
     parser.add_argument("--front-enabled", action="store_true")
+    parser.add_argument("--shear-rate", type=float)
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -56,9 +57,11 @@ def main():
         _load_checkpoint(args.checkpoint))
     physics_args = _args_from_configuration(configuration)
     spacing, _, _, _, _, _, context = _physics(physics_args)
-    imposed_rate = (float(configuration.get("shear_rate_s", 0.0))
-                    if args.dynamic else 0.0)
-    fronts_enabled = bool(args.dynamic or args.front_enabled)
+    imposed_rate = (float(args.shear_rate) if args.shear_rate is not None
+                    else (float(configuration.get("shear_rate_s", 0.0))
+                          if args.dynamic else 0.0))
+    fronts_enabled = bool(args.dynamic or args.front_enabled
+                          or args.shear_rate is not None)
     context = replace(
         context, shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
         source_mode="disabled", sink_mode="disabled",
