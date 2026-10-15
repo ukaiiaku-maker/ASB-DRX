@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-14T23:08:00Z",
+  "last_updated_utc": "2026-10-15T00:52:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -65,11 +65,11 @@
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_completed_growth_reversal_audit",
-      "last_case": "v67_growth_reversal_n16_r4e4_7p2_percent",
-      "last_start_local": "2026-10-14T15:50:21-07:00",
-      "last_source_commit": "14088f9",
-      "last_output": "full_model/verification/v67_growth_reversal"
+      "status": "available_after_completed_r1e3_matched_strain_reversal",
+      "last_case": "v67_material_continuity_interface_sink_r1e3_8_percent",
+      "last_start_local": "2026-10-14T17:59:00-07:00",
+      "last_source_commit": "7c284cd",
+      "last_output": "full_model/verification/v67_material_continuity_interface_sink_r1e3_screen"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -81,16 +81,16 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_exact_lab_frame_material_continuity_remains_energy_consistent_and_sustains_growth_on_trajectory_when_future_Peierls_Taylor_slip_increments_use_the_receiver_orientation",
-    "next_executable_experiment": "run_the_same_n16_1000K_40000_per_s_7p2_percent_trajectory_with_the_single_versioned_material_continuity_handoff_then_compare_target_growth_energy_closure_Nye_mismatch_and_restart_before_selecting_lower_rates",
-    "source_identity": "V67_handoff_causal_audit_bda59d50be5855eb535bad5b8382ca11765de017a23716c7ae898fc91eec11eb",
-    "expected_discriminatory_observation": "sustained_target_growth_with_complete_energy_closure_and_no_growth_of_owner_Curl_beta_minus_family_Nye_mismatch_would_support_the_handoff_repair;_persistent_recession_or_growing_mismatch_would_reject_it",
+    "physical_uncertainty": "which_signed_interface_absorption_or_structural_redistribution_path_can_prevent_the_low_density_target_from_being_consumed_by_grain_30_after_3p848_percent_strain_without_inventing_Burgers_content",
+    "next_executable_experiment": "build_a_common_axis_production_bridge_from_explicit_interface_boundary_Burgers_reservoirs_to_conserved_structural_edge_content_then_price_stationary_absorption_and_cycle_redistribution_on_the_retained_r1e3_pre_reversal_and_post_reversal_states",
+    "source_identity": "V67_rate_exposure_comparison_at_commit_432adcd",
+    "expected_discriminatory_observation": "a_valid_signed_structural_reaction_must_reduce_the_0p90_MPa_incoming_boundary_storage_penalty_or_reverse_the_edge_20_30_neighbor_selection_while_closing_line_Burgers_energy_and_heat;_neutral_pair_recovery_alone_is_rejected",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "same_state_causal_control_changes_terminal_target_growth_prices_from_plus51_and_plus331_MPa_to_minus1p15_and_minus0p51_MPa_when_exact_donor_beta_is_preserved; receiver_slip_projection_is_incomplete; versioned_material_continuity_mode_implemented_and_52_focused_tests_pass"
+    "result_status": "material_continuity_removes_the_40k_elastic_reversal_and_is_Nye_consistent_but_growth_is_only_0p0111_percent;_static_target_recedes;_verified_interface_neutral_recovery_is_too_weak;_r1e3_early_growth_reaches_0p22935_percent_then_reverses_at_3p848_percent_so_mobility_and_exposure_alone_are_rejected"
   },
   "completion_semantics": {
     "execution_complete": false,
-    "implementation_verified": false,
+    "implementation_verified": true,
     "mechanism_supported_at_tested_conditions": false,
     "integrated_response_qualified": false,
     "material_validated": false,
