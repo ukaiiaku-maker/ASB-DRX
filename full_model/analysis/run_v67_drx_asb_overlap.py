@@ -119,6 +119,8 @@ def main():
     growth_outside = np.zeros(len(state.owners))
     active_band_intervals = 0
     active_band_area_fraction_sum = 0.0
+    lattice_heat_inside_band_J = 0.0
+    lattice_heat_outside_band_J = 0.0
     records = []
     dt = float(configuration["dt_s"])
     for index in range(1, args.intervals+1):
@@ -126,6 +128,12 @@ def main():
         before_supports = np.asarray(endpoint.state.supports)
         interval = advance_complete_multigrain_interval(endpoint, dt, context)
         endpoint = interval.endpoint
+        lattice_heat = np.asarray(
+            interval.integrals["lattice_absorption_heat_J_by_cell"])
+        lattice_heat_inside_band_J += float(np.sum(
+            lattice_heat*band_before, dtype=np.longdouble))
+        lattice_heat_outside_band_J += float(np.sum(
+            lattice_heat*(~band_before), dtype=np.longdouble))
         positive = np.maximum(
             np.asarray(endpoint.state.supports)-before_supports, 0.0)
         growth_inside += np.sum(
@@ -157,6 +165,13 @@ def main():
         where=total_growth > 0.0)
     mean_active_band_fraction = active_band_area_fraction_sum/args.intervals
     overlap_enrichment = overlap_fraction/max(mean_active_band_fraction, 1e-300)
+    lattice_heat_total_J = (
+        lattice_heat_inside_band_J+lattice_heat_outside_band_J)
+    lattice_heat_inside_fraction = (
+        lattice_heat_inside_band_J/lattice_heat_total_J
+        if lattice_heat_total_J > 0.0 else 0.0)
+    lattice_heat_band_enrichment = (
+        lattice_heat_inside_fraction/max(mean_active_band_fraction, 1e-300))
     commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     output_configuration = dict(configuration)
@@ -206,6 +221,12 @@ def main():
         "owner_results": owner_results,
         "active_band_intervals": active_band_intervals,
         "mean_active_largest_band_area_fraction": mean_active_band_fraction,
+        "lattice_absorption_heat_overlap": {
+            "inside_active_band_J": lattice_heat_inside_band_J,
+            "outside_active_band_J": lattice_heat_outside_band_J,
+            "inside_active_band_fraction": lattice_heat_inside_fraction,
+            "inside_band_enrichment": lattice_heat_band_enrichment,
+        },
         "sampled_interval_records": records,
         "ledger": asdict(endpoint.runtime.ledger),
         "decision": {
@@ -219,6 +240,8 @@ def main():
             "growing_owner_intersects_active_band": bool(any(
                 row["positive_front_growth_inside_active_band_m2"] > 0.0
                 for row in growing)),
+            "lattice_absorption_occurs_inside_active_band": bool(
+                lattice_heat_inside_band_J > 0.0),
             "all_hard_absorption_balances_passed": bool(
                 not rx_enabled or (
                     endpoint.runtime.ledger.lattice_absorption_rejected_intervals
