@@ -1,0 +1,332 @@
+{
+  "artifacts": {
+    "checkpoint_latest.npz": "15603c604c022082ac23ab067b78fccac7db5151204bf91967888ce579f8ce56"
+  },
+  "claim_boundary": "Prepared one-owner topology test; extending one retained owner over the section is not endogenous nucleation or DRX.",
+  "configuration": {
+    "added_engineering_shear": 0.08,
+    "added_physical_time_s": 0.008,
+    "dt_s": 0.0008,
+    "grid": [
+      16,
+      16
+    ],
+    "groma_sign_resolved_transport_enabled": true,
+    "initial_state": "uniform_single_crystal",
+    "intervals": 10,
+    "owner_id": 1,
+    "polarized_wall_absorption_enabled": true,
+    "represented_thickness_m": 4.96e-10,
+    "shear_rate_s": 10.0,
+    "source_bulk_site_density_m2": 1000000000000.0,
+    "source_mode": "random_discrete_bulk",
+    "source_parameters": {
+      "activation_enthalpy_eV": 1.9,
+      "activation_entropy_kB": 0.0,
+      "attempt_frequency_Hz": 1000000000000.0,
+      "barrier_floor_eV": 0.05,
+      "burgers_m": 2.48e-10,
+      "grain_size_m": 4.8e-06,
+      "intrinsic_activation_volume_m3": 1.5252992000000005e-29,
+      "pair_increment_m2": 10000000000.0,
+      "tj_site_weight": 1.0
+    },
+    "source_seed": 67,
+    "spacing_m": 3e-07,
+    "wall_nye_match_coefficient_J_m": 2e-05
+  },
+  "created_utc": "2026-10-15T23:51:42.224188+00:00",
+  "decision": {
+    "all_hard_balances_passed": true,
+    "all_source_events_accepted": true,
+    "grain_count_change": 0,
+    "strict_combined_nye_subgrain": false,
+    "strict_ordered_structural_subgrain": false,
+    "strict_plastic_nye_subgrain": false
+  },
+  "final_recognition": {
+    "combined_declared_nye": {
+      "qualified": false,
+      "reason": "no_resolved_orientation_plateau"
+    },
+    "ordered_structural_nye": {
+      "qualified": false,
+      "reason": "no_resolved_orientation_plateau"
+    },
+    "plastic_incompatibility_nye": {
+      "qualified": false,
+      "reason": "no_resolved_orientation_plateau"
+    }
+  },
+  "initial": {
+    "orientation_span_deg": 0.0,
+    "wall_order_mean": 0.0
+  },
+  "ledger": {
+    "accepted_events": 0,
+    "applied_shear_strain": 0.08000000000000002,
+    "cumulative_front_first_law_residual_J": 0.0,
+    "cumulative_interface_sink_first_law_residual_J": 0.0,
+    "cumulative_interface_sink_generated_heat_J": 0.0,
+    "cumulative_lattice_absorption_heat_J": 0.0,
+    "cumulative_mechanical_external_work_J": 1.7580306392078714e-12,
+    "cumulative_mechanical_first_law_residual_J": 8.49099020311031e-15,
+    "cumulative_mechanical_internal_energy_change_J": 1.7665216294109816e-12,
+    "cumulative_sink_first_law_residual_J": 0.0,
+    "cumulative_sink_generated_heat_J": 0.0,
+    "cumulative_source_first_law_residual_J": 6.870888592918475e-17,
+    "cumulative_source_generated_heat_J": 1.193489720535827e-14,
+    "cumulative_source_resolved_work_J": 1.1907485554936142e-14,
+    "cumulative_structural_absorption_heat_J": 0.0,
+    "cumulative_wall_orientation_relaxation_heat_J": 7.115957532632359e-19,
+    "generated_heat_J": 0.0,
+    "interface_sink_annihilated_pair_cell_sum_m2": 0.0,
+    "interface_sink_inactive_intervals": 0,
+    "interface_sink_intervals": 0,
+    "interface_sink_rejected_intervals": 0,
+    "intervals": 10,
+    "lattice_absorbed_line_length_m": 0.0,
+    "lattice_absorption_inactive_intervals": 0,
+    "lattice_absorption_intervals": 0,
+    "lattice_absorption_rejected_intervals": 0,
+    "maximum_interface_sink_line_balance_residual_m2": 0.0,
+    "maximum_interface_sink_relative_first_law_residual": 0.0,
+    "maximum_lattice_absorption_first_law_residual": 0.0,
+    "maximum_mechanical_relative_first_law_residual": 0.007122098779966515,
+    "maximum_relative_energy_closure": 0.0,
+    "maximum_sink_line_balance_residual_m2": 0.0,
+    "maximum_sink_relative_first_law_residual": 0.0,
+    "maximum_source_line_balance_residual_m2": 0.125,
+    "maximum_source_relative_first_law_residual": 0.01628560713699342,
+    "maximum_structural_absorption_first_law_residual": 0.0,
+    "maximum_wall_orientation_relaxation_first_law_residual": 2.763086618917905e-09,
+    "physical_time_s": 0.008000000000000002,
+    "rejected_events": 0,
+    "sink_annihilated_pair_cell_sum_m2": 0.0,
+    "sink_inactive_intervals": 0,
+    "sink_intervals": 0,
+    "sink_rejected_intervals": 0,
+    "source_created_line_cell_sum_m2": 588900937364052.9,
+    "source_event_count": 6784.138798433888,
+    "source_inactive_intervals": 0,
+    "source_intervals": 10,
+    "source_rejected_intervals": 0,
+    "stationary_intervals": 10,
+    "structural_absorbed_line_length_m": 0.0,
+    "structural_absorption_inactive_intervals": 0,
+    "structural_absorption_intervals": 0,
+    "structural_absorption_rejected_intervals": 0,
+    "transformed_volume_m3": 0.0,
+    "wall_orientation_relaxation_inactive_intervals": 2,
+    "wall_orientation_relaxation_intervals": 8,
+    "wall_orientation_relaxation_rejected_intervals": 0
+  },
+  "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_interface_structural_bridge_dynamic_r1e3_clean/checkpoint_latest.npz",
+  "parent_checkpoint_sha256": "58802f9269f00d823d8a8c1b24a4ae75a778975d391610ab9a7a5c9217177b15",
+  "records": [
+    {
+      "applied_shear_strain": 0.008,
+      "compatible_target_span_deg": 0.0,
+      "interval": 1,
+      "mechanical_relative_first_law_residual": 1.7176725577716482e-10,
+      "orientation_span_deg": 0.016080204564057798,
+      "physical_time_s": 0.0008,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 612.0571145483578,
+      "source_line_balance_residual_m2": 0.0859375,
+      "source_relative_first_law_residual": 0.01628560713699342,
+      "wall_order_mean": 0.0,
+      "wall_order_range": [
+        0.0,
+        0.0
+      ],
+      "wall_orientation_affinity_J_m": 0.0,
+      "wall_orientation_classification": "INACTIVE_NO_DOWNHILL_COMPATIBLE_ROTATION",
+      "wall_orientation_fraction": 0.0
+    },
+    {
+      "applied_shear_strain": 0.016,
+      "compatible_target_span_deg": 0.0,
+      "interval": 2,
+      "mechanical_relative_first_law_residual": 1.7217592715572717e-08,
+      "orientation_span_deg": 0.03216116189027072,
+      "physical_time_s": 0.0016,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 612.0607346920018,
+      "source_line_balance_residual_m2": 0.0546875,
+      "source_relative_first_law_residual": 0.007783841482917922,
+      "wall_order_mean": 0.0,
+      "wall_order_range": [
+        0.0,
+        0.0
+      ],
+      "wall_orientation_affinity_J_m": 0.0,
+      "wall_orientation_classification": "INACTIVE_NO_DOWNHILL_COMPATIBLE_ROTATION",
+      "wall_orientation_fraction": 0.0
+    },
+    {
+      "applied_shear_strain": 0.024,
+      "compatible_target_span_deg": 2.2280357769187286e-06,
+      "interval": 3,
+      "mechanical_relative_first_law_residual": 0.0012795500534519308,
+      "orientation_span_deg": 0.0474145316764037,
+      "physical_time_s": 0.0024000000000000002,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 612.0979094118632,
+      "source_line_balance_residual_m2": 0.0078125,
+      "source_relative_first_law_residual": 0.004919411976976372,
+      "wall_order_mean": 0.026795088873311407,
+      "wall_order_range": [
+        0.024634190863508862,
+        0.02893490677559607
+      ],
+      "wall_orientation_affinity_J_m": 1.9799560129404746e-11,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.032,
+      "compatible_target_span_deg": 2.013249688803463e-06,
+      "interval": 4,
+      "mechanical_relative_first_law_residual": 0.0024641399686238675,
+      "orientation_span_deg": 0.0548126063962184,
+      "physical_time_s": 0.0032,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 613.2486343516355,
+      "source_line_balance_residual_m2": 0.03125,
+      "source_relative_first_law_residual": 0.004387671026913069,
+      "wall_order_mean": 0.003214226474039415,
+      "wall_order_range": [
+        0.0031723104852543847,
+        0.0032625723071899896
+      ],
+      "wall_orientation_affinity_J_m": 1.581053956735068e-10,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.04,
+      "compatible_target_span_deg": 1.151272116402315e-06,
+      "interval": 5,
+      "mechanical_relative_first_law_residual": 0.007122098779966515,
+      "orientation_span_deg": 0.06812066599103946,
+      "physical_time_s": 0.004,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 615.0192482468797,
+      "source_line_balance_residual_m2": 0.0,
+      "source_relative_first_law_residual": 0.004195154776336386,
+      "wall_order_mean": 0.0017360360673127594,
+      "wall_order_range": [
+        0.0017071898825511895,
+        0.0017712083650420684
+      ],
+      "wall_orientation_affinity_J_m": 4.351137979156913e-10,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.048,
+      "compatible_target_span_deg": 7.95031724214715e-07,
+      "interval": 6,
+      "mechanical_relative_first_law_residual": 0.006899379718904166,
+      "orientation_span_deg": 0.08122882010328526,
+      "physical_time_s": 0.0048000000000000004,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 616.7522213578243,
+      "source_line_balance_residual_m2": 0.0390625,
+      "source_relative_first_law_residual": 0.003988704374044056,
+      "wall_order_mean": 0.001191268569169195,
+      "wall_order_range": [
+        0.0011644537309846888,
+        0.0012232873984313055
+      ],
+      "wall_orientation_affinity_J_m": 8.525069767399111e-10,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.056,
+      "compatible_target_span_deg": 6.069141645137189e-07,
+      "interval": 7,
+      "mechanical_relative_first_law_residual": 0.00632548329487402,
+      "orientation_span_deg": 0.0959773050062617,
+      "physical_time_s": 0.005600000000000001,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 618.4807898762481,
+      "source_line_balance_residual_m2": 0.0,
+      "source_relative_first_law_residual": 0.0037777410586362055,
+      "wall_order_mean": 0.0009062255330494603,
+      "wall_order_range": [
+        0.0008815654391105591,
+        0.0009375816455958017
+      ],
+      "wall_orientation_affinity_J_m": 1.43191670549162e-09,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.064,
+      "compatible_target_span_deg": 4.908454788253476e-07,
+      "interval": 8,
+      "mechanical_relative_first_law_residual": 0.005912935043357638,
+      "orientation_span_deg": 0.11041712108666989,
+      "physical_time_s": 0.006400000000000001,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 621.1589880916108,
+      "source_line_balance_residual_m2": -0.125,
+      "source_relative_first_law_residual": 0.0035543636250442235,
+      "wall_order_mean": 0.0007306167944616975,
+      "wall_order_range": [
+        0.0007074367315366729,
+        0.0007616638642112478
+      ],
+      "wall_orientation_affinity_J_m": 2.1874132308621097e-09,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.07200000000000001,
+      "compatible_target_span_deg": 4.119379978573534e-07,
+      "interval": 9,
+      "mechanical_relative_first_law_residual": 0.005506884760155381,
+      "orientation_span_deg": 0.12340550038853812,
+      "physical_time_s": 0.0072000000000000015,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 709.2027917384282,
+      "source_line_balance_residual_m2": -0.015625,
+      "source_relative_first_law_residual": 0.0035971174822005936,
+      "wall_order_mean": 0.0006113764326111173,
+      "wall_order_range": [
+        0.0005892285409990407,
+        0.0006424840890749614
+      ],
+      "wall_orientation_affinity_J_m": 3.132923595816672e-09,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    },
+    {
+      "applied_shear_strain": 0.08000000000000002,
+      "compatible_target_span_deg": 3.548399166838121e-07,
+      "interval": 10,
+      "mechanical_relative_first_law_residual": 0.004620231458602269,
+      "orientation_span_deg": 0.13856160891085853,
+      "physical_time_s": 0.008000000000000002,
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 1154.060366119038,
+      "source_line_balance_residual_m2": 0.09375,
+      "source_relative_first_law_residual": 0.012211427091297489,
+      "wall_order_mean": 0.000525011727143368,
+      "wall_order_range": [
+        0.000502413476989066,
+        0.000556296390573107
+      ],
+      "wall_orientation_affinity_J_m": 4.302096764191348e-09,
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fraction": 0.05
+    }
+  ],
+  "schema": "v67-single-owner-random-source-v1",
+  "scope": "prepared retained-material one-owner mechanism control",
+  "source_commit": "657072898969b35b88c78bbd6676405a828bd12c",
+  "source_tree_clean": true
+}
