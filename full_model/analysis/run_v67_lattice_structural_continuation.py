@@ -72,6 +72,10 @@ def main():
             "lattice_classification": interval.audit[
                 "lattice_absorption_classification"],
             "lattice_fraction": interval.audit["lattice_absorption_fraction"],
+            "lattice_edge_fractions": interval.audit[
+                "lattice_absorption_edge_fractions"],
+            "lattice_edge_affinities_J_m": interval.audit[
+                "lattice_absorption_edge_affinities_J_m"],
             "lattice_removed_line_m": interval.audit[
                 "lattice_absorption_removed_line_m"],
             "lattice_mura_relative_residual": interval.audit[

@@ -697,6 +697,12 @@ def advance_complete_multigrain_interval(
         "lattice_absorption_fraction": (
             0.0 if lattice_absorption is None
             else lattice_absorption.kinetic_fraction),
+        "lattice_absorption_edge_fractions": (
+            {} if lattice_absorption is None
+            else lattice_absorption.edge_fraction_by_interface),
+        "lattice_absorption_edge_affinities_J_m": (
+            {} if lattice_absorption is None
+            else lattice_absorption.edge_affinity_J_m_by_interface),
         "lattice_absorption_removed_line_m": (
             0.0 if lattice_absorption is None
             else context.represented_thickness_m*(

@@ -65,6 +65,8 @@ class LatticeInterfaceAbsorptionDecision:
     first_law_residual_J: float
     relative_first_law_residual: float
     heat_source_J_by_cell: np.ndarray
+    edge_fraction_by_interface: dict[str, float]
+    edge_affinity_J_m_by_interface: dict[str, float]
 
 
 def _edge_geometry(state, spacing_m):
@@ -101,10 +103,17 @@ def project_lattice_line_to_interfaces(
     """Apply a finite signed-line/swept-area event without pricing it."""
     state.validate()
     spacing = float(spacing_m)
-    extent = float(fraction)
+    raw_extent = np.asarray(fraction, dtype=float)
     if not math.isfinite(spacing) or spacing <= 0.0:
         raise ValueError("spacing must be positive finite")
-    if not math.isfinite(extent) or not 0.0 <= extent <= 1.0:
+    if raw_extent.ndim == 0:
+        extents = np.full(len(state.interfaces), float(raw_extent))
+    elif raw_extent.shape == (len(state.interfaces),):
+        extents = raw_extent
+    else:
+        raise ValueError("fraction requires one scalar or one value per interface")
+    if (np.any(~np.isfinite(extents)) or np.any(extents < 0.0)
+            or np.any(extents > 1.0)):
         raise ValueError("fraction must lie in [0,1]")
     geometry = _edge_geometry(state, spacing)
     owner_dplus = [np.zeros_like(owner.mobile_plus_m2) for owner in state.owners]
@@ -115,7 +124,8 @@ def project_lattice_line_to_interfaces(
     interface_burgers = []
     b = float(parameters.boundary.burgers_m)
 
-    for component, (ia, ib, normal, wa, wb) in zip(state.interfaces, geometry):
+    for component, (ia, ib, normal, wa, wb), extent in zip(
+            state.interfaces, geometry, extents):
         add_plus = np.zeros_like(component.boundary_plus_m2)
         add_minus = np.zeros_like(component.boundary_minus_m2)
         add_burgers = np.zeros(
@@ -234,24 +244,39 @@ def evaluate_lattice_interface_absorption(
         wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
         **options)
     before = evaluate_complete_multigrain_energy(state, **common)
-    full = project_lattice_line_to_interfaces(
-        state, systems=systems, spacing_m=spacing,
-        fraction=parameters.maximum_fraction_per_interval,
-        parameters=parameters)
-    full_energy = evaluate_complete_multigrain_energy(
-        full.candidate_state, **common)
-    line_m = ((full.removed_plus_line_per_thickness
-               +full.removed_minus_line_per_thickness)*thickness)
-    affinity = ((before.helmholtz_J-full_energy.helmholtz_J)/line_m
-                if line_m > 0.0 else 0.0)
     temperature = float(np.mean([
         np.mean(owner.temperature_K) for owner in state.owners]))
-    rate = float(exp_floor_event_rate_Hz(
-        max(affinity, 0.0), temperature, parameters.boundary))
-    fraction = min(-math.expm1(-rate*dt),
-                   parameters.maximum_fraction_per_interval)
+    edge_fractions = []
+    edge_affinities = []
+    edge_rates = []
+    # Price each interface from the immutable accepted state.  A favorable
+    # edge cannot subsidize an uphill reaction on another edge.
+    for edge_index in range(len(state.interfaces)):
+        trial_extent = np.zeros(len(state.interfaces))
+        trial_extent[edge_index] = parameters.maximum_fraction_per_interval
+        edge_trial = project_lattice_line_to_interfaces(
+            state, systems=systems, spacing_m=spacing,
+            fraction=trial_extent, parameters=parameters)
+        edge_energy = evaluate_complete_multigrain_energy(
+            edge_trial.candidate_state, **common)
+        edge_line_m = thickness*(
+            edge_trial.removed_plus_line_per_thickness
+            +edge_trial.removed_minus_line_per_thickness)
+        edge_affinity = ((before.helmholtz_J-edge_energy.helmholtz_J)/edge_line_m
+                         if edge_line_m > 0.0 else 0.0)
+        edge_rate = float(exp_floor_event_rate_Hz(
+            max(edge_affinity, 0.0), temperature, parameters.boundary))
+        edge_fraction = (min(-math.expm1(-edge_rate*dt),
+                             parameters.maximum_fraction_per_interval)
+                         if edge_line_m > 0.0 and edge_affinity >= 0.0 else 0.0)
+        edge_affinities.append(edge_affinity)
+        edge_rates.append(edge_rate)
+        edge_fractions.append(edge_fraction)
+    affinity = max(edge_affinities, default=0.0)
+    rate = max(edge_rates, default=0.0)
+    fraction = max(edge_fractions, default=0.0)
     projection = project_lattice_line_to_interfaces(
-        state, systems=systems, spacing_m=spacing, fraction=fraction,
+        state, systems=systems, spacing_m=spacing, fraction=edge_fractions,
         parameters=parameters)
     cold = projection.candidate_state
     cold_energy = evaluate_complete_multigrain_energy(cold, **common)
@@ -306,4 +331,8 @@ def evaluate_lattice_interface_absorption(
         accepted, classification, cold, committed if accepted else state,
         fraction, rate, affinity, projection, delta, heat if accepted else 0.0,
         residual if accepted else 0.0, relative if accepted else 0.0,
-        heat_cells if accepted else np.zeros_like(heat_cells))
+        heat_cells if accepted else np.zeros_like(heat_cells),
+        {component.component_id: float(value)
+         for component, value in zip(state.interfaces, edge_fractions)},
+        {component.component_id: float(value)
+         for component, value in zip(state.interfaces, edge_affinities)})
