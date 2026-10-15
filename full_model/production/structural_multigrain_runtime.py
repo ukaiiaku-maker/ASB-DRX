@@ -157,20 +157,25 @@ def advance_structural_junction_interval(
             junction_disclination_parameters=disclination_parameters,
             **options)
 
+    reference_orientation = float(np.mean(state.owners[0].orientation_rad))
     before_audit = audit_network_compatibility(
         state.grain_ids, runtime.interfaces, lengths,
-        boundary_parameters.burgers_m)
+        boundary_parameters.burgers_m,
+        reference_owner=state.grain_ids[0],
+        reference_orientation_rad=reference_orientation)
     for owner, derived in zip(
             state.owners, before_audit.fitted_orientation_rad):
-        if np.max(np.abs(np.asarray(owner.orientation_rad)-derived)) > 1e-12:
+        if abs(float(np.mean(owner.orientation_rad))-derived) > 1e-12:
             raise ValueError(
-                "owner orientation is not synchronized with structural content")
+                "owner mean orientation is not synchronized with structural content")
     before_state = state
     before_energy = complete(before_state, runtime.interfaces)
     candidate_interfaces = proposal.candidate_interfaces
     candidate_audit = audit_network_compatibility(
         state.grain_ids, candidate_interfaces, lengths,
-        boundary_parameters.burgers_m)
+        boundary_parameters.burgers_m,
+        reference_owner=state.grain_ids[0],
+        reference_orientation_rad=reference_orientation)
     candidate_state = _uniform_owner_orientations(
         state, candidate_audit.fitted_orientation_rad)
     candidate_energy = complete(candidate_state, candidate_interfaces)
