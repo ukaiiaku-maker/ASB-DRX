@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-15T17:26:54Z",
+  "last_updated_utc": "2026-10-15T18:06:18Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -81,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_a_Mura_consistent_lattice_to_boundary_absorption_flux_can_use_the_4p71e4_to_8p02e5_larger_near_boundary_signed_capacity_without_desynchronizing_beta_p_Nye_or_inventing_Burgers_content",
-    "next_executable_experiment": "derive_and_implement_a_joint_incident_edge_lattice_absorption_flux_that_updates_beta_p_and_Nye_from_one_flux_retains_tangential_Burgers_content_and_prices_the_complete_zero_work_event_before_a_short_r1e3_production_test",
-    "source_identity": "V67_common_axis_bridge_clean_production_commit_9bc7f10",
-    "expected_discriminatory_observation": "a_valid_lattice_flux_must_close_beta_p_Nye_line_Burgers_and_heat_ledgers_and_change_edge_20_30_selection_without_a_scalar_density_sink_or_target_grain_bias",
+    "physical_uncertainty": "whether_the_qualified_stress_directed_one_flux_absorption_pathway_produces_common_origin_lower_rate_dynamic_RX_and_overlap_with_active_shear_localization_without_parameter_or_mechanism_switches",
+    "next_executable_experiment": "run_matched_common_origin_rate_and_temperature_continuations_with_the_unchanged_stress_directed_absorption_parameterization_and_measure_owner_growth_front_persistence_and_ASB_connectivity_together",
+    "source_identity": "V67_stress_directed_dynamic_to_static_RX_commit_8a0b899",
+    "expected_discriminatory_observation": "lower_rate_anchors_must_show_sustained_dynamic_owner_growth_while_higher_rate_anchors_retain_localization_and_the_overlap_condition_must_show_RX_growth_inside_the_active_band",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "explicit_interface_common_axis_absorption_is_production_integrated_and_conservative_but_capacity_limited;_50_post_reversal_intervals_worsen_the_growth_minus_shrink_bias_from_0p891885_to_0p900213_MPa;_clean_r1e3_growth_peaks_0p202037_percent_at_3p64_percent_strain_and_reverses_to_0p198602_percent_at_4_percent;_near_boundary_lattice_capacity_is_4p71e4_to_8p02e5_larger_but_requires_a_Mura_consistent_flux"
+    "result_status": "stress_directed_one_flux_lattice_to_interface_absorption_is_production_integrated_and_conservative;_at_r1e3_the_10_20_bias_reverses_and_grain30_grows_during_loading_and_zero_rate_hold;_an_additional_200_interval_hold_grows_grain30_0p06157_percent_and_grain10_0p02204_percent_while_grain20_shrinks_0p08530_percent;_rate_ordering_and_DRX_ASB_coexistence_remain_unqualified"
   },
   "continuation_rule": {
     "active": true,
@@ -97,7 +97,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "mechanism_supported_at_tested_conditions": false,
+    "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": false,
     "material_validated": false,
     "full_charter_complete": false

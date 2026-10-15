@@ -2802,3 +2802,23 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   Mura-consistent lattice-to-boundary flux as the next hypothesis; a scalar
   density sink is not authorized because it would desynchronize beta-p/Nye.
 - The canonical regression passes 1,111 tests in 365.13 seconds.
+- A production one-flux lattice-to-interface operator now transfers signed
+  mobile line and Burgers content while advancing beta-p and family Nye from
+  the identical swept-area increment. The complete regression passes 1,113
+  tests in 316.81 seconds; focused integration tests pass 10/10 after the
+  line-unit repair.
+- Global and edge-local thermal capture are valid negative controls: all edges
+  are individually downhill, but the 20--30 bias worsens. Stress-directed
+  positive/negative transport from the retained Arrhenius mechanics reduces
+  that adverse change and is the selected production hypothesis.
+- At 1,000/s, 50 coupled intervals accept every lattice, structural, and front
+  transaction. Grain 30 gains 1.0161e-15 m2 while grain 20 loses
+  1.0200e-15 m2, and the 10--20 competition bias reverses from +0.322703 to
+  -0.275139 MPa. No labels are created and maximum support motion is 1.51e-4.
+- A following 50-interval zero-rate hold preserves growth. A further 200-
+  interval hold grows grains 30 and 10 by 0.06157% and 0.02204%, respectively,
+  while grain 20 shrinks 0.08530%. All 200 absorption/structural transactions
+  and fronts accept; the maximum absorption first-law residual is 4.26e-12.
+- This is sustained dynamic-to-static RX at small amplitude, not yet a claim
+  of percent-scale DRX, spontaneous nucleation, rate ordering, or DRX inside a
+  qualified ASB. Exact dynamic and long-hold restart checkpoints are retained.

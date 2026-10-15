@@ -435,3 +435,31 @@ near-boundary signed lattice field than in the explicit interface reservoir.
 Advance to a Mura-consistent lattice-to-boundary flux that updates plastic
 distortion and Nye from one flux, jointly limits incident-edge capacity, and
 retains incompatible Burgers content. Do not promote a scalar density sink.
+
+## ADR-0032: Advance stress-directed one-flux absorption to rate-family tests
+
+Status: production-integrated positive mechanism discriminator, 2026-10-15.
+
+Replace scalar lattice deletion by one atomic signed transaction. Mobile line
+is debited from its material owner, the same signed content and laboratory-frame
+Burgers vector are credited to the explicit interface, and the swept area is
+the sole increment of plastic distortion and family Nye. Incident-edge donor
+capacity is shared, each edge is priced independently, heat is deposited on
+the realized capture support, and the immutable Arrhenius EXP-floor
+Peierls--Taylor--Hall--Petch mechanics supplies the retained-stress direction.
+
+Symmetric and edge-priced thermal capture are valid but worsen the 20--30
+competition bias. Stress-directed capture is more selective. In a clean
+1,000/s production continuation it accepts 50/50 lattice and structural
+reactions, moves every front without rejection, and reverses the 10--20
+directional bias from +0.322703 to -0.275139 MPa. Grain 30 grows during loading
+and through a subsequent zero-rate hold. An additional 200-interval hold grows
+grain 30 by 0.06157% and grain 10 by 0.02204%, while grain 20 shrinks 0.08530%.
+The absorption Mura residual remains below 9.1e-16 in the short runs and the
+maximum first-law residual remains below 4.3e-12 in the long hold.
+
+This qualifies an energy-accessible, conserved dynamic-to-static RX pathway at
+the tested retained state. It does not yet qualify percent-scale DRX, common-
+origin rate ordering, spontaneous grain birth, or DRX/ASB coexistence. Advance
+the unchanged parameterization to matched rate/temperature continuations; do
+not retune capture distance or introduce a rate-dependent switch.
