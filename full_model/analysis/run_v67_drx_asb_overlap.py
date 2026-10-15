@@ -80,6 +80,7 @@ def main():
     parser.add_argument("out", type=Path)
     parser.add_argument("--intervals", type=int, default=50)
     parser.add_argument("--capture-distance", type=float, default=5e-7)
+    parser.add_argument("--disable-rx", action="store_true")
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -89,15 +90,19 @@ def main():
     physics_args = _args_from_configuration(configuration)
     physics_args.shear_rate = float(configuration["shear_rate_s"])
     spacing, _, _, _, _, _, base_context = _physics(physics_args)
+    rx_enabled = not args.disable_rx
     context = replace(
         base_context, shear_rate_s=float(configuration["shear_rate_s"]),
         front_enabled=True, source_mode="disabled", sink_mode="disabled",
         interface_sink_mode="disabled", interface_sink_parameters=None,
-        structural_absorption_mode="common_axis",
-        structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(),
-        lattice_absorption_mode="one_flux_mura",
-        lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
-            capture_distance_m=args.capture_distance))
+        structural_absorption_mode=("common_axis" if rx_enabled else "disabled"),
+        structural_absorption_parameters=(
+            InterfaceStructuralAbsorptionParameters() if rx_enabled else None),
+        lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
+        lattice_absorption_parameters=(
+            LatticeInterfaceAbsorptionParameters(
+                capture_distance_m=args.capture_distance)
+            if rx_enabled else None))
     endpoint = make_endpoint(state, runtime, load, context)
     initial_supports = np.asarray(state.supports).copy()
     initial_orientations = np.asarray([
@@ -106,6 +111,7 @@ def main():
     growth_inside = np.zeros(len(state.owners))
     growth_outside = np.zeros(len(state.owners))
     active_band_intervals = 0
+    active_band_area_fraction_sum = 0.0
     records = []
     dt = float(configuration["dt_s"])
     for index in range(1, args.intervals+1):
@@ -120,6 +126,7 @@ def main():
         growth_outside += np.sum(
             positive*(~band_before)[None, ...], axis=(1, 2))*spacing**2
         active_band_intervals += int(metrics_before["band_like"])
+        active_band_area_fraction_sum += float(np.mean(band_before))
         if index == 1 or index == args.intervals or index % 10 == 0:
             records.append({
                 "interval": index, "load": endpoint.load,
@@ -141,15 +148,18 @@ def main():
     overlap_fraction = np.divide(
         growth_inside, total_growth, out=np.zeros_like(total_growth),
         where=total_growth > 0.0)
+    mean_active_band_fraction = active_band_area_fraction_sum/args.intervals
+    overlap_enrichment = overlap_fraction/max(mean_active_band_fraction, 1e-300)
     commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     output_configuration = dict(configuration)
     output_configuration.update(
         schema="v67-drx-asb-overlap-v1", target_steps=args.intervals,
         parent_checkpoint=str(args.checkpoint.resolve()),
-        lattice_absorption_mode="one_flux_mura",
+        rx_enabled=rx_enabled,
+        lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
         lattice_capture_distance_m=args.capture_distance,
-        structural_absorption_mode="common_axis")
+        structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
@@ -166,6 +176,7 @@ def main():
             "positive_front_growth_inside_active_band_m2": float(growth_inside[i]),
             "positive_front_growth_outside_active_band_m2": float(growth_outside[i]),
             "positive_growth_inside_band_fraction": float(overlap_fraction[i]),
+            "growth_inside_band_enrichment": float(overlap_enrichment[i]),
             "mean_orientation_change_rad": float(
                 final_orientations[i]-initial_orientations[i]),
         } for i, grain in enumerate(state.grain_ids)}
@@ -186,10 +197,12 @@ def main():
                 np.sum(initial_band | final_band), 1)),
         "owner_results": owner_results,
         "active_band_intervals": active_band_intervals,
+        "mean_active_largest_band_area_fraction": mean_active_band_fraction,
         "sampled_interval_records": records,
         "ledger": asdict(endpoint.runtime.ledger),
         "decision": {
             "initial_connected_band": bool(initial_metrics["band_like"]),
+            "rx_pathway_enabled": rx_enabled,
             "final_connected_band": bool(final_metrics["band_like"]),
             "band_persisted_every_interval": active_band_intervals == args.intervals,
             "any_owner_net_growth": bool(growing),
@@ -197,7 +210,9 @@ def main():
                 row["positive_front_growth_inside_active_band_m2"] > 0.0
                 for row in growing)),
             "all_hard_absorption_balances_passed": bool(
-                endpoint.runtime.ledger.lattice_absorption_rejected_intervals == 0),
+                not rx_enabled or (
+                    endpoint.runtime.ledger.lattice_absorption_rejected_intervals
+                    == 0)),
             "grain_ids_unchanged": endpoint.state.grain_ids == state.grain_ids,
         },
         "artifacts": {"checkpoint_latest.npz": _sha(checkpoint)},
