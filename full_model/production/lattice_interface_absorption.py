@@ -40,10 +40,10 @@ class LatticeInterfaceAbsorptionParameters:
 @dataclass(frozen=True)
 class LatticeInterfaceProjection:
     candidate_state: object
-    removed_plus_line_m: float
-    removed_minus_line_m: float
-    interface_plus_line_m: float
-    interface_minus_line_m: float
+    removed_plus_line_per_thickness: float
+    removed_minus_line_per_thickness: float
+    interface_plus_line_per_thickness: float
+    interface_minus_line_per_thickness: float
     burgers_balance_norm_m: float
     maximum_mura_relative_residual: float
     maximum_incident_capacity: float
@@ -240,7 +240,8 @@ def evaluate_lattice_interface_absorption(
         parameters=parameters)
     full_energy = evaluate_complete_multigrain_energy(
         full.candidate_state, **common)
-    line_m = ((full.removed_plus_line_m+full.removed_minus_line_m)*thickness)
+    line_m = ((full.removed_plus_line_per_thickness
+               +full.removed_minus_line_per_thickness)*thickness)
     affinity = ((before.helmholtz_J-full_energy.helmholtz_J)/line_m
                 if line_m > 0.0 else 0.0)
     temperature = float(np.mean([
@@ -257,12 +258,15 @@ def evaluate_lattice_interface_absorption(
     delta = cold_energy.helmholtz_J-before.helmholtz_J
     resolution = 4096*np.finfo(float).eps*max(
         abs(before.helmholtz_J), abs(cold_energy.helmholtz_J), 1e-300)
-    active = projection.removed_plus_line_m+projection.removed_minus_line_m > 0.0
+    active = (projection.removed_plus_line_per_thickness
+              +projection.removed_minus_line_per_thickness) > 0.0
     balances = (
-        abs(projection.removed_plus_line_m-projection.interface_plus_line_m)
-        <= 1e-11*max(projection.removed_plus_line_m, 1e-300)
-        and abs(projection.removed_minus_line_m-projection.interface_minus_line_m)
-        <= 1e-11*max(projection.removed_minus_line_m, 1e-300)
+        abs(projection.removed_plus_line_per_thickness
+            -projection.interface_plus_line_per_thickness)
+        <= 1e-11*max(projection.removed_plus_line_per_thickness, 1e-300)
+        and abs(projection.removed_minus_line_per_thickness
+                -projection.interface_minus_line_per_thickness)
+        <= 1e-11*max(projection.removed_minus_line_per_thickness, 1e-300)
         and projection.maximum_mura_relative_residual < 2e-11)
     downhill = delta <= resolution
     heat = max(-delta, 0.0) if active and balances and downhill else 0.0

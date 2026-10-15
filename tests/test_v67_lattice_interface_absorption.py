@@ -36,12 +36,14 @@ def test_one_flux_absorption_closes_line_beta_nye_and_interface_burgers():
         parameters=LatticeInterfaceAbsorptionParameters(
             maximum_fraction_per_interval=.05,
             capture_distance_m=spacing))
-    assert result.removed_plus_line_m > 0.0
+    assert result.removed_plus_line_per_thickness > 0.0
     np.testing.assert_allclose(
-        result.removed_plus_line_m, result.interface_plus_line_m,
+        result.removed_plus_line_per_thickness,
+        result.interface_plus_line_per_thickness,
         rtol=2e-14, atol=0.0)
     np.testing.assert_allclose(
-        result.removed_minus_line_m, result.interface_minus_line_m,
+        result.removed_minus_line_per_thickness,
+        result.interface_minus_line_per_thickness,
         rtol=2e-14, atol=0.0)
     assert result.maximum_mura_relative_residual < 2e-11
     assert result.maximum_incident_capacity <= .02+1e-15

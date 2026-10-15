@@ -469,8 +469,9 @@ def advance_complete_multigrain_interval(
             raise RuntimeError("lattice absorption failed a hard balance audit")
         if lattice_absorption.accepted:
             structural_state = lattice_absorption.committed_state
-        absorbed = (lattice_absorption.projection.removed_plus_line_m
-                    +lattice_absorption.projection.removed_minus_line_m)
+        absorbed = context.represented_thickness_m*(
+            lattice_absorption.projection.removed_plus_line_per_thickness
+            +lattice_absorption.projection.removed_minus_line_per_thickness)
         runtime = replace(runtime, ledger=replace(
             runtime.ledger,
             lattice_absorption_intervals=(
@@ -698,8 +699,9 @@ def advance_complete_multigrain_interval(
             else lattice_absorption.kinetic_fraction),
         "lattice_absorption_removed_line_m": (
             0.0 if lattice_absorption is None
-            else lattice_absorption.projection.removed_plus_line_m
-            +lattice_absorption.projection.removed_minus_line_m),
+            else context.represented_thickness_m*(
+                lattice_absorption.projection.removed_plus_line_per_thickness
+                +lattice_absorption.projection.removed_minus_line_per_thickness)),
         "lattice_absorption_mura_relative_residual": (
             0.0 if lattice_absorption is None
             else lattice_absorption.projection.maximum_mura_relative_residual),
