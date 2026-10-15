@@ -44,6 +44,8 @@ def main():
     parser.add_argument("--intervals", type=int, default=50)
     parser.add_argument("--capture-distance", type=float, default=5e-7)
     args = parser.parse_args()
+    source_status = subprocess.check_output(
+        ("git", "status", "--porcelain"), cwd=ROOT, text=True)
     args.out.mkdir(parents=True, exist_ok=True)
     state, runtime, _, load, _, configuration, provenance = _load_checkpoint(
         args.checkpoint)
@@ -84,8 +86,6 @@ def main():
     after = _directional_audit(endpoint, context, fraction=2e-4)
     commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
-    status = subprocess.check_output(
-        ("git", "status", "--porcelain"), cwd=ROOT, text=True)
     accepted_lattice = sum(row["lattice_classification"].startswith("ACCEPTED")
                            for row in records)
     accepted_structural = sum(
@@ -95,7 +95,7 @@ def main():
         "schema": "v67-one-flux-lattice-structural-continuation-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": commit,
-        "source_tree_clean": not bool(status),
+        "source_tree_clean": not bool(source_status),
         "parent_checkpoint": str(args.checkpoint.resolve()),
         "parent_checkpoint_sha256": _sha(args.checkpoint),
         "parent_provenance": provenance,
