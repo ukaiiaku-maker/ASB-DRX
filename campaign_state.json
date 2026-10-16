@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T12:46:41Z",
+  "last_updated_utc": "2026-10-16T13:18:26Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -66,13 +66,13 @@
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 59716,
-      "case": "v67_highrate2000_reaction_cone_extended15",
+      "pid": 62356,
+      "case": "v67_highrate2000_wall_recovery_extended15",
       "status": "running_single_local_solver",
-      "last_case": "v67_highrate2000_reaction_cone_extended15",
-      "last_start_local": "2026-10-16T05:30:54-07:00",
-      "last_source_commit": "29662a78bd1d1f75a1b34fb6c9281416a0e614d0",
-      "last_output": "full_model/verification/v67_highrate2000_reaction_cone_extended15"
+      "last_case": "v67_highrate2000_wall_recovery_extended15",
+      "last_start_local": "2026-10-16T06:18:07-07:00",
+      "last_source_commit": "53be25102d16cf7a8a33729d17650b4f071f9db4",
+      "last_output": "full_model/verification/v67_highrate2000_wall_recovery_extended15"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -85,11 +85,11 @@
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
     "physical_uncertainty": "whether_removing_redundant_opposite_sign_ordered_wall_line_at_fixed_signed_Burgers_content_makes_the_surviving_excess_accessible_to_Frank_Bilby_compatible_reorganization_and_matures_the_saturating_1p17_degree_precursor",
-    "next_executable_experiment": "finish_and_classify_the_active_clean_reaction_cone_baseline_then_run_the_committed_wall_neutral_pair_recovery_plus_compatible_survivor_reorganization_from_the_same_retained_parent_and_follow_with_a_no_reset_hold",
-    "source_identity": "6d45315_with_conserved_support_weighted_wall_pair_recovery_and_shared_Arrhenius_EXP_floor_law",
+    "next_executable_experiment": "complete_and_classify_the_active_matched_wall_neutral_pair_recovery_plus_compatible_survivor_reorganization_then_follow_the_credible_candidate_with_a_no_reset_hold",
+    "source_identity": "53be251_with_conserved_support_weighted_wall_pair_recovery_shared_Arrhenius_EXP_floor_law_and_launch_frozen_provenance",
     "expected_discriminatory_observation": "exact_signed_content_and_line_balance_with_a_complete_energy_drop_followed_by_improved_compatibility_and_either_a_finite_interior_orientation_plateau_or_a_quantified_negative_topology_result",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "baseline_reaction_cone_improves_wall_orientation_compatibility_but_the_leading_high_rate_precursor_saturates_near_1p17_degree_and_has_no_enclosed_plateau;_grain30_retains_55p27_percent_neutral_ordered_wall_line_so_conserved_pair_recovery_is_now_implemented_tested_and_queued_for_same_parent_discrimination"
+    "result_status": "matched_15_interval_baseline_completed_with_all_hard_gates_passed_no_reactivated_compatible_events_and_grain30_reversing_from_1p174_to_1p144_degree;_the_same_parent_15_interval_conserved_pair_recovery_discriminator_is_running"
   },
   "continuation_rule": {
     "active": true,

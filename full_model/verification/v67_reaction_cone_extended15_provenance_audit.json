@@ -1,0 +1,13 @@
+{
+  "schema": "v67-continuation-provenance-audit-v1",
+  "case": "v67_highrate2000_reaction_cone_extended15",
+  "actual_launch_source_commit": "29662a78bd1d1f75a1b34fb6c9281416a0e614d0",
+  "source_tree_clean_at_launch": true,
+  "erroneously_reported_completion_head": "9133a87b0b568d163a6828ec3780e5f6f6b460d1",
+  "result_sha256": "f03dae337f6c93038d674d6ee7363a4baf15bda88e0d85a129f4c1265a4f6123",
+  "checkpoint_sha256": "7dd892ba7cb688edc99522d3bd8650170d867b44b768430878ecfe616718723a",
+  "audit_classification": "VALID_PHYSICS_RESULT_WITH_CORRECTED_LAUNCH_PROVENANCE",
+  "explanation": "The Python process imported production source at launch commit 29662a7. Documentation and new-mechanism commits advanced repository HEAD while it ran. The old runner then queried HEAD again at completion and wrote 9133a87 into result.json even though that source was never loaded by the running process.",
+  "repair_commit": "53be25102d16cf7a8a33729d17650b4f071f9db4",
+  "repair": "All later continuations retain the launch-time source identity and record the completion repository HEAD separately."
+}
