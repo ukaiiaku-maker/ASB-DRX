@@ -138,7 +138,8 @@ class CompleteMultiGrainLocalFields:
 def evaluate_complete_multigrain_local_fields(
         state, *, spacing_m, wall_parameters, mean_strain=None,
         topologies=(), systems=None, boundary_line_energy_J_m=None,
-        boundary_junction_energy_J_m=None):
+        boundary_junction_energy_J_m=None,
+        additional_plastic_distortion=None):
     """Return the local terms changed by lattice/interface absorption.
 
     The nonlocal elastic solve remains global; its returned density is the
@@ -186,6 +187,11 @@ def evaluate_complete_multigrain_local_fields(
         boundary += line_energy*line_density+junction_energy*junction_density
 
     beta = np.asarray(mixture.beta_p)
+    if additional_plastic_distortion is not None:
+        extra = np.asarray(additional_plastic_distortion, dtype=float)
+        if extra.shape != beta.shape or np.any(~np.isfinite(extra)):
+            raise ValueError("additional plastic distortion has invalid shape")
+        beta = beta+extra
     eigenstrain = .5*(beta[..., :2, :2]
                       +np.swapaxes(beta[..., :2, :2], -1, -2))
     mean = np.zeros((2, 2)) if mean_strain is None else np.asarray(
@@ -329,7 +335,8 @@ def evaluate_complete_multigrain_energy(
         boundary_line_energy_J_m=None, boundary_junction_energy_J_m=None,
         reference_temperature_K=0.0, structural_interfaces=(),
         structural_burgers_m=None, structural_parameters=None,
-        junction_disclination_parameters=None):
+        junction_disclination_parameters=None,
+        additional_plastic_distortion=None):
     """Evaluate the complete shared functional on one multi-owner state."""
     state.validate()
     spacing = float(spacing_m)
@@ -382,6 +389,11 @@ def evaluate_complete_multigrain_energy(
             dtype=np.longdouble)*volume)
 
     beta = np.asarray(mixture.beta_p)
+    if additional_plastic_distortion is not None:
+        extra = np.asarray(additional_plastic_distortion, dtype=float)
+        if extra.shape != beta.shape or np.any(~np.isfinite(extra)):
+            raise ValueError("additional plastic distortion has invalid shape")
+        beta = beta+extra
     eigenstrain = .5*(beta[..., :2, :2]
                       +np.swapaxes(beta[..., :2, :2], -1, -2))
     mean = np.zeros((2, 2)) if mean_strain is None else np.asarray(
