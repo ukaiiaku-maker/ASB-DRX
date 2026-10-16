@@ -2,6 +2,36 @@
 
 Updated: 2026-10-16 (America/Los_Angeles)
 
+## V67 fixed-transmission RX recovery
+
+- The clean inherited 55% front-transmission trajectory reproduces a physical
+  late reversal: grain 20 reaches 0.91224% growth and the independently priced
+  endpoint bias is -23.421 kPa. Matched-random versus GB/TJ source geography is
+  an exact null because no new source event accepts at this late state.
+- Direct audits show that the interface reservoir is almost entirely
+  tangential Burgers content and contains 81.78% scalar line above its exact
+  vector carrier floor. Vector-neutral junction recovery, conservative local
+  TJ redistribution, compatible interface sliding, and two bulk-recovery
+  geographies all close their declared balances but fail to restore target
+  selection. These mechanisms remain negative discriminators.
+- Reducing only the fixed moving-front transmission fraction from 0.55 to 0.25
+  changes the same-state target bias to +1.151 MPa after one interval and
+  +1.126 MPa after ten. A 60-interval continuation remains monotone, reaches
+  1.00329% cumulative existing-boundary growth, and ends with +0.98450 MPa
+  growth-minus-shrinkage bias. Every Mura, first-law, provenance, and
+  grain-identity hard audit passes.
+- The exact endpoint then advances through a no-reset, front-enabled zero-rate
+  hold with the same 0.25 transfer law. It adds 0.03298% growth, reaches
+  1.03628% cumulatively, and retains +0.91856 MPa bias after 15 microseconds.
+  The machine-readable pair classification is
+  `QUALIFIED_DYNAMIC_AND_RETAINED_STATIC_EXISTING_BOUNDARY_RX`.
+- This result identifies front dislocation inheritance as the late limiter;
+  it is not yet a from-origin single-parameter trajectory, spontaneous grain
+  birth, or material calibration. A fresh zero-load polycrystal replay with
+  0.25 transmission fixed from the first front event is now the sole local
+  heavy solver. After its common prestrain, 2/s and 20/s forks will test the
+  neighboring response family without another coefficient change.
+
 ## V67 conserved wall-content continuation
 
 - The immutable Arrhenius EXP-floor Peierls--Taylor--Hall--Petch mechanics,

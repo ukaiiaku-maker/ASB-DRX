@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T15:31:00Z",
+  "last_updated_utc": "2026-10-16T16:38:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -49,11 +49,11 @@
   },
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "full_common_production_candidate_grows_existing_grain20_by_0p21727_percent_at_2_per_s_versus_0p01643_percent_at_20_per_s_at_common_incremental_strain;_percent_scale_DRX_and_new_grain_birth_remain_absent",
+    "G02": "late_state_fixed_0p25_front_transmission_candidate_reaches_1p00329_percent_monotone_dynamic_existing_boundary_RX_at_2_per_s_and_1p03628_percent_after_no_reset_zero_rate_hold;_fresh_anchor_single_parameter_replay_is_running_and_new_grain_birth_remains_absent",
     "G03": "matched_n32_n48_16_percent_horizon_forms_connected_bands_with_and_without_heat; thermal_amplification_positive_but_strict_ASB_false_because_band_geometry_is_not_spatially_converged",
     "G04": "response_sensitivity_demonstrated; required_regime_switching_and_dynamic_spatial_coexistence_not_yet_demonstrated",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
-    "G06": "repaired_full_production_2_per_s_state_grows_grain20_by_0p04759_percent_during_a_no_reset_40_microsecond_zero_rate_hold_with_target_growth_remaining_downhill"
+    "G06": "fixed_0p25_transmission_candidate_adds_0p03298_percent_growth_during_a_no_reset_15_microsecond_zero_rate_hold_after_crossing_one_percent_dynamically_with_terminal_bias_plus_0p91856_MPa"
   },
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_with_exact_competing_hazards_and_same_interval_structural_handoff_removes_the_old_numerical_reversal_but_the_repaired_path_later_reverses_physically_below_one_percent",
@@ -65,17 +65,20 @@
     "H7": "conserved_Arrhenius_neutral_pair_recovery_is_energy_consistent_and_nearly_fully_polarizes_the_leading_wall_but_does_not_create_topology_or_mature_the_1p17_degree_precursor_dynamically_or_during_the_no_reset_hold",
     "H8": "the_apparent_local_joint_closed_wall_downhill_path_was_a_rejected_quadratic_coupling_artifact_that_relaxed_preexisting_orientation_Nye_mismatch;_the_continuous_incremental_conjugate_map_finds_zero_downhill_candidates_across_120_screened_states",
     "H9": "conservative_collective_climb_from_a_cell_core_to_its_ordered_boundary_is_downhill_on_n32_and_n64_but_has_zero_downhill_candidates_on_the_fixed_scale_n128_representation;_the_sign_and_affinity_are_not_grid_convergent_and_production_promotion_is_rejected",
-    "H10": "the_2_per_s_existing_boundary_branch_remains_monotone_through_0p91224_percent_but_its_net_directional_bias_crosses_negative_below_one_percent;_a_clean_replay_and_late_matched_random_source_geography_fork_are_selected"
+    "H10": "the_2_per_s_inherited_0p55_transmission_branch_reverses_below_one_percent;_late_GB_TJ_and_matched_random_sources_are_exactly_inactive_and_source_geography_is_not_the_limiter",
+    "H11": "vector_neutral_junction_recovery_local_TJ_Burgers_redistribution_Mura_compatible_interface_sliding_and_bulk_neutral_recovery_are_energy_consistent_negative_discriminators_that_do_not_restore_RX_selection",
+    "H12": "fixed_0p25_front_transmission_from_the_same_late_state_restores_plus_1p126_MPa_bias_then_reaches_1p00329_percent_dynamic_growth_and_1p03628_percent_after_a_no_reset_zero_rate_hold_with_all_hard_ledgers_passed",
+    "H13": "fresh_zero_load_anchor_replay_with_0p25_transmission_fixed_from_the_first_front_event_is_running_to_remove_the_late_parameter_handoff_from_the_claim"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 68582,
-      "case": "v67_exact_fullphysics_rate2_growth_matched_random_50",
+      "pid": 74904,
+      "case": "v67_fresh_anchor_transmission0p25_rate20_prestrain33",
       "status": "running_single_local_solver",
-      "last_case": "v67_exact_fullphysics_rate2_growth_matched_random_50",
-      "last_start_local": "2026-10-16T08:31:00-07:00",
-      "last_source_commit": "2c66ff4",
-      "last_output": "full_model/verification/v67_exact_fullphysics_rate2_growth_matched_random_50"
+      "last_case": "v67_fresh_anchor_transmission0p25_rate20_prestrain33",
+      "last_start_local": "2026-10-16T09:37:00-07:00",
+      "last_source_commit": "9e6d40c",
+      "last_output": "full_model/verification/v67_fresh_anchor_transmission0p25_rate20_prestrain33"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -86,13 +89,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10"],
-    "physical_uncertainty": "whether_the_observed_late_directional_reversal_is_reproducible_from_clean_source_and_whether_random_bulk_source_geography_can_sustain_local_stored_energy_after_the_GB_TJ_source_becomes_inactive",
-    "next_executable_experiment": "replay_the_50_interval_baseline_from_clean_source_then_fork_the_identical_parent_with_matched_random_sources_without_retuning_and_compare_growth_bias_line_supply_and_hard_ledgers",
-    "source_identity": "dfb1065_plus_classifier_fail_closed_repair;_production_equations_unchanged_since_89e429c",
-    "expected_discriminatory_observation": "clean_reproduction_of_the_negative_endpoint_bias_followed_by_either_a_source_geography_dependent_restoration_of_positive_bias_or_a_rate_limiting_mechanism_independent_of_source_location",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13"],
+    "physical_uncertainty": "whether_fixed_0p25_moving_front_transmission_sustains_the_same_RX_response_when_applied_from_the_fresh_zero_load_anchor_and_whether_the_same_parameterization_preserves_the_neighboring_rate_and_high_rate_ASB_response",
+    "next_executable_experiment": "complete_the_fresh_anchor_20_per_s_prestrain_with_0p25_transmission_then_fork_2_and_20_per_s_at_matched_incremental_strain_without_changing_any_physical_parameter",
+    "source_identity": "9e6d40c_with_production_transfer_override_introduced_at_d0d643a;_immutable_Arrhenius_mechanics_unchanged",
+    "expected_discriminatory_observation": "a_clean_from_anchor_common_state_followed_by_lower_rate_growth_advantage_without_late_parameter_switch_or_a_rejection_that_localizes_the_positive_result_to_the_late_handoff",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "clean_50_interval_replay_reproduces_0p91224_percent_and_negative_0p02342_MPa_endpoint_bias_with_all_hard_audits_passed;_the_same_parent_matched_random_source_geography_fork_is_running"
+    "result_status": "late_state_fixed_0p25_transmission_pair_qualifies_one_percent_dynamic_and_positive_retained_static_existing_boundary_RX;_fresh_anchor_fixed_parameter_replay_is_running"
   },
   "continuation_rule": {
     "active": true,
@@ -103,7 +106,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315;_focused_joint_integration_17_passed_in_3p72_s_at_f761ce7;_full_latest_regression_pending_after_active_solver",
+    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315;_new_transmission_analysis_scripts_compile;_full_latest_regression_pending_after_active_solver",
     "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": false,
     "material_validated": false,
