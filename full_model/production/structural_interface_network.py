@@ -117,6 +117,7 @@ class JunctionReactionParameters:
     exp_n: float = 2.0
     barrier_floor_fraction: float = 0.05/1.50
     maximum_fraction_per_interval: float = 0.10
+    complete_physical_clock: bool = False
 
     def __post_init__(self):
         values = (self.activation_enthalpy_eV, self.critical_backstress_Pa,
@@ -424,8 +425,11 @@ def relax_junction_cycle_interval(
         reaction_parameters.barrier_floor_fraction)
     rate = activated_rate_s(
         reaction_parameters.process, enthalpy, temperature)
-    fraction = min(
-        -math.expm1(-rate*dt), reaction_parameters.maximum_fraction_per_interval)
+    uncapped_fraction = -math.expm1(-rate*dt)
+    fraction = (uncapped_fraction
+                if reaction_parameters.complete_physical_clock else
+                min(uncapped_fraction,
+                    reaction_parameters.maximum_fraction_per_interval))
     old_content = np.asarray(
         [item.signed_integrated_content for item in interfaces], dtype=float)
     target_content = np.asarray(

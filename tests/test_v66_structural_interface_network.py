@@ -167,6 +167,24 @@ def test_arrhenius_cycle_reaction_is_downhill_heat_complete_and_reduces_closure(
     assert ledger.absolute_reacted_content > 0.0
 
 
+def test_arrhenius_cycle_complete_clock_is_not_a_per_call_fraction():
+    ids = (10, 20, 30)
+    old_lengths = np.array((4e-6, 5e-6, 6e-6))
+    changed = old_lengths*np.array((.7, 1.1, .95))
+    interfaces = initialize_structural_interfaces(
+        ids, np.radians((0.0, 2.0, 5.0)),
+        ((10, 20), (20, 30), (10, 30)), old_lengths, B)
+    ledger = relax_junction_cycle_interval(
+        ids, interfaces, changed, B, temperature_K=1000.0, dt_s=1e-3,
+        represented_thickness_m=2*B,
+        reaction_parameters=JunctionReactionParameters(
+            maximum_fraction_per_interval=.1,
+            complete_physical_clock=True))
+    assert ledger.accepted
+    assert ledger.reacted_fraction > .1
+    assert ledger.generated_heat_J == pytest.approx(-ledger.delta_helmholtz_J)
+
+
 def test_arrhenius_cycle_reaction_rolls_back_uphill_boundary_projection():
     # Actual V66 prepared-handoff lengths: its least-squares compatible
     # boundary state is more expensive than the tiny cycle energy.

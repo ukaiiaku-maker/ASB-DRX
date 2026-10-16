@@ -2900,3 +2900,38 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   0.00102 degrees. This is an early existing-boundary SIBM/RX response, not
   yet the required >=1% sustained dynamic-RX classification; continuation to
   the matched 0.88% strain horizon is the active experiment.
+
+## V67 exact Arrhenius clock and same-interval structural handoff (2026-10-16)
+
+- The production audit found that lattice absorption was fixed at its 5% per-
+  call cap even though the evaluated Arrhenius rate was about 5.6e11/s. The
+  analogous interface-to-structure and junction reactions also used outer-call
+  caps. These were numerical exposure limits, not physical-time integrations.
+- Lattice capture now uses an exact competing-hazard map over interface contact
+  and crystallographic incidence. Signed positive/negative line is partitioned
+  among interfaces by hazard share, and the fixed-rate map satisfies its
+  finite-time semigroup while preserving the identical Mura swept-area update.
+- When saturated capture overshoots the complete-energy minimum, a logarithmic
+  search selects the lowest conservative state on that same reaction
+  coordinate. It does not restore a fitted cap. Every published event remains
+  downhill and deposits its independently evaluated Helmholtz release as heat.
+- Newly captured interface Burgers content is transferred into compatible
+  structural edge content and junction relaxation in the same physical
+  interval. The retained start-of-interval reservoir is still processed, so
+  no captured content waits for an outer-call-count-dependent handoff.
+- At a common 4 microsecond horizon, the repaired 0.5 and 0.25 microsecond
+  cadences agree to 0.80% for target-grain area change, 0.61% for the shrinking
+  grain, and 0.13% for the remaining grain. All are below the provisional 5%
+  threshold; Mura and channel first-law ledgers close.
+- The qualified 20/s continuation reaches 0.424% strain. Grain 20 grows
+  0.25737% cumulatively, including 0.11354% in the second 40 microseconds, so
+  the former reversal at this load was a clipped-clock/handoff artifact. Both
+  adjacent directional pairs favor grain-20 growth at the endpoint.
+- All 160 lattice captures, same-interval structural handoffs, junction
+  reactions, and front intervals accept. The maximum lattice Mura residual is
+  below 8.7e-16 and the largest reported reaction first-law residual is
+  5.9e-6. This is sustained existing-boundary dynamic RX initiation, not the
+  required >=1% DRX classification or new-grain formation.
+- The active experiment is continuation of this exact checkpoint until grain
+  20 reaches 1% growth or a genuine complete-energy reversal is observed;
+  afterward the retained state will be tested without history reset.

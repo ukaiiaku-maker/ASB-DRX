@@ -142,3 +142,64 @@ def test_local_kinetic_evaluator_returns_spatial_fields_under_global_gate():
         result.edge_affinity_field_J_m_by_interface[component_id]))
     if result.accepted:
         assert result.delta_helmholtz_J <= 0.0
+
+
+def test_exact_arrhenius_clock_is_not_truncated_by_affinity_probe_extent():
+    state, systems, spacing = _fixture(8)
+    wall = CommonWallParameters(spacing_m=spacing)
+    common = dict(
+        state=state, mean_strain=np.array([[0.0, .02], [.02, 0.0]]),
+        interval_s=4e-6, spacing_m=spacing,
+        represented_thickness_m=1e-6, systems=systems,
+        wall_parameters=wall,
+        energy_kwargs={"topologies": (), "systems": systems})
+    clipped = evaluate_lattice_interface_absorption(
+        **common, parameters=LatticeInterfaceAbsorptionParameters(
+            maximum_fraction_per_interval=.05,
+            capture_distance_m=spacing,
+            complete_physical_clock=False))
+    exact = evaluate_lattice_interface_absorption(
+        **common, parameters=LatticeInterfaceAbsorptionParameters(
+            maximum_fraction_per_interval=.05,
+            capture_distance_m=spacing,
+            complete_physical_clock=True))
+    assert clipped.maximum_uncapped_fraction > .999
+    assert clipped.kinetic_fraction <= .05+1e-15
+    assert exact.kinetic_fraction > .999
+    assert exact.maximum_uncapped_fraction == clipped.maximum_uncapped_fraction
+    assert exact.local_kinetics_mode.endswith("EXACT_CLOCK")
+    assert clipped.local_kinetics_mode.endswith("CLIPPED_CLOCK")
+    if exact.accepted:
+        assert exact.projection.maximum_mura_relative_residual < 2e-11
+        assert exact.relative_first_law_residual < .05
+
+
+def test_competing_hazard_projection_has_exact_fixed_rate_semigroup():
+    state, systems, spacing = _fixture(8)
+    parameters = LatticeInterfaceAbsorptionParameters(
+        capture_distance_m=spacing)
+    directions = tuple(np.ones_like(owner.mobile_plus_m2)
+                       for owner in state.owners)
+    shape = (len(state.interfaces),)+state.supports.shape[1:]
+
+    def advance(parent, exposure):
+        return project_lattice_line_to_interfaces(
+            parent, systems=systems, spacing_m=spacing, fraction=0.0,
+            parameters=parameters, stress_direction_by_owner=directions,
+            hazard_exposure_by_interface=np.full(shape, exposure)
+        ).candidate_state
+
+    one = advance(state, 3.0)
+    two = advance(advance(state, 1.5), 1.5)
+    for direct, split in zip(one.owners, two.owners):
+        for name in ("mobile_plus_m2", "mobile_minus_m2", "beta_p",
+                     "family_nye_m1", "slip", "alignment_m2"):
+            np.testing.assert_allclose(
+                getattr(direct, name), getattr(split, name),
+                rtol=2e-13, atol=5e-12)
+    for direct, split in zip(one.interfaces, two.interfaces):
+        for name in ("boundary_plus_m2", "boundary_minus_m2",
+                     "boundary_burgers_m1"):
+            np.testing.assert_allclose(
+                getattr(direct, name), getattr(split, name),
+                rtol=2e-13, atol=1e-12)

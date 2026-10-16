@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T03:43:01Z",
+  "last_updated_utc": "2026-10-16T05:58:30Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -49,14 +49,14 @@
   },
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "dynamic_target_growth_is_transient_from_10k_to_80k_per_s_but_retained_high_rate_state_grows_3p368_percent_through_unload_and_fixed_strain_hold",
+    "G02": "qualified_exact_clock_existing_boundary_path_at_20_per_s_grows_target_grain_0p25737_percent_through_0p424_percent_strain_without_the_former_numerical_reversal_but_remains_below_one_percent_DRX",
     "G03": "matched_n32_n48_16_percent_horizon_forms_connected_bands_with_and_without_heat; thermal_amplification_positive_but_strict_ASB_false_because_band_geometry_is_not_spatially_converged",
     "G04": "response_sensitivity_demonstrated; required_regime_switching_and_dynamic_spatial_coexistence_not_yet_demonstrated",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "high_rate_retained_state_grows_monotonically_during_six_microsecond_hold_and_continues_after_release_to_704_Pa_mean_stress"
   },
   "active_hypotheses": {
-    "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
+    "H1": "signed_lattice_absorption_with_competing_interface_hazards_and_same_interval_structural_handoff_sustains_low_rate_existing_boundary_growth_without_the_former_clipped_clock_reversal",
     "H2": "conservative_GB_source_to_ordered_wall_capture_with_asymmetric_Arrhenius_recovery_produces_a_rate_ordered_low_angle_precursor_but_has_not_matured_a_two_degree_RX_region",
     "H3": "family_total_Groma_transport_has_a_positive_0.8_um_high_temperature_tangent_but_the_valid_concurrent_nonlinear_prefix_does_not_separate_wall_polarization_from_control_and_supports_only_4.35e-5_deg_total_signed_capacity; endogenous_wall_formation_is_negative_at_tested_conditions",
     "H4": "GB_TJ_only_and_matched_random_Arrhenius_sources_are_nearly_indistinguishable_over_twenty_n16_intervals_so_source_geography_is_not_the_current_rate_limiting_mechanism"
@@ -65,11 +65,11 @@
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_clean_20_per_s_horizon32",
-      "last_case": "v67_clean_polycrystal_n32_rate20_committed_horizon32",
-      "last_start_local": "2026-10-15T20:28:00-07:00",
-      "last_source_commit": "5e2fdbffd4a04c0ca86c2481b1db4c96abf16d2f",
-      "last_output": "full_model/verification/v67_clean_polycrystal_n32_rate20_committed_horizon32"
+      "status": "available_after_qualified_exact_clock_80us_continuation",
+      "last_case": "v67_exact_handoff_dynamic80us",
+      "last_start_local": "2026-10-15T22:49:00-07:00",
+      "last_source_commit": "working_tree_exact_clock_repair_pending_commit",
+      "last_output": "full_model/verification/v67_exact_handoff_dynamic80us"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -81,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_clean_existing_boundary_growth_at_20_per_s_exceeds_one_percent_and_remains_sustained_at_the_same_0p88_percent_strain_horizon_where_200_per_s_has_no_DRX",
-    "next_executable_experiment": "continue_the_clean_committed_n32_20_per_s_checkpoint_from_0p264_to_0p88_percent_strain_with_the_extensive_eta_rho_wall_operators",
-    "source_identity": "5e2fdbf_clean_extensive_common_owner_wall_transport",
-    "expected_discriminatory_observation": "grain_20_must_exceed_one_percent_sustained_existing_boundary_growth_with_all_line_Mura_energy_and_heat_ledgers_closed_while_the_matched_200_per_s_path_remains_subthreshold",
+    "physical_uncertainty": "whether_the_repaired_exact_clock_same_interval_lattice_interface_structural_chain_reaches_one_percent_sustained_dynamic_growth_before_a_genuine_complete_energy_reversal",
+    "next_executable_experiment": "continue_the_qualified_dt0p5us_20_per_s_checkpoint_beyond_0p424_percent_strain_until_one_percent_growth_or_a_genuine_directional_energy_reversal_then_test_retained_static_consequence",
+    "source_identity": "working_tree_exact_competing_hazard_and_same_interval_structural_handoff_after_5f16523",
+    "expected_discriminatory_observation": "grain_20_must_reach_one_percent_or_exhibit_a_directionally_priced_physical_reversal_with_all_line_Mura_energy_and_heat_ledgers_closed",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "clean_n32_20_per_s_reaches_0p38456_percent_growth_of_low_defect_grain_20_by_0p264_percent_strain_with_all_25_transactions_balanced;_the_0p00102_degree_internal_span_is_not_new_grain_maturation_and_continuation_to_0p88_percent_strain_is_required"
+    "result_status": "the_old_five_percent_per_call_lattice_and_ten_percent_structural_caps_discarded_Arrhenius_time;_the_repaired_competing_hazard_exact_clock_and_same_interval_handoff_converge_between_0p5_and_0p25us_to_below_0p8_percent_response_error;_grain_20_grows_0p25737_percent_by_0p424_percent_strain_and_the_former_reversal_is_absent;_all_160_production_intervals_are_balance_clean_but_percent_scale_DRX_is_not_yet_reached"
   },
   "continuation_rule": {
     "active": true,

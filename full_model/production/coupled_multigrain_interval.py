@@ -861,6 +861,124 @@ def advance_complete_multigrain_interval(
                 if lattice_absorption.accepted else 0.0)))
     lattice_absorption_wall_time = (
         time.perf_counter()-lattice_absorption_started)
+    # Complete the newly captured lattice -> interface -> structural handoff
+    # inside the same physical interval.  The start-of-interval transaction
+    # clears retained reservoir content; this second transaction sees only
+    # content delivered by the mechanical/lattice map above.  With the exact
+    # Arrhenius clocks enabled, neither operation advances a numerical fixed
+    # fraction per outer call.
+    structural_absorption_post = None
+    structural_junction_post = None
+    if (context.structural_absorption_mode != "disabled"
+            and lattice_absorption is not None
+            and lattice_absorption.accepted):
+        structural_absorption_post = evaluate_interface_structural_absorption(
+            structural_state, structural_interfaces, mean_strain=strain1,
+            interval_s=dt, spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            wall_parameters=context.wall_parameters, energy_kwargs=energy_base,
+            parameters=context.structural_absorption_parameters)
+        if structural_absorption_post.classification in {
+                "REJECTED_BURGERS_OR_LINE_BALANCE",
+                "REJECTED_COMPLETE_FIRST_LAW"}:
+            raise RuntimeError(
+                "post-capture structural absorption failed a hard balance audit")
+        if structural_absorption_post.accepted:
+            structural_state = structural_absorption_post.committed_state
+            structural_interfaces = (
+                structural_absorption_post.committed_interfaces)
+        runtime = replace(runtime, structural_interfaces=structural_interfaces,
+                          ledger=replace(
+            runtime.ledger,
+            structural_absorption_intervals=(
+                runtime.ledger.structural_absorption_intervals
+                +int(structural_absorption_post.accepted)),
+            structural_absorption_inactive_intervals=(
+                runtime.ledger.structural_absorption_inactive_intervals
+                +int(structural_absorption_post.classification.startswith(
+                    "INACTIVE"))),
+            structural_absorption_rejected_intervals=(
+                runtime.ledger.structural_absorption_rejected_intervals
+                +int(structural_absorption_post.classification.startswith(
+                    "REJECTED"))),
+            structural_absorbed_line_length_m=(
+                runtime.ledger.structural_absorbed_line_length_m
+                +(structural_absorption_post.projection.removed_line_length_m
+                  *context.represented_thickness_m
+                  if structural_absorption_post.accepted else 0.0)),
+            cumulative_structural_absorption_heat_J=(
+                runtime.ledger.cumulative_structural_absorption_heat_J
+                +(structural_absorption_post.generated_heat_J
+                  if structural_absorption_post.accepted else 0.0)),
+            maximum_structural_absorption_first_law_residual=max(
+                runtime.ledger.maximum_structural_absorption_first_law_residual,
+                structural_absorption_post.relative_first_law_residual
+                if structural_absorption_post.accepted else 0.0)))
+        energy_base.update(
+            structural_interfaces=structural_interfaces,
+            structural_burgers_m=(
+                context.structural_absorption_parameters.boundary.burgers_m),
+            structural_parameters=(
+                context.structural_absorption_parameters.boundary),
+            junction_disclination_parameters=JunctionDisclinationParameters())
+    if (context.structural_junction_mode != "disabled"
+            and structural_absorption_post is not None
+            and structural_absorption_post.accepted):
+        parameters = (JunctionReactionParameters()
+                      if context.structural_junction_parameters is None
+                      else context.structural_junction_parameters)
+        (structural_state, junction_runtime,
+         structural_junction_post) = advance_structural_junction_interval(
+            structural_state,
+            StructuralMultigrainRuntime(structural_interfaces),
+            dt_s=dt, spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            wall_parameters=context.wall_parameters,
+            energy_kwargs=dict(context.energy_kwargs, mean_strain=strain1),
+            boundary_parameters=(
+                context.structural_absorption_parameters.boundary),
+            disclination_parameters=JunctionDisclinationParameters(),
+            reaction_parameters=parameters)
+        if structural_junction_post.classification == "REJECTED_COMPLETE_FIRST_LAW":
+            raise RuntimeError(
+                "post-capture structural junction reaction failed its hard energy audit")
+        structural_interfaces = tuple(junction_runtime.interfaces)
+        runtime = replace(
+            runtime, structural_interfaces=structural_interfaces,
+            ledger=replace(
+                runtime.ledger,
+                structural_junction_intervals=(
+                    runtime.ledger.structural_junction_intervals
+                    +int(structural_junction_post.accepted)),
+                structural_junction_inactive_intervals=(
+                    runtime.ledger.structural_junction_inactive_intervals
+                    +int(structural_junction_post.classification
+                         == "NO_CYCLE_REACTION")),
+                structural_junction_rejected_intervals=(
+                    runtime.ledger.structural_junction_rejected_intervals
+                    +int(structural_junction_post.classification.startswith(
+                        "REJECTED"))),
+                structural_junction_reacted_absolute_content=(
+                    runtime.ledger.structural_junction_reacted_absolute_content
+                    +(structural_junction_post.kinetic_proposal.
+                      absolute_reacted_content
+                      if structural_junction_post.accepted else 0.0)),
+                cumulative_structural_junction_heat_J=(
+                    runtime.ledger.cumulative_structural_junction_heat_J
+                    +(structural_junction_post.generated_heat_J
+                      if structural_junction_post.accepted else 0.0)),
+                maximum_structural_junction_first_law_residual=max(
+                    runtime.ledger.
+                    maximum_structural_junction_first_law_residual,
+                    structural_junction_post.relative_first_law_residual
+                    if structural_junction_post.accepted else 0.0)))
+        energy_base.update(
+            structural_interfaces=structural_interfaces,
+            structural_burgers_m=(
+                context.structural_absorption_parameters.boundary.burgers_m),
+            structural_parameters=(
+                context.structural_absorption_parameters.boundary),
+            junction_disclination_parameters=JunctionDisclinationParameters())
     wall_orientation_started = time.perf_counter()
     wall_orientation = None
     if context.wall_orientation_relaxation_mode != "disabled":
@@ -1029,13 +1147,19 @@ def advance_complete_multigrain_interval(
             if interface_sink is None or not interface_sink.accepted
             else np.asarray(interface_sink.heat_source_J_by_cell)),
         "structural_absorption_heat_J": (
-            0.0 if structural_absorption is None
-            or not structural_absorption.accepted
-            else structural_absorption.generated_heat_J),
+            (0.0 if structural_absorption is None
+             or not structural_absorption.accepted
+             else structural_absorption.generated_heat_J)
+            +(0.0 if structural_absorption_post is None
+              or not structural_absorption_post.accepted
+              else structural_absorption_post.generated_heat_J)),
         "structural_junction_heat_J": (
-            0.0 if structural_junction is None
-            or not structural_junction.accepted
-            else structural_junction.generated_heat_J),
+            (0.0 if structural_junction is None
+             or not structural_junction.accepted
+             else structural_junction.generated_heat_J)
+            +(0.0 if structural_junction_post is None
+              or not structural_junction_post.accepted
+              else structural_junction_post.generated_heat_J)),
         "lattice_absorption_heat_J": (
             0.0 if lattice_absorption is None or not lattice_absorption.accepted
             else lattice_absorption.generated_heat_J),
@@ -1256,6 +1380,20 @@ def advance_complete_multigrain_interval(
             0.0 if structural_absorption is None
             or not structural_absorption.accepted
             else structural_absorption.relative_first_law_residual),
+        "structural_absorption_post_classification": (
+            "DISABLED" if structural_absorption_post is None
+            else structural_absorption_post.classification),
+        "structural_absorption_post_fraction": (
+            0.0 if structural_absorption_post is None
+            else structural_absorption_post.kinetic_fraction),
+        "structural_absorption_post_content_change": (
+            [] if structural_absorption_post is None
+            else structural_absorption_post.projection.
+            structural_content_change.tolist()),
+        "structural_absorption_post_relative_first_law_residual": (
+            0.0 if structural_absorption_post is None
+            or not structural_absorption_post.accepted
+            else structural_absorption_post.relative_first_law_residual),
         "structural_junction_mode": context.structural_junction_mode,
         "structural_junction_classification": (
             "DISABLED" if structural_junction is None
@@ -1274,6 +1412,21 @@ def advance_complete_multigrain_interval(
             0.0 if structural_junction is None
             or not structural_junction.accepted
             else structural_junction.relative_first_law_residual),
+        "structural_junction_post_classification": (
+            "DISABLED" if structural_junction_post is None
+            else structural_junction_post.classification),
+        "structural_junction_post_reacted_fraction": (
+            0.0 if structural_junction_post is None
+            else structural_junction_post.kinetic_proposal.reacted_fraction),
+        "structural_junction_post_absolute_reacted_content": (
+            0.0 if structural_junction_post is None
+            or not structural_junction_post.accepted
+            else structural_junction_post.kinetic_proposal.
+            absolute_reacted_content),
+        "structural_junction_post_relative_first_law_residual": (
+            0.0 if structural_junction_post is None
+            or not structural_junction_post.accepted
+            else structural_junction_post.relative_first_law_residual),
         "lattice_absorption_mode": context.lattice_absorption_mode,
         "lattice_absorption_classification": (
             "DISABLED" if lattice_absorption is None
@@ -1281,6 +1434,21 @@ def advance_complete_multigrain_interval(
         "lattice_absorption_fraction": (
             0.0 if lattice_absorption is None
             else lattice_absorption.kinetic_fraction),
+        "lattice_absorption_event_rate_s": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.event_rate_s),
+        "lattice_absorption_maximum_uncapped_fraction": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.maximum_uncapped_fraction),
+        "lattice_absorption_selected_hazard_scale": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.selected_hazard_scale),
+        "lattice_absorption_energy_search_evaluations": (
+            0 if lattice_absorption is None
+            else lattice_absorption.energy_search_evaluations),
+        "lattice_absorption_kinetics_mode": (
+            "DISABLED" if lattice_absorption is None
+            else lattice_absorption.local_kinetics_mode),
         "lattice_absorption_edge_fractions": (
             {} if lattice_absorption is None
             else lattice_absorption.edge_fraction_by_interface),

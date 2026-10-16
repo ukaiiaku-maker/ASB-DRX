@@ -33,6 +33,7 @@ class LatticeInterfaceAbsorptionParameters:
     boundary: StructuralBoundaryParameters = StructuralBoundaryParameters()
     maximum_fraction_per_interval: float = 0.05
     capture_distance_m: float = 5.0e-7
+    complete_physical_clock: bool = False
 
     def __post_init__(self):
         if (not math.isfinite(self.maximum_fraction_per_interval)
@@ -64,6 +65,9 @@ class LatticeInterfaceAbsorptionDecision:
     committed_state: object
     kinetic_fraction: float
     event_rate_s: float
+    maximum_uncapped_fraction: float
+    selected_hazard_scale: float
+    energy_search_evaluations: int
     affinity_J_m: float
     projection: LatticeInterfaceProjection
     delta_helmholtz_J: float
@@ -109,7 +113,7 @@ def _edge_geometry(state, spacing_m):
 
 def project_lattice_line_to_interfaces(
         state, *, systems, spacing_m, fraction, parameters,
-        stress_direction_by_owner=None):
+        stress_direction_by_owner=None, hazard_exposure_by_interface=None):
     """Apply a finite signed-line/swept-area event without pricing it."""
     state.validate()
     spacing = float(spacing_m)
@@ -142,6 +146,42 @@ def project_lattice_line_to_interfaces(
             raise ValueError("stress directions require owner x grid x family")
     else:
         stress_directions = None
+    hazard_exposures = None
+    hazard_shares = None
+    total_plus_hazard = total_minus_hazard = None
+    if hazard_exposure_by_interface is not None:
+        hazard_exposures = np.asarray(
+            hazard_exposure_by_interface, dtype=float)
+        if hazard_exposures.shape != (len(state.interfaces),)+grid_shape:
+            raise ValueError(
+                "hazard exposure requires one spatial field per interface")
+        if np.any(~np.isfinite(hazard_exposures)) or np.any(
+                hazard_exposures < 0.0):
+            raise ValueError("hazard exposure must be finite and nonnegative")
+        if stress_directions is None:
+            raise ValueError("hazard capture requires signed stress directions")
+        total_plus_hazard = [np.zeros_like(owner.mobile_plus_m2)
+                             for owner in state.owners]
+        total_minus_hazard = [np.zeros_like(owner.mobile_minus_m2)
+                              for owner in state.owners]
+        hazard_shares = []
+        for exposure, (ia, ib, normal, wa, wb) in zip(
+                hazard_exposures, geometry):
+            edge_shares = []
+            for owner_index, outward, contact in (
+                    (ia, normal, wa), (ib, -normal, wb)):
+                _, slip, _ = rotated_system_fields(
+                    systems, state.owners[owner_index].orientation_rad)
+                incidence = np.sum(slip*outward[..., None, :], axis=-1)
+                sign_speed = np.sign(stress_directions[owner_index])
+                plus = (exposure[..., None]*contact[..., None]
+                        *np.maximum(-sign_speed*incidence, 0.0))
+                minus = (exposure[..., None]*contact[..., None]
+                         *np.maximum(sign_speed*incidence, 0.0))
+                total_plus_hazard[owner_index] += plus
+                total_minus_hazard[owner_index] += minus
+                edge_shares.append((owner_index, plus, minus))
+            hazard_shares.append(tuple(edge_shares))
     owner_dplus = [np.zeros_like(owner.mobile_plus_m2) for owner in state.owners]
     owner_dminus = [np.zeros_like(owner.mobile_minus_m2) for owner in state.owners]
     owner_flow = [np.zeros_like(owner.family_nye_m1) for owner in state.owners]
@@ -151,15 +191,16 @@ def project_lattice_line_to_interfaces(
     interface_activity = []
     b = float(parameters.boundary.burgers_m)
 
-    for component, (ia, ib, normal, wa, wb), extent in zip(
-            state.interfaces, geometry, extents):
+    for edge_index, (component, (ia, ib, normal, wa, wb), extent) in enumerate(
+            zip(state.interfaces, geometry, extents)):
         add_plus = np.zeros_like(component.boundary_plus_m2)
         add_minus = np.zeros_like(component.boundary_minus_m2)
         add_burgers = np.zeros(
             state.supports.shape[1:]+(3, 3), dtype=float)
         edge_activity = np.zeros(grid_shape, dtype=float)
-        for owner_index, outward, contact in (
-                (ia, normal, wa), (ib, -normal, wb)):
+        owner_sides = ((ia, normal, wa), (ib, -normal, wb))
+        for local_owner_index, (owner_index, outward, contact) in enumerate(
+                owner_sides):
             owner = state.owners[owner_index]
             burgers, slip, plane = rotated_system_fields(
                 systems, owner.orientation_rad)
@@ -178,8 +219,20 @@ def project_lattice_line_to_interfaces(
                 crossing_minus = np.maximum(sign_speed*incidence, 0.0)
                 direction_plus = sign_speed
                 direction_minus = -sign_speed
-            local_plus = extent[..., None]*contact[..., None]*crossing_plus
-            local_minus = extent[..., None]*contact[..., None]*crossing_minus
+            if hazard_shares is None:
+                local_plus = extent[..., None]*contact[..., None]*crossing_plus
+                local_minus = extent[..., None]*contact[..., None]*crossing_minus
+            else:
+                _, plus_hazard, minus_hazard = hazard_shares[
+                    edge_index][local_owner_index]
+                plus_total = total_plus_hazard[owner_index]
+                minus_total = total_minus_hazard[owner_index]
+                local_plus = np.divide(
+                    -np.expm1(-plus_total)*plus_hazard, plus_total,
+                    out=np.zeros_like(plus_hazard), where=plus_total > 0.0)
+                local_minus = np.divide(
+                    -np.expm1(-minus_total)*minus_hazard, minus_total,
+                    out=np.zeros_like(minus_hazard), where=minus_total > 0.0)
             cap_plus = local_plus*np.asarray(owner.mobile_plus_m2)
             cap_minus = local_minus*np.asarray(owner.mobile_minus_m2)
             owner_dplus[owner_index] += cap_plus
@@ -311,6 +364,8 @@ def evaluate_lattice_interface_absorption(
     edge_rates = []
     edge_fraction_fields = []
     edge_affinity_fields = []
+    edge_rate_fields = []
+    maximum_uncapped_fraction = 0.0
     # Price each interface from the immutable accepted state.  The local
     # affinity is the exact local storage change plus the equilibrium elastic
     # first variation sigma:delta(eigenstrain), divided by the local captured
@@ -351,11 +406,21 @@ def evaluate_lattice_interface_absorption(
         rate_field = exp_floor_event_rate_Hz(
             np.maximum(affinity_field, 0.0), temperature,
             parameters.boundary)
-        fraction_field = np.where(
-            accessible,
-            np.minimum(-np.expm1(-rate_field*dt),
-                       parameters.maximum_fraction_per_interval),
-            0.0)
+        uncapped_fraction_field = np.where(
+            accessible, -np.expm1(-rate_field*dt), 0.0)
+        maximum_uncapped_fraction = max(
+            maximum_uncapped_fraction,
+            float(np.max(uncapped_fraction_field, initial=0.0)))
+        if parameters.complete_physical_clock:
+            # ``1-exp(-rate*dt)`` is the exact finite Arrhenius reaction
+            # probability.  The small declared extent above remains an
+            # affinity probe; it must not silently discard the remainder of
+            # the requested physical interval.
+            fraction_field = uncapped_fraction_field
+        else:
+            fraction_field = np.minimum(
+                uncapped_fraction_field,
+                parameters.maximum_fraction_per_interval)
         activity_sum = float(np.sum(activity, dtype=np.longdouble))
         if activity_sum > 0.0:
             edge_affinity = float(np.sum(
@@ -370,19 +435,64 @@ def evaluate_lattice_interface_absorption(
         edge_rates.append(edge_rate)
         edge_fractions.append(edge_fraction)
         edge_affinity_fields.append(affinity_field)
+        edge_rate_fields.append(rate_field)
         edge_fraction_fields.append(fraction_field)
     affinity = max(edge_affinities, default=0.0)
     rate = max(edge_rates, default=0.0)
     fraction = max(edge_fractions, default=0.0)
+    hazard_exposure = (
+        np.asarray(edge_rate_fields)*dt
+        if parameters.complete_physical_clock else None)
     projection = project_lattice_line_to_interfaces(
         state, systems=systems, spacing_m=spacing,
-        fraction=np.asarray(edge_fraction_fields),
-        parameters=parameters, stress_direction_by_owner=stress_directions)
+        fraction=np.asarray(edge_fraction_fields), parameters=parameters,
+        stress_direction_by_owner=stress_directions,
+        hazard_exposure_by_interface=hazard_exposure)
     cold = projection.candidate_state
     cold_energy = evaluate_complete_multigrain_energy(cold, **common)
     delta = cold_energy.helmholtz_J-before.helmholtz_J
     resolution = 4096*np.finfo(float).eps*max(
         abs(before.helmholtz_J), abs(cold_energy.helmholtz_J), 1e-300)
+    selected_hazard_scale = 1.0
+    energy_search_evaluations = 1
+    if (parameters.complete_physical_clock and delta > resolution
+            and np.any(hazard_exposure > 0.0)):
+        # At high temperature/affinity the exact exposure can saturate while
+        # finite boundary storage makes complete capture uphill.  This is a
+        # stiff constrained relaxation, not permission to discard physical
+        # time.  Search the same conservative reaction coordinate and retain
+        # its lowest complete Helmholtz state.  A logarithmic search resolves
+        # both saturated and near-linear hazards without a fitted scale.
+        best = (delta, selected_hazard_scale, projection, cold, cold_energy)
+        worse_after_downhill_minimum = 0
+        for power in range(1, 41):
+            scale = 0.5**power
+            trial_projection = project_lattice_line_to_interfaces(
+                state, systems=systems, spacing_m=spacing,
+                fraction=np.asarray(edge_fraction_fields),
+                parameters=parameters,
+                stress_direction_by_owner=stress_directions,
+                hazard_exposure_by_interface=hazard_exposure*scale)
+            trial_cold = trial_projection.candidate_state
+            trial_energy = evaluate_complete_multigrain_energy(
+                trial_cold, **common)
+            trial_delta = trial_energy.helmholtz_J-before.helmholtz_J
+            energy_search_evaluations += 1
+            if trial_delta < best[0]:
+                best = (trial_delta, scale, trial_projection,
+                        trial_cold, trial_energy)
+                worse_after_downhill_minimum = 0
+            elif best[0] < -resolution:
+                worse_after_downhill_minimum += 1
+                # Along this scalar conservative reaction coordinate the
+                # energy returns continuously toward the accepted state as
+                # exposure -> 0.  Three resolved rises past a downhill
+                # minimum bracket the logarithmic search without spending
+                # evaluations on another twenty near-identity trials.
+                if worse_after_downhill_minimum >= 3:
+                    break
+        (delta, selected_hazard_scale, projection,
+         cold, cold_energy) = best
     active = (projection.removed_plus_line_per_thickness
               +projection.removed_minus_line_per_thickness) > 0.0
     balances = (
@@ -429,7 +539,9 @@ def evaluate_lattice_interface_absorption(
         classification = "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION"
     return LatticeInterfaceAbsorptionDecision(
         accepted, classification, cold, committed if accepted else state,
-        fraction, rate, affinity, projection, delta, heat if accepted else 0.0,
+        fraction, rate, maximum_uncapped_fraction, selected_hazard_scale,
+        energy_search_evaluations, affinity, projection,
+        delta, heat if accepted else 0.0,
         residual if accepted else 0.0, relative if accepted else 0.0,
         heat_cells if accepted else np.zeros_like(heat_cells),
         {component.component_id: float(value)
@@ -440,4 +552,9 @@ def evaluate_lattice_interface_absorption(
          for component, value in zip(state.interfaces, edge_fraction_fields)},
         {component.component_id: np.asarray(value)
          for component, value in zip(state.interfaces, edge_affinity_fields)},
-        "LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION")
+        ("LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION_"
+         +("EXACT_CLOCK_ENERGY_LIMITED" if (
+             parameters.complete_physical_clock
+             and selected_hazard_scale < 1.0) else "EXACT_CLOCK")
+         if parameters.complete_physical_clock else
+         "LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION_CLIPPED_CLOCK"))

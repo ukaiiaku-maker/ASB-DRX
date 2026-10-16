@@ -36,6 +36,7 @@ class InterfaceStructuralAbsorptionParameters:
     boundary: StructuralBoundaryParameters = StructuralBoundaryParameters()
     maximum_fraction_per_interval: float = 0.10
     normal_resolution: float = 1.0e-12
+    complete_physical_clock: bool = False
 
     def __post_init__(self):
         if (not math.isfinite(self.maximum_fraction_per_interval)
@@ -266,8 +267,10 @@ def evaluate_interface_structural_absorption(
         np.mean(owner.temperature_K) for owner in state.owners]))
     rate = float(exp_floor_event_rate_Hz(
         max(affinity, 0.0), temperature, parameters.boundary))
-    fraction = min(-math.expm1(-rate*dt),
-                   parameters.maximum_fraction_per_interval)
+    uncapped_fraction = -math.expm1(-rate*dt)
+    fraction = (uncapped_fraction if parameters.complete_physical_clock else
+                min(uncapped_fraction,
+                    parameters.maximum_fraction_per_interval))
 
     projection = project_interface_burgers_to_structural_content(
         state, structural_interfaces, spacing_m=spacing, fraction=fraction,

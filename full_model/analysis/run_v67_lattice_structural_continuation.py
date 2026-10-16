@@ -64,6 +64,14 @@ def main():
     parser.add_argument("out", type=Path)
     parser.add_argument("--intervals", type=int, default=50)
     parser.add_argument("--capture-distance", type=float, default=5e-7)
+    parser.add_argument(
+        "--lattice-maximum-fraction", type=float, default=.05,
+        help=("small lattice/interface affinity-probe extent; only the legacy "
+              "clipped-clock control also uses it as a kinetic cap"))
+    parser.add_argument(
+        "--clipped-lattice-clock", action="store_true",
+        help=("negative numerical control that reproduces the legacy loss of "
+              "unadvanced Arrhenius physical time"))
     parser.add_argument("--dynamic", action="store_true")
     parser.add_argument("--front-enabled", action="store_true")
     parser.add_argument("--shear-rate", type=float)
@@ -133,15 +141,18 @@ def main():
         source_random_seed=args.source_seed, sink_mode="disabled",
         interface_sink_mode="disabled", interface_sink_parameters=None,
         structural_absorption_mode="common_axis",
-        structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(),
+        structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(
+            complete_physical_clock=True),
         structural_junction_mode=(
             "arrhenius_cycle" if args.junction_cycle_relaxation else "disabled"),
         structural_junction_parameters=(
-            JunctionReactionParameters()
+            JunctionReactionParameters(complete_physical_clock=True)
             if args.junction_cycle_relaxation else None),
         lattice_absorption_mode="one_flux_mura",
         lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
-            capture_distance_m=args.capture_distance),
+            maximum_fraction_per_interval=args.lattice_maximum_fraction,
+            capture_distance_m=args.capture_distance,
+            complete_physical_clock=not args.clipped_lattice_clock),
         wall_orientation_relaxation_mode=(
             "ordered_nye" if (args.wall_orientation_relaxation
                                or args.wall_glide) else "disabled"),
@@ -191,6 +202,8 @@ def main():
         front_enabled=fronts_enabled,
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
+        lattice_maximum_fraction=args.lattice_maximum_fraction,
+        lattice_complete_physical_clock=not args.clipped_lattice_clock,
         structural_absorption_mode="common_axis",
         structural_junction_mode=context.structural_junction_mode,
         wall_orientation_relaxation_mode=(
@@ -217,6 +230,16 @@ def main():
             "lattice_classification": interval.audit[
                 "lattice_absorption_classification"],
             "lattice_fraction": interval.audit["lattice_absorption_fraction"],
+            "lattice_event_rate_s": interval.audit[
+                "lattice_absorption_event_rate_s"],
+            "lattice_maximum_uncapped_fraction": interval.audit[
+                "lattice_absorption_maximum_uncapped_fraction"],
+            "lattice_selected_hazard_scale": interval.audit[
+                "lattice_absorption_selected_hazard_scale"],
+            "lattice_energy_search_evaluations": interval.audit[
+                "lattice_absorption_energy_search_evaluations"],
+            "lattice_kinetics_mode": interval.audit[
+                "lattice_absorption_kinetics_mode"],
             "lattice_edge_fractions": interval.audit[
                 "lattice_absorption_edge_fractions"],
             "lattice_edge_affinities_J_m": interval.audit[
@@ -231,6 +254,14 @@ def main():
                 "structural_absorption_classification"],
             "structural_content_change": interval.audit[
                 "structural_absorption_content_change"],
+            "structural_post_classification": interval.audit[
+                "structural_absorption_post_classification"],
+            "structural_post_fraction": interval.audit[
+                "structural_absorption_post_fraction"],
+            "structural_post_content_change": interval.audit[
+                "structural_absorption_post_content_change"],
+            "structural_post_first_law_relative_residual": interval.audit[
+                "structural_absorption_post_relative_first_law_residual"],
             "structural_junction_classification": interval.audit[
                 "structural_junction_classification"],
             "structural_junction_reacted_fraction": interval.audit[
@@ -241,6 +272,14 @@ def main():
                 "structural_junction_absolute_reacted_content"],
             "structural_junction_relative_first_law_residual": interval.audit[
                 "structural_junction_relative_first_law_residual"],
+            "structural_junction_post_classification": interval.audit[
+                "structural_junction_post_classification"],
+            "structural_junction_post_reacted_fraction": interval.audit[
+                "structural_junction_post_reacted_fraction"],
+            "structural_junction_post_absolute_reacted_content": interval.audit[
+                "structural_junction_post_absolute_reacted_content"],
+            "structural_junction_post_relative_first_law_residual": interval.audit[
+                "structural_junction_post_relative_first_law_residual"],
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fractions": interval.audit[
@@ -336,6 +375,8 @@ def main():
             "intervals": args.intervals, "dt_s": dt,
             "front_maximum_substep_s": front_substep,
             "capture_distance_m": args.capture_distance,
+            "lattice_maximum_fraction": args.lattice_maximum_fraction,
+            "lattice_complete_physical_clock": not args.clipped_lattice_clock,
             "shear_rate_s": imposed_rate, "front_enabled": fronts_enabled,
             "lattice_absorption": "one_flux_mura",
             "structural_absorption": "common_axis",

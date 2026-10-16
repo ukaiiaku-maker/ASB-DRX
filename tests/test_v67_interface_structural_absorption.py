@@ -109,3 +109,20 @@ def test_capped_hagb_absorption_is_arrhenius_energy_complete_and_label_safe():
     np.testing.assert_array_equal(decision.committed_state.supports, state.supports)
     assert decision.committed_interfaces[0].signed_integrated_content != (
         structural[0].signed_integrated_content)
+
+
+def test_complete_clock_absorbs_full_arrhenius_exposure_not_outer_step_cap():
+    state, structural, spacing, thickness, wall, energy = _fixture()
+    exact = evaluate_interface_structural_absorption(
+        state, structural, mean_strain=np.zeros((2, 2)), interval_s=1e-3,
+        spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=wall, energy_kwargs=energy,
+        parameters=InterfaceStructuralAbsorptionParameters(
+            boundary=StructuralBoundaryParameters(burgers_m=wall.burgers_m),
+            maximum_fraction_per_interval=.10,
+            complete_physical_clock=True))
+    assert exact.accepted
+    assert exact.kinetic_fraction > .999
+    assert exact.projection.signed_content_balance == 0.0
+    assert exact.projection.maximum_vector_balance_m1 < 1e-12
+    assert exact.relative_first_law_residual < 1e-5
