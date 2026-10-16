@@ -92,7 +92,8 @@ def main():
     parser.add_argument("--source-seed", type=int, default=67)
     args = parser.parse_args()
     source_status = subprocess.check_output(
-        ("git", "status", "--porcelain"), cwd=ROOT, text=True)
+        ("git", "status", "--porcelain", "--untracked-files=no"),
+        cwd=ROOT, text=True)
     args.out.mkdir(parents=True, exist_ok=True)
     state, runtime, step, load, initial_volume, configuration, provenance = (
         _load_checkpoint(args.checkpoint))
