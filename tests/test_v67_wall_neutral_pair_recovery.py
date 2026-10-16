@@ -131,3 +131,27 @@ def test_unordered_neutral_wall_is_not_annihilated_by_structural_recovery():
     assert decision.classification == "INACTIVE_NO_ACCESSIBLE_NEUTRAL_WALL_PAIR"
     np.testing.assert_array_equal(decision.committed_state.owners[0].wall_plus_m2,
                                   owner.wall_plus_m2)
+
+
+def test_wall_recovery_full_and_two_half_intervals_agree_below_five_percent():
+    systems, topologies, parameters, state = _state()
+    kwargs = dict(
+        mean_strain=np.zeros((2, 2)), spacing_m=parameters.spacing_m,
+        represented_thickness_m=5e-10, systems=systems,
+        wall_parameters=parameters,
+        energy_kwargs={"topologies": topologies, "systems": systems},
+        parameters=WallNeutralPairRecoveryParameters())
+    full = evaluate_wall_neutral_pair_recovery(
+        state, interval_s=5e-7, **kwargs)
+    half_1 = evaluate_wall_neutral_pair_recovery(
+        state, interval_s=2.5e-7, **kwargs)
+    half_2 = evaluate_wall_neutral_pair_recovery(
+        half_1.committed_state, interval_s=2.5e-7, **kwargs)
+    for name in ("wall_plus_m2", "wall_minus_m2", "temperature_K"):
+        one = np.asarray(getattr(full.committed_state.owners[0], name))
+        two = np.asarray(getattr(half_2.committed_state.owners[0], name))
+        relative = np.max(np.abs(one-two))/max(float(np.max(np.abs(two))), 1.0)
+        assert relative < .05
+    pair_two_half = (half_1.annihilated_pair_cell_sum_m2
+                     +half_2.annihilated_pair_cell_sum_m2)
+    assert abs(full.annihilated_pair_cell_sum_m2-pair_two_half)/pair_two_half < .05
