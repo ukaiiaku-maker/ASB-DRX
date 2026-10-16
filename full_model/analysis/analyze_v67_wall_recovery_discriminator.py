@@ -48,13 +48,22 @@ def _wall_inventory(directory):
     return owners
 
 
-def _result(directory):
+def _result(directory, provenance_audit=None):
     directory = Path(directory)
     payload = json.loads((directory/"result.json").read_text())
+    source_commit = payload["source_commit"]
+    source_provenance = "result_launch_record"
+    reported_source_commit = source_commit
+    if provenance_audit is not None:
+        audit = json.loads(Path(provenance_audit).read_text())
+        source_commit = audit["actual_launch_source_commit"]
+        source_provenance = audit["audit_classification"]
     return {
         "result_sha256": _sha(directory/"result.json"),
         "checkpoint_sha256": _sha(directory/"checkpoint_latest.npz"),
-        "source_commit": payload["source_commit"],
+        "source_commit": source_commit,
+        "reported_source_commit": reported_source_commit,
+        "source_provenance": source_provenance,
         "source_tree_clean": payload["source_tree_clean"],
         "parent_checkpoint_sha256": payload["parent_checkpoint_sha256"],
         "configuration": payload["configuration"],
@@ -70,9 +79,11 @@ def main():
     parser.add_argument("baseline", type=Path)
     parser.add_argument("recovery", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--baseline-provenance-audit", type=Path)
+    parser.add_argument("--recovery-provenance-audit", type=Path)
     args = parser.parse_args()
-    baseline = _result(args.baseline)
-    recovery = _result(args.recovery)
+    baseline = _result(args.baseline, args.baseline_provenance_audit)
+    recovery = _result(args.recovery, args.recovery_provenance_audit)
     records = recovery["records"]
     accepted = [row for row in records
                 if row["wall_recovery_classification"].startswith("ACCEPTED")]
