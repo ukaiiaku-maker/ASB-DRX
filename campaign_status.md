@@ -3032,3 +3032,28 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   production checkpoint toward 1% target growth or a genuine directional-
   energy reversal. A success leads to the common-law neighboring response and
   coexistence tests; a reversal selects the responsible evolving energy term.
+
+## V67 wall-topology conjugacy audit (2026-10-16)
+
+- Conserved Arrhenius neutral-pair recovery closes signed and total line,
+  first-law, and no-reset restart audits, and almost completely polarizes the
+  leading high-rate wall. It does not create a closed topology: the matched
+  dynamic precursor remains below 1.15 degrees and declines during the
+  following held-strain interval. Recovery alone is therefore a valid
+  negative topology result, not DRX.
+- An initial finite wall/orientation probe appeared to find two small downhill
+  events. Production accepted one event with a 0.04703 reaction coordinate,
+  but a path audit found that the candidate was relaxing the retained state's
+  pre-existing orientation/Nye reconstruction mismatch and multiplying the
+  new orientation response by the wall coordinate a second time. That event
+  and its one-interval output are quarantined from scientific claims.
+- The repaired conjugate map subtracts the baseline reconstructed orientation
+  before applying the candidate increment. It is continuous at zero transfer
+  and linear, rather than quadratic, in the reaction coordinate. A regression
+  test now uses an intentionally incompatible retained orientation to prove
+  that old mismatch cannot be consumed by a new wall event.
+- The repaired endpoint screen finds zero downhill joint candidates among 120
+  owner/radius/coordinate states. The best candidate is still uphill by
+  3.93e-23 J. This rejects the tested local closed-ring route without forcing
+  orientation, canceling an energy term, changing the immutable Arrhenius
+  Peierls--Taylor--Hall--Petch law, or allocating a grain label.

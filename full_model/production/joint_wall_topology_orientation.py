@@ -107,14 +107,27 @@ def joint_wall_orientation_candidate(
         domain = ndimage.binary_erosion(domain, iterations=cells)
     if np.count_nonzero(domain) < 2:
         return wall, transferred, 0.0
+    # Price only the orientation response conjugate to the *new* wall
+    # transfer.  The retained state need not already be the least-squares
+    # orientation reconstruction of its ordered Nye field.  Relaxing that
+    # pre-existing mismatch as part of this reaction would give a finite
+    # orientation jump at zero transfer and would spuriously make a wall
+    # event downhill.  Subtract the baseline reconstruction so the coupled
+    # path is continuous at coordinate zero.  Both wall transfer and this
+    # incremental reconstruction are already proportional to ``coordinate``;
+    # applying the coordinate again would incorrectly suppress the response
+    # quadratically.
+    old_alpha = ordered_wall_nye_from_common(old, systems)
+    old_reconstructed, _ = reconstruct_orientation_from_ordered_nye(
+        old_alpha, old.orientation_rad, domain, spacing_m)
     alpha = ordered_wall_nye_from_common(candidate, systems)
     reconstructed, _ = reconstruct_orientation_from_ordered_nye(
-        alpha, candidate.orientation_rad, domain, spacing_m)
+        alpha, old.orientation_rad, domain, spacing_m)
     increment = np.arctan2(
-        np.sin(reconstructed-np.asarray(old.orientation_rad)),
-        np.cos(reconstructed-np.asarray(old.orientation_rad)))
+        np.sin(reconstructed-old_reconstructed),
+        np.cos(reconstructed-old_reconstructed))
     orientation = np.asarray(old.orientation_rad).copy()
-    orientation[domain] += float(coordinate)*increment[domain]
+    orientation[domain] += increment[domain]
     orientation += float(np.mean(old.orientation_rad)-np.mean(orientation))
     owners = list(wall.owners)
     owners[owner_index] = replace(candidate, orientation_rad=orientation)

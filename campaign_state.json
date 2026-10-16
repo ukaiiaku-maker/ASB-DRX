@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T13:18:26Z",
+  "last_updated_utc": "2026-10-16T14:48:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -62,17 +62,18 @@
     "H4": "GB_TJ_only_and_matched_random_Arrhenius_sources_are_nearly_indistinguishable_over_twenty_n16_intervals_so_source_geography_is_not_the_current_rate_limiting_mechanism",
     "H5": "same_family_neutral_and_vector_neutral_interface_sinks_are_valid_negative_controls;_even_the_ideal_Burgers_capacity_relaxation_bound_does_not_reverse_the_final_front_selection",
     "H6": "restoring_the_common_GB_TJ_source_wall_dipole_ordering_and_junction_channels_prevents_the_early_disabled_control_reversal_and_produces_a_13p2_fold_lower_rate_growth_advantage_at_common_incremental_strain",
-    "H7": "ordered_wall_content_contains_a_large_redundant_opposite_sign_fraction_in_the_leading_high_rate_precursor;_conserved_Arrhenius_neutral_pair_recovery_followed_by_survivor_reorganization_is_the_active_physical_discriminator"
+    "H7": "conserved_Arrhenius_neutral_pair_recovery_is_energy_consistent_and_nearly_fully_polarizes_the_leading_wall_but_does_not_create_topology_or_mature_the_1p17_degree_precursor_dynamically_or_during_the_no_reset_hold",
+    "H8": "the_apparent_joint_closed_wall_downhill_path_was_a_rejected_quadratic_coupling_artifact_that_relaxed_preexisting_orientation_Nye_mismatch;_the_continuous_incremental_conjugate_map_finds_zero_downhill_candidates_across_120_screened_states"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 62356,
-      "case": "v67_highrate2000_wall_recovery_extended15",
-      "status": "running_single_local_solver",
-      "last_case": "v67_highrate2000_wall_recovery_extended15",
-      "last_start_local": "2026-10-16T06:18:07-07:00",
-      "last_source_commit": "53be25102d16cf7a8a33729d17650b4f071f9db4",
-      "last_output": "full_model/verification/v67_highrate2000_wall_recovery_extended15"
+      "pid": null,
+      "case": null,
+      "status": "idle_during_incremental_coupling_repair",
+      "last_case": "v67_joint_wall_topology_production_static5_continuation",
+      "last_start_local": "2026-10-16T07:39:00-07:00",
+      "last_source_commit": "f761ce772ae7814862c354e4e2e63e1a22e2a040",
+      "last_output": "full_model/verification/v67_joint_wall_topology_production_static5_continuation"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -83,13 +84,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
-    "physical_uncertainty": "whether_removing_redundant_opposite_sign_ordered_wall_line_at_fixed_signed_Burgers_content_makes_the_surviving_excess_accessible_to_Frank_Bilby_compatible_reorganization_and_matures_the_saturating_1p17_degree_precursor",
-    "next_executable_experiment": "complete_and_classify_the_active_matched_wall_neutral_pair_recovery_plus_compatible_survivor_reorganization_then_follow_the_credible_candidate_with_a_no_reset_hold",
-    "source_identity": "53be251_with_conserved_support_weighted_wall_pair_recovery_shared_Arrhenius_EXP_floor_law_and_launch_frozen_provenance",
-    "expected_discriminatory_observation": "exact_signed_content_and_line_balance_with_a_complete_energy_drop_followed_by_improved_compatibility_and_either_a_finite_interior_orientation_plateau_or_a_quantified_negative_topology_result",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8"],
+    "physical_uncertainty": "whether_any_conservative_closed_wall_path_is_accessible_after_pricing_only_the_incremental_orientation_response_due_to_new_ordered_Nye_content_rather_than_relaxing_retained_mismatch",
+    "next_executable_experiment": "commit_the_incremental_conjugate_repair_rerun_the_clean_120_candidate_screen_and_execute_a_clean_common_production_interval_to_verify_the_spurious_event_is_rejected",
+    "source_identity": "working_tree_repair_over_f761ce7_subtracts_baseline_Nye_reconstruction_and_removes_double_coordinate_scaling",
+    "expected_discriminatory_observation": "zero_downhill_joint_candidates_and_an_inactive_production_transaction_while_all_unrelated_common_state_operators_and_hard_balances_remain_unchanged",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "matched_15_interval_baseline_completed_with_all_hard_gates_passed_no_reactivated_compatible_events_and_grain30_reversing_from_1p174_to_1p144_degree;_the_same_parent_15_interval_conserved_pair_recovery_discriminator_is_running"
+    "result_status": "the_f761ce7_one_interval_joint_event_is_quarantined_because_its_orientation_path_consumed_preexisting_orientation_Nye_mismatch;_the_corrected_incremental_screen_has_zero_downhill_candidates_out_of_120_and_the_invalid_five_interval_continuation_was_stopped_before_publication"
   },
   "continuation_rule": {
     "active": true,
@@ -100,7 +101,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315",
+    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315;_focused_joint_integration_17_passed_in_3p72_s_at_f761ce7;_full_latest_regression_pending_after_active_solver",
     "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": false,
     "material_validated": false,
