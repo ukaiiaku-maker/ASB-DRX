@@ -1,0 +1,402 @@
+{
+  "audits": {
+    "adiabatic_band_at_all_resolutions": true,
+    "all_source_trees_clean": true,
+    "grid_and_timestep_errors_below_5_percent": true,
+    "mechanical_first_law_residuals_below_1e-3": true,
+    "no_strong_bath_band_at_any_resolution": true,
+    "same_terminal_strain_0p124": true
+  },
+  "cases": {
+    "n32_dt1_ad": {
+      "band_onset_strain": 0.11935999999999647,
+      "band_onset_time_s": 1.342000000000019e-06,
+      "configuration": {
+        "band_normal": "x",
+        "dt_s": 1e-09,
+        "front_enabled": false,
+        "immutable_flow_law": "EXP-floor Arrhenius Peierls-Taylor common mechanics",
+        "initial_shear_strain": 0.012,
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 32,
+        "schema": "v67-single-crystal-asb-discriminator-v1",
+        "shear_rate_s": 80000.0,
+        "spatial_seed": "mean-zero temperature Gaussian only",
+        "target_steps": 1400,
+        "temperature_K": 1000.0,
+        "temperature_seed_mean_zero": true,
+        "temperature_seed_peak_K": 20.0,
+        "temperature_seed_width_m": 6e-07,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      },
+      "final_power_localization": {
+        "above_threshold_fraction": 0.09375,
+        "band_like": true,
+        "component_span_fraction": [
+          0.09375,
+          1.03125
+        ],
+        "largest_component_cells": 96,
+        "largest_component_fraction": 0.09375,
+        "maximum_to_mean": 2.2425823990289064,
+        "periodic_winding": [
+          false,
+          true
+        ],
+        "positive_max_W_m3": 1423295271787975.0,
+        "positive_mean_W_m3": 634667993650666.8,
+        "signed_min_W_m3": 416249757087481.8,
+        "threshold_multiple": 2.0
+      },
+      "initial_state_digest": "691188c8537ef9e515af73a817d2470f0947cc6b829f65680eb06c90e17b5be9",
+      "path": "full_model/verification/v67_single_crystal_asb_n32_seed20_ad_dt1_1400",
+      "result": {
+        "band_intervals": 59,
+        "final_stress_Pa": 7021530709.23329,
+        "final_temperature_contrast_K": 132.2663470950597,
+        "final_temperature_mean_K": 1231.3587674100381,
+        "grain_ids_unchanged": true,
+        "maximum_mechanical_relative_first_law_residual": 0.00016851734894612755,
+        "maximum_temperature_contrast_K": 132.2663470950597,
+        "peak_stress_Pa": 7442975660.951512,
+        "peak_stress_step": 953,
+        "post_peak_stress_drop_fraction": 0.05662318015216309,
+        "terminal_band_persistence_intervals": 59
+      },
+      "source_commit": "090c0cd1feb82767574695a68571c36e453dd039",
+      "source_tree_clean": true
+    },
+    "n32_dt1_bath": {
+      "band_onset_strain": null,
+      "band_onset_time_s": null,
+      "configuration": {
+        "band_normal": "x",
+        "dt_s": 1e-09,
+        "front_enabled": false,
+        "immutable_flow_law": "EXP-floor Arrhenius Peierls-Taylor common mechanics",
+        "initial_shear_strain": 0.012,
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 32,
+        "schema": "v67-single-crystal-asb-discriminator-v1",
+        "shear_rate_s": 80000.0,
+        "spatial_seed": "mean-zero temperature Gaussian only",
+        "target_steps": 1400,
+        "temperature_K": 1000.0,
+        "temperature_seed_mean_zero": true,
+        "temperature_seed_peak_K": 20.0,
+        "temperature_seed_width_m": 6e-07,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      },
+      "final_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.0000015132635551,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 593334065544635.5,
+        "positive_mean_W_m3": 593333167675176.8,
+        "signed_min_W_m3": 593332775967631.0,
+        "threshold_multiple": 2.0
+      },
+      "initial_state_digest": "691188c8537ef9e515af73a817d2470f0947cc6b829f65680eb06c90e17b5be9",
+      "path": "full_model/verification/v67_single_crystal_asb_n32_seed20_bath_dt1_1400",
+      "result": {
+        "band_intervals": 0,
+        "final_stress_Pa": 7481789828.946474,
+        "final_temperature_contrast_K": 2.094452611345332e-09,
+        "final_temperature_mean_K": 1000.0026448747926,
+        "grain_ids_unchanged": true,
+        "maximum_mechanical_relative_first_law_residual": 0.00023389259522867654,
+        "maximum_temperature_contrast_K": 0.19616445056931298,
+        "peak_stress_Pa": 7517040055.1414175,
+        "peak_stress_step": 1012,
+        "post_peak_stress_drop_fraction": 0.004689375862888131,
+        "terminal_band_persistence_intervals": 0
+      },
+      "source_commit": "090c0cd1feb82767574695a68571c36e453dd039",
+      "source_tree_clean": true
+    },
+    "n32_dt2_ad": {
+      "band_onset_strain": 0.11951999999999781,
+      "band_onset_time_s": 1.3439999999999972e-06,
+      "configuration": {
+        "band_normal": "x",
+        "dt_s": 2e-09,
+        "front_enabled": false,
+        "immutable_flow_law": "EXP-floor Arrhenius Peierls-Taylor common mechanics",
+        "initial_shear_strain": 0.012,
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 32,
+        "schema": "v67-single-crystal-asb-discriminator-v1",
+        "shear_rate_s": 80000.0,
+        "spatial_seed": "mean-zero temperature Gaussian only",
+        "target_steps": 700,
+        "temperature_K": 1000.0,
+        "temperature_seed_mean_zero": true,
+        "temperature_seed_peak_K": 20.0,
+        "temperature_seed_width_m": 6e-07,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      },
+      "final_power_localization": {
+        "above_threshold_fraction": 0.09375,
+        "band_like": true,
+        "component_span_fraction": [
+          0.09375,
+          1.03125
+        ],
+        "largest_component_cells": 96,
+        "largest_component_fraction": 0.09375,
+        "maximum_to_mean": 2.2387247582479177,
+        "periodic_winding": [
+          false,
+          true
+        ],
+        "positive_max_W_m3": 1397847932945177.0,
+        "positive_mean_W_m3": 624394726415215.0,
+        "signed_min_W_m3": 409558762339204.25,
+        "threshold_multiple": 2.0
+      },
+      "initial_state_digest": "691188c8537ef9e515af73a817d2470f0947cc6b829f65680eb06c90e17b5be9",
+      "path": "full_model/verification/v67_single_crystal_asb_n32_seed20_ad_700",
+      "result": {
+        "band_intervals": 29,
+        "final_stress_Pa": 7017734617.41667,
+        "final_temperature_contrast_K": 132.06371325599048,
+        "final_temperature_mean_K": 1231.5193385615162,
+        "grain_ids_unchanged": true,
+        "maximum_mechanical_relative_first_law_residual": 0.0003369069419514106,
+        "maximum_temperature_contrast_K": 132.06371325599048,
+        "peak_stress_Pa": 7440629527.928768,
+        "peak_stress_step": 476,
+        "post_peak_stress_drop_fraction": 0.05683590466703677,
+        "terminal_band_persistence_intervals": 29
+      },
+      "source_commit": "f18aca90a0d4b762e152d56784dfdc0cdef9d57c",
+      "source_tree_clean": true
+    },
+    "n32_dt2_bath": {
+      "band_onset_strain": null,
+      "band_onset_time_s": null,
+      "configuration": {
+        "band_normal": "x",
+        "dt_s": 2e-09,
+        "front_enabled": false,
+        "immutable_flow_law": "EXP-floor Arrhenius Peierls-Taylor common mechanics",
+        "initial_shear_strain": 0.012,
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 32,
+        "schema": "v67-single-crystal-asb-discriminator-v1",
+        "shear_rate_s": 80000.0,
+        "spatial_seed": "mean-zero temperature Gaussian only",
+        "target_steps": 700,
+        "temperature_K": 1000.0,
+        "temperature_seed_mean_zero": true,
+        "temperature_seed_peak_K": 20.0,
+        "temperature_seed_width_m": 6e-07,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      },
+      "final_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.0000030024234428,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 581439818132231.8,
+        "positive_mean_W_m3": 581438072408932.6,
+        "signed_min_W_m3": 581437311031912.5,
+        "threshold_multiple": 2.0
+      },
+      "initial_state_digest": "691188c8537ef9e515af73a817d2470f0947cc6b829f65680eb06c90e17b5be9",
+      "path": "full_model/verification/v67_single_crystal_asb_n32_seed20_bath_700",
+      "result": {
+        "band_intervals": 0,
+        "final_stress_Pa": 7478212466.372198,
+        "final_temperature_contrast_K": 5.582023732131347e-11,
+        "final_temperature_mean_K": 1000.0000354066145,
+        "grain_ids_unchanged": true,
+        "maximum_mechanical_relative_first_law_residual": 0.0004677521172200885,
+        "maximum_temperature_contrast_K": 0.001321657689118183,
+        "peak_stress_Pa": 7513733538.506403,
+        "peak_stress_step": 505,
+        "post_peak_stress_drop_fraction": 0.00472748626926499,
+        "terminal_band_persistence_intervals": 0
+      },
+      "source_commit": "f18aca90a0d4b762e152d56784dfdc0cdef9d57c",
+      "source_tree_clean": true
+    },
+    "n48_dt2_ad": {
+      "band_onset_strain": 0.11951999999999781,
+      "band_onset_time_s": 1.3439999999999972e-06,
+      "configuration": {
+        "band_normal": "x",
+        "dt_s": 2e-09,
+        "front_enabled": false,
+        "immutable_flow_law": "EXP-floor Arrhenius Peierls-Taylor common mechanics",
+        "initial_shear_strain": 0.012,
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 48,
+        "schema": "v67-single-crystal-asb-discriminator-v1",
+        "shear_rate_s": 80000.0,
+        "spatial_seed": "mean-zero temperature Gaussian only",
+        "target_steps": 700,
+        "temperature_K": 1000.0,
+        "temperature_seed_mean_zero": true,
+        "temperature_seed_peak_K": 20.0,
+        "temperature_seed_width_m": 6e-07,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      },
+      "final_power_localization": {
+        "above_threshold_fraction": 0.0625,
+        "band_like": true,
+        "component_span_fraction": [
+          0.0625,
+          1.0208333333333333
+        ],
+        "largest_component_cells": 144,
+        "largest_component_fraction": 0.0625,
+        "maximum_to_mean": 2.2385699137610633,
+        "periodic_winding": [
+          false,
+          true
+        ],
+        "positive_max_W_m3": 1397748524062115.2,
+        "positive_mean_W_m3": 624393509208623.1,
+        "signed_min_W_m3": 409561339680627.44,
+        "threshold_multiple": 2.0
+      },
+      "initial_state_digest": "1b798bb8e5a5180f06e697c1611aa59d7a1c1e44aaca6fab813f1e129a8a99ba",
+      "path": "full_model/verification/v67_single_crystal_asb_n48_seed20_ad_700",
+      "result": {
+        "band_intervals": 29,
+        "final_stress_Pa": 7017735995.799325,
+        "final_temperature_contrast_K": 132.06117633304416,
+        "final_temperature_mean_K": 1231.5193495957183,
+        "grain_ids_unchanged": true,
+        "maximum_mechanical_relative_first_law_residual": 0.0003369057398757928,
+        "maximum_temperature_contrast_K": 132.06117633304416,
+        "peak_stress_Pa": 7440629531.899111,
+        "peak_stress_step": 476,
+        "post_peak_stress_drop_fraction": 0.05683571991950102,
+        "terminal_band_persistence_intervals": 29
+      },
+      "source_commit": "090c0cd1feb82767574695a68571c36e453dd039",
+      "source_tree_clean": true
+    },
+    "n48_dt2_bath": {
+      "band_onset_strain": null,
+      "band_onset_time_s": null,
+      "configuration": {
+        "band_normal": "x",
+        "dt_s": 2e-09,
+        "front_enabled": false,
+        "immutable_flow_law": "EXP-floor Arrhenius Peierls-Taylor common mechanics",
+        "initial_shear_strain": 0.012,
+        "interface_width_m": 6e-07,
+        "length_m": 4.8e-06,
+        "maximum_mechanical_subdivisions": 10,
+        "n": 48,
+        "schema": "v67-single-crystal-asb-discriminator-v1",
+        "shear_rate_s": 80000.0,
+        "spatial_seed": "mean-zero temperature Gaussian only",
+        "target_steps": 700,
+        "temperature_K": 1000.0,
+        "temperature_seed_mean_zero": true,
+        "temperature_seed_peak_K": 20.0,
+        "temperature_seed_width_m": 6e-07,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      },
+      "final_power_localization": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 1.0000030023149316,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 581439818069348.5,
+        "positive_mean_W_m3": 581438072409141.9,
+        "signed_min_W_m3": 581437311029524.9,
+        "threshold_multiple": 2.0
+      },
+      "initial_state_digest": "1b798bb8e5a5180f06e697c1611aa59d7a1c1e44aaca6fab813f1e129a8a99ba",
+      "path": "full_model/verification/v67_single_crystal_asb_n48_seed20_bath_700",
+      "result": {
+        "band_intervals": 0,
+        "final_stress_Pa": 7478212466.37228,
+        "final_temperature_contrast_K": 5.5706550483591855e-11,
+        "final_temperature_mean_K": 1000.0000354066146,
+        "grain_ids_unchanged": true,
+        "maximum_mechanical_relative_first_law_residual": 0.0004677521175194765,
+        "maximum_temperature_contrast_K": 0.0013216574990337904,
+        "peak_stress_Pa": 7513733538.506393,
+        "peak_stress_step": 505,
+        "post_peak_stress_drop_fraction": 0.0047274862692528105,
+        "terminal_band_persistence_intervals": 0
+      },
+      "source_commit": "090c0cd1feb82767574695a68571c36e453dd039",
+      "source_tree_clean": true
+    }
+  },
+  "claim_boundary": "Grid- and timestep-qualified heat-triggered localization from a fixed 20 K mean-zero prepared imperfection. This is a physical response-family result, not a zero-imperfection bifurcation or a calibration to a named material.",
+  "created_utc": "2026-10-16T19:11:23.269787+00:00",
+  "decision": {
+    "classification": "QUALIFIED_HEAT_TRIGGERED_SINGLE_CRYSTAL_ASB",
+    "material_calibration_claimed": false,
+    "strict_prepared_asb_qualified": true,
+    "zero_imperfection_instability_claimed": false
+  },
+  "relative_errors": {
+    "dt2ns_to_dt1ns_fixed_horizon": {
+      "band_onset_strain": 0.0013404825737378047,
+      "final_power_maximum_to_mean": 0.0017201779442571061,
+      "final_temperature_contrast_K": 0.0015320135735176006,
+      "post_peak_stress_drop_fraction": 0.003756845064195082
+    },
+    "n32_to_n48_fixed_physical_width": {
+      "band_onset_strain": 0.0,
+      "final_power_maximum_to_mean": 6.91711641001535e-05,
+      "final_temperature_contrast_K": 1.9210210122024175e-05,
+      "post_peak_stress_drop_fraction": 3.2505532791258728e-06
+    },
+    "provisional_threshold": 0.05
+  },
+  "schema": "v67-single-crystal-asb-refinement-v1"
+}
