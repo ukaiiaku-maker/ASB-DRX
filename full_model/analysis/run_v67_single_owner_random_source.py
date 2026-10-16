@@ -109,6 +109,9 @@ def main():
         "--source-mode", choices=("random_bulk", "random_discrete_bulk"),
         default="random_bulk")
     parser.add_argument("--source-site-density-m2", type=float, default=1e12)
+    parser.add_argument(
+        "--transport-scheme", choices=("spectral", "groma_upwind"),
+        default="spectral")
     parser.add_argument("--collective-wall-nucleation", action="store_true")
     parser.add_argument(
         "--initial-state", choices=(
@@ -163,7 +166,7 @@ def main():
             groma_gnd_correlation_energy_J_m=.5*gb2,
             groma_sign_resolved_transport_enabled=True,
             mobile_correlation_diffusivity_m2_s=0.0,
-            transport_scheme="spectral")
+            transport_scheme=args.transport_scheme)
     wall = replace(wall, **wall_updates)
     source_parameters = ArrheniusSourceParameters(
         grain_size_m=float(configuration.get("length_m", spacing*grid[0])),
@@ -209,6 +212,7 @@ def main():
         source_bulk_site_density_m2=args.source_site_density_m2,
         collective_wall_nucleation=args.collective_wall_nucleation,
         wall_order_relaxation_mode=context.wall_order_relaxation_mode,
+        transport_scheme=args.transport_scheme,
         wall_nye_match_coefficient_J_m=2.0e-5)
     for index in range(1, args.intervals+1):
         interval = advance_complete_multigrain_interval(
@@ -342,6 +346,7 @@ def main():
                 wall.polarized_mobile_wall_absorption_enabled),
             "groma_sign_resolved_transport_enabled": (
                 wall.groma_sign_resolved_transport_enabled),
+            "transport_scheme": wall.transport_scheme,
         },
         "initial": {
             "orientation_span_deg": float(np.degrees(np.ptp(

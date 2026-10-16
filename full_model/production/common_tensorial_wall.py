@@ -241,15 +241,16 @@ class CommonWallParameters:
                      or self.groma_gnd_correlation_energy_J_m <= 0.0)):
             raise ValueError("sign-resolved Groma transport requires A and D energies")
         if (self.groma_sign_resolved_transport_enabled
-                and self.transport_scheme != "spectral"):
+                and self.transport_scheme not in ("spectral", "groma_upwind")):
             raise ValueError(
                 "sign-resolved Groma transport currently requires the "
-                "periodic spectral transport scheme")
+                "periodic spectral or qualified Groma-upwind transport scheme")
         if (not math.isfinite(float(self.capture_deposition_length_m))
                 or self.capture_deposition_length_m < 0.0):
             raise ValueError("capture deposition length must be finite and nonnegative")
-        if self.transport_scheme not in ("spectral", "upwind"):
-            raise ValueError("transport scheme must be spectral or upwind")
+        if self.transport_scheme not in ("spectral", "upwind", "groma_upwind"):
+            raise ValueError(
+                "transport scheme must be spectral, upwind, or groma_upwind")
         if self.multiplication_coefficient < 0.0:
             raise ValueError("multiplication coefficient cannot be negative")
         if self.taylor_alpha < 0.0 or self.taylor_wall_weight < 0.0 or self.taylor_junction_weight < 0.0:
@@ -947,7 +948,7 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                 state.mobile_minus_m2[..., family], parameters.spacing_m)
             flux_minus[..., family, 0] -= parameters.mobile_correlation_diffusivity_m2_s*gx
             flux_minus[..., family, 1] -= parameters.mobile_correlation_diffusivity_m2_s*gy
-    if parameters.transport_scheme == "upwind":
+    if parameters.transport_scheme in ("upwind", "groma_upwind"):
         mp_rate = _periodic_upwind_rate(
             state.mobile_plus_m2, speed_plus[..., None]*planar,
             parameters.spacing_m, driving.material_support)

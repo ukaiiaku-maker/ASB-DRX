@@ -29,6 +29,49 @@ def test_sign_resolved_branch_rejects_unqualified_supported_upwind_transport():
         replace(candidate_parameters(parameters), transport_scheme="upwind")
 
 
+def test_groma_upwind_transport_is_conservative_positive_and_sign_symmetric():
+    systems, topologies, parameters, state, _ = fixture(n=16)
+    parameters = replace(
+        candidate_parameters(parameters), transport_scheme="groma_upwind")
+    state = patterned_state(state)
+    stress = np.full_like(state.mobile_plus_m2, 2.0e9)
+    result = wall_residual(
+        state, CommonWallDriving(resolved_stress_Pa=stress),
+        systems, topologies, parameters)
+    for key in ("transport_mobile_plus_rate_m2_s",
+                "transport_mobile_minus_rate_m2_s"):
+        rate = result.channel_rates_m2_s[key]
+        imbalance = np.abs(np.sum(rate, axis=(0, 1)))
+        turnover = np.sum(np.abs(rate), axis=(0, 1))
+        assert np.max(imbalance/turnover) < 2e-15
+    assert np.min(result.heat_rate_W_m3) >= 0.0
+    assert balance_ledger(
+        state, result, systems, topologies
+    )["relative_energy_balance_residual"] < 1e-5
+
+    exchanged = replace(
+        state,
+        mobile_plus_m2=state.mobile_minus_m2,
+        mobile_minus_m2=state.mobile_plus_m2,
+        forest_plus_m2=state.forest_minus_m2,
+        forest_minus_m2=state.forest_plus_m2,
+        wall_plus_m2=state.wall_minus_m2,
+        wall_minus_m2=state.wall_plus_m2)
+    reversed_result = wall_residual(
+        exchanged, CommonWallDriving(resolved_stress_Pa=-stress),
+        systems, topologies, parameters)
+    np.testing.assert_allclose(
+        reversed_result.channel_rates_m2_s[
+            "transport_mobile_plus_rate_m2_s"],
+        result.channel_rates_m2_s["transport_mobile_minus_rate_m2_s"],
+        rtol=2e-14, atol=1e-3)
+    np.testing.assert_allclose(
+        reversed_result.channel_rates_m2_s[
+            "transport_mobile_minus_rate_m2_s"],
+        result.channel_rates_m2_s["transport_mobile_plus_rate_m2_s"],
+        rtol=2e-14, atol=1e-3)
+
+
 def patterned_state(state):
     n = state.orientation_rad.shape[0]
     x = 2.0*np.pi*np.arange(n)[:, None]/n
