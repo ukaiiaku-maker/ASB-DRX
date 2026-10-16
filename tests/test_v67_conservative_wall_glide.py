@@ -3,6 +3,7 @@ from dataclasses import replace
 import numpy as np
 
 from full_model.production.conservative_wall_glide import (
+    ConservativeWallGlideParameters, _checkerboard_glide_pass,
     evaluate_conservative_wall_glide,
 )
 from full_model.production.multigrain_common_state import MultiGrainCommonState
@@ -71,3 +72,23 @@ def test_wall_glide_physical_clock_is_below_five_percent_half_step_error():
         two = np.asarray(getattr(fine.owners[0], field))
         relative = np.linalg.norm(one-two)/max(np.linalg.norm(two), 1.0)
         assert relative < .05
+
+
+def test_wall_glide_conserves_support_weighted_line_on_diffuse_edge():
+    population = np.full((8, 8, 4), 1.0e13)
+    population[::2] *= 2.0
+    chemical = np.zeros_like(population)
+    chemical[::2] = 2.0e-9
+    support = np.ones((8, 8))
+    support[::2] = .2
+    before = np.sum(
+        support[..., None]*population, axis=(0, 1), dtype=np.longdouble)
+    result, moved, _ = _checkerboard_glide_pass(
+        population, chemical, np.full((8, 8), 1000.0),
+        np.ones((8, 8), dtype=bool), 2e-8, 0, 0,
+        ConservativeWallGlideParameters(),
+        support=support)
+    assert moved > 0.0
+    np.testing.assert_allclose(
+        np.sum(support[..., None]*result, axis=(0, 1), dtype=np.longdouble),
+        before, rtol=2e-15, atol=1.0)

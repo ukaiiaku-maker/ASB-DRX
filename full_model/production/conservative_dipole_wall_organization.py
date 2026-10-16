@@ -85,13 +85,14 @@ class ConservativeDipoleWallDecision:
 
 
 def _checkerboard_pair_separation_pass(
-        owner, chemical, temperature_K, domain, edge_interval_s, axis, parity,
-        parameters, offset_cells=1):
+        owner, chemical, temperature_K, support, domain, edge_interval_s,
+        axis, parity, parameters, offset_cells=1):
     """Apply disjoint nearest-neighbour loop-expansion events for one pass."""
     mp = np.asarray(owner.mobile_plus_m2, dtype=float).copy()
     mm = np.asarray(owner.mobile_minus_m2, dtype=float).copy()
     wp = np.asarray(owner.wall_plus_m2, dtype=float).copy()
     wm = np.asarray(owner.wall_minus_m2, dtype=float).copy()
+    weight = np.asarray(support, dtype=float)[..., None]
     shape = mp.shape[:2]
     if any(size % 2 for size in shape):
         raise ValueError("checkerboard dipole separation requires even extents")
@@ -103,6 +104,9 @@ def _checkerboard_pair_separation_pass(
     eligible = (np.asarray(domain, dtype=bool)
                 &np.roll(domain, -offset, axis=axis)
                 &(coordinate % 2 == parity))
+    # df/drho is conjugate to the extensive owner inventory eta*rho.  Pair
+    # separation therefore uses the unweighted potential while debiting and
+    # crediting support-weighted line below.
     mobile_mu = (np.asarray(chemical["mobile_plus_mu_J_m"])
                  +np.asarray(chemical["mobile_minus_mu_J_m"]))
     # A deposits + at the donor and - at its forward neighbour.  B reverses
@@ -118,7 +122,7 @@ def _checkerboard_pair_separation_pass(
     affinity = np.maximum(-delta, 0.0)
     edge_temperature = .5*(
         np.asarray(temperature_K)[..., None]
-        +np.roll(temperature_K, -1, axis=axis)[..., None])
+        +np.roll(temperature_K, -offset, axis=axis)[..., None])
     rate = exp_floor_event_rate_Hz(
         affinity, edge_temperature, parameters.activation)
     maximum_rate = (float(np.max(rate[eligible]))
@@ -126,16 +130,25 @@ def _checkerboard_pair_separation_pass(
     fraction = np.minimum(
         -np.expm1(-rate*float(edge_interval_s)),
         parameters.maximum_edge_fraction)
-    neutral = np.minimum(mp, mm)
+    neutral = weight*np.minimum(mp, mm)
     extent = np.where(
         eligible[..., None]&(delta < 0.0), fraction*neutral, 0.0)
     a = np.where(choose_a, extent, 0.0)
     b = extent-a
-    mp -= extent
-    mm -= extent
-    wp += a+np.roll(b, offset, axis=axis)
-    wm += b+np.roll(a, offset, axis=axis)
-    tolerance = 1e-12*max(float(np.max(neutral)), 1.0)
+    donor_delta = np.divide(
+        extent, weight, out=np.zeros_like(extent),
+        where=weight > 256.0*np.finfo(float).eps)
+    plus_credit = a+np.roll(b, offset, axis=axis)
+    minus_credit = b+np.roll(a, offset, axis=axis)
+    mp -= donor_delta
+    mm -= donor_delta
+    wp += np.divide(
+        plus_credit, weight, out=np.zeros_like(plus_credit),
+        where=weight > 256.0*np.finfo(float).eps)
+    wm += np.divide(
+        minus_credit, weight, out=np.zeros_like(minus_credit),
+        where=weight > 256.0*np.finfo(float).eps)
+    tolerance = 1e-12*max(float(np.max(np.minimum(mp, mm))), 1.0)
     if min(float(np.min(mp)), float(np.min(mm)),
            float(np.min(wp)), float(np.min(wm))) < -tolerance:
         raise RuntimeError("dipole-wall separation violated nonnegativity")
@@ -149,16 +162,17 @@ def _checkerboard_pair_separation_pass(
 
 def _inventories(state):
     plus = minus = line = np.longdouble(0.0)
-    for owner in state.owners:
+    for support, owner in zip(state.supports, state.owners):
         p = (np.asarray(owner.mobile_plus_m2)
              +np.asarray(owner.forest_plus_m2)
              +np.asarray(owner.wall_plus_m2))
         m = (np.asarray(owner.mobile_minus_m2)
              +np.asarray(owner.forest_minus_m2)
              +np.asarray(owner.wall_minus_m2))
-        plus += np.sum(p, dtype=np.longdouble)
-        minus += np.sum(m, dtype=np.longdouble)
-        line += np.sum(p+m, dtype=np.longdouble)
+        weight = np.asarray(support)[..., None]
+        plus += np.sum(weight*p, dtype=np.longdouble)
+        minus += np.sum(weight*m, dtype=np.longdouble)
+        line += np.sum(weight*(p+m), dtype=np.longdouble)
     return plus, minus, line
 
 
@@ -208,7 +222,7 @@ def evaluate_conservative_dipole_wall_organization(
                         owner, wall_parameters, options.get("topologies", ()),
                         systems)
                     candidate, moved, rate = _checkerboard_pair_separation_pass(
-                        owner, chemical, owner.temperature_K, domain,
+                        owner, chemical, owner.temperature_K, support, domain,
                         substep_s/4.0, axis, parity, parameters)
                     activity += np.asarray(support)*np.sum(
                         np.abs(candidate.wall_plus_m2-owner.wall_plus_m2)
@@ -272,12 +286,20 @@ def evaluate_conservative_dipole_wall_organization(
     inventory_scale = max(float(initial_inventory[2]), 1.0)
     balanced = max(abs(plus_residual), abs(minus_residual),
                    abs(line_residual)) <= 1e-12*inventory_scale
-    accepted = bool(separated > 0.0 and downhill and balanced
+    published_change = any(
+        not np.array_equal(np.asarray(getattr(old, name)),
+                           np.asarray(getattr(new, name)))
+        for old, new in zip(state.owners, cold.owners)
+        for name in ("mobile_plus_m2", "mobile_minus_m2",
+                     "wall_plus_m2", "wall_minus_m2"))
+    accepted = bool(separated > 0.0 and published_change and downhill and balanced
                     and relative <= maximum_relative_first_law_residual)
     if accepted:
         classification = "ACCEPTED_CONSERVATIVE_DIPOLE_WALL_ORGANIZATION"
     elif separated <= 0.0:
         classification = "INACTIVE_NO_DOWNHILL_DIPOLE_WALL_EVENT"
+    elif not published_change:
+        classification = "INACTIVE_BELOW_NUMERICAL_DIPOLE_WALL_RESOLUTION"
     elif not balanced:
         classification = "REJECTED_DIPOLE_WALL_BALANCE"
     elif not downhill:

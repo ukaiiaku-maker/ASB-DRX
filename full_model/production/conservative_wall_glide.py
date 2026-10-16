@@ -64,16 +64,21 @@ class ConservativeWallGlideDecision:
 
 def _checkerboard_glide_pass(population, chemical_J_m, temperature_K, domain,
                              edge_interval_s, axis, parity, parameters,
-                             mobility=None):
+                             mobility=None, support=None):
     value = np.asarray(population, dtype=float).copy()
     chemical = np.asarray(chemical_J_m, dtype=float)
     temperature = np.asarray(temperature_K, dtype=float)
+    eta = (np.ones(value.shape[:2], dtype=float) if support is None
+           else np.asarray(support, dtype=float))
+    if eta.shape != value.shape[:2] or np.any(eta < 0.0):
+        raise ValueError("wall-glide support must be nonnegative on the grid")
+    extensive = eta[..., None]*value
     shape = value.shape[:2]
     if any(size % 2 for size in shape):
         raise ValueError("checkerboard wall glide requires even grid extents")
     coordinate = np.arange(shape[axis]).reshape(
         (-1, 1) if axis == 0 else (1, -1))
-    neighbor_value = np.roll(value, -1, axis=axis)
+    neighbor_extensive = np.roll(extensive, -1, axis=axis)
     neighbor_mu = np.roll(chemical, -1, axis=axis)
     neighbor_temperature = np.roll(temperature, -1, axis=axis)
     eligible = (domain & np.roll(domain, -1, axis=axis)
@@ -92,10 +97,16 @@ def _checkerboard_glide_pass(population, chemical_J_m, temperature_K, domain,
     fraction = np.minimum(
         -np.expm1(-rate*float(edge_interval_s)),
         parameters.maximum_edge_fraction)
-    donor = np.where(difference >= 0.0, value, neighbor_value)
+    # df/drho is also d(eta*f)/d(eta*rho).  Transport the physical extensive
+    # inventory eta*rho with that unweighted chemical potential.
+    donor = np.where(difference >= 0.0, extensive, neighbor_extensive)
     flux = np.where(
         eligible[..., None], np.sign(difference)*fraction*donor, 0.0)
-    value = value-flux+np.roll(flux, 1, axis=axis)
+    next_extensive = extensive-flux+np.roll(flux, 1, axis=axis)
+    delta = next_extensive-extensive
+    value += np.divide(
+        delta, eta[..., None], out=np.zeros_like(delta),
+        where=eta[..., None] > 256.0*np.finfo(float).eps)
     moved = float(np.sum(np.abs(flux), dtype=np.longdouble))
     if np.min(value) < -1e-12*max(float(np.max(population)), 1.0):
         raise RuntimeError("conservative wall glide violated nonnegativity")
@@ -142,10 +153,12 @@ def evaluate_conservative_wall_glide(
     maximum_rate = 0.0
     activity = np.zeros(state.supports.shape[1:])
     before_inventory = []
-    for owner in state.owners:
+    for support, owner in zip(state.supports, state.owners):
         before_inventory.extend((
-            np.sum(owner.wall_plus_m2, axis=(0, 1), dtype=np.longdouble),
-            np.sum(owner.wall_minus_m2, axis=(0, 1), dtype=np.longdouble)))
+            np.sum(np.asarray(support)[..., None]*owner.wall_plus_m2,
+                   axis=(0, 1), dtype=np.longdouble),
+            np.sum(np.asarray(support)[..., None]*owner.wall_minus_m2,
+                   axis=(0, 1), dtype=np.longdouble)))
     for _ in range(internal_substeps):
         for axis in (0, 1):
             for parity in (0, 1):
@@ -172,7 +185,7 @@ def evaluate_conservative_wall_glide(
                                 chemical[f"wall_{sign}_mu_J_m"],
                                 owner.temperature_K, domain,
                                 substep_s/4.0, axis, parity, parameters,
-                                mobility=mobility))
+                                mobility=mobility, support=support))
                         fields[name] = candidate
                         moved += sign_moved
                         maximum_rate = max(maximum_rate, sign_rate)
@@ -227,21 +240,30 @@ def evaluate_conservative_wall_glide(
         committed = state
         residual = relative = 0.0
     after_inventory = []
-    for owner in cold.owners:
+    for support, owner in zip(state.supports, cold.owners):
         after_inventory.extend((
-            np.sum(owner.wall_plus_m2, axis=(0, 1), dtype=np.longdouble),
-            np.sum(owner.wall_minus_m2, axis=(0, 1), dtype=np.longdouble)))
+            np.sum(np.asarray(support)[..., None]*owner.wall_plus_m2,
+                   axis=(0, 1), dtype=np.longdouble),
+            np.sum(np.asarray(support)[..., None]*owner.wall_minus_m2,
+                   axis=(0, 1), dtype=np.longdouble)))
     inventory_residual = float(np.max(np.abs(
         np.asarray(after_inventory)-np.asarray(before_inventory))))
     inventory_scale = max(
         float(np.max(np.abs(np.asarray(before_inventory)))), 1.0)
     inventory_closes = bool(
         inventory_residual <= 4096*np.finfo(float).eps*inventory_scale)
-    accepted = bool(moved > 0.0 and downhill
+    published_change = any(
+        not np.array_equal(np.asarray(getattr(old, name)),
+                           np.asarray(getattr(new, name)))
+        for old, new in zip(state.owners, cold.owners)
+        for name in ("wall_plus_m2", "wall_minus_m2"))
+    accepted = bool(moved > 0.0 and published_change and downhill
                     and inventory_closes
                     and relative <= maximum_relative_first_law_residual)
     if moved <= 0.0:
         classification = "INACTIVE_NO_ORDERED_WALL_GLIDE"
+    elif not published_change:
+        classification = "INACTIVE_BELOW_NUMERICAL_WALL_GLIDE_RESOLUTION"
     elif not downhill:
         classification = "REJECTED_CONSERVATIVE_WALL_GLIDE_UPHILL"
     elif not inventory_closes:

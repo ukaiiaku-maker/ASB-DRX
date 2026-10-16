@@ -70,11 +70,22 @@ def main():
         help=("maximum front transaction substep in seconds; defaults to the "
               "continuation interval rather than an inherited parent cadence"))
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
+    parser.add_argument(
+        "--wall-order-relaxation", action="store_true",
+        help=("advance the implicit Arrhenius wall-order variable without "
+              "requiring conservative wall-line glide"))
     parser.add_argument("--wall-glide", action="store_true")
+    parser.add_argument(
+        "--wall-glide-maximum-edge-fraction", type=float, default=.02,
+        help=("bounded checkerboard fraction used by conservative wall glide; "
+              "changes numerical cadence, not its Arrhenius clock"))
     parser.add_argument("--dipole-wall-organization", action="store_true")
     parser.add_argument(
         "--wall-nye-match-length", type=float,
         help="physical wall/orientation match length in metres")
+    parser.add_argument("--wall-order-support-threshold", type=float,
+                        default=1.0e-8)
+    parser.add_argument("--wall-order-max-iterations", type=int, default=300)
     parser.add_argument(
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")
@@ -125,14 +136,19 @@ def main():
             WallOrientationRelaxationParameters()
             if (args.wall_orientation_relaxation or args.wall_glide) else None),
         wall_order_relaxation_mode=(
-            "implicit_arrhenius" if args.wall_glide else "disabled"),
+            "implicit_arrhenius" if (
+                args.wall_order_relaxation or args.wall_glide) else "disabled"),
         wall_order_relaxation_parameters=(
-            ImplicitWallOrderRelaxationParameters()
-            if args.wall_glide else None),
+            ImplicitWallOrderRelaxationParameters(
+                owner_support_threshold=args.wall_order_support_threshold,
+                optimizer_max_iterations=args.wall_order_max_iterations)
+            if (args.wall_order_relaxation or args.wall_glide) else None),
         conservative_wall_glide_mode=(
             "chemical_edge_glide" if args.wall_glide else "disabled"),
         conservative_wall_glide_parameters=(
-            ConservativeWallGlideParameters() if args.wall_glide else None),
+            ConservativeWallGlideParameters(
+                maximum_edge_fraction=args.wall_glide_maximum_edge_fraction)
+            if args.wall_glide else None),
         conservative_dipole_wall_mode=(
             "neutral_pair_expansion" if args.dipole_wall_organization
             else "disabled"),
@@ -169,7 +185,12 @@ def main():
         wall_nye_match_coefficient_J_m=(
             wall_parameters.wall_nye_match_coefficient_J_m),
         wall_nye_match_length_m=match_length,
+        wall_order_support_threshold=args.wall_order_support_threshold,
+        wall_order_max_iterations=args.wall_order_max_iterations,
+        wall_order_relaxation_mode=context.wall_order_relaxation_mode,
         conservative_wall_glide_mode=context.conservative_wall_glide_mode,
+        wall_glide_maximum_edge_fraction=(
+            args.wall_glide_maximum_edge_fraction),
         conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
         source_mode=args.source_mode, source_seed=args.source_seed)
     source_commit = subprocess.check_output(
@@ -212,6 +233,12 @@ def main():
                 "conservative_wall_glide_inventory_residual_m2"],
             "wall_glide_internal_substeps": interval.audit[
                 "conservative_wall_glide_internal_substeps"],
+            "wall_glide_backtracks": interval.audit[
+                "conservative_wall_glide_backtracks"],
+            "wall_glide_maximum_rate_s": interval.audit[
+                "conservative_wall_glide_maximum_rate_s"],
+            "wall_glide_delta_helmholtz_J": interval.audit[
+                "conservative_wall_glide_delta_helmholtz_J"],
             "wall_glide_first_law_relative_residual": interval.audit[
                 "conservative_wall_glide_relative_first_law_residual"],
             "dipole_wall_classification": interval.audit[
@@ -220,6 +247,12 @@ def main():
                 "conservative_dipole_wall_separated_pair_cell_sum_m2"],
             "dipole_wall_line_residual_m2": interval.audit[
                 "conservative_dipole_wall_line_residual_m2"],
+            "dipole_wall_backtracks": interval.audit[
+                "conservative_dipole_wall_backtracks"],
+            "dipole_wall_maximum_rate_s": interval.audit[
+                "conservative_dipole_wall_maximum_rate_s"],
+            "dipole_wall_delta_helmholtz_J": interval.audit[
+                "conservative_dipole_wall_delta_helmholtz_J"],
             "dipole_wall_first_law_relative_residual": interval.audit[
                 "conservative_dipole_wall_relative_first_law_residual"],
             "source_classification": interval.audit["source_classification"],
@@ -284,13 +317,19 @@ def main():
             "structural_absorption": "common_axis",
             "wall_orientation_relaxation": bool(
                 args.wall_orientation_relaxation or args.wall_glide),
+            "wall_order_relaxation": bool(
+                args.wall_order_relaxation or args.wall_glide),
             "wall_glide": bool(args.wall_glide),
+            "wall_glide_maximum_edge_fraction": (
+                args.wall_glide_maximum_edge_fraction),
             "dipole_wall_organization": bool(args.dipole_wall_organization),
             "source_mode": args.source_mode,
             "source_seed": args.source_seed,
             "wall_nye_match_coefficient_J_m": (
                 wall_parameters.wall_nye_match_coefficient_J_m),
             "wall_nye_match_length_m": match_length,
+            "wall_order_support_threshold": args.wall_order_support_threshold,
+            "wall_order_max_iterations": args.wall_order_max_iterations,
         },
         "before_directional_audit": before,
         "after_directional_audit": after,

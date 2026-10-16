@@ -1078,6 +1078,10 @@ def advance_complete_multigrain_interval(
             0.0 if dipole_wall is None else dipole_wall.maximum_rate_s),
         "conservative_dipole_wall_internal_substeps": (
             0 if dipole_wall is None else dipole_wall.internal_substeps),
+        "conservative_dipole_wall_backtracks": (
+            0 if dipole_wall is None else dipole_wall.backtracks),
+        "conservative_dipole_wall_delta_helmholtz_J": (
+            0.0 if dipole_wall is None else dipole_wall.delta_helmholtz_J),
         "conservative_dipole_wall_relative_first_law_residual": (
             0.0 if dipole_wall is None or not dipole_wall.accepted
             else dipole_wall.relative_first_law_residual),
@@ -1095,6 +1099,8 @@ def advance_complete_multigrain_interval(
             0 if wall_glide is None else wall_glide.internal_substeps),
         "conservative_wall_glide_backtracks": (
             0 if wall_glide is None else wall_glide.backtracks),
+        "conservative_wall_glide_delta_helmholtz_J": (
+            0.0 if wall_glide is None else wall_glide.delta_helmholtz_J),
         "conservative_wall_glide_relative_first_law_residual": (
             0.0 if wall_glide is None or not wall_glide.accepted
             else wall_glide.relative_first_law_residual),

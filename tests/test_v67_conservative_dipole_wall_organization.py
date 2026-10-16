@@ -29,6 +29,7 @@ def test_pair_separation_is_nonnegative_and_conserves_each_signed_inventory():
         owner.mobile_minus_m2+owner.wall_minus_m2, dtype=np.longdouble)
     result, moved, _ = _checkerboard_pair_separation_pass(
         owner, chemical, np.full((8, 8), 1000.0),
+        np.ones((8, 8)),
         np.ones((8, 8), dtype=bool), 2e-8, 0, 0,
         ConservativeDipoleWallParameters())
     assert moved > 0.0
@@ -53,11 +54,49 @@ def test_pair_separation_is_inactive_when_event_is_uphill():
     }
     result, moved, _ = _checkerboard_pair_separation_pass(
         owner, chemical, np.full((8, 8), 1000.0),
+        np.ones((8, 8)),
         np.ones((8, 8), dtype=bool), 2e-8, 0, 0,
         ConservativeDipoleWallParameters())
     assert moved == 0.0
     np.testing.assert_array_equal(result.mobile_plus_m2, owner.mobile_plus_m2)
     np.testing.assert_array_equal(result.wall_minus_m2, owner.wall_minus_m2)
+
+
+def test_pair_separation_conserves_support_weighted_owner_inventory():
+    _, _, _, owner, _ = fixture(8)
+    owner = replace(
+        owner, mobile_plus_m2=np.full_like(owner.mobile_plus_m2, 1.0e13),
+        mobile_minus_m2=np.full_like(owner.mobile_minus_m2, 1.0e13))
+    shape = owner.mobile_plus_m2.shape
+    chemical = {
+        "mobile_plus_mu_J_m": np.full(shape, 2.0e-9),
+        "mobile_minus_mu_J_m": np.full(shape, 2.0e-9),
+        "wall_plus_mu_J_m": np.full(shape, 1.0e-9),
+        "wall_minus_mu_J_m": np.full(shape, 1.0e-9),
+    }
+    # Even rows are the parity-zero donors.  Raw-density transfer across this
+    # support jump would not conserve the common physical inventory eta*rho.
+    support = np.ones((8, 8))
+    support[::2] = .2
+    plus_before = np.sum(
+        support[..., None]
+        *(owner.mobile_plus_m2+owner.wall_plus_m2), dtype=np.longdouble)
+    minus_before = np.sum(
+        support[..., None]
+        *(owner.mobile_minus_m2+owner.wall_minus_m2), dtype=np.longdouble)
+    result, moved, _ = _checkerboard_pair_separation_pass(
+        owner, chemical, np.full((8, 8), 1000.0), support,
+        np.ones((8, 8), dtype=bool), 2e-8, 0, 0,
+        ConservativeDipoleWallParameters())
+    assert moved > 0.0
+    np.testing.assert_allclose(np.sum(
+        support[..., None]
+        *(result.mobile_plus_m2+result.wall_plus_m2), dtype=np.longdouble),
+        plus_before, rtol=2e-15, atol=1.0)
+    np.testing.assert_allclose(np.sum(
+        support[..., None]
+        *(result.mobile_minus_m2+result.wall_minus_m2), dtype=np.longdouble),
+        minus_before, rtol=2e-15, atol=1.0)
 
 
 def test_capture_reach_is_physical_and_includes_diffuse_boundary_donor():
@@ -92,6 +131,7 @@ def test_multicell_loop_span_preserves_each_signed_inventory():
         owner.mobile_minus_m2+owner.wall_minus_m2, dtype=np.longdouble)
     result, moved, _ = _checkerboard_pair_separation_pass(
         owner, chemical, np.full((8, 8), 1000.0),
+        np.ones((8, 8)),
         np.ones((8, 8), dtype=bool), 2e-8, 0, 0,
         ConservativeDipoleWallParameters(), offset_cells=2)
     assert moved > 0.0
