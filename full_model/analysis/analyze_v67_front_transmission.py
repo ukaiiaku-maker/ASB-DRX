@@ -60,9 +60,15 @@ def main():
     baseline_result_path = args.inherited_baseline/"result.json"
     baseline_checkpoint_path = args.inherited_baseline/"checkpoint_latest.npz"
     baseline_result = json.loads(baseline_result_path.read_text())
+    baseline_decision = baseline_result["decision"]
     baseline = _directional_bias(
         baseline_result["after_directional_audit"], args.grain_id)
     baseline_checkpoint_sha256 = _sha(baseline_checkpoint_path)
+    baseline_hard = bool(
+        baseline_result["source_tree_clean"]
+        and baseline_decision["first_law_hard_balance_passed"]
+        and baseline_decision["mura_hard_balance_passed"]
+        and baseline_decision["grain_ids_unchanged"])
     cases = {
         "transmission_0": _case(args.complete_absorption, args.grain_id),
         "transmission_0p25_one": _case(args.partial_one, args.grain_id),
@@ -84,24 +90,30 @@ def main():
             "checkpoint_sha256": baseline_checkpoint_sha256,
             "source_commit": baseline_result["source_commit"],
             "source_tree_clean": baseline_result["source_tree_clean"],
+            "hard_audits_passed": baseline_hard,
             "directional_bias": baseline,
         },
         "cases": cases,
         "decision": {
             "same_parent_checkpoint": common_restart,
-            "all_hard_audits_passed": all(
-                case["hard_audits_passed"] for case in cases.values()),
+            "all_hard_audits_passed": bool(
+                baseline_hard and all(
+                    case["hard_audits_passed"] for case in cases.values())),
             "complete_absorption_endpoint_bias_Pa": cases[
                 "transmission_0"]["after_bias"]["net_growth_minus_shrink_Pa"],
             "partial_absorption_endpoint_bias_Pa": endpoint,
             "partial_absorption_target_area_change_m2": partial[
                 "target_area_change_m2"],
             "partial_absorption_sustains_positive_RX_bias": bool(
-                baseline_bias <= 0.0 < endpoint
+                common_restart and baseline_hard
+                and all(case["hard_audits_passed"] for case in cases.values())
+                and baseline_bias <= 0.0 < endpoint
                 and partial["target_area_change_m2"] > 0.0),
             "classification": (
                 "FIXED_PARTIAL_ABSORPTION_SUSTAINS_LATE_RX"
-                if baseline_bias <= 0.0 < endpoint
+                if common_restart and baseline_hard
+                and all(case["hard_audits_passed"] for case in cases.values())
+                and baseline_bias <= 0.0 < endpoint
                 and partial["target_area_change_m2"] > 0.0 else
                 "PARTIAL_ABSORPTION_DOES_NOT_SUSTAIN_LATE_RX"),
         },

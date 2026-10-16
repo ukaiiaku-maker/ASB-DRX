@@ -17,6 +17,7 @@
       "net_growth_minus_shrink_Pa": -23421.303679477656
     },
     "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean",
+    "hard_audits_passed": true,
     "result_sha256": "166cf67695c5ef5cac1932db39039c3ff580cdc7f7632f99cc48c5195c263447",
     "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc",
     "source_tree_clean": true
@@ -193,7 +194,7 @@
     }
   },
   "claim_boundary": "Existing-boundary RX discriminator at one lower-rate late state. The 25% transmission fraction is fixed across the horizon and does not depend on rate, time, grain label, or outcome. This does not yet establish spontaneous grain birth or material calibration.",
-  "created_utc": "2026-10-16T16:18:27.244850+00:00",
+  "created_utc": "2026-10-16T16:21:10.478062+00:00",
   "decision": {
     "all_hard_audits_passed": true,
     "classification": "FIXED_PARTIAL_ABSORPTION_SUSTAINS_LATE_RX",
