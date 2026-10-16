@@ -113,14 +113,17 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         > terminal_bath["temperature_range_K"] + 20.0)
     thermal_softening = bool(
         ad_softening >= .05 and ad_softening > bath_softening + .01)
+    persistent_rx_band = bool(
+        matched and chain and controls and hard and ad_persistent and rx_overlap)
     heat_dependent_asb = bool(
-        matched and chain and controls and hard and ad_persistent and rx_overlap
-        and thermal_separation and thermal_softening)
+        persistent_rx_band and thermal_separation and thermal_softening)
     strict_heat_triggered_band = bool(ad_persistent and not bath_persistent)
-    classification = (
-        "QUALIFIED_POLYCRYSTAL_DRX_WITH_HEAT_DEPENDENT_ASB"
-        if heat_dependent_asb
-        else "LATE_HORIZON_POLYCRYSTAL_RESPONSE_NOT_YET_QUALIFIED")
+    if heat_dependent_asb:
+        classification = "QUALIFIED_POLYCRYSTAL_DRX_WITH_HEAT_DEPENDENT_ASB"
+    elif persistent_rx_band:
+        classification = "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING"
+    else:
+        classification = "LATE_HORIZON_POLYCRYSTAL_RESPONSE_NOT_YET_QUALIFIED"
     return {
         "schema": "v67-poly-rx-asb-long-horizon-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -141,6 +144,8 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
                 thermal_separation),
         },
         "decision": {
+            "persistent_physical_band_with_existing_boundary_rx": (
+                persistent_rx_band),
             "heat_dependent_polycrystal_asb_with_rx": heat_dependent_asb,
             "strict_heat_triggered_terminal_band": strict_heat_triggered_band,
             "classification": classification,

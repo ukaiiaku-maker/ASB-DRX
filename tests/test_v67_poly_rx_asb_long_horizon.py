@@ -43,7 +43,11 @@ def test_heat_dependent_persistent_asb_with_rx_qualifies():
 def test_geometric_band_without_softening_does_not_qualify():
     result = classify(
         _series("adiabatic", soften=False), _series("strong_bath"))
+    assert result["decision"][
+        "persistent_physical_band_with_existing_boundary_rx"]
     assert not result["decision"]["heat_dependent_polycrystal_asb_with_rx"]
+    assert result["decision"]["classification"] == (
+        "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING")
 
 
 def test_bath_band_separates_strict_trigger_from_thermal_asb():
