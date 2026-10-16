@@ -47,6 +47,10 @@ from .lattice_interface_absorption import (
 from .wall_orientation_relaxation import (
     evaluate_wall_orientation_relaxation,
 )
+from .implicit_wall_order_relaxation import (
+    ImplicitWallOrderRelaxationParameters,
+    evaluate_implicit_wall_order_relaxation,
+)
 from .structural_interface_network import (
     JunctionDisclinationParameters, initialize_structural_interfaces,
     interface_lengths_m,
@@ -90,6 +94,8 @@ class CoupledMultigrainContext:
     lattice_absorption_mode: str = "disabled"
     wall_orientation_relaxation_parameters: object | None = None
     wall_orientation_relaxation_mode: str = "disabled"
+    wall_order_relaxation_parameters: object | None = None
+    wall_order_relaxation_mode: str = "disabled"
 
 
 def endpoint_observables(state, load: float,
@@ -253,10 +259,17 @@ def advance_complete_multigrain_interval(
         time.perf_counter()-structural_absorption_started)
     energy_before = dict(energy_base, mean_strain=strain0)
     mechanical_started = time.perf_counter()
+    mechanical_wall_parameters = context.wall_parameters
+    if context.wall_order_relaxation_mode != "disabled":
+        # The independently audited implicit transaction owns q for this
+        # physical interval; transport/reactions/slip retain their production
+        # equations and cannot double-advance the stiff ordering channel.
+        mechanical_wall_parameters = replace(
+            context.wall_parameters, wall_order_enabled=False)
     mechanical = advance_energy_qualified_mechanics(
         mechanical_parent_state, mean_strain_before=strain0,
         mean_strain_candidate=strain1, systems=context.systems,
-        topologies=context.topologies, wall_parameters=context.wall_parameters,
+        topologies=context.topologies, wall_parameters=mechanical_wall_parameters,
         dt_s=dt, represented_thickness_m=context.represented_thickness_m,
         energy_kwargs=energy_before, maximum_relative_first_law_residual=.05,
         maximum_subdivisions=context.maximum_mechanical_subdivisions,
@@ -367,12 +380,51 @@ def advance_complete_multigrain_interval(
                 runtime.ledger.maximum_source_line_balance_residual_m2,
                 abs(source.line_balance_residual_m2) if source.accepted else 0.0)))
     source_wall_time = time.perf_counter()-source_started
+    wall_order_started = time.perf_counter()
+    wall_order = None
+    ordered_state = source_state
+    if context.wall_order_relaxation_mode != "disabled":
+        if context.wall_order_relaxation_mode != "implicit_arrhenius":
+            raise ValueError("unknown wall-order relaxation mode")
+        parameters = (ImplicitWallOrderRelaxationParameters()
+                      if context.wall_order_relaxation_parameters is None
+                      else context.wall_order_relaxation_parameters)
+        wall_order = evaluate_implicit_wall_order_relaxation(
+            ordered_state, interval_s=dt, mean_strain=strain1,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            topologies=context.topologies, systems=context.systems,
+            wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, parameters=parameters)
+        if wall_order.classification == "REJECTED_WALL_ORDER_FIRST_LAW":
+            raise RuntimeError("wall-order relaxation failed its hard energy audit")
+        if wall_order.accepted:
+            ordered_state = wall_order.committed_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            wall_order_relaxation_intervals=(
+                runtime.ledger.wall_order_relaxation_intervals
+                +int(wall_order.accepted)),
+            wall_order_relaxation_inactive_intervals=(
+                runtime.ledger.wall_order_relaxation_inactive_intervals
+                +int(wall_order.classification.startswith("INACTIVE"))),
+            wall_order_relaxation_rejected_intervals=(
+                runtime.ledger.wall_order_relaxation_rejected_intervals
+                +int(wall_order.classification.startswith("REJECTED"))),
+            cumulative_wall_order_relaxation_heat_J=(
+                runtime.ledger.cumulative_wall_order_relaxation_heat_J
+                +(wall_order.generated_heat_J if wall_order.accepted else 0.0)),
+            maximum_wall_order_relaxation_first_law_residual=max(
+                runtime.ledger.maximum_wall_order_relaxation_first_law_residual,
+                wall_order.relative_first_law_residual
+                if wall_order.accepted else 0.0)))
+    wall_order_wall_time = time.perf_counter()-wall_order_started
     # The neutral sink is a distinct zero-work physical channel. It follows
     # line creation so a same-site source/sink hypothesis has an unambiguous
     # operator order and separate line/heat ledgers.
     sink_started = time.perf_counter()
     sink = None
-    sink_state = source_state
+    sink_state = ordered_state
     if context.sink_mode != "disabled":
         if context.sink_parameters is None:
             raise ValueError("enabled sink mode requires sink parameters")
@@ -644,6 +696,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if source is None or not source.accepted
             else np.asarray(source.heat_source_J_by_cell)),
+        "wall_order_relaxation_heat_J": (
+            0.0 if wall_order is None or not wall_order.accepted
+            else wall_order.generated_heat_J),
+        "wall_order_relaxation_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if wall_order is None or not wall_order.accepted
+            else np.asarray(wall_order.heat_source_J_by_cell)),
         "sink_heat_J": (0.0 if sink is None or not sink.accepted
                          else sink.generated_heat_J),
         "sink_heat_J_by_cell": (
@@ -727,6 +786,21 @@ def advance_complete_multigrain_interval(
         "source_line_balance_residual_m2": (
             0.0 if source is None or not source.accepted
             else source.line_balance_residual_m2),
+        "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
+        "wall_order_relaxation_classification": (
+            "DISABLED" if wall_order is None else wall_order.classification),
+        "wall_order_relaxation_fractions": (
+            {} if wall_order is None else wall_order.owner_fraction_by_id),
+        "wall_order_relaxation_rates_s": (
+            {} if wall_order is None else wall_order.owner_rate_s_by_id),
+        "wall_order_relaxation_target_energy_changes_J": (
+            {} if wall_order is None
+            else wall_order.owner_target_energy_change_J_by_id),
+        "wall_order_relaxation_backtracks": (
+            0 if wall_order is None else wall_order.backtracks),
+        "wall_order_relaxation_relative_first_law_residual": (
+            0.0 if wall_order is None or not wall_order.accepted
+            else wall_order.relative_first_law_residual),
         "sink_mode": context.sink_mode,
         "sink_classification": ("DISABLED" if sink is None
                                 else sink.classification),
@@ -807,6 +881,7 @@ def advance_complete_multigrain_interval(
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
+            "wall_order_relaxation_map": wall_order_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
             "structural_absorption_map": structural_absorption_wall_time,
@@ -814,7 +889,8 @@ def advance_complete_multigrain_interval(
             "wall_orientation_relaxation_map": wall_orientation_wall_time,
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
-            "accounted_total": (mechanical_wall_time+source_wall_time+sink_wall_time
+            "accounted_total": (mechanical_wall_time+source_wall_time
+                                +wall_order_wall_time+sink_wall_time
                                 +interface_sink_wall_time
                                 +structural_absorption_wall_time+front_wall_time
                                 +lattice_absorption_wall_time

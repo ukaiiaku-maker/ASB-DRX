@@ -44,6 +44,9 @@ from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
 )
 from full_model.production.multigrain_common_state import MultiGrainCommonState
+from full_model.production.implicit_wall_order_relaxation import (
+    ImplicitWallOrderRelaxationParameters,
+)
 from full_model.production.multigrain_production import MultiGrainProductionRuntime
 from full_model.production.orientation_wall_compatibility import (
     evaluate_orientation_wall_compatibility, ordered_wall_nye_from_common,
@@ -181,13 +184,32 @@ def main():
         lattice_absorption_mode="disabled",
         wall_orientation_relaxation_mode="ordered_nye",
         wall_orientation_relaxation_parameters=(
-            WallOrientationRelaxationParameters()))
+            WallOrientationRelaxationParameters()),
+        wall_order_relaxation_mode=(
+            "implicit_arrhenius" if args.collective_wall_nucleation
+            else "disabled"),
+        wall_order_relaxation_parameters=(
+            ImplicitWallOrderRelaxationParameters()
+            if args.collective_wall_nucleation else None))
     runtime = (loaded_runtime
                if args.initial_state == "continued_single_crystal"
                else MultiGrainProductionRuntime(()))
     endpoint = make_endpoint(single, runtime, initial_load, context)
     initial = owner
     records = []
+    source_commit = subprocess.check_output(
+        ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
+    progress_configuration = dict(configuration)
+    progress_configuration.update(
+        schema="v67-single-owner-random-source-v1",
+        owner_id=active_owner_id, initial_state=args.initial_state,
+        intervals=args.intervals, dt_s=args.dt,
+        shear_rate_s=args.shear_rate, source_mode=args.source_mode,
+        source_seed=args.source_seed,
+        source_bulk_site_density_m2=args.source_site_density_m2,
+        collective_wall_nucleation=args.collective_wall_nucleation,
+        wall_order_relaxation_mode=context.wall_order_relaxation_mode,
+        wall_nye_match_coefficient_J_m=2.0e-5)
     for index in range(1, args.intervals+1):
         interval = advance_complete_multigrain_interval(
             endpoint, args.dt, context)
@@ -227,6 +249,17 @@ def main():
                 "source_line_balance_residual_m2"],
             "mechanical_relative_first_law_residual": interval.audit[
                 "mechanical_relative_first_law_residual"],
+            "wall_order_classification": interval.audit[
+                "wall_order_relaxation_classification"],
+            "wall_order_fraction": interval.audit[
+                "wall_order_relaxation_fractions"].get(active_owner_id, 0.0),
+            "wall_order_rate_s": interval.audit[
+                "wall_order_relaxation_rates_s"].get(active_owner_id, 0.0),
+            "wall_order_target_energy_change_J": interval.audit[
+                "wall_order_relaxation_target_energy_changes_J"].get(
+                    active_owner_id, 0.0),
+            "wall_order_relative_first_law_residual": interval.audit[
+                "wall_order_relaxation_relative_first_law_residual"],
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fraction": interval.audit[
@@ -256,24 +289,26 @@ def main():
                 0.0 if nucleus is None else nucleus.relative_first_law_residual),
         })
         print(json.dumps(records[-1]), flush=True)
+        # Publish each accepted endpoint atomically.  A disconnect can lose at
+        # most the currently executing interval, never the complete prefix.
+        progress = args.out/"checkpoint_latest.npz"
+        temporary = args.out/"checkpoint_latest.tmp.npz"
+        _save_checkpoint(
+            temporary, endpoint.state, endpoint.runtime, step+index,
+            endpoint.load, initial_volume, progress_configuration,
+            {"source_commit": source_commit,
+             "parent_provenance": provenance},
+            diagnostic_arrays={
+                "diagnostic_v67_records_json": np.asarray(json.dumps(records))})
+        os.replace(temporary, progress)
     final = endpoint.state.owners[0]
-    result_configuration = dict(configuration)
-    result_configuration.update(
-        schema="v67-single-owner-random-source-v1",
-        owner_id=active_owner_id, initial_state=args.initial_state,
-        intervals=args.intervals, dt_s=args.dt,
-        shear_rate_s=args.shear_rate, source_mode=args.source_mode,
-        source_seed=args.source_seed,
-        source_bulk_site_density_m2=args.source_site_density_m2,
-        collective_wall_nucleation=args.collective_wall_nucleation,
-        wall_nye_match_coefficient_J_m=2.0e-5)
+    result_configuration = progress_configuration
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
         temporary, endpoint.state, endpoint.runtime, step+args.intervals,
         endpoint.load, initial_volume, result_configuration,
-        {"source_commit": subprocess.check_output(
-            ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip(),
+        {"source_commit": source_commit,
          "parent_provenance": provenance})
     os.replace(temporary, checkpoint)
     recognitions = _recognitions(final, systems, spacing)
@@ -298,6 +333,7 @@ def main():
             "source_mode": args.source_mode, "source_seed": args.source_seed,
             "source_bulk_site_density_m2": args.source_site_density_m2,
             "collective_wall_nucleation": args.collective_wall_nucleation,
+            "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
             "source_parameters": asdict(source_parameters),
             "wall_nye_match_coefficient_J_m": 2.0e-5,
             "polarized_wall_absorption_enabled": (
@@ -322,6 +358,7 @@ def main():
             "all_hard_balances_passed": all(
                 row["source_relative_first_law_residual"] < .05
                 and row["mechanical_relative_first_law_residual"] < .05
+                and row["wall_order_relative_first_law_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records),
             "accepted_collective_wall_events": sum(

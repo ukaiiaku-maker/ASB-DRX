@@ -141,6 +141,11 @@ class MultiGrainProductionLedger:
     wall_orientation_relaxation_rejected_intervals: int = 0
     cumulative_wall_orientation_relaxation_heat_J: float = 0.0
     maximum_wall_orientation_relaxation_first_law_residual: float = 0.0
+    wall_order_relaxation_intervals: int = 0
+    wall_order_relaxation_inactive_intervals: int = 0
+    wall_order_relaxation_rejected_intervals: int = 0
+    cumulative_wall_order_relaxation_heat_J: float = 0.0
+    maximum_wall_order_relaxation_first_law_residual: float = 0.0
 
 
 @dataclass(frozen=True)
