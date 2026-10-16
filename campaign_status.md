@@ -3148,3 +3148,23 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   relative to its frozen initial volume with the common Arrhenius mechanics.
   Restartable continuation toward 1% growth or a genuine energy reversal is
   the next production calculation.
+
+## V67 fresh-anchor polycrystal recurrence (2026-10-16T21:46:52Z)
+
+- A matched 19.375 K mean-zero thermal imperfection was applied once to the
+  fresh fixed-transmission polycrystal state; all later intervals continue the
+  exact states without reseeding or history reset. Production RX channels and
+  the common Arrhenius EXP-floor Peierls--Taylor--Hall--Petch law are unchanged.
+- At 0.02664 shear the adiabatic member has a physical connected band and the
+  strong-bath member does not. By 0.03464 both bands dissolve. At 0.05064 both
+  controls independently reform connected bands, so the terminal response is
+  a mechanical recurrence rather than strict heat-triggered polycrystal ASB.
+- Across the three analyzed chunks, the adiabatic member spends 43 intervals
+  in a physical band versus 25 for the bath. Heat advances initial onset and
+  increases exposure even though it is not required for terminal recurrence.
+- Existing-boundary grain-20 growth intersects the active band in both terminal
+  controls. Absorption, Mura, first-law, grain-identity, endpoint, bath-rate,
+  and checkpoint-chain audits pass. Persistent banding is not yet claimed.
+- The exact adiabatic state is advancing to 0.06664 shear. Its matched bath
+  continuation runs next, followed by atomic chunks toward the approximately
+  0.1-shear localization horizon.

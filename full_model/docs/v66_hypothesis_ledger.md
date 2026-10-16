@@ -1158,3 +1158,17 @@ experiment, result, limitation, and next branch.
   while existing-boundary RX intersects it. The canonical classifier now also
   requires zero adiabatic bath rate and a strictly positive strong-bath rate.
   The mislabeled continuation is superseded, not used as evidence.
+
+## 2026-10-16T21:46:52Z — H16 fresh-anchor polycrystal recurrence
+
+- Hypothesis: the finite-amplitude single-crystal ASB basin can coexist with
+  production existing-boundary RX in the fresh polycrystal, with heat changing
+  band onset or persistence under otherwise identical mechanics.
+- Result: the adiabatic branch bands first at 0.02664 shear while the 5e9/s
+  bath branch does not. Both dissolve by 0.03464 and both recur by 0.05064.
+  Cumulative band-active exposure is 43 versus 25 intervals, respectively.
+- Existing-boundary growth intersects the terminal recurrent band in both
+  controls and every declared hard balance closes. H16 therefore supports
+  recurrent mechanical RX/band coexistence with thermal timing modulation. It
+  rejects strict heat-triggered polycrystal ASB at this endpoint and leaves
+  late-horizon persistence as the active discriminator.

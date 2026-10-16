@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T19:54:37Z",
+  "last_updated_utc": "2026-10-16T21:46:52Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -51,7 +51,7 @@
     "G01": "one_immutable_common_framework_now_supports_existing_boundary_dynamic_and_retained_static_RX_a_lower_rate_RX_advantage_and_grid_timestep_qualified_heat_triggered_single_crystal_ASB;_spontaneous_birth_remains_absent",
     "G02": "fixed_0p25_front_transmission_from_the_fresh_zero_load_anchor_reaches_1p32550_percent_monotone_dynamic_existing_boundary_RX_and_the_matched_2_per_s_increment_grows_8p0537_times_more_than_20_per_s",
     "G03": "mean_zero_20_K_subcritical_single_crystal_seed_forms_an_adiabatic_connected_band_but_not_a_strong_bath_band;_n32_n48_and_2_ns_1_ns_errors_are_below_0p38_percent",
-    "G04": "lower_rate_RX_advantage_higher_rate_heat_triggered_ASB_and_n64_existing_boundary_RX_intersection_with_an_active_high_rate_band_are_demonstrated_under_the_same_law;_the_polycrystal_band_is_mechanically_formed_and_thermally_amplified",
+    "G04": "lower_rate_RX_advantage_higher_rate_heat_triggered_single_crystal_ASB_and_polycrystal_existing_boundary_RX_intersection_with_recurrent_active_high_rate_bands_are_demonstrated_under_the_same_law;_polycrystal_heat_advances_onset_and_exposure_but_does_not_uniquely_trigger_the_band",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "fixed_0p25_transmission_candidate_adds_0p03298_percent_growth_during_a_no_reset_15_microsecond_zero_rate_hold_after_crossing_one_percent_dynamically_with_terminal_bias_plus_0p91856_MPa"
   },
@@ -70,17 +70,18 @@
     "H12": "fixed_0p25_front_transmission_from_the_same_late_state_restores_plus_1p126_MPa_bias_then_reaches_1p00329_percent_dynamic_growth_and_1p03628_percent_after_a_no_reset_zero_rate_hold_with_all_hard_ledgers_passed",
     "H13": "fresh_zero_load_anchor_replay_with_0p25_transmission_fixed_from_the_first_front_event_reaches_1p32550_percent_growth_and_removes_the_late_parameter_handoff_from_the_claim",
     "H14": "the_n64_high_rate_production_RX_pair_has_existing_boundary_growth_intersecting_a_connected_active_band_in_both_adiabatic_and_bath_controls;_heat_amplifies_power_and_temperature_but_does_not_trigger_that_polycrystal_band",
-    "H15": "a_subcritical_mean_zero_20_K_single_crystal_imperfection_forms_a_persistent_adiabatic_band_and_5p68_percent_softening_while_the_exact_strong_bath_control_remains_uniform;_the_response_is_grid_and_timestep_qualified_but_not_a_zero_imperfection_claim"
+    "H15": "a_subcritical_mean_zero_20_K_single_crystal_imperfection_forms_a_persistent_adiabatic_band_and_5p68_percent_softening_while_the_exact_strong_bath_control_remains_uniform;_the_response_is_grid_and_timestep_qualified_but_not_a_zero_imperfection_claim",
+    "H16": "the_fresh_anchor_19p375_K_polycrystal_pair_shows_heat_advanced_early_band_onset_and_43_versus_25_active_intervals_through_0p05064_shear_but_both_controls_dissolve_and_recur;_existing_boundary_RX_intersects_the_recurrent_bands_and_strict_heat_triggered_polycrystal_ASB_is_not_yet_supported"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": null,
-      "case": null,
-      "status": "idle_after_corrected_n64_bath_replay",
-      "last_case": "v67_n64_overlap_bath_production_tx0p25_25_repaired",
-      "last_start_local": "2026-10-16T12:27:00-07:00",
-      "last_source_commit": "747cbc0",
-      "last_output": "full_model/verification/v67_n64_overlap_bath_production_tx0p25_25_repaired"
+      "pid": 85397,
+      "case": "v67_poly_rx_asb_seed19p375_ad_400",
+      "status": "running_adiabatic_continuation_to_0p06664_shear",
+      "last_case": "v67_poly_rx_asb_seed19p375_bath_300",
+      "last_start_local": "2026-10-16T14:45:39-07:00",
+      "last_source_commit": "78f61bf",
+      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_ad_400"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -91,13 +92,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15"],
-    "physical_uncertainty": "whether_the_grid_timestep_qualified_thermal_ASB_basin_and_existing_boundary_RX_remain_simultaneously_active_when_the_bracketed_thermal_seed_is_applied_to_the_fresh_anchor_polycrystal",
-    "next_executable_experiment": "fork_the_fresh_anchor_0p25_transmission_polycrystal_into_matched_high_rate_adiabatic_and_strong_bath_cases_with_the_fixed_19p375_K_mean_zero_seed_and_production_RX_channels",
-    "source_identity": "747cbc0_with_repaired_nonzero_bath_rate_restart_routing;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged",
-    "expected_discriminatory_observation": "simultaneous_existing_boundary_growth_and_a_persistent_adiabatic_band_with_the_strong_bath_control_quantifying_the_mechanical_polycrystal_contribution",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16"],
+    "physical_uncertainty": "whether_the_recurrent_polycrystal_power_bands_become_persistent_near_the_later_0p1_shear_horizon_and_whether_adiabatic_heat_changes_persistence_or_only_onset_timing",
+    "next_executable_experiment": "continue_the_exact_matched_19p375_K_adiabatic_and_strong_bath_polycrystal_states_in_100_interval_atomic_chunks_first_to_0p06664_then_toward_0p1_shear_while_reclassifying_band_persistence_and_RX_overlap",
+    "source_identity": "bfea805_analysis_checkpoint_over_unchanged_78f61bf_production_runner;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged",
+    "expected_discriminatory_observation": "persistent_connected_bands_and_existing_boundary_RX_in_both_or_only_the_adiabatic_branch_at_a_matched_late_horizon_with_all_first_law_Mura_and_identity_audits_closed",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "fresh_anchor_existing_boundary_RX_lower_rate_advantage_retained_static_RX_corrected_n64_RX_band_coexistence_and_grid_timestep_qualified_prepared_single_crystal_ASB_are_positive;_ASB_onset_is_15_to_17p5_K_and_20_interval_persistence_is_18p75_to_19p375_K"
+    "result_status": "through_0p05064_shear_the_fresh_anchor_pair_has_recurrent_mechanical_RX_band_coexistence_with_adiabatic_onset_and_exposure_advanced_43_to_25_intervals;_the_exact_late_horizon_continuation_is_running"
   },
   "continuation_rule": {
     "active": true,
