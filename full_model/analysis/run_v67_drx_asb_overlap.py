@@ -197,6 +197,25 @@ def main():
     initial_orientations = np.asarray([
         np.mean(owner.orientation_rad) for owner in state.owners])
     initial_power, initial_band, initial_metrics = _band(endpoint)
+    commit = subprocess.check_output(
+        ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
+    output_configuration = dict(configuration)
+    output_configuration.update(
+        schema="v67-drx-asb-overlap-v1", target_steps=args.intervals,
+        parent_checkpoint=str(args.checkpoint.resolve()),
+        rx_enabled=rx_enabled,
+        interface_neutral_sink_enabled=bool(args.interface_neutral_sink),
+        production_rx_enabled=bool(args.production_rx),
+        front_transmission_fraction=float(
+            context.front_kinetics.transfer_law.transmission_fraction),
+        lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
+        lattice_capture_distance_m=args.capture_distance,
+        structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
+    output_configuration.update(
+        wall_orientation_relaxation_mode=(
+            "ordered_nye" if orientation_enabled else "disabled"),
+        wall_nye_match_coefficient_J_m=(
+            wall_parameters.wall_nye_match_coefficient_J_m))
     growth_inside = np.zeros(len(state.owners))
     growth_outside = np.zeros(len(state.owners))
     active_band_intervals = 0
@@ -261,6 +280,15 @@ def main():
                 "wall_orientation_fractions": interval.audit[
                     "wall_orientation_relaxation_fractions"],
             })
+        temporary = args.out/"checkpoint_latest.tmp.npz"
+        _save_checkpoint(
+            temporary, endpoint.state, endpoint.runtime, step+index,
+            endpoint.load, initial_volume, output_configuration,
+            {"source_commit": commit, "parent_provenance": provenance},
+            diagnostic_arrays={
+                "diagnostic_v67_overlap_records_json": np.asarray(
+                    json.dumps(records))})
+        os.replace(temporary, args.out/"checkpoint_latest.npz")
     final_power, final_band, final_metrics = _band(endpoint)
     final_supports = np.asarray(endpoint.state.supports)
     final_orientations = np.asarray([
@@ -281,25 +309,6 @@ def main():
         if lattice_heat_total_J > 0.0 else 0.0)
     lattice_heat_band_enrichment = (
         lattice_heat_inside_fraction/max(mean_active_band_fraction, 1e-300))
-    commit = subprocess.check_output(
-        ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
-    output_configuration = dict(configuration)
-    output_configuration.update(
-        schema="v67-drx-asb-overlap-v1", target_steps=args.intervals,
-        parent_checkpoint=str(args.checkpoint.resolve()),
-        rx_enabled=rx_enabled,
-        interface_neutral_sink_enabled=bool(args.interface_neutral_sink),
-        production_rx_enabled=bool(args.production_rx),
-        front_transmission_fraction=float(
-            context.front_kinetics.transfer_law.transmission_fraction),
-        lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
-        lattice_capture_distance_m=args.capture_distance,
-        structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
-    output_configuration.update(
-        wall_orientation_relaxation_mode=(
-            "ordered_nye" if orientation_enabled else "disabled"),
-        wall_nye_match_coefficient_J_m=(
-            wall_parameters.wall_nye_match_coefficient_J_m))
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
