@@ -67,12 +67,26 @@ def main():
     state, runtime, _, load, _, configuration, provenance = _load_checkpoint(
         args.checkpoint)
     *_, context = _physics(_args_from_configuration(configuration))
+    if configuration.get("wall_nye_match_coefficient_J_m") is not None:
+        context = replace(context, wall_parameters=replace(
+            context.wall_parameters,
+            wall_nye_match_coefficient_J_m=float(
+                configuration["wall_nye_match_coefficient_J_m"])))
     zero = np.zeros_like(state.owners[0].beta_p)
     baseline_energy = _energy(state, runtime, load, context, zero)
     baseline_bias = _directional_bias(
         _directional_audit(make_endpoint(state, runtime, load, context),
                            context, fraction=2e-4), args.grain_id)[
         "net_growth_minus_shrink_Pa"]
+    authoritative_result = args.checkpoint.parent/"result.json"
+    authoritative_bias = None
+    if authoritative_result.exists():
+        authoritative_bias = _directional_bias(
+            json.loads(authoritative_result.read_text())["after_directional_audit"],
+            args.grain_id)["net_growth_minus_shrink_Pa"]
+    baseline_matches = bool(
+        authoritative_bias is None
+        or abs(baseline_bias-authoritative_bias) <= 1.0)
     rows = []
     for fraction in (0.05, 0.1, 0.25, 0.5, 0.75, 1.0):
         projection = project_tangential_interface_burgers_to_sliding(
@@ -123,9 +137,11 @@ def main():
         "parent_checkpoint_sha256": _sha(args.checkpoint),
         "parent_provenance": provenance,
         "baseline_directional_growth_minus_shrink_Pa": baseline_bias,
+        "authoritative_directional_growth_minus_shrink_Pa": authoritative_bias,
         "rows": rows,
         "decision": {
             "all_tested_fractions_feasible": len(feasible) == len(rows),
+            "baseline_context_matches_authoritative_result": baseline_matches,
             "best_fraction": best["reaction_fraction"],
             "best_delta_helmholtz_J": best["delta_helmholtz_J"],
             "best_directional_growth_minus_shrink_Pa": best[
@@ -138,6 +154,7 @@ def main():
                 baseline_bias <= 0.0
                 < best["directional_growth_minus_shrink_Pa"]),
             "classification": (
+                "UNQUALIFIED_BASELINE_CONTEXT" if not baseline_matches else
                 "DOWNHILL_MURA_SLIDING_UPPER_BOUND"
                 if best["delta_helmholtz_J"] < 0.0 else
                 "NO_DOWNHILL_MURA_SLIDING_UPPER_BOUND"),

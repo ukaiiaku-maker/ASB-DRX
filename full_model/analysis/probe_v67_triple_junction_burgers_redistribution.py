@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -67,6 +67,11 @@ def main():
         args.checkpoint)
     physics_args = _args_from_configuration(configuration)
     *_, context = _physics(physics_args)
+    if configuration.get("wall_nye_match_coefficient_J_m") is not None:
+        context = replace(context, wall_parameters=replace(
+            context.wall_parameters,
+            wall_nye_match_coefficient_J_m=float(
+                configuration["wall_nye_match_coefficient_J_m"])))
     original_energy = _energy(state, runtime, load, context)
     baseline = project_triple_junction_burgers(
         state, burgers_m=context.wall_parameters.burgers_m,
@@ -78,6 +83,15 @@ def main():
         context, fraction=2e-4)
     baseline_bias = _directional_bias(baseline_audit, args.grain_id)[
         "net_growth_minus_shrink_Pa"]
+    authoritative_result = args.checkpoint.parent/"result.json"
+    authoritative_bias = None
+    if authoritative_result.exists():
+        authoritative_bias = _directional_bias(
+            json.loads(authoritative_result.read_text())["after_directional_audit"],
+            args.grain_id)["net_growth_minus_shrink_Pa"]
+    baseline_matches = bool(
+        authoritative_bias is None
+        or abs(baseline_bias-authoritative_bias) <= 1.0)
     rows = []
     for fraction in (0.1, 0.25, 0.5, 0.75, 1.0):
         projection = project_triple_junction_burgers(
@@ -125,9 +139,11 @@ def main():
         "original_to_capacity_baseline_delta_helmholtz_J": (
             baseline_energy.helmholtz_J-original_energy.helmholtz_J),
         "capacity_baseline_directional_growth_minus_shrink_Pa": baseline_bias,
+        "authoritative_directional_growth_minus_shrink_Pa": authoritative_bias,
         "rows": rows,
         "decision": {
             "hard_vector_balance_passed": hard,
+            "baseline_context_matches_authoritative_result": baseline_matches,
             "best_fraction": best["reaction_fraction"],
             "best_delta_helmholtz_from_capacity_baseline_J": best[
                 "delta_helmholtz_from_capacity_baseline_J"],
@@ -145,11 +161,12 @@ def main():
                 baseline_bias <= 0.0
                 < best["directional_growth_minus_shrink_Pa"]),
             "classification": (
-                "UNQUALIFIED_VECTOR_BALANCE" if not hard else
+                "UNQUALIFIED_BASELINE_CONTEXT" if not baseline_matches else
+                ("UNQUALIFIED_VECTOR_BALANCE" if not hard else
                 ("NO_DOWNHILL_LOCAL_TJ_BURGERS_REACTION" if not downhill else
                  ("DOWNHILL_TJ_REACTION_WITH_DIRECTIONAL_EFFECT"
                   if directional_effect else
-                  "DOWNHILL_TJ_REACTION_NO_DIRECTIONAL_EFFECT"))),
+                  "DOWNHILL_TJ_REACTION_NO_DIRECTIONAL_EFFECT")))),
         },
         "claim_boundary": (
             "Symmetric local three-edge upper-bound probe. The fraction-zero "
