@@ -868,6 +868,29 @@ def advance_complete_multigrain_interval(
                 if lattice_absorption.accepted else 0.0)))
     lattice_absorption_wall_time = (
         time.perf_counter()-lattice_absorption_started)
+    # The retained structural graph owns owner-mean common-axis rotations;
+    # mechanical plastic spin and source kinematics own only intragranular
+    # fluctuations until an explicit GB accommodation transaction is added.
+    # Reapply that existing constraint before the same-interval structural
+    # handoff (rather than only after front motion), otherwise an accepted
+    # high-rate spin increment leaves the edge state stale and the atomic
+    # absorption audit correctly refuses to proceed.
+    pre_post_structural_orientation_sync_max_rad = 0.0
+    if structural_interfaces:
+        means_before_sync = np.asarray([
+            np.mean(owner.orientation_rad)
+            for owner in structural_state.owners])
+        structural_state = synchronize_structural_owner_orientations(
+            structural_state,
+            StructuralMultigrainRuntime(structural_interfaces),
+            spacing_m=context.spacing_m,
+            burgers_m=(
+                context.structural_absorption_parameters.boundary.burgers_m))
+        means_after_sync = np.asarray([
+            np.mean(owner.orientation_rad)
+            for owner in structural_state.owners])
+        pre_post_structural_orientation_sync_max_rad = float(np.max(
+            np.abs(means_after_sync-means_before_sync), initial=0.0))
     # Complete the newly captured lattice -> interface -> structural handoff
     # inside the same physical interval.  The start-of-interval transaction
     # clears retained reservoir content; this second transaction sees only
@@ -1509,6 +1532,8 @@ def advance_complete_multigrain_interval(
         "lattice_absorption_relative_first_law_residual": (
             0.0 if lattice_absorption is None or not lattice_absorption.accepted
             else lattice_absorption.relative_first_law_residual),
+        "pre_post_structural_orientation_sync_max_rad": (
+            pre_post_structural_orientation_sync_max_rad),
         "wall_orientation_relaxation_mode": (
             context.wall_orientation_relaxation_mode),
         "wall_orientation_relaxation_classification": (

@@ -183,6 +183,7 @@ def test_common_axis_structural_absorption_is_persistent_production_state():
         "INACTIVE_NO_COMPATIBLE_INTERFACE_BURGERS")
     assert len(result.endpoint.runtime.structural_interfaces) == len(
         result.endpoint.runtime.interfaces)
+    assert result.audit["pre_post_structural_orientation_sync_max_rad"] < 1e-12
     assert result.endpoint.runtime.ledger.structural_absorption_inactive_intervals == 1
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
 

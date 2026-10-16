@@ -326,6 +326,8 @@ def main():
                 "lattice_absorption_mura_relative_residual"],
             "lattice_first_law_relative_residual": interval.audit[
                 "lattice_absorption_relative_first_law_residual"],
+            "pre_post_structural_orientation_sync_max_rad": interval.audit[
+                "pre_post_structural_orientation_sync_max_rad"],
             "structural_classification": interval.audit[
                 "structural_absorption_classification"],
             "structural_content_change": interval.audit[
