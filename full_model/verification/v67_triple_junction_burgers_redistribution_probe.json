@@ -1,0 +1,225 @@
+{
+  "capacity_baseline_directional_growth_minus_shrink_Pa": 66060.7848048124,
+  "claim_boundary": "Symmetric local three-edge upper-bound probe. The fraction-zero capacity-relaxed state isolates ordinary vector-neutral line removal; only the additional energy change is attributed to conservative Burgers redistribution. No production kinetics, plastic distortion, Nye update, support motion, or label change is asserted.",
+  "created_utc": "2026-10-16T15:42:31.488201+00:00",
+  "decision": {
+    "TJ_redistribution_has_resolved_neighbor_selection_effect": false,
+    "TJ_redistribution_restores_positive_RX_bias_beyond_capacity_baseline": false,
+    "best_delta_helmholtz_from_capacity_baseline_J": -2.9872797637322263e-17,
+    "best_directional_bias_change_from_capacity_baseline_Pa": 0.0,
+    "best_directional_growth_minus_shrink_Pa": 66060.7848048124,
+    "best_fraction": 1.0,
+    "capacity_baseline_restores_positive_RX_bias": true,
+    "classification": "DOWNHILL_TJ_REACTION_NO_DIRECTIONAL_EFFECT",
+    "directional_effect_resolution_Pa": 66.0607848048124,
+    "downhill_beyond_vector_neutral_capacity_relaxation": true,
+    "hard_vector_balance_passed": true
+  },
+  "original_to_capacity_baseline_delta_helmholtz_J": -1.0279438692102295e-15,
+  "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean/checkpoint_latest.npz",
+  "parent_checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+  "parent_provenance": {
+    "parent_provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "campaign": "V67",
+                "scientific_scope": "fresh zero-load polycrystal anchor",
+                "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                "source_dirty": false
+              },
+              "source_commit": "b6f989d1ba8317d276d9e4b86c40e5a64d09d951"
+            },
+            "source_commit": "5e2fdbffd4a04c0ca86c2481b1db4c96abf16d2f"
+          },
+          "source_commit": "0f3f81a8eb6dcfe017987b57f9439aba7b1bc9f7"
+        },
+        "source_commit": "fc8a5a614792750a14b122e51b578bea43e853aa"
+      },
+      "source_commit": "89e429c9ec96c032d89e54ed0154c7226a13b178"
+    },
+    "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc"
+  },
+  "rows": [
+    {
+      "delta_helmholtz_from_capacity_baseline_J": -4.707216346092271e-18,
+      "directional_bias_change_from_capacity_baseline_Pa": 4.989223089069128e-05,
+      "directional_growth_minus_shrink_Pa": 66060.78485470463,
+      "projection": {
+        "capacity_limited_cell_count": 1,
+        "carrier_capacity_after_cell_sum_m2": 1.6056549667121606e+16,
+        "carrier_capacity_before_cell_sum_m2": 1.6337745386720936e+16,
+        "feasible": true,
+        "integrated_vector_balance_m": [
+          [
+            -2.55202109444852e-12,
+            -1.3286559352732041e-12,
+            2.11086703671981e-12
+          ],
+          [
+            -1.3118541355213592e-15,
+            -2.7950732006676304e-16,
+            -6.392354365020864e-16
+          ],
+          [
+            2.431214951581495e-15,
+            1.7941394490949072e-15,
+            -5.057389782566618e-15
+          ]
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_junction_weight": 1.0,
+        "maximum_pointwise_vector_balance_m1": 6.252776074688882e-13,
+        "maximum_realized_coordinate": 0.1,
+        "reaction_fraction": 0.1,
+        "removed_line_cell_sum_m2": 6.168763951949358e+16
+      },
+      "reaction_fraction": 0.1
+    },
+    {
+      "delta_helmholtz_from_capacity_baseline_J": -1.1141402175827633e-17,
+      "directional_bias_change_from_capacity_baseline_Pa": 0.0,
+      "directional_growth_minus_shrink_Pa": 66060.7848048124,
+      "projection": {
+        "capacity_limited_cell_count": 4,
+        "carrier_capacity_after_cell_sum_m2": 1.5672189701187644e+16,
+        "carrier_capacity_before_cell_sum_m2": 1.6337745386720936e+16,
+        "feasible": true,
+        "integrated_vector_balance_m": [
+          [
+            1.0854511733882077e-12,
+            -2.2309619429616845e-12,
+            -2.674083177112152e-12
+          ],
+          [
+            -3.6960248772123505e-15,
+            -1.5034682347833325e-15,
+            3.733517943589615e-15
+          ],
+          [
+            -1.1517208627770392e-15,
+            2.1194238177630817e-15,
+            1.7889742421825505e-15
+          ]
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_junction_weight": 1.0,
+        "maximum_pointwise_vector_balance_m1": 5.684341886080801e-13,
+        "maximum_realized_coordinate": 0.25,
+        "reaction_fraction": 0.25,
+        "removed_line_cell_sum_m2": 6.207199948542755e+16
+      },
+      "reaction_fraction": 0.25
+    },
+    {
+      "delta_helmholtz_from_capacity_baseline_J": -1.9623605180371718e-17,
+      "directional_bias_change_from_capacity_baseline_Pa": 4.989223089069128e-05,
+      "directional_growth_minus_shrink_Pa": 66060.78485470463,
+      "projection": {
+        "capacity_limited_cell_count": 8,
+        "carrier_capacity_after_cell_sum_m2": 1.5165487012744068e+16,
+        "carrier_capacity_before_cell_sum_m2": 1.6337745386720936e+16,
+        "feasible": true,
+        "integrated_vector_balance_m": [
+          [
+            1.42724720930687e-12,
+            -2.922315167630529e-13,
+            3.128830527998616e-12
+          ],
+          [
+            3.791902230577959e-15,
+            -2.237283370175834e-15,
+            9.241129454544417e-16
+          ],
+          [
+            -1.2759433266895659e-15,
+            1.3239633185353067e-15,
+            -4.067953656219925e-15
+          ]
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_junction_weight": 1.0,
+        "maximum_pointwise_vector_balance_m1": 6.821210263296962e-13,
+        "maximum_realized_coordinate": 0.5,
+        "reaction_fraction": 0.5,
+        "removed_line_cell_sum_m2": 6.257870217387112e+16
+      },
+      "reaction_fraction": 0.5
+    },
+    {
+      "delta_helmholtz_from_capacity_baseline_J": -2.571215767175571e-17,
+      "directional_bias_change_from_capacity_baseline_Pa": 4.989223089069128e-05,
+      "directional_growth_minus_shrink_Pa": 66060.78485470463,
+      "projection": {
+        "capacity_limited_cell_count": 17,
+        "carrier_capacity_after_cell_sum_m2": 1.4801774199638734e+16,
+        "carrier_capacity_before_cell_sum_m2": 1.6337745386720936e+16,
+        "feasible": true,
+        "integrated_vector_balance_m": [
+          [
+            3.5082561855581673e-12,
+            1.3394806097632994e-12,
+            4.240385820253323e-12
+          ],
+          [
+            7.533714320787088e-16,
+            2.612258926694682e-15,
+            3.0305009261592797e-15
+          ],
+          [
+            -7.845829021191353e-15,
+            1.3329037512935758e-15,
+            -4.783459327424577e-15
+          ]
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_junction_weight": 1.0,
+        "maximum_pointwise_vector_balance_m1": 1.2505552149377763e-12,
+        "maximum_realized_coordinate": 0.75,
+        "reaction_fraction": 0.75,
+        "removed_line_cell_sum_m2": 6.2942414986976456e+16
+      },
+      "reaction_fraction": 0.75
+    },
+    {
+      "delta_helmholtz_from_capacity_baseline_J": -2.9872797637322263e-17,
+      "directional_bias_change_from_capacity_baseline_Pa": 0.0,
+      "directional_growth_minus_shrink_Pa": 66060.7848048124,
+      "projection": {
+        "capacity_limited_cell_count": 28,
+        "carrier_capacity_after_cell_sum_m2": 1.4553229398828318e+16,
+        "carrier_capacity_before_cell_sum_m2": 1.6337745386720936e+16,
+        "feasible": true,
+        "integrated_vector_balance_m": [
+          [
+            4.7284606785602534e-12,
+            -2.154249001407038e-12,
+            8.245515381588575e-12
+          ],
+          [
+            -5.4104398912457885e-15,
+            7.588288653578683e-16,
+            5.661744402300772e-15
+          ],
+          [
+            8.651933336434325e-17,
+            -6.208175520969889e-16,
+            -7.019423020268589e-15
+          ]
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_junction_weight": 1.0,
+        "maximum_pointwise_vector_balance_m1": 1.2505552149377763e-12,
+        "maximum_realized_coordinate": 1.0,
+        "reaction_fraction": 1.0,
+        "removed_line_cell_sum_m2": 6.319095978778688e+16
+      },
+      "reaction_fraction": 1.0
+    }
+  ],
+  "schema": "v67-triple-junction-burgers-redistribution-probe-v1",
+  "source_commit": "67cd3e48cbf02dcb769a0d972e8534ee64e329b7",
+  "source_tree_clean": true
+}
