@@ -30,7 +30,10 @@ from .complete_multigrain_energy import (
 
 @dataclass(frozen=True)
 class ImplicitWallOrderRelaxationParameters:
-    maximum_fraction_per_interval: float = .15
+    # Implicit energy minimization removes the explicit Euler stability
+    # restriction.  The physical fraction is therefore the Arrhenius
+    # exponential itself; the default cap of one is only a bound guard.
+    maximum_fraction_per_interval: float = 1.0
     owner_support_threshold: float = 1.0e-8
     optimizer_max_iterations: int = 300
     optimizer_gradient_tolerance: float = 1.0e-9

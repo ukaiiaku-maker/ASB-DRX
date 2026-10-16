@@ -44,7 +44,9 @@ def test_implicit_wall_order_is_arrhenius_bounded_downhill_and_first_law_closed(
     assert decision.accepted
     assert decision.classification == (
         "ACCEPTED_IMPLICIT_ARRHENIUS_WALL_ORDER_RELAXATION")
-    assert 0.0 < decision.owner_fraction_by_id[1] <= .15
+    # The zero-stress fixture has a slower EXP-floor clock, but the implicit
+    # path is no longer clipped by the former 0.15 explicit-step cap.
+    assert .15 < decision.owner_fraction_by_id[1] <= 1.0
     assert decision.owner_rate_s_by_id[1] > 0.0
     assert decision.delta_helmholtz_J < 0.0
     assert decision.generated_heat_J > 0.0
