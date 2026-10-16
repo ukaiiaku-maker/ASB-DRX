@@ -18,7 +18,7 @@ def test_local_wall_glide_is_downhill_nonnegative_and_inventory_conservative():
                             owner.wall_minus_m2.shape).copy()
     owner = replace(
         owner, wall_plus_m2=plus, wall_minus_m2=minus,
-        wall_order=np.ones((8, 8)),
+        wall_order=np.full((8, 8), .5),
         temperature_K=np.full((8, 8), 1000.0))
     state = MultiGrainCommonState((1,), np.ones((1, 8, 8)), (owner,))
     before_plus = np.sum(plus, axis=(0, 1), dtype=np.longdouble)
@@ -52,7 +52,7 @@ def test_wall_glide_physical_clock_is_below_five_percent_half_step_error():
         wall_plus_m2=np.asarray(owner.wall_plus_m2)*modulation,
         wall_minus_m2=np.asarray(owner.wall_minus_m2)*np.roll(
             modulation, 2, axis=0),
-        wall_order=np.ones((8, 8)),
+        wall_order=np.full((8, 8), .5),
         temperature_K=np.full((8, 8), 1000.0))
     state = MultiGrainCommonState((1,), np.ones((1, 8, 8)), (owner,))
     common = dict(

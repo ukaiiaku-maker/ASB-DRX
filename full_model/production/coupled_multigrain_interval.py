@@ -58,6 +58,10 @@ from .compatible_wall_reorganization import (
 from .conservative_wall_glide import (
     ConservativeWallGlideParameters, evaluate_conservative_wall_glide,
 )
+from .conservative_dipole_wall_organization import (
+    ConservativeDipoleWallParameters,
+    evaluate_conservative_dipole_wall_organization,
+)
 from .collective_wall_nucleation import (
     CollectiveWallNucleationParameters, evaluate_collective_wall_nucleation,
 )
@@ -110,6 +114,8 @@ class CoupledMultigrainContext:
     compatible_wall_reorganization_mode: str = "disabled"
     conservative_wall_glide_parameters: object | None = None
     conservative_wall_glide_mode: str = "disabled"
+    conservative_dipole_wall_parameters: object | None = None
+    conservative_dipole_wall_mode: str = "disabled"
     collective_wall_nucleation_parameters: object | None = None
     collective_wall_nucleation_mode: str = "disabled"
     collective_wall_nucleation_seed: int = 67
@@ -478,9 +484,62 @@ def advance_complete_multigrain_interval(
                 wall_order.relative_first_law_residual
                 if wall_order.accepted else 0.0)))
     wall_order_wall_time = time.perf_counter()-wall_order_started
+    dipole_wall_started = time.perf_counter()
+    dipole_wall = None
+    dipole_state = ordered_state
+    if context.conservative_dipole_wall_mode != "disabled":
+        if context.conservative_dipole_wall_mode != "neutral_pair_expansion":
+            raise ValueError("unknown conservative dipole-wall mode")
+        parameters = (ConservativeDipoleWallParameters()
+                      if context.conservative_dipole_wall_parameters is None
+                      else context.conservative_dipole_wall_parameters)
+        dipole_wall = evaluate_conservative_dipole_wall_organization(
+            dipole_state, interval_s=dt, mean_strain=strain1,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, parameters=parameters)
+        if dipole_wall.classification.startswith("REJECTED"):
+            raise RuntimeError(
+                "conservative dipole-wall event failed a hard audit")
+        if dipole_wall.accepted:
+            dipole_state = dipole_wall.committed_state
+        maximum_inventory_residual = max(
+            abs(dipole_wall.plus_inventory_residual_m2),
+            abs(dipole_wall.minus_inventory_residual_m2),
+            abs(dipole_wall.line_balance_residual_m2))
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            conservative_dipole_wall_intervals=(
+                runtime.ledger.conservative_dipole_wall_intervals
+                +int(dipole_wall.accepted)),
+            conservative_dipole_wall_inactive_intervals=(
+                runtime.ledger.conservative_dipole_wall_inactive_intervals
+                +int(dipole_wall.classification.startswith("INACTIVE"))),
+            conservative_dipole_wall_rejected_intervals=(
+                runtime.ledger.conservative_dipole_wall_rejected_intervals
+                +int(dipole_wall.classification.startswith("REJECTED"))),
+            conservative_dipole_wall_pair_cell_sum_m2=(
+                runtime.ledger.conservative_dipole_wall_pair_cell_sum_m2
+                +(dipole_wall.separated_pair_cell_sum_m2
+                  if dipole_wall.accepted else 0.0)),
+            cumulative_conservative_dipole_wall_heat_J=(
+                runtime.ledger.cumulative_conservative_dipole_wall_heat_J
+                +(dipole_wall.generated_heat_J
+                  if dipole_wall.accepted else 0.0)),
+            maximum_conservative_dipole_wall_first_law_residual=max(
+                runtime.ledger.
+                maximum_conservative_dipole_wall_first_law_residual,
+                dipole_wall.relative_first_law_residual
+                if dipole_wall.accepted else 0.0),
+            maximum_conservative_dipole_wall_inventory_residual_m2=max(
+                runtime.ledger.
+                maximum_conservative_dipole_wall_inventory_residual_m2,
+                maximum_inventory_residual)))
+    dipole_wall_wall_time = time.perf_counter()-dipole_wall_started
     wall_glide_started = time.perf_counter()
     wall_glide = None
-    glide_state = ordered_state
+    glide_state = dipole_state
     if context.conservative_wall_glide_mode != "disabled":
         if context.conservative_wall_glide_mode != "chemical_edge_glide":
             raise ValueError("unknown conservative wall-glide mode")
@@ -858,6 +917,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if wall_order is None or not wall_order.accepted
             else np.asarray(wall_order.heat_source_J_by_cell)),
+        "conservative_dipole_wall_heat_J": (
+            0.0 if dipole_wall is None or not dipole_wall.accepted
+            else dipole_wall.generated_heat_J),
+        "conservative_dipole_wall_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if dipole_wall is None or not dipole_wall.accepted
+            else np.asarray(dipole_wall.heat_source_J_by_cell)),
         "conservative_wall_glide_heat_J": (
             0.0 if wall_glide is None or not wall_glide.accepted
             else wall_glide.generated_heat_J),
@@ -979,6 +1045,12 @@ def advance_complete_multigrain_interval(
             {} if wall_order is None else wall_order.owner_fraction_by_id),
         "wall_order_relaxation_rates_s": (
             {} if wall_order is None else wall_order.owner_rate_s_by_id),
+        "wall_order_relaxation_disordering_rates_s": (
+            {} if wall_order is None
+            else wall_order.owner_disordering_rate_s_by_id),
+        "wall_order_relaxation_disordering_fractions": (
+            {} if wall_order is None
+            else wall_order.owner_disordering_fraction_by_id),
         "wall_order_relaxation_target_energy_changes_J": (
             {} if wall_order is None
             else wall_order.owner_target_energy_change_J_by_id),
@@ -987,6 +1059,28 @@ def advance_complete_multigrain_interval(
         "wall_order_relaxation_relative_first_law_residual": (
             0.0 if wall_order is None or not wall_order.accepted
             else wall_order.relative_first_law_residual),
+        "conservative_dipole_wall_mode": (
+            context.conservative_dipole_wall_mode),
+        "conservative_dipole_wall_classification": (
+            "DISABLED" if dipole_wall is None else dipole_wall.classification),
+        "conservative_dipole_wall_separated_pair_cell_sum_m2": (
+            0.0 if dipole_wall is None or not dipole_wall.accepted
+            else dipole_wall.separated_pair_cell_sum_m2),
+        "conservative_dipole_wall_plus_inventory_residual_m2": (
+            0.0 if dipole_wall is None
+            else dipole_wall.plus_inventory_residual_m2),
+        "conservative_dipole_wall_minus_inventory_residual_m2": (
+            0.0 if dipole_wall is None
+            else dipole_wall.minus_inventory_residual_m2),
+        "conservative_dipole_wall_line_residual_m2": (
+            0.0 if dipole_wall is None else dipole_wall.line_balance_residual_m2),
+        "conservative_dipole_wall_maximum_rate_s": (
+            0.0 if dipole_wall is None else dipole_wall.maximum_rate_s),
+        "conservative_dipole_wall_internal_substeps": (
+            0 if dipole_wall is None else dipole_wall.internal_substeps),
+        "conservative_dipole_wall_relative_first_law_residual": (
+            0.0 if dipole_wall is None or not dipole_wall.accepted
+            else dipole_wall.relative_first_law_residual),
         "conservative_wall_glide_mode": context.conservative_wall_glide_mode,
         "conservative_wall_glide_classification": (
             "DISABLED" if wall_glide is None else wall_glide.classification),
@@ -1108,6 +1202,7 @@ def advance_complete_multigrain_interval(
             "collective_wall_nucleation_map": collective_wall_wall_time,
             "source_map": source_wall_time,
             "wall_order_relaxation_map": wall_order_wall_time,
+            "conservative_dipole_wall_map": dipole_wall_wall_time,
             "conservative_wall_glide_map": wall_glide_wall_time,
             "compatible_wall_reorganization_map": wall_reorganization_wall_time,
             "sink_map": sink_wall_time,
@@ -1119,7 +1214,8 @@ def advance_complete_multigrain_interval(
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time
                                 +collective_wall_wall_time
-                                +wall_order_wall_time+wall_glide_wall_time
+                                +wall_order_wall_time+dipole_wall_wall_time
+                                +wall_glide_wall_time
                                 +sink_wall_time
                                 +wall_reorganization_wall_time
                                 +interface_sink_wall_time

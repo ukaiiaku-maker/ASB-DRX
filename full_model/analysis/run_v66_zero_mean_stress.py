@@ -27,8 +27,38 @@ from full_model.analysis.run_v58_three_grain_production import (
 from full_model.analysis.run_v66_coupled_rx_asb import (
     _atomic_json, _physics, _record, _source_provenance,
 )
+from full_model.production.arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters,
+)
+from full_model.production.collective_wall_nucleation import (
+    CollectiveWallNucleationParameters,
+)
+from full_model.production.compatible_wall_reorganization import (
+    CompatibleWallReorganizationParameters,
+)
+from full_model.production.conservative_wall_glide import (
+    ConservativeWallGlideParameters,
+)
+from full_model.production.conservative_dipole_wall_organization import (
+    ConservativeDipoleWallParameters,
+)
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
+)
+from full_model.production.implicit_wall_order_relaxation import (
+    ImplicitWallOrderRelaxationParameters,
+)
+from full_model.production.interface_structural_absorption import (
+    InterfaceStructuralAbsorptionParameters,
+)
+from full_model.production.lattice_interface_absorption import (
+    LatticeInterfaceAbsorptionParameters,
+)
+from full_model.production.orientation_wall_compatibility import (
+    evaluate_orientation_wall_compatibility,
+)
+from full_model.production.wall_orientation_relaxation import (
+    WallOrientationRelaxationParameters,
 )
 
 
@@ -50,27 +80,111 @@ def main():
     parser.add_argument("--dt", type=float, default=2e-9)
     parser.add_argument("--probe-strain", type=float, default=1e-4)
     parser.add_argument("--maximum-strain-change", type=float, default=5e-4)
+    parser.add_argument("--minimum-rx-growth-fraction", type=float, default=.01)
     parser.add_argument("--checkpoint-every", type=int, default=100)
+    parser.add_argument("--v67-wall-physics", action="store_true")
+    parser.add_argument("--v67-polycrystal-physics", action="store_true")
+    parser.add_argument("--source-seed", type=int, default=67)
+    parser.add_argument("--nucleation-seed", type=int, default=24)
     args = parser.parse_args()
     args.source = args.source.resolve()
     args.out.mkdir(parents=True, exist_ok=True)
     physical_args = SimpleNamespace(
         n=16, length=4.8e-6, temperature=1000.0,
         shear_rate=0.0, dt=args.dt, interface_width=6e-7)
-    _, _, _, _, _, _, base_context = _physics(physical_args)
+    spacing, _, systems, wall, _, _, base_context = _physics(physical_args)
+    if args.v67_wall_physics and args.v67_polycrystal_physics:
+        parser.error("select only one V67 physics continuation")
+    if args.v67_wall_physics:
+        poisson = wall.c12_Pa/(wall.c11_Pa+wall.c12_Pa)
+        reduced_modulus = wall.c44_Pa/(2.0*np.pi*(1.0-poisson))
+        gb2 = reduced_modulus*wall.burgers_m**2
+        wall = replace(
+            wall,
+            wall_nye_match_coefficient_J_m=wall.c44_Pa*spacing**2,
+            polarized_wall_absorption_enabled=True,
+            polarized_mobile_wall_absorption_enabled=True,
+            groma_family_correlation_energy_J_m=1.25*gb2,
+            groma_gnd_correlation_energy_J_m=.5*gb2,
+            groma_sign_resolved_transport_enabled=True,
+            mobile_correlation_diffusivity_m2_s=0.0,
+            transport_scheme="groma_upwind")
+        base_context = replace(
+            base_context, wall_parameters=wall, front_enabled=False,
+            maximum_mechanical_subdivisions=14,
+            maximum_mechanical_internal_substeps=512,
+            source_parameters=ArrheniusSourceParameters(
+                grain_size_m=physical_args.length, pair_increment_m2=1.0e10),
+            source_mode="random_bulk", source_random_seed=args.source_seed,
+            source_bulk_site_density_m2=1.0e12,
+            sink_mode="disabled", interface_sink_mode="disabled",
+            structural_absorption_mode="disabled",
+            lattice_absorption_mode="disabled",
+            wall_orientation_relaxation_mode="ordered_nye",
+            wall_orientation_relaxation_parameters=(
+                WallOrientationRelaxationParameters()),
+            wall_order_relaxation_mode="implicit_arrhenius",
+            wall_order_relaxation_parameters=(
+                ImplicitWallOrderRelaxationParameters()),
+            compatible_wall_reorganization_mode="frank_bilby_projection",
+            compatible_wall_reorganization_parameters=(
+                CompatibleWallReorganizationParameters(
+                    conservation_mode="burgers_vector")),
+            conservative_wall_glide_mode="chemical_edge_glide",
+            conservative_wall_glide_parameters=ConservativeWallGlideParameters(),
+            collective_wall_nucleation_mode="activated_closed_wall",
+            collective_wall_nucleation_parameters=(
+                CollectiveWallNucleationParameters(
+                    source_site_density_m2=1.0e12,
+                    source_seed=args.source_seed)),
+            collective_wall_nucleation_seed=args.nucleation_seed)
     state, runtime, _, load, _, _, _ = _load_checkpoint(args.source)
+    if args.v67_polycrystal_physics:
+        wall = replace(
+            wall,
+            wall_nye_match_coefficient_J_m=wall.c44_Pa*spacing**2)
+        base_context = replace(
+            base_context, wall_parameters=wall, front_enabled=True,
+            maximum_mechanical_subdivisions=14,
+            maximum_mechanical_internal_substeps=512,
+            source_parameters=ArrheniusSourceParameters(grain_size_m=2.4e-6),
+            source_mode="gb_tj_only", source_random_seed=args.source_seed,
+            sink_mode="disabled", interface_sink_mode="disabled",
+            structural_absorption_mode="common_axis",
+            structural_absorption_parameters=(
+                InterfaceStructuralAbsorptionParameters()),
+            lattice_absorption_mode="one_flux_mura",
+            lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
+                capture_distance_m=5e-7),
+            wall_orientation_relaxation_mode="ordered_nye",
+            wall_orientation_relaxation_parameters=(
+                WallOrientationRelaxationParameters()),
+            wall_order_relaxation_mode="implicit_arrhenius",
+            wall_order_relaxation_parameters=(
+                ImplicitWallOrderRelaxationParameters()),
+            conservative_wall_glide_mode="chemical_edge_glide",
+            conservative_wall_glide_parameters=ConservativeWallGlideParameters(),
+            conservative_dipole_wall_mode="neutral_pair_expansion",
+            conservative_dipole_wall_parameters=(
+                ConservativeDipoleWallParameters()))
     endpoint = make_endpoint(state, runtime, load, base_context)
     initial_volume = (np.sum(state.supports, axis=(1, 2))
                       *base_context.spacing_m**2
                       *base_context.represented_thickness_m)
-    configuration = {
+    configuration = dict(_load_checkpoint(args.source)[5])
+    configuration.update({
         "schema": "v66-zero-mean-stress-feedback-v1",
         "source_checkpoint": str(args.source.relative_to(ROOT)),
         "steps": args.steps, "dt_s": args.dt,
         "probe_strain": args.probe_strain,
         "maximum_strain_change_per_interval": args.maximum_strain_change,
+        "minimum_rx_growth_fraction": args.minimum_rx_growth_fraction,
         "controller": "bounded local elastic secant; complete work-ledgered interval",
-    }
+        "v67_wall_physics": args.v67_wall_physics,
+        "v67_polycrystal_physics": args.v67_polycrystal_physics,
+        "source_seed": args.source_seed,
+        "nucleation_seed": args.nucleation_seed,
+    })
     provenance = dict(
         _source_provenance(),
         scientific_scope="near-zero-mean-stress discriminator")
@@ -100,6 +214,46 @@ def main():
             "controller_predicted_zero_stress_strain": predicted,
             "controller_strain_increment": increment,
         })
+        if args.v67_wall_physics and len(endpoint.state.owners) == 1:
+            owner = endpoint.state.owners[0]
+            compatibility = evaluate_orientation_wall_compatibility(
+                owner, systems, np.ones(owner.orientation_rad.shape, dtype=bool),
+                spacing)
+            row.update({
+                "orientation_span_deg": float(np.degrees(np.ptp(
+                    owner.orientation_rad))),
+                "compatible_target_span_deg": float(np.degrees(
+                    compatibility.reconstructed_orientation_span_rad)),
+                "orientation_wall_relative_mismatch": float(
+                    compatibility.reconstructed_relative_mismatch),
+                "wall_order_mean": float(np.mean(owner.wall_order)),
+                "conservative_wall_glide_classification": interval.audit[
+                    "conservative_wall_glide_classification"],
+                "conservative_wall_glide_relative_first_law_residual": (
+                    interval.audit[
+                        "conservative_wall_glide_relative_first_law_residual"]),
+            })
+        if args.v67_polycrystal_physics:
+            row.update({
+                "owner_orientation_span_deg": {
+                    str(grain): float(np.degrees(np.ptp(
+                        owner.orientation_rad[np.asarray(support) > .75])))
+                    for grain, support, owner in zip(
+                        endpoint.state.grain_ids, endpoint.state.supports,
+                        endpoint.state.owners)},
+                "lattice_absorption_classification": interval.audit[
+                    "lattice_absorption_classification"],
+                "lattice_mura_relative_residual": interval.audit[
+                    "lattice_absorption_mura_relative_residual"],
+                "structural_absorption_classification": interval.audit[
+                    "structural_absorption_classification"],
+                "dipole_wall_classification": interval.audit[
+                    "conservative_dipole_wall_classification"],
+                "wall_glide_classification": interval.audit[
+                    "conservative_wall_glide_classification"],
+                "wall_orientation_classification": interval.audit[
+                    "wall_orientation_relaxation_classification"],
+            })
         history.append(row)
         if step == 1 or step % args.checkpoint_every == 0 or step == args.steps:
             temporary = args.out/"checkpoint_latest.tmp.npz"
@@ -135,13 +289,18 @@ def main():
                     "maximum_front_relative_energy_closure": (
                         endpoint.runtime.ledger.maximum_relative_energy_closure),
                     "rejected_front_events_total": endpoint.runtime.ledger.rejected_events,
+                    "final_owner_orientation_span_deg": (
+                        history[-1].get("owner_orientation_span_deg")),
                 },
                 "decision": {
                     "run_complete": step == args.steps,
                     "near_zero_mean_stress_reached": first_settled is not None,
                     "stress_free_claim": False,
                     "static_rx_at_near_zero_mean_stress_supported": bool(
-                        first_settled is not None and target[-1] > target[first_settled]),
+                        first_settled is not None
+                        and target[-1]-target[first_settled]
+                        >= args.minimum_rx_growth_fraction),
+                    "minimum_rx_growth_fraction": args.minimum_rx_growth_fraction,
                     "reason": (
                         "Mean stress is feedback-controlled by work-ledgered strain "
                         "increments; local residual stresses and finite controller error remain."),

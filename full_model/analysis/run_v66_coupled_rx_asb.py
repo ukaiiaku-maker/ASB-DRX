@@ -191,7 +191,8 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
             np.max(power)/max(mean_positive, np.finfo(float).tiny)),
         "power_temperature_top_decile_overlap": overlap,
         "target_growth_fraction": float(
-            (volumes[1]-initial_volume[1])/initial_volume[1]),
+            (volumes[1]-initial_volume[1])/initial_volume[1]
+            if volumes.size > 1 else 0.0),
         "grain_volumes_m3": volumes.tolist(),
         "mechanical_relative_first_law_residual": interval.audit[
             "mechanical_relative_first_law_residual"],

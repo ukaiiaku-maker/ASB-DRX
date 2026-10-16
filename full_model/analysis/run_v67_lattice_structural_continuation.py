@@ -40,6 +40,9 @@ from full_model.production.implicit_wall_order_relaxation import (
 from full_model.production.conservative_wall_glide import (
     ConservativeWallGlideParameters,
 )
+from full_model.production.conservative_dipole_wall_organization import (
+    ConservativeDipoleWallParameters,
+)
 from full_model.production.arrhenius_dislocation_sources import (
     ArrheniusSourceParameters,
 )
@@ -64,6 +67,10 @@ def main():
     parser.add_argument("--dt", type=float)
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
     parser.add_argument("--wall-glide", action="store_true")
+    parser.add_argument("--dipole-wall-organization", action="store_true")
+    parser.add_argument(
+        "--wall-nye-match-length", type=float,
+        help="physical wall/orientation match length in metres")
     parser.add_argument(
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")
@@ -83,10 +90,16 @@ def main():
                           or args.shear_rate is not None)
     wall_parameters = context.wall_parameters
     if args.wall_orientation_relaxation or args.wall_glide:
+        match_length = (spacing if args.wall_nye_match_length is None
+                        else float(args.wall_nye_match_length))
+        if not np.isfinite(match_length) or match_length <= 0.0:
+            raise ValueError("wall Nye match length must be positive finite")
         wall_parameters = replace(
             wall_parameters,
             wall_nye_match_coefficient_J_m=(
-                wall_parameters.c44_Pa*spacing**2))
+                wall_parameters.c44_Pa*match_length**2))
+    else:
+        match_length = None
     context = replace(
         context, wall_parameters=wall_parameters,
         shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
@@ -115,7 +128,13 @@ def main():
         conservative_wall_glide_mode=(
             "chemical_edge_glide" if args.wall_glide else "disabled"),
         conservative_wall_glide_parameters=(
-            ConservativeWallGlideParameters() if args.wall_glide else None))
+            ConservativeWallGlideParameters() if args.wall_glide else None),
+        conservative_dipole_wall_mode=(
+            "neutral_pair_expansion" if args.dipole_wall_organization
+            else "disabled"),
+        conservative_dipole_wall_parameters=(
+            ConservativeDipoleWallParameters()
+            if args.dipole_wall_organization else None))
     dt = (float(args.dt) if args.dt is not None
           else float(configuration["dt_s"]))
     if not np.isfinite(dt) or dt <= 0.0:
@@ -123,6 +142,26 @@ def main():
     endpoint = make_endpoint(state, runtime, load, context)
     before = _directional_audit(endpoint, context, fraction=2e-4)
     records = []
+    progress_configuration = dict(configuration)
+    progress_configuration.update(
+        schema="v67-one-flux-lattice-structural-continuation-v1",
+        parent_checkpoint=str(args.checkpoint.resolve()),
+        target_steps=args.intervals, shear_rate_s=imposed_rate, dt_s=dt,
+        front_enabled=fronts_enabled,
+        lattice_absorption_mode="one_flux_mura",
+        lattice_capture_distance_m=args.capture_distance,
+        structural_absorption_mode="common_axis",
+        wall_orientation_relaxation_mode=(
+            "ordered_nye" if (args.wall_orientation_relaxation
+                              or args.wall_glide) else "disabled"),
+        wall_nye_match_coefficient_J_m=(
+            wall_parameters.wall_nye_match_coefficient_J_m),
+        wall_nye_match_length_m=match_length,
+        conservative_wall_glide_mode=context.conservative_wall_glide_mode,
+        conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
+        source_mode=args.source_mode, source_seed=args.source_seed)
+    source_commit = subprocess.check_output(
+        ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     for index in range(1, args.intervals+1):
         interval = advance_complete_multigrain_interval(endpoint, dt, context)
         endpoint = interval.endpoint
@@ -163,6 +202,14 @@ def main():
                 "conservative_wall_glide_internal_substeps"],
             "wall_glide_first_law_relative_residual": interval.audit[
                 "conservative_wall_glide_relative_first_law_residual"],
+            "dipole_wall_classification": interval.audit[
+                "conservative_dipole_wall_classification"],
+            "dipole_wall_separated_pair_cell_sum_m2": interval.audit[
+                "conservative_dipole_wall_separated_pair_cell_sum_m2"],
+            "dipole_wall_line_residual_m2": interval.audit[
+                "conservative_dipole_wall_line_residual_m2"],
+            "dipole_wall_first_law_relative_residual": interval.audit[
+                "conservative_dipole_wall_relative_first_law_residual"],
             "source_classification": interval.audit["source_classification"],
             "source_event_count": interval.audit["source_event_count"],
             "source_first_law_relative_residual": interval.audit[
@@ -180,6 +227,16 @@ def main():
                     endpoint.state.grain_ids, endpoint.state.supports,
                     endpoint.state.owners)},
         })
+        print(json.dumps(records[-1], sort_keys=True), flush=True)
+        temporary = args.out/"checkpoint_latest.tmp.npz"
+        _save_checkpoint(
+            temporary, endpoint.state, endpoint.runtime, step+index,
+            endpoint.load, initial_volume, progress_configuration,
+            {"source_commit": source_commit,
+             "parent_provenance": provenance},
+            diagnostic_arrays={
+                "diagnostic_v67_records_json": np.asarray(json.dumps(records))})
+        os.replace(temporary, args.out/"checkpoint_latest.npz")
     after = _directional_audit(endpoint, context, fraction=2e-4)
     commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
@@ -188,21 +245,7 @@ def main():
     accepted_structural = sum(
         row["structural_classification"].startswith("ACCEPTED")
         for row in records)
-    continuation_configuration = dict(configuration)
-    continuation_configuration.update(
-        schema="v67-one-flux-lattice-structural-continuation-v1",
-        parent_checkpoint=str(args.checkpoint.resolve()),
-        target_steps=args.intervals, shear_rate_s=imposed_rate, dt_s=dt,
-        front_enabled=fronts_enabled,
-        lattice_absorption_mode="one_flux_mura",
-        lattice_capture_distance_m=args.capture_distance,
-        structural_absorption_mode="common_axis",
-        wall_orientation_relaxation_mode=(
-            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
-        wall_nye_match_coefficient_J_m=(
-            wall_parameters.wall_nye_match_coefficient_J_m),
-        conservative_wall_glide_mode=context.conservative_wall_glide_mode,
-        source_mode=args.source_mode, source_seed=args.source_seed)
+    continuation_configuration = progress_configuration
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
@@ -229,10 +272,12 @@ def main():
             "wall_orientation_relaxation": bool(
                 args.wall_orientation_relaxation or args.wall_glide),
             "wall_glide": bool(args.wall_glide),
+            "dipole_wall_organization": bool(args.dipole_wall_organization),
             "source_mode": args.source_mode,
             "source_seed": args.source_seed,
             "wall_nye_match_coefficient_J_m": (
                 wall_parameters.wall_nye_match_coefficient_J_m),
+            "wall_nye_match_length_m": match_length,
         },
         "before_directional_audit": before,
         "after_directional_audit": after,
@@ -253,6 +298,9 @@ def main():
             "accepted_wall_glide_intervals": sum(
                 row["wall_glide_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_dipole_wall_intervals": sum(
+                row["dipole_wall_classification"].startswith("ACCEPTED")
+                for row in records),
             "accepted_source_intervals": sum(
                 row["source_classification"].startswith("ACCEPTED")
                 for row in records),
@@ -262,6 +310,7 @@ def main():
             "first_law_hard_balance_passed": bool(all(
                 row["lattice_first_law_relative_residual"] < .05
                 and row["wall_glide_first_law_relative_residual"] < .05
+                and row["dipole_wall_first_law_relative_residual"] < .05
                 and row["source_first_law_relative_residual"] < .05
                 for row in records
                 if row["lattice_classification"].startswith("ACCEPTED"))),

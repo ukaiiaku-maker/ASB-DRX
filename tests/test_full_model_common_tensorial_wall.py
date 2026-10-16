@@ -12,7 +12,8 @@ from full_model.production.common_tensorial_wall import (
     wall_free_energy_density_J_m3,
     wall_total_free_energy_density_J_m3,
     wall_free_energy_derivatives, wall_residual,
-    _biased_exchange_components, _periodic_upwind_rate,
+    _biased_exchange_components, _minimum_bounded_fraction,
+    _periodic_upwind_rate,
 )
 from full_model.production.tensorial_nye import (
     bcc_four_family_systems, junction_closure_metrics, make_junction_topology,
@@ -211,6 +212,16 @@ def test_accepted_step_is_exactly_scaled_common_residual_and_nonnegative():
                     +dt*scale*getattr(residual.state_rate, name))
         np.testing.assert_allclose(getattr(updated, name), expected)
     updated.validate(systems, topologies)
+
+
+def test_bounded_fraction_does_not_turn_subnormal_decay_into_zeno_step():
+    tiny = np.nextafter(0.0, 1.0)*25.0
+    assert np.isinf(_minimum_bounded_fraction(
+        np.asarray([tiny]), np.asarray([tiny*1e-5])))
+    assert _minimum_bounded_fraction(
+        np.asarray([0.0]), np.asarray([1.0])) == 0.0
+    assert _minimum_bounded_fraction(
+        np.asarray([2.0]), np.asarray([4.0])) == .5
 
 
 def test_jvp_uses_authoritative_residual():

@@ -1,0 +1,1011 @@
+{
+  "after_directional_audit": {
+    "directional_prices": [
+      {
+        "base_cold_delta_helmholtz_J": -3.768844674975769e-19,
+        "base_directional_energy_density_Pa": -3032866.2276486238,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 4.000788331409126e-20,
+          "defect_storage_J": -4.1490545207433845e-19,
+          "helmholtz_J": -3.768844674975769e-19,
+          "internal_J": -3.768844674975769e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.0598541896387775e-20,
+          "phase_local_J": 8.611643171260732e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -5.048709793414476e-29
+        },
+        "direction": "a_to_b",
+        "donor_id": 10,
+        "interface": "edge-10-20",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 2214555939521.959,
+          "external_sink": 49212354211.59908
+        },
+        "receiver_id": 20,
+        "structural_cold_delta_helmholtz_J": -3.814369779755911e-19,
+        "structural_directional_energy_density_Pa": -3069501.2085791514,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 4.000788331409126e-20,
+          "defect_storage_J": -4.1490545207433845e-19,
+          "helmholtz_J": -3.814369779755911e-19,
+          "internal_J": -3.814369779755911e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.0598541896387775e-20,
+          "phase_local_J": 8.611643171260732e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -4.6513307538673745e-21,
+          "structural_junction_J": 9.882024401876539e-23,
+          "thermal_internal_J": -5.048709793414476e-29
+        },
+        "swept_volume_m3": 1.242667625963097e-25,
+        "target_owner_grows": true,
+        "target_owner_shrinks": false
+      },
+      {
+        "base_cold_delta_helmholtz_J": -7.354746315807708e-19,
+        "base_directional_energy_density_Pa": -6601540.415602332,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 1.4478690644435491e-22,
+          "defect_storage_J": -7.187220640482216e-19,
+          "helmholtz_J": -7.354746315807708e-19,
+          "internal_J": -7.354746317322321e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.489416363460637e-21,
+          "phase_local_J": -9.407938028115028e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -2.0194839173657902e-28
+        },
+        "direction": "b_to_a",
+        "donor_id": 20,
+        "interface": "edge-10-20",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 14045988403.345873,
+          "external_sink": 312133075.6299083
+        },
+        "receiver_id": 10,
+        "structural_cold_delta_helmholtz_J": -7.427779913664508e-19,
+        "structural_directional_energy_density_Pa": -6667094.57984485,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 1.4478690644435491e-22,
+          "defect_storage_J": -7.187220640482216e-19,
+          "helmholtz_J": -7.427779913664508e-19,
+          "internal_J": -7.427779915179121e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.489416363460637e-21,
+          "phase_local_J": -9.407938028115028e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -7.371692323829266e-21,
+          "structural_junction_J": 6.833257011067551e-23,
+          "thermal_internal_J": -2.0194839173657902e-28
+        },
+        "swept_volume_m3": 1.1140954766292456e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": true
+      },
+      {
+        "base_cold_delta_helmholtz_J": -8.68335532426538e-19,
+        "base_directional_energy_density_Pa": -6994554.409225766,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 4.1457255012817203e-20,
+          "defect_storage_J": -9.07748511036736e-19,
+          "helmholtz_J": -8.68335532426538e-19,
+          "internal_J": -8.683355325275122e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.0604630630143441e-20,
+          "phase_local_J": 8.560354251436694e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -5.048709793414476e-29
+        },
+        "direction": "a_to_b",
+        "donor_id": 10,
+        "interface": "edge-10-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 2207214333574.5986,
+          "external_sink": 49049207412.76885
+        },
+        "receiver_id": 30,
+        "structural_cold_delta_helmholtz_J": -8.729787110176579e-19,
+        "structural_directional_energy_density_Pa": -7031955.8100374825,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 4.1457255012817203e-20,
+          "defect_storage_J": -9.07748511036736e-19,
+          "helmholtz_J": -8.729787110176579e-19,
+          "internal_J": -8.72978711068145e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.0604630630143441e-20,
+          "phase_local_J": 8.560354251436694e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -4.6473078239692765e-21,
+          "structural_junction_J": 4.129224283552459e-24,
+          "thermal_internal_J": -5.048709793414476e-29
+        },
+        "swept_volume_m3": 1.2414451037527277e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": false
+      },
+      {
+        "base_cold_delta_helmholtz_J": -1.1224165995770692e-18,
+        "base_directional_energy_density_Pa": -10083016.87142386,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 9.963502874039265e-20,
+          "defect_storage_J": -1.2051696993011677e-18,
+          "helmholtz_J": -1.1224165995770692e-18,
+          "internal_J": -1.1224165996780434e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.502722471426794e-21,
+          "phase_local_J": -9.379206515272733e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -1.5146129380243427e-28
+        },
+        "direction": "b_to_a",
+        "donor_id": 30,
+        "interface": "edge-10-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 1431309754950.2993,
+          "external_sink": 31806883443.339985
+        },
+        "receiver_id": 10,
+        "structural_cold_delta_helmholtz_J": -1.1297915282067065e-18,
+        "structural_directional_energy_density_Pa": -10149268.145528499,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 9.963502874039265e-20,
+          "defect_storage_J": -1.2051696993011677e-18,
+          "helmholtz_J": -1.1297915282067065e-18,
+          "internal_J": -1.1297915283581677e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.502722471426794e-21,
+          "phase_local_J": -9.379206515272733e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -7.375040005358574e-21,
+          "structural_junction_J": 1.1137436354922945e-25,
+          "thermal_internal_J": -1.5146129380243427e-28
+        },
+        "swept_volume_m3": 1.1131753659543056e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": false
+      },
+      {
+        "base_cold_delta_helmholtz_J": -2.1875990738620923e-18,
+        "base_directional_energy_density_Pa": -17449991.411839847,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 1.7545107815292866e-22,
+          "defect_storage_J": -2.181006134351398e-18,
+          "helmholtz_J": -2.1875990738620923e-18,
+          "internal_J": -2.1875990740135536e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.176855724748018e-21,
+          "phase_local_J": -5.915348056988214e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -1.5146129380243427e-28
+        },
+        "direction": "a_to_b",
+        "donor_id": 20,
+        "interface": "edge-20-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 15172880556.397778,
+          "external_sink": 337175123.4755062
+        },
+        "receiver_id": 30,
+        "structural_cold_delta_helmholtz_J": -2.1907120273898936e-18,
+        "structural_directional_energy_density_Pa": -17474822.7499834,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 1.7545107815292866e-22,
+          "defect_storage_J": -2.181006134351398e-18,
+          "helmholtz_J": -2.1907120273898936e-18,
+          "internal_J": -2.190712027591842e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.176855724748018e-21,
+          "phase_local_J": -5.915348056988214e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -3.2015587006145938e-21,
+          "structural_junction_J": 8.860519137199048e-23,
+          "thermal_internal_J": -1.5146129380243427e-28
+        },
+        "swept_volume_m3": 1.2536390547320285e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": true
+      },
+      {
+        "base_cold_delta_helmholtz_J": -1.3099013476339947e-18,
+        "base_directional_energy_density_Pa": -10446863.32235279,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 1.1254597564800778e-19,
+          "defect_storage_J": -1.4156955244898686e-18,
+          "helmholtz_J": -1.3099013476339947e-18,
+          "internal_J": -1.3099013474320463e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.195017679624113e-21,
+          "phase_local_J": -5.567810823604913e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": 2.0194839173657902e-28
+        },
+        "direction": "b_to_a",
+        "donor_id": 30,
+        "interface": "edge-20-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 1623177038277.8655,
+          "external_sink": 36070600850.61923
+        },
+        "receiver_id": 20,
+        "structural_cold_delta_helmholtz_J": -1.3130153864324533e-18,
+        "structural_directional_energy_density_Pa": -10471698.732871879,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 1.1254597564800778e-19,
+          "defect_storage_J": -1.4156955244898686e-18,
+          "helmholtz_J": -1.3130153864324533e-18,
+          "internal_J": -1.3130153861800178e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.195017679624113e-21,
+          "phase_local_J": -5.567810823604913e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -3.221139095240314e-21,
+          "structural_junction_J": 1.0710030439735239e-22,
+          "thermal_internal_J": 2.0194839173657902e-28
+        },
+        "swept_volume_m3": 1.2538704750077897e-25,
+        "target_owner_grows": true,
+        "target_owner_shrinks": false
+      }
+    ],
+    "grain_partition": {
+      "10": {
+        "defect_storage_J": 1.9321090569287274e-14,
+        "defect_storage_mean_J_m3": 4818000.106951009,
+        "orientation_weighted_mean_rad": 0.0007283249543792687,
+        "recoverable_elastic_share_J": 1.0439189160648869e-13,
+        "signed_family_line_m": [
+          -1.80362706251078e-09,
+          1.4273624083213973e-09,
+          -4.924181257254456e-09,
+          1.9991252729511378e-09
+        ],
+        "total_line_m": 8.962125176065305e-06,
+        "volume_m3": 4.010188904191268e-21
+      },
+      "20": {
+        "defect_storage_J": 6.189479938638605e-17,
+        "defect_storage_mean_J_m3": 16679.265891741103,
+        "orientation_weighted_mean_rad": 0.26310133627477933,
+        "recoverable_elastic_share_J": 9.685068798341947e-14,
+        "signed_family_line_m": [
+          8.403012544337144e-13,
+          -3.8260407711807864e-13,
+          3.994908267191884e-13,
+          -3.4440051770405718e-12
+        ],
+        "total_line_m": 4.779552370362354e-08,
+        "volume_m3": 3.7108827083950886e-21
+      },
+      "30": {
+        "defect_storage_J": 3.386704887459772e-14,
+        "defect_storage_mean_J_m3": 9136543.030202134,
+        "orientation_weighted_mean_rad": 0.5222933666809957,
+        "recoverable_elastic_share_J": 9.828160051553531e-14,
+        "signed_family_line_m": [
+          -1.9776329439301305e-10,
+          1.8041010238352029e-09,
+          -1.7206971667651792e-09,
+          1.9327542073863302e-10
+        ],
+        "total_line_m": 8.253176830587847e-06,
+        "volume_m3": 3.7067683874136436e-21
+      }
+    },
+    "load": 0.04023999999999971,
+    "mean_shear_stress_Pa": 2054092695.8263402,
+    "mean_temperature_K": 1009.2776458622766,
+    "physical_time_s": 4.159999999999968e-05,
+    "structural_diagnostic": {
+      "interface_lengths_m": [
+        3.959615427742511e-06,
+        3.956015574104558e-06,
+        4.212885634643511e-06
+      ],
+      "owner_orientations_rad": [
+        0.0009051786557756184,
+        0.2630955873560942,
+        0.5249674289379441
+      ],
+      "production_coupled_interval_carries_this_state": false,
+      "required_signed_integrated_content": [
+        4186.182206838288,
+        8359.671064179593,
+        4448.532739991198
+      ],
+      "scope": "common-axis conserved-content price; no trajectory mutation"
+    },
+    "target_volume_m3": 3.710882708395088e-21
+  },
+  "artifacts": {
+    "checkpoint_latest.npz": "55657894bc8fe76847f7f5e0eb055bca58184a00dd5cdb8a3ae758b436258045"
+  },
+  "before_directional_audit": {
+    "directional_prices": [
+      {
+        "base_cold_delta_helmholtz_J": -6.071972555887401e-19,
+        "base_directional_energy_density_Pa": -4885144.141560647,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 3.488908344080461e-20,
+          "defect_storage_J": -6.401013435326028e-19,
+          "helmholtz_J": -6.071972555887401e-19,
+          "internal_J": -6.07197255538253e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.0610572087512407e-20,
+          "phase_local_J": 8.62557660330961e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": 1.0097419586828951e-28
+        },
+        "direction": "a_to_b",
+        "donor_id": 10,
+        "interface": "edge-10-20",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 2238360954231.101,
+          "external_sink": 49741354538.46891
+        },
+        "receiver_id": 20,
+        "structural_cold_delta_helmholtz_J": -6.117589094316515e-19,
+        "structural_directional_energy_density_Pa": -4921844.466440935,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 3.488908344080461e-20,
+          "defect_storage_J": -6.401013435326028e-19,
+          "helmholtz_J": -6.117589094316515e-19,
+          "internal_J": -6.117589093306773e-19,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.0610572087512407e-20,
+          "phase_local_J": 8.62557660330961e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -4.6605290045508835e-21,
+          "structural_junction_J": 9.887520557101379e-23,
+          "thermal_internal_J": 1.0097419586828951e-28
+        },
+        "swept_volume_m3": 1.2429464474199938e-25,
+        "target_owner_grows": true,
+        "target_owner_shrinks": false
+      },
+      {
+        "base_cold_delta_helmholtz_J": -1.2805734878646651e-18,
+        "base_directional_energy_density_Pa": -11491739.827615492,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 1.4108130470581538e-22,
+          "defect_storage_J": -1.2638183337771145e-18,
+          "helmholtz_J": -1.2805734878646651e-18,
+          "internal_J": -1.2805734876627167e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.477694542402591e-21,
+          "phase_local_J": -9.418540817044075e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": 1.5146129380243427e-28
+        },
+        "direction": "b_to_a",
+        "donor_id": 20,
+        "interface": "edge-10-20",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 14137621187.259949,
+          "external_sink": 314169359.7168878
+        },
+        "receiver_id": 10,
+        "structural_cold_delta_helmholtz_J": -1.287865818996237e-18,
+        "structural_directional_energy_density_Pa": -11557180.485957233,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 1.4108130470581538e-22,
+          "defect_storage_J": -1.2638183337771145e-18,
+          "helmholtz_J": -1.287865818996237e-18,
+          "internal_J": -1.2878658187438015e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.477694542402591e-21,
+          "phase_local_J": -9.418540817044075e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -7.360696594803073e-21,
+          "structural_junction_J": 6.836548692999737e-23,
+          "thermal_internal_J": 1.5146129380243427e-28
+        },
+        "swept_volume_m3": 1.1143425687269332e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": true
+      },
+      {
+        "base_cold_delta_helmholtz_J": -1.7134000273647579e-18,
+        "base_directional_energy_density_Pa": -13805359.833780486,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 3.9232554561958916e-20,
+          "defect_storage_J": -1.750589566835265e-18,
+          "helmholtz_J": -1.7134000273647579e-18,
+          "internal_J": -1.7134000273142708e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.059218721158855e-20,
+          "phase_local_J": 8.549172179265191e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": 5.048709793414476e-29
+        },
+        "direction": "a_to_b",
+        "donor_id": 10,
+        "interface": "edge-10-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 2170257876360.0256,
+          "external_sink": 48227952808.000565
+        },
+        "receiver_id": 30,
+        "structural_cold_delta_helmholtz_J": -1.7180326960062137e-18,
+        "structural_directional_energy_density_Pa": -13842686.585598236,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 3.9232554561958916e-20,
+          "defect_storage_J": -1.750589566835265e-18,
+          "helmholtz_J": -1.7180326960062137e-18,
+          "internal_J": -1.7180326958547524e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -1.059218721158855e-20,
+          "phase_local_J": 8.549172179265191e-21,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -4.6368032563087535e-21,
+          "structural_junction_J": 4.134626514458265e-24,
+          "thermal_internal_J": 5.048709793414476e-29
+        },
+        "swept_volume_m3": 1.2411121825106076e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": false
+      },
+      {
+        "base_cold_delta_helmholtz_J": -1.695212095065551e-18,
+        "base_directional_energy_density_Pa": -15233500.917703168,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 8.563959453701758e-20,
+          "defect_storage_J": -1.7639667243556e-18,
+          "helmholtz_J": -1.695212095065551e-18,
+          "internal_J": -1.695212095116038e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.504490260003233e-21,
+          "phase_local_J": -9.380475089002522e-21,
+          "recoverable_elastic_J": 1.5146129380243427e-28,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -5.048709793414476e-29
+        },
+        "direction": "b_to_a",
+        "donor_id": 30,
+        "interface": "edge-10-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 1466188495322.264,
+          "external_sink": 32581966562.716976
+        },
+        "receiver_id": 10,
+        "structural_cold_delta_helmholtz_J": -1.7025881364813138e-18,
+        "structural_directional_energy_density_Pa": -15299783.440110309,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 8.563959453701758e-20,
+          "defect_storage_J": -1.7639667243556e-18,
+          "helmholtz_J": -1.7025881364813138e-18,
+          "internal_J": -1.7025881364308267e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -7.504490260003233e-21,
+          "phase_local_J": -9.380475089002522e-21,
+          "recoverable_elastic_J": 1.5146129380243427e-28,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -7.37615332278196e-21,
+          "structural_junction_J": 1.1191884725490146e-25,
+          "thermal_internal_J": -5.048709793414476e-29
+        },
+        "swept_volume_m3": 1.1128184546833288e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": false
+      },
+      {
+        "base_cold_delta_helmholtz_J": -4.292233523234546e-18,
+        "base_directional_energy_density_Pa": -34233119.330697715,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 1.706124965019771e-22,
+          "defect_storage_J": -4.2856211270817805e-18,
+          "helmholtz_J": -4.292233523234546e-18,
+          "internal_J": -4.292233523133572e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.185913021370552e-21,
+          "phase_local_J": -5.970955940964531e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": 1.0097419586828951e-28
+        },
+        "direction": "a_to_b",
+        "donor_id": 20,
+        "interface": "edge-20-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 15278684117.973583,
+          "external_sink": 339526313.7327463
+        },
+        "receiver_id": 30,
+        "structural_cold_delta_helmholtz_J": -4.295348501648384e-18,
+        "structural_directional_energy_density_Pa": -34257963.139212854,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 1.706124965019771e-22,
+          "defect_storage_J": -4.2856211270817805e-18,
+          "helmholtz_J": -4.295348501648384e-18,
+          "internal_J": -4.29534850154741e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.185913021370552e-21,
+          "phase_local_J": -5.970955940964531e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -3.2036239471419323e-21,
+          "structural_junction_J": 8.864552836733982e-23,
+          "thermal_internal_J": 1.0097419586828951e-28
+        },
+        "swept_volume_m3": 1.2538248360515572e-25,
+        "target_owner_grows": false,
+        "target_owner_shrinks": true
+      },
+      {
+        "base_cold_delta_helmholtz_J": -2.0754599063482627e-18,
+        "base_directional_energy_density_Pa": -16550046.174403433,
+        "base_energy_component_change_J": {
+          "boundary_excess_J": 8.935284132784794e-20,
+          "defect_storage_J": -2.158067778464717e-18,
+          "helmholtz_J": -2.0754599063482627e-18,
+          "internal_J": -2.075459906550211e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.19478839680758e-21,
+          "phase_local_J": -5.501807642219651e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": 0.0,
+          "structural_junction_J": 0.0,
+          "thermal_internal_J": -2.0194839173657902e-28
+        },
+        "direction": "b_to_a",
+        "donor_id": 30,
+        "interface": "edge-20-30",
+        "physical_channel_cell_sums_m2": {
+          "annihilated": 1650732514343.8535,
+          "external_sink": 36682944763.19674
+        },
+        "receiver_id": 20,
+        "structural_cold_delta_helmholtz_J": -2.0785805263418854e-18,
+        "structural_directional_energy_density_Pa": -16574930.492731746,
+        "structural_energy_component_change_J": {
+          "boundary_excess_J": 8.935284132784794e-20,
+          "defect_storage_J": -2.158067778464717e-18,
+          "helmholtz_J": -2.0785805263418854e-18,
+          "internal_J": -2.0785805264933467e-18,
+          "numerical_constraint_J": 0.0,
+          "phase_gradient_J": -6.19478839680758e-21,
+          "phase_local_J": -5.501807642219651e-22,
+          "recoverable_elastic_J": 0.0,
+          "signed_junction_storage_J": 0.0,
+          "structural_boundary_J": -3.2277672895538633e-21,
+          "structural_junction_J": 1.0714729768257254e-22,
+          "thermal_internal_J": -2.0194839173657902e-28
+        },
+        "swept_volume_m3": 1.2540508252830148e-25,
+        "target_owner_grows": true,
+        "target_owner_shrinks": false
+      }
+    ],
+    "grain_partition": {
+      "10": {
+        "defect_storage_J": 3.032997932045099e-14,
+        "defect_storage_mean_J_m3": 7564750.364595949,
+        "orientation_weighted_mean_rad": 0.0006008615834994692,
+        "recoverable_elastic_share_J": 1.0914564470970539e-13,
+        "signed_family_line_m": [
+          -1.6493851794970444e-15,
+          8.743892677459361e-16,
+          -8.043917153736185e-13,
+          1.0930934432636877e-15
+        ],
+        "total_line_m": 8.987026897705762e-06,
+        "volume_m3": 4.0093827104195506e-21
+      },
+      "20": {
+        "defect_storage_J": 6.206179241162256e-17,
+        "defect_storage_mean_J_m3": 16716.50322915958,
+        "orientation_weighted_mean_rad": 0.26293282900882947,
+        "recoverable_elastic_share_J": 1.0130879140203605e-13,
+        "signed_family_line_m": [
+          9.951399164466186e-14,
+          -3.9919629560317544e-14,
+          1.390290709221888e-13,
+          -2.8264402888880914e-14
+        ],
+        "total_line_m": 4.792481393802136e-08,
+        "volume_m3": 3.7126061330436924e-21
+      },
+      "30": {
+        "defect_storage_J": 5.747007120685732e-14,
+        "defect_storage_mean_J_m3": 15507927.539260658,
+        "orientation_weighted_mean_rad": 0.5222625738269047,
+        "recoverable_elastic_share_J": 1.0264055233122406e-13,
+        "signed_family_line_m": [
+          -5.466173919573209e-14,
+          6.575398501212686e-15,
+          1.0823606360216133e-13,
+          6.383086487210259e-15
+        ],
+        "total_line_m": 8.254501323819208e-06,
+        "volume_m3": 3.705851156536756e-21
+      }
+    },
+    "load": 0.039999999999999716,
+    "mean_shear_stress_Pa": 2105892340.425302,
+    "mean_temperature_K": 1008.0150190943128,
+    "physical_time_s": 4.0399999999999695e-05,
+    "structural_diagnostic": {
+      "interface_lengths_m": [
+        3.960499019064057e-06,
+        3.954856581307016e-06,
+        4.213500775091686e-06
+      ],
+      "owner_orientations_rad": [
+        0.0007126637945931998,
+        0.26292647018694004,
+        0.5247587115510205
+      ],
+      "production_coupled_interval_carries_this_state": false,
+      "required_signed_integrated_content": [
+        4187.490012104605,
+        8356.96355192515,
+        4448.509483594944
+      ],
+      "scope": "common-axis conserved-content price; no trajectory mutation"
+    },
+    "target_volume_m3": 3.7126061330436924e-21
+  },
+  "claim_boundary": "Retained-state stationary production discriminator. It qualifies the coupled absorption path but not sustained dynamic DRX.",
+  "configuration": {
+    "capture_distance_m": 5e-07,
+    "dipole_wall_organization": true,
+    "dt_s": 4e-07,
+    "front_enabled": true,
+    "intervals": 3,
+    "lattice_absorption": "one_flux_mura",
+    "shear_rate_s": 200.0,
+    "source_mode": "gb_tj_only",
+    "source_seed": 67,
+    "structural_absorption": "common_axis",
+    "wall_glide": true,
+    "wall_nye_match_coefficient_J_m": 0.010485,
+    "wall_orientation_relaxation": true
+  },
+  "created_utc": "2026-10-16T02:21:06.510033+00:00",
+  "decision": {
+    "accepted_dipole_wall_intervals": 3,
+    "accepted_lattice_intervals": 3,
+    "accepted_source_intervals": 3,
+    "accepted_structural_intervals": 3,
+    "accepted_wall_glide_intervals": 3,
+    "accepted_wall_orientation_intervals": 3,
+    "first_law_hard_balance_passed": true,
+    "grain_ids_unchanged": true,
+    "maximum_support_change": 0.00046017140507675913,
+    "mura_hard_balance_passed": true,
+    "supports_unchanged": false
+  },
+  "interval_records": [
+    {
+      "dipole_wall_classification": "ACCEPTED_CONSERVATIVE_DIPOLE_WALL_ORGANIZATION",
+      "dipole_wall_first_law_relative_residual": 0.0,
+      "dipole_wall_line_residual_m2": -2.0,
+      "dipole_wall_separated_pair_cell_sum_m2": 1.516912257199327e+16,
+      "interval": 1,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "lattice_edge_affinities_J_m": {
+        "edge-10-20": 8.461085303068878e-08,
+        "edge-10-30": 9.874544755405256e-08,
+        "edge-20-30": 1.2723884769636666e-07
+      },
+      "lattice_edge_fractions": {
+        "edge-10-20": 0.049999999999999996,
+        "edge-10-30": 0.05,
+        "edge-20-30": 0.05
+      },
+      "lattice_first_law_relative_residual": 0.0,
+      "lattice_fraction": 0.05,
+      "lattice_mura_relative_residual": 8.962376835547756e-16,
+      "lattice_removed_line_m": 1.522212689152294e-08,
+      "owner_orientation_span_deg": {
+        "10": 0.43214608499034324,
+        "20": 0.002203369676903437,
+        "30": 0.5244748280107456
+      },
+      "owner_support_weighted_wall_order": {
+        "10": 0.8046248398744638,
+        "20": 0.02897302964189577,
+        "30": 0.9767800169115697
+      },
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 6.9015249330099895,
+      "source_first_law_relative_residual": 9.059436248688077e-06,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "structural_content_change": [
+        8.972986102584913e-06,
+        1.2331450990828673e-05,
+        4.793819667613247e-06
+      ],
+      "wall_glide_classification": "ACCEPTED_CONSERVATIVE_ARRHENIUS_WALL_GLIDE",
+      "wall_glide_first_law_relative_residual": 6.075659431379478e-13,
+      "wall_glide_internal_substeps": 27,
+      "wall_glide_inventory_residual_m2": 0.515625,
+      "wall_glide_moved_line_cell_sum_m2": 1851345452300830.2,
+      "wall_orientation_affinities_J_m": {
+        "10": 3.3205830390976356e-11,
+        "20": 1.1413087325615946e-12,
+        "30": 1.809723120201876e-10
+      },
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_first_law_relative_residual": 0.0,
+      "wall_orientation_fractions": {
+        "10": 0.38897326499840823,
+        "20": 0.0015588564042030286,
+        "30": 0.8949410542158964
+      }
+    },
+    {
+      "dipole_wall_classification": "ACCEPTED_CONSERVATIVE_DIPOLE_WALL_ORGANIZATION",
+      "dipole_wall_first_law_relative_residual": 6.054156257688591e-14,
+      "dipole_wall_line_residual_m2": 0.25,
+      "dipole_wall_separated_pair_cell_sum_m2": 7323598206029111.0,
+      "interval": 2,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "lattice_edge_affinities_J_m": {
+        "edge-10-20": 8.453910792848937e-08,
+        "edge-10-30": 9.830685519367944e-08,
+        "edge-20-30": 1.268206343953615e-07
+      },
+      "lattice_edge_fractions": {
+        "edge-10-20": 0.05,
+        "edge-10-30": 0.05,
+        "edge-20-30": 0.05000000000000001
+      },
+      "lattice_first_law_relative_residual": 3.1205206603616026e-13,
+      "lattice_fraction": 0.05000000000000001,
+      "lattice_mura_relative_residual": 9.830830819257438e-16,
+      "lattice_removed_line_m": 1.266454701350971e-08,
+      "owner_orientation_span_deg": {
+        "10": 0.43273451068731444,
+        "20": 0.0022113142146578946,
+        "30": 0.524956100947342
+      },
+      "owner_support_weighted_wall_order": {
+        "10": 0.8114409458818223,
+        "20": 0.028972618137698723,
+        "30": 0.9766788694854478
+      },
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 6.914757600636016,
+      "source_first_law_relative_residual": 9.221402039309149e-06,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "structural_content_change": [
+        0.010436846300683032,
+        0.501603095592125,
+        0.49613913667539633
+      ],
+      "wall_glide_classification": "ACCEPTED_CONSERVATIVE_ARRHENIUS_WALL_GLIDE",
+      "wall_glide_first_law_relative_residual": 5.381843897718175e-13,
+      "wall_glide_internal_substeps": 27,
+      "wall_glide_inventory_residual_m2": 0.3125,
+      "wall_glide_moved_line_cell_sum_m2": 1592175088464588.2,
+      "wall_orientation_affinities_J_m": {
+        "10": -5.870721584513386e-12,
+        "20": 1.1021888578149055e-12,
+        "30": -4.438605992268776e-13
+      },
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_first_law_relative_residual": 0.00011267605633802817,
+      "wall_orientation_fractions": {
+        "10": 0.0,
+        "20": 0.0015505274100840224,
+        "30": 0.0
+      }
+    },
+    {
+      "dipole_wall_classification": "ACCEPTED_CONSERVATIVE_DIPOLE_WALL_ORGANIZATION",
+      "dipole_wall_first_law_relative_residual": 5.44321769411076e-13,
+      "dipole_wall_line_residual_m2": -0.6875,
+      "dipole_wall_separated_pair_cell_sum_m2": 2303496040106912.0,
+      "interval": 3,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "lattice_edge_affinities_J_m": {
+        "edge-10-20": 8.449433723098898e-08,
+        "edge-10-30": 9.847892733356667e-08,
+        "edge-20-30": 1.2710907504763135e-07
+      },
+      "lattice_edge_fractions": {
+        "edge-10-20": 0.05,
+        "edge-10-30": 0.05,
+        "edge-20-30": 0.05
+      },
+      "lattice_first_law_relative_residual": 8.362294705145923e-14,
+      "lattice_fraction": 0.05,
+      "lattice_mura_relative_residual": 9.08532970408174e-16,
+      "lattice_removed_line_m": 1.1772902418015904e-08,
+      "owner_orientation_span_deg": {
+        "10": 0.43276632267175247,
+        "20": 0.0022167752005201415,
+        "30": 0.5249089784225973
+      },
+      "owner_support_weighted_wall_order": {
+        "10": 0.8334732815655463,
+        "20": 0.02897230318326563,
+        "30": 0.9766033071564307
+      },
+      "source_classification": "ACCEPTED_CONJUGATE_PAIR_SOURCE",
+      "source_event_count": 6.917630085897781,
+      "source_first_law_relative_residual": 9.439971054735066e-06,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "structural_content_change": [
+        0.0165203947163611,
+        0.8711253470709421,
+        0.8618839460830949
+      ],
+      "wall_glide_classification": "ACCEPTED_CONSERVATIVE_ARRHENIUS_WALL_GLIDE",
+      "wall_glide_first_law_relative_residual": 2.6909889091351595e-12,
+      "wall_glide_internal_substeps": 27,
+      "wall_glide_inventory_residual_m2": 0.375,
+      "wall_glide_moved_line_cell_sum_m2": 868388763538015.1,
+      "wall_orientation_affinities_J_m": {
+        "10": -7.783302439574552e-13,
+        "20": 1.068849519188914e-12,
+        "30": -2.4861666852694697e-12
+      },
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_first_law_relative_residual": 5.8070323161348394e-05,
+      "wall_orientation_fractions": {
+        "10": 0.0,
+        "20": 0.0015436527685774673,
+        "30": 0.0
+      }
+    }
+  ],
+  "ledger": {
+    "accepted_events": 536,
+    "applied_shear_strain": 0.04023999999999975,
+    "collective_wall_nucleation_inactive_intervals": 0,
+    "collective_wall_nucleation_intervals": 0,
+    "collective_wall_nucleation_rejected_intervals": 0,
+    "compatible_wall_reorganization_inactive_intervals": 0,
+    "compatible_wall_reorganization_intervals": 0,
+    "compatible_wall_reorganization_rejected_intervals": 0,
+    "conservative_dipole_wall_inactive_intervals": 0,
+    "conservative_dipole_wall_intervals": 3,
+    "conservative_dipole_wall_pair_cell_sum_m2": 2.4796216818129292e+16,
+    "conservative_dipole_wall_rejected_intervals": 0,
+    "conservative_wall_glide_inactive_intervals": 0,
+    "conservative_wall_glide_intervals": 3,
+    "conservative_wall_glide_line_cell_sum_m2": 4311909304303433.5,
+    "conservative_wall_glide_rejected_intervals": 0,
+    "cumulative_collective_wall_nucleation_heat_J": 0.0,
+    "cumulative_compatible_wall_reorganization_heat_J": 0.0,
+    "cumulative_conservative_dipole_wall_heat_J": 1.3817547506372697e-14,
+    "cumulative_conservative_wall_glide_heat_J": 6.325785756097611e-16,
+    "cumulative_front_first_law_residual_J": -5.11364065732002e-27,
+    "cumulative_interface_sink_first_law_residual_J": -1.791389519786566e-24,
+    "cumulative_interface_sink_generated_heat_J": 1.1515919151102683e-18,
+    "cumulative_lattice_absorption_heat_J": 4.060335186663025e-15,
+    "cumulative_mechanical_external_work_J": 6.580773448279294e-13,
+    "cumulative_mechanical_first_law_residual_J": 1.7130943725029594e-15,
+    "cumulative_mechanical_internal_energy_change_J": 6.597904392004325e-13,
+    "cumulative_sink_first_law_residual_J": 0.0,
+    "cumulative_sink_generated_heat_J": 0.0,
+    "cumulative_source_first_law_residual_J": 2.3133349832138516e-22,
+    "cumulative_source_generated_heat_J": 2.5035650177767645e-17,
+    "cumulative_source_resolved_work_J": 2.5017815647384855e-17,
+    "cumulative_structural_absorption_heat_J": 2.1446049597503745e-18,
+    "cumulative_wall_order_relaxation_heat_J": 4.5451990660715594e-17,
+    "cumulative_wall_orientation_relaxation_heat_J": 1.8121772353772624e-16,
+    "generated_heat_J": 6.296076076122734e-17,
+    "interface_sink_annihilated_pair_cell_sum_m2": 8599103308768.43,
+    "interface_sink_inactive_intervals": 0,
+    "interface_sink_intervals": 500,
+    "interface_sink_rejected_intervals": 0,
+    "intervals": 536,
+    "lattice_absorbed_line_length_m": 3.9659576323048555e-08,
+    "lattice_absorption_inactive_intervals": 0,
+    "lattice_absorption_intervals": 3,
+    "lattice_absorption_rejected_intervals": 0,
+    "maximum_collective_wall_nucleation_first_law_residual": 0.0,
+    "maximum_compatible_wall_reorganization_first_law_residual": 0.0,
+    "maximum_conservative_dipole_wall_first_law_residual": 5.44321769411076e-13,
+    "maximum_conservative_dipole_wall_inventory_residual_m2": 2.0,
+    "maximum_conservative_wall_glide_first_law_residual": 2.6909889091351595e-12,
+    "maximum_conservative_wall_glide_inventory_residual_m2": 0.515625,
+    "maximum_interface_sink_line_balance_residual_m2": 2.288818359375e-05,
+    "maximum_interface_sink_relative_first_law_residual": 1.278371865591982e-05,
+    "maximum_lattice_absorption_first_law_residual": 3.1205206603616026e-13,
+    "maximum_mechanical_relative_first_law_residual": 0.017653644890508333,
+    "maximum_relative_energy_closure": 6.399463576593069e-08,
+    "maximum_sink_line_balance_residual_m2": 0.0,
+    "maximum_sink_relative_first_law_residual": 0.0,
+    "maximum_source_line_balance_residual_m2": 0.479736328125,
+    "maximum_source_relative_first_law_residual": 9.439971054735066e-06,
+    "maximum_structural_absorption_first_law_residual": 0.028806884590142384,
+    "maximum_wall_order_relaxation_first_law_residual": 2.763932067381137e-09,
+    "maximum_wall_orientation_relaxation_first_law_residual": 0.00011267605633802817,
+    "physical_time_s": 4.159999999999968e-05,
+    "rejected_events": 0,
+    "sink_annihilated_pair_cell_sum_m2": 0.0,
+    "sink_inactive_intervals": 0,
+    "sink_intervals": 0,
+    "sink_rejected_intervals": 0,
+    "source_created_line_cell_sum_m2": 7199275215119.307,
+    "source_event_count": 20.733912619543787,
+    "source_inactive_intervals": 0,
+    "source_intervals": 3,
+    "source_rejected_intervals": 0,
+    "stationary_intervals": 0,
+    "structural_absorbed_line_length_m": 1.431380720230665e-09,
+    "structural_absorption_inactive_intervals": 1,
+    "structural_absorption_intervals": 502,
+    "structural_absorption_rejected_intervals": 0,
+    "transformed_volume_m3": 1.5562406155742968e-23,
+    "wall_order_relaxation_inactive_intervals": 0,
+    "wall_order_relaxation_intervals": 3,
+    "wall_order_relaxation_rejected_intervals": 0,
+    "wall_orientation_relaxation_inactive_intervals": 0,
+    "wall_orientation_relaxation_intervals": 3,
+    "wall_orientation_relaxation_rejected_intervals": 0
+  },
+  "owner_area_m2": {
+    "10": {
+      "after": 8.085058274579166e-12,
+      "before": 8.083432883910384e-12,
+      "change": 1.6253906687819357e-15
+    },
+    "20": {
+      "after": 7.481618363699773e-12,
+      "before": 7.485093010168732e-12,
+      "change": -3.474646468959071e-15
+    },
+    "30": {
+      "after": 7.473323361721054e-12,
+      "before": 7.471474105920879e-12,
+      "change": 1.8492558001755195e-15
+    }
+  },
+  "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_interface_structural_bridge_dynamic_r1e3_clean/checkpoint_latest.npz",
+  "parent_checkpoint_sha256": "58802f9269f00d823d8a8c1b24a4ae75a778975d391610ab9a7a5c9217177b15",
+  "parent_provenance": {
+    "campaign": "V66",
+    "scientific_scope": "inherited-subgrain coupled exposure",
+    "source_commit": "9bc7f10fb5884b2af731da3bb9f2652349f9de89",
+    "source_dirty": false
+  },
+  "schema": "v67-one-flux-lattice-structural-continuation-v1",
+  "source_commit": "0889b4d5547ca848eaf77cf951c8c72bbebc5020",
+  "source_tree_clean": false
+}

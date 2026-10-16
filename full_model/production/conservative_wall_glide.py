@@ -33,12 +33,15 @@ class ConservativeWallGlideParameters:
     maximum_edge_fraction: float = .02
     maximum_internal_substeps: int = 4096
     maximum_backtracks: int = 20
+    ordered_wall_mobility_power: float = 2.0
 
     def __post_init__(self):
         if not 0.0 < float(self.maximum_edge_fraction) < 1.0:
             raise ValueError("maximum edge fraction must lie in (0,1)")
         if int(self.maximum_internal_substeps) < 1:
             raise ValueError("positive wall-glide substep capacity required")
+        if float(self.ordered_wall_mobility_power) < 0.0:
+            raise ValueError("ordered-wall mobility power must be nonnegative")
 
 
 @dataclass(frozen=True)
@@ -60,7 +63,8 @@ class ConservativeWallGlideDecision:
 
 
 def _checkerboard_glide_pass(population, chemical_J_m, temperature_K, domain,
-                             edge_interval_s, axis, parity, parameters):
+                             edge_interval_s, axis, parity, parameters,
+                             mobility=None):
     value = np.asarray(population, dtype=float).copy()
     chemical = np.asarray(chemical_J_m, dtype=float)
     temperature = np.asarray(temperature_K, dtype=float)
@@ -79,6 +83,11 @@ def _checkerboard_glide_pass(population, chemical_J_m, temperature_K, domain,
     edge_temperature = .5*(temperature+neighbor_temperature)
     rate = exp_floor_event_rate_Hz(
         affinity, edge_temperature[..., None], parameters.activation)
+    if mobility is not None:
+        local_mobility = np.asarray(mobility, dtype=float)
+        edge_mobility = .5*(
+            local_mobility+np.roll(local_mobility, -1, axis=axis))
+        rate = rate*edge_mobility[..., None]
     maximum_rate = (float(np.max(rate[eligible])) if np.any(eligible) else 0.0)
     fraction = np.minimum(
         -np.expm1(-rate*float(edge_interval_s)),
@@ -113,10 +122,13 @@ def evaluate_conservative_wall_glide(
     before = evaluate_complete_multigrain_energy(state, **common)
     maximum_temperature = max(
         float(np.max(owner.temperature_K)) for owner in state.owners)
+    maximum_mobility = max(float(np.max(
+        np.maximum(1.0-np.asarray(owner.wall_order), 0.0)**
+        parameters.ordered_wall_mobility_power)) for owner in state.owners)
     eV_J = 1.602176634e-19
     floor_affinity = (parameters.activation.activation_enthalpy_eV*eV_J
                       /parameters.activation.activation_segment_m)
-    rate_ceiling = float(exp_floor_event_rate_Hz(
+    rate_ceiling = maximum_mobility*float(exp_floor_event_rate_Hz(
         floor_affinity, maximum_temperature, parameters.activation))
     edge_exposure_limit = -math.log1p(-parameters.maximum_edge_fraction)
     internal_substeps = max(1, int(math.ceil(
@@ -143,6 +155,9 @@ def evaluate_conservative_wall_glide(
                         (np.asarray(support) > parameters.owner_support_threshold)
                         &(np.asarray(owner.wall_order)
                           >= parameters.minimum_wall_order))
+                    mobility = np.maximum(
+                        1.0-np.asarray(owner.wall_order), 0.0)**(
+                            parameters.ordered_wall_mobility_power)
                     chemical = wall_free_energy_derivatives(
                         owner, wall_parameters, options.get("topologies", ()),
                         systems)
@@ -156,7 +171,8 @@ def evaluate_conservative_wall_glide(
                                 population,
                                 chemical[f"wall_{sign}_mu_J_m"],
                                 owner.temperature_K, domain,
-                                substep_s/4.0, axis, parity, parameters))
+                                substep_s/4.0, axis, parity, parameters,
+                                mobility=mobility))
                         fields[name] = candidate
                         moved += sign_moved
                         maximum_rate = max(maximum_rate, sign_rate)

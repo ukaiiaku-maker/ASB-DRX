@@ -1435,6 +1435,26 @@ def _state_map(state, function):
         for item in fields(state)})
 
 
+def _minimum_bounded_fraction(available, requested):
+    """Return the smallest ``available/requested`` without a scale floor.
+
+    Both arrays are nonnegative.  A requested change can underflow to exact
+    zero when a constitutive rate is proportional to a subnormal population;
+    that change is numerically inactive and must not create a false Zeno
+    limiter.  Conversely, zero availability with a resolved positive request
+    remains a genuine zero scale.  Direct IEEE division preserves both cases,
+    whereas the former absolute ``1e-300`` denominator floor did not.
+    """
+    numerator = np.asarray(available, dtype=float)
+    denominator = np.asarray(requested, dtype=float)
+    ratio = np.full(np.broadcast_shapes(numerator.shape, denominator.shape),
+                    np.inf, dtype=float)
+    numerator, denominator = np.broadcast_arrays(numerator, denominator)
+    with np.errstate(divide="ignore", over="ignore", invalid="ignore"):
+        np.divide(numerator, denominator, out=ratio, where=denominator > 0.0)
+    return float(np.min(ratio))
+
+
 def accepted_euler_step(state, driving, systems, topologies, parameters, dt_s,
                         active_mask=None):
     """Advance the common residual with one global positivity/bound limiter.
@@ -1466,21 +1486,21 @@ def accepted_euler_step(state, driving, systems, topologies, parameters, dt_s,
             donor = value*(1.0-state.wall_order[..., None])
         mask = derivative < 0.0
         if np.any(mask):
-            scale = min(scale, float(np.min(
-                parameters.maximum_fraction_per_step*donor[mask]
-                /np.maximum(-dt_s*derivative[mask], 1e-300))))
+            scale = min(scale, _minimum_bounded_fraction(
+                parameters.maximum_fraction_per_step*donor[mask],
+                -dt_s*derivative[mask]))
     for name in ("wall_order", "multi_hit_coordination"):
         value = np.asarray(getattr(state, name))
         derivative = np.asarray(getattr(rate, name))
         upper = derivative > 0.0; lower = derivative < 0.0
         if np.any(upper):
-            scale = min(scale, float(np.min(
-                parameters.maximum_fraction_per_step*(1.0-value[upper])
-                /np.maximum(dt_s*derivative[upper], 1e-300))))
+            scale = min(scale, _minimum_bounded_fraction(
+                parameters.maximum_fraction_per_step*(1.0-value[upper]),
+                dt_s*derivative[upper]))
         if np.any(lower):
-            scale = min(scale, float(np.min(
-                parameters.maximum_fraction_per_step*value[lower]
-                /np.maximum(-dt_s*derivative[lower], 1e-300))))
+            scale = min(scale, _minimum_bounded_fraction(
+                parameters.maximum_fraction_per_step*value[lower],
+                -dt_s*derivative[lower]))
     scale = float(np.clip(scale, 0.0, 1.0))
     updated = _state_map(
         state, lambda name, value: value+dt_s*scale*np.asarray(getattr(rate, name)))

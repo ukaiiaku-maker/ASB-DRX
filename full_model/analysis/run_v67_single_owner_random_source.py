@@ -53,6 +53,9 @@ from full_model.production.compatible_wall_reorganization import (
 from full_model.production.conservative_wall_glide import (
     ConservativeWallGlideParameters,
 )
+from full_model.production.conservative_dipole_wall_organization import (
+    ConservativeDipoleWallParameters,
+)
 from full_model.production.multigrain_production import MultiGrainProductionRuntime
 from full_model.production.orientation_wall_compatibility import (
     evaluate_orientation_wall_compatibility, ordered_wall_nye_from_common,
@@ -79,6 +82,29 @@ def _density(owner):
 def _serial_recognition(value):
     return {key: item for key, item in value.items()
             if not isinstance(item, np.ndarray)}
+
+
+def _physics_configuration(configuration):
+    """Recover inherited physics keys from controller checkpoint wrappers."""
+    required = {"n", "length_m", "interface_width_m", "temperature_K",
+                "dt_s", "maximum_mechanical_subdivisions"}
+    resolved = dict(configuration)
+    visited = set()
+    while not required.issubset(resolved):
+        parent = resolved.get("source_checkpoint")
+        if parent is None:
+            missing = sorted(required.difference(resolved))
+            raise KeyError(f"checkpoint is missing inherited physics keys: {missing}")
+        path = Path(parent)
+        if not path.is_absolute():
+            path = ROOT/path
+        canonical = str(path.resolve())
+        if canonical in visited:
+            raise ValueError("checkpoint physics provenance contains a cycle")
+        visited.add(canonical)
+        _, _, _, _, _, inherited, _ = _load_checkpoint(path)
+        resolved = dict(inherited, **resolved)
+    return resolved
 
 
 def _recognitions(owner, systems, spacing):
@@ -116,10 +142,13 @@ def main():
         "--source-mode", choices=("random_bulk", "random_discrete_bulk"),
         default="random_bulk")
     parser.add_argument("--source-site-density-m2", type=float, default=1e12)
+    parser.add_argument("--source-pair-increment-m2", type=float, default=1e10)
     parser.add_argument(
         "--transport-scheme", choices=("spectral", "groma_upwind"),
         default="spectral")
     parser.add_argument("--collective-wall-nucleation", action="store_true")
+    parser.add_argument("--dipole-wall-organization", action="store_true")
+    parser.add_argument("--disable-wall-glide", action="store_true")
     parser.add_argument(
         "--initial-state", choices=(
             "retained_owner", "uniform_single_crystal",
@@ -160,8 +189,9 @@ def main():
     single = MultiGrainCommonState(
         (active_owner_id,), np.ones((1,)+grid), (owner,))
     single.validate()
+    inherited_configuration = _physics_configuration(configuration)
     spacing, thickness, systems, wall, _, _, context = _physics(
-        _args_from_configuration(configuration))
+        _args_from_configuration(inherited_configuration))
     # Gradient-elastic compatibility at the resolved wall width.  The former
     # 2e-5 J/m value corresponds to a sub-grid ~14 nm length and lets the
     # O(1e6 J/m3) ordering well overwhelm Frank--Bilby consistency.
@@ -183,7 +213,7 @@ def main():
     wall = replace(wall, **wall_updates)
     source_parameters = ArrheniusSourceParameters(
         grain_size_m=float(configuration.get("length_m", spacing*grid[0])),
-        pair_increment_m2=1.0e10)
+        pair_increment_m2=args.source_pair_increment_m2)
     context = replace(
         context, wall_parameters=wall, shear_rate_s=args.shear_rate,
         maximum_mechanical_subdivisions=(
@@ -215,11 +245,19 @@ def main():
                 conservation_mode="burgers_vector")
             if args.collective_wall_nucleation else None),
         conservative_wall_glide_mode=(
-            "chemical_edge_glide" if args.collective_wall_nucleation
+            "chemical_edge_glide" if (args.collective_wall_nucleation
+                                      and not args.disable_wall_glide)
             else "disabled"),
         conservative_wall_glide_parameters=(
             ConservativeWallGlideParameters()
-            if args.collective_wall_nucleation else None),
+            if (args.collective_wall_nucleation and not args.disable_wall_glide)
+            else None),
+        conservative_dipole_wall_mode=(
+            "neutral_pair_expansion" if args.dipole_wall_organization
+            else "disabled"),
+        conservative_dipole_wall_parameters=(
+            ConservativeDipoleWallParameters()
+            if args.dipole_wall_organization else None),
         collective_wall_nucleation_mode=(
             "activated_closed_wall" if args.collective_wall_nucleation
             else "disabled"),
@@ -237,7 +275,7 @@ def main():
     records = []
     source_commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
-    progress_configuration = dict(configuration)
+    progress_configuration = dict(inherited_configuration)
     progress_configuration.update(
         schema="v67-single-owner-random-source-v1",
         owner_id=active_owner_id, initial_state=args.initial_state,
@@ -246,7 +284,10 @@ def main():
         source_seed=args.source_seed,
         nucleation_seed=nucleation_seed,
         source_bulk_site_density_m2=args.source_site_density_m2,
+        source_pair_increment_m2=args.source_pair_increment_m2,
         collective_wall_nucleation=args.collective_wall_nucleation,
+        dipole_wall_organization=args.dipole_wall_organization,
+        wall_glide_disabled=args.disable_wall_glide,
         wall_order_relaxation_mode=context.wall_order_relaxation_mode,
         conservative_wall_glide_mode=context.conservative_wall_glide_mode,
         transport_scheme=args.transport_scheme,
@@ -307,6 +348,18 @@ def main():
                 "conservative_wall_glide_internal_substeps"],
             "conservative_wall_glide_relative_first_law_residual": interval.audit[
                 "conservative_wall_glide_relative_first_law_residual"],
+            "conservative_dipole_wall_classification": interval.audit[
+                "conservative_dipole_wall_classification"],
+            "conservative_dipole_wall_separated_pair_cell_sum_m2": (
+                interval.audit[
+                    "conservative_dipole_wall_separated_pair_cell_sum_m2"]),
+            "conservative_dipole_wall_line_residual_m2": interval.audit[
+                "conservative_dipole_wall_line_residual_m2"],
+            "conservative_dipole_wall_internal_substeps": interval.audit[
+                "conservative_dipole_wall_internal_substeps"],
+            "conservative_dipole_wall_relative_first_law_residual": (
+                interval.audit[
+                    "conservative_dipole_wall_relative_first_law_residual"]),
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fraction": interval.audit[
@@ -389,6 +442,8 @@ def main():
             "nucleation_seed": nucleation_seed,
             "source_bulk_site_density_m2": args.source_site_density_m2,
             "collective_wall_nucleation": args.collective_wall_nucleation,
+            "dipole_wall_organization": args.dipole_wall_organization,
+            "wall_glide_disabled": args.disable_wall_glide,
             "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
             "conservative_wall_glide_mode": (
                 context.conservative_wall_glide_mode),
@@ -421,6 +476,8 @@ def main():
                 and row["wall_order_relative_first_law_residual"] < .05
                 and row[
                     "conservative_wall_glide_relative_first_law_residual"] < .05
+                and row[
+                    "conservative_dipole_wall_relative_first_law_residual"] < .05
                 and row["wall_reorganization_relative_first_law_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records),

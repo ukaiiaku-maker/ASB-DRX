@@ -68,3 +68,25 @@ def test_unpolarized_zero_order_control_remains_inactive():
     np.testing.assert_array_equal(
         decision.committed_state.owners[0].wall_order,
         state.owners[0].wall_order)
+
+
+def test_wall_disordering_uses_slower_stress_independent_recovery_clock():
+    systems, topologies, parameters, state = _one_owner(False)
+    owner = replace(
+        state.owners[0],
+        wall_order=np.full(state.owners[0].wall_order.shape, .8))
+    state = replace(state, owners=(owner,))
+    decision = evaluate_implicit_wall_order_relaxation(
+        state, interval_s=2.0e-4, mean_strain=np.zeros((2, 2)),
+        spacing_m=parameters.spacing_m,
+        represented_thickness_m=5.0e-10, topologies=topologies,
+        systems=systems, wall_parameters=parameters,
+        energy_kwargs={"topologies": topologies, "systems": systems})
+    assert decision.accepted
+    assert decision.owner_disordering_rate_s_by_id[1] < (
+        decision.owner_rate_s_by_id[1])
+    assert 0.0 < decision.owner_disordering_fraction_by_id[1] < 1.0e-3
+    assert np.mean(decision.committed_state.owners[0].wall_order) < .8
+    assert np.mean(decision.committed_state.owners[0].wall_order) > .79
+    assert decision.delta_helmholtz_J < 0.0
+    assert decision.relative_first_law_residual < 1.0e-10

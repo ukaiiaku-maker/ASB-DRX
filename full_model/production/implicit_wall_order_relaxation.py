@@ -38,6 +38,12 @@ class ImplicitWallOrderRelaxationParameters:
     optimizer_max_iterations: int = 300
     optimizer_gradient_tolerance: float = 1.0e-9
     maximum_backtracks: int = 16
+    # Creation of an ordered wall can be glide/cross-slip assisted by the
+    # resolved mechanical stress.  Dissolving that network is a recovery
+    # reaction requiring climb/diffusion and therefore has its own
+    # stress-independent Arrhenius barrier.  This is a direction-of-reaction
+    # law, not a loading-rate or temperature switch.
+    disordering_barrier_eV: float = 1.40
 
     def __post_init__(self):
         if not 0.0 < self.maximum_fraction_per_interval <= 1.0:
@@ -46,6 +52,9 @@ class ImplicitWallOrderRelaxationParameters:
             raise ValueError("owner support threshold must lie in [0,1)")
         if self.optimizer_max_iterations < 1 or self.maximum_backtracks < 0:
             raise ValueError("wall-order iteration limits are invalid")
+        if (not math.isfinite(self.disordering_barrier_eV)
+                or self.disordering_barrier_eV <= 0.0):
+            raise ValueError("disordering barrier must be positive finite")
 
 
 @dataclass(frozen=True)
@@ -56,6 +65,8 @@ class ImplicitWallOrderRelaxationDecision:
     committed_state: object
     owner_fraction_by_id: dict[int, float]
     owner_rate_s_by_id: dict[int, float]
+    owner_disordering_rate_s_by_id: dict[int, float]
+    owner_disordering_fraction_by_id: dict[int, float]
     owner_optimizer_success_by_id: dict[int, bool]
     owner_target_energy_change_J_by_id: dict[int, float]
     backtracks: int
@@ -152,6 +163,8 @@ def evaluate_implicit_wall_order_relaxation(
     stress_scale = np.max(np.abs(local.stress_Pa), axis=(-2, -1))
     fractions = {}
     rates = {}
+    disordering_rates = {}
+    disordering_fractions = {}
     successes = {}
     target_changes = {}
     targets = []
@@ -170,13 +183,22 @@ def evaluate_implicit_wall_order_relaxation(
         rate = float(exp_floor_rate(
             owner_stress, temperature, wall_parameters.order_barrier_eV,
             wall_parameters))
+        disordering_rate = float(exp_floor_rate(
+            0.0, temperature, parameters.disordering_barrier_eV,
+            wall_parameters))
         fraction = min(-math.expm1(-rate*dt),
                        parameters.maximum_fraction_per_interval)
+        disordering_fraction = min(
+            -math.expm1(-disordering_rate*dt),
+            parameters.maximum_fraction_per_interval)
         if target_change >= 0.0 or np.allclose(target, owner.wall_order,
                                                rtol=0.0, atol=1e-14):
             fraction = 0.0
+            disordering_fraction = 0.0
         fractions[int(grain_id)] = fraction
         rates[int(grain_id)] = rate
+        disordering_rates[int(grain_id)] = disordering_rate
+        disordering_fractions[int(grain_id)] = disordering_fraction
         successes[int(grain_id)] = success
         target_changes[int(grain_id)] = target_change
         targets.append(target)
@@ -185,9 +207,11 @@ def evaluate_implicit_wall_order_relaxation(
         owners = []
         for grain_id, owner, target in zip(
                 state.grain_ids, state.owners, targets):
-            fraction = scale*fractions[int(grain_id)]
-            q = np.asarray(owner.wall_order)+fraction*(
-                target-np.asarray(owner.wall_order))
+            delta = target-np.asarray(owner.wall_order)
+            fraction = np.where(
+                delta >= 0.0, fractions[int(grain_id)],
+                disordering_fractions[int(grain_id)])
+            q = np.asarray(owner.wall_order)+scale*fraction*delta
             owners.append(replace(owner, wall_order=np.clip(q, 0.0, 1.0)))
         candidate = replace(state, owners=tuple(owners))
         candidate.validate()
@@ -246,9 +270,13 @@ def evaluate_implicit_wall_order_relaxation(
     effective_fractions = {
         key: (scale*value if accepted else 0.0)
         for key, value in fractions.items()}
+    effective_disordering_fractions = {
+        key: (scale*value if accepted else 0.0)
+        for key, value in disordering_fractions.items()}
     return ImplicitWallOrderRelaxationDecision(
         accepted, classification, cold, committed if accepted else state,
-        effective_fractions, rates, successes, target_changes, backtracks,
+        effective_fractions, rates, disordering_rates,
+        effective_disordering_fractions, successes, target_changes, backtracks,
         delta, heat if accepted else 0.0, residual if accepted else 0.0,
         relative if accepted else 0.0,
         heat_cells if accepted else np.zeros_like(heat_cells))

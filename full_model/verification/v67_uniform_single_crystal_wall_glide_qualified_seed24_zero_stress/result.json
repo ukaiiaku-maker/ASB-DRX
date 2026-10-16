@@ -1,0 +1,36 @@
+{
+  "configuration": {
+    "controller": "bounded local elastic secant; complete work-ledgered interval",
+    "dt_s": 2e-09,
+    "maximum_strain_change_per_interval": 0.0005,
+    "nucleation_seed": 24,
+    "probe_strain": 0.0001,
+    "schema": "v66-zero-mean-stress-feedback-v1",
+    "source_checkpoint": "full_model/verification/v67_uniform_single_crystal_wall_glide_qualified_seed24_9p42pct_resume/checkpoint_latest.npz",
+    "source_seed": 67,
+    "steps": 100,
+    "v67_wall_physics": true
+  },
+  "created_utc": "2026-10-16T01:27:13.898023+00:00",
+  "decision": {
+    "near_zero_mean_stress_reached": true,
+    "reason": "Mean stress is feedback-controlled by work-ledgered strain increments; local residual stresses and finite controller error remain.",
+    "run_complete": true,
+    "static_rx_at_near_zero_mean_stress_supported": false,
+    "stress_free_claim": false
+  },
+  "result": {
+    "cumulative_external_work_J": -3.740163335395363e-13,
+    "final_applied_shear_strain": 0.06709563100115938,
+    "final_mean_shear_stress_Pa": 0.16396436520153657,
+    "final_target_change_fraction": 0.0,
+    "first_step_below_10MPa": 54,
+    "maximum_front_relative_energy_closure": 0.0,
+    "maximum_mechanical_relative_first_law_residual": 0.007122098779966515,
+    "minimum_absolute_mean_shear_stress_Pa": 0.1639010884682648,
+    "rejected_front_events_total": 0,
+    "steps_completed": 100,
+    "target_change_after_first_below_10MPa": 0.0
+  },
+  "schema": "v66-zero-mean-stress-result-v1"
+}

@@ -1,13 +1,13 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-15T18:19:42Z",
+  "last_updated_utc": "2026-10-16T02:29:38Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
     "deadline_utc": "2026-10-15T10:47:15Z",
     "duration_s": 43200,
     "actual_end_utc": null,
-    "status": "active",
+    "status": "active_under_explicit_reconnect_continuation",
     "execution_location": "local_only",
     "maximum_heavy_campaign_solvers": 1,
     "hpc_authorized": false,
@@ -57,19 +57,19 @@
   },
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_can_raise_structural_GB_content_and_misorientation_when_complete_affinity_is_favorable",
-    "H2": "selective_subgrain_growth_and_accessible_misorientation_redistribution_can_mature_a_viable_RX_region",
+    "H2": "conservative_GB_source_to_ordered_wall_capture_with_asymmetric_Arrhenius_recovery_produces_a_rate_ordered_low_angle_precursor_but_has_not_matured_a_two_degree_RX_region",
     "H3": "family_total_Groma_transport_has_a_positive_0.8_um_high_temperature_tangent_but_the_valid_concurrent_nonlinear_prefix_does_not_separate_wall_polarization_from_control_and_supports_only_4.35e-5_deg_total_signed_capacity; endogenous_wall_formation_is_negative_at_tested_conditions",
-    "H4": "GB_TJ_only_and_random_bulk_Arrhenius_sources_produce_discriminably_different_organization_and_heterogeneity"
+    "H4": "GB_TJ_only_and_matched_random_Arrhenius_sources_are_nearly_indistinguishable_over_twenty_n16_intervals_so_source_geography_is_not_the_current_rate_limiting_mechanism"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_completed_r1e3_matched_strain_reversal",
-      "last_case": "v67_material_continuity_interface_sink_r1e3_8_percent",
-      "last_start_local": "2026-10-14T17:59:00-07:00",
-      "last_source_commit": "7c284cd",
-      "last_output": "full_model/verification/v67_material_continuity_interface_sink_r1e3_screen"
+      "status": "available_after_completed_full_regression",
+      "last_case": "v67_polycrystal_gbtj_physical_match_rate200_preflight",
+      "last_start_local": "2026-10-15T19:20:00-07:00",
+      "last_source_commit": "0889b4d_dirty_continuation",
+      "last_output": "full_model/verification/v67_polycrystal_gbtj_physical_match_rate200_preflight"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -81,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_rate_ordered_stress_directed_RX_pathway_coexists_spatially_with_the_active_high_rate_shear_band_under_the_same_parameterization_and_common_thermal_boundary_law",
-    "next_executable_experiment": "enable_the_qualified_one_flux_absorption_pathway_on_a_saved_high_rate_localization_anchor_and_measure_RX_owner_growth_and_front_motion_inside_versus_outside_the_connected_power_band_at_common_strain_landmarks",
-    "source_identity": "V67_matched_incremental_strain_rate_ordering_commit_1a3d1ab",
-    "expected_discriminatory_observation": "the_overlap_anchor_must_retain_a_connected_active_power_band_while_showing_energy_accepted_RX_growth_spatially_intersecting_that_band_without_parameter_or_mechanism_switches",
+    "physical_uncertainty": "whether_the_subdegree_rate_ordered_precursor_is_an_n16_representation_limit_or_a_true_common_law_saturation_and_whether_it_can_organize_inside_a_clean_active_shear_band",
+    "next_executable_experiment": "construct_a_fresh_clean_source_n32_polycrystal_anchor_then_apply_the_accepted_GB_source_capture_ordering_recovery_and_one_flux_Mura_path_at_common_strain_increments",
+    "source_identity": "V67_conservative_capture_and_asymmetric_recovery_pending_commit",
+    "expected_discriminatory_observation": "a_resolved_owner_must_exceed_the_n16_low_angle_plateau_with_all_line_Mura_energy_and_heat_ledgers_closed_before_any_DRX_or_overlap_claim",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "stress_directed_one_flux_absorption_is_conservative_and_sustains_dynamic_to_static_RX;_matched_additional_strain_from_one_retained_state_grows_grain30_0p14075_percent_at_r1e2_versus_0p01360_percent_at_r1e3_for_a_10p35x_lower_rate_advantage;_virgin_path_rate_mapping_percent_scale_DRX_and_DRX_ASB_spatial_coexistence_remain_unqualified"
+    "result_status": "conservative_source_to_wall_capture_and_asymmetric_Arrhenius_recovery_pass_1139_tests_and_produce_a_rate_ordered_0p704_degree_n16_precursor;_two_degree_DRX_static_RX_and_DRX_inside_a_qualified_ASB_remain_unqualified;_dirty_parent_n48_evidence_is_quarantined"
   },
   "continuation_rule": {
     "active": true,

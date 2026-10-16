@@ -2828,3 +2828,42 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   Thus the unchanged Arrhenius mechanics gives a 10.35x lower-rate growth
   advantage through physical exposure time. The inherited prehistory and
   sub-percent response prevent promotion to a virgin-path DRX regime map.
+
+## V67 conservative wall-organization continuation (2026-10-16)
+
+- A false zero-progress failure in the bounded Euler map was repaired with an
+  IEEE-safe donor/request fraction. Subnormal wall rates no longer create a
+  spurious timestep collapse; the focused regression covers the zero-donor
+  and subnormal cases.
+- Neutral Hall--Petch source pairs now have an energy-qualified conservative
+  route into signed wall dipoles. Each positive/negative Burgers-family
+  inventory and total line closes, no owner or grain label is created, and
+  heat is deposited only from the independently evaluated Helmholtz drop.
+- Ordered wall glide is physically pinned by its ordered fraction. A separate
+  stress-independent 1.40 eV Arrhenius recovery clock now controls wall
+  disordering, while stress-assisted ordering retains the immutable EXP-floor
+  law. This is a reaction-direction law, not a rate-dependent mechanism switch.
+- The n16 GB/TJ-only dynamic path sustains a low-angle precursor through 100
+  intervals. A work-ledgered feedback unload reaches 3.50 MPa mean shear with
+  all Mura and first-law audits closed. A following 6 microsecond controlled
+  hold moves an existing front by 0.339%, but owner orientation spans do not
+  mature; this is not static RX and the result classifier now requires at
+  least 1% retained growth before supporting that claim.
+- The former source/organization masks were disconnected: GB/TJ source pairs
+  occupied diffuse-interface cells excluded from the wall operator. A fixed
+  0.5 micrometre capture zone connects boundary-emitted pairs to an existing
+  ordered network without changing their line inventory. At equal strain the
+  unchanged common law predicts an intermediate-rate organization maximum:
+  grain 30 reaches 0.704 degrees at 200/s, versus about 0.65 degrees at 100/s
+  and lower values at 300--1000/s.
+- The response remains a subgrain precursor, not DRX: no owner reaches the
+  provisional 2 degree threshold and no grain is born. GB/TJ and shuffled
+  matched-random sources remain nearly indistinguishable over 20 intervals.
+  A finite two-cell loop-span ablation and a 0.5 micrometre match-length
+  ablation are valid negative results rather than promoted closures.
+- The retained n48 ASB checkpoint is quarantined: its dirty V66 parent fails
+  the current mechanical complete-energy audit even at zero strain increment,
+  so it cannot qualify DRX-in-band coexistence. The next executable task is a
+  fresh clean-source n32/n48 polycrystal anchor using the accepted operators.
+- Canonical regression: 1,139 tests pass in 331.92 seconds. No heavy solver is
+  active at this checkpoint; autonomous continuation remains in force.
