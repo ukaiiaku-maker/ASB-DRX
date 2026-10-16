@@ -127,8 +127,8 @@ def main() -> None:
 
     for item in plan:
         name = item["output_name"]
-        parent = (args.verification_root / item["parent_name"]
-                  / "checkpoint_latest.npz")
+        parent_root = args.verification_root / item["parent_name"]
+        parent = parent_root / "checkpoint_latest.npz"
         output = args.verification_root / name
         result = output / "result.json"
         if result.exists():
@@ -141,10 +141,34 @@ def main() -> None:
             _atomic_json(args.state, state)
             if valid:
                 continue
+            # Never overwrite invalid evidence. Recovery is an explicit
+            # diagnosis task, while the independent matched branch may proceed.
+            continue
+        if (output / "checkpoint_latest.npz").exists():
+            state["cases"][name] = {
+                "status": "PARTIAL_REQUIRES_RECOVERY",
+                "checkpoint": str(output / "checkpoint_latest.npz"),
+                "updated_utc": _utc(),
+            }
+            state["updated_utc"] = _utc()
+            _atomic_json(args.state, state)
+            continue
         if not parent.exists():
             state["cases"][name] = {
                 "status": "BLOCKED_MISSING_PARENT",
                 "parent": str(parent), "updated_utc": _utc(),
+            }
+            state["updated_utc"] = _utc()
+            _atomic_json(args.state, state)
+            continue
+        parent_result = parent_root / "result.json"
+        parent_valid, parent_failures = validate_result(
+            parent_result, item["control"])
+        if not parent_valid:
+            state["cases"][name] = {
+                "status": "BLOCKED_INVALID_PARENT",
+                "parent": str(parent), "failures": parent_failures,
+                "updated_utc": _utc(),
             }
             state["updated_utc"] = _utc()
             _atomic_json(args.state, state)
