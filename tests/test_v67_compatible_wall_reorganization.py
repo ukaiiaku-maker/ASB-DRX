@@ -2,6 +2,7 @@ from dataclasses import replace
 
 import numpy as np
 
+import full_model.production.compatible_wall_reorganization as reorganization_module
 from full_model.production.compatible_wall_reorganization import (
     CompatibleWallReorganizationParameters,
     evaluate_compatible_wall_reorganization,
@@ -150,3 +151,52 @@ def test_reaction_cone_conserves_support_weighted_multigrain_inventory():
         support[..., None, None]*direction*after_signed[..., None],
         axis=(0, 1, 2), dtype=np.longdouble)
     np.testing.assert_allclose(after, before, rtol=2e-11, atol=32.0)
+
+
+def test_local_affinity_probe_can_accept_before_uphill_projection_endpoint(
+        monkeypatch):
+    systems, topologies, parameters, owner, _ = fixture(8)
+    spacing = parameters.spacing_m
+    total = np.full_like(owner.wall_plus_m2, 2.0e14)
+    owner = replace(
+        owner, wall_plus_m2=.5*total, wall_minus_m2=.5*total,
+        wall_order=np.ones(owner.wall_order.shape),
+        temperature_K=np.full(owner.temperature_K.shape, 1000.0))
+    state = MultiGrainCommonState(
+        (1,), np.ones((1, 8, 8)), (owner,))
+    target = np.zeros_like(total)
+    target[:4, :, :] = 1.0e13
+    target[4:, :, :] = -1.0e13
+    active = np.ones((8, 8), dtype=bool)
+    monkeypatch.setattr(
+        reorganization_module, "_compatible_signed_target",
+        lambda *args, **kwargs: (target, active))
+
+    class Energy:
+        def __init__(self, value):
+            self.helmholtz_J = value
+            self.internal_J = value
+
+    def energy(candidate, **kwargs):
+        signed = (candidate.owners[0].wall_plus_m2
+                  -candidate.owners[0].wall_minus_m2)
+        coordinate = float(np.linalg.norm(signed)/np.linalg.norm(target))
+        # The exact projection endpoint is uphill, but the local direction is
+        # downhill and has a finite minimum.  The complete-energy backtrack
+        # must select that accessible partial transaction.
+        return Energy(1.0e-17*((coordinate-.2)**2-.04))
+
+    monkeypatch.setattr(
+        reorganization_module, "evaluate_complete_multigrain_energy", energy)
+    decision = evaluate_compatible_wall_reorganization(
+        state, interval_s=2.0e-5, mean_strain=np.zeros((2, 2)),
+        spacing_m=spacing, represented_thickness_m=5.0e-10,
+        systems=systems, wall_parameters=parameters,
+        energy_kwargs={"topologies": topologies, "systems": systems},
+        parameters=CompatibleWallReorganizationParameters(
+            affinity_probe_fraction=.05),
+        maximum_relative_first_law_residual=2.0)
+    assert decision.accepted
+    assert decision.backtracks > 0
+    assert decision.owner_affinity_J_m_by_id[1] > 0.0
+    assert decision.delta_helmholtz_J < 0.0

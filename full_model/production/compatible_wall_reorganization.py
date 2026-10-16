@@ -23,9 +23,20 @@ class CompatibleWallReorganizationParameters:
         attempt_frequency_Hz=1.0e7, activation_segment_m=2.5e-9)
     minimum_wall_order: float = .20
     owner_support_threshold: float = .75
+    affinity_probe_fraction: float = .05
     maximum_fraction_per_interval: float = 1.0
     maximum_backtracks: int = 16
     conservation_mode: str = "family_signed"
+
+    def __post_init__(self):
+        if not 0.0 < float(self.affinity_probe_fraction) <= 1.0:
+            raise ValueError("wall-reorganization affinity probe must lie in (0,1]")
+        if not 0.0 < float(self.maximum_fraction_per_interval) <= 1.0:
+            raise ValueError("wall-reorganization fraction must lie in (0,1]")
+        if self.maximum_backtracks < 0:
+            raise ValueError("wall-reorganization backtracks cannot be negative")
+        if self.conservation_mode not in {"family_signed", "burgers_vector"}:
+            raise ValueError("unknown compatible-wall conservation mode")
 
 
 @dataclass(frozen=True)
@@ -221,17 +232,25 @@ def evaluate_compatible_wall_reorganization(
         targets.append(target)
         active_masks.append(active)
         total = owner.wall_plus_m2+owner.wall_minus_m2
+        current = owner.wall_plus_m2-owner.wall_minus_m2
+        probe = float(parameters.affinity_probe_fraction)
+        probe_signed = current+probe*(target-current)
         candidate_owner = replace(
-            owner, wall_plus_m2=.5*(total+target),
-            wall_minus_m2=.5*(total-target))
+            owner, wall_plus_m2=.5*(total+probe_signed),
+            wall_minus_m2=.5*(total-probe_signed))
         owners = tuple(candidate_owner if gid == grain_id else item
                        for gid, item in zip(state.grain_ids, state.owners))
         trial = replace(state, owners=owners)
         trial.validate()
         trial_energy = evaluate_complete_multigrain_energy(trial, **common)
+        # The conjugate event measure is the physical signed line actually
+        # redistributed by the probe, not all wall line in the owner.  This
+        # keeps the Arrhenius affinity independent of inactive neutral storage
+        # and avoids rejecting a locally downhill direction merely because its
+        # distant mathematical projection endpoint is uphill.
         participating_line_m = float(np.sum(
-            np.asarray(support)[..., None]*active[..., None]*total,
-            dtype=np.longdouble)*cell_volume)
+            np.asarray(support)[..., None]*np.abs(
+                probe_signed-current), dtype=np.longdouble)*cell_volume)
         affinity = ((before.helmholtz_J-trial_energy.helmholtz_J)
                     /participating_line_m if participating_line_m > 0.0 else 0.0)
         temperature = (float(np.mean(owner.temperature_K[active]))
