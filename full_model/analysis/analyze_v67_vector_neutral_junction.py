@@ -42,7 +42,7 @@ def main():
     checkpoint_path = args.case/"checkpoint_latest.npz"
     result = json.loads(result_path.read_text())
     state, _, _, _, initial, _, _ = _load_checkpoint(checkpoint_path)
-    parent_path = Path(result["configuration"]["parent_checkpoint"])
+    parent_path = Path(result["parent_checkpoint"])
     parent, *_ = _load_checkpoint(parent_path)
     index = state.grain_ids.index(args.grain_id)
     area = float(np.sum(state.supports[index], dtype=np.longdouble)) * (
