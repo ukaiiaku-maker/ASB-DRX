@@ -55,6 +55,9 @@ from .compatible_wall_reorganization import (
     CompatibleWallReorganizationParameters,
     evaluate_compatible_wall_reorganization,
 )
+from .conservative_wall_glide import (
+    ConservativeWallGlideParameters, evaluate_conservative_wall_glide,
+)
 from .collective_wall_nucleation import (
     CollectiveWallNucleationParameters, evaluate_collective_wall_nucleation,
 )
@@ -105,6 +108,8 @@ class CoupledMultigrainContext:
     wall_order_relaxation_mode: str = "disabled"
     compatible_wall_reorganization_parameters: object | None = None
     compatible_wall_reorganization_mode: str = "disabled"
+    conservative_wall_glide_parameters: object | None = None
+    conservative_wall_glide_mode: str = "disabled"
     collective_wall_nucleation_parameters: object | None = None
     collective_wall_nucleation_mode: str = "disabled"
     collective_wall_nucleation_seed: int = 67
@@ -473,9 +478,55 @@ def advance_complete_multigrain_interval(
                 wall_order.relative_first_law_residual
                 if wall_order.accepted else 0.0)))
     wall_order_wall_time = time.perf_counter()-wall_order_started
+    wall_glide_started = time.perf_counter()
+    wall_glide = None
+    glide_state = ordered_state
+    if context.conservative_wall_glide_mode != "disabled":
+        if context.conservative_wall_glide_mode != "chemical_edge_glide":
+            raise ValueError("unknown conservative wall-glide mode")
+        parameters = (ConservativeWallGlideParameters()
+                      if context.conservative_wall_glide_parameters is None
+                      else context.conservative_wall_glide_parameters)
+        wall_glide = evaluate_conservative_wall_glide(
+            glide_state, interval_s=dt, mean_strain=strain1,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, parameters=parameters)
+        if wall_glide.classification == (
+                "REJECTED_CONSERVATIVE_WALL_GLIDE_FIRST_LAW"):
+            raise RuntimeError("conservative wall glide failed its hard energy audit")
+        if wall_glide.accepted:
+            glide_state = wall_glide.committed_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            conservative_wall_glide_intervals=(
+                runtime.ledger.conservative_wall_glide_intervals
+                +int(wall_glide.accepted)),
+            conservative_wall_glide_inactive_intervals=(
+                runtime.ledger.conservative_wall_glide_inactive_intervals
+                +int(wall_glide.classification.startswith("INACTIVE"))),
+            conservative_wall_glide_rejected_intervals=(
+                runtime.ledger.conservative_wall_glide_rejected_intervals
+                +int(wall_glide.classification.startswith("REJECTED"))),
+            conservative_wall_glide_line_cell_sum_m2=(
+                runtime.ledger.conservative_wall_glide_line_cell_sum_m2
+                +(wall_glide.moved_line_cell_sum_m2
+                  if wall_glide.accepted else 0.0)),
+            cumulative_conservative_wall_glide_heat_J=(
+                runtime.ledger.cumulative_conservative_wall_glide_heat_J
+                +(wall_glide.generated_heat_J if wall_glide.accepted else 0.0)),
+            maximum_conservative_wall_glide_first_law_residual=max(
+                runtime.ledger.maximum_conservative_wall_glide_first_law_residual,
+                wall_glide.relative_first_law_residual
+                if wall_glide.accepted else 0.0),
+            maximum_conservative_wall_glide_inventory_residual_m2=max(
+                runtime.ledger.maximum_conservative_wall_glide_inventory_residual_m2,
+                abs(wall_glide.inventory_residual_m2))))
+    wall_glide_wall_time = time.perf_counter()-wall_glide_started
     wall_reorganization_started = time.perf_counter()
     wall_reorganization = None
-    reorganized_state = ordered_state
+    reorganized_state = glide_state
     if context.compatible_wall_reorganization_mode != "disabled":
         if context.compatible_wall_reorganization_mode != "frank_bilby_projection":
             raise ValueError("unknown compatible wall-reorganization mode")
@@ -806,6 +857,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if wall_order is None or not wall_order.accepted
             else np.asarray(wall_order.heat_source_J_by_cell)),
+        "conservative_wall_glide_heat_J": (
+            0.0 if wall_glide is None or not wall_glide.accepted
+            else wall_glide.generated_heat_J),
+        "conservative_wall_glide_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if wall_glide is None or not wall_glide.accepted
+            else np.asarray(wall_glide.heat_source_J_by_cell)),
         "compatible_wall_reorganization_heat_J": (
             0.0 if wall_reorganization is None or not wall_reorganization.accepted
             else wall_reorganization.generated_heat_J),
@@ -928,6 +986,21 @@ def advance_complete_multigrain_interval(
         "wall_order_relaxation_relative_first_law_residual": (
             0.0 if wall_order is None or not wall_order.accepted
             else wall_order.relative_first_law_residual),
+        "conservative_wall_glide_mode": context.conservative_wall_glide_mode,
+        "conservative_wall_glide_classification": (
+            "DISABLED" if wall_glide is None else wall_glide.classification),
+        "conservative_wall_glide_moved_line_cell_sum_m2": (
+            0.0 if wall_glide is None or not wall_glide.accepted
+            else wall_glide.moved_line_cell_sum_m2),
+        "conservative_wall_glide_inventory_residual_m2": (
+            0.0 if wall_glide is None else wall_glide.inventory_residual_m2),
+        "conservative_wall_glide_maximum_rate_s": (
+            0.0 if wall_glide is None else wall_glide.maximum_rate_s),
+        "conservative_wall_glide_backtracks": (
+            0 if wall_glide is None else wall_glide.backtracks),
+        "conservative_wall_glide_relative_first_law_residual": (
+            0.0 if wall_glide is None or not wall_glide.accepted
+            else wall_glide.relative_first_law_residual),
         "compatible_wall_reorganization_mode": (
             context.compatible_wall_reorganization_mode),
         "compatible_wall_reorganization_classification": (
@@ -1032,6 +1105,7 @@ def advance_complete_multigrain_interval(
             "collective_wall_nucleation_map": collective_wall_wall_time,
             "source_map": source_wall_time,
             "wall_order_relaxation_map": wall_order_wall_time,
+            "conservative_wall_glide_map": wall_glide_wall_time,
             "compatible_wall_reorganization_map": wall_reorganization_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
@@ -1042,7 +1116,8 @@ def advance_complete_multigrain_interval(
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time
                                 +collective_wall_wall_time
-                                +wall_order_wall_time+sink_wall_time
+                                +wall_order_wall_time+wall_glide_wall_time
+                                +sink_wall_time
                                 +wall_reorganization_wall_time
                                 +interface_sink_wall_time
                                 +structural_absorption_wall_time+front_wall_time

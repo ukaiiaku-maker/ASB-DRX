@@ -3,6 +3,7 @@ from dataclasses import replace
 import numpy as np
 
 from full_model.production.compatible_wall_reorganization import (
+    CompatibleWallReorganizationParameters,
     evaluate_compatible_wall_reorganization,
 )
 from full_model.production.extensive_wall import (
@@ -57,3 +58,44 @@ def test_compatible_wall_glide_is_downhill_and_conserves_every_sign_inventory():
     np.testing.assert_array_equal(
         decision.committed_state.owners[0].wall_order,
         state.owners[0].wall_order)
+
+
+def test_reaction_cone_conserves_resultant_burgers_vector_and_wall_line():
+    systems, topologies, parameters, owner, _ = fixture(8)
+    spacing = parameters.spacing_m
+    coordinate = np.arange(8)[:, None]
+    orientation = (.025*np.sin(2*np.pi*coordinate/8)*np.ones((1, 8)))
+    closure = orientation_gradient_frank_bilby_target_m1(
+        orientation, spacing)[..., :, 2]
+    burgers = rotated_system_fields(systems, orientation)[0]
+    signed = np.einsum(
+        "...ai,...i->...a",
+        np.linalg.pinv(np.swapaxes(burgers, -2, -1)), closure)
+    # A spatially shifted distribution has the same family inventories but is
+    # incompatible with the current orientation.  The broader reaction cone
+    # is allowed to exchange family labels while preserving their resultant.
+    signed = np.roll(signed, 2, axis=0)
+    total = np.abs(signed)+2.0e14
+    owner = replace(
+        owner, wall_plus_m2=.5*(total+signed),
+        wall_minus_m2=.5*(total-signed),
+        wall_order=np.ones(owner.wall_order.shape),
+        orientation_rad=orientation,
+        temperature_K=np.full(owner.temperature_K.shape, 1000.0))
+    state = MultiGrainCommonState(
+        (1,), np.ones((1,)+orientation.shape), (owner,))
+    parameters = replace(
+        parameters,
+        wall_nye_match_coefficient_J_m=parameters.c44_Pa*spacing**2)
+    decision = evaluate_compatible_wall_reorganization(
+        state, interval_s=2.0e-5, mean_strain=np.zeros((2, 2)),
+        spacing_m=spacing, represented_thickness_m=5.0e-10,
+        systems=systems, wall_parameters=parameters,
+        energy_kwargs={"topologies": topologies, "systems": systems},
+        parameters=CompatibleWallReorganizationParameters(
+            conservation_mode="burgers_vector"))
+    assert decision.accepted
+    assert decision.delta_helmholtz_J < 0.0
+    inventory_scale = float(np.sum(np.abs(signed)))
+    assert decision.signed_content_residual_m2/inventory_scale < 1.0e-11
+    assert decision.line_balance_residual_m2 == 0.0

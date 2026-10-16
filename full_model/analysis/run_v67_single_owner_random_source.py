@@ -50,6 +50,9 @@ from full_model.production.implicit_wall_order_relaxation import (
 from full_model.production.compatible_wall_reorganization import (
     CompatibleWallReorganizationParameters,
 )
+from full_model.production.conservative_wall_glide import (
+    ConservativeWallGlideParameters,
+)
 from full_model.production.multigrain_production import MultiGrainProductionRuntime
 from full_model.production.orientation_wall_compatibility import (
     evaluate_orientation_wall_compatibility, ordered_wall_nye_from_common,
@@ -208,7 +211,14 @@ def main():
             "frank_bilby_projection" if args.collective_wall_nucleation
             else "disabled"),
         compatible_wall_reorganization_parameters=(
-            CompatibleWallReorganizationParameters()
+            CompatibleWallReorganizationParameters(
+                conservation_mode="burgers_vector")
+            if args.collective_wall_nucleation else None),
+        conservative_wall_glide_mode=(
+            "chemical_edge_glide" if args.collective_wall_nucleation
+            else "disabled"),
+        conservative_wall_glide_parameters=(
+            ConservativeWallGlideParameters()
             if args.collective_wall_nucleation else None),
         collective_wall_nucleation_mode=(
             "activated_closed_wall" if args.collective_wall_nucleation
@@ -238,6 +248,7 @@ def main():
         source_bulk_site_density_m2=args.source_site_density_m2,
         collective_wall_nucleation=args.collective_wall_nucleation,
         wall_order_relaxation_mode=context.wall_order_relaxation_mode,
+        conservative_wall_glide_mode=context.conservative_wall_glide_mode,
         transport_scheme=args.transport_scheme,
         wall_nye_match_coefficient_J_m=wall.wall_nye_match_coefficient_J_m)
     for index in range(1, args.intervals+1):
@@ -284,6 +295,16 @@ def main():
                 "compatible_wall_reorganization_line_residual_m2"],
             "wall_reorganization_relative_first_law_residual": interval.audit[
                 "compatible_wall_reorganization_relative_first_law_residual"],
+            "conservative_wall_glide_classification": interval.audit[
+                "conservative_wall_glide_classification"],
+            "conservative_wall_glide_moved_line_cell_sum_m2": interval.audit[
+                "conservative_wall_glide_moved_line_cell_sum_m2"],
+            "conservative_wall_glide_inventory_residual_m2": interval.audit[
+                "conservative_wall_glide_inventory_residual_m2"],
+            "conservative_wall_glide_maximum_rate_s": interval.audit[
+                "conservative_wall_glide_maximum_rate_s"],
+            "conservative_wall_glide_relative_first_law_residual": interval.audit[
+                "conservative_wall_glide_relative_first_law_residual"],
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fraction": interval.audit[
@@ -296,6 +317,10 @@ def main():
                 current.orientation_rad))),
             "compatible_target_span_deg": float(np.degrees(
                 compatibility.reconstructed_orientation_span_rad)),
+            "orientation_wall_before_relative_mismatch": float(
+                compatibility.before_relative_mismatch),
+            "orientation_wall_reconstructed_relative_mismatch": float(
+                compatibility.reconstructed_relative_mismatch),
             "wall_order_mean": float(np.mean(current.wall_order)),
             "wall_order_range": [float(np.min(current.wall_order)),
                                  float(np.max(current.wall_order))],
@@ -363,6 +388,8 @@ def main():
             "source_bulk_site_density_m2": args.source_site_density_m2,
             "collective_wall_nucleation": args.collective_wall_nucleation,
             "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
+            "conservative_wall_glide_mode": (
+                context.conservative_wall_glide_mode),
             "source_parameters": asdict(source_parameters),
             "wall_nye_match_coefficient_J_m": (
                 wall.wall_nye_match_coefficient_J_m),
@@ -390,6 +417,8 @@ def main():
                 row["source_relative_first_law_residual"] < .05
                 and row["mechanical_relative_first_law_residual"] < .05
                 and row["wall_order_relative_first_law_residual"] < .05
+                and row[
+                    "conservative_wall_glide_relative_first_law_residual"] < .05
                 and row["wall_reorganization_relative_first_law_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records),

@@ -146,6 +146,13 @@ class MultiGrainProductionLedger:
     wall_order_relaxation_rejected_intervals: int = 0
     cumulative_wall_order_relaxation_heat_J: float = 0.0
     maximum_wall_order_relaxation_first_law_residual: float = 0.0
+    conservative_wall_glide_intervals: int = 0
+    conservative_wall_glide_inactive_intervals: int = 0
+    conservative_wall_glide_rejected_intervals: int = 0
+    conservative_wall_glide_line_cell_sum_m2: float = 0.0
+    cumulative_conservative_wall_glide_heat_J: float = 0.0
+    maximum_conservative_wall_glide_first_law_residual: float = 0.0
+    maximum_conservative_wall_glide_inventory_residual_m2: float = 0.0
     compatible_wall_reorganization_intervals: int = 0
     compatible_wall_reorganization_inactive_intervals: int = 0
     compatible_wall_reorganization_rejected_intervals: int = 0

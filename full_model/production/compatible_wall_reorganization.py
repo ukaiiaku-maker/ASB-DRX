@@ -6,6 +6,7 @@ from dataclasses import dataclass, replace
 import math
 
 import numpy as np
+from scipy.optimize import least_squares
 
 from .complete_multigrain_energy import evaluate_complete_multigrain_energy
 from .extensive_wall import orientation_gradient_frank_bilby_target_m1
@@ -24,6 +25,7 @@ class CompatibleWallReorganizationParameters:
     owner_support_threshold: float = .75
     maximum_fraction_per_interval: float = 1.0
     maximum_backtracks: int = 16
+    conservation_mode: str = "family_signed"
 
 
 @dataclass(frozen=True)
@@ -75,6 +77,55 @@ def _bounded_sum_projection(raw, capacity, required_sum):
     return projected
 
 
+def _burgers_vector_projection(raw, capacity, directions, required_vector):
+    """Project onto line-capacity boxes at fixed resultant Burgers vector.
+
+    ``directions`` are unit Burgers vectors in the laboratory frame.  Thus the
+    constraint has density units and is independent of the common Burgers
+    magnitude.  The four-family reaction cone may exchange signed population
+    between families, but cannot create resultant Burgers content or wall
+    line.  Only the three Lagrange multipliers are solved numerically.
+    """
+    value = np.asarray(raw, dtype=float).reshape(-1)
+    bound = np.asarray(capacity, dtype=float).reshape(-1)
+    direction = np.asarray(directions, dtype=float).reshape(-1, 3)
+    required = np.asarray(required_vector, dtype=float)
+    scale = max(float(np.max(bound)), float(np.max(np.abs(value))), 1.0)
+
+    def candidate(multiplier):
+        return np.clip(value+scale*(direction@multiplier), -bound, bound)
+
+    def residual(multiplier):
+        return (direction.T@candidate(multiplier)-required)/scale
+
+    solution = least_squares(
+        residual, np.zeros(3), xtol=1e-14, ftol=1e-14, gtol=1e-14,
+        max_nfev=400)
+    multiplier = solution.x.copy()
+    # Finish at conservation precision with the active-set Jacobian.  The
+    # nonlinear solve may terminate on a tiny scaled objective while its
+    # absolute residual still exceeds the line-content ledger tolerance.
+    for _ in range(20):
+        projected = candidate(multiplier)
+        difference = direction.T@projected-required
+        free = ((projected > -bound+1e-10*scale)
+                &(projected < bound-1e-10*scale))
+        jacobian = scale*(direction[free].T@direction[free])
+        correction = np.linalg.lstsq(jacobian, difference, rcond=None)[0]
+        multiplier -= correction
+        if np.linalg.norm(difference) <= 2e-12*max(
+                np.linalg.norm(required), scale, 1.0):
+            break
+    projected = candidate(multiplier)
+    absolute = np.linalg.norm(direction.T@projected-required)
+    tolerance = 2e-11*max(np.linalg.norm(required), scale, 1.0)
+    if not solution.success or absolute > tolerance:
+        raise RuntimeError(
+            "Burgers-vector reaction projection did not close: "
+            f"residual={absolute:.6e}, tolerance={tolerance:.6e}")
+    return projected.reshape(np.asarray(raw).shape)
+
+
 def _compatible_signed_target(owner, support, systems, spacing_m, parameters):
     current = (np.asarray(owner.wall_plus_m2)
                -np.asarray(owner.wall_minus_m2))
@@ -94,13 +145,25 @@ def _compatible_signed_target(owner, support, systems, spacing_m, parameters):
                         parameters.minimum_wall_order),
         out=np.zeros_like(raw), where=active[..., None])
     target = current.copy()
-    for family in range(current.shape[2]):
-        fixed_sum = float(np.sum(
-            current[..., family][~active], dtype=np.longdouble))
-        required = float(np.sum(
-            current[..., family], dtype=np.longdouble))-fixed_sum
-        target[..., family][active] = _bounded_sum_projection(
-            raw[..., family][active], total[..., family][active], required)
+    if parameters.conservation_mode == "family_signed":
+        for family in range(current.shape[2]):
+            fixed_sum = float(np.sum(
+                current[..., family][~active], dtype=np.longdouble))
+            required = float(np.sum(
+                current[..., family], dtype=np.longdouble))-fixed_sum
+            target[..., family][active] = _bounded_sum_projection(
+                raw[..., family][active], total[..., family][active], required)
+    elif parameters.conservation_mode == "burgers_vector":
+        magnitude = np.linalg.norm(burgers, axis=-1, keepdims=True)
+        directions = burgers/np.maximum(magnitude, np.finfo(float).tiny)
+        required = np.sum(
+            directions[active]*current[active][..., None], axis=(0, 1),
+            dtype=np.longdouble).astype(float)
+        target[active] = _burgers_vector_projection(
+            raw[active], total[active], directions[active], required)
+    else:
+        raise ValueError(
+            "conservation_mode must be 'family_signed' or 'burgers_vector'")
     return target, active
 
 
@@ -224,7 +287,26 @@ def evaluate_compatible_wall_reorganization(
     after_line = sum(float(np.sum(
         owner.wall_plus_m2+owner.wall_minus_m2, dtype=np.longdouble))
         for owner in cold.owners)
-    signed_residual = float(np.max(np.abs(after_signed-before_signed)))
+    if parameters.conservation_mode == "family_signed":
+        signed_residual = float(np.max(np.abs(after_signed-before_signed)))
+    else:
+        before_vector = np.zeros(3, dtype=np.longdouble)
+        after_vector = np.zeros(3, dtype=np.longdouble)
+        for before_owner, after_owner in zip(state.owners, cold.owners):
+            burgers = rotated_system_fields(
+                systems, before_owner.orientation_rad)[0]
+            directions = burgers/np.maximum(
+                np.linalg.norm(burgers, axis=-1, keepdims=True),
+                np.finfo(float).tiny)
+            before_vector += np.sum(
+                directions*(before_owner.wall_plus_m2
+                            -before_owner.wall_minus_m2)[..., None],
+                axis=(0, 1, 2), dtype=np.longdouble)
+            after_vector += np.sum(
+                directions*(after_owner.wall_plus_m2
+                            -after_owner.wall_minus_m2)[..., None],
+                axis=(0, 1, 2), dtype=np.longdouble)
+        signed_residual = float(np.linalg.norm(after_vector-before_vector))
     line_residual = float(after_line-before_line)
     accepted = bool(active and downhill
                     and relative <= maximum_relative_first_law_residual)
