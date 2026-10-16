@@ -17,7 +17,6 @@ import json
 import os
 from pathlib import Path
 import time
-from types import SimpleNamespace
 
 import numpy as np
 
@@ -26,6 +25,9 @@ from full_model.analysis.run_v58_three_grain_production import (
 )
 from full_model.analysis.run_v66_coupled_rx_asb import (
     _atomic_json, _physics, _record, _source_provenance,
+)
+from full_model.analysis.run_v67_interface_structural_bridge import (
+    _args_from_configuration,
 )
 from full_model.production.arrhenius_dislocation_sources import (
     ArrheniusSourceParameters,
@@ -89,9 +91,11 @@ def main():
     args = parser.parse_args()
     args.source = args.source.resolve()
     args.out.mkdir(parents=True, exist_ok=True)
-    physical_args = SimpleNamespace(
-        n=16, length=4.8e-6, temperature=1000.0,
-        shear_rate=0.0, dt=args.dt, interface_width=6e-7)
+    state, runtime, _, load, _, source_configuration, _ = _load_checkpoint(
+        args.source)
+    physical_args = _args_from_configuration(source_configuration)
+    physical_args.shear_rate = 0.0
+    physical_args.dt = args.dt
     spacing, _, systems, wall, _, _, base_context = _physics(physical_args)
     if args.v67_wall_physics and args.v67_polycrystal_physics:
         parser.error("select only one V67 physics continuation")
@@ -138,7 +142,6 @@ def main():
                     source_site_density_m2=1.0e12,
                     source_seed=args.source_seed)),
             collective_wall_nucleation_seed=args.nucleation_seed)
-    state, runtime, _, load, _, _, _ = _load_checkpoint(args.source)
     if args.v67_polycrystal_physics:
         wall = replace(
             wall,
@@ -161,7 +164,11 @@ def main():
                 WallOrientationRelaxationParameters()),
             wall_order_relaxation_mode="implicit_arrhenius",
             wall_order_relaxation_parameters=(
-                ImplicitWallOrderRelaxationParameters()),
+                ImplicitWallOrderRelaxationParameters(
+                    owner_support_threshold=float(source_configuration.get(
+                        "wall_order_support_threshold", 1.0e-8)),
+                    optimizer_max_iterations=int(source_configuration.get(
+                        "wall_order_max_iterations", 300)))),
             conservative_wall_glide_mode="chemical_edge_glide",
             conservative_wall_glide_parameters=ConservativeWallGlideParameters(),
             conservative_dipole_wall_mode="neutral_pair_expansion",
@@ -171,7 +178,7 @@ def main():
     initial_volume = (np.sum(state.supports, axis=(1, 2))
                       *base_context.spacing_m**2
                       *base_context.represented_thickness_m)
-    configuration = dict(_load_checkpoint(args.source)[5])
+    configuration = dict(source_configuration)
     configuration.update({
         "schema": "v66-zero-mean-stress-feedback-v1",
         "source_checkpoint": str(args.source.relative_to(ROOT)),
