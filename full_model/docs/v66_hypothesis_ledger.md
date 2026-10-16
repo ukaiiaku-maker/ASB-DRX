@@ -1172,3 +1172,17 @@ experiment, result, limitation, and next branch.
   recurrent mechanical RX/band coexistence with thermal timing modulation. It
   rejects strict heat-triggered polycrystal ASB at this endpoint and leaves
   late-horizon persistence as the active discriminator.
+
+## 2026-10-16T22:55:39Z — H17 persistent RX band without softening
+
+- From 0.05064 to 0.06664 shear, the fresh-anchor adiabatic branch remains in a
+  physical connected band for 100/100 intervals and the strong-bath branch for
+  98/100. Existing-boundary grain-20 growth intersects the active band in both.
+- Both stresses continue to rise, so persistent spatial localization is not
+  being relabeled as ASB. The result is classified as persistent mechanical
+  RX-band coexistence without post-peak softening. Bath suppression and strict
+  heat-triggered banding are false.
+- Production-source equivalence across the two recorded commits is verified;
+  only analysis, documentation, tests, and evidence changed. All hard balances
+  pass. The matched states are continuing toward 0.13064 shear with full scalar
+  response histories to resolve the thermal-softening question.

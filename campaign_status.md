@@ -3168,3 +3168,23 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The exact adiabatic state is advancing to 0.06664 shear. Its matched bath
   continuation runs next, followed by atomic chunks toward the approximately
   0.1-shear localization horizon.
+
+## V67 persistent RX-band horizon (2026-10-16T22:55:39Z)
+
+- The matched fresh-anchor pair now reaches 0.06664 shear without reseeding or
+  history reset. The adiabatic branch is physically banded for all 100 latest
+  intervals; the 5e9/s bath branch is banded for 98 of 100. Both have continuing
+  grain-20 growth, front motion inside the band, unchanged grain identities,
+  and closed absorption, Mura, and first-law ledgers.
+- Neither branch has post-peak stress loss at this horizon. The decision is
+  `PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING`: this establishes persistent
+  dynamic existing-boundary RX/band coexistence, but not polycrystal ASB.
+- The initially different source commits are physically equivalent: their diff
+  contains no production, reference-physics, or trajectory-driver change. A
+  machine audit records the driver blob hashes and changed nonphysical paths.
+- Native-grid field evidence now shows grain ownership, orientation, total line
+  density, exact Nye norm, temperature, and plastic power with fixed matched
+  color scales. Scalar band counters are not being used as microstructure.
+- Subsequent chunks now retain every accepted interval's stress, temperature,
+  plastic power, flow exposure, and connected-band state. A sequential local
+  continuation is running through 0.13064 shear with one heavy solver only.
