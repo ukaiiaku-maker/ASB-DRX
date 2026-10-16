@@ -1101,3 +1101,36 @@ experiment, result, limitation, and next branch.
   the one-percent growth horizon, then carry its exact retained state into a
   zero-rate front-enabled hold. A successful pair must next survive a
   same-parameter neighboring-rate fork and the high-rate coexistence tests.
+
+## 2026-10-16T19:11:46Z — V67 common-law RX/ASB response-family decision
+
+- Goals: C00 and G01--G06. The immutable constitutive basis remains the common
+  Arrhenius EXP-floor Peierls--Taylor--Hall--Petch mechanics; no rate-dependent
+  switch, condition-specific fit, history reset, or grain insertion is used.
+- RX result: fixing front transmission at 0.25 from the fresh zero-load anchor
+  produces 1.32550% monotone existing-boundary growth. Equal added strain from
+  that common state produces 0.51126% growth at 2/s and 0.063481% at 20/s, an
+  8.0537-fold lower-rate advantage. The exact retained dynamic state also grows
+  during a no-reset zero-rate hold.
+- Coexistence result: the checksum-bound n64 high-rate production pair develops
+  connected mechanical bands in both heat controls. Grain 30 grows by
+  0.70598% adiabatically and 0.72020% with the strong bath, and its positive
+  boundary motion intersects the active band in both members. Adiabatic heat
+  amplifies power localization and temperature, but does not trigger this
+  prepared polycrystal band; strict heat-triggered ASB is false for that pair.
+- Independent ASB discriminator: a one-owner periodic state removes boundary
+  geometry as a band seed. A fixed mean-zero 20 K perturbation is subcritical
+  initially. At 0.124 shear the adiabatic n32 member develops a connected band,
+  132.064 K temperature contrast, and 5.6836% post-peak softening; the identical
+  strong-bath member remains uniform and softens 0.4727%. All first-law audits
+  pass.
+- Refinement: n32-to-n48 fixed-width errors are at most 0.00692%, and 2 ns to
+  1 ns fixed-horizon errors are at most 0.3757% across onset strain, final power
+  localization, temperature contrast, and post-peak drop. The prepared response
+  is classified `QUALIFIED_HEAT_TRIGGERED_SINGLE_CRYSTAL_ASB`.
+- Decision: the common model now demonstrates lower-rate existing-boundary RX,
+  retained static RX, high-rate heat-triggered ASB, and existing-boundary RX
+  intersecting an active high-rate band. The claim remains a response-family
+  demonstration: spontaneous grain birth, a zero-imperfection instability, and
+  named-material calibration are not established. The immediate next experiment
+  brackets the finite thermal-seed amplitude below 20 K.

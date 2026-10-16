@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T16:38:00Z",
+  "last_updated_utc": "2026-10-16T19:11:46Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -48,10 +48,10 @@
     "status": "closed_reference_untouched"
   },
   "goal_status": {
-    "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "late_state_fixed_0p25_front_transmission_candidate_reaches_1p00329_percent_monotone_dynamic_existing_boundary_RX_at_2_per_s_and_1p03628_percent_after_no_reset_zero_rate_hold;_fresh_anchor_single_parameter_replay_is_running_and_new_grain_birth_remains_absent",
-    "G03": "matched_n32_n48_16_percent_horizon_forms_connected_bands_with_and_without_heat; thermal_amplification_positive_but_strict_ASB_false_because_band_geometry_is_not_spatially_converged",
-    "G04": "response_sensitivity_demonstrated; required_regime_switching_and_dynamic_spatial_coexistence_not_yet_demonstrated",
+    "G01": "one_immutable_common_framework_now_supports_existing_boundary_dynamic_and_retained_static_RX_a_lower_rate_RX_advantage_and_grid_timestep_qualified_heat_triggered_single_crystal_ASB;_spontaneous_birth_remains_absent",
+    "G02": "fixed_0p25_front_transmission_from_the_fresh_zero_load_anchor_reaches_1p32550_percent_monotone_dynamic_existing_boundary_RX_and_the_matched_2_per_s_increment_grows_8p0537_times_more_than_20_per_s",
+    "G03": "mean_zero_20_K_subcritical_single_crystal_seed_forms_an_adiabatic_connected_band_but_not_a_strong_bath_band;_n32_n48_and_2_ns_1_ns_errors_are_below_0p38_percent",
+    "G04": "lower_rate_RX_advantage_higher_rate_heat_triggered_ASB_and_n64_existing_boundary_RX_intersection_with_an_active_high_rate_band_are_demonstrated_under_the_same_law;_the_polycrystal_band_is_mechanically_formed_and_thermally_amplified",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "fixed_0p25_transmission_candidate_adds_0p03298_percent_growth_during_a_no_reset_15_microsecond_zero_rate_hold_after_crossing_one_percent_dynamically_with_terminal_bias_plus_0p91856_MPa"
   },
@@ -68,17 +68,19 @@
     "H10": "the_2_per_s_inherited_0p55_transmission_branch_reverses_below_one_percent;_late_GB_TJ_and_matched_random_sources_are_exactly_inactive_and_source_geography_is_not_the_limiter",
     "H11": "vector_neutral_junction_recovery_local_TJ_Burgers_redistribution_Mura_compatible_interface_sliding_and_bulk_neutral_recovery_are_energy_consistent_negative_discriminators_that_do_not_restore_RX_selection",
     "H12": "fixed_0p25_front_transmission_from_the_same_late_state_restores_plus_1p126_MPa_bias_then_reaches_1p00329_percent_dynamic_growth_and_1p03628_percent_after_a_no_reset_zero_rate_hold_with_all_hard_ledgers_passed",
-    "H13": "fresh_zero_load_anchor_replay_with_0p25_transmission_fixed_from_the_first_front_event_is_running_to_remove_the_late_parameter_handoff_from_the_claim"
+    "H13": "fresh_zero_load_anchor_replay_with_0p25_transmission_fixed_from_the_first_front_event_reaches_1p32550_percent_growth_and_removes_the_late_parameter_handoff_from_the_claim",
+    "H14": "the_n64_high_rate_production_RX_pair_has_existing_boundary_growth_intersecting_a_connected_active_band_in_both_adiabatic_and_bath_controls;_heat_amplifies_power_and_temperature_but_does_not_trigger_that_polycrystal_band",
+    "H15": "a_subcritical_mean_zero_20_K_single_crystal_imperfection_forms_a_persistent_adiabatic_band_and_5p68_percent_softening_while_the_exact_strong_bath_control_remains_uniform;_the_response_is_grid_and_timestep_qualified_but_not_a_zero_imperfection_claim"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 74904,
-      "case": "v67_fresh_anchor_transmission0p25_rate20_prestrain33",
-      "status": "running_single_local_solver",
-      "last_case": "v67_fresh_anchor_transmission0p25_rate20_prestrain33",
-      "last_start_local": "2026-10-16T09:37:00-07:00",
-      "last_source_commit": "9e6d40c",
-      "last_output": "full_model/verification/v67_fresh_anchor_transmission0p25_rate20_prestrain33"
+      "pid": null,
+      "case": null,
+      "status": "idle_between_amplitude_discriminators",
+      "last_case": "v67_single_crystal_asb_n32_seed20_bath_dt1_1400",
+      "last_start_local": "2026-10-16T11:58:00-07:00",
+      "last_source_commit": "090c0cd",
+      "last_output": "full_model/verification/v67_single_crystal_asb_n32_seed20_bath_dt1_1400"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -89,13 +91,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13"],
-    "physical_uncertainty": "whether_fixed_0p25_moving_front_transmission_sustains_the_same_RX_response_when_applied_from_the_fresh_zero_load_anchor_and_whether_the_same_parameterization_preserves_the_neighboring_rate_and_high_rate_ASB_response",
-    "next_executable_experiment": "complete_the_fresh_anchor_20_per_s_prestrain_with_0p25_transmission_then_fork_2_and_20_per_s_at_matched_incremental_strain_without_changing_any_physical_parameter",
-    "source_identity": "9e6d40c_with_production_transfer_override_introduced_at_d0d643a;_immutable_Arrhenius_mechanics_unchanged",
-    "expected_discriminatory_observation": "a_clean_from_anchor_common_state_followed_by_lower_rate_growth_advantage_without_late_parameter_switch_or_a_rejection_that_localizes_the_positive_result_to_the_late_handoff",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15"],
+    "physical_uncertainty": "the_finite_thermal_imperfection_amplitude_needed_to_enter_the_qualified_single_crystal_ASB_basin_and_how_that_basin_maps_onto_the_existing_boundary_RX_polycrystal_response",
+    "next_executable_experiment": "run_the_same_n32_0p124_strain_adiabatic_discriminator_at_10_K_then_bisect_the_10_to_20_K_onset_interval_without_changing_any_constitutive_parameter",
+    "source_identity": "445f9bf_with_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_fixed_0p25_front_transmission",
+    "expected_discriminatory_observation": "a_negative_10_K_endpoint_and_positive_20_K_endpoint_will_bound_the_finite_amplitude_ASB_basin;_an_earlier_positive_result_will_reduce_the_required_seed",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "late_state_fixed_0p25_transmission_pair_qualifies_one_percent_dynamic_and_positive_retained_static_existing_boundary_RX;_fresh_anchor_fixed_parameter_replay_is_running"
+    "result_status": "fresh_anchor_existing_boundary_RX_lower_rate_advantage_retained_static_RX_n64_RX_band_coexistence_and_grid_timestep_qualified_prepared_single_crystal_ASB_are_positive;_amplitude_bracketing_is_next"
   },
   "continuation_rule": {
     "active": true,
@@ -106,9 +108,9 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315;_new_transmission_analysis_scripts_compile;_full_latest_regression_pending_after_active_solver",
+    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315;_focused_V67_ASB_tests_pass_6;_full_latest_regression_pending_after_amplitude_discriminator",
     "mechanism_supported_at_tested_conditions": true,
-    "integrated_response_qualified": false,
+    "integrated_response_qualified": true,
     "material_validated": false,
     "full_charter_complete": false
   }

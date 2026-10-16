@@ -2,6 +2,48 @@
 
 Updated: 2026-10-16 (America/Los_Angeles)
 
+## V67 qualified heat-triggered ASB response
+
+- A one-owner periodic control removes grain boundaries as a mechanical band
+  seed. Both members use the same EXP-floor Arrhenius Peierls--Taylor law and
+  the same mean-zero 20 K Gaussian temperature imperfection; only physical
+  heat extraction differs. The initial power maximum/mean is 1.504, below the
+  registered band threshold of two.
+- At n32 and 0.124 shear, the adiabatic member amplifies its temperature
+  contrast from 29.11 K to 132.06 K, develops a connected power band for the
+  final 29 intervals, and softens 5.6836% after peak stress. The exact strong-
+  bath control erases the perturbation, never forms a band, and softens only
+  0.4727%. Mechanical first-law residuals remain below 0.047%.
+- Fixed-physical-width n48 reproduces the same 29-interval band and differs by
+  at most 0.00692% in the registered localization observables. A 2 ns to 1 ns
+  fixed-horizon refinement differs by at most 0.3757% and doubles the terminal
+  persistence from 29 to 59 intervals as expected. The machine classification
+  is `QUALIFIED_HEAT_TRIGGERED_SINGLE_CRYSTAL_ASB`.
+- This is a prepared finite-amplitude response family, not a zero-imperfection
+  bifurcation or named-material calibration. The active next experiment brackets
+  the onset amplitude below 20 K; no constitutive coefficient or rate switch is
+  changed.
+
+## V67 common-law RX and high-rate coexistence
+
+- With moving-front transmission fixed at 0.25 from the fresh zero-load anchor,
+  the production polycrystal reaches 1.32550% monotone existing-boundary growth.
+  From its common state, equal added strain produces 0.51126% growth at 2/s and
+  0.063481% at 20/s, an 8.0537-fold lower-rate RX advantage without retuning.
+- The earlier exact dynamic endpoint also crosses 1% growth and continues to
+  1.03628% during a no-reset 15 microsecond zero-rate hold, establishing
+  retained-state static RX under the same transmission law.
+- Checksum-bound n64 high-rate adiabatic and strong-bath continuations both form
+  connected mechanical bands while the existing grain-30 boundary grows through
+  the active band. The adiabatic case reaches 1056.31 K mean temperature and
+  10.190 power maximum/mean versus 1005.15 K and 9.920 in the bath control.
+  This establishes RX/band coexistence with thermal amplification, but the
+  polycrystal band itself is not heat-triggered; the independent single-crystal
+  causal pair above supplies that qualification.
+- Grain birth remains absent. All positive RX claims concern existing-boundary
+  migration, and the 0.25 transmission fraction is a documented hypothesis,
+  not a calibrated material constant.
+
 ## V67 fixed-transmission RX recovery
 
 - The clean inherited 55% front-transmission trajectory reproduces a physical
