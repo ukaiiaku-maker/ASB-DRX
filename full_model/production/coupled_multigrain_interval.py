@@ -329,7 +329,12 @@ def advance_complete_multigrain_interval(
             reaction_parameters=parameters)
         if structural_junction.classification == "REJECTED_COMPLETE_FIRST_LAW":
             raise RuntimeError(
-                "structural junction reaction failed its hard energy audit")
+                "structural junction reaction failed its hard energy audit: "
+                f"relative={structural_junction.relative_first_law_residual:.17g}, "
+                f"residual_J={structural_junction.first_law_residual_J:.17g}, "
+                f"heat_J={structural_junction.generated_heat_J:.17g}, "
+                f"candidate_delta_J="
+                f"{structural_junction.complete_energy_candidate.internal_J-structural_junction.complete_energy_before.internal_J:.17g}")
         structural_interfaces = tuple(junction_runtime.interfaces)
         runtime = replace(
             runtime, structural_interfaces=structural_interfaces,
@@ -1103,7 +1108,15 @@ def advance_complete_multigrain_interval(
             reaction_parameters=parameters)
         if structural_junction_post.classification == "REJECTED_COMPLETE_FIRST_LAW":
             raise RuntimeError(
-                "post-capture structural junction reaction failed its hard energy audit")
+                "post-capture structural junction reaction failed its hard "
+                "energy audit: "
+                f"relative="
+                f"{structural_junction_post.relative_first_law_residual:.17g}, "
+                f"residual_J="
+                f"{structural_junction_post.first_law_residual_J:.17g}, "
+                f"heat_J={structural_junction_post.generated_heat_J:.17g}, "
+                f"candidate_delta_J="
+                f"{structural_junction_post.complete_energy_candidate.internal_J-structural_junction_post.complete_energy_before.internal_J:.17g}")
         structural_interfaces = tuple(junction_runtime.interfaces)
         runtime = replace(
             runtime, structural_interfaces=structural_interfaces,

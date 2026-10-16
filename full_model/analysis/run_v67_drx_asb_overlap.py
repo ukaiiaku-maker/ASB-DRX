@@ -28,11 +28,26 @@ from full_model.production.coupled_multigrain_interval import (
 from full_model.production.interface_structural_absorption import (
     InterfaceStructuralAbsorptionParameters,
 )
+from full_model.production.structural_interface_network import (
+    JunctionReactionParameters,
+)
 from full_model.production.lattice_interface_absorption import (
     LatticeInterfaceAbsorptionParameters,
 )
 from full_model.production.wall_orientation_relaxation import (
     WallOrientationRelaxationParameters,
+)
+from full_model.production.implicit_wall_order_relaxation import (
+    ImplicitWallOrderRelaxationParameters,
+)
+from full_model.production.conservative_wall_glide import (
+    ConservativeWallGlideParameters,
+)
+from full_model.production.conservative_dipole_wall_organization import (
+    ConservativeDipoleWallParameters,
+)
+from full_model.production.arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters,
 )
 from full_model.production.multigrain_source_transaction import (
     NeutralBoundarySinkParameters,
@@ -89,9 +104,18 @@ def main():
     parser.add_argument("--disable-rx", action="store_true")
     parser.add_argument("--interface-neutral-sink", action="store_true")
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
+    parser.add_argument(
+        "--production-rx", action="store_true",
+        help=("enable the qualified complete-clock source, junction, wall "
+              "order/glide, and dipole organization channels"))
+    parser.add_argument(
+        "--front-transmission-fraction", type=float,
+        help=("fixed front dislocation transmission fraction; omission "
+              "preserves the inherited transfer law"))
     args = parser.parse_args()
     source_status = subprocess.check_output(
-        ("git", "status", "--porcelain"), cwd=ROOT, text=True)
+        ("git", "status", "--porcelain", "--untracked-files=no"),
+        cwd=ROOT, text=True)
     args.out.mkdir(parents=True, exist_ok=True)
     state, runtime, step, load, initial_volume, configuration, provenance = (
         _load_checkpoint(args.checkpoint))
@@ -100,30 +124,74 @@ def main():
     spacing, _, _, _, _, _, base_context = _physics(physics_args)
     rx_enabled = not args.disable_rx
     wall_parameters = base_context.wall_parameters
-    if args.wall_orientation_relaxation:
+    if args.production_rx:
+        wall_parameters = replace(
+            wall_parameters, wall_nye_match_coefficient_J_m=(
+                wall_parameters.c44_Pa*(1.5e-7)**2))
+    elif args.wall_orientation_relaxation:
         wall_parameters = replace(
             wall_parameters, wall_nye_match_coefficient_J_m=2.0e-5)
+    orientation_enabled = bool(
+        args.wall_orientation_relaxation or args.production_rx)
     context = replace(
         base_context, wall_parameters=wall_parameters,
         shear_rate_s=float(configuration["shear_rate_s"]),
-        front_enabled=True, source_mode="disabled", sink_mode="disabled",
+        front_enabled=True,
+        source_mode=("gb_tj_only" if args.production_rx else "disabled"),
+        source_parameters=(
+            ArrheniusSourceParameters(grain_size_m=2.4e-6)
+            if args.production_rx else None),
+        source_random_seed=67, sink_mode="disabled",
         interface_sink_mode=("neutral_pair" if args.interface_neutral_sink
                              else "disabled"),
         interface_sink_parameters=(NeutralBoundarySinkParameters()
                                    if args.interface_neutral_sink else None),
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"),
         structural_absorption_parameters=(
-            InterfaceStructuralAbsorptionParameters() if rx_enabled else None),
+            InterfaceStructuralAbsorptionParameters(complete_physical_clock=True)
+            if rx_enabled else None),
+        structural_junction_mode=(
+            "arrhenius_cycle" if args.production_rx and rx_enabled
+            else "disabled"),
+        structural_junction_parameters=(
+            JunctionReactionParameters(complete_physical_clock=True)
+            if args.production_rx and rx_enabled else None),
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
         lattice_absorption_parameters=(
             LatticeInterfaceAbsorptionParameters(
-                capture_distance_m=args.capture_distance)
+                capture_distance_m=args.capture_distance,
+                complete_physical_clock=True)
             if rx_enabled else None),
         wall_orientation_relaxation_mode=(
-            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+            "ordered_nye" if orientation_enabled else "disabled"),
         wall_orientation_relaxation_parameters=(
-            WallOrientationRelaxationParameters()
-            if args.wall_orientation_relaxation else None))
+            WallOrientationRelaxationParameters(boundary_clearance_m=2.0e-7)
+            if orientation_enabled else None),
+        wall_order_relaxation_mode=(
+            "implicit_arrhenius" if args.production_rx else "disabled"),
+        wall_order_relaxation_parameters=(
+            ImplicitWallOrderRelaxationParameters(
+                owner_support_threshold=1.0e-8,
+                optimizer_max_iterations=50)
+            if args.production_rx else None),
+        conservative_wall_glide_mode=(
+            "chemical_edge_glide" if args.production_rx else "disabled"),
+        conservative_wall_glide_parameters=(
+            ConservativeWallGlideParameters(maximum_edge_fraction=.02)
+            if args.production_rx else None),
+        conservative_dipole_wall_mode=(
+            "neutral_pair_expansion" if args.production_rx else "disabled"),
+        conservative_dipole_wall_parameters=(
+            ConservativeDipoleWallParameters()
+            if args.production_rx else None))
+    if args.front_transmission_fraction is not None:
+        transmission = float(args.front_transmission_fraction)
+        if not np.isfinite(transmission) or not 0.0 <= transmission <= 1.0:
+            raise ValueError("front transmission fraction must lie in [0,1]")
+        context = replace(context, front_kinetics=replace(
+            context.front_kinetics, transfer_law=replace(
+                context.front_kinetics.transfer_law,
+                transmission_fraction=transmission)))
     endpoint = make_endpoint(state, runtime, load, context)
     initial_supports = np.asarray(state.supports).copy()
     initial_orientations = np.asarray([
@@ -135,6 +203,21 @@ def main():
     active_band_area_fraction_sum = 0.0
     lattice_heat_inside_band_J = 0.0
     lattice_heat_outside_band_J = 0.0
+    first_law_audit_keys = (
+        "mechanical_relative_first_law_residual",
+        "source_relative_first_law_residual",
+        "wall_order_relaxation_relative_first_law_residual",
+        "conservative_dipole_wall_relative_first_law_residual",
+        "conservative_wall_glide_relative_first_law_residual",
+        "structural_absorption_relative_first_law_residual",
+        "structural_absorption_post_relative_first_law_residual",
+        "structural_junction_relative_first_law_residual",
+        "structural_junction_post_relative_first_law_residual",
+        "lattice_absorption_relative_first_law_residual",
+        "wall_orientation_relaxation_relative_first_law_residual",
+    )
+    maximum_first_law_residuals = {key: 0.0 for key in first_law_audit_keys}
+    maximum_lattice_mura_residual = 0.0
     records = []
     dt = float(configuration["dt_s"])
     for index in range(1, args.intervals+1):
@@ -142,6 +225,14 @@ def main():
         before_supports = np.asarray(endpoint.state.supports)
         interval = advance_complete_multigrain_interval(endpoint, dt, context)
         endpoint = interval.endpoint
+        maximum_lattice_mura_residual = max(
+            maximum_lattice_mura_residual,
+            abs(float(interval.audit[
+                "lattice_absorption_mura_relative_residual"])))
+        for key in first_law_audit_keys:
+            maximum_first_law_residuals[key] = max(
+                maximum_first_law_residuals[key],
+                abs(float(interval.audit[key])))
         lattice_heat = np.asarray(
             interval.integrals["lattice_absorption_heat_J_by_cell"])
         lattice_heat_inside_band_J += float(np.sum(
@@ -198,12 +289,15 @@ def main():
         parent_checkpoint=str(args.checkpoint.resolve()),
         rx_enabled=rx_enabled,
         interface_neutral_sink_enabled=bool(args.interface_neutral_sink),
+        production_rx_enabled=bool(args.production_rx),
+        front_transmission_fraction=float(
+            context.front_kinetics.transfer_law.transmission_fraction),
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
         lattice_capture_distance_m=args.capture_distance,
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
     output_configuration.update(
         wall_orientation_relaxation_mode=(
-            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+            "ordered_nye" if orientation_enabled else "disabled"),
         wall_nye_match_coefficient_J_m=(
             wall_parameters.wall_nye_match_coefficient_J_m))
     checkpoint = args.out/"checkpoint_latest.npz"
@@ -252,9 +346,17 @@ def main():
         },
         "sampled_interval_records": records,
         "ledger": asdict(endpoint.runtime.ledger),
+        "hard_balance_maxima": {
+            "lattice_mura_relative_residual": (
+                maximum_lattice_mura_residual),
+            "first_law_relative_residuals": maximum_first_law_residuals,
+        },
         "decision": {
             "initial_connected_band": bool(initial_metrics["band_like"]),
             "rx_pathway_enabled": rx_enabled,
+            "production_rx_channels_enabled": bool(args.production_rx),
+            "front_transmission_fraction": float(
+                context.front_kinetics.transfer_law.transmission_fraction),
             "interface_neutral_sink_enabled": bool(
                 args.interface_neutral_sink),
             "final_connected_band": bool(final_metrics["band_like"]),
@@ -269,6 +371,11 @@ def main():
                 not rx_enabled or (
                     endpoint.runtime.ledger.lattice_absorption_rejected_intervals
                     == 0)),
+            "mura_hard_balance_passed": bool(
+                maximum_lattice_mura_residual < 2.0e-11),
+            "first_law_hard_balance_passed": bool(all(
+                value < .05
+                for value in maximum_first_law_residuals.values())),
             "grain_ids_unchanged": endpoint.state.grain_ids == state.grain_ids,
         },
         "artifacts": {"checkpoint_latest.npz": _sha(checkpoint)},

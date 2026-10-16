@@ -117,6 +117,23 @@ def test_complete_runtime_rolls_back_uphill_reaction():
         assert np.array_equal(old.temperature_K, new.temperature_K)
 
 
+def test_complete_runtime_rolls_back_energy_unresolved_reaction():
+    state, runtime, spacing, thickness, wall, energy = _fixture(1.0+1e-9)
+    evolved, after, decision = advance_structural_junction_interval(
+        state, runtime, dt_s=1e-3, spacing_m=spacing,
+        represented_thickness_m=thickness, wall_parameters=wall,
+        energy_kwargs=energy)
+    assert not decision.accepted
+    assert decision.classification == (
+        "INACTIVE_COMPLETE_ENERGY_BELOW_RESOLUTION")
+    assert after.interfaces == runtime.interfaces
+    assert after.ledger.inactive_intervals == 1
+    assert after.ledger.rejected_reactions == 0
+    assert decision.generated_heat_J == 0.0
+    for old, new in zip(state.owners, evolved.owners):
+        assert np.array_equal(old.temperature_K, new.temperature_K)
+
+
 def test_uncapped_physical_interval_subdivision_agrees():
     state, runtime, spacing, thickness, wall, energy = _fixture(1.02)
     once_state, once_runtime, once = advance_structural_junction_interval(

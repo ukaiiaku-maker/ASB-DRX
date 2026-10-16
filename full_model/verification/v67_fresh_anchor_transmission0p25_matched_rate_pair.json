@@ -1,0 +1,82 @@
+{
+  "cases": {
+    "high_rate": {
+      "added_strain": 0.00015999999999999999,
+      "checkpoint_sha256": "dcb4fd7c949ab4709ed6420af556d87fd91a045597d9cd76e708f5a97c3c3bab",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_fresh_anchor_transmission0p25_rate20_matched16",
+      "dt_s": 5e-07,
+      "endpoint_directional_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 1467219.8419281717,
+            "growth_pressure_Pa": 2096359.2787884523,
+            "shrink_pressure_Pa": 629139.4368602806
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 1720734.609328201,
+            "growth_pressure_Pa": 2166203.0337899155,
+            "shrink_pressure_Pa": 445468.42446171446
+          }
+        },
+        "net_growth_minus_shrink_Pa": 3187954.451256373
+      },
+      "hard_audits_passed": true,
+      "intervals": 16,
+      "parent_checkpoint_sha256": "a48b879e1297cf9cb4d2a6336f09860e420412bcb83e3e092c05cc4ed918fc8b",
+      "result_sha256": "95dbb0f8e2978acbb83891d165a42b709bf311d5c1aea3ca80ca9648af52c9b3",
+      "shear_rate_s": 20.0,
+      "source_commit": "bacbb4d3231f05f89281307a40533ac8e9ef71cf",
+      "source_tree_clean": true,
+      "target_area_before_m2": 7.560057123060847e-12,
+      "target_area_change_m2": 4.799196642110066e-15,
+      "target_growth_increment_percent": 0.06348095740534578,
+      "transmission_fraction": 0.25
+    },
+    "low_rate": {
+      "added_strain": 0.00015999999999999999,
+      "checkpoint_sha256": "aa0012f5ae9f703b14fc7f84b22ac9a9753387ae145d468f06775baf17d66472",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_fresh_anchor_transmission0p25_rate2_matched160",
+      "dt_s": 5e-07,
+      "endpoint_directional_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 908472.6417609267,
+            "growth_pressure_Pa": 1649799.8735079227,
+            "shrink_pressure_Pa": 741327.231746996
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 1148171.7498205905,
+            "growth_pressure_Pa": 1728747.3131491197,
+            "shrink_pressure_Pa": 580575.5633285294
+          }
+        },
+        "net_growth_minus_shrink_Pa": 2056644.3915815172
+      },
+      "hard_audits_passed": true,
+      "intervals": 160,
+      "parent_checkpoint_sha256": "a48b879e1297cf9cb4d2a6336f09860e420412bcb83e3e092c05cc4ed918fc8b",
+      "result_sha256": "ffcea36dabfd6ca22ddc86aeee4ad60f8aa7b0decb6deb7b4edd8a2b594a0b7c",
+      "shear_rate_s": 2.0,
+      "source_commit": "bacbb4d3231f05f89281307a40533ac8e9ef71cf",
+      "source_tree_clean": true,
+      "target_area_before_m2": 7.560057123060847e-12,
+      "target_area_change_m2": 3.865134121710694e-14,
+      "target_growth_increment_percent": 0.5112572641707519,
+      "transmission_fraction": 0.25
+    }
+  },
+  "claim_boundary": "Common-parent, matched-added-strain existing-boundary response under one fixed front-transmission law. This does not establish new-grain birth, ASB coexistence, or material calibration.",
+  "created_utc": "2026-10-16T17:52:19.535979+00:00",
+  "decision": {
+    "all_hard_audits_passed": true,
+    "both_target_growth_increments_positive": true,
+    "classification": "QUALIFIED_FIXED_LAW_LOWER_RATE_RX_ADVANTAGE",
+    "growth_increment_ratio_low_over_high": 8.053710672733152,
+    "lower_rate_growth_advantage": true,
+    "matched_added_strain": true,
+    "same_fixed_transmission_fraction": true,
+    "same_parent_checkpoint": true
+  },
+  "grain_id": 20,
+  "schema": "v67-fixed-transmission-matched-strain-rate-pair-v1"
+}

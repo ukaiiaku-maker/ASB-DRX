@@ -183,7 +183,13 @@ def advance_structural_junction_interval(
     resolution = 4096.0*np.finfo(float).eps*max(
         abs(before_energy.internal_J), abs(candidate_energy.internal_J), 1e-30)
     active = proposal.classification != "NO_CYCLE_REACTION"
-    downhill = bool(delta <= resolution)
+    # A change inside the complete-functional floating resolution has no
+    # resolved thermodynamic sign and cannot support a heat transaction.  Do
+    # not attempt to publish it: an unrepresentably small heat increment would
+    # otherwise leave an O(1) *relative* first-law residual even though the
+    # absolute energy difference is roundoff scale.
+    unresolved = bool(active and abs(delta) <= resolution)
+    downhill = bool(delta < -resolution)
     tentative = bool(active and downhill)
     heat = max(-delta, 0.0) if tentative else 0.0
     committed_state = (_deposit_uniform_heat(
@@ -198,6 +204,8 @@ def advance_structural_junction_interval(
     accepted = bool(tentative and relative <= float(closure_fraction))
     if not active:
         classification = "NO_CYCLE_REACTION"
+    elif unresolved:
+        classification = "INACTIVE_COMPLETE_ENERGY_BELOW_RESOLUTION"
     elif not downhill:
         classification = "REJECTED_COMPLETE_ENERGY_UPHILL"
     elif not accepted:
@@ -216,8 +224,9 @@ def advance_structural_junction_interval(
         intervals=runtime.ledger.intervals+1,
         accepted_reactions=(runtime.ledger.accepted_reactions+int(accepted)),
         rejected_reactions=(runtime.ledger.rejected_reactions
-                            +int(active and not accepted)),
-        inactive_intervals=(runtime.ledger.inactive_intervals+int(not active)),
+                            +int(active and not unresolved and not accepted)),
+        inactive_intervals=(runtime.ledger.inactive_intervals
+                            +int(not active or unresolved)),
         reacted_absolute_content=(runtime.ledger.reacted_absolute_content
                                   +(proposal.absolute_reacted_content
                                     if accepted else 0.0)),
