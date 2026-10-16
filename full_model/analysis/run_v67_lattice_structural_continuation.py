@@ -88,6 +88,10 @@ def main():
               "continuation interval rather than an inherited parent cadence"))
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
     parser.add_argument(
+        "--wall-orientation-boundary-clearance", type=float, default=2.0e-7,
+        help=("physical exclusion distance from diffuse owner boundaries; "
+              "zero is a declared resolved-domain ablation"))
+    parser.add_argument(
         "--junction-cycle-relaxation", action="store_true",
         help=("advance the conservative Arrhenius structural-cycle reaction "
               "before mechanics and front motion"))
@@ -194,7 +198,9 @@ def main():
             "ordered_nye" if (args.wall_orientation_relaxation
                                or args.wall_glide) else "disabled"),
         wall_orientation_relaxation_parameters=(
-            WallOrientationRelaxationParameters()
+            WallOrientationRelaxationParameters(
+                boundary_clearance_m=(
+                    args.wall_orientation_boundary_clearance))
             if (args.wall_orientation_relaxation or args.wall_glide) else None),
         wall_order_relaxation_mode=(
             "implicit_arrhenius" if (
@@ -259,6 +265,8 @@ def main():
         wall_orientation_relaxation_mode=(
             "ordered_nye" if (args.wall_orientation_relaxation
                               or args.wall_glide) else "disabled"),
+        wall_orientation_boundary_clearance_m=(
+            args.wall_orientation_boundary_clearance),
         wall_nye_match_coefficient_J_m=(
             wall_parameters.wall_nye_match_coefficient_J_m),
         wall_nye_match_length_m=match_length,
@@ -476,6 +484,8 @@ def main():
             "structural_absorption": "common_axis",
             "wall_orientation_relaxation": bool(
                 args.wall_orientation_relaxation or args.wall_glide),
+            "wall_orientation_boundary_clearance_m": (
+                args.wall_orientation_boundary_clearance),
             "wall_order_relaxation": bool(
                 args.wall_order_relaxation or args.wall_glide),
             "wall_glide": bool(args.wall_glide),
