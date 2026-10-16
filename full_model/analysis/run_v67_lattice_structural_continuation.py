@@ -535,7 +535,12 @@ def main():
                 "diagnostic_v67_records_json": np.asarray(json.dumps(records))})
         os.replace(temporary, args.out/"checkpoint_latest.npz")
     after = _directional_audit(endpoint, context, fraction=2e-4)
-    commit = subprocess.check_output(
+    # A long local run may overlap later analysis/documentation commits.  The
+    # process has already imported its production modules, so provenance must
+    # remain the launch-time source identity captured above, not whatever HEAD
+    # happens to name when the final checkpoint is written.
+    commit = source_commit
+    completion_head = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     accepted_lattice = sum(row["lattice_classification"].startswith("ACCEPTED")
                            for row in records)
@@ -556,6 +561,7 @@ def main():
         "schema": "v67-one-flux-lattice-structural-continuation-v1",
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": commit,
+        "completion_repository_head": completion_head,
         "source_tree_clean": not bool(source_status),
         "parent_checkpoint": str(args.checkpoint.resolve()),
         "parent_checkpoint_sha256": _sha(args.checkpoint),
