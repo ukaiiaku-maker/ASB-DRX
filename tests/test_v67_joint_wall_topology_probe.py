@@ -2,8 +2,8 @@ from dataclasses import replace
 
 import numpy as np
 
-from full_model.analysis.probe_v67_joint_wall_topology_orientation import (
-    _joint_candidate,
+from full_model.production.joint_wall_topology_orientation import (
+    joint_wall_orientation_candidate,
 )
 from full_model.production.multigrain_common_state import MultiGrainCommonState
 from tests.test_full_model_common_tensorial_wall import fixture
@@ -21,7 +21,7 @@ def test_joint_topology_probe_preserves_line_reservoir_and_owner_mean():
         (1,), np.ones((1, 8, 8)), (owner,))
     x, y = np.indices((8, 8))
     ring = np.exp(-.5*((np.sqrt((x-4)**2+(y-4)**2)-2.0)/.75)**2)
-    candidate, transferred, rotation = _joint_candidate(
+    candidate, transferred, rotation = joint_wall_orientation_candidate(
         state, 0, ring, .2, systems, parameters.spacing_m, 0.0, .01)
     changed = candidate.owners[0]
     assert transferred > 0.0

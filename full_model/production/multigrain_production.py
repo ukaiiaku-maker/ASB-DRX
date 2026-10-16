@@ -178,6 +178,13 @@ class MultiGrainProductionLedger:
     compatible_wall_reorganization_rejected_intervals: int = 0
     cumulative_compatible_wall_reorganization_heat_J: float = 0.0
     maximum_compatible_wall_reorganization_first_law_residual: float = 0.0
+    joint_wall_topology_orientation_intervals: int = 0
+    joint_wall_topology_orientation_inactive_intervals: int = 0
+    joint_wall_topology_orientation_rejected_intervals: int = 0
+    joint_wall_topology_orientation_transferred_line_cell_sum_m2: float = 0.0
+    cumulative_joint_wall_topology_orientation_heat_J: float = 0.0
+    maximum_joint_wall_topology_orientation_first_law_residual: float = 0.0
+    maximum_joint_wall_topology_orientation_balance_residual_m2: float = 0.0
     collective_wall_nucleation_intervals: int = 0
     collective_wall_nucleation_inactive_intervals: int = 0
     collective_wall_nucleation_rejected_intervals: int = 0

@@ -19,7 +19,6 @@ from pathlib import Path
 import subprocess
 
 import numpy as np
-from scipy import ndimage
 
 from full_model.analysis.run_v58_three_grain_production import _load_checkpoint
 from full_model.analysis.run_v66_coupled_rx_asb import _physics
@@ -33,46 +32,13 @@ from full_model.production.collective_wall_nucleation import (
 from full_model.production.complete_multigrain_energy import (
     evaluate_complete_multigrain_energy,
 )
-from full_model.production.orientation_wall_compatibility import (
-    ordered_wall_nye_from_common, reconstruct_orientation_from_ordered_nye,
+from full_model.production.joint_wall_topology_orientation import (
+    joint_wall_orientation_candidate,
 )
 
 
 def _sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
-
-
-def _joint_candidate(state, owner_index, ring, coordinate, systems, spacing,
-                     clearance_m, order_increment):
-    wall, transferred = _collective_wall_candidate(
-        state, owner_index, ring, order_increment, coordinate)
-    old = state.owners[owner_index]
-    candidate = wall.owners[owner_index]
-    support = np.asarray(state.supports[owner_index])
-    domain = support > .75
-    cells = int(np.ceil(float(clearance_m)/float(spacing)))
-    if cells:
-        domain = ndimage.binary_erosion(domain, iterations=cells)
-    if np.count_nonzero(domain) < 2:
-        return wall, transferred, 0.0
-    alpha = ordered_wall_nye_from_common(candidate, systems)
-    reconstructed, _ = reconstruct_orientation_from_ordered_nye(
-        alpha, candidate.orientation_rad, domain, spacing)
-    increment = np.arctan2(
-        np.sin(reconstructed-np.asarray(old.orientation_rad)),
-        np.cos(reconstructed-np.asarray(old.orientation_rad)))
-    orientation = np.asarray(old.orientation_rad).copy()
-    orientation[domain] += float(coordinate)*increment[domain]
-    # Structural interface content owns each grain's mean orientation.  The
-    # finite topology probe can create gradients but cannot rotate an owner as
-    # a rigid body for free.
-    orientation += float(np.mean(old.orientation_rad)-np.mean(orientation))
-    owners = list(wall.owners)
-    owners[owner_index] = replace(candidate, orientation_rad=orientation)
-    joint = replace(wall, owners=tuple(owners))
-    joint.validate()
-    change = float(np.max(np.abs(orientation-old.orientation_rad)))
-    return joint, transferred, change
 
 
 def main():
@@ -128,7 +94,7 @@ def main():
                 if transferred <= 0.0:
                     continue
                 wall_energy = evaluate_complete_multigrain_energy(wall, **common)
-                joint, _, maximum_rotation = _joint_candidate(
+                joint, _, maximum_rotation = joint_wall_orientation_candidate(
                     state, owner_index, ring, coordinate, systems, spacing,
                     args.clearance_m, args.order_increment)
                 joint_energy = evaluate_complete_multigrain_energy(joint, **common)

@@ -49,6 +49,9 @@ from full_model.production.compatible_wall_reorganization import (
 from full_model.production.wall_neutral_pair_recovery import (
     WallNeutralPairRecoveryParameters,
 )
+from full_model.production.joint_wall_topology_orientation import (
+    JointWallTopologyOrientationParameters,
+)
 from full_model.production.conservative_dipole_wall_organization import (
     ConservativeDipoleWallParameters,
 )
@@ -119,6 +122,10 @@ def main():
         "--wall-neutral-pair-recovery", action="store_true",
         help=("enable conserved Arrhenius climb annihilation of redundant "
               "opposite-sign ordered-wall line before survivor reorganization"))
+    parser.add_argument(
+        "--joint-wall-topology-orientation", action="store_true",
+        help=("enable the finite closed-wall transaction whose orientation "
+              "is reconstructed from its own ordered Nye content"))
     parser.add_argument(
         "--compatible-wall-reorganization", action="store_true",
         help=("enable conservative redistribution of existing signed wall "
@@ -259,6 +266,12 @@ def main():
         wall_neutral_pair_recovery_parameters=(
             WallNeutralPairRecoveryParameters()
             if args.wall_neutral_pair_recovery else None),
+        joint_wall_topology_orientation_mode=(
+            "nye_reconstructed_ring"
+            if args.joint_wall_topology_orientation else "disabled"),
+        joint_wall_topology_orientation_parameters=(
+            JointWallTopologyOrientationParameters()
+            if args.joint_wall_topology_orientation else None),
         compatible_wall_reorganization_mode=(
             "frank_bilby_projection"
             if args.compatible_wall_reorganization else "disabled"),
@@ -324,6 +337,8 @@ def main():
         conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
         wall_neutral_pair_recovery_mode=(
             context.wall_neutral_pair_recovery_mode),
+        joint_wall_topology_orientation_mode=(
+            context.joint_wall_topology_orientation_mode),
         compatible_wall_reorganization_mode=(
             context.compatible_wall_reorganization_mode),
         compatible_wall_conservation=(
@@ -465,6 +480,28 @@ def main():
                 "wall_neutral_pair_recovery_delta_helmholtz_J"],
             "wall_recovery_first_law_relative_residual": interval.audit[
                 "wall_neutral_pair_recovery_relative_first_law_residual"],
+            "joint_topology_classification": interval.audit[
+                "joint_wall_topology_orientation_classification"],
+            "joint_topology_owner_id": interval.audit[
+                "joint_wall_topology_orientation_owner_id"],
+            "joint_topology_radius_m": interval.audit[
+                "joint_wall_topology_orientation_radius_m"],
+            "joint_topology_downhill_candidates": interval.audit[
+                "joint_wall_topology_orientation_downhill_candidates"],
+            "joint_topology_affinity_J_m": interval.audit[
+                "joint_wall_topology_orientation_affinity_J_m"],
+            "joint_topology_coordinate": interval.audit[
+                "joint_wall_topology_orientation_coordinate"],
+            "joint_topology_transferred_line_cell_sum_m2": interval.audit[
+                "joint_wall_topology_orientation_transferred_line_cell_sum_m2"],
+            "joint_topology_maximum_rotation_rad": interval.audit[
+                "joint_wall_topology_orientation_maximum_rotation_rad"],
+            "joint_topology_line_residual_m2": interval.audit[
+                "joint_wall_topology_orientation_line_residual_m2"],
+            "joint_topology_delta_helmholtz_J": interval.audit[
+                "joint_wall_topology_orientation_delta_helmholtz_J"],
+            "joint_topology_first_law_relative_residual": interval.audit[
+                "joint_wall_topology_orientation_relative_first_law_residual"],
             "compatible_wall_classification": interval.audit[
                 "compatible_wall_reorganization_classification"],
             "compatible_wall_fractions": interval.audit[
@@ -588,6 +625,8 @@ def main():
             "dipole_wall_organization": bool(args.dipole_wall_organization),
             "wall_neutral_pair_recovery": bool(
                 args.wall_neutral_pair_recovery),
+            "joint_wall_topology_orientation": bool(
+                args.joint_wall_topology_orientation),
             "compatible_wall_reorganization": bool(
                 args.compatible_wall_reorganization),
             "compatible_wall_conservation": (
@@ -636,6 +675,9 @@ def main():
             "accepted_wall_recovery_intervals": sum(
                 row["wall_recovery_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_joint_topology_intervals": sum(
+                row["joint_topology_classification"].startswith("ACCEPTED")
+                for row in records),
             "accepted_compatible_wall_intervals": sum(
                 row["compatible_wall_classification"].startswith("ACCEPTED")
                 for row in records),
@@ -656,6 +698,7 @@ def main():
                 and row["wall_glide_first_law_relative_residual"] < .05
                 and row["dipole_wall_first_law_relative_residual"] < .05
                 and row["wall_recovery_first_law_relative_residual"] < .05
+                and row["joint_topology_first_law_relative_residual"] < .05
                 and row["compatible_wall_first_law_relative_residual"] < .05
                 and row["source_first_law_relative_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05

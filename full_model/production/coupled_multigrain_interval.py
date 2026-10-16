@@ -59,6 +59,10 @@ from .compatible_wall_reorganization import (
 from .wall_neutral_pair_recovery import (
     WallNeutralPairRecoveryParameters, evaluate_wall_neutral_pair_recovery,
 )
+from .joint_wall_topology_orientation import (
+    JointWallTopologyOrientationParameters,
+    evaluate_joint_wall_topology_orientation,
+)
 from .conservative_wall_glide import (
     ConservativeWallGlideParameters, evaluate_conservative_wall_glide,
 )
@@ -122,6 +126,8 @@ class CoupledMultigrainContext:
     compatible_wall_reorganization_mode: str = "disabled"
     wall_neutral_pair_recovery_parameters: object | None = None
     wall_neutral_pair_recovery_mode: str = "disabled"
+    joint_wall_topology_orientation_parameters: object | None = None
+    joint_wall_topology_orientation_mode: str = "disabled"
     conservative_wall_glide_parameters: object | None = None
     conservative_wall_glide_mode: str = "disabled"
     conservative_dipole_wall_parameters: object | None = None
@@ -767,12 +773,66 @@ def advance_complete_multigrain_interval(
                 if wall_reorganization.accepted else 0.0)))
     wall_reorganization_wall_time = (
         time.perf_counter()-wall_reorganization_started)
+    joint_topology_started = time.perf_counter()
+    joint_topology = None
+    joint_state = reorganized_state
+    if context.joint_wall_topology_orientation_mode != "disabled":
+        if context.joint_wall_topology_orientation_mode != "nye_reconstructed_ring":
+            raise ValueError("unknown joint wall-topology/orientation mode")
+        parameters = (JointWallTopologyOrientationParameters()
+                      if context.joint_wall_topology_orientation_parameters is None
+                      else context.joint_wall_topology_orientation_parameters)
+        joint_topology = evaluate_joint_wall_topology_orientation(
+            joint_state, interval_s=dt, mean_strain=strain1,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, parameters=parameters)
+        if joint_topology.classification.startswith("REJECTED"):
+            raise RuntimeError(
+                "joint wall topology/orientation failed a hard audit")
+        if joint_topology.accepted:
+            joint_state = joint_topology.committed_state
+        maximum_balance_residual = max(
+            abs(joint_topology.plus_inventory_residual_m2),
+            abs(joint_topology.minus_inventory_residual_m2),
+            abs(joint_topology.line_balance_residual_m2))
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            joint_wall_topology_orientation_intervals=(
+                runtime.ledger.joint_wall_topology_orientation_intervals
+                +int(joint_topology.accepted)),
+            joint_wall_topology_orientation_inactive_intervals=(
+                runtime.ledger.joint_wall_topology_orientation_inactive_intervals
+                +int(joint_topology.classification.startswith("INACTIVE"))),
+            joint_wall_topology_orientation_rejected_intervals=(
+                runtime.ledger.joint_wall_topology_orientation_rejected_intervals
+                +int(joint_topology.classification.startswith("REJECTED"))),
+            joint_wall_topology_orientation_transferred_line_cell_sum_m2=(
+                runtime.ledger.
+                joint_wall_topology_orientation_transferred_line_cell_sum_m2
+                +(joint_topology.transferred_line_cell_sum_m2
+                  if joint_topology.accepted else 0.0)),
+            cumulative_joint_wall_topology_orientation_heat_J=(
+                runtime.ledger.cumulative_joint_wall_topology_orientation_heat_J
+                +(joint_topology.generated_heat_J
+                  if joint_topology.accepted else 0.0)),
+            maximum_joint_wall_topology_orientation_first_law_residual=max(
+                runtime.ledger.
+                maximum_joint_wall_topology_orientation_first_law_residual,
+                joint_topology.relative_first_law_residual
+                if joint_topology.accepted else 0.0),
+            maximum_joint_wall_topology_orientation_balance_residual_m2=max(
+                runtime.ledger.
+                maximum_joint_wall_topology_orientation_balance_residual_m2,
+                maximum_balance_residual)))
+    joint_topology_wall_time = time.perf_counter()-joint_topology_started
     # The neutral sink is a distinct zero-work physical channel. It follows
     # line creation so a same-site source/sink hypothesis has an unambiguous
     # operator order and separate line/heat ledgers.
     sink_started = time.perf_counter()
     sink = None
-    sink_state = reorganized_state
+    sink_state = joint_state
     if context.sink_mode != "disabled":
         if context.sink_parameters is None:
             raise ValueError("enabled sink mode requires sink parameters")
@@ -1288,6 +1348,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if wall_reorganization is None or not wall_reorganization.accepted
             else np.asarray(wall_reorganization.heat_source_J_by_cell)),
+        "joint_wall_topology_orientation_heat_J": (
+            0.0 if joint_topology is None or not joint_topology.accepted
+            else joint_topology.generated_heat_J),
+        "joint_wall_topology_orientation_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if joint_topology is None or not joint_topology.accepted
+            else np.asarray(joint_topology.heat_source_J_by_cell)),
         "sink_heat_J": (0.0 if sink is None or not sink.accepted
                          else sink.generated_heat_J),
         "sink_heat_J_by_cell": (
@@ -1553,6 +1620,39 @@ def advance_complete_multigrain_interval(
         "compatible_wall_reorganization_relative_first_law_residual": (
             0.0 if wall_reorganization is None or not wall_reorganization.accepted
             else wall_reorganization.relative_first_law_residual),
+        "joint_wall_topology_orientation_mode": (
+            context.joint_wall_topology_orientation_mode),
+        "joint_wall_topology_orientation_classification": (
+            "DISABLED" if joint_topology is None
+            else joint_topology.classification),
+        "joint_wall_topology_orientation_owner_id": (
+            None if joint_topology is None else joint_topology.selected_owner_id),
+        "joint_wall_topology_orientation_center": (
+            None if joint_topology is None else joint_topology.selected_center),
+        "joint_wall_topology_orientation_radius_m": (
+            0.0 if joint_topology is None else joint_topology.selected_radius_m),
+        "joint_wall_topology_orientation_downhill_candidates": (
+            0 if joint_topology is None else joint_topology.downhill_candidate_count),
+        "joint_wall_topology_orientation_affinity_J_m": (
+            0.0 if joint_topology is None else joint_topology.affinity_J_m),
+        "joint_wall_topology_orientation_event_rate_s": (
+            0.0 if joint_topology is None else joint_topology.event_rate_s),
+        "joint_wall_topology_orientation_coordinate": (
+            0.0 if joint_topology is None else joint_topology.realized_coordinate),
+        "joint_wall_topology_orientation_transferred_line_cell_sum_m2": (
+            0.0 if joint_topology is None or not joint_topology.accepted
+            else joint_topology.transferred_line_cell_sum_m2),
+        "joint_wall_topology_orientation_maximum_rotation_rad": (
+            0.0 if joint_topology is None or not joint_topology.accepted
+            else joint_topology.maximum_orientation_change_rad),
+        "joint_wall_topology_orientation_line_residual_m2": (
+            0.0 if joint_topology is None
+            else joint_topology.line_balance_residual_m2),
+        "joint_wall_topology_orientation_delta_helmholtz_J": (
+            0.0 if joint_topology is None else joint_topology.delta_helmholtz_J),
+        "joint_wall_topology_orientation_relative_first_law_residual": (
+            0.0 if joint_topology is None or not joint_topology.accepted
+            else joint_topology.relative_first_law_residual),
         "sink_mode": context.sink_mode,
         "sink_classification": ("DISABLED" if sink is None
                                 else sink.classification),
@@ -1707,6 +1807,7 @@ def advance_complete_multigrain_interval(
             "conservative_wall_glide_map": wall_glide_wall_time,
             "wall_neutral_pair_recovery_map": wall_recovery_wall_time,
             "compatible_wall_reorganization_map": wall_reorganization_wall_time,
+            "joint_wall_topology_orientation_map": joint_topology_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
             "structural_absorption_map": structural_absorption_wall_time,
@@ -1722,6 +1823,7 @@ def advance_complete_multigrain_interval(
                                 +wall_recovery_wall_time
                                 +sink_wall_time
                                 +wall_reorganization_wall_time
+                                +joint_topology_wall_time
                                 +interface_sink_wall_time
                                 +structural_absorption_wall_time
                                 +structural_junction_wall_time+front_wall_time
