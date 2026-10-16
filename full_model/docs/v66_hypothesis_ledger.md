@@ -1134,3 +1134,27 @@ experiment, result, limitation, and next branch.
   demonstration: spontaneous grain birth, a zero-imperfection instability, and
   named-material calibration are not established. The immediate next experiment
   brackets the finite thermal-seed amplitude below 20 K.
+
+## 2026-10-16T19:54:37Z — V67 ASB amplitude bracket and bath-restart repair
+
+- The fixed n32/0.124-shear seed sweep is monotone. A 15 K peak seed remains
+  non-banded at 1.792 maximum/mean power; 17.5 K first crosses the threshold in
+  the terminal interval. The 20-interval persistence transition is bracketed
+  between 18.75 K (16 intervals) and 19.375 K (23 intervals). All seeds are
+  mean-zero and initially subcritical, and no constitutive parameter changes.
+- A restart audit then found that `_args_from_configuration` preserved the
+  `strong_bath` label but hard-coded its reconstructed bath rate to zero. This
+  invalidated only the post-restart heat extraction in the earlier 25-interval
+  n64 bath continuation, not its frozen V66 parent or the independent fresh
+  single-crystal pair.
+- The bridge now reads the checkpoint's declared `thermal_bath_rate_s`, and a
+  test fails if a 5e9/s strong bath is not reconstructed exactly. The exact
+  checksum-bound n64 bath replay completes all 25 production-RX intervals with
+  mean temperature 1000.023 K and range 0.2462 K, versus 1056.309 K and 48.360 K
+  adiabatically. Grain 30 grows 0.71756% and intersects the connected band; all
+  Mura and first-law gates pass.
+- The corrected pair retains the scientific decision: the polycrystal band is
+  mechanically formed in both controls and thermally amplified adiabatically,
+  while existing-boundary RX intersects it. The canonical classifier now also
+  requires zero adiabatic bath rate and a strictly positive strong-bath rate.
+  The mislabeled continuation is superseded, not used as evidence.

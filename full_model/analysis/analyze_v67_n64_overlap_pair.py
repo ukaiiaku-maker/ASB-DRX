@@ -48,6 +48,8 @@ def _case(directory):
         "step": int(step),
         "load": float(load),
         "thermal_control": configuration["thermal_control"],
+        "thermal_bath_rate_s": float(configuration.get(
+            "thermal_bath_rate_s", 0.0)),
         "front_transmission_fraction": decision[
             "front_transmission_fraction"],
         "hard_audits_passed": hard,
@@ -76,6 +78,11 @@ def main():
     same_transmission = (
         adiabatic["front_transmission_fraction"]
         == bath["front_transmission_fraction"])
+    heat_controls_valid = bool(
+        adiabatic["thermal_control"] == "adiabatic"
+        and adiabatic["thermal_bath_rate_s"] == 0.0
+        and bath["thermal_control"] == "strong_bath"
+        and bath["thermal_bath_rate_s"] > 0.0)
     both_banded = bool(
         adiabatic["decision"]["final_connected_band"]
         and bath["decision"]["final_connected_band"])
@@ -88,7 +95,7 @@ def main():
         and adiabatic["final_power_localization"]["maximum_to_mean"]
         > bath["final_power_localization"]["maximum_to_mean"])
     coexistence = bool(
-        matched_endpoint and same_transmission and both_banded
+        matched_endpoint and same_transmission and heat_controls_valid and both_banded
         and both_overlap and hard)
     payload = {
         "schema": "v67-n64-matched-rx-band-overlap-pair-v1",
@@ -97,6 +104,7 @@ def main():
         "decision": {
             "matched_endpoint": matched_endpoint,
             "same_fixed_transmission_fraction": same_transmission,
+            "heat_control_rates_valid": heat_controls_valid,
             "all_hard_audits_passed": hard,
             "both_controls_form_connected_power_bands": both_banded,
             "both_controls_have_RX_growth_intersecting_active_band": (

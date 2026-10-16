@@ -36,13 +36,19 @@ Updated: 2026-10-16 (America/Los_Angeles)
 - Checksum-bound n64 high-rate adiabatic and strong-bath continuations both form
   connected mechanical bands while the existing grain-30 boundary grows through
   the active band. The adiabatic case reaches 1056.31 K mean temperature and
-  10.190 power maximum/mean versus 1005.15 K and 9.920 in the bath control.
+  10.190 power maximum/mean versus 1000.023 K and 9.954 in the bath control.
   This establishes RX/band coexistence with thermal amplification, but the
   polycrystal band itself is not heat-triggered; the independent single-crystal
   causal pair above supplies that qualification.
 - Grain birth remains absent. All positive RX claims concern existing-boundary
   migration, and the 0.25 transmission fraction is a documented hypothesis,
   not a calibrated material constant.
+- Restart audit found that the first overlap postprocessor reconstructed the
+  recorded strong-bath label with a zero bath rate. That continuation is
+  superseded. A source-level repair now carries the checkpoint's nonzero
+  `thermal_bath_rate_s`; the exact n64 bath replay above holds mean temperature
+  to 1000.023 K and passes all hard ledgers. The canonical pair requires and
+  records a positive bath rate before it can qualify coexistence.
 
 ## V67 fixed-transmission RX recovery
 

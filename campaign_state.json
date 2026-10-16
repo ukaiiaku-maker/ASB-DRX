@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T19:11:46Z",
+  "last_updated_utc": "2026-10-16T19:54:37Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -76,11 +76,11 @@
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "idle_between_amplitude_discriminators",
-      "last_case": "v67_single_crystal_asb_n32_seed20_bath_dt1_1400",
-      "last_start_local": "2026-10-16T11:58:00-07:00",
-      "last_source_commit": "090c0cd",
-      "last_output": "full_model/verification/v67_single_crystal_asb_n32_seed20_bath_dt1_1400"
+      "status": "idle_after_corrected_n64_bath_replay",
+      "last_case": "v67_n64_overlap_bath_production_tx0p25_25_repaired",
+      "last_start_local": "2026-10-16T12:27:00-07:00",
+      "last_source_commit": "747cbc0",
+      "last_output": "full_model/verification/v67_n64_overlap_bath_production_tx0p25_25_repaired"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -92,12 +92,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15"],
-    "physical_uncertainty": "the_finite_thermal_imperfection_amplitude_needed_to_enter_the_qualified_single_crystal_ASB_basin_and_how_that_basin_maps_onto_the_existing_boundary_RX_polycrystal_response",
-    "next_executable_experiment": "run_the_same_n32_0p124_strain_adiabatic_discriminator_at_10_K_then_bisect_the_10_to_20_K_onset_interval_without_changing_any_constitutive_parameter",
-    "source_identity": "445f9bf_with_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_fixed_0p25_front_transmission",
-    "expected_discriminatory_observation": "a_negative_10_K_endpoint_and_positive_20_K_endpoint_will_bound_the_finite_amplitude_ASB_basin;_an_earlier_positive_result_will_reduce_the_required_seed",
+    "physical_uncertainty": "whether_the_grid_timestep_qualified_thermal_ASB_basin_and_existing_boundary_RX_remain_simultaneously_active_when_the_bracketed_thermal_seed_is_applied_to_the_fresh_anchor_polycrystal",
+    "next_executable_experiment": "fork_the_fresh_anchor_0p25_transmission_polycrystal_into_matched_high_rate_adiabatic_and_strong_bath_cases_with_the_fixed_19p375_K_mean_zero_seed_and_production_RX_channels",
+    "source_identity": "747cbc0_with_repaired_nonzero_bath_rate_restart_routing;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged",
+    "expected_discriminatory_observation": "simultaneous_existing_boundary_growth_and_a_persistent_adiabatic_band_with_the_strong_bath_control_quantifying_the_mechanical_polycrystal_contribution",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "fresh_anchor_existing_boundary_RX_lower_rate_advantage_retained_static_RX_n64_RX_band_coexistence_and_grid_timestep_qualified_prepared_single_crystal_ASB_are_positive;_amplitude_bracketing_is_next"
+    "result_status": "fresh_anchor_existing_boundary_RX_lower_rate_advantage_retained_static_RX_corrected_n64_RX_band_coexistence_and_grid_timestep_qualified_prepared_single_crystal_ASB_are_positive;_ASB_onset_is_15_to_17p5_K_and_20_interval_persistence_is_18p75_to_19p375_K"
   },
   "continuation_rule": {
     "active": true,
@@ -108,7 +108,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315;_focused_V67_ASB_tests_pass_6;_full_latest_regression_pending_after_amplitude_discriminator",
+    "canonical_regression": "1190_passed_in_419p88_s_at_source_ee165f5;_four_focused_restart_seed_tests_pass_at_747cbc0;_latest_bath_bridge_delta_pending_full_rerun",
     "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": true,
     "material_validated": false,
