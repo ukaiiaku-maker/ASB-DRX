@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T15:06:00Z",
+  "last_updated_utc": "2026-10-16T15:18:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -64,13 +64,14 @@
     "H6": "restoring_the_common_GB_TJ_source_wall_dipole_ordering_and_junction_channels_prevents_the_early_disabled_control_reversal_and_produces_a_13p2_fold_lower_rate_growth_advantage_at_common_incremental_strain",
     "H7": "conserved_Arrhenius_neutral_pair_recovery_is_energy_consistent_and_nearly_fully_polarizes_the_leading_wall_but_does_not_create_topology_or_mature_the_1p17_degree_precursor_dynamically_or_during_the_no_reset_hold",
     "H8": "the_apparent_local_joint_closed_wall_downhill_path_was_a_rejected_quadratic_coupling_artifact_that_relaxed_preexisting_orientation_Nye_mismatch;_the_continuous_incremental_conjugate_map_finds_zero_downhill_candidates_across_120_screened_states",
-    "H9": "conservative_collective_climb_from_a_cell_core_to_its_ordered_boundary_is_downhill_on_n32_and_n64_but_has_zero_downhill_candidates_on_the_fixed_scale_n128_representation;_the_sign_and_affinity_are_not_grid_convergent_and_production_promotion_is_rejected"
+    "H9": "conservative_collective_climb_from_a_cell_core_to_its_ordered_boundary_is_downhill_on_n32_and_n64_but_has_zero_downhill_candidates_on_the_fixed_scale_n128_representation;_the_sign_and_affinity_are_not_grid_convergent_and_production_promotion_is_rejected",
+    "H10": "the_2_per_s_existing_boundary_branch_remains_monotone_through_0p91224_percent_but_its_net_directional_bias_crosses_negative_below_one_percent;_a_clean_replay_and_late_matched_random_source_geography_fork_are_selected"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 67359,
-      "case": "v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50",
-      "status": "running_single_local_solver",
+      "pid": null,
+      "case": null,
+      "status": "idle_before_clean_reversal_replay",
       "last_case": "v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50",
       "last_start_local": "2026-10-16T08:06:00-07:00",
       "last_source_commit": "89e429c",
@@ -85,13 +86,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9"],
-    "physical_uncertainty": "whether_the_valid_existing_boundary_lower_rate_RX_branch_reaches_one_percent_growth_before_a_genuine_directional_energy_reversal_after_intragranular_closed_wall_routes_failed_conjugacy_or_grid_convergence",
-    "next_executable_experiment": "continue_the_clean_2_per_s_common_production_checkpoint_in_small_restartable_bundles_with_unchanged_channels_and_measure_progress_toward_one_percent_growth_or_reversal",
-    "source_identity": "3687382_with_incremental_conjugacy_repair_quarantined_collective_climb_probe_and_conservative_fixed_scale_refinement;_production_baseline_operators_unchanged",
-    "expected_discriminatory_observation": "monotone_existing_grain20_growth_from_0p90938_percent_to_the_one_percent_threshold_with_closed_Mura_first_law_and_restart_ledgers_or_an_attributed_energy_reversal",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10"],
+    "physical_uncertainty": "whether_the_observed_late_directional_reversal_is_reproducible_from_clean_source_and_whether_random_bulk_source_geography_can_sustain_local_stored_energy_after_the_GB_TJ_source_becomes_inactive",
+    "next_executable_experiment": "replay_the_50_interval_baseline_from_clean_source_then_fork_the_identical_parent_with_matched_random_sources_without_retuning_and_compare_growth_bias_line_supply_and_hard_ledgers",
+    "source_identity": "dfb1065_plus_classifier_fail_closed_repair;_production_equations_unchanged_since_89e429c",
+    "expected_discriminatory_observation": "clean_reproduction_of_the_negative_endpoint_bias_followed_by_either_a_source_geography_dependent_restoration_of_positive_bias_or_a_rate_limiting_mechanism_independent_of_source_location",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "corrected_local_joint_production_is_inactive_with_zero_downhill_candidates;_collective_core_to_wall_capture_is_rejected_by_n32_n64_n128_fixed_scale_refinement;_the_valid_lower_rate_existing_boundary_checkpoint_advanced_from_0p90938_to_0p90998_percent_with_all_hard_gates_closed_and_a_50_interval_asymptote_discriminator_is_running"
+    "result_status": "exploratory_50_interval_continuation_reaches_0p91224_percent_but_endpoint_net_growth_bias_is_negative_0p02342_MPa;_automatic_source_tree_clean_is_false_only_because_campaign_state_was_modified_at_launch_so_a_clean_replay_is_next"
   },
   "continuation_rule": {
     "active": true,

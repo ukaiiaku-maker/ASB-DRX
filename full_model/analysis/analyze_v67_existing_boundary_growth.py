@@ -130,10 +130,11 @@ def main():
                 not monotone or directional < 0.0),
             "projected_additional_intervals_at_latest_rate": projected,
             "classification": (
-                "QUALIFIED_ONE_PERCENT_EXISTING_BOUNDARY_RX" if hard and reached
-                else ("PHYSICAL_RX_REVERSAL" if hard and (
-                    not monotone or directional < 0.0)
-                      else "VALID_CONTINUING_EXISTING_BOUNDARY_RX")),
+                "UNQUALIFIED_PROVENANCE_OR_HARD_AUDIT" if not hard else
+                ("QUALIFIED_ONE_PERCENT_EXISTING_BOUNDARY_RX" if reached else
+                 ("PHYSICAL_RX_REVERSAL" if (
+                     not monotone or directional < 0.0)
+                  else "VALID_CONTINUING_EXISTING_BOUNDARY_RX"))),
         },
         "claim_boundary": (
             "Existing-boundary RX/SIBM only. Reaching one percent does not "
