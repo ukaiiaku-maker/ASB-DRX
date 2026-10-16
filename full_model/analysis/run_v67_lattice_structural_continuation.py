@@ -43,6 +43,9 @@ from full_model.production.implicit_wall_order_relaxation import (
 from full_model.production.conservative_wall_glide import (
     ConservativeWallGlideParameters,
 )
+from full_model.production.compatible_wall_reorganization import (
+    CompatibleWallReorganizationParameters,
+)
 from full_model.production.conservative_dipole_wall_organization import (
     ConservativeDipoleWallParameters,
 )
@@ -109,6 +112,16 @@ def main():
         help=("bounded checkerboard fraction used by conservative wall glide; "
               "changes numerical cadence, not its Arrhenius clock"))
     parser.add_argument("--dipole-wall-organization", action="store_true")
+    parser.add_argument(
+        "--compatible-wall-reorganization", action="store_true",
+        help=("enable conservative redistribution of existing signed wall "
+              "content toward the current Frank--Bilby target"))
+    parser.add_argument(
+        "--compatible-wall-conservation",
+        choices=("family_signed", "burgers_vector"),
+        default="burgers_vector",
+        help=("invariant retained by the compatible wall reaction; the "
+              "Burgers-vector reaction cone is the production candidate"))
     parser.add_argument(
         "--collective-wall-nucleation", action="store_true",
         help=("enable the separately labeled finite-amplitude closed-wall "
@@ -233,6 +246,13 @@ def main():
         conservative_dipole_wall_parameters=(
             ConservativeDipoleWallParameters()
             if args.dipole_wall_organization else None),
+        compatible_wall_reorganization_mode=(
+            "frank_bilby_projection"
+            if args.compatible_wall_reorganization else "disabled"),
+        compatible_wall_reorganization_parameters=(
+            CompatibleWallReorganizationParameters(
+                conservation_mode=args.compatible_wall_conservation)
+            if args.compatible_wall_reorganization else None),
         collective_wall_nucleation_mode=(
             ("continuous_closed_wall"
              if args.collective_wall_kinetics == "continuous_net_flux"
@@ -289,6 +309,10 @@ def main():
         wall_glide_maximum_edge_fraction=(
             args.wall_glide_maximum_edge_fraction),
         conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
+        compatible_wall_reorganization_mode=(
+            context.compatible_wall_reorganization_mode),
+        compatible_wall_conservation=(
+            args.compatible_wall_conservation),
         collective_wall_nucleation_mode=(
             context.collective_wall_nucleation_mode),
         collective_wall_order_increment=(
@@ -410,6 +434,18 @@ def main():
                 "conservative_dipole_wall_delta_helmholtz_J"],
             "dipole_wall_first_law_relative_residual": interval.audit[
                 "conservative_dipole_wall_relative_first_law_residual"],
+            "compatible_wall_classification": interval.audit[
+                "compatible_wall_reorganization_classification"],
+            "compatible_wall_fractions": interval.audit[
+                "compatible_wall_reorganization_fractions"],
+            "compatible_wall_affinities_J_m": interval.audit[
+                "compatible_wall_reorganization_affinities_J_m"],
+            "compatible_wall_signed_residual_m2": interval.audit[
+                "compatible_wall_reorganization_signed_residual_m2"],
+            "compatible_wall_line_residual_m2": interval.audit[
+                "compatible_wall_reorganization_line_residual_m2"],
+            "compatible_wall_first_law_relative_residual": interval.audit[
+                "compatible_wall_reorganization_relative_first_law_residual"],
             "source_classification": interval.audit["source_classification"],
             "source_event_count": interval.audit["source_event_count"],
             "source_first_law_relative_residual": interval.audit[
@@ -509,6 +545,10 @@ def main():
             "wall_glide_maximum_edge_fraction": (
                 args.wall_glide_maximum_edge_fraction),
             "dipole_wall_organization": bool(args.dipole_wall_organization),
+            "compatible_wall_reorganization": bool(
+                args.compatible_wall_reorganization),
+            "compatible_wall_conservation": (
+                args.compatible_wall_conservation),
             "collective_wall_nucleation": bool(
                 args.collective_wall_nucleation),
             "collective_wall_order_increment": (
@@ -550,6 +590,9 @@ def main():
             "accepted_dipole_wall_intervals": sum(
                 row["dipole_wall_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_compatible_wall_intervals": sum(
+                row["compatible_wall_classification"].startswith("ACCEPTED")
+                for row in records),
             "accepted_source_intervals": sum(
                 row["source_classification"].startswith("ACCEPTED")
                 for row in records),
@@ -566,6 +609,7 @@ def main():
                 row["lattice_first_law_relative_residual"] < .05
                 and row["wall_glide_first_law_relative_residual"] < .05
                 and row["dipole_wall_first_law_relative_residual"] < .05
+                and row["compatible_wall_first_law_relative_residual"] < .05
                 and row["source_first_law_relative_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records

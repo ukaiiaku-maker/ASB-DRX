@@ -46,38 +46,52 @@ class CompatibleWallReorganizationDecision:
     heat_source_J_by_cell: np.ndarray
 
 
-def _bounded_sum_projection(raw, capacity, required_sum):
-    """Euclidean box projection with an exact prescribed scalar sum."""
+def _bounded_sum_projection(raw, capacity, required_sum, weights=None):
+    """Box projection with an exact support-weighted scalar inventory.
+
+    Common-state densities are intensive owner fields.  Their physical line
+    inventory is ``support*density``; conserving an unweighted array sum in a
+    diffuse multiphase cell silently creates or removes line when content is
+    redistributed between unequal support fractions.
+    """
     value = np.asarray(raw, dtype=float)
     bound = np.asarray(capacity, dtype=float)
+    weight = (np.ones_like(value) if weights is None
+              else np.broadcast_to(np.asarray(weights, dtype=float),
+                                    value.shape))
+    if np.any(weight <= 0.0) or np.any(~np.isfinite(weight)):
+        raise ValueError("projection weights must be positive and finite")
     target = float(required_sum)
-    if abs(target) > float(np.sum(bound, dtype=np.longdouble))*(1+1e-13):
+    capacity_sum = float(np.sum(weight*bound, dtype=np.longdouble))
+    if abs(target) > capacity_sum*(1+1e-13):
         raise ValueError("signed wall inventory exceeds local line capacity")
-    low = float(np.min(-bound-value))-1.0
-    high = float(np.max(bound-value))+1.0
+    low = float(np.min((-bound-value)/weight))-1.0
+    high = float(np.max((bound-value)/weight))+1.0
     for _ in range(100):
         middle = .5*(low+high)
-        projected = np.clip(value+middle, -bound, bound)
-        if float(np.sum(projected, dtype=np.longdouble)) < target:
+        projected = np.clip(value+middle*weight, -bound, bound)
+        if float(np.sum(weight*projected, dtype=np.longdouble)) < target:
             low = middle
         else:
             high = middle
-    projected = np.clip(value+.5*(low+high), -bound, bound)
+    projected = np.clip(value+.5*(low+high)*weight, -bound, bound)
     # Distribute the remaining floating residual over unsaturated capacity.
     for _ in range(4):
-        residual = target-float(np.sum(projected, dtype=np.longdouble))
+        residual = target-float(np.sum(
+            weight*projected, dtype=np.longdouble))
         if abs(residual) <= 32*np.finfo(float).eps*max(abs(target), 1.0):
             break
         room = np.maximum(bound-projected if residual > 0.0
                           else bound+projected, 0.0)
-        total_room = float(np.sum(room, dtype=np.longdouble))
+        total_room = float(np.sum(weight*room, dtype=np.longdouble))
         if total_room <= 0.0:
             break
         projected += np.sign(residual)*room*min(abs(residual)/total_room, 1.0)
     return projected
 
 
-def _burgers_vector_projection(raw, capacity, directions, required_vector):
+def _burgers_vector_projection(
+        raw, capacity, directions, required_vector, weights=None):
     """Project onto line-capacity boxes at fixed resultant Burgers vector.
 
     ``directions`` are unit Burgers vectors in the laboratory frame.  Thus the
@@ -89,14 +103,19 @@ def _burgers_vector_projection(raw, capacity, directions, required_vector):
     value = np.asarray(raw, dtype=float).reshape(-1)
     bound = np.asarray(capacity, dtype=float).reshape(-1)
     direction = np.asarray(directions, dtype=float).reshape(-1, 3)
+    weight = (np.ones_like(value) if weights is None else np.broadcast_to(
+        np.asarray(weights, dtype=float), np.asarray(raw).shape).reshape(-1))
+    if np.any(weight <= 0.0) or np.any(~np.isfinite(weight)):
+        raise ValueError("projection weights must be positive and finite")
+    design = weight[:, None]*direction
     required = np.asarray(required_vector, dtype=float)
     scale = max(float(np.max(bound)), float(np.max(np.abs(value))), 1.0)
 
     def candidate(multiplier):
-        return np.clip(value+scale*(direction@multiplier), -bound, bound)
+        return np.clip(value+scale*(design@multiplier), -bound, bound)
 
     def residual(multiplier):
-        return (direction.T@candidate(multiplier)-required)/scale
+        return (design.T@candidate(multiplier)-required)/scale
 
     solution = least_squares(
         residual, np.zeros(3), xtol=1e-14, ftol=1e-14, gtol=1e-14,
@@ -107,17 +126,17 @@ def _burgers_vector_projection(raw, capacity, directions, required_vector):
     # absolute residual still exceeds the line-content ledger tolerance.
     for _ in range(20):
         projected = candidate(multiplier)
-        difference = direction.T@projected-required
+        difference = design.T@projected-required
         free = ((projected > -bound+1e-10*scale)
                 &(projected < bound-1e-10*scale))
-        jacobian = scale*(direction[free].T@direction[free])
+        jacobian = scale*(design[free].T@design[free])
         correction = np.linalg.lstsq(jacobian, difference, rcond=None)[0]
         multiplier -= correction
         if np.linalg.norm(difference) <= 2e-12*max(
                 np.linalg.norm(required), scale, 1.0):
             break
     projected = candidate(multiplier)
-    absolute = np.linalg.norm(direction.T@projected-required)
+    absolute = np.linalg.norm(design.T@projected-required)
     tolerance = 2e-11*max(np.linalg.norm(required), scale, 1.0)
     if not solution.success or absolute > tolerance:
         raise RuntimeError(
@@ -145,22 +164,26 @@ def _compatible_signed_target(owner, support, systems, spacing_m, parameters):
                         parameters.minimum_wall_order),
         out=np.zeros_like(raw), where=active[..., None])
     target = current.copy()
+    owner_weight = np.asarray(support, dtype=float)
     if parameters.conservation_mode == "family_signed":
         for family in range(current.shape[2]):
-            fixed_sum = float(np.sum(
-                current[..., family][~active], dtype=np.longdouble))
             required = float(np.sum(
-                current[..., family], dtype=np.longdouble))-fixed_sum
+                owner_weight[active]*current[..., family][active],
+                dtype=np.longdouble))
             target[..., family][active] = _bounded_sum_projection(
-                raw[..., family][active], total[..., family][active], required)
+                raw[..., family][active], total[..., family][active], required,
+                weights=owner_weight[active])
     elif parameters.conservation_mode == "burgers_vector":
         magnitude = np.linalg.norm(burgers, axis=-1, keepdims=True)
         directions = burgers/np.maximum(magnitude, np.finfo(float).tiny)
         required = np.sum(
-            directions[active]*current[active][..., None], axis=(0, 1),
+            owner_weight[active][..., None, None]
+            *directions[active]*current[active][..., None], axis=(0, 1),
             dtype=np.longdouble).astype(float)
         target[active] = _burgers_vector_projection(
-            raw[active], total[active], directions[active], required)
+            raw[active], total[active], directions[active], required,
+            weights=np.broadcast_to(
+                owner_weight[active, None], current[active].shape))
     else:
         raise ValueError(
             "conservation_mode must be 'family_signed' or 'burgers_vector'")
@@ -276,35 +299,42 @@ def evaluate_compatible_wall_reorganization(
         committed = state
         residual = relative = 0.0
     before_signed = np.asarray([
-        np.sum(owner.wall_plus_m2-owner.wall_minus_m2, axis=(0, 1))
-        for owner in state.owners])
+        np.sum(np.asarray(support)[..., None]
+               *(owner.wall_plus_m2-owner.wall_minus_m2), axis=(0, 1))
+        for support, owner in zip(state.supports, state.owners)])
     after_signed = np.asarray([
-        np.sum(owner.wall_plus_m2-owner.wall_minus_m2, axis=(0, 1))
-        for owner in cold.owners])
+        np.sum(np.asarray(support)[..., None]
+               *(owner.wall_plus_m2-owner.wall_minus_m2), axis=(0, 1))
+        for support, owner in zip(state.supports, cold.owners)])
     before_line = sum(float(np.sum(
-        owner.wall_plus_m2+owner.wall_minus_m2, dtype=np.longdouble))
-        for owner in state.owners)
+        np.asarray(support)[..., None]
+        *(owner.wall_plus_m2+owner.wall_minus_m2), dtype=np.longdouble))
+        for support, owner in zip(state.supports, state.owners))
     after_line = sum(float(np.sum(
-        owner.wall_plus_m2+owner.wall_minus_m2, dtype=np.longdouble))
-        for owner in cold.owners)
+        np.asarray(support)[..., None]
+        *(owner.wall_plus_m2+owner.wall_minus_m2), dtype=np.longdouble))
+        for support, owner in zip(state.supports, cold.owners))
     if parameters.conservation_mode == "family_signed":
         signed_residual = float(np.max(np.abs(after_signed-before_signed)))
     else:
         before_vector = np.zeros(3, dtype=np.longdouble)
         after_vector = np.zeros(3, dtype=np.longdouble)
-        for before_owner, after_owner in zip(state.owners, cold.owners):
+        for support, before_owner, after_owner in zip(
+                state.supports, state.owners, cold.owners):
             burgers = rotated_system_fields(
                 systems, before_owner.orientation_rad)[0]
             directions = burgers/np.maximum(
                 np.linalg.norm(burgers, axis=-1, keepdims=True),
                 np.finfo(float).tiny)
             before_vector += np.sum(
-                directions*(before_owner.wall_plus_m2
-                            -before_owner.wall_minus_m2)[..., None],
+                np.asarray(support)[..., None, None]
+                *directions*(before_owner.wall_plus_m2
+                             -before_owner.wall_minus_m2)[..., None],
                 axis=(0, 1, 2), dtype=np.longdouble)
             after_vector += np.sum(
-                directions*(after_owner.wall_plus_m2
-                            -after_owner.wall_minus_m2)[..., None],
+                np.asarray(support)[..., None, None]
+                *directions*(after_owner.wall_plus_m2
+                             -after_owner.wall_minus_m2)[..., None],
                 axis=(0, 1, 2), dtype=np.longdouble)
         signed_residual = float(np.linalg.norm(after_vector-before_vector))
     line_residual = float(after_line-before_line)
