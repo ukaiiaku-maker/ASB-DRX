@@ -878,6 +878,8 @@ def advance_complete_multigrain_interval(
         "wall_orientation_relaxation_relative_first_law_residual": (
             0.0 if wall_orientation is None or not wall_orientation.accepted
             else wall_orientation.relative_first_law_residual),
+        "wall_orientation_relaxation_backtracks": (
+            0 if wall_orientation is None else wall_orientation.backtracks),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,

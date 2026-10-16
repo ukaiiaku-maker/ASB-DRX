@@ -22,7 +22,12 @@ class WallOrientationRelaxationParameters:
     activation: StructuralBoundaryParameters = StructuralBoundaryParameters(
         activation_enthalpy_eV=.70, barrier_floor_eV=.05,
         attempt_frequency_Hz=1.0e7, activation_segment_m=2.5e-9)
-    maximum_fraction_per_interval: float = .05
+    # The implicit endpoint transaction is not subject to an explicit-Euler
+    # stability cap.  Its physical fraction is the Arrhenius exponential;
+    # complete-energy backtracking below remains the nonlinear safeguard.
+    maximum_fraction_per_interval: float = 1.0
+    affinity_probe_fraction: float = .05
+    maximum_backtracks: int = 16
     owner_support_threshold: float = .75
     boundary_clearance_m: float = 2.0e-7
 
@@ -30,6 +35,11 @@ class WallOrientationRelaxationParameters:
         if (not math.isfinite(self.maximum_fraction_per_interval)
                 or not 0.0 < self.maximum_fraction_per_interval <= 1.0):
             raise ValueError("orientation relaxation fraction must lie in (0,1]")
+        if (not math.isfinite(self.affinity_probe_fraction)
+                or not 0.0 < self.affinity_probe_fraction <= 1.0):
+            raise ValueError("orientation affinity probe must lie in (0,1]")
+        if self.maximum_backtracks < 0:
+            raise ValueError("orientation backtrack count cannot be negative")
         if not 0.0 < self.owner_support_threshold < 1.0:
             raise ValueError("owner support threshold must lie in (0,1)")
         if not math.isfinite(self.boundary_clearance_m) or self.boundary_clearance_m < 0.0:
@@ -50,6 +60,7 @@ class WallOrientationRelaxationDecision:
     first_law_residual_J: float
     relative_first_law_residual: float
     heat_source_J_by_cell: np.ndarray
+    backtracks: int = 0
 
 
 def _owner_domain(support, spacing_m, parameters):
@@ -100,7 +111,7 @@ def evaluate_wall_orientation_relaxation(
             np.cos(diagnostic.reconstructed_orientation_rad
                    -np.asarray(owner.orientation_rad)))
         target = np.asarray(owner.orientation_rad).copy()
-        target[domain] += parameters.maximum_fraction_per_interval*increment[domain]
+        target[domain] += parameters.affinity_probe_fraction*increment[domain]
         targets[int(grain_id)] = target
         trial_owners = tuple(
             replace(item, orientation_rad=target) if gid == grain_id else item
@@ -125,31 +136,44 @@ def evaluate_wall_orientation_relaxation(
         fractions[int(grain_id)] = fraction
         affinities[int(grain_id)] = affinity
 
-    owners = []
-    activity = np.zeros(state.supports.shape[1:])
-    for grain_id, support, owner in zip(
-            state.grain_ids, state.supports, state.owners):
-        fraction = fractions[int(grain_id)]
-        domain = domains[int(grain_id)]
-        if fraction > 0.0 and int(grain_id) in compatibility:
-            target = compatibility[int(grain_id)].reconstructed_orientation_rad
-            increment = np.arctan2(
-                np.sin(target-np.asarray(owner.orientation_rad)),
-                np.cos(target-np.asarray(owner.orientation_rad)))
-            orientation = np.asarray(owner.orientation_rad).copy()
-            orientation[domain] += fraction*increment[domain]
-            owners.append(replace(owner, orientation_rad=orientation))
-            activity += (np.asarray(support)*domain*np.asarray(owner.wall_order)
-                         *np.sum(owner.wall_plus_m2+owner.wall_minus_m2, axis=2))
-        else:
-            owners.append(owner)
-    cold = replace(state, owners=tuple(owners))
-    cold.validate()
-    cold_energy = evaluate_complete_multigrain_energy(cold, **common)
-    delta = cold_energy.helmholtz_J-before.helmholtz_J
     resolution = 4096*np.finfo(float).eps*max(
-        abs(before.helmholtz_J), abs(cold_energy.helmholtz_J), 1e-300)
+        abs(before.helmholtz_J), 1e-300)
     active = any(value > 0.0 for value in fractions.values())
+    step_scale = 1.0
+    backtracks = 0
+    cold = state
+    cold_energy = before
+    activity = np.zeros(state.supports.shape[1:])
+    if active:
+        for backtracks in range(parameters.maximum_backtracks+1):
+            owners = []
+            activity = np.zeros(state.supports.shape[1:])
+            for grain_id, support, owner in zip(
+                    state.grain_ids, state.supports, state.owners):
+                fraction = step_scale*fractions[int(grain_id)]
+                domain = domains[int(grain_id)]
+                if fraction > 0.0 and int(grain_id) in compatibility:
+                    target = compatibility[
+                        int(grain_id)].reconstructed_orientation_rad
+                    increment = np.arctan2(
+                        np.sin(target-np.asarray(owner.orientation_rad)),
+                        np.cos(target-np.asarray(owner.orientation_rad)))
+                    orientation = np.asarray(owner.orientation_rad).copy()
+                    orientation[domain] += fraction*increment[domain]
+                    owners.append(replace(owner, orientation_rad=orientation))
+                    activity += (np.asarray(support)*domain
+                                 *np.asarray(owner.wall_order)
+                                 *np.sum(owner.wall_plus_m2+owner.wall_minus_m2,
+                                         axis=2))
+                else:
+                    owners.append(owner)
+            cold = replace(state, owners=tuple(owners))
+            cold.validate()
+            cold_energy = evaluate_complete_multigrain_energy(cold, **common)
+            if cold_energy.helmholtz_J-before.helmholtz_J <= resolution:
+                break
+            step_scale *= .5
+    delta = cold_energy.helmholtz_J-before.helmholtz_J
     downhill = delta <= resolution
     heat = max(-delta, 0.0) if active and downhill else 0.0
     heat_cells = np.zeros(state.supports.shape[1:])
@@ -163,13 +187,15 @@ def evaluate_wall_orientation_relaxation(
         committed.validate()
         hot = evaluate_complete_multigrain_energy(committed, **common)
         residual = hot.internal_J-before.internal_J
-        scale = max(abs(delta), heat, resolution, 1e-300)
-        relative = abs(residual)/scale
+        energy_scale = max(abs(delta), heat, resolution, 1e-300)
+        relative = abs(residual)/energy_scale
     else:
         committed = state
         residual = relative = 0.0
     accepted = bool(active and downhill
                     and relative <= maximum_relative_first_law_residual)
+    fractions = {key: (step_scale*value if accepted else 0.0)
+                 for key, value in fractions.items()}
     if not active:
         classification = "INACTIVE_NO_DOWNHILL_COMPATIBLE_ROTATION"
     elif not downhill:
@@ -183,4 +209,4 @@ def evaluate_wall_orientation_relaxation(
         fractions, affinities, compatibility, delta,
         heat if accepted else 0.0, residual if accepted else 0.0,
         relative if accepted else 0.0,
-        heat_cells if accepted else np.zeros_like(heat_cells))
+        heat_cells if accepted else np.zeros_like(heat_cells), backtracks)
