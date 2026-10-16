@@ -11,6 +11,7 @@ from full_model.production.multigrain_source_transaction import (
     advance_energy_qualified_pair_source_transaction,
     NeutralBoundarySinkParameters,
     evaluate_interface_neutral_sink_transaction,
+    evaluate_interface_vector_neutral_junction_transaction,
     evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
 )
@@ -145,6 +146,53 @@ def test_stationary_interface_sink_preserves_signed_burgers_and_closes_heat():
         plus-minus, rtol=0.0, atol=1e-2)
     assert abs(result.line_balance_residual_m2) < 1e-12*max(
         2.0*result.annihilated_pair_cell_sum_m2, 1.0)
+
+    exact = evaluate_interface_neutral_sink_transaction(
+        state, mean_strain=np.zeros((2, 2)), interval_s=1e-3,
+        sink_parameters=NeutralBoundarySinkParameters(
+            maximum_fraction_per_interval=.1,
+            complete_physical_clock=True),
+        wall_parameters=wall, represented_thickness_m=4.96e-10,
+        energy_kwargs=energy)
+    assert exact.accepted
+    assert exact.maximum_fraction > .1
+    assert exact.annihilated_pair_cell_sum_m2 > (
+        result.annihilated_pair_cell_sum_m2)
+    np.testing.assert_array_equal(
+        exact.candidate_state.interfaces[0].boundary_burgers_m1, burgers)
+
+
+def test_vector_neutral_interface_junction_reaches_burgers_capacity_bound():
+    state, _, wall, energy, _, _ = _fixture()
+    grid = state.supports.shape[1:]
+    plus = np.full(grid+(3, 4), 1.0e14)
+    minus = np.full(grid+(3, 4), .8e14)
+    burgers = (1e4*np.random.default_rng(66).normal(
+        size=grid+(3, 3)))
+    component = InterfaceComponentState(
+        "edge-10-20", 10, 20, np.zeros(grid), np.zeros(grid), plus,
+        minus, np.zeros(grid+(3, 1)), boundary_burgers_m1=burgers)
+    state = replace(state, interfaces=(component,))
+    result = evaluate_interface_vector_neutral_junction_transaction(
+        state, mean_strain=np.zeros((2, 2)), interval_s=1e-3,
+        sink_parameters=NeutralBoundarySinkParameters(
+            complete_physical_clock=True),
+        wall_parameters=wall, represented_thickness_m=4.96e-10,
+        energy_kwargs=energy)
+    assert result.accepted
+    assert result.classification.startswith(
+        "ACCEPTED_INTERFACE_VECTOR_NEUTRAL_JUNCTION")
+    np.testing.assert_array_equal(
+        result.candidate_state.interfaces[0].boundary_burgers_m1, burgers)
+    after = result.candidate_state.interfaces[0]
+    line_after = np.sum(
+        after.boundary_plus_m2+after.boundary_minus_m2, axis=-1)
+    required = np.linalg.norm(burgers, axis=-1)/wall.burgers_m
+    assert np.min(line_after-required) >= -1.0
+    assert np.sum(line_after) < np.sum(plus+minus)
+    assert abs(result.line_balance_residual_m2) < 1e-12*max(
+        2.0*result.annihilated_pair_cell_sum_m2, 1.0)
+    assert result.relative_first_law_residual < .05
 
 
 def test_neutral_sink_site_geography_changes_density_not_integral_balance():

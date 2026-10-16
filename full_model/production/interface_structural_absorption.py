@@ -55,6 +55,8 @@ class InterfaceStructuralProjection:
     removed_signed_content: float
     signed_content_balance: float
     maximum_vector_balance_m1: float
+    vector_balance_scale_m1: float
+    relative_vector_balance: float
     incompatible_burgers_norm_before_m1: float
     incompatible_burgers_norm_after_m1: float
 
@@ -134,6 +136,7 @@ def project_interface_burgers_to_structural_content(
     removed_line_length = 0.0
     removed_signed_content = 0.0
     maximum_vector_balance = 0.0
+    vector_balance_scale = 1.0
     incompatible_before = 0.0
     incompatible_after = 0.0
     cell_area = spacing**2
@@ -159,6 +162,9 @@ def project_interface_burgers_to_structural_content(
         burgers = np.asarray(component.boundary_burgers_m1, dtype=float)
         if burgers.shape[-2:] != (3, 3):
             raise ValueError("interface Burgers reservoir must be grid+(3,3)")
+        vector_balance_scale = max(
+            vector_balance_scale,
+            float(np.max(np.abs(burgers), initial=0.0)))
         projected = np.sum(burgers*normal[..., None, :], axis=-1)
         requested = reacted_fraction*np.abs(projected)/b
         plus = np.asarray(component.boundary_plus_m2, dtype=float)
@@ -207,7 +213,9 @@ def project_interface_burgers_to_structural_content(
     return InterfaceStructuralProjection(
         candidate, next_interfaces, content_change, removed_line_length,
         removed_signed_content, float(np.sum(content_change)-removed_signed_content),
-        maximum_vector_balance, incompatible_before, incompatible_after)
+        maximum_vector_balance, vector_balance_scale,
+        maximum_vector_balance/vector_balance_scale,
+        incompatible_before, incompatible_after)
 
 
 def evaluate_interface_structural_absorption(
@@ -312,9 +320,11 @@ def evaluate_interface_structural_absorption(
         committed_energy = before_energy
         residual = 0.0
         relative = 0.0
+    vector_roundoff = (4096.0*np.finfo(float).eps
+                       *projection.vector_balance_scale_m1)
     balances_close = (
         abs(projection.signed_content_balance) <= 1e-10
-        and projection.maximum_vector_balance_m1 <= 1e-12)
+        and projection.maximum_vector_balance_m1 <= vector_roundoff)
     accepted = bool(active and downhill and balances_close
                     and relative <= maximum_relative_first_law_residual)
     if not active:

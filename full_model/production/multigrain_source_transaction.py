@@ -55,6 +55,7 @@ class NeutralBoundarySinkParameters:
     barrier_floor_fraction: float = 0.05/1.40
     maximum_fraction_per_interval: float = 0.10
     stress_assisted: bool = False
+    complete_physical_clock: bool = False
 
     def __post_init__(self):
         values = (self.activation_enthalpy_eV, self.attempt_frequency_s,
@@ -464,8 +465,11 @@ def evaluate_interface_neutral_sink_transaction(
     rate = activated_rate_array_s(
         process, np.full_like(common.temperature_K, enthalpy),
         common.temperature_K)
-    fraction = np.minimum(
-        -np.expm1(-rate*dt), sink_parameters.maximum_fraction_per_interval)
+    uncapped_fraction = -np.expm1(-rate*dt)
+    fraction = (uncapped_fraction if sink_parameters.complete_physical_clock
+                else np.minimum(
+                    uncapped_fraction,
+                    sink_parameters.maximum_fraction_per_interval))
     maximum_fraction = float(np.max(fraction, initial=0.0))
     interfaces = []
     heat_density = np.zeros_like(common.temperature_K, dtype=float)
@@ -530,5 +534,135 @@ def evaluate_interface_neutral_sink_transaction(
     return MultiGrainSinkDecision(
         accepted, f"{classification}:{sink_mode}",
         candidate if accepted else state, annihilated_total, signed_change,
+        balance, defect_change, heat_J, residual, relative, maximum_fraction,
+        heat_by_cell)
+
+
+def evaluate_interface_vector_neutral_junction_transaction(
+        state, *, mean_strain, interval_s, sink_parameters,
+        wall_parameters, represented_thickness_m, energy_kwargs=None,
+        sink_mode="interface_vector_neutral_junction_sink",
+        maximum_relative_first_law_residual=.05):
+    """Remove only interface line that is neutral in exact Burgers space.
+
+    Multiple absorbed lattice families can react by GB glide/climb even when
+    no same-family positive/negative pair exists.  The exact tensor
+    ``boundary_burgers_m1`` remains bitwise unchanged.  For each stored row,
+    ``|B|/b`` is a strict lower bound on line capable of carrying that Burgers
+    vector; only scalar line above that bound is eligible.  Thus this channel
+    cannot erase net Burgers content or manufacture a structural rotation.
+    """
+    dt = float(interval_s)
+    if not math.isfinite(dt) or dt <= 0.0:
+        raise ValueError("interface junction interval must be positive finite")
+    if sink_parameters.stress_assisted:
+        raise ValueError(
+            "vector-neutral interface reaction has no declared resolved stress")
+    spacing = float(wall_parameters.spacing_m)
+    thickness = float(represented_thickness_m)
+    cell_volume = spacing*spacing*thickness
+    options = {} if energy_kwargs is None else dict(energy_kwargs)
+    options.pop("mean_strain", None)
+    common_energy = dict(
+        spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
+        **options)
+    before_energy = evaluate_complete_multigrain_energy(state, **common_energy)
+    common, _ = reconstruct_multigrain_common(state, spacing)
+    process = ActivatedProcess(
+        "interface-vector-neutral-junction", sink_parameters.attempt_frequency_s,
+        0.0, sink_parameters.attempt_frequency_s)
+    enthalpy = sink_parameters.activation_enthalpy_eV*EV_J
+    rate = activated_rate_array_s(
+        process, np.full_like(common.temperature_K, enthalpy),
+        common.temperature_K)
+    uncapped_fraction = -np.expm1(-rate*dt)
+    fraction = (uncapped_fraction if sink_parameters.complete_physical_clock
+                else np.minimum(
+                    uncapped_fraction,
+                    sink_parameters.maximum_fraction_per_interval))
+    maximum_fraction = float(np.max(fraction, initial=0.0))
+    interfaces = []
+    heat_density = np.zeros_like(common.temperature_K, dtype=float)
+    removed_total = 0.0
+    line_change = 0.0
+    inventory_scale = 0.0
+    maximum_capacity_violation = 0.0
+    line_energy = float(wall_parameters.line_energy_J_m)
+    burgers_m = float(wall_parameters.burgers_m)
+    for interface in state.interfaces:
+        plus = np.asarray(interface.boundary_plus_m2, dtype=float)
+        minus = np.asarray(interface.boundary_minus_m2, dtype=float)
+        burgers = np.asarray(interface.boundary_burgers_m1, dtype=float)
+        line_by_row = np.sum(plus+minus, axis=-1)
+        required_by_row = np.linalg.norm(burgers, axis=-1)/burgers_m
+        removable_by_row = np.maximum(line_by_row-required_by_row, 0.0)
+        removed_by_row = fraction[..., None]*removable_by_row
+        retained_fraction = np.divide(
+            line_by_row-removed_by_row, line_by_row,
+            out=np.ones_like(line_by_row), where=line_by_row > 0.0)
+        next_plus = plus*retained_fraction[..., None]
+        next_minus = minus*retained_fraction[..., None]
+        next_line_by_row = np.sum(next_plus+next_minus, axis=-1)
+        maximum_capacity_violation = max(
+            maximum_capacity_violation,
+            float(np.max(
+                np.maximum(required_by_row-next_line_by_row, 0.0),
+                initial=0.0)))
+        interfaces.append(replace(
+            interface, boundary_plus_m2=next_plus,
+            boundary_minus_m2=next_minus,
+            boundary_burgers_m1=burgers.copy()))
+        removed_cell = np.sum(removed_by_row, axis=-1)
+        heat_density += line_energy*removed_cell
+        removed_total += float(np.sum(
+            removed_by_row, dtype=np.longdouble))
+        line_change += float(np.sum(
+            next_plus+next_minus-plus-minus, dtype=np.longdouble))
+        inventory_scale += float(np.sum(
+            plus+minus, dtype=np.longdouble))
+    unheated = replace(state, interfaces=tuple(interfaces))
+    unheated.validate()
+    cold_energy = evaluate_complete_multigrain_energy(unheated, **common_energy)
+    heat_by_cell = heat_density*cell_volume
+    temperature = (np.asarray(common.temperature_K)
+                   +heat_density/wall_parameters.volumetric_heat_capacity_J_m3_K)
+    candidate = replace(unheated, owners=tuple(
+        replace(owner, temperature_K=temperature.copy())
+        for owner in unheated.owners))
+    candidate.validate()
+    after_energy = evaluate_complete_multigrain_energy(candidate, **common_energy)
+    defect_change = cold_energy.helmholtz_J-before_energy.helmholtz_J
+    heat_J = float(np.sum(heat_by_cell, dtype=np.longdouble))
+    residual = after_energy.internal_J-before_energy.internal_J
+    scale = max(abs(defect_change), abs(heat_J), 1e-300)
+    relative = abs(residual)/scale
+    balance = line_change+removed_total
+    tolerance = max(
+        1e-12*max(removed_total, 1.0),
+        4096.0*np.finfo(float).eps*max(inventory_scale, 1.0))
+    active = removed_total > tolerance
+    downhill = defect_change <= 1e-12*scale
+    capacity_close = maximum_capacity_violation <= tolerance
+    accepted = bool(
+        active and downhill and capacity_close
+        and relative <= maximum_relative_first_law_residual
+        and abs(balance) <= tolerance)
+    if not active:
+        classification = "INACTIVE_INTERFACE_VECTOR_NEUTRAL_JUNCTION"
+    elif not downhill:
+        classification = "REJECTED_UPHILL_INTERFACE_VECTOR_NEUTRAL_JUNCTION"
+    elif relative > maximum_relative_first_law_residual:
+        classification = "REJECTED_INTERFACE_VECTOR_NEUTRAL_JUNCTION_FIRST_LAW"
+    elif not capacity_close or abs(balance) > tolerance:
+        classification = "REJECTED_INTERFACE_VECTOR_NEUTRAL_JUNCTION_BALANCE"
+    else:
+        classification = "ACCEPTED_INTERFACE_VECTOR_NEUTRAL_JUNCTION"
+    # The legacy decision name is retained for ledger compatibility: one
+    # "pair" equals two units of removed scalar line.  The authoritative
+    # signed balance for this mode is the unchanged Burgers tensor.
+    return MultiGrainSinkDecision(
+        accepted, f"{classification}:{sink_mode}",
+        candidate if accepted else state, 0.5*removed_total, 0.0,
         balance, defect_change, heat_J, residual, relative, maximum_fraction,
         heat_by_cell)

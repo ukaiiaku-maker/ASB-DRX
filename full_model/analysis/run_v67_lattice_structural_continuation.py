@@ -49,6 +49,9 @@ from full_model.production.conservative_dipole_wall_organization import (
 from full_model.production.arrhenius_dislocation_sources import (
     ArrheniusSourceParameters,
 )
+from full_model.production.multigrain_source_transaction import (
+    NeutralBoundarySinkParameters,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -105,7 +108,18 @@ def main():
         "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
         default="disabled")
     parser.add_argument("--source-seed", type=int, default=67)
+    parser.add_argument(
+        "--interface-neutral-sink", action="store_true",
+        help=("enable the separately ledgered thermal annihilation of neutral "
+              "positive/negative line pairs already stored at interfaces"))
+    parser.add_argument(
+        "--interface-vector-junction-sink", action="store_true",
+        help=("ablation: react only scalar interface line above the exact "
+              "Burgers-capacity lower bound while preserving the Burgers "
+              "tensor bitwise"))
     args = parser.parse_args()
+    if args.interface_neutral_sink and args.interface_vector_junction_sink:
+        raise ValueError("select at most one interface sink hypothesis")
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain", "--untracked-files=no"),
         cwd=ROOT, text=True)
@@ -139,7 +153,14 @@ def main():
             None if args.source_mode == "disabled"
             else ArrheniusSourceParameters(grain_size_m=2.4e-6)),
         source_random_seed=args.source_seed, sink_mode="disabled",
-        interface_sink_mode="disabled", interface_sink_parameters=None,
+        interface_sink_mode=(
+            "vector_neutral_junction"
+            if args.interface_vector_junction_sink else
+            ("neutral_pair" if args.interface_neutral_sink else "disabled")),
+        interface_sink_parameters=(
+            NeutralBoundarySinkParameters(complete_physical_clock=True)
+            if (args.interface_neutral_sink
+                or args.interface_vector_junction_sink) else None),
         structural_absorption_mode="common_axis",
         structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(
             complete_physical_clock=True),
@@ -220,6 +241,10 @@ def main():
             args.wall_glide_maximum_edge_fraction),
         conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
         source_mode=args.source_mode, source_seed=args.source_seed)
+    progress_configuration["interface_neutral_sink"] = bool(
+        args.interface_neutral_sink)
+    progress_configuration["interface_vector_junction_sink"] = bool(
+        args.interface_vector_junction_sink)
     source_commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     for index in range(1, args.intervals+1):
@@ -227,6 +252,12 @@ def main():
         endpoint = interval.endpoint
         records.append({
             "interval": index,
+            "interface_sink_classification": interval.audit[
+                "interface_sink_classification"],
+            "interface_sink_annihilated_pair_cell_sum_m2": interval.audit[
+                "interface_sink_annihilated_pair_cell_sum_m2"],
+            "interface_sink_first_law_relative_residual": interval.audit[
+                "interface_sink_relative_first_law_residual"],
             "lattice_classification": interval.audit[
                 "lattice_absorption_classification"],
             "lattice_fraction": interval.audit["lattice_absorption_fraction"],
@@ -390,6 +421,9 @@ def main():
             "dipole_wall_organization": bool(args.dipole_wall_organization),
             "source_mode": args.source_mode,
             "source_seed": args.source_seed,
+            "interface_neutral_sink": bool(args.interface_neutral_sink),
+            "interface_vector_junction_sink": bool(
+                args.interface_vector_junction_sink),
             "wall_nye_match_coefficient_J_m": (
                 wall_parameters.wall_nye_match_coefficient_J_m),
             "wall_nye_match_length_m": match_length,
@@ -420,6 +454,9 @@ def main():
                 for row in records),
             "accepted_source_intervals": sum(
                 row["source_classification"].startswith("ACCEPTED")
+                for row in records),
+            "accepted_interface_sink_intervals": sum(
+                row["interface_sink_classification"].startswith("ACCEPTED")
                 for row in records),
             "mura_hard_balance_passed": bool(all(
                 row["lattice_mura_relative_residual"] < 2e-11

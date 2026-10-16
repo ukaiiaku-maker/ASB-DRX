@@ -35,6 +35,7 @@ from .arrhenius_dislocation_sources import (
 from .multigrain_source_transaction import (
     advance_energy_qualified_pair_source_transaction,
     evaluate_interface_neutral_sink_transaction,
+    evaluate_interface_vector_neutral_junction_transaction,
     evaluate_multigrain_neutral_sink_transaction,
     evaluate_multigrain_pair_source_transaction,
 )
@@ -767,17 +768,22 @@ def advance_complete_multigrain_interval(
         if context.interface_sink_parameters is None:
             raise ValueError(
                 "enabled interface sink requires interface sink parameters")
-        if context.interface_sink_mode != "neutral_pair":
+        if context.interface_sink_mode not in {
+                "neutral_pair", "vector_neutral_junction"}:
             raise ValueError("unknown interface sink mode")
-        interface_sink = evaluate_interface_neutral_sink_transaction(
+        interface_sink_evaluator = (
+            evaluate_interface_vector_neutral_junction_transaction
+            if context.interface_sink_mode == "vector_neutral_junction"
+            else evaluate_interface_neutral_sink_transaction)
+        interface_sink = interface_sink_evaluator(
             interface_sink_state, mean_strain=strain1, interval_s=dt,
             sink_parameters=context.interface_sink_parameters,
             wall_parameters=context.wall_parameters,
             represented_thickness_m=context.represented_thickness_m,
             energy_kwargs=energy_base,
             sink_mode=context.interface_sink_mode)
-        if interface_sink.classification.startswith(
-                "REJECTED_INTERFACE_NEUTRAL_SINK_FIRST_LAW"):
+        if ("FIRST_LAW" in interface_sink.classification
+                and interface_sink.classification.startswith("REJECTED")):
             raise RuntimeError(
                 "interface sink failed its hard energy audit")
         if interface_sink.accepted:
@@ -882,7 +888,14 @@ def advance_complete_multigrain_interval(
                 "REJECTED_BURGERS_OR_LINE_BALANCE",
                 "REJECTED_COMPLETE_FIRST_LAW"}:
             raise RuntimeError(
-                "post-capture structural absorption failed a hard balance audit")
+                "post-capture structural absorption failed a hard balance audit: "
+                f"{structural_absorption_post.classification}; "
+                "signed_content_balance="
+                f"{structural_absorption_post.projection.signed_content_balance:.17g}; "
+                "maximum_vector_balance_m1="
+                f"{structural_absorption_post.projection.maximum_vector_balance_m1:.17g}; "
+                "relative_vector_balance="
+                f"{structural_absorption_post.projection.relative_vector_balance:.17g}")
         if structural_absorption_post.accepted:
             structural_state = structural_absorption_post.committed_state
             structural_interfaces = (

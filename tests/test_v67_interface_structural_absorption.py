@@ -74,6 +74,7 @@ def test_projection_closes_signed_content_vector_and_line_debit():
     assert result.removed_line_length_m > 0.0
     assert result.signed_content_balance == 0.0
     assert result.maximum_vector_balance_m1 < 1e-13
+    assert result.relative_vector_balance < 4096*np.finfo(float).eps
     before = state.interfaces[0]
     after = result.candidate_state.interfaces[0]
     removed_line = np.sum(
@@ -125,4 +126,5 @@ def test_complete_clock_absorbs_full_arrhenius_exposure_not_outer_step_cap():
     assert exact.kinetic_fraction > .999
     assert exact.projection.signed_content_balance == 0.0
     assert exact.projection.maximum_vector_balance_m1 < 1e-12
+    assert exact.projection.relative_vector_balance < 4096*np.finfo(float).eps
     assert exact.relative_first_law_residual < 1e-5

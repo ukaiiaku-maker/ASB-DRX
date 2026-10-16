@@ -2935,3 +2935,29 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The active experiment is continuation of this exact checkpoint until grain
   20 reaches 1% growth or a genuine complete-energy reversal is observed;
   afterward the retained state will be tested without history reset.
+- The continuation reaches a genuine physical reversal before 1%: after a
+  0.25737% cumulative maximum at 0.424% strain, grain 20 ends the extended
+  horizon at 0.18967% and loses 0.09894% during a subsequent 40 microsecond
+  zero-rate hold. At the retained endpoint, both adjacent edge pairs favor
+  shrinkage by their independently priced complete-energy slopes.
+- A late interface-vector audit encountered a 1.81e-12 1/m subtraction
+  residual while signed content closed exactly. The fixed 1e-12 absolute gate
+  lay below the state-dependent floating-point floor; it is now replaced by a
+  published residual normalized by the stored Burgers scale and a 4096-epsilon
+  acceptance bound. The unchanged rejected interval then passes all balances.
+- Same-family neutral annihilation removes 4.25e16 pair-cell content during a
+  matched retained hold but changes target shrinkage by only 6.8e-5 percentage
+  point. It is not the limiting boundary reaction.
+- More than 99.99999999% of the stored interface Burgers-vector norm is
+  tangential to the common-axis projection. A quarantined glide/climb junction
+  ablation removes only scalar line above the exact sum(|B_row|/b) capacity
+  floor while preserving the Burgers tensor bitwise. It removes 4.69e16 pair-
+  equivalent line-cell content but changes target shrinkage by only 7.6e-5
+  percentage point.
+- Even the ideal instantaneous vector-neutral relaxation bound leaves both
+  target-growth pressures weaker than shrinkage (-0.342/-0.432 MPa growth
+  versus -0.917/-0.724 MPa shrinkage). Coupling that sink into the front cannot
+  rescue this state and is not promoted to the baseline.
+- The selected next response-family discriminator is lower-rate exposure from
+  a common accepted state under the identical Arrhenius Peierls--Taylor--Hall--
+  Petch law. No sink or transfer coefficient is retuned.
