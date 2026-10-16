@@ -63,6 +63,8 @@ class CollectiveWallNucleationDecision:
     detailed_balance_log_residual: float = 0.0
     energy_path_coordinate: tuple[float, ...] = ()
     energy_path_delta_helmholtz_J: tuple[float, ...] = ()
+    total_forward_event_rate_Hz: float = 0.0
+    selected_channel_probability: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -120,7 +122,8 @@ def collective_wall_detailed_balance(
     forward_rate = prefactor*math.exp(-forward_barrier_eV/thermal_eV)
     reverse_rate = prefactor*math.exp(-reverse_barrier_eV/thermal_eV)
     expected = -endpoint_eV/thermal_eV
-    residual = math.log(forward_rate/reverse_rate)-expected
+    log_ratio = (reverse_barrier_eV-forward_barrier_eV)/thermal_eV
+    residual = log_ratio-expected
     return CollectiveWallDetailedBalance(
         resolved, float(path[-1]), saddle_eV, forward_barrier_eV,
         reverse_barrier_eV, forward_rate, reverse_rate, residual)
@@ -182,7 +185,7 @@ def evaluate_collective_wall_nucleation(
         state.supports.shape[1:], spacing,
         parameters.source_site_density_m2, parameters.source_seed)
     centers = np.argwhere(sites > 0.0)
-    best = None
+    downhill = []
     candidate_count = downhill_count = 0
     for owner_index, (grain_id, support, owner) in enumerate(zip(
             state.grain_ids, state.supports, state.owners)):
@@ -205,30 +208,52 @@ def evaluate_collective_wall_nucleation(
                 candidate_count += 1
                 if delta <= 0.0:
                     downhill_count += 1
-                    if best is None or delta < best[0]:
-                        best = (delta, int(grain_id), owner_index, center,
-                                float(radius), ring, transferred, candidate)
-    if best is None:
+                    downhill.append((
+                        delta, int(grain_id), owner_index, center,
+                        float(radius), ring, transferred, candidate))
+    if not downhill:
         zero = np.zeros(state.supports.shape[1:])
         return CollectiveWallNucleationDecision(
             False, "INACTIVE_NO_DOWNHILL_CLOSED_WALL_NUCLEUS",
             state, state, None, None, 0.0, candidate_count, 0, 0.0, draw,
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zero)
-    (delta, grain_id, owner_index, center, radius, ring, transferred,
-     candidate) = best
-    owner = candidate.owners[candidate.grain_ids.index(grain_id)]
-    temperature = float(np.sum(np.asarray(owner.temperature_K)*ring)
-                        /np.sum(ring))
     coordinates = np.linspace(0.0, 1.0, parameters.energy_path_samples)
-    path = []
-    for coordinate in coordinates:
-        point, _ = _collective_wall_candidate(
-            state, owner_index, ring, parameters.order_increment, coordinate)
-        point_energy = evaluate_complete_multigrain_energy(point, **common)
-        path.append(point_energy.helmholtz_J-before.helmholtz_J)
-    detailed_balance = collective_wall_detailed_balance(
-        path, temperature, parameters.activation)
-    probability = -math.expm1(-detailed_balance.forward_rate_Hz*dt)
+    priced = []
+    for item in downhill:
+        (delta, grain_id, owner_index, center, radius, ring, transferred,
+         candidate) = item
+        owner = candidate.owners[candidate.grain_ids.index(grain_id)]
+        temperature = float(np.sum(np.asarray(owner.temperature_K)*ring)
+                            /np.sum(ring))
+        path = []
+        for coordinate in coordinates:
+            point, _ = _collective_wall_candidate(
+                state, owner_index, ring, parameters.order_increment,
+                coordinate)
+            point_energy = evaluate_complete_multigrain_energy(point, **common)
+            path.append(point_energy.helmholtz_J-before.helmholtz_J)
+        detailed_balance = collective_wall_detailed_balance(
+            path, temperature, parameters.activation)
+        priced.append(item+(tuple(path), detailed_balance))
+    total_rate = float(np.sum(
+        [item[-1].forward_rate_Hz for item in priced], dtype=np.longdouble))
+    probability = -math.expm1(-total_rate*dt)
+    if draw < probability:
+        channel_quantile = draw/probability
+        cumulative = 0.0
+        selected = priced[-1]
+        for item in priced:
+            cumulative += item[-1].forward_rate_Hz/total_rate
+            if channel_quantile < cumulative:
+                selected = item
+                break
+    else:
+        # The most kinetically active channel is reported as the representative
+        # audit path when no event occurs; no state is selected or published.
+        selected = max(priced, key=lambda item: item[-1].forward_rate_Hz)
+    (delta, grain_id, owner_index, center, radius, ring, transferred,
+     candidate, path, detailed_balance) = selected
+    channel_probability = detailed_balance.forward_rate_Hz/total_rate
     audit_fields = dict(
         resolved_forward_barrier_J=(
             detailed_balance.resolved_forward_barrier_J),
@@ -241,7 +266,9 @@ def evaluate_collective_wall_nucleation(
         detailed_balance_log_residual=(
             detailed_balance.detailed_balance_log_residual),
         energy_path_coordinate=tuple(map(float, coordinates)),
-        energy_path_delta_helmholtz_J=tuple(map(float, path)))
+        energy_path_delta_helmholtz_J=tuple(map(float, path)),
+        total_forward_event_rate_Hz=total_rate,
+        selected_channel_probability=channel_probability)
     if draw >= probability:
         zero = np.zeros(state.supports.shape[1:])
         return CollectiveWallNucleationDecision(

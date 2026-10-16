@@ -396,6 +396,10 @@ def main():
                 "collective_wall_nucleation_forward_barrier_eV"],
             "collective_wall_reverse_barrier_eV": interval.audit[
                 "collective_wall_nucleation_reverse_barrier_eV"],
+            "collective_wall_total_forward_event_rate_Hz": interval.audit[
+                "collective_wall_nucleation_total_forward_event_rate_Hz"],
+            "collective_wall_selected_channel_probability": interval.audit[
+                "collective_wall_nucleation_selected_channel_probability"],
             "collective_wall_detailed_balance_log_residual": interval.audit[
                 "collective_wall_nucleation_detailed_balance_log_residual"],
             "owner_orientation_span_deg": {

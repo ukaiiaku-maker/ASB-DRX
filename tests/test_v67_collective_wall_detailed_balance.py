@@ -4,9 +4,13 @@ import math
 import numpy as np
 import pytest
 
+import full_model.production.collective_wall_nucleation as collective_module
+from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.collective_wall_nucleation import (
+    CollectiveWallNucleationParameters,
     _collective_wall_candidate,
     collective_wall_detailed_balance,
+    evaluate_collective_wall_nucleation,
 )
 from full_model.production.multigrain_common_state import MultiGrainCommonState
 from full_model.production.structural_boundary import StructuralBoundaryParameters
@@ -85,3 +89,38 @@ def test_energy_path_requires_zero_origin():
         collective_wall_detailed_balance(
             np.array([.1, 0.0])*EV_J, 1000.0,
             StructuralBoundaryParameters())
+
+
+def test_independent_downhill_geometries_contribute_additive_hazard(monkeypatch):
+    original = owner((8, 8), value=2e13)
+    plus = original.mobile_plus_m2.copy(); plus[..., 0] += 3e13
+    original = replace(original, mobile_plus_m2=plus)
+    state = MultiGrainCommonState(
+        (7,), np.ones((1, 8, 8)), (original,))
+    sites = np.zeros((8, 8)); sites[4, 4] = 1.0
+    monkeypatch.setattr(
+        collective_module, "random_discrete_bulk_site_field",
+        lambda *args, **kwargs: sites)
+
+    class Energy:
+        def __init__(self, value):
+            self.helmholtz_J = value
+
+    monkeypatch.setattr(
+        collective_module, "evaluate_complete_multigrain_energy",
+        lambda trial, **kwargs: Energy(-float(np.sum(
+            trial.owners[0].wall_order))*EV_J))
+    parameters = CollectiveWallNucleationParameters(
+        source_site_density_m2=1.0, candidate_radii_m=(1e-7, 2e-7),
+        ring_width_m=4e-7, order_increment=.1, energy_path_samples=3)
+    result = evaluate_collective_wall_nucleation(
+        state, interval_s=1e-6, mean_strain=np.zeros((2, 2)),
+        spacing_m=1e-7, represented_thickness_m=5e-10, systems=(),
+        wall_parameters=CommonWallParameters(spacing_m=1e-7),
+        random_uniform=.999, parameters=parameters)
+    assert result.downhill_candidate_count == 2
+    assert result.total_forward_event_rate_Hz == pytest.approx(
+        2.0*result.forward_event_rate_Hz)
+    assert result.selected_channel_probability == pytest.approx(.5)
+    assert result.event_probability == pytest.approx(
+        -math.expm1(-result.total_forward_event_rate_Hz*1e-6))

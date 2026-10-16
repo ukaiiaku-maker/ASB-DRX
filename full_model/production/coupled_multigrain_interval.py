@@ -1223,6 +1223,12 @@ def advance_complete_multigrain_interval(
         "collective_wall_nucleation_forward_event_rate_Hz": (
             0.0 if collective_wall is None
             else collective_wall.forward_event_rate_Hz),
+        "collective_wall_nucleation_total_forward_event_rate_Hz": (
+            0.0 if collective_wall is None
+            else collective_wall.total_forward_event_rate_Hz),
+        "collective_wall_nucleation_selected_channel_probability": (
+            0.0 if collective_wall is None
+            else collective_wall.selected_channel_probability),
         "collective_wall_nucleation_reverse_event_rate_Hz": (
             0.0 if collective_wall is None
             else collective_wall.reverse_event_rate_Hz),
