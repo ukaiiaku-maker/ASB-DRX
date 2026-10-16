@@ -1,0 +1,125 @@
+{
+  "bundles": [
+    {
+      "area_change_m2": 1.0876144447668328e-15,
+      "directional_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 404034.9409017485,
+            "growth_pressure_Pa": 1293871.9101078066,
+            "shrink_pressure_Pa": 889836.9692060581
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 721606.3719779646,
+            "growth_pressure_Pa": 1446111.0418293567,
+            "shrink_pressure_Pa": 724504.669851392
+          }
+        },
+        "net_growth_minus_shrink_Pa": 1125641.3128797133
+      },
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_late_transmission0p25_10",
+      "endpoint": {
+        "area_m2": 7.5303104996255e-12,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_late_transmission0p25_10/checkpoint_latest.npz",
+        "checkpoint_sha256": "960752394eadf15e8063432309b09fdbbdfb945590cdaef29c00541f4eb6a81d",
+        "gamma": 0.003026000000000053,
+        "growth_percent": 0.9268129423135818,
+        "initial_area_m2": 7.461159507661831e-12,
+        "step": 419
+      },
+      "first_law_hard_balance_passed": true,
+      "grain_ids_unchanged": true,
+      "intervals": 10,
+      "mura_hard_balance_passed": true,
+      "result_sha256": "27675ac9a7fb8d5d28d988046a6598596c26c82d4d52d4417b448ac4a703bdc9",
+      "source_commit": "d0d643a290e523cbd07d726dcc2c18e2b0f593ae",
+      "source_tree_clean": true
+    },
+    {
+      "area_change_m2": 5.706356882380083e-15,
+      "directional_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 326534.2290390325,
+            "growth_pressure_Pa": 1235841.0012344378,
+            "shrink_pressure_Pa": 909306.7721954053
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 657966.1560629146,
+            "growth_pressure_Pa": 1396741.9955645837,
+            "shrink_pressure_Pa": 738775.839501669
+          }
+        },
+        "net_growth_minus_shrink_Pa": 984500.3851019471
+      },
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_transmission0p25_to_one_percent_60",
+      "endpoint": {
+        "area_m2": 7.536016856507882e-12,
+        "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_transmission0p25_to_one_percent_60/checkpoint_latest.npz",
+        "checkpoint_sha256": "00cfc181caad26d0f4b36cf10c6c0c510c7139ad727b5108c59aab9c02422b13",
+        "gamma": 0.003086000000000061,
+        "growth_percent": 1.003293774502212,
+        "initial_area_m2": 7.461159507661831e-12,
+        "step": 479
+      },
+      "first_law_hard_balance_passed": true,
+      "grain_ids_unchanged": true,
+      "intervals": 60,
+      "mura_hard_balance_passed": true,
+      "result_sha256": "d1a3d2f080fa25be6077cccbf17dcfaf447f1fbae617ceaec2752d904aa7cbe1",
+      "source_commit": "d0d643a290e523cbd07d726dcc2c18e2b0f593ae",
+      "source_tree_clean": true
+    }
+  ],
+  "claim_boundary": "Existing-boundary RX/SIBM only. Reaching one percent does not demonstrate spontaneous intragranular grain birth or DRX inside a qualified shear band.",
+  "created_utc": "2026-10-16T16:29:33.658503+00:00",
+  "decision": {
+    "all_hard_audits_passed": true,
+    "classification": "QUALIFIED_ONE_PERCENT_EXISTING_BOUNDARY_RX",
+    "growth_increment_percent_by_bundle": [
+      0.014577016396000175,
+      0.07648083218863011
+    ],
+    "growth_monotone": true,
+    "growth_rate_percent_per_interval_by_bundle": [
+      0.0014577016396000175,
+      0.0012746805364771685
+    ],
+    "latest_growth_percent": 1.003293774502212,
+    "latest_net_directional_growth_bias_Pa": 984500.3851019471,
+    "one_percent_reached": true,
+    "physical_reversal_observed": false,
+    "projected_additional_intervals_at_latest_rate": null
+  },
+  "endpoints": [
+    {
+      "area_m2": 7.529222885180737e-12,
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean/checkpoint_latest.npz",
+      "checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+      "gamma": 0.0030160000000000516,
+      "growth_percent": 0.9122359259175816,
+      "initial_area_m2": 7.461159507661831e-12,
+      "step": 409
+    },
+    {
+      "area_m2": 7.5303104996255e-12,
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_late_transmission0p25_10/checkpoint_latest.npz",
+      "checkpoint_sha256": "960752394eadf15e8063432309b09fdbbdfb945590cdaef29c00541f4eb6a81d",
+      "gamma": 0.003026000000000053,
+      "growth_percent": 0.9268129423135818,
+      "initial_area_m2": 7.461159507661831e-12,
+      "step": 419
+    },
+    {
+      "area_m2": 7.536016856507882e-12,
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_transmission0p25_to_one_percent_60/checkpoint_latest.npz",
+      "checkpoint_sha256": "00cfc181caad26d0f4b36cf10c6c0c510c7139ad727b5108c59aab9c02422b13",
+      "gamma": 0.003086000000000061,
+      "growth_percent": 1.003293774502212,
+      "initial_area_m2": 7.461159507661831e-12,
+      "step": 479
+    }
+  ],
+  "grain_id": 20,
+  "schema": "v67-existing-boundary-one-percent-continuation-v1"
+}
