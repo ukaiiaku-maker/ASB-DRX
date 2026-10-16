@@ -95,6 +95,18 @@ def _band(endpoint):
         power, threshold_multiple=2.0)
 
 
+def _flow_exposure(endpoint, power, shear_rate_s):
+    """Fraction of imposed shear power carried by resolved plastic flow."""
+    stress = np.asarray(endpoint.observables["common_stress_tensor_Pa"])
+    imposed = abs(float(np.mean(stress[..., 0, 1]))*float(shear_rate_s))
+    return float(np.mean(np.maximum(power, 0.0))/max(
+        imposed, np.finfo(float).tiny))
+
+
+def _physical_band(metrics, flow_exposure_fraction, threshold=.01):
+    return bool(metrics["band_like"] and flow_exposure_fraction >= threshold)
+
+
 def _temperature_seed(state, peak_K, width_m, spacing_m, normal="x"):
     """Apply one owner-independent, mean-zero thermal imperfection."""
     amplitude = float(peak_K)
@@ -257,6 +269,10 @@ def main():
     initial_orientations = np.asarray([
         np.mean(owner.orientation_rad) for owner in state.owners])
     initial_power, initial_band, initial_metrics = _band(endpoint)
+    initial_flow_exposure = _flow_exposure(
+        endpoint, initial_power, context.shear_rate_s)
+    initial_physical_band = _physical_band(
+        initial_metrics, initial_flow_exposure)
     commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     output_configuration = dict(configuration)
@@ -309,7 +325,13 @@ def main():
     records = []
     dt = physics_args.dt
     for index in range(1, args.intervals+1):
-        _, band_before, metrics_before = _band(endpoint)
+        power_before, band_before, metrics_before = _band(endpoint)
+        flow_exposure_before = _flow_exposure(
+            endpoint, power_before, context.shear_rate_s)
+        physical_band_before = _physical_band(
+            metrics_before, flow_exposure_before)
+        active_mask = (band_before if physical_band_before
+                       else np.zeros_like(band_before))
         before_supports = np.asarray(endpoint.state.supports)
         interval = advance_complete_multigrain_interval(endpoint, dt, context)
         endpoint = interval.endpoint
@@ -324,21 +346,23 @@ def main():
         lattice_heat = np.asarray(
             interval.integrals["lattice_absorption_heat_J_by_cell"])
         lattice_heat_inside_band_J += float(np.sum(
-            lattice_heat*band_before, dtype=np.longdouble))
+            lattice_heat*active_mask, dtype=np.longdouble))
         lattice_heat_outside_band_J += float(np.sum(
-            lattice_heat*(~band_before), dtype=np.longdouble))
+            lattice_heat*(~active_mask), dtype=np.longdouble))
         positive = np.maximum(
             np.asarray(endpoint.state.supports)-before_supports, 0.0)
         growth_inside += np.sum(
-            positive*band_before[None, ...], axis=(1, 2))*spacing**2
+            positive*active_mask[None, ...], axis=(1, 2))*spacing**2
         growth_outside += np.sum(
-            positive*(~band_before)[None, ...], axis=(1, 2))*spacing**2
-        active_band_intervals += int(metrics_before["band_like"])
-        active_band_area_fraction_sum += float(np.mean(band_before))
+            positive*(~active_mask)[None, ...], axis=(1, 2))*spacing**2
+        active_band_intervals += int(physical_band_before)
+        active_band_area_fraction_sum += float(np.mean(active_mask))
         if index == 1 or index == args.intervals or index % 10 == 0:
             records.append({
                 "interval": index, "load": endpoint.load,
                 "band_before": metrics_before,
+                "flow_exposure_fraction_before": flow_exposure_before,
+                "physical_band_before": physical_band_before,
                 "lattice_classification": interval.audit[
                     "lattice_absorption_classification"],
                 "structural_classification": interval.audit[
@@ -359,6 +383,9 @@ def main():
                     json.dumps(records))})
         os.replace(temporary, args.out/"checkpoint_latest.npz")
     final_power, final_band, final_metrics = _band(endpoint)
+    final_flow_exposure = _flow_exposure(
+        endpoint, final_power, context.shear_rate_s)
+    final_physical_band = _physical_band(final_metrics, final_flow_exposure)
     final_supports = np.asarray(endpoint.state.supports)
     final_orientations = np.asarray([
         np.mean(owner.orientation_rad) for owner in endpoint.state.owners])
@@ -410,6 +437,13 @@ def main():
         "configuration": output_configuration,
         "initial_power_localization": initial_metrics,
         "final_power_localization": final_metrics,
+        "flow_regime": {
+            "minimum_plastic_power_fraction": .01,
+            "initial_plastic_to_imposed_power_fraction": initial_flow_exposure,
+            "final_plastic_to_imposed_power_fraction": final_flow_exposure,
+            "initial_physical_band": initial_physical_band,
+            "final_physical_band": final_physical_band,
+        },
         "initial_final_band_jaccard": float(
             np.sum(initial_band & final_band)/max(
                 np.sum(initial_band | final_band), 1)),
@@ -430,14 +464,16 @@ def main():
             "first_law_relative_residuals": maximum_first_law_residuals,
         },
         "decision": {
-            "initial_connected_band": bool(initial_metrics["band_like"]),
+            "initial_connected_band": initial_physical_band,
+            "initial_relative_threshold_band": bool(initial_metrics["band_like"]),
             "rx_pathway_enabled": rx_enabled,
             "production_rx_channels_enabled": bool(args.production_rx),
             "front_transmission_fraction": float(
                 context.front_kinetics.transfer_law.transmission_fraction),
             "interface_neutral_sink_enabled": bool(
                 args.interface_neutral_sink),
-            "final_connected_band": bool(final_metrics["band_like"]),
+            "final_connected_band": final_physical_band,
+            "final_relative_threshold_band": bool(final_metrics["band_like"]),
             "band_persisted_every_interval": active_band_intervals == args.intervals,
             "any_owner_net_growth": bool(growing),
             "growing_owner_intersects_active_band": bool(any(

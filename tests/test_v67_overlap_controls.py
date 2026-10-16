@@ -4,7 +4,9 @@ from dataclasses import replace
 import numpy as np
 
 from full_model.analysis.run_v58_three_grain_production import initialize_state
-from full_model.analysis.run_v67_drx_asb_overlap import _temperature_seed
+from full_model.analysis.run_v67_drx_asb_overlap import (
+    _physical_band, _temperature_seed,
+)
 from full_model.analysis.run_v67_interface_structural_bridge import (
     _args_from_configuration,
 )
@@ -41,3 +43,10 @@ def test_polycrystal_temperature_seed_is_mean_zero_and_owner_independent():
             if item.name != "temperature_K":
                 np.testing.assert_array_equal(
                     getattr(current, item.name), getattr(before, item.name))
+
+
+def test_relative_band_requires_nontrivial_plastic_flow_exposure():
+    metrics = {"band_like": True}
+    assert not _physical_band(metrics, 1e-8)
+    assert _physical_band(metrics, .01)
+    assert not _physical_band({"band_like": False}, 1.0)
