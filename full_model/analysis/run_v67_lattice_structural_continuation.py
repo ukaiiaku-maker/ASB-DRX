@@ -99,6 +99,10 @@ def main():
         "--front-substep", type=float,
         help=("maximum front transaction substep in seconds; defaults to the "
               "continuation interval rather than an inherited parent cadence"))
+    parser.add_argument(
+        "--front-transmission-fraction", type=float,
+        help=("rate-independent dislocation-transmission ablation; omission "
+              "preserves the inherited common transfer law"))
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
     parser.add_argument(
         "--wall-orientation-boundary-clearance", type=float, default=2.0e-7,
@@ -308,6 +312,14 @@ def main():
                 kinetics_mode=args.collective_wall_kinetics)
             if args.collective_wall_nucleation else None),
         collective_wall_nucleation_seed=args.collective_wall_seed)
+    if args.front_transmission_fraction is not None:
+        transmission = float(args.front_transmission_fraction)
+        if not np.isfinite(transmission) or not 0.0 <= transmission <= 1.0:
+            raise ValueError("front transmission fraction must lie in [0,1]")
+        context = replace(context, front_kinetics=replace(
+            context.front_kinetics, transfer_law=replace(
+                context.front_kinetics.transfer_law,
+                transmission_fraction=transmission)))
     dt = (float(args.dt) if args.dt is not None
           else float(configuration["dt_s"]))
     if not np.isfinite(dt) or dt <= 0.0:
@@ -328,6 +340,8 @@ def main():
         parent_checkpoint=str(args.checkpoint.resolve()),
         target_steps=args.intervals, shear_rate_s=imposed_rate, dt_s=dt,
         front_maximum_substep_s=front_substep,
+        front_transmission_fraction=float(
+            context.front_kinetics.transfer_law.transmission_fraction),
         front_enabled=fronts_enabled,
         mechanical_max_subdivisions=mechanical_max_subdivisions,
         lattice_absorption_mode="one_flux_mura",
@@ -631,6 +645,8 @@ def main():
         "configuration": {
             "intervals": args.intervals, "dt_s": dt,
             "front_maximum_substep_s": front_substep,
+            "front_transmission_fraction": float(
+                context.front_kinetics.transfer_law.transmission_fraction),
             "mechanical_max_subdivisions": mechanical_max_subdivisions,
             "capture_distance_m": args.capture_distance,
             "lattice_maximum_fraction": args.lattice_maximum_fraction,
