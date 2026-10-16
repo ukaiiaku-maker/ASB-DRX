@@ -1,0 +1,182 @@
+{
+  "after": {
+    "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean/checkpoint_latest.npz",
+    "checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+    "gamma": 0.0030160000000000516,
+    "interfaces": [
+      {
+        "burgers_norm": {
+          "content_weighted_normalized_band": 0.5071811547774815,
+          "fraction_within_normalized_band_gt_0p1": 0.9941593852029167,
+          "pearson_correlation_with_band": 0.3919957564975625
+        },
+        "interface": "edge-10-20",
+        "line": {
+          "content_weighted_normalized_band": 0.5056819904628146,
+          "fraction_within_normalized_band_gt_0p1": 0.9916927562740033,
+          "pearson_correlation_with_band": 0.34558887826428114
+        }
+      },
+      {
+        "burgers_norm": {
+          "content_weighted_normalized_band": 0.5404471454158513,
+          "fraction_within_normalized_band_gt_0p1": 0.9955613075984657,
+          "pearson_correlation_with_band": 0.6233801134309246
+        },
+        "interface": "edge-10-30",
+        "line": {
+          "content_weighted_normalized_band": 0.5414251759766047,
+          "fraction_within_normalized_band_gt_0p1": 0.9949442173431398,
+          "pearson_correlation_with_band": 0.6295710918080804
+        }
+      },
+      {
+        "burgers_norm": {
+          "content_weighted_normalized_band": 0.44262794479597484,
+          "fraction_within_normalized_band_gt_0p1": 0.9901947581569933,
+          "pearson_correlation_with_band": 0.393743309003686
+        },
+        "interface": "edge-20-30",
+        "line": {
+          "content_weighted_normalized_band": 0.4307317437491443,
+          "fraction_within_normalized_band_gt_0p1": 0.9902597826135849,
+          "pearson_correlation_with_band": 0.3716451928406536
+        }
+      }
+    ],
+    "provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "campaign": "V67",
+                  "scientific_scope": "fresh zero-load polycrystal anchor",
+                  "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                  "source_dirty": false
+                },
+                "source_commit": "b6f989d1ba8317d276d9e4b86c40e5a64d09d951"
+              },
+              "source_commit": "5e2fdbffd4a04c0ca86c2481b1db4c96abf16d2f"
+            },
+            "source_commit": "0f3f81a8eb6dcfe017987b57f9439aba7b1bc9f7"
+          },
+          "source_commit": "fc8a5a614792750a14b122e51b578bea43e853aa"
+        },
+        "source_commit": "89e429c9ec96c032d89e54ed0154c7226a13b178"
+      },
+      "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc"
+    },
+    "step": 409
+  },
+  "before": {
+    "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle1/checkpoint_latest.npz",
+    "checkpoint_sha256": "318650d5ae902d0041a53c06a7475818f24215c5865f9e48cc1d1f0249b0eaf0",
+    "gamma": 0.002966000000000045,
+    "interfaces": [
+      {
+        "burgers_norm": {
+          "content_weighted_normalized_band": 0.5091508951082062,
+          "fraction_within_normalized_band_gt_0p1": 0.9942623206683585,
+          "pearson_correlation_with_band": 0.40256976002469685
+        },
+        "interface": "edge-10-20",
+        "line": {
+          "content_weighted_normalized_band": 0.5066684340876993,
+          "fraction_within_normalized_band_gt_0p1": 0.9918110401568307,
+          "pearson_correlation_with_band": 0.3552684046147703
+        }
+      },
+      {
+        "burgers_norm": {
+          "content_weighted_normalized_band": 0.542934282092877,
+          "fraction_within_normalized_band_gt_0p1": 0.9957493775829553,
+          "pearson_correlation_with_band": 0.6330548134575468
+        },
+        "interface": "edge-10-30",
+        "line": {
+          "content_weighted_normalized_band": 0.5433901070921139,
+          "fraction_within_normalized_band_gt_0p1": 0.9950890401997816,
+          "pearson_correlation_with_band": 0.6368484957034894
+        }
+      },
+      {
+        "burgers_norm": {
+          "content_weighted_normalized_band": 0.44271312379452143,
+          "fraction_within_normalized_band_gt_0p1": 0.9907770075839658,
+          "pearson_correlation_with_band": 0.39352655326144786
+        },
+        "interface": "edge-20-30",
+        "line": {
+          "content_weighted_normalized_band": 0.43270354734117034,
+          "fraction_within_normalized_band_gt_0p1": 0.9908980080222938,
+          "pearson_correlation_with_band": 0.381237164424034
+        }
+      }
+    ],
+    "provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "campaign": "V67",
+                "scientific_scope": "fresh zero-load polycrystal anchor",
+                "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                "source_dirty": false
+              },
+              "source_commit": "b6f989d1ba8317d276d9e4b86c40e5a64d09d951"
+            },
+            "source_commit": "5e2fdbffd4a04c0ca86c2481b1db4c96abf16d2f"
+          },
+          "source_commit": "0f3f81a8eb6dcfe017987b57f9439aba7b1bc9f7"
+        },
+        "source_commit": "fc8a5a614792750a14b122e51b578bea43e853aa"
+      },
+      "source_commit": "89e429c9ec96c032d89e54ed0154c7226a13b178"
+    },
+    "step": 359
+  },
+  "changes": {
+    "edge-10-20": {
+      "burgers_norm": {
+        "absolute_change": -0.001969740330724723,
+        "relative_change": -0.0038686769475404894
+      },
+      "line": {
+        "absolute_change": -0.0009864436248847586,
+        "relative_change": -0.0019469214155030917
+      }
+    },
+    "edge-10-30": {
+      "burgers_norm": {
+        "absolute_change": -0.002487136677025714,
+        "relative_change": -0.004580916621139523
+      },
+      "line": {
+        "absolute_change": -0.0019649311155092164,
+        "relative_change": -0.003616059788103811
+      }
+    },
+    "edge-20-30": {
+      "burgers_norm": {
+        "absolute_change": -8.517899854659783e-05,
+        "relative_change": -0.00019240224418134115
+      },
+      "line": {
+        "absolute_change": -0.0019718035920260335,
+        "relative_change": -0.0045569388190648255
+      }
+    }
+  },
+  "claim_boundary": "This overlap audit can detect a gross Eulerian trail but does not prove a local conservative comoving flux or Mura/disconnection conjugacy.",
+  "created_utc": "2026-10-16T15:45:02.221346+00:00",
+  "decision": {
+    "classification": "NO_GROSS_INTERFACE_RESERVOIR_DETACHMENT",
+    "gross_reservoir_detachment_detected": false,
+    "maximum_relative_weighted_overlap_drop": 0.004580916621139523,
+    "minimum_after_fraction_within_boundary_band": 0.9901947581569933
+  },
+  "schema": "v67-interface-geometry-overlap-audit-v1"
+}
