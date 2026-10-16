@@ -1,0 +1,97 @@
+{
+  "cases": [
+    {
+      "best_affinity_J_m": 3.439961199466614e-11,
+      "best_candidate": {
+        "center": [
+          9,
+          20
+        ],
+        "coordinate": 0.1,
+        "grain_id": 10,
+        "joint_delta_helmholtz_J": -7.911068338700318e-21,
+        "maximum_incremental_rotation_deg": 0.0015583747178816115,
+        "moved_line_cell_sum_m2": 20607124620804.04,
+        "radius_m": 4.5e-07,
+        "wall_only_delta_helmholtz_J": 3.1418860680403017e-20
+      },
+      "best_joint_delta_helmholtz_J": -7.911068338700318e-21,
+      "best_moved_line_m": 2.2997551076817309e-10,
+      "candidate_count": 270,
+      "downhill_candidate_count": 47,
+      "grid": 32,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_collective_climb_wall_capture_probe.json",
+      "sha256": "4d4d14484497e406450ceac9ecf0ab25d7ea3a471caed4c5d974e9454fd077e6",
+      "source_commit": "36873828bd5d47fe8620b508498642b07c6516f4",
+      "source_tree_clean": true,
+      "spacing_m": 1.5e-07
+    },
+    {
+      "best_affinity_J_m": 1.463179601133769e-10,
+      "best_candidate": {
+        "center": [
+          11,
+          46
+        ],
+        "coordinate": 0.2,
+        "grain_id": 10,
+        "joint_delta_helmholtz_J": -5.495468204524001e-20,
+        "maximum_incremental_rotation_deg": 0.004408175907916639,
+        "moved_line_cell_sum_m2": 134617914567325.34,
+        "radius_m": 4.5e-07,
+        "wall_only_delta_helmholtz_J": -7.627547882247024e-20
+      },
+      "best_joint_delta_helmholtz_J": -5.495468204524001e-20,
+      "best_moved_line_m": 3.7558398164283773e-10,
+      "candidate_count": 300,
+      "downhill_candidate_count": 6,
+      "grid": 64,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_collective_climb_wall_capture_refined_n64_probe.json",
+      "sha256": "d7abdd840b9760ddbc2664715c0c96da25f28430216ce46da83334a242f118ae",
+      "source_commit": "36873828bd5d47fe8620b508498642b07c6516f4",
+      "source_tree_clean": true,
+      "spacing_m": 7.5e-08
+    },
+    {
+      "best_affinity_J_m": -9.012034395607463e-09,
+      "best_candidate": {
+        "center": [
+          74,
+          109
+        ],
+        "coordinate": 0.01,
+        "grain_id": 30,
+        "joint_delta_helmholtz_J": 3.369407941928953e-24,
+        "maximum_incremental_rotation_deg": 1.2046662550401854e-08,
+        "moved_line_cell_sum_m2": 536026847.85766184,
+        "radius_m": 4.5e-07,
+        "wall_only_delta_helmholtz_J": 3.690404910594245e-24
+      },
+      "best_joint_delta_helmholtz_J": 3.369407941928953e-24,
+      "best_moved_line_m": 3.7387872638071914e-16,
+      "candidate_count": 300,
+      "downhill_candidate_count": 0,
+      "grid": 128,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_collective_climb_wall_capture_refined_n128_probe.json",
+      "sha256": "be3c6094215a92f836db83cf60641b54ef2f18379c6ad6d9cfc0d45674479cc9",
+      "source_commit": "36873828bd5d47fe8620b508498642b07c6516f4",
+      "source_tree_clean": true,
+      "spacing_m": 3.75e-08
+    }
+  ],
+  "claim_boundary": "A passing static discriminator would authorize kinetic and production qualification, not establish DRX by itself.",
+  "created_utc": "2026-10-16T14:56:43.355449+00:00",
+  "decision": {
+    "classification": "REJECTED_NONCONVERGED_COLLECTIVE_CLIMB_CANDIDATE",
+    "downhill_sign_stable": false,
+    "production_promotion_authorized": false,
+    "provisional_five_percent_refinement_passed": false,
+    "successive_affinity_relative_changes": [
+      0.764898225973004,
+      1.0162358412862575
+    ]
+  },
+  "relative_tolerance": 0.05,
+  "represented_thickness_m": 4.96e-10,
+  "schema": "v67-collective-climb-fixed-scale-refinement-v1"
+}

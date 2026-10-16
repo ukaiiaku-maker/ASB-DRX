@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T14:48:00Z",
+  "last_updated_utc": "2026-10-16T15:00:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -63,13 +63,14 @@
     "H5": "same_family_neutral_and_vector_neutral_interface_sinks_are_valid_negative_controls;_even_the_ideal_Burgers_capacity_relaxation_bound_does_not_reverse_the_final_front_selection",
     "H6": "restoring_the_common_GB_TJ_source_wall_dipole_ordering_and_junction_channels_prevents_the_early_disabled_control_reversal_and_produces_a_13p2_fold_lower_rate_growth_advantage_at_common_incremental_strain",
     "H7": "conserved_Arrhenius_neutral_pair_recovery_is_energy_consistent_and_nearly_fully_polarizes_the_leading_wall_but_does_not_create_topology_or_mature_the_1p17_degree_precursor_dynamically_or_during_the_no_reset_hold",
-    "H8": "the_apparent_joint_closed_wall_downhill_path_was_a_rejected_quadratic_coupling_artifact_that_relaxed_preexisting_orientation_Nye_mismatch;_the_continuous_incremental_conjugate_map_finds_zero_downhill_candidates_across_120_screened_states"
+    "H8": "the_apparent_local_joint_closed_wall_downhill_path_was_a_rejected_quadratic_coupling_artifact_that_relaxed_preexisting_orientation_Nye_mismatch;_the_continuous_incremental_conjugate_map_finds_zero_downhill_candidates_across_120_screened_states",
+    "H9": "conservative_collective_climb_from_a_cell_core_to_its_ordered_boundary_is_downhill_on_n32_and_n64_but_has_zero_downhill_candidates_on_the_fixed_scale_n128_representation;_the_sign_and_affinity_are_not_grid_convergent_and_production_promotion_is_rejected"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "idle_during_incremental_coupling_repair",
+      "status": "idle_before_valid_existing_boundary_RX_continuation",
       "last_case": "v67_joint_wall_topology_production_static5_continuation",
       "last_start_local": "2026-10-16T07:39:00-07:00",
       "last_source_commit": "f761ce772ae7814862c354e4e2e63e1a22e2a040",
@@ -84,13 +85,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8"],
-    "physical_uncertainty": "whether_any_conservative_closed_wall_path_is_accessible_after_pricing_only_the_incremental_orientation_response_due_to_new_ordered_Nye_content_rather_than_relaxing_retained_mismatch",
-    "next_executable_experiment": "commit_the_incremental_conjugate_repair_rerun_the_clean_120_candidate_screen_and_execute_a_clean_common_production_interval_to_verify_the_spurious_event_is_rejected",
-    "source_identity": "working_tree_repair_over_f761ce7_subtracts_baseline_Nye_reconstruction_and_removes_double_coordinate_scaling",
-    "expected_discriminatory_observation": "zero_downhill_joint_candidates_and_an_inactive_production_transaction_while_all_unrelated_common_state_operators_and_hard_balances_remain_unchanged",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9"],
+    "physical_uncertainty": "whether_the_valid_existing_boundary_lower_rate_RX_branch_reaches_one_percent_growth_before_a_genuine_directional_energy_reversal_after_intragranular_closed_wall_routes_failed_conjugacy_or_grid_convergence",
+    "next_executable_experiment": "continue_the_clean_2_per_s_common_production_checkpoint_in_small_restartable_bundles_with_unchanged_channels_and_measure_progress_toward_one_percent_growth_or_reversal",
+    "source_identity": "3687382_with_incremental_conjugacy_repair_quarantined_collective_climb_probe_and_conservative_fixed_scale_refinement;_production_baseline_operators_unchanged",
+    "expected_discriminatory_observation": "monotone_existing_grain20_growth_from_0p90938_percent_to_the_one_percent_threshold_with_closed_Mura_first_law_and_restart_ledgers_or_an_attributed_energy_reversal",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "the_f761ce7_one_interval_joint_event_is_quarantined_because_its_orientation_path_consumed_preexisting_orientation_Nye_mismatch;_the_corrected_incremental_screen_has_zero_downhill_candidates_out_of_120_and_the_invalid_five_interval_continuation_was_stopped_before_publication"
+    "result_status": "corrected_local_joint_production_is_inactive_with_zero_downhill_candidates;_collective_core_to_wall_capture_is_rejected_by_n32_n64_n128_fixed_scale_refinement;_the_valid_lower_rate_existing_boundary_checkpoint_is_at_0p90938_percent_grain20_growth_and_selected_for_continuation"
   },
   "continuation_rule": {
     "active": true,

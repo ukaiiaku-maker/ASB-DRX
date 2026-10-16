@@ -3057,3 +3057,16 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   3.93e-23 J. This rejects the tested local closed-ring route without forcing
   orientation, canceling an energy term, changing the immutable Arrhenius
   Peierls--Taylor--Hall--Petch law, or allocating a grain label.
+- A distinct collective-climb discriminator conservatively transports
+  polarized mobile line from a prospective cell core to its ordered boundary.
+  It preserves every sign/family inventory and its orientation increment is
+  derived only from the transported Nye content. The 0.45 micrometre event is
+  downhill on the n32 and n64 representations, but n128 has zero downhill
+  candidates among 300. Successive best-affinity changes are 76.5% and 101.6%,
+  so the route fails the fixed-scale 5% refinement criterion and is not
+  promoted to production.
+- The intragranular negative result does not stop independent authorized work.
+  The valid 2/s existing-boundary branch has reached 0.90938% grain-20 growth
+  relative to its frozen initial volume with the common Arrhenius mechanics.
+  Restartable continuation toward 1% growth or a genuine energy reversal is
+  the next production calculation.
