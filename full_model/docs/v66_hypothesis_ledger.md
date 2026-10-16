@@ -1090,6 +1090,13 @@ experiment, result, limitation, and next branch.
   boundary preserves that advantage while the independently priced front
   remains downhill. This is an existing-boundary mechanism candidate, not a
   new-grain-birth result or a calibrated material transmission coefficient.
+- Reference constraint: Sections 7.6.1.2--7.6.1.4 of the supplied Rollett
+  recrystallization text describe SIBM as leaving a region of lower
+  dislocation content and summarize observations where the bulge still has
+  significant dislocation density or drags substructure. Therefore complete
+  absorption is retained only as an upper bound; the nonzero 0.25 inheritance
+  candidate tests the documented intermediate physical picture without
+  claiming that its numerical value has been calibrated.
 - Next experiment already running: continue the fixed 0.25 trajectory through
   the one-percent growth horizon, then carry its exact retained state into a
   zero-rate front-enabled hold. A successful pair must next survive a
