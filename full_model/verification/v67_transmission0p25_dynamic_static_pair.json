@@ -1,0 +1,53 @@
+{
+  "claim_boundary": "This pair qualifies existing-boundary growth after a late-state fixed-transmission fork. It does not establish spontaneous grain birth, a from-origin single-parameter trajectory, or material calibration; those require separate tests.",
+  "created_utc": "2026-10-16T16:36:43.946484+00:00",
+  "decision": {
+    "all_hard_audits_passed": true,
+    "classification": "QUALIFIED_DYNAMIC_AND_RETAINED_STATIC_EXISTING_BOUNDARY_RX",
+    "dynamic_one_percent_RX_passed": true,
+    "exact_no_reset_parent_continuity": true,
+    "retained_static_endpoint_bias_positive": true,
+    "retained_static_growth_positive": true,
+    "same_fixed_transmission_fraction": true
+  },
+  "dynamic": {
+    "checkpoint_sha256": "00cfc181caad26d0f4b36cf10c6c0c510c7139ad727b5108c59aab9c02422b13",
+    "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_transmission0p25_to_one_percent_60",
+    "endpoint_bias_Pa": 984500.3851019471,
+    "growth_percent": 1.003293774502212,
+    "hard_audits_passed": true,
+    "result_sha256": "d1a3d2f080fa25be6077cccbf17dcfaf447f1fbae617ceaec2752d904aa7cbe1",
+    "source_commit": "d0d643a290e523cbd07d726dcc2c18e2b0f593ae",
+    "summary": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_transmission0p25_to_one_percent.json",
+    "summary_sha256": "e62bf68cb7b5b6ceb51a8f3bb41545b8d53596ca5c20a3b8aba61ffd983c5765",
+    "transmission_fraction": 0.25
+  },
+  "grain_id": 20,
+  "retained_static": {
+    "checkpoint_sha256": "4ef92a47e2d01afe226235038d0e5caf6cdfc9c967df80ee0e48f751e443913d",
+    "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_retained_static_transmission0p25_30",
+    "endpoint_bias": {
+      "by_interface": {
+        "edge-10-20": {
+          "growth_minus_shrink_Pa": 289847.0138033887,
+          "growth_pressure_Pa": 1207888.0675647107,
+          "shrink_pressure_Pa": 918041.053761322
+        },
+        "edge-20-30": {
+          "growth_minus_shrink_Pa": 628709.0230265835,
+          "growth_pressure_Pa": 1373078.7384034756,
+          "shrink_pressure_Pa": 744369.7153768921
+        }
+      },
+      "net_growth_minus_shrink_Pa": 918556.0368299722
+    },
+    "hard_audits_passed": true,
+    "parent_checkpoint_sha256": "00cfc181caad26d0f4b36cf10c6c0c510c7139ad727b5108c59aab9c02422b13",
+    "result_sha256": "0c88201da6ea5ec513d0527074b9a40bbbcb656b9bb330724e22828e223b7656",
+    "shear_rate_s": 0.0,
+    "source_commit": "6e2881e182f073bd41be03c3bf02273d0fe23e30",
+    "target_area_change_m2": 2.4608667964763333e-15,
+    "transmission_fraction": 0.25
+  },
+  "schema": "v67-fixed-transmission-dynamic-static-pair-v1"
+}
