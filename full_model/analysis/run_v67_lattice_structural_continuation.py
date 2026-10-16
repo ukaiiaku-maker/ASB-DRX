@@ -28,6 +28,9 @@ from full_model.production.coupled_multigrain_interval import (
 from full_model.production.interface_structural_absorption import (
     InterfaceStructuralAbsorptionParameters,
 )
+from full_model.production.structural_interface_network import (
+    JunctionReactionParameters,
+)
 from full_model.production.lattice_interface_absorption import (
     LatticeInterfaceAbsorptionParameters,
 )
@@ -70,6 +73,10 @@ def main():
         help=("maximum front transaction substep in seconds; defaults to the "
               "continuation interval rather than an inherited parent cadence"))
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
+    parser.add_argument(
+        "--junction-cycle-relaxation", action="store_true",
+        help=("advance the conservative Arrhenius structural-cycle reaction "
+              "before mechanics and front motion"))
     parser.add_argument(
         "--wall-order-relaxation", action="store_true",
         help=("advance the implicit Arrhenius wall-order variable without "
@@ -127,6 +134,11 @@ def main():
         interface_sink_mode="disabled", interface_sink_parameters=None,
         structural_absorption_mode="common_axis",
         structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(),
+        structural_junction_mode=(
+            "arrhenius_cycle" if args.junction_cycle_relaxation else "disabled"),
+        structural_junction_parameters=(
+            JunctionReactionParameters()
+            if args.junction_cycle_relaxation else None),
         lattice_absorption_mode="one_flux_mura",
         lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
             capture_distance_m=args.capture_distance),
@@ -180,6 +192,7 @@ def main():
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
         structural_absorption_mode="common_axis",
+        structural_junction_mode=context.structural_junction_mode,
         wall_orientation_relaxation_mode=(
             "ordered_nye" if (args.wall_orientation_relaxation
                               or args.wall_glide) else "disabled"),
@@ -218,6 +231,16 @@ def main():
                 "structural_absorption_classification"],
             "structural_content_change": interval.audit[
                 "structural_absorption_content_change"],
+            "structural_junction_classification": interval.audit[
+                "structural_junction_classification"],
+            "structural_junction_reacted_fraction": interval.audit[
+                "structural_junction_reacted_fraction"],
+            "structural_junction_backstress_Pa": interval.audit[
+                "structural_junction_backstress_Pa"],
+            "structural_junction_absolute_reacted_content": interval.audit[
+                "structural_junction_absolute_reacted_content"],
+            "structural_junction_relative_first_law_residual": interval.audit[
+                "structural_junction_relative_first_law_residual"],
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fractions": interval.audit[

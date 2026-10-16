@@ -59,6 +59,9 @@ from full_model.production.lattice_interface_absorption import (
 from full_model.production.orientation_wall_compatibility import (
     evaluate_orientation_wall_compatibility,
 )
+from full_model.production.structural_interface_network import (
+    JunctionReactionParameters,
+)
 from full_model.production.wall_orientation_relaxation import (
     WallOrientationRelaxationParameters,
 )
@@ -156,6 +159,8 @@ def main():
             structural_absorption_mode="common_axis",
             structural_absorption_parameters=(
                 InterfaceStructuralAbsorptionParameters()),
+            structural_junction_mode="arrhenius_cycle",
+            structural_junction_parameters=JunctionReactionParameters(),
             lattice_absorption_mode="one_flux_mura",
             lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
                 capture_distance_m=5e-7),
@@ -260,6 +265,22 @@ def main():
                     "conservative_wall_glide_classification"],
                 "wall_orientation_classification": interval.audit[
                     "wall_orientation_relaxation_classification"],
+                "front_directions": interval.audit["front_directions"],
+                "front_selected_velocities_m_s": interval.audit[
+                    "front_selected_velocities_m_s"],
+                "front_pressures_Pa": interval.audit["front_pressures_Pa"],
+                "front_independent_pressures_Pa": interval.audit[
+                    "front_independent_pressures_Pa"],
+                "front_directional_pressure_pairs_Pa": interval.audit[
+                    "front_directional_pressure_pairs_Pa"],
+                "front_directional_energy_component_slopes_Pa": interval.audit[
+                    "front_directional_energy_component_slopes_Pa"],
+                "front_requested_fractions": interval.audit[
+                    "front_requested_fractions"],
+                "front_accepted_fractions": interval.audit[
+                    "front_accepted_fractions"],
+                "front_joint_pressure_factors": interval.audit[
+                    "front_joint_pressure_factors"],
             })
         history.append(row)
         if step == 1 or step % args.checkpoint_every == 0 or step == args.steps:

@@ -204,6 +204,14 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
             "mechanical_irreversible_heat_J"],
         "front_heat_J": interval.integrals["front_heat_J"],
         "front_directions": interval.audit["front_directions"],
+        "front_selected_velocities_m_s": interval.audit[
+            "front_selected_velocities_m_s"],
+        "front_joint_pressure_factors": interval.audit[
+            "front_joint_pressure_factors"],
+        "front_independent_directional_prices": interval.audit[
+            "front_independent_directional_prices"],
+        "front_joint_capacity_solves": interval.audit[
+            "front_joint_capacity_solves"],
         "source_mode": interval.audit["source_mode"],
         "source_classification": interval.audit["source_classification"],
         "source_event_count": interval.audit["source_event_count"],
@@ -237,6 +245,20 @@ def _record(step, endpoint, interval, initial_volume, context, wall_time_s):
             "structural_absorption_heat_J"],
         "structural_absorption_relative_first_law_residual": interval.audit[
             "structural_absorption_relative_first_law_residual"],
+        "structural_junction_mode": interval.audit[
+            "structural_junction_mode"],
+        "structural_junction_classification": interval.audit[
+            "structural_junction_classification"],
+        "structural_junction_reacted_fraction": interval.audit[
+            "structural_junction_reacted_fraction"],
+        "structural_junction_backstress_Pa": interval.audit[
+            "structural_junction_backstress_Pa"],
+        "structural_junction_absolute_reacted_content": interval.audit[
+            "structural_junction_absolute_reacted_content"],
+        "structural_junction_heat_J": interval.integrals[
+            "structural_junction_heat_J"],
+        "structural_junction_relative_first_law_residual": interval.audit[
+            "structural_junction_relative_first_law_residual"],
         "mechanical_subdivision_depth": interval.audit[
             "mechanical_subdivision_depth"],
         "wall_time_s": wall_time_s,

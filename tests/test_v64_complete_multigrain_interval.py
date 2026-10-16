@@ -17,6 +17,13 @@ from full_model.production.multigrain_common_state import PhysicalTransferLaw
 from full_model.production.interface_structural_absorption import (
     InterfaceStructuralAbsorptionParameters,
 )
+from full_model.production.structural_interface_network import (
+    JunctionReactionParameters, initialize_structural_interfaces,
+    interface_lengths_m,
+)
+from full_model.production.structural_multigrain_runtime import (
+    StructuralMultigrainRuntime, synchronize_structural_owner_orientations,
+)
 from full_model.production.multigrain_source_transaction import (
     NeutralBoundarySinkParameters,
 )
@@ -178,3 +185,41 @@ def test_common_axis_structural_absorption_is_persistent_production_state():
         result.endpoint.runtime.interfaces)
     assert result.endpoint.runtime.ledger.structural_absorption_inactive_intervals == 1
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
+
+
+def test_arrhenius_junction_reaction_is_in_complete_interval_and_ledger():
+    ctx = replace(
+        context(front_enabled=False), shear_rate_s=0.0,
+        structural_absorption_parameters=(
+            InterfaceStructuralAbsorptionParameters()),
+        structural_junction_parameters=JunctionReactionParameters(),
+        structural_junction_mode="arrhenius_cycle")
+    endpoint = parent(ctx)
+    lengths = interface_lengths_m(
+        endpoint.state.supports, endpoint.runtime.interfaces,
+        endpoint.state.grain_ids, ctx.spacing_m)
+    orientations = np.asarray([
+        np.mean(owner.orientation_rad) for owner in endpoint.state.owners])
+    structural = list(initialize_structural_interfaces(
+        endpoint.state.grain_ids, orientations,
+        tuple((edge.grain_a_id, edge.grain_b_id)
+              for edge in endpoint.runtime.interfaces),
+        lengths, ctx.structural_absorption_parameters.boundary.burgers_m))
+    structural[0] = replace(
+        structural[0], signed_integrated_content=(
+            1.02*structural[0].signed_integrated_content))
+    synchronized = synchronize_structural_owner_orientations(
+        endpoint.state, StructuralMultigrainRuntime(tuple(structural)),
+        spacing_m=ctx.spacing_m,
+        burgers_m=ctx.structural_absorption_parameters.boundary.burgers_m)
+    endpoint = make_endpoint(
+        synchronized, replace(endpoint.runtime,
+                              structural_interfaces=tuple(structural)),
+        endpoint.load, ctx)
+    result = advance_complete_multigrain_interval(endpoint, 1e-8, ctx)
+    assert result.audit["structural_junction_classification"] == (
+        "ACCEPTED_COMPLETE_JUNCTION_RELAXATION")
+    assert result.audit["structural_junction_absolute_reacted_content"] > 0.0
+    assert result.integrals["structural_junction_heat_J"] > 0.0
+    assert result.audit["structural_junction_relative_first_law_residual"] < .05
+    assert result.endpoint.runtime.ledger.structural_junction_intervals == 1

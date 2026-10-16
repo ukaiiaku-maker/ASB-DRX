@@ -130,6 +130,12 @@ class MultiGrainProductionLedger:
     structural_absorbed_line_length_m: float = 0.0
     cumulative_structural_absorption_heat_J: float = 0.0
     maximum_structural_absorption_first_law_residual: float = 0.0
+    structural_junction_intervals: int = 0
+    structural_junction_inactive_intervals: int = 0
+    structural_junction_rejected_intervals: int = 0
+    structural_junction_reacted_absolute_content: float = 0.0
+    cumulative_structural_junction_heat_J: float = 0.0
+    maximum_structural_junction_first_law_residual: float = 0.0
     lattice_absorption_intervals: int = 0
     lattice_absorption_inactive_intervals: int = 0
     lattice_absorption_rejected_intervals: int = 0
@@ -207,6 +213,10 @@ class MultiGrainProductionDecision:
     complete_energy_evaluations: int = 0
     independent_directional_prices: int = 0
     joint_capacity_solves: int = 0
+    directional_pressure_pairs_Pa: dict[str, dict[str, float]] = field(
+        default_factory=dict)
+    directional_energy_component_slopes_Pa: dict[
+        str, dict[str, dict[str, float]]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -838,7 +848,7 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
     cell_volume = float(spacing_m)**2*float(represented_thickness_m)
     swept_volume = swept_cells*cell_volume
     if swept_volume <= 0.0:
-        return None, weight
+        return None, weight, None
     proposal = derive_physical_transfer_proposal(
         state, interface_id=interface.component_id, donor_id=donor_id,
         receiver_id=receiver_id, requested_fraction=request,
@@ -852,7 +862,20 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
         absolute_tolerance_J=0.0,
         precomputed_before_energy=precomputed_before_energy,
         bind_state_identity=False)
-    return (priced.decision.available_change_J, swept_volume), weight
+    before = priced.decision.before
+    candidate = priced.decision.candidate
+    slopes = {
+        item.name: float(getattr(candidate, item.name)-getattr(before, item.name))
+        /swept_volume
+        for item in fields(type(before))
+    }
+    slopes.update({
+        "helmholtz": float(priced.decision.delta_helmholtz_J)/swept_volume,
+        "material_sink_export": (
+            float(priced.decision.material_sink_export_J)/swept_volume),
+        "available": float(priced.decision.available_change_J)/swept_volume,
+    })
+    return (priced.decision.available_change_J, swept_volume), weight, slopes
 
 
 def advance_multigrain_front(
@@ -890,6 +913,7 @@ def advance_multigrain_front(
     base_requests = {}
     channel_records = {}
     directional_channels = {}
+    directional_energy_component_slopes = {}
     cfl_clipped_by_interface = {}
     maximum_unclipped_by_interface = {}
     energy_options = {} if energy_kwargs is None else dict(energy_kwargs)
@@ -1007,14 +1031,14 @@ def advance_multigrain_front(
     for interface in runtime.interfaces:
         if interface.grain_a_id not in index or interface.grain_b_id not in index:
             raise ValueError("runtime interface references an unknown grain")
-        ab, weight_ab = _virtual_channel(
+        ab, weight_ab, slopes_ab = _virtual_channel(
             state, interface, interface.grain_a_id, interface.grain_b_id,
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
             interval_s=dt, systems=systems,
             precomputed_before_energy=parent_energy)
-        ba, weight_ba = _virtual_channel(
+        ba, weight_ba, slopes_ba = _virtual_channel(
             state, interface, interface.grain_b_id, interface.grain_a_id,
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
@@ -1031,6 +1055,10 @@ def advance_multigrain_front(
         directional_channels[interface.component_id] = (
             interface, pressure_ab, pressure_ba,
             weight_ab, weight_ba)
+        directional_energy_component_slopes[interface.component_id] = {
+            "a_to_b": {} if slopes_ab is None else slopes_ab,
+            "b_to_a": {} if slopes_ba is None else slopes_ba,
+        }
         selected = request_at_force_scale(
             interface, pressure_ab, pressure_ba, weight_ab, weight_ba, 1.0)
         if selected is None:
@@ -1051,12 +1079,19 @@ def advance_multigrain_front(
         physical_time_s=runtime.ledger.physical_time_s+dt,
         applied_shear_strain=(runtime.ledger.applied_shear_strain
                               +float(applied_shear_rate_s)*dt))
+    directional_pressure_pairs = {
+        key: {"a_to_b": float(values[1]), "b_to_a": float(values[2])}
+        for key, values in directional_channels.items()
+    }
     if not base_requests:
         next_ledger = replace(
             next_ledger,
             stationary_intervals=next_ledger.stationary_intervals+1)
         return state, replace(runtime, ledger=next_ledger), MultiGrainProductionDecision(
-            True, "STATIONARY_COMPLETE_AFFINITY", {}, {}, {}, {}, None, 0)
+            True, "STATIONARY_COMPLETE_AFFINITY", {}, {}, {}, {}, None, 0,
+            directional_pressure_pairs_Pa=directional_pressure_pairs,
+            directional_energy_component_slopes_Pa=(
+                directional_energy_component_slopes))
 
     # Individual edge derivatives do not in general add at a diffuse triple
     # junction: all proposals act on the same partition-of-unity supports and
@@ -1361,7 +1396,11 @@ def advance_multigrain_front(
                     independent_directional_prices=(
                         independent_directional_prices),
                     joint_capacity_solves=max(
-                        complete_energy_evaluations-1, 0)))
+                        complete_energy_evaluations-1, 0),
+                    directional_pressure_pairs_Pa=(
+                        directional_pressure_pairs),
+                    directional_energy_component_slopes_Pa=(
+                        directional_energy_component_slopes)))
     pressures = {key: value*joint_pressure_factor
                  for key, value in independent_pressures.items()}
 
@@ -1411,7 +1450,10 @@ def advance_multigrain_front(
                           else decision.classification)
         return state, replace(runtime, ledger=next_ledger), MultiGrainProductionDecision(
             False, classification, directions, pressures, requested,
-            accepted_fractions, decision, kinetics.maximum_backtracks)
+            accepted_fractions, decision, kinetics.maximum_backtracks,
+            directional_pressure_pairs_Pa=directional_pressure_pairs,
+            directional_energy_component_slopes_Pa=(
+                directional_energy_component_slopes))
     swept_volume = sum(accepted_fractions.values())*(
         float(spacing_m)**2*float(represented_thickness_m))
     closure_scale = max(result.decision.generated_heat_J, 1e-300)
@@ -1438,7 +1480,9 @@ def advance_multigrain_front(
                 force_rate_closure_classification,
                 force_rate_closure_bracket, force_rate_iterations,
                 complete_energy_evaluations, independent_directional_prices,
-                complete_energy_evaluations-1))
+                complete_energy_evaluations-1,
+                directional_pressure_pairs,
+                directional_energy_component_slopes))
 
 
 def advance_multigrain_front_interval(
