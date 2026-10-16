@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T07:42:49Z",
+  "last_updated_utc": "2026-10-16T12:46:41Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -61,17 +61,18 @@
     "H3": "family_total_Groma_transport_has_a_positive_0.8_um_high_temperature_tangent_but_the_valid_concurrent_nonlinear_prefix_does_not_separate_wall_polarization_from_control_and_supports_only_4.35e-5_deg_total_signed_capacity; endogenous_wall_formation_is_negative_at_tested_conditions",
     "H4": "GB_TJ_only_and_matched_random_Arrhenius_sources_are_nearly_indistinguishable_over_twenty_n16_intervals_so_source_geography_is_not_the_current_rate_limiting_mechanism",
     "H5": "same_family_neutral_and_vector_neutral_interface_sinks_are_valid_negative_controls;_even_the_ideal_Burgers_capacity_relaxation_bound_does_not_reverse_the_final_front_selection",
-    "H6": "restoring_the_common_GB_TJ_source_wall_dipole_ordering_and_junction_channels_prevents_the_early_disabled_control_reversal_and_produces_a_13p2_fold_lower_rate_growth_advantage_at_common_incremental_strain"
+    "H6": "restoring_the_common_GB_TJ_source_wall_dipole_ordering_and_junction_channels_prevents_the_early_disabled_control_reversal_and_produces_a_13p2_fold_lower_rate_growth_advantage_at_common_incremental_strain",
+    "H7": "ordered_wall_content_contains_a_large_redundant_opposite_sign_fraction_in_the_leading_high_rate_precursor;_conserved_Arrhenius_neutral_pair_recovery_followed_by_survivor_reorganization_is_the_active_physical_discriminator"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": null,
-      "case": null,
-      "status": "available_after_fullphysics_rate2_dynamic_and_retained_static_completion",
-      "last_case": "v67_exact_fullphysics_rate2_retained_static40us",
-      "last_start_local": "2026-10-16T00:28:00-07:00",
-      "last_source_commit": "0f3f81a8eb6dcfe017987b57f9439aba7b1bc9f7",
-      "last_output": "full_model/verification/v67_exact_fullphysics_rate2_retained_static40us"
+      "pid": 59716,
+      "case": "v67_highrate2000_reaction_cone_extended15",
+      "status": "running_single_local_solver",
+      "last_case": "v67_highrate2000_reaction_cone_extended15",
+      "last_start_local": "2026-10-16T05:30:54-07:00",
+      "last_source_commit": "29662a78bd1d1f75a1b34fb6c9281416a0e614d0",
+      "last_output": "full_model/verification/v67_highrate2000_reaction_cone_extended15"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -82,13 +83,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6"],
-    "physical_uncertainty": "whether_the_now_sustained_full_production_2_per_s_existing_boundary_response_reaches_one_percent_before_a_complete_energy_reversal_and_whether_it_can_seed_a_new_intragranular_region",
-    "next_executable_experiment": "continue_the_valid_2_per_s_full_production_checkpoint_without_retuning_toward_one_percent_or_a_directional_energy_reversal_then_execute_the_selected_neighboring_response_test",
-    "source_identity": "0f3f81a_with_full_common_production_channel_set_and_exact_0p5_microsecond_clock",
-    "expected_discriminatory_observation": "continued_monotonic_target_growth_with_both_neighbor_directions_downhill_or_a_resolved_energy_component_that_causes_reversal",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
+    "physical_uncertainty": "whether_removing_redundant_opposite_sign_ordered_wall_line_at_fixed_signed_Burgers_content_makes_the_surviving_excess_accessible_to_Frank_Bilby_compatible_reorganization_and_matures_the_saturating_1p17_degree_precursor",
+    "next_executable_experiment": "finish_and_classify_the_active_clean_reaction_cone_baseline_then_run_the_committed_wall_neutral_pair_recovery_plus_compatible_survivor_reorganization_from_the_same_retained_parent_and_follow_with_a_no_reset_hold",
+    "source_identity": "6d45315_with_conserved_support_weighted_wall_pair_recovery_and_shared_Arrhenius_EXP_floor_law",
+    "expected_discriminatory_observation": "exact_signed_content_and_line_balance_with_a_complete_energy_drop_followed_by_improved_compatibility_and_either_a_finite_interior_orientation_plateau_or_a_quantified_negative_topology_result",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "full_common_production_channels_turn_the_disabled_control_reversal_into_0p21727_percent_monotonic_dynamic_growth_at_2_per_s;_common_strain_growth_is_13p2_times_the_20_per_s_response;_no_reset_static_hold_adds_0p04759_percent;_one_percent_DRX_and_new_grain_birth_remain_unqualified"
+    "result_status": "baseline_reaction_cone_improves_wall_orientation_compatibility_but_the_leading_high_rate_precursor_saturates_near_1p17_degree_and_has_no_enclosed_plateau;_grain30_retains_55p27_percent_neutral_ordered_wall_line_so_conserved_pair_recovery_is_now_implemented_tested_and_queued_for_same_parent_discrimination"
   },
   "continuation_rule": {
     "active": true,
@@ -99,6 +100,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
+    "canonical_regression": "1165_passed_in_379p44_s_at_source_6d45315",
     "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": false,
     "material_validated": false,
