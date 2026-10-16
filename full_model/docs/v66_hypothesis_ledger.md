@@ -1051,3 +1051,46 @@ experiment, result, limitation, and next branch.
   No solver remains active. Pushed source/evidence is regression-clean, and
   the exact matched n64 step-675 checkpoints are the next physical restart
   states. This is execution closure, not full-charter or material validation.
+
+## 2026-10-16T16:22:00Z — V67 late-state carrier and front-handoff decision
+
+- Goals: C00, G01, G02, G05, and G06.
+- Prediction: the lower-rate existing-boundary reversal can arise either from
+  insufficient late line supply, a missing energy-accessible reaction of the
+  explicit interface Burgers reservoir, or excessive inheritance of the
+  donor's dislocation state by material swept into the growing grain.
+- Experiments: fork the same checksum-bound late 2/s state into GB/TJ-only and
+  matched-random sources; measure scalar and vector carrier capacity; price
+  vector-neutral junction relaxation, local triple-junction Burgers
+  redistribution, Mura-compatible interface sliding, and two neutral-recovery
+  geographies; finally vary only the fixed moving-front transmission fraction
+  from the inherited 0.55 to 0.25 and 0.0. Preserve the common Arrhenius
+  mechanics, front mobility, boundary storage, sink, heat, and organization
+  laws in every fork.
+- Negative results: source geography is an exact late null because neither
+  source accepts. More than 99.999999995% of the interface Burgers norm is
+  tangential, while scalar line exceeds the exact vector carrier floor by
+  81.78%. Vector-neutral junction recovery removes that excess but makes the
+  target bias progressively more negative. A local vector-conserving TJ
+  reaction is downhill but changes directional bias by zero. Mura-compatible
+  tangential sliding is downhill and closes the dual Nye balance but changes
+  bias by only 0.000199 Pa. GB/TJ and matched-random bulk neutral recovery both
+  erase the neighbor contrast and make the target recede. None is promoted.
+- Positive discriminator: the inherited 0.55 transmission endpoint has a
+  -23.421 kPa target-growth-minus-shrinkage bias. From that exact checkpoint,
+  fixed 0.25 transmission produces +1.151 MPa after one interval and +1.126
+  MPa after ten, with positive target-area increments and all Mura, first-law,
+  grain-identity, and source-provenance gates passing. Complete absorption is
+  a stronger positive upper bound at +2.131 MPa. The 0.25 value is fixed over
+  the horizon and is not conditioned on rate, time, label, or outcome.
+- Interpretation: the late reversal is controlled by the moving-front
+  dislocation handoff, not by an unavailable scalar-reservoir relaxation.
+  Transmitting 55% repopulates the low-defect receiver fast enough to collapse
+  its stored-energy advantage. Partial absorption/annihilation at the moving
+  boundary preserves that advantage while the independently priced front
+  remains downhill. This is an existing-boundary mechanism candidate, not a
+  new-grain-birth result or a calibrated material transmission coefficient.
+- Next experiment already running: continue the fixed 0.25 trajectory through
+  the one-percent growth horizon, then carry its exact retained state into a
+  zero-rate front-enabled hold. A successful pair must next survive a
+  same-parameter neighboring-rate fork and the high-rate coexistence tests.
