@@ -170,6 +170,9 @@ def main():
         maximum_mechanical_subdivisions=(
             14 if args.collective_wall_nucleation
             else context.maximum_mechanical_subdivisions),
+        maximum_mechanical_internal_substeps=(
+            512 if args.collective_wall_nucleation
+            else context.maximum_mechanical_internal_substeps),
         front_enabled=False, source_parameters=source_parameters,
         source_mode=args.source_mode, source_random_seed=args.source_seed,
         source_bulk_site_density_m2=args.source_site_density_m2,

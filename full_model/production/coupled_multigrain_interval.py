@@ -68,6 +68,7 @@ class CoupledMultigrainContext:
     maximum_front_substep_s: float
     maximum_mechanical_subdivisions: int
     energy_kwargs: Mapping[str, object]
+    maximum_mechanical_internal_substeps: int = 128
     heat_deposition_mode: str = "local_realized_event"
     front_enabled: bool = True
     warm_start_front_factor: bool = False
@@ -258,7 +259,9 @@ def advance_complete_multigrain_interval(
         topologies=context.topologies, wall_parameters=context.wall_parameters,
         dt_s=dt, represented_thickness_m=context.represented_thickness_m,
         energy_kwargs=energy_before, maximum_relative_first_law_residual=.05,
-        maximum_subdivisions=context.maximum_mechanical_subdivisions)
+        maximum_subdivisions=context.maximum_mechanical_subdivisions,
+        maximum_internal_substeps=(
+            context.maximum_mechanical_internal_substeps))
     mechanical_wall_time = time.perf_counter()-mechanical_started
     mechanical_heat = sum(
         (np.asarray(item.irreversible_heat_J_m3_cells)

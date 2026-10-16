@@ -486,7 +486,7 @@ def advance_energy_qualified_mechanics(
         state, *, mean_strain_before, mean_strain_candidate, systems,
         topologies, wall_parameters, dt_s, represented_thickness_m,
         energy_kwargs=None, maximum_relative_first_law_residual=.05,
-        maximum_subdivisions=10):
+        maximum_subdivisions=10, maximum_internal_substeps=128):
     """Rollback and bisect a mechanical interval until every leaf qualifies."""
     strain0 = np.asarray(mean_strain_before, dtype=float)
     strain1 = np.asarray(mean_strain_candidate, dtype=float)
@@ -511,7 +511,7 @@ def advance_energy_qualified_mechanics(
                 # This is a trial inside an outer rollback/bisection
                 # controller.  Fail early rather than spending thousands of
                 # constitutive substeps proving that a coarse trial is stiff.
-                maximum_internal_substeps=128)
+                maximum_internal_substeps=int(maximum_internal_substeps))
         except RuntimeError as error:
             adaptive_failure = any(text in str(error) for text in (
                 "mechanical physical interval exceeded substep budget",
