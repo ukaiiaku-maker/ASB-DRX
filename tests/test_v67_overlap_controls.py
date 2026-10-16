@@ -5,7 +5,7 @@ import numpy as np
 
 from full_model.analysis.run_v58_three_grain_production import initialize_state
 from full_model.analysis.run_v67_drx_asb_overlap import (
-    _physical_band, _temperature_seed,
+    _physical_band, _response_snapshot, _temperature_seed,
 )
 from full_model.analysis.run_v67_interface_structural_bridge import (
     _args_from_configuration,
@@ -50,3 +50,21 @@ def test_relative_band_requires_nontrivial_plastic_flow_exposure():
     assert not _physical_band(metrics, 1e-8)
     assert _physical_band(metrics, .01)
     assert not _physical_band({"band_like": False}, 1.0)
+
+
+def test_response_snapshot_records_stress_heat_and_physical_flow_exposure():
+    class Endpoint:
+        load = .1
+        observables = {
+            "instantaneous_plastic_power_W_m3": np.full((4, 4), 4.0),
+            "common_stress_tensor_Pa": np.broadcast_to(
+                np.array([[0.0, 2.0], [2.0, 0.0]]), (4, 4, 2, 2)),
+            "common_temperature_K": np.arange(16.0).reshape(4, 4) + 1000.0,
+        }
+
+    snapshot = _response_snapshot(Endpoint(), 10.0)
+    assert snapshot["load"] == .1
+    assert snapshot["mean_shear_stress_Pa"] == 2.0
+    assert snapshot["temperature_range_K"] == 15.0
+    assert snapshot["plastic_to_imposed_power_fraction"] == .2
+    assert not snapshot["connected_physical_band"]

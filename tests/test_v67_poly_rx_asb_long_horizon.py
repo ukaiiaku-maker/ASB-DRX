@@ -16,6 +16,7 @@ def _case(control, stage, *, soften=True, persistent=None):
         "thermal_control": control,
         "thermal_bath_rate_s": 0.0 if adiabatic else 5e9,
         "target_steps": 100,
+        "active_physical_band_intervals": 100 if persistent else 0,
         "mean_shear_stress_Pa": peak,
         "temperature_range_K": 50.0 if adiabatic else 1.0,
         "decision": {
@@ -54,6 +55,7 @@ def test_bath_band_separates_strict_trigger_from_thermal_asb():
     bath = _series("strong_bath")
     bath[-1]["decision"]["final_connected_band"] = True
     bath[-1]["decision"]["band_persisted_every_interval"] = True
+    bath[-1]["active_physical_band_intervals"] = 98
     result = classify(_series("adiabatic"), bath)
     assert result["decision"]["heat_dependent_polycrystal_asb_with_rx"]
     assert not result["decision"]["strict_heat_triggered_terminal_band"]

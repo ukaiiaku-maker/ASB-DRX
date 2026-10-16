@@ -107,6 +107,25 @@ def _physical_band(metrics, flow_exposure_fraction, threshold=.01):
     return bool(metrics["band_like"] and flow_exposure_fraction >= threshold)
 
 
+def _response_snapshot(endpoint, shear_rate_s):
+    """Return scalar mechanics/thermal diagnostics on one accepted state."""
+    power, _, metrics = _band(endpoint)
+    flow = _flow_exposure(endpoint, power, shear_rate_s)
+    stress = np.asarray(endpoint.observables["common_stress_tensor_Pa"])
+    temperature = np.asarray(endpoint.observables["common_temperature_K"])
+    return {
+        "load": float(endpoint.load),
+        "mean_shear_stress_Pa": float(np.mean(stress[..., 0, 1])),
+        "temperature_mean_K": float(np.mean(temperature)),
+        "temperature_range_K": float(np.ptp(temperature)),
+        "plastic_power_mean_W_m3": float(np.mean(power)),
+        "plastic_power_maximum_W_m3": float(np.max(power)),
+        "plastic_power_maximum_to_mean": float(metrics["maximum_to_mean"]),
+        "plastic_to_imposed_power_fraction": flow,
+        "connected_physical_band": _physical_band(metrics, flow),
+    }
+
+
 def _temperature_seed(state, peak_K, width_m, spacing_m, normal="x"):
     """Apply one owner-independent, mean-zero thermal imperfection."""
     amplitude = float(peak_K)
@@ -323,6 +342,11 @@ def main():
     maximum_first_law_residuals = {key: 0.0 for key in first_law_audit_keys}
     maximum_lattice_mura_residual = 0.0
     records = []
+    response_history = [{
+        "interval": 0,
+        **_response_snapshot(endpoint, context.shear_rate_s),
+    }]
+    terminal_band_persistence_intervals = 0
     dt = physics_args.dt
     for index in range(1, args.intervals+1):
         power_before, band_before, metrics_before = _band(endpoint)
@@ -373,6 +397,14 @@ def main():
                 "wall_orientation_fractions": interval.audit[
                     "wall_orientation_relaxation_fractions"],
             })
+        response = {
+            "interval": index,
+            **_response_snapshot(endpoint, context.shear_rate_s),
+        }
+        response_history.append(response)
+        terminal_band_persistence_intervals = (
+            terminal_band_persistence_intervals + 1
+            if response["connected_physical_band"] else 0)
         temporary = args.out/"checkpoint_latest.tmp.npz"
         _save_checkpoint(
             temporary, endpoint.state, endpoint.runtime, step+index,
@@ -380,7 +412,9 @@ def main():
             {"source_commit": commit, "parent_provenance": provenance},
             diagnostic_arrays={
                 "diagnostic_v67_overlap_records_json": np.asarray(
-                    json.dumps(records))})
+                    json.dumps(records)),
+                "diagnostic_v67_overlap_response_json": np.asarray(
+                    json.dumps(response_history))})
         os.replace(temporary, args.out/"checkpoint_latest.npz")
     final_power, final_band, final_metrics = _band(endpoint)
     final_flow_exposure = _flow_exposure(
@@ -405,6 +439,12 @@ def main():
         if lattice_heat_total_J > 0.0 else 0.0)
     lattice_heat_band_enrichment = (
         lattice_heat_inside_fraction/max(mean_active_band_fraction, 1e-300))
+    stress_history = np.abs(np.asarray([
+        row["mean_shear_stress_Pa"] for row in response_history]))
+    peak_stress_index = int(np.argmax(stress_history))
+    peak_stress = float(stress_history[peak_stress_index])
+    endpoint_softening = float(max(
+        peak_stress-stress_history[-1], 0.0)/max(peak_stress, 1e-300))
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
@@ -457,6 +497,17 @@ def main():
             "inside_band_enrichment": lattice_heat_band_enrichment,
         },
         "sampled_interval_records": records,
+        "response_history": response_history,
+        "response_summary": {
+            "peak_absolute_mean_shear_stress_Pa": peak_stress,
+            "peak_stress_interval": int(
+                response_history[peak_stress_index]["interval"]),
+            "endpoint_post_peak_softening_fraction": endpoint_softening,
+            "maximum_temperature_range_K": float(max(
+                row["temperature_range_K"] for row in response_history)),
+            "terminal_band_persistence_intervals": int(
+                terminal_band_persistence_intervals),
+        },
         "ledger": asdict(endpoint.runtime.ledger),
         "hard_balance_maxima": {
             "lattice_mura_relative_residual": (
@@ -475,6 +526,8 @@ def main():
             "final_connected_band": final_physical_band,
             "final_relative_threshold_band": bool(final_metrics["band_like"]),
             "band_persisted_every_interval": active_band_intervals == args.intervals,
+            "terminal_band_persisted_at_least_20_intervals": bool(
+                terminal_band_persistence_intervals >= 20),
             "any_owner_net_growth": bool(growing),
             "growing_owner_intersects_active_band": bool(any(
                 row["positive_front_growth_inside_active_band_m2"] > 0.0

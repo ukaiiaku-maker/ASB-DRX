@@ -1,0 +1,51 @@
+{
+  "all_changed_paths": [
+    "campaign_state.json",
+    "campaign_status.md",
+    "full_model/analysis/analyze_v67_poly_rx_asb_long_horizon.py",
+    "full_model/analysis/analyze_v67_poly_rx_asb_recurrence.py",
+    "full_model/analysis/run_v67_poly_rx_asb_sequence.py",
+    "full_model/docs/v66_hypothesis_ledger.md",
+    "full_model/verification/v67_poly_rx_asb_seed19p375_ad_300/result.json",
+    "full_model/verification/v67_poly_rx_asb_seed19p375_bath_300/result.json",
+    "full_model/verification/v67_poly_rx_asb_seed19p375_long_horizon_current.json",
+    "full_model/verification/v67_poly_rx_asb_seed19p375_recurrence_pair.json",
+    "tests/test_v67_poly_rx_asb_long_horizon.py",
+    "tests/test_v67_poly_rx_asb_recurrence.py",
+    "tests/test_v67_poly_rx_asb_sequence.py"
+  ],
+  "created_utc": "2026-10-16T22:54:06.450931+00:00",
+  "decision": {
+    "classification": "MATCHED_PHYSICAL_SOURCE_EQUIVALENT",
+    "physical_source_equivalent": true
+  },
+  "physical_changed_paths": [],
+  "physical_driver_blob_sha256": {
+    "full_model/analysis/run_v58_three_grain_production.py": {
+      "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f": "da420424f2a2b7d59b163b6ce2f02bd9d46b65cc51ce0d62094945c7358f72f8",
+      "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456": "da420424f2a2b7d59b163b6ce2f02bd9d46b65cc51ce0d62094945c7358f72f8"
+    },
+    "full_model/analysis/run_v66_coupled_rx_asb.py": {
+      "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f": "1784c1f75c8c41451a1e45d483ffc8f7787ad4750c9a40a7b53f5e58b851d03a",
+      "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456": "1784c1f75c8c41451a1e45d483ffc8f7787ad4750c9a40a7b53f5e58b851d03a"
+    },
+    "full_model/analysis/run_v67_drx_asb_overlap.py": {
+      "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f": "09160b8e06565848c789bcd2de1d69a0deddb78eac5ee97002fc1e85bccf3c0d",
+      "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456": "09160b8e06565848c789bcd2de1d69a0deddb78eac5ee97002fc1e85bccf3c0d"
+    },
+    "full_model/analysis/run_v67_interface_structural_bridge.py": {
+      "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f": "2111ebf924d39b2b2889f1575a769d00a772fa723353d58f387d12515c697d98",
+      "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456": "2111ebf924d39b2b2889f1575a769d00a772fa723353d58f387d12515c697d98"
+    }
+  },
+  "results": [
+    "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400/result.json",
+    "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_400/result.json"
+  ],
+  "schema": "v67-matched-physical-source-equivalence-v1",
+  "scope": "Equivalence covers the production package, reference physics inputs, and the four analysis drivers that construct and advance this V67 common-state trajectory. Documentation, classifiers, tests, and previously generated evidence may differ.",
+  "source_commits": [
+    "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
+    "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456"
+  ]
+}

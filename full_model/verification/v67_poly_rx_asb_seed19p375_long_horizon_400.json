@@ -1,0 +1,920 @@
+{
+  "audits": {
+    "all_hard_audits_passed": true,
+    "checkpoint_chains_valid": true,
+    "heat_control_rates_valid": true,
+    "matched_load_time_endpoints": true
+  },
+  "cases": {
+    "adiabatic": [
+      {
+        "active_physical_band_intervals": 3,
+        "checkpoint_sha256": "6d9fa955fb7a6c1573cfa6055638c45c6374d2c9d6346494260aad4f2c6673cc",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": true,
+          "final_relative_threshold_band": true,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": false,
+          "initial_relative_threshold_band": true,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_150",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.1376953125,
+          "band_like": true,
+          "component_span_fraction": [
+            0.53125,
+            0.34375
+          ],
+          "largest_component_cells": 78,
+          "largest_component_fraction": 0.076171875,
+          "maximum_to_mean": 12.098124266900928,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 33681278198802.445,
+          "positive_mean_W_m3": 2784008285561.3027,
+          "signed_min_W_m3": 1173835.3152553008,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": true,
+          "final_plastic_to_imposed_power_fraction": 0.018418745800978267,
+          "initial_physical_band": false,
+          "initial_plastic_to_imposed_power_fraction": 3.985055787280057e-09,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.0014795474325500434,
+            "conservative_wall_glide_relative_first_law_residual": 2.3811207165927847e-06,
+            "lattice_absorption_relative_first_law_residual": 5.780231190198535e-09,
+            "mechanical_relative_first_law_residual": 5.775617019301131e-06,
+            "source_relative_first_law_residual": 0.00016958761594545657,
+            "structural_absorption_post_relative_first_law_residual": 1.4786156940360293e-06,
+            "structural_absorption_relative_first_law_residual": 4.1598344385893443e-05,
+            "structural_junction_post_relative_first_law_residual": 0.005088271674350613,
+            "structural_junction_relative_first_law_residual": 0.004908835904628331,
+            "wall_order_relaxation_relative_first_law_residual": 4.034583178339075e-09,
+            "wall_orientation_relaxation_relative_first_law_residual": 0.0005763319672131147
+          },
+          "lattice_mura_relative_residual": 8.634571572165979e-16
+        },
+        "load": 0.02664000000000006,
+        "mean_shear_stress_Pa": 1889385083.3029013,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.077977340093249e-12,
+            "area_before_m2": 8.078008608071094e-12,
+            "growth_inside_band_enrichment": 0.35313179203148765,
+            "mean_orientation_change_rad": 2.455692443516801e-24,
+            "net_area_change_m2": -3.126797784515049e-17,
+            "positive_front_growth_inside_active_band_m2": 1.1361236059749534e-21,
+            "positive_front_growth_outside_active_band_m2": 1.4128098021322708e-18,
+            "positive_growth_inside_band_fraction": 0.0008035127689778967,
+            "relative_area_change": -3.8707532217667206e-06
+          },
+          "20": {
+            "area_after_m2": 7.560215099478777e-12,
+            "area_before_m2": 7.560107640755977e-12,
+            "growth_inside_band_enrichment": 1.4868378782372194,
+            "mean_orientation_change_rad": -0.00018974647663483335,
+            "net_area_change_m2": 1.0745872279952438e-16,
+            "positive_front_growth_inside_active_band_m2": 3.6354757775036025e-19,
+            "positive_front_growth_outside_active_band_m2": 1.0709517522233935e-16,
+            "positive_growth_inside_band_fraction": 0.003383136969035861,
+            "relative_area_change": 1.4213914391935693e-05
+          },
+          "30": {
+            "area_after_m2": 7.401807560427972e-12,
+            "area_before_m2": 7.401883751172926e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": -0.0005548693612297262,
+            "net_area_change_m2": -7.619074495437389e-17,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -1.0293426310876668e-05
+          }
+        },
+        "parent_checkpoint_sha256": "55e18933cdb8cb0a2142ec3bce3a95fcce7f9856ebd57d5ac0d1b8be9c1fa3f4",
+        "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
+        "source_tree_clean": true,
+        "step": 183,
+        "target_steps": 100,
+        "temperature_mean_K": 1000.1934017927965,
+        "temperature_range_K": 27.360308867125468,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      },
+      {
+        "active_physical_band_intervals": 32,
+        "checkpoint_sha256": "060c3dd6ee58635d0124b4b56b49a0c9b91cba3496dc6a67e2539ad3b5f9a3f4",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": false,
+          "final_relative_threshold_band": false,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": true,
+          "initial_relative_threshold_band": true,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_200",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.0107421875,
+          "band_like": false,
+          "component_span_fraction": [
+            0.125,
+            0.09375
+          ],
+          "largest_component_cells": 5,
+          "largest_component_fraction": 0.0048828125,
+          "maximum_to_mean": 2.841679843026156,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 293036308088130.9,
+          "positive_mean_W_m3": 103120803283761.62,
+          "signed_min_W_m3": 507971357.224594,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": false,
+          "final_plastic_to_imposed_power_fraction": 0.5520680809545395,
+          "initial_physical_band": true,
+          "initial_plastic_to_imposed_power_fraction": 0.018418745800978267,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.0010542714873277596,
+            "conservative_wall_glide_relative_first_law_residual": 1.0113348897440175e-07,
+            "lattice_absorption_relative_first_law_residual": 8.47765484473715e-12,
+            "mechanical_relative_first_law_residual": 0.0004945958031796839,
+            "source_relative_first_law_residual": 8.11893925117574e-06,
+            "structural_absorption_post_relative_first_law_residual": 4.992464242319178e-08,
+            "structural_absorption_relative_first_law_residual": 3.787387355444692e-05,
+            "structural_junction_post_relative_first_law_residual": 0.0,
+            "structural_junction_relative_first_law_residual": 0.0,
+            "wall_order_relaxation_relative_first_law_residual": 2.8523139579182296e-11,
+            "wall_orientation_relaxation_relative_first_law_residual": 0.00015198723307242192
+          },
+          "lattice_mura_relative_residual": 8.8760484414093e-16
+        },
+        "load": 0.03464000000000008,
+        "mean_shear_stress_Pa": 2334875145.8665924,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.077964201612549e-12,
+            "area_before_m2": 8.077977340093249e-12,
+            "growth_inside_band_enrichment": 0.08507511429078883,
+            "mean_orientation_change_rad": 4.963083675318166e-24,
+            "net_area_change_m2": -1.3138480700074147e-17,
+            "positive_front_growth_inside_active_band_m2": 6.754989262556729e-21,
+            "positive_front_growth_outside_active_band_m2": 1.5158274671384996e-18,
+            "positive_growth_inside_band_fraction": 0.004436534280398558,
+            "relative_area_change": -1.6264567412023072e-06
+          },
+          "20": {
+            "area_after_m2": 7.560265290400828e-12,
+            "area_before_m2": 7.560215099478777e-12,
+            "growth_inside_band_enrichment": 1.4524523995106815,
+            "mean_orientation_change_rad": 0.00010123911585002698,
+            "net_area_change_m2": 5.019092205133572e-17,
+            "positive_front_growth_inside_active_band_m2": 3.801617191235528e-18,
+            "positive_front_growth_outside_active_band_m2": 4.6389304858826083e-17,
+            "positive_growth_inside_band_fraction": 0.0757431231776078,
+            "relative_area_change": 6.638821963517418e-06
+          },
+          "30": {
+            "area_after_m2": 7.40177050798662e-12,
+            "area_before_m2": 7.401807560427972e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 0.0007315775310082762,
+            "net_area_change_m2": -3.705244135126157e-17,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -5.005863912127865e-06
+          }
+        },
+        "parent_checkpoint_sha256": "6d9fa955fb7a6c1573cfa6055638c45c6374d2c9d6346494260aad4f2c6673cc",
+        "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
+        "source_tree_clean": true,
+        "step": 233,
+        "target_steps": 50,
+        "temperature_mean_K": 1001.9081735411835,
+        "temperature_range_K": 30.4750268590833,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      },
+      {
+        "active_physical_band_intervals": 8,
+        "checkpoint_sha256": "2b24407d5b6ef64d92a54be871993dcea1228659dcb11f39a15ffd09f28467f1",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": true,
+          "final_relative_threshold_band": true,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": false,
+          "initial_relative_threshold_band": false,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_300",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.1640625,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5625,
+            0.1875
+          ],
+          "largest_component_cells": 70,
+          "largest_component_fraction": 0.068359375,
+          "maximum_to_mean": 4.716356424612875,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 343724017094675.8,
+          "positive_mean_W_m3": 72879143590783.47,
+          "signed_min_W_m3": 1732159336.5044446,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": true,
+          "final_plastic_to_imposed_power_fraction": 0.30586714340348126,
+          "initial_physical_band": false,
+          "initial_plastic_to_imposed_power_fraction": 0.5520680809545395,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.0003333611134261188,
+            "conservative_wall_glide_relative_first_law_residual": 2.4359640944933664e-09,
+            "lattice_absorption_relative_first_law_residual": 8.529335546574193e-13,
+            "mechanical_relative_first_law_residual": 0.0005162071277299944,
+            "source_relative_first_law_residual": 6.774946256496154e-06,
+            "structural_absorption_post_relative_first_law_residual": 3.411176340692184e-09,
+            "structural_absorption_relative_first_law_residual": 1.144788995806156e-05,
+            "structural_junction_post_relative_first_law_residual": 0.0012058570198105081,
+            "structural_junction_relative_first_law_residual": 0.0017722640673460345,
+            "wall_order_relaxation_relative_first_law_residual": 1.915575545715692e-11,
+            "wall_orientation_relaxation_relative_first_law_residual": 0.00026924956336876234
+          },
+          "lattice_mura_relative_residual": 7.341846780000767e-16
+        },
+        "load": 0.05064000000000012,
+        "mean_shear_stress_Pa": 2978382328.83704,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.078691029673875e-12,
+            "area_before_m2": 8.077964201612549e-12,
+            "growth_inside_band_enrichment": 1.3113361159041965,
+            "mean_orientation_change_rad": 6.435713319846321e-20,
+            "net_area_change_m2": 7.268280613263027e-16,
+            "positive_front_growth_inside_active_band_m2": 4.7047135021722376e-18,
+            "positive_front_growth_outside_active_band_m2": 7.24229910703569e-16,
+            "positive_growth_inside_band_fraction": 0.006454232445465968,
+            "relative_area_change": 8.997663807190568e-05
+          },
+          "20": {
+            "area_after_m2": 7.561465851089586e-12,
+            "area_before_m2": 7.560265290400828e-12,
+            "growth_inside_band_enrichment": 4.472912754357744,
+            "mean_orientation_change_rad": -0.00016731527715824202,
+            "net_area_change_m2": 1.200560688758354e-15,
+            "positive_front_growth_inside_active_band_m2": 2.6430484584304967e-17,
+            "positive_front_growth_outside_active_band_m2": 1.174130204174243e-15,
+            "positive_growth_inside_band_fraction": 0.022015117462854523,
+            "relative_area_change": 0.0001587987514515781
+          },
+          "30": {
+            "area_after_m2": 7.399843119236537e-12,
+            "area_before_m2": 7.40177050798662e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 0.003967943649846539,
+            "net_area_change_m2": -1.927388750083041e-15,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -0.00026039563750367026
+          }
+        },
+        "parent_checkpoint_sha256": "060c3dd6ee58635d0124b4b56b49a0c9b91cba3496dc6a67e2539ad3b5f9a3f4",
+        "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
+        "source_tree_clean": true,
+        "step": 333,
+        "target_steps": 100,
+        "temperature_mean_K": 1005.6242450182701,
+        "temperature_range_K": 96.83757012334058,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      },
+      {
+        "active_physical_band_intervals": 100,
+        "checkpoint_sha256": "80ab8a09863282688ce58b2bed8346ef7a3bd924b086ef423b64e69035f8dbd7",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": true,
+          "final_connected_band": true,
+          "final_relative_threshold_band": true,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": true,
+          "initial_relative_threshold_band": true,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.2021484375,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5625,
+            0.53125
+          ],
+          "largest_component_cells": 144,
+          "largest_component_fraction": 0.140625,
+          "maximum_to_mean": 5.827252032102155,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 351192891336379.8,
+          "positive_mean_W_m3": 60267324873142.4,
+          "signed_min_W_m3": 1516644396.8694434,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": true,
+          "final_plastic_to_imposed_power_fraction": 0.19140763323060356,
+          "initial_physical_band": true,
+          "initial_plastic_to_imposed_power_fraction": 0.30586714340348126,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.0004128514139020352,
+            "conservative_wall_glide_relative_first_law_residual": 1.4343155961611575e-08,
+            "lattice_absorption_relative_first_law_residual": 1.1352792965601686e-12,
+            "mechanical_relative_first_law_residual": 1.1517730753987202e-05,
+            "source_relative_first_law_residual": 3.6931939497760736e-06,
+            "structural_absorption_post_relative_first_law_residual": 2.768576588967356e-09,
+            "structural_absorption_relative_first_law_residual": 3.4250148329488534e-07,
+            "structural_junction_post_relative_first_law_residual": 0.00038916562889165627,
+            "structural_junction_relative_first_law_residual": 0.00045238633793259444,
+            "wall_order_relaxation_relative_first_law_residual": 1.722563554959355e-11,
+            "wall_orientation_relaxation_relative_first_law_residual": 0.00011066231394898467
+          },
+          "lattice_mura_relative_residual": 6.433966360840748e-16
+        },
+        "load": 0.06663999999999999,
+        "mean_shear_stress_Pa": 3935796855.1163855,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.079947655988594e-12,
+            "area_before_m2": 8.078691029673875e-12,
+            "growth_inside_band_enrichment": 1.3224810260468918,
+            "mean_orientation_change_rad": -9.317362419797304e-19,
+            "net_area_change_m2": 1.2566263147187726e-15,
+            "positive_front_growth_inside_active_band_m2": 1.9134280455758778e-16,
+            "positive_front_growth_outside_active_band_m2": 1.065824434845681e-15,
+            "positive_growth_inside_band_fraction": 0.15220155167932245,
+            "relative_area_change": 0.00015554825776887036
+          },
+          "20": {
+            "area_after_m2": 7.563562235210207e-12,
+            "area_before_m2": 7.561465851089586e-12,
+            "growth_inside_band_enrichment": 1.052292404057957,
+            "mean_orientation_change_rad": -0.0011437359378491663,
+            "net_area_change_m2": 2.0963841206203472e-15,
+            "positive_front_growth_inside_active_band_m2": 2.538849324206918e-16,
+            "positive_front_growth_outside_active_band_m2": 1.842499188199313e-15,
+            "positive_growth_inside_band_fraction": 0.12110611310374048,
+            "relative_area_change": 0.00027724573011438835
+          },
+          "30": {
+            "area_after_m2": 7.396490108801197e-12,
+            "area_before_m2": 7.399843119236537e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 0.0011967779971444603,
+            "net_area_change_m2": -3.3530104353407354e-15,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -0.0004531191244614757
+          }
+        },
+        "parent_checkpoint_sha256": "2b24407d5b6ef64d92a54be871993dcea1228659dcb11f39a15ffd09f28467f1",
+        "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
+        "source_tree_clean": true,
+        "step": 433,
+        "target_steps": 100,
+        "temperature_mean_K": 1010.690939373756,
+        "temperature_range_K": 47.85301934867812,
+        "thermal_bath_rate_s": 0.0,
+        "thermal_control": "adiabatic"
+      }
+    ],
+    "strong_bath": [
+      {
+        "active_physical_band_intervals": 0,
+        "checkpoint_sha256": "c54680b4560c0c0b8882d27e419e3c475f541914ae0f66f229261cdd089c3474",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": false,
+          "final_relative_threshold_band": false,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": false,
+          "initial_connected_band": false,
+          "initial_relative_threshold_band": true,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": false,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_150",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.1396484375,
+          "band_like": false,
+          "component_span_fraction": [
+            0.46875,
+            0.3125
+          ],
+          "largest_component_cells": 71,
+          "largest_component_fraction": 0.0693359375,
+          "maximum_to_mean": 14.705763803841139,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 40534108866358.36,
+          "positive_mean_W_m3": 2756341622716.045,
+          "signed_min_W_m3": 12751476.228938516,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": false,
+          "final_plastic_to_imposed_power_fraction": 0.01825571802736003,
+          "initial_physical_band": false,
+          "initial_plastic_to_imposed_power_fraction": 3.854316730683492e-09,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.001716775768754558,
+            "conservative_wall_glide_relative_first_law_residual": 2.3339090885358904e-06,
+            "lattice_absorption_relative_first_law_residual": 1.76474071308314e-07,
+            "mechanical_relative_first_law_residual": 5.2825712744924e-06,
+            "source_relative_first_law_residual": 0.00015635770676543264,
+            "structural_absorption_post_relative_first_law_residual": 9.815889974517121e-07,
+            "structural_absorption_relative_first_law_residual": 4.000777751194832e-05,
+            "structural_junction_post_relative_first_law_residual": 0.012399876771410967,
+            "structural_junction_relative_first_law_residual": 0.009435409634857318,
+            "wall_order_relaxation_relative_first_law_residual": 1.5086101098014842e-09,
+            "wall_orientation_relaxation_relative_first_law_residual": 0.0005404107121412273
+          },
+          "lattice_mura_relative_residual": 8.562893874883515e-16
+        },
+        "load": 0.02664000000000006,
+        "mean_shear_stress_Pa": 1887313894.3268948,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.077977002864166e-12,
+            "area_before_m2": 8.078008485532356e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 3.351373950546876e-23,
+            "net_area_change_m2": -3.1482668190050736e-17,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 1.4086538248917967e-18,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -3.8973304183123755e-06
+          },
+          "20": {
+            "area_after_m2": 7.560215708997075e-12,
+            "area_before_m2": 7.56010785209694e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": -0.00016921320813301222,
+            "net_area_change_m2": 1.0785690013474051e-16,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 1.0785690013453058e-16,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": 1.426658220290129e-05
+          },
+          "30": {
+            "area_after_m2": 7.401807288138756e-12,
+            "area_before_m2": 7.4018836623707e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": -0.0005325765264627691,
+            "net_area_change_m2": -7.637423194307418e-17,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -1.031821566331033e-05
+          }
+        },
+        "parent_checkpoint_sha256": "d9b7079f4080f22d20fb35485620937ded7c7d524c4ed848eed99a7e9475b29a",
+        "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
+        "source_tree_clean": true,
+        "step": 183,
+        "target_steps": 100,
+        "temperature_mean_K": 1000.0004360942869,
+        "temperature_range_K": 0.00412942797697724,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      },
+      {
+        "active_physical_band_intervals": 19,
+        "checkpoint_sha256": "ffb42161626b4e47b46b5167c184a96c971ce36b8f9488df57f9c69f749dbe89",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": false,
+          "final_relative_threshold_band": false,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": false,
+          "initial_relative_threshold_band": false,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_200",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.0107421875,
+          "band_like": false,
+          "component_span_fraction": [
+            0.125,
+            0.0625
+          ],
+          "largest_component_cells": 4,
+          "largest_component_fraction": 0.00390625,
+          "maximum_to_mean": 2.87628457158814,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 296401273024619.4,
+          "positive_mean_W_m3": 103050051428312.42,
+          "signed_min_W_m3": 570048092.6853851,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": false,
+          "final_plastic_to_imposed_power_fraction": 0.5517020836517633,
+          "initial_physical_band": false,
+          "initial_plastic_to_imposed_power_fraction": 0.01825571802736003,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.0008163327080768277,
+            "conservative_wall_glide_relative_first_law_residual": 1.1747506151287908e-07,
+            "lattice_absorption_relative_first_law_residual": 3.0086840425188834e-11,
+            "mechanical_relative_first_law_residual": 0.0005171621485723897,
+            "source_relative_first_law_residual": 4.462370361008497e-06,
+            "structural_absorption_post_relative_first_law_residual": 1.5691949265654436e-07,
+            "structural_absorption_relative_first_law_residual": 4.08815996729472e-05,
+            "structural_junction_post_relative_first_law_residual": 0.0,
+            "structural_junction_relative_first_law_residual": 0.0,
+            "wall_order_relaxation_relative_first_law_residual": 3.0210548004787784e-11,
+            "wall_orientation_relaxation_relative_first_law_residual": 8.805917576611483e-05
+          },
+          "lattice_mura_relative_residual": 8.417846308286363e-16
+        },
+        "load": 0.03464000000000008,
+        "mean_shear_stress_Pa": 2334821058.364854,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.077964065662525e-12,
+            "area_before_m2": 8.077977002864166e-12,
+            "growth_inside_band_enrichment": 0.09285850989539408,
+            "mean_orientation_change_rad": -5.2112378590840744e-23,
+            "net_area_change_m2": -1.2937201641240378e-17,
+            "positive_front_growth_inside_active_band_m2": 4.63275783547934e-21,
+            "positive_front_growth_outside_active_band_m2": 1.6486965571335447e-18,
+            "positive_growth_inside_band_fraction": 0.0028020780818043723,
+            "relative_area_change": -1.6015397959975997e-06
+          },
+          "20": {
+            "area_after_m2": 7.560265928085865e-12,
+            "area_before_m2": 7.560215708997075e-12,
+            "growth_inside_band_enrichment": 1.51600975034894,
+            "mean_orientation_change_rad": 0.00010882880110130166,
+            "net_area_change_m2": 5.021908879034848e-17,
+            "positive_front_growth_inside_active_band_m2": 2.297361536421367e-18,
+            "positive_front_growth_outside_active_band_m2": 4.7921727255366537e-17,
+            "positive_growth_inside_band_fraction": 0.04574677859939672,
+            "relative_area_change": 6.642547081108412e-06
+          },
+          "30": {
+            "area_after_m2": 7.401770006251606e-12,
+            "area_before_m2": 7.401807288138756e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 0.0007512500548856327,
+            "net_area_change_m2": -3.728188715072369e-17,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -5.036862714659857e-06
+          }
+        },
+        "parent_checkpoint_sha256": "c54680b4560c0c0b8882d27e419e3c475f541914ae0f66f229261cdd089c3474",
+        "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
+        "source_tree_clean": true,
+        "step": 233,
+        "target_steps": 50,
+        "temperature_mean_K": 1000.0126386570761,
+        "temperature_range_K": 0.18721090221220038,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      },
+      {
+        "active_physical_band_intervals": 6,
+        "checkpoint_sha256": "ff56c6815b8c7097d35e395875f4a42414f685d1dc402f1679546ebe90304ef8",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": true,
+          "final_relative_threshold_band": true,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": false,
+          "initial_relative_threshold_band": false,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_300",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.1533203125,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5625,
+            0.21875
+          ],
+          "largest_component_cells": 62,
+          "largest_component_fraction": 0.060546875,
+          "maximum_to_mean": 4.692601564082117,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 345273305842335.7,
+          "positive_mean_W_m3": 73578227583843.88,
+          "signed_min_W_m3": 2214145921.14038,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": true,
+          "final_plastic_to_imposed_power_fraction": 0.3092359318504596,
+          "initial_physical_band": false,
+          "initial_plastic_to_imposed_power_fraction": 0.5517020836517633,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.00019703656998738966,
+            "conservative_wall_glide_relative_first_law_residual": 1.902106220287734e-09,
+            "lattice_absorption_relative_first_law_residual": 1.0701397101981227e-12,
+            "mechanical_relative_first_law_residual": 0.0005187002479760802,
+            "source_relative_first_law_residual": 3.6261086313582974e-06,
+            "structural_absorption_post_relative_first_law_residual": 3.138215043160593e-09,
+            "structural_absorption_relative_first_law_residual": 1.2222116598992354e-05,
+            "structural_junction_post_relative_first_law_residual": 0.0019217834150091284,
+            "structural_junction_relative_first_law_residual": 0.002371312897628687,
+            "wall_order_relaxation_relative_first_law_residual": 1.9931598479731608e-11,
+            "wall_orientation_relaxation_relative_first_law_residual": 0.0002514893330213393
+          },
+          "lattice_mura_relative_residual": 7.154702530784114e-16
+        },
+        "load": 0.05064000000000012,
+        "mean_shear_stress_Pa": 2974194619.927967,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.078740486516947e-12,
+            "area_before_m2": 8.077964065662525e-12,
+            "growth_inside_band_enrichment": 1.3382294918369435,
+            "mean_orientation_change_rad": 1.0177630256852453e-20,
+            "net_area_change_m2": 7.764208544226792e-16,
+            "positive_front_growth_inside_active_band_m2": 3.6217406187845836e-18,
+            "positive_front_growth_outside_active_band_m2": 7.74838983562239e-16,
+            "positive_growth_inside_band_fraction": 0.004652438467714374,
+            "relative_area_change": 9.611590842834482e-05
+          },
+          "20": {
+            "area_after_m2": 7.561513114939562e-12,
+            "area_before_m2": 7.560265928085865e-12,
+            "growth_inside_band_enrichment": 4.825764381596293,
+            "mean_orientation_change_rad": -0.00018390124036826716,
+            "net_area_change_m2": 1.2471868536971018e-15,
+            "positive_front_growth_inside_active_band_m2": 2.0924142996981143e-17,
+            "positive_front_growth_outside_active_band_m2": 1.2262627106989286e-15,
+            "positive_growth_inside_band_fraction": 0.016777071482893362,
+            "relative_area_change": 0.00016496600325444755
+          },
+          "30": {
+            "area_after_m2": 7.399746398543489e-12,
+            "area_before_m2": 7.401770006251606e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 0.003967499327311996,
+            "net_area_change_m2": -2.0236077081165498e-15,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -0.0002733951077117219
+          }
+        },
+        "parent_checkpoint_sha256": "ffb42161626b4e47b46b5167c184a96c971ce36b8f9488df57f9c69f749dbe89",
+        "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
+        "source_tree_clean": true,
+        "step": 333,
+        "target_steps": 100,
+        "temperature_mean_K": 1000.0144565052151,
+        "temperature_range_K": 0.19467140351071066,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      },
+      {
+        "active_physical_band_intervals": 98,
+        "checkpoint_sha256": "f546b0755d364346b10f6030b640568a6b556dca539058dabf601bad4b5d8904",
+        "decision": {
+          "all_hard_absorption_balances_passed": true,
+          "any_owner_net_growth": true,
+          "band_persisted_every_interval": false,
+          "final_connected_band": true,
+          "final_relative_threshold_band": true,
+          "first_law_hard_balance_passed": true,
+          "front_transmission_fraction": 0.25,
+          "grain_ids_unchanged": true,
+          "growing_owner_intersects_active_band": true,
+          "initial_connected_band": true,
+          "initial_relative_threshold_band": true,
+          "interface_neutral_sink_enabled": false,
+          "lattice_absorption_occurs_inside_active_band": true,
+          "mura_hard_balance_passed": true,
+          "production_rx_channels_enabled": true,
+          "rx_pathway_enabled": true
+        },
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_400",
+        "final_power_localization": {
+          "above_threshold_fraction": 0.2041015625,
+          "band_like": true,
+          "component_span_fraction": [
+            0.5625,
+            0.5
+          ],
+          "largest_component_cells": 137,
+          "largest_component_fraction": 0.1337890625,
+          "maximum_to_mean": 5.9053670971791306,
+          "periodic_winding": [
+            false,
+            false
+          ],
+          "positive_max_W_m3": 338001175430641.94,
+          "positive_mean_W_m3": 57236268274007.555,
+          "signed_min_W_m3": 1516991389.264791,
+          "threshold_multiple": 2.0
+        },
+        "flow_regime": {
+          "final_physical_band": true,
+          "final_plastic_to_imposed_power_fraction": 0.18198734210945988,
+          "initial_physical_band": true,
+          "initial_plastic_to_imposed_power_fraction": 0.3092359318504596,
+          "minimum_plastic_power_fraction": 0.01
+        },
+        "hard_balance_maxima": {
+          "first_law_relative_residuals": {
+            "conservative_dipole_wall_relative_first_law_residual": 0.00022805017103762827,
+            "conservative_wall_glide_relative_first_law_residual": 1.4717325073185579e-08,
+            "lattice_absorption_relative_first_law_residual": 1.2904868766381697e-12,
+            "mechanical_relative_first_law_residual": 1.2068579495732835e-05,
+            "source_relative_first_law_residual": 3.5543972503815597e-06,
+            "structural_absorption_post_relative_first_law_residual": 3.236512231380684e-09,
+            "structural_absorption_relative_first_law_residual": 3.1407695289877133e-07,
+            "structural_junction_post_relative_first_law_residual": 0.0009656652360515021,
+            "structural_junction_relative_first_law_residual": 0.0009798681631925886,
+            "wall_order_relaxation_relative_first_law_residual": 1.2536697582416523e-11,
+            "wall_orientation_relaxation_relative_first_law_residual": 6.453153333376354e-06
+          },
+          "lattice_mura_relative_residual": 6.392730333443155e-16
+        },
+        "load": 0.06663999999999999,
+        "mean_shear_stress_Pa": 3931335801.337056,
+        "owner_results": {
+          "10": {
+            "area_after_m2": 8.080055588603287e-12,
+            "area_before_m2": 8.078740486516947e-12,
+            "growth_inside_band_enrichment": 1.2761794246421352,
+            "mean_orientation_change_rad": 3.1509625637859973e-19,
+            "net_area_change_m2": 1.3151020863399797e-15,
+            "positive_front_growth_inside_active_band_m2": 1.8311716956481916e-16,
+            "positive_front_growth_outside_active_band_m2": 1.13253740411727e-15,
+            "positive_growth_inside_band_fraction": 0.13918331850003288,
+            "relative_area_change": 0.0001627855342716882
+          },
+          "20": {
+            "area_after_m2": 7.56364016147822e-12,
+            "area_before_m2": 7.561513114939562e-12,
+            "growth_inside_band_enrichment": 1.0730632592216138,
+            "mean_orientation_change_rad": -0.0011560640769205932,
+            "net_area_change_m2": 2.1270465386579058e-15,
+            "positive_front_growth_inside_active_band_m2": 2.4893030201877013e-16,
+            "positive_front_growth_outside_active_band_m2": 1.8781162366403267e-15,
+            "positive_growth_inside_band_fraction": 0.11703096170885725,
+            "relative_area_change": 0.00028129906095850326
+          },
+          "30": {
+            "area_after_m2": 7.39630424991849e-12,
+            "area_before_m2": 7.399746398543489e-12,
+            "growth_inside_band_enrichment": 0.0,
+            "mean_orientation_change_rad": 0.0012448522679071594,
+            "net_area_change_m2": -3.442148624999501e-15,
+            "positive_front_growth_inside_active_band_m2": 0.0,
+            "positive_front_growth_outside_active_band_m2": 0.0,
+            "positive_growth_inside_band_fraction": 0.0,
+            "relative_area_change": -0.00046517116122750206
+          }
+        },
+        "parent_checkpoint_sha256": "ff56c6815b8c7097d35e395875f4a42414f685d1dc402f1679546ebe90304ef8",
+        "source_commit": "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456",
+        "source_tree_clean": true,
+        "step": 433,
+        "target_steps": 100,
+        "temperature_mean_K": 1000.0107293809176,
+        "temperature_range_K": 0.25594596471671593,
+        "thermal_bath_rate_s": 5000000000.0,
+        "thermal_control": "strong_bath"
+      }
+    ]
+  },
+  "claim_boundary": "The stress-drop metric uses stored atomic-chunk endpoints and is a coarse lower-bound diagnostic. Qualification additionally requires a fully banded terminal chunk, >5% adiabatic post-peak loss, >1% softening separation from the matched bath, >20 K spatial thermal contrast separation, RX overlap, exact branch continuity, and all hard ledgers. It does not establish spontaneous grain birth or material calibration.",
+  "created_utc": "2026-10-16T22:54:35.112992+00:00",
+  "decision": {
+    "classification": "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING",
+    "heat_dependent_polycrystal_asb_with_rx": false,
+    "persistent_physical_band_with_existing_boundary_rx": true,
+    "strict_heat_triggered_terminal_band": false
+  },
+  "observations": {
+    "adiabatic_coarse_endpoint_softening_fraction": 0.0,
+    "adiabatic_terminal_chunk_fully_banded": true,
+    "bath_coarse_endpoint_softening_fraction": 0.0,
+    "bath_terminal_band_suppressed": false,
+    "bath_terminal_chunk_fully_banded": false,
+    "terminal_existing_boundary_rx_intersects_adiabatic_band": true,
+    "terminal_temperature_contrast_separation_exceeds_20K": true
+  },
+  "schema": "v67-poly-rx-asb-long-horizon-v1"
+}

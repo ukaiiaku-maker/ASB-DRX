@@ -106,6 +106,10 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
     bath_persistent = bool(
         terminal_bath["decision"]["final_connected_band"]
         and terminal_bath["decision"]["band_persisted_every_interval"])
+    bath_band_suppressed = bool(
+        not terminal_bath["decision"]["final_connected_band"]
+        and terminal_bath["active_physical_band_intervals"]
+        < .2 * terminal_bath["target_steps"])
     rx_overlap = bool(
         terminal_ad["decision"]["growing_owner_intersects_active_band"])
     thermal_separation = bool(
@@ -117,7 +121,7 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         matched and chain and controls and hard and ad_persistent and rx_overlap)
     heat_dependent_asb = bool(
         persistent_rx_band and thermal_separation and thermal_softening)
-    strict_heat_triggered_band = bool(ad_persistent and not bath_persistent)
+    strict_heat_triggered_band = bool(ad_persistent and bath_band_suppressed)
     if heat_dependent_asb:
         classification = "QUALIFIED_POLYCRYSTAL_DRX_WITH_HEAT_DEPENDENT_ASB"
     elif persistent_rx_band:
@@ -139,6 +143,7 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "bath_coarse_endpoint_softening_fraction": bath_softening,
             "adiabatic_terminal_chunk_fully_banded": ad_persistent,
             "bath_terminal_chunk_fully_banded": bath_persistent,
+            "bath_terminal_band_suppressed": bath_band_suppressed,
             "terminal_existing_boundary_rx_intersects_adiabatic_band": rx_overlap,
             "terminal_temperature_contrast_separation_exceeds_20K": (
                 thermal_separation),
