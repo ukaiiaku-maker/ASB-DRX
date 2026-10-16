@@ -105,6 +105,10 @@ def main():
         "--collective-wall-nucleation", action="store_true",
         help=("enable the separately labeled finite-amplitude closed-wall "
               "ablation with a complete-energy reaction-path audit"))
+    parser.add_argument(
+        "--collective-wall-kinetics",
+        choices=("atomic_event", "continuous_net_flux"),
+        default="atomic_event")
     parser.add_argument("--collective-wall-order-increment", type=float,
                         default=.01)
     parser.add_argument("--collective-wall-source-site-density", type=float,
@@ -213,13 +217,16 @@ def main():
             ConservativeDipoleWallParameters()
             if args.dipole_wall_organization else None),
         collective_wall_nucleation_mode=(
-            "activated_closed_wall" if args.collective_wall_nucleation
-            else "disabled"),
+            ("continuous_closed_wall"
+             if args.collective_wall_kinetics == "continuous_net_flux"
+             else "activated_closed_wall")
+            if args.collective_wall_nucleation else "disabled"),
         collective_wall_nucleation_parameters=(
             CollectiveWallNucleationParameters(
                 source_site_density_m2=(
                     args.collective_wall_source_site_density),
-                order_increment=args.collective_wall_order_increment)
+                order_increment=args.collective_wall_order_increment,
+                kinetics_mode=args.collective_wall_kinetics)
             if args.collective_wall_nucleation else None),
         collective_wall_nucleation_seed=args.collective_wall_seed)
     dt = (float(args.dt) if args.dt is not None
@@ -266,6 +273,7 @@ def main():
             context.collective_wall_nucleation_mode),
         collective_wall_order_increment=(
             args.collective_wall_order_increment),
+        collective_wall_kinetics=args.collective_wall_kinetics,
         collective_wall_source_site_density_m2=(
             args.collective_wall_source_site_density),
         collective_wall_seed=args.collective_wall_seed,
@@ -402,6 +410,12 @@ def main():
                 "collective_wall_nucleation_selected_channel_probability"],
             "collective_wall_detailed_balance_log_residual": interval.audit[
                 "collective_wall_nucleation_detailed_balance_log_residual"],
+            "collective_wall_realized_continuous_coordinate": interval.audit[
+                "collective_wall_nucleation_realized_continuous_coordinate"],
+            "collective_wall_backtracks": interval.audit[
+                "collective_wall_nucleation_backtracks"],
+            "collective_wall_first_law_relative_residual": interval.audit[
+                "collective_wall_nucleation_relative_first_law_residual"],
             "owner_orientation_span_deg": {
                 str(grain): float(np.degrees(np.ptp(
                     owner.orientation_rad[np.asarray(support) > .75])))
@@ -472,6 +486,7 @@ def main():
                 args.collective_wall_nucleation),
             "collective_wall_order_increment": (
                 args.collective_wall_order_increment),
+            "collective_wall_kinetics": args.collective_wall_kinetics,
             "collective_wall_source_site_density_m2": (
                 args.collective_wall_source_site_density),
             "collective_wall_seed": args.collective_wall_seed,
@@ -514,6 +529,9 @@ def main():
             "accepted_interface_sink_intervals": sum(
                 row["interface_sink_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_collective_wall_intervals": sum(
+                row["collective_wall_classification"].startswith("ACCEPTED")
+                for row in records),
             "mura_hard_balance_passed": bool(all(
                 row["lattice_mura_relative_residual"] < 2e-11
                 for row in records)),
@@ -522,6 +540,7 @@ def main():
                 and row["wall_glide_first_law_relative_residual"] < .05
                 and row["dipole_wall_first_law_relative_residual"] < .05
                 and row["source_first_law_relative_residual"] < .05
+                and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records
                 if row["lattice_classification"].startswith("ACCEPTED"))),
             "supports_unchanged": bool(np.array_equal(

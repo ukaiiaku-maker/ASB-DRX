@@ -362,7 +362,8 @@ def advance_complete_multigrain_interval(
     collective_wall_started = time.perf_counter()
     collective_wall = None
     if context.collective_wall_nucleation_mode != "disabled":
-        if context.collective_wall_nucleation_mode != "activated_closed_wall":
+        if context.collective_wall_nucleation_mode not in {
+                "activated_closed_wall", "continuous_closed_wall"}:
             raise ValueError("unknown collective wall-nucleation mode")
         parameters = (CollectiveWallNucleationParameters()
                       if context.collective_wall_nucleation_parameters is None
@@ -1235,6 +1236,11 @@ def advance_complete_multigrain_interval(
         "collective_wall_nucleation_detailed_balance_log_residual": (
             0.0 if collective_wall is None
             else collective_wall.detailed_balance_log_residual),
+        "collective_wall_nucleation_realized_continuous_coordinate": (
+            0.0 if collective_wall is None
+            else collective_wall.realized_continuous_coordinate),
+        "collective_wall_nucleation_backtracks": (
+            0 if collective_wall is None else collective_wall.backtracks),
         "collective_wall_nucleation_selected_radius_m": (
             0.0 if collective_wall is None else collective_wall.selected_radius_m),
         "collective_wall_nucleation_delta_helmholtz_J": (

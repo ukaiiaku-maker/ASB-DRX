@@ -105,6 +105,7 @@ def test_independent_downhill_geometries_contribute_additive_hazard(monkeypatch)
     class Energy:
         def __init__(self, value):
             self.helmholtz_J = value
+            self.internal_J = 0.0
 
     monkeypatch.setattr(
         collective_module, "evaluate_complete_multigrain_energy",
@@ -124,3 +125,17 @@ def test_independent_downhill_geometries_contribute_additive_hazard(monkeypatch)
     assert result.selected_channel_probability == pytest.approx(.5)
     assert result.event_probability == pytest.approx(
         -math.expm1(-result.total_forward_event_rate_Hz*1e-6))
+
+    continuous = evaluate_collective_wall_nucleation(
+        state, interval_s=1e-6, mean_strain=np.zeros((2, 2)),
+        spacing_m=1e-7, represented_thickness_m=5e-10, systems=(),
+        wall_parameters=CommonWallParameters(spacing_m=1e-7),
+        random_uniform=.999, parameters=replace(
+            parameters, kinetics_mode="continuous_net_flux"))
+    assert continuous.accepted
+    assert continuous.classification == (
+        "ACCEPTED_CONTINUOUS_CLOSED_WALL_ORGANIZATION")
+    assert continuous.realized_continuous_coordinate > 0.0
+    assert continuous.delta_helmholtz_J < 0.0
+    assert abs(continuous.line_balance_residual_m2) < 32.0
+    assert abs(continuous.signed_content_residual_m2) < 32.0

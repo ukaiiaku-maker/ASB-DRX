@@ -25,12 +25,21 @@ class CollectiveWallNucleationParameters:
     order_increment: float = .01
     owner_support_threshold: float = .75
     energy_path_samples: int = 21
+    kinetics_mode: str = "atomic_event"
+    maximum_continuous_coordinate_per_interval: float = .05
+    maximum_backtracks: int = 16
 
     def __post_init__(self):
         if int(self.energy_path_samples) != self.energy_path_samples:
             raise ValueError("energy_path_samples must be an integer")
         if self.energy_path_samples < 2:
             raise ValueError("at least two energy-path samples are required")
+        if self.kinetics_mode not in {"atomic_event", "continuous_net_flux"}:
+            raise ValueError("unknown collective-wall kinetics mode")
+        if not 0.0 < self.maximum_continuous_coordinate_per_interval <= 1.0:
+            raise ValueError("continuous coordinate bound must lie in (0, 1]")
+        if self.maximum_backtracks < 0:
+            raise ValueError("maximum_backtracks must be nonnegative")
 
 
 @dataclass(frozen=True)
@@ -65,6 +74,8 @@ class CollectiveWallNucleationDecision:
     energy_path_delta_helmholtz_J: tuple[float, ...] = ()
     total_forward_event_rate_Hz: float = 0.0
     selected_channel_probability: float = 0.0
+    realized_continuous_coordinate: float = 0.0
+    backtracks: int = 0
 
 
 @dataclass(frozen=True)
@@ -161,6 +172,49 @@ def _collective_wall_candidate(state, owner_index, ring, order_increment,
     return candidate, transferred
 
 
+def _combined_collective_wall_candidate(
+        state, channels, order_increment, scale=1.0):
+    """Advance simultaneous small ring coordinates without overspending line."""
+    factor = float(scale)
+    if not math.isfinite(factor) or not 0.0 <= factor <= 1.0:
+        raise ValueError("combined collective-wall scale must lie in [0, 1]")
+    masks = [np.zeros(state.supports.shape[1:], dtype=float)
+             for _ in state.owners]
+    for owner_index, ring, coordinate in channels:
+        masks[int(owner_index)] += factor*float(coordinate)*np.asarray(ring)
+    maximum_mask = max((float(np.max(mask)) for mask in masks), default=0.0)
+    if maximum_mask > 1.0+64.0*np.finfo(float).eps:
+        raise ValueError("combined collective-wall channels overspend mobile line")
+    owners = []
+    activity = np.zeros(state.supports.shape[1:], dtype=float)
+    transferred = 0.0
+    for owner, mask in zip(state.owners, masks):
+        excess_plus = np.maximum(
+            np.asarray(owner.mobile_plus_m2)
+            -np.asarray(owner.mobile_minus_m2), 0.0)
+        excess_minus = np.maximum(
+            np.asarray(owner.mobile_minus_m2)
+            -np.asarray(owner.mobile_plus_m2), 0.0)
+        transfer_plus = mask[..., None]*excess_plus
+        transfer_minus = mask[..., None]*excess_minus
+        local_activity = np.sum(transfer_plus+transfer_minus, axis=2)
+        activity += local_activity
+        transferred += float(np.sum(
+            transfer_plus+transfer_minus, dtype=np.longdouble))
+        order = np.asarray(owner.wall_order)+(
+            float(order_increment)*mask*(1.0-np.asarray(owner.wall_order)))
+        owners.append(replace(
+            owner,
+            mobile_plus_m2=np.asarray(owner.mobile_plus_m2)-transfer_plus,
+            mobile_minus_m2=np.asarray(owner.mobile_minus_m2)-transfer_minus,
+            wall_plus_m2=np.asarray(owner.wall_plus_m2)+transfer_plus,
+            wall_minus_m2=np.asarray(owner.wall_minus_m2)+transfer_minus,
+            wall_order=order))
+    candidate = replace(state, owners=tuple(owners))
+    candidate.validate()
+    return candidate, transferred, activity
+
+
 def evaluate_collective_wall_nucleation(
         state, *, interval_s, mean_strain, spacing_m,
         represented_thickness_m, systems, wall_parameters,
@@ -238,7 +292,7 @@ def evaluate_collective_wall_nucleation(
     total_rate = float(np.sum(
         [item[-1].forward_rate_Hz for item in priced], dtype=np.longdouble))
     probability = -math.expm1(-total_rate*dt)
-    if draw < probability:
+    if parameters.kinetics_mode == "atomic_event" and draw < probability:
         channel_quantile = draw/probability
         cumulative = 0.0
         selected = priced[-1]
@@ -269,6 +323,112 @@ def evaluate_collective_wall_nucleation(
         energy_path_delta_helmholtz_J=tuple(map(float, path)),
         total_forward_event_rate_Hz=total_rate,
         selected_channel_probability=channel_probability)
+    if parameters.kinetics_mode == "continuous_net_flux":
+        channels = []
+        for item in priced:
+            owner_item = item[2]
+            ring_item = item[5]
+            balance_item = item[-1]
+            net_rate = max(
+                balance_item.forward_rate_Hz-balance_item.reverse_rate_Hz,
+                0.0)
+            coordinate = min(
+                -math.expm1(-net_rate*dt),
+                parameters.maximum_continuous_coordinate_per_interval)
+            if coordinate > 0.0:
+                channels.append((owner_item, ring_item, coordinate))
+        maximum_mask = 0.0
+        for owner_item in range(len(state.owners)):
+            mask = sum(
+                (coordinate*np.asarray(ring_item)
+                 for index_item, ring_item, coordinate in channels
+                 if index_item == owner_item),
+                np.zeros(state.supports.shape[1:], dtype=float))
+            maximum_mask = max(maximum_mask, float(np.max(mask)))
+        scale_factor = min(1.0, 1.0/max(maximum_mask, 1.0))
+        resolution = (4096.0*np.finfo(float).eps
+                      *max(abs(before.helmholtz_J), 1e-300))
+        continuous_candidate = state
+        continuous_energy = before
+        continuous_transferred = 0.0
+        activity = np.zeros(state.supports.shape[1:], dtype=float)
+        backtracks = 0
+        for backtracks in range(parameters.maximum_backtracks+1):
+            continuous_candidate, continuous_transferred, activity = (
+                _combined_collective_wall_candidate(
+                    state, channels, parameters.order_increment,
+                    scale=scale_factor))
+            continuous_energy = evaluate_complete_multigrain_energy(
+                continuous_candidate, **common)
+            if (continuous_energy.helmholtz_J-before.helmholtz_J
+                    <= resolution):
+                break
+            scale_factor *= .5
+        continuous_delta = (
+            continuous_energy.helmholtz_J-before.helmholtz_J)
+        downhill = continuous_delta <= resolution
+        heat = max(-continuous_delta, 0.0) if downhill else 0.0
+        heat_cells = np.zeros(state.supports.shape[1:], dtype=float)
+        if heat > 0.0 and float(np.sum(activity)) > 0.0:
+            heat_cells = heat*activity/float(np.sum(
+                activity, dtype=np.longdouble))
+        cell_volume = spacing*spacing*thickness
+        if heat > 0.0:
+            rise = heat_cells/(
+                wall_parameters.volumetric_heat_capacity_J_m3_K*cell_volume)
+            committed = replace(continuous_candidate, owners=tuple(
+                replace(item, temperature_K=np.asarray(item.temperature_K)+rise)
+                for item in continuous_candidate.owners))
+            committed.validate()
+            hot_energy = evaluate_complete_multigrain_energy(committed, **common)
+            residual = hot_energy.internal_J-before.internal_J
+            relative = abs(residual)/max(
+                abs(continuous_delta), heat, resolution, 1e-300)
+        else:
+            committed = state
+            residual = relative = 0.0
+        line_before = sum(float(np.sum(
+            item.mobile_plus_m2+item.mobile_minus_m2
+            +item.wall_plus_m2+item.wall_minus_m2,
+            dtype=np.longdouble)) for item in state.owners)
+        line_after = sum(float(np.sum(
+            item.mobile_plus_m2+item.mobile_minus_m2
+            +item.wall_plus_m2+item.wall_minus_m2,
+            dtype=np.longdouble)) for item in continuous_candidate.owners)
+        signed_before = sum(float(np.sum(
+            item.mobile_plus_m2-item.mobile_minus_m2
+            +item.wall_plus_m2-item.wall_minus_m2,
+            dtype=np.longdouble)) for item in state.owners)
+        signed_after = sum(float(np.sum(
+            item.mobile_plus_m2-item.mobile_minus_m2
+            +item.wall_plus_m2-item.wall_minus_m2,
+            dtype=np.longdouble)) for item in continuous_candidate.owners)
+        accepted = bool(
+            channels and downhill
+            and relative <= maximum_relative_first_law_residual)
+        if not channels:
+            classification = "INACTIVE_NO_FORWARD_CONTINUOUS_WALL_FLUX"
+        elif not downhill:
+            classification = "REJECTED_CONTINUOUS_CLOSED_WALL_UPHILL"
+        elif relative > maximum_relative_first_law_residual:
+            classification = "REJECTED_CONTINUOUS_CLOSED_WALL_FIRST_LAW"
+        else:
+            classification = "ACCEPTED_CONTINUOUS_CLOSED_WALL_ORGANIZATION"
+        maximum_coordinate = max(
+            (coordinate for _, _, coordinate in channels), default=0.0)
+        return CollectiveWallNucleationDecision(
+            accepted, classification, continuous_candidate,
+            committed if accepted else state, grain_id, center, radius,
+            candidate_count, downhill_count, probability, draw,
+            continuous_transferred, signed_after-signed_before,
+            line_after-line_before, continuous_delta,
+            heat if accepted else 0.0, residual if accepted else 0.0,
+            relative if accepted else 0.0,
+            heat_cells if accepted else np.zeros_like(heat_cells),
+            **audit_fields,
+            realized_continuous_coordinate=(
+                scale_factor*maximum_coordinate if accepted else 0.0),
+            backtracks=backtracks)
     if draw >= probability:
         zero = np.zeros(state.supports.shape[1:])
         return CollectiveWallNucleationDecision(
