@@ -1,0 +1,174 @@
+{
+  "cases": {
+    "gb_tj_only": {
+      "accepted_source_intervals": 0,
+      "checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+      "configuration": {
+        "capture_distance_m": 5e-07,
+        "collective_wall_kinetics": "atomic_event",
+        "collective_wall_nucleation": false,
+        "collective_wall_order_increment": 0.01,
+        "collective_wall_seed": 67,
+        "collective_wall_source_site_density_m2": 1000000000000.0,
+        "compatible_wall_conservation": "burgers_vector",
+        "compatible_wall_reorganization": false,
+        "dipole_wall_organization": true,
+        "dt_s": 5e-07,
+        "front_enabled": true,
+        "front_maximum_substep_s": 5e-07,
+        "interface_neutral_sink": false,
+        "interface_vector_junction_sink": false,
+        "intervals": 50,
+        "joint_wall_topology_orientation": false,
+        "lattice_absorption": "one_flux_mura",
+        "lattice_complete_physical_clock": true,
+        "lattice_maximum_fraction": 0.05,
+        "mechanical_max_subdivisions": 14,
+        "shear_rate_s": 2.0,
+        "source_mode": "gb_tj_only",
+        "source_seed": 67,
+        "structural_absorption": "common_axis",
+        "wall_glide": true,
+        "wall_glide_maximum_edge_fraction": 0.02,
+        "wall_neutral_pair_recovery": false,
+        "wall_nye_match_coefficient_J_m": 0.00262125,
+        "wall_nye_match_length_m": 1.5e-07,
+        "wall_order_max_iterations": 50,
+        "wall_order_relaxation": true,
+        "wall_order_support_threshold": 1e-08,
+        "wall_orientation_boundary_clearance_m": 2e-07,
+        "wall_orientation_relaxation": true
+      },
+      "directional_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": -170508.61936509982,
+            "growth_pressure_Pa": 705412.3388320475,
+            "shrink_pressure_Pa": 875920.9581971474
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 147087.31568562216,
+            "growth_pressure_Pa": 858192.0088984506,
+            "shrink_pressure_Pa": 711104.6932128285
+          }
+        },
+        "net_growth_minus_shrink_Pa": -23421.303679477656
+      },
+      "directional_component_growth_minus_shrink_Pa": {
+        "boundary_excess_J": -1284890.297716503,
+        "defect_storage_J": 1466158.8994375626,
+        "helmholtz_J": -23421.303679477656,
+        "internal_J": -23421.306416237727,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -21188.384456611413,
+        "phase_local_J": -160200.13181195382,
+        "recoverable_elastic_J": -1.3769658567888044e-07,
+        "signed_junction_storage_J": 0.0,
+        "structural_boundary_J": -23055.00249231487,
+        "structural_junction_J": -246.38649734091445,
+        "thermal_internal_J": -0.0027617677650087287
+      },
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean",
+      "growth_percent": 0.9122359259175816,
+      "hard_audits_passed": true,
+      "parent_checkpoint_sha256": "318650d5ae902d0041a53c06a7475818f24215c5865f9e48cc1d1f0249b0eaf0",
+      "result_sha256": "166cf67695c5ef5cac1932db39039c3ff580cdc7f7632f99cc48c5195c263447",
+      "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc",
+      "source_event_count": 0.0,
+      "source_tree_clean": true,
+      "support_weighted_total_line_cell_sum_m2": 1.4350228941669699e+18,
+      "target_area_change_m2": 1.6808308957364e-16
+    },
+    "matched_random": {
+      "accepted_source_intervals": 0,
+      "checkpoint_sha256": "335ee6df4e9141e2b45f76fd0127d10f709cba34763ce19a9dd4d8a0215ee1d5",
+      "configuration": {
+        "capture_distance_m": 5e-07,
+        "collective_wall_kinetics": "atomic_event",
+        "collective_wall_nucleation": false,
+        "collective_wall_order_increment": 0.01,
+        "collective_wall_seed": 67,
+        "collective_wall_source_site_density_m2": 1000000000000.0,
+        "compatible_wall_conservation": "burgers_vector",
+        "compatible_wall_reorganization": false,
+        "dipole_wall_organization": true,
+        "dt_s": 5e-07,
+        "front_enabled": true,
+        "front_maximum_substep_s": 5e-07,
+        "interface_neutral_sink": false,
+        "interface_vector_junction_sink": false,
+        "intervals": 50,
+        "joint_wall_topology_orientation": false,
+        "lattice_absorption": "one_flux_mura",
+        "lattice_complete_physical_clock": true,
+        "lattice_maximum_fraction": 0.05,
+        "mechanical_max_subdivisions": 14,
+        "shear_rate_s": 2.0,
+        "source_mode": "matched_random",
+        "source_seed": 67,
+        "structural_absorption": "common_axis",
+        "wall_glide": true,
+        "wall_glide_maximum_edge_fraction": 0.02,
+        "wall_neutral_pair_recovery": false,
+        "wall_nye_match_coefficient_J_m": 0.00262125,
+        "wall_nye_match_length_m": 1.5e-07,
+        "wall_order_max_iterations": 50,
+        "wall_order_relaxation": true,
+        "wall_order_support_threshold": 1e-08,
+        "wall_orientation_boundary_clearance_m": 2e-07,
+        "wall_orientation_relaxation": true
+      },
+      "directional_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": -170508.61936509982,
+            "growth_pressure_Pa": 705412.3388320475,
+            "shrink_pressure_Pa": 875920.9581971474
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 147087.31568562216,
+            "growth_pressure_Pa": 858192.0088984506,
+            "shrink_pressure_Pa": 711104.6932128285
+          }
+        },
+        "net_growth_minus_shrink_Pa": -23421.303679477656
+      },
+      "directional_component_growth_minus_shrink_Pa": {
+        "boundary_excess_J": -1284890.297716503,
+        "defect_storage_J": 1466158.8994375626,
+        "helmholtz_J": -23421.303679477656,
+        "internal_J": -23421.306416237727,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -21188.384456611413,
+        "phase_local_J": -160200.13181195382,
+        "recoverable_elastic_J": -1.3769658567888044e-07,
+        "signed_junction_storage_J": 0.0,
+        "structural_boundary_J": -23055.00249231487,
+        "structural_junction_J": -246.38649734091445,
+        "thermal_internal_J": -0.0027617677650087287
+      },
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_matched_random_50",
+      "growth_percent": 0.9122359259175816,
+      "hard_audits_passed": true,
+      "parent_checkpoint_sha256": "318650d5ae902d0041a53c06a7475818f24215c5865f9e48cc1d1f0249b0eaf0",
+      "result_sha256": "d88b4ca97ef933c11e4601bfa5689a248fbd308878c86b9fe9d0337c69a9c8c2",
+      "source_commit": "2c66ff4c4fb96975be215266990e6a81e840cc04",
+      "source_event_count": 0.0,
+      "source_tree_clean": true,
+      "support_weighted_total_line_cell_sum_m2": 1.4350228941669699e+18,
+      "target_area_change_m2": 1.6808308957364e-16
+    }
+  },
+  "claim_boundary": "Same-law source-geography discriminator; it does not authorize a source-rate refit or condition-specific mechanism switch.",
+  "created_utc": "2026-10-16T15:28:53.726658+00:00",
+  "decision": {
+    "all_hard_audits_passed": true,
+    "all_non_source_configuration_matched": true,
+    "endpoint_bias_difference_Pa": 0.0,
+    "growth_difference_percentage_point": 0.0,
+    "random_source_reactivates_line_supply": false,
+    "random_source_restores_positive_growth_bias": false,
+    "same_parent_checkpoint": true
+  },
+  "schema": "v67-late-source-geography-discriminator-v1"
+}
