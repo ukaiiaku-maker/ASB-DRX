@@ -9,9 +9,7 @@ import numpy as np
 
 from .arrhenius_dislocation_sources import random_discrete_bulk_site_field
 from .complete_multigrain_energy import evaluate_complete_multigrain_energy
-from .structural_boundary import (
-    StructuralBoundaryParameters, exp_floor_event_rate_Hz,
-)
+from .structural_boundary import StructuralBoundaryParameters
 
 
 @dataclass(frozen=True)
@@ -26,6 +24,13 @@ class CollectiveWallNucleationParameters:
     ring_width_m: float = 4.5e-7
     order_increment: float = .01
     owner_support_threshold: float = .75
+    energy_path_samples: int = 21
+
+    def __post_init__(self):
+        if int(self.energy_path_samples) != self.energy_path_samples:
+            raise ValueError("energy_path_samples must be an integer")
+        if self.energy_path_samples < 2:
+            raise ValueError("at least two energy-path samples are required")
 
 
 @dataclass(frozen=True)
@@ -49,6 +54,35 @@ class CollectiveWallNucleationDecision:
     first_law_residual_J: float
     relative_first_law_residual: float
     heat_source_J_by_cell: np.ndarray
+    resolved_forward_barrier_J: float = 0.0
+    intrinsic_forward_barrier_eV: float = 0.0
+    forward_barrier_eV: float = 0.0
+    reverse_barrier_eV: float = 0.0
+    forward_event_rate_Hz: float = 0.0
+    reverse_event_rate_Hz: float = 0.0
+    detailed_balance_log_residual: float = 0.0
+    energy_path_coordinate: tuple[float, ...] = ()
+    energy_path_delta_helmholtz_J: tuple[float, ...] = ()
+
+
+@dataclass(frozen=True)
+class CollectiveWallDetailedBalance:
+    """Transition-state audit for one resolved collective reaction path.
+
+    The immutable EXP-floor form is retained.  The declared intrinsic barrier
+    sits above the highest resolved point on the forward path.  A single
+    transition-state energy then determines both directions, so the reverse
+    rate is not an independently adjustable wall-dissolution law.
+    """
+
+    resolved_forward_barrier_J: float
+    delta_helmholtz_J: float
+    transition_state_eV: float
+    forward_barrier_eV: float
+    reverse_barrier_eV: float
+    forward_rate_Hz: float
+    reverse_rate_Hz: float
+    detailed_balance_log_residual: float
 
 
 def _periodic_radius(shape, center, spacing_m):
@@ -56,6 +90,72 @@ def _periodic_radius(shape, center, spacing_m):
     dx = np.minimum((x-center[0]) % shape[0], (center[0]-x) % shape[0])
     dy = np.minimum((y-center[1]) % shape[1], (center[1]-y) % shape[1])
     return spacing_m*np.sqrt(dx*dx+dy*dy)
+
+
+def collective_wall_detailed_balance(
+        energy_path_delta_helmholtz_J, temperature_K, activation):
+    """Price a sampled path with one saddle and exact detailed balance."""
+    path = np.asarray(energy_path_delta_helmholtz_J, dtype=float)
+    temperature = float(temperature_K)
+    if (path.ndim != 1 or path.size < 2 or np.any(~np.isfinite(path))
+            or not math.isfinite(temperature) or temperature <= 0.0):
+        raise ValueError("a finite energy path and positive temperature are required")
+    scale = max(float(np.max(np.abs(path))), 1e-300)
+    if abs(float(path[0])) > 4096.0*np.finfo(float).eps*scale:
+        raise ValueError("the energy path must start at zero")
+    eV_J = 1.602176634e-19
+    kB_J_K = 1.380649e-23
+    resolved = max(float(np.max(path)), 0.0)
+    endpoint_eV = float(path[-1])/eV_J
+    intrinsic = float(activation.activation_enthalpy_eV)
+    floor = float(activation.barrier_floor_eV)
+    # The same transition state must remain at least one floor above either
+    # endpoint.  This preserves EXP-floor kinetics without clipping the two
+    # directions independently and thereby breaking microscopic reversibility.
+    saddle_eV = max(intrinsic+resolved/eV_J, floor, endpoint_eV+floor)
+    forward_barrier_eV = saddle_eV
+    reverse_barrier_eV = saddle_eV-endpoint_eV
+    prefactor = float(activation.attempt_frequency_Hz)
+    thermal_eV = kB_J_K*temperature/eV_J
+    forward_rate = prefactor*math.exp(-forward_barrier_eV/thermal_eV)
+    reverse_rate = prefactor*math.exp(-reverse_barrier_eV/thermal_eV)
+    expected = -endpoint_eV/thermal_eV
+    residual = math.log(forward_rate/reverse_rate)-expected
+    return CollectiveWallDetailedBalance(
+        resolved, float(path[-1]), saddle_eV, forward_barrier_eV,
+        reverse_barrier_eV, forward_rate, reverse_rate, residual)
+
+
+def _collective_wall_candidate(state, owner_index, ring, order_increment,
+                               coordinate=1.0):
+    """Return one point on the conservative mobile-to-wall event path."""
+    lam = float(coordinate)
+    if not math.isfinite(lam) or not 0.0 <= lam <= 1.0:
+        raise ValueError("reaction coordinate must lie in [0, 1]")
+    owner = state.owners[owner_index]
+    excess_plus = np.maximum(
+        np.asarray(owner.mobile_plus_m2)-np.asarray(owner.mobile_minus_m2), 0.0)
+    excess_minus = np.maximum(
+        np.asarray(owner.mobile_minus_m2)-np.asarray(owner.mobile_plus_m2), 0.0)
+    transfer_plus = lam*np.asarray(ring)[..., None]*excess_plus
+    transfer_minus = lam*np.asarray(ring)[..., None]*excess_minus
+    order = np.asarray(owner.wall_order)+(
+        lam*float(order_increment)*np.asarray(ring)
+        *(1.0-np.asarray(owner.wall_order)))
+    candidate_owner = replace(
+        owner,
+        mobile_plus_m2=np.asarray(owner.mobile_plus_m2)-transfer_plus,
+        mobile_minus_m2=np.asarray(owner.mobile_minus_m2)-transfer_minus,
+        wall_plus_m2=np.asarray(owner.wall_plus_m2)+transfer_plus,
+        wall_minus_m2=np.asarray(owner.wall_minus_m2)+transfer_minus,
+        wall_order=order)
+    owners = list(state.owners)
+    owners[owner_index] = candidate_owner
+    candidate = replace(state, owners=tuple(owners))
+    candidate.validate()
+    transferred = float(np.sum(
+        transfer_plus+transfer_minus, dtype=np.longdouble))
+    return candidate, transferred
 
 
 def evaluate_collective_wall_nucleation(
@@ -87,12 +187,6 @@ def evaluate_collective_wall_nucleation(
     for owner_index, (grain_id, support, owner) in enumerate(zip(
             state.grain_ids, state.supports, state.owners)):
         domain = np.asarray(support) > parameters.owner_support_threshold
-        excess_plus = np.maximum(
-            np.asarray(owner.mobile_plus_m2)
-            -np.asarray(owner.mobile_minus_m2), 0.0)
-        excess_minus = np.maximum(
-            np.asarray(owner.mobile_minus_m2)
-            -np.asarray(owner.mobile_plus_m2), 0.0)
         for center_array in centers:
             center = tuple(map(int, center_array))
             radial = _periodic_radius(domain.shape, center, spacing)
@@ -102,53 +196,59 @@ def evaluate_collective_wall_nucleation(
                         *domain)
                 if float(np.sum(ring)) < 8.0:
                     continue
-                transfer_plus = ring[..., None]*excess_plus
-                transfer_minus = ring[..., None]*excess_minus
-                transferred = float(np.sum(
-                    transfer_plus+transfer_minus, dtype=np.longdouble))
+                candidate, transferred = _collective_wall_candidate(
+                    state, owner_index, ring, parameters.order_increment)
                 if transferred <= 0.0:
                     continue
-                order = np.asarray(owner.wall_order).copy()
-                order += (parameters.order_increment*ring*(1.0-order))
-                candidate_owner = replace(
-                    owner,
-                    mobile_plus_m2=np.asarray(owner.mobile_plus_m2)-transfer_plus,
-                    mobile_minus_m2=np.asarray(owner.mobile_minus_m2)-transfer_minus,
-                    wall_plus_m2=np.asarray(owner.wall_plus_m2)+transfer_plus,
-                    wall_minus_m2=np.asarray(owner.wall_minus_m2)+transfer_minus,
-                    wall_order=order)
-                owners = list(state.owners)
-                owners[owner_index] = candidate_owner
-                candidate = replace(state, owners=tuple(owners))
-                candidate.validate()
                 energy = evaluate_complete_multigrain_energy(candidate, **common)
                 delta = energy.helmholtz_J-before.helmholtz_J
                 candidate_count += 1
                 if delta <= 0.0:
                     downhill_count += 1
                     if best is None or delta < best[0]:
-                        best = (delta, int(grain_id), center, float(radius),
-                                ring, transferred, candidate)
+                        best = (delta, int(grain_id), owner_index, center,
+                                float(radius), ring, transferred, candidate)
     if best is None:
         zero = np.zeros(state.supports.shape[1:])
         return CollectiveWallNucleationDecision(
             False, "INACTIVE_NO_DOWNHILL_CLOSED_WALL_NUCLEUS",
             state, state, None, None, 0.0, candidate_count, 0, 0.0, draw,
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zero)
-    delta, grain_id, center, radius, ring, transferred, candidate = best
+    (delta, grain_id, owner_index, center, radius, ring, transferred,
+     candidate) = best
     owner = candidate.owners[candidate.grain_ids.index(grain_id)]
     temperature = float(np.sum(np.asarray(owner.temperature_K)*ring)
                         /np.sum(ring))
-    rate = float(exp_floor_event_rate_Hz(
-        0.0, temperature, parameters.activation))
-    probability = -math.expm1(-rate*dt)
+    coordinates = np.linspace(0.0, 1.0, parameters.energy_path_samples)
+    path = []
+    for coordinate in coordinates:
+        point, _ = _collective_wall_candidate(
+            state, owner_index, ring, parameters.order_increment, coordinate)
+        point_energy = evaluate_complete_multigrain_energy(point, **common)
+        path.append(point_energy.helmholtz_J-before.helmholtz_J)
+    detailed_balance = collective_wall_detailed_balance(
+        path, temperature, parameters.activation)
+    probability = -math.expm1(-detailed_balance.forward_rate_Hz*dt)
+    audit_fields = dict(
+        resolved_forward_barrier_J=(
+            detailed_balance.resolved_forward_barrier_J),
+        intrinsic_forward_barrier_eV=(
+            parameters.activation.activation_enthalpy_eV),
+        forward_barrier_eV=detailed_balance.forward_barrier_eV,
+        reverse_barrier_eV=detailed_balance.reverse_barrier_eV,
+        forward_event_rate_Hz=detailed_balance.forward_rate_Hz,
+        reverse_event_rate_Hz=detailed_balance.reverse_rate_Hz,
+        detailed_balance_log_residual=(
+            detailed_balance.detailed_balance_log_residual),
+        energy_path_coordinate=tuple(map(float, coordinates)),
+        energy_path_delta_helmholtz_J=tuple(map(float, path)))
     if draw >= probability:
         zero = np.zeros(state.supports.shape[1:])
         return CollectiveWallNucleationDecision(
             False, "INACTIVE_ACTIVATED_CLOSED_WALL_NOT_SAMPLED",
             candidate, state, grain_id, center, radius, candidate_count,
             downhill_count, probability, draw, transferred, 0.0, 0.0,
-            delta, 0.0, 0.0, 0.0, zero)
+            delta, 0.0, 0.0, 0.0, zero, **audit_fields)
     heat = max(-delta, 0.0)
     heat_cells = np.zeros(state.supports.shape[1:])
     heat_cells = heat*ring/float(np.sum(ring, dtype=np.longdouble))
@@ -192,4 +292,4 @@ def evaluate_collective_wall_nucleation(
         candidate_count, downhill_count, probability, draw, transferred,
         signed_residual, line_residual, delta, heat if accepted else 0.0,
         residual if accepted else 0.0, relative if accepted else 0.0,
-        heat_cells if accepted else np.zeros_like(heat_cells))
+        heat_cells if accepted else np.zeros_like(heat_cells), **audit_fields)

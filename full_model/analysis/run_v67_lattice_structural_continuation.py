@@ -46,6 +46,9 @@ from full_model.production.conservative_wall_glide import (
 from full_model.production.conservative_dipole_wall_organization import (
     ConservativeDipoleWallParameters,
 )
+from full_model.production.collective_wall_nucleation import (
+    CollectiveWallNucleationParameters,
+)
 from full_model.production.arrhenius_dislocation_sources import (
     ArrheniusSourceParameters,
 )
@@ -98,6 +101,15 @@ def main():
         help=("bounded checkerboard fraction used by conservative wall glide; "
               "changes numerical cadence, not its Arrhenius clock"))
     parser.add_argument("--dipole-wall-organization", action="store_true")
+    parser.add_argument(
+        "--collective-wall-nucleation", action="store_true",
+        help=("enable the separately labeled finite-amplitude closed-wall "
+              "ablation with a complete-energy reaction-path audit"))
+    parser.add_argument("--collective-wall-order-increment", type=float,
+                        default=.01)
+    parser.add_argument("--collective-wall-source-site-density", type=float,
+                        default=1.0e12)
+    parser.add_argument("--collective-wall-seed", type=int, default=67)
     parser.add_argument(
         "--wall-nye-match-length", type=float,
         help="physical wall/orientation match length in metres")
@@ -199,7 +211,17 @@ def main():
             else "disabled"),
         conservative_dipole_wall_parameters=(
             ConservativeDipoleWallParameters()
-            if args.dipole_wall_organization else None))
+            if args.dipole_wall_organization else None),
+        collective_wall_nucleation_mode=(
+            "activated_closed_wall" if args.collective_wall_nucleation
+            else "disabled"),
+        collective_wall_nucleation_parameters=(
+            CollectiveWallNucleationParameters(
+                source_site_density_m2=(
+                    args.collective_wall_source_site_density),
+                order_increment=args.collective_wall_order_increment)
+            if args.collective_wall_nucleation else None),
+        collective_wall_nucleation_seed=args.collective_wall_seed)
     dt = (float(args.dt) if args.dt is not None
           else float(configuration["dt_s"]))
     if not np.isfinite(dt) or dt <= 0.0:
@@ -240,6 +262,13 @@ def main():
         wall_glide_maximum_edge_fraction=(
             args.wall_glide_maximum_edge_fraction),
         conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
+        collective_wall_nucleation_mode=(
+            context.collective_wall_nucleation_mode),
+        collective_wall_order_increment=(
+            args.collective_wall_order_increment),
+        collective_wall_source_site_density_m2=(
+            args.collective_wall_source_site_density),
+        collective_wall_seed=args.collective_wall_seed,
         source_mode=args.source_mode, source_seed=args.source_seed)
     progress_configuration["interface_neutral_sink"] = bool(
         args.interface_neutral_sink)
@@ -353,6 +382,22 @@ def main():
             "source_event_count": interval.audit["source_event_count"],
             "source_first_law_relative_residual": interval.audit[
                 "source_relative_first_law_residual"],
+            "collective_wall_classification": interval.audit[
+                "collective_wall_nucleation_classification"],
+            "collective_wall_downhill_candidates": interval.audit[
+                "collective_wall_nucleation_downhill_candidates"],
+            "collective_wall_event_probability": interval.audit[
+                "collective_wall_nucleation_event_probability"],
+            "collective_wall_delta_helmholtz_J": interval.audit[
+                "collective_wall_nucleation_delta_helmholtz_J"],
+            "collective_wall_resolved_forward_barrier_J": interval.audit[
+                "collective_wall_nucleation_resolved_forward_barrier_J"],
+            "collective_wall_forward_barrier_eV": interval.audit[
+                "collective_wall_nucleation_forward_barrier_eV"],
+            "collective_wall_reverse_barrier_eV": interval.audit[
+                "collective_wall_nucleation_reverse_barrier_eV"],
+            "collective_wall_detailed_balance_log_residual": interval.audit[
+                "collective_wall_nucleation_detailed_balance_log_residual"],
             "owner_orientation_span_deg": {
                 str(grain): float(np.degrees(np.ptp(
                     owner.orientation_rad[np.asarray(support) > .75])))
@@ -419,6 +464,13 @@ def main():
             "wall_glide_maximum_edge_fraction": (
                 args.wall_glide_maximum_edge_fraction),
             "dipole_wall_organization": bool(args.dipole_wall_organization),
+            "collective_wall_nucleation": bool(
+                args.collective_wall_nucleation),
+            "collective_wall_order_increment": (
+                args.collective_wall_order_increment),
+            "collective_wall_source_site_density_m2": (
+                args.collective_wall_source_site_density),
+            "collective_wall_seed": args.collective_wall_seed,
             "source_mode": args.source_mode,
             "source_seed": args.source_seed,
             "interface_neutral_sink": bool(args.interface_neutral_sink),

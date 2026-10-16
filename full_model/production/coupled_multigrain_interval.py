@@ -1211,6 +1211,24 @@ def advance_complete_multigrain_interval(
             else collective_wall.downhill_candidate_count),
         "collective_wall_nucleation_event_probability": (
             0.0 if collective_wall is None else collective_wall.event_probability),
+        "collective_wall_nucleation_resolved_forward_barrier_J": (
+            0.0 if collective_wall is None
+            else collective_wall.resolved_forward_barrier_J),
+        "collective_wall_nucleation_forward_barrier_eV": (
+            0.0 if collective_wall is None
+            else collective_wall.forward_barrier_eV),
+        "collective_wall_nucleation_reverse_barrier_eV": (
+            0.0 if collective_wall is None
+            else collective_wall.reverse_barrier_eV),
+        "collective_wall_nucleation_forward_event_rate_Hz": (
+            0.0 if collective_wall is None
+            else collective_wall.forward_event_rate_Hz),
+        "collective_wall_nucleation_reverse_event_rate_Hz": (
+            0.0 if collective_wall is None
+            else collective_wall.reverse_event_rate_Hz),
+        "collective_wall_nucleation_detailed_balance_log_residual": (
+            0.0 if collective_wall is None
+            else collective_wall.detailed_balance_log_residual),
         "collective_wall_nucleation_selected_radius_m": (
             0.0 if collective_wall is None else collective_wall.selected_radius_m),
         "collective_wall_nucleation_delta_helmholtz_J": (
