@@ -1,0 +1,553 @@
+{
+  "active_band_intervals": 19,
+  "artifacts": {
+    "checkpoint_latest.npz": "ffb42161626b4e47b46b5167c184a96c971ce36b8f9488df57f9c69f749dbe89"
+  },
+  "claim_boundary": "Prepared high-rate localization endpoint with existing grain owners; this tests spatial coexistence, not spontaneous nucleation or grid convergence of the inherited band.",
+  "configuration": {
+    "collective_wall_kinetics": "atomic_event",
+    "collective_wall_nucleation_mode": "disabled",
+    "collective_wall_order_increment": 0.01,
+    "collective_wall_seed": 67,
+    "collective_wall_source_site_density_m2": 1000000000000.0,
+    "compatible_wall_conservation": "burgers_vector",
+    "compatible_wall_reorganization_mode": "disabled",
+    "conservative_dipole_wall_mode": "neutral_pair_expansion",
+    "conservative_wall_glide_mode": "chemical_edge_glide",
+    "dt_s": 2e-09,
+    "front_enabled": true,
+    "front_maximum_substep_s": 4e-07,
+    "front_transmission_fraction": 0.25,
+    "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+    "initial_state": "fresh V66 three-owner preparation at zero load",
+    "interface_neutral_sink": false,
+    "interface_neutral_sink_enabled": false,
+    "interface_sink_mode": "disabled",
+    "interface_vector_junction_sink": false,
+    "interface_width_m": 6e-07,
+    "joint_wall_topology_orientation_mode": "disabled",
+    "lattice_absorption_mode": "one_flux_mura",
+    "lattice_capture_distance_m": 5e-07,
+    "lattice_complete_physical_clock": true,
+    "lattice_maximum_fraction": 0.05,
+    "length_m": 4.8e-06,
+    "maximum_mechanical_subdivisions": 14,
+    "mechanical_max_subdivisions": 14,
+    "n": 32,
+    "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_150/checkpoint_latest.npz",
+    "plastic_history_mode": "material_continuity",
+    "production_rx_enabled": true,
+    "rx_enabled": true,
+    "schema": "v67-drx-asb-overlap-v1",
+    "shear_rate_s": 80000.0,
+    "sink_activation_enthalpy_eV": 1.4,
+    "sink_mode": "disabled",
+    "sink_seed": 67,
+    "sink_stress_assisted": false,
+    "source_grain_size_m": 2.4e-06,
+    "source_mode": "gb_tj_only",
+    "source_seed": 67,
+    "structural_absorption_mode": "common_axis",
+    "structural_junction_mode": "arrhenius_cycle",
+    "target_steps": 50,
+    "temperature_K": 1000.0,
+    "temperature_seed_mean_zero": true,
+    "temperature_seed_normal": "x",
+    "temperature_seed_peak_K": 0.0,
+    "temperature_seed_width_m": 6e-07,
+    "thermal_bath_rate_s": 5000000000.0,
+    "thermal_bath_temperature_K": 1000.0,
+    "thermal_control": "strong_bath",
+    "thermal_diffusivity_m2_s": 3.947368421052631e-08,
+    "wall_glide_maximum_edge_fraction": 0.02,
+    "wall_neutral_pair_recovery_mode": "disabled",
+    "wall_nye_match_coefficient_J_m": 0.00262125,
+    "wall_nye_match_length_m": 1.5e-07,
+    "wall_order_max_iterations": 50,
+    "wall_order_relaxation_mode": "implicit_arrhenius",
+    "wall_order_support_threshold": 1e-08,
+    "wall_orientation_boundary_clearance_m": 2e-07,
+    "wall_orientation_relaxation_mode": "ordered_nye"
+  },
+  "created_utc": "2026-10-16T21:04:37.794615+00:00",
+  "decision": {
+    "all_hard_absorption_balances_passed": true,
+    "any_owner_net_growth": true,
+    "band_persisted_every_interval": false,
+    "final_connected_band": false,
+    "final_relative_threshold_band": false,
+    "first_law_hard_balance_passed": true,
+    "front_transmission_fraction": 0.25,
+    "grain_ids_unchanged": true,
+    "growing_owner_intersects_active_band": true,
+    "initial_connected_band": false,
+    "initial_relative_threshold_band": false,
+    "interface_neutral_sink_enabled": false,
+    "lattice_absorption_occurs_inside_active_band": true,
+    "mura_hard_balance_passed": true,
+    "production_rx_channels_enabled": true,
+    "rx_pathway_enabled": true
+  },
+  "final_power_localization": {
+    "above_threshold_fraction": 0.0107421875,
+    "band_like": false,
+    "component_span_fraction": [
+      0.125,
+      0.0625
+    ],
+    "largest_component_cells": 4,
+    "largest_component_fraction": 0.00390625,
+    "maximum_to_mean": 2.87628457158814,
+    "periodic_winding": [
+      false,
+      false
+    ],
+    "positive_max_W_m3": 296401273024619.4,
+    "positive_mean_W_m3": 103050051428312.42,
+    "signed_min_W_m3": 570048092.6853851,
+    "threshold_multiple": 2.0
+  },
+  "flow_regime": {
+    "final_physical_band": false,
+    "final_plastic_to_imposed_power_fraction": 0.5517020836517633,
+    "initial_physical_band": false,
+    "initial_plastic_to_imposed_power_fraction": 0.01825571802736003,
+    "minimum_plastic_power_fraction": 0.01
+  },
+  "hard_balance_maxima": {
+    "first_law_relative_residuals": {
+      "conservative_dipole_wall_relative_first_law_residual": 0.0008163327080768277,
+      "conservative_wall_glide_relative_first_law_residual": 1.1747506151287908e-07,
+      "lattice_absorption_relative_first_law_residual": 3.0086840425188834e-11,
+      "mechanical_relative_first_law_residual": 0.0005171621485723897,
+      "source_relative_first_law_residual": 4.462370361008497e-06,
+      "structural_absorption_post_relative_first_law_residual": 1.5691949265654436e-07,
+      "structural_absorption_relative_first_law_residual": 4.08815996729472e-05,
+      "structural_junction_post_relative_first_law_residual": 0.0,
+      "structural_junction_relative_first_law_residual": 0.0,
+      "wall_order_relaxation_relative_first_law_residual": 3.0210548004787784e-11,
+      "wall_orientation_relaxation_relative_first_law_residual": 8.805917576611483e-05
+    },
+    "lattice_mura_relative_residual": 8.417846308286363e-16
+  },
+  "initial_final_band_jaccard": 0.0,
+  "initial_power_localization": {
+    "above_threshold_fraction": 0.1396484375,
+    "band_like": false,
+    "component_span_fraction": [
+      0.46875,
+      0.3125
+    ],
+    "largest_component_cells": 71,
+    "largest_component_fraction": 0.0693359375,
+    "maximum_to_mean": 14.705763803841139,
+    "periodic_winding": [
+      false,
+      false
+    ],
+    "positive_max_W_m3": 40534108866358.36,
+    "positive_mean_W_m3": 2756341622716.045,
+    "signed_min_W_m3": 12751476.228938516,
+    "threshold_multiple": 2.0
+  },
+  "lattice_absorption_heat_overlap": {
+    "inside_active_band_J": 2.213522584164571e-20,
+    "inside_active_band_fraction": 2.487465515565018e-06,
+    "inside_band_enrichment": 8.243251417276953e-05,
+    "outside_active_band_J": 8.898684481262782e-15
+  },
+  "ledger": {
+    "accepted_events": 550,
+    "applied_shear_strain": 0.03464000000000009,
+    "collective_wall_nucleation_inactive_intervals": 0,
+    "collective_wall_nucleation_intervals": 0,
+    "collective_wall_nucleation_rejected_intervals": 0,
+    "compatible_wall_reorganization_inactive_intervals": 0,
+    "compatible_wall_reorganization_intervals": 0,
+    "compatible_wall_reorganization_rejected_intervals": 0,
+    "conservative_dipole_wall_inactive_intervals": 5,
+    "conservative_dipole_wall_intervals": 228,
+    "conservative_dipole_wall_pair_cell_sum_m2": 2.7036574066310064e+16,
+    "conservative_dipole_wall_rejected_intervals": 0,
+    "conservative_wall_glide_inactive_intervals": 0,
+    "conservative_wall_glide_intervals": 233,
+    "conservative_wall_glide_line_cell_sum_m2": 1.0168022513286379e+17,
+    "conservative_wall_glide_rejected_intervals": 0,
+    "cumulative_collective_wall_nucleation_heat_J": 0.0,
+    "cumulative_compatible_wall_reorganization_heat_J": 0.0,
+    "cumulative_conservative_dipole_wall_heat_J": 8.605772046252611e-16,
+    "cumulative_conservative_wall_glide_heat_J": 1.3823645079850235e-15,
+    "cumulative_front_first_law_residual_J": 2.3585758916108416e-28,
+    "cumulative_interface_sink_first_law_residual_J": 0.0,
+    "cumulative_interface_sink_generated_heat_J": 0.0,
+    "cumulative_joint_wall_topology_orientation_heat_J": 0.0,
+    "cumulative_lattice_absorption_heat_J": 1.1360661212779612e-14,
+    "cumulative_mechanical_external_work_J": 4.2882537136411157e-13,
+    "cumulative_mechanical_first_law_residual_J": 4.317533031115718e-17,
+    "cumulative_mechanical_internal_energy_change_J": 3.4707936282134524e-13,
+    "cumulative_sink_first_law_residual_J": 0.0,
+    "cumulative_sink_generated_heat_J": 0.0,
+    "cumulative_source_first_law_residual_J": 6.165654793673285e-23,
+    "cumulative_source_generated_heat_J": 4.579962902399025e-18,
+    "cumulative_source_resolved_work_J": 4.6142476191980125e-18,
+    "cumulative_structural_absorption_heat_J": 1.3286457407738347e-15,
+    "cumulative_structural_junction_heat_J": 1.7620705760261098e-18,
+    "cumulative_wall_neutral_pair_recovery_heat_J": 0.0,
+    "cumulative_wall_order_relaxation_heat_J": 2.2614755554830525e-15,
+    "cumulative_wall_orientation_relaxation_heat_J": 2.3856078943642153e-20,
+    "generated_heat_J": 1.311401382819288e-16,
+    "interface_sink_annihilated_pair_cell_sum_m2": 0.0,
+    "interface_sink_inactive_intervals": 0,
+    "interface_sink_intervals": 0,
+    "interface_sink_rejected_intervals": 0,
+    "intervals": 550,
+    "joint_wall_topology_orientation_inactive_intervals": 0,
+    "joint_wall_topology_orientation_intervals": 0,
+    "joint_wall_topology_orientation_rejected_intervals": 0,
+    "joint_wall_topology_orientation_transferred_line_cell_sum_m2": 0.0,
+    "lattice_absorbed_line_length_m": 2.4795042422333005e-06,
+    "lattice_absorption_inactive_intervals": 0,
+    "lattice_absorption_intervals": 233,
+    "lattice_absorption_rejected_intervals": 0,
+    "maximum_collective_wall_nucleation_first_law_residual": 0.0,
+    "maximum_compatible_wall_reorganization_first_law_residual": 0.0,
+    "maximum_conservative_dipole_wall_first_law_residual": 0.002569226377390808,
+    "maximum_conservative_dipole_wall_inventory_residual_m2": 17.875,
+    "maximum_conservative_wall_glide_first_law_residual": 2.3339090885358904e-06,
+    "maximum_conservative_wall_glide_inventory_residual_m2": 11.6171875,
+    "maximum_interface_sink_line_balance_residual_m2": 0.0,
+    "maximum_interface_sink_relative_first_law_residual": 0.0,
+    "maximum_joint_wall_topology_orientation_balance_residual_m2": 0.0,
+    "maximum_joint_wall_topology_orientation_first_law_residual": 0.0,
+    "maximum_lattice_absorption_first_law_residual": 2.805936452022042e-07,
+    "maximum_mechanical_relative_first_law_residual": 0.04077451685042164,
+    "maximum_relative_energy_closure": 3.4904990026315617e-07,
+    "maximum_sink_line_balance_residual_m2": 0.0,
+    "maximum_sink_relative_first_law_residual": 0.0,
+    "maximum_source_line_balance_residual_m2": 0.9530296325683594,
+    "maximum_source_relative_first_law_residual": 0.02457381750477173,
+    "maximum_structural_absorption_first_law_residual": 6.180055273267549e-05,
+    "maximum_structural_junction_first_law_residual": 0.012399876771410967,
+    "maximum_wall_neutral_pair_recovery_balance_residual_m2": 0.0,
+    "maximum_wall_neutral_pair_recovery_first_law_residual": 0.0,
+    "maximum_wall_order_relaxation_first_law_residual": 1.894044651341945e-08,
+    "maximum_wall_orientation_relaxation_first_law_residual": 0.0005404107121412273,
+    "physical_time_s": 0.00013280000000000073,
+    "rejected_events": 0,
+    "sink_annihilated_pair_cell_sum_m2": 0.0,
+    "sink_inactive_intervals": 0,
+    "sink_intervals": 0,
+    "sink_rejected_intervals": 0,
+    "source_created_line_cell_sum_m2": 6098194722007.595,
+    "source_event_count": 17.562800799372024,
+    "source_inactive_intervals": 53,
+    "source_intervals": 180,
+    "source_rejected_intervals": 0,
+    "stationary_intervals": 0,
+    "structural_absorbed_line_length_m": 8.849327188151248e-07,
+    "structural_absorption_inactive_intervals": 1,
+    "structural_absorption_intervals": 465,
+    "structural_absorption_rejected_intervals": 0,
+    "structural_junction_inactive_intervals": 1,
+    "structural_junction_intervals": 224,
+    "structural_junction_reacted_absolute_content": 75.86547020690796,
+    "structural_junction_rejected_intervals": 0,
+    "transformed_volume_m3": 5.256161739143882e-23,
+    "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2": 0.0,
+    "wall_neutral_pair_recovery_inactive_intervals": 0,
+    "wall_neutral_pair_recovery_intervals": 0,
+    "wall_neutral_pair_recovery_rejected_intervals": 0,
+    "wall_order_relaxation_inactive_intervals": 0,
+    "wall_order_relaxation_intervals": 233,
+    "wall_order_relaxation_rejected_intervals": 0,
+    "wall_orientation_relaxation_inactive_intervals": 0,
+    "wall_orientation_relaxation_intervals": 233,
+    "wall_orientation_relaxation_rejected_intervals": 0
+  },
+  "mean_active_largest_band_area_fraction": 0.03017578125,
+  "owner_results": {
+    "10": {
+      "area_after_m2": 8.077964065662525e-12,
+      "area_before_m2": 8.077977002864166e-12,
+      "growth_inside_band_enrichment": 0.09285850989539408,
+      "mean_orientation_change_rad": -5.2112378590840744e-23,
+      "net_area_change_m2": -1.2937201641240378e-17,
+      "positive_front_growth_inside_active_band_m2": 4.63275783547934e-21,
+      "positive_front_growth_outside_active_band_m2": 1.6486965571335447e-18,
+      "positive_growth_inside_band_fraction": 0.0028020780818043723,
+      "relative_area_change": -1.6015397959975997e-06
+    },
+    "20": {
+      "area_after_m2": 7.560265928085865e-12,
+      "area_before_m2": 7.560215708997075e-12,
+      "growth_inside_band_enrichment": 1.51600975034894,
+      "mean_orientation_change_rad": 0.00010882880110130166,
+      "net_area_change_m2": 5.021908879034848e-17,
+      "positive_front_growth_inside_active_band_m2": 2.297361536421367e-18,
+      "positive_front_growth_outside_active_band_m2": 4.7921727255366537e-17,
+      "positive_growth_inside_band_fraction": 0.04574677859939672,
+      "relative_area_change": 6.642547081108412e-06
+    },
+    "30": {
+      "area_after_m2": 7.401770006251606e-12,
+      "area_before_m2": 7.401807288138756e-12,
+      "growth_inside_band_enrichment": 0.0,
+      "mean_orientation_change_rad": 0.0007512500548856327,
+      "net_area_change_m2": -3.728188715072369e-17,
+      "positive_front_growth_inside_active_band_m2": 0.0,
+      "positive_front_growth_outside_active_band_m2": 0.0,
+      "positive_growth_inside_band_fraction": 0.0,
+      "relative_area_change": -5.036862714659857e-06
+    }
+  },
+  "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_150/checkpoint_latest.npz",
+  "parent_checkpoint_sha256": "c54680b4560c0c0b8882d27e419e3c475f541914ae0f66f229261cdd089c3474",
+  "parent_provenance": {
+    "parent_provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "campaign": "V67",
+          "scientific_scope": "fresh zero-load polycrystal anchor",
+          "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+          "source_dirty": false
+        },
+        "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+      },
+      "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+    },
+    "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+  },
+  "sampled_interval_records": [
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1396484375,
+        "band_like": false,
+        "component_span_fraction": [
+          0.46875,
+          0.3125
+        ],
+        "largest_component_cells": 71,
+        "largest_component_fraction": 0.0693359375,
+        "maximum_to_mean": 14.705763803841139,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 40534108866358.36,
+        "positive_mean_W_m3": 2756341622716.045,
+        "signed_min_W_m3": 12751476.228938516,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.01825571802736003,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 1,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.02680000000000006,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 5.935980371420097e-06,
+        "20": 0.0,
+        "30": 5.9439559376400764e-06
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.150390625,
+        "band_like": true,
+        "component_span_fraction": [
+          0.53125,
+          0.3125
+        ],
+        "largest_component_cells": 81,
+        "largest_component_fraction": 0.0791015625,
+        "maximum_to_mean": 10.635830840284095,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 123864468137114.42,
+        "positive_mean_W_m3": 11645960714979.354,
+        "signed_min_W_m3": 31395531.997506503,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.07242801074989755,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 10,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.028240000000000064,
+      "physical_band_before": true,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 5.936481177474876e-06,
+        "20": 0.0,
+        "30": 5.955161030653783e-06
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1533203125,
+        "band_like": true,
+        "component_span_fraction": [
+          0.53125,
+          0.3125
+        ],
+        "largest_component_cells": 83,
+        "largest_component_fraction": 0.0810546875,
+        "maximum_to_mean": 5.813538303596729,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 218590169508193.16,
+        "positive_mean_W_m3": 37600194252260.35,
+        "signed_min_W_m3": 79360536.70311888,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.22063293359751654,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 20,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.029840000000000068,
+      "physical_band_before": true,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 5.937101275847035e-06,
+        "20": 0.0,
+        "30": 6.017795825607657e-06
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1162109375,
+        "band_like": false,
+        "component_span_fraction": [
+          0.40625,
+          0.28125
+        ],
+        "largest_component_cells": 70,
+        "largest_component_fraction": 0.068359375,
+        "maximum_to_mean": 3.2340218727930288,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 234725252775849.1,
+        "positive_mean_W_m3": 72579983070161.22,
+        "signed_min_W_m3": 168065940.10795766,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.40848598224734367,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 30,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.03144000000000007,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 5.9378015743855196e-06,
+        "20": 0.0,
+        "30": 6.484393699272563e-06
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.03515625,
+        "band_like": false,
+        "component_span_fraction": [
+          0.21875,
+          0.25
+        ],
+        "largest_component_cells": 24,
+        "largest_component_fraction": 0.0234375,
+        "maximum_to_mean": 2.48684870159114,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 238082563737440.88,
+        "positive_mean_W_m3": 95736649996081.56,
+        "signed_min_W_m3": 363039408.5951117,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.5240474169722028,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 40,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.033040000000000076,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 5.938565888215203e-06,
+        "20": 0.0,
+        "30": 8.501648685269447e-06
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.0107421875,
+        "band_like": false,
+        "component_span_fraction": [
+          0.125,
+          0.0625
+        ],
+        "largest_component_cells": 4,
+        "largest_component_fraction": 0.00390625,
+        "maximum_to_mean": 2.6799655682584613,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 276051925553963.47,
+        "positive_mean_W_m3": 103005773217210.4,
+        "signed_min_W_m3": 544239913.4852271,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.5524832276023842,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 50,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.03464000000000008,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 5.939065512881864e-06,
+        "20": 0.0,
+        "30": 1.1073910742149546e-05
+      }
+    }
+  ],
+  "schema": "v67-drx-asb-overlap-v1",
+  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
+  "source_tree_clean": true
+}
