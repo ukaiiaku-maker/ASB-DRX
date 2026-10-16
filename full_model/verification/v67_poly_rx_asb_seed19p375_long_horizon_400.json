@@ -109,6 +109,8 @@
           }
         },
         "parent_checkpoint_sha256": "55e18933cdb8cb0a2142ec3bce3a95fcce7f9856ebd57d5ac0d1b8be9c1fa3f4",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
         "source_tree_clean": true,
         "step": 183,
@@ -220,6 +222,8 @@
           }
         },
         "parent_checkpoint_sha256": "6d9fa955fb7a6c1573cfa6055638c45c6374d2c9d6346494260aad4f2c6673cc",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
         "source_tree_clean": true,
         "step": 233,
@@ -331,6 +335,8 @@
           }
         },
         "parent_checkpoint_sha256": "060c3dd6ee58635d0124b4b56b49a0c9b91cba3496dc6a67e2539ad3b5f9a3f4",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
         "source_tree_clean": true,
         "step": 333,
@@ -442,6 +448,8 @@
           }
         },
         "parent_checkpoint_sha256": "2b24407d5b6ef64d92a54be871993dcea1228659dcb11f39a15ffd09f28467f1",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
         "source_tree_clean": true,
         "step": 433,
@@ -555,6 +563,8 @@
           }
         },
         "parent_checkpoint_sha256": "d9b7079f4080f22d20fb35485620937ded7c7d524c4ed848eed99a7e9475b29a",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
         "source_tree_clean": true,
         "step": 183,
@@ -666,6 +676,8 @@
           }
         },
         "parent_checkpoint_sha256": "c54680b4560c0c0b8882d27e419e3c475f541914ae0f66f229261cdd089c3474",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181",
         "source_tree_clean": true,
         "step": 233,
@@ -777,6 +789,8 @@
           }
         },
         "parent_checkpoint_sha256": "ffb42161626b4e47b46b5167c184a96c971ce36b8f9488df57f9c69f749dbe89",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
         "source_tree_clean": true,
         "step": 333,
@@ -888,6 +902,8 @@
           }
         },
         "parent_checkpoint_sha256": "ff56c6815b8c7097d35e395875f4a42414f685d1dc402f1679546ebe90304ef8",
+        "response_history": [],
+        "response_summary": null,
         "source_commit": "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456",
         "source_tree_clean": true,
         "step": 433,
@@ -899,8 +915,8 @@
       }
     ]
   },
-  "claim_boundary": "The stress-drop metric uses stored atomic-chunk endpoints and is a coarse lower-bound diagnostic. Qualification additionally requires a fully banded terminal chunk, >5% adiabatic post-peak loss, >1% softening separation from the matched bath, >20 K spatial thermal contrast separation, RX overlap, exact branch continuity, and all hard ledgers. It does not establish spontaneous grain birth or material calibration.",
-  "created_utc": "2026-10-16T22:54:35.112992+00:00",
+  "claim_boundary": "The stress-drop metric uses exact per-interval response histories where retained and atomic-chunk endpoints elsewhere. Qualification requires per-interval diagnostics in both terminal controls plus a fully banded terminal chunk, >5% adiabatic post-peak loss, >1% softening separation from the matched bath, >20 K spatial thermal contrast separation, RX overlap, exact branch continuity, and all hard ledgers. It does not establish spontaneous grain birth or material calibration.",
+  "created_utc": "2026-10-16T22:58:03.794816+00:00",
   "decision": {
     "classification": "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING",
     "heat_dependent_polycrystal_asb_with_rx": false,
@@ -908,12 +924,15 @@
     "strict_heat_triggered_terminal_band": false
   },
   "observations": {
+    "adiabatic_available_history_softening_fraction": 0.0,
     "adiabatic_coarse_endpoint_softening_fraction": 0.0,
     "adiabatic_terminal_chunk_fully_banded": true,
+    "bath_available_history_softening_fraction": 0.0,
     "bath_coarse_endpoint_softening_fraction": 0.0,
     "bath_terminal_band_suppressed": false,
     "bath_terminal_chunk_fully_banded": false,
     "terminal_existing_boundary_rx_intersects_adiabatic_band": true,
+    "terminal_per_interval_response_diagnostics_available": false,
     "terminal_temperature_contrast_separation_exceeds_20K": true
   },
   "schema": "v67-poly-rx-asb-long-horizon-v1"

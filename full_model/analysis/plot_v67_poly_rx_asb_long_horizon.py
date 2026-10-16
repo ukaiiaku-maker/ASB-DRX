@@ -56,9 +56,9 @@ def render(payload: dict, output_prefix: Path) -> None:
         0.0, 1.0,
         "Classification\n" + decision["classification"] + "\n\n"
         f"Adiabatic coarse softening: "
-        f"{observation['adiabatic_coarse_endpoint_softening_fraction']:.4f}\n"
+        f"{observation.get('adiabatic_available_history_softening_fraction', observation['adiabatic_coarse_endpoint_softening_fraction']):.4f}\n"
         f"Bath coarse softening: "
-        f"{observation['bath_coarse_endpoint_softening_fraction']:.4f}\n"
+        f"{observation.get('bath_available_history_softening_fraction', observation['bath_coarse_endpoint_softening_fraction']):.4f}\n"
         f"Persistent RX band: "
         f"{decision['persistent_physical_band_with_existing_boundary_rx']}\n"
         f"Heat-dependent ASB: "

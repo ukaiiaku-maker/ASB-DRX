@@ -19,6 +19,7 @@ def _case(control, stage, *, soften=True, persistent=None):
         "active_physical_band_intervals": 100 if persistent else 0,
         "mean_shear_stress_Pa": peak,
         "temperature_range_K": 50.0 if adiabatic else 1.0,
+        "response_history": [{"mean_shear_stress_Pa": peak}],
         "decision": {
             "all_hard_absorption_balances_passed": True,
             "mura_hard_balance_passed": True,

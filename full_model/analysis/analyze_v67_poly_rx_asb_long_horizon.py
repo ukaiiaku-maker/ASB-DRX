@@ -59,6 +59,8 @@ def load_case(path: Path) -> dict:
         "flow_regime": result["flow_regime"],
         "final_power_localization": result["final_power_localization"],
         "owner_results": result["owner_results"],
+        "response_history": result.get("response_history", []),
+        "response_summary": result.get("response_summary"),
         "decision": result["decision"],
         "hard_balance_maxima": result["hard_balance_maxima"],
     }
@@ -67,6 +69,18 @@ def load_case(path: Path) -> dict:
 def _coarse_softening(cases: list[dict]) -> float:
     stress = np.abs([case["mean_shear_stress_Pa"] for case in cases])
     peak = float(np.max(stress))
+    return float(max(peak - stress[-1], 0.0) / max(peak, 1e-300))
+
+
+def _available_history_softening(cases: list[dict]) -> float:
+    stress = []
+    for case in cases:
+        history = case.get("response_history", [])
+        if history:
+            stress.extend(abs(row["mean_shear_stress_Pa"]) for row in history)
+        else:
+            stress.append(abs(case["mean_shear_stress_Pa"]))
+    peak = max(stress)
     return float(max(peak - stress[-1], 0.0) / max(peak, 1e-300))
 
 
@@ -96,8 +110,10 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         and case["decision"]["first_law_hard_balance_passed"]
         and case["decision"]["grain_ids_unchanged"]
         for case in all_cases)
-    ad_softening = _coarse_softening(adiabatic)
-    bath_softening = _coarse_softening(bath)
+    ad_coarse_softening = _coarse_softening(adiabatic)
+    bath_coarse_softening = _coarse_softening(bath)
+    ad_softening = _available_history_softening(adiabatic)
+    bath_softening = _available_history_softening(bath)
     terminal_ad = adiabatic[-1]
     terminal_bath = bath[-1]
     ad_persistent = bool(
@@ -117,10 +133,14 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         > terminal_bath["temperature_range_K"] + 20.0)
     thermal_softening = bool(
         ad_softening >= .05 and ad_softening > bath_softening + .01)
+    terminal_diagnostics = bool(
+        terminal_ad.get("response_history")
+        and terminal_bath.get("response_history"))
     persistent_rx_band = bool(
         matched and chain and controls and hard and ad_persistent and rx_overlap)
     heat_dependent_asb = bool(
-        persistent_rx_band and thermal_separation and thermal_softening)
+        persistent_rx_band and thermal_separation and thermal_softening
+        and terminal_diagnostics)
     strict_heat_triggered_band = bool(ad_persistent and bath_band_suppressed)
     if heat_dependent_asb:
         classification = "QUALIFIED_POLYCRYSTAL_DRX_WITH_HEAT_DEPENDENT_ASB"
@@ -139,8 +159,12 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "all_hard_audits_passed": hard,
         },
         "observations": {
-            "adiabatic_coarse_endpoint_softening_fraction": ad_softening,
-            "bath_coarse_endpoint_softening_fraction": bath_softening,
+            "adiabatic_coarse_endpoint_softening_fraction": ad_coarse_softening,
+            "bath_coarse_endpoint_softening_fraction": bath_coarse_softening,
+            "adiabatic_available_history_softening_fraction": ad_softening,
+            "bath_available_history_softening_fraction": bath_softening,
+            "terminal_per_interval_response_diagnostics_available": (
+                terminal_diagnostics),
             "adiabatic_terminal_chunk_fully_banded": ad_persistent,
             "bath_terminal_chunk_fully_banded": bath_persistent,
             "bath_terminal_band_suppressed": bath_band_suppressed,
@@ -156,8 +180,9 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "classification": classification,
         },
         "claim_boundary": (
-            "The stress-drop metric uses stored atomic-chunk endpoints and is a "
-            "coarse lower-bound diagnostic. Qualification additionally requires "
+            "The stress-drop metric uses exact per-interval response histories "
+            "where retained and atomic-chunk endpoints elsewhere. Qualification "
+            "requires per-interval diagnostics in both terminal controls plus "
             "a fully banded terminal chunk, >5% adiabatic post-peak loss, >1% "
             "softening separation from the matched bath, >20 K spatial thermal "
             "contrast separation, RX overlap, exact branch continuity, and all "
