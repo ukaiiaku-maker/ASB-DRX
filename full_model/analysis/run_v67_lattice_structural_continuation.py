@@ -83,6 +83,10 @@ def main():
     parser.add_argument("--shear-rate", type=float)
     parser.add_argument("--dt", type=float)
     parser.add_argument(
+        "--mechanical-max-subdivisions", type=int,
+        help=("maximum complete-energy bisection depth; changes numerical "
+              "resolution without changing the first-law tolerance"))
+    parser.add_argument(
         "--front-substep", type=float,
         help=("maximum front transaction substep in seconds; defaults to the "
               "continuation interval rather than an inherited parent cadence"))
@@ -148,6 +152,12 @@ def main():
         _load_checkpoint(args.checkpoint))
     physics_args = _args_from_configuration(configuration)
     spacing, _, _, _, _, _, context = _physics(physics_args)
+    mechanical_max_subdivisions = (
+        context.maximum_mechanical_subdivisions
+        if args.mechanical_max_subdivisions is None
+        else int(args.mechanical_max_subdivisions))
+    if mechanical_max_subdivisions < 0:
+        raise ValueError("mechanical subdivision depth must be nonnegative")
     imposed_rate = (float(args.shear_rate) if args.shear_rate is not None
                     else (float(configuration.get("shear_rate_s", 0.0))
                           if args.dynamic else 0.0))
@@ -168,6 +178,7 @@ def main():
     context = replace(
         context, wall_parameters=wall_parameters,
         shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
+        maximum_mechanical_subdivisions=mechanical_max_subdivisions,
         source_mode=args.source_mode,
         source_parameters=(
             None if args.source_mode == "disabled"
@@ -256,6 +267,7 @@ def main():
         target_steps=args.intervals, shear_rate_s=imposed_rate, dt_s=dt,
         front_maximum_substep_s=front_substep,
         front_enabled=fronts_enabled,
+        mechanical_max_subdivisions=mechanical_max_subdivisions,
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
         lattice_maximum_fraction=args.lattice_maximum_fraction,
@@ -328,6 +340,8 @@ def main():
                 "lattice_absorption_relative_first_law_residual"],
             "pre_post_structural_orientation_sync_max_rad": interval.audit[
                 "pre_post_structural_orientation_sync_max_rad"],
+            "final_structural_orientation_sync_max_rad": interval.audit[
+                "final_structural_orientation_sync_max_rad"],
             "structural_classification": interval.audit[
                 "structural_absorption_classification"],
             "structural_content_change": interval.audit[
@@ -478,6 +492,7 @@ def main():
         "configuration": {
             "intervals": args.intervals, "dt_s": dt,
             "front_maximum_substep_s": front_substep,
+            "mechanical_max_subdivisions": mechanical_max_subdivisions,
             "capture_distance_m": args.capture_distance,
             "lattice_maximum_fraction": args.lattice_maximum_fraction,
             "lattice_complete_physical_clock": not args.clipped_lattice_clock,

@@ -21,7 +21,8 @@ from .nonlocal_elasticity import elastic_energy_density, solve_periodic_eigenstr
 from .tensorial_nye import spectral_derivatives
 from .structural_interface_network import (
     JunctionDisclinationParameters, StructuralBoundaryParameters,
-    interface_lengths_m, network_boundary_energy_J_per_m,
+    audit_network_compatibility, interface_lengths_m,
+    network_boundary_energy_J_per_m,
     network_junction_disclination_energy_J_per_m,
 )
 from .multigrain_common_state import (
@@ -447,7 +448,8 @@ def evaluate_joint_multigrain_transaction(
         absolute_tolerance_J=0.0,
         relative_tolerance=8192.0*np.finfo(float).eps,
         precomputed_before_energy: CompleteFrontEnergy | None = None,
-        bind_state_identity=True):
+        bind_state_identity=True,
+        synchronize_structural_owner_orientation=False):
     """Evaluate and atomically publish a complete joint physical event.
 
     The independent dissipation is deposited as heat (or exported by a
@@ -471,6 +473,27 @@ def evaluate_joint_multigrain_transaction(
                      if precomputed_before_energy is None
                      else precomputed_before_energy)
     cold_state = capacity.candidate
+    if synchronize_structural_owner_orientation:
+        interfaces = tuple(options.get("structural_interfaces", ()))
+        burgers = options.get("structural_burgers_m")
+        if not interfaces or burgers is None:
+            raise ValueError(
+                "structural orientation synchronization requires graph energy")
+        lengths = interface_lengths_m(
+            cold_state.supports, interfaces, cold_state.grain_ids, spacing_m)
+        reference = float(np.mean(before_state.owners[0].orientation_rad))
+        audit = audit_network_compatibility(
+            cold_state.grain_ids, interfaces, lengths, float(burgers),
+            reference_owner=cold_state.grain_ids[0],
+            reference_orientation_rad=reference)
+        owners = tuple(
+            replace(owner, orientation_rad=(
+                np.asarray(owner.orientation_rad)
+                +audit.fitted_orientation_rad[index]
+                -float(np.mean(owner.orientation_rad))))
+            for index, owner in enumerate(cold_state.owners))
+        cold_state = replace(cold_state, owners=owners)
+        cold_state.validate()
     cold_energy = evaluate_complete_multigrain_energy(cold_state, **common)
     cell_volume = (float(spacing_m)**2*float(represented_thickness_m))
     # Only the explicitly external channel leaves the represented system.

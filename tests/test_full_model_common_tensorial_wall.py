@@ -8,6 +8,7 @@ from full_model.production.common_tensorial_wall import (
     accepted_euler_step, accepted_step_jacobian_vector_product,
     balance_ledger, fourier_symbol, jacobian_vector_product,
     resolved_driving_components, taylor_resistance_Pa,
+    ordered_wall_orientation_energy_rate_W_m3,
     wall_polarization_invariants,
     wall_free_energy_density_J_m3,
     wall_total_free_energy_density_J_m3,
@@ -155,6 +156,30 @@ def test_wall_nye_match_wall_and_order_derivatives_share_complete_energy():
     np.testing.assert_allclose(
         chemical["wall_order_derivative_J_m3"], numerical_q,
         rtol=3e-7, atol=2.0)
+
+
+def test_wall_nye_match_orientation_rate_is_exact_chain_rule_derivative():
+    systems, topologies, p, state, _ = fixture(n=8)
+    p = replace(p, wall_nye_match_coefficient_J_m=2.0e-5)
+    x = np.arange(8)[:, None]*2*np.pi/8
+    y = np.arange(8)[None, :]*2*np.pi/8
+    state = replace(
+        state, orientation_rad=.03*np.sin(x)+.02*np.cos(y),
+        wall_order=.35+.05*np.sin(x+y),
+        wall_plus_m2=np.asarray(state.wall_plus_m2).copy())
+    state.wall_plus_m2[..., 0] *= 1.0+.2*np.cos(y)
+    rate = 2.0e4*np.sin(x-2.0*y)+1.0e4*np.cos(2.0*x+y)
+    analytical = ordered_wall_orientation_energy_rate_W_m3(
+        state, rate, systems, p)
+    h = 2.0e-12
+    plus = replace(state, orientation_rad=state.orientation_rad+h*rate)
+    minus = replace(state, orientation_rad=state.orientation_rad-h*rate)
+    numerical = (
+        wall_free_energy_density_J_m3(plus, p, topologies, systems)
+        -wall_free_energy_density_J_m3(minus, p, topologies, systems)
+    )/(2.0*h)
+    np.testing.assert_allclose(
+        np.mean(analytical), np.mean(numerical), rtol=2e-7, atol=2e3)
 
 
 def test_reported_defect_energy_rate_is_directional_derivative():

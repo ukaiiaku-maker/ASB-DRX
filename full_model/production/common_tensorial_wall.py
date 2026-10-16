@@ -458,6 +458,47 @@ def ordered_wall_orientation_mismatch(state, systems, parameters,
     return ordered_nye-target, basis, signed_wall
 
 
+def ordered_wall_orientation_energy_rate_W_m3(
+        state, orientation_rate_rad_s, systems, parameters, *,
+        _rotated_fields=None):
+    """Exact chain-rule rate of the wall/Frank--Bilby match energy.
+
+    The match functional depends on both lattice orientation and its spatial
+    gradient.  Density and order derivatives are handled by
+    :func:`wall_free_energy_derivatives`; this term supplies the previously
+    missing derivative along plastic-spin kinematics.  It is derived directly
+    from ``M = A(theta)-T(theta, grad(theta))`` and is not an endpoint-energy
+    residual.
+    """
+    coefficient = float(parameters.wall_nye_match_coefficient_J_m)
+    if coefficient <= 0.0:
+        return np.zeros_like(state.orientation_rad, dtype=float)
+    if _rotated_fields is None:
+        _rotated_fields = rotated_system_fields(
+            systems, state.orientation_rad)
+    mismatch, _, signed_wall = ordered_wall_orientation_mismatch(
+        state, systems, parameters, _rotated_fields=_rotated_fields)
+    burgers = np.asarray(_rotated_fields[0], dtype=float)
+    dburgers = np.stack(
+        (-burgers[..., 1], burgers[..., 0], np.zeros_like(burgers[..., 0])),
+        axis=-1)
+    ordered_signed = np.asarray(state.wall_order)[..., None]*signed_wall
+    ordered_nye_theta = np.einsum(
+        "...a,...ai->...i", ordered_signed, dburgers)
+    theta = np.asarray(state.orientation_rad, dtype=float)
+    theta_rate = np.asarray(orientation_rate_rad_s, dtype=float)
+    tx, ty = _spectral_gradient(theta, parameters.spacing_m)
+    rate_x, rate_y = _spectral_gradient(theta_rate, parameters.spacing_m)
+    c, s = np.cos(theta), np.sin(theta)
+    u = np.stack((-c, -s, np.zeros_like(theta)), axis=-1)
+    v = np.stack((-s, c, np.zeros_like(theta)), axis=-1)
+    direct = ordered_nye_theta+tx[..., None]*v+ty[..., None]*u
+    mismatch_rate = (direct*theta_rate[..., None]
+                     -u*rate_x[..., None]+v*rate_y[..., None])
+    return coefficient*np.sum(
+        mismatch[..., :, 2]*mismatch_rate, axis=-1)
+
+
 def wall_free_energy_derivatives(
         state, parameters, topologies=(), systems=None, *,
         _rotated_fields=None):
@@ -1222,6 +1263,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         _rotated_fields=rotated_fields)
     orientation_rate = parameters.orientation_spin_weight*.5*(
         beta_rate[..., 1, 0]-beta_rate[..., 0, 1])
+    orientation_match_free_energy_rate = (
+        ordered_wall_orientation_energy_rate_W_m3(
+            state, orientation_rate, systems, parameters,
+            _rotated_fields=rotated_fields))
 
     k_order = exp_floor_rate(
         np.max(np.abs(stress), axis=2), temperature[..., 0],
@@ -1263,8 +1308,9 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     # is intentionally retained so the thermodynamic hard gate fails loudly.
     multiplication_free_energy_rate = np.sum(
         multiplication_pair_mu*multiplication, axis=2)
-    plastic_drag_dissipation = (transport_driving_power
-                                -multiplication_free_energy_rate)
+    plastic_drag_dissipation = (
+        transport_driving_power-multiplication_free_energy_rate
+        -orientation_match_free_energy_rate)
     lock_dissipation = -np.sum(
         delta_lock_p*lock_p+delta_lock_m*lock_m, axis=2)
     wall_exchange_dissipation = -np.sum(
@@ -1284,7 +1330,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         +np.sum(chemical["wall_plus_mu_J_m"]*wp_rate
                 +chemical["wall_minus_mu_J_m"]*wm_rate, axis=2)
         +np.sum(chemical["junction_mu_J_m"]*junction_rate, axis=2)
-        +q_chemical_potential*q_rate)
+        +q_chemical_potential*q_rate
+        +orientation_match_free_energy_rate)
     physical_channel_sum = (
         plastic_drag_dissipation+lock_dissipation
         +annihilation_dissipation+junction_dissipation
@@ -1339,6 +1386,8 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
             wall_exchange_dissipation+order_dissipation),
         "wall_exchange_dissipation_W_m3": wall_exchange_dissipation,
         "wall_order_dissipation_W_m3": order_dissipation,
+        "wall_orientation_match_free_energy_rate_W_m3": (
+            orientation_match_free_energy_rate),
         "transport_free_energy_rate_W_m3": transport_free_energy_rate,
         "chemical_backstress_Pa": drive["chemical_backstress_Pa"],
         "thermodynamic_stress_plus_Pa": drive[

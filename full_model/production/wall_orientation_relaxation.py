@@ -75,7 +75,8 @@ def evaluate_wall_orientation_relaxation(
         state, *, interval_s, spacing_m, represented_thickness_m, systems,
         wall_parameters, energy_kwargs=None,
         parameters=WallOrientationRelaxationParameters(),
-        maximum_relative_first_law_residual=.05):
+        maximum_relative_first_law_residual=.05,
+        preserve_owner_mean_orientation=False):
     """Price and commit common-axis rotation without changing line or beta/Nye."""
     dt = float(interval_s)
     spacing = float(spacing_m)
@@ -112,6 +113,9 @@ def evaluate_wall_orientation_relaxation(
                    -np.asarray(owner.orientation_rad)))
         target = np.asarray(owner.orientation_rad).copy()
         target[domain] += parameters.affinity_probe_fraction*increment[domain]
+        if preserve_owner_mean_orientation:
+            target += (float(np.mean(owner.orientation_rad))
+                       -float(np.mean(target)))
         targets[int(grain_id)] = target
         trial_owners = tuple(
             replace(item, orientation_rad=target) if gid == grain_id else item
@@ -160,6 +164,9 @@ def evaluate_wall_orientation_relaxation(
                         np.cos(target-np.asarray(owner.orientation_rad)))
                     orientation = np.asarray(owner.orientation_rad).copy()
                     orientation[domain] += fraction*increment[domain]
+                    if preserve_owner_mean_orientation:
+                        orientation += (float(np.mean(owner.orientation_rad))
+                                        -float(np.mean(orientation)))
                     owners.append(replace(owner, orientation_rad=orientation))
                     activity += (np.asarray(support)*domain
                                  *np.asarray(owner.wall_order)

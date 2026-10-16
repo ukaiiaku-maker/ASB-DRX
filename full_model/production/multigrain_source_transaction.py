@@ -89,7 +89,8 @@ def evaluate_multigrain_pair_source_transaction(
         state, *, mean_strain, site_field, interval_s, source_parameters,
         systems, wall_parameters, represented_thickness_m,
         energy_kwargs=None, source_mode="unspecified",
-        maximum_relative_first_law_residual=.05):
+        maximum_relative_first_law_residual=.05,
+        preserve_owner_mean_orientation=False):
     """Propose and qualify one coupled neutral-pair/source-slip event.
 
     The event is performed at fixed total strain, so external boundary work is
@@ -150,6 +151,12 @@ def evaluate_multigrain_pair_source_transaction(
             owner, proposed,
             np.asarray(support) > 256*np.finfo(float).eps,
             systems, spacing)
+        if preserve_owner_mean_orientation:
+            proposed = replace(
+                proposed, orientation_rad=(
+                    np.asarray(proposed.orientation_rad)
+                    +float(np.mean(owner.orientation_rad))
+                    -float(np.mean(proposed.orientation_rad))))
         proposed_owners.append(proposed)
         ledgers.append(ledger)
         weight = np.asarray(support)

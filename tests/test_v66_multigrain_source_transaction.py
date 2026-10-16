@@ -60,6 +60,25 @@ def test_stressed_pair_source_closes_complete_energy_and_signed_line():
         result.created_line_cell_sum_m2, 1.0)
 
 
+def test_structural_graph_source_constraint_preserves_owner_means_not_span():
+    state, systems, wall, energy, source, sites = _fixture()
+    before_means = np.asarray([
+        np.mean(owner.orientation_rad) for owner in state.owners])
+    result = evaluate_multigrain_pair_source_transaction(
+        state, mean_strain=np.array([[0.0, .01], [.01, 0.0]]),
+        site_field=sites, interval_s=2e-9, source_parameters=source,
+        systems=systems, wall_parameters=wall,
+        represented_thickness_m=4.96e-10, energy_kwargs=energy,
+        source_mode="gb_tj_only", preserve_owner_mean_orientation=True)
+    assert result.accepted
+    after_means = np.asarray([
+        np.mean(owner.orientation_rad)
+        for owner in result.candidate_state.owners])
+    np.testing.assert_allclose(after_means, before_means, rtol=0.0, atol=1e-15)
+    assert any(np.ptp(owner.orientation_rad) > 0.0
+               for owner in result.candidate_state.owners)
+
+
 def test_unstressed_thermal_attempt_cannot_invent_line_storage_energy():
     state, systems, wall, energy, source, sites = _fixture()
     result = evaluate_multigrain_pair_source_transaction(

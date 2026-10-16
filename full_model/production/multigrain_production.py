@@ -525,7 +525,8 @@ def advance_energy_qualified_mechanics(
         state, *, mean_strain_before, mean_strain_candidate, systems,
         topologies, wall_parameters, dt_s, represented_thickness_m,
         energy_kwargs=None, maximum_relative_first_law_residual=.05,
-        maximum_subdivisions=10, maximum_internal_substeps=128):
+        maximum_subdivisions=10, maximum_internal_substeps=128,
+        preserve_owner_mean_orientation=False):
     """Rollback and bisect a mechanical interval until every leaf qualifies."""
     strain0 = np.asarray(mean_strain_before, dtype=float)
     strain1 = np.asarray(mean_strain_candidate, dtype=float)
@@ -559,6 +560,20 @@ def advance_energy_qualified_mechanics(
             if not adaptive_failure or depth >= int(maximum_subdivisions):
                 raise
             return bisect_interval()
+        if preserve_owner_mean_orientation:
+            # A retained structural-interface graph owns grain-mean rotation.
+            # Bulk plastic spin may still create intragranular fluctuations,
+            # but its rigid owner mode is constrained until an explicit
+            # interface reaction changes the graph content. Apply this to the
+            # proposal before its complete-energy acceptance audit.
+            owners = tuple(
+                replace(after, orientation_rad=(
+                    np.asarray(after.orientation_rad)
+                    +float(np.mean(before.orientation_rad))
+                    -float(np.mean(after.orientation_rad))))
+                for before, after in zip(accepted.owners, candidate.owners))
+            candidate = replace(candidate, owners=owners)
+            candidate.validate()
         cell_volume = (float(wall_parameters.spacing_m)**2
                        *float(represented_thickness_m))
         thermostat_exchange = float(np.sum(
@@ -839,7 +854,8 @@ def _bracketed_positive_fixed_point(update, initial, *, bracket_hint=None,
 def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
                      spacing_m, represented_thickness_m, wall_parameters,
                      energy_kwargs, interval_s, systems,
-                     precomputed_before_energy=None):
+                     precomputed_before_energy=None,
+                     synchronize_structural_owner_orientation=False):
     index = {grain_id: position for position, grain_id in enumerate(state.grain_ids)}
     weight = _geometric_sweep_weight(
         state, index[donor_id], index[receiver_id], spacing_m)
@@ -861,7 +877,9 @@ def _virtual_channel(state, interface, donor_id, receiver_id, *, kinetics,
         dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
         absolute_tolerance_J=0.0,
         precomputed_before_energy=precomputed_before_energy,
-        bind_state_identity=False)
+        bind_state_identity=False,
+        synchronize_structural_owner_orientation=(
+            synchronize_structural_owner_orientation))
     before = priced.decision.before
     candidate = priced.decision.candidate
     slopes = {
@@ -883,7 +901,8 @@ def advance_multigrain_front(
         represented_thickness_m, wall_parameters, energy_kwargs=None,
         applied_shear_rate_s=0.0, systems=None,
         heat_deposition_mode="local_realized_event",
-        initial_joint_pressure_factor=1.0):
+        initial_joint_pressure_factor=1.0,
+        synchronize_structural_owner_orientation=False):
     """Advance all incident boundaries from one immutable accepted state.
 
     Directional derivatives price each edge in the full shared functional.
@@ -1037,14 +1056,18 @@ def advance_multigrain_front(
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
             interval_s=dt, systems=systems,
-            precomputed_before_energy=parent_energy)
+            precomputed_before_energy=parent_energy,
+            synchronize_structural_owner_orientation=(
+                synchronize_structural_owner_orientation))
         ba, weight_ba, slopes_ba = _virtual_channel(
             state, interface, interface.grain_b_id, interface.grain_a_id,
             kinetics=kinetics, spacing_m=spacing_m,
             represented_thickness_m=represented_thickness_m,
             wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
             interval_s=dt, systems=systems,
-            precomputed_before_energy=parent_energy)
+            precomputed_before_energy=parent_energy,
+            synchronize_structural_owner_orientation=(
+                synchronize_structural_owner_orientation))
         evaluated_prices = int(ab is not None)+int(ba is not None)
         independent_directional_prices += evaluated_prices
         complete_energy_evaluations += evaluated_prices
@@ -1170,7 +1193,10 @@ def advance_multigrain_front(
             dissipation=MultiGrainDissipation(), energy_kwargs=energy_kwargs,
             absolute_tolerance_J=0.0,
             precomputed_before_energy=parent_energy,
-            bind_state_identity=False).decision.available_change_J
+            bind_state_identity=False,
+            synchronize_structural_owner_orientation=(
+                synchronize_structural_owner_orientation)
+        ).decision.available_change_J
         complete_energy_evaluations += 1
         independent_work = sum(
             unscaled_pressures[key]
@@ -1433,7 +1459,9 @@ def advance_multigrain_front(
             heat_source_J_by_cell=heat_source_J_by_cell,
             heat_deposition_mode=heat_deposition_mode,
             energy_kwargs=options, absolute_tolerance_J=tolerance_J,
-            precomputed_before_energy=parent_energy)
+            precomputed_before_energy=parent_energy,
+            synchronize_structural_owner_orientation=(
+                synchronize_structural_owner_orientation))
         complete_energy_evaluations += 1
         if result.decision.accepted:
             break
@@ -1491,7 +1519,8 @@ def advance_multigrain_front_interval(
         applied_shear_rate_s=0.0, systems=None,
         heat_deposition_mode="local_realized_event",
         initial_joint_pressure_factor=1.0,
-        warm_start_joint_pressure_factor=False):
+        warm_start_joint_pressure_factor=False,
+        synchronize_structural_owner_orientation=False):
     """Advance a physical interval with recomputed finite front increments.
 
     ``maximum_fraction_per_step`` is a local contour-CFL bound, not a physical
@@ -1530,7 +1559,9 @@ def advance_multigrain_front_interval(
                 wall_parameters=wall_parameters, energy_kwargs=energy_kwargs,
                 applied_shear_rate_s=applied_shear_rate_s, systems=systems,
                 heat_deposition_mode=heat_deposition_mode,
-                initial_joint_pressure_factor=hint)
+                initial_joint_pressure_factor=hint,
+                synchronize_structural_owner_orientation=(
+                    synchronize_structural_owner_orientation))
         except FrontForceRateConvergenceError:
             # A finite transaction can straddle a nonsmooth active-set corner
             # even though each smaller physical increment has an independently

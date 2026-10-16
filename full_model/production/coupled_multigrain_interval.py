@@ -418,7 +418,8 @@ def advance_complete_multigrain_interval(
         energy_kwargs=energy_before, maximum_relative_first_law_residual=.05,
         maximum_subdivisions=context.maximum_mechanical_subdivisions,
         maximum_internal_substeps=(
-            context.maximum_mechanical_internal_substeps))
+            context.maximum_mechanical_internal_substeps),
+        preserve_owner_mean_orientation=bool(structural_interfaces))
     mechanical_wall_time = time.perf_counter()-mechanical_started
     mechanical_heat = sum(
         (np.asarray(item.irreversible_heat_J_m3_cells)
@@ -490,7 +491,8 @@ def advance_complete_multigrain_interval(
             systems=context.systems, wall_parameters=context.wall_parameters,
             represented_thickness_m=context.represented_thickness_m,
             energy_kwargs=energy_base, source_mode=context.source_mode,
-            maximum_subdivisions=context.maximum_source_subdivisions)
+            maximum_subdivisions=context.maximum_source_subdivisions,
+            preserve_owner_mean_orientation=bool(structural_interfaces))
         if source.classification in {
                 "REJECTED_FIRST_LAW_CLOSURE"}:
             raise RuntimeError(
@@ -891,6 +893,9 @@ def advance_complete_multigrain_interval(
             for owner in structural_state.owners])
         pre_post_structural_orientation_sync_max_rad = float(np.max(
             np.abs(means_after_sync-means_before_sync), initial=0.0))
+        if pre_post_structural_orientation_sync_max_rad > 1e-10:
+            raise RuntimeError(
+                "unpriced owner-mean orientation change before structural handoff")
     # Complete the newly captured lattice -> interface -> structural handoff
     # inside the same physical interval.  The start-of-interval transaction
     # clears retained reservoir content; this second transaction sees only
@@ -1018,6 +1023,22 @@ def advance_complete_multigrain_interval(
             junction_disclination_parameters=JunctionDisclinationParameters())
     wall_orientation_started = time.perf_counter()
     wall_orientation = None
+    if structural_interfaces:
+        wall_entry_synchronized = synchronize_structural_owner_orientations(
+            structural_state,
+            StructuralMultigrainRuntime(structural_interfaces),
+            spacing_m=context.spacing_m,
+            burgers_m=(
+                context.structural_absorption_parameters.boundary.burgers_m))
+        wall_entry_mismatch = float(np.max(np.abs(np.asarray([
+            np.mean(owner.orientation_rad)
+            for owner in wall_entry_synchronized.owners])-np.asarray([
+                np.mean(owner.orientation_rad)
+                for owner in structural_state.owners])), initial=0.0))
+        if wall_entry_mismatch > 1e-10:
+            raise RuntimeError(
+                "unpriced owner-mean orientation change before ordered-wall "
+                f"relaxation: {wall_entry_mismatch:.17g} rad")
     if context.wall_orientation_relaxation_mode != "disabled":
         if context.wall_orientation_relaxation_mode != "ordered_nye":
             raise ValueError("unknown wall orientation relaxation mode")
@@ -1029,12 +1050,29 @@ def advance_complete_multigrain_interval(
             represented_thickness_m=context.represented_thickness_m,
             systems=context.systems, wall_parameters=context.wall_parameters,
             energy_kwargs=dict(energy_base, mean_strain=strain1),
-            parameters=context.wall_orientation_relaxation_parameters)
+            parameters=context.wall_orientation_relaxation_parameters,
+            preserve_owner_mean_orientation=bool(structural_interfaces))
         if wall_orientation.classification == "REJECTED_COMPLETE_FIRST_LAW":
             raise RuntimeError(
                 "wall orientation relaxation failed its hard energy audit")
         if wall_orientation.accepted:
             structural_state = wall_orientation.committed_state
+        if structural_interfaces:
+            wall_exit_synchronized = synchronize_structural_owner_orientations(
+                structural_state,
+                StructuralMultigrainRuntime(structural_interfaces),
+                spacing_m=context.spacing_m,
+                burgers_m=(context.structural_absorption_parameters.boundary.
+                           burgers_m))
+            wall_exit_mismatch = float(np.max(np.abs(np.asarray([
+                np.mean(owner.orientation_rad)
+                for owner in wall_exit_synchronized.owners])-np.asarray([
+                    np.mean(owner.orientation_rad)
+                    for owner in structural_state.owners])), initial=0.0))
+            if wall_exit_mismatch > 1e-10:
+                raise RuntimeError(
+                    "unpriced owner-mean orientation change in ordered-wall "
+                    f"relaxation: {wall_exit_mismatch:.17g} rad")
         runtime = replace(runtime, ledger=replace(
             runtime.ledger,
             wall_orientation_relaxation_intervals=(
@@ -1068,6 +1106,8 @@ def advance_complete_multigrain_interval(
             applied_shear_rate_s=context.shear_rate_s,
             systems=context.systems,
             heat_deposition_mode=context.heat_deposition_mode,
+            synchronize_structural_owner_orientation=bool(
+                structural_interfaces),
             initial_joint_pressure_factor=(
                 float(parent.numerical_hints.get(
                     "front_joint_pressure_factor", 1.0))
@@ -1088,11 +1128,22 @@ def advance_complete_multigrain_interval(
                                   +context.shear_rate_s*dt),
             stationary_intervals=runtime.ledger.stationary_intervals+1),
             runtime.structural_interfaces)
+    final_structural_orientation_sync_max_rad = 0.0
     if structural_interfaces:
+        means_before_final_sync = np.asarray([
+            np.mean(owner.orientation_rad) for owner in state.owners])
         state = synchronize_structural_owner_orientations(
             state, StructuralMultigrainRuntime(structural_interfaces),
             spacing_m=context.spacing_m,
             burgers_m=context.structural_absorption_parameters.boundary.burgers_m)
+        means_after_final_sync = np.asarray([
+            np.mean(owner.orientation_rad) for owner in state.owners])
+        final_structural_orientation_sync_max_rad = float(np.max(
+            np.abs(means_after_final_sync-means_before_final_sync), initial=0.0))
+        if final_structural_orientation_sync_max_rad > 1e-10:
+            raise RuntimeError(
+                "unpriced owner-mean orientation change before interval commit: "
+                f"{final_structural_orientation_sync_max_rad:.17g} rad")
     front_wall_time = time.perf_counter()-front_started
     front_sources = [
         np.asarray(item.heat_source_J_by_cell, dtype=float)
@@ -1534,6 +1585,8 @@ def advance_complete_multigrain_interval(
             else lattice_absorption.relative_first_law_residual),
         "pre_post_structural_orientation_sync_max_rad": (
             pre_post_structural_orientation_sync_max_rad),
+        "final_structural_orientation_sync_max_rad": (
+            final_structural_orientation_sync_max_rad),
         "wall_orientation_relaxation_mode": (
             context.wall_orientation_relaxation_mode),
         "wall_orientation_relaxation_classification": (

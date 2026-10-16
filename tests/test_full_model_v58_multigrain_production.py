@@ -462,6 +462,31 @@ def test_energy_qualified_mechanics_consumes_full_interval():
     assert result.relative_first_law_residual <= .05
 
 
+def test_energy_qualified_mechanics_can_constrain_only_owner_rigid_rotation():
+    spacing = 2e-8
+    state = _state(8)
+    systems = bcc_four_family_systems()
+    parameters = CommonWallParameters(
+        spacing_m=spacing, elastic_iterations=1,
+        mobile_correlation_diffusivity_m2_s=0.0,
+        thermal_diffusivity_m2_s=1e-7)
+    before_means = np.asarray([
+        np.mean(owner.orientation_rad) for owner in state.owners])
+    result = advance_energy_qualified_mechanics(
+        state,
+        mean_strain_before=np.array([[0.0, .004], [.004, 0.0]]),
+        mean_strain_candidate=np.array([[0.0, .0041], [.0041, 0.0]]),
+        systems=systems, topologies=(), wall_parameters=parameters,
+        dt_s=1e-10, represented_thickness_m=5e-10,
+        energy_kwargs=dict(reference_temperature_K=900.0),
+        maximum_relative_first_law_residual=.05,
+        preserve_owner_mean_orientation=True)
+    after_means = np.asarray([
+        np.mean(owner.orientation_rad) for owner in result.state.owners])
+    np.testing.assert_allclose(after_means, before_means, rtol=0.0, atol=1e-15)
+    assert result.relative_first_law_residual <= .05
+
+
 def test_energy_qualified_zero_load_hold_is_not_bisected_below_roundoff():
     spacing = 2e-8
     state = _state(8)
