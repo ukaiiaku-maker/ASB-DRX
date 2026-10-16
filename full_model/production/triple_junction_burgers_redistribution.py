@@ -26,6 +26,8 @@ class TripleJunctionBurgersProjection:
     candidate_state: object
     reaction_fraction: float
     maximum_junction_weight: float
+    maximum_realized_coordinate: float
+    capacity_limited_cell_count: int
     maximum_pointwise_vector_balance_m1: float
     integrated_vector_balance_m: np.ndarray
     removed_line_cell_sum_m2: float
@@ -70,9 +72,28 @@ def project_triple_junction_burgers(
     triple = np.prod(np.maximum(np.asarray(state.supports), 0.0), axis=0)
     peak = float(np.max(triple, initial=0.0))
     weight = (triple/peak if peak > 0.0 else np.zeros_like(triple))
-    coordinate = fraction*weight[None, ..., None, None]
     common = np.mean(burgers, axis=0, keepdims=True)
-    next_burgers = burgers+coordinate*(common-burgers)
+    direction = common-burgers
+    line_capacity = np.stack([
+        np.sum(np.asarray(item.boundary_plus_m2)
+               +np.asarray(item.boundary_minus_m2), axis=-1)
+        for item in state.interfaces])
+    requested = fraction*weight
+    low = np.zeros_like(requested)
+    high = requested.copy()
+    # One coordinate per spatial cell is shared by all three edges and rows;
+    # hence backtracking cannot break the pointwise vector balance.
+    for _ in range(60):
+        middle = .5*(low+high)
+        trial = burgers+middle[None, ..., None, None]*direction
+        required = np.linalg.norm(trial, axis=-1)/b
+        feasible = np.all(required <= line_capacity, axis=(0, 3))
+        low = np.where(feasible, middle, low)
+        high = np.where(feasible, high, middle)
+    coordinate = low[None, ..., None, None]
+    next_burgers = burgers+coordinate*direction
+    capacity_limited = int(np.count_nonzero(
+        low < requested-4096*np.finfo(float).eps*np.maximum(requested, 1.0)))
     pointwise_residual = np.sum(next_burgers-burgers, axis=0)
     maximum_balance = float(np.max(np.abs(pointwise_residual), initial=0.0))
     integrated_balance = np.sum(
@@ -113,6 +134,7 @@ def project_triple_junction_burgers(
     balance_tolerance = 4096.0*np.finfo(float).eps*scale
     return TripleJunctionBurgersProjection(
         candidate, fraction, float(np.max(weight, initial=0.0)),
+        float(np.max(low, initial=0.0)), capacity_limited,
         maximum_balance, integrated_balance, removed, before_capacity,
         after_capacity, maximum_deficit,
         bool(maximum_balance <= balance_tolerance
