@@ -27,6 +27,9 @@ from full_model.production.collective_wall_nucleation import _periodic_radius
 from full_model.production.complete_multigrain_energy import (
     evaluate_complete_multigrain_energy,
 )
+from full_model.production.fixed_scale_refinement import (
+    refine_multigrain_common_state,
+)
 
 
 def _sha(path):
@@ -55,6 +58,7 @@ def main():
     parser.add_argument("checkpoint", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--centers-per-owner", type=int, default=4)
+    parser.add_argument("--refinement-factor", type=int, default=1)
     parser.add_argument("--clearance-m", type=float, default=2e-7)
     parser.add_argument("--match-length-m", type=float, default=1.5e-7)
     parser.add_argument("--ring-width-m", type=float, default=4.5e-7)
@@ -68,6 +72,11 @@ def main():
         _load_checkpoint(args.checkpoint))
     physics_args = _args_from_configuration(configuration)
     spacing, _, systems, _, _, _, context = _physics(physics_args)
+    refinement_audit = None
+    if args.refinement_factor != 1:
+        state, refinement_audit = refine_multigrain_common_state(
+            state, args.refinement_factor)
+        spacing /= args.refinement_factor
     wall_parameters = replace(
         context.wall_parameters,
         wall_nye_match_coefficient_J_m=(
@@ -147,6 +156,8 @@ def main():
         "checkpoint_sha256": _sha(args.checkpoint),
         "configuration": {
             "centers_per_owner": args.centers_per_owner,
+            "refinement_factor": args.refinement_factor,
+            "spacing_m": spacing,
             "clearance_m": args.clearance_m,
             "match_length_m": args.match_length_m,
             "ring_width_m": args.ring_width_m,
@@ -157,6 +168,7 @@ def main():
             "orientation_map": "incremental_ordered_Nye_reconstruction",
         },
         "records": records,
+        "refinement_audit": refinement_audit,
         "decision": {
             "candidate_count": len(records),
             "wall_only_downhill_count": sum(
