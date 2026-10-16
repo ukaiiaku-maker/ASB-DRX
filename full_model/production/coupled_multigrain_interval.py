@@ -56,6 +56,9 @@ from .compatible_wall_reorganization import (
     CompatibleWallReorganizationParameters,
     evaluate_compatible_wall_reorganization,
 )
+from .wall_neutral_pair_recovery import (
+    WallNeutralPairRecoveryParameters, evaluate_wall_neutral_pair_recovery,
+)
 from .conservative_wall_glide import (
     ConservativeWallGlideParameters, evaluate_conservative_wall_glide,
 )
@@ -117,6 +120,8 @@ class CoupledMultigrainContext:
     wall_order_relaxation_mode: str = "disabled"
     compatible_wall_reorganization_parameters: object | None = None
     compatible_wall_reorganization_mode: str = "disabled"
+    wall_neutral_pair_recovery_parameters: object | None = None
+    wall_neutral_pair_recovery_mode: str = "disabled"
     conservative_wall_glide_parameters: object | None = None
     conservative_wall_glide_mode: str = "disabled"
     conservative_dipole_wall_parameters: object | None = None
@@ -665,9 +670,64 @@ def advance_complete_multigrain_interval(
                 runtime.ledger.maximum_conservative_wall_glide_inventory_residual_m2,
                 abs(wall_glide.inventory_residual_m2))))
     wall_glide_wall_time = time.perf_counter()-wall_glide_started
+    wall_recovery_started = time.perf_counter()
+    wall_recovery = None
+    recovered_state = glide_state
+    if context.wall_neutral_pair_recovery_mode != "disabled":
+        if context.wall_neutral_pair_recovery_mode != "arrhenius_climb":
+            raise ValueError("unknown wall neutral-pair recovery mode")
+        parameters = (WallNeutralPairRecoveryParameters()
+                      if context.wall_neutral_pair_recovery_parameters is None
+                      else context.wall_neutral_pair_recovery_parameters)
+        wall_recovery = evaluate_wall_neutral_pair_recovery(
+            recovered_state, interval_s=dt, mean_strain=strain1,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, parameters=parameters)
+        if wall_recovery.classification.startswith("REJECTED"):
+            raise RuntimeError(
+                "wall neutral-pair recovery failed a hard balance audit")
+        if wall_recovery.accepted:
+            recovered_state = wall_recovery.committed_state
+        maximum_balance_residual = max(
+            abs(wall_recovery.signed_content_residual_m2),
+            abs(wall_recovery.line_balance_residual_m2))
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            wall_neutral_pair_recovery_intervals=(
+                runtime.ledger.wall_neutral_pair_recovery_intervals
+                +int(wall_recovery.accepted)),
+            wall_neutral_pair_recovery_inactive_intervals=(
+                runtime.ledger.wall_neutral_pair_recovery_inactive_intervals
+                +int(wall_recovery.classification.startswith("INACTIVE"))),
+            wall_neutral_pair_recovery_rejected_intervals=(
+                runtime.ledger.wall_neutral_pair_recovery_rejected_intervals
+                +int(wall_recovery.classification.startswith("REJECTED"))),
+            wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2=(
+                runtime.ledger.
+                wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2
+                +(wall_recovery.annihilated_pair_cell_sum_m2
+                  if wall_recovery.accepted else 0.0)),
+            cumulative_wall_neutral_pair_recovery_heat_J=(
+                runtime.ledger.cumulative_wall_neutral_pair_recovery_heat_J
+                +(wall_recovery.generated_heat_J
+                  if wall_recovery.accepted else 0.0)),
+            maximum_wall_neutral_pair_recovery_first_law_residual=max(
+                runtime.ledger.
+                maximum_wall_neutral_pair_recovery_first_law_residual,
+                wall_recovery.relative_first_law_residual
+                if wall_recovery.accepted else 0.0),
+            maximum_wall_neutral_pair_recovery_balance_residual_m2=max(
+                runtime.ledger.
+                maximum_wall_neutral_pair_recovery_balance_residual_m2,
+                maximum_balance_residual)))
+    wall_recovery_wall_time = time.perf_counter()-wall_recovery_started
     wall_reorganization_started = time.perf_counter()
     wall_reorganization = None
-    reorganized_state = glide_state
+    # Redundant neutral content recovers first; the compatible reaction cone
+    # then redistributes only the surviving signed structural excess.
+    reorganized_state = recovered_state
     if context.compatible_wall_reorganization_mode != "disabled":
         if context.compatible_wall_reorganization_mode != "frank_bilby_projection":
             raise ValueError("unknown compatible wall-reorganization mode")
@@ -1214,6 +1274,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if wall_glide is None or not wall_glide.accepted
             else np.asarray(wall_glide.heat_source_J_by_cell)),
+        "wall_neutral_pair_recovery_heat_J": (
+            0.0 if wall_recovery is None or not wall_recovery.accepted
+            else wall_recovery.generated_heat_J),
+        "wall_neutral_pair_recovery_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if wall_recovery is None or not wall_recovery.accepted
+            else np.asarray(wall_recovery.heat_source_J_by_cell)),
         "compatible_wall_reorganization_heat_J": (
             0.0 if wall_reorganization is None or not wall_reorganization.accepted
             else wall_reorganization.generated_heat_J),
@@ -1438,6 +1505,29 @@ def advance_complete_multigrain_interval(
         "conservative_wall_glide_relative_first_law_residual": (
             0.0 if wall_glide is None or not wall_glide.accepted
             else wall_glide.relative_first_law_residual),
+        "wall_neutral_pair_recovery_mode": (
+            context.wall_neutral_pair_recovery_mode),
+        "wall_neutral_pair_recovery_classification": (
+            "DISABLED" if wall_recovery is None
+            else wall_recovery.classification),
+        "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2": (
+            0.0 if wall_recovery is None or not wall_recovery.accepted
+            else wall_recovery.annihilated_pair_cell_sum_m2),
+        "wall_neutral_pair_recovery_signed_residual_m2": (
+            0.0 if wall_recovery is None
+            else wall_recovery.signed_content_residual_m2),
+        "wall_neutral_pair_recovery_line_residual_m2": (
+            0.0 if wall_recovery is None
+            else wall_recovery.line_balance_residual_m2),
+        "wall_neutral_pair_recovery_maximum_rate_s": (
+            0.0 if wall_recovery is None else wall_recovery.maximum_rate_s),
+        "wall_neutral_pair_recovery_backtracks": (
+            0 if wall_recovery is None else wall_recovery.backtracks),
+        "wall_neutral_pair_recovery_delta_helmholtz_J": (
+            0.0 if wall_recovery is None else wall_recovery.delta_helmholtz_J),
+        "wall_neutral_pair_recovery_relative_first_law_residual": (
+            0.0 if wall_recovery is None or not wall_recovery.accepted
+            else wall_recovery.relative_first_law_residual),
         "compatible_wall_reorganization_mode": (
             context.compatible_wall_reorganization_mode),
         "compatible_wall_reorganization_classification": (
@@ -1455,6 +1545,11 @@ def advance_complete_multigrain_interval(
         "compatible_wall_reorganization_line_residual_m2": (
             0.0 if wall_reorganization is None
             else wall_reorganization.line_balance_residual_m2),
+        "compatible_wall_reorganization_backtracks": (
+            0 if wall_reorganization is None else wall_reorganization.backtracks),
+        "compatible_wall_reorganization_delta_helmholtz_J": (
+            0.0 if wall_reorganization is None
+            else wall_reorganization.delta_helmholtz_J),
         "compatible_wall_reorganization_relative_first_law_residual": (
             0.0 if wall_reorganization is None or not wall_reorganization.accepted
             else wall_reorganization.relative_first_law_residual),
@@ -1610,6 +1705,7 @@ def advance_complete_multigrain_interval(
             "wall_order_relaxation_map": wall_order_wall_time,
             "conservative_dipole_wall_map": dipole_wall_wall_time,
             "conservative_wall_glide_map": wall_glide_wall_time,
+            "wall_neutral_pair_recovery_map": wall_recovery_wall_time,
             "compatible_wall_reorganization_map": wall_reorganization_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
@@ -1623,6 +1719,7 @@ def advance_complete_multigrain_interval(
                                 +collective_wall_wall_time
                                 +wall_order_wall_time+dipole_wall_wall_time
                                 +wall_glide_wall_time
+                                +wall_recovery_wall_time
                                 +sink_wall_time
                                 +wall_reorganization_wall_time
                                 +interface_sink_wall_time

@@ -159,6 +159,13 @@ class MultiGrainProductionLedger:
     cumulative_conservative_wall_glide_heat_J: float = 0.0
     maximum_conservative_wall_glide_first_law_residual: float = 0.0
     maximum_conservative_wall_glide_inventory_residual_m2: float = 0.0
+    wall_neutral_pair_recovery_intervals: int = 0
+    wall_neutral_pair_recovery_inactive_intervals: int = 0
+    wall_neutral_pair_recovery_rejected_intervals: int = 0
+    wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2: float = 0.0
+    cumulative_wall_neutral_pair_recovery_heat_J: float = 0.0
+    maximum_wall_neutral_pair_recovery_first_law_residual: float = 0.0
+    maximum_wall_neutral_pair_recovery_balance_residual_m2: float = 0.0
     conservative_dipole_wall_intervals: int = 0
     conservative_dipole_wall_inactive_intervals: int = 0
     conservative_dipole_wall_rejected_intervals: int = 0

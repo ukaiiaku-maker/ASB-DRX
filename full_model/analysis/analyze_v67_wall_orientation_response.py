@@ -64,6 +64,14 @@ def _case(directory):
         recognition = recognize_common_orientation_plateau(
             owner.orientation_rad, owner.family_nye_m1, owner.wall_order,
             _total_density(owner), spacing, domain_mask=domain)
+        threshold_scan = {}
+        for threshold_deg in (.05, .10, .20, .50, 1.0, 2.0):
+            threshold_scan[f"{threshold_deg:g}"] = _serial_recognition(
+                recognize_common_orientation_plateau(
+                    owner.orientation_rad, owner.family_nye_m1,
+                    owner.wall_order, _total_density(owner), spacing,
+                    minimum_misorientation_deg=threshold_deg,
+                    domain_mask=domain))
         any_qualified |= bool(recognition.get("qualified", False))
         owners[str(grain_id)] = {
             "domain_cells": int(np.sum(domain)),
@@ -78,6 +86,7 @@ def _case(directory):
             "compatible_reconstructed_span_deg": float(np.degrees(
                 compatibility.reconstructed_orientation_span_rad)),
             "recognition": _serial_recognition(recognition),
+            "misorientation_threshold_scan_deg": threshold_scan,
         }
     return {
         "source_commit": result["source_commit"],

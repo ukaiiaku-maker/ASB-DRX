@@ -30,6 +30,9 @@ from full_model.production.multigrain_source_transaction import (
 from full_model.production.multigrain_production import (
     MultiGrainFrontKinetics, MultiGrainProductionRuntime,
 )
+from full_model.production.wall_neutral_pair_recovery import (
+    WallNeutralPairRecoveryParameters,
+)
 from full_model.production.tensorial_nye import bcc_four_family_systems
 
 
@@ -169,6 +172,33 @@ def test_enabled_neutral_boundary_sink_is_separate_complete_channel():
             <1e-10*result.audit["sink_annihilated_pair_cell_sum_m2"])
     assert result.endpoint.runtime.ledger.sink_intervals == 1
     assert result.endpoint.runtime.ledger.source_intervals == 0
+    assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
+
+
+def test_ordered_wall_neutral_recovery_is_in_complete_interval_and_ledger():
+    ctx = replace(
+        context(front_enabled=False), shear_rate_s=0.0,
+        wall_neutral_pair_recovery_parameters=(
+            WallNeutralPairRecoveryParameters()),
+        wall_neutral_pair_recovery_mode="arrhenius_climb")
+    endpoint = parent(ctx)
+    owners = tuple(replace(
+        owner,
+        wall_plus_m2=np.full_like(owner.wall_plus_m2, 2.5e14),
+        wall_minus_m2=np.full_like(owner.wall_minus_m2, 1.5e14),
+        wall_order=np.ones_like(owner.wall_order))
+        for owner in endpoint.state.owners)
+    state = replace(endpoint.state, owners=owners)
+    endpoint = make_endpoint(state, endpoint.runtime, endpoint.load, ctx)
+    result = advance_complete_multigrain_interval(endpoint, 1e-10, ctx)
+    assert result.audit["wall_neutral_pair_recovery_classification"] == (
+        "ACCEPTED_WALL_NEUTRAL_PAIR_RECOVERY")
+    assert result.audit[
+        "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2"] > 0.0
+    assert result.integrals["wall_neutral_pair_recovery_heat_J"] > 0.0
+    assert result.audit[
+        "wall_neutral_pair_recovery_relative_first_law_residual"] < .05
+    assert result.endpoint.runtime.ledger.wall_neutral_pair_recovery_intervals == 1
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
 
 

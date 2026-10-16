@@ -46,6 +46,9 @@ from full_model.production.conservative_wall_glide import (
 from full_model.production.compatible_wall_reorganization import (
     CompatibleWallReorganizationParameters,
 )
+from full_model.production.wall_neutral_pair_recovery import (
+    WallNeutralPairRecoveryParameters,
+)
 from full_model.production.conservative_dipole_wall_organization import (
     ConservativeDipoleWallParameters,
 )
@@ -112,6 +115,10 @@ def main():
         help=("bounded checkerboard fraction used by conservative wall glide; "
               "changes numerical cadence, not its Arrhenius clock"))
     parser.add_argument("--dipole-wall-organization", action="store_true")
+    parser.add_argument(
+        "--wall-neutral-pair-recovery", action="store_true",
+        help=("enable conserved Arrhenius climb annihilation of redundant "
+              "opposite-sign ordered-wall line before survivor reorganization"))
     parser.add_argument(
         "--compatible-wall-reorganization", action="store_true",
         help=("enable conservative redistribution of existing signed wall "
@@ -246,6 +253,12 @@ def main():
         conservative_dipole_wall_parameters=(
             ConservativeDipoleWallParameters()
             if args.dipole_wall_organization else None),
+        wall_neutral_pair_recovery_mode=(
+            "arrhenius_climb" if args.wall_neutral_pair_recovery
+            else "disabled"),
+        wall_neutral_pair_recovery_parameters=(
+            WallNeutralPairRecoveryParameters()
+            if args.wall_neutral_pair_recovery else None),
         compatible_wall_reorganization_mode=(
             "frank_bilby_projection"
             if args.compatible_wall_reorganization else "disabled"),
@@ -309,6 +322,8 @@ def main():
         wall_glide_maximum_edge_fraction=(
             args.wall_glide_maximum_edge_fraction),
         conservative_dipole_wall_mode=context.conservative_dipole_wall_mode,
+        wall_neutral_pair_recovery_mode=(
+            context.wall_neutral_pair_recovery_mode),
         compatible_wall_reorganization_mode=(
             context.compatible_wall_reorganization_mode),
         compatible_wall_conservation=(
@@ -434,6 +449,22 @@ def main():
                 "conservative_dipole_wall_delta_helmholtz_J"],
             "dipole_wall_first_law_relative_residual": interval.audit[
                 "conservative_dipole_wall_relative_first_law_residual"],
+            "wall_recovery_classification": interval.audit[
+                "wall_neutral_pair_recovery_classification"],
+            "wall_recovery_annihilated_pair_cell_sum_m2": interval.audit[
+                "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2"],
+            "wall_recovery_signed_residual_m2": interval.audit[
+                "wall_neutral_pair_recovery_signed_residual_m2"],
+            "wall_recovery_line_residual_m2": interval.audit[
+                "wall_neutral_pair_recovery_line_residual_m2"],
+            "wall_recovery_maximum_rate_s": interval.audit[
+                "wall_neutral_pair_recovery_maximum_rate_s"],
+            "wall_recovery_backtracks": interval.audit[
+                "wall_neutral_pair_recovery_backtracks"],
+            "wall_recovery_delta_helmholtz_J": interval.audit[
+                "wall_neutral_pair_recovery_delta_helmholtz_J"],
+            "wall_recovery_first_law_relative_residual": interval.audit[
+                "wall_neutral_pair_recovery_relative_first_law_residual"],
             "compatible_wall_classification": interval.audit[
                 "compatible_wall_reorganization_classification"],
             "compatible_wall_fractions": interval.audit[
@@ -444,6 +475,10 @@ def main():
                 "compatible_wall_reorganization_signed_residual_m2"],
             "compatible_wall_line_residual_m2": interval.audit[
                 "compatible_wall_reorganization_line_residual_m2"],
+            "compatible_wall_backtracks": interval.audit[
+                "compatible_wall_reorganization_backtracks"],
+            "compatible_wall_delta_helmholtz_J": interval.audit[
+                "compatible_wall_reorganization_delta_helmholtz_J"],
             "compatible_wall_first_law_relative_residual": interval.audit[
                 "compatible_wall_reorganization_relative_first_law_residual"],
             "source_classification": interval.audit["source_classification"],
@@ -545,6 +580,8 @@ def main():
             "wall_glide_maximum_edge_fraction": (
                 args.wall_glide_maximum_edge_fraction),
             "dipole_wall_organization": bool(args.dipole_wall_organization),
+            "wall_neutral_pair_recovery": bool(
+                args.wall_neutral_pair_recovery),
             "compatible_wall_reorganization": bool(
                 args.compatible_wall_reorganization),
             "compatible_wall_conservation": (
@@ -590,6 +627,9 @@ def main():
             "accepted_dipole_wall_intervals": sum(
                 row["dipole_wall_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_wall_recovery_intervals": sum(
+                row["wall_recovery_classification"].startswith("ACCEPTED")
+                for row in records),
             "accepted_compatible_wall_intervals": sum(
                 row["compatible_wall_classification"].startswith("ACCEPTED")
                 for row in records),
@@ -609,6 +649,7 @@ def main():
                 row["lattice_first_law_relative_residual"] < .05
                 and row["wall_glide_first_law_relative_residual"] < .05
                 and row["dipole_wall_first_law_relative_residual"] < .05
+                and row["wall_recovery_first_law_relative_residual"] < .05
                 and row["compatible_wall_first_law_relative_residual"] < .05
                 and row["source_first_law_relative_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
