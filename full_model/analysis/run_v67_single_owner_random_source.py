@@ -303,6 +303,8 @@ def main():
                 "conservative_wall_glide_inventory_residual_m2"],
             "conservative_wall_glide_maximum_rate_s": interval.audit[
                 "conservative_wall_glide_maximum_rate_s"],
+            "conservative_wall_glide_internal_substeps": interval.audit[
+                "conservative_wall_glide_internal_substeps"],
             "conservative_wall_glide_relative_first_law_residual": interval.audit[
                 "conservative_wall_glide_relative_first_law_residual"],
             "wall_orientation_classification": interval.audit[

@@ -30,8 +30,15 @@ class ConservativeWallGlideParameters:
         attempt_frequency_Hz=1.0e7, activation_segment_m=2.5e-9)
     minimum_wall_order: float = .20
     owner_support_threshold: float = .75
-    maximum_edge_fraction: float = .25
+    maximum_edge_fraction: float = .02
+    maximum_internal_substeps: int = 4096
     maximum_backtracks: int = 20
+
+    def __post_init__(self):
+        if not 0.0 < float(self.maximum_edge_fraction) < 1.0:
+            raise ValueError("maximum edge fraction must lie in (0,1)")
+        if int(self.maximum_internal_substeps) < 1:
+            raise ValueError("positive wall-glide substep capacity required")
 
 
 @dataclass(frozen=True)
@@ -43,6 +50,7 @@ class ConservativeWallGlideDecision:
     moved_line_cell_sum_m2: float
     inventory_residual_m2: float
     maximum_rate_s: float
+    internal_substeps: int
     backtracks: int
     delta_helmholtz_J: float
     generated_heat_J: float
@@ -51,40 +59,35 @@ class ConservativeWallGlideDecision:
     heat_source_J_by_cell: np.ndarray
 
 
-def _checkerboard_glide(population, chemical_J_m, temperature_K, domain,
-                        interval_s, parameters):
+def _checkerboard_glide_pass(population, chemical_J_m, temperature_K, domain,
+                             edge_interval_s, axis, parity, parameters):
     value = np.asarray(population, dtype=float).copy()
     chemical = np.asarray(chemical_J_m, dtype=float)
     temperature = np.asarray(temperature_K, dtype=float)
     shape = value.shape[:2]
     if any(size % 2 for size in shape):
         raise ValueError("checkerboard wall glide requires even grid extents")
-    moved = 0.0
-    maximum_rate = 0.0
-    edge_dt = float(interval_s)/4.0
-    for axis in (0, 1):
-        coordinate = np.arange(shape[axis]).reshape(
-            (-1, 1) if axis == 0 else (1, -1))
-        for parity in (0, 1):
-            neighbor_value = np.roll(value, -1, axis=axis)
-            neighbor_mu = np.roll(chemical, -1, axis=axis)
-            neighbor_temperature = np.roll(temperature, -1, axis=axis)
-            eligible = (domain & np.roll(domain, -1, axis=axis)
-                        &(coordinate % 2 == parity))
-            difference = chemical-neighbor_mu
-            affinity = np.abs(difference)
-            edge_temperature = .5*(temperature+neighbor_temperature)
-            rate = exp_floor_event_rate_Hz(
-                affinity, edge_temperature[..., None], parameters.activation)
-            maximum_rate = max(maximum_rate, float(np.max(rate[eligible]))
-                               if np.any(eligible) else 0.0)
-            fraction = np.minimum(
-                -np.expm1(-rate*edge_dt), parameters.maximum_edge_fraction)
-            donor = np.where(difference >= 0.0, value, neighbor_value)
-            flux = np.where(
-                eligible[..., None], np.sign(difference)*fraction*donor, 0.0)
-            value = value-flux+np.roll(flux, 1, axis=axis)
-            moved += float(np.sum(np.abs(flux), dtype=np.longdouble))
+    coordinate = np.arange(shape[axis]).reshape(
+        (-1, 1) if axis == 0 else (1, -1))
+    neighbor_value = np.roll(value, -1, axis=axis)
+    neighbor_mu = np.roll(chemical, -1, axis=axis)
+    neighbor_temperature = np.roll(temperature, -1, axis=axis)
+    eligible = (domain & np.roll(domain, -1, axis=axis)
+                &(coordinate % 2 == parity))
+    difference = chemical-neighbor_mu
+    affinity = np.abs(difference)
+    edge_temperature = .5*(temperature+neighbor_temperature)
+    rate = exp_floor_event_rate_Hz(
+        affinity, edge_temperature[..., None], parameters.activation)
+    maximum_rate = (float(np.max(rate[eligible])) if np.any(eligible) else 0.0)
+    fraction = np.minimum(
+        -np.expm1(-rate*float(edge_interval_s)),
+        parameters.maximum_edge_fraction)
+    donor = np.where(difference >= 0.0, value, neighbor_value)
+    flux = np.where(
+        eligible[..., None], np.sign(difference)*fraction*donor, 0.0)
+    value = value-flux+np.roll(flux, 1, axis=axis)
+    moved = float(np.sum(np.abs(flux), dtype=np.longdouble))
     if np.min(value) < -1e-12*max(float(np.max(population)), 1.0):
         raise RuntimeError("conservative wall glide violated nonnegativity")
     return np.maximum(value, 0.0), moved, maximum_rate
@@ -108,34 +111,62 @@ def evaluate_conservative_wall_glide(
         wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
         **options)
     before = evaluate_complete_multigrain_energy(state, **common)
-    proposed_owners = []
+    maximum_temperature = max(
+        float(np.max(owner.temperature_K)) for owner in state.owners)
+    eV_J = 1.602176634e-19
+    floor_affinity = (parameters.activation.activation_enthalpy_eV*eV_J
+                      /parameters.activation.activation_segment_m)
+    rate_ceiling = float(exp_floor_event_rate_Hz(
+        floor_affinity, maximum_temperature, parameters.activation))
+    edge_exposure_limit = -math.log1p(-parameters.maximum_edge_fraction)
+    internal_substeps = max(1, int(math.ceil(
+        rate_ceiling*dt/(4.0*edge_exposure_limit))))
+    if internal_substeps > int(parameters.maximum_internal_substeps):
+        raise RuntimeError(
+            "conservative wall glide exceeded its physical-clock substeps")
+    substep_s = dt/internal_substeps
+    working = state
     moved = 0.0
     maximum_rate = 0.0
     activity = np.zeros(state.supports.shape[1:])
     before_inventory = []
-    for support, owner in zip(state.supports, state.owners):
-        domain = ((np.asarray(support) > parameters.owner_support_threshold)
-                  &(np.asarray(owner.wall_order)
-                    >= parameters.minimum_wall_order))
-        chemical = wall_free_energy_derivatives(
-            owner, wall_parameters, options.get("topologies", ()), systems)
-        fields = {}
-        owner_activity = np.zeros_like(activity)
-        for sign in ("plus", "minus"):
-            name = f"wall_{sign}_m2"
-            population = np.asarray(getattr(owner, name))
-            before_inventory.append(np.sum(
-                population, axis=(0, 1), dtype=np.longdouble))
-            candidate, sign_moved, sign_rate = _checkerboard_glide(
-                population, chemical[f"wall_{sign}_mu_J_m"],
-                owner.temperature_K, domain, dt, parameters)
-            fields[name] = candidate
-            moved += sign_moved
-            maximum_rate = max(maximum_rate, sign_rate)
-            owner_activity += np.sum(np.abs(candidate-population), axis=2)
-        proposed_owners.append(replace(owner, **fields))
-        activity += np.asarray(support)*owner_activity
-    proposed = replace(state, owners=tuple(proposed_owners))
+    for owner in state.owners:
+        before_inventory.extend((
+            np.sum(owner.wall_plus_m2, axis=(0, 1), dtype=np.longdouble),
+            np.sum(owner.wall_minus_m2, axis=(0, 1), dtype=np.longdouble)))
+    for _ in range(internal_substeps):
+        for axis in (0, 1):
+            for parity in (0, 1):
+                proposed_owners = []
+                for support, owner in zip(working.supports, working.owners):
+                    domain = (
+                        (np.asarray(support) > parameters.owner_support_threshold)
+                        &(np.asarray(owner.wall_order)
+                          >= parameters.minimum_wall_order))
+                    chemical = wall_free_energy_derivatives(
+                        owner, wall_parameters, options.get("topologies", ()),
+                        systems)
+                    fields = {}
+                    owner_activity = np.zeros_like(activity)
+                    for sign in ("plus", "minus"):
+                        name = f"wall_{sign}_m2"
+                        population = np.asarray(getattr(owner, name))
+                        candidate, sign_moved, sign_rate = (
+                            _checkerboard_glide_pass(
+                                population,
+                                chemical[f"wall_{sign}_mu_J_m"],
+                                owner.temperature_K, domain,
+                                substep_s/4.0, axis, parity, parameters))
+                        fields[name] = candidate
+                        moved += sign_moved
+                        maximum_rate = max(maximum_rate, sign_rate)
+                        owner_activity += np.sum(
+                            np.abs(candidate-population), axis=2)
+                    proposed_owners.append(replace(owner, **fields))
+                    activity += np.asarray(support)*owner_activity
+                working = replace(working, owners=tuple(proposed_owners))
+                working.validate()
+    proposed = working
     proposed.validate()
 
     resolution = 4096*np.finfo(float).eps*max(
@@ -186,12 +217,19 @@ def evaluate_conservative_wall_glide(
             np.sum(owner.wall_minus_m2, axis=(0, 1), dtype=np.longdouble)))
     inventory_residual = float(np.max(np.abs(
         np.asarray(after_inventory)-np.asarray(before_inventory))))
+    inventory_scale = max(
+        float(np.max(np.abs(np.asarray(before_inventory)))), 1.0)
+    inventory_closes = bool(
+        inventory_residual <= 4096*np.finfo(float).eps*inventory_scale)
     accepted = bool(moved > 0.0 and downhill
+                    and inventory_closes
                     and relative <= maximum_relative_first_law_residual)
     if moved <= 0.0:
         classification = "INACTIVE_NO_ORDERED_WALL_GLIDE"
     elif not downhill:
         classification = "REJECTED_CONSERVATIVE_WALL_GLIDE_UPHILL"
+    elif not inventory_closes:
+        classification = "REJECTED_CONSERVATIVE_WALL_GLIDE_BALANCE"
     elif relative > maximum_relative_first_law_residual:
         classification = "REJECTED_CONSERVATIVE_WALL_GLIDE_FIRST_LAW"
     else:
@@ -199,7 +237,7 @@ def evaluate_conservative_wall_glide(
     return ConservativeWallGlideDecision(
         accepted, classification, cold, committed if accepted else state,
         scale*moved if accepted else 0.0, inventory_residual,
-        maximum_rate, backtracks, delta,
+        maximum_rate, internal_substeps, backtracks, delta,
         heat if accepted else 0.0, residual if accepted else 0.0,
         relative if accepted else 0.0,
         heat_cells if accepted else np.zeros_like(heat_cells))

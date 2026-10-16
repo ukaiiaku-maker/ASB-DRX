@@ -34,6 +34,15 @@ from full_model.production.lattice_interface_absorption import (
 from full_model.production.wall_orientation_relaxation import (
     WallOrientationRelaxationParameters,
 )
+from full_model.production.implicit_wall_order_relaxation import (
+    ImplicitWallOrderRelaxationParameters,
+)
+from full_model.production.conservative_wall_glide import (
+    ConservativeWallGlideParameters,
+)
+from full_model.production.arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,6 +63,11 @@ def main():
     parser.add_argument("--shear-rate", type=float)
     parser.add_argument("--dt", type=float)
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
+    parser.add_argument("--wall-glide", action="store_true")
+    parser.add_argument(
+        "--source-mode", choices=("disabled", "gb_tj_only", "matched_random"),
+        default="disabled")
+    parser.add_argument("--source-seed", type=int, default=67)
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -68,13 +82,19 @@ def main():
     fronts_enabled = bool(args.dynamic or args.front_enabled
                           or args.shear_rate is not None)
     wall_parameters = context.wall_parameters
-    if args.wall_orientation_relaxation:
+    if args.wall_orientation_relaxation or args.wall_glide:
         wall_parameters = replace(
-            wall_parameters, wall_nye_match_coefficient_J_m=2.0e-5)
+            wall_parameters,
+            wall_nye_match_coefficient_J_m=(
+                wall_parameters.c44_Pa*spacing**2))
     context = replace(
         context, wall_parameters=wall_parameters,
         shear_rate_s=imposed_rate, front_enabled=fronts_enabled,
-        source_mode="disabled", sink_mode="disabled",
+        source_mode=args.source_mode,
+        source_parameters=(
+            None if args.source_mode == "disabled"
+            else ArrheniusSourceParameters(grain_size_m=2.4e-6)),
+        source_random_seed=args.source_seed, sink_mode="disabled",
         interface_sink_mode="disabled", interface_sink_parameters=None,
         structural_absorption_mode="common_axis",
         structural_absorption_parameters=InterfaceStructuralAbsorptionParameters(),
@@ -82,10 +102,20 @@ def main():
         lattice_absorption_parameters=LatticeInterfaceAbsorptionParameters(
             capture_distance_m=args.capture_distance),
         wall_orientation_relaxation_mode=(
-            "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
+            "ordered_nye" if (args.wall_orientation_relaxation
+                               or args.wall_glide) else "disabled"),
         wall_orientation_relaxation_parameters=(
             WallOrientationRelaxationParameters()
-            if args.wall_orientation_relaxation else None))
+            if (args.wall_orientation_relaxation or args.wall_glide) else None),
+        wall_order_relaxation_mode=(
+            "implicit_arrhenius" if args.wall_glide else "disabled"),
+        wall_order_relaxation_parameters=(
+            ImplicitWallOrderRelaxationParameters()
+            if args.wall_glide else None),
+        conservative_wall_glide_mode=(
+            "chemical_edge_glide" if args.wall_glide else "disabled"),
+        conservative_wall_glide_parameters=(
+            ConservativeWallGlideParameters() if args.wall_glide else None))
     dt = (float(args.dt) if args.dt is not None
           else float(configuration["dt_s"]))
     if not np.isfinite(dt) or dt <= 0.0:
@@ -123,6 +153,32 @@ def main():
                 "wall_orientation_relaxation_affinities_J_m"],
             "wall_orientation_first_law_relative_residual": interval.audit[
                 "wall_orientation_relaxation_relative_first_law_residual"],
+            "wall_glide_classification": interval.audit[
+                "conservative_wall_glide_classification"],
+            "wall_glide_moved_line_cell_sum_m2": interval.audit[
+                "conservative_wall_glide_moved_line_cell_sum_m2"],
+            "wall_glide_inventory_residual_m2": interval.audit[
+                "conservative_wall_glide_inventory_residual_m2"],
+            "wall_glide_internal_substeps": interval.audit[
+                "conservative_wall_glide_internal_substeps"],
+            "wall_glide_first_law_relative_residual": interval.audit[
+                "conservative_wall_glide_relative_first_law_residual"],
+            "source_classification": interval.audit["source_classification"],
+            "source_event_count": interval.audit["source_event_count"],
+            "source_first_law_relative_residual": interval.audit[
+                "source_relative_first_law_residual"],
+            "owner_orientation_span_deg": {
+                str(grain): float(np.degrees(np.ptp(
+                    owner.orientation_rad[np.asarray(support) > .75])))
+                for grain, support, owner in zip(
+                    endpoint.state.grain_ids, endpoint.state.supports,
+                    endpoint.state.owners)},
+            "owner_support_weighted_wall_order": {
+                str(grain): float(np.sum(support*owner.wall_order)
+                                  /np.sum(support))
+                for grain, support, owner in zip(
+                    endpoint.state.grain_ids, endpoint.state.supports,
+                    endpoint.state.owners)},
         })
     after = _directional_audit(endpoint, context, fraction=2e-4)
     commit = subprocess.check_output(
@@ -144,7 +200,9 @@ def main():
         wall_orientation_relaxation_mode=(
             "ordered_nye" if args.wall_orientation_relaxation else "disabled"),
         wall_nye_match_coefficient_J_m=(
-            wall_parameters.wall_nye_match_coefficient_J_m))
+            wall_parameters.wall_nye_match_coefficient_J_m),
+        conservative_wall_glide_mode=context.conservative_wall_glide_mode,
+        source_mode=args.source_mode, source_seed=args.source_seed)
     checkpoint = args.out/"checkpoint_latest.npz"
     temporary = args.out/"checkpoint_latest.tmp.npz"
     _save_checkpoint(
@@ -169,7 +227,10 @@ def main():
             "lattice_absorption": "one_flux_mura",
             "structural_absorption": "common_axis",
             "wall_orientation_relaxation": bool(
-                args.wall_orientation_relaxation),
+                args.wall_orientation_relaxation or args.wall_glide),
+            "wall_glide": bool(args.wall_glide),
+            "source_mode": args.source_mode,
+            "source_seed": args.source_seed,
             "wall_nye_match_coefficient_J_m": (
                 wall_parameters.wall_nye_match_coefficient_J_m),
         },
@@ -189,11 +250,19 @@ def main():
             "accepted_wall_orientation_intervals": sum(
                 row["wall_orientation_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_wall_glide_intervals": sum(
+                row["wall_glide_classification"].startswith("ACCEPTED")
+                for row in records),
+            "accepted_source_intervals": sum(
+                row["source_classification"].startswith("ACCEPTED")
+                for row in records),
             "mura_hard_balance_passed": bool(all(
                 row["lattice_mura_relative_residual"] < 2e-11
                 for row in records)),
             "first_law_hard_balance_passed": bool(all(
                 row["lattice_first_law_relative_residual"] < .05
+                and row["wall_glide_first_law_relative_residual"] < .05
+                and row["source_first_law_relative_residual"] < .05
                 for row in records
                 if row["lattice_classification"].startswith("ACCEPTED"))),
             "supports_unchanged": bool(np.array_equal(

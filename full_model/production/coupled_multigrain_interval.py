@@ -493,8 +493,9 @@ def advance_complete_multigrain_interval(
             represented_thickness_m=context.represented_thickness_m,
             systems=context.systems, wall_parameters=context.wall_parameters,
             energy_kwargs=energy_base, parameters=parameters)
-        if wall_glide.classification == (
-                "REJECTED_CONSERVATIVE_WALL_GLIDE_FIRST_LAW"):
+        if wall_glide.classification in {
+                "REJECTED_CONSERVATIVE_WALL_GLIDE_FIRST_LAW",
+                "REJECTED_CONSERVATIVE_WALL_GLIDE_BALANCE"}:
             raise RuntimeError("conservative wall glide failed its hard energy audit")
         if wall_glide.accepted:
             glide_state = wall_glide.committed_state
@@ -996,6 +997,8 @@ def advance_complete_multigrain_interval(
             0.0 if wall_glide is None else wall_glide.inventory_residual_m2),
         "conservative_wall_glide_maximum_rate_s": (
             0.0 if wall_glide is None else wall_glide.maximum_rate_s),
+        "conservative_wall_glide_internal_substeps": (
+            0 if wall_glide is None else wall_glide.internal_substeps),
         "conservative_wall_glide_backtracks": (
             0 if wall_glide is None else wall_glide.backtracks),
         "conservative_wall_glide_relative_first_law_residual": (
