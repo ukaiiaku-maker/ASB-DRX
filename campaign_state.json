@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T21:46:52Z",
+  "last_updated_utc": "2026-10-16T22:31:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -75,13 +75,13 @@
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 85397,
-      "case": "v67_poly_rx_asb_seed19p375_ad_400",
-      "status": "running_adiabatic_continuation_to_0p06664_shear",
-      "last_case": "v67_poly_rx_asb_seed19p375_bath_300",
-      "last_start_local": "2026-10-16T14:45:39-07:00",
-      "last_source_commit": "78f61bf",
-      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_ad_400"
+      "pid": 87093,
+      "case": "v67_poly_rx_asb_seed19p375_bath_400",
+      "status": "running_matched_bath_continuation_to_0p06664_shear",
+      "last_case": "v67_poly_rx_asb_seed19p375_ad_400",
+      "last_start_local": "2026-10-16T15:30:45-07:00",
+      "last_source_commit": "b37fbb1",
+      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_bath_400"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -98,7 +98,7 @@
     "source_identity": "bfea805_analysis_checkpoint_over_unchanged_78f61bf_production_runner;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged",
     "expected_discriminatory_observation": "persistent_connected_bands_and_existing_boundary_RX_in_both_or_only_the_adiabatic_branch_at_a_matched_late_horizon_with_all_first_law_Mura_and_identity_audits_closed",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "through_0p05064_shear_the_fresh_anchor_pair_has_recurrent_mechanical_RX_band_coexistence_with_adiabatic_onset_and_exposure_advanced_43_to_25_intervals;_the_exact_late_horizon_continuation_is_running"
+    "result_status": "the_adiabatic_branch_is_physically_banded_for_all_100_intervals_to_0p06664_shear_with_RX_overlap_and_closed_ledgers_but_remains_stress_hardening;_the_matched_bath_branch_is_running"
   },
   "continuation_rule": {
     "active": true,
