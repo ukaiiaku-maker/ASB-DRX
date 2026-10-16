@@ -160,6 +160,14 @@ def main():
         default="disabled")
     parser.add_argument("--source-seed", type=int, default=67)
     parser.add_argument(
+        "--sink-mode", choices=("disabled", "gb_tj_only", "matched_random"),
+        default="disabled",
+        help=("Arrhenius neutral-pair recovery geography; this is independent "
+              "of the explicit interface-reservoir sink"))
+    parser.add_argument("--sink-seed", type=int, default=67)
+    parser.add_argument("--sink-activation-enthalpy", type=float, default=1.4)
+    parser.add_argument("--sink-stress-assisted", action="store_true")
+    parser.add_argument(
         "--interface-neutral-sink", action="store_true",
         help=("enable the separately ledgered thermal annihilation of neutral "
               "positive/negative line pairs already stored at interfaces"))
@@ -210,7 +218,15 @@ def main():
         source_parameters=(
             None if args.source_mode == "disabled"
             else ArrheniusSourceParameters(grain_size_m=2.4e-6)),
-        source_random_seed=args.source_seed, sink_mode="disabled",
+        source_random_seed=args.source_seed,
+        sink_mode=args.sink_mode,
+        sink_parameters=(
+            None if args.sink_mode == "disabled" else
+            NeutralBoundarySinkParameters(
+                activation_enthalpy_eV=args.sink_activation_enthalpy,
+                stress_assisted=args.sink_stress_assisted,
+                complete_physical_clock=True)),
+        sink_random_seed=args.sink_seed,
         interface_sink_mode=(
             "vector_neutral_junction"
             if args.interface_vector_junction_sink else
@@ -352,6 +368,10 @@ def main():
             args.collective_wall_source_site_density),
         collective_wall_seed=args.collective_wall_seed,
         source_mode=args.source_mode, source_seed=args.source_seed)
+    progress_configuration.update(
+        sink_mode=args.sink_mode, sink_seed=args.sink_seed,
+        sink_activation_enthalpy_eV=args.sink_activation_enthalpy,
+        sink_stress_assisted=bool(args.sink_stress_assisted))
     progress_configuration["interface_neutral_sink"] = bool(
         args.interface_neutral_sink)
     progress_configuration["interface_vector_junction_sink"] = bool(
@@ -363,6 +383,11 @@ def main():
         endpoint = interval.endpoint
         records.append({
             "interval": index,
+            "sink_classification": interval.audit["sink_classification"],
+            "sink_annihilated_pair_cell_sum_m2": interval.audit[
+                "sink_annihilated_pair_cell_sum_m2"],
+            "sink_first_law_relative_residual": interval.audit[
+                "sink_relative_first_law_residual"],
             "interface_sink_classification": interval.audit[
                 "interface_sink_classification"],
             "interface_sink_annihilated_pair_cell_sum_m2": interval.audit[
@@ -641,6 +666,10 @@ def main():
             "collective_wall_seed": args.collective_wall_seed,
             "source_mode": args.source_mode,
             "source_seed": args.source_seed,
+            "sink_mode": args.sink_mode,
+            "sink_seed": args.sink_seed,
+            "sink_activation_enthalpy_eV": args.sink_activation_enthalpy,
+            "sink_stress_assisted": bool(args.sink_stress_assisted),
             "interface_neutral_sink": bool(args.interface_neutral_sink),
             "interface_vector_junction_sink": bool(
                 args.interface_vector_junction_sink),
@@ -684,6 +713,9 @@ def main():
             "accepted_source_intervals": sum(
                 row["source_classification"].startswith("ACCEPTED")
                 for row in records),
+            "accepted_sink_intervals": sum(
+                row["sink_classification"].startswith("ACCEPTED")
+                for row in records),
             "accepted_interface_sink_intervals": sum(
                 row["interface_sink_classification"].startswith("ACCEPTED")
                 for row in records),
@@ -701,6 +733,7 @@ def main():
                 and row["joint_topology_first_law_relative_residual"] < .05
                 and row["compatible_wall_first_law_relative_residual"] < .05
                 and row["source_first_law_relative_residual"] < .05
+                and row["sink_first_law_relative_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records
                 if row["lattice_classification"].startswith("ACCEPTED"))),

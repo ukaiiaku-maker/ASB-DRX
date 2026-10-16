@@ -1,0 +1,174 @@
+{
+  "authoritative_directional_growth_minus_shrink_Pa": -23421.303679477656,
+  "baseline_directional_growth_minus_shrink_Pa": -23421.303679477656,
+  "claim_boundary": "Zero-integral tangential content only. The topological mean remains on the interface and the debited fluctuation equals the curl-derived sliding Nye field. This is an energetic upper bound, not a production kinetic law or an inferred lattice-family transfer kernel.",
+  "created_utc": "2026-10-16T16:05:48.695244+00:00",
+  "decision": {
+    "all_tested_fractions_feasible": false,
+    "baseline_context_matches_authoritative_result": true,
+    "best_delta_helmholtz_J": -3.497285549953447e-18,
+    "best_directional_bias_change_Pa": 0.0001992356264963746,
+    "best_directional_growth_minus_shrink_Pa": -23421.30348024203,
+    "best_fraction": 0.1,
+    "classification": "DOWNHILL_MURA_SLIDING_UPPER_BOUND",
+    "downhill_Mura_compatible_sliding_path": true,
+    "restores_positive_RX_bias": false
+  },
+  "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean/checkpoint_latest.npz",
+  "parent_checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+  "parent_provenance": {
+    "parent_provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "campaign": "V67",
+                "scientific_scope": "fresh zero-load polycrystal anchor",
+                "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                "source_dirty": false
+              },
+              "source_commit": "b6f989d1ba8317d276d9e4b86c40e5a64d09d951"
+            },
+            "source_commit": "5e2fdbffd4a04c0ca86c2481b1db4c96abf16d2f"
+          },
+          "source_commit": "0f3f81a8eb6dcfe017987b57f9439aba7b1bc9f7"
+        },
+        "source_commit": "fc8a5a614792750a14b122e51b578bea43e853aa"
+      },
+      "source_commit": "89e429c9ec96c032d89e54ed0154c7226a13b178"
+    },
+    "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc"
+  },
+  "rows": [
+    {
+      "additional_beta_rms": 1.2086986281045823e-05,
+      "delta_helmholtz_J": -2.480521345653031e-18,
+      "directional_bias_change_Pa": 0.0001992356264963746,
+      "directional_growth_minus_shrink_Pa": -23421.30348024203,
+      "projection": {
+        "dual_nye_relative_rms": 1.2464536234229863e-15,
+        "feasible": true,
+        "integrated_burgers_balance_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_local_burgers_balance_m1": 0.0,
+        "reaction_fraction": 0.05,
+        "removed_carrier_line_cell_sum_m2": 194561865494299.66
+      },
+      "reaction_fraction": 0.05,
+      "sliding_nye_rms_m1": 26.54149343277611
+    },
+    {
+      "additional_beta_rms": 2.4173972562091646e-05,
+      "delta_helmholtz_J": -3.497285549953447e-18,
+      "directional_bias_change_Pa": 0.0001992356264963746,
+      "directional_growth_minus_shrink_Pa": -23421.30348024203,
+      "projection": {
+        "dual_nye_relative_rms": 1.2464536234229863e-15,
+        "feasible": true,
+        "integrated_burgers_balance_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_carrier_deficit_m2": 0.0,
+        "maximum_local_burgers_balance_m1": 0.0,
+        "reaction_fraction": 0.1,
+        "removed_carrier_line_cell_sum_m2": 384414457206406.9
+      },
+      "reaction_fraction": 0.1,
+      "sliding_nye_rms_m1": 53.08298686555222
+    },
+    {
+      "additional_beta_rms": 6.043493140522912e-05,
+      "delta_helmholtz_J": 2.2730000915214607e-18,
+      "directional_bias_change_Pa": 0.00011225731577724218,
+      "directional_growth_minus_shrink_Pa": -23421.30356722034,
+      "projection": {
+        "dual_nye_relative_rms": 1.1360847067645101e-15,
+        "feasible": false,
+        "integrated_burgers_balance_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_carrier_deficit_m2": 2869923.4098503888,
+        "maximum_local_burgers_balance_m1": 0.0,
+        "reaction_fraction": 0.25,
+        "removed_carrier_line_cell_sum_m2": 923444462634470.8
+      },
+      "reaction_fraction": 0.25,
+      "sliding_nye_rms_m1": 132.70746716388058
+    },
+    {
+      "additional_beta_rms": 0.00012086986281045824,
+      "delta_helmholtz_J": 4.159676697031374e-17,
+      "directional_bias_change_Pa": 0.00021204189397394657,
+      "directional_growth_minus_shrink_Pa": -23421.303467435762,
+      "projection": {
+        "dual_nye_relative_rms": 1.1360847067645101e-15,
+        "feasible": false,
+        "integrated_burgers_balance_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_carrier_deficit_m2": 6061631500.074478,
+        "maximum_local_burgers_balance_m1": 0.0,
+        "reaction_fraction": 0.5,
+        "removed_carrier_line_cell_sum_m2": 1701866862473785.0
+      },
+      "reaction_fraction": 0.5,
+      "sliding_nye_rms_m1": 265.41493432776116
+    },
+    {
+      "additional_beta_rms": 0.00018130479421568733,
+      "delta_helmholtz_J": 1.1898021967184744e-16,
+      "directional_bias_change_Pa": 1.2806267477571964e-05,
+      "directional_growth_minus_shrink_Pa": -23421.30366667139,
+      "projection": {
+        "dual_nye_relative_rms": 1.1880979725987728e-15,
+        "feasible": false,
+        "integrated_burgers_balance_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_carrier_deficit_m2": 32407486108.255447,
+        "maximum_local_burgers_balance_m1": 0.0,
+        "reaction_fraction": 0.75,
+        "removed_carrier_line_cell_sum_m2": 2274997245189447.0
+      },
+      "reaction_fraction": 0.75,
+      "sliding_nye_rms_m1": 398.1224014916417
+    },
+    {
+      "additional_beta_rms": 0.00024173972562091647,
+      "delta_helmholtz_J": 2.3625667285477503e-16,
+      "directional_bias_change_Pa": 0.0001992356264963746,
+      "directional_growth_minus_shrink_Pa": -23421.30348024203,
+      "projection": {
+        "dual_nye_relative_rms": 1.1360847067645101e-15,
+        "feasible": false,
+        "integrated_burgers_balance_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_carrier_deficit_m2": 59160689567.525345,
+        "maximum_local_burgers_balance_m1": 0.0,
+        "reaction_fraction": 1.0,
+        "removed_carrier_line_cell_sum_m2": 2533318606082351.0
+      },
+      "reaction_fraction": 1.0,
+      "sliding_nye_rms_m1": 530.8298686555223
+    }
+  ],
+  "schema": "v67-interface-sliding-mura-probe-v1",
+  "source_commit": "894d8da0532c0659acc7f17685da3a0446c869d6",
+  "source_tree_clean": false
+}

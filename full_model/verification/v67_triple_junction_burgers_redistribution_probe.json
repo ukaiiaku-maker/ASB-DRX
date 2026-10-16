@@ -1,17 +1,19 @@
 {
-  "capacity_baseline_directional_growth_minus_shrink_Pa": 66060.7848048124,
+  "authoritative_directional_growth_minus_shrink_Pa": -23421.303679477656,
+  "capacity_baseline_directional_growth_minus_shrink_Pa": -23421.303623226006,
   "claim_boundary": "Symmetric local three-edge upper-bound probe. The fraction-zero capacity-relaxed state isolates ordinary vector-neutral line removal; only the additional energy change is attributed to conservative Burgers redistribution. No production kinetics, plastic distortion, Nye update, support motion, or label change is asserted.",
-  "created_utc": "2026-10-16T15:42:31.488201+00:00",
+  "created_utc": "2026-10-16T16:05:40.288252+00:00",
   "decision": {
     "TJ_redistribution_has_resolved_neighbor_selection_effect": false,
     "TJ_redistribution_restores_positive_RX_bias_beyond_capacity_baseline": false,
+    "baseline_context_matches_authoritative_result": true,
     "best_delta_helmholtz_from_capacity_baseline_J": -2.9872797637322263e-17,
     "best_directional_bias_change_from_capacity_baseline_Pa": 0.0,
-    "best_directional_growth_minus_shrink_Pa": 66060.7848048124,
+    "best_directional_growth_minus_shrink_Pa": -23421.303623226006,
     "best_fraction": 1.0,
-    "capacity_baseline_restores_positive_RX_bias": true,
+    "capacity_baseline_restores_positive_RX_bias": false,
     "classification": "DOWNHILL_TJ_REACTION_NO_DIRECTIONAL_EFFECT",
-    "directional_effect_resolution_Pa": 66.0607848048124,
+    "directional_effect_resolution_Pa": 23.421303623226006,
     "downhill_beyond_vector_neutral_capacity_relaxation": true,
     "hard_vector_balance_passed": true
   },
@@ -45,8 +47,8 @@
   "rows": [
     {
       "delta_helmholtz_from_capacity_baseline_J": -4.707216346092271e-18,
-      "directional_bias_change_from_capacity_baseline_Pa": 4.989223089069128e-05,
-      "directional_growth_minus_shrink_Pa": 66060.78485470463,
+      "directional_bias_change_from_capacity_baseline_Pa": 4.989234730601311e-05,
+      "directional_growth_minus_shrink_Pa": -23421.30357333366,
       "projection": {
         "capacity_limited_cell_count": 1,
         "carrier_capacity_after_cell_sum_m2": 1.6056549667121606e+16,
@@ -81,7 +83,7 @@
     {
       "delta_helmholtz_from_capacity_baseline_J": -1.1141402175827633e-17,
       "directional_bias_change_from_capacity_baseline_Pa": 0.0,
-      "directional_growth_minus_shrink_Pa": 66060.7848048124,
+      "directional_growth_minus_shrink_Pa": -23421.303623226006,
       "projection": {
         "capacity_limited_cell_count": 4,
         "carrier_capacity_after_cell_sum_m2": 1.5672189701187644e+16,
@@ -115,8 +117,8 @@
     },
     {
       "delta_helmholtz_from_capacity_baseline_J": -1.9623605180371718e-17,
-      "directional_bias_change_from_capacity_baseline_Pa": 4.989223089069128e-05,
-      "directional_growth_minus_shrink_Pa": 66060.78485470463,
+      "directional_bias_change_from_capacity_baseline_Pa": 4.989234730601311e-05,
+      "directional_growth_minus_shrink_Pa": -23421.30357333366,
       "projection": {
         "capacity_limited_cell_count": 8,
         "carrier_capacity_after_cell_sum_m2": 1.5165487012744068e+16,
@@ -150,8 +152,8 @@
     },
     {
       "delta_helmholtz_from_capacity_baseline_J": -2.571215767175571e-17,
-      "directional_bias_change_from_capacity_baseline_Pa": 4.989223089069128e-05,
-      "directional_growth_minus_shrink_Pa": 66060.78485470463,
+      "directional_bias_change_from_capacity_baseline_Pa": 4.989234730601311e-05,
+      "directional_growth_minus_shrink_Pa": -23421.30357333366,
       "projection": {
         "capacity_limited_cell_count": 17,
         "carrier_capacity_after_cell_sum_m2": 1.4801774199638734e+16,
@@ -186,7 +188,7 @@
     {
       "delta_helmholtz_from_capacity_baseline_J": -2.9872797637322263e-17,
       "directional_bias_change_from_capacity_baseline_Pa": 0.0,
-      "directional_growth_minus_shrink_Pa": 66060.7848048124,
+      "directional_growth_minus_shrink_Pa": -23421.303623226006,
       "projection": {
         "capacity_limited_cell_count": 28,
         "carrier_capacity_after_cell_sum_m2": 1.4553229398828318e+16,
@@ -220,6 +222,6 @@
     }
   ],
   "schema": "v67-triple-junction-burgers-redistribution-probe-v1",
-  "source_commit": "67cd3e48cbf02dcb769a0d972e8534ee64e329b7",
+  "source_commit": "894d8da0532c0659acc7f17685da3a0446c869d6",
   "source_tree_clean": true
 }
