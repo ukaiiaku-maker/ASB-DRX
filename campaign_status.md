@@ -2867,3 +2867,13 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   fresh clean-source n32/n48 polycrystal anchor using the accepted operators.
 - Canonical regression: 1,139 tests pass in 331.92 seconds. No heavy solver is
   active at this checkpoint; autonomous continuation remains in force.
+- A clean-source n32 zero-load anchor was generated under `c039873` with
+  159/121/121 owner-core cells and no production loading interval. Its
+  orientation field is unforced, so it is a virgin organization test rather
+  than another inherited-gradient continuation.
+- The first 0.4 microsecond n32 interval exposed a stale inherited 2 ns front
+  ceiling and required about 3.5 minutes. Explicit front-substep refinement
+  shows 40 ns and 400 ns agree with that 2 ns reference: support relative L2
+  errors are 1.57e-9 and 1.65e-8, respectively, and the maximum state-field
+  relative error at 400 ns is 1.04e-5. The continuation runner now records and
+  controls this numerical cadence explicitly; no physical clock is changed.

@@ -1,0 +1,70 @@
+{
+  "artifacts": {
+    "checkpoint_latest.npz": "358a4b89f63bd54c5ccf7965e2a3d517fca04c18d383398101dbb6334d5c4cad"
+  },
+  "configuration": {
+    "dt_s": 2e-09,
+    "front_maximum_substep_s": 2e-09,
+    "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+    "initial_state": "fresh V66 three-owner preparation at zero load",
+    "interface_sink_mode": "disabled",
+    "interface_width_m": 6e-07,
+    "length_m": 4.8e-06,
+    "maximum_mechanical_subdivisions": 14,
+    "n": 32,
+    "plastic_history_mode": "material_continuity",
+    "schema": "v67-clean-polycrystal-anchor-v1",
+    "shear_rate_s": 0.0,
+    "sink_activation_enthalpy_eV": 1.4,
+    "sink_mode": "disabled",
+    "sink_stress_assisted": false,
+    "source_grain_size_m": 2.4e-06,
+    "source_mode": "disabled",
+    "structural_absorption_mode": "disabled",
+    "target_steps": 0,
+    "temperature_K": 1000.0,
+    "thermal_bath_rate_s": 0.0,
+    "thermal_bath_temperature_K": 1000.0,
+    "thermal_control": "adiabatic",
+    "thermal_diffusivity_m2_s": 3.947368421052631e-08
+  },
+  "created_utc": "2026-10-16T02:31:25.829580+00:00",
+  "decision": {
+    "grain_ids_unchanged_by_publication": true,
+    "production_loading_intervals": 0,
+    "source_tree_clean": true,
+    "zero_load_anchor": true
+  },
+  "preparation": {
+    "contrast_Pa": 20091220.84542289,
+    "high_density_m2_each": 2242357871713654.5,
+    "low_density_m2_each": 10000000000000.0
+  },
+  "provenance": {
+    "campaign": "V67",
+    "scientific_scope": "fresh zero-load polycrystal anchor",
+    "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+    "source_dirty": false
+  },
+  "result": {
+    "applied_shear_strain": 0.0,
+    "grain_count": 3,
+    "grain_ids": [
+      10,
+      20,
+      30
+    ],
+    "owner_core_cells": [
+      159,
+      121,
+      121
+    ],
+    "owner_orientation_span_deg": [
+      0.0,
+      3.180554681463517e-14,
+      6.361109362927034e-14
+    ],
+    "physical_time_s": 4.0000000000000014e-07
+  },
+  "schema": "v67-clean-polycrystal-anchor-v1"
+}

@@ -65,6 +65,10 @@ def main():
     parser.add_argument("--front-enabled", action="store_true")
     parser.add_argument("--shear-rate", type=float)
     parser.add_argument("--dt", type=float)
+    parser.add_argument(
+        "--front-substep", type=float,
+        help=("maximum front transaction substep in seconds; defaults to the "
+              "continuation interval rather than an inherited parent cadence"))
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
     parser.add_argument("--wall-glide", action="store_true")
     parser.add_argument("--dipole-wall-organization", action="store_true")
@@ -139,6 +143,13 @@ def main():
           else float(configuration["dt_s"]))
     if not np.isfinite(dt) or dt <= 0.0:
         raise ValueError("continuation dt must be positive finite")
+    front_substep = (dt if args.front_substep is None
+                     else float(args.front_substep))
+    if not np.isfinite(front_substep) or front_substep <= 0.0:
+        raise ValueError("front substep must be positive finite")
+    if front_substep > dt:
+        raise ValueError("front substep cannot exceed the continuation interval")
+    context = replace(context, maximum_front_substep_s=front_substep)
     endpoint = make_endpoint(state, runtime, load, context)
     before = _directional_audit(endpoint, context, fraction=2e-4)
     records = []
@@ -147,6 +158,7 @@ def main():
         schema="v67-one-flux-lattice-structural-continuation-v1",
         parent_checkpoint=str(args.checkpoint.resolve()),
         target_steps=args.intervals, shear_rate_s=imposed_rate, dt_s=dt,
+        front_maximum_substep_s=front_substep,
         front_enabled=fronts_enabled,
         lattice_absorption_mode="one_flux_mura",
         lattice_capture_distance_m=args.capture_distance,
@@ -265,6 +277,7 @@ def main():
         "parent_provenance": provenance,
         "configuration": {
             "intervals": args.intervals, "dt_s": dt,
+            "front_maximum_substep_s": front_substep,
             "capture_distance_m": args.capture_distance,
             "shear_rate_s": imposed_rate, "front_enabled": fronts_enabled,
             "lattice_absorption": "one_flux_mura",

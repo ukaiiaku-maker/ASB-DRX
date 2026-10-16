@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T02:29:38Z",
+  "last_updated_utc": "2026-10-16T02:48:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -82,9 +82,9 @@
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
     "physical_uncertainty": "whether_the_subdegree_rate_ordered_precursor_is_an_n16_representation_limit_or_a_true_common_law_saturation_and_whether_it_can_organize_inside_a_clean_active_shear_band",
-    "next_executable_experiment": "construct_a_fresh_clean_source_n32_polycrystal_anchor_then_apply_the_accepted_GB_source_capture_ordering_recovery_and_one_flux_Mura_path_at_common_strain_increments",
-    "source_identity": "V67_conservative_capture_and_asymmetric_recovery_pending_commit",
-    "expected_discriminatory_observation": "a_resolved_owner_must_exceed_the_n16_low_angle_plateau_with_all_line_Mura_energy_and_heat_ledgers_closed_before_any_DRX_or_overlap_claim",
+    "next_executable_experiment": "continue_the_clean_c039873_n32_zero_load_anchor_at_200_per_s_with_the_front_substep_qualified_at_1p04e_minus5_maximum_relative_field_error_until_source_activation_or_a_resolved_negative_horizon",
+    "source_identity": "c039873_clean_n32_zero_load_anchor_plus_pending_front_cadence_repair",
+    "expected_discriminatory_observation": "the_virgin_resolved_path_must_activate_Hall_Petch_supply_and_exceed_the_n16_low_angle_plateau_with_all_line_Mura_energy_and_heat_ledgers_closed_before_any_DRX_claim",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
     "result_status": "conservative_source_to_wall_capture_and_asymmetric_Arrhenius_recovery_pass_1139_tests_and_produce_a_rate_ordered_0p704_degree_n16_precursor;_two_degree_DRX_static_RX_and_DRX_inside_a_qualified_ASB_remain_unqualified;_dirty_parent_n48_evidence_is_quarantined"
   },
