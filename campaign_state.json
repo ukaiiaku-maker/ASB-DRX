@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T06:45:00Z",
+  "last_updated_utc": "2026-10-16T07:42:49Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -49,28 +49,29 @@
   },
   "goal_status": {
     "G01": "partially_supported_common_framework_requires_RX_mechanism",
-    "G02": "qualified_exact_clock_existing_boundary_path_at_20_per_s_peaks_at_0p25737_percent_then_physically_reverses_and_retained_static_holds_shrink_the_target;_percent_scale_DRX_remains_absent",
+    "G02": "full_common_production_candidate_grows_existing_grain20_by_0p21727_percent_at_2_per_s_versus_0p01643_percent_at_20_per_s_at_common_incremental_strain;_percent_scale_DRX_and_new_grain_birth_remain_absent",
     "G03": "matched_n32_n48_16_percent_horizon_forms_connected_bands_with_and_without_heat; thermal_amplification_positive_but_strict_ASB_false_because_band_geometry_is_not_spatially_converged",
     "G04": "response_sensitivity_demonstrated; required_regime_switching_and_dynamic_spatial_coexistence_not_yet_demonstrated",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
-    "G06": "high_rate_retained_state_grows_monotonically_during_six_microsecond_hold_and_continues_after_release_to_704_Pa_mean_stress"
+    "G06": "repaired_full_production_2_per_s_state_grows_grain20_by_0p04759_percent_during_a_no_reset_40_microsecond_zero_rate_hold_with_target_growth_remaining_downhill"
   },
   "active_hypotheses": {
     "H1": "signed_lattice_absorption_with_exact_competing_hazards_and_same_interval_structural_handoff_removes_the_old_numerical_reversal_but_the_repaired_path_later_reverses_physically_below_one_percent",
     "H2": "conservative_GB_source_to_ordered_wall_capture_with_asymmetric_Arrhenius_recovery_produces_a_rate_ordered_low_angle_precursor_but_has_not_matured_a_two_degree_RX_region",
     "H3": "family_total_Groma_transport_has_a_positive_0.8_um_high_temperature_tangent_but_the_valid_concurrent_nonlinear_prefix_does_not_separate_wall_polarization_from_control_and_supports_only_4.35e-5_deg_total_signed_capacity; endogenous_wall_formation_is_negative_at_tested_conditions",
     "H4": "GB_TJ_only_and_matched_random_Arrhenius_sources_are_nearly_indistinguishable_over_twenty_n16_intervals_so_source_geography_is_not_the_current_rate_limiting_mechanism",
-    "H5": "same_family_neutral_and_vector_neutral_interface_sinks_are_valid_negative_controls;_even_the_ideal_Burgers_capacity_relaxation_bound_does_not_reverse_the_final_front_selection"
+    "H5": "same_family_neutral_and_vector_neutral_interface_sinks_are_valid_negative_controls;_even_the_ideal_Burgers_capacity_relaxation_bound_does_not_reverse_the_final_front_selection",
+    "H6": "restoring_the_common_GB_TJ_source_wall_dipole_ordering_and_junction_channels_prevents_the_early_disabled_control_reversal_and_produces_a_13p2_fold_lower_rate_growth_advantage_at_common_incremental_strain"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_qualified_exact_clock_80us_continuation",
-      "last_case": "v67_exact_handoff_dynamic80us",
-      "last_start_local": "2026-10-15T22:49:00-07:00",
-      "last_source_commit": "working_tree_exact_clock_repair_pending_commit",
-      "last_output": "full_model/verification/v67_exact_handoff_dynamic80us"
+      "status": "available_after_fullphysics_rate2_dynamic_and_retained_static_completion",
+      "last_case": "v67_exact_fullphysics_rate2_retained_static40us",
+      "last_start_local": "2026-10-16T00:28:00-07:00",
+      "last_source_commit": "0f3f81a8eb6dcfe017987b57f9439aba7b1bc9f7",
+      "last_output": "full_model/verification/v67_exact_fullphysics_rate2_retained_static40us"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -81,13 +82,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5"],
-    "physical_uncertainty": "whether_lower_rate_physical_exposure_under_the_unchanged_common_law_can_reach_one_percent_existing_boundary_RX_before_the_now_verified_physical_reversal",
-    "next_executable_experiment": "run_a_common_state_lower_rate_continuation_with_the_exact_clock_baseline_and_no_sink_ablation_then_compare_growth_per_strain_and_reversal_load",
-    "source_identity": "2a4073a_plus_scale_aware_Burgers_balance_and_quarantined_interface_sink_ablations_pending_commit",
-    "expected_discriminatory_observation": "lower_rate_must_increase_sustained_target_growth_toward_one_percent_without_a_mechanism_switch_or_condition_specific_parameter_change",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6"],
+    "physical_uncertainty": "whether_the_now_sustained_full_production_2_per_s_existing_boundary_response_reaches_one_percent_before_a_complete_energy_reversal_and_whether_it_can_seed_a_new_intragranular_region",
+    "next_executable_experiment": "continue_the_valid_2_per_s_full_production_checkpoint_without_retuning_toward_one_percent_or_a_directional_energy_reversal_then_execute_the_selected_neighboring_response_test",
+    "source_identity": "0f3f81a_with_full_common_production_channel_set_and_exact_0p5_microsecond_clock",
+    "expected_discriminatory_observation": "continued_monotonic_target_growth_with_both_neighbor_directions_downhill_or_a_resolved_energy_component_that_causes_reversal",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "exact_clock_response_converges_but_peaks_below_one_percent_and_then_reverses_physically;_retained_static_RX_is_negative;_neutral_and_vector_neutral_GB_sink_hypotheses_are_negative_and_the_ideal_relaxed_front_bound_remains_shrink_selected;_lower_rate_common_law_exposure_is_next"
+    "result_status": "full_common_production_channels_turn_the_disabled_control_reversal_into_0p21727_percent_monotonic_dynamic_growth_at_2_per_s;_common_strain_growth_is_13p2_times_the_20_per_s_response;_no_reset_static_hold_adds_0p04759_percent;_one_percent_DRX_and_new_grain_birth_remain_unqualified"
   },
   "continuation_rule": {
     "active": true,

@@ -2961,3 +2961,42 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The selected next response-family discriminator is lower-rate exposure from
   a common accepted state under the identical Arrhenius Peierls--Taylor--Hall--
   Petch law. No sink or transfer coefficient is retuned.
+
+## V67 common-production lower-rate and retained-state response (2026-10-16)
+
+- A source/organization-disabled 2/s control peaks near 0.045% target growth
+  and reverses before 80 microseconds. Caller timesteps of 1 and 5
+  microseconds are rejected against the 0.5 microsecond reference: target-
+  response errors are 24.1% and 54.8%, respectively. The qualified cadence
+  therefore remains 0.5 microseconds.
+- The control exposed an effective-switch mismatch: it did not continue the
+  GB/TJ source, conservative wall glide, dipole organization, ordered-wall
+  relaxation, or structural junction reactions that prepared the common
+  state. It is retained as a negative ablation, not classified as the common
+  production model.
+- With all production channels restored and the exact lattice/structural
+  clocks unchanged, the 2/s branch grows grain 20 monotonically by 0.21727%
+  over 80 microseconds. Grain 30 shrinks 0.21988%, while grain 10 changes only
+  0.00026%. Both adjacent complete-energy comparisons favor target growth at
+  the endpoint.
+- At the identical incremental shear strain of 0.00016, the same fixed
+  parameterization grows grain 20 by 0.21727% at 2/s and 0.01643% at 20/s, a
+  factor of 13.2 in favor of lower-rate RX. No rate selector, kinetic
+  coefficient change, or sink ablation is used.
+- The Hall--Petch GB/TJ source accepts only the first three lower-rate
+  intervals and is then below energy resolution. Sustained growth is carried
+  by the retained source history plus conservative wall/dipole and junction
+  redistribution, rather than continuing line injection.
+- A no-reset 40 microsecond zero-rate hold from the 2/s endpoint grows grain
+  20 by a further 0.04759%; both target-growth directions remain downhill.
+  This establishes positive retained existing-boundary static RX for the
+  repaired candidate. It does not establish spontaneous intragranular grain
+  birth or percent-scale DRX.
+- All 160 lower-rate dynamic intervals and all 80 retained static intervals
+  close the Mura and declared channel first-law audits. Result/checkpoint
+  SHA-256 pairs are `624a4528...`/`f0fcb66a...` for dynamic and
+  `fb6567d2...`/`cf014ace...` for static.
+- The active experiment is a no-retuning continuation of the valid 2/s
+  production checkpoint toward 1% target growth or a genuine directional-
+  energy reversal. A success leads to the common-law neighboring response and
+  coexistence tests; a reversal selects the responsible evolving energy term.
