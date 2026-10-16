@@ -21,6 +21,19 @@ def _sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def _component_bias(audit):
+    rows = [row for row in audit["directional_prices"]
+            if row["target_owner_grows"] or row["target_owner_shrinks"]]
+    values = {}
+    for row in rows:
+        sign = 1.0 if row["target_owner_grows"] else -1.0
+        volume = float(row["swept_volume_m3"])
+        for name, delta in row[
+                "structural_energy_component_change_J"].items():
+            values[name] = values.get(name, 0.0)+sign*(-float(delta)/volume)
+    return values
+
+
 def _case(directory, grain_id, spacing_m, thickness_m):
     result_path = directory/"result.json"
     checkpoint_path = directory/"checkpoint_latest.npz"
@@ -55,6 +68,8 @@ def _case(directory, grain_id, spacing_m, thickness_m):
             row["source_event_count"] for row in result["interval_records"])),
         "directional_bias": _directional_bias(
             result["after_directional_audit"], grain_id),
+        "directional_component_growth_minus_shrink_Pa": _component_bias(
+            result["after_directional_audit"]),
         "hard_audits_passed": bool(
             result["source_tree_clean"]
             and decision["first_law_hard_balance_passed"]
