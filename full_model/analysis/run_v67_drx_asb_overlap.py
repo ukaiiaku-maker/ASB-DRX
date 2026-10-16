@@ -52,7 +52,6 @@ from full_model.production.arrhenius_dislocation_sources import (
 from full_model.production.multigrain_source_transaction import (
     NeutralBoundarySinkParameters,
 )
-from full_model.production.multigrain_common_state import MultiGrainCommonState
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -127,7 +126,10 @@ def _temperature_seed(state, peak_K, width_m, spacing_m, normal="x"):
     owners = tuple(replace(
         owner, temperature_K=np.asarray(owner.temperature_K)+amplitude*profile)
         for owner in state.owners)
-    seeded = MultiGrainCommonState(state.grain_ids, state.supports, owners)
+    # Preserve explicit front-interface reservoirs and their ledger. Rebuilding
+    # only from grain IDs/supports/owners would silently erase the exact
+    # moving-front history carried by a restart checkpoint.
+    seeded = replace(state, owners=owners)
     seeded.validate()
     return seeded
 

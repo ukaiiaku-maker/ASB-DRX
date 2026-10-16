@@ -1,4 +1,5 @@
 from dataclasses import fields
+from dataclasses import replace
 
 import numpy as np
 
@@ -7,6 +8,7 @@ from full_model.analysis.run_v67_drx_asb_overlap import _temperature_seed
 from full_model.analysis.run_v67_interface_structural_bridge import (
     _args_from_configuration,
 )
+from full_model.production.multigrain_common_state import MultiGrainLedger
 
 
 def test_checkpoint_bridge_preserves_nonzero_bath_rate():
@@ -23,11 +25,15 @@ def test_checkpoint_bridge_preserves_nonzero_bath_rate():
 def test_polycrystal_temperature_seed_is_mean_zero_and_owner_independent():
     state = initialize_state(
         16, 1000.0, spacing_m=3e-7, interface_width_m=6e-7)
+    state = replace(
+        state, ledger=MultiGrainLedger(attempted_transactions=7))
     seeded = _temperature_seed(state, 20.0, 6e-7, 3e-7, "diagonal")
     deltas = [owner.temperature_K-before.temperature_K
               for owner, before in zip(seeded.owners, state.owners)]
     assert abs(float(np.mean(deltas[0]))) < 1e-12
     assert np.ptp(deltas[0]) > 20.0
+    assert seeded.ledger == state.ledger
+    assert seeded.interfaces is state.interfaces
     for delta in deltas[1:]:
         np.testing.assert_array_equal(delta, deltas[0])
     for current, before in zip(seeded.owners, state.owners):
