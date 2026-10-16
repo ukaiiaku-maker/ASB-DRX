@@ -108,6 +108,7 @@ def main():
     parser.add_argument("--dt", type=float, default=8e-4)
     parser.add_argument("--shear-rate", type=float, default=10.0)
     parser.add_argument("--source-seed", type=int, default=67)
+    parser.add_argument("--nucleation-seed", type=int)
     parser.add_argument(
         "--source-mode", choices=("random_bulk", "random_discrete_bulk"),
         default="random_bulk")
@@ -122,6 +123,8 @@ def main():
             "continued_single_crystal"),
         default="retained_owner")
     args = parser.parse_args()
+    nucleation_seed = (args.source_seed if args.nucleation_seed is None
+                       else args.nucleation_seed)
     args.out.mkdir(parents=True, exist_ok=True)
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain"), cwd=ROOT, text=True)
@@ -215,7 +218,7 @@ def main():
                 source_site_density_m2=args.source_site_density_m2,
                 source_seed=args.source_seed)
             if args.collective_wall_nucleation else None),
-        collective_wall_nucleation_seed=args.source_seed)
+        collective_wall_nucleation_seed=nucleation_seed)
     runtime = (loaded_runtime
                if args.initial_state == "continued_single_crystal"
                else MultiGrainProductionRuntime(()))
@@ -231,6 +234,7 @@ def main():
         intervals=args.intervals, dt_s=args.dt,
         shear_rate_s=args.shear_rate, source_mode=args.source_mode,
         source_seed=args.source_seed,
+        nucleation_seed=nucleation_seed,
         source_bulk_site_density_m2=args.source_site_density_m2,
         collective_wall_nucleation=args.collective_wall_nucleation,
         wall_order_relaxation_mode=context.wall_order_relaxation_mode,
@@ -355,6 +359,7 @@ def main():
             "added_engineering_shear": (
                 args.intervals*args.dt*args.shear_rate),
             "source_mode": args.source_mode, "source_seed": args.source_seed,
+            "nucleation_seed": nucleation_seed,
             "source_bulk_site_density_m2": args.source_site_density_m2,
             "collective_wall_nucleation": args.collective_wall_nucleation,
             "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
