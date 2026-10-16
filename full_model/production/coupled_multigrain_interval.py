@@ -51,6 +51,10 @@ from .implicit_wall_order_relaxation import (
     ImplicitWallOrderRelaxationParameters,
     evaluate_implicit_wall_order_relaxation,
 )
+from .compatible_wall_reorganization import (
+    CompatibleWallReorganizationParameters,
+    evaluate_compatible_wall_reorganization,
+)
 from .structural_interface_network import (
     JunctionDisclinationParameters, initialize_structural_interfaces,
     interface_lengths_m,
@@ -96,6 +100,8 @@ class CoupledMultigrainContext:
     wall_orientation_relaxation_mode: str = "disabled"
     wall_order_relaxation_parameters: object | None = None
     wall_order_relaxation_mode: str = "disabled"
+    compatible_wall_reorganization_parameters: object | None = None
+    compatible_wall_reorganization_mode: str = "disabled"
 
 
 def endpoint_observables(state, load: float,
@@ -419,12 +425,54 @@ def advance_complete_multigrain_interval(
                 wall_order.relative_first_law_residual
                 if wall_order.accepted else 0.0)))
     wall_order_wall_time = time.perf_counter()-wall_order_started
+    wall_reorganization_started = time.perf_counter()
+    wall_reorganization = None
+    reorganized_state = ordered_state
+    if context.compatible_wall_reorganization_mode != "disabled":
+        if context.compatible_wall_reorganization_mode != "frank_bilby_projection":
+            raise ValueError("unknown compatible wall-reorganization mode")
+        parameters = (CompatibleWallReorganizationParameters()
+                      if context.compatible_wall_reorganization_parameters is None
+                      else context.compatible_wall_reorganization_parameters)
+        wall_reorganization = evaluate_compatible_wall_reorganization(
+            reorganized_state, interval_s=dt, mean_strain=strain1,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, parameters=parameters)
+        if wall_reorganization.classification == (
+                "REJECTED_COMPATIBLE_WALL_GLIDE_FIRST_LAW"):
+            raise RuntimeError(
+                "compatible wall reorganization failed its hard energy audit")
+        if wall_reorganization.accepted:
+            reorganized_state = wall_reorganization.committed_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            compatible_wall_reorganization_intervals=(
+                runtime.ledger.compatible_wall_reorganization_intervals
+                +int(wall_reorganization.accepted)),
+            compatible_wall_reorganization_inactive_intervals=(
+                runtime.ledger.compatible_wall_reorganization_inactive_intervals
+                +int(wall_reorganization.classification.startswith("INACTIVE"))),
+            compatible_wall_reorganization_rejected_intervals=(
+                runtime.ledger.compatible_wall_reorganization_rejected_intervals
+                +int(wall_reorganization.classification.startswith("REJECTED"))),
+            cumulative_compatible_wall_reorganization_heat_J=(
+                runtime.ledger.cumulative_compatible_wall_reorganization_heat_J
+                +(wall_reorganization.generated_heat_J
+                  if wall_reorganization.accepted else 0.0)),
+            maximum_compatible_wall_reorganization_first_law_residual=max(
+                runtime.ledger.maximum_compatible_wall_reorganization_first_law_residual,
+                wall_reorganization.relative_first_law_residual
+                if wall_reorganization.accepted else 0.0)))
+    wall_reorganization_wall_time = (
+        time.perf_counter()-wall_reorganization_started)
     # The neutral sink is a distinct zero-work physical channel. It follows
     # line creation so a same-site source/sink hypothesis has an unambiguous
     # operator order and separate line/heat ledgers.
     sink_started = time.perf_counter()
     sink = None
-    sink_state = ordered_state
+    sink_state = reorganized_state
     if context.sink_mode != "disabled":
         if context.sink_parameters is None:
             raise ValueError("enabled sink mode requires sink parameters")
@@ -703,6 +751,13 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if wall_order is None or not wall_order.accepted
             else np.asarray(wall_order.heat_source_J_by_cell)),
+        "compatible_wall_reorganization_heat_J": (
+            0.0 if wall_reorganization is None or not wall_reorganization.accepted
+            else wall_reorganization.generated_heat_J),
+        "compatible_wall_reorganization_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if wall_reorganization is None or not wall_reorganization.accepted
+            else np.asarray(wall_reorganization.heat_source_J_by_cell)),
         "sink_heat_J": (0.0 if sink is None or not sink.accepted
                          else sink.generated_heat_J),
         "sink_heat_J_by_cell": (
@@ -801,6 +856,26 @@ def advance_complete_multigrain_interval(
         "wall_order_relaxation_relative_first_law_residual": (
             0.0 if wall_order is None or not wall_order.accepted
             else wall_order.relative_first_law_residual),
+        "compatible_wall_reorganization_mode": (
+            context.compatible_wall_reorganization_mode),
+        "compatible_wall_reorganization_classification": (
+            "DISABLED" if wall_reorganization is None
+            else wall_reorganization.classification),
+        "compatible_wall_reorganization_fractions": (
+            {} if wall_reorganization is None
+            else wall_reorganization.owner_fraction_by_id),
+        "compatible_wall_reorganization_affinities_J_m": (
+            {} if wall_reorganization is None
+            else wall_reorganization.owner_affinity_J_m_by_id),
+        "compatible_wall_reorganization_signed_residual_m2": (
+            0.0 if wall_reorganization is None
+            else wall_reorganization.signed_content_residual_m2),
+        "compatible_wall_reorganization_line_residual_m2": (
+            0.0 if wall_reorganization is None
+            else wall_reorganization.line_balance_residual_m2),
+        "compatible_wall_reorganization_relative_first_law_residual": (
+            0.0 if wall_reorganization is None or not wall_reorganization.accepted
+            else wall_reorganization.relative_first_law_residual),
         "sink_mode": context.sink_mode,
         "sink_classification": ("DISABLED" if sink is None
                                 else sink.classification),
@@ -884,6 +959,7 @@ def advance_complete_multigrain_interval(
             "mechanical_map": mechanical_wall_time,
             "source_map": source_wall_time,
             "wall_order_relaxation_map": wall_order_wall_time,
+            "compatible_wall_reorganization_map": wall_reorganization_wall_time,
             "sink_map": sink_wall_time,
             "interface_sink_map": interface_sink_wall_time,
             "structural_absorption_map": structural_absorption_wall_time,
@@ -893,6 +969,7 @@ def advance_complete_multigrain_interval(
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time
                                 +wall_order_wall_time+sink_wall_time
+                                +wall_reorganization_wall_time
                                 +interface_sink_wall_time
                                 +structural_absorption_wall_time+front_wall_time
                                 +lattice_absorption_wall_time

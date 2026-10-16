@@ -47,6 +47,9 @@ from full_model.production.multigrain_common_state import MultiGrainCommonState
 from full_model.production.implicit_wall_order_relaxation import (
     ImplicitWallOrderRelaxationParameters,
 )
+from full_model.production.compatible_wall_reorganization import (
+    CompatibleWallReorganizationParameters,
+)
 from full_model.production.multigrain_production import MultiGrainProductionRuntime
 from full_model.production.orientation_wall_compatibility import (
     evaluate_orientation_wall_compatibility, ordered_wall_nye_from_common,
@@ -153,7 +156,11 @@ def main():
     single.validate()
     spacing, thickness, systems, wall, _, _, context = _physics(
         _args_from_configuration(configuration))
-    wall_updates = {"wall_nye_match_coefficient_J_m": 2.0e-5}
+    # Gradient-elastic compatibility at the resolved wall width.  The former
+    # 2e-5 J/m value corresponds to a sub-grid ~14 nm length and lets the
+    # O(1e6 J/m3) ordering well overwhelm Frank--Bilby consistency.
+    wall_updates = {
+        "wall_nye_match_coefficient_J_m": wall.c44_Pa*spacing**2}
     if args.initial_state in {
             "uniform_single_crystal", "continued_single_crystal"}:
         poisson = wall.c12_Pa/(wall.c11_Pa+wall.c12_Pa)
@@ -193,6 +200,12 @@ def main():
             else "disabled"),
         wall_order_relaxation_parameters=(
             ImplicitWallOrderRelaxationParameters()
+            if args.collective_wall_nucleation else None),
+        compatible_wall_reorganization_mode=(
+            "frank_bilby_projection" if args.collective_wall_nucleation
+            else "disabled"),
+        compatible_wall_reorganization_parameters=(
+            CompatibleWallReorganizationParameters()
             if args.collective_wall_nucleation else None))
     runtime = (loaded_runtime
                if args.initial_state == "continued_single_crystal"
@@ -213,7 +226,7 @@ def main():
         collective_wall_nucleation=args.collective_wall_nucleation,
         wall_order_relaxation_mode=context.wall_order_relaxation_mode,
         transport_scheme=args.transport_scheme,
-        wall_nye_match_coefficient_J_m=2.0e-5)
+        wall_nye_match_coefficient_J_m=wall.wall_nye_match_coefficient_J_m)
     for index in range(1, args.intervals+1):
         interval = advance_complete_multigrain_interval(
             endpoint, args.dt, context)
@@ -264,6 +277,20 @@ def main():
                     active_owner_id, 0.0),
             "wall_order_relative_first_law_residual": interval.audit[
                 "wall_order_relaxation_relative_first_law_residual"],
+            "wall_reorganization_classification": interval.audit[
+                "compatible_wall_reorganization_classification"],
+            "wall_reorganization_fraction": interval.audit[
+                "compatible_wall_reorganization_fractions"].get(
+                    active_owner_id, 0.0),
+            "wall_reorganization_affinity_J_m": interval.audit[
+                "compatible_wall_reorganization_affinities_J_m"].get(
+                    active_owner_id, 0.0),
+            "wall_reorganization_signed_residual_m2": interval.audit[
+                "compatible_wall_reorganization_signed_residual_m2"],
+            "wall_reorganization_line_residual_m2": interval.audit[
+                "compatible_wall_reorganization_line_residual_m2"],
+            "wall_reorganization_relative_first_law_residual": interval.audit[
+                "compatible_wall_reorganization_relative_first_law_residual"],
             "wall_orientation_classification": interval.audit[
                 "wall_orientation_relaxation_classification"],
             "wall_orientation_fraction": interval.audit[
@@ -339,7 +366,8 @@ def main():
             "collective_wall_nucleation": args.collective_wall_nucleation,
             "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
             "source_parameters": asdict(source_parameters),
-            "wall_nye_match_coefficient_J_m": 2.0e-5,
+            "wall_nye_match_coefficient_J_m": (
+                wall.wall_nye_match_coefficient_J_m),
             "polarized_wall_absorption_enabled": (
                 wall.polarized_wall_absorption_enabled),
             "polarized_mobile_wall_absorption_enabled": (
@@ -364,6 +392,7 @@ def main():
                 row["source_relative_first_law_residual"] < .05
                 and row["mechanical_relative_first_law_residual"] < .05
                 and row["wall_order_relative_first_law_residual"] < .05
+                and row["wall_reorganization_relative_first_law_residual"] < .05
                 and row["collective_wall_first_law_relative_residual"] < .05
                 for row in records),
             "accepted_collective_wall_events": sum(

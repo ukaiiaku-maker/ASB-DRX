@@ -146,6 +146,11 @@ class MultiGrainProductionLedger:
     wall_order_relaxation_rejected_intervals: int = 0
     cumulative_wall_order_relaxation_heat_J: float = 0.0
     maximum_wall_order_relaxation_first_law_residual: float = 0.0
+    compatible_wall_reorganization_intervals: int = 0
+    compatible_wall_reorganization_inactive_intervals: int = 0
+    compatible_wall_reorganization_rejected_intervals: int = 0
+    cumulative_compatible_wall_reorganization_heat_J: float = 0.0
+    maximum_compatible_wall_reorganization_first_law_residual: float = 0.0
 
 
 @dataclass(frozen=True)
