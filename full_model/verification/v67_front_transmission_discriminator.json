@@ -1,0 +1,207 @@
+{
+  "baseline": {
+    "checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+    "directional_bias": {
+      "by_interface": {
+        "edge-10-20": {
+          "growth_minus_shrink_Pa": -170508.61936509982,
+          "growth_pressure_Pa": 705412.3388320475,
+          "shrink_pressure_Pa": 875920.9581971474
+        },
+        "edge-20-30": {
+          "growth_minus_shrink_Pa": 147087.31568562216,
+          "growth_pressure_Pa": 858192.0088984506,
+          "shrink_pressure_Pa": 711104.6932128285
+        }
+      },
+      "net_growth_minus_shrink_Pa": -23421.303679477656
+    },
+    "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_growth_to_one_percent_bundle2_50_clean",
+    "result_sha256": "166cf67695c5ef5cac1932db39039c3ff580cdc7f7632f99cc48c5195c263447",
+    "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc",
+    "source_tree_clean": true
+  },
+  "baseline_inherited_transmission_fraction": 0.55,
+  "cases": {
+    "transmission_0": {
+      "after_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 908248.1976679985,
+            "growth_pressure_Pa": 1803534.1706067564,
+            "shrink_pressure_Pa": 895285.9729387579
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 1222505.3779054433,
+            "growth_pressure_Pa": 1953259.0030268843,
+            "shrink_pressure_Pa": 730753.625121441
+          }
+        },
+        "net_growth_minus_shrink_Pa": 2130753.5755734416
+      },
+      "after_components": {
+        "boundary_excess_J": -1801723.9005919094,
+        "defect_storage_J": 4137206.0704309503,
+        "helmholtz_J": 2130753.5755734416,
+        "internal_J": 2130753.5734611824,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -21205.42653971639,
+        "phase_local_J": -160218.21615793015,
+        "recoverable_elastic_J": 1.2643181598135225e-07,
+        "signed_junction_storage_J": 0.0,
+        "structural_boundary_J": -23058.527660332715,
+        "structural_junction_J": -246.42393457761432,
+        "thermal_internal_J": -0.0020591884860657276
+      },
+      "before_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 909642.9255702784,
+            "growth_pressure_Pa": 1804554.467593576,
+            "shrink_pressure_Pa": 894911.5420232976
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 1223646.630186067,
+            "growth_pressure_Pa": 1954093.0064795385,
+            "shrink_pressure_Pa": 730446.3762934717
+          }
+        },
+        "net_growth_minus_shrink_Pa": 2133289.5557563454
+      },
+      "checkpoint_sha256": "36db8f72b82e519f1e184afbdd7053c70749bd1ab6ffc96ff66b752e5a5b960f",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_late_transmission0_one",
+      "hard_audits_passed": true,
+      "intervals": 1,
+      "parent_checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+      "result_sha256": "0b098c956f0513bf51fefb58c588553b5f534daa76f1b32f7ca8d9e095640f5d",
+      "source_commit": "d0d643a290e523cbd07d726dcc2c18e2b0f593ae",
+      "source_tree_clean": true,
+      "target_area_change_m2": 2.0756685239321556e-16,
+      "transmission_fraction": 0.0
+    },
+    "transmission_0p25_horizon": {
+      "after_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 404034.9409017485,
+            "growth_pressure_Pa": 1293871.9101078066,
+            "shrink_pressure_Pa": 889836.9692060581
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 721606.3719779646,
+            "growth_pressure_Pa": 1446111.0418293567,
+            "shrink_pressure_Pa": 724504.669851392
+          }
+        },
+        "net_growth_minus_shrink_Pa": 1125641.3128797133
+      },
+      "after_components": {
+        "boundary_excess_J": -1573220.4154469026,
+        "defect_storage_J": 2903654.6711025946,
+        "helmholtz_J": 1125641.3128797133,
+        "internal_J": 1125641.311181627,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -21264.040622109518,
+        "phase_local_J": -160289.53707467002,
+        "recoverable_elastic_J": 8.65797591435076e-08,
+        "signed_junction_storage_J": 0.0,
+        "structural_boundary_J": -22992.721241844025,
+        "structural_junction_J": -246.6439531166581,
+        "thermal_internal_J": -0.0016949657093550002
+      },
+      "before_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 418677.5236272791,
+            "growth_pressure_Pa": 1304956.9823693798,
+            "shrink_pressure_Pa": 886279.4587421007
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 734312.575151322,
+            "growth_pressure_Pa": 1455967.2779144607,
+            "shrink_pressure_Pa": 721654.7027631388
+          }
+        },
+        "net_growth_minus_shrink_Pa": 1152990.098778601
+      },
+      "checkpoint_sha256": "960752394eadf15e8063432309b09fdbbdfb945590cdaef29c00541f4eb6a81d",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_late_transmission0p25_10",
+      "hard_audits_passed": true,
+      "intervals": 10,
+      "parent_checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+      "result_sha256": "27675ac9a7fb8d5d28d988046a6598596c26c82d4d52d4417b448ac4a703bdc9",
+      "source_commit": "d0d643a290e523cbd07d726dcc2c18e2b0f593ae",
+      "source_tree_clean": true,
+      "target_area_change_m2": 1.0876144447668328e-15,
+      "transmission_fraction": 0.25
+    },
+    "transmission_0p25_one": {
+      "after_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 417373.4836329005,
+            "growth_pressure_Pa": 1304026.230563434,
+            "shrink_pressure_Pa": 886652.7469305336
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 733224.2979547747,
+            "growth_pressure_Pa": 1455188.8861393186,
+            "shrink_pressure_Pa": 721964.5881845439
+          }
+        },
+        "net_growth_minus_shrink_Pa": 1150597.7815876752
+      },
+      "after_components": {
+        "boundary_excess_J": -1567093.4522986135,
+        "defect_storage_J": 2922402.368135196,
+        "helmholtz_J": 1150597.7815876752,
+        "internal_J": 1150597.7824644013,
+        "numerical_constraint_J": 0.0,
+        "phase_gradient_J": -21196.21907535731,
+        "phase_local_J": -160209.324196853,
+        "recoverable_elastic_J": 2.7159493831804947e-07,
+        "signed_junction_storage_J": 0.0,
+        "structural_boundary_J": -23059.18283310219,
+        "structural_junction_J": -246.40801031636914,
+        "thermal_internal_J": 0.0008453768039228318
+      },
+      "before_bias": {
+        "by_interface": {
+          "edge-10-20": {
+            "growth_minus_shrink_Pa": 418677.5236272791,
+            "growth_pressure_Pa": 1304956.9823693798,
+            "shrink_pressure_Pa": 886279.4587421007
+          },
+          "edge-20-30": {
+            "growth_minus_shrink_Pa": 734312.575151322,
+            "growth_pressure_Pa": 1455967.2779144607,
+            "shrink_pressure_Pa": 721654.7027631388
+          }
+        },
+        "net_growth_minus_shrink_Pa": 1152990.098778601
+      },
+      "checkpoint_sha256": "521dc5f4427c75b613ad21e01ef5e1ee0a2880a362d5858ca9e77feb17e9b8f6",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_exact_fullphysics_rate2_late_transmission0p25_one",
+      "hard_audits_passed": true,
+      "intervals": 1,
+      "parent_checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+      "result_sha256": "d599a0e73bb12477ee1cf63d90b44f1ecf6e729fd0b4ab3280c94db7323845af",
+      "source_commit": "d0d643a290e523cbd07d726dcc2c18e2b0f593ae",
+      "source_tree_clean": true,
+      "target_area_change_m2": 1.114944877101448e-16,
+      "transmission_fraction": 0.25
+    }
+  },
+  "claim_boundary": "Existing-boundary RX discriminator at one lower-rate late state. The 25% transmission fraction is fixed across the horizon and does not depend on rate, time, grain label, or outcome. This does not yet establish spontaneous grain birth or material calibration.",
+  "created_utc": "2026-10-16T16:18:27.244850+00:00",
+  "decision": {
+    "all_hard_audits_passed": true,
+    "classification": "FIXED_PARTIAL_ABSORPTION_SUSTAINS_LATE_RX",
+    "complete_absorption_endpoint_bias_Pa": 2130753.5755734416,
+    "partial_absorption_endpoint_bias_Pa": 1125641.3128797133,
+    "partial_absorption_sustains_positive_RX_bias": true,
+    "partial_absorption_target_area_change_m2": 1.0876144447668328e-15,
+    "same_parent_checkpoint": true
+  },
+  "schema": "v67-front-transmission-discriminator-v1"
+}
