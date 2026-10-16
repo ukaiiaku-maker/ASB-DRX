@@ -2877,3 +2877,26 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   errors are 1.57e-9 and 1.65e-8, respectively, and the maximum state-field
   relative error at 400 ns is 1.04e-5. The continuation runner now records and
   controls this numerical cadence explicitly; no physical clock is changed.
+- The virgin clean n32 path was continued to 0.88% strain at 200/s. The
+  Hall--Petch pair source is active for 93 of the final 100 intervals, but the
+  largest intragranular orientation span is only 2.86e-4 degrees. Source
+  supply, resolution, and physical exposure at that rate therefore do not
+  mature the precursor into DRX.
+- A common-owner conservation audit found that the first wall-glide/dipole
+  implementation conserved raw owner density rather than the authoritative
+  extensive inventory `eta_i*rho_i`. Both operators now transport that
+  extensive signed-family inventory with its conjugate unweighted chemical
+  potential and divide by fixed owner support only after the edge transaction.
+  Support-weighted positive, negative, and total line close to roundoff.
+- At a clean n32 20/s state, the corrected wall-glide 2% checkerboard cadence
+  agrees with a 1% reference to 2.3e-6 in wall-density relative L2 and 4.4e-5
+  in orientation relative L2. The former unweighted operator line-searched to
+  a zero publication while reporting activity; below-resolution transitions
+  are now classified inactive rather than accepted.
+- The clean committed 20/s path reaches 0.264% strain with all 25 lattice,
+  structural, wall-glide, dipole, orientation, Mura, and first-law gates
+  closed. The low-defect existing grain 20 grows 0.38456%, while grains 10
+  and 30 shrink 0.07935% and 0.29964%. The largest intragranular span is only
+  0.00102 degrees. This is an early existing-boundary SIBM/RX response, not
+  yet the required >=1% sustained dynamic-RX classification; continuation to
+  the matched 0.88% strain horizon is the active experiment.

@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T02:48:00Z",
+  "last_updated_utc": "2026-10-16T03:43:01Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -65,11 +65,11 @@
     "heavy_campaign_solver": {
       "pid": null,
       "case": null,
-      "status": "available_after_completed_full_regression",
-      "last_case": "v67_polycrystal_gbtj_physical_match_rate200_preflight",
-      "last_start_local": "2026-10-15T19:20:00-07:00",
-      "last_source_commit": "0889b4d_dirty_continuation",
-      "last_output": "full_model/verification/v67_polycrystal_gbtj_physical_match_rate200_preflight"
+      "status": "available_after_clean_20_per_s_horizon32",
+      "last_case": "v67_clean_polycrystal_n32_rate20_committed_horizon32",
+      "last_start_local": "2026-10-15T20:28:00-07:00",
+      "last_source_commit": "5e2fdbffd4a04c0ca86c2481b1db4c96abf16d2f",
+      "last_output": "full_model/verification/v67_clean_polycrystal_n32_rate20_committed_horizon32"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -81,12 +81,12 @@
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
     "hypothesis_ids": ["H1", "H2", "H3", "H4"],
-    "physical_uncertainty": "whether_the_subdegree_rate_ordered_precursor_is_an_n16_representation_limit_or_a_true_common_law_saturation_and_whether_it_can_organize_inside_a_clean_active_shear_band",
-    "next_executable_experiment": "continue_the_clean_c039873_n32_zero_load_anchor_at_200_per_s_with_the_front_substep_qualified_at_1p04e_minus5_maximum_relative_field_error_until_source_activation_or_a_resolved_negative_horizon",
-    "source_identity": "c039873_clean_n32_zero_load_anchor_plus_pending_front_cadence_repair",
-    "expected_discriminatory_observation": "the_virgin_resolved_path_must_activate_Hall_Petch_supply_and_exceed_the_n16_low_angle_plateau_with_all_line_Mura_energy_and_heat_ledgers_closed_before_any_DRX_claim",
+    "physical_uncertainty": "whether_clean_existing_boundary_growth_at_20_per_s_exceeds_one_percent_and_remains_sustained_at_the_same_0p88_percent_strain_horizon_where_200_per_s_has_no_DRX",
+    "next_executable_experiment": "continue_the_clean_committed_n32_20_per_s_checkpoint_from_0p264_to_0p88_percent_strain_with_the_extensive_eta_rho_wall_operators",
+    "source_identity": "5e2fdbf_clean_extensive_common_owner_wall_transport",
+    "expected_discriminatory_observation": "grain_20_must_exceed_one_percent_sustained_existing_boundary_growth_with_all_line_Mura_energy_and_heat_ledgers_closed_while_the_matched_200_per_s_path_remains_subthreshold",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "conservative_source_to_wall_capture_and_asymmetric_Arrhenius_recovery_pass_1139_tests_and_produce_a_rate_ordered_0p704_degree_n16_precursor;_two_degree_DRX_static_RX_and_DRX_inside_a_qualified_ASB_remain_unqualified;_dirty_parent_n48_evidence_is_quarantined"
+    "result_status": "clean_n32_20_per_s_reaches_0p38456_percent_growth_of_low_defect_grain_20_by_0p264_percent_strain_with_all_25_transactions_balanced;_the_0p00102_degree_internal_span_is_not_new_grain_maturation_and_continuation_to_0p88_percent_strain_is_required"
   },
   "continuation_rule": {
     "active": true,
