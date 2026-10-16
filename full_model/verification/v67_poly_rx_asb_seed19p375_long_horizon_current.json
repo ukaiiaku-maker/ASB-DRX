@@ -678,10 +678,11 @@
     ]
   },
   "claim_boundary": "The stress-drop metric uses stored atomic-chunk endpoints and is a coarse lower-bound diagnostic. Qualification additionally requires a fully banded terminal chunk, >5% adiabatic post-peak loss, >1% softening separation from the matched bath, >20 K spatial thermal contrast separation, RX overlap, exact branch continuity, and all hard ledgers. It does not establish spontaneous grain birth or material calibration.",
-  "created_utc": "2026-10-16T21:56:32.794722+00:00",
+  "created_utc": "2026-10-16T22:21:30.696033+00:00",
   "decision": {
     "classification": "LATE_HORIZON_POLYCRYSTAL_RESPONSE_NOT_YET_QUALIFIED",
     "heat_dependent_polycrystal_asb_with_rx": false,
+    "persistent_physical_band_with_existing_boundary_rx": false,
     "strict_heat_triggered_terminal_band": false
   },
   "observations": {
