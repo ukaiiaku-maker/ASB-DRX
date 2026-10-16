@@ -23,7 +23,7 @@ class CollectiveWallNucleationParameters:
     source_seed: int = 67
     candidate_radii_m: tuple[float, ...] = (
         4.5e-7, 7.5e-7, 1.05e-6, 1.35e-6, 1.65e-6)
-    ring_half_thickness_m: float = 2.25e-7
+    ring_width_m: float = 4.5e-7
     order_increment: float = .01
     owner_support_threshold: float = .75
 
@@ -97,19 +97,19 @@ def evaluate_collective_wall_nucleation(
             center = tuple(map(int, center_array))
             radial = _periodic_radius(domain.shape, center, spacing)
             for radius in parameters.candidate_radii_m:
-                ring = (domain
-                        &(np.abs(radial-radius)
-                          <=parameters.ring_half_thickness_m))
-                if np.count_nonzero(ring) < 8:
+                ring = (np.exp(-.5*((radial-radius)
+                                    /parameters.ring_width_m)**2)
+                        *domain)
+                if float(np.sum(ring)) < 8.0:
                     continue
-                transfer_plus = np.where(ring[..., None], excess_plus, 0.0)
-                transfer_minus = np.where(ring[..., None], excess_minus, 0.0)
+                transfer_plus = ring[..., None]*excess_plus
+                transfer_minus = ring[..., None]*excess_minus
                 transferred = float(np.sum(
                     transfer_plus+transfer_minus, dtype=np.longdouble))
                 if transferred <= 0.0:
                     continue
                 order = np.asarray(owner.wall_order).copy()
-                order[ring] += parameters.order_increment*(1.0-order[ring])
+                order += (parameters.order_increment*ring*(1.0-order))
                 candidate_owner = replace(
                     owner,
                     mobile_plus_m2=np.asarray(owner.mobile_plus_m2)-transfer_plus,
@@ -137,7 +137,8 @@ def evaluate_collective_wall_nucleation(
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zero)
     delta, grain_id, center, radius, ring, transferred, candidate = best
     owner = candidate.owners[candidate.grain_ids.index(grain_id)]
-    temperature = float(np.mean(np.asarray(owner.temperature_K)[ring]))
+    temperature = float(np.sum(np.asarray(owner.temperature_K)*ring)
+                        /np.sum(ring))
     rate = float(exp_floor_event_rate_Hz(
         0.0, temperature, parameters.activation))
     probability = -math.expm1(-rate*dt)
@@ -150,7 +151,7 @@ def evaluate_collective_wall_nucleation(
             delta, 0.0, 0.0, 0.0, zero)
     heat = max(-delta, 0.0)
     heat_cells = np.zeros(state.supports.shape[1:])
-    heat_cells[ring] = heat/np.count_nonzero(ring)
+    heat_cells = heat*ring/float(np.sum(ring, dtype=np.longdouble))
     cell_volume = spacing*spacing*thickness
     rise = heat_cells/(wall_parameters.volumetric_heat_capacity_J_m3_K
                        *cell_volume)
