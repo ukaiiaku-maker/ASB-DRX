@@ -1,0 +1,66 @@
+{
+  "checkpoint_sha256": "26a71f4ca5ec5e5b6cea6c8f206b34acc2724378bece7ca060938ef8c406b5c9",
+  "created_utc": "2026-10-16T15:22:06.929715+00:00",
+  "decision": {
+    "aggregate_normal_burgers_fraction_l2": 9.054310471978926e-06,
+    "aggregate_tangential_burgers_fraction_l2": 0.9999999999590097,
+    "boundary_excess_opposes_growth_Pa": -1284890.297716503,
+    "boundary_reservoir_limits_growth": true,
+    "burgers_capacity_line_fraction": 0.1822257862342355,
+    "common_axis_absorption_can_address_dominant_content": false,
+    "defect_storage_favors_growth_Pa": 1466158.8994375626,
+    "net_growth_minus_shrink_Pa": -23421.303679477656,
+    "vector_neutral_removable_line_fraction": 0.8177742137657645
+  },
+  "directional_component_growth_minus_shrink_Pa": {
+    "boundary_excess_J": -1284890.297716503,
+    "defect_storage_J": 1466158.8994375626,
+    "helmholtz_J": -23421.303679477656,
+    "internal_J": -23421.306416237727,
+    "numerical_constraint_J": 0.0,
+    "phase_gradient_J": -21188.384456611413,
+    "phase_local_J": -160200.13181195382,
+    "recoverable_elastic_J": -1.3769658567888044e-07,
+    "signed_junction_storage_J": 0.0,
+    "structural_boundary_J": -23055.00249231487,
+    "structural_junction_J": -246.38649734091445,
+    "thermal_internal_J": -0.0027617677650087287
+  },
+  "interfaces": [
+    {
+      "boundary_line_cell_sum_m2": 2.053864684145524e+16,
+      "burgers_capacity_line_cell_sum_m2": 4163133981001716.0,
+      "interface": "edge-10-20",
+      "normal_burgers_l2_m1": 0.040846876950165395,
+      "normal_fraction_l2": 2.6238051757160355e-06,
+      "tangential_burgers_l2_m1": 15567.801042574625,
+      "vector_neutral_removable_fraction": 0.797302421472147,
+      "vector_neutral_removable_line_cell_sum_m2": 1.6375512860453526e+16
+    },
+    {
+      "boundary_line_cell_sum_m2": 4.205846394453695e+16,
+      "burgers_capacity_line_cell_sum_m2": 6993235479437814.0,
+      "interface": "edge-10-30",
+      "normal_burgers_l2_m1": 0.3011239041430872,
+      "normal_fraction_l2": 9.495131807924245e-06,
+      "tangential_burgers_l2_m1": 31713.504374758373,
+      "vector_neutral_removable_fraction": 0.8337258467484717,
+      "vector_neutral_removable_line_cell_sum_m2": 3.5065228465099136e+16
+    },
+    {
+      "boundary_line_cell_sum_m2": 1.5147078400622998e+16,
+      "burgers_capacity_line_cell_sum_m2": 3010626539234570.0,
+      "interface": "edge-20-30",
+      "normal_burgers_l2_m1": 0.31646394093089014,
+      "normal_fraction_l2": 9.542023606975837e-06,
+      "tangential_burgers_l2_m1": 33165.28589230564,
+      "vector_neutral_removable_fraction": 0.8012404465331913,
+      "vector_neutral_removable_line_cell_sum_m2": 1.2136451861388428e+16
+    }
+  ],
+  "result_sha256": "166cf67695c5ef5cac1932db39039c3ff580cdc7f7632f99cc48c5195c263447",
+  "schema": "v67-late-boundary-reservoir-audit-v1",
+  "selected_hypothesis": "First test the existing vector-neutral GB junction reaction, which removes only scalar line above the exact Burgers-capacity bound and leaves the tangential Burgers tensor unchanged. If that cannot restore favorable RX competition, test a conservative tangential Burgers/disconnection or boundary-sliding reaction coupled to compatible beta-p/Nye and boundary geometry; scalar Burgers deletion is not authorized.",
+  "source_commit": "4c4acfd6b498daa2dfc4021de56d7342c7aab4cc",
+  "source_tree_clean": true
+}
