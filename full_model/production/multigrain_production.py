@@ -151,6 +151,11 @@ class MultiGrainProductionLedger:
     compatible_wall_reorganization_rejected_intervals: int = 0
     cumulative_compatible_wall_reorganization_heat_J: float = 0.0
     maximum_compatible_wall_reorganization_first_law_residual: float = 0.0
+    collective_wall_nucleation_intervals: int = 0
+    collective_wall_nucleation_inactive_intervals: int = 0
+    collective_wall_nucleation_rejected_intervals: int = 0
+    cumulative_collective_wall_nucleation_heat_J: float = 0.0
+    maximum_collective_wall_nucleation_first_law_residual: float = 0.0
 
 
 @dataclass(frozen=True)

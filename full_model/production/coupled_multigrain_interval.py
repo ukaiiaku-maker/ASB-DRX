@@ -55,6 +55,9 @@ from .compatible_wall_reorganization import (
     CompatibleWallReorganizationParameters,
     evaluate_compatible_wall_reorganization,
 )
+from .collective_wall_nucleation import (
+    CollectiveWallNucleationParameters, evaluate_collective_wall_nucleation,
+)
 from .structural_interface_network import (
     JunctionDisclinationParameters, initialize_structural_interfaces,
     interface_lengths_m,
@@ -102,6 +105,9 @@ class CoupledMultigrainContext:
     wall_order_relaxation_mode: str = "disabled"
     compatible_wall_reorganization_parameters: object | None = None
     compatible_wall_reorganization_mode: str = "disabled"
+    collective_wall_nucleation_parameters: object | None = None
+    collective_wall_nucleation_mode: str = "disabled"
+    collective_wall_nucleation_seed: int = 67
 
 
 def endpoint_observables(state, load: float,
@@ -264,6 +270,48 @@ def advance_complete_multigrain_interval(
     structural_absorption_wall_time = (
         time.perf_counter()-structural_absorption_started)
     energy_before = dict(energy_base, mean_strain=strain0)
+    collective_wall_started = time.perf_counter()
+    collective_wall = None
+    if context.collective_wall_nucleation_mode != "disabled":
+        if context.collective_wall_nucleation_mode != "activated_closed_wall":
+            raise ValueError("unknown collective wall-nucleation mode")
+        parameters = (CollectiveWallNucleationParameters()
+                      if context.collective_wall_nucleation_parameters is None
+                      else context.collective_wall_nucleation_parameters)
+        draw = float(np.random.default_rng(
+            int(context.collective_wall_nucleation_seed)
+            +int(runtime.ledger.intervals)).random())
+        collective_wall = evaluate_collective_wall_nucleation(
+            mechanical_parent_state, interval_s=dt, mean_strain=strain0,
+            spacing_m=context.spacing_m,
+            represented_thickness_m=context.represented_thickness_m,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            energy_kwargs=energy_base, random_uniform=draw,
+            parameters=parameters)
+        if collective_wall.classification == "REJECTED_CLOSED_WALL_FIRST_LAW":
+            raise RuntimeError("collective wall nucleus failed its hard energy audit")
+        if collective_wall.accepted:
+            mechanical_parent_state = collective_wall.committed_state
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            collective_wall_nucleation_intervals=(
+                runtime.ledger.collective_wall_nucleation_intervals
+                +int(collective_wall.accepted)),
+            collective_wall_nucleation_inactive_intervals=(
+                runtime.ledger.collective_wall_nucleation_inactive_intervals
+                +int(collective_wall.classification.startswith("INACTIVE"))),
+            collective_wall_nucleation_rejected_intervals=(
+                runtime.ledger.collective_wall_nucleation_rejected_intervals
+                +int(collective_wall.classification.startswith("REJECTED"))),
+            cumulative_collective_wall_nucleation_heat_J=(
+                runtime.ledger.cumulative_collective_wall_nucleation_heat_J
+                +(collective_wall.generated_heat_J
+                  if collective_wall.accepted else 0.0)),
+            maximum_collective_wall_nucleation_first_law_residual=max(
+                runtime.ledger.maximum_collective_wall_nucleation_first_law_residual,
+                collective_wall.relative_first_law_residual
+                if collective_wall.accepted else 0.0)))
+    collective_wall_wall_time = time.perf_counter()-collective_wall_started
     mechanical_started = time.perf_counter()
     mechanical_wall_parameters = context.wall_parameters
     if context.wall_order_relaxation_mode != "disabled":
@@ -735,6 +783,13 @@ def advance_complete_multigrain_interval(
             item.irreversible_heat_J for item in mechanical.operator_decisions),
         "mechanical_plastic_work_J": sum(
             item.external_plastic_work_J for item in mechanical.operator_decisions),
+        "collective_wall_nucleation_heat_J": (
+            0.0 if collective_wall is None or not collective_wall.accepted
+            else collective_wall.generated_heat_J),
+        "collective_wall_nucleation_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if collective_wall is None or not collective_wall.accepted
+            else np.asarray(collective_wall.heat_source_J_by_cell)),
         "front_heat_J": float(np.sum(front_heat, dtype=np.longdouble)),
         "source_resolved_work_J": (0.0 if source is None or not source.accepted
                                     else source.resolved_work_J),
@@ -803,6 +858,23 @@ def advance_complete_multigrain_interval(
             item.consumed_interval_s for item in mechanical.operator_decisions),
         "mechanical_relative_first_law_residual": (
             mechanical.relative_first_law_residual),
+        "collective_wall_nucleation_mode": (
+            context.collective_wall_nucleation_mode),
+        "collective_wall_nucleation_classification": (
+            "DISABLED" if collective_wall is None
+            else collective_wall.classification),
+        "collective_wall_nucleation_downhill_candidates": (
+            0 if collective_wall is None
+            else collective_wall.downhill_candidate_count),
+        "collective_wall_nucleation_event_probability": (
+            0.0 if collective_wall is None else collective_wall.event_probability),
+        "collective_wall_nucleation_selected_radius_m": (
+            0.0 if collective_wall is None else collective_wall.selected_radius_m),
+        "collective_wall_nucleation_delta_helmholtz_J": (
+            0.0 if collective_wall is None else collective_wall.delta_helmholtz_J),
+        "collective_wall_nucleation_relative_first_law_residual": (
+            0.0 if collective_wall is None or not collective_wall.accepted
+            else collective_wall.relative_first_law_residual),
         "front_subintervals": len(fronts),
         "front_rejected_subintervals": sum(not item.accepted for item in fronts),
         "front_maximum_unclipped_fraction": max(
@@ -957,6 +1029,7 @@ def advance_complete_multigrain_interval(
             0 if wall_orientation is None else wall_orientation.backtracks),
         "cost_breakdown_s": {
             "mechanical_map": mechanical_wall_time,
+            "collective_wall_nucleation_map": collective_wall_wall_time,
             "source_map": source_wall_time,
             "wall_order_relaxation_map": wall_order_wall_time,
             "compatible_wall_reorganization_map": wall_reorganization_wall_time,
@@ -968,6 +1041,7 @@ def advance_complete_multigrain_interval(
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time
+                                +collective_wall_wall_time
                                 +wall_order_wall_time+sink_wall_time
                                 +wall_reorganization_wall_time
                                 +interface_sink_wall_time

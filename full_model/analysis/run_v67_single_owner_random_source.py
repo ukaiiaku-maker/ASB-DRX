@@ -38,7 +38,7 @@ from full_model.production.common_subgrain_recognition import (
 )
 from full_model.production.common_tensorial_wall import CommonWallState
 from full_model.production.collective_wall_nucleation import (
-    CollectiveWallNucleationParameters, evaluate_collective_wall_nucleation,
+    CollectiveWallNucleationParameters,
 )
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
@@ -206,7 +206,16 @@ def main():
             else "disabled"),
         compatible_wall_reorganization_parameters=(
             CompatibleWallReorganizationParameters()
-            if args.collective_wall_nucleation else None))
+            if args.collective_wall_nucleation else None),
+        collective_wall_nucleation_mode=(
+            "activated_closed_wall" if args.collective_wall_nucleation
+            else "disabled"),
+        collective_wall_nucleation_parameters=(
+            CollectiveWallNucleationParameters(
+                source_site_density_m2=args.source_site_density_m2,
+                source_seed=args.source_seed)
+            if args.collective_wall_nucleation else None),
+        collective_wall_nucleation_seed=args.source_seed)
     runtime = (loaded_runtime
                if args.initial_state == "continued_single_crystal"
                else MultiGrainProductionRuntime(()))
@@ -231,26 +240,6 @@ def main():
         interval = advance_complete_multigrain_interval(
             endpoint, args.dt, context)
         endpoint = interval.endpoint
-        nucleus = None
-        if args.collective_wall_nucleation:
-            draw = float(np.random.default_rng(
-                args.source_seed+endpoint.runtime.ledger.intervals).random())
-            nucleus = evaluate_collective_wall_nucleation(
-                endpoint.state, interval_s=args.dt,
-                mean_strain=np.array([
-                    [0.0, .5*endpoint.load], [.5*endpoint.load, 0.0]]),
-                spacing_m=spacing, represented_thickness_m=thickness,
-                systems=systems, wall_parameters=wall,
-                energy_kwargs=context.energy_kwargs, random_uniform=draw,
-                parameters=CollectiveWallNucleationParameters(
-                    source_site_density_m2=args.source_site_density_m2,
-                    source_seed=args.source_seed))
-            if nucleus.classification == "REJECTED_CLOSED_WALL_FIRST_LAW":
-                raise RuntimeError("collective wall nucleus failed first law")
-            if nucleus.accepted:
-                endpoint = make_endpoint(
-                    nucleus.committed_state, endpoint.runtime, endpoint.load,
-                    context, numerical_hints=endpoint.numerical_hints)
         current = endpoint.state.owners[0]
         compatibility = evaluate_orientation_wall_compatibility(
             current, systems, np.ones(grid, dtype=bool), spacing)
@@ -307,17 +296,21 @@ def main():
             "wall_order_range": [float(np.min(current.wall_order)),
                                  float(np.max(current.wall_order))],
             "collective_wall_classification": (
-                "DISABLED" if nucleus is None else nucleus.classification),
+                interval.audit["collective_wall_nucleation_classification"]),
             "collective_wall_downhill_candidates": (
-                0 if nucleus is None else nucleus.downhill_candidate_count),
+                interval.audit[
+                    "collective_wall_nucleation_downhill_candidates"]),
             "collective_wall_event_probability": (
-                0.0 if nucleus is None else nucleus.event_probability),
+                interval.audit["collective_wall_nucleation_event_probability"]),
             "collective_wall_selected_radius_m": (
-                0.0 if nucleus is None else nucleus.selected_radius_m),
+                interval.audit[
+                    "collective_wall_nucleation_selected_radius_m"]),
             "collective_wall_delta_helmholtz_J": (
-                0.0 if nucleus is None else nucleus.delta_helmholtz_J),
+                interval.audit[
+                    "collective_wall_nucleation_delta_helmholtz_J"]),
             "collective_wall_first_law_relative_residual": (
-                0.0 if nucleus is None else nucleus.relative_first_law_residual),
+                interval.audit[
+                    "collective_wall_nucleation_relative_first_law_residual"]),
         })
         print(json.dumps(records[-1]), flush=True)
         # Publish each accepted endpoint atomically.  A disconnect can lose at
