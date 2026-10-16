@@ -105,6 +105,10 @@ def main():
         "delta_helmholtz_from_capacity_baseline_J"])
     hard = bool(all(row["projection"]["feasible"] for row in rows))
     downhill = best["delta_helmholtz_from_capacity_baseline_J"] < 0.0
+    bias_change = (best["directional_growth_minus_shrink_Pa"]
+                   -baseline_bias)
+    bias_resolution = max(1.0, 1.0e-3*abs(baseline_bias))
+    directional_effect = abs(bias_change) > bias_resolution
     source_commit = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True).strip()
     source_clean = not subprocess.check_output(
@@ -129,13 +133,23 @@ def main():
                 "delta_helmholtz_from_capacity_baseline_J"],
             "best_directional_growth_minus_shrink_Pa": best[
                 "directional_growth_minus_shrink_Pa"],
+            "best_directional_bias_change_from_capacity_baseline_Pa": (
+                bias_change),
+            "directional_effect_resolution_Pa": bias_resolution,
+            "capacity_baseline_restores_positive_RX_bias": bool(
+                baseline_bias > 0.0),
             "downhill_beyond_vector_neutral_capacity_relaxation": downhill,
-            "restores_positive_RX_bias": bool(
-                best["directional_growth_minus_shrink_Pa"] > 0.0),
+            "TJ_redistribution_has_resolved_neighbor_selection_effect": (
+                directional_effect),
+            "TJ_redistribution_restores_positive_RX_bias_beyond_capacity_baseline": bool(
+                baseline_bias <= 0.0
+                < best["directional_growth_minus_shrink_Pa"]),
             "classification": (
                 "UNQUALIFIED_VECTOR_BALANCE" if not hard else
-                ("DOWNHILL_LOCAL_TJ_BURGERS_REACTION" if downhill else
-                 "NO_DOWNHILL_LOCAL_TJ_BURGERS_REACTION")),
+                ("NO_DOWNHILL_LOCAL_TJ_BURGERS_REACTION" if not downhill else
+                 ("DOWNHILL_TJ_REACTION_WITH_DIRECTIONAL_EFFECT"
+                  if directional_effect else
+                  "DOWNHILL_TJ_REACTION_NO_DIRECTIONAL_EFFECT"))),
         },
         "claim_boundary": (
             "Symmetric local three-edge upper-bound probe. The fraction-zero "

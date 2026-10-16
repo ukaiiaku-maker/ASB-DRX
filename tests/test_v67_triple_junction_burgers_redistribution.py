@@ -104,3 +104,26 @@ def test_zero_coordinate_changes_only_declared_capacity_relaxation():
         np.testing.assert_array_equal(after.boundary_minus_m2,
                                       before.boundary_minus_m2)
     assert retained.removed_line_cell_sum_m2 == 0.0
+
+
+def test_shared_coordinate_backtracks_before_any_local_carrier_deficit():
+    state = _fixture()
+    components = []
+    for index, item in enumerate(state.interfaces):
+        burgers = (np.zeros_like(item.boundary_burgers_m1) if index == 0
+                   else item.boundary_burgers_m1)
+        required = np.linalg.norm(burgers, axis=-1)/2.48e-10
+        plus = np.broadcast_to(
+            required[..., None]/4.0, item.boundary_plus_m2.shape).copy()
+        components.append(replace(
+            item, boundary_plus_m2=plus,
+            boundary_minus_m2=np.zeros_like(plus),
+            boundary_burgers_m1=burgers))
+    state = replace(state, interfaces=tuple(components))
+    state.validate()
+    result = project_triple_junction_burgers(
+        state, burgers_m=2.48e-10, reaction_fraction=1.0)
+    assert result.feasible
+    assert result.capacity_limited_cell_count > 0
+    assert result.maximum_carrier_deficit_m2 == 0.0
+    assert result.maximum_pointwise_vector_balance_m1 < 1e-10
