@@ -167,6 +167,9 @@ def main():
         pair_increment_m2=1.0e10)
     context = replace(
         context, wall_parameters=wall, shear_rate_s=args.shear_rate,
+        maximum_mechanical_subdivisions=(
+            14 if args.collective_wall_nucleation
+            else context.maximum_mechanical_subdivisions),
         front_enabled=False, source_parameters=source_parameters,
         source_mode=args.source_mode, source_random_seed=args.source_seed,
         source_bulk_site_density_m2=args.source_site_density_m2,
