@@ -52,6 +52,7 @@ from full_model.production.arrhenius_dislocation_sources import (
 from full_model.production.multigrain_source_transaction import (
     NeutralBoundarySinkParameters,
 )
+from full_model.production.multigrain_common_state import MultiGrainCommonState
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -95,6 +96,42 @@ def _band(endpoint):
         power, threshold_multiple=2.0)
 
 
+def _temperature_seed(state, peak_K, width_m, spacing_m, normal="x"):
+    """Apply one owner-independent, mean-zero thermal imperfection."""
+    amplitude = float(peak_K)
+    if amplitude == 0.0:
+        return state
+    if amplitude < 0.0 or width_m <= 0.0:
+        raise ValueError("temperature seed amplitude/width must be nonnegative/positive")
+    grid = state.supports.shape[1:]
+    x, y = np.meshgrid(np.arange(grid[0]), np.arange(grid[1]), indexing="ij")
+    if normal == "x":
+        coordinate = x
+        period = grid[0]
+    elif normal == "y":
+        coordinate = y
+        period = grid[1]
+    elif normal == "diagonal":
+        if grid[0] != grid[1]:
+            raise ValueError("diagonal seed requires a square grid")
+        coordinate = np.mod(x-y, grid[0])
+        period = grid[0]
+    else:
+        raise ValueError("unknown thermal seed normal")
+    distance = np.minimum(
+        np.abs(coordinate-.5*period),
+        period-np.abs(coordinate-.5*period))
+    profile = np.exp(-.5*(distance/(width_m/spacing_m))**2)
+    profile -= np.mean(profile)
+    profile /= max(float(np.max(profile)), np.finfo(float).tiny)
+    owners = tuple(replace(
+        owner, temperature_K=np.asarray(owner.temperature_K)+amplitude*profile)
+        for owner in state.owners)
+    seeded = MultiGrainCommonState(state.grain_ids, state.supports, owners)
+    seeded.validate()
+    return seeded
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("checkpoint", type=Path)
@@ -111,7 +148,18 @@ def main():
     parser.add_argument(
         "--front-transmission-fraction", type=float,
         help=("fixed front dislocation transmission fraction; omission "
-              "preserves the inherited transfer law"))
+            "preserves the inherited transfer law"))
+    parser.add_argument("--override-dt", type=float)
+    parser.add_argument("--override-shear-rate", type=float)
+    parser.add_argument(
+        "--thermal-control", choices=("inherited", "adiabatic", "strong_bath"),
+        default="inherited")
+    parser.add_argument("--bath-rate", type=float, default=5e9)
+    parser.add_argument("--temperature-seed", type=float, default=0.0)
+    parser.add_argument("--temperature-seed-width", type=float, default=6e-7)
+    parser.add_argument(
+        "--temperature-seed-normal", choices=("x", "y", "diagonal"),
+        default="x")
     args = parser.parse_args()
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain", "--untracked-files=no"),
@@ -120,8 +168,18 @@ def main():
     state, runtime, step, load, initial_volume, configuration, provenance = (
         _load_checkpoint(args.checkpoint))
     physics_args = _args_from_configuration(configuration)
-    physics_args.shear_rate = float(configuration["shear_rate_s"])
+    physics_args.shear_rate = float(
+        configuration["shear_rate_s"] if args.override_shear_rate is None
+        else args.override_shear_rate)
+    physics_args.dt = float(
+        configuration["dt_s"] if args.override_dt is None else args.override_dt)
+    if args.thermal_control != "inherited":
+        physics_args.thermal_control = args.thermal_control
+        physics_args.bath_rate = args.bath_rate
     spacing, _, _, _, _, _, base_context = _physics(physics_args)
+    state = _temperature_seed(
+        state, args.temperature_seed, args.temperature_seed_width,
+        spacing, args.temperature_seed_normal)
     rx_enabled = not args.disable_rx
     wall_parameters = base_context.wall_parameters
     if args.production_rx:
@@ -135,7 +193,7 @@ def main():
         args.wall_orientation_relaxation or args.production_rx)
     context = replace(
         base_context, wall_parameters=wall_parameters,
-        shear_rate_s=float(configuration["shear_rate_s"]),
+        shear_rate_s=physics_args.shear_rate,
         front_enabled=True,
         source_mode=("gb_tj_only" if args.production_rx else "disabled"),
         source_parameters=(
@@ -202,6 +260,15 @@ def main():
     output_configuration = dict(configuration)
     output_configuration.update(
         schema="v67-drx-asb-overlap-v1", target_steps=args.intervals,
+        dt_s=physics_args.dt, shear_rate_s=physics_args.shear_rate,
+        thermal_control=physics_args.thermal_control,
+        thermal_bath_rate_s=(
+            0.0 if physics_args.thermal_control == "adiabatic"
+            else physics_args.bath_rate),
+        temperature_seed_peak_K=args.temperature_seed,
+        temperature_seed_width_m=args.temperature_seed_width,
+        temperature_seed_normal=args.temperature_seed_normal,
+        temperature_seed_mean_zero=True,
         parent_checkpoint=str(args.checkpoint.resolve()),
         rx_enabled=rx_enabled,
         interface_neutral_sink_enabled=bool(args.interface_neutral_sink),
@@ -238,7 +305,7 @@ def main():
     maximum_first_law_residuals = {key: 0.0 for key in first_law_audit_keys}
     maximum_lattice_mura_residual = 0.0
     records = []
-    dt = float(configuration["dt_s"])
+    dt = physics_args.dt
     for index in range(1, args.intervals+1):
         _, band_before, metrics_before = _band(endpoint)
         before_supports = np.asarray(endpoint.state.supports)

@@ -50,7 +50,8 @@ def _args_from_configuration(configuration):
         sink_mode="disabled", sink_activation_enthalpy=1.4,
         sink_stress_assisted=False, interface_sink_mode="disabled",
         plastic_history_mode=c.get("plastic_history_mode", "receiver_dormant"),
-        thermal_control=c.get("thermal_control", "adiabatic"), bath_rate=0.0)
+        thermal_control=c.get("thermal_control", "adiabatic"),
+        bath_rate=float(c.get("thermal_bath_rate_s", 0.0)))
 
 
 def _edge_20_30(audit):
