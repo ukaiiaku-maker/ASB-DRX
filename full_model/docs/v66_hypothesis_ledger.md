@@ -1332,3 +1332,18 @@ experiment, result, limitation, and next branch.
   `IMPOSED_RATE_EXCEEDS_HP_NUCLEATION_CAPACITY_RETAINED_CARRIERS_REQUIRED`.
   Thus the same Arrhenius law explains why nucleation can sustain lower-rate RX
   but cannot replace carriers lost to high-rate polycrystal boundaries.
+
+## 2026-10-17 — H26 matched 0.11464 sustained carrier floor
+
+- The exact matched branches reach 0.11464 shear with no physical band in
+  either latest 100-interval chunk. Adiabatic and bath terminal flow exposures
+  are `6.64767e-5` and `7.70634e-5`; both peak in the final interval at 7.950
+  and 7.939 GPa and have zero post-peak softening.
+- Existing-boundary grain-20 growth continues by `0.02327%` and `0.02291%` in
+  the terminal chunks, but cannot intersect a band that no longer exists. All
+  Mura, absorption, first-law, identity, and branch-chain audits pass.
+- The exact earlier chain contains qualified RX-band coexistence, so this is
+  classified `SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND`, rather than
+  erasing the prior state or leaving the later response unclassified. The
+  0.13064 horizon is already executing to test whether the carrier floor is
+  stationary or eventually reactivates.

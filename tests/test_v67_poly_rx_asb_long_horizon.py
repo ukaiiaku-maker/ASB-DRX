@@ -88,3 +88,27 @@ def test_matched_flow_arrest_after_rx_band_is_not_left_unclassified():
     assert result["decision"]["matched_mobile_supply_arrest_after_rx_band"]
     assert result["decision"]["classification"] == (
         "MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND")
+
+
+def test_sustained_post_band_arrest_uses_exact_prior_chain():
+    adiabatic = _series("adiabatic", soften=False)
+    bath = _series("strong_bath", soften=False)
+    for series in (adiabatic, bath):
+        series[1]["active_physical_band_intervals"] = 100
+        series[1]["decision"]["final_connected_band"] = True
+        series[1]["decision"]["band_persisted_every_interval"] = True
+        series[1]["decision"]["growing_owner_intersects_active_band"] = True
+        terminal = series[-1]
+        terminal["decision"]["final_connected_band"] = False
+        terminal["decision"]["band_persisted_every_interval"] = False
+        terminal["decision"]["growing_owner_intersects_active_band"] = False
+        terminal["active_physical_band_intervals"] = 0
+        terminal["flow_regime"] = {
+            "final_plastic_to_imposed_power_fraction": 1e-4}
+        terminal["owner_results"] = {
+            "20": {"net_area_change_m2": 1e-15}}
+    result = classify(adiabatic, bath)
+    assert result["decision"][
+        "sustained_source_limited_arrest_after_prior_rx_band"]
+    assert result["decision"]["classification"] == (
+        "SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND")

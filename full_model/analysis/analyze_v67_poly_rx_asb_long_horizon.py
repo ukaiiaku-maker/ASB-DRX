@@ -151,6 +151,20 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         and terminal_ad["active_physical_band_intervals"] > 0
         and terminal_bath["active_physical_band_intervals"] > 0
         and rx_overlap)
+    prior_rx_band = bool(any(
+        case["active_physical_band_intervals"] > 0
+        and case["decision"]["growing_owner_intersects_active_band"]
+        for case in adiabatic[:-1]))
+    terminal_existing_boundary_growth = bool(any(
+        row["net_area_change_m2"] > 0.0
+        for row in terminal_ad.get("owner_results", {}).values()))
+    sustained_post_band_arrest = bool(
+        matched and chain and controls and hard and terminal_diagnostics
+        and ad_terminal_flow < .01 and bath_terminal_flow < .01
+        and ad_softening == 0.0 and bath_softening == 0.0
+        and terminal_ad["active_physical_band_intervals"] == 0
+        and terminal_bath["active_physical_band_intervals"] == 0
+        and prior_rx_band and terminal_existing_boundary_growth)
     persistent_rx_band = bool(
         matched and chain and controls and hard and ad_persistent and rx_overlap)
     heat_dependent_asb = bool(
@@ -163,6 +177,8 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         classification = "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING"
     elif matched_supply_arrest:
         classification = "MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND"
+    elif sustained_post_band_arrest:
+        classification = "SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND"
     else:
         classification = "LATE_HORIZON_POLYCRYSTAL_RESPONSE_NOT_YET_QUALIFIED"
     return {
@@ -190,6 +206,9 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "adiabatic_terminal_flow_exposure_fraction": ad_terminal_flow,
             "bath_terminal_flow_exposure_fraction": bath_terminal_flow,
             "terminal_existing_boundary_rx_intersects_adiabatic_band": rx_overlap,
+            "prior_existing_boundary_rx_band_in_chain": prior_rx_band,
+            "terminal_existing_boundary_growth_continues": (
+                terminal_existing_boundary_growth),
             "terminal_temperature_contrast_separation_exceeds_20K": (
                 thermal_separation),
         },
@@ -200,6 +219,8 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "strict_heat_triggered_terminal_band": strict_heat_triggered_band,
             "matched_mobile_supply_arrest_after_rx_band": (
                 matched_supply_arrest),
+            "sustained_source_limited_arrest_after_prior_rx_band": (
+                sustained_post_band_arrest),
             "classification": classification,
         },
         "claim_boundary": (

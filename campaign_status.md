@@ -3306,3 +3306,15 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `full_model/verification/v67_hall_petch_capacity_envelope.{png,pdf}`. Across
   600--1400 K the ceiling stays near the 2/s branch and remains orders of
   magnitude below 80000/s.
+
+## V67 matched 0.11464 source-limited endpoint
+
+- Adiabatic and strong-bath terminal flow exposures are `6.64767e-5` and
+  `7.70634e-5`. Both latest chunks contain zero physical-band intervals, peak
+  at their terminal stresses (7.950 and 7.939 GPa), and have zero softening.
+- Grain 20 continues existing-boundary growth by `0.02327%` and `0.02291%`;
+  all hard audits and checkpoint chains pass. The earlier exact chain retains
+  its RX-band coexistence evidence.
+- The pair is classified
+  `SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND`. Adiabatic 800 started
+  automatically; no gate or approval pause occurred.
