@@ -1,0 +1,58 @@
+{
+  "case": {
+    "checkpoint_sha256": "0f6559b88433431aee4640bd868c993ff2d98a57758247ac6a88fc9d033df618",
+    "classification": "IMPOSED_RATE_EXCEEDS_HP_NUCLEATION_CAPACITY_RETAINED_CARRIERS_REQUIRED",
+    "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_700",
+    "event_slip_increment": 0.00010333333333333334,
+    "family_count": 4,
+    "imposed_shear_rate_s": 80000.0,
+    "load": 0.11463999999999804,
+    "maximum_all_family_shear_rate_s": 2.523830101884291,
+    "maximum_hazard_per_family_s": 6106.040569074898,
+    "maximum_nucleation_capacity_fraction_of_imposed_rate": 3.154787627355364e-05,
+    "maximum_shear_rate_per_family_s": 0.6309575254710728,
+    "observed_terminal_plastic_to_imposed_power_fraction": 6.647670879617974e-05,
+    "observed_to_nucleation_ceiling_ratio": 2.1071690601217012,
+    "parent_provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "campaign": "V67",
+                        "scientific_scope": "fresh zero-load polycrystal anchor",
+                        "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                        "source_dirty": false
+                      },
+                      "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                    },
+                    "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+        },
+        "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
+      },
+      "source_commit": "0b115938ee25d65e21e51b1a744e18907d1e5a49"
+    },
+    "step": 733,
+    "temperature_maximum_K": 1038.1825599784415
+  },
+  "claim_boundary": "This is the generous all-four-families-accessible EXP-floor upper bound from the immutable analytical nucleation law. It does not limit glide of retained carriers and is not a fitted source rate.",
+  "created_utc": "2026-10-17T01:38:29.151663+00:00",
+  "decision": {
+    "classification": "IMPOSED_RATE_EXCEEDS_HP_NUCLEATION_CAPACITY_RETAINED_CARRIERS_REQUIRED"
+  },
+  "schema": "v67-hall-petch-capacity-ceiling-v1"
+}

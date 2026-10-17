@@ -79,18 +79,19 @@
     "H21": "superseded_interpretation:_the_initial_same_state_clock_audit_correctly_measured_d2_over_b2_but_incorrectly_interpreted_the_prescribed_new_source_site_multiplicity_as_a_production_recycling_clock_defect",
     "H22": "the_supplied_Azizi_Dillon_law_defines_b2_over_d2_as_available_nucleation_site_multiplicity_and_b_over_d_as_fixed_event_strain;_corrected_interface_emission_uses_the_same_events_over_d2_pair_density_and_events_times_b_over_d_slip_as_the_conjugate_source_with_reservoir_capacity_only_and_supplies_2p3168e_5_of_mobile_line_per_ad600_interval",
     "H23": "the_hard_audited_ad400_to_ad600_and_bath400_to_bath600_balances_require_98p502_and_98p444_percent_boundary_transparency_to_prevent_mobile_loss;_no_signed_crystallographic_transfer_kernel_is_DD_identified_so_no_coefficient_is_fitted_or_promoted",
-    "H24": "a_same_interval_residence_hypothesis_restricted_to_newly_captured_neutral_pairs_can_recycle_at_most_1p0992e_4_of_captured_line_and_is_classified_NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT"
+    "H24": "a_same_interval_residence_hypothesis_restricted_to_newly_captured_neutral_pairs_can_recycle_at_most_1p0992e_4_of_captured_line_and_is_classified_NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT",
+    "H25": "the_immutable_four_family_Hall_Petch_nucleation_EXP_floor_ceiling_is_2p52383_per_s_at_the_hottest_ad700_cell_so_it_can_carry_the_qualified_2_per_s_RX_branch_but_only_3p15479e_5_of_the_80000_per_s_high_rate_demand;_retained_or_transmitted_carriers_are_required"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": 88568,
-      "child_pid": 94625,
-      "case": "v67_poly_rx_asb_seed19p375_ad_700",
+      "child_pid": 97258,
+      "case": "v67_poly_rx_asb_seed19p375_bath_700",
       "status": "running_sequential_matched_horizon_to_0p13064_shear",
-      "last_case": "v67_poly_rx_asb_seed19p375_bath_600",
+      "last_case": "v67_poly_rx_asb_seed19p375_ad_700",
       "last_start_local": "2026-10-16T17:48:38-07:00",
-      "last_source_commit": "0b11593",
-      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_ad_700",
+      "last_source_commit": "0c046e3",
+      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_bath_700",
       "queued_after_manager": "same_ad500_parent_matched_random_source_geography_to_ad600_horizon_then_machine_comparison",
       "geography_watcher_pid": 91476,
       "conditional_interface_emission_watcher_pid": 93660
@@ -104,13 +105,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24"],
-    "physical_uncertainty": "whether_relocation_of_the_unchanged_analytical_source_site_measure_changes_supply;_scalar_transparency_and_neutral_residence_release_are_now_bounded_insufficient_and_signed_transfer_remains_unidentified",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25"],
+    "physical_uncertainty": "whether_relocation_of_the_unchanged_analytical_source_site_measure_changes_supply;_the_analytical_nucleation_ceiling_explains_lower_rate_support_and_high_rate_shortfall_while_signed_boundary_transfer_remains_unidentified",
     "next_executable_experiment": "finish_the_running_matched_baseline_horizon_then_automatically_fork_the_exact_ad500_checkpoint_for_matched_random_source_geography;_if_that_does_not_restore_physical_flow_the_already_queued_second_fork_enables_only_conserved_interface_mobile_pair_emission",
-    "source_identity": "eb0d801_plus_uncommitted_analytical_event_measure_repair;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
+    "source_identity": "0c046e3_plus_uncommitted_capacity_analysis;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
     "expected_discriminatory_observation": "matched_random_final_flow_at_least_1_percent_when_the_same_parent_GB_TJ_control_is_below_1_percent_or_a_valid_negative_geography_result_with_exact_parent_and_site_measure_audits",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "the_exact_0p09864_pair_is_classified_MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND;_analytical_fixed_event_supply_is_insufficient,_98p5_percent_transparency_would_be_required,_and_new_neutral_capture_cohorts_can_recycle_only_1p0992e_4_of_captured_line;_the_baseline_horizon_and_queued_causal_forks_continue"
+    "result_status": "ad700_is_clean_and_unbanded_at_7p950_GPa_with_zero_softening_and_flow_6p64767e_5;_the_analytical_HP_nucleation_ceiling_is_2p52383_per_s_which_supports_2_per_s_RX_but_only_3p15479e_5_of_the_80000_per_s_demand;_bath700_is_running_and_queued_causal_forks_continue"
   },
   "continuation_rule": {
     "active": true,

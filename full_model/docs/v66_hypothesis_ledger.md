@@ -1315,3 +1315,20 @@ experiment, result, limitation, and next branch.
   crystallographic content between differently oriented owners; implementing
   an arbitrary family mapping would violate the campaign's DD-identification
   constraint.
+
+## 2026-10-17 — H25 Hall--Petch nucleation capacity ceiling
+
+- Combining the immutable nucleation multiplicity `N=b^2/d^2`, event slip
+  `b/d`, attempt frequency, and EXP-floor barrier gives the analytical upper
+  bound `gamma_dot_max = n_family * nu * (b/d)^3 * exp(-Q_floor/kT)` when all
+  four families are accessible. No trajectory measurement or fit enters it.
+- At the hottest ad700 cell (`1038.18 K`, `d=2.4 um`) this ceiling is
+  `2.52383 /s`: `0.630958 /s` per family. It can carry the previously qualified
+  2/s lower-rate RX branch, but is only `3.15479e-5` of the 80000/s polycrystal
+  demand.
+- The ad700 observed flow fraction is `6.64767e-5`, only 2.107 times the
+  nucleation-only ceiling because a small retained mobile population still
+  glides. Classification:
+  `IMPOSED_RATE_EXCEEDS_HP_NUCLEATION_CAPACITY_RETAINED_CARRIERS_REQUIRED`.
+  Thus the same Arrhenius law explains why nucleation can sustain lower-rate RX
+  but cannot replace carriers lost to high-rate polycrystal boundaries.

@@ -3287,3 +3287,18 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT`. They rule out scalar or
   neutral shortcuts; only a validated crystallographic signed-transfer law
   could test this route further.
+
+## V67 analytical Hall--Petch capacity ceiling
+
+- The all-four-family EXP-floor upper bound derived from the immutable law is
+  `2.52383 /s` at the hottest ad700 cell. This exceeds the qualified 2/s RX
+  condition but is only `3.15479e-5` of the 80000/s high-rate demand.
+- Ad700 ends at `6.64767e-5` plastic/imposed power, 2.107 times the
+  nucleation-only ceiling because residual mobile line still glides. It remains
+  unbanded and hardens to 7.950 GPa; grain 20 continues existing-boundary growth
+  by 0.02327%, with all hard ledgers closed.
+- Classification:
+  `IMPOSED_RATE_EXCEEDS_HP_NUCLEATION_CAPACITY_RETAINED_CARRIERS_REQUIRED`.
+  The rate split is an endogenous consequence of one law, not a mechanism
+  switch: nucleation can support lower-rate RX, while high-rate polycrystal ASB
+  additionally requires physically retained or transmitted carriers.
