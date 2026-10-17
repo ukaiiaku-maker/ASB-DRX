@@ -110,3 +110,33 @@ def test_arrhenius_emission_is_complete_energy_accepted_at_finite_load():
     assert result.relative_first_law_residual < 5e-5
     assert result.committed_state.grain_ids == state.grain_ids
     np.testing.assert_array_equal(result.committed_state.supports, state.supports)
+
+
+def test_arrhenius_emission_complete_clock_is_timestep_stable():
+    state, spacing = _fixture()
+    systems = bcc_four_family_systems()
+    wall = CommonWallParameters(spacing_m=spacing)
+    kwargs = dict(
+        mean_strain=np.array([[0.0, .025], [.025, 0.0]]), systems=systems,
+        wall_parameters=wall, represented_thickness_m=2*2.48e-10,
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.4e-6),
+        energy_kwargs={"topologies": (), "systems": systems})
+    whole = evaluate_interface_mobile_pair_emission(
+        state, interval_s=2e-9, **kwargs)
+    half1 = evaluate_interface_mobile_pair_emission(
+        state, interval_s=1e-9, **kwargs)
+    half2 = evaluate_interface_mobile_pair_emission(
+        half1.committed_state, interval_s=1e-9, **kwargs)
+    assert whole.accepted and half1.accepted and half2.accepted
+    split_pairs = (
+        half1.projection.created_lattice_pair_cell_sum_m2
+        +half2.projection.created_lattice_pair_cell_sum_m2)
+    np.testing.assert_allclose(
+        split_pairs, whole.projection.created_lattice_pair_cell_sum_m2,
+        rtol=2e-5)
+    for combined, direct in zip(
+            half2.committed_state.interfaces, whole.committed_state.interfaces):
+        np.testing.assert_allclose(
+            combined.boundary_plus_m2, direct.boundary_plus_m2, rtol=2e-5)
+        np.testing.assert_allclose(
+            combined.boundary_minus_m2, direct.boundary_minus_m2, rtol=2e-5)
