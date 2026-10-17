@@ -108,6 +108,14 @@ class MultiGrainProductionLedger:
     cumulative_source_first_law_residual_J: float = 0.0
     maximum_source_relative_first_law_residual: float = 0.0
     maximum_source_line_balance_residual_m2: float = 0.0
+    interface_mobile_emission_intervals: int = 0
+    interface_mobile_emission_inactive_intervals: int = 0
+    interface_mobile_emission_rejected_intervals: int = 0
+    interface_mobile_emitted_pair_cell_sum_m2: float = 0.0
+    cumulative_interface_mobile_emission_heat_J: float = 0.0
+    maximum_interface_mobile_emission_first_law_residual: float = 0.0
+    maximum_interface_mobile_emission_line_balance_residual_m2: float = 0.0
+    maximum_interface_mobile_emission_mura_residual: float = 0.0
     sink_intervals: int = 0
     sink_inactive_intervals: int = 0
     sink_rejected_intervals: int = 0

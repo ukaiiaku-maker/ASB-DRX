@@ -13,7 +13,9 @@ from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.coupled_multigrain_interval import (
     CoupledMultigrainContext, advance_complete_multigrain_interval, make_endpoint,
 )
-from full_model.production.multigrain_common_state import PhysicalTransferLaw
+from full_model.production.multigrain_common_state import (
+    InterfaceComponentState, PhysicalTransferLaw,
+)
 from full_model.production.interface_structural_absorption import (
     InterfaceStructuralAbsorptionParameters,
 )
@@ -109,6 +111,45 @@ def test_enabled_conjugate_pair_source_is_in_complete_interval_and_ledger():
             < 1e-6*result.audit["source_created_line_cell_sum_m2"])
     assert result.endpoint.runtime.ledger.source_intervals == 1
     assert result.endpoint.runtime.ledger.source_event_count > 0.0
+    assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
+
+
+def test_interface_mobile_emission_is_separate_conservative_channel():
+    ctx = replace(
+        context(front_enabled=False),
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.5e-6),
+        interface_mobile_emission_mode="arrhenius_neutral_pair")
+    before = parent(ctx)
+    interfaces = []
+    owner = before.state.owners[0]
+    n = owner.temperature_K.shape[0]
+    families = owner.mobile_plus_m2.shape[-1]
+    for edge in before.runtime.interfaces:
+        plus = np.zeros((n, n, 3, families))
+        minus = np.zeros_like(plus)
+        plus[..., 0, :] = 2.0e14
+        minus[..., 0, :] = 1.5e14
+        interfaces.append(InterfaceComponentState(
+            edge.component_id, edge.grain_a_id, edge.grain_b_id,
+            np.zeros((n, n)), np.zeros((n, n)), plus, minus,
+            np.zeros_like(owner.junction_m2),
+            boundary_burgers_m1=np.zeros((n, n, 3, 3))))
+    state = replace(before.state, interfaces=tuple(interfaces))
+    before = make_endpoint(state, before.runtime, before.load, ctx)
+    result = advance_complete_multigrain_interval(before, 1e-10, ctx)
+    assert result.audit["interface_mobile_emission_classification"] == (
+        "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION")
+    assert result.audit["interface_mobile_emitted_pair_cell_sum_m2"] > 0.0
+    assert result.integrals["interface_mobile_emission_heat_J"] > 0.0
+    assert result.audit[
+        "interface_mobile_emission_relative_first_law_residual"] < .05
+    assert abs(result.audit[
+        "interface_mobile_emission_line_balance_residual_m2"]) < 1e-10*result.audit[
+            "interface_mobile_emitted_pair_cell_sum_m2"]
+    assert result.audit[
+        "interface_mobile_emission_mura_relative_residual"] < 1e-10
+    assert result.endpoint.runtime.ledger.interface_mobile_emission_intervals == 1
+    assert result.endpoint.runtime.ledger.source_intervals == 0
     assert result.endpoint.runtime.ledger.physical_time_s == 1e-10
 
 

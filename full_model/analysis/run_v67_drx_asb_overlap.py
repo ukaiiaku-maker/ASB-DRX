@@ -117,6 +117,12 @@ def _production_source_mode(production_rx, requested_mode):
     return requested_mode
 
 
+def _interface_emission_mode(production_rx, enabled):
+    if enabled and not production_rx:
+        raise ValueError("interface mobile emission requires --production-rx")
+    return "arrhenius_neutral_pair" if enabled else "disabled"
+
+
 def _response_snapshot(endpoint, shear_rate_s):
     """Return scalar mechanics/thermal diagnostics on one accepted state."""
     power, _, metrics = _band(endpoint)
@@ -195,6 +201,10 @@ def main():
               "exact GB/TJ opportunity distribution and changes only its "
               "spatial placement"))
     parser.add_argument(
+        "--interface-mobile-emission", action="store_true",
+        help=("enable energy-qualified neutral-pair emission from the explicit "
+              "mobile-channel GB reservoir under the same Hall--Petch hazard"))
+    parser.add_argument(
         "--front-transmission-fraction", type=float,
         help=("fixed front dislocation transmission fraction; omission "
             "preserves the inherited transfer law"))
@@ -242,6 +252,8 @@ def main():
         args.wall_orientation_relaxation or args.production_rx)
     source_mode = _production_source_mode(
         args.production_rx, args.source_mode)
+    interface_emission_mode = _interface_emission_mode(
+        args.production_rx, args.interface_mobile_emission)
     context = replace(
         base_context, wall_parameters=wall_parameters,
         shear_rate_s=physics_args.shear_rate,
@@ -251,6 +263,8 @@ def main():
             ArrheniusSourceParameters(grain_size_m=2.4e-6)
             if args.production_rx else None),
         source_random_seed=67, sink_mode="disabled",
+        interface_mobile_emission_mode=(
+            interface_emission_mode),
         interface_sink_mode=("neutral_pair" if args.interface_neutral_sink
                              else "disabled"),
         interface_sink_parameters=(NeutralBoundarySinkParameters()
@@ -330,6 +344,8 @@ def main():
         production_rx_enabled=bool(args.production_rx),
         source_mode=source_mode,
         source_random_seed=(67 if source_mode != "disabled" else None),
+        interface_mobile_emission_mode=(
+            context.interface_mobile_emission_mode),
         front_transmission_fraction=float(
             context.front_kinetics.transfer_law.transmission_fraction),
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
@@ -540,6 +556,8 @@ def main():
             "rx_pathway_enabled": rx_enabled,
             "production_rx_channels_enabled": bool(args.production_rx),
             "source_mode": source_mode,
+            "interface_mobile_emission_mode": (
+                context.interface_mobile_emission_mode),
             "front_transmission_fraction": float(
                 context.front_kinetics.transfer_law.transmission_fraction),
             "interface_neutral_sink_enabled": bool(

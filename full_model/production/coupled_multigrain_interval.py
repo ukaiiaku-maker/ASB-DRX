@@ -45,6 +45,9 @@ from .interface_structural_absorption import (
 from .lattice_interface_absorption import (
     evaluate_lattice_interface_absorption,
 )
+from .interface_mobile_pair_emission import (
+    evaluate_interface_mobile_pair_emission,
+)
 from .wall_orientation_relaxation import (
     evaluate_wall_orientation_relaxation,
 )
@@ -106,6 +109,7 @@ class CoupledMultigrainContext:
     source_tj_weight: float = 2.0
     source_bulk_site_density_m2: float = 1.0e12
     maximum_source_subdivisions: int = 6
+    interface_mobile_emission_mode: str = "disabled"
     sink_parameters: object | None = None
     sink_mode: str = "disabled"
     sink_random_seed: int = 66
@@ -374,6 +378,64 @@ def advance_complete_multigrain_interval(
             junction_disclination_parameters=JunctionDisclinationParameters())
     structural_junction_wall_time = (
         time.perf_counter()-structural_junction_started)
+    interface_mobile_emission_started = time.perf_counter()
+    interface_mobile_emission = None
+    if context.interface_mobile_emission_mode != "disabled":
+        if context.interface_mobile_emission_mode != "arrhenius_neutral_pair":
+            raise ValueError("unknown interface mobile-emission mode")
+        if context.source_parameters is None:
+            raise ValueError(
+                "interface mobile emission requires Hall--Petch source parameters")
+        interface_mobile_emission = evaluate_interface_mobile_pair_emission(
+            mechanical_parent_state, mean_strain=strain0, interval_s=dt,
+            systems=context.systems, wall_parameters=context.wall_parameters,
+            represented_thickness_m=context.represented_thickness_m,
+            source_parameters=context.source_parameters,
+            energy_kwargs=energy_base)
+        if interface_mobile_emission.classification in {
+                "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+                "REJECTED_COMPLETE_FIRST_LAW"}:
+            raise RuntimeError(
+                "interface mobile emission failed a hard balance audit")
+        if interface_mobile_emission.accepted:
+            mechanical_parent_state = (
+                interface_mobile_emission.committed_state)
+        projection = interface_mobile_emission.projection
+        runtime = replace(runtime, ledger=replace(
+            runtime.ledger,
+            interface_mobile_emission_intervals=(
+                runtime.ledger.interface_mobile_emission_intervals
+                +int(interface_mobile_emission.accepted)),
+            interface_mobile_emission_inactive_intervals=(
+                runtime.ledger.interface_mobile_emission_inactive_intervals
+                +int(interface_mobile_emission.classification.startswith(
+                    "INACTIVE"))),
+            interface_mobile_emission_rejected_intervals=(
+                runtime.ledger.interface_mobile_emission_rejected_intervals
+                +int(interface_mobile_emission.classification.startswith(
+                    "REJECTED"))),
+            interface_mobile_emitted_pair_cell_sum_m2=(
+                runtime.ledger.interface_mobile_emitted_pair_cell_sum_m2
+                +(projection.created_lattice_pair_cell_sum_m2
+                  if interface_mobile_emission.accepted else 0.0)),
+            cumulative_interface_mobile_emission_heat_J=(
+                runtime.ledger.cumulative_interface_mobile_emission_heat_J
+                +(interface_mobile_emission.generated_heat_J
+                  if interface_mobile_emission.accepted else 0.0)),
+            maximum_interface_mobile_emission_first_law_residual=max(
+                runtime.ledger.
+                maximum_interface_mobile_emission_first_law_residual,
+                interface_mobile_emission.relative_first_law_residual
+                if interface_mobile_emission.accepted else 0.0),
+            maximum_interface_mobile_emission_line_balance_residual_m2=max(
+                runtime.ledger.
+                maximum_interface_mobile_emission_line_balance_residual_m2,
+                abs(projection.line_balance_residual_cell_sum_m2)),
+            maximum_interface_mobile_emission_mura_residual=max(
+                runtime.ledger.maximum_interface_mobile_emission_mura_residual,
+                projection.maximum_mura_relative_residual)))
+    interface_mobile_emission_wall_time = (
+        time.perf_counter()-interface_mobile_emission_started)
     energy_before = dict(energy_base, mean_strain=strain0)
     collective_wall_started = time.perf_counter()
     collective_wall = None
@@ -1326,6 +1388,15 @@ def advance_complete_multigrain_interval(
             np.zeros(parent.state.supports.shape[1:], dtype=float)
             if source is None or not source.accepted
             else np.asarray(source.heat_source_J_by_cell)),
+        "interface_mobile_emission_heat_J": (
+            0.0 if interface_mobile_emission is None
+            or not interface_mobile_emission.accepted
+            else interface_mobile_emission.generated_heat_J),
+        "interface_mobile_emission_heat_J_by_cell": (
+            np.zeros(parent.state.supports.shape[1:], dtype=float)
+            if interface_mobile_emission is None
+            or not interface_mobile_emission.accepted
+            else np.asarray(interface_mobile_emission.heat_source_J_by_cell)),
         "wall_order_relaxation_heat_J": (
             0.0 if wall_order is None or not wall_order.accepted
             else wall_order.generated_heat_J),
@@ -1519,6 +1590,28 @@ def advance_complete_multigrain_interval(
         "source_line_balance_residual_m2": (
             0.0 if source is None or not source.accepted
             else source.line_balance_residual_m2),
+        "interface_mobile_emission_mode": (
+            context.interface_mobile_emission_mode),
+        "interface_mobile_emission_classification": (
+            "DISABLED" if interface_mobile_emission is None
+            else interface_mobile_emission.classification),
+        "interface_mobile_emitted_pair_cell_sum_m2": (
+            0.0 if interface_mobile_emission is None
+            or not interface_mobile_emission.accepted
+            else interface_mobile_emission.projection.
+            created_lattice_pair_cell_sum_m2),
+        "interface_mobile_emission_line_balance_residual_m2": (
+            0.0 if interface_mobile_emission is None
+            else interface_mobile_emission.projection.
+            line_balance_residual_cell_sum_m2),
+        "interface_mobile_emission_mura_relative_residual": (
+            0.0 if interface_mobile_emission is None
+            else interface_mobile_emission.projection.
+            maximum_mura_relative_residual),
+        "interface_mobile_emission_relative_first_law_residual": (
+            0.0 if interface_mobile_emission is None
+            or not interface_mobile_emission.accepted
+            else interface_mobile_emission.relative_first_law_residual),
         "wall_order_relaxation_mode": context.wall_order_relaxation_mode,
         "wall_order_relaxation_classification": (
             "DISABLED" if wall_order is None else wall_order.classification),
@@ -1815,6 +1908,8 @@ def advance_complete_multigrain_interval(
             "mechanical_map": mechanical_wall_time,
             "collective_wall_nucleation_map": collective_wall_wall_time,
             "source_map": source_wall_time,
+            "interface_mobile_emission_map": (
+                interface_mobile_emission_wall_time),
             "wall_order_relaxation_map": wall_order_wall_time,
             "conservative_dipole_wall_map": dipole_wall_wall_time,
             "conservative_wall_glide_map": wall_glide_wall_time,
@@ -1830,6 +1925,7 @@ def advance_complete_multigrain_interval(
             "front_map": front_wall_time,
             "endpoint_observables": observable_wall_time,
             "accounted_total": (mechanical_wall_time+source_wall_time
+                                +interface_mobile_emission_wall_time
                                 +collective_wall_wall_time
                                 +wall_order_wall_time+dipole_wall_wall_time
                                 +wall_glide_wall_time

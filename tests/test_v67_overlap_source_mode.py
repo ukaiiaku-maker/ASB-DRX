@@ -1,7 +1,7 @@
 import pytest
 
 from full_model.analysis.run_v67_drx_asb_overlap import (
-    _production_source_mode,
+    _interface_emission_mode, _production_source_mode,
 )
 
 
@@ -17,3 +17,10 @@ def test_source_geography_cannot_be_enabled_without_production_sources():
     assert _production_source_mode(False, "gb_tj_only") == "disabled"
     with pytest.raises(ValueError, match="requires --production-rx"):
         _production_source_mode(False, "matched_random")
+
+
+def test_interface_emission_is_an_explicit_production_extension():
+    assert _interface_emission_mode(True, True) == "arrhenius_neutral_pair"
+    assert _interface_emission_mode(True, False) == "disabled"
+    with pytest.raises(ValueError, match="requires --production-rx"):
+        _interface_emission_mode(False, True)
