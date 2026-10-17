@@ -140,6 +140,17 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
     terminal_diagnostics = bool(
         terminal_ad.get("response_history")
         and terminal_bath.get("response_history"))
+    ad_terminal_flow = terminal_ad.get("flow_regime", {}).get(
+        "final_plastic_to_imposed_power_fraction", float("inf"))
+    bath_terminal_flow = terminal_bath.get("flow_regime", {}).get(
+        "final_plastic_to_imposed_power_fraction", float("inf"))
+    matched_supply_arrest = bool(
+        matched and chain and controls and hard and terminal_diagnostics
+        and ad_terminal_flow < .01 and bath_terminal_flow < .01
+        and ad_softening == 0.0 and bath_softening == 0.0
+        and terminal_ad["active_physical_band_intervals"] > 0
+        and terminal_bath["active_physical_band_intervals"] > 0
+        and rx_overlap)
     persistent_rx_band = bool(
         matched and chain and controls and hard and ad_persistent and rx_overlap)
     heat_dependent_asb = bool(
@@ -150,6 +161,8 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
         classification = "QUALIFIED_POLYCRYSTAL_DRX_WITH_HEAT_DEPENDENT_ASB"
     elif persistent_rx_band:
         classification = "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING"
+    elif matched_supply_arrest:
+        classification = "MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND"
     else:
         classification = "LATE_HORIZON_POLYCRYSTAL_RESPONSE_NOT_YET_QUALIFIED"
     return {
@@ -174,6 +187,8 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "bath_terminal_band_persisted_at_least_20_intervals": (
                 bath_persistent),
             "bath_terminal_band_suppressed": bath_band_suppressed,
+            "adiabatic_terminal_flow_exposure_fraction": ad_terminal_flow,
+            "bath_terminal_flow_exposure_fraction": bath_terminal_flow,
             "terminal_existing_boundary_rx_intersects_adiabatic_band": rx_overlap,
             "terminal_temperature_contrast_separation_exceeds_20K": (
                 thermal_separation),
@@ -183,6 +198,8 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
                 persistent_rx_band),
             "heat_dependent_polycrystal_asb_with_rx": heat_dependent_asb,
             "strict_heat_triggered_terminal_band": strict_heat_triggered_band,
+            "matched_mobile_supply_arrest_after_rx_band": (
+                matched_supply_arrest),
             "classification": classification,
         },
         "claim_boundary": (

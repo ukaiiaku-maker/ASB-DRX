@@ -70,3 +70,21 @@ def test_bath_band_separates_strict_trigger_from_thermal_asb():
     result = classify(_series("adiabatic"), bath)
     assert result["decision"]["heat_dependent_polycrystal_asb_with_rx"]
     assert not result["decision"]["strict_heat_triggered_terminal_band"]
+
+
+def test_matched_flow_arrest_after_rx_band_is_not_left_unclassified():
+    adiabatic = _series("adiabatic", soften=False)
+    bath = _series("strong_bath", soften=False)
+    for terminal in (adiabatic[-1], bath[-1]):
+        terminal["decision"]["final_connected_band"] = False
+        terminal["decision"]["band_persisted_every_interval"] = False
+        terminal["decision"][
+            "terminal_band_persisted_at_least_20_intervals"] = False
+        terminal["decision"]["growing_owner_intersects_active_band"] = True
+        terminal["active_physical_band_intervals"] = 45
+        terminal["flow_regime"] = {
+            "final_plastic_to_imposed_power_fraction": 1e-4}
+    result = classify(adiabatic, bath)
+    assert result["decision"]["matched_mobile_supply_arrest_after_rx_band"]
+    assert result["decision"]["classification"] == (
+        "MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND")
