@@ -1245,3 +1245,24 @@ experiment, result, limitation, and next branch.
 - Both existing-boundary target increments remain positive and every declared
   hard audit passes. An exact physical-source audit confirms that the recorded
   commits differ only in nonphysical analysis/evidence paths.
+
+## 2026-10-17T01:16:16Z — H21 carrier capture/source clock audit
+
+- The exact ad600 retained state was evaluated with the production one-flux
+  lattice capture and the default Hall--Petch interface re-emission operators.
+  Both are downhill, first-law-qualified reactions on the same common state.
+- Lattice capture has a weighted event rate of `5.6451e11 /s` and saturated
+  uncapped interval fraction. Hall--Petch re-emission has a maximum hazard of
+  `6.1095e3 /s` and a `1.2219e-5` interval fraction. The separation is not a
+  different Peierls, Taylor, thermal, or EXP-floor law: it is the exact
+  `d^2/b^2 = 9.3652e7` inverse of the new-source opportunity measure.
+- The stored neutral interface pair inventory is already `19.9405` times the
+  remaining lattice-mobile line inventory (or `39.8811` times when both signs
+  of each pair are counted). Therefore carrier availability is not limited by
+  conserved content; it is limited by treating a represented stored pair as if
+  a previously absent source site must be nucleated again.
+- Classification: `SITE_MULTIPLICITY_DOMINATES_CARRIER_RECYCLE_CLOCK`. This is
+  a diagnosed clock inconsistency, not promotion of the quarantined fast
+  stored-pair release. Its simultaneous release fails the complete first-law
+  gate, so only the already queued energy-qualified Hall--Petch production fork
+  proceeds while a coupled constrained event clock remains a derivation task.

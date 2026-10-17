@@ -3236,3 +3236,20 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   source-equivalence audits pass. Native-grid ownership, orientation, line,
   Nye, temperature, and power plots are committed. The one-solver manager is
   continuing the no-retuning baseline while the queued causal forks wait.
+
+## V67 carrier capture/source clock diagnosis (2026-10-17T01:16:16Z)
+
+- On the exact ad600 common state, production lattice capture is accepted at a
+  weighted `5.6451e11 /s`; default Hall--Petch interface re-emission is also
+  energy accepted but reaches only `6.1095e3 /s` and `1.2219e-5` of the
+  reservoir per two-nanosecond interval.
+- Their `9.3652e7` rate separation is exactly the inverse `b^2/d^2` new-source
+  site measure. The interface contains `19.9405` neutral pairs per unit of
+  remaining mobile line, so the late state has conserved carrier capacity but
+  no symmetric recycling clock.
+- The machine decision is
+  `SITE_MULTIPLICITY_DOMINATES_CARRIER_RECYCLE_CLOCK`. No production parameter
+  or baseline mechanism changed. The fast stored-pair release remains
+  quarantined because a simultaneous event fails the complete first-law gate;
+  the source-geography and conservative default-emission continuations remain
+  queued and executable under the one-heavy-solver constraint.

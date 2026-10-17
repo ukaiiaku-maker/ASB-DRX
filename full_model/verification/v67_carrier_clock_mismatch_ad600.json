@@ -1,0 +1,70 @@
+{
+  "case": {
+    "checkpoint_sha256": "4c65bd1f485a4b0ee1f00caceb02c2093183b741923902a42e630df2c7b5c347",
+    "classification": "SITE_MULTIPLICITY_DOMINATES_CARRIER_RECYCLE_CLOCK",
+    "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600",
+    "load": 0.09863999999999869,
+    "metrics": {
+      "capture_accepted": true,
+      "capture_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "capture_local_kinetics_mode": "LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION_EXACT_CLOCK",
+      "capture_maximum_uncapped_fraction": 1.0,
+      "capture_relative_first_law_residual": 0.0,
+      "capture_selected_hazard_scale": 1.0,
+      "capture_weighted_event_rate_s": 564514554118.0322,
+      "existing_pair_hazard_maximum_s_inferred": 572172674492.3142,
+      "existing_to_new_opportunity_rate_ratio": 93652445.36940683,
+      "hall_petch_emission_accepted": true,
+      "hall_petch_emission_classification": "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION",
+      "hall_petch_emission_maximum_fraction": 1.2218990685016627e-05,
+      "hall_petch_emission_relative_first_law_residual": 6.063100697375948e-06,
+      "hall_petch_hazard_maximum_s": 6109.532668745713,
+      "hall_petch_hazard_median_s": 6011.183882208593,
+      "hall_petch_hazard_minimum_positive_s": 3.709071750253631e-06,
+      "mobile_line_cell_sum_m2": 2140063443816073.5,
+      "neutral_interface_pair_cell_sum_m2": 4.267400697882714e+16,
+      "neutral_interface_pair_to_mobile_inventory_ratio": 19.940533586580308,
+      "new_source_site_multiplicity_b2_over_d2": 1.0677777777777781e-08
+    },
+    "parent_provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "campaign": "V67",
+                      "scientific_scope": "fresh zero-load polycrystal anchor",
+                      "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                      "source_dirty": false
+                    },
+                    "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                  },
+                  "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+      },
+      "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
+    },
+    "physical_time_s": 0.00013360000000000246,
+    "step": 633
+  },
+  "claim_boundary": "The inferred existing-pair hazard removes only the b^2/d^2 new-site measure. It diagnoses a clock inconsistency but does not qualify the quarantined fast-release ablation or demonstrate finite-time flow recovery.",
+  "created_utc": "2026-10-17T01:16:05.278270+00:00",
+  "decision": {
+    "classification": "SITE_MULTIPLICITY_DOMINATES_CARRIER_RECYCLE_CLOCK",
+    "production_change_authorized": false
+  },
+  "immutable_mechanics": "EXP-floor Arrhenius Peierls-Taylor-Hall-Petch mechanics retained",
+  "schema": "v67-carrier-clock-mismatch-audit-v1"
+}
