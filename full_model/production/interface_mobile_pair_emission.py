@@ -17,8 +17,20 @@ import numpy as np
 
 from .tensorial_nye import (
     TensorialKinematicState, accept_slip_increment,
-    nye_from_plastic_distortion,
+    nye_from_plastic_distortion, plastic_distortion_from_slip,
 )
+from .arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters, hall_petch_nucleation_hazard_Hz,
+)
+from .common_tensorial_wall import (
+    CommonWallDriving, resolved_driving_components,
+)
+from .complete_multigrain_energy import (
+    evaluate_complete_multigrain_energy,
+    evaluate_complete_multigrain_local_fields,
+)
+from .multigrain_common_state import reconstruct_multigrain_common
+from .multigrain_production import _owner_drivings_from_common_stress
 
 
 @dataclass(frozen=True)
@@ -30,6 +42,23 @@ class InterfaceMobilePairEmissionProjection:
     signed_content_change_cell_sum_m2: float
     maximum_mura_relative_residual: float
     emitted_pair_density_m2_by_cell: np.ndarray
+
+
+@dataclass(frozen=True)
+class InterfaceMobilePairEmissionDecision:
+    accepted: bool
+    classification: str
+    candidate_state: object
+    committed_state: object
+    projection: InterfaceMobilePairEmissionProjection
+    maximum_kinetic_fraction: float
+    resolved_work_J: float
+    defect_boundary_storage_change_J: float
+    delta_helmholtz_before_heat_J: float
+    generated_heat_J: float
+    first_law_residual_J: float
+    relative_first_law_residual: float
+    heat_source_J_by_cell: np.ndarray
 
 
 def project_interface_mobile_pair_emission(
@@ -161,9 +190,22 @@ def project_interface_mobile_pair_emission(
                 -(owner.mobile_plus_m2-owner.mobile_minus_m2)),
             dtype=np.longdouble))
         beta_nye_increment = nye_from_plastic_distortion(dbeta, spacing)
-        family_nye_increment = np.sum(
-            updated.family_nye_m1-np.asarray(owner.family_nye_m1), axis=2)
-        mura_residual = family_nye_increment-beta_nye_increment
+        # Audit the manufactured accepted increment directly. Subtracting the
+        # updated and retained large Nye tensors loses several digits on mature
+        # states even though accept_slip_increment constructs this identity
+        # family by family.
+        expected_family_increment = np.stack([
+            nye_from_plastic_distortion(
+                plastic_distortion_from_slip(
+                    np.where(
+                        np.arange(len(systems))[None, None, :] == family,
+                        slip_increment, 0.0),
+                    systems, np.asarray(owner.orientation_rad)),
+                spacing)
+            for family in range(len(systems))], axis=2)
+        mura_residual = (np.sum(
+            expected_family_increment.astype(np.longdouble), axis=2,
+            dtype=np.longdouble)-beta_nye_increment.astype(np.longdouble))
         mura_scale = max(float(np.sqrt(np.mean(
             beta_nye_increment*beta_nye_increment))), 1.0)
         maximum_mura = max(
@@ -177,3 +219,150 @@ def project_interface_mobile_pair_emission(
     return InterfaceMobilePairEmissionProjection(
         candidate, removed_pairs, created_pairs, line_balance, signed_change,
         maximum_mura, emitted_by_cell)
+
+
+def evaluate_interface_mobile_pair_emission(
+        state, *, mean_strain, interval_s, systems, wall_parameters,
+        represented_thickness_m, source_parameters=ArrheniusSourceParameters(),
+        energy_kwargs=None, maximum_fraction_per_interval=.05,
+        maximum_relative_first_law_residual=.05,
+        maximum_mura_relative_residual=1.0e-10):
+    """Price one Hall--Petch-activated neutral GB-reservoir emission event."""
+    dt = float(interval_s)
+    maximum_fraction = float(maximum_fraction_per_interval)
+    if not math.isfinite(dt) or dt <= 0.0:
+        raise ValueError("emission interval must be positive finite")
+    if (not math.isfinite(maximum_fraction)
+            or not 0.0 < maximum_fraction <= 1.0):
+        raise ValueError("maximum emission fraction must lie in (0,1]")
+    if (not math.isfinite(float(maximum_mura_relative_residual))
+            or float(maximum_mura_relative_residual) <= 0.0):
+        raise ValueError("Mura tolerance must be positive finite")
+    spacing = float(wall_parameters.spacing_m)
+    thickness = float(represented_thickness_m)
+    cell_volume = spacing*spacing*thickness
+    options = {} if energy_kwargs is None else dict(energy_kwargs)
+    options.pop("mean_strain", None)
+    common_energy = dict(
+        spacing_m=spacing, represented_thickness_m=thickness,
+        wall_parameters=wall_parameters, mean_strain=np.asarray(mean_strain),
+        **options)
+    before_energy = evaluate_complete_multigrain_energy(
+        state, **common_energy)
+    drivings = _owner_drivings_from_common_stress(
+        state, CommonWallDriving(mean_strain=np.asarray(mean_strain)),
+        systems, wall_parameters)
+    raw_stresses = tuple(resolved_driving_components(
+        owner, driving, systems, (), wall_parameters)["raw_stress_Pa"]
+        for owner, driving in zip(state.owners, drivings))
+    hazards = tuple(hall_petch_nucleation_hazard_Hz(
+        stress, np.asarray(owner.temperature_K)[..., None], source_parameters)
+        for owner, stress in zip(state.owners, raw_stresses))
+    owner_index = {grain: i for i, grain in enumerate(state.grain_ids)}
+    fractions = []
+    for component in state.interfaces:
+        ia = owner_index[component.grain_a_id]
+        ib = owner_index[component.grain_b_id]
+        eta_a = np.asarray(state.supports[ia])[..., None]
+        eta_b = np.asarray(state.supports[ib])[..., None]
+        support = eta_a+eta_b
+        rate = np.divide(
+            eta_a*hazards[ia]+eta_b*hazards[ib], support,
+            out=np.zeros_like(hazards[ia]), where=support > 0.0)
+        fractions.append(np.minimum(-np.expm1(-rate*dt), maximum_fraction))
+    fraction_field = np.asarray(fractions)
+    projection = project_interface_mobile_pair_emission(
+        state, fraction=fraction_field,
+        resolved_stress_by_owner=raw_stresses, systems=systems,
+        spacing_m=spacing, burgers_m=source_parameters.burgers_m,
+        source_grain_size_m=source_parameters.grain_size_m,
+        emission_weight_by_owner=hazards,
+        preserve_owner_mean_orientation=True)
+    if projection.removed_interface_pair_cell_sum_m2 == 0.0:
+        zeros = np.zeros(state.supports.shape[1:])
+        return InterfaceMobilePairEmissionDecision(
+            False, "INACTIVE_NO_NEUTRAL_INTERFACE_CAPACITY", state, state,
+            projection, float(np.max(fraction_field, initial=0.0)),
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zeros)
+
+    unheated = projection.candidate_state
+    local_options = {
+        key: value for key, value in options.items()
+        if key in {"topologies", "systems", "boundary_line_energy_J_m",
+                   "boundary_junction_energy_J_m"}}
+    before_local = evaluate_complete_multigrain_local_fields(
+        state, spacing_m=spacing, wall_parameters=wall_parameters,
+        mean_strain=np.asarray(mean_strain), **local_options)
+    after_local = evaluate_complete_multigrain_local_fields(
+        unheated, spacing_m=spacing, wall_parameters=wall_parameters,
+        mean_strain=np.asarray(mean_strain), **local_options)
+    storage_change_density = (
+        after_local.defect_storage_J_m3-before_local.defect_storage_J_m3
+        +after_local.signed_junction_storage_J_m3
+        -before_local.signed_junction_storage_J_m3
+        +after_local.boundary_excess_J_m3-before_local.boundary_excess_J_m3)
+    work_density = np.zeros(state.supports.shape[1:])
+    for support, before, after, stress in zip(
+            state.supports, state.owners, unheated.owners, raw_stresses):
+        work_density += np.asarray(support)*np.sum(
+            stress*(np.asarray(after.slip)-np.asarray(before.slip)), axis=2)
+    raw_heat_density = work_density-storage_change_density
+    local_scale = np.maximum.reduce((
+        np.abs(work_density), np.abs(storage_change_density),
+        np.ones_like(work_density)))
+    raw_heat_sum = float(np.sum(raw_heat_density, dtype=np.longdouble))
+    heat_valid = bool(
+        raw_heat_sum >= -1e-12*float(np.sum(local_scale, dtype=np.longdouble)))
+    positive_work = np.maximum(work_density, 0.0)
+    positive_work_sum = float(np.sum(positive_work, dtype=np.longdouble))
+    heat_density = np.zeros_like(raw_heat_density)
+    if heat_valid and raw_heat_sum > 0.0 and positive_work_sum > 0.0:
+        heat_density = raw_heat_sum*positive_work/positive_work_sum
+    common, _ = reconstruct_multigrain_common(unheated, spacing)
+    temperature = (np.asarray(common.temperature_K)
+                   +heat_density/wall_parameters.volumetric_heat_capacity_J_m3_K)
+    candidate = replace(unheated, owners=tuple(
+        replace(owner, temperature_K=temperature.copy())
+        for owner in unheated.owners))
+    candidate.validate()
+    unheated_energy = evaluate_complete_multigrain_energy(
+        unheated, **common_energy)
+    after_energy = evaluate_complete_multigrain_energy(
+        candidate, **common_energy)
+    work_J = float(np.sum(work_density, dtype=np.longdouble)*cell_volume)
+    storage_J = float(np.sum(
+        storage_change_density, dtype=np.longdouble)*cell_volume)
+    heat_J = float(np.sum(heat_density, dtype=np.longdouble)*cell_volume)
+    delta_helmholtz = unheated_energy.helmholtz_J-before_energy.helmholtz_J
+    residual = after_energy.internal_J-before_energy.internal_J
+    scale = max(abs(work_J), abs(storage_J), abs(delta_helmholtz),
+                abs(heat_J), 1e-300)
+    relative = abs(residual)/scale
+    balance_scale = max(
+        projection.removed_interface_pair_cell_sum_m2, 1.0)
+    balances_close = bool(
+        abs(projection.line_balance_residual_cell_sum_m2)
+        <= 1e-11*balance_scale
+        and abs(projection.signed_content_change_cell_sum_m2)
+        <= 1e-11*balance_scale
+        and projection.maximum_mura_relative_residual
+        < float(maximum_mura_relative_residual))
+    downhill = delta_helmholtz <= 1e-12*scale
+    accepted = bool(
+        balances_close and heat_valid and downhill
+        and relative <= maximum_relative_first_law_residual)
+    if not balances_close:
+        classification = "REJECTED_LINE_BURGERS_OR_MURA_BALANCE"
+    elif not heat_valid:
+        classification = "REJECTED_INSUFFICIENT_RESOLVED_WORK"
+    elif not downhill:
+        classification = "REJECTED_UPHILL_COMPLETE_HELMHOLTZ"
+    elif relative > maximum_relative_first_law_residual:
+        classification = "REJECTED_COMPLETE_FIRST_LAW"
+    else:
+        classification = "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION"
+    return InterfaceMobilePairEmissionDecision(
+        accepted, classification, candidate, candidate if accepted else state,
+        projection, float(np.max(fraction_field, initial=0.0)),
+        work_J, storage_J, delta_helmholtz, heat_J, residual, relative,
+        heat_density*cell_volume)

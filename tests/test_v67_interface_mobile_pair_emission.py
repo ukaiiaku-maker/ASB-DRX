@@ -4,8 +4,13 @@ import numpy as np
 
 from full_model.analysis.run_v66_structural_bicrystal_front import _state
 from full_model.production.interface_mobile_pair_emission import (
+    evaluate_interface_mobile_pair_emission,
     project_interface_mobile_pair_emission,
 )
+from full_model.production.arrhenius_dislocation_sources import (
+    ArrheniusSourceParameters,
+)
+from full_model.production.common_tensorial_wall import CommonWallParameters
 from full_model.production.multigrain_common_state import InterfaceComponentState
 from full_model.production.multigrain_production import MultiGrainInterface
 from full_model.production.tensorial_nye import (
@@ -86,3 +91,22 @@ def test_emission_is_sign_exchange_symmetric():
         np.testing.assert_allclose(plus.mobile_plus_m2, minus.mobile_plus_m2)
         np.testing.assert_allclose(plus.slip-initial.slip,
                                    -(minus.slip-initial.slip))
+
+
+def test_arrhenius_emission_is_complete_energy_accepted_at_finite_load():
+    state, spacing = _fixture()
+    systems = bcc_four_family_systems()
+    result = evaluate_interface_mobile_pair_emission(
+        state, mean_strain=np.array([[0.0, .025], [.025, 0.0]]),
+        interval_s=2e-9, systems=systems,
+        wall_parameters=CommonWallParameters(spacing_m=spacing),
+        represented_thickness_m=2*2.48e-10,
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.4e-6),
+        energy_kwargs={"topologies": (), "systems": systems})
+    assert result.accepted
+    assert result.classification == "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION"
+    assert result.delta_helmholtz_before_heat_J < 0.0
+    assert result.generated_heat_J > 0.0
+    assert result.relative_first_law_residual < 5e-5
+    assert result.committed_state.grain_ids == state.grain_ids
+    np.testing.assert_array_equal(result.committed_state.supports, state.supports)
