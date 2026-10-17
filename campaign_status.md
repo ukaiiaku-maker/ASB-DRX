@@ -3204,3 +3204,18 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   entire Hall--Petch opportunity multiset and changes only its deterministic
   spatial placement from GB/TJ sites to matched-random sites; no resistance,
   source kinetics, front coefficient, rate law, or thermal parameter changes.
+
+## V67 conserved interface carrier source (2026-10-17T01:15:00Z)
+
+- The explicit neutral mobile-channel GB reservoir contains 39.881 times the
+  late lattice-mobile inventory. A conservative pair-emission projection now
+  transfers that existing line into incident owners with exact line/Burgers
+  closure and compatible slip--plastic-distortion--Nye evolution.
+- The unchanged Hall--Petch hazard activates the event. Static pricing on the
+  exact ad500 and ad600 retained states is downhill and first-law closed. The
+  channel is production-integrated, separately ledgered, tested, and remains
+  disabled in every baseline result.
+- Two continuations are executable without intervention: matched-random source
+  geography runs after the baseline manager; if it does not restore physical
+  flow, the interface-reservoir emission fork runs from the same ad500 parent.
+  Shell watchers enforce one heavy local solver at a time.

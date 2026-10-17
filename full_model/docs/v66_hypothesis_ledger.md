@@ -1207,3 +1207,25 @@ experiment, result, limitation, and next branch.
   site multiset, kinetics, mechanics, thermal law, timestep, and front law are
   fixed; a machine analyzer will compare source increment, retained mobile
   content, flow exposure, and all hard ledgers.
+
+## 2026-10-17T01:15:00Z — H20 conserved interface carrier source
+
+- The neutral pair capacity in the explicit mobile-channel interface
+  reservoir is 39.881 times the remaining ad600 lattice-mobile inventory.
+  This retained content is an identified conserved reservoir, not new line
+  inserted to sustain flow.
+- A default-off atomic operator now debits equal positive/negative family line
+  from that reservoir and credits the two incident owner populations with the
+  exact support-weighted amount. Its conjugate grain-spanning slip uses the
+  existing Hall--Petch event measure and updates slip, plastic distortion, and
+  Nye through the authoritative accepted-slip map. It changes no grain support
+  or label.
+- Retained-state ad500 and ad600 events are downhill by `5.16e-18` and
+  `6.52e-18 J`; their complete first-law residuals are `7.16e-6` and
+  `6.06e-6` relative. Line and signed Burgers balances close at roundoff. This
+  establishes energy accessibility, not finite-time flow recovery.
+- The mechanism is integrated as a separately ledgered default-off production
+  channel. A conditional exact-ad500-parent 100-interval fork is already
+  queued behind the matched-random geography discriminator and will execute
+  only if relocating the unchanged external source opportunities is
+  insufficient.
