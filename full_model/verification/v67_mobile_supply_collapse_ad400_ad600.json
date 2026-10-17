@@ -1,0 +1,103 @@
+{
+  "cases": {
+    "early": {
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400",
+      "extensive_cell_inventory_m2": {
+        "forest": 7.397679215413947e+17,
+        "mobile": 1.5402708223993224e+16,
+        "wall": 5.3193039388508397e+17
+      },
+      "flow_exposure_fraction": 0.19140763323060356,
+      "hard_audits_passed": true,
+      "lattice_absorbed_line_length_m": 2.9085913995126085e-06,
+      "load": 0.06663999999999999,
+      "owners": {
+        "10": {
+          "core_effective_stress_abs_Pa": 756725589.3397977,
+          "core_glide_speed_abs_m_s": 24.421811831913246,
+          "core_mobile_density_m2": 27792205632288.797,
+          "core_taylor_resistance_Pa": 225565281.41779506
+        },
+        "20": {
+          "core_effective_stress_abs_Pa": 1367892498.5188355,
+          "core_glide_speed_abs_m_s": 109.76872403667389,
+          "core_mobile_density_m2": 50183436154.38328,
+          "core_taylor_resistance_Pa": 19645101.186489243
+        },
+        "30": {
+          "core_effective_stress_abs_Pa": 1909980264.5694516,
+          "core_glide_speed_abs_m_s": 423.1115671192861,
+          "core_mobile_density_m2": 424785883094.028,
+          "core_taylor_resistance_Pa": 223500053.12122196
+        }
+      },
+      "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
+      "source_created_line_cell_sum_m2": 15552257096956.531,
+      "source_tree_clean": true,
+      "step": 433,
+      "support_family_weighted_means": {
+        "effective_abs_Pa": 1313822348.7071803,
+        "raw_abs_Pa": 1452235415.1260183,
+        "speed_abs_m_s": 180.1554224770907,
+        "taylor_Pa": 155317482.6763563
+      }
+    },
+    "late": {
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600",
+      "extensive_cell_inventory_m2": {
+        "forest": 7.616019006988261e+17,
+        "mobile": 2140063443816073.5,
+        "wall": 5.0958121373397606e+17
+      },
+      "flow_exposure_fraction": 6.501720647165065e-05,
+      "hard_audits_passed": true,
+      "lattice_absorbed_line_length_m": 3.058853702253807e-06,
+      "load": 0.09863999999999869,
+      "owners": {
+        "10": {
+          "core_effective_stress_abs_Pa": 1335671408.2259834,
+          "core_glide_speed_abs_m_s": 277.4521080739097,
+          "core_mobile_density_m2": 4239198608025.693,
+          "core_taylor_resistance_Pa": 223450214.85036114
+        },
+        "20": {
+          "core_effective_stress_abs_Pa": 2316644225.914465,
+          "core_glide_speed_abs_m_s": 468.9575150949641,
+          "core_mobile_density_m2": 5173397563.051939,
+          "core_taylor_resistance_Pa": 20116068.09862571
+        },
+        "30": {
+          "core_effective_stress_abs_Pa": 3237307944.2183776,
+          "core_glide_speed_abs_m_s": 500.41188384893155,
+          "core_mobile_density_m2": 424073021763.32983,
+          "core_taylor_resistance_Pa": 221322803.79741248
+        }
+      },
+      "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5",
+      "source_created_line_cell_sum_m2": 25025426092932.184,
+      "source_tree_clean": true,
+      "step": 633,
+      "support_family_weighted_means": {
+        "effective_abs_Pa": 2257935048.571348,
+        "raw_abs_Pa": 2403345639.3767133,
+        "speed_abs_m_s": 414.16132336347846,
+        "taylor_Pa": 154541572.83009475
+      }
+    }
+  },
+  "claim_boundary": "This identifies the proximate carrier-supply loss over the tested trajectory. It does not establish that source geography is the remedy until the checksum-matched random-site fork is executed.",
+  "created_utc": "2026-10-17T00:52:01.470447+00:00",
+  "decision": {
+    "classification": "FLOW_ARRESTED_BY_MOBILE_SUPPLY_COLLAPSE",
+    "mobile_supply_collapse_not_taylor_locking": true
+  },
+  "next_discriminator": "Move the identical Hall-Petch source opportunities from GB/TJ sites to the matched-random geography on the same retained state; do not reduce Taylor resistance or retune source kinetics.",
+  "ratios": {
+    "flow_exposure_retention": 0.0003396792770187979,
+    "glide_speed_ratio": 2.298911227144134,
+    "mobile_inventory_retention": 0.13894072475400382,
+    "source_increment_to_mobile_loss": 0.0007142745020310435,
+    "taylor_resistance_ratio": 0.9950043624652458
+  },
+  "schema": "v67-mobile-supply-collapse-v1"
+}
