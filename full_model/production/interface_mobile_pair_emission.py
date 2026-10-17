@@ -283,7 +283,30 @@ def evaluate_interface_mobile_pair_emission(
         rate = np.divide(
             eta_a*hazards[ia]+eta_b*hazards[ib], support,
             out=np.zeros_like(hazards[ia]), where=support > 0.0)
-        fractions.append(np.minimum(-np.expm1(-rate*dt), maximum_fraction))
+        if kinetics_mode == "hall_petch_nucleation":
+            # The immutable Arrhenius--hazard law is
+            #   strain_rate = delta_strain * nu * N * exp(-G/kT).
+            # ``rate`` already contains the Hall--Petch available-site
+            # multiplicity N=b^2/d^2.  One event contributes the declared
+            # fixed pair increment; it is not a probability independently
+            # applied to every line segment accumulated in the reservoir.
+            # Using ``1-exp(-rate*dt)`` as a reservoir fraction would make the
+            # macroscopic event increment grow spuriously with stored line.
+            requested = source_parameters.pair_increment_m2*rate*dt
+            capacity = np.minimum(
+                np.asarray(component.boundary_plus_m2)[..., 0, :],
+                np.asarray(component.boundary_minus_m2)[..., 0, :])
+            fraction = np.divide(
+                requested, capacity, out=np.zeros_like(requested),
+                where=capacity > 0.0)
+            fractions.append(np.minimum(fraction, maximum_fraction))
+        else:
+            # Quarantined ablation: every represented stored pair is treated
+            # as an existing opportunity.  Its occupancy therefore evolves
+            # with an exact first-order survival probability.  This is not the
+            # production Hall--Petch event measure and is not runner-exposed.
+            fractions.append(np.minimum(
+                -np.expm1(-rate*dt), maximum_fraction))
     fraction_field = np.asarray(fractions)
     projection = project_interface_mobile_pair_emission(
         state, fraction=fraction_field,

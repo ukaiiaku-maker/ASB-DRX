@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Audit lattice capture and interface re-emission clocks on one V67 state.
 
-The Hall--Petch source law includes the probability ``b**2/d**2`` that a new
-source opportunity exists.  A neutral pair already stored at an interface is
-an existing opportunity.  This audit reports that distinction without
-promoting the fast stored-pair release ablation or changing either production
-operator.
+The Hall--Petch law prescribes ``b**2/d**2`` as its available-site
+multiplicity and a fixed increment per event.  This audit verifies the
+production event measure and separately reports the factor-free existing-site
+hypothesis without promoting that fast-release ablation.
 """
 
 from __future__ import annotations
@@ -55,11 +54,13 @@ def classify_clock_audit(metrics: dict) -> str:
         return "CAPTURE_CLOCK_NOT_ENERGY_QUALIFIED"
     if not metrics["hall_petch_emission_accepted"]:
         return "HALL_PETCH_EMISSION_NOT_ENERGY_QUALIFIED"
-    if metrics["existing_to_new_opportunity_rate_ratio"] < 1.0e6:
+    if metrics["hypothetical_existing_to_new_opportunity_rate_ratio"] < 1.0e6:
         return "SOURCE_OPPORTUNITY_MEASURE_NOT_RATE_SEPARATING"
     if metrics["neutral_interface_pair_to_mobile_inventory_ratio"] <= 1.0:
         return "INTERFACE_RESERVOIR_NOT_CARRIER_DOMINANT"
-    return "SITE_MULTIPLICITY_DOMINATES_CARRIER_RECYCLE_CLOCK"
+    if metrics["emitted_line_fraction_of_mobile_inventory_per_interval"] >= 1e-4:
+        return "FIXED_EVENT_INTERFACE_SUPPLY_NOT_NEGLIGIBLE"
+    return "ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT"
 
 
 def audit(root: Path) -> dict:
@@ -130,15 +131,22 @@ def audit(root: Path) -> dict:
         "capture_relative_first_law_residual": capture.relative_first_law_residual,
         "hall_petch_emission_accepted": emission.accepted,
         "hall_petch_emission_classification": emission.classification,
-        "hall_petch_emission_maximum_fraction": emission.maximum_kinetic_fraction,
+        "hall_petch_emission_maximum_local_capacity_fraction": (
+            emission.maximum_kinetic_fraction),
+        "hall_petch_aggregate_emitted_reservoir_pair_fraction": (
+            emission.projection.created_lattice_pair_cell_sum_m2
+            /max(neutral_pairs, np.finfo(float).tiny)),
+        "emitted_line_fraction_of_mobile_inventory_per_interval": (
+            2.0*emission.projection.created_lattice_pair_cell_sum_m2
+            /max(mobile, np.finfo(float).tiny)),
         "hall_petch_emission_relative_first_law_residual": (
             emission.relative_first_law_residual),
         "hall_petch_hazard_minimum_positive_s": float(np.min(positive_hazard)),
         "hall_petch_hazard_median_s": float(np.median(positive_hazard)),
         "hall_petch_hazard_maximum_s": float(np.max(positive_hazard)),
         "new_source_site_multiplicity_b2_over_d2": multiplicity,
-        "existing_to_new_opportunity_rate_ratio": 1.0/multiplicity,
-        "existing_pair_hazard_maximum_s_inferred": (
+        "hypothetical_existing_to_new_opportunity_rate_ratio": 1.0/multiplicity,
+        "hypothetical_existing_pair_hazard_maximum_s": (
             float(np.max(positive_hazard))/multiplicity),
         "mobile_line_cell_sum_m2": mobile,
         "neutral_interface_pair_cell_sum_m2": neutral_pairs,
@@ -164,7 +172,7 @@ def main() -> None:
     args = parser.parse_args()
     result = audit(args.case)
     payload = {
-        "schema": "v67-carrier-clock-mismatch-audit-v1",
+        "schema": "v67-carrier-clock-mismatch-audit-v2",
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "immutable_mechanics": (
             "EXP-floor Arrhenius Peierls-Taylor-Hall-Petch mechanics retained"),
@@ -174,10 +182,12 @@ def main() -> None:
             "production_change_authorized": False,
         },
         "claim_boundary": (
-            "The inferred existing-pair hazard removes only the b^2/d^2 new-site "
-            "measure. It diagnoses a clock inconsistency but does not qualify the "
-            "quarantined fast-release ablation or demonstrate finite-time flow "
-            "recovery."),
+            "Azizi--Dillon defines b^2/d^2 as the nucleation-site multiplicity "
+            "and a fixed strain increment per event. The production emission "
+            "therefore retains that factor and debits one fixed pair increment "
+            "per event, capacity-limited by the stored reservoir. The reported "
+            "factor-free hazard is a quarantined hypothetical existing-site "
+            "ablation, not a production clock or finite-time flow recovery."),
     }
     args.out.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")
     print(json.dumps(payload["decision"], indent=2, sort_keys=True))

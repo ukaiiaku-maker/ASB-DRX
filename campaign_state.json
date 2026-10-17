@@ -76,7 +76,8 @@
     "H18": "through_0p08264_shear_both_matched_controls_retain_terminal_RX_bands_and_continue_hardening;_adiabatic_heat_changes_temperature_but_does_not_produce_postpeak_softening",
     "H19": "the_adiabatic_polycrystal_loses_physical_flow_by_0p09864_shear_because_mobile_inventory_falls_to_13p894_percent_and_flow_exposure_to_0p03397_percent_of_the_0p06664_values_while_Taylor_resistance_is_0p9950_times_and_glide_speed_is_2p299_times;_the_exact_matched_random_source_geography_fork_is_queued",
     "H20": "the_explicit_neutral_mobile_channel_interface_reservoir_contains_39p881_times_the_late_mobile_inventory_when_both_pair_signs_are_counted;_an_exact_line_and_Burgers_conserving_Hall_Petch_activated_pair_emission_is_downhill_and_first_law_closed_on_ad500_and_ad600_and_is_integrated_default_off_for_a_conditional_exact_parent_fork",
-    "H21": "on_the_exact_ad600_state_production_capture_runs_at_5p6451e11_per_s_while_energy_qualified_Hall_Petch_reemission_runs_at_6p1095e3_per_s;_the_9p3652e7_separation_is_exactly_d2_over_b2_and_the_interface_holds_19p9405_neutral_pairs_per_remaining_mobile_line_so_the_opportunity_measure_not_conserved_capacity_controls_recycling"
+    "H21": "superseded_interpretation:_the_initial_same_state_clock_audit_correctly_measured_d2_over_b2_but_incorrectly_interpreted_the_prescribed_new_source_site_multiplicity_as_a_production_recycling_clock_defect",
+    "H22": "the_supplied_Azizi_Dillon_law_defines_b2_over_d2_as_available_nucleation_site_multiplicity_and_b_over_d_as_fixed_event_strain;_corrected_interface_emission_uses_pair_increment_times_hazard_times_dt_with_reservoir_capacity_only_and_supplies_1p3345e_6_of_mobile_line_per_ad600_interval"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
@@ -101,13 +102,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21"],
-    "physical_uncertainty": "whether_source_geography_or_the_energy_qualified_conserved_interface_pair_reemission_is_sufficient_to_prevent_the_observed_mobile_carrier_starvation_given_the_diagnosed_d2_over_b2_capture_recycling_clock_separation",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22"],
+    "physical_uncertainty": "whether_relocation_of_the_unchanged_analytical_source_site_measure_changes_supply;_the_corrected_fixed_event_interface_reemission_is_expected_to_be_too_small_but_remains_queued_as_a_finite_time_discriminator",
     "next_executable_experiment": "finish_the_running_matched_baseline_horizon_then_automatically_fork_the_exact_ad500_checkpoint_for_matched_random_source_geography;_if_that_does_not_restore_physical_flow_the_already_queued_second_fork_enables_only_conserved_interface_mobile_pair_emission",
-    "source_identity": "b834b68_plus_uncommitted_clock_audit;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
+    "source_identity": "eb0d801_plus_uncommitted_analytical_event_measure_repair;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
     "expected_discriminatory_observation": "matched_random_final_flow_at_least_1_percent_when_the_same_parent_GB_TJ_control_is_below_1_percent_or_a_valid_negative_geography_result_with_exact_parent_and_site_measure_audits",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "the_exact_0p09864_pair_is_classified_MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND;_a_same_state_audit_finds_accepted_capture_at_5p6451e11_per_s_and_accepted_Hall_Petch_reemission_at_6p1095e3_per_s_with_exact_d2_over_b2_separation_and_19p9405_neutral_pairs_per_mobile_line;_the_baseline_horizon_and_queued_causal_forks_continue"
+    "result_status": "the_exact_0p09864_pair_is_classified_MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND;_the_corrected_Azizi_Dillon_fixed_event_interface_emission_is_energy_accessible_but_adds_only_1p3345e_6_of_mobile_line_per_interval_and_is_classified_ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT;_the_baseline_horizon_and_queued_causal_forks_continue"
   },
   "continuation_rule": {
     "active": true,

@@ -7,8 +7,9 @@ def _metrics(**changes):
     values = {
         "capture_accepted": True,
         "hall_petch_emission_accepted": True,
-        "existing_to_new_opportunity_rate_ratio": 9.0e7,
+        "hypothetical_existing_to_new_opportunity_rate_ratio": 9.0e7,
         "neutral_interface_pair_to_mobile_inventory_ratio": 40.0,
+        "emitted_line_fraction_of_mobile_inventory_per_interval": 1e-6,
     }
     values.update(changes)
     return values
@@ -24,10 +25,13 @@ def test_clock_audit_requires_independent_energy_qualification():
 
 def test_clock_audit_separates_site_measure_from_reservoir_capacity():
     assert classify_clock_audit(_metrics(
-        existing_to_new_opportunity_rate_ratio=1.0e3)) == (
+        hypothetical_existing_to_new_opportunity_rate_ratio=1.0e3)) == (
             "SOURCE_OPPORTUNITY_MEASURE_NOT_RATE_SEPARATING")
     assert classify_clock_audit(_metrics(
         neutral_interface_pair_to_mobile_inventory_ratio=.5)) == (
             "INTERFACE_RESERVOIR_NOT_CARRIER_DOMINANT")
+    assert classify_clock_audit(_metrics(
+        emitted_line_fraction_of_mobile_inventory_per_interval=1e-3)) == (
+            "FIXED_EVENT_INTERFACE_SUPPLY_NOT_NEGLIGIBLE")
     assert classify_clock_audit(_metrics()) == (
-        "SITE_MULTIPLICITY_DOMINATES_CARRIER_RECYCLE_CLOCK")
+        "ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT")

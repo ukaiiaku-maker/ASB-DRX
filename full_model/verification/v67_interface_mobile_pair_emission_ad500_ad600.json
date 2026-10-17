@@ -2,18 +2,20 @@
   "cases": {
     "v67_poly_rx_asb_seed19p375_ad_500": {
       "accepted": true,
+      "aggregate_emitted_reservoir_pair_fraction": 3.29789735152945e-08,
       "checkpoint_sha256": "565a5efafb959ab980a5dcafa7e7121b08033321fedb3befcb77f0bdc7e3c9e4",
       "classification": "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION",
-      "created_lattice_pair_cell_sum_m2": 486652943898.18616,
-      "defect_boundary_storage_change_J": 3.367253121365273e-21,
-      "delta_helmholtz_before_heat_J": -5.161435456064951e-18,
+      "created_lattice_pair_cell_sum_m2": 1407451175.7689023,
+      "defect_boundary_storage_change_J": -8.911841932871613e-24,
+      "delta_helmholtz_before_heat_J": -1.867044749060889e-20,
       "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_500",
-      "first_law_residual_J": -3.6989271327255287e-23,
-      "generated_heat_J": 5.161398468835324e-18,
+      "first_law_residual_J": 2.5849394142282115e-26,
+      "generated_heat_J": 1.867047582582439e-20,
       "line_balance_residual_cell_sum_m2": 0.0,
       "load": 0.08263999999999934,
-      "maximum_kinetic_fraction": 1.2231573248818306e-05,
-      "maximum_mura_relative_residual": 5.869733422006528e-11,
+      "maximum_kinetic_fraction": 1.0,
+      "maximum_mura_relative_residual": 5.889056713393873e-11,
+      "neutral_interface_pair_capacity_cell_sum_m2": 4.26772281167628e+16,
       "parent_provenance": {
         "parent_provenance": {
           "parent_provenance": {
@@ -41,26 +43,28 @@
         },
         "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
       },
-      "relative_first_law_residual": 7.161848826947715e-06,
-      "removed_interface_pair_cell_sum_m2": 486652943898.18616,
-      "resolved_work_J": 5.1647657219566895e-18,
-      "signed_content_change_cell_sum_m2": -0.0022725606791313474,
+      "relative_first_law_residual": 1.3845064466181457e-06,
+      "removed_interface_pair_cell_sum_m2": 1407451175.7689023,
+      "resolved_work_J": 1.8661563983891518e-20,
+      "signed_content_change_cell_sum_m2": 0.0029825764585188603,
       "step": 533
     },
     "v67_poly_rx_asb_seed19p375_ad_600": {
       "accepted": true,
+      "aggregate_emitted_reservoir_pair_fraction": 3.346204323475591e-08,
       "checkpoint_sha256": "4c65bd1f485a4b0ee1f00caceb02c2093183b741923902a42e630df2c7b5c347",
       "classification": "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION",
-      "created_lattice_pair_cell_sum_m2": 497166890730.8906,
-      "defect_boundary_storage_change_J": 4.268368375417708e-21,
-      "delta_helmholtz_before_heat_J": -6.523628732989292e-18,
+      "created_lattice_pair_cell_sum_m2": 1427959466.525789,
+      "defect_boundary_storage_change_J": -1.239248905881832e-23,
+      "delta_helmholtz_before_heat_J": -2.3752728780768872e-20,
       "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600",
-      "first_law_residual_J": -3.9579057502885176e-23,
-      "generated_heat_J": 6.5235891550885445e-18,
-      "line_balance_residual_cell_sum_m2": 0.0001220703125,
+      "first_law_residual_J": 3.715850407953054e-26,
+      "generated_heat_J": 2.3752767016363666e-20,
+      "line_balance_residual_cell_sum_m2": 0.0,
       "load": 0.09863999999999869,
-      "maximum_kinetic_fraction": 1.2218990685016627e-05,
-      "maximum_mura_relative_residual": 5.748681338979268e-11,
+      "maximum_kinetic_fraction": 1.0,
+      "maximum_mura_relative_residual": 6.325010672563265e-11,
+      "neutral_interface_pair_capacity_cell_sum_m2": 4.267400697882714e+16,
       "parent_provenance": {
         "parent_provenance": {
           "parent_provenance": {
@@ -91,15 +95,15 @@
         },
         "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
       },
-      "relative_first_law_residual": 6.063100697375948e-06,
-      "removed_interface_pair_cell_sum_m2": 497166890730.89056,
-      "resolved_work_J": 6.5278575234639624e-18,
-      "signed_content_change_cell_sum_m2": -0.0012608620172732234,
+      "relative_first_law_residual": 1.5643863325031329e-06,
+      "removed_interface_pair_cell_sum_m2": 1427959466.525789,
+      "resolved_work_J": 2.3740374527304848e-20,
+      "signed_content_change_cell_sum_m2": -0.008095521224496709,
       "step": 633
     }
   },
   "claim_boundary": "Atomic retained-state energy accessibility is not finite-time flow recovery. Production remains disabled until the exact-parent source-geography discriminator completes and a coupled fork passes.",
-  "created_utc": "2026-10-17T01:01:11.504773+00:00",
+  "created_utc": "2026-10-17T01:20:53.053838+00:00",
   "decision": {
     "all_retained_states_energy_accessible": true,
     "classification": "ENERGY_ACCESSIBLE_INTERFACE_CARRIER_EMISSION",

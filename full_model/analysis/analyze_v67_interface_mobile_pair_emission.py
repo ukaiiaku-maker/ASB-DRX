@@ -60,6 +60,10 @@ def price(root: Path) -> dict:
         source_parameters=ArrheniusSourceParameters(grain_size_m=2.4e-6),
         energy_kwargs=energy)
     projection = decision.projection
+    neutral_capacity = float(sum(np.sum(np.minimum(
+        np.asarray(component.boundary_plus_m2)[..., 0, :],
+        np.asarray(component.boundary_minus_m2)[..., 0, :]),
+        dtype=np.longdouble) for component in state.interfaces))
     return {
         "directory": str(root.resolve()),
         "checkpoint_sha256": _sha(checkpoint),
@@ -68,6 +72,10 @@ def price(root: Path) -> dict:
         "accepted": decision.accepted,
         "classification": decision.classification,
         "maximum_kinetic_fraction": decision.maximum_kinetic_fraction,
+        "neutral_interface_pair_capacity_cell_sum_m2": neutral_capacity,
+        "aggregate_emitted_reservoir_pair_fraction": (
+            projection.removed_interface_pair_cell_sum_m2
+            /max(neutral_capacity, np.finfo(float).tiny)),
         "removed_interface_pair_cell_sum_m2": (
             projection.removed_interface_pair_cell_sum_m2),
         "created_lattice_pair_cell_sum_m2": (

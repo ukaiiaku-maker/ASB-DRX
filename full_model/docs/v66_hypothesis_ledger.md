@@ -1266,3 +1266,25 @@ experiment, result, limitation, and next branch.
   stored-pair release. Its simultaneous release fails the complete first-law
   gate, so only the already queued energy-qualified Hall--Petch production fork
   proceeds while a coupled constrained event clock remains a derivation task.
+
+## 2026-10-17T01:21:00Z — H22 analytical event-measure correction
+
+- H21's interpretation of `d^2/b^2` as evidence for a production recycling-
+  clock defect is superseded. The supplied Azizi--Dillon Arrhenius--hazard
+  paper explicitly defines `N_nuc=b^2/d^2` as the available-site multiplicity
+  and assigns the fixed strain increment `delta_epsilon=b/d` to each boundary-
+  nucleation event. Removing `N_nuc` would change the immutable analytical law.
+- The default-off interface operator had independently applied the resulting
+  hazard as a fraction of every stored pair. That event measure was also
+  incorrect: its output grew with reservoir inventory rather than with the
+  fixed per-event increment. Production now requests
+  `pair_increment * hazard * dt` and uses the reservoir only as a capacity cap.
+- On the exact ad600 state the corrected event is still downhill and first-law
+  closed, but emits only `3.3462e-8` of the reservoir and line equal to
+  `1.3345e-6` of the mobile inventory per interval. Classification:
+  `ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT`.
+- The factor-free stored-pair mode remains a quarantined existing-site
+  hypothesis. It is neither runner-exposed nor production evidence because its
+  simultaneous saturated event fails the complete first-law audit. The queued
+  corrected finite-time fork remains useful as a strict same-law negative or
+  unexpectedly cumulative discriminator.
