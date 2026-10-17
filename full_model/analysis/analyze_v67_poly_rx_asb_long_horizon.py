@@ -118,10 +118,14 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
     terminal_bath = bath[-1]
     ad_persistent = bool(
         terminal_ad["decision"]["final_connected_band"]
-        and terminal_ad["decision"]["band_persisted_every_interval"])
+        and terminal_ad["decision"].get(
+            "terminal_band_persisted_at_least_20_intervals",
+            terminal_ad["decision"]["band_persisted_every_interval"]))
     bath_persistent = bool(
         terminal_bath["decision"]["final_connected_band"]
-        and terminal_bath["decision"]["band_persisted_every_interval"])
+        and terminal_bath["decision"].get(
+            "terminal_band_persisted_at_least_20_intervals",
+            terminal_bath["decision"]["band_persisted_every_interval"]))
     bath_band_suppressed = bool(
         not terminal_bath["decision"]["final_connected_band"]
         and terminal_bath["active_physical_band_intervals"]
@@ -165,8 +169,10 @@ def classify(adiabatic: list[dict], bath: list[dict]) -> dict:
             "bath_available_history_softening_fraction": bath_softening,
             "terminal_per_interval_response_diagnostics_available": (
                 terminal_diagnostics),
-            "adiabatic_terminal_chunk_fully_banded": ad_persistent,
-            "bath_terminal_chunk_fully_banded": bath_persistent,
+            "adiabatic_terminal_band_persisted_at_least_20_intervals": (
+                ad_persistent),
+            "bath_terminal_band_persisted_at_least_20_intervals": (
+                bath_persistent),
             "bath_terminal_band_suppressed": bath_band_suppressed,
             "terminal_existing_boundary_rx_intersects_adiabatic_band": rx_overlap,
             "terminal_temperature_contrast_separation_exceeds_20K": (

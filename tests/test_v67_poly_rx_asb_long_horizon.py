@@ -52,6 +52,16 @@ def test_geometric_band_without_softening_does_not_qualify():
         "PERSISTENT_RX_BAND_WITHOUT_ASB_SOFTENING")
 
 
+def test_twenty_terminal_intervals_qualify_persistence_without_full_chunk():
+    adiabatic = _series("adiabatic", soften=False)
+    adiabatic[-1]["decision"]["band_persisted_every_interval"] = False
+    adiabatic[-1]["decision"][
+        "terminal_band_persisted_at_least_20_intervals"] = True
+    result = classify(adiabatic, _series("strong_bath"))
+    assert result["decision"][
+        "persistent_physical_band_with_existing_boundary_rx"]
+
+
 def test_bath_band_separates_strict_trigger_from_thermal_asb():
     bath = _series("strong_bath")
     bath[-1]["decision"]["final_connected_band"] = True

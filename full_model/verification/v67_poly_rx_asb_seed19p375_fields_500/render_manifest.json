@@ -1,0 +1,114 @@
+{
+  "coordinate_semantics": "native node-centered production arrays on physical [0,L) axes; no interpolation, registration, or spatial projection",
+  "files": {
+    "v67_poly_rx_asb_seed19p375_ad_400": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_fields_500/v67_poly_rx_asb_seed19p375_ad_400_fields.png",
+      "sha256": "5501f4fc06d223a7191f12b7d9978ebf57b8702c3dc4fb45e6d537f79b0829a3"
+    },
+    "v67_poly_rx_asb_seed19p375_ad_500": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_fields_500/v67_poly_rx_asb_seed19p375_ad_500_fields.png",
+      "sha256": "d4dc03a3d5085e4619dc743e5113632290cb446783afc79f5f6fd5b626c6520a"
+    },
+    "v67_poly_rx_asb_seed19p375_bath_400": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_fields_500/v67_poly_rx_asb_seed19p375_bath_400_fields.png",
+      "sha256": "1d4b25f67ca96bd9db3ad12af5fdb33be0c8dcd7f3de0f796cbc8e705090bfa5"
+    },
+    "v67_poly_rx_asb_seed19p375_bath_500": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_fields_500/v67_poly_rx_asb_seed19p375_bath_500_fields.png",
+      "sha256": "5dde679fc60653d50025cbff41398cbb78ed00cf5717dc78d95aca7549231b7b"
+    }
+  },
+  "fixed_color_limits": {
+    "dominant grain ID": [
+      10.0,
+      30.0
+    ],
+    "log10 exact Nye norm [m$^{-1}$]": [
+      3.9289868089676565,
+      5.600658774647503
+    ],
+    "log10 plastic power [W m$^{-3}$]": [
+      8.96373564341523,
+      14.545545716560293
+    ],
+    "orientation (degrees)": [
+      -0.15962456679369394,
+      29.346178662834657
+    ],
+    "temperature [K]": [
+      989.5422402469387,
+      1041.165065306737
+    ],
+    "total line density / $10^{17}$ m$^{-2}$": [
+      0.0007685510830877295,
+      0.019097933320633104
+    ]
+  },
+  "frames": [
+    {
+      "case": "v67_poly_rx_asb_seed19p375_ad_400",
+      "checkpoint_sha256": "80ab8a09863282688ce58b2bed8346ef7a3bd924b086ef423b64e69035f8dbd7",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.06663999999999999,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400",
+      "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f",
+      "step": 433,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013320000000000158
+    },
+    {
+      "case": "v67_poly_rx_asb_seed19p375_bath_400",
+      "checkpoint_sha256": "f546b0755d364346b10f6030b640568a6b556dca539058dabf601bad4b5d8904",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.06663999999999999,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_400",
+      "source_commit": "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456",
+      "step": 433,
+      "thermal_control": "strong_bath",
+      "time_s": 0.0001332000000000016
+    },
+    {
+      "case": "v67_poly_rx_asb_seed19p375_ad_500",
+      "checkpoint_sha256": "565a5efafb959ab980a5dcafa7e7121b08033321fedb3befcb77f0bdc7e3c9e4",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.08263999999999934,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_500",
+      "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d",
+      "step": 533,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013340000000000202
+    },
+    {
+      "case": "v67_poly_rx_asb_seed19p375_bath_500",
+      "checkpoint_sha256": "236043ddf22932a904a992f62fffc1d285a415691423e3e6fca8fb87adf1dc5d",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.08263999999999934,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_500",
+      "source_commit": "64f09f90ab462f7480c461ed29ddb457c46a0cd8",
+      "step": 533,
+      "thermal_control": "strong_bath",
+      "time_s": 0.00013340000000000202
+    }
+  ],
+  "schema": "v67-poly-rx-asb-field-render-v1"
+}
