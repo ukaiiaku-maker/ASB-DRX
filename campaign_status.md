@@ -3271,3 +3271,19 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   `2.3168e-5` of mobile inventory. The corrected classification is
   `ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT`.
   The queued finite-time fork will execute this corrected law.
+
+## V67 carrier-transmission bounds
+
+- The hard-audited 0.06664-to-0.09864 balance requires at least 98.502%
+  adiabatic or 98.444% bath through-boundary transparency to prevent net mobile
+  loss. The existing DD evidence does not identify the required signed transfer
+  kernel, so no coefficient was fitted or promoted.
+- Treating only newly captured neutral pairs as an already-encountered
+  residence-time cohort also fails by capacity: complete release could recycle
+  just `1.0992e-4` of captured line. Historical reservoirs were ineligible, and
+  the immutable Hall--Petch nucleation law was unchanged.
+- The two decisions are
+  `NEAR_COMPLETE_TRANSPARENCY_REQUIRED_NOT_PRODUCTION_IDENTIFIED` and
+  `NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT`. They rule out scalar or
+  neutral shortcuts; only a validated crystallographic signed-transfer law
+  could test this route further.

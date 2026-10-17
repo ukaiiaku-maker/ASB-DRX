@@ -1,0 +1,186 @@
+{
+  "claim_boundary": "This is a balance-derived lower bound, not a fitted boundary transmission coefficient. Existing DD evidence does not identify a signed transfer kernel or memory law, so near-complete transparency is not promoted to production.",
+  "created_utc": "2026-10-17T01:29:47.202539+00:00",
+  "decision": {
+    "classification": "NEAR_COMPLETE_TRANSPARENCY_REQUIRED_NOT_PRODUCTION_IDENTIFIED",
+    "coefficient_fitted_or_promoted": false,
+    "production_transmission_kernel_identified": false
+  },
+  "intervals": {
+    "adiabatic": {
+      "end": {
+        "cell_volume_m3": 1.116e-23,
+        "checkpoint_sha256": "4c65bd1f485a4b0ee1f00caceb02c2093183b741923902a42e630df2c7b5c347",
+        "cumulative_lattice_absorbed_line_length_m": 3.058853702253807e-06,
+        "cumulative_source_created_line_cell_sum_m2": 25025426092932.184,
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600",
+        "hard_audits_passed": true,
+        "load": 0.09863999999999869,
+        "mobile_line_length_m": 2.3883108032987378e-08,
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "parent_provenance": {
+                          "campaign": "V67",
+                          "scientific_scope": "fresh zero-load polycrystal anchor",
+                          "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                          "source_dirty": false
+                        },
+                        "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                      },
+                      "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                    },
+                    "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+              },
+              "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+            },
+            "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+          },
+          "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
+        },
+        "step": 633,
+        "thermal_control": "adiabatic"
+      },
+      "hard_audits_passed": true,
+      "lattice_absorbed_line_m": 1.5026230274119863e-07,
+      "minimum_transparency_for_no_net_mobile_loss": 0.9850182850032658,
+      "mobile_line_loss_m": 1.48011115746777e-07,
+      "mobile_loss_over_absorbed_line": 0.9850182850032658,
+      "source_created_line_m": 1.0572056599508829e-10,
+      "source_created_over_absorbed_line": 0.0007035734450121803,
+      "start": {
+        "cell_volume_m3": 1.116e-23,
+        "checkpoint_sha256": "80ab8a09863282688ce58b2bed8346ef7a3bd924b086ef423b64e69035f8dbd7",
+        "cumulative_lattice_absorbed_line_length_m": 2.9085913995126085e-06,
+        "cumulative_source_created_line_cell_sum_m2": 15552257096956.531,
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400",
+        "hard_audits_passed": true,
+        "load": 0.06663999999999999,
+        "mobile_line_length_m": 1.7189422377976438e-07,
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "campaign": "V67",
+                      "scientific_scope": "fresh zero-load polycrystal anchor",
+                      "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                      "source_dirty": false
+                    },
+                    "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                  },
+                  "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "step": 433,
+        "thermal_control": "adiabatic"
+      }
+    },
+    "strong_bath": {
+      "end": {
+        "cell_volume_m3": 1.116e-23,
+        "checkpoint_sha256": "0d7fbcb67ac342b4160b7ff9729d645523ad4c07114fe593f508b4b5d9b5a89d",
+        "cumulative_lattice_absorbed_line_length_m": 3.058704376380466e-06,
+        "cumulative_source_created_line_cell_sum_m2": 24901846568187.336,
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_600",
+        "hard_audits_passed": true,
+        "load": 0.09863999999999869,
+        "mobile_line_length_m": 2.4153919322020092e-08,
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "parent_provenance": {
+                          "campaign": "V67",
+                          "scientific_scope": "fresh zero-load polycrystal anchor",
+                          "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                          "source_dirty": false
+                        },
+                        "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                      },
+                      "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                    },
+                    "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+              },
+              "source_commit": "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456"
+            },
+            "source_commit": "64f09f90ab462f7480c461ed29ddb457c46a0cd8"
+          },
+          "source_commit": "702a00aee93cf6e6c2fbc351b4570179a13ef9e7"
+        },
+        "step": 633,
+        "thermal_control": "strong_bath"
+      },
+      "hard_audits_passed": true,
+      "lattice_absorbed_line_m": 1.5131693043608807e-07,
+      "minimum_transparency_for_no_net_mobile_loss": 0.9844422303274191,
+      "mobile_line_loss_m": 1.4896277648480147e-07,
+      "mobile_loss_over_absorbed_line": 0.9844422303274191,
+      "source_created_line_m": 1.048956283153595e-10,
+      "source_created_over_absorbed_line": 0.0006932180557261859,
+      "start": {
+        "cell_volume_m3": 1.116e-23,
+        "checkpoint_sha256": "f546b0755d364346b10f6030b640568a6b556dca539058dabf601bad4b5d8904",
+        "cumulative_lattice_absorbed_line_length_m": 2.9073874459443778e-06,
+        "cumulative_source_created_line_cell_sum_m2": 15502596719140.787,
+        "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_400",
+        "hard_audits_passed": true,
+        "load": 0.06663999999999999,
+        "mobile_line_length_m": 1.7311669580682157e-07,
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "campaign": "V67",
+                      "scientific_scope": "fresh zero-load polycrystal anchor",
+                      "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                      "source_dirty": false
+                    },
+                    "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "b37fbb1a40ec7eedeb22b8b291410dea5d8f3456"
+        },
+        "step": 433,
+        "thermal_control": "strong_bath"
+      }
+    }
+  },
+  "schema": "v67-carrier-transparency-requirement-v1"
+}

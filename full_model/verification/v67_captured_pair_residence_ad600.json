@@ -1,0 +1,167 @@
+{
+  "case": {
+    "capture": {
+      "accepted": true,
+      "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "relative_first_law_residual": 0.0,
+      "removed_minus_line_per_thickness": 0.00030854325225230166,
+      "removed_plus_line_per_thickness": 4.824775423884103e-05
+    },
+    "checkpoint_sha256": "4c65bd1f485a4b0ee1f00caceb02c2093183b741923902a42e630df2c7b5c347",
+    "classification": "NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT",
+    "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600",
+    "largest_accepted_trial": {
+      "accepted": true,
+      "classification": "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION",
+      "delta_helmholtz_before_heat_J": -1.9512253609588265e-24,
+      "eligible_pair_fraction_emitted": 0.125,
+      "emitted_pair_cell_sum_m2": 108939.58304267761,
+      "line_balance_residual_cell_sum_m2": 0.0,
+      "maximum_mura_relative_residual": 4.940394127356264e-11,
+      "maximum_reaction_coordinate": 0.125,
+      "relative_first_law_residual": 0.008817223870901279
+    },
+    "load": 0.09863999999999869,
+    "maximum_neutral_recycled_fraction_of_captured_line": 0.00010991939029252836,
+    "new_neutral_capture_pair_cell_sum_m2": 871516.6643414209,
+    "parent_provenance": {
+      "parent_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "campaign": "V67",
+                      "scientific_scope": "fresh zero-load polycrystal anchor",
+                      "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                      "source_dirty": false
+                    },
+                    "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                  },
+                  "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+      },
+      "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
+    },
+    "release_trials": [
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -1.575520572972095e-23,
+        "eligible_pair_fraction_emitted": 1.0,
+        "emitted_pair_cell_sum_m2": 871516.6643414209,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.66488222204097e-11,
+        "maximum_reaction_coordinate": 1.0,
+        "relative_first_law_residual": 0.00010252550731038275
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -7.885680800529938e-24,
+        "eligible_pair_fraction_emitted": 0.5,
+        "emitted_pair_cell_sum_m2": 435758.33217071043,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.406857318620924e-11,
+        "maximum_reaction_coordinate": 0.5,
+        "relative_first_law_residual": 0.001024380249948781
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -3.933954671028559e-24,
+        "eligible_pair_fraction_emitted": 0.25,
+        "emitted_pair_cell_sum_m2": 217879.16608535522,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.438183977739575e-11,
+        "maximum_reaction_coordinate": 0.25,
+        "relative_first_law_residual": 0.0010252561912535065
+      },
+      {
+        "accepted": true,
+        "classification": "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION",
+        "delta_helmholtz_before_heat_J": -1.9512253609588265e-24,
+        "eligible_pair_fraction_emitted": 0.125,
+        "emitted_pair_cell_sum_m2": 108939.58304267761,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.940394127356264e-11,
+        "maximum_reaction_coordinate": 0.125,
+        "relative_first_law_residual": 0.008817223870901279
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -9.851042548910325e-25,
+        "eligible_pair_fraction_emitted": 0.0625,
+        "emitted_pair_cell_sum_m2": 54469.791521338804,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.726136404112364e-11,
+        "maximum_reaction_coordinate": 0.0625,
+        "relative_first_law_residual": 0.0012300123001230013
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -4.8952290156946755e-25,
+        "eligible_pair_fraction_emitted": 0.03125,
+        "emitted_pair_cell_sum_m2": 27234.895760669402,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.2173065041762934e-11,
+        "maximum_reaction_coordinate": 0.03125,
+        "relative_first_law_residual": 0.003280801131747531
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -2.443575540012606e-25,
+        "eligible_pair_fraction_emitted": 0.015625,
+        "emitted_pair_cell_sum_m2": 13617.447880334701,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 3.6720958049510257e-11,
+        "maximum_reaction_coordinate": 0.015625,
+        "relative_first_law_residual": 0.0032807297857895055
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -1.3207424819572268e-25,
+        "eligible_pair_fraction_emitted": 0.0078125,
+        "emitted_pair_cell_sum_m2": 6808.7239401673505,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 3.914830356778535e-11,
+        "maximum_reaction_coordinate": 0.0078125,
+        "relative_first_law_residual": 0.0764525993883792
+      },
+      {
+        "accepted": false,
+        "classification": "REJECTED_LINE_BURGERS_OR_MURA_BALANCE",
+        "delta_helmholtz_before_heat_J": -6.462348535570529e-26,
+        "eligible_pair_fraction_emitted": 0.00390625,
+        "emitted_pair_cell_sum_m2": 3404.3619700836753,
+        "line_balance_residual_cell_sum_m2": 0.0,
+        "maximum_mura_relative_residual": 4.484766916830077e-11,
+        "maximum_reaction_coordinate": 0.00390625,
+        "relative_first_law_residual": 0.06875
+      }
+    ],
+    "step": 633
+  },
+  "claim_boundary": "Only neutral pairs delivered by the immediately preceding accepted capture probe are eligible. Historical reservoir content cannot release. The factor-free rate is a residence-time hypothesis for an already encountered carrier, not a change to the immutable Hall--Petch nucleation law. Static energy accessibility is not a finite-time production result.",
+  "created_utc": "2026-10-17T01:31:50.263872+00:00",
+  "decision": {
+    "classification": "NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT",
+    "production_promoted": false
+  },
+  "schema": "v67-captured-pair-residence-audit-v1"
+}

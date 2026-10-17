@@ -227,7 +227,8 @@ def evaluate_interface_mobile_pair_emission(
         energy_kwargs=None, maximum_fraction_per_interval=1.0,
         maximum_relative_first_law_residual=.05,
         maximum_mura_relative_residual=1.0e-10,
-        kinetics_mode="hall_petch_nucleation"):
+        kinetics_mode="hall_petch_nucleation",
+        eligible_pair_density_m2_by_interface=None):
     """Price one Hall--Petch-activated neutral GB-reservoir emission event."""
     dt = float(interval_s)
     maximum_fraction = float(maximum_fraction_per_interval)
@@ -273,8 +274,20 @@ def evaluate_interface_mobile_pair_emission(
             source_parameters.grain_size_m/source_parameters.burgers_m)**2
         hazards = tuple(value*stored_pair_measure for value in hazards)
     owner_index = {grain: i for i, grain in enumerate(state.grain_ids)}
+    if eligible_pair_density_m2_by_interface is None:
+        eligible_fields = None
+    else:
+        eligible_fields = np.asarray(
+            eligible_pair_density_m2_by_interface, dtype=float)
+        eligible_shape = ((len(state.interfaces),)
+                          +state.owners[0].mobile_plus_m2.shape)
+        if (eligible_fields.shape != eligible_shape
+                or np.any(~np.isfinite(eligible_fields))
+                or np.any(eligible_fields < 0.0)):
+            raise ValueError(
+                "eligible emission capacity requires interface x grid x family")
     fractions = []
-    for component in state.interfaces:
+    for edge_index, component in enumerate(state.interfaces):
         ia = owner_index[component.grain_a_id]
         ib = owner_index[component.grain_b_id]
         eta_a = np.asarray(state.supports[ia])[..., None]
@@ -283,6 +296,11 @@ def evaluate_interface_mobile_pair_emission(
         rate = np.divide(
             eta_a*hazards[ia]+eta_b*hazards[ib], support,
             out=np.zeros_like(hazards[ia]), where=support > 0.0)
+        capacity = np.minimum(
+            np.asarray(component.boundary_plus_m2)[..., 0, :],
+            np.asarray(component.boundary_minus_m2)[..., 0, :])
+        eligible = (capacity if eligible_fields is None else
+                    np.minimum(eligible_fields[edge_index], capacity))
         if kinetics_mode == "hall_petch_nucleation":
             # The immutable Arrhenius--hazard law is
             #   strain_rate = delta_strain * nu * N * exp(-G/kT).
@@ -296,9 +314,7 @@ def evaluate_interface_mobile_pair_emission(
             # Using ``1-exp(-rate*dt)`` as a reservoir fraction would make the
             # macroscopic event increment grow spuriously with stored line.
             requested = rate*dt/source_parameters.grain_size_m**2
-            capacity = np.minimum(
-                np.asarray(component.boundary_plus_m2)[..., 0, :],
-                np.asarray(component.boundary_minus_m2)[..., 0, :])
+            requested = np.minimum(requested, eligible)
             fraction = np.divide(
                 requested, capacity, out=np.zeros_like(requested),
                 where=capacity > 0.0)
@@ -308,8 +324,11 @@ def evaluate_interface_mobile_pair_emission(
             # as an existing opportunity.  Its occupancy therefore evolves
             # with an exact first-order survival probability.  This is not the
             # production Hall--Petch event measure and is not runner-exposed.
+            eligible_fraction = np.divide(
+                eligible, capacity, out=np.zeros_like(eligible),
+                where=capacity > 0.0)
             fractions.append(np.minimum(
-                -np.expm1(-rate*dt), maximum_fraction))
+                -np.expm1(-rate*dt), maximum_fraction)*eligible_fraction)
     fraction_field = np.asarray(fractions)
     projection = project_interface_mobile_pair_emission(
         state, fraction=fraction_field,

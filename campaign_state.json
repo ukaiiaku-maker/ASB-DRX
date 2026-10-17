@@ -77,7 +77,9 @@
     "H19": "the_adiabatic_polycrystal_loses_physical_flow_by_0p09864_shear_because_mobile_inventory_falls_to_13p894_percent_and_flow_exposure_to_0p03397_percent_of_the_0p06664_values_while_Taylor_resistance_is_0p9950_times_and_glide_speed_is_2p299_times;_the_exact_matched_random_source_geography_fork_is_queued",
     "H20": "the_explicit_neutral_mobile_channel_interface_reservoir_contains_39p881_times_the_late_mobile_inventory_when_both_pair_signs_are_counted;_an_exact_line_and_Burgers_conserving_Hall_Petch_activated_pair_emission_is_downhill_and_first_law_closed_on_ad500_and_ad600_and_is_integrated_default_off_for_a_conditional_exact_parent_fork",
     "H21": "superseded_interpretation:_the_initial_same_state_clock_audit_correctly_measured_d2_over_b2_but_incorrectly_interpreted_the_prescribed_new_source_site_multiplicity_as_a_production_recycling_clock_defect",
-    "H22": "the_supplied_Azizi_Dillon_law_defines_b2_over_d2_as_available_nucleation_site_multiplicity_and_b_over_d_as_fixed_event_strain;_corrected_interface_emission_uses_the_same_events_over_d2_pair_density_and_events_times_b_over_d_slip_as_the_conjugate_source_with_reservoir_capacity_only_and_supplies_2p3168e_5_of_mobile_line_per_ad600_interval"
+    "H22": "the_supplied_Azizi_Dillon_law_defines_b2_over_d2_as_available_nucleation_site_multiplicity_and_b_over_d_as_fixed_event_strain;_corrected_interface_emission_uses_the_same_events_over_d2_pair_density_and_events_times_b_over_d_slip_as_the_conjugate_source_with_reservoir_capacity_only_and_supplies_2p3168e_5_of_mobile_line_per_ad600_interval",
+    "H23": "the_hard_audited_ad400_to_ad600_and_bath400_to_bath600_balances_require_98p502_and_98p444_percent_boundary_transparency_to_prevent_mobile_loss;_no_signed_crystallographic_transfer_kernel_is_DD_identified_so_no_coefficient_is_fitted_or_promoted",
+    "H24": "a_same_interval_residence_hypothesis_restricted_to_newly_captured_neutral_pairs_can_recycle_at_most_1p0992e_4_of_captured_line_and_is_classified_NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
@@ -102,13 +104,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22"],
-    "physical_uncertainty": "whether_relocation_of_the_unchanged_analytical_source_site_measure_changes_supply;_the_corrected_fixed_event_interface_reemission_is_expected_to_be_too_small_but_remains_queued_as_a_finite_time_discriminator",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24"],
+    "physical_uncertainty": "whether_relocation_of_the_unchanged_analytical_source_site_measure_changes_supply;_scalar_transparency_and_neutral_residence_release_are_now_bounded_insufficient_and_signed_transfer_remains_unidentified",
     "next_executable_experiment": "finish_the_running_matched_baseline_horizon_then_automatically_fork_the_exact_ad500_checkpoint_for_matched_random_source_geography;_if_that_does_not_restore_physical_flow_the_already_queued_second_fork_enables_only_conserved_interface_mobile_pair_emission",
     "source_identity": "eb0d801_plus_uncommitted_analytical_event_measure_repair;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
     "expected_discriminatory_observation": "matched_random_final_flow_at_least_1_percent_when_the_same_parent_GB_TJ_control_is_below_1_percent_or_a_valid_negative_geography_result_with_exact_parent_and_site_measure_audits",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "the_exact_0p09864_pair_is_classified_MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND;_the_corrected_Azizi_Dillon_fixed_event_interface_emission_is_energy_accessible_but_adds_only_2p3168e_5_of_mobile_line_per_interval_and_is_classified_ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT;_the_baseline_horizon_and_queued_causal_forks_continue"
+    "result_status": "the_exact_0p09864_pair_is_classified_MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND;_analytical_fixed_event_supply_is_insufficient,_98p5_percent_transparency_would_be_required,_and_new_neutral_capture_cohorts_can_recycle_only_1p0992e_4_of_captured_line;_the_baseline_horizon_and_queued_causal_forks_continue"
   },
   "continuation_rule": {
     "active": true,

@@ -1290,3 +1290,28 @@ experiment, result, limitation, and next branch.
   simultaneous saturated event fails the complete first-law audit. The queued
   corrected finite-time fork remains useful as a strict same-law negative or
   unexpectedly cumulative discriminator.
+
+## 2026-10-17 — H23/H24 transmission and residence-capacity bounds
+
+- The accepted ad400-to-ad600 balance loses `1.4801e-7 m` of mobile line while
+  absorbing `1.5026e-7 m`; the matched bath loses `1.4896e-7 m` while
+  absorbing `1.5132e-7 m`. Analytical source creation is only about `0.07%` of
+  absorption in either control. Preventing net depletion by pass-through alone
+  would therefore require `98.502%` and `98.444%` transparency.
+- Classification:
+  `NEAR_COMPLETE_TRANSPARENCY_REQUIRED_NOT_PRODUCTION_IDENTIFIED`. This is a
+  balance-derived lower bound, not a fitted coefficient. No such signed
+  crystallographic transfer kernel or memory law is identified by the existing
+  DD evidence, so a 98.5% transfer rule is not promoted or retuned to the PF
+  outcome.
+- A distinct factor-free residence-time hypothesis was then restricted to
+  neutral pairs delivered by one immediately preceding accepted capture probe.
+  Historical interface content was ineligible. The new cohort is overwhelmingly
+  signed: even complete neutral release could recycle only `1.0992e-4` of the
+  captured line, versus the 0.985 balance requirement.
+- Classification: `NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT`. A tiny
+  accepted reaction prefix is at subtraction-resolution scale and cannot alter
+  this capacity bound. Effective transmission would have to carry signed
+  crystallographic content between differently oriented owners; implementing
+  an arbitrary family mapping would violate the campaign's DD-identification
+  constraint.

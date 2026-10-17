@@ -187,6 +187,28 @@ def test_conjugate_emission_ignores_legacy_scalar_pair_increment():
         large.projection.created_lattice_pair_cell_sum_m2, rtol=1e-15)
 
 
+def test_residence_release_can_be_restricted_to_a_newly_captured_cohort():
+    state, spacing = _fixture()
+    systems = bcc_four_family_systems()
+    eligible = np.full(
+        (len(state.interfaces),)+state.owners[0].mobile_plus_m2.shape,
+        2.5e9)
+    result = evaluate_interface_mobile_pair_emission(
+        state, mean_strain=np.array([[0.0, .025], [.025, 0.0]]),
+        interval_s=2e-9, systems=systems,
+        wall_parameters=CommonWallParameters(spacing_m=spacing),
+        represented_thickness_m=2*2.48e-10,
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.4e-6),
+        energy_kwargs={"topologies": (), "systems": systems},
+        kinetics_mode="stored_pair_release",
+        eligible_pair_density_m2_by_interface=eligible)
+    assert result.accepted
+    assert result.projection.created_lattice_pair_cell_sum_m2 <= np.sum(eligible)
+    np.testing.assert_allclose(
+        result.projection.created_lattice_pair_cell_sum_m2,
+        np.sum(eligible), rtol=1e-12)
+
+
 def test_stored_pair_release_requires_nonlinear_path_resolution():
     state, spacing = _fixture()
     systems = bcc_four_family_systems()
