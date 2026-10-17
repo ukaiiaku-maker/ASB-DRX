@@ -224,9 +224,10 @@ def project_interface_mobile_pair_emission(
 def evaluate_interface_mobile_pair_emission(
         state, *, mean_strain, interval_s, systems, wall_parameters,
         represented_thickness_m, source_parameters=ArrheniusSourceParameters(),
-        energy_kwargs=None, maximum_fraction_per_interval=.05,
+        energy_kwargs=None, maximum_fraction_per_interval=1.0,
         maximum_relative_first_law_residual=.05,
-        maximum_mura_relative_residual=1.0e-10):
+        maximum_mura_relative_residual=1.0e-10,
+        kinetics_mode="hall_petch_nucleation"):
     """Price one Hall--Petch-activated neutral GB-reservoir emission event."""
     dt = float(interval_s)
     maximum_fraction = float(maximum_fraction_per_interval)
@@ -238,6 +239,8 @@ def evaluate_interface_mobile_pair_emission(
     if (not math.isfinite(float(maximum_mura_relative_residual))
             or float(maximum_mura_relative_residual) <= 0.0):
         raise ValueError("Mura tolerance must be positive finite")
+    if kinetics_mode not in {"hall_petch_nucleation", "stored_pair_release"}:
+        raise ValueError("unknown interface-emission kinetics mode")
     spacing = float(wall_parameters.spacing_m)
     thickness = float(represented_thickness_m)
     cell_volume = spacing*spacing*thickness
@@ -258,6 +261,17 @@ def evaluate_interface_mobile_pair_emission(
     hazards = tuple(hall_petch_nucleation_hazard_Hz(
         stress, np.asarray(owner.temperature_K)[..., None], source_parameters)
         for owner, stress in zip(state.owners, raw_stresses))
+    if kinetics_mode == "stored_pair_release":
+        # The Hall--Petch nucleation hazard contains b^2/d^2: the probability
+        # that a previously absent source configuration exists. Every neutral
+        # pair in the explicit interface reservoir is already such a source
+        # opportunity, so charging that multiplicity again double-counts site
+        # scarcity. Keep the identical barrier, stress concentration, EXP
+        # floor, entropy, and attempt frequency; only change the event measure
+        # from prospective lattice sites to represented stored pairs.
+        stored_pair_measure = (
+            source_parameters.grain_size_m/source_parameters.burgers_m)**2
+        hazards = tuple(value*stored_pair_measure for value in hazards)
     owner_index = {grain: i for i, grain in enumerate(state.grain_ids)}
     fractions = []
     for component in state.interfaces:

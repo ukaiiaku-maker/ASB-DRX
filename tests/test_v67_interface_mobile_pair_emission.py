@@ -140,3 +140,24 @@ def test_arrhenius_emission_complete_clock_is_timestep_stable():
             combined.boundary_plus_m2, direct.boundary_plus_m2, rtol=2e-5)
         np.testing.assert_allclose(
             combined.boundary_minus_m2, direct.boundary_minus_m2, rtol=2e-5)
+
+
+def test_stored_pair_release_requires_nonlinear_path_resolution():
+    state, spacing = _fixture()
+    systems = bcc_four_family_systems()
+    kwargs = dict(
+        mean_strain=np.array([[0.0, .025], [.025, 0.0]]), interval_s=2e-9,
+        systems=systems, wall_parameters=CommonWallParameters(spacing_m=spacing),
+        represented_thickness_m=2*2.48e-10,
+        source_parameters=ArrheniusSourceParameters(grain_size_m=2.4e-6),
+        energy_kwargs={"topologies": (), "systems": systems},
+        kinetics_mode="stored_pair_release")
+    simultaneous = evaluate_interface_mobile_pair_emission(
+        state, maximum_fraction_per_interval=1.0, **kwargs)
+    resolved_prefix = evaluate_interface_mobile_pair_emission(
+        state, maximum_fraction_per_interval=.0078125, **kwargs)
+    assert not simultaneous.accepted
+    assert simultaneous.classification in {
+        "REJECTED_COMPLETE_FIRST_LAW", "REJECTED_UPHILL_COMPLETE_HELMHOLTZ"}
+    assert resolved_prefix.accepted
+    assert resolved_prefix.maximum_kinetic_fraction == .0078125
