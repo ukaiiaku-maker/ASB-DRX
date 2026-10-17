@@ -1186,3 +1186,24 @@ experiment, result, limitation, and next branch.
   only analysis, documentation, tests, and evidence changed. All hard balances
   pass. The matched states are continuing toward 0.13064 shear with full scalar
   response histories to resolve the thermal-softening question.
+
+## 2026-10-17T01:03:00Z — H18/H19 persistent band then carrier starvation
+
+- The matched adiabatic and strong-bath branches remain terminally banded
+  through 0.08264 shear, with continuing existing-boundary RX overlap and no
+  post-peak softening. This extends the mechanical RX-band coexistence result
+  but still does not establish polycrystal ASB.
+- By 0.09864 shear the adiabatic physical band has dissolved because plastic
+  flow exposure collapses, even though its stress continues to harden. Relative
+  to the valid 0.06664 state, mobile inventory retains 13.894%, flow exposure
+  retains 0.03397%, Taylor resistance is 0.9950 times, and glide speed is
+  2.299 times. New Hall--Petch source content replaces only 0.07143% of the
+  lost mobile inventory. The proximate failure is mobile-carrier supply, not
+  Taylor locking or insufficient resolved stress.
+- The next physical discriminator is executing, not awaiting approval. After
+  the single-solver matched baseline manager exits, an already queued exact
+  ad500-parent fork moves the unchanged GB/TJ source-opportunity multiset to
+  deterministic matched-random locations for 100 intervals. The parent hash,
+  site multiset, kinetics, mechanics, thermal law, timestep, and front law are
+  fixed; a machine analyzer will compare source increment, retained mobile
+  content, flow exposure, and all hard ledgers.

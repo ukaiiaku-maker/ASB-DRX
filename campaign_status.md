@@ -3188,3 +3188,19 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - Subsequent chunks now retain every accepted interval's stress, temperature,
   plastic power, flow exposure, and connected-band state. A sequential local
   continuation is running through 0.13064 shear with one heavy solver only.
+
+## V67 mobile-carrier supply discriminator (2026-10-17T01:03:00Z)
+
+- Both controls retain physical RX bands through 0.08264 shear without any
+  stress softening. The adiabatic member subsequently loses the band and flow
+  exposure by 0.09864 shear while continuing to harden.
+- A state-resolved audit classifies this as
+  `FLOW_ARRESTED_BY_MOBILE_SUPPLY_COLLAPSE`: mobile inventory retains 13.894%,
+  flow exposure 0.03397%, Taylor resistance 99.50%, and glide speed 229.9% of
+  their 0.06664 values. Source creation replaces only 0.07143% of lost mobile
+  content. Hard absorption, Mura, energy, and identity audits pass.
+- The matched horizon sequence remains the sole heavy solver. An exact-parent
+  source-geography fork is already queued behind it. The fork preserves the
+  entire Hall--Petch opportunity multiset and changes only its deterministic
+  spatial placement from GB/TJ sites to matched-random sites; no resistance,
+  source kinetics, front coefficient, rate law, or thermal parameter changes.

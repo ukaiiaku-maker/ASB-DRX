@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-16T22:55:39Z",
+  "last_updated_utc": "2026-10-17T01:03:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -51,7 +51,7 @@
     "G01": "one_immutable_common_framework_now_supports_existing_boundary_dynamic_and_retained_static_RX_a_lower_rate_RX_advantage_and_grid_timestep_qualified_heat_triggered_single_crystal_ASB;_spontaneous_birth_remains_absent",
     "G02": "fixed_0p25_front_transmission_from_the_fresh_zero_load_anchor_reaches_1p32550_percent_monotone_dynamic_existing_boundary_RX_and_the_matched_2_per_s_increment_grows_8p0537_times_more_than_20_per_s",
     "G03": "mean_zero_20_K_subcritical_single_crystal_seed_forms_an_adiabatic_connected_band_but_not_a_strong_bath_band;_n32_n48_and_2_ns_1_ns_errors_are_below_0p38_percent",
-    "G04": "lower_rate_RX_advantage_higher_rate_heat_triggered_single_crystal_ASB_and_polycrystal_existing_boundary_RX_intersection_with_recurrent_active_high_rate_bands_are_demonstrated_under_the_same_law;_polycrystal_heat_advances_onset_and_exposure_but_does_not_uniquely_trigger_the_band",
+    "G04": "lower_rate_RX_advantage_higher_rate_heat_triggered_single_crystal_ASB_and_polycrystal_existing_boundary_RX_intersection_with_persistent_high_rate_bands_are_demonstrated_under_the_same_law;_the_polycrystal_hardens_then_arrests_by_mobile_carrier_starvation_without_ASB_softening",
     "G05": "inherited_subgrain_maturation_and_exact_bicrystal_structural_content_supported_polycrystal_cycle_reservoir_added_but_new_boundary_formation_not_established",
     "G06": "fixed_0p25_transmission_candidate_adds_0p03298_percent_growth_during_a_no_reset_15_microsecond_zero_rate_hold_after_crossing_one_percent_dynamically_with_terminal_bias_plus_0p91856_MPa"
   },
@@ -72,17 +72,21 @@
     "H14": "the_n64_high_rate_production_RX_pair_has_existing_boundary_growth_intersecting_a_connected_active_band_in_both_adiabatic_and_bath_controls;_heat_amplifies_power_and_temperature_but_does_not_trigger_that_polycrystal_band",
     "H15": "a_subcritical_mean_zero_20_K_single_crystal_imperfection_forms_a_persistent_adiabatic_band_and_5p68_percent_softening_while_the_exact_strong_bath_control_remains_uniform;_the_response_is_grid_and_timestep_qualified_but_not_a_zero_imperfection_claim",
     "H16": "the_fresh_anchor_19p375_K_polycrystal_pair_shows_heat_advanced_early_band_onset_and_43_versus_25_active_intervals_through_0p05064_shear_but_both_controls_dissolve_and_recur;_existing_boundary_RX_intersects_the_recurrent_bands_and_strict_heat_triggered_polycrystal_ASB_is_not_yet_supported",
-    "H17": "from_0p05064_to_0p06664_shear_the_adiabatic_branch_is_physically_banded_100_of_100_intervals_and_the_bath_98_of_100;_both_have_RX_overlap_and_zero_postpeak_softening_so_this_is_persistent_mechanical_RX_band_coexistence_not_yet_ASB"
+    "H17": "from_0p05064_to_0p06664_shear_the_adiabatic_branch_is_physically_banded_100_of_100_intervals_and_the_bath_98_of_100;_both_have_RX_overlap_and_zero_postpeak_softening_so_this_is_persistent_mechanical_RX_band_coexistence_not_yet_ASB",
+    "H18": "through_0p08264_shear_both_matched_controls_retain_terminal_RX_bands_and_continue_hardening;_adiabatic_heat_changes_temperature_but_does_not_produce_postpeak_softening",
+    "H19": "the_adiabatic_polycrystal_loses_physical_flow_by_0p09864_shear_because_mobile_inventory_falls_to_13p894_percent_and_flow_exposure_to_0p03397_percent_of_the_0p06664_values_while_Taylor_resistance_is_0p9950_times_and_glide_speed_is_2p299_times;_the_exact_matched_random_source_geography_fork_is_queued"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 88593,
-      "case": "v67_poly_rx_asb_seed19p375_ad_500",
+      "pid": 88568,
+      "child_pid": 90558,
+      "case": "v67_poly_rx_asb_seed19p375_bath_600",
       "status": "running_sequential_matched_horizon_to_0p13064_shear",
-      "last_case": "v67_poly_rx_asb_seed19p375_bath_400",
-      "last_start_local": "2026-10-16T15:55:39-07:00",
-      "last_source_commit": "ff2e929",
-      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_ad_500"
+      "last_case": "v67_poly_rx_asb_seed19p375_ad_600",
+      "last_start_local": "2026-10-16T17:48:38-07:00",
+      "last_source_commit": "784da0d",
+      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_bath_600",
+      "queued_after_manager": "same_ad500_parent_matched_random_source_geography_to_ad600_horizon_then_machine_comparison"
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -93,13 +97,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17"],
-    "physical_uncertainty": "whether_the_persistent_mechanical_RX_bands_develop_greater_than_5_percent_adiabatic_postpeak_softening_with_a_smaller_bath_response_by_the_0p13_shear_horizon",
-    "next_executable_experiment": "execute_the_running_fault_isolated_100_interval_matched_chunks_from_0p06664_to_0p13064_shear_with_per_interval_stress_temperature_and_terminal_persistence_histories",
-    "source_identity": "ff2e929_with_per_interval_response_diagnostics;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged",
-    "expected_discriminatory_observation": "adiabatic_postpeak_softening_at_least_5_percent_exceeding_bath_by_1_percent_with_persistent_band_RX_overlap_and_closed_first_law_Mura_identity_audits",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19"],
+    "physical_uncertainty": "whether_exact_redistribution_of_unchanged_Hall_Petch_source_opportunities_from_GB_TJ_sites_to_matched_random_sites_prevents_the_observed_mobile_carrier_starvation",
+    "next_executable_experiment": "finish_the_running_matched_baseline_horizon_then_automatically_fork_the_exact_ad500_checkpoint_for_100_intervals_with_matched_random_source_geography_and_compare_source_increment_mobile_inventory_flow_exposure_and_hard_ledgers",
+    "source_identity": "784da0d;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_only_the_exact_source_site_multiset_permutation_is_authorized_in_the_queued_fork",
+    "expected_discriminatory_observation": "matched_random_final_flow_at_least_1_percent_when_the_same_parent_GB_TJ_control_is_below_1_percent_or_a_valid_negative_geography_result_with_exact_parent_and_site_measure_audits",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "the_matched_0p06664_pair_is_persistent_mechanical_RX_band_coexistence_without_ASB_softening;_adiabatic_is_banded_100_of_100_intervals_and_bath_98_of_100_and_the_late_softening_horizon_is_running"
+    "result_status": "the_matched_pair_remains_banded_without_softening_through_0p08264;_the_adiabatic_branch_then_arrests_by_mobile_supply_collapse_by_0p09864;_the_remaining_baseline_horizon_is_running_and_the_no_retuning_geography_fork_is_already_queued"
   },
   "continuation_rule": {
     "active": true,
@@ -110,7 +114,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "canonical_regression": "1190_passed_in_419p88_s_at_source_ee165f5;_14_focused_overlap_horizon_sequence_source_and_render_tests_pass_at_ff2e929;_latest_analysis_and_diagnostic_deltas_pending_full_rerun",
+    "canonical_regression": "1190_passed_in_419p88_s_at_source_ee165f5;_21_focused_source_and_overlap_tests_plus_8_geography_and_starvation_tests_pass_through_784da0d;_latest_analysis_deltas_pending_full_rerun",
     "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": true,
     "material_validated": false,
