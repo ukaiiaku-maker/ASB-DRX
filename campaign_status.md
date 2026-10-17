@@ -3302,3 +3302,7 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   The rate split is an endogenous consequence of one law, not a mechanism
   switch: nucleation can support lower-rate RX, while high-rate polycrystal ASB
   additionally requires physically retained or transmitted carriers.
+- The reproducible temperature envelope is rendered in
+  `full_model/verification/v67_hall_petch_capacity_envelope.{png,pdf}`. Across
+  600--1400 K the ceiling stays near the 2/s branch and remains orders of
+  magnitude below 80000/s.
