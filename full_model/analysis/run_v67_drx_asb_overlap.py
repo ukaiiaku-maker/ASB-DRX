@@ -107,6 +107,16 @@ def _physical_band(metrics, flow_exposure_fraction, threshold=.01):
     return bool(metrics["band_like"] and flow_exposure_fraction >= threshold)
 
 
+def _production_source_mode(production_rx, requested_mode):
+    """Resolve source geography without changing the source kinetics."""
+    if not production_rx:
+        if requested_mode != "gb_tj_only":
+            raise ValueError(
+                "a source-geography control requires --production-rx")
+        return "disabled"
+    return requested_mode
+
+
 def _response_snapshot(endpoint, shear_rate_s):
     """Return scalar mechanics/thermal diagnostics on one accepted state."""
     power, _, metrics = _band(endpoint)
@@ -179,6 +189,12 @@ def main():
         help=("enable the qualified complete-clock source, junction, wall "
               "order/glide, and dipole organization channels"))
     parser.add_argument(
+        "--source-mode", choices=("gb_tj_only", "matched_random"),
+        default="gb_tj_only",
+        help=("Hall--Petch source geography; matched_random preserves the "
+              "exact GB/TJ opportunity distribution and changes only its "
+              "spatial placement"))
+    parser.add_argument(
         "--front-transmission-fraction", type=float,
         help=("fixed front dislocation transmission fraction; omission "
             "preserves the inherited transfer law"))
@@ -224,11 +240,13 @@ def main():
             wall_parameters, wall_nye_match_coefficient_J_m=2.0e-5)
     orientation_enabled = bool(
         args.wall_orientation_relaxation or args.production_rx)
+    source_mode = _production_source_mode(
+        args.production_rx, args.source_mode)
     context = replace(
         base_context, wall_parameters=wall_parameters,
         shear_rate_s=physics_args.shear_rate,
         front_enabled=True,
-        source_mode=("gb_tj_only" if args.production_rx else "disabled"),
+        source_mode=source_mode,
         source_parameters=(
             ArrheniusSourceParameters(grain_size_m=2.4e-6)
             if args.production_rx else None),
@@ -310,6 +328,8 @@ def main():
         rx_enabled=rx_enabled,
         interface_neutral_sink_enabled=bool(args.interface_neutral_sink),
         production_rx_enabled=bool(args.production_rx),
+        source_mode=source_mode,
+        source_random_seed=(67 if source_mode != "disabled" else None),
         front_transmission_fraction=float(
             context.front_kinetics.transfer_law.transmission_fraction),
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
@@ -519,6 +539,7 @@ def main():
             "initial_relative_threshold_band": bool(initial_metrics["band_like"]),
             "rx_pathway_enabled": rx_enabled,
             "production_rx_channels_enabled": bool(args.production_rx),
+            "source_mode": source_mode,
             "front_transmission_fraction": float(
                 context.front_kinetics.transfer_law.transmission_fraction),
             "interface_neutral_sink_enabled": bool(
