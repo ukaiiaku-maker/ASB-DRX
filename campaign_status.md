@@ -3219,3 +3219,20 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   geography runs after the baseline manager; if it does not restore physical
   flow, the interface-reservoir emission fork runs from the same ad500 parent.
   Shell watchers enforce one heavy local solver at a time.
+
+## V67 matched 0.09864 carrier-arrest endpoint
+
+- The matched adiabatic and strong-bath controls both lose physical flow after
+  earlier RX-band overlap. Their terminal plastic/imposed power fractions are
+  `6.5017e-5` and `6.0873e-5`; both stresses peak at the endpoint and neither
+  softens. The classification is
+  `MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND`, not ASB.
+- The adiabatic member retains a 43.01 K spatial temperature contrast while
+  the bath member is nearly uniform (`0.00595 K`), yet their arrest is nearly
+  identical. Heat is therefore not the cause of the lost flow. Existing-
+  boundary grain 20 still grows by `0.02376%` and `0.02343%` in the latest
+  chunks, respectively.
+- Absorption, Mura, first-law, identity, branch-chain, and matched physical-
+  source-equivalence audits pass. Native-grid ownership, orientation, line,
+  Nye, temperature, and power plots are committed. The one-solver manager is
+  continuing the no-retuning baseline while the queued causal forks wait.

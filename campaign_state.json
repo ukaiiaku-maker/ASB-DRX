@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-17T01:15:00Z",
+  "last_updated_utc": "2026-10-17T01:29:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-14T22:47:15Z",
@@ -106,7 +106,7 @@
     "source_identity": "3ec35ad;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
     "expected_discriminatory_observation": "matched_random_final_flow_at_least_1_percent_when_the_same_parent_GB_TJ_control_is_below_1_percent_or_a_valid_negative_geography_result_with_exact_parent_and_site_measure_audits",
     "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "both_matched_controls_arrest_by_mobile_supply_collapse;_the_baseline_horizon_is_running;_the_no_retuning_geography_fork_and_a_conditional_energy_qualified_conserved_interface_reservoir_emission_fork_are_already_queued"
+    "result_status": "the_exact_0p09864_pair_is_classified_MATCHED_MOBILE_SUPPLY_ARREST_AFTER_RX_BAND_with_terminal_flow_6p5017e_5_adiabatic_and_6p0873e_5_bath_zero_softening_and_all_hard_audits_passed;_the_baseline_horizon_and_queued_causal_forks_continue"
   },
   "continuation_rule": {
     "active": true,

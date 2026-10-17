@@ -1229,3 +1229,19 @@ experiment, result, limitation, and next branch.
   queued behind the matched-random geography discriminator and will execute
   only if relocating the unchanged external source opportunities is
   insufficient.
+
+## 2026-10-17 — matched 0.09864 endpoint classification
+
+- Adiabatic and strong-bath branches both terminate below `7e-5` plastic to
+  imposed power fraction after 49 and 46 band-active intervals. Both continue
+  hardening, retain zero post-peak softening, and have zero terminal band
+  persistence. The pair is classified as matched mobile-supply arrest after
+  RX-band coexistence.
+- The temperature contrasts remain sharply separated (`43.01 K` versus
+  `0.00595 K`) while the mechanical arrest is nearly identical. This rejects
+  thermal softening as the cause of the polycrystal flow loss at this horizon.
+  It does not alter the independently qualified heat-triggered single-crystal
+  ASB response.
+- Both existing-boundary target increments remain positive and every declared
+  hard audit passes. An exact physical-source audit confirms that the recorded
+  commits differ only in nonphysical analysis/evidence paths.
