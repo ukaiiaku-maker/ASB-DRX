@@ -11,6 +11,8 @@
       "hard_audits_passed": true,
       "lattice_absorbed_line_length_m": 2.9085913995126085e-06,
       "load": 0.06663999999999999,
+      "neutral_mobile_channel_interface_line_cell_sum_m2": 8.526753837650466e+16,
+      "neutral_mobile_channel_interface_pair_cell_sum_m2": 4.263376918825233e+16,
       "owners": {
         "10": {
           "core_effective_stress_abs_Pa": 756725589.3397977,
@@ -53,6 +55,8 @@
       "hard_audits_passed": true,
       "lattice_absorbed_line_length_m": 3.058853702253807e-06,
       "load": 0.09863999999999869,
+      "neutral_mobile_channel_interface_line_cell_sum_m2": 8.534801395765427e+16,
+      "neutral_mobile_channel_interface_pair_cell_sum_m2": 4.267400697882714e+16,
       "owners": {
         "10": {
           "core_effective_stress_abs_Pa": 1335671408.2259834,
@@ -86,7 +90,7 @@
     }
   },
   "claim_boundary": "This identifies the proximate carrier-supply loss over the tested trajectory. It does not establish that source geography is the remedy until the checksum-matched random-site fork is executed.",
-  "created_utc": "2026-10-17T00:52:01.470447+00:00",
+  "created_utc": "2026-10-17T00:57:13.814039+00:00",
   "decision": {
     "classification": "FLOW_ARRESTED_BY_MOBILE_SUPPLY_COLLAPSE",
     "mobile_supply_collapse_not_taylor_locking": true
@@ -95,6 +99,7 @@
   "ratios": {
     "flow_exposure_retention": 0.0003396792770187979,
     "glide_speed_ratio": 2.298911227144134,
+    "late_neutral_interface_line_to_mobile_inventory": 39.881067173160616,
     "mobile_inventory_retention": 0.13894072475400382,
     "source_increment_to_mobile_loss": 0.0007142745020310435,
     "taylor_resistance_ratio": 0.9950043624652458

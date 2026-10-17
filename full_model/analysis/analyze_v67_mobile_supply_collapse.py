@@ -78,6 +78,12 @@ def load_case(root: Path) -> dict:
                 np.abs(drive["speed_m_s"])[core])),
         }
     ledger = result["ledger"]
+    neutral_boundary_pairs = float(sum(
+        np.sum(np.minimum(
+            np.asarray(component.boundary_plus_m2)[..., 0, :],
+            np.asarray(component.boundary_minus_m2)[..., 0, :]),
+            dtype=np.longdouble)
+        for component in state.interfaces))
     return {
         "directory": str(root.resolve()),
         "source_commit": result["source_commit"],
@@ -91,6 +97,10 @@ def load_case(root: Path) -> dict:
             name: value / weight_sum for name, value in weighted.items()},
         "source_created_line_cell_sum_m2": ledger[
             "source_created_line_cell_sum_m2"],
+        "neutral_mobile_channel_interface_pair_cell_sum_m2": (
+            neutral_boundary_pairs),
+        "neutral_mobile_channel_interface_line_cell_sum_m2": (
+            2.0*neutral_boundary_pairs),
         "lattice_absorbed_line_length_m": ledger[
             "lattice_absorbed_line_length_m"],
         "owners": owners,
@@ -120,6 +130,9 @@ def classify(early: dict, late: dict) -> dict:
                 "speed_abs_m_s"], 1e-300),
         "source_increment_to_mobile_loss": source_increment / max(
             mobile_loss, 1e-300),
+        "late_neutral_interface_line_to_mobile_inventory": (
+            late["neutral_mobile_channel_interface_line_cell_sum_m2"]
+            /max(mobile_late, 1e-300)),
     }
     starvation = bool(
         early["hard_audits_passed"] and late["hard_audits_passed"]

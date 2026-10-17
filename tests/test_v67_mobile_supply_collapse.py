@@ -8,6 +8,7 @@ def _case(mobile, flow, taylor, speed, source):
         "support_family_weighted_means": {
             "taylor_Pa": taylor, "speed_abs_m_s": speed},
         "source_created_line_cell_sum_m2": source,
+        "neutral_mobile_channel_interface_line_cell_sum_m2": 2e16,
         "hard_audits_passed": True,
     }
 
