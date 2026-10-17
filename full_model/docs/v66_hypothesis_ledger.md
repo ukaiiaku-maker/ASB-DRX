@@ -1277,11 +1277,13 @@ experiment, result, limitation, and next branch.
 - The default-off interface operator had independently applied the resulting
   hazard as a fraction of every stored pair. That event measure was also
   incorrect: its output grew with reservoir inventory rather than with the
-  fixed per-event increment. Production now requests
-  `pair_increment * hazard * dt` and uses the reservoir only as a capacity cap.
+  fixed per-event increment. Production now uses the same `events/d^2` pair
+  density and `events*b/d` slip as the conjugate lattice-source transaction,
+  and uses the reservoir only as a capacity cap. The legacy scalar
+  `pair_increment_m2` cannot parameterize this production event.
 - On the exact ad600 state the corrected event is still downhill and first-law
-  closed, but emits only `3.3462e-8` of the reservoir and line equal to
-  `1.3345e-6` of the mobile inventory per interval. Classification:
+  closed, but emits only `5.8094e-7` of the reservoir and line equal to
+  `2.3168e-5` of the mobile inventory per interval. Classification:
   `ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT`.
 - The factor-free stored-pair mode remains a quarantined existing-site
   hypothesis. It is neither runner-exposed nor production evidence because its

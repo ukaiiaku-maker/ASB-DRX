@@ -167,6 +167,26 @@ def test_hall_petch_emission_uses_fixed_event_increment_not_reservoir_fraction()
         baseline.maximum_kinetic_fraction/10.0, rtol=5e-13)
 
 
+def test_conjugate_emission_ignores_legacy_scalar_pair_increment():
+    state, spacing = _fixture()
+    systems = bcc_four_family_systems()
+    common = dict(
+        mean_strain=np.array([[0.0, .025], [.025, 0.0]]), interval_s=2e-9,
+        systems=systems, wall_parameters=CommonWallParameters(spacing_m=spacing),
+        represented_thickness_m=2*2.48e-10,
+        energy_kwargs={"topologies": (), "systems": systems})
+    small = evaluate_interface_mobile_pair_emission(
+        state, source_parameters=ArrheniusSourceParameters(
+            grain_size_m=2.4e-6, pair_increment_m2=1.0), **common)
+    large = evaluate_interface_mobile_pair_emission(
+        state, source_parameters=ArrheniusSourceParameters(
+            grain_size_m=2.4e-6, pair_increment_m2=1.0e20), **common)
+    assert small.accepted and large.accepted
+    np.testing.assert_allclose(
+        small.projection.created_lattice_pair_cell_sum_m2,
+        large.projection.created_lattice_pair_cell_sum_m2, rtol=1e-15)
+
+
 def test_stored_pair_release_requires_nonlinear_path_resolution():
     state, spacing = _fixture()
     systems = bcc_four_family_systems()

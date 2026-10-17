@@ -12,12 +12,12 @@
       "capture_relative_first_law_residual": 0.0,
       "capture_selected_hazard_scale": 1.0,
       "capture_weighted_event_rate_s": 564514554118.0322,
-      "emitted_line_fraction_of_mobile_inventory_per_interval": 1.3345019939965053e-06,
-      "hall_petch_aggregate_emitted_reservoir_pair_fraction": 3.346204323475591e-08,
+      "emitted_line_fraction_of_mobile_inventory_per_interval": 2.3168324595170108e-05,
+      "hall_petch_aggregate_emitted_reservoir_pair_fraction": 5.809354221785233e-07,
       "hall_petch_emission_accepted": true,
       "hall_petch_emission_classification": "ACCEPTED_INTERFACE_MOBILE_PAIR_EMISSION",
       "hall_petch_emission_maximum_local_capacity_fraction": 1.0,
-      "hall_petch_emission_relative_first_law_residual": 1.5643863325031329e-06,
+      "hall_petch_emission_relative_first_law_residual": 1.4693118642760767e-06,
       "hall_petch_hazard_maximum_s": 6109.532668745713,
       "hall_petch_hazard_median_s": 6011.183882208593,
       "hall_petch_hazard_minimum_positive_s": 3.709071750253631e-06,
@@ -62,7 +62,7 @@
     "step": 633
   },
   "claim_boundary": "Azizi--Dillon defines b^2/d^2 as the nucleation-site multiplicity and a fixed strain increment per event. The production emission therefore retains that factor and debits one fixed pair increment per event, capacity-limited by the stored reservoir. The reported factor-free hazard is a quarantined hypothetical existing-site ablation, not a production clock or finite-time flow recovery.",
-  "created_utc": "2026-10-17T01:20:55.368815+00:00",
+  "created_utc": "2026-10-17T01:22:32.038268+00:00",
   "decision": {
     "classification": "ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT",
     "production_change_authorized": false

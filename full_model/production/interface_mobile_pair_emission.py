@@ -287,12 +287,15 @@ def evaluate_interface_mobile_pair_emission(
             # The immutable Arrhenius--hazard law is
             #   strain_rate = delta_strain * nu * N * exp(-G/kT).
             # ``rate`` already contains the Hall--Petch available-site
-            # multiplicity N=b^2/d^2.  One event contributes the declared
-            # fixed pair increment; it is not a probability independently
+            # multiplicity N=b^2/d^2.  The conjugate production source maps
+            # one event to pair density 1/d^2 and slip b/d.  Use that identical
+            # measure here; the legacy scalar ``pair_increment_m2`` belongs to
+            # the older nonconjugate helper and must not parameterize this
+            # production event.  One event is not a probability independently
             # applied to every line segment accumulated in the reservoir.
             # Using ``1-exp(-rate*dt)`` as a reservoir fraction would make the
             # macroscopic event increment grow spuriously with stored line.
-            requested = source_parameters.pair_increment_m2*rate*dt
+            requested = rate*dt/source_parameters.grain_size_m**2
             capacity = np.minimum(
                 np.asarray(component.boundary_plus_m2)[..., 0, :],
                 np.asarray(component.boundary_minus_m2)[..., 0, :])

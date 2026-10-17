@@ -3262,11 +3262,12 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   per event. The production law must retain both.
 - Interface emission previously multiplied the hazard by the entire reservoir
   through a fractional-decay update. It now emits the declared fixed pair
-  increment per hazard event and treats stored line only as a capacity bound.
+  density `1/d^2` and slip `b/d` per hazard event and treats stored line only
+  as a capacity bound. The legacy scalar pair increment is not used.
   A tenfold-reservoir regression proves that emitted content is unchanged while
   the used reservoir fraction falls tenfold.
 - Corrected retained-state events remain energy accessible. At ad600, one
-  interval emits `3.3462e-8` of stored pairs and adds line equal to only
-  `1.3345e-6` of mobile inventory. The corrected classification is
+  interval emits `5.8094e-7` of stored pairs and adds line equal to only
+  `2.3168e-5` of mobile inventory. The corrected classification is
   `ANALYTICAL_SITE_MULTIPLICITY_PRESERVED_FIXED_EVENT_SUPPLY_INSUFFICIENT`.
   The queued finite-time fork will execute this corrected law.
