@@ -548,7 +548,7 @@ def test_v31_conduction_only_is_conservative_and_smooths_temperature():
     thermal = replace(
         p, thermal_diffusivity_m2_s=1e-8, bath_rate_s=0.0,
         mobile_correlation_diffusivity_m2_s=0.0,
-        multiplication_coefficient=0.0)
+        multiplication_coefficient_m1=0.0)
     zero = np.zeros_like(state.mobile_plus_m2)
     updated, residual, scale = accepted_euler_step(
         quiet, CommonWallDriving(glide_speed_m_s=zero,
@@ -567,7 +567,7 @@ def test_v31_multiplication_is_limited_by_independent_storage_work_budget():
     driving = CommonWallDriving(
         glide_speed_m_s=np.full_like(state.mobile_plus_m2, 2.0e-4),
         resolved_stress_Pa=low_stress)
-    aggressive = replace(p, multiplication_coefficient=1.0e8)
+    aggressive = replace(p, multiplication_coefficient_m1=1.0e8)
     residual = wall_residual(state, driving, systems, topologies, aggressive)
     scale = residual.channel_rates_m2_s[
         "multiplication_energy_budget_scale"]

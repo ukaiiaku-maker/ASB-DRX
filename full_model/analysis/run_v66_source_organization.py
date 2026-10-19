@@ -110,7 +110,7 @@ def _run(mode, site, boundary, p_source, *, n, length_m, temperature_K,
     parameters = CommonWallParameters(
         spacing_m=dx, transport_scheme="upwind",
         mobile_correlation_diffusivity_m2_s=2e-13,
-        multiplication_coefficient=0.0, wall_order_enabled=False,
+        multiplication_coefficient_m1=0.0, wall_order_enabled=False,
         lock_barrier_eV=5.0, unlock_barrier_eV=5.0,
         wall_barrier_eV=5.0, annihilation_barrier_eV=5.0,
         junction_barrier_eV=5.0, order_barrier_eV=5.0,

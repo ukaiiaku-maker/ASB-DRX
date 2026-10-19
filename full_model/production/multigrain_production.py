@@ -254,6 +254,9 @@ class MultiGrainMechanicalDecision:
     irreversible_heat_J_m3_cells: np.ndarray
     thermal_conduction_J_m3_cells: np.ndarray
     thermal_bath_exchange_J_m3_cells: np.ndarray
+    raw_multiplication_line_increment_m2_cells: np.ndarray
+    accepted_multiplication_line_increment_m2_cells: np.ndarray
+    multiplication_budget_active_time_s_cells: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -420,6 +423,10 @@ def advance_multigrain_mechanics(
     irreversible_heat_density = np.zeros_like(plastic_work_density)
     thermal_conduction_density = np.zeros_like(plastic_work_density)
     thermal_bath_exchange_density = np.zeros_like(plastic_work_density)
+    raw_multiplication_line_increment = np.zeros_like(plastic_work_density)
+    accepted_multiplication_line_increment = np.zeros_like(
+        plastic_work_density)
+    multiplication_budget_active_time = np.zeros_like(plastic_work_density)
     minimum_scale = 1.0
     maximum_line_residual = 0.0
     substeps = 0
@@ -471,6 +478,26 @@ def advance_multigrain_mechanics(
             weight = np.asarray(support, dtype=float)
             work_increment = weight*residual.plastic_power_W_m3*consumed
             owner_heat_increment = weight*residual.heat_rate_W_m3*consumed
+            raw_pairs = np.asarray(
+                residual.channel_rates_m2_s["multiplication_pairs_raw"],
+                dtype=float)
+            accepted_pairs = np.asarray(
+                residual.channel_rates_m2_s["multiplication_pairs"],
+                dtype=float)
+            budget_scale = np.asarray(
+                residual.channel_rates_m2_s[
+                    "multiplication_energy_budget_scale"], dtype=float)
+            # The channel stores a per-sign neutral-pair rate.  Twice its
+            # family sum is the generated unsigned line density rate.  These
+            # are accepted-clock integrals over the actual constitutive
+            # substeps, not endpoint reconstructions.
+            raw_multiplication_line_increment += (
+                weight*2.0*np.sum(raw_pairs, axis=2)*consumed)
+            accepted_multiplication_line_increment += (
+                weight*2.0*np.sum(accepted_pairs, axis=2)*consumed)
+            multiplication_budget_active_time += (
+                weight*(budget_scale < 1.0-64.0*np.finfo(float).eps)
+                *consumed)
             plastic_work_density += work_increment
             irreversible_heat_density += owner_heat_increment
             heat_increment += owner_heat_increment
@@ -539,7 +566,10 @@ def advance_multigrain_mechanics(
         True, minimum_scale, work, heat, maximum_line_residual,
         substeps, dt, plastic_work_density,
         irreversible_heat_density, thermal_conduction_density,
-        thermal_bath_exchange_density)
+        thermal_bath_exchange_density,
+        raw_multiplication_line_increment,
+        accepted_multiplication_line_increment,
+        multiplication_budget_active_time)
     return candidate, decision
 
 

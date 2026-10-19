@@ -58,6 +58,23 @@ def _physics_for_checkpoint(configuration):
     wall = replace(
         wall,
         wall_nye_match_coefficient_J_m=wall.c44_Pa*(1.5e-7)**2)
+    if "multiplication_law" in configuration:
+        wall = replace(
+            wall,
+            multiplication_law=configuration["multiplication_law"],
+            multiplication_coefficient_m1=float(
+                configuration["multiplication_coefficient_m1"]),
+            multiplication_storage_work_fraction=float(configuration[
+                "multiplication_storage_work_fraction"]))
+    if configuration.get("temperature_dependent_exp_floor", False):
+        wall = replace(
+            wall,
+            kinetic_reference_temperature_K=float(configuration[
+                "kinetic_reference_temperature_K"]),
+            glide_barrier_temperature_coefficient=float(configuration[
+                "glide_barrier_temperature_coefficient"]),
+            critical_stress_temperature_coefficient=float(configuration[
+                "critical_stress_temperature_coefficient"]))
     structural = InterfaceStructuralAbsorptionParameters(
         complete_physical_clock=True).boundary
     return spacing, thickness, systems, wall, dict(

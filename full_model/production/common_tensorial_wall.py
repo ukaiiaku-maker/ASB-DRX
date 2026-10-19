@@ -198,7 +198,17 @@ class CommonWallParameters:
     # and atomistic core radius. Zero retains legacy one-cell deposition.
     capture_deposition_length_m: float = 0.0
     transport_scheme: str = "spectral"
-    multiplication_coefficient: float = 10.0
+    # Units-bearing coefficient in d(rho)/dGamma=C_mult sqrt(rho_eff) [m^-1].
+    # The legacy V21 mode is retained for old checkpoints. Corrected V67 runs
+    # explicitly select the recovered v34 KM forest-storage mode and its
+    # resolved coefficient; defaults never silently change checkpoint physics.
+    multiplication_law: str = "legacy_v21_mobile_pair_v1"
+    multiplication_coefficient_m1: float = 10.0
+    multiplication_storage_work_fraction: float = 1.0
+    multiplication_forest_mix: float = 0.35
+    multiplication_mobile_obstacle_weight: float = 0.10
+    multiplication_wall_obstacle_weight: float = 0.35
+    multiplication_gnd_obstacle_weight: float = 0.10
     enforce_multiplication_energy_budget: bool = True
     taylor_alpha: float = 0.30
     taylor_wall_weight: float = 2.0
@@ -263,8 +273,20 @@ class CommonWallParameters:
         if self.transport_scheme not in ("spectral", "upwind", "groma_upwind"):
             raise ValueError(
                 "transport scheme must be spectral, upwind, or groma_upwind")
-        if self.multiplication_coefficient < 0.0:
+        if self.multiplication_law not in (
+                "disabled", "legacy_v21_mobile_pair_v1",
+                "v34_km_forest_storage_v1"):
+            raise ValueError("unknown multiplication law")
+        if self.multiplication_coefficient_m1 < 0.0:
             raise ValueError("multiplication coefficient cannot be negative")
+        if any(not math.isfinite(float(value)) or not 0.0 <= value <= 1.0
+               for value in (
+                   self.multiplication_storage_work_fraction,
+                   self.multiplication_forest_mix,
+                   self.multiplication_mobile_obstacle_weight,
+                   self.multiplication_wall_obstacle_weight,
+                   self.multiplication_gnd_obstacle_weight)):
+            raise ValueError("multiplication fractions/weights must lie in [0,1]")
         if self.taylor_alpha < 0.0 or self.taylor_wall_weight < 0.0 or self.taylor_junction_weight < 0.0:
             raise ValueError("Taylor weights cannot be negative")
         if self.wall_gate_form not in ("product_rational", "joint_rational"):
@@ -812,6 +834,48 @@ def taylor_resistance_Pa(state, systems, topologies, parameters):
             *np.sqrt(np.maximum(obstacle, 0.0)))
 
 
+def multiplication_density_argument_m2(state, parameters):
+    """Return the declared per-family density controlling multiplication.
+
+    The V21 compatibility mode used all within-family line.  The recovered
+    v34 KM law used a forest mixture plus separately weighted mobile, wall,
+    and total signed-GND content.  Its GB-shell term is not included here:
+    stationary interface content is an explicit external reservoir in the
+    common-owner model and must not be silently counted again as bulk line.
+    """
+    if parameters.multiplication_law == "disabled":
+        return np.zeros_like(state.mobile_plus_m2)
+    if parameters.multiplication_law == "legacy_v21_mobile_pair_v1":
+        return (
+            state.mobile_plus_m2+state.mobile_minus_m2
+            +state.forest_plus_m2+state.forest_minus_m2
+            +state.wall_plus_m2+state.wall_minus_m2)
+    forest = state.forest_plus_m2+state.forest_minus_m2
+    forest_total = np.sum(forest, axis=2)[..., None]
+    mobile = state.mobile_plus_m2+state.mobile_minus_m2
+    wall_total = np.sum(
+        state.wall_plus_m2+state.wall_minus_m2, axis=2)[..., None]
+    total_signed = np.sum(
+        state.mobile_plus_m2-state.mobile_minus_m2
+        +state.forest_plus_m2-state.forest_minus_m2
+        +state.wall_plus_m2-state.wall_minus_m2, axis=2)[..., None]
+    mix = parameters.multiplication_forest_mix
+    return np.maximum(
+        (1.0-mix)*forest+mix*forest_total
+        +parameters.multiplication_mobile_obstacle_weight*mobile
+        +parameters.multiplication_wall_obstacle_weight*wall_total
+        +parameters.multiplication_gnd_obstacle_weight*np.abs(total_signed),
+        0.0)
+
+
+def raw_multiplication_pair_rate_m2_s(
+        state, slip_rate_s, parameters):
+    """Per-sign neutral-pair source; twice this is total generated line."""
+    density = multiplication_density_argument_m2(state, parameters)
+    return (0.5*parameters.multiplication_coefficient_m1
+            *np.sqrt(density)*np.abs(np.asarray(slip_rate_s, dtype=float)))
+
+
 def resolved_driving_components(
         state, driving, systems, topologies, parameters, *,
         _chemical=None, _rotated_fields=None):
@@ -1207,14 +1271,16 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                     *annihilation_affinity_factor)
     mp_rate -= annihilation; mm_rate -= annihilation
 
-    # Loop multiplication creates equal positive/negative content.  It raises
-    # line length but exactly preserves vector Burgers inventory; its rate is
-    # the conventional d(rho)/d(gamma) ~ sqrt(rho) form.
-    family_total = (state.mobile_plus_m2+state.mobile_minus_m2
-                    +state.forest_plus_m2+state.forest_minus_m2
-                    +state.wall_plus_m2+state.wall_minus_m2)
-    multiplication = (0.5*parameters.multiplication_coefficient
-                      *np.sqrt(np.maximum(family_total, 0.0))*np.abs(slip_rate))
+    # Equal-sign multiplication raises unsigned line and preserves vector
+    # Burgers inventory.  ``multiplication_raw`` is the per-sign rate.  The
+    # law/version determines both rho_eff and the destination reservoir; they
+    # are serialized together so a legacy mobile source cannot masquerade as
+    # the recovered v34 forest-storage closure.
+    multiplication_density = multiplication_density_argument_m2(
+        state, parameters)
+    multiplication_raw = raw_multiplication_pair_rate_m2_s(
+        state, slip_rate, parameters)
+    multiplication = multiplication_raw.copy()
     # Multiplication stores line energy and therefore cannot consume more
     # power than the mechanical/transport transaction supplies locally.  This
     # is an a-priori constitutive admissibility bound evaluated from the
@@ -1224,7 +1290,12 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
     transport_free_energy_rate = np.sum(
         chemical["mobile_plus_mu_J_m"]*transport_mp_rate
         +chemical["mobile_minus_mu_J_m"]*transport_mm_rate, axis=2)
-    multiplication_pair_mu = annihilation_pair_mu
+    if parameters.multiplication_law == "v34_km_forest_storage_v1":
+        multiplication_pair_mu = (
+            chemical["forest_plus_mu_J_m"]
+            +chemical["forest_minus_mu_J_m"])
+    else:
+        multiplication_pair_mu = annihilation_pair_mu
     multiplication_cost = np.sum(
         np.maximum(multiplication_pair_mu, 0.0)*multiplication, axis=2)
     transport_driving_power = parameters.burgers_m*np.sum(
@@ -1232,8 +1303,13 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         *state.mobile_plus_m2
         +drive["thermodynamic_stress_minus_Pa"]*speed_minus
         *state.mobile_minus_m2, axis=2)
-    multiplication_power_available = np.maximum(
-        transport_driving_power, 0.0)
+    if parameters.multiplication_law == "v34_km_forest_storage_v1":
+        multiplication_power_available = (
+            parameters.multiplication_storage_work_fraction*np.sum(
+                np.abs(stress)*np.abs(slip_rate), axis=2))
+    else:
+        multiplication_power_available = np.maximum(
+            transport_driving_power, 0.0)
     multiplication_budget_scale = np.ones(grid)
     if parameters.enforce_multiplication_energy_budget:
         # Ratios above one all map to the same inactive budget bound. Avoid a
@@ -1244,7 +1320,10 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
                 1.0, multiplication_power_available
                 /np.maximum(multiplication_cost, 1e-300))
         multiplication *= multiplication_budget_scale[..., None]
-    mp_rate += multiplication; mm_rate += multiplication
+    if parameters.multiplication_law == "v34_km_forest_storage_v1":
+        fp_rate += multiplication; fm_rate += multiplication
+    else:
+        mp_rate += multiplication; mm_rate += multiplication
 
     junction_extents = []
     junction_turnovers = []
@@ -1429,6 +1508,12 @@ def wall_residual(state: CommonWallState, driving: CommonWallDriving,
         "annihilation_pairs": annihilation,
         "annihilation_affinity_factor": annihilation_affinity_factor,
         "multiplication_pairs": multiplication,
+        "multiplication_pairs_raw": multiplication_raw,
+        "multiplication_density_argument_m2": multiplication_density,
+        "multiplication_power_available_W_m3": multiplication_power_available,
+        "multiplication_cost_raw_W_m3": np.sum(
+            np.maximum(multiplication_pair_mu, 0.0)*multiplication_raw,
+            axis=2),
         "junction": (np.stack(junction_extents, axis=2)
                      if junction_extents else np.zeros(grid+(0,))),
         "junction_turnover": junction_turnover_array,

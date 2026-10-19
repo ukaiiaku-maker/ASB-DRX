@@ -515,6 +515,18 @@ def advance_complete_multigrain_interval(
         (np.asarray(item.thermal_bath_exchange_J_m3_cells)
          for item in mechanical.operator_decisions),
         start=np.zeros(parent.state.supports.shape[1:], dtype=float))
+    multiplication_raw = sum(
+        (np.asarray(item.raw_multiplication_line_increment_m2_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros(parent.state.supports.shape[1:], dtype=float))
+    multiplication_accepted = sum(
+        (np.asarray(item.accepted_multiplication_line_increment_m2_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros(parent.state.supports.shape[1:], dtype=float))
+    multiplication_budget_active_time = sum(
+        (np.asarray(item.multiplication_budget_active_time_s_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros(parent.state.supports.shape[1:], dtype=float))
     runtime = replace(runtime, ledger=replace(
         runtime.ledger,
         cumulative_mechanical_external_work_J=(
@@ -1485,6 +1497,10 @@ def advance_complete_multigrain_interval(
         "front_heat_J_by_cell": front_heat,
         "thermal_conduction_J_m3": conduction,
         "thermal_bath_exchange_J_m3": bath,
+        "multiplication_raw_line_increment_m2": multiplication_raw,
+        "multiplication_accepted_line_increment_m2": multiplication_accepted,
+        "multiplication_budget_active_time_s": (
+            multiplication_budget_active_time),
     }
     audit = {
         "mechanical_subdivision_depth": mechanical.subdivisions,
@@ -1492,6 +1508,17 @@ def advance_complete_multigrain_interval(
             item.maximum_substeps for item in mechanical.operator_decisions),
         "mechanical_consumed_interval_s": sum(
             item.consumed_interval_s for item in mechanical.operator_decisions),
+        "multiplication_raw_line_increment_cell_sum_m2": float(np.sum(
+            multiplication_raw, dtype=np.longdouble)),
+        "multiplication_accepted_line_increment_cell_sum_m2": float(np.sum(
+            multiplication_accepted, dtype=np.longdouble)),
+        "multiplication_acceptance_fraction": float(np.sum(
+            multiplication_accepted, dtype=np.longdouble)/max(
+                float(np.sum(multiplication_raw, dtype=np.longdouble)),
+                1e-300)),
+        "multiplication_budget_active_cell_time_fraction": float(np.sum(
+            multiplication_budget_active_time, dtype=np.longdouble)/max(
+                dt*float(multiplication_budget_active_time.size), 1e-300)),
         "mechanical_relative_first_law_residual": (
             mechanical.relative_first_law_residual),
         "collective_wall_nucleation_mode": (

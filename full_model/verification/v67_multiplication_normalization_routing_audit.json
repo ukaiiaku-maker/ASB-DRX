@@ -1,0 +1,482 @@
+{
+  "cases": [
+    {
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_401_arrival_limited/checkpoint_latest.npz",
+      "checkpoint_sha256": "6ae795ede9034e64f4db5b28e424070cd1d25ebbc460faadc8cd9ac143022b87",
+      "dt_s": 2e-09,
+      "load": 0.06679999999999998,
+      "physical_time_s": 0.0001332020000000016,
+      "recovered_to_legacy": {
+        "accepted_line_increment_ratio": 60923239.4172574,
+        "instantaneous_raw_line_rate_ratio": 61210142.76849409
+      },
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "campaign": "V67",
+                      "scientific_scope": "fresh zero-load polycrystal anchor",
+                      "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                      "source_dirty": false
+                    },
+                    "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                  },
+                  "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d"
+      },
+      "step": 434,
+      "variants": {
+        "legacy_v21_mobile_pair": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 1.0,
+            "accepted_unsigned_line_increment_m": 2.1328220754211702e-16,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 1.4971236968222055e-15,
+            "internal_substeps": 326,
+            "irreversible_heat_J": 2.5300666994135473e-15,
+            "minimum_internal_step_scale": 0.0030677403196283978,
+            "raw_unsigned_line_increment_m": 2.1328220754211702e-16
+          },
+          "coefficient_m1": 10.0,
+          "density_argument": "within_family_total_line",
+          "destination": "mobile_plus_and_mobile_minus",
+          "endpoint_inventory_change_m": {
+            "forest": 7.368023215219922e-10,
+            "interface": 0.0,
+            "mobile": 3.6286685173440857e-11,
+            "wall": -7.73648179854924e-10
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 1.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 9292686765676.102,
+            "domain_mean_available_storage_power_W_m3": 64716245420712.98,
+            "domain_mean_density_argument_m2": 314232571132387.9,
+            "domain_mean_raw_storage_cost_W_m3": 15715.788206233869,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 9292686765676.102,
+            "maximum_budget_scale": 1.000000000000004,
+            "minimum_budget_scale": 0.9999999999999956
+          },
+          "law": "legacy_v21_mobile_pair_v1",
+          "storage_work_fraction": 1.0
+        },
+        "recovered_v34_forest_storage": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 1.0,
+            "accepted_unsigned_line_increment_m": 1.2993842993529577e-08,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 1.4819935885101681e-15,
+            "internal_substeps": 326,
+            "irreversible_heat_J": 2.4833168937375063e-15,
+            "minimum_internal_step_scale": 0.0030677403196283978,
+            "raw_unsigned_line_increment_m": 1.2993842993529577e-08
+          },
+          "coefficient_m1": 500000000.0,
+          "density_argument": "saved_v34_forest_wall_gnd_without_external_gb_shell",
+          "destination": "forest_plus_and_forest_minus",
+          "endpoint_inventory_change_m": {
+            "forest": 1.3725851577561527e-08,
+            "interface": 0.0,
+            "mobile": 3.643459565000674e-11,
+            "wall": -7.689771690716618e-10
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 1.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 5.6880668362992976e+20,
+            "domain_mean_available_storage_power_W_m3": 5619154010089.907,
+            "domain_mean_density_argument_m2": 563569893189471.4,
+            "domain_mean_raw_storage_cost_W_m3": 1017938534096.8041,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 5.6880668362992976e+20,
+            "maximum_budget_scale": 1.000000000000004,
+            "minimum_budget_scale": 0.9999999999999956
+          },
+          "law": "v34_km_forest_storage_v1",
+          "storage_work_fraction": 0.1
+        },
+        "strict_no_multiplication": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 0.0,
+            "accepted_unsigned_line_increment_m": 0.0,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 1.4971236931141853e-15,
+            "internal_substeps": 326,
+            "irreversible_heat_J": 2.530066695735895e-15,
+            "minimum_internal_step_scale": 0.0030677403196283978,
+            "raw_unsigned_line_increment_m": 0.0
+          },
+          "coefficient_m1": 0.0,
+          "density_argument": "zero",
+          "destination": "none",
+          "endpoint_inventory_change_m": {
+            "forest": 7.368023216151659e-10,
+            "interface": 0.0,
+            "mobile": 3.628647186269853e-11,
+            "wall": -7.736481798904994e-10
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 0.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 0.0,
+            "domain_mean_available_storage_power_W_m3": 64716245420712.98,
+            "domain_mean_density_argument_m2": 0.0,
+            "domain_mean_raw_storage_cost_W_m3": 0.0,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 0.0,
+            "maximum_budget_scale": 1.000000000000004,
+            "minimum_budget_scale": 0.9999999999999956
+          },
+          "law": "disabled",
+          "storage_work_fraction": 0.0
+        }
+      }
+    },
+    {
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_500_arrival_limited/checkpoint_latest.npz",
+      "checkpoint_sha256": "5685015544a99fd3bca337c10aa40c223638384e88c6895abaa9dc44fd352c20",
+      "dt_s": 2e-09,
+      "load": 0.08263999999999934,
+      "physical_time_s": 0.00013340000000000202,
+      "recovered_to_legacy": {
+        "accepted_line_increment_ratio": 63630070.539268315,
+        "instantaneous_raw_line_rate_ratio": 63480342.08223603
+      },
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "parent_provenance": {
+                          "campaign": "V67",
+                          "scientific_scope": "fresh zero-load polycrystal anchor",
+                          "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                          "source_dirty": false
+                        },
+                        "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                      },
+                      "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                    },
+                    "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+              },
+              "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+            },
+            "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d"
+          },
+          "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+        },
+        "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+      },
+      "step": 533,
+      "variants": {
+        "legacy_v21_mobile_pair": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 1.0,
+            "accepted_unsigned_line_increment_m": 1.4593916817552155e-16,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 1.2775544007930417e-15,
+            "internal_substeps": 304,
+            "irreversible_heat_J": 1.6799084383663988e-15,
+            "minimum_internal_step_scale": 0.0032761130535915554,
+            "raw_unsigned_line_increment_m": 1.4593916817552155e-16
+          },
+          "coefficient_m1": 10.0,
+          "density_argument": "within_family_total_line",
+          "destination": "mobile_plus_and_mobile_minus",
+          "endpoint_inventory_change_m": {
+            "forest": 1.1936976385870229e-09,
+            "interface": 0.0,
+            "mobile": 1.1315225898807057e-11,
+            "wall": -1.209989480009133e-09
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 1.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 6058808979712.281,
+            "domain_mean_available_storage_power_W_m3": 52225097744578.18,
+            "domain_mean_density_argument_m2": 312083327998447.3,
+            "domain_mean_raw_storage_cost_W_m3": 10227.786829517365,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 6058808979712.281,
+            "maximum_budget_scale": 1.0000000000000049,
+            "minimum_budget_scale": 0.9999999999999958
+          },
+          "law": "legacy_v21_mobile_pair_v1",
+          "storage_work_fraction": 1.0
+        },
+        "recovered_v34_forest_storage": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 1.0,
+            "accepted_unsigned_line_increment_m": 9.286119565450578e-09,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 1.2697542731492047e-15,
+            "internal_substeps": 304,
+            "irreversible_heat_J": 1.6571292316433987e-15,
+            "minimum_internal_step_scale": 0.0032761130535915554,
+            "raw_unsigned_line_increment_m": 9.286119565450578e-09
+          },
+          "coefficient_m1": 500000000.0,
+          "density_argument": "saved_v34_forest_wall_gnd_without_external_gb_shell",
+          "destination": "forest_plus_and_forest_minus",
+          "endpoint_inventory_change_m": {
+            "forest": 1.0456412875202732e-08,
+            "interface": 0.0,
+            "mobile": 1.1501540214059088e-11,
+            "wall": -1.1866792104687842e-09
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 1.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 3.846152666430591e+20,
+            "domain_mean_available_storage_power_W_m3": 4636924770963.469,
+            "domain_mean_density_argument_m2": 564084168175079.2,
+            "domain_mean_raw_storage_cost_W_m3": 687319945651.3262,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 3.846152666430591e+20,
+            "maximum_budget_scale": 1.0000000000000049,
+            "minimum_budget_scale": 0.9999999999999958
+          },
+          "law": "v34_km_forest_storage_v1",
+          "storage_work_fraction": 0.1
+        },
+        "strict_no_multiplication": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 0.0,
+            "accepted_unsigned_line_increment_m": 0.0,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 1.277554384066643e-15,
+            "internal_substeps": 304,
+            "irreversible_heat_J": 1.6799084230282e-15,
+            "minimum_internal_step_scale": 0.0032761130535915554,
+            "raw_unsigned_line_increment_m": 0.0
+          },
+          "coefficient_m1": 0.0,
+          "density_argument": "zero",
+          "destination": "none",
+          "endpoint_inventory_change_m": {
+            "forest": 1.1936976387106897e-09,
+            "interface": 0.0,
+            "mobile": 1.1315079887823474e-11,
+            "wall": -1.2099894800480965e-09
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 0.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 0.0,
+            "domain_mean_available_storage_power_W_m3": 52225097744578.18,
+            "domain_mean_density_argument_m2": 0.0,
+            "domain_mean_raw_storage_cost_W_m3": 0.0,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 0.0,
+            "maximum_budget_scale": 1.0000000000000049,
+            "minimum_budget_scale": 0.9999999999999958
+          },
+          "law": "disabled",
+          "storage_work_fraction": 0.0
+        }
+      }
+    },
+    {
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600_arrival_limited/checkpoint_latest.npz",
+      "checkpoint_sha256": "c1278a29e74417246c566ca59a7bdddb6354e692783a85b1ab774fc390efac15",
+      "dt_s": 2e-09,
+      "load": 0.09863999999999869,
+      "physical_time_s": 0.00013360000000000246,
+      "recovered_to_legacy": {
+        "accepted_line_increment_ratio": 66322601.50872644,
+        "instantaneous_raw_line_rate_ratio": 66214279.52863916
+      },
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "parent_provenance": {
+                          "parent_provenance": {
+                            "parent_provenance": {
+                              "campaign": "V67",
+                              "scientific_scope": "fresh zero-load polycrystal anchor",
+                              "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                              "source_dirty": false
+                            },
+                            "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                          },
+                          "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                        },
+                        "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                      },
+                      "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                    },
+                    "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+                  },
+                  "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+                },
+                "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d"
+              },
+              "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+            },
+            "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+          },
+          "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+        },
+        "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+      },
+      "step": 633,
+      "variants": {
+        "legacy_v21_mobile_pair": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 1.0,
+            "accepted_unsigned_line_increment_m": 5.4240529084144024e-17,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 5.758146614156042e-16,
+            "internal_substeps": 322,
+            "irreversible_heat_J": 7.3217828645977055e-16,
+            "minimum_internal_step_scale": 0.003118406338549765,
+            "raw_unsigned_line_increment_m": 5.4240529084144024e-17
+          },
+          "coefficient_m1": 10.0,
+          "density_argument": "within_family_total_line",
+          "destination": "mobile_plus_and_mobile_minus",
+          "endpoint_inventory_change_m": {
+            "forest": 1.3166172774099852e-09,
+            "interface": 0.0,
+            "mobile": 3.947514357320333e-12,
+            "wall": -1.3207259999232387e-09
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 1.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 2174127755902.8682,
+            "domain_mean_available_storage_power_W_m3": 22743288597227.17,
+            "domain_mean_density_argument_m2": 311006096140334.7,
+            "domain_mean_raw_storage_cost_W_m3": 3657.280671333073,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 2174127755902.8682,
+            "maximum_budget_scale": 1.0000000000000047,
+            "minimum_budget_scale": 0.9999999999999954
+          },
+          "law": "legacy_v21_mobile_pair_v1",
+          "storage_work_fraction": 1.0
+        },
+        "recovered_v34_forest_storage": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 1.0,
+            "accepted_unsigned_line_increment_m": 3.597372996070171e-09,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 5.753853677823483e-16,
+            "internal_substeps": 322,
+            "irreversible_heat_J": 7.264739402306341e-16,
+            "minimum_internal_step_scale": 0.003118406338549765,
+            "raw_unsigned_line_increment_m": 3.597372996070171e-09
+          },
+          "coefficient_m1": 500000000.0,
+          "density_argument": "saved_v34_forest_wall_gnd_without_external_gb_shell",
+          "destination": "forest_plus_and_forest_minus",
+          "endpoint_inventory_change_m": {
+            "forest": 4.8985164194912284e-09,
+            "interface": 0.0,
+            "mobile": 4.042707017909454e-12,
+            "wall": -1.3053465300791561e-09
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 1.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 1.4395830296032548e+20,
+            "domain_mean_available_storage_power_W_m3": 2050799161941.7197,
+            "domain_mean_density_argument_m2": 565612201341307.1,
+            "domain_mean_raw_storage_cost_W_m3": 256556598013.54166,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 1.4395830296032548e+20,
+            "maximum_budget_scale": 1.0000000000000047,
+            "minimum_budget_scale": 0.9999999999999954
+          },
+          "law": "v34_km_forest_storage_v1",
+          "storage_work_fraction": 0.1
+        },
+        "strict_no_multiplication": {
+          "accepted_clock": {
+            "accepted_to_raw_fraction": 0.0,
+            "accepted_unsigned_line_increment_m": 0.0,
+            "budget_active_cell_time_fraction": 0.0,
+            "consumed_interval_s": 2e-09,
+            "external_plastic_work_J": 5.758146493560689e-16,
+            "internal_substeps": 322,
+            "irreversible_heat_J": 7.321782752776684e-16,
+            "minimum_internal_step_scale": 0.003118406338549765,
+            "raw_unsigned_line_increment_m": 0.0
+          },
+          "coefficient_m1": 0.0,
+          "density_argument": "zero",
+          "destination": "none",
+          "endpoint_inventory_change_m": {
+            "forest": 1.3166172775217936e-09,
+            "interface": 0.0,
+            "mobile": 3.947460076510928e-12,
+            "wall": -1.3207259999918484e-09
+          },
+          "instantaneous": {
+            "accepted_to_raw_fraction": 0.0,
+            "budget_active_cell_fraction": 0.0,
+            "domain_mean_accepted_unsigned_line_rate_m2_s": 0.0,
+            "domain_mean_available_storage_power_W_m3": 22743288597227.17,
+            "domain_mean_density_argument_m2": 0.0,
+            "domain_mean_raw_storage_cost_W_m3": 0.0,
+            "domain_mean_raw_unsigned_line_rate_m2_s": 0.0,
+            "maximum_budget_scale": 1.0000000000000047,
+            "minimum_budget_scale": 0.9999999999999954
+          },
+          "law": "disabled",
+          "storage_work_fraction": 0.0
+        }
+      }
+    }
+  ],
+  "claim_boundary": "The audit recovers normalization, density argument, storage fraction, and forest routing from the archived executable and saved parameter semantics. It does not claim that this closure produces ASB or DRX; that requires the matched continuation.",
+  "created_utc": "2026-10-19T19:53:07.434557+00:00",
+  "decision": {
+    "all_physical_clocks_consumed": true,
+    "checkpoint_count": 3,
+    "classification": "PRODUCTION_MULTIPLICATION_NORMALIZATION_AND_RESERVOIR_ROUTING_DEFECT_CONFIRMED_AND_REPAIRED",
+    "strict_no_multiplication_retained_only_as_comparator": true
+  },
+  "immutable_mechanics": "Arrhenius EXP-floor Peierls-Taylor-Hall-Petch flow and event measure unchanged",
+  "reference_implementation": "full_model/reference_sources/v34/drx_var_v34_candidate_drx_asb_sweep.py",
+  "saved_reference_semantics": {
+    "KM_k1_m1": 500000000.0,
+    "forest_mix": 0.35,
+    "gb_shell_omission": "Common-owner interfaces are explicit reservoirs; the old bulk-shell proxy is omitted to avoid double counting.",
+    "gnd_weight": 0.1,
+    "mobile_weight": 0.1,
+    "obstacle_mode": "forest_wall_gnd",
+    "rho_state_store_to_forest": true,
+    "stored_work_fraction": "1-taylor_quinney=0.1",
+    "wall_weight": 0.35
+  },
+  "schema": "v67-multiplication-normalization-routing-audit-v1"
+}

@@ -139,7 +139,7 @@ def main():
     wall = CommonWallParameters(
         spacing_m=dx, transport_scheme="upwind",
         thermal_diffusivity_m2_s=0.0, bath_rate_s=0.0,
-        multiplication_coefficient=2.0)
+        multiplication_coefficient_m1=2.0)
     systems = bcc_four_family_systems(structural.burgers_m)
     capture = np.zeros((n, n), bool); capture[n//2-1:n//2+1] = True
     rotating = np.zeros((n, n), bool); rotating[n//2:] = True

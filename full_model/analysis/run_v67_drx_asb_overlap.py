@@ -199,6 +199,12 @@ def main():
         "--temperature-dependent-exp-floor", action="store_true",
         help=("enable the preserved analytical H0(T) and sigma_c(T) glide "
               "scaling with its fixed legacy coefficients"))
+    parser.add_argument(
+        "--multiplication-law",
+        choices=("legacy_v21_mobile", "v34_km_forest", "disabled"),
+        default="legacy_v21_mobile",
+        help=("explicit multiplication schema; v34_km_forest restores the "
+              "saved 5e8 m^-1 KM obstacle/storage law"))
     parser.add_argument("--disable-rx", action="store_true")
     parser.add_argument("--interface-neutral-sink", action="store_true")
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
@@ -253,6 +259,20 @@ def main():
         spacing, args.temperature_seed_normal)
     rx_enabled = not args.disable_rx
     wall_parameters = base_context.wall_parameters
+    if args.multiplication_law == "v34_km_forest":
+        wall_parameters = replace(
+            wall_parameters,
+            multiplication_law="v34_km_forest_storage_v1",
+            multiplication_coefficient_m1=5.0e8,
+            multiplication_storage_work_fraction=.10,
+            multiplication_forest_mix=.35,
+            multiplication_mobile_obstacle_weight=.10,
+            multiplication_wall_obstacle_weight=.35,
+            multiplication_gnd_obstacle_weight=.10)
+    elif args.multiplication_law == "disabled":
+        wall_parameters = replace(
+            wall_parameters, multiplication_law="disabled",
+            multiplication_coefficient_m1=0.0)
     if args.temperature_dependent_exp_floor:
         wall_parameters = replace(
             wall_parameters,
@@ -379,6 +399,20 @@ def main():
             wall_parameters.glide_barrier_temperature_coefficient),
         critical_stress_temperature_coefficient=float(
             wall_parameters.critical_stress_temperature_coefficient),
+        multiplication_law=wall_parameters.multiplication_law,
+        multiplication_coefficient_m1=float(
+            wall_parameters.multiplication_coefficient_m1),
+        multiplication_storage_work_fraction=float(
+            wall_parameters.multiplication_storage_work_fraction),
+        multiplication_density_argument=(
+            "v34_forest_mix_plus_mobile_wall_gnd"
+            if wall_parameters.multiplication_law
+            == "v34_km_forest_storage_v1" else "within_family_total_line"),
+        multiplication_destination=(
+            "forest_plus_minus" if wall_parameters.multiplication_law
+            == "v34_km_forest_storage_v1" else
+            "disabled" if wall_parameters.multiplication_law == "disabled"
+            else "mobile_plus_minus"),
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
     output_configuration.update(
         wall_orientation_relaxation_mode=(

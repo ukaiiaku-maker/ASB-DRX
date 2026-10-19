@@ -418,6 +418,14 @@ def test_mechanical_step_evolves_supported_owner_and_preserves_dormant_history()
     assert decision.accepted
     assert decision.minimum_step_scale > 0.0
     assert decision.external_plastic_work_J >= 0.0
+    assert np.all(decision.raw_multiplication_line_increment_m2_cells >= 0.0)
+    assert np.all(
+        decision.accepted_multiplication_line_increment_m2_cells
+        <= decision.raw_multiplication_line_increment_m2_cells)
+    assert np.all(
+        decision.multiplication_budget_active_time_s_cells >= 0.0)
+    assert np.all(
+        decision.multiplication_budget_active_time_s_cells <= 1e-12)
     # Grain 30 has no support in the upper half and cannot age while absent.
     np.testing.assert_array_equal(evolved.owners[2].slip[:6], dormant_before)
     assert np.max(np.abs(evolved.owners[0].slip-state.owners[0].slip)) > 0.0
