@@ -235,6 +235,16 @@ def _multiplication_parameters(parameters, selection, configuration):
         if selection == "inherited" else 1.0)
 
 
+def _front_transmission_fraction(requested, configuration, fallback):
+    """Preserve the parent front law unless an explicit override is given."""
+    value = (configuration.get("front_transmission_fraction", fallback)
+             if requested is None else requested)
+    value = float(value)
+    if not np.isfinite(value) or not 0.0 <= value <= 1.0:
+        raise ValueError("front transmission fraction must lie in [0,1]")
+    return value
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("checkpoint", type=Path)
@@ -385,14 +395,13 @@ def main():
         conservative_dipole_wall_parameters=(
             ConservativeDipoleWallParameters()
             if args.production_rx else None))
-    if args.front_transmission_fraction is not None:
-        transmission = float(args.front_transmission_fraction)
-        if not np.isfinite(transmission) or not 0.0 <= transmission <= 1.0:
-            raise ValueError("front transmission fraction must lie in [0,1]")
-        context = replace(context, front_kinetics=replace(
-            context.front_kinetics, transfer_law=replace(
-                context.front_kinetics.transfer_law,
-                transmission_fraction=transmission)))
+    transmission = _front_transmission_fraction(
+        args.front_transmission_fraction, configuration,
+        context.front_kinetics.transfer_law.transmission_fraction)
+    context = replace(context, front_kinetics=replace(
+        context.front_kinetics, transfer_law=replace(
+            context.front_kinetics.transfer_law,
+            transmission_fraction=transmission)))
     endpoint = make_endpoint(state, runtime, load, context)
     initial_supports = np.asarray(state.supports).copy()
     initial_orientations = np.asarray([

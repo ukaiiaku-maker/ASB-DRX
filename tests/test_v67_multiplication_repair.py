@@ -9,7 +9,7 @@ from full_model.production.common_tensorial_wall import (
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 from full_model.analysis.run_v67_drx_asb_overlap import (
-    _multiplication_parameters,
+    _front_transmission_fraction, _multiplication_parameters,
 )
 
 
@@ -195,3 +195,11 @@ def test_multiplication_schema_restart_is_explicit_and_backward_compatible():
     disabled = _multiplication_parameters(base, "disabled", saved)
     assert disabled.multiplication_law == "disabled"
     assert disabled.multiplication_coefficient_m1 == 0.0
+
+
+def test_front_transmission_restart_inherits_parent_unless_overridden():
+    assert _front_transmission_fraction(
+        None, {"front_transmission_fraction": .25}, .55) == .25
+    assert _front_transmission_fraction(
+        .40, {"front_transmission_fraction": .25}, .55) == .40
+    assert _front_transmission_fraction(None, {}, .55) == .55
