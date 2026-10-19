@@ -68,3 +68,18 @@ def test_response_snapshot_records_stress_heat_and_physical_flow_exposure():
     assert snapshot["temperature_range_K"] == 15.0
     assert snapshot["plastic_to_imposed_power_fraction"] == .2
     assert not snapshot["connected_physical_band"]
+
+
+def test_zero_rate_hold_cannot_be_classified_as_active_flow():
+    class Endpoint:
+        load = .1
+        observables = {
+            "instantaneous_plastic_power_W_m3": np.full((4, 4), 4.0),
+            "common_stress_tensor_Pa": np.broadcast_to(
+                np.array([[0.0, 2.0], [2.0, 0.0]]), (4, 4, 2, 2)),
+            "common_temperature_K": np.full((4, 4), 1000.0),
+        }
+
+    snapshot = _response_snapshot(Endpoint(), 0.0)
+    assert snapshot["plastic_to_imposed_power_fraction"] == 0.0
+    assert not snapshot["connected_physical_band"]

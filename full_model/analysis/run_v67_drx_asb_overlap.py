@@ -99,8 +99,12 @@ def _flow_exposure(endpoint, power, shear_rate_s):
     """Fraction of imposed shear power carried by resolved plastic flow."""
     stress = np.asarray(endpoint.observables["common_stress_tensor_Pa"])
     imposed = abs(float(np.mean(stress[..., 0, 1]))*float(shear_rate_s))
-    return float(np.mean(np.maximum(power, 0.0))/max(
-        imposed, np.finfo(float).tiny))
+    # Plastic/imposed power is undefined on a zero-rate retained-state hold.
+    # Return zero for the activity classifier rather than manufacturing an
+    # infinite "band exposure" from a vanishing macroscopic denominator.
+    if imposed <= np.finfo(float).tiny:
+        return 0.0
+    return float(np.mean(np.maximum(power, 0.0))/imposed)
 
 
 def _physical_band(metrics, flow_exposure_fraction, threshold=.01):
