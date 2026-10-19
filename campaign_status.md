@@ -3339,3 +3339,22 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   first-law closed, and debits only 0.0918--0.589% as much line as the former
   reaction-only capture. This selects an exact-parent coupled ad400 fork; no
   production response is claimed from the atomic audit.
+
+## V67 arrival-limited exact-parent production result (2026-10-19)
+
+- The exact ad400-to-ad600 adiabatic continuation is complete. The candidate
+  preserves `0.0460981` plastic/imposed power at ad600 versus `6.50172e-5` for
+  the reaction-only baseline, a `709.0`-fold recovery. Mobile line is only
+  `1.315` times baseline, so the dominant effect is preservation of the
+  stress-correlated owner/family carrier population rather than scalar line.
+- Every hard absorption, Mura, first-law, identity, and checkpoint-chain audit
+  passes. Existing-boundary RX continues. The same candidate also preserves
+  positive grain-20 growth in resolved 2/s dynamic and no-reset static
+  continuations without changing the common Arrhenius mechanics or event
+  measure.
+- High-rate ASB is not yet qualified: the connected endpoint band persists for
+  only two intervals and post-peak softening is zero. The machine decision is
+  `CARRIER_COLLAPSE_PREVENTED_RX_PRESERVED_ASB_NOT_YET_QUALIFIED`.
+- The matched strong-bath continuation from bath400 is the active next
+  experiment. It uses the identical candidate and parameterization to test
+  whether recovered flow closes a heat-specific localization loop.

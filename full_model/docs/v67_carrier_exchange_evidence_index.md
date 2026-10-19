@@ -1,6 +1,6 @@
 # V67 carrier-exchange continuation evidence index
 
-Updated: 2026-10-19T17:49:29Z
+Updated: 2026-10-19T19:18:00Z
 
 This index is intentionally compact. It identifies the retained evidence used
 to develop the arrival-limited candidate without copying the historical result
@@ -54,10 +54,32 @@ line/Burgers/Mura/first-law audits, and reduces newly captured line to 0.113%,
 not establish a production response; the immediate next experiment is the
 exact-parent ad400 coupled continuation against the retained baseline.
 
+## Exact-parent production discriminator
+
+Machine record:
+`full_model/verification/v67_arrival_exchange_candidate_ad400_ad600.json`.
+
+- From the exact ad400 parent to ad600, the candidate retains a
+  plastic/imposed power fraction of `0.0460981`; the reaction-only baseline is
+  `6.50172e-5`. This is a `709.0`-fold recovery of accepted flow with every
+  absorption, Mura, first-law, and grain-identity hard audit passing.
+- Candidate mobile line at ad600 is `1.315` times the baseline. Cumulative
+  interface capture is only 4.5% lower, demonstrating that signed arrival
+  preserves the power-carrying family/order correlation rather than merely
+  inflating scalar density.
+- The identical candidate preserves positive existing-boundary grain-20 motion
+  at 2/s during both a resolved dynamic continuation (`3.8515e-5` relative
+  area) and its no-reset zero-rate continuation (`3.8458e-5`).
+- This is not yet ASB. The adiabatic endpoint has a connected band for only two
+  terminal intervals and zero post-peak softening. The classified result is
+  `CARRIER_COLLAPSE_PREVENTED_RX_PRESERVED_ASB_NOT_YET_QUALIFIED`; the next
+  discriminator is the identical matched strong-bath continuation.
+
 ## Claim boundary
 
 The candidate changes only the supply measure of lattice-to-interface capture.
 It does not alter Arrhenius flow, Peierls or Taylor resistance, Hall--Petch
 nucleation, source multiplicity, front transmission, thermal parameters, or
 plastic history. Its coupled high-rate, lower-rate dynamic-RX, and no-reset
-static consequences remain to be executed before promotion.
+static consequences pass on the tested resolved continuations. The matched
+bath comparison, persistent localization, and softening criteria remain open.

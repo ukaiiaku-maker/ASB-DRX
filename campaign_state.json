@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-19T17:49:29Z",
+  "last_updated_utc": "2026-10-19T19:18:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-19T17:16:00Z",
@@ -82,18 +82,19 @@
     "H24": "a_same_interval_residence_hypothesis_restricted_to_newly_captured_neutral_pairs_can_recycle_at_most_1p0992e_4_of_captured_line_and_is_classified_NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT",
     "H25": "the_immutable_four_family_Hall_Petch_nucleation_EXP_floor_ceiling_is_2p52383_per_s_at_the_hottest_ad700_cell_so_it_can_carry_the_qualified_2_per_s_RX_branch_but_only_3p15479e_5_of_the_80000_per_s_high_rate_demand;_retained_or_transmitted_carriers_are_required",
     "H26": "the_matched_0p11464_pair_has_zero_terminal_band_intervals,_zero_softening,_flow_6p64767e_5_adiabatic_and_7p70634e_5_bath,_continued_existing_boundary_growth,_and_is_classified_SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND",
-    "H27": "accepted_ad400_ad500_ad600_mechanics_consumes_the_full_2_ns_interval_and_does_not_suppress_raw_flow;_high_power_families_are_selectively_depleted_and_legacy_diffuse_interface_capture_accounts_for_slightly_more_than_net_mobile_loss;_a_default_off_signed_normal_arrival_limited_serial_capture_clock_is_hard_audited_and_awaits_the_exact_parent_production_discriminator"
+    "H27": "accepted_ad400_ad500_ad600_mechanics_consumes_the_full_2_ns_interval_and_does_not_suppress_raw_flow;_high_power_families_are_selectively_depleted_and_legacy_diffuse_interface_capture_accounts_for_slightly_more_than_net_mobile_loss;_a_default_off_signed_normal_arrival_limited_serial_capture_clock_is_hard_audited",
+    "H28": "the_same_arrival_limited_candidate_prevents_high_rate_carrier_collapse_at_ad600_with_709p0_times_baseline_flow_and_preserves_lower_rate_dynamic_and_no_reset_static_existing_boundary_RX;_all_hard_audits_pass_but_two_interval_terminal_localization_and_zero_softening_do_not_qualify_ASB"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
       "pid": null,
       "child_pid": null,
       "case": null,
-      "status": "idle_between_atomic_audit_and_exact_parent_candidate_fork",
-      "last_case": "v67_accepted_carrier_budget_ad400_ad600",
-      "last_start_local": "2026-10-19T10:34:00-07:00",
-      "last_source_commit": "86ffbdf",
-      "last_output": "full_model/verification/v67_accepted_carrier_budget_ad400_ad600.json",
+      "status": "idle_before_matched_bath_candidate_continuation",
+      "last_case": "v67_poly_rx_asb_seed19p375_ad_600_arrival_limited",
+      "last_start_local": "2026-10-19T11:58:00-07:00",
+      "last_source_commit": "5bdf45e",
+      "last_output": "full_model/verification/v67_arrival_exchange_candidate_ad400_ad600.json",
       "queued_after_manager": null,
       "geography_watcher_pid": null,
       "conditional_interface_emission_watcher_pid": null
@@ -107,13 +108,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27"],
-    "physical_uncertainty": "whether_the_same_signed_normal_arrival_limited_boundary_capture_law_preserves_high_rate_active_family_carriers_without_destroying_lower_rate_dynamic_RX_or_retained_static_RX",
-    "next_executable_experiment": "run_the_exact_ad400_parent_for_one_then_ten_coupled_intervals_with_arrival_limited_boundary_exchange_and_compare_to_the_retained_reaction_only_baseline;_then_apply_the_same_candidate_to_a_lower_rate_dynamic_and_no_reset_static_pair",
-    "source_identity": "arrival_limited_candidate_on_top_of_86ffbdf;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
-    "expected_discriminatory_observation": "hard_valid_reduction_of_lattice_capture_with_retained_active_family_flow_and_no_loss_of_RX_motion_relative_to_the_exact_parent_baseline",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28"],
+    "physical_uncertainty": "whether_recovered_high_rate_carrier_flow_generates_heat_specific_persistent_localization_and_postpeak_softening_or_only_recurrent_mechanical_bands",
+    "next_executable_experiment": "continue_the_exact_matched_bath400_parent_to_bath600_with_the_identical_arrival_limited_candidate_and_compare_persistence_softening_temperature_and_RX_against_the_completed_adiabatic_branch",
+    "source_identity": "arrival_limited_candidate_at_5bdf45e_plus_zero_rate_diagnostic_fix_b7129f1;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
+    "expected_discriminatory_observation": "adiabatic_specific_persistent_band_and_softening_relative_to_the_strong_bath_control_if_recovered_flow_closes_the_ASB_feedback_loop",
     "resource_need": "current_user_directed_local_only_continuation_with_at_most_one_heavy_solver_and_no_HPC_or_paid_compute",
-    "result_status": "atomic_retained_state_audit_classifies_ACTIVE_FAMILY_CORRELATION_COLLAPSE_WITH_OVERCONSUMING_NON_ARRIVAL_LIMITED_CAPTURE;_production_response_not_yet_claimed"
+    "result_status": "CARRIER_COLLAPSE_PREVENTED_RX_PRESERVED_ASB_NOT_YET_QUALIFIED;_matched_bath_candidate_branch_is_next"
   },
   "continuation_rule": {
     "active": true,

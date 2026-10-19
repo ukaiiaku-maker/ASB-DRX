@@ -1,0 +1,255 @@
+{
+  "claim_boundary": "This exact-parent result tests carrier collapse and preservation of existing-boundary RX. It does not qualify ASB without the matched bath branch, persistent localization and post-peak softening, and it does not establish endogenous grain birth.",
+  "created_utc": "2026-10-19T18:38:26.045478+00:00",
+  "criteria": {
+    "asb_softening_floor": 0.05,
+    "asb_terminal_persistence_intervals": 20,
+    "physical_flow_floor": 0.01
+  },
+  "decision": {
+    "all_hard_audits_passed": true,
+    "classification": "CARRIER_COLLAPSE_PREVENTED_RX_PRESERVED_ASB_NOT_YET_QUALIFIED",
+    "preserves_lower_rate_dynamic_and_static_rx": true,
+    "prevents_high_rate_flow_collapse": true,
+    "qualifies_high_rate_asb": false
+  },
+  "high_rate": {
+    "arrival_limited_ad600": {
+      "absorbed_line_since_ad400_m": 1.4344512162430845e-07,
+      "checkpoint": {
+        "load": 0.09863999999999869,
+        "mobile_line_m": 3.141691818280639e-08,
+        "owner_area_m2": [
+          8.080690372836935e-12,
+          7.566661350349721e-12,
+          7.39264827681334e-12
+        ],
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600_arrival_limited/checkpoint_latest.npz",
+        "sha256": "c1278a29e74417246c566ca59a7bdddb6354e692783a85b1ab774fc390efac15",
+        "source_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "parent_provenance": {
+                          "parent_provenance": {
+                            "parent_provenance": {
+                              "parent_provenance": {
+                                "campaign": "V67",
+                                "scientific_scope": "fresh zero-load polycrystal anchor",
+                                "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                                "source_dirty": false
+                              },
+                              "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                            },
+                            "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                          },
+                          "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                        },
+                        "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                      },
+                      "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+                    },
+                    "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+                  },
+                  "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d"
+                },
+                "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+              },
+              "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+            },
+            "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+          },
+          "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7"
+        },
+        "step": 633
+      },
+      "endpoint": {
+        "connected_physical_band": true,
+        "endpoint_post_peak_softening_fraction": 0.0,
+        "hard_valid": true,
+        "load": 0.09863999999999869,
+        "mean_shear_stress_Pa": 6167090182.604696,
+        "plastic_power_mean_W_m3": 22743287124832.367,
+        "plastic_to_imposed_power_fraction": 0.046098091748730204,
+        "temperature_mean_K": 1019.0882553925125,
+        "temperature_range_K": 45.6899529176585,
+        "terminal_band_persistence_intervals": 2
+      },
+      "grain20_relative_area_change_latest_segment": 0.00010002000725822001
+    },
+    "parent_ad400": {
+      "load": 0.06663999999999999,
+      "mobile_line_m": 1.718942237797644e-07,
+      "owner_area_m2": [
+        8.079947655988594e-12,
+        7.563562235210207e-12,
+        7.396490108801197e-12
+      ],
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400/checkpoint_latest.npz",
+      "sha256": "80ab8a09863282688ce58b2bed8346ef7a3bd924b086ef423b64e69035f8dbd7",
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "campaign": "V67",
+                    "scientific_scope": "fresh zero-load polycrystal anchor",
+                    "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                    "source_dirty": false
+                  },
+                  "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                },
+                "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+      },
+      "step": 433
+    },
+    "ratios": {
+      "candidate_to_baseline_flow": 709.0137249872506,
+      "candidate_to_baseline_mobile_line": 1.3154451313209865
+    },
+    "reaction_only_ad600": {
+      "absorbed_line_since_ad400_m": 1.5026230274119863e-07,
+      "checkpoint": {
+        "load": 0.09863999999999869,
+        "mobile_line_m": 2.3883108032987378e-08,
+        "owner_area_m2": [
+          8.080737530084677e-12,
+          7.567156569771994e-12,
+          7.392105900143327e-12
+        ],
+        "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600/checkpoint_latest.npz",
+        "sha256": "4c65bd1f485a4b0ee1f00caceb02c2093183b741923902a42e630df2c7b5c347",
+        "source_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "parent_provenance": {
+                          "campaign": "V67",
+                          "scientific_scope": "fresh zero-load polycrystal anchor",
+                          "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                          "source_dirty": false
+                        },
+                        "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                      },
+                      "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                    },
+                    "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+              },
+              "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+            },
+            "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+          },
+          "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
+        },
+        "step": 633
+      },
+      "endpoint": {
+        "connected_physical_band": false,
+        "endpoint_post_peak_softening_fraction": 0.0,
+        "hard_valid": true,
+        "load": 0.09863999999999869,
+        "mean_shear_stress_Pa": 6524430238.332649,
+        "plastic_power_mean_W_m3": 33936018233.24438,
+        "plastic_to_imposed_power_fraction": 6.501720647165065e-05,
+        "temperature_mean_K": 1013.8812408447095,
+        "temperature_range_K": 43.01277107147598,
+        "terminal_band_persistence_intervals": 0
+      }
+    }
+  },
+  "hypothesis": "glide-supplied lattice capture is limited by signed normal arrival and shares one serial clock with the unchanged energy-qualified Arrhenius interface reaction",
+  "immutable_laws": "Peierls-Taylor-Hall-Petch EXP-floor mechanics and Hall-Petch source event measure unchanged",
+  "lower_rate_dynamic": {
+    "result": {
+      "connected_physical_band": false,
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "grain20_relative_area_change": 3.851511632821573e-05,
+      "hard_valid": true,
+      "load": 0.002641000000000002,
+      "mean_shear_stress_Pa": 14852095.547401037,
+      "plastic_power_mean_W_m3": 11.54804728517637,
+      "plastic_to_imposed_power_fraction": 3.887682801501085e-07,
+      "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d",
+      "temperature_mean_K": 1000.1055905232131,
+      "temperature_range_K": 0.009806674815990846,
+      "terminal_band_persistence_intervals": 0
+    }
+  },
+  "one_interval_exact_parent": {
+    "arrival_limited": {
+      "absorbed_line_increment_m": 2.7915429401805474e-11,
+      "endpoint": {
+        "connected_physical_band": true,
+        "endpoint_post_peak_softening_fraction": 0.0,
+        "hard_valid": true,
+        "load": 0.06679999999999998,
+        "mean_shear_stress_Pa": 3947227261.317979,
+        "plastic_power_mean_W_m3": 64717469386406.71,
+        "plastic_to_imposed_power_fraction": 0.20494598202079944,
+        "temperature_mean_K": 1010.726323003388,
+        "temperature_range_K": 47.66160977964887,
+        "terminal_band_persistence_intervals": 1
+      },
+      "grain20_relative_area_change": 2.483048694544322e-06,
+      "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d",
+      "source_tree_clean": true
+    },
+    "reaction_only": {
+      "absorbed_line_increment_m": 1.5719875308125077e-09,
+      "endpoint": {
+        "connected_physical_band": true,
+        "endpoint_post_peak_softening_fraction": 0.0,
+        "hard_valid": true,
+        "load": 0.06679999999999998,
+        "mean_shear_stress_Pa": 3946597946.8057985,
+        "plastic_power_mean_W_m3": 60748154432404.92,
+        "plastic_to_imposed_power_fraction": 0.19240671095459505,
+        "temperature_mean_K": 1010.7335655506658,
+        "temperature_range_K": 47.700611253227066,
+        "terminal_band_persistence_intervals": 1
+      },
+      "grain20_relative_area_change": 2.4831906347800148e-06,
+      "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d",
+      "source_tree_clean": true
+    }
+  },
+  "retained_static": {
+    "result": {
+      "connected_physical_band": false,
+      "endpoint_post_peak_softening_fraction": 8.115720455705199e-10,
+      "grain20_relative_area_change": 3.845755619272074e-05,
+      "hard_valid": true,
+      "load": 0.002641000000000002,
+      "mean_shear_stress_Pa": 14852095.535347492,
+      "plastic_power_mean_W_m3": 11.548212997212243,
+      "plastic_to_imposed_power_fraction": 0.0,
+      "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7",
+      "temperature_mean_K": 1000.1058250471506,
+      "temperature_range_K": 0.009666280215355982,
+      "terminal_band_persistence_intervals": 0
+    }
+  },
+  "schema": "v67-arrival-limited-exchange-candidate-v1"
+}
