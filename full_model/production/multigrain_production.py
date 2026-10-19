@@ -257,6 +257,10 @@ class MultiGrainMechanicalDecision:
     raw_multiplication_line_increment_m2_cells: np.ndarray
     accepted_multiplication_line_increment_m2_cells: np.ndarray
     multiplication_budget_active_time_s_cells: np.ndarray
+    raw_multiplication_line_increment_m2_owner_family_cells: np.ndarray
+    accepted_multiplication_line_increment_m2_owner_family_cells: np.ndarray
+    signed_slip_increment_owner_family_cells: np.ndarray
+    absolute_slip_increment_owner_family_cells: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -427,6 +431,14 @@ def advance_multigrain_mechanics(
     accepted_multiplication_line_increment = np.zeros_like(
         plastic_work_density)
     multiplication_budget_active_time = np.zeros_like(plastic_work_density)
+    owner_family_shape = (
+        len(state.owners),)+state.supports.shape[1:]+(len(systems),)
+    raw_multiplication_owner_family = np.zeros(
+        owner_family_shape, dtype=float)
+    accepted_multiplication_owner_family = np.zeros_like(
+        raw_multiplication_owner_family)
+    signed_slip_owner_family = np.zeros_like(raw_multiplication_owner_family)
+    absolute_slip_owner_family = np.zeros_like(raw_multiplication_owner_family)
     minimum_scale = 1.0
     maximum_line_residual = 0.0
     substeps = 0
@@ -473,8 +485,8 @@ def advance_multigrain_mechanics(
             raise RuntimeError("mechanical interval made no physical-time progress")
         owners = []
         heat_increment = np.zeros(state.supports.shape[1:], dtype=float)
-        for support, owner, (_, residual, _) in zip(
-                updated_state.supports, updated_state.owners, trials):
+        for owner_index, (support, owner, (_, residual, _)) in enumerate(zip(
+                updated_state.supports, updated_state.owners, trials)):
             weight = np.asarray(support, dtype=float)
             work_increment = weight*residual.plastic_power_W_m3*consumed
             owner_heat_increment = weight*residual.heat_rate_W_m3*consumed
@@ -495,6 +507,16 @@ def advance_multigrain_mechanics(
                 weight*2.0*np.sum(raw_pairs, axis=2)*consumed)
             accepted_multiplication_line_increment += (
                 weight*2.0*np.sum(accepted_pairs, axis=2)*consumed)
+            raw_multiplication_owner_family[owner_index] += (
+                weight[..., None]*2.0*raw_pairs*consumed)
+            accepted_multiplication_owner_family[owner_index] += (
+                weight[..., None]*2.0*accepted_pairs*consumed)
+            signed_slip_owner_family[owner_index] += (
+                weight[..., None]*np.asarray(
+                    residual.state_rate.slip, dtype=float)*consumed)
+            absolute_slip_owner_family[owner_index] += (
+                weight[..., None]*np.abs(np.asarray(
+                    residual.state_rate.slip, dtype=float))*consumed)
             multiplication_budget_active_time += (
                 weight*(budget_scale < 1.0-64.0*np.finfo(float).eps)
                 *consumed)
@@ -569,7 +591,11 @@ def advance_multigrain_mechanics(
         thermal_bath_exchange_density,
         raw_multiplication_line_increment,
         accepted_multiplication_line_increment,
-        multiplication_budget_active_time)
+        multiplication_budget_active_time,
+        raw_multiplication_owner_family,
+        accepted_multiplication_owner_family,
+        signed_slip_owner_family,
+        absolute_slip_owner_family)
     return candidate, decision
 
 

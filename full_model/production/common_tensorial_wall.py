@@ -855,16 +855,17 @@ def multiplication_density_argument_m2(state, parameters):
     mobile = state.mobile_plus_m2+state.mobile_minus_m2
     wall_total = np.sum(
         state.wall_plus_m2+state.wall_minus_m2, axis=2)[..., None]
-    total_signed = np.sum(
-        state.mobile_plus_m2-state.mobile_minus_m2
-        +state.forest_plus_m2-state.forest_minus_m2
-        +state.wall_plus_m2-state.wall_minus_m2, axis=2)[..., None]
+    # The archived v34 reduced GND correction was kappa=sum(rp-rm), where
+    # rp/rm were the mobile signed populations. Forest and wall reservoirs
+    # enter through their own unsigned weights and must not be counted twice.
+    mobile_signed = np.sum(
+        state.mobile_plus_m2-state.mobile_minus_m2, axis=2)[..., None]
     mix = parameters.multiplication_forest_mix
     return np.maximum(
         (1.0-mix)*forest+mix*forest_total
         +parameters.multiplication_mobile_obstacle_weight*mobile
         +parameters.multiplication_wall_obstacle_weight*wall_total
-        +parameters.multiplication_gnd_obstacle_weight*np.abs(total_signed),
+        +parameters.multiplication_gnd_obstacle_weight*np.abs(mobile_signed),
         0.0)
 
 

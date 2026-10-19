@@ -133,6 +133,16 @@ def _response_snapshot(endpoint, shear_rate_s):
     flow = _flow_exposure(endpoint, power, shear_rate_s)
     stress = np.asarray(endpoint.observables["common_stress_tensor_Pa"])
     temperature = np.asarray(endpoint.observables["common_temperature_K"])
+    reservoir_means = {}
+    for name in ("mobile", "forest", "wall"):
+        density = sum(
+            np.asarray(support)[..., None]*(
+                np.asarray(getattr(owner, f"{name}_plus_m2"))
+                +np.asarray(getattr(owner, f"{name}_minus_m2")))
+            for support, owner in zip(
+                endpoint.state.supports, endpoint.state.owners))
+        reservoir_means[f"{name}_density_m2"] = float(np.mean(
+            np.sum(density, axis=2), dtype=np.longdouble))
     return {
         "load": float(endpoint.load),
         "mean_shear_stress_Pa": float(np.mean(stress[..., 0, 1])),
@@ -143,6 +153,7 @@ def _response_snapshot(endpoint, shear_rate_s):
         "plastic_power_maximum_to_mean": float(metrics["maximum_to_mean"]),
         "plastic_to_imposed_power_fraction": flow,
         "connected_physical_band": _physical_band(metrics, flow),
+        **reservoir_means,
     }
 
 
@@ -185,6 +196,45 @@ def _temperature_seed(state, peak_K, width_m, spacing_m, normal="x"):
     return seeded
 
 
+def _multiplication_parameters(parameters, selection, configuration):
+    """Resolve an explicit or checkpoint-inherited multiplication schema."""
+    selected = selection
+    if selected == "inherited":
+        selected = {
+            "legacy_v21_mobile_pair_v1": "legacy_v21_mobile",
+            "v34_km_forest_storage_v1": "v34_km_forest",
+            "disabled": "disabled",
+        }[configuration.get(
+            "multiplication_law", "legacy_v21_mobile_pair_v1")]
+    if selected == "v34_km_forest":
+        resolved = dict(
+            multiplication_law="v34_km_forest_storage_v1",
+            multiplication_coefficient_m1=5.0e8,
+            multiplication_storage_work_fraction=.10,
+            multiplication_forest_mix=.35,
+            multiplication_mobile_obstacle_weight=.10,
+            multiplication_wall_obstacle_weight=.35,
+            multiplication_gnd_obstacle_weight=.10)
+        if selection == "inherited":
+            for key in tuple(resolved):
+                if key in configuration:
+                    resolved[key] = configuration[key]
+        return replace(parameters, **resolved)
+    if selected == "disabled":
+        return replace(
+            parameters, multiplication_law="disabled",
+            multiplication_coefficient_m1=0.0,
+            multiplication_storage_work_fraction=0.0)
+    return replace(
+        parameters, multiplication_law="legacy_v21_mobile_pair_v1",
+        multiplication_coefficient_m1=float(configuration.get(
+            "multiplication_coefficient_m1", 10.0))
+        if selection == "inherited" else 10.0,
+        multiplication_storage_work_fraction=float(configuration.get(
+            "multiplication_storage_work_fraction", 1.0))
+        if selection == "inherited" else 1.0)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("checkpoint", type=Path)
@@ -201,10 +251,12 @@ def main():
               "scaling with its fixed legacy coefficients"))
     parser.add_argument(
         "--multiplication-law",
-        choices=("legacy_v21_mobile", "v34_km_forest", "disabled"),
-        default="legacy_v21_mobile",
+        choices=("inherited", "legacy_v21_mobile", "v34_km_forest",
+                 "disabled"),
+        default="inherited",
         help=("explicit multiplication schema; v34_km_forest restores the "
-              "saved 5e8 m^-1 KM obstacle/storage law"))
+              "saved 5e8 m^-1 KM obstacle/storage law; inherited preserves "
+              "the serialized parent schema"))
     parser.add_argument("--disable-rx", action="store_true")
     parser.add_argument("--interface-neutral-sink", action="store_true")
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
@@ -258,21 +310,8 @@ def main():
         state, args.temperature_seed, args.temperature_seed_width,
         spacing, args.temperature_seed_normal)
     rx_enabled = not args.disable_rx
-    wall_parameters = base_context.wall_parameters
-    if args.multiplication_law == "v34_km_forest":
-        wall_parameters = replace(
-            wall_parameters,
-            multiplication_law="v34_km_forest_storage_v1",
-            multiplication_coefficient_m1=5.0e8,
-            multiplication_storage_work_fraction=.10,
-            multiplication_forest_mix=.35,
-            multiplication_mobile_obstacle_weight=.10,
-            multiplication_wall_obstacle_weight=.35,
-            multiplication_gnd_obstacle_weight=.10)
-    elif args.multiplication_law == "disabled":
-        wall_parameters = replace(
-            wall_parameters, multiplication_law="disabled",
-            multiplication_coefficient_m1=0.0)
+    wall_parameters = _multiplication_parameters(
+        base_context.wall_parameters, args.multiplication_law, configuration)
     if args.temperature_dependent_exp_floor:
         wall_parameters = replace(
             wall_parameters,
@@ -404,8 +443,16 @@ def main():
             wall_parameters.multiplication_coefficient_m1),
         multiplication_storage_work_fraction=float(
             wall_parameters.multiplication_storage_work_fraction),
+        multiplication_forest_mix=float(
+            wall_parameters.multiplication_forest_mix),
+        multiplication_mobile_obstacle_weight=float(
+            wall_parameters.multiplication_mobile_obstacle_weight),
+        multiplication_wall_obstacle_weight=float(
+            wall_parameters.multiplication_wall_obstacle_weight),
+        multiplication_gnd_obstacle_weight=float(
+            wall_parameters.multiplication_gnd_obstacle_weight),
         multiplication_density_argument=(
-            "v34_forest_mix_plus_mobile_wall_gnd"
+            "v34_forest_mix_plus_mobile_wall_mobile_kappa"
             if wall_parameters.multiplication_law
             == "v34_km_forest_storage_v1" else "within_family_total_line"),
         multiplication_destination=(
@@ -445,6 +492,7 @@ def main():
         "interval": 0,
         **_response_snapshot(endpoint, context.shear_rate_s),
     }]
+    multiplication_history = []
     terminal_band_persistence_intervals = 0
     dt = physics_args.dt
     for index in range(1, args.intervals+1):
@@ -458,6 +506,36 @@ def main():
         before_supports = np.asarray(endpoint.state.supports)
         interval = advance_complete_multigrain_interval(endpoint, dt, context)
         endpoint = interval.endpoint
+        raw_mult = np.asarray(interval.integrals[
+            "multiplication_raw_line_increment_m2"])
+        accepted_mult = np.asarray(interval.integrals[
+            "multiplication_accepted_line_increment_m2"])
+        signed_slip = np.asarray(interval.integrals[
+            "signed_slip_increment_owner_family"])
+        absolute_slip = np.asarray(interval.integrals[
+            "absolute_slip_increment_owner_family"])
+        multiplication_history.append({
+            "interval": index,
+            "load": float(endpoint.load),
+            "raw_unsigned_line_increment_domain_mean_m2": float(np.mean(
+                raw_mult, dtype=np.longdouble)),
+            "accepted_unsigned_line_increment_domain_mean_m2": float(np.mean(
+                accepted_mult, dtype=np.longdouble)),
+            "raw_unsigned_physical_line_increment_m": float(np.sum(
+                raw_mult, dtype=np.longdouble)*spacing**2
+                *context.represented_thickness_m),
+            "accepted_unsigned_physical_line_increment_m": float(np.sum(
+                accepted_mult, dtype=np.longdouble)*spacing**2
+                *context.represented_thickness_m),
+            "budget_active_cell_time_fraction": float(interval.audit[
+                "multiplication_budget_active_cell_time_fraction"]),
+            "signed_slip_increment_by_owner_family": np.sum(
+                signed_slip, axis=(1, 2), dtype=np.longdouble
+            ).astype(float).tolist(),
+            "absolute_slip_increment_by_owner_family": np.sum(
+                absolute_slip, axis=(1, 2), dtype=np.longdouble
+            ).astype(float).tolist(),
+        })
         maximum_lattice_mura_residual = max(
             maximum_lattice_mura_residual,
             abs(float(interval.audit[
@@ -513,7 +591,9 @@ def main():
                 "diagnostic_v67_overlap_records_json": np.asarray(
                     json.dumps(records)),
                 "diagnostic_v67_overlap_response_json": np.asarray(
-                    json.dumps(response_history))})
+                    json.dumps(response_history)),
+                "diagnostic_v67_multiplication_history_json": np.asarray(
+                    json.dumps(multiplication_history))})
         os.replace(temporary, args.out/"checkpoint_latest.npz")
     final_power, final_band, final_metrics = _band(endpoint)
     final_flow_exposure = _flow_exposure(
@@ -597,6 +677,7 @@ def main():
         },
         "sampled_interval_records": records,
         "response_history": response_history,
+        "multiplication_history": multiplication_history,
         "response_summary": {
             "peak_absolute_mean_shear_stress_Pa": peak_stress,
             "peak_stress_interval": int(

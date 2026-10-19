@@ -59,13 +59,19 @@ def _physics_for_checkpoint(configuration):
         wall,
         wall_nye_match_coefficient_J_m=wall.c44_Pa*(1.5e-7)**2)
     if "multiplication_law" in configuration:
+        fields = (
+            "multiplication_coefficient_m1",
+            "multiplication_storage_work_fraction",
+            "multiplication_forest_mix",
+            "multiplication_mobile_obstacle_weight",
+            "multiplication_wall_obstacle_weight",
+            "multiplication_gnd_obstacle_weight",
+        )
+        resolved = {name: float(configuration[name]) for name in fields
+                    if name in configuration}
         wall = replace(
-            wall,
-            multiplication_law=configuration["multiplication_law"],
-            multiplication_coefficient_m1=float(
-                configuration["multiplication_coefficient_m1"]),
-            multiplication_storage_work_fraction=float(configuration[
-                "multiplication_storage_work_fraction"]))
+            wall, multiplication_law=configuration["multiplication_law"],
+            **resolved)
     if configuration.get("temperature_dependent_exp_floor", False):
         wall = replace(
             wall,

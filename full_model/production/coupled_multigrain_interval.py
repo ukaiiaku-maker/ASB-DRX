@@ -527,6 +527,26 @@ def advance_complete_multigrain_interval(
         (np.asarray(item.multiplication_budget_active_time_s_cells)
          for item in mechanical.operator_decisions),
         start=np.zeros(parent.state.supports.shape[1:], dtype=float))
+    multiplication_raw_owner_family = sum(
+        (np.asarray(
+            item.raw_multiplication_line_increment_m2_owner_family_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros(
+            (len(parent.state.owners),)+parent.state.supports.shape[1:]
+            +(len(context.systems),), dtype=float))
+    multiplication_accepted_owner_family = sum(
+        (np.asarray(
+            item.accepted_multiplication_line_increment_m2_owner_family_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros_like(multiplication_raw_owner_family))
+    signed_slip_owner_family = sum(
+        (np.asarray(item.signed_slip_increment_owner_family_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros_like(multiplication_raw_owner_family))
+    absolute_slip_owner_family = sum(
+        (np.asarray(item.absolute_slip_increment_owner_family_cells)
+         for item in mechanical.operator_decisions),
+        start=np.zeros_like(multiplication_raw_owner_family))
     runtime = replace(runtime, ledger=replace(
         runtime.ledger,
         cumulative_mechanical_external_work_J=(
@@ -1501,6 +1521,12 @@ def advance_complete_multigrain_interval(
         "multiplication_accepted_line_increment_m2": multiplication_accepted,
         "multiplication_budget_active_time_s": (
             multiplication_budget_active_time),
+        "multiplication_raw_line_increment_m2_owner_family": (
+            multiplication_raw_owner_family),
+        "multiplication_accepted_line_increment_m2_owner_family": (
+            multiplication_accepted_owner_family),
+        "signed_slip_increment_owner_family": signed_slip_owner_family,
+        "absolute_slip_increment_owner_family": absolute_slip_owner_family,
     }
     audit = {
         "mechanical_subdivision_depth": mechanical.subdivisions,

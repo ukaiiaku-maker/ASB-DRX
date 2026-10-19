@@ -50,7 +50,8 @@ VARIANTS = {
         "multiplication_wall_obstacle_weight": 0.35,
         "multiplication_gnd_obstacle_weight": 0.10,
         "destination": "forest_plus_and_forest_minus",
-        "density_argument": "saved_v34_forest_wall_gnd_without_external_gb_shell",
+        "density_argument": (
+            "saved_v34_forest_wall_mobile_kappa_without_external_gb_shell"),
     },
     "strict_no_multiplication": {
         "multiplication_law": "disabled",
@@ -82,8 +83,9 @@ def _instantaneous(state, load, systems, topologies, parameters):
     cell_raw_cost = np.zeros_like(cell_raw)
     cell_density = np.zeros_like(cell_raw)
     cell_scale = np.zeros_like(cell_raw)
-    for support, owner, driving in zip(
-            state.supports, state.owners, drivings):
+    owner_family = []
+    for grain, support, owner, driving in zip(
+            state.grain_ids, state.supports, state.owners, drivings):
         weight = np.asarray(support, dtype=float)
         residual = wall_residual(
             owner, driving, systems, topologies, parameters)
@@ -100,6 +102,37 @@ def _instantaneous(state, load, systems, topologies, parameters):
             channels["multiplication_density_argument_m2"], axis=2)
         cell_scale += weight*np.asarray(
             channels["multiplication_energy_budget_scale"])
+        denominator = max(float(np.sum(weight, dtype=np.longdouble)), 1e-300)
+
+        def family_mean(values):
+            return (np.sum(weight[..., None]*np.asarray(values), axis=(0, 1),
+                           dtype=np.longdouble)/denominator).astype(float)
+
+        owner_family.append({
+            "grain_id": int(grain),
+            "mobile_density_m2": family_mean(
+                owner.mobile_plus_m2+owner.mobile_minus_m2).tolist(),
+            "forest_density_m2": family_mean(
+                owner.forest_plus_m2+owner.forest_minus_m2).tolist(),
+            "wall_density_m2": family_mean(
+                owner.wall_plus_m2+owner.wall_minus_m2).tolist(),
+            "source_density_argument_m2": family_mean(
+                channels["multiplication_density_argument_m2"]).tolist(),
+            "resolved_stress_Pa": family_mean(
+                channels["raw_stress_Pa"]).tolist(),
+            "thermodynamic_stress_plus_Pa": family_mean(
+                channels["thermodynamic_stress_plus_Pa"]).tolist(),
+            "thermodynamic_stress_minus_Pa": family_mean(
+                channels["thermodynamic_stress_minus_Pa"]).tolist(),
+            "signed_slip_rate_s": family_mean(
+                residual.state_rate.slip).tolist(),
+            "absolute_slip_rate_s": family_mean(
+                np.abs(residual.state_rate.slip)).tolist(),
+            "raw_unsigned_multiplication_rate_m2_s": family_mean(
+                2.0*channels["multiplication_pairs_raw"]).tolist(),
+            "accepted_unsigned_multiplication_rate_m2_s": family_mean(
+                2.0*channels["multiplication_pairs"]).tolist(),
+        })
     raw = float(np.mean(cell_raw, dtype=np.longdouble))
     accepted = float(np.mean(cell_accepted, dtype=np.longdouble))
     return {
@@ -116,6 +149,7 @@ def _instantaneous(state, load, systems, topologies, parameters):
             cell_scale < 1.0-64.0*np.finfo(float).eps)),
         "minimum_budget_scale": float(np.min(cell_scale)),
         "maximum_budget_scale": float(np.max(cell_scale)),
+        "by_owner_family": owner_family,
     }
 
 
@@ -140,6 +174,12 @@ def audit_variant(state, load, configuration, declaration):
     accepted_increment_m = float(np.sum(
         decision.accepted_multiplication_line_increment_m2_cells,
         dtype=np.longdouble)*cell_volume)
+    owner_family_raw_m = np.sum(
+        decision.raw_multiplication_line_increment_m2_owner_family_cells,
+        axis=(1, 2), dtype=np.longdouble)*cell_volume
+    owner_family_accepted_m = np.sum(
+        decision.accepted_multiplication_line_increment_m2_owner_family_cells,
+        axis=(1, 2), dtype=np.longdouble)*cell_volume
     return {
         "law": parameters.multiplication_law,
         "coefficient_m1": parameters.multiplication_coefficient_m1,
@@ -164,6 +204,13 @@ def audit_variant(state, load, configuration, declaration):
             "consumed_interval_s": decision.consumed_interval_s,
             "external_plastic_work_J": decision.external_plastic_work_J,
             "irreversible_heat_J": decision.irreversible_heat_J,
+            "by_owner_family": [{
+                "grain_id": int(grain),
+                "raw_unsigned_line_increment_m": np.asarray(
+                    owner_family_raw_m[index], dtype=float).tolist(),
+                "accepted_unsigned_line_increment_m": np.asarray(
+                    owner_family_accepted_m[index], dtype=float).tolist(),
+            } for index, grain in enumerate(state.grain_ids)],
         },
         "endpoint_inventory_change_m": {
             name: after[name]["total_m"]-before[name]["total_m"]
