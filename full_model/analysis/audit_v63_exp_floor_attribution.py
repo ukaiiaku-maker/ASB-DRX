@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 
@@ -15,7 +16,7 @@ from full_model.analysis.audit_v63_phase_sensitive_fields import (
 from full_model.analysis.postprocess_v59_physical_asb import _wall_parameters
 from full_model.analysis.run_v58_three_grain_production import _load_checkpoint
 from full_model.production.common_tensorial_wall import (
-    CommonWallDriving, exp_floor_rate, resolved_driving_components,
+    CommonWallDriving, glide_velocity_m_s, resolved_driving_components,
 )
 from full_model.production.multigrain_production import (
     _owner_drivings_from_common_stress,
@@ -37,7 +38,36 @@ def owner_drivers(path: Path) -> tuple[dict, dict, object]:
                      else bound_configuration)
     n = int(configuration["n"])
     spacing = float(configuration["length_m"])/n
-    wall = _wall_parameters(configuration, spacing)
+    if configuration.get("schema") == "v67-drx-asb-overlap-v1":
+        # V67 continuation checkpoints intentionally carry only their bound
+        # physical configuration, not the older V58 runner's parser defaults.
+        # Reconstruct the same production context used by the V67 runner so
+        # the diagnostic evaluates the authoritative common-law rate map.
+        from full_model.analysis.run_v66_coupled_rx_asb import _physics
+        from full_model.analysis.run_v67_interface_structural_bridge import (
+            _args_from_configuration,
+        )
+        physics_args = _args_from_configuration(configuration)
+        physics_args.shear_rate = float(configuration["shear_rate_s"])
+        physics_args.dt = float(configuration["dt_s"])
+        _, _, _, wall, _, _, _ = _physics(physics_args)
+        if configuration.get("production_rx_enabled", False):
+            wall = replace(
+                wall,
+                wall_nye_match_coefficient_J_m=float(configuration.get(
+                    "wall_nye_match_coefficient_J_m",
+                    wall.wall_nye_match_coefficient_J_m)))
+        if configuration.get("temperature_dependent_exp_floor", False):
+            wall = replace(
+                wall,
+                kinetic_reference_temperature_K=float(configuration[
+                    "kinetic_reference_temperature_K"]),
+                glide_barrier_temperature_coefficient=float(configuration[
+                    "glide_barrier_temperature_coefficient"]),
+                critical_stress_temperature_coefficient=float(configuration[
+                    "critical_stress_temperature_coefficient"]))
+    else:
+        wall = _wall_parameters(configuration, spacing)
     systems = bcc_four_family_systems()
     strain = np.array([[0.0, .5*gamma], [.5*gamma, 0.0]])
     drivings = _owner_drivings_from_common_stress(
@@ -77,11 +107,7 @@ def effective_stress(raw, chemical, resistance, regularization):
 def speed_from_inputs(raw, chemical, resistance, temperature, wall):
     effective = effective_stress(
         raw, chemical, resistance, wall.taylor_regularization_Pa)
-    activation = exp_floor_rate(
-        effective, temperature, wall.glide_barrier_eV, wall
-    )/wall.attempt_frequency_s
-    return (wall.glide_speed_attempt_m_s*activation
-            *np.tanh(effective/wall.critical_stress_Pa)), effective
+    return glide_velocity_m_s(effective, temperature, wall), effective
 
 
 def raw_from_stress_orientation(stress: np.ndarray, orientation: np.ndarray) -> np.ndarray:

@@ -1,0 +1,191 @@
+{
+  "active_weight_semantics": "mean of nonnegative projected owner supports, broadcast over four families",
+  "common_band_half_width": 15,
+  "common_quadrature_n": 96,
+  "constitutive_projection_error": {
+    "left": 0.007163694828624966,
+    "right": 0.006818017979800526,
+    "semantics": "nonlinear rate of projected primitive drivers versus projection of the independently computed nonlinear rate"
+  },
+  "coordinate_and_sign_semantics": "same periodic origin, no translation optimization; signed raw, chemical, thermodynamic, and effective owner/family stresses are retained",
+  "directional_derivative_predictions": {
+    "all_inputs_joint": {
+      "actual_delta_weighted_l2": 2952.768073535923,
+      "predicted_delta_relative_error": 0.022586877715341187,
+      "predicted_delta_weighted_l2": 2995.02883083249
+    },
+    "finite_difference_fraction_of_full_input_delta": 0.0001,
+    "interpretation": "centered directional derivative at the left projected state, evaluated along the full left-to-right input difference; discrepancy from the finite substitution measures nonlinearity and saturation",
+    "one_input": {
+      "chemical": {
+        "actual_delta_weighted_l2": 0.5741902885343577,
+        "predicted_delta_relative_error": 0.00025181960559805187,
+        "predicted_delta_weighted_l2": 0.5741874819203983
+      },
+      "raw": {
+        "actual_delta_weighted_l2": 1335.135223058615,
+        "predicted_delta_relative_error": 0.046590985756273996,
+        "predicted_delta_weighted_l2": 1370.9663198113947
+      },
+      "resistance": {
+        "actual_delta_weighted_l2": 40.38718539532234,
+        "predicted_delta_relative_error": 0.0017802112773041632,
+        "predicted_delta_weighted_l2": 40.38954828828551
+      },
+      "temperature": {
+        "actual_delta_weighted_l2": 2380.7387628328242,
+        "predicted_delta_relative_error": 0.013327164341451427,
+        "predicted_delta_weighted_l2": 2411.1585778385775
+      }
+    }
+  },
+  "fixed_discrepancy_norm": {
+    "baseline_relative_error": 0.03132322694350102,
+    "semantics": "one symmetric denominator fixed before either substitution direction",
+    "weighted_l2_scale": 94267.68445224213
+  },
+  "left": {
+    "gamma": 0.09863999999999869,
+    "grain_ids": [
+      10,
+      20,
+      30
+    ],
+    "n": 32,
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_600_arrival_limited/checkpoint_latest.npz",
+    "physical_time_s": 0.00013360000000000243,
+    "sha256": "e90c2773627caa785858b92fbc03aa792d18e65b4771fe1737620e0e2ece454d",
+    "source_commit": "f254cf163268fc20f2d242c2121a97eae00db600",
+    "spacing_m": 1.5e-07,
+    "step": 633
+  },
+  "limitations": "diagnostic reevaluation only; projected primitives are not an admissible production state and no counterfactual is published",
+  "native_independent_rate_map_checks": {
+    "left": {
+      "grid": [
+        32,
+        32
+      ],
+      "recomputed_vs_recorded_maximum_absolute_m_s": 0.0,
+      "recomputed_vs_recorded_weighted_relative_l2": 0.0,
+      "temperature_route": "physical_native_owner_field"
+    },
+    "right": {
+      "grid": [
+        32,
+        32
+      ],
+      "recomputed_vs_recorded_maximum_absolute_m_s": 0.0,
+      "recomputed_vs_recorded_weighted_relative_l2": 0.0,
+      "temperature_route": "physical_native_owner_field"
+    }
+  },
+  "one_input_at_a_time_substitutions": {
+    "chemical": {
+      "effective_stress_change_from_left_relative_l2": 5.5026074966329e-06,
+      "fixed_denominator_remaining_error": 0.031323265425588505,
+      "fraction_of_baseline_error_removed": -1.2285479893649891e-06,
+      "rate_change_from_left_relative_l2": 6.24852392502002e-06,
+      "remaining_rate_error_to_right_relative_l2": 0.031323265425588505
+    },
+    "raw": {
+      "effective_stress_change_from_left_relative_l2": 0.008251381719743147,
+      "fixed_denominator_remaining_error": 0.02530409409486023,
+      "fraction_of_baseline_error_removed": 0.19216196528849813,
+      "rate_change_from_left_relative_l2": 0.01448625933023001,
+      "remaining_rate_error_to_right_relative_l2": 0.02530409409486023
+    },
+    "resistance": {
+      "effective_stress_change_from_left_relative_l2": 0.0005499303093500567,
+      "fixed_denominator_remaining_error": 0.031311345612095025,
+      "fraction_of_baseline_error_removed": 0.0003793137733678913,
+      "rate_change_from_left_relative_l2": 0.00043950502953680754,
+      "remaining_rate_error_to_right_relative_l2": 0.031311345612095025
+    },
+    "temperature": {
+      "effective_stress_change_from_left_relative_l2": 0.0,
+      "fixed_denominator_remaining_error": 0.014332273805794547,
+      "fraction_of_baseline_error_removed": 0.5424394226161228,
+      "rate_change_from_left_relative_l2": 0.025329456851364136,
+      "remaining_rate_error_to_right_relative_l2": 0.014332273805794547
+    }
+  },
+  "projected_actual_speed_difference": 0.0313416808347562,
+  "projected_effective_stress_difference": 0.008293482773092598,
+  "projected_primitive_differences": {
+    "chemical": 0.17268592174712497,
+    "raw": 0.00791481277677525,
+    "resistance": 0.007634412281144581,
+    "temperature": 0.021747486784775404
+  },
+  "projected_support_diagnostics": {
+    "left_maximum": 0.9762692145298765,
+    "left_minimum": 0.011433794081761853,
+    "left_negative_fraction": 0.0,
+    "right_maximum": 0.9762682696918087,
+    "right_minimum": 0.01143557047717943,
+    "right_negative_fraction": 0.0,
+    "semantics": "reported without clipping; projected fields are never production states"
+  },
+  "raw_reconstruction_projection_error": {
+    "left": 0.0016399030635529277,
+    "right": 0.0015845433537280103,
+    "semantics": "resolve projected common stress with projected owner angle versus project production resolved stress"
+  },
+  "raw_stress_substitutions": {
+    "common_stress_tensor": {
+      "effective_stress_change_from_left_relative_l2": 0.008199551733181949,
+      "fraction_of_baseline_error_removed": 0.1727392182028521,
+      "rate_change_from_left_relative_l2": 0.013641448053843241,
+      "raw_stress_change_from_left_relative_l2": 0.007849061116565807,
+      "remaining_rate_error_to_right_relative_l2": 0.025912477209690143
+    },
+    "owner_orientation": {
+      "effective_stress_change_from_left_relative_l2": 0.0026507966681420243,
+      "fraction_of_baseline_error_removed": 0.021538253172548077,
+      "rate_change_from_left_relative_l2": 0.0037317732338609235,
+      "raw_stress_change_from_left_relative_l2": 0.0026068628362638587,
+      "remaining_rate_error_to_right_relative_l2": 0.03064857935141072
+    }
+  },
+  "recomputed_after_projection_speed_difference": 0.03132322694350102,
+  "reverse_one_input_substitutions": {
+    "chemical": {
+      "fixed_denominator_fraction_of_baseline_removed": -1.083013822372315e-06,
+      "fixed_denominator_remaining_error_to_left": 0.031323260866988764
+    },
+    "raw": {
+      "fixed_denominator_fraction_of_baseline_removed": 0.1932520539827122,
+      "fixed_denominator_remaining_error_to_left": 0.025269948999302818
+    },
+    "resistance": {
+      "fixed_denominator_fraction_of_baseline_removed": 0.00033916252034040363,
+      "fixed_denominator_remaining_error_to_left": 0.03131260327890567
+    },
+    "temperature": {
+      "fixed_denominator_fraction_of_baseline_removed": 0.547701269348757,
+      "fixed_denominator_remaining_error_to_left": 0.014167455786446327
+    }
+  },
+  "right": {
+    "gamma": 0.09863999999999869,
+    "grain_ids": [
+      10,
+      20,
+      30
+    ],
+    "n": 32,
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600_arrival_limited/checkpoint_latest.npz",
+    "physical_time_s": 0.00013360000000000246,
+    "sha256": "c1278a29e74417246c566ca59a7bdddb6354e692783a85b1ab774fc390efac15",
+    "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7",
+    "spacing_m": 1.5e-07,
+    "step": 633
+  },
+  "right_effective_stress_only_with_left_temperature": {
+    "rate_change_from_left": 0.014491899521897656,
+    "remaining_rate_error_to_right": 0.025292099055881558
+  },
+  "right_projected_inputs_vs_projected_actual_rate_relative_l2": 0.006818017979800526,
+  "schema": "asb-drx-v63-exp-floor-input-attribution-v1"
+}

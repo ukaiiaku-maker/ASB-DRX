@@ -169,6 +169,13 @@ class CommonWallParameters:
     elastic_iterations: int = 3
     glide_barrier_eV: float = 1.90
     glide_speed_attempt_m_s: float = 2.0e3
+    # Optional analytical temperature scaling from the preserved EXP-floor
+    # law: H0(T)=H0_ref exp[-g(T-Tref)/Tref] and
+    # sigma_c(T)=sigma_c_ref exp[-s(T-Tref)/Tref].  Zero coefficients retain
+    # every qualified common-wall baseline exactly.
+    kinetic_reference_temperature_K: float = 1000.0
+    glide_barrier_temperature_coefficient: float = 0.0
+    critical_stress_temperature_coefficient: float = 0.0
     # Optional causal controls.  They alter only the named accepted
     # constitutive channel; the physical temperature state and heat equation
     # continue to evolve.  None means use state.temperature_K.
@@ -215,6 +222,7 @@ class CommonWallParameters:
             self.critical_stress_Pa, self.exp_n,
             self.reaction_energy_scale_J_m,
             self.c11_Pa, self.c44_Pa, self.glide_speed_attempt_m_s,
+            self.kinetic_reference_temperature_K,
             self.volumetric_heat_capacity_J_m3_K,
             self.wall_gate_half_density_ratio,
             self.wall_gate_half_polarization, self.wall_gate_joint_half,
@@ -225,6 +233,10 @@ class CommonWallParameters:
         )
         if any(not math.isfinite(float(value)) or value <= 0.0 for value in positive):
             raise ValueError("common wall parameters must be finite and positive")
+        if any(not math.isfinite(float(value)) or value < 0.0 for value in (
+                self.glide_barrier_temperature_coefficient,
+                self.critical_stress_temperature_coefficient)):
+            raise ValueError("EXP-floor temperature coefficients must be finite and nonnegative")
         if not 0.0 <= self.exp_floor <= 1.0 or not 0.0 < self.maximum_fraction_per_step <= 1.0:
             raise ValueError("bounded fractions are invalid")
         if not 0.0 < self.bound_active_tolerance < 0.5:
@@ -363,15 +375,67 @@ def _periodic_upwind_rate(density, velocity, spacing, support=None):
         where=eta[..., None] > 256.0*np.finfo(float).eps)
 
 
-def exp_floor_rate(stress_pa, temperature_K, barrier_eV, parameters):
+def exp_floor_rate(stress_pa, temperature_K, barrier_eV, parameters,
+                   critical_stress_Pa=None):
     stress = np.abs(np.asarray(stress_pa, dtype=float))
     temperature = np.asarray(temperature_K, dtype=float)
-    enthalpy = float(barrier_eV)*EV_J*(
+    if critical_stress_Pa is None and np.ndim(barrier_eV) == 0:
+        # Historical scalar path retained bitwise for restart regressions.
+        enthalpy = float(barrier_eV)*EV_J*(
+            parameters.exp_floor+(1.0-parameters.exp_floor)*np.exp(
+                -parameters.exp_a*(stress/parameters.critical_stress_Pa)
+                **parameters.exp_n))
+        free = enthalpy-KB_J_K*temperature*parameters.activation_entropy_kB
+        return parameters.attempt_frequency_s*np.exp(np.clip(
+            -free/(KB_J_K*temperature), -700.0, 40.0))
+    barrier = np.asarray(barrier_eV, dtype=float)
+    critical = np.asarray(
+        parameters.critical_stress_Pa
+        if critical_stress_Pa is None else critical_stress_Pa, dtype=float)
+    enthalpy = barrier*EV_J*(
         parameters.exp_floor+(1.0-parameters.exp_floor)*np.exp(
-            -parameters.exp_a*(stress/parameters.critical_stress_Pa)**parameters.exp_n))
+            -parameters.exp_a*(stress/critical)**parameters.exp_n))
     free = enthalpy-KB_J_K*temperature*parameters.activation_entropy_kB
     return parameters.attempt_frequency_s*np.exp(np.clip(
         -free/(KB_J_K*temperature), -700.0, 40.0))
+
+
+def glide_exp_floor_parameters(temperature_K, parameters):
+    """Return H0(T) [eV] and sigma_c(T) [Pa] for the glide channel."""
+    if (parameters.glide_barrier_temperature_coefficient == 0.0
+            and parameters.critical_stress_temperature_coefficient == 0.0):
+        # Preserve the exact scalar arithmetic of all qualified checkpoints.
+        return parameters.glide_barrier_eV, parameters.critical_stress_Pa
+    temperature = np.asarray(temperature_K, dtype=float)
+    scaled = (temperature-parameters.kinetic_reference_temperature_K)/(
+        parameters.kinetic_reference_temperature_K)
+    barrier = parameters.glide_barrier_eV*np.exp(
+        -parameters.glide_barrier_temperature_coefficient*scaled)
+    critical = parameters.critical_stress_Pa*np.exp(
+        -parameters.critical_stress_temperature_coefficient*scaled)
+    return barrier, critical
+
+
+def glide_velocity_m_s(stress_pa, temperature_K, parameters):
+    """Signed glide velocity under the complete analytical EXP-floor law."""
+    barrier, critical = glide_exp_floor_parameters(
+        temperature_K, parameters)
+    if (parameters.glide_barrier_temperature_coefficient == 0.0
+            and parameters.critical_stress_temperature_coefficient == 0.0) \
+            or np.all(np.asarray(temperature_K, dtype=float)
+                      == parameters.kinetic_reference_temperature_K):
+        return (parameters.glide_speed_attempt_m_s
+                *exp_floor_rate(stress_pa, temperature_K,
+                                parameters.glide_barrier_eV, parameters)
+                /parameters.attempt_frequency_s
+                *np.tanh(np.asarray(stress_pa, dtype=float)
+                         /parameters.critical_stress_Pa))
+    else:
+        activation = exp_floor_rate(
+            stress_pa, temperature_K, barrier, parameters,
+            critical_stress_Pa=critical)/parameters.attempt_frequency_s
+    return (parameters.glide_speed_attempt_m_s*activation
+            *np.tanh(np.asarray(stress_pa, dtype=float)/critical))
 
 
 def wall_polarization_invariants(
@@ -859,12 +923,9 @@ def resolved_driving_components(
                          +parameters.taylor_regularization_Pa**2)
         effective = thermodynamic_stress*(1.0-resistance/smooth)
     if driving.glide_speed_m_s is None:
-        activation = exp_floor_rate(
+        speed = glide_velocity_m_s(
             effective, channel_temperature_K(
-                state, parameters, "flow")[..., None],
-            parameters.glide_barrier_eV, parameters)/parameters.attempt_frequency_s
-        speed = (parameters.glide_speed_attempt_m_s*activation
-                 *np.tanh(effective/parameters.critical_stress_Pa))
+                state, parameters, "flow")[..., None], parameters)
     else:
         speed = np.asarray(driving.glide_speed_m_s, dtype=float)
     if speed.shape != family_shape:
@@ -911,11 +972,7 @@ def resolved_driving_components(
             state, parameters, "flow")[..., None]
 
         def arrhenius_velocity(value):
-            activation = exp_floor_rate(
-                value, temperature, parameters.glide_barrier_eV,
-                parameters)/parameters.attempt_frequency_s
-            return (parameters.glide_speed_attempt_m_s*activation
-                    *np.tanh(value/parameters.critical_stress_Pa))
+            return glide_velocity_m_s(value, temperature, parameters)
 
         speed_plus = arrhenius_velocity(effective_plus)
         speed_minus = arrhenius_velocity(effective_minus)

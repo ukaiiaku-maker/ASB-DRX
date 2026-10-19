@@ -195,6 +195,10 @@ def main():
         "--arrival-limited-boundary-exchange", action="store_true",
         help=("limit glide-supplied lattice capture by the signed normal "
               "carrier flux reaching the diffuse interface"))
+    parser.add_argument(
+        "--temperature-dependent-exp-floor", action="store_true",
+        help=("enable the preserved analytical H0(T) and sigma_c(T) glide "
+              "scaling with its fixed legacy coefficients"))
     parser.add_argument("--disable-rx", action="store_true")
     parser.add_argument("--interface-neutral-sink", action="store_true")
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
@@ -249,6 +253,12 @@ def main():
         spacing, args.temperature_seed_normal)
     rx_enabled = not args.disable_rx
     wall_parameters = base_context.wall_parameters
+    if args.temperature_dependent_exp_floor:
+        wall_parameters = replace(
+            wall_parameters,
+            kinetic_reference_temperature_K=1000.0,
+            glide_barrier_temperature_coefficient=1.24174,
+            critical_stress_temperature_coefficient=.108506)
     if args.production_rx:
         wall_parameters = replace(
             wall_parameters, wall_nye_match_coefficient_J_m=(
@@ -361,6 +371,14 @@ def main():
         lattice_capture_distance_m=args.capture_distance,
         lattice_arrival_limited_exchange=bool(
             args.arrival_limited_boundary_exchange),
+        temperature_dependent_exp_floor=bool(
+            args.temperature_dependent_exp_floor),
+        kinetic_reference_temperature_K=float(
+            wall_parameters.kinetic_reference_temperature_K),
+        glide_barrier_temperature_coefficient=float(
+            wall_parameters.glide_barrier_temperature_coefficient),
+        critical_stress_temperature_coefficient=float(
+            wall_parameters.critical_stress_temperature_coefficient),
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
     output_configuration.update(
         wall_orientation_relaxation_mode=(

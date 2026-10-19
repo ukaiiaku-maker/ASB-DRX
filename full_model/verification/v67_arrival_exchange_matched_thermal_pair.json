@@ -1,0 +1,248 @@
+{
+  "adiabatic_segments": [
+    {
+      "active_band_samples": 36,
+      "checkpoint_sha256": "e727d8003fd1e19ad12949e46e7ffcca14bd4e6aa9f43c411111cf3b7557a255",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_450_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": true,
+        "interval": 40,
+        "load": 0.07463999999999966,
+        "mean_shear_stress_Pa": 4393494517.319567,
+        "plastic_power_maximum_W_m3": 508949016807076.56,
+        "plastic_power_maximum_to_mean": 4.629709736264517,
+        "plastic_power_mean_W_m3": 109931085489113.67,
+        "plastic_to_imposed_power_fraction": 0.312766651510987,
+        "temperature_mean_K": 1014.1160353290755,
+        "temperature_range_K": 46.6030358185692
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.06823999999999993,
+      "grain20_growth_inside_band_fraction": 0.08964223973985651,
+      "grain20_relative_area_change": 8.620647046385919e-05,
+      "hard_valid": true,
+      "last_band_load": 0.07463999999999966,
+      "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7",
+      "terminal_band_persistence_intervals": 14
+    },
+    {
+      "active_band_samples": 51,
+      "checkpoint_sha256": "5685015544a99fd3bca337c10aa40c223638384e88c6895abaa9dc44fd352c20",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_500_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": true,
+        "interval": 50,
+        "load": 0.08263999999999934,
+        "mean_shear_stress_Pa": 4907547593.938013,
+        "plastic_power_maximum_W_m3": 180236562111967.53,
+        "plastic_power_maximum_to_mean": 3.4511069302289648,
+        "plastic_power_mean_W_m3": 52225725182038.82,
+        "plastic_to_imposed_power_fraction": 0.13302399055321948,
+        "temperature_mean_K": 1016.7060322760024,
+        "temperature_range_K": 45.88356968442497
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.07463999999999966,
+      "grain20_growth_inside_band_fraction": 0.1679104111205918,
+      "grain20_relative_area_change": 9.996426446341688e-05,
+      "hard_valid": true,
+      "last_band_load": 0.08263999999999934,
+      "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7",
+      "terminal_band_persistence_intervals": 50
+    },
+    {
+      "active_band_samples": 26,
+      "checkpoint_sha256": "96457bf1ea368d45df17fe0881c3a80ba581fd44be46640efe0a511fac1ae1b9",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_550_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": false,
+        "interval": 50,
+        "load": 0.09063999999999901,
+        "mean_shear_stress_Pa": 5522113245.871941,
+        "plastic_power_maximum_W_m3": 136245955353260.17,
+        "plastic_power_maximum_to_mean": 3.9611137721122933,
+        "plastic_power_mean_W_m3": 34395870250554.81,
+        "plastic_to_imposed_power_fraction": 0.0778593916836717,
+        "temperature_mean_K": 1018.0839210488798,
+        "temperature_range_K": 45.4630866281866
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.08263999999999934,
+      "grain20_growth_inside_band_fraction": 0.06635229175982225,
+      "grain20_relative_area_change": 9.920266340588847e-05,
+      "hard_valid": true,
+      "last_band_load": 0.08663999999999918,
+      "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7",
+      "terminal_band_persistence_intervals": 0
+    },
+    {
+      "active_band_samples": 24,
+      "checkpoint_sha256": "c1278a29e74417246c566ca59a7bdddb6354e692783a85b1ab774fc390efac15",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": true,
+        "interval": 50,
+        "load": 0.09863999999999869,
+        "mean_shear_stress_Pa": 6167090182.604696,
+        "plastic_power_maximum_W_m3": 92354514024572.47,
+        "plastic_power_maximum_to_mean": 4.0607372855850175,
+        "plastic_power_mean_W_m3": 22743287124832.367,
+        "plastic_to_imposed_power_fraction": 0.046098091748730204,
+        "temperature_mean_K": 1019.0882553925125,
+        "temperature_range_K": 45.6899529176585
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.090959999999999,
+      "grain20_growth_inside_band_fraction": 0.03031549215585281,
+      "grain20_relative_area_change": 0.00010002000725822001,
+      "hard_valid": true,
+      "last_band_load": 0.09863999999999869,
+      "source_commit": "b7129f17f7ecbb90fc2bfc696dcd485b44f3c5e7",
+      "terminal_band_persistence_intervals": 2
+    }
+  ],
+  "claim_boundary": "The common carrier law is qualified against collapse and preserves existing-boundary RX. Intermittent adiabatic-only late recurrence without persistence or softening is not classified as ASB.",
+  "created_utc": "2026-10-19T19:26:50.043495+00:00",
+  "criteria": {
+    "matched_bath_must_not_qualify": true,
+    "minimum_post_peak_softening_fraction": 0.05,
+    "minimum_terminal_band_intervals": 20
+  },
+  "decision": {
+    "all_hard_audits_passed": true,
+    "asb_qualified": false,
+    "classification": "HEAT_BIASED_BAND_RECURRENCE_WITH_RX_BUT_NO_ASB_SOFTENING",
+    "existing_boundary_rx_preserved": true,
+    "heat_biases_late_band_recurrence": true
+  },
+  "exp_floor_attribution": {
+    "native_rate_map_checks": {
+      "left": {
+        "grid": [
+          32,
+          32
+        ],
+        "recomputed_vs_recorded_maximum_absolute_m_s": 0.0,
+        "recomputed_vs_recorded_weighted_relative_l2": 0.0,
+        "temperature_route": "physical_native_owner_field"
+      },
+      "right": {
+        "grid": [
+          32,
+          32
+        ],
+        "recomputed_vs_recorded_maximum_absolute_m_s": 0.0,
+        "recomputed_vs_recorded_weighted_relative_l2": 0.0,
+        "temperature_route": "physical_native_owner_field"
+      }
+    },
+    "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_arrival_exchange_ad_bath600_exp_floor_attribution.json",
+    "projected_speed_difference": 0.03132322694350102,
+    "raw_stress_fraction_of_speed_discrepancy_removed": 0.19216196528849813,
+    "sha256": "9ba91416f1d88bf2b602ae6611e139c1ea9921bec1054fafb3961d9d7850a69d",
+    "temperature_fraction_of_speed_discrepancy_removed": 0.5424394226161228
+  },
+  "schema": "v67-arrival-exchange-matched-thermal-pair-v1",
+  "strong_bath_segments": [
+    {
+      "active_band_samples": 37,
+      "checkpoint_sha256": "2b7124a0773c3033e6d11ddf89b02de38c5368a583909decaf824732de9661ef",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_450_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": true,
+        "interval": 50,
+        "load": 0.07463999999999966,
+        "mean_shear_stress_Pa": 4386498084.317575,
+        "plastic_power_maximum_W_m3": 453109938478312.56,
+        "plastic_power_maximum_to_mean": 4.0566295917388615,
+        "plastic_power_mean_W_m3": 111696157667697.84,
+        "plastic_to_imposed_power_fraction": 0.3182953563431079,
+        "temperature_mean_K": 1000.0119293046316,
+        "temperature_range_K": 0.056771191943880694
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.06663999999999999,
+      "grain20_growth_inside_band_fraction": 0.07333144289255841,
+      "grain20_relative_area_change": 0.00010828427413007493,
+      "hard_valid": true,
+      "last_band_load": 0.07463999999999966,
+      "source_commit": "f254cf163268fc20f2d242c2121a97eae00db600",
+      "terminal_band_persistence_intervals": 3
+    },
+    {
+      "active_band_samples": 51,
+      "checkpoint_sha256": "99e0a9cd3bd88bd4a56bbf4c727d30adca84f5c4ac0e0189d4ae103fe28cc4ec",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_500_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": true,
+        "interval": 50,
+        "load": 0.08263999999999934,
+        "mean_shear_stress_Pa": 4894255420.6103,
+        "plastic_power_maximum_W_m3": 188290433372607.97,
+        "plastic_power_maximum_to_mean": 3.470657180722352,
+        "plastic_power_mean_W_m3": 54252097965325.08,
+        "plastic_to_imposed_power_fraction": 0.13856065249696345,
+        "temperature_mean_K": 1000.0075152759745,
+        "temperature_range_K": 0.03107723141954466
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.07463999999999966,
+      "grain20_growth_inside_band_fraction": 0.16686296369447137,
+      "grain20_relative_area_change": 9.828153284377075e-05,
+      "hard_valid": true,
+      "last_band_load": 0.08263999999999934,
+      "source_commit": "f254cf163268fc20f2d242c2121a97eae00db600",
+      "terminal_band_persistence_intervals": 50
+    },
+    {
+      "active_band_samples": 27,
+      "checkpoint_sha256": "3606229c4ea3feead1c9043c96ee24e11418dcdab5ea479a22160eb7fd9f4a10",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_550_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": false,
+        "interval": 50,
+        "load": 0.09063999999999901,
+        "mean_shear_stress_Pa": 5504786866.138329,
+        "plastic_power_maximum_W_m3": 141940529923462.22,
+        "plastic_power_maximum_to_mean": 4.01218038298737,
+        "plastic_power_mean_W_m3": 35377404895683.39,
+        "plastic_to_imposed_power_fraction": 0.08033327573793299,
+        "temperature_mean_K": 1000.0049272658205,
+        "temperature_range_K": 0.019059211145759036
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": 0.08263999999999934,
+      "grain20_growth_inside_band_fraction": 0.07093804909370455,
+      "grain20_relative_area_change": 9.81586553024483e-05,
+      "hard_valid": true,
+      "last_band_load": 0.08679999999999917,
+      "source_commit": "f254cf163268fc20f2d242c2121a97eae00db600",
+      "terminal_band_persistence_intervals": 0
+    },
+    {
+      "active_band_samples": 0,
+      "checkpoint_sha256": "e90c2773627caa785858b92fbc03aa792d18e65b4771fe1737620e0e2ece454d",
+      "directory": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_bath_600_arrival_limited",
+      "endpoint": {
+        "connected_physical_band": false,
+        "interval": 50,
+        "load": 0.09863999999999869,
+        "mean_shear_stress_Pa": 6150984799.236921,
+        "plastic_power_maximum_W_m3": 92095488124589.05,
+        "plastic_power_maximum_to_mean": 4.215290009401754,
+        "plastic_power_mean_W_m3": 21847960144896.297,
+        "plastic_to_imposed_power_fraction": 0.04439931339857707,
+        "temperature_mean_K": 1000.0028236497085,
+        "temperature_range_K": 0.011394036215619963
+      },
+      "endpoint_post_peak_softening_fraction": 0.0,
+      "first_band_load": null,
+      "grain20_growth_inside_band_fraction": 0.0,
+      "grain20_relative_area_change": 9.886760315050173e-05,
+      "hard_valid": true,
+      "last_band_load": null,
+      "source_commit": "f254cf163268fc20f2d242c2121a97eae00db600",
+      "terminal_band_persistence_intervals": 0
+    }
+  ]
+}
