@@ -3318,3 +3318,24 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The pair is classified
   `SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND`. Adiabatic 800 started
   automatically; no gate or approval pause occurred.
+
+## V67 accepted-flow and arrival-limited carrier audit (2026-10-19)
+
+- The complete 0.13064 matched horizon and both queued causal forks have
+  finished. Source relocation and corrected Hall--Petch interface emission are
+  valid negative results; no V67 solver remains active.
+- Exact ad400/ad500/ad600 mechanical probes consume their full physical
+  intervals. Accepted/raw power ratios are 1.0029, 1.0222, and 1.2770, so the
+  global positivity limiter is not discarding the missing plastic flow.
+- The actual failure is selective loss of the owner/family carriers that carry
+  Orowan power. Historical lattice/interface absorption accounts for slightly
+  more than 100% of net mobile loss, with other mechanical reactions returning
+  a small amount.
+- The old capture clock can repeatedly act on every eligible carrier in the
+  diffuse boundary support. A default-off candidate now combines the unchanged
+  energy-qualified Arrhenius reaction exposure in series with the signed normal
+  arrival exposure `|v| dt |grad eta| |s.n|`. It is not a transparency fit.
+- On copied retained states the candidate is downhill, line/Burgers/Mura and
+  first-law closed, and debits only 0.0918--0.589% as much line as the former
+  reaction-only capture. This selects an exact-parent coupled ad400 fork; no
+  production response is claimed from the atomic audit.

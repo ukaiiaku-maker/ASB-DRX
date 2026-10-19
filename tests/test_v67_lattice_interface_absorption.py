@@ -203,3 +203,59 @@ def test_competing_hazard_projection_has_exact_fixed_rate_semigroup():
             np.testing.assert_allclose(
                 getattr(direct, name), getattr(split, name),
                 rtol=2e-13, atol=1e-12)
+
+
+def test_arrival_limited_capture_requires_normal_carrier_arrival():
+    state, systems, spacing = _fixture(8)
+    parameters = LatticeInterfaceAbsorptionParameters(
+        capture_distance_m=spacing, arrival_limited=True)
+    directions = tuple(np.ones_like(owner.mobile_plus_m2)
+                       for owner in state.owners)
+    no_arrival = tuple(np.zeros_like(owner.mobile_plus_m2)
+                       for owner in state.owners)
+    shape = (len(state.interfaces),)+state.supports.shape[1:]
+    result = project_lattice_line_to_interfaces(
+        state, systems=systems, spacing_m=spacing, fraction=0.0,
+        parameters=parameters, stress_direction_by_owner=directions,
+        hazard_exposure_by_interface=np.full(shape, 1.0e6),
+        arrival_exposure_by_owner=no_arrival)
+    assert result.arrival_limited
+    assert result.maximum_arrival_exposure == 0.0
+    assert result.removed_plus_line_per_thickness == 0.0
+    assert result.removed_minus_line_per_thickness == 0.0
+
+
+def test_arrival_and_reaction_share_one_serial_competing_clock():
+    state, systems, spacing = _fixture(8)
+    parameters = LatticeInterfaceAbsorptionParameters(
+        capture_distance_m=spacing, arrival_limited=True)
+    directions = tuple(np.ones_like(owner.mobile_plus_m2)
+                       for owner in state.owners)
+    arrivals = tuple(np.full_like(owner.mobile_plus_m2, 0.2)
+                     for owner in state.owners)
+    shape = (len(state.interfaces),)+state.supports.shape[1:]
+
+    def advance(parent, reaction, arrival):
+        local_arrivals = tuple(np.full_like(owner.mobile_plus_m2, arrival)
+                               for owner in parent.owners)
+        return project_lattice_line_to_interfaces(
+            parent, systems=systems, spacing_m=spacing, fraction=0.0,
+            parameters=parameters, stress_direction_by_owner=directions,
+            hazard_exposure_by_interface=np.full(shape, reaction),
+            arrival_exposure_by_owner=local_arrivals).candidate_state
+
+    direct = advance(state, 4.0, 0.2)
+    split = advance(advance(state, 2.0, 0.1), 2.0, 0.1)
+    for one, two in zip(direct.owners, split.owners):
+        for name in ("mobile_plus_m2", "mobile_minus_m2", "beta_p",
+                     "family_nye_m1", "slip", "alignment_m2"):
+            np.testing.assert_allclose(
+                getattr(one, name), getattr(two, name),
+                rtol=3e-13, atol=5e-12)
+    arrived = project_lattice_line_to_interfaces(
+        state, systems=systems, spacing_m=spacing, fraction=0.0,
+        parameters=parameters, stress_direction_by_owner=directions,
+        hazard_exposure_by_interface=np.full(shape, 1.0e6),
+        arrival_exposure_by_owner=arrivals)
+    assert arrived.maximum_arrival_exposure == 0.2
+    assert 0.0 < arrived.maximum_incident_capacity < 0.2

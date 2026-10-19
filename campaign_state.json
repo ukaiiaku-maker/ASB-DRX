@@ -1,13 +1,13 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-17T01:29:00Z",
+  "last_updated_utc": "2026-10-19T17:49:29Z",
   "active_allocation": {
     "campaign": "V67",
-    "start_utc": "2026-10-14T22:47:15Z",
-    "deadline_utc": "2026-10-15T10:47:15Z",
-    "duration_s": 43200,
+    "start_utc": "2026-10-19T17:16:00Z",
+    "deadline_utc": null,
+    "duration_s": null,
     "actual_end_utc": null,
-    "status": "active_under_explicit_reconnect_continuation",
+    "status": "active_user_directed_continuation_without_new_fixed_compute_duration",
     "execution_location": "local_only",
     "maximum_heavy_campaign_solvers": 1,
     "hpc_authorized": false,
@@ -81,21 +81,22 @@
     "H23": "the_hard_audited_ad400_to_ad600_and_bath400_to_bath600_balances_require_98p502_and_98p444_percent_boundary_transparency_to_prevent_mobile_loss;_no_signed_crystallographic_transfer_kernel_is_DD_identified_so_no_coefficient_is_fitted_or_promoted",
     "H24": "a_same_interval_residence_hypothesis_restricted_to_newly_captured_neutral_pairs_can_recycle_at_most_1p0992e_4_of_captured_line_and_is_classified_NEW_CAPTURE_COHORT_NEUTRAL_CAPACITY_INSUFFICIENT",
     "H25": "the_immutable_four_family_Hall_Petch_nucleation_EXP_floor_ceiling_is_2p52383_per_s_at_the_hottest_ad700_cell_so_it_can_carry_the_qualified_2_per_s_RX_branch_but_only_3p15479e_5_of_the_80000_per_s_high_rate_demand;_retained_or_transmitted_carriers_are_required",
-    "H26": "the_matched_0p11464_pair_has_zero_terminal_band_intervals,_zero_softening,_flow_6p64767e_5_adiabatic_and_7p70634e_5_bath,_continued_existing_boundary_growth,_and_is_classified_SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND"
+    "H26": "the_matched_0p11464_pair_has_zero_terminal_band_intervals,_zero_softening,_flow_6p64767e_5_adiabatic_and_7p70634e_5_bath,_continued_existing_boundary_growth,_and_is_classified_SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND",
+    "H27": "accepted_ad400_ad500_ad600_mechanics_consumes_the_full_2_ns_interval_and_does_not_suppress_raw_flow;_high_power_families_are_selectively_depleted_and_legacy_diffuse_interface_capture_accounts_for_slightly_more_than_net_mobile_loss;_a_default_off_signed_normal_arrival_limited_serial_capture_clock_is_hard_audited_and_awaits_the_exact_parent_production_discriminator"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 88568,
-      "child_pid": 98504,
-      "case": "v67_poly_rx_asb_seed19p375_ad_800",
-      "status": "running_sequential_matched_horizon_to_0p13064_shear",
-      "last_case": "v67_poly_rx_asb_seed19p375_bath_700",
-      "last_start_local": "2026-10-16T17:48:38-07:00",
-      "last_source_commit": "79205f3",
-      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_ad_800",
-      "queued_after_manager": "same_ad500_parent_matched_random_source_geography_to_ad600_horizon_then_machine_comparison",
-      "geography_watcher_pid": 91476,
-      "conditional_interface_emission_watcher_pid": 93660
+      "pid": null,
+      "child_pid": null,
+      "case": null,
+      "status": "idle_between_atomic_audit_and_exact_parent_candidate_fork",
+      "last_case": "v67_accepted_carrier_budget_ad400_ad600",
+      "last_start_local": "2026-10-19T10:34:00-07:00",
+      "last_source_commit": "86ffbdf",
+      "last_output": "full_model/verification/v67_accepted_carrier_budget_ad400_ad600.json",
+      "queued_after_manager": null,
+      "geography_watcher_pid": null,
+      "conditional_interface_emission_watcher_pid": null
     },
     "preserved_precursor_checkpoint": {
       "path": "full_model/verification/v66_one_grain_precursor_work/n32_mechanical/checkpoint_step_000000082_strain_0.01164000.npz",
@@ -106,13 +107,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26"],
-    "physical_uncertainty": "whether_relocation_of_the_unchanged_analytical_source_site_measure_changes_supply;_the_analytical_nucleation_ceiling_explains_lower_rate_support_and_high_rate_shortfall_while_signed_boundary_transfer_remains_unidentified",
-    "next_executable_experiment": "finish_the_running_matched_baseline_horizon_then_automatically_fork_the_exact_ad500_checkpoint_for_matched_random_source_geography;_if_that_does_not_restore_physical_flow_the_already_queued_second_fork_enables_only_conserved_interface_mobile_pair_emission",
-    "source_identity": "0c046e3_plus_uncommitted_capacity_analysis;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_unchanged;_source_geography_and_default_off_conserved_interface_emission_are_separately_controlled",
-    "expected_discriminatory_observation": "matched_random_final_flow_at_least_1_percent_when_the_same_parent_GB_TJ_control_is_below_1_percent_or_a_valid_negative_geography_result_with_exact_parent_and_site_measure_audits",
-    "resource_need": "active_V67_local_only_allocation_with_at_most_one_heavy_solver",
-    "result_status": "the_matched_0p11464_pair_is_SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND_with_zero_softening_and_terminal_flow_6p64767e_5_adiabatic_and_7p70634e_5_bath;_ad800_is_running_and_queued_causal_forks_continue"
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27"],
+    "physical_uncertainty": "whether_the_same_signed_normal_arrival_limited_boundary_capture_law_preserves_high_rate_active_family_carriers_without_destroying_lower_rate_dynamic_RX_or_retained_static_RX",
+    "next_executable_experiment": "run_the_exact_ad400_parent_for_one_then_ten_coupled_intervals_with_arrival_limited_boundary_exchange_and_compare_to_the_retained_reaction_only_baseline;_then_apply_the_same_candidate_to_a_lower_rate_dynamic_and_no_reset_static_pair",
+    "source_identity": "arrival_limited_candidate_on_top_of_86ffbdf;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
+    "expected_discriminatory_observation": "hard_valid_reduction_of_lattice_capture_with_retained_active_family_flow_and_no_loss_of_RX_motion_relative_to_the_exact_parent_baseline",
+    "resource_need": "current_user_directed_local_only_continuation_with_at_most_one_heavy_solver_and_no_HPC_or_paid_compute",
+    "result_status": "atomic_retained_state_audit_classifies_ACTIVE_FAMILY_CORRELATION_COLLAPSE_WITH_OVERCONSUMING_NON_ARRIVAL_LIMITED_CAPTURE;_production_response_not_yet_claimed"
   },
   "continuation_rule": {
     "active": true,
@@ -123,7 +124,7 @@
   "completion_semantics": {
     "execution_complete": false,
     "implementation_verified": true,
-    "canonical_regression": "1190_passed_in_419p88_s_at_source_ee165f5;_40_coupled_multigrain_regressions_and_18_focused_emission_overlap_tests_pass_through_3ec35ad;_latest_production_delta_pending_full_rerun",
+    "canonical_regression": "1190_passed_in_419p88_s_at_source_ee165f5;_arrival_limited_atomic_and_long_horizon_focused_tests_15_passed_on_2026_10_19;_latest_production_delta_pending_full_rerun",
     "mechanism_supported_at_tested_conditions": true,
     "integrated_response_qualified": true,
     "material_validated": false,

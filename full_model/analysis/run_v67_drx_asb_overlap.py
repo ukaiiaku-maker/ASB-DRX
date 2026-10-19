@@ -187,6 +187,10 @@ def main():
     parser.add_argument("out", type=Path)
     parser.add_argument("--intervals", type=int, default=50)
     parser.add_argument("--capture-distance", type=float, default=5e-7)
+    parser.add_argument(
+        "--arrival-limited-boundary-exchange", action="store_true",
+        help=("limit glide-supplied lattice capture by the signed normal "
+              "carrier flux reaching the diffuse interface"))
     parser.add_argument("--disable-rx", action="store_true")
     parser.add_argument("--interface-neutral-sink", action="store_true")
     parser.add_argument("--wall-orientation-relaxation", action="store_true")
@@ -283,7 +287,8 @@ def main():
         lattice_absorption_parameters=(
             LatticeInterfaceAbsorptionParameters(
                 capture_distance_m=args.capture_distance,
-                complete_physical_clock=True)
+                complete_physical_clock=True,
+                arrival_limited=args.arrival_limited_boundary_exchange)
             if rx_enabled else None),
         wall_orientation_relaxation_mode=(
             "ordered_nye" if orientation_enabled else "disabled"),
@@ -350,6 +355,8 @@ def main():
             context.front_kinetics.transfer_law.transmission_fraction),
         lattice_absorption_mode=("one_flux_mura" if rx_enabled else "disabled"),
         lattice_capture_distance_m=args.capture_distance,
+        lattice_arrival_limited_exchange=bool(
+            args.arrival_limited_boundary_exchange),
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
     output_configuration.update(
         wall_orientation_relaxation_mode=(

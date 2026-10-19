@@ -34,6 +34,7 @@ class LatticeInterfaceAbsorptionParameters:
     maximum_fraction_per_interval: float = 0.05
     capture_distance_m: float = 5.0e-7
     complete_physical_clock: bool = False
+    arrival_limited: bool = False
 
     def __post_init__(self):
         if (not math.isfinite(self.maximum_fraction_per_interval)
@@ -55,6 +56,8 @@ class LatticeInterfaceProjection:
     maximum_incident_capacity: float
     capture_activity_m2: np.ndarray
     capture_activity_m2_by_interface: np.ndarray
+    arrival_limited: bool = False
+    maximum_arrival_exposure: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -80,6 +83,8 @@ class LatticeInterfaceAbsorptionDecision:
     edge_fraction_field_by_interface: dict[str, np.ndarray]
     edge_affinity_field_J_m_by_interface: dict[str, np.ndarray]
     local_kinetics_mode: str
+    arrival_limited: bool = False
+    maximum_arrival_exposure: float = 0.0
 
 
 def _edge_geometry(state, spacing_m):
@@ -113,7 +118,8 @@ def _edge_geometry(state, spacing_m):
 
 def project_lattice_line_to_interfaces(
         state, *, systems, spacing_m, fraction, parameters,
-        stress_direction_by_owner=None, hazard_exposure_by_interface=None):
+        stress_direction_by_owner=None, hazard_exposure_by_interface=None,
+        arrival_exposure_by_owner=None):
     """Apply a finite signed-line/swept-area event without pricing it."""
     state.validate()
     spacing = float(spacing_m)
@@ -149,6 +155,23 @@ def project_lattice_line_to_interfaces(
     hazard_exposures = None
     hazard_shares = None
     total_plus_hazard = total_minus_hazard = None
+    arrival_exposures = None
+    maximum_arrival_exposure = 0.0
+    if arrival_exposure_by_owner is not None:
+        arrival_exposures = tuple(
+            np.asarray(value, dtype=float)
+            for value in arrival_exposure_by_owner)
+        if (len(arrival_exposures) != len(state.owners)
+                or any(value.shape != state.owners[0].mobile_plus_m2.shape
+                       for value in arrival_exposures)):
+            raise ValueError(
+                "arrival exposure requires owner x grid x family")
+        if any(np.any(~np.isfinite(value)) or np.any(value < 0.0)
+               for value in arrival_exposures):
+            raise ValueError("arrival exposure must be finite and nonnegative")
+        maximum_arrival_exposure = max(
+            (float(np.max(value, initial=0.0))
+             for value in arrival_exposures), default=0.0)
     if hazard_exposure_by_interface is not None:
         hazard_exposures = np.asarray(
             hazard_exposure_by_interface, dtype=float)
@@ -174,10 +197,36 @@ def project_lattice_line_to_interfaces(
                     systems, state.owners[owner_index].orientation_rad)
                 incidence = np.sum(slip*outward[..., None, :], axis=-1)
                 sign_speed = np.sign(stress_directions[owner_index])
+                plus_crossing = np.maximum(-sign_speed*incidence, 0.0)
+                minus_crossing = np.maximum(sign_speed*incidence, 0.0)
                 plus = (exposure[..., None]*contact[..., None]
-                        *np.maximum(-sign_speed*incidence, 0.0))
+                        *plus_crossing)
                 minus = (exposure[..., None]*contact[..., None]
-                         *np.maximum(sign_speed*incidence, 0.0))
+                         *minus_crossing)
+                if arrival_exposures is not None:
+                    # The former exact reaction clock acted on every carrier
+                    # in the diffuse support at every outer call.  A glide-
+                    # supplied boundary reaction can consume only line that
+                    # reaches the interface.  ``contact = dx |grad eta|``;
+                    # multiplying it by ``|v| dt / dx`` therefore gives the
+                    # width-independent diffuse representation of
+                    # ``rho max(v.n, 0) dt``.  Arrival and reaction are serial
+                    # clocks, so their effective exposure is their harmonic
+                    # rate combination, not two independently saturating
+                    # donor debits.
+                    arrival = arrival_exposures[owner_index]
+                    plus_arrival = (arrival*contact[..., None]
+                                    *plus_crossing)
+                    minus_arrival = (arrival*contact[..., None]
+                                     *minus_crossing)
+                    plus = np.divide(
+                        plus*plus_arrival, plus+plus_arrival,
+                        out=np.zeros_like(plus),
+                        where=(plus+plus_arrival) > 0.0)
+                    minus = np.divide(
+                        minus*minus_arrival, minus+minus_arrival,
+                        out=np.zeros_like(minus),
+                        where=(minus+minus_arrival) > 0.0)
                 total_plus_hazard[owner_index] += plus
                 total_minus_hazard[owner_index] += minus
                 edge_shares.append((owner_index, plus, minus))
@@ -323,7 +372,8 @@ def project_lattice_line_to_interfaces(
     return LatticeInterfaceProjection(
         candidate, removed_plus, removed_minus, stored_plus, stored_minus,
         burgers_balance, maximum_mura, max_capacity, activity,
-        activity_by_interface)
+        activity_by_interface, arrival_exposures is not None,
+        maximum_arrival_exposure)
 
 
 def evaluate_lattice_interface_absorption(
@@ -352,10 +402,16 @@ def evaluate_lattice_interface_absorption(
     owner_drivings = _owner_drivings_from_common_stress(
         state, CommonWallDriving(mean_strain=np.asarray(mean_strain)),
         systems, wall_parameters)
-    stress_directions = tuple(
+    resolved_drivings = tuple(
         resolved_driving_components(
-            owner, driving, systems, (), wall_parameters)["speed_m_s"]
+            owner, driving, systems, (), wall_parameters)
         for owner, driving in zip(state.owners, owner_drivings))
+    stress_directions = tuple(
+        value["speed_m_s"] for value in resolved_drivings)
+    arrival_exposures = (tuple(
+        np.abs(value["speed_m_s"])*dt/spacing
+        for value in resolved_drivings)
+        if parameters.arrival_limited else None)
     temperature = np.sum(
         np.asarray(state.supports)*np.asarray([
             owner.temperature_K for owner in state.owners]), axis=0)
@@ -447,7 +503,8 @@ def evaluate_lattice_interface_absorption(
         state, systems=systems, spacing_m=spacing,
         fraction=np.asarray(edge_fraction_fields), parameters=parameters,
         stress_direction_by_owner=stress_directions,
-        hazard_exposure_by_interface=hazard_exposure)
+        hazard_exposure_by_interface=hazard_exposure,
+        arrival_exposure_by_owner=arrival_exposures)
     cold = projection.candidate_state
     cold_energy = evaluate_complete_multigrain_energy(cold, **common)
     delta = cold_energy.helmholtz_J-before.helmholtz_J
@@ -472,7 +529,8 @@ def evaluate_lattice_interface_absorption(
                 fraction=np.asarray(edge_fraction_fields),
                 parameters=parameters,
                 stress_direction_by_owner=stress_directions,
-                hazard_exposure_by_interface=hazard_exposure*scale)
+                hazard_exposure_by_interface=hazard_exposure*scale,
+                arrival_exposure_by_owner=arrival_exposures)
             trial_cold = trial_projection.candidate_state
             trial_energy = evaluate_complete_multigrain_energy(
                 trial_cold, **common)
@@ -556,5 +614,7 @@ def evaluate_lattice_interface_absorption(
          +("EXACT_CLOCK_ENERGY_LIMITED" if (
              parameters.complete_physical_clock
              and selected_hazard_scale < 1.0) else "EXACT_CLOCK")
+         +("_ARRIVAL_LIMITED" if parameters.arrival_limited else "")
          if parameters.complete_physical_clock else
-         "LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION_CLIPPED_CLOCK"))
+         "LOCAL_COMPLETE_STORAGE_PLUS_ELASTIC_FIRST_VARIATION_CLIPPED_CLOCK"),
+        parameters.arrival_limited, projection.maximum_arrival_exposure)

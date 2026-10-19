@@ -1,0 +1,1498 @@
+{
+  "cases": [
+    {
+      "capture_probes": {
+        "arrival_limited_serial_clock": {
+          "accepted": true,
+          "arrival_limited": true,
+          "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+          "delta_helmholtz_J": -1.6255650808109098e-20,
+          "kinetic_fraction": 0.9999999846069684,
+          "maximum_arrival_exposure": 8.735572581559405,
+          "maximum_incident_capacity_fraction": 0.7829263309597221,
+          "maximum_mura_relative_residual": 5.383339226074724e-16,
+          "reaction_event_rate_s": 561121665205.5697,
+          "relative_first_law_residual": 0.0,
+          "removed_line_m": 7.393675278227386e-14,
+          "selected_hazard_scale": 1.0
+        },
+        "arrival_to_legacy_removed_line_ratio": 0.00112829282154617,
+        "legacy_reaction_clock": {
+          "accepted": true,
+          "arrival_limited": false,
+          "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+          "delta_helmholtz_J": -1.3603934571800133e-17,
+          "kinetic_fraction": 0.9999999846069684,
+          "maximum_arrival_exposure": 0.0,
+          "maximum_incident_capacity_fraction": 1.0000000000000002,
+          "maximum_mura_relative_residual": 5.600157462409635e-16,
+          "reaction_event_rate_s": 561121665205.5697,
+          "relative_first_law_residual": 1.4844851735409098e-11,
+          "removed_line_m": 6.552975554781401e-11,
+          "selected_hazard_scale": 1.0
+        }
+      },
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_400/checkpoint_latest.npz",
+      "checkpoint_sha256": "80ab8a09863282688ce58b2bed8346ef7a3bd924b086ef423b64e69035f8dbd7",
+      "configuration": {
+        "dt_s": 2e-09,
+        "lattice_capture_distance_m": 5e-07,
+        "lattice_maximum_fraction": 0.05,
+        "shear_rate_s": 80000.0,
+        "source_mode": "gb_tj_only"
+      },
+      "flow_reconciliation": {
+        "accepted_interval_mean_plastic_power_W_m3": 60443447894364.984,
+        "accepted_to_raw_power_ratio": 1.00292236334686,
+        "consumed_interval_s": 2e-09,
+        "maximum_line_balance_residual_m2_s": 0.0,
+        "mechanical_internal_substeps": 326,
+        "minimum_internal_step_scale": 0.003068568899431268,
+        "raw_instantaneous_mean_plastic_power_W_m3": 60267324873142.41
+      },
+      "ledger": {
+        "accepted_events": 751,
+        "applied_shear_strain": 0.06663999999999999,
+        "collective_wall_nucleation_inactive_intervals": 0,
+        "collective_wall_nucleation_intervals": 0,
+        "collective_wall_nucleation_rejected_intervals": 0,
+        "compatible_wall_reorganization_inactive_intervals": 0,
+        "compatible_wall_reorganization_intervals": 0,
+        "compatible_wall_reorganization_rejected_intervals": 0,
+        "conservative_dipole_wall_inactive_intervals": 5,
+        "conservative_dipole_wall_intervals": 428,
+        "conservative_dipole_wall_pair_cell_sum_m2": 2.7036573774254904e+16,
+        "conservative_dipole_wall_rejected_intervals": 0,
+        "conservative_wall_glide_inactive_intervals": 0,
+        "conservative_wall_glide_intervals": 433,
+        "conservative_wall_glide_line_cell_sum_m2": 1.0252253015991354e+17,
+        "conservative_wall_glide_rejected_intervals": 0,
+        "cumulative_collective_wall_nucleation_heat_J": 0.0,
+        "cumulative_compatible_wall_reorganization_heat_J": 0.0,
+        "cumulative_conservative_dipole_wall_heat_J": 8.605774645520074e-16,
+        "cumulative_conservative_wall_glide_heat_J": 1.4056876483068795e-15,
+        "cumulative_front_first_law_residual_J": 2.3460526797425343e-27,
+        "cumulative_interface_mobile_emission_heat_J": 0.0,
+        "cumulative_interface_sink_first_law_residual_J": 0.0,
+        "cumulative_interface_sink_generated_heat_J": 0.0,
+        "cumulative_joint_wall_topology_orientation_heat_J": 0.0,
+        "cumulative_lattice_absorption_heat_J": 9.734677543143547e-14,
+        "cumulative_mechanical_external_work_J": 1.535110656724519e-12,
+        "cumulative_mechanical_first_law_residual_J": 1.4529378240133093e-16,
+        "cumulative_mechanical_internal_energy_change_J": 1.5352559505069207e-12,
+        "cumulative_sink_first_law_residual_J": 0.0,
+        "cumulative_sink_generated_heat_J": 0.0,
+        "cumulative_source_first_law_residual_J": 1.0056228425801931e-22,
+        "cumulative_source_generated_heat_J": 1.6888889807260963e-17,
+        "cumulative_source_resolved_work_J": 1.696223243948543e-17,
+        "cumulative_structural_absorption_heat_J": 1.5235185890756461e-15,
+        "cumulative_structural_junction_heat_J": 1.7657115523891305e-18,
+        "cumulative_wall_neutral_pair_recovery_heat_J": 0.0,
+        "cumulative_wall_order_relaxation_heat_J": 8.096056802154153e-15,
+        "cumulative_wall_orientation_relaxation_heat_J": 3.5068530656630723e-20,
+        "generated_heat_J": 2.363160952508551e-16,
+        "interface_mobile_emission_inactive_intervals": 0,
+        "interface_mobile_emission_intervals": 0,
+        "interface_mobile_emission_rejected_intervals": 0,
+        "interface_mobile_emitted_pair_cell_sum_m2": 0.0,
+        "interface_sink_annihilated_pair_cell_sum_m2": 0.0,
+        "interface_sink_inactive_intervals": 0,
+        "interface_sink_intervals": 0,
+        "interface_sink_rejected_intervals": 0,
+        "intervals": 751,
+        "joint_wall_topology_orientation_inactive_intervals": 0,
+        "joint_wall_topology_orientation_intervals": 0,
+        "joint_wall_topology_orientation_rejected_intervals": 0,
+        "joint_wall_topology_orientation_transferred_line_cell_sum_m2": 0.0,
+        "lattice_absorbed_line_length_m": 2.9085913995126085e-06,
+        "lattice_absorption_inactive_intervals": 0,
+        "lattice_absorption_intervals": 433,
+        "lattice_absorption_rejected_intervals": 0,
+        "maximum_collective_wall_nucleation_first_law_residual": 0.0,
+        "maximum_compatible_wall_reorganization_first_law_residual": 0.0,
+        "maximum_conservative_dipole_wall_first_law_residual": 0.0035370406759677735,
+        "maximum_conservative_dipole_wall_inventory_residual_m2": 17.875,
+        "maximum_conservative_wall_glide_first_law_residual": 2.5055456076115137e-06,
+        "maximum_conservative_wall_glide_inventory_residual_m2": 11.6171875,
+        "maximum_interface_mobile_emission_first_law_residual": 0.0,
+        "maximum_interface_mobile_emission_line_balance_residual_m2": 0.0,
+        "maximum_interface_mobile_emission_mura_residual": 0.0,
+        "maximum_interface_sink_line_balance_residual_m2": 0.0,
+        "maximum_interface_sink_relative_first_law_residual": 0.0,
+        "maximum_joint_wall_topology_orientation_balance_residual_m2": 0.0,
+        "maximum_joint_wall_topology_orientation_first_law_residual": 0.0,
+        "maximum_lattice_absorption_first_law_residual": 5.780231190198535e-09,
+        "maximum_mechanical_relative_first_law_residual": 0.04077451685042164,
+        "maximum_relative_energy_closure": 3.828286958752743e-07,
+        "maximum_sink_line_balance_residual_m2": 0.0,
+        "maximum_sink_relative_first_law_residual": 0.0,
+        "maximum_source_line_balance_residual_m2": 1.3921546936035156,
+        "maximum_source_relative_first_law_residual": 0.024271440631541984,
+        "maximum_structural_absorption_first_law_residual": 6.795638830823931e-05,
+        "maximum_structural_junction_first_law_residual": 0.005088271674350613,
+        "maximum_wall_neutral_pair_recovery_balance_residual_m2": 0.0,
+        "maximum_wall_neutral_pair_recovery_first_law_residual": 0.0,
+        "maximum_wall_order_relaxation_first_law_residual": 1.4950682953037404e-08,
+        "maximum_wall_orientation_relaxation_first_law_residual": 0.0005763319672131147,
+        "physical_time_s": 0.00013320000000000158,
+        "rejected_events": 0,
+        "sink_annihilated_pair_cell_sum_m2": 0.0,
+        "sink_inactive_intervals": 0,
+        "sink_intervals": 0,
+        "sink_rejected_intervals": 0,
+        "source_created_line_cell_sum_m2": 15552257096956.531,
+        "source_event_count": 44.79050043919515,
+        "source_inactive_intervals": 54,
+        "source_intervals": 379,
+        "source_rejected_intervals": 0,
+        "stationary_intervals": 0,
+        "structural_absorbed_line_length_m": 1.0147503960308829e-06,
+        "structural_absorption_inactive_intervals": 1,
+        "structural_absorption_intervals": 865,
+        "structural_absorption_rejected_intervals": 0,
+        "structural_junction_inactive_intervals": 1,
+        "structural_junction_intervals": 555,
+        "structural_junction_reacted_absolute_content": 76.05138714233999,
+        "structural_junction_rejected_intervals": 0,
+        "transformed_volume_m3": 5.522764259742774e-23,
+        "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2": 0.0,
+        "wall_neutral_pair_recovery_inactive_intervals": 0,
+        "wall_neutral_pair_recovery_intervals": 0,
+        "wall_neutral_pair_recovery_rejected_intervals": 0,
+        "wall_order_relaxation_inactive_intervals": 0,
+        "wall_order_relaxation_intervals": 433,
+        "wall_order_relaxation_rejected_intervals": 0,
+        "wall_orientation_relaxation_inactive_intervals": 38,
+        "wall_orientation_relaxation_intervals": 395,
+        "wall_orientation_relaxation_rejected_intervals": 0
+      },
+      "line_inventory": {
+        "forest": {
+          "minus_m": 4.116668370988075e-06,
+          "plus_m": 4.13914163341389e-06,
+          "total_m": 8.255810004401966e-06
+        },
+        "interface": {
+          "minus_m": 9.432125748841188e-07,
+          "plus_m": 9.658523865436954e-07,
+          "total_m": 1.9090649614278142e-06
+        },
+        "mobile": {
+          "minus_m": 9.384976121650616e-08,
+          "plus_m": 7.804446256325821e-08,
+          "total_m": 1.7189422377976438e-07
+        },
+        "wall": {
+          "minus_m": 2.9795270828587696e-06,
+          "plus_m": 2.956816112898768e-06,
+          "total_m": 5.9363431957575375e-06
+        }
+      },
+      "load": 0.06663999999999999,
+      "owners_accepted": [
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            1.359730784244664e-14,
+            1.9963577067131865e-14,
+            4.3033704214507196e-07,
+            3.1700062165432276e-07
+          ],
+          "accepted_beta_p_increment_l2": 0.020522351658541427,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            -1.3597307521783869e-14,
+            -1.9963576734422262e-14,
+            4.3033704214507196e-07,
+            3.1700062165432276e-07
+          ],
+          "grain_id": 10,
+          "initial_stress_conjugate_power_W_by_family": [
+            6.189894640631385e-15,
+            9.063601182330767e-15,
+            3.504620790379235e-07,
+            2.5857462236747974e-07
+          ]
+        },
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            1.894544058831168e-09,
+            1.3367240024230785e-09,
+            1.5352272332550756e-11,
+            2.3417046011684904e-11
+          ],
+          "accepted_beta_p_increment_l2": 0.00021176611804278272,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            1.894544058831168e-09,
+            1.3367240024230785e-09,
+            1.5352272332550756e-11,
+            2.3417046011684904e-11
+          ],
+          "grain_id": 20,
+          "initial_stress_conjugate_power_W_by_family": [
+            1.4089128194000362e-09,
+            9.627722011184349e-10,
+            9.20725100853521e-12,
+            2.2704748726259725e-11
+          ]
+        },
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            4.510569437395096e-12,
+            3.6181925453689363e-12,
+            1.220052942074805e-11,
+            9.863362718053516e-08
+          ],
+          "accepted_beta_p_increment_l2": 0.018743800274424606,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            4.510569437395096e-12,
+            3.6181925453689363e-12,
+            -1.2200529420690693e-11,
+            9.863362718053516e-08
+          ],
+          "grain_id": 30,
+          "initial_stress_conjugate_power_W_by_family": [
+            6.248181893595771e-12,
+            4.527231862727177e-12,
+            8.450454286468111e-12,
+            7.993541055702205e-08
+          ]
+        }
+      ],
+      "owners_raw": [
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            5.517300113612615e-05,
+            8.105775646287584e-05,
+            1731.7540353054505,
+            1284.3090656741688
+          ],
+          "grain_id": 10,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            5.717265474959921e-07,
+            6.119155223462718e-07,
+            106.2735896449215,
+            19.278354035385824
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            -70057714.02263129,
+            -70170280.40348522,
+            1549538393.7260482,
+            1230551607.2526011
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            -167149657.74880508,
+            -167149657.74880508,
+            1765855390.9858053,
+            1446616989.1832342
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            218584453.73293635,
+            218671939.6241385,
+            218023854.8229117,
+            218754144.70159402
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            9.298251814042937,
+            12.237932105114698,
+            61.961485147317,
+            77.59489442547142
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            13.079553815484903,
+            12.731637835759463,
+            42.07840388883816,
+            64.26433327507479
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            1.3682904281759285e-14,
+            2.0102323602793213e-14,
+            4.294750007557518e-07,
+            3.185086482871939e-07
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            6.2290195881926105e-15,
+            9.126609376523999e-15,
+            3.4852760476521264e-07,
+            2.594966776573617e-07
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            -1.368290395659489e-14,
+            -2.010232319414339e-14,
+            4.294750007557518e-07,
+            3.185086482871939e-07
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": -4.15973376e-18,
+          "transport_mobile_plus_global_rate_m_per_s": 2.71982592e-18
+        },
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            7.431222664722173,
+            5.383690245232281,
+            0.06243584017509863,
+            0.09361185007146798
+          ],
+          "grain_id": 20,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            49.24663863433139,
+            49.26161889194522,
+            0.040218014132022466,
+            453.9408150195381
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            1395117242.2005627,
+            1395158148.8344607,
+            790393722.3152846,
+            2054828134.8351436
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            1416911685.2850907,
+            1416911685.2850902,
+            812187026.8920047,
+            2077009968.1233258
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            21749440.8330576,
+            21743640.743765634,
+            21780508.339479353,
+            22137341.148168646
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            0.22773939720497913,
+            0.15875540746776223,
+            0.48042371892556185,
+            0.00011555238776479065
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            0.30612298924786724,
+            0.38369374030159203,
+            0.2664273562480915,
+            0.00018960204696538374
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            1.8429432208510993e-09,
+            1.3351551808176058e-09,
+            1.548408836342446e-11,
+            2.321573881772406e-11
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            1.3601469605667292e-09,
+            9.588273857305871e-10,
+            9.28606574133692e-12,
+            2.2325653927188855e-11
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            1.8429432208510993e-09,
+            1.3351551808176058e-09,
+            1.548408836342446e-11,
+            2.321573881772406e-11
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": 1.032858e-20,
+          "transport_mobile_plus_global_rate_m_per_s": -4.803264e-20
+        },
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.018083167627317896,
+            0.015071060924486844,
+            0.047800190695110704,
+            394.3779565662698
+          ],
+          "grain_id": 30,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            602.4489254714405,
+            602.3343658710419,
+            0.4256169529473694,
+            358.16370472547766
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            2521552268.224651,
+            2520939495.605682,
+            -304633808.0195135,
+            1896107985.9324875
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            2740864175.428705,
+            2740864175.428705,
+            -475127251.30441326,
+            2113648180.0705266
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            220039913.6956121,
+            220661539.99619028,
+            218031207.7082103,
+            218779194.92491338
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            1.7620959634817862e-05,
+            1.6003890591101617e-05,
+            2.870974221794607,
+            24.382622844508035
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            1.2067539558213045e-05,
+            1.4155633541393283e-05,
+            1.6241286872809149,
+            22.613189367306685
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            4.484625571574838e-12,
+            3.737623109272738e-12,
+            1.1854447292387455e-11,
+            9.780573322843492e-08
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            6.223503249315027e-12,
+            4.756384799783625e-12,
+            8.186419454769403e-12,
+            7.833129572661865e-08
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            4.484625571574838e-12,
+            3.737623109272738e-12,
+            -1.1854447292330974e-11,
+            9.780573322843492e-08
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": 4.75648128e-18,
+          "transport_mobile_plus_global_rate_m_per_s": 2.11438755e-19
+        }
+      ],
+      "physical_time_s": 0.00013320000000000158,
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "campaign": "V67",
+                    "scientific_scope": "fresh zero-load polycrystal anchor",
+                    "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                    "source_dirty": false
+                  },
+                  "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                },
+                "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+      },
+      "step": 433
+    },
+    {
+      "capture_probes": {
+        "arrival_limited_serial_clock": {
+          "accepted": true,
+          "arrival_limited": true,
+          "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+          "delta_helmholtz_J": -6.951495611182974e-21,
+          "kinetic_fraction": 0.999999990798534,
+          "maximum_arrival_exposure": 9.09628293247251,
+          "maximum_incident_capacity_fraction": 0.8635164047650684,
+          "maximum_mura_relative_residual": 4.888074591852832e-16,
+          "reaction_event_rate_s": 564888915699.0582,
+          "relative_first_law_residual": 0.0,
+          "removed_line_m": 2.980182653213714e-14,
+          "selected_hazard_scale": 1.0
+        },
+        "arrival_to_legacy_removed_line_ratio": 0.0009175687174485679,
+        "legacy_reaction_clock": {
+          "accepted": true,
+          "arrival_limited": false,
+          "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+          "delta_helmholtz_J": -6.5251960346666175e-18,
+          "kinetic_fraction": 0.999999990798534,
+          "maximum_arrival_exposure": 0.0,
+          "maximum_incident_capacity_fraction": 1.0000000000000002,
+          "maximum_mura_relative_residual": 5.223487842959549e-16,
+          "reaction_event_rate_s": 564888915699.0582,
+          "relative_first_law_residual": 0.0,
+          "removed_line_m": 3.247912223403323e-11,
+          "selected_hazard_scale": 1.0
+        }
+      },
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_500/checkpoint_latest.npz",
+      "checkpoint_sha256": "565a5efafb959ab980a5dcafa7e7121b08033321fedb3befcb77f0bdc7e3c9e4",
+      "configuration": {
+        "dt_s": 2e-09,
+        "lattice_capture_distance_m": 5e-07,
+        "lattice_maximum_fraction": 0.05,
+        "shear_rate_s": 80000.0,
+        "source_mode": "gb_tj_only"
+      },
+      "flow_reconciliation": {
+        "accepted_interval_mean_plastic_power_W_m3": 14856188780122.201,
+        "accepted_to_raw_power_ratio": 1.02221552263212,
+        "consumed_interval_s": 2e-09,
+        "maximum_line_balance_residual_m2_s": 0.0,
+        "mechanical_internal_substeps": 404,
+        "minimum_internal_step_scale": 0.0024697313588387475,
+        "raw_instantaneous_mean_plastic_power_W_m3": 14533323405096.365
+      },
+      "ledger": {
+        "accepted_events": 851,
+        "applied_shear_strain": 0.08263999999999934,
+        "collective_wall_nucleation_inactive_intervals": 0,
+        "collective_wall_nucleation_intervals": 0,
+        "collective_wall_nucleation_rejected_intervals": 0,
+        "compatible_wall_reorganization_inactive_intervals": 0,
+        "compatible_wall_reorganization_intervals": 0,
+        "compatible_wall_reorganization_rejected_intervals": 0,
+        "conservative_dipole_wall_inactive_intervals": 5,
+        "conservative_dipole_wall_intervals": 528,
+        "conservative_dipole_wall_pair_cell_sum_m2": 2.703657529492947e+16,
+        "conservative_dipole_wall_rejected_intervals": 0,
+        "conservative_wall_glide_inactive_intervals": 0,
+        "conservative_wall_glide_intervals": 533,
+        "conservative_wall_glide_line_cell_sum_m2": 1.0256082327012424e+17,
+        "conservative_wall_glide_rejected_intervals": 0,
+        "cumulative_collective_wall_nucleation_heat_J": 0.0,
+        "cumulative_compatible_wall_reorganization_heat_J": 0.0,
+        "cumulative_conservative_dipole_wall_heat_J": 8.605775289563788e-16,
+        "cumulative_conservative_wall_glide_heat_J": 1.4064613887715654e-15,
+        "cumulative_front_first_law_residual_J": 2.2115294265801522e-27,
+        "cumulative_interface_mobile_emission_heat_J": 0.0,
+        "cumulative_interface_sink_first_law_residual_J": 0.0,
+        "cumulative_interface_sink_generated_heat_J": 0.0,
+        "cumulative_joint_wall_topology_orientation_heat_J": 0.0,
+        "cumulative_lattice_absorption_heat_J": 1.2454301396400766e-13,
+        "cumulative_mechanical_external_work_J": 2.3591962809665747e-12,
+        "cumulative_mechanical_first_law_residual_J": 1.4810696104093553e-16,
+        "cumulative_mechanical_internal_energy_change_J": 2.3593443879276152e-12,
+        "cumulative_sink_first_law_residual_J": 0.0,
+        "cumulative_sink_generated_heat_J": 0.0,
+        "cumulative_source_first_law_residual_J": 1.0765632736294186e-22,
+        "cumulative_source_generated_heat_J": 2.64009474455445e-17,
+        "cumulative_source_resolved_work_J": 2.6498386883658898e-17,
+        "cumulative_structural_absorption_heat_J": 1.573324200601946e-15,
+        "cumulative_structural_junction_heat_J": 1.7657234697676237e-18,
+        "cumulative_wall_neutral_pair_recovery_heat_J": 0.0,
+        "cumulative_wall_order_relaxation_heat_J": 9.263562348911751e-15,
+        "cumulative_wall_orientation_relaxation_heat_J": 4.100381368071117e-20,
+        "generated_heat_J": 2.7597099467233755e-16,
+        "interface_mobile_emission_inactive_intervals": 0,
+        "interface_mobile_emission_intervals": 0,
+        "interface_mobile_emission_rejected_intervals": 0,
+        "interface_mobile_emitted_pair_cell_sum_m2": 0.0,
+        "interface_sink_annihilated_pair_cell_sum_m2": 0.0,
+        "interface_sink_inactive_intervals": 0,
+        "interface_sink_intervals": 0,
+        "interface_sink_rejected_intervals": 0,
+        "intervals": 851,
+        "joint_wall_topology_orientation_inactive_intervals": 0,
+        "joint_wall_topology_orientation_intervals": 0,
+        "joint_wall_topology_orientation_rejected_intervals": 0,
+        "joint_wall_topology_orientation_transferred_line_cell_sum_m2": 0.0,
+        "lattice_absorbed_line_length_m": 3.040424789183622e-06,
+        "lattice_absorption_inactive_intervals": 0,
+        "lattice_absorption_intervals": 533,
+        "lattice_absorption_rejected_intervals": 0,
+        "maximum_collective_wall_nucleation_first_law_residual": 0.0,
+        "maximum_compatible_wall_reorganization_first_law_residual": 0.0,
+        "maximum_conservative_dipole_wall_first_law_residual": 0.0035370406759677735,
+        "maximum_conservative_dipole_wall_inventory_residual_m2": 17.875,
+        "maximum_conservative_wall_glide_first_law_residual": 2.5055456076115137e-06,
+        "maximum_conservative_wall_glide_inventory_residual_m2": 11.6171875,
+        "maximum_interface_mobile_emission_first_law_residual": 0.0,
+        "maximum_interface_mobile_emission_line_balance_residual_m2": 0.0,
+        "maximum_interface_mobile_emission_mura_residual": 0.0,
+        "maximum_interface_sink_line_balance_residual_m2": 0.0,
+        "maximum_interface_sink_relative_first_law_residual": 0.0,
+        "maximum_joint_wall_topology_orientation_balance_residual_m2": 0.0,
+        "maximum_joint_wall_topology_orientation_first_law_residual": 0.0,
+        "maximum_lattice_absorption_first_law_residual": 5.780231190198535e-09,
+        "maximum_mechanical_relative_first_law_residual": 0.04077451685042164,
+        "maximum_relative_energy_closure": 3.828286958752743e-07,
+        "maximum_sink_line_balance_residual_m2": 0.0,
+        "maximum_sink_relative_first_law_residual": 0.0,
+        "maximum_source_line_balance_residual_m2": 1.3921546936035156,
+        "maximum_source_relative_first_law_residual": 0.024271440631541984,
+        "maximum_structural_absorption_first_law_residual": 6.795638830823931e-05,
+        "maximum_structural_junction_first_law_residual": 0.005088271674350613,
+        "maximum_wall_neutral_pair_recovery_balance_residual_m2": 0.0,
+        "maximum_wall_neutral_pair_recovery_first_law_residual": 0.0,
+        "maximum_wall_order_relaxation_first_law_residual": 1.4950682953037404e-08,
+        "maximum_wall_orientation_relaxation_first_law_residual": 0.0005763319672131147,
+        "physical_time_s": 0.00013340000000000202,
+        "rejected_events": 0,
+        "sink_annihilated_pair_cell_sum_m2": 0.0,
+        "sink_inactive_intervals": 0,
+        "sink_intervals": 0,
+        "sink_rejected_intervals": 0,
+        "source_created_line_cell_sum_m2": 20223125689049.367,
+        "source_event_count": 58.24260198442183,
+        "source_inactive_intervals": 54,
+        "source_intervals": 479,
+        "source_rejected_intervals": 0,
+        "stationary_intervals": 0,
+        "structural_absorbed_line_length_m": 1.047825507438429e-06,
+        "structural_absorption_inactive_intervals": 1,
+        "structural_absorption_intervals": 1065,
+        "structural_absorption_rejected_intervals": 0,
+        "structural_junction_inactive_intervals": 1,
+        "structural_junction_intervals": 562,
+        "structural_junction_reacted_absolute_content": 76.05338385753294,
+        "structural_junction_rejected_intervals": 0,
+        "transformed_volume_m3": 5.65572247820842e-23,
+        "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2": 0.0,
+        "wall_neutral_pair_recovery_inactive_intervals": 0,
+        "wall_neutral_pair_recovery_intervals": 0,
+        "wall_neutral_pair_recovery_rejected_intervals": 0,
+        "wall_order_relaxation_inactive_intervals": 0,
+        "wall_order_relaxation_intervals": 533,
+        "wall_order_relaxation_rejected_intervals": 0,
+        "wall_orientation_relaxation_inactive_intervals": 38,
+        "wall_orientation_relaxation_intervals": 495,
+        "wall_orientation_relaxation_rejected_intervals": 0
+      },
+      "line_inventory": {
+        "forest": {
+          "minus_m": 4.1685938244852176e-06,
+          "plus_m": 4.184842187154822e-06,
+          "total_m": 8.35343601164004e-06
+        },
+        "interface": {
+          "minus_m": 9.989540543154095e-07,
+          "plus_m": 1.0098442551772518e-06,
+          "total_m": 2.0087983094926613e-06
+        },
+        "mobile": {
+          "minus_m": 1.989362261726451e-08,
+          "plus_m": 2.215387029789667e-08,
+          "total_m": 4.204749291516118e-08
+        },
+        "wall": {
+          "minus_m": 2.9253989727437725e-06,
+          "plus_m": 2.909456711925801e-06,
+          "total_m": 5.834855684669573e-06
+        }
+      },
+      "load": 0.08263999999999934,
+      "owners_accepted": [
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            3.466544399378818e-14,
+            5.3080021281593476e-14,
+            4.498840927133307e-12,
+            1.88376103413323e-07
+          ],
+          "accepted_beta_p_increment_l2": 0.012293423813544131,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            -3.466381745133288e-14,
+            -5.307800044657303e-14,
+            4.498840927133307e-12,
+            1.88376103413323e-07
+          ],
+          "grain_id": 10,
+          "initial_stress_conjugate_power_W_by_family": [
+            1.6549798186191146e-14,
+            2.533353606697041e-14,
+            5.0524059567094946e-12,
+            1.6334065982652505e-07
+          ]
+        },
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            2.247207685380631e-11,
+            1.1920652330794638e-11,
+            2.84248187397543e-10,
+            7.988750430896066e-12
+          ],
+          "accepted_beta_p_increment_l2": 1.8748442979844332e-05,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            2.247207685380631e-11,
+            1.1920652330794638e-11,
+            2.84248187397543e-10,
+            7.988750430896066e-12
+          ],
+          "grain_id": 20,
+          "initial_stress_conjugate_power_W_by_family": [
+            2.0043961574108622e-11,
+            9.84544322852352e-12,
+            1.962599585838327e-10,
+            1.02666004111187e-11
+          ]
+        },
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            4.479118974814027e-12,
+            3.665717198461879e-12,
+            5.701548246648552e-12,
+            7.527277915848542e-09
+          ],
+          "accepted_beta_p_increment_l2": 0.004561081208128225,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            4.479118974814027e-12,
+            3.665717198461879e-12,
+            -5.701548246639567e-12,
+            7.527277915848542e-09
+          ],
+          "grain_id": 30,
+          "initial_stress_conjugate_power_W_by_family": [
+            8.173768721987753e-12,
+            6.06159035190465e-12,
+            4.3769227965060855e-12,
+            6.264879386263531e-09
+          ]
+        }
+      ],
+      "owners_raw": [
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.00013988949723616004,
+            0.00021432401379365502,
+            0.018025835068319333,
+            752.2446016096312
+          ],
+          "grain_id": 10,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            3.294589497101103e-05,
+            3.307016105528496e-05,
+            480.6376339250374,
+            192.35680160020624
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            -85834071.43620585,
+            -85887490.49661219,
+            2094923407.9664338,
+            1656381730.366303
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            -186401889.79544052,
+            -186401889.79544047,
+            2312108222.048625,
+            1874375487.0055275
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            218561722.43817523,
+            218650453.90061238,
+            218197001.63457224,
+            219581977.99066865
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            8.283529248933947,
+            10.755109072932775,
+            2.4157927583852802e-05,
+            17.167773970551753
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            12.837364138594273,
+            11.485483287055345,
+            2.1469969969376253e-05,
+            13.041810172697238
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            3.46925953145677e-14,
+            5.315235542082645e-14,
+            4.470407096943195e-12,
+            1.8655666119918857e-07
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            1.6563728872182895e-14,
+            2.5368724466669067e-14,
+            5.011619765472175e-12,
+            1.6107586234741457e-07
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            -3.469106777838946e-14,
+            -5.3150454208256496e-14,
+            4.470407096943195e-12,
+            1.8655666119918857e-07
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": 2.3141376e-18,
+          "transport_mobile_plus_global_rate_m_per_s": -1.8655948800000002e-18
+        },
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.08791899585640765,
+            0.041723086050607025,
+            1.131193910880801,
+            0.03203494415417924
+          ],
+          "grain_id": 20,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            326.8837626582152,
+            326.8979009070082,
+            1.8402924031766341,
+            628.1256194103438
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            1842513012.6155558,
+            1842547372.9376895,
+            1050440306.7681415,
+            2663058916.163518
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            1864700287.480333,
+            1864700287.480333,
+            1072365616.8331283,
+            2685735059.0658054
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            22145346.543626208,
+            22137317.1949185,
+            21905641.592196506,
+            22637765.52278169
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            0.00061157775590041,
+            0.0013840918980428992,
+            0.43886907268755615,
+            1.807646769712104e-05
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            9.580372233275611e-05,
+            0.0004181524703044171,
+            0.25358842415188065,
+            3.392153714281809e-05
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            2.18039109723891e-11,
+            1.0347325340550543e-11,
+            2.8053608989843866e-10,
+            7.944666150236453e-12
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            1.934595433183695e-11,
+            8.535710090803103e-12,
+            1.9349368049936245e-10,
+            1.0107635901826499e-11
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            2.18039109723891e-11,
+            1.0347325340550543e-11,
+            2.8053608989843866e-10,
+            7.944666150236453e-12
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": -1.5854175e-20,
+          "transport_mobile_plus_global_rate_m_per_s": 6.56173125e-21
+        },
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.01804339078769159,
+            0.014844452486441373,
+            0.01993653067252762,
+            24.94820722535182
+          ],
+          "grain_id": 30,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            656.7800116283732,
+            656.7461221578059,
+            3.3014447433173113,
+            592.6113593216738
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            3364853011.3778853,
+            3363889499.4757853,
+            -424617950.7519653,
+            2504912127.330445
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            3583505668.631516,
+            3583505668.631516,
+            -609531497.1146488,
+            2722643326.269211
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            219077213.6435519,
+            220048323.38877067,
+            218098541.45771834,
+            218486049.47221538
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            1.572452726227624e-05,
+            1.236402995008343e-05,
+            2.808792874477692,
+            0.6519698832624806
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            1.153233828635551e-05,
+            1.0400655510630157e-05,
+            1.6124250959008548,
+            5.433798685375953
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            4.474760915347514e-12,
+            3.681424216637461e-12,
+            4.944259606786851e-12,
+            6.187155391887252e-09
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            8.18808911494218e-12,
+            6.2192519963571185e-12,
+            3.706066489562703e-12,
+            4.753982253638362e-09
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            4.474760915347514e-12,
+            3.681424216637461e-12,
+            -4.944259606777796e-12,
+            6.187155391887252e-09
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": -2.36833858125e-19,
+          "transport_mobile_plus_global_rate_m_per_s": 2.2491795993750003e-18
+        }
+      ],
+      "physical_time_s": 0.00013340000000000202,
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "campaign": "V67",
+                      "scientific_scope": "fresh zero-load polycrystal anchor",
+                      "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                      "source_dirty": false
+                    },
+                    "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                  },
+                  "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+        },
+        "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+      },
+      "step": 533
+    },
+    {
+      "capture_probes": {
+        "arrival_limited_serial_clock": {
+          "accepted": true,
+          "arrival_limited": true,
+          "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+          "delta_helmholtz_J": -3.5333779191155507e-22,
+          "kinetic_fraction": 0.9999951505316717,
+          "maximum_arrival_exposure": 9.199494650618233,
+          "maximum_incident_capacity_fraction": 0.8930349954637687,
+          "maximum_mura_relative_residual": 4.977198878856161e-16,
+          "reaction_event_rate_s": 564514554118.0322,
+          "relative_first_law_residual": 0.0,
+          "removed_line_m": 1.0432005939247766e-15,
+          "selected_hazard_scale": 1.0
+        },
+        "arrival_to_legacy_removed_line_ratio": 0.005894843103150949,
+        "legacy_reaction_clock": {
+          "accepted": true,
+          "arrival_limited": false,
+          "classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+          "delta_helmholtz_J": -3.480484565704186e-20,
+          "kinetic_fraction": 0.9999951505316717,
+          "maximum_arrival_exposure": 0.0,
+          "maximum_incident_capacity_fraction": 1.0000000000000002,
+          "maximum_mura_relative_residual": 5.11953530688405e-16,
+          "reaction_event_rate_s": 564514554118.0322,
+          "relative_first_law_residual": 0.0,
+          "removed_line_m": 1.769683392196068e-13,
+          "selected_hazard_scale": 1.0
+        }
+      },
+      "checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_600/checkpoint_latest.npz",
+      "checkpoint_sha256": "4c65bd1f485a4b0ee1f00caceb02c2093183b741923902a42e630df2c7b5c347",
+      "configuration": {
+        "dt_s": 2e-09,
+        "lattice_capture_distance_m": 5e-07,
+        "lattice_maximum_fraction": 0.05,
+        "shear_rate_s": 80000.0,
+        "source_mode": "gb_tj_only"
+      },
+      "flow_reconciliation": {
+        "accepted_interval_mean_plastic_power_W_m3": 43335079764.70716,
+        "accepted_to_raw_power_ratio": 1.2769641820340396,
+        "consumed_interval_s": 2e-09,
+        "maximum_line_balance_residual_m2_s": 0.0,
+        "mechanical_internal_substeps": 456,
+        "minimum_internal_step_scale": 0.0021972984851913566,
+        "raw_instantaneous_mean_plastic_power_W_m3": 33936018233.244377
+      },
+      "ledger": {
+        "accepted_events": 951,
+        "applied_shear_strain": 0.09863999999999869,
+        "collective_wall_nucleation_inactive_intervals": 0,
+        "collective_wall_nucleation_intervals": 0,
+        "collective_wall_nucleation_rejected_intervals": 0,
+        "compatible_wall_reorganization_inactive_intervals": 0,
+        "compatible_wall_reorganization_intervals": 0,
+        "compatible_wall_reorganization_rejected_intervals": 0,
+        "conservative_dipole_wall_inactive_intervals": 5,
+        "conservative_dipole_wall_intervals": 628,
+        "conservative_dipole_wall_pair_cell_sum_m2": 2.7036576532185188e+16,
+        "conservative_dipole_wall_rejected_intervals": 0,
+        "conservative_wall_glide_inactive_intervals": 0,
+        "conservative_wall_glide_intervals": 633,
+        "conservative_wall_glide_line_cell_sum_m2": 1.025719601697893e+17,
+        "conservative_wall_glide_rejected_intervals": 0,
+        "cumulative_collective_wall_nucleation_heat_J": 0.0,
+        "cumulative_compatible_wall_reorganization_heat_J": 0.0,
+        "cumulative_conservative_dipole_wall_heat_J": 8.605775877479985e-16,
+        "cumulative_conservative_wall_glide_heat_J": 1.40677284316658e-15,
+        "cumulative_front_first_law_residual_J": -5.320315744778607e-28,
+        "cumulative_interface_mobile_emission_heat_J": 0.0,
+        "cumulative_interface_sink_first_law_residual_J": 0.0,
+        "cumulative_interface_sink_generated_heat_J": 0.0,
+        "cumulative_joint_wall_topology_orientation_heat_J": 0.0,
+        "cumulative_lattice_absorption_heat_J": 1.286164465016344e-13,
+        "cumulative_mechanical_external_work_J": 3.4233285367519853e-12,
+        "cumulative_mechanical_first_law_residual_J": 1.483678544723625e-16,
+        "cumulative_mechanical_internal_energy_change_J": 3.423476904606459e-12,
+        "cumulative_sink_first_law_residual_J": 0.0,
+        "cumulative_sink_generated_heat_J": 0.0,
+        "cumulative_source_first_law_residual_J": 1.0135553754076059e-22,
+        "cumulative_source_generated_heat_J": 3.870508009601379e-17,
+        "cumulative_source_resolved_work_J": 3.882921711425234e-17,
+        "cumulative_structural_absorption_heat_J": 1.5801446261632066e-15,
+        "cumulative_structural_junction_heat_J": 1.7657234697676237e-18,
+        "cumulative_wall_neutral_pair_recovery_heat_J": 0.0,
+        "cumulative_wall_order_relaxation_heat_J": 9.774811381565908e-15,
+        "cumulative_wall_orientation_relaxation_heat_J": 4.1032825182771264e-20,
+        "generated_heat_J": 3.041517595998122e-16,
+        "interface_mobile_emission_inactive_intervals": 0,
+        "interface_mobile_emission_intervals": 0,
+        "interface_mobile_emission_rejected_intervals": 0,
+        "interface_mobile_emitted_pair_cell_sum_m2": 0.0,
+        "interface_sink_annihilated_pair_cell_sum_m2": 0.0,
+        "interface_sink_inactive_intervals": 0,
+        "interface_sink_intervals": 0,
+        "interface_sink_rejected_intervals": 0,
+        "intervals": 951,
+        "joint_wall_topology_orientation_inactive_intervals": 0,
+        "joint_wall_topology_orientation_intervals": 0,
+        "joint_wall_topology_orientation_rejected_intervals": 0,
+        "joint_wall_topology_orientation_transferred_line_cell_sum_m2": 0.0,
+        "lattice_absorbed_line_length_m": 3.058853702253807e-06,
+        "lattice_absorption_inactive_intervals": 0,
+        "lattice_absorption_intervals": 633,
+        "lattice_absorption_rejected_intervals": 0,
+        "maximum_collective_wall_nucleation_first_law_residual": 0.0,
+        "maximum_compatible_wall_reorganization_first_law_residual": 0.0,
+        "maximum_conservative_dipole_wall_first_law_residual": 0.0035370406759677735,
+        "maximum_conservative_dipole_wall_inventory_residual_m2": 17.875,
+        "maximum_conservative_wall_glide_first_law_residual": 2.5055456076115137e-06,
+        "maximum_conservative_wall_glide_inventory_residual_m2": 11.6171875,
+        "maximum_interface_mobile_emission_first_law_residual": 0.0,
+        "maximum_interface_mobile_emission_line_balance_residual_m2": 0.0,
+        "maximum_interface_mobile_emission_mura_residual": 0.0,
+        "maximum_interface_sink_line_balance_residual_m2": 0.0,
+        "maximum_interface_sink_relative_first_law_residual": 0.0,
+        "maximum_joint_wall_topology_orientation_balance_residual_m2": 0.0,
+        "maximum_joint_wall_topology_orientation_first_law_residual": 0.0,
+        "maximum_lattice_absorption_first_law_residual": 5.780231190198535e-09,
+        "maximum_mechanical_relative_first_law_residual": 0.04077451685042164,
+        "maximum_relative_energy_closure": 3.828286958752743e-07,
+        "maximum_sink_line_balance_residual_m2": 0.0,
+        "maximum_sink_relative_first_law_residual": 0.0,
+        "maximum_source_line_balance_residual_m2": 1.3921546936035156,
+        "maximum_source_relative_first_law_residual": 0.024271440631541984,
+        "maximum_structural_absorption_first_law_residual": 6.795638830823931e-05,
+        "maximum_structural_junction_first_law_residual": 0.005088271674350613,
+        "maximum_wall_neutral_pair_recovery_balance_residual_m2": 0.0,
+        "maximum_wall_neutral_pair_recovery_first_law_residual": 0.0,
+        "maximum_wall_order_relaxation_first_law_residual": 1.4950682953037404e-08,
+        "maximum_wall_orientation_relaxation_first_law_residual": 0.0005763319672131147,
+        "physical_time_s": 0.00013360000000000246,
+        "rejected_events": 0,
+        "sink_annihilated_pair_cell_sum_m2": 0.0,
+        "sink_inactive_intervals": 0,
+        "sink_intervals": 0,
+        "sink_rejected_intervals": 0,
+        "source_created_line_cell_sum_m2": 25025426092932.184,
+        "source_event_count": 72.07322714760355,
+        "source_inactive_intervals": 54,
+        "source_intervals": 579,
+        "source_rejected_intervals": 0,
+        "stationary_intervals": 0,
+        "structural_absorbed_line_length_m": 1.0523505662277863e-06,
+        "structural_absorption_inactive_intervals": 1,
+        "structural_absorption_intervals": 1265,
+        "structural_absorption_rejected_intervals": 0,
+        "structural_junction_inactive_intervals": 1,
+        "structural_junction_intervals": 562,
+        "structural_junction_reacted_absolute_content": 76.05338385753294,
+        "structural_junction_rejected_intervals": 0,
+        "transformed_volume_m3": 5.771816751400032e-23,
+        "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2": 0.0,
+        "wall_neutral_pair_recovery_inactive_intervals": 0,
+        "wall_neutral_pair_recovery_intervals": 0,
+        "wall_neutral_pair_recovery_rejected_intervals": 0,
+        "wall_order_relaxation_inactive_intervals": 0,
+        "wall_order_relaxation_intervals": 633,
+        "wall_order_relaxation_rejected_intervals": 0,
+        "wall_orientation_relaxation_inactive_intervals": 135,
+        "wall_orientation_relaxation_intervals": 498,
+        "wall_orientation_relaxation_rejected_intervals": 0
+      },
+      "line_inventory": {
+        "forest": {
+          "minus_m": 4.24455548074233e-06,
+          "plus_m": 4.25492173105657e-06,
+          "total_m": 8.4994772117989e-06
+        },
+        "interface": {
+          "minus_m": 1.0064599373642393e-06,
+          "plus_m": 1.0170729608490884e-06,
+          "total_m": 2.0235328982133277e-06
+        },
+        "mobile": {
+          "minus_m": 1.094155074977848e-08,
+          "plus_m": 1.29415572832089e-08,
+          "total_m": 2.388310803298738e-08
+        },
+        "wall": {
+          "minus_m": 2.8484771161994935e-06,
+          "plus_m": 2.8384492290716797e-06,
+          "total_m": 5.686926345271173e-06
+        }
+      },
+      "load": 0.09863999999999869,
+      "owners_accepted": [
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            9.865984548618778e-14,
+            1.4569312510403997e-13,
+            4.742344773438184e-12,
+            4.500184572982422e-12
+          ],
+          "accepted_beta_p_increment_l2": 2.868415489924915e-07,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            -9.83732955880518e-14,
+            -1.4405043890077077e-13,
+            4.742344773438184e-12,
+            4.500184572982422e-12
+          ],
+          "grain_id": 10,
+          "initial_stress_conjugate_power_W_by_family": [
+            4.9996743300135164e-14,
+            7.365847169716859e-14,
+            6.727438111737849e-12,
+            5.393291085949394e-12
+          ]
+        },
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            4.950467026096041e-12,
+            4.596178067124224e-12,
+            3.306464736705762e-10,
+            5.336447604066921e-12
+          ],
+          "accepted_beta_p_increment_l2": 4.9460366874090654e-05,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            4.950467026096041e-12,
+            4.596178067124224e-12,
+            3.306464736705762e-10,
+            5.336447604066921e-12
+          ],
+          "grain_id": 20,
+          "initial_stress_conjugate_power_W_by_family": [
+            5.891742705414898e-12,
+            5.443333874866242e-12,
+            2.2707293521985012e-10,
+            8.901388826466166e-12
+          ]
+        },
+        {
+          "accepted_absolute_slip_area_rate_m2_s_by_family": [
+            4.498718227770514e-12,
+            3.6925138073237935e-12,
+            5.83443686933187e-11,
+            1.5541677392628575e-10
+          ],
+          "accepted_beta_p_increment_l2": 9.932726862208114e-05,
+          "accepted_signed_slip_area_rate_m2_s_by_family": [
+            4.498718227770514e-12,
+            3.6925138073237935e-12,
+            -5.834436869329046e-11,
+            1.5541677392628575e-10
+          ],
+          "grain_id": 30,
+          "initial_stress_conjugate_power_W_by_family": [
+            1.0477829977275977e-11,
+            7.822360467015549e-12,
+            4.708085410096461e-11,
+            1.7029558718905674e-10
+          ]
+        }
+      ],
+      "owners_raw": [
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.0003978753302254598,
+            0.0005843480760444895,
+            0.01909380683189253,
+            0.018198588663724095
+          ],
+          "grain_id": 10,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            0.11402050984914487,
+            0.11398199465959886,
+            631.835249396176,
+            510.8714922505719
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            -101437633.9450127,
+            -101476738.1315883,
+            2704424704.9625664,
+            2181336044.8731084
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            -210124758.24731028,
+            -210124758.24731025,
+            2921106426.099907,
+            2399912085.153035
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            218550405.9985694,
+            218639846.05625543,
+            217305386.79037094,
+            219542332.18292475
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            8.28426350695069,
+            10.755530830826176,
+            1.5328627941129002e-05,
+            1.8421878529371198e-05
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            12.837574215645992,
+            11.485478931843968,
+            1.5020171957591817e-05,
+            1.8120349678139762e-05
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            9.867308189591402e-14,
+            1.4491832285903342e-13,
+            4.735264094309348e-12,
+            4.513249988603576e-12
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            5.000866111209139e-14,
+            7.314927102974309e-14,
+            6.709630199911551e-12,
+            5.396759954165986e-12
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            -9.836025850027741e-14,
+            -1.448325725634387e-13,
+            4.735264094309348e-12,
+            4.513249988603576e-12
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": 9.0675e-23,
+          "transport_mobile_plus_global_rate_m_per_s": 9.57841875e-22
+        },
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.020366731947047093,
+            0.018748746858574354,
+            1.3170369529869843,
+            0.02150161047416421
+          ],
+          "grain_id": 20,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            586.1119121697201,
+            586.1252285706807,
+            27.184355191797934,
+            658.6974793153989
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            2369746147.5249777,
+            2369789932.236298,
+            1319384894.4568973,
+            3399879476.69021
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            2392441887.092719,
+            2392441887.092719,
+            1341498332.8987913,
+            3422870637.2919526
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            22653757.449342974,
+            22643021.092957184,
+            22096061.083276547,
+            22946613.696680907
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            1.612522506931181e-05,
+            1.2398602879302559e-05,
+            0.30219233714455795,
+            1.4805359693659624e-05
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            1.8415484167046644e-05,
+            1.9394274612944368e-05,
+            0.18946559682534533,
+            1.794224254969524e-05
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            5.050949522867679e-12,
+            4.64968922092644e-12,
+            3.2662516434077216e-10,
+            5.332399397592724e-12
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            6.043049666698148e-12,
+            5.545809678948106e-12,
+            2.2369987247926867e-10,
+            8.856517657512616e-12
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            5.050949522867679e-12,
+            4.64968922092644e-12,
+            3.2662516434077216e-10,
+            5.332399397592724e-12
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": 6.49512e-21,
+          "transport_mobile_plus_global_rate_m_per_s": 6.895485e-21
+        },
+        {
+          "absolute_speed_weighted_line_m2_s_by_family": [
+            0.01812097370302958,
+            0.014910383638441486,
+            0.19960622518138887,
+            0.333768968985186
+          ],
+          "grain_id": 30,
+          "instantaneous_constitutive_scale": 1.0,
+          "mean_absolute_speed_m_s_by_family": [
+            669.4762817237406,
+            669.4660205776514,
+            15.203639841319282,
+            646.4441908058745
+          ],
+          "mean_effective_stress_Pa_by_family": [
+            4350687510.88387,
+            4349494188.554462,
+            -603334596.0824376,
+            3242551914.868779
+          ],
+          "mean_raw_stress_Pa_by_family": [
+            4568656262.257536,
+            4568656262.257536,
+            -798036811.8059198,
+            3459549867.7520504
+          ],
+          "mean_taylor_resistance_Pa_by_family": [
+            218227980.11121118,
+            219426108.9104175,
+            218310436.05053374,
+            217461309.44624004
+          ],
+          "mobile_minus_line_per_thickness_by_family": [
+            1.554205980707995e-05,
+            1.216316048702803e-05,
+            2.7173926886921755,
+            9.397602538039009e-05
+          ],
+          "mobile_plus_line_per_thickness_by_family": [
+            1.1397175763472308e-05,
+            1.0139097013592264e-05,
+            1.5703701568790158,
+            0.008850031318199631
+          ],
+          "raw_absolute_slip_area_rate_m2_s_by_family": [
+            4.494001478351336e-12,
+            3.697775142333489e-12,
+            4.950234384498444e-11,
+            8.277470430832614e-11
+          ],
+          "raw_power_W_by_family_per_thickness": [
+            1.047588909614872e-11,
+            7.974881579509757e-12,
+            3.9141755566099313e-11,
+            7.38480627961948e-11
+          ],
+          "raw_signed_slip_area_rate_m2_s_by_family": [
+            4.494001478351336e-12,
+            3.697775142333489e-12,
+            -4.9502343844955495e-11,
+            8.277470430832614e-11
+          ],
+          "transport_mobile_minus_global_rate_m_per_s": 3.6047323125e-20,
+          "transport_mobile_plus_global_rate_m_per_s": 5.34155090625e-20
+        }
+      ],
+      "physical_time_s": 0.00013360000000000246,
+      "source_provenance": {
+        "parent_provenance": {
+          "parent_provenance": {
+            "parent_provenance": {
+              "parent_provenance": {
+                "parent_provenance": {
+                  "parent_provenance": {
+                    "parent_provenance": {
+                      "parent_provenance": {
+                        "campaign": "V67",
+                        "scientific_scope": "fresh zero-load polycrystal anchor",
+                        "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+                        "source_dirty": false
+                      },
+                      "source_commit": "9e6d40c0576ef158cf4b940db82bb1103ecbaf7f"
+                    },
+                    "source_commit": "1bdc008e60ddf039bf1470b3ee0e8f8e02303fda"
+                  },
+                  "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+                },
+                "source_commit": "e4aa4d4ba020a2be24c3fc03282e5d497d93c181"
+              },
+              "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+            },
+            "source_commit": "78f61bfe0b9ecdcd862dee43d9b622f99b4d386f"
+          },
+          "source_commit": "ff2e9295a71bc171c186a4dd6ab07e4c792fa99d"
+        },
+        "source_commit": "e0d87ff0f2b1572fe7c10e511bc0bc13127c9be5"
+      },
+      "step": 633
+    }
+  ],
+  "claim_boundary": "The one-interval accepted mechanics probes use immutable copied states. Per-family accepted slip is the exact published state increment; per-family stress-conjugate power uses the initial common stress, while total accepted work is the authoritative substep-integrated value. Segment residuals group transport, lock/recovery, multiplication and annihilation not separately accumulated in the historical ledger.",
+  "created_utc": "2026-10-19T17:47:57.626016+00:00",
+  "decision": {
+    "accepted_mechanical_clock_consumes_full_interval": true,
+    "arrival_limited_candidate_changes_only_boundary_capture_clock": true,
+    "classification": "ACTIVE_FAMILY_CORRELATION_COLLAPSE_WITH_OVERCONSUMING_NON_ARRIVAL_LIMITED_CAPTURE"
+  },
+  "immutable_mechanics": "Arrhenius EXP-floor Peierls-Taylor-Hall-Petch flow and source event measure unchanged",
+  "schema": "v67-accepted-carrier-budget-v1",
+  "segments": [
+    {
+      "absorption_fraction_of_mobile_loss": 1.0153000294515078,
+      "closure_identity_m": 0.0,
+      "delta_mobile_line_m": -1.298467308646032e-07,
+      "from_load": 0.06663999999999999,
+      "lattice_interface_absorbed_line_m": 1.3183338967101362e-07,
+      "residual_mechanical_reaction_transport_line_m": 1.9345319129226508e-09,
+      "source_created_line_m": 5.212689348775605e-11,
+      "source_replacement_fraction_of_mobile_loss": 0.0004014494099363273,
+      "to_load": 0.08263999999999934
+    },
+    {
+      "absorption_fraction_of_mobile_loss": 1.0145630138167139,
+      "closure_identity_m": 0.0,
+      "delta_mobile_line_m": -1.81643848821738e-08,
+      "from_load": 0.08263999999999934,
+      "lattice_interface_absorbed_line_m": 1.8428913070185006e-08,
+      "residual_mechanical_reaction_transport_line_m": 2.1093451550387435e-10,
+      "source_created_line_m": 5.3593672507332235e-11,
+      "source_replacement_fraction_of_mobile_loss": 0.002950481001970405,
+      "to_load": 0.09863999999999869
+    }
+  ]
+}

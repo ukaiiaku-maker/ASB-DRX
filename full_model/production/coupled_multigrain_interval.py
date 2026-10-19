@@ -1867,6 +1867,12 @@ def advance_complete_multigrain_interval(
         "lattice_absorption_kinetics_mode": (
             "DISABLED" if lattice_absorption is None
             else lattice_absorption.local_kinetics_mode),
+        "lattice_absorption_arrival_limited": (
+            False if lattice_absorption is None
+            else lattice_absorption.arrival_limited),
+        "lattice_absorption_maximum_arrival_exposure": (
+            0.0 if lattice_absorption is None
+            else lattice_absorption.maximum_arrival_exposure),
         "lattice_absorption_edge_fractions": (
             {} if lattice_absorption is None
             else lattice_absorption.edge_fraction_by_interface),

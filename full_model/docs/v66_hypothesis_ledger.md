@@ -1347,3 +1347,26 @@ experiment, result, limitation, and next branch.
   erasing the prior state or leaving the later response unclassified. The
   0.13064 horizon is already executing to test whether the carrier floor is
   stationary or eventually reactivates.
+
+## 2026-10-19T17:49:29Z — H27 accepted-flow and arrival accounting
+
+- Immutable ad400/ad500/ad600 probes show that the mechanical positivity
+  limiter consumes the complete 2 ns interval. Accepted/raw mean plastic-power
+  ratios are 1.0029, 1.0222, and 1.2770; numerical acceptance is not the cause
+  of the approximately 1776-fold ad400-to-ad600 raw-power collapse.
+- The collapse is family selective. High-power carrier families present at
+  ad400 are almost exhausted by ad600, while much of the surviving line lies
+  on owner/family combinations with negligible resolved Orowan power.
+- Historical lattice/interface absorption accounts for 101.53% and 101.46% of
+  net mobile loss over the two retained segments. The old exact reaction clock
+  acts on diffuse-interface populations without an independently declared
+  normal-arrival ceiling.
+- A default-off serial arrival/reaction candidate now limits that same signed
+  one-flux transaction by `rho max(v.n,0)`. It introduces no transparency
+  coefficient and does not alter the Arrhenius or Hall--Petch event laws.
+  Immutable probes remain downhill and hard-audited while reducing the debit
+  to 0.0918--0.589% of the reaction-only value.
+- Classification:
+  `ACTIVE_FAMILY_CORRELATION_COLLAPSE_WITH_OVERCONSUMING_NON_ARRIVAL_LIMITED_CAPTURE`.
+  Production response is not yet claimed; the next action is an exact-parent
+  ad400 coupled fork with the candidate enabled.
