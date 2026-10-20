@@ -44,6 +44,15 @@ def main() -> None:
     }
     if laws != {"v34_km_forest_storage_v1"} or len(coefficients) != 1:
         raise ValueError("segments do not share the repaired v34 law")
+    seam_metadata = {"parent_checkpoint", "temperature_seed_peak_K"}
+    reference_configuration = {
+        key: value for key, value in data[0]["configuration"].items()
+        if key not in seam_metadata
+    }
+    physics_configuration_matched = all(
+        {key: value for key, value in item["configuration"].items()
+         if key not in seam_metadata} == reference_configuration
+        for item in data[1:])
 
     chain = []
     chain_valid = True
@@ -121,7 +130,7 @@ def main() -> None:
             "relative_area_change": (final-initial)/initial,
         }
 
-    if not hard_pass or not chain_valid:
+    if not hard_pass or not chain_valid or not physics_configuration_matched:
         classification = "FRESH_HISTORY_INVALID"
     elif bands[-1] and terminal_persistence >= 20 and softening > 0.0:
         classification = "FRESH_REPAIRED_MULTIPLICATION_SUPPORTS_TERMINAL_ASB"
@@ -142,6 +151,8 @@ def main() -> None:
         "classification": classification,
         "fresh_origin": True,
         "checkpoint_chain_valid": bool(chain_valid),
+        "physics_configuration_matched_across_segments": bool(
+            physics_configuration_matched),
         "all_hard_balances_passed": bool(hard_pass),
         "multiplication_law": next(iter(laws)),
         "multiplication_coefficient_m1": next(iter(coefficients)),
@@ -152,6 +163,14 @@ def main() -> None:
         "cumulative_raw_multiplication_line_m": raw_line,
         "cumulative_accepted_multiplication_line_m": accepted_line,
         "accepted_to_raw_fraction": accepted_line/max(raw_line, 1e-300),
+        "accumulated_domain_mean_absolute_family_slip": float(sum(
+            np.sum(np.asarray(row["absolute_slip_increment_by_owner_family"]))
+            for row in multiplication)
+            /int(data[0]["configuration"]["n"])**2),
+        "accumulated_domain_mean_signed_family_slip": float(sum(
+            np.sum(np.asarray(row["signed_slip_increment_by_owner_family"]))
+            for row in multiplication)
+            /int(data[0]["configuration"]["n"])**2),
         "hard_balance_failed_trials_safely_rolled_back": failed_trials,
         "maximum_accepted_subinterval_count": subinterval_max,
         "initial_flow_exposure": float(flow[0]),
