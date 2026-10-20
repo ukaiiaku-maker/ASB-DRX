@@ -1,0 +1,194 @@
+{
+  "coordinate_semantics": "native node-centered production arrays on physical [0,L) axes; no interpolation, registration, or spatial projection",
+  "files": {
+    "v67_multiplication_v34_fresh_highrate_seed19p375_1000": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_1000_fields.png",
+      "sha256": "18e9cb41307e6bc0c0a64d1419242e5d64558b2c6b338a9302a886bab8fc53d2"
+    },
+    "v67_multiplication_v34_fresh_highrate_seed19p375_1200": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_1200_fields.png",
+      "sha256": "4efda5bbcd0e1b5ddc03b2396447b4e9e3b64f1462b68e8529a72fd89a56d359"
+    },
+    "v67_multiplication_v34_fresh_highrate_seed19p375_1234": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_1234_fields.png",
+      "sha256": "1e1299b13c6180e9f156bb5630ec6eee07c788c97b665bbd454a63db64205beb"
+    },
+    "v67_multiplication_v34_fresh_highrate_seed19p375_200": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_200_fields.png",
+      "sha256": "1f3434f575ea6f79eed8044c11b0c3ee9ded422b9d7b3328745b1271ddc2decf"
+    },
+    "v67_multiplication_v34_fresh_highrate_seed19p375_400": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_400_fields.png",
+      "sha256": "2f4498822f3a34dd4f384319d72f38b2f2b371b235e1d59660526d821ac93ebd"
+    },
+    "v67_multiplication_v34_fresh_highrate_seed19p375_600": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_600_fields.png",
+      "sha256": "bc6f0939f6583c8d1c05e5731bf3513cd46e5a533a7a393149e32b78f36d8c7a"
+    },
+    "v67_multiplication_v34_fresh_highrate_seed19p375_800": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_highrate_seed19p375_800_fields.png",
+      "sha256": "39d74c8407f0b9eff27961025d2154b5d9c49578b3bdfd53a5411311855fdcc8"
+    },
+    "v67_multiplication_v34_fresh_rate20_prestrain33_adaptive": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_fresh_history/fields/v67_multiplication_v34_fresh_rate20_prestrain33_adaptive_fields.png",
+      "sha256": "6e3672db22f2e16b42811f758a8822c8c35400341c8d957bb3ddd82572b9766a"
+    }
+  },
+  "fixed_color_limits": {
+    "dominant grain ID": [
+      10.0,
+      30.0
+    ],
+    "log10 exact Nye norm [m$^{-1}$]": [
+      0.0,
+      5.309320146917371
+    ],
+    "log10 plastic power [W m$^{-3}$]": [
+      3.5427896032576243,
+      14.677712758469502
+    ],
+    "orientation (degrees)": [
+      -4.330102659154421,
+      29.63055604829258
+    ],
+    "temperature [K]": [
+      992.7521216656825,
+      1147.1382688111032
+    ],
+    "total line density / $10^{17}$ m$^{-2}$": [
+      0.0009327167503254504,
+      0.14475765376401095
+    ]
+  },
+  "frames": [
+    {
+      "case": "v67_multiplication_v34_fresh_rate20_prestrain33_adaptive",
+      "checkpoint_sha256": "535190aae5d62119c1eeb9b2ae8faa199449225b572504fbf0eb223e6a2ceed3",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.0026400000000000017,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_rate20_prestrain33_adaptive",
+      "source_commit": "e69b84d87fe6f8e916977cf245ce046180f84e73",
+      "step": 33,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013240000000000002
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_200",
+      "checkpoint_sha256": "d50461878df0a8f46d5affbb24190abce93bb7cc44e5bc385d63f18f3904bb3e",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.03464000000000008,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_200",
+      "source_commit": "e69b84d87fe6f8e916977cf245ce046180f84e73",
+      "step": 233,
+      "thermal_control": "adiabatic",
+      "time_s": 0.0001328000000000008
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_400",
+      "checkpoint_sha256": "f8ff8393ccad55a8d4935d9ff520c5e6c19d66b8328e5555da721b3973e31675",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.06663999999999999,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_400",
+      "source_commit": "6894fcf0d1f2c6b7abdc3a2d86afd144668bf544",
+      "step": 433,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013320000000000164
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_600",
+      "checkpoint_sha256": "67bc0a4b1049ed8e568a39037277d869507f6a5db07278e59765b8859153ab73",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.09863999999999869,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_600",
+      "source_commit": "3666ac082703c2190e92c83c83c036b2b673a7e2",
+      "step": 633,
+      "thermal_control": "adiabatic",
+      "time_s": 0.0001336000000000025
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_800",
+      "checkpoint_sha256": "d1652972bd7fe872fca83d5ed7a4c22795fe78fc63e89aee842f461ca5c155a3",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.1306399999999974,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_800",
+      "source_commit": "a4628a6b8d852913ea3eec2e438754314f0ad5b5",
+      "step": 833,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013400000000000337
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_1000",
+      "checkpoint_sha256": "e14228f2c221c8d36e137ba0462f46442c3b10b176bdadade34a3ac5d5887c53",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.1626399999999961,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1000",
+      "source_commit": "bb8dc8f567e0deff4749e1dfa1a412140ab11e4a",
+      "step": 1033,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013440000000000424
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_1200",
+      "checkpoint_sha256": "1f2ddb51eecf196d11e78a082ae1358fcbced7f5a98924cf7a6c222e9cb5fea2",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.1946399999999948,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1200",
+      "source_commit": "c77065af81a2ee52f1543baed23c38263414e5c4",
+      "step": 1233,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013480000000000512
+    },
+    {
+      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_1234",
+      "checkpoint_sha256": "3590678fec0c072e04f952779bb743d65696782a727c3926c7e1955029b8ec12",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.20007999999999457,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1234",
+      "source_commit": "67193abbf8319f6df3a9ef03f50f4f553f6fb604",
+      "step": 1267,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013486800000000524
+    }
+  ],
+  "schema": "v67-poly-rx-asb-field-render-v1"
+}

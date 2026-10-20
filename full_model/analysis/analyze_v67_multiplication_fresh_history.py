@@ -32,6 +32,19 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text())
 
 
+def physics_configuration(configuration: dict) -> dict:
+    """Remove restart-segmentation metadata from a production configuration."""
+    seam_metadata = {
+        "parent_checkpoint",
+        "target_steps",
+        "temperature_seed_peak_K",
+    }
+    return {
+        key: value for key, value in configuration.items()
+        if key not in seam_metadata
+    }
+
+
 def _profile_participation(values: np.ndarray) -> float:
     value = np.maximum(np.asarray(values, dtype=float), 0.0)
     return float(np.sum(value)**2
@@ -79,14 +92,11 @@ def main() -> None:
     }
     if laws != {"v34_km_forest_storage_v1"} or len(coefficients) != 1:
         raise ValueError("segments do not share the repaired v34 law")
-    seam_metadata = {"parent_checkpoint", "temperature_seed_peak_K"}
-    reference_configuration = {
-        key: value for key, value in data[0]["configuration"].items()
-        if key not in seam_metadata
-    }
+    # A short terminal segment is required to land on a prescribed physical
+    # load and is not a physics-law change.
+    reference_configuration = physics_configuration(data[0]["configuration"])
     physics_configuration_matched = all(
-        {key: value for key, value in item["configuration"].items()
-         if key not in seam_metadata} == reference_configuration
+        physics_configuration(item["configuration"]) == reference_configuration
         for item in data[1:])
 
     chain = []

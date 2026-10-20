@@ -256,6 +256,30 @@ def test_front_transmission_restart_inherits_parent_unless_overridden():
     assert _front_transmission_fraction(None, {}, .55) == .55
 
 
+def test_fresh_history_segment_length_is_not_a_physics_change():
+    from full_model.analysis.analyze_v67_multiplication_fresh_history import (
+        physics_configuration,
+    )
+
+    first = {
+        "multiplication_law": "v34_km_forest_storage_v1",
+        "multiplication_coefficient_m1": 5.0e8,
+        "target_steps": 200,
+        "parent_checkpoint": "parent-a.npz",
+        "temperature_seed_peak_K": 19.375,
+    }
+    terminal = {
+        **first,
+        "target_steps": 34,
+        "parent_checkpoint": "parent-b.npz",
+        "temperature_seed_peak_K": 0.0,
+    }
+    assert physics_configuration(first) == physics_configuration(terminal)
+
+    terminal["multiplication_coefficient_m1"] = 10.0
+    assert physics_configuration(first) != physics_configuration(terminal)
+
+
 def test_hard_balance_subdivision_fills_clock_and_discards_failed_trials():
     parent = CoupledEndpoint(None, None, 0.0, {})
 

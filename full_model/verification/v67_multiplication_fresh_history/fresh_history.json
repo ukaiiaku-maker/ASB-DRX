@@ -1,0 +1,182 @@
+{
+  "accepted_to_raw_fraction": 0.8356172046167225,
+  "accumulated_domain_mean_absolute_family_slip": 0.19161121744946705,
+  "accumulated_domain_mean_signed_family_slip": 0.17056887354022235,
+  "all_hard_balances_passed": true,
+  "checkpoint_chain_valid": true,
+  "claim_boundary": "Fresh-origin, checkpoint-linked production history under one repaired v34 multiplication parameterization. Classification does not by itself qualify grid convergence or DRX inside ASB.",
+  "classification": "FRESH_REPAIRED_STORAGE_MULTIPLICATION_REMAINS_FLOWING_WITHOUT_QUALIFIED_TERMINAL_ASB",
+  "created_utc": "2026-10-20T06:02:58.934960+00:00",
+  "cumulative_accepted_multiplication_line_m": 8.423619639203298e-05,
+  "cumulative_raw_multiplication_line_m": 0.00010080715897977483,
+  "endpoint": {
+    "connected_physical_band": false,
+    "forest_density_m2": 8025198397904437.0,
+    "interval": 34,
+    "load": 0.20007999999999457,
+    "mean_shear_stress_Pa": 7311796992.341581,
+    "mobile_density_m2": 106425934178233.72,
+    "plastic_power_maximum_W_m3": 305527810877181.56,
+    "plastic_power_maximum_to_mean": 2.310626352733402,
+    "plastic_power_mean_W_m3": 132227268383636.02,
+    "plastic_to_imposed_power_fraction": 0.22605125067430692,
+    "temperature_mean_K": 1106.6900228202403,
+    "temperature_range_K": 78.04223224801603,
+    "wall_density_m2": 590990047436718.9
+  },
+  "endpoint_flow_exposure": 0.22605125067430692,
+  "endpoint_post_peak_softening_fraction": 0.0,
+  "endpoint_spatial_localization": {
+    "checkpoint_sha256": "3590678fec0c072e04f952779bb743d65696782a727c3926c7e1955029b8ec12",
+    "continuous_power": {
+      "inverse_participation_fraction": 0.8944813851211189,
+      "largest_periodic_component_area_fraction": 0.08984375,
+      "maximum": 305527810877181.75,
+      "mean": 132227268383636.02,
+      "minimum": 41649030204252.64,
+      "negative_cell_fraction": 0.0,
+      "negative_integral_cell_sum": 0.0,
+      "periodic_component_count": 8,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 3.2928648403006867e-06,
+        "major_rms_width_m": 1.3983509471530284e-06,
+        "minor_gaussian_fwhm_m": 2.985906808676577e-06,
+        "minor_rms_width_m": 1.2679978731353874e-06
+      },
+      "signed_integral_cell_sum": 1.3540072282484328e+17,
+      "standard_deviation": 45415062218776.875,
+      "threshold": 177642330602412.88,
+      "undefined_localized_width": false
+    },
+    "fixed_threshold_topology": {
+      "above_threshold_fraction": 0.01171875,
+      "band_like": false,
+      "component_span_fraction": [
+        0.03125,
+        0.125
+      ],
+      "largest_component_cells": 4,
+      "largest_component_fraction": 0.00390625,
+      "maximum_to_mean": 2.3106263527334034,
+      "periodic_winding": [
+        false,
+        false
+      ],
+      "positive_max_W_m3": 305527810877181.75,
+      "positive_mean_W_m3": 132227268383636.02,
+      "signed_min_W_m3": 41649030204252.64,
+      "threshold_multiple": 2.0
+    },
+    "power_field_semantics": "instantaneous accepted work-conjugate plastic power reconstructed from the terminal common state; native grid, no resampling",
+    "power_temperature_pearson_correlation": -0.027012694913274963,
+    "x_profile_participation_fraction": 0.9546330760063577,
+    "y_profile_participation_fraction": 0.9841891280295174
+  },
+  "final_load": 0.20007999999999457,
+  "first_physical_band_load": null,
+  "fresh_origin": true,
+  "hard_balance_failed_trials_safely_rolled_back": 6,
+  "initial_flow_exposure": 2.5981596782569963e-09,
+  "initial_load": 0.0026400000000000017,
+  "last_physical_band_load": null,
+  "maximum_accepted_subinterval_count": 3,
+  "maximum_flow_exposure": 0.7851330427458715,
+  "multiplication_coefficient_m1": 500000000.0,
+  "multiplication_law": "v34_km_forest_storage_v1",
+  "owner_area_changes": {
+    "10": {
+      "area_after_m2": 8.080455790994713e-12,
+      "area_before_m2": 8.079479221085206e-12,
+      "relative_area_change": 0.00012087040300300666
+    },
+    "20": {
+      "area_after_m2": 7.57892506147694e-12,
+      "area_before_m2": 7.562093586524447e-12,
+      "relative_area_change": 0.002225769194722267
+    },
+    "30": {
+      "area_after_m2": 7.380619147528344e-12,
+      "area_before_m2": 7.398427192390347e-12,
+      "relative_area_change": -0.00240700413735498
+    }
+  },
+  "peak_absolute_mean_shear_stress_Pa": 7311796992.341581,
+  "peak_stress_load": 0.20007999999999457,
+  "physics_configuration_matched_across_segments": true,
+  "production_intervals": 1234,
+  "schema": "v67-multiplication-fresh-history-v1",
+  "segment_chain": [
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_200/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "d50461878df0a8f46d5affbb24190abce93bb7cc44e5bc385d63f18f3904bb3e",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_rate20_prestrain33_adaptive/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "535190aae5d62119c1eeb9b2ae8faa199449225b572504fbf0eb223e6a2ceed3",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_200/result.json",
+      "result_sha256": "cad2dbb3b08b1314cee91dce8bb910b6bdfcb8bc3e8cebb6677f1539553c6147",
+      "source_commit": "e69b84d87fe6f8e916977cf245ce046180f84e73",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_400/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "f8ff8393ccad55a8d4935d9ff520c5e6c19d66b8328e5555da721b3973e31675",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_200/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "d50461878df0a8f46d5affbb24190abce93bb7cc44e5bc385d63f18f3904bb3e",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_400/result.json",
+      "result_sha256": "daf7d9ac7ad0926e674089e46e47a691008dade25971453e20706bfb9c72e10b",
+      "source_commit": "6894fcf0d1f2c6b7abdc3a2d86afd144668bf544",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_600/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "67bc0a4b1049ed8e568a39037277d869507f6a5db07278e59765b8859153ab73",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_400/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "f8ff8393ccad55a8d4935d9ff520c5e6c19d66b8328e5555da721b3973e31675",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_600/result.json",
+      "result_sha256": "882c9b010c6135655f56461d2a1f5d72117dff23aab44ae40f5440475b0c74d2",
+      "source_commit": "3666ac082703c2190e92c83c83c036b2b673a7e2",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_800/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "d1652972bd7fe872fca83d5ed7a4c22795fe78fc63e89aee842f461ca5c155a3",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_600/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "67bc0a4b1049ed8e568a39037277d869507f6a5db07278e59765b8859153ab73",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_800/result.json",
+      "result_sha256": "5a949165c1ba7d24fa5c89e0302c37937f7180268b5cbcaf0918e0ffeff20361",
+      "source_commit": "a4628a6b8d852913ea3eec2e438754314f0ad5b5",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1000/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "e14228f2c221c8d36e137ba0462f46442c3b10b176bdadade34a3ac5d5887c53",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_800/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "d1652972bd7fe872fca83d5ed7a4c22795fe78fc63e89aee842f461ca5c155a3",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1000/result.json",
+      "result_sha256": "6aaeb12821bd448e46d0323be95a1e1499988e32d45839c50c4043d51edef999",
+      "source_commit": "bb8dc8f567e0deff4749e1dfa1a412140ab11e4a",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1200/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "1f2ddb51eecf196d11e78a082ae1358fcbced7f5a98924cf7a6c222e9cb5fea2",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1000/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "e14228f2c221c8d36e137ba0462f46442c3b10b176bdadade34a3ac5d5887c53",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1200/result.json",
+      "result_sha256": "6677d6023a3623cca4e57a431242aeb78fe35bf7dce1212fa4acfe8b9a2cf81f",
+      "source_commit": "c77065af81a2ee52f1543baed23c38263414e5c4",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1234/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "3590678fec0c072e04f952779bb743d65696782a727c3926c7e1955029b8ec12",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1200/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "1f2ddb51eecf196d11e78a082ae1358fcbced7f5a98924cf7a6c222e9cb5fea2",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_1234/result.json",
+      "result_sha256": "9979445b7bdbbd6ccf7b5f4ffb40036ad5023fde66a2e773a2e2e9f20a8201dc",
+      "source_commit": "67193abbf8319f6df3a9ef03f50f4f553f6fb604",
+      "source_tree_clean": true
+    }
+  ],
+  "terminal_band_persistence_intervals": 0,
+  "terminal_physical_band": false
+}
