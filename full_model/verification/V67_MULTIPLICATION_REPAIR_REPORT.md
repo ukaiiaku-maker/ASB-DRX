@@ -109,7 +109,34 @@ boundary-law ablation. The driver now inherits the serialized 0.25 value, and
 the accepted matched repaired/legacy/disabled set all uses 0.25.
 
 At the matched 0.13064-shear endpoint, the repaired trajectory has accepted
-approximately \(5.01\times10^{-6}\) m of new forest line and retains 0.1813%
-accepted plastic/imposed power. It remains unbanded at the endpoint and has no
-post-peak softening. Final quantitative classification awaits completion of the
-strict zero comparator through the identical interval.
+\(5.00898\times10^{-6}\) m of new forest line, 98.033% of its raw proposal.
+Only 0.2502% of cell-time is budget active at the maximum. The normalization
+repair is therefore not suppressed by the work cap. It retains 0.18127%
+accepted plastic/imposed power, versus 0.035887% for both the legacy and strict
+zero paths: a factor of 5.051. Its final mean forest density is 1.559 times the
+disabled comparator, while its mean mobile density is only 1.007 times larger;
+the response depends on the spatial owner/family trajectory rather than on a
+scalar mobile-inventory increase.
+
+The repaired path's final connected band occurs at shear 0.12120, compared
+with 0.10376 for both legacy and disabled paths. None is banded at the endpoint,
+none softens after its peak stress, and all peak at the terminal load. Grain 20
+still grows by 0.08104% in the repaired path and intersects active bands, but
+this is existing-boundary RX/band overlap, not qualified ASB. All three paths
+pass the hard absorption, Mura, first-law, and grain-identity checks.
+
+The strict comparator accepts exactly zero multiplication. The legacy path
+accepts only \(1.276\times10^{-15}\) m and is numerically indistinguishable
+from disabled at the endpoint. The decision is
+`NORMALIZATION_REPAIR_EXTENDS_ACCEPTED_FLOW_AND_BAND_PERSISTENCE_BUT_STORAGE_ONLY_MULTIPLICATION_STILL_ARRESTS_WITHOUT_ASB_SOFTENING`.
+
+The production-kernel low-density fixture also proves that retained forest with
+zero mobile line gives zero slip and zero multiplication. This is intentional:
+the repaired storage law does not relabel all forest as an operable pinned
+source. A persistent-source extension, if needed after the fresh-origin replay,
+must carry its own formation, survival, operation, and destruction state.
+
+The high-rate discriminator stops at its preregistered 0.13064 endpoint. At
+that point the response is almost elastic and monotonically hardening near
+9 GPa; extending it mechanically toward 0.20 would enter an unqualified
+high-stress regime without testing an ASB feedback loop.

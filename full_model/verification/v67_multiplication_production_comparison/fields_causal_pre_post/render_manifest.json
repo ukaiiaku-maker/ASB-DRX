@@ -1,0 +1,94 @@
+{
+  "coordinate_semantics": "native node-centered production arrays on physical [0,L) axes; no interpolation, registration, or spatial projection",
+  "files": {
+    "v67_poly_rx_asb_seed19p375_ad_401_arrival_limited": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_production_comparison/fields_causal_pre_post/v67_poly_rx_asb_seed19p375_ad_401_arrival_limited_fields.png",
+      "sha256": "e11ddcdb2dbc100fd369f3eda21d0691a2494f524b0ef400f2254056c60929de"
+    },
+    "v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_no_multiplication_tx0p25": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_production_comparison/fields_causal_pre_post/v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_no_multiplication_tx0p25_fields.png",
+      "sha256": "53bc8ecd003f3e0f4f4dc70c36bdc4ff02ca21256a9d3ce4e398d71bb98550e0"
+    },
+    "v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_v34_km_forest_tx0p25": {
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_production_comparison/fields_causal_pre_post/v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_v34_km_forest_tx0p25_fields.png",
+      "sha256": "f1a01b4ba83ee76340a606ad943c273e0797b7214aecf0e862f55b8ae3963f50"
+    }
+  },
+  "fixed_color_limits": {
+    "dominant grain ID": [
+      10.0,
+      30.0
+    ],
+    "log10 exact Nye norm [m$^{-1}$]": [
+      3.87740967395578,
+      5.51242984929495
+    ],
+    "log10 plastic power [W m$^{-3}$]": [
+      9.359293203540608,
+      14.55526340987489
+    ],
+    "orientation (degrees)": [
+      -2.270381457889349,
+      29.34465580404392
+    ],
+    "temperature [K]": [
+      989.7453722713615,
+      1045.3884305846104
+    ],
+    "total line density / $10^{17}$ m$^{-2}$": [
+      0.0007485853584328486,
+      0.02991396687669012
+    ]
+  },
+  "frames": [
+    {
+      "case": "v67_poly_rx_asb_seed19p375_ad_401_arrival_limited",
+      "checkpoint_sha256": "6ae795ede9034e64f4db5b28e424070cd1d25ebbc460faadc8cd9ac143022b87",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.06679999999999998,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_401_arrival_limited",
+      "source_commit": "5bdf45e045381f51f9a5159e2493461cdc892a7d",
+      "step": 434,
+      "thermal_control": "adiabatic",
+      "time_s": 0.0001332020000000016
+    },
+    {
+      "case": "v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_v34_km_forest_tx0p25",
+      "checkpoint_sha256": "ad3fae7467235b0443450061df9c695fd58a1ed591f2308a12ae403e52cabc56",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.1306399999999974,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_v34_km_forest_tx0p25",
+      "source_commit": "b37db334e34d278952a2a5d54a0b1e12fdf02982",
+      "step": 833,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013400000000000334
+    },
+    {
+      "case": "v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_no_multiplication_tx0p25",
+      "checkpoint_sha256": "bc948f02a0e4f07029d0612d165dcf4f496ee4eb3937d0976b7b2ee684304d22",
+      "extent_um": [
+        0.0,
+        4.8,
+        0.0,
+        4.8
+      ],
+      "load": 0.1306399999999974,
+      "path": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_no_multiplication_tx0p25",
+      "source_commit": "b37db334e34d278952a2a5d54a0b1e12fdf02982",
+      "step": 833,
+      "thermal_control": "adiabatic",
+      "time_s": 0.00013400000000000328
+    }
+  ],
+  "schema": "v67-poly-rx-asb-field-render-v1"
+}
