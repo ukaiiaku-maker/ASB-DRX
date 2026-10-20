@@ -107,7 +107,7 @@ def render(roots: list[Path], output_dir: Path) -> dict:
             figure.colorbar(image, ax=axis, shrink=.72)
         figure.suptitle(
             f"{item['case']}: shear={item['load']:.5f}, "
-            f"t={item['time_s'] * 1e6:.3f} µs")
+            f"t={item['time_s'] * 1e6:.3f} µs", fontsize=9)
         target = output_dir / f"{item['case']}_fields.png"
         figure.savefig(target, dpi=180)
         plt.close(figure)

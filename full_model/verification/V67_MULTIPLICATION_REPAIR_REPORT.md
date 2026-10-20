@@ -56,6 +56,22 @@ weights, and destination reservoir.
 
 ## Reference and regression evidence
 
+| Quantity | Legacy compatibility | Recovered production | Strict comparator |
+|---|---:|---:|---:|
+| Schema | `legacy_v21_mobile_pair_v1` | `v34_km_forest_storage_v1` | `disabled` |
+| Coefficient (m^-1) | 10 | 5.0e8 | 0 |
+| Effective source density | within-family mobile + forest + wall | equation above | 0 |
+| Per-sign multiplicity | 1/2 | 1/2 | 0 |
+| Destination | mobile +/- | forest +/- | none |
+| Stored-work fraction | legacy transport-power bound | 0.1 | 0 |
+| Runtime origin | backward-compatible checkpoint fallback | explicit driver selection, then serialized | explicit driver selection |
+
+The Burgers magnitude is 2.48e-10 m. Slip in the source law is the accepted
+crystallographic family slip, not imposed macroscopic shear; no Taylor-factor
+conversion is applied. Owner support is applied once when family/cell increments
+are accumulated, and represented cell volume is applied once when converting
+density increments to physical line.
+
 - `full_model/reference_sources/v34/drx_var_v34_candidate_drx_asb_sweep.py`
   contains `KM_k1=5.0e8`, `stor_raw=KM_k1*sqrt(rf)*abs(gdot)`, the 0.1 stored
   work fraction, and `rho_state_store_to_forest=True`.
@@ -88,4 +104,3 @@ approximately \(5.01\times10^{-6}\) m of new forest line and retains 0.1813%
 accepted plastic/imposed power. It remains unbanded at the endpoint and has no
 post-peak softening. Final quantitative classification awaits completion of the
 strict zero comparator through the identical interval.
-

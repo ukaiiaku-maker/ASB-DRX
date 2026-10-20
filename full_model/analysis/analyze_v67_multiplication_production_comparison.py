@@ -45,6 +45,13 @@ def _law_summary(path: Path, result: dict) -> dict:
                     for row in multiplication))
     accepted = float(sum(row["accepted_unsigned_physical_line_increment_m"]
                          for row in multiplication))
+    cells = int(result["configuration"]["n"])**2
+    accumulated_absolute_slip = float(sum(
+        np.sum(np.asarray(row["absolute_slip_increment_by_owner_family"]))
+        for row in multiplication)/cells)
+    accumulated_signed_slip = float(sum(
+        np.sum(np.asarray(row["signed_slip_increment_by_owner_family"]))
+        for row in multiplication)/cells)
     return {
         "result": str(path.resolve()),
         "result_sha256": _sha256(path),
@@ -70,6 +77,9 @@ def _law_summary(path: Path, result: dict) -> dict:
         "maximum_budget_active_cell_time_fraction": float(max(
             (row["budget_active_cell_time_fraction"] for row in multiplication),
             default=0.0)),
+        "accumulated_domain_mean_absolute_family_slip": (
+            accumulated_absolute_slip),
+        "accumulated_domain_mean_signed_family_slip": accumulated_signed_slip,
         "initial_flow_exposure": float(
             initial["plastic_to_imposed_power_fraction"]),
         "final_flow_exposure": float(final["plastic_to_imposed_power_fraction"]),
@@ -124,6 +134,57 @@ def _plot(results: dict[str, dict], path: Path) -> None:
     axes[1, 1].set_ylabel(r"Forest density ($10^{12}$ m$^{-2}$)")
     axes[2, 0].set_ylabel(r"Wall density ($10^{12}$ m$^{-2}$)")
     axes[2, 1].set_ylabel("Temperature range (K)")
+    axes[2, 0].set_xlabel("Applied shear strain")
+    axes[2, 1].set_xlabel("Applied shear strain")
+    axes[0, 0].legend(frameon=False, fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
+def _plot_channel_histories(results: dict[str, dict], path: Path) -> None:
+    style = {
+        "recovered_v34": ("#0072B2", "-"),
+        "legacy_v21": ("#D55E00", "--"),
+        "disabled": ("#4D4D4D", ":"),
+    }
+    fig, axes = plt.subplots(3, 2, figsize=(10.2, 10.2), sharex=True)
+    for name, result in results.items():
+        color, line = style[name]
+        label = name.replace("_", " ")
+        records = result.get("multiplication_history", [])
+        if not records:
+            continue
+        load = np.asarray([row["load"] for row in records], dtype=float)
+        raw = np.asarray([
+            row["raw_unsigned_physical_line_increment_m"] for row in records])
+        accepted = np.asarray([
+            row["accepted_unsigned_physical_line_increment_m"] for row in records])
+        budget = np.asarray([
+            row["budget_active_cell_time_fraction"] for row in records])
+        cells = int(result["configuration"]["n"])**2
+        absolute_slip = np.asarray([
+            np.sum(np.asarray(row["absolute_slip_increment_by_owner_family"]))
+            /cells for row in records])
+        signed_slip = np.asarray([
+            np.sum(np.asarray(row["signed_slip_increment_by_owner_family"]))
+            /cells for row in records])
+        ratio = np.divide(
+            accepted, raw, out=np.full_like(accepted, np.nan), where=raw > 0.0)
+        axes[0, 0].semilogy(load, np.maximum(raw, 1e-30), line,
+                            color=color, label=label)
+        axes[0, 1].semilogy(load, np.maximum(accepted, 1e-30), line,
+                            color=color)
+        axes[1, 0].plot(load, np.cumsum(absolute_slip), line, color=color)
+        axes[1, 1].plot(load, np.cumsum(signed_slip), line, color=color)
+        axes[2, 0].plot(load, ratio, line, color=color)
+        axes[2, 1].plot(load, budget, line, color=color)
+    axes[0, 0].set_ylabel("Raw new line / interval (m)")
+    axes[0, 1].set_ylabel("Accepted new line / interval (m)")
+    axes[1, 0].set_ylabel("Accumulated absolute slip")
+    axes[1, 1].set_ylabel("Accumulated signed slip")
+    axes[2, 0].set_ylabel("Accepted / raw multiplication")
+    axes[2, 1].set_ylabel("Budget-active cell-time fraction")
     axes[2, 0].set_xlabel("Applied shear strain")
     axes[2, 1].set_xlabel("Applied shear strain")
     axes[0, 0].legend(frameon=False, fontsize=8)
@@ -212,6 +273,7 @@ def main() -> None:
     report = args.out/"comparison.json"
     report.write_text(json.dumps(payload, indent=2, sort_keys=True)+"\n")
     _plot(results, args.out/"response_comparison.png")
+    _plot_channel_histories(results, args.out/"channel_comparison.png")
     print(json.dumps(payload, indent=2, sort_keys=True))
 
 
