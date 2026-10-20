@@ -135,6 +135,23 @@ def test_zero_coefficient_is_exact_no_multiplication_comparator():
     assert np.count_nonzero(pair) == 0
 
 
+def test_storage_law_does_not_treat_immobile_forest_as_operable_source():
+    state = _state()
+    state = replace(
+        state,
+        mobile_plus_m2=np.zeros_like(state.mobile_plus_m2),
+        mobile_minus_m2=np.zeros_like(state.mobile_minus_m2))
+    residual = wall_residual(
+        state,
+        CommonWallDriving(
+            glide_speed_m_s=np.full(state.mobile_plus_m2.shape, 1e-3),
+            resolved_stress_Pa=np.full(state.mobile_plus_m2.shape, 1e9)),
+        bcc_four_family_systems(), (), _parameters())
+    assert np.count_nonzero(residual.state_rate.slip) == 0
+    assert np.count_nonzero(
+        residual.channel_rates_m2_s["multiplication_pairs_raw"]) == 0
+
+
 def test_production_kernel_converges_to_pure_storage_scalar_solution():
     rho0 = 2.0e13
     coefficient = 5.0e8
