@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-20T06:05:23Z",
+  "last_updated_utc": "2026-10-20T07:38:16Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-19T17:16:00Z",
@@ -88,19 +88,21 @@
     "H30": "the_recovered_v34_law_accepts_5p009e_6_m_stored_line_through_0p13064_shear_and_delays_band_extinction_from_0p10376_to_0p12120_with_5p051_times_endpoint_flow_while_preserving_all_hard_ledgers_but_the_endpoint_is_unbanded_and_has_zero_softening",
     "H31": "rollback_safe_complete_interval_bisection_repairs_state_dependent_structural_absorption_hard_rejections_without_committing_failed_state_load_heat_source_opportunity_or_clock;_the_fresh_132_microsecond_prefix_passes_with_one_rejected_macro_trial",
     "H32": "the_same_fresh_recovered_candidate_grows_grain20_by_0p08512_percent_during_a_2_per_s_dynamic_segment_and_0p08262_percent_during_a_no_reset_10_microsecond_static_hold_with_all_hard_ledgers_passed",
-    "H33": "the_fresh_recovered_v34_storage_law_reaches_shear_0p20008_with_8p42362e_5_m_accepted_line_0p226051_endpoint_flow_and_0p22258_percent_grain20_growth_but_zero_terminal_band_and_zero_softening;_carrier_starvation_is_repaired_while_spatial_localization_is_not"
+    "H33": "the_fresh_recovered_v34_storage_law_reaches_shear_0p20008_with_8p42362e_5_m_accepted_line_0p226051_endpoint_flow_and_0p22258_percent_grain20_growth_but_zero_terminal_band_and_zero_softening;_carrier_starvation_is_repaired_while_spatial_localization_is_not",
+    "H34": "rotating_the_same_19p375_K_strip_to_intersect_the_horizontal_boundary_geometry_changes_flow_multiplication_and_RX_by_less_than_0p1_percent_through_shear_0p09864_and_does_not_form_a_band;_seed_boundary_orientation_is_not_the_missing_amplifier",
+    "H35": "the_repaired_v34_law_delays_the_20_K_single_crystal_ASB_to_shear_about_0p132_but_produces_459_terminal_band_intervals_and_18p05_percent_softening_by_0p204_while_all_bath_controls_remain_uniform;_grid_and_timestep_errors_are_below_1p62_percent"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 58058,
+      "pid": null,
       "child_pid": null,
-      "case": "v67_multiplication_v34_fresh_highrate_yseed19p375_200",
-      "status": "running_matched_y_normal_seed_geometry_discriminator",
-      "last_case": "v67_multiplication_v34_fresh_highrate_seed19p375_1234",
-      "last_start_local": "2026-10-19T23:04:00-07:00",
-      "last_source_commit": "dce0d7d",
-      "last_output": "full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_200/checkpoint_latest.npz",
-      "queued_after_manager": "continue_matched_y_normal_seed_in_restartable_chunks_while_it_remains_valid_then_compare_band_and_RX_overlap_against_the_completed_x_normal_history",
+      "case": "v67_multiplication_v34_fresh_highrate_seed20_200",
+      "status": "ready_to_run_qualified_seed_polycrystal_combined_response",
+      "last_case": "v67_single_crystal_asb_n32_seed20_bath_v34mult_dt1_2400",
+      "last_start_local": null,
+      "last_source_commit": "06d9c4e",
+      "last_output": "full_model/verification/v67_multiplication_v34_fresh_highrate_seed20_200/checkpoint_latest.npz",
+      "queued_after_manager": "run_the_same_qualified_20_K_seed_in_the_fresh_polycrystal_then_continue_only_valid_restartable_segments_toward_the_single_crystal_band_onset_and_test_RX_overlap",
       "geography_watcher_pid": null,
       "conditional_interface_emission_watcher_pid": null
     },
@@ -113,13 +115,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28", "H29", "H30", "H31", "H32", "H33"],
-    "physical_uncertainty": "whether_intersection_of_the_same_subcritical_thermal_strip_with_the_existing_horizontal_GB_geometry_converts_the_repaired_active_flow_into_a_persistent_localized_band_with_RX_overlap",
-    "next_executable_experiment": "complete_the_matched_y_normal_seed_geometry_discriminator_then_continue_its_valid_history_and_compare_continuous_localization_softening_and_owner_growth_with_the_completed_x_normal_0p20_history",
-    "source_identity": "production_repair_at_b37db33_from_archived_v34_KM_k1_5e8_per_m_forest_storage_law;_rollback_safe_subdivision_at_e69b84d;_complete_x_normal_history_at_dce0d7d;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
-    "expected_discriminatory_observation": "same_carrier_law_same_seed_amplitude_width_loading_and_thermal_boundary_with_only_seed_normal_changed;_persistent_band_and_RX_intersection_would_identify_geometry_coupling_while_another_broad_response_would_select_a_single_crystal_or_spatial_mechanics_hypothesis",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28", "H29", "H30", "H31", "H32", "H33", "H34", "H35"],
+    "physical_uncertainty": "whether_the_grid_and_timestep_qualified_20_K_heat_trigger_couples_to_existing_boundary_RX_in_the_polycrystal_under_the_same_repaired_carrier_law_or_is_suppressed_by_multigrain_spatial_competition",
+    "next_executable_experiment": "run_the_20_K_x_normal_polycrystal_from_the_same_fresh_prefix_with_all_constitutive_parameters_fixed_then_continue_through_the_delayed_single_crystal_band_onset_if_valid_and_measure_RX_inside_the_active_band",
+    "source_identity": "production_repair_at_b37db33_from_archived_v34_KM_k1_5e8_per_m_forest_storage_law;_complete_polycrystal_19p375_K_history_at_dce0d7d;_strict_repaired_law_single_crystal_ASB_qualification_at_06d9c4e;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_event_measure_unchanged",
+    "expected_discriminatory_observation": "a_persistent_heat_specific_polycrystal_band_with_positive_existing_boundary_growth_inside_it_would_close_the_combined_response;_an_unbanded_result_would_isolate_multigrain_spatial_competition_as_the_remaining_mechanism_problem",
     "resource_need": "current_user_directed_local_only_continuation_with_at_most_one_heavy_solver_and_no_HPC_or_paid_compute",
-    "result_status": "FRESH_REPAIRED_STORAGE_MULTIPLICATION_REACHES_0P20_WITH_ACTIVE_FLOW_BUT_NO_ASB;_MATCHED_Y_NORMAL_GEOMETRY_DISCRIMINATOR_RUNNING"
+    "result_status": "REPAIRED_MULTIPLICATION_FLOW_AND_LOWER_RATE_RX_PRESERVED;_SINGLE_CRYSTAL_ASB_STRICTLY_QUALIFIED;_POLYCRYSTAL_DRX_INSIDE_ASB_REMAINS_TO_TEST"
   },
   "continuation_rule": {
     "active": true,

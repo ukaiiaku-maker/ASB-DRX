@@ -3387,3 +3387,24 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
   running from the same fresh prefix with every constitutive parameter fixed;
   it tests intersection of the thermal imperfection with the inherited
   horizontal grain-boundary geometry.
+
+## V67 repaired-law localization closure (2026-10-20)
+
+- The matched y-normal polycrystal branch reaches shear 0.09864 with all hard
+  ledgers passed. It matches the x-normal flow, multiplication, density, and RX
+  response but is no more localized. Seed/boundary orientation is rejected as
+  the missing ASB amplifier at this horizon.
+- The single-crystal production driver now selects the same explicit
+  `v34_km_forest_storage_v1` schema and records raw and accepted source line.
+  Repaired forest storage delays the old marginal band beyond shear 0.124; it
+  does not eliminate ASB.
+- At shear 0.204 the unchanged 20 K adiabatic case has 459 terminal band
+  intervals, a winding 96-cell power band, 18.0536% post-peak softening, and
+  `1.37169e-4 m` accepted multiplication. The exact strong-bath case is uniform
+  and has zero softening.
+- Fixed-scale n48 and 1 ns refinements preserve onset. Maximum declared grid or
+  timestep error is 1.62%, and all first-law residuals are below `1e-3`. The
+  machine classification is `QUALIFIED_HEAT_TRIGGERED_SINGLE_CRYSTAL_ASB`.
+- The immediate combined-response test is the same qualified 20 K imperfection
+  in the fresh polycrystal production history. No Arrhenius, Peierls, Taylor,
+  Hall--Petch, multiplication, front, or source parameter is changed.

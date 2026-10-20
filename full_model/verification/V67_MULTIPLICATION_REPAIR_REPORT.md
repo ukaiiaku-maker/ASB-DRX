@@ -195,3 +195,38 @@ same mean-zero thermal strip. The y-normal strip intersects the inherited
 horizontal grain-boundary geometry, whereas the completed x-normal strip did
 not. This matched test probes localization/front geometry without fitting
 multiplication, transmission, source density, or any rate-dependent switch.
+
+## Spatial and single-crystal consequences
+
+The matched y-normal strip was carried from the same prefix through shear
+0.09864. At that endpoint it differs from x-normal by only 0.098% in accepted
+flow, 0.048% in the latest accepted multiplication increment, and effectively
+zero in owner-20 growth. Neither history contains a qualified band. The
+y-normal largest 2x-mean component contains 17 cells over 34.4% of the domain,
+versus 19 cells over 40.6% for x-normal. Rotating the strip into the inherited
+horizontal boundary geometry therefore does not supply the missing
+localization; it mostly translates the same constitutive response.
+
+The single-crystal ASB driver previously retained the legacy coefficient-10
+mobile-pair default. It now selects and records the same explicit repaired
+schema and integrates raw/accepted multiplication. Under that common law the
+old 19.375 K, shear-0.124 endpoint becomes unbanded: forest storage delays the
+marginal instability. This is a real coupled effect, not a regression bypass.
+
+The unchanged 20 K bracket was therefore extended to shear 0.204. The n32
+adiabatic trajectory accepts 1.37169e-4 m of stored line, develops a winding
+96-cell band, retains it for 459 intervals, and softens 18.0536% after its
+stress peak. Its exact strong-bath control remains uniform and has zero
+softening. Fixed-scale n48 and 1 ns refinements reproduce band onset and keep
+all declared response errors below 1.62%; every mechanical first-law residual
+is below 1e-3. The machine decision is
+`QUALIFIED_HEAT_TRIGGERED_SINGLE_CRYSTAL_ASB` under the repaired production
+multiplication law. This is a prepared finite-imperfection response family,
+not a zero-imperfection bifurcation or named-material calibration.
+
+Thus the repaired law now supports the two separate sides of the standing
+objective: lower-rate existing-boundary dynamic/static RX and grid/time-step
+qualified high-rate heat-triggered ASB. The unresolved combined calculation is
+polycrystal DRX inside a persistent high-rate band. The next production test
+uses the already-qualified 20 K imperfection in the polycrystal with all
+mechanics, multiplication, boundary, source, and thermal parameters fixed.
