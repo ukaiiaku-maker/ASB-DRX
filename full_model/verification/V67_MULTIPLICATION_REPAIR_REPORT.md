@@ -102,8 +102,8 @@ It cannot manufacture carrier throughput directly.
 The matched production comparison starts from the immutable ad400 common
 checkpoint. It is therefore a causal law intervention on an evolved state,
 not a claim that the preceding history used the repaired law. A separate replay
-from the saved zero-load anchor is required and scheduled before making a
-full-trajectory claim. The first completed repaired run accidentally inherited
+from the saved zero-load anchor has now been executed and is reported below.
+The first completed repaired run accidentally inherited
 the old driver default of 0.55 front transmission; it is retained only as a
 boundary-law ablation. The driver now inherits the serialized 0.25 value, and
 the accepted matched repaired/legacy/disabled set all uses 0.25.
@@ -136,7 +136,53 @@ the repaired storage law does not relabel all forest as an operable pinned
 source. A persistent-source extension, if needed after the fresh-origin replay,
 must carry its own formation, survival, operation, and destruction state.
 
-The high-rate discriminator stops at its preregistered 0.13064 endpoint. At
-that point the response is almost elastic and monotonically hardening near
-9 GPa; extending it mechanically toward 0.20 would enter an unqualified
+The *evolved-state intervention* stops at its preregistered 0.13064 endpoint.
+At that point the response is almost elastic and monotonically hardening near
+9 GPa; extending that causal fork toward 0.20 would enter an unqualified
 high-stress regime without testing an ASB feedback loop.
+
+## Fresh-origin corrected history
+
+The corrected history begins at the saved zero-load three-grain anchor. Its
+first 33 accepted intervals use 20 s^-1 for 132 microseconds and reach shear
+0.00264. One rejected macro trial is rolled back and replaced by two complete
+half intervals; all accepted clocks, work, heat, source opportunity, and load
+are therefore preserved. At this prefix endpoint, owner 20 has grown 1.35279%
+and all hard balances pass. A matched 2 s^-1, 10-microsecond loaded continuation
+then grows owner 20 by 0.08512%; its no-reset 10-microsecond static continuation
+grows the same owner by 0.08262%. This establishes retained-state static RX but
+also shows that this short lower-rate loaded window is dominated by the same
+stored-energy/front kinetics rather than by deformation-enhanced dynamic RX.
+
+The high-rate branch applies the single mean-zero 19.375 K, 0.6-micrometre
+thermal strip once, then advances at 80000 s^-1 with 2 ns accepted intervals.
+Four checkpoint-linked 200-interval segments reach shear 0.13064. Their
+checkpoint hashes and all physics-bearing configuration values match at the
+seams; only the parent path and one-time seed metadata differ. Across this
+fresh high-rate history:
+
+- accepted multiplication is 4.87925e-5 m, 90.3392% of the raw proposal;
+- accumulated domain-mean absolute family slip is 0.127903;
+- endpoint plastic/imposed power is 0.638252, rather than the 0.0018127 of the
+  evolved-state intervention;
+- endpoint mean stress is 4.10687 GPa, mean temperature is 1064.47 K, and the
+  temperature range is 59.927 K;
+- endpoint mean mobile and forest densities are 1.66657e14 and 4.94664e15
+  m^-2, respectively; and
+- owner 20 grows 0.06090% during the high-rate portion, but none of its growth
+  lies inside a qualified band because no connected physical band occurs.
+
+The production path develops first a compact hot spot and then a broad
+horizontal high-power layer. At its closest approach to the fixed topology
+criterion, the largest above-2x-mean component spans half the domain but
+contains only 30 cells, below the preregistered 32-cell minimum. It later
+fragments. The endpoint is monotonic-hardening with no softening. Thus the
+fresh result is classified
+`FRESH_REPAIRED_STORAGE_MULTIPLICATION_REMAINS_FLOWING_WITHOUT_QUALIFIED_TERMINAL_ASB`.
+It is a successful carrier-throughput repair and an ASB negative at the old
+horizon, not a combined DRX-inside-ASB result.
+
+Unlike the evolved-state fork, the fresh state remains within an active-flow
+regime at 0.13064. The same parameterization is therefore being extended
+toward shear 0.20; that continuation is a physical-horizon test, not a change
+to the multiplication, source, boundary, or localization laws.
