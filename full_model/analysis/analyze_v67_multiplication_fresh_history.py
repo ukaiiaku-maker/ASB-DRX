@@ -19,6 +19,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
+from full_model.analysis.postprocess_v53_asb_mechanism import field_metrics
+from full_model.analysis.render_v67_poly_rx_asb_fields import frame
+from full_model.analysis.spatial_localization import spatial_localization_metrics
+
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -26,6 +30,37 @@ def digest(path: Path) -> str:
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text())
+
+
+def _profile_participation(values: np.ndarray) -> float:
+    value = np.maximum(np.asarray(values, dtype=float), 0.0)
+    return float(np.sum(value)**2
+                 /(value.size*max(float(np.sum(value*value)), 1e-300)))
+
+
+def _endpoint_spatial_metrics(result_path: Path) -> dict:
+    endpoint = frame(result_path.parent)
+    # The renderer stores log10(power) only to keep one field representation
+    # for plots. Reconstructing here is exact to floating-point roundoff.
+    power = np.power(10.0, np.asarray(endpoint["fields"][-1], dtype=float))
+    temperature = np.asarray(endpoint["fields"][-2], dtype=float)
+    spacing = endpoint["extent_um"][1]*1e-6/power.shape[0]
+    continuous, _ = field_metrics(power, spacing)
+    correlation = float(np.corrcoef(power.ravel(), temperature.ravel())[0, 1])
+    return {
+        "checkpoint_sha256": endpoint["checkpoint_sha256"],
+        "fixed_threshold_topology": spatial_localization_metrics(
+            power, threshold_multiple=2.0),
+        "continuous_power": continuous,
+        "x_profile_participation_fraction": _profile_participation(
+            np.mean(power, axis=1)),
+        "y_profile_participation_fraction": _profile_participation(
+            np.mean(power, axis=0)),
+        "power_temperature_pearson_correlation": correlation,
+        "power_field_semantics": (
+            "instantaneous accepted work-conjugate plastic power reconstructed "
+            "from the terminal common state; native grid, no resampling"),
+    }
 
 
 def main() -> None:
@@ -129,6 +164,7 @@ def main() -> None:
             "area_after_m2": final,
             "relative_area_change": (final-initial)/initial,
         }
+    endpoint_spatial = _endpoint_spatial_metrics(args.segments[-1])
 
     if not hard_pass or not chain_valid or not physics_configuration_matched:
         classification = "FRESH_HISTORY_INVALID"
@@ -186,6 +222,7 @@ def main() -> None:
         "terminal_physical_band": bool(bands[-1]),
         "terminal_band_persistence_intervals": terminal_persistence,
         "endpoint": response[-1],
+        "endpoint_spatial_localization": endpoint_spatial,
         "owner_area_changes": owner_changes,
         "claim_boundary": (
             "Fresh-origin, checkpoint-linked production history under one "
