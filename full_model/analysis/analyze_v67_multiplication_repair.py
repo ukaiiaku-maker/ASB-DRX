@@ -124,6 +124,10 @@ def _instantaneous(state, load, systems, topologies, parameters):
                 channels["thermodynamic_stress_plus_Pa"]).tolist(),
             "thermodynamic_stress_minus_Pa": family_mean(
                 channels["thermodynamic_stress_minus_Pa"]).tolist(),
+            "raw_arrhenius_speed_plus_m_s": family_mean(
+                channels["speed_plus_m_s"]).tolist(),
+            "raw_arrhenius_speed_minus_m_s": family_mean(
+                channels["speed_minus_m_s"]).tolist(),
             "signed_slip_rate_s": family_mean(
                 residual.state_rate.slip).tolist(),
             "absolute_slip_rate_s": family_mean(
@@ -132,6 +136,10 @@ def _instantaneous(state, load, systems, topologies, parameters):
                 2.0*channels["multiplication_pairs_raw"]).tolist(),
             "accepted_unsigned_multiplication_rate_m2_s": family_mean(
                 2.0*channels["multiplication_pairs"]).tolist(),
+            "multiplication_energy_budget_scale": family_mean(
+                np.broadcast_to(
+                    channels["multiplication_energy_budget_scale"][..., None],
+                    channels["multiplication_pairs"].shape)).tolist(),
         })
     raw = float(np.mean(cell_raw, dtype=np.longdouble))
     accepted = float(np.mean(cell_accepted, dtype=np.longdouble))

@@ -171,9 +171,10 @@ def _plot_channel_histories(results: dict[str, dict], path: Path) -> None:
             /cells for row in records])
         ratio = np.divide(
             accepted, raw, out=np.full_like(accepted, np.nan), where=raw > 0.0)
-        axes[0, 0].semilogy(load, np.maximum(raw, 1e-30), line,
+        axes[0, 0].semilogy(load, np.where(raw > 0.0, raw, np.nan), line,
                             color=color, label=label)
-        axes[0, 1].semilogy(load, np.maximum(accepted, 1e-30), line,
+        axes[0, 1].semilogy(
+            load, np.where(accepted > 0.0, accepted, np.nan), line,
                             color=color)
         axes[1, 0].plot(load, np.cumsum(absolute_slip), line, color=color)
         axes[1, 1].plot(load, np.cumsum(signed_slip), line, color=color)

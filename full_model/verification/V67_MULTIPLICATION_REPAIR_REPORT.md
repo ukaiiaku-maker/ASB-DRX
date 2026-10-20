@@ -99,6 +99,15 @@ positive multiplication result can preserve or redistribute accepted flow only
 through the coupled stress, slip, reaction, and boundary-transport trajectory.
 It cannot manufacture carrier throughput directly.
 
+The matched production comparison starts from the immutable ad400 common
+checkpoint. It is therefore a causal law intervention on an evolved state,
+not a claim that the preceding history used the repaired law. A separate replay
+from the saved zero-load anchor is required and scheduled before making a
+full-trajectory claim. The first completed repaired run accidentally inherited
+the old driver default of 0.55 front transmission; it is retained only as a
+boundary-law ablation. The driver now inherits the serialized 0.25 value, and
+the accepted matched repaired/legacy/disabled set all uses 0.25.
+
 At the matched 0.13064-shear endpoint, the repaired trajectory has accepted
 approximately \(5.01\times10^{-6}\) m of new forest line and retains 0.1813%
 accepted plastic/imposed power. It remains unbanded at the endpoint and has no
