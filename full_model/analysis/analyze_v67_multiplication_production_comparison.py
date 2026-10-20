@@ -52,9 +52,14 @@ def _law_summary(path: Path, result: dict) -> dict:
     accumulated_signed_slip = float(sum(
         np.sum(np.asarray(row["signed_slip_increment_by_owner_family"]))
         for row in multiplication)/cells)
+    endpoint_checkpoint = path.parent/"checkpoint_latest.npz"
     return {
         "result": str(path.resolve()),
         "result_sha256": _sha256(path),
+        "endpoint_checkpoint": str(endpoint_checkpoint.resolve()),
+        "endpoint_checkpoint_sha256": _sha256(endpoint_checkpoint),
+        "parent_checkpoint": result["parent_checkpoint"],
+        "parent_checkpoint_sha256": result["parent_checkpoint_sha256"],
         "source_commit": result["source_commit"],
         "source_tree_clean": bool(result["source_tree_clean"]),
         "multiplication_law": result["configuration"]["multiplication_law"],
