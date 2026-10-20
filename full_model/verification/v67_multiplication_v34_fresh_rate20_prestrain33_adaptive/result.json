@@ -1,0 +1,2712 @@
+{
+  "active_band_intervals": 0,
+  "artifacts": {
+    "checkpoint_latest.npz": "535190aae5d62119c1eeb9b2ae8faa199449225b572504fbf0eb223e6a2ceed3"
+  },
+  "claim_boundary": "Prepared high-rate localization endpoint with existing grain owners; this tests spatial coexistence, not spontaneous nucleation or grid convergence of the inherited band.",
+  "configuration": {
+    "critical_stress_temperature_coefficient": 0.0,
+    "dt_s": 4e-06,
+    "front_maximum_substep_s": 2e-09,
+    "front_transmission_fraction": 0.25,
+    "glide_barrier_temperature_coefficient": 0.0,
+    "hard_balance_subdivisions": 5,
+    "immutable_flow_law": "EXP-floor Arrhenius with Peierls and Taylor resistance",
+    "initial_state": "fresh V66 three-owner preparation at zero load",
+    "interface_mobile_emission_mode": "disabled",
+    "interface_neutral_sink_enabled": false,
+    "interface_sink_mode": "disabled",
+    "interface_width_m": 6e-07,
+    "kinetic_reference_temperature_K": 1000.0,
+    "lattice_absorption_mode": "one_flux_mura",
+    "lattice_arrival_limited_exchange": true,
+    "lattice_capture_distance_m": 5e-07,
+    "length_m": 4.8e-06,
+    "maximum_mechanical_subdivisions": 14,
+    "multiplication_coefficient_m1": 500000000.0,
+    "multiplication_density_argument": "v34_forest_mix_plus_mobile_wall_mobile_kappa",
+    "multiplication_destination": "forest_plus_minus",
+    "multiplication_forest_mix": 0.35,
+    "multiplication_gnd_obstacle_weight": 0.1,
+    "multiplication_law": "v34_km_forest_storage_v1",
+    "multiplication_mobile_obstacle_weight": 0.1,
+    "multiplication_storage_work_fraction": 0.1,
+    "multiplication_wall_obstacle_weight": 0.35,
+    "n": 32,
+    "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_clean_polycrystal_anchor_n32/checkpoint_latest.npz",
+    "plastic_history_mode": "material_continuity",
+    "production_rx_enabled": true,
+    "rx_enabled": true,
+    "schema": "v67-drx-asb-overlap-v1",
+    "shear_rate_s": 20.0,
+    "sink_activation_enthalpy_eV": 1.4,
+    "sink_mode": "disabled",
+    "sink_stress_assisted": false,
+    "source_grain_size_m": 2.4e-06,
+    "source_mode": "gb_tj_only",
+    "source_random_seed": 67,
+    "structural_absorption_mode": "common_axis",
+    "target_steps": 33,
+    "temperature_K": 1000.0,
+    "temperature_dependent_exp_floor": false,
+    "temperature_seed_mean_zero": true,
+    "temperature_seed_normal": "x",
+    "temperature_seed_peak_K": 0.0,
+    "temperature_seed_width_m": 6e-07,
+    "thermal_bath_rate_s": 0.0,
+    "thermal_bath_temperature_K": 1000.0,
+    "thermal_control": "adiabatic",
+    "thermal_diffusivity_m2_s": 3.947368421052631e-08,
+    "wall_nye_match_coefficient_J_m": 0.00262125,
+    "wall_orientation_relaxation_mode": "ordered_nye"
+  },
+  "created_utc": "2026-10-20T02:53:04.941993+00:00",
+  "decision": {
+    "all_hard_absorption_balances_passed": true,
+    "any_owner_net_growth": true,
+    "band_persisted_every_interval": false,
+    "final_connected_band": false,
+    "final_relative_threshold_band": false,
+    "first_law_hard_balance_passed": true,
+    "front_transmission_fraction": 0.25,
+    "grain_ids_unchanged": true,
+    "growing_owner_intersects_active_band": false,
+    "initial_connected_band": false,
+    "initial_relative_threshold_band": false,
+    "interface_mobile_emission_mode": "disabled",
+    "interface_neutral_sink_enabled": false,
+    "lattice_absorption_occurs_inside_active_band": false,
+    "mura_hard_balance_passed": true,
+    "production_rx_channels_enabled": true,
+    "rx_pathway_enabled": true,
+    "source_mode": "gb_tj_only",
+    "terminal_band_persisted_at_least_20_intervals": false
+  },
+  "final_power_localization": {
+    "above_threshold_fraction": 0.1171875,
+    "band_like": false,
+    "component_span_fraction": [
+      0.40625,
+      0.34375
+    ],
+    "largest_component_cells": 116,
+    "largest_component_fraction": 0.11328125,
+    "maximum_to_mean": 3.056077803851125,
+    "periodic_winding": [
+      false,
+      false
+    ],
+    "positive_max_W_m3": 146035.1420869624,
+    "positive_mean_W_m3": 47785.151903834325,
+    "signed_min_W_m3": 3489.7121318199615,
+    "threshold_multiple": 2.0
+  },
+  "flow_regime": {
+    "final_physical_band": false,
+    "final_plastic_to_imposed_power_fraction": 1.0157789223963944e-05,
+    "initial_physical_band": false,
+    "initial_plastic_to_imposed_power_fraction": 0.0,
+    "minimum_plastic_power_fraction": 0.01
+  },
+  "hard_balance_maxima": {
+    "first_law_relative_residuals": {
+      "conservative_dipole_wall_relative_first_law_residual": 1.7768579181764036e-06,
+      "conservative_wall_glide_relative_first_law_residual": 4.755399834717974e-09,
+      "lattice_absorption_relative_first_law_residual": 0.004863108449231713,
+      "mechanical_relative_first_law_residual": 0.008697841567393663,
+      "source_relative_first_law_residual": 0.019934758445278082,
+      "structural_absorption_post_relative_first_law_residual": 0.04198735737904454,
+      "structural_absorption_relative_first_law_residual": 2.2510579697938767e-05,
+      "structural_junction_post_relative_first_law_residual": 1.0942403464817223e-07,
+      "structural_junction_relative_first_law_residual": 1.358382477093819e-07,
+      "wall_order_relaxation_relative_first_law_residual": 6.127849839160461e-08,
+      "wall_orientation_relaxation_relative_first_law_residual": 2.0616530471575648e-06
+    },
+    "lattice_mura_relative_residual": 2.0541333218044819e-16
+  },
+  "initial_final_band_jaccard": 0.0,
+  "initial_power_localization": {
+    "above_threshold_fraction": 0.0,
+    "band_like": false,
+    "component_span_fraction": [
+      0.0,
+      0.0
+    ],
+    "largest_component_cells": 0,
+    "largest_component_fraction": 0.0,
+    "maximum_to_mean": 0.0,
+    "periodic_winding": [
+      false,
+      false
+    ],
+    "positive_max_W_m3": 0.0,
+    "positive_mean_W_m3": 0.0,
+    "signed_min_W_m3": 0.0,
+    "threshold_multiple": 2.0
+  },
+  "lattice_absorption_heat_overlap": {
+    "inside_active_band_J": 0.0,
+    "inside_active_band_fraction": 0.0,
+    "inside_band_enrichment": 0.0,
+    "outside_active_band_J": 3.0057319700822952e-21
+  },
+  "ledger": {
+    "accepted_events": 54,
+    "applied_shear_strain": 0.0026400000000000017,
+    "collective_wall_nucleation_inactive_intervals": 0,
+    "collective_wall_nucleation_intervals": 0,
+    "collective_wall_nucleation_rejected_intervals": 0,
+    "compatible_wall_reorganization_inactive_intervals": 0,
+    "compatible_wall_reorganization_intervals": 0,
+    "compatible_wall_reorganization_rejected_intervals": 0,
+    "conservative_dipole_wall_inactive_intervals": 5,
+    "conservative_dipole_wall_intervals": 29,
+    "conservative_dipole_wall_pair_cell_sum_m2": 2.5175647808796616e+16,
+    "conservative_dipole_wall_rejected_intervals": 0,
+    "conservative_wall_glide_inactive_intervals": 0,
+    "conservative_wall_glide_intervals": 34,
+    "conservative_wall_glide_line_cell_sum_m2": 1.3076885116454909e+17,
+    "conservative_wall_glide_rejected_intervals": 0,
+    "cumulative_collective_wall_nucleation_heat_J": 0.0,
+    "cumulative_compatible_wall_reorganization_heat_J": 0.0,
+    "cumulative_conservative_dipole_wall_heat_J": 8.407262088076269e-16,
+    "cumulative_conservative_wall_glide_heat_J": 1.3759347330441458e-15,
+    "cumulative_front_first_law_residual_J": 2.1951926992448624e-19,
+    "cumulative_interface_mobile_emission_heat_J": 0.0,
+    "cumulative_interface_sink_first_law_residual_J": 0.0,
+    "cumulative_interface_sink_generated_heat_J": 0.0,
+    "cumulative_joint_wall_topology_orientation_heat_J": 0.0,
+    "cumulative_lattice_absorption_heat_J": 3.0057319700822952e-21,
+    "cumulative_mechanical_external_work_J": 3.5482784531255115e-15,
+    "cumulative_mechanical_first_law_residual_J": -1.243438958643275e-17,
+    "cumulative_mechanical_internal_energy_change_J": 3.5358440635390792e-15,
+    "cumulative_sink_first_law_residual_J": 0.0,
+    "cumulative_sink_generated_heat_J": 0.0,
+    "cumulative_source_first_law_residual_J": 2.0942111331955662e-24,
+    "cumulative_source_generated_heat_J": 2.4709863347621357e-19,
+    "cumulative_source_resolved_work_J": 2.5627586794796178e-19,
+    "cumulative_structural_absorption_heat_J": 4.1801965843947506e-19,
+    "cumulative_structural_junction_heat_J": 4.373463407404096e-18,
+    "cumulative_wall_neutral_pair_recovery_heat_J": 0.0,
+    "cumulative_wall_order_relaxation_heat_J": 9.266270489472576e-16,
+    "cumulative_wall_orientation_relaxation_heat_J": 2.0846668414184616e-20,
+    "generated_heat_J": 1.3847470942607835e-16,
+    "interface_mobile_emission_inactive_intervals": 0,
+    "interface_mobile_emission_intervals": 0,
+    "interface_mobile_emission_rejected_intervals": 0,
+    "interface_mobile_emitted_pair_cell_sum_m2": 0.0,
+    "interface_sink_annihilated_pair_cell_sum_m2": 0.0,
+    "interface_sink_inactive_intervals": 0,
+    "interface_sink_intervals": 0,
+    "interface_sink_rejected_intervals": 0,
+    "intervals": 54,
+    "joint_wall_topology_orientation_inactive_intervals": 0,
+    "joint_wall_topology_orientation_intervals": 0,
+    "joint_wall_topology_orientation_rejected_intervals": 0,
+    "joint_wall_topology_orientation_transferred_line_cell_sum_m2": 0.0,
+    "lattice_absorbed_line_length_m": 2.0583986473937879e-13,
+    "lattice_absorption_inactive_intervals": 0,
+    "lattice_absorption_intervals": 34,
+    "lattice_absorption_rejected_intervals": 0,
+    "maximum_collective_wall_nucleation_first_law_residual": 0.0,
+    "maximum_compatible_wall_reorganization_first_law_residual": 0.0,
+    "maximum_conservative_dipole_wall_first_law_residual": 1.7768579181764036e-06,
+    "maximum_conservative_dipole_wall_inventory_residual_m2": 6.5,
+    "maximum_conservative_wall_glide_first_law_residual": 4.755399834717974e-09,
+    "maximum_conservative_wall_glide_inventory_residual_m2": 12.41796875,
+    "maximum_interface_mobile_emission_first_law_residual": 0.0,
+    "maximum_interface_mobile_emission_line_balance_residual_m2": 0.0,
+    "maximum_interface_mobile_emission_mura_residual": 0.0,
+    "maximum_interface_sink_line_balance_residual_m2": 0.0,
+    "maximum_interface_sink_relative_first_law_residual": 0.0,
+    "maximum_joint_wall_topology_orientation_balance_residual_m2": 0.0,
+    "maximum_joint_wall_topology_orientation_first_law_residual": 0.0,
+    "maximum_lattice_absorption_first_law_residual": 0.004863108449231713,
+    "maximum_mechanical_relative_first_law_residual": 0.008697841567393663,
+    "maximum_relative_energy_closure": 0.0024552160328624568,
+    "maximum_sink_line_balance_residual_m2": 0.0,
+    "maximum_sink_relative_first_law_residual": 0.0,
+    "maximum_source_line_balance_residual_m2": 1.3479642271995544,
+    "maximum_source_relative_first_law_residual": 0.019934758445278082,
+    "maximum_structural_absorption_first_law_residual": 0.04198735737904454,
+    "maximum_structural_junction_first_law_residual": 1.358382477093819e-07,
+    "maximum_wall_neutral_pair_recovery_balance_residual_m2": 0.0,
+    "maximum_wall_neutral_pair_recovery_first_law_residual": 0.0,
+    "maximum_wall_order_relaxation_first_law_residual": 6.127849839160461e-08,
+    "maximum_wall_orientation_relaxation_first_law_residual": 2.0616530471575648e-06,
+    "physical_time_s": 0.00013240000000000002,
+    "rejected_events": 0,
+    "sink_annihilated_pair_cell_sum_m2": 0.0,
+    "sink_inactive_intervals": 0,
+    "sink_intervals": 0,
+    "sink_rejected_intervals": 0,
+    "source_created_line_cell_sum_m2": 1476223901347.4302,
+    "source_event_count": 4.251524835887517,
+    "source_inactive_intervals": 8,
+    "source_intervals": 26,
+    "source_rejected_intervals": 0,
+    "stationary_intervals": 0,
+    "structural_absorbed_line_length_m": 2.7869802597990733e-10,
+    "structural_absorption_inactive_intervals": 1,
+    "structural_absorption_intervals": 67,
+    "structural_absorption_rejected_intervals": 0,
+    "structural_junction_inactive_intervals": 2,
+    "structural_junction_intervals": 66,
+    "structural_junction_reacted_absolute_content": 123.7337009229077,
+    "structural_junction_rejected_intervals": 0,
+    "transformed_volume_m3": 5.404508093650694e-23,
+    "wall_neutral_pair_recovery_annihilated_pair_cell_sum_m2": 0.0,
+    "wall_neutral_pair_recovery_inactive_intervals": 0,
+    "wall_neutral_pair_recovery_intervals": 0,
+    "wall_neutral_pair_recovery_rejected_intervals": 0,
+    "wall_order_relaxation_inactive_intervals": 0,
+    "wall_order_relaxation_intervals": 34,
+    "wall_order_relaxation_rejected_intervals": 0,
+    "wall_orientation_relaxation_inactive_intervals": 0,
+    "wall_orientation_relaxation_intervals": 34,
+    "wall_orientation_relaxation_rejected_intervals": 0
+  },
+  "mean_active_largest_band_area_fraction": 0.0,
+  "multiplication_history": [
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          0.0,
+          0.0,
+          9.344779592425353e-11,
+          9.344779592425353e-11
+        ],
+        [
+          3.7261142091835856e-11,
+          3.7261142091835856e-11,
+          1.3609672970733147e-11,
+          5.1006860611889064e-11
+        ],
+        [
+          1.503058218126831e-10,
+          1.503058218126831e-10,
+          3.1292118541733247e-11,
+          1.1784666068951907e-10
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 6.749241673864184,
+      "accepted_unsigned_physical_line_increment_m": 7.712925397025208e-20,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 1,
+      "load": 7.999999999999999e-05,
+      "raw_unsigned_line_increment_domain_mean_m2": 8943.417648854198,
+      "raw_unsigned_physical_line_increment_m": 1.0220394594428195e-16,
+      "signed_slip_increment_by_owner_family": [
+        [
+          0.0,
+          0.0,
+          9.344779592425353e-11,
+          9.344779592425353e-11
+        ],
+        [
+          3.7261142091835856e-11,
+          3.7261142091835856e-11,
+          1.3609672970733147e-11,
+          5.1006860611889064e-11
+        ],
+        [
+          1.503058218126831e-10,
+          1.503058218126831e-10,
+          -3.1292118541733247e-11,
+          1.1784666068951907e-10
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.8935978461847368e-17,
+          1.8940385947497377e-17,
+          2.93602331179687e-10,
+          2.935843523029939e-10
+        ],
+        [
+          1.1649455187863817e-10,
+          1.1649502216714324e-10,
+          4.1756871091447844e-11,
+          1.621402030419076e-10
+        ],
+        [
+          5.1301019321936e-10,
+          5.129493062821184e-10,
+          9.469405701603384e-11,
+          3.8406818563976235e-10
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 66.9421194543912,
+      "accepted_unsigned_physical_line_increment_m": 7.650038303856701e-19,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 1,
+      "hard_balance_subinterval_count": 2,
+      "interval": 2,
+      "load": 0.00015999999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 29375.18889027119,
+      "raw_unsigned_physical_line_increment_m": 3.356949586077967e-16,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.4429669618197314e-18,
+          -1.4472622827199167e-18,
+          2.93602331179687e-10,
+          2.935843523029939e-10
+        ],
+        [
+          1.1649455187863817e-10,
+          1.1649502216714324e-10,
+          4.1756871091447844e-11,
+          1.621402030419076e-10
+        ],
+        [
+          5.1301019321936e-10,
+          5.129493062821184e-10,
+          -9.469405701603384e-11,
+          3.8406818563976235e-10
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          9.084926659712868e-17,
+          9.085673635232952e-17,
+          5.270464623264138e-10,
+          5.27029643829079e-10
+        ],
+        [
+          2.0294949545033784e-10,
+          2.0295091948737373e-10,
+          7.06491959481002e-11,
+          2.8912587469998303e-10
+        ],
+        [
+          1.0331268142533745e-09,
+          1.0330188922470105e-09,
+          1.596433042586756e-10,
+          7.274734951636328e-10
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 199.84947794630128,
+      "accepted_unsigned_physical_line_increment_m": 2.2838478580538596e-18,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 3,
+      "load": 0.00023999999999999998,
+      "raw_unsigned_line_increment_domain_mean_m2": 56211.54289996107,
+      "raw_unsigned_physical_line_increment_m": 6.423765184138912e-16,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -3.817746541005313e-18,
+          -3.846426985404118e-18,
+          5.270464623264138e-10,
+          5.27029643829079e-10
+        ],
+        [
+          2.0294949545033784e-10,
+          2.0295091948737373e-10,
+          7.06491959481002e-11,
+          2.8912587469998303e-10
+        ],
+        [
+          1.0331268142533745e-09,
+          1.0330188922470105e-09,
+          -1.596433042586756e-10,
+          7.274734951636328e-10
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          2.239206778313984e-16,
+          2.2394251898128873e-16,
+          8.202557383178439e-10,
+          8.202464351995687e-10
+        ],
+        [
+          3.0217908794402544e-10,
+          3.0218228310508403e-10,
+          1.0104113729191898e-10,
+          4.4169443898799284e-10
+        ],
+        [
+          1.8376252001711707e-09,
+          1.8374442525743733e-09,
+          2.2749510889151744e-10,
+          1.2104754946118482e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 451.43596697624895,
+      "accepted_unsigned_physical_line_increment_m": 5.158938000849857e-18,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 4,
+      "load": 0.00031999999999999997,
+      "raw_unsigned_line_increment_domain_mean_m2": 94611.58036331613,
+      "raw_unsigned_physical_line_increment_m": 1.0812060025391186e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.006253845822781e-17,
+          -1.0128775013180591e-17,
+          8.202557383178439e-10,
+          8.202464351995687e-10
+        ],
+        [
+          3.0217908794402544e-10,
+          3.0218228310508403e-10,
+          1.0104113729191898e-10,
+          4.4169443898799284e-10
+        ],
+        [
+          1.8376252001711707e-09,
+          1.8374442525743733e-09,
+          -2.2749510889151744e-10,
+          1.2104754946118482e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          4.085792477270087e-16,
+          4.0862437963614133e-16,
+          1.1956109484190828e-09,
+          1.1955990334881992e-09
+        ],
+        [
+          4.157308854875456e-10,
+          4.1573647863388096e-10,
+          1.3294148355131427e-10,
+          6.208559194867667e-10
+        ],
+        [
+          3.030110988104537e-09,
+          3.0298188052684467e-09,
+          2.992589876442684e-10,
+          1.8843333447741244e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 876.3977476092206,
+      "accepted_unsigned_physical_line_increment_m": 1.0015333236038555e-17,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 5,
+      "load": 0.00039999999999999996,
+      "raw_unsigned_line_increment_domain_mean_m2": 148791.96985365957,
+      "raw_unsigned_physical_line_increment_m": 1.700370824772445e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -2.0508886641802667e-17,
+          -2.0620838660991816e-17,
+          1.1956109484190828e-09,
+          1.1955990334881992e-09
+        ],
+        [
+          4.157308854875456e-10,
+          4.1573647863388096e-10,
+          1.3294148355131427e-10,
+          6.208559194867667e-10
+        ],
+        [
+          3.030110988104537e-09,
+          3.0298188052684467e-09,
+          -2.992589876442684e-10,
+          1.8843333447741244e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          6.478201783144288e-16,
+          6.478914480063939e-16,
+          1.6762413806276985e-09,
+          1.6762234934987321e-09
+        ],
+        [
+          5.441925088473864e-10,
+          5.442012864083805e-10,
+          1.6649820653314097e-10,
+          8.257822482400717e-10
+        ],
+        [
+          4.716728343961274e-09,
+          4.71627302442618e-09,
+          3.760351035001407e-10,
+          2.801993141476599e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 1550.9171711616013,
+      "accepted_unsigned_physical_line_increment_m": 1.7723633285287397e-17,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 6,
+      "load": 0.00047999999999999996,
+      "raw_unsigned_line_increment_domain_mean_m2": 223084.15584648654,
+      "raw_unsigned_physical_line_increment_m": 2.5493700395487126e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -3.663018824826344e-17,
+          -3.681642081730956e-17,
+          1.6762413806276985e-09,
+          1.6762234934987321e-09
+        ],
+        [
+          5.441925088473864e-10,
+          5.442012864083805e-10,
+          1.6649820653314097e-10,
+          8.257822482400717e-10
+        ],
+        [
+          4.716728343961274e-09,
+          4.71627302442618e-09,
+          -3.760351035001407e-10,
+          2.801993141476599e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          9.458564969659794e-16,
+          9.459478997269633e-16,
+          2.285039003794845e-09,
+          2.2850119941062943e-09
+        ],
+        [
+          3.1631609085762205e-10,
+          3.1632784968338883e-10,
+          9.183666200635895e-11,
+          4.868742699121422e-10
+        ],
+        [
+          7.000034527298953e-09,
+          6.999352583106084e-09,
+          4.589324128074035e-10,
+          4.015235571560957e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 1416.0389757957876,
+      "accepted_unsigned_physical_line_increment_m": 1.6182266849158134e-17,
+      "budget_active_cell_time_fraction": 1.0,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 7,
+      "load": 0.00056,
+      "raw_unsigned_line_increment_domain_mean_m2": 320337.2926378904,
+      "raw_unsigned_physical_line_increment_m": 3.660763326298989e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -5.994293399834444e-17,
+          -6.022762554629589e-17,
+          2.285039003794845e-09,
+          2.2850119941062943e-09
+        ],
+        [
+          3.1631609085762205e-10,
+          3.1632784968338883e-10,
+          9.183666200635895e-11,
+          4.868742699121422e-10
+        ],
+        [
+          7.000034527298953e-09,
+          6.999352583106084e-09,
+          -4.589324128074035e-10,
+          4.015235571560957e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.3008815453105117e-15,
+          1.301006157063084e-15,
+          3.0445942757044794e-09,
+          3.044554067174592e-09
+        ],
+        [
+          3.925184602415925e-10,
+          3.925345305690574e-10,
+          1.0936243696940568e-10,
+          6.077098117697509e-10
+        ],
+        [
+          9.97826015475611e-09,
+          9.97728118057369e-09,
+          5.490688766312226e-10,
+          5.574433824276935e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 2365.676664775198,
+      "accepted_unsigned_physical_line_increment_m": 2.7034574416784595e-17,
+      "budget_active_cell_time_fraction": 0.9966267862058038,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 8,
+      "load": 0.0006399999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 447019.2037212681,
+      "raw_unsigned_physical_line_increment_m": 5.108463937054057e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -9.111797961734086e-17,
+          -9.150907015670023e-17,
+          3.0445942757044794e-09,
+          3.044554067174592e-09
+        ],
+        [
+          3.925184602415925e-10,
+          3.925345305690574e-10,
+          1.0936243696940568e-10,
+          6.077098117697509e-10
+        ],
+        [
+          9.97826015475611e-09,
+          9.97728118057369e-09,
+          -5.490688766312226e-10,
+          5.574433824276935e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.7184955112130186e-15,
+          1.7186646639688264e-15,
+          3.977137525326575e-09,
+          3.977079035139345e-09
+        ],
+        [
+          4.781558271125362e-10,
+          4.781762896217712e-10,
+          1.284628754896968e-10,
+          7.420709110176906e-10
+        ],
+        [
+          1.3744659315618893e-08,
+          1.3743304229209735e-08,
+          6.47571135581804e-10,
+          7.528333620135305e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 3737.0418542690877,
+      "accepted_unsigned_physical_line_increment_m": 4.270631638389045e-17,
+      "budget_active_cell_time_fraction": 0.7885337159318462,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 9,
+      "load": 0.0007199999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 605950.8285650293,
+      "raw_unsigned_physical_line_increment_m": 6.924709116708585e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.339635884277371e-16,
+          -1.3447151950690128e-16,
+          3.977137525326575e-09,
+          3.977079035139345e-09
+        ],
+        [
+          4.781558271125362e-10,
+          4.781762896217712e-10,
+          1.284628754896968e-10,
+          7.420709110176906e-10
+        ],
+        [
+          1.3744659315618893e-08,
+          1.3743304229209735e-08,
+          -6.47571135581804e-10,
+          7.528333620135305e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          2.1970906654107357e-15,
+          2.1973067772901322e-15,
+          5.104481067481369e-09,
+          5.104397747383944e-09
+        ],
+        [
+          5.720353054538429e-10,
+          5.720604912807528e-10,
+          1.489354046457913e-10,
+          8.877990111259111e-10
+        ],
+        [
+          1.8386926722906652e-08,
+          1.8385106489382874e-08,
+          7.555738973408956e-10,
+          9.923840554478058e-09
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 5613.211827230067,
+      "accepted_unsigned_physical_line_increment_m": 6.414688664769285e-17,
+      "budget_active_cell_time_fraction": 0.6857610019018654,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 10,
+      "load": 0.0007999999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 800828.243735552,
+      "raw_unsigned_physical_line_increment_m": 9.15173703689089e-15,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.9111256916206945e-16,
+          -1.9174423709737297e-16,
+          5.104481067481369e-09,
+          5.104397747383944e-09
+        ],
+        [
+          5.720353054538429e-10,
+          5.720604912807528e-10,
+          1.489354046457913e-10,
+          8.877990111259111e-10
+        ],
+        [
+          1.8386926722906652e-08,
+          1.8385106489382874e-08,
+          -7.555738973408956e-10,
+          9.923840554478058e-09
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          2.738516920233291e-15,
+          2.7388332976940576e-15,
+          6.4479669041459875e-09,
+          6.447851116438668e-09
+        ],
+        [
+          6.739441967966986e-10,
+          6.739743872209679e-10,
+          1.7086733689622844e-10,
+          1.044421884009596e-09
+        ],
+        [
+          2.3986717101930672e-08,
+          2.398433418763965e-08,
+          8.742200362489076e-10,
+          1.2805831944611462e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 8320.922021100032,
+      "accepted_unsigned_physical_line_increment_m": 9.50901655096078e-17,
+      "budget_active_cell_time_fraction": 0.6747423689651467,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 11,
+      "load": 0.0008799999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 1035143.4534729411,
+      "raw_unsigned_physical_line_increment_m": 1.1829453763336215e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -2.655858002781218e-16,
+          -2.6632774688526943e-16,
+          6.4479669041459875e-09,
+          6.447851116438668e-09
+        ],
+        [
+          6.739441967966986e-10,
+          6.739743872209679e-10,
+          1.7086733689622844e-10,
+          1.044421884009596e-09
+        ],
+        [
+          2.3986717101930672e-08,
+          2.398433418763965e-08,
+          -8.742200362489076e-10,
+          1.2805831944611462e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          3.3443537945827085e-15,
+          3.3447844666226804e-15,
+          8.02841629640115e-09,
+          8.02825891191231e-09
+        ],
+        [
+          7.836751623685126e-10,
+          7.837105976952985e-10,
+          1.943397166827452e-10,
+          1.2115917404160754e-09
+        ],
+        [
+          3.061926295435712e-08,
+          3.0616212770392926e-08,
+          1.0046600762310966e-09,
+          1.6216992353333888e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 12232.137124879282,
+      "accepted_unsigned_physical_line_increment_m": 1.3978690592118045e-16,
+      "budget_active_cell_time_fraction": 0.674532240370214,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 12,
+      "load": 0.0009599999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 1312166.2080973212,
+      "raw_unsigned_physical_line_increment_m": 1.4995225479542893e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -3.60677613604799e-16,
+          -3.6152471364130724e-16,
+          8.02841629640115e-09,
+          8.02825891191231e-09
+        ],
+        [
+          7.836751623685126e-10,
+          7.837105976952985e-10,
+          1.943397166827452e-10,
+          1.2115917404160754e-09
+        ],
+        [
+          3.061926295435712e-08,
+          3.0616212770392926e-08,
+          -1.0046600762310966e-09,
+          1.6216992353333888e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          4.016480194674206e-15,
+          4.0170436928404495e-15,
+          9.866081021741062e-09,
+          9.865871112864441e-09
+        ],
+        [
+          9.010440706603068e-10,
+          9.01084967128934e-10,
+          2.1942725066667923e-10,
+          1.3890723900662908e-09
+        ],
+        [
+          3.835308015054345e-08,
+          3.834925373369161e-08,
+          1.1480512334121288e-09,
+          2.019766816075673e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 17789.333659765023,
+      "accepted_unsigned_physical_line_increment_m": 2.0329365877040914e-16,
+      "budget_active_cell_time_fraction": 0.674389855822263,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 13,
+      "load": 0.00104,
+      "raw_unsigned_line_increment_domain_mean_m2": 1634932.5288231045,
+      "raw_unsigned_physical_line_increment_m": 1.868374735018583e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -4.799971775507985e-16,
+          -4.809431652965387e-16,
+          9.866081021741062e-09,
+          9.865871112864441e-09
+        ],
+        [
+          9.010440706603068e-10,
+          9.01084967128934e-10,
+          2.1942725066667923e-10,
+          1.3890723900662908e-09
+        ],
+        [
+          3.835308015054345e-08,
+          3.834925373369161e-08,
+          -1.1480512334121288e-09,
+          2.019766816075673e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          4.756870457911458e-15,
+          4.7575738088494785e-15,
+          1.1980600288818262e-08,
+          1.1980325202687645e-08
+        ],
+        [
+          1.0258913443723339e-09,
+          1.0259379107529007e-09,
+          2.4619655875881985e-10,
+          1.5767114497604783e-09
+        ],
+        [
+          4.724977926472367e-08,
+          4.724506084861039e-08,
+          1.3055561230168086e-09,
+          2.4785747839681968e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 25526.355508002503,
+      "accepted_unsigned_physical_line_increment_m": 2.9171110652857135e-16,
+      "budget_active_cell_time_fraction": 0.6742478312051758,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 14,
+      "load": 0.00112,
+      "raw_unsigned_line_increment_domain_mean_m2": 2006236.4564372615,
+      "raw_unsigned_physical_line_increment_m": 2.2926949226331994e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -6.274953607483217e-16,
+          -6.285316583297907e-16,
+          1.1980600288818262e-08,
+          1.1980325202687645e-08
+        ],
+        [
+          1.0258913443723339e-09,
+          1.0259379107529007e-09,
+          2.4619655875881985e-10,
+          1.5767114497604783e-09
+        ],
+        [
+          4.724977926472367e-08,
+          4.724506084861039e-08,
+          -1.3055561230168086e-09,
+          2.4785747839681968e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          5.567620263070423e-15,
+          5.568498291846777e-15,
+          1.4390957628939477e-08,
+          1.4390603122099456e-08
+        ],
+        [
+          1.1580912537125062e-09,
+          1.1581437127008198e-09,
+          2.747077568877318e-10,
+          1.7744366588293307e-09
+        ],
+        [
+          5.7363995567315416e-08,
+          5.735826891800758e-08,
+          1.4783447156185267e-09,
+          3.001656253310728e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 36085.70481166076,
+      "accepted_unsigned_physical_line_increment_m": 4.123816608748893e-16,
+      "budget_active_cell_time_fraction": 0.6741061077424162,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 15,
+      "load": 0.0012,
+      "raw_unsigned_line_increment_domain_mean_m2": 2428625.7271116446,
+      "raw_unsigned_physical_line_increment_m": 2.7753946229315537e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -8.0752952977101e-16,
+          -8.086445807150858e-16,
+          1.4390957628939477e-08,
+          1.4390603122099456e-08
+        ],
+        [
+          1.1580912537125062e-09,
+          1.1581437127008198e-09,
+          2.747077568877318e-10,
+          1.7744366588293307e-09
+        ],
+        [
+          5.7363995567315416e-08,
+          5.735826891800758e-08,
+          -1.4783447156185267e-09,
+          3.001656253310728e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          6.451230401894836e-15,
+          6.452304028584586e-15,
+          1.711544633532204e-08,
+          1.7114996368342263e-08
+        ],
+        [
+          1.2975408178426623e-09,
+          1.2975994353275588e-09,
+          3.050128232197009e-10,
+          1.9822270303642183e-09
+        ],
+        [
+          6.874339060175307e-08,
+          6.87365360246292e-08,
+          1.667592648638814e-09,
+          3.592281810199495e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 50225.691488166594,
+      "accepted_unsigned_physical_line_increment_m": 5.739711662161298e-16,
+      "budget_active_cell_time_fraction": 0.6739646604493446,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 16,
+      "load": 0.0012799999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 2904399.610137844,
+      "raw_unsigned_physical_line_increment_m": 3.319101404071766e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.0249818831252699e-15,
+          -1.0261626208156749e-15,
+          1.711544633532204e-08,
+          1.7114996368342263e-08
+        ],
+        [
+          1.2975408178426623e-09,
+          1.2975994353275588e-09,
+          3.050128232197009e-10,
+          1.9822270303642183e-09
+        ],
+        [
+          6.874339060175307e-08,
+          6.87365360246292e-08,
+          -1.667592648638814e-09,
+          3.592281810199495e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          7.410789646027644e-15,
+          7.412081740945397e-15,
+          2.0171634273639128e-08,
+          2.0171070066031815e-08
+        ],
+        [
+          1.4441671389476981e-09,
+          1.4442322554856105e-09,
+          3.3715790799420814e-10,
+          2.200118193738749e-09
+        ],
+        [
+          8.142873703951427e-08,
+          8.142063344915365e-08,
+          1.874480125130764e-09,
+          4.253454333074557e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 68826.05652036227,
+      "accepted_unsigned_physical_line_increment_m": 7.865331617456568e-16,
+      "budget_active_cell_time_fraction": 0.6738234618806365,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 17,
+      "load": 0.0013599999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 3435609.675599318,
+      "raw_unsigned_physical_line_increment_m": 3.9261597675200915e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.285510999807902e-15,
+          -1.2867417983374567e-15,
+          2.0171634273639128e-08,
+          2.0171070066031815e-08
+        ],
+        [
+          1.4441671389476981e-09,
+          1.4442322554856105e-09,
+          3.3715790799420814e-10,
+          2.200118193738749e-09
+        ],
+        [
+          8.142873703951427e-08,
+          8.142063344915365e-08,
+          -1.874480125130764e-09,
+          4.253454333074557e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          8.169541514314325e-15,
+          8.163068992383466e-15,
+          1.875597618625802e-08,
+          1.876097885699618e-08
+        ],
+        [
+          1.5864772585529667e-09,
+          1.5871001786595598e-09,
+          3.688343248292504e-10,
+          2.411798843146825e-09
+        ],
+        [
+          8.09212690955294e-08,
+          8.550098991651934e-08,
+          1.8165864673739547e-09,
+          4.456973031021123e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 80237.62519881348,
+      "accepted_unsigned_physical_line_increment_m": 9.169427427520087e-16,
+      "budget_active_cell_time_fraction": 0.6737010589897365,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 18,
+      "load": 0.0014399999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 3497539.808674118,
+      "raw_unsigned_physical_line_increment_m": 3.9969325327158434e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.2952541666663518e-15,
+          -1.2911942733465389e-15,
+          1.875597618625802e-08,
+          1.876097885699618e-08
+        ],
+        [
+          1.5864772585529667e-09,
+          1.5871001786595598e-09,
+          3.688343248292504e-10,
+          2.411798843146825e-09
+        ],
+        [
+          8.09212690955294e-08,
+          8.550098991651934e-08,
+          -1.8165864673739547e-09,
+          4.456973031021123e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          9.256338805781343e-15,
+          9.249112051363308e-15,
+          2.174134518243761e-08,
+          2.1761614728353215e-08
+        ],
+        [
+          1.735672318063292e-09,
+          1.7367702229070604e-09,
+          4.024250201534538e-10,
+          2.633434962746519e-09
+        ],
+        [
+          9.399702966397219e-08,
+          9.931287258232177e-08,
+          2.0289296228117522e-09,
+          5.182226207286972e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 106487.63968190891,
+      "accepted_unsigned_physical_line_increment_m": 1.216923708262506e-15,
+      "budget_active_cell_time_fraction": 0.6735787388305132,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 19,
+      "load": 0.0015199999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 4060825.839225814,
+      "raw_unsigned_physical_line_increment_m": 4.640646795853833e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.56409008132805e-15,
+          -1.558576048132646e-15,
+          2.174134518243761e-08,
+          2.1761614728353215e-08
+        ],
+        [
+          1.735672318063292e-09,
+          1.7367702229070604e-09,
+          4.024250201534538e-10,
+          2.633434962746519e-09
+        ],
+        [
+          9.399702966397219e-08,
+          9.931287258232177e-08,
+          -2.0289296228117522e-09,
+          5.182226207286972e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.0422816647709674e-14,
+          1.041552928173091e-14,
+          2.502071499309876e-08,
+          2.5062622860226792e-08
+        ],
+        [
+          1.890470627217992e-09,
+          1.8921152556036577e-09,
+          4.3767250658536494e-10,
+          2.8634916359010966e-09
+        ],
+        [
+          1.0825233030147965e-07,
+          1.1437018752453689e-07,
+          2.2593992879512157e-09,
+          5.97721347535034e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 139455.50565540246,
+      "accepted_unsigned_physical_line_increment_m": 1.5936752057490344e-15,
+      "budget_active_cell_time_fraction": 0.6734565516727372,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 20,
+      "load": 0.0015999999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 4676269.054345898,
+      "raw_unsigned_physical_line_increment_m": 5.343965455001623e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.884997859639157e-15,
+          -1.8778304676485874e-15,
+          2.502071499309876e-08,
+          2.5062622860226792e-08
+        ],
+        [
+          1.890470627217992e-09,
+          1.8921152556036577e-09,
+          4.3767250658536494e-10,
+          2.8634916359010966e-09
+        ],
+        [
+          1.0825233030147965e-07,
+          1.1437018752453689e-07,
+          -2.2593992879512157e-09,
+          5.97721347535034e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.1685062288878493e-14,
+          1.1678538811967206e-14,
+          2.8606230462689933e-08,
+          2.8676964142291316e-08
+        ],
+        [
+          2.0507486354661692e-09,
+          2.0530185111164393e-09,
+          4.745689989548783e-10,
+          3.101958488057448e-09
+        ],
+        [
+          1.2370529405609461e-07,
+          1.3069043404881565e-07,
+          2.5091300000395566e-09,
+          6.843938142721068e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 180334.83367205728,
+      "accepted_unsigned_physical_line_increment_m": 2.060837625630883e-15,
+      "budget_active_cell_time_fraction": 0.6733345390013589,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 21,
+      "load": 0.0016799999999999999,
+      "raw_unsigned_line_increment_domain_mean_m2": 5345004.395143713,
+      "raw_unsigned_physical_line_increment_m": 6.108185502699913e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -2.2713691995190443e-15,
+          -2.2622863231074168e-15,
+          2.8606230462689933e-08,
+          2.8676964142291316e-08
+        ],
+        [
+          2.0507486354661692e-09,
+          2.0530185111164393e-09,
+          4.745689989548783e-10,
+          3.101958488057448e-09
+        ],
+        [
+          1.2370529405609461e-07,
+          1.3069043404881565e-07,
+          -2.5091300000395566e-09,
+          6.843938142721068e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.3056884436073581e-14,
+          1.3051193666568889e-14,
+          3.250853638756119e-08,
+          3.261485451830108e-08
+        ],
+        [
+          2.2164754367212105e-09,
+          2.2194555059371607e-09,
+          5.131191811083756e-10,
+          3.3489725321480923e-09
+        ],
+        [
+          1.4036688097505628e-07,
+          1.4828586630128406e-07,
+          2.779148778484088e-09,
+          7.783961462087174e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 230425.48501989455,
+      "accepted_unsigned_physical_line_increment_m": 2.633265574729752e-15,
+      "budget_active_cell_time_fraction": 0.6732127440906417,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 22,
+      "load": 0.0017599999999999998,
+      "raw_unsigned_line_increment_domain_mean_m2": 6067883.00268399,
+      "raw_unsigned_physical_line_increment_m": 6.934279609339221e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -2.7448030183821956e-15,
+          -2.7338003145448603e-15,
+          3.250853638756119e-08,
+          3.261485451830108e-08
+        ],
+        [
+          2.2164754367212105e-09,
+          2.2194555059371607e-09,
+          5.131191811083756e-10,
+          3.3489725321480923e-09
+        ],
+        [
+          1.4036688097505628e-07,
+          1.4828586630128406e-07,
+          -2.779148778484088e-09,
+          7.783961462087174e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.456892271154772e-14,
+          1.4563128809753695e-14,
+          3.67273385279269e-08,
+          3.6864503512970045e-08
+        ],
+        [
+          2.3876019211897713e-09,
+          2.3913795292141266e-09,
+          5.533241048938625e-10,
+          3.6046786021949423e-09
+        ],
+        [
+          1.5824289445850718e-07,
+          1.6716246689414544e-07,
+          3.0704758198410725e-09,
+          8.79860913464785e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 291125.1019726727,
+      "accepted_unsigned_physical_line_increment_m": 3.326931085327388e-15,
+      "budget_active_cell_time_fraction": 0.6730912186580318,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 23,
+      "load": 0.0018399999999999998,
+      "raw_unsigned_line_increment_domain_mean_m2": 6845124.410341561,
+      "raw_unsigned_physical_line_increment_m": 7.82249865414777e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -3.340305100519881e-15,
+          -3.327401598685722e-15,
+          3.67273385279269e-08,
+          3.6864503512970045e-08
+        ],
+        [
+          2.3876019211897713e-09,
+          2.3913795292141266e-09,
+          5.533241048938625e-10,
+          3.6046786021949423e-09
+        ],
+        [
+          1.5824289445850718e-07,
+          1.6716246689414544e-07,
+          -3.0704758198410725e-09,
+          8.79860913464785e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.6267747492195226e-14,
+          1.6260972138526746e-14,
+          4.128172120457164e-08,
+          4.1469191403635357e-08
+        ],
+        [
+          2.5575444207390297e-09,
+          2.562284880229784e-09,
+          5.936140262836667e-10,
+          3.859439789092963e-09
+        ],
+        [
+          1.773292490168765e-07,
+          1.873193197056894e-07,
+          3.3841296369778994e-09,
+          9.888898898237083e-08
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 363905.94268931495,
+      "accepted_unsigned_physical_line_increment_m": 4.1586588881026615e-15,
+      "budget_active_cell_time_fraction": 0.6729699798515896,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 24,
+      "load": 0.0019199999999999998,
+      "raw_unsigned_line_increment_domain_mean_m2": 7677608.772848687,
+      "raw_unsigned_physical_line_increment_m": 8.773848463871115e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -4.117674859917691e-15,
+          -4.103110596661409e-15,
+          4.128172120457164e-08,
+          4.1469191403635357e-08
+        ],
+        [
+          2.5575444207390297e-09,
+          2.562284880229784e-09,
+          5.936140262836667e-10,
+          3.859439789092963e-09
+        ],
+        [
+          1.773292490168765e-07,
+          1.873193197056894e-07,
+          -3.3841296369778994e-09,
+          9.888898898237083e-08
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.822858547456932e-14,
+          1.8220608625339523e-14,
+          4.6183395231248797e-08,
+          4.642681928762653e-08
+        ],
+        [
+          2.739123058497245e-09,
+          2.7448728977557063e-09,
+          6.370189856634963e-10,
+          4.1325412987412585e-09
+        ],
+        [
+          1.9762467729017365e-07,
+          2.087347897268318e-07,
+          3.721116120994959e-09,
+          1.1055553916850389e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 450399.71772988857,
+      "accepted_unsigned_physical_line_increment_m": 5.14709591026233e-15,
+      "budget_active_cell_time_fraction": 0.6728490461365866,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 25,
+      "load": 0.002,
+      "raw_unsigned_line_increment_domain_mean_m2": 8565349.555172695,
+      "raw_unsigned_physical_line_increment_m": 9.788344426058474e-14,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -5.177631215862846e-15,
+          -5.161198717629092e-15,
+          4.6183395231248797e-08,
+          4.642681928762653e-08
+        ],
+        [
+          2.739123058497245e-09,
+          2.7448728977557063e-09,
+          6.370189856634963e-10,
+          4.1325412987412585e-09
+        ],
+        [
+          1.9762467729017365e-07,
+          2.087347897268318e-07,
+          -3.721116120994959e-09,
+          1.1055553916850389e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          2.060221303198022e-14,
+          2.0592068688841576e-14,
+          5.1428316630287914e-08,
+          5.173959606095516e-08
+        ],
+        [
+          2.926199669125369e-09,
+          2.9330657065246397e-09,
+          6.82077360042581e-10,
+          4.4150366591182405e-09
+        ],
+        [
+          2.1912460880235705e-07,
+          2.3141290033245754e-07,
+          4.082431286317335e-09,
+          1.2298831608320812e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 552259.479966246,
+      "accepted_unsigned_physical_line_increment_m": 6.311132975537466e-15,
+      "budget_active_cell_time_fraction": 0.672728467025321,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 26,
+      "load": 0.0020800000000000003,
+      "raw_unsigned_line_increment_domain_mean_m2": 9508334.686772786,
+      "raw_unsigned_physical_line_increment_m": 1.0865972746688952e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -6.691917522732624e-15,
+          -6.672516026296862e-15,
+          5.1428316630287914e-08,
+          5.173959606095516e-08
+        ],
+        [
+          2.926199669125369e-09,
+          2.9330657065246397e-09,
+          6.82077360042581e-10,
+          4.4150366591182405e-09
+        ],
+        [
+          2.1912460880235705e-07,
+          2.3141290033245754e-07,
+          -4.082431286317335e-09,
+          1.2298831608320812e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          2.3640311616908465e-14,
+          2.361540248344857e-14,
+          5.686724549302819e-08,
+          5.723215350808304e-08
+        ],
+        [
+          3.1187824598383214e-09,
+          3.126870314474109e-09,
+          7.287728131534245e-10,
+          4.707106933415112e-09
+        ],
+        [
+          2.4181129044488096e-07,
+          2.553391154796526e-07,
+          4.469070950118269e-09,
+          1.361875376163467e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 671142.95967503,
+      "accepted_unsigned_physical_line_increment_m": 7.669714360292696e-15,
+      "budget_active_cell_time_fraction": 0.6726082872348824,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 27,
+      "load": 0.0021600000000000005,
+      "raw_unsigned_line_increment_domain_mean_m2": 10501456.011700585,
+      "raw_unsigned_physical_line_increment_m": 1.2000895906875242e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -8.953366141375315e-15,
+          -8.918021819032304e-15,
+          5.686724549302819e-08,
+          5.723215350808304e-08
+        ],
+        [
+          3.1187824598383214e-09,
+          3.126870314474109e-09,
+          7.287728131534245e-10,
+          4.707106933415112e-09
+        ],
+        [
+          2.4181129044488096e-07,
+          2.553391154796526e-07,
+          -4.469070950118269e-09,
+          1.361875376163467e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          2.7766335660518775e-14,
+          2.7729989975877183e-14,
+          6.280103351256682e-08,
+          6.326779951646835e-08
+        ],
+        [
+          3.3167911457351796e-09,
+          3.3262157381975347e-09,
+          7.771034615946567e-10,
+          5.0090004937994844e-09
+        ],
+        [
+          2.645332857434244e-07,
+          2.791796525393348e-07,
+          4.880458392544933e-09,
+          1.499525410273516e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 805963.5130564345,
+      "accepted_unsigned_physical_line_increment_m": 9.210422073046845e-15,
+      "budget_active_cell_time_fraction": 0.6724885678268516,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 28,
+      "load": 0.0022400000000000007,
+      "raw_unsigned_line_increment_domain_mean_m2": 11516298.081675794,
+      "raw_unsigned_physical_line_increment_m": 1.316064118696979e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.2475112889913746e-14,
+          -1.2426471841489953e-14,
+          6.280103351256682e-08,
+          6.326779951646835e-08
+        ],
+        [
+          3.3167911457351796e-09,
+          3.3262157381975347e-09,
+          7.771034615946567e-10,
+          5.0090004937994844e-09
+        ],
+        [
+          2.645332857434244e-07,
+          2.791796525393348e-07,
+          -4.880458392544933e-09,
+          1.499525410273516e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          3.374485167619926e-14,
+          3.369063855631607e-14,
+          6.910070731793153e-08,
+          6.96808629512101e-08
+        ],
+        [
+          3.520352610392132e-09,
+          3.5312363151009133e-09,
+          8.270612154218189e-10,
+          5.321043653571522e-09
+        ],
+        [
+          2.890854911576875e-07,
+          3.0503880673085734e-07,
+          5.32026722943968e-09,
+          1.6457931278071742e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 963034.6440566422,
+      "accepted_unsigned_physical_line_increment_m": 1.1005405826736257e-14,
+      "budget_active_cell_time_fraction": 0.6723693557247372,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 29,
+      "load": 0.002320000000000001,
+      "raw_unsigned_line_increment_domain_mean_m2": 12607827.872098152,
+      "raw_unsigned_physical_line_increment_m": 1.4408023966987816e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.8132192969193502e-14,
+          -1.8062667983666963e-14,
+          6.910070731793153e-08,
+          6.96808629512101e-08
+        ],
+        [
+          3.520352610392132e-09,
+          3.5312363151009133e-09,
+          8.270612154218189e-10,
+          5.321043653571522e-09
+        ],
+        [
+          2.890854911576875e-07,
+          3.0503880673085734e-07,
+          -5.32026722943968e-09,
+          1.6457931278071742e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          4.296088909494604e-14,
+          4.2880215733698824e-14,
+          7.576510399071321e-08,
+          7.64734717611804e-08
+        ],
+        [
+          3.6745558552298342e-09,
+          3.6870261198187725e-09,
+          8.64896291412258e-10,
+          5.561572771862793e-09
+        ],
+        [
+          3.151791572834543e-07,
+          3.3257114158858697e-07,
+          5.788700904647649e-09,
+          1.8005821942762782e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 1143610.2231749026,
+      "accepted_unsigned_physical_line_increment_m": 1.3068994652807079e-14,
+      "budget_active_cell_time_fraction": 0.6722507266389509,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 30,
+      "load": 0.002400000000000001,
+      "raw_unsigned_line_increment_domain_mean_m2": 13766955.408868052,
+      "raw_unsigned_physical_line_increment_m": 1.5732656369967867e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -2.744996487168812e-14,
+          -2.7348638961060094e-14,
+          7.576510399071321e-08,
+          7.64734717611804e-08
+        ],
+        [
+          3.6745558552298342e-09,
+          3.6870261198187725e-09,
+          8.64896291412258e-10,
+          5.561572771862793e-09
+        ],
+        [
+          3.151791572834543e-07,
+          3.3257114158858697e-07,
+          -5.788700904647649e-09,
+          1.8005821942762782e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          5.774870736104479e-14,
+          5.762863701452565e-14,
+          8.272607409057391e-08,
+          8.355361181601137e-08
+        ],
+        [
+          3.886326350541455e-09,
+          3.900494592620513e-09,
+          9.172723956338099e-10,
+          5.890120955987403e-09
+        ],
+        [
+          3.4242473671870004e-07,
+          3.6132016877427645e-07,
+          6.286318126778245e-09,
+          1.9629681813233148e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 1349112.031849101,
+      "accepted_unsigned_physical_line_increment_m": 1.541743644204643e-14,
+      "budget_active_cell_time_fraction": 0.6721327844060387,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 31,
+      "load": 0.0024800000000000013,
+      "raw_unsigned_line_increment_domain_mean_m2": 14978507.194864098,
+      "raw_unsigned_physical_line_increment_m": 1.7117198366175574e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -4.3068959034119614e-14,
+          -4.29187490602163e-14,
+          8.272607409057391e-08,
+          8.355361181601137e-08
+        ],
+        [
+          3.886326350541455e-09,
+          3.900494592620513e-09,
+          9.172723956338099e-10,
+          5.890120955987403e-09
+        ],
+        [
+          3.4242473671870004e-07,
+          3.6132016877427645e-07,
+          -6.286318126778245e-09,
+          1.9629681813233148e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          8.261491850202709e-14,
+          8.244344244998642e-14,
+          9.014215099552518e-08,
+          9.111473561914117e-08
+        ],
+        [
+          4.1036473004523586e-09,
+          4.1196490281021e-09,
+          9.712151873892473e-10,
+          6.229524650495337e-09
+        ],
+        [
+          3.708069202757778e-07,
+          3.912616633183866e-07,
+          6.8140490259181764e-09,
+          2.132863078831814e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 1581473.545248092,
+      "accepted_unsigned_physical_line_increment_m": 1.8072826639327955e-14,
+      "budget_active_cell_time_fraction": 0.6720156303243953,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 32,
+      "load": 0.0025600000000000015,
+      "raw_unsigned_line_increment_domain_mean_m2": 16246598.266332086,
+      "raw_unsigned_physical_line_increment_m": 1.8566352553192048e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -6.956333606938235e-14,
+          -6.93447550995435e-14,
+          9.014215099552518e-08,
+          9.111473561914117e-08
+        ],
+        [
+          4.1036473004523586e-09,
+          4.1196490281021e-09,
+          9.712151873892473e-10,
+          6.229524650495337e-09
+        ],
+        [
+          3.708069202757778e-07,
+          3.912616633183866e-07,
+          -6.8140490259181764e-09,
+          2.132863078831814e-07
+        ]
+      ]
+    },
+    {
+      "absolute_slip_increment_by_owner_family": [
+        [
+          1.2571552976617022e-13,
+          1.2548258706743237e-13,
+          9.794103031351093e-08,
+          9.906970097533988e-08
+        ],
+        [
+          4.326516420675758e-09,
+          4.344488779681925e-09,
+          1.0267088186589928e-09,
+          6.580059845035944e-09
+        ],
+        [
+          4.00312464133428e-07,
+          4.2233832321472625e-07,
+          7.372726828191233e-09,
+          2.3101438752439376e-07
+        ]
+      ],
+      "accepted_unsigned_line_increment_domain_mean_m2": 1842646.774371646,
+      "accepted_unsigned_physical_line_increment_m": 2.1057472514035273e-14,
+      "budget_active_cell_time_fraction": 0.6718993764360224,
+      "hard_balance_failed_trial_count": 0,
+      "hard_balance_subinterval_count": 1,
+      "interval": 33,
+      "load": 0.0026400000000000017,
+      "raw_unsigned_line_increment_domain_mean_m2": 17567816.93233798,
+      "raw_unsigned_physical_line_increment_m": 2.0076220105204927e-13,
+      "signed_slip_increment_by_owner_family": [
+        [
+          -1.1485779087193769e-13,
+          -1.1454629116511863e-13,
+          9.794103031351093e-08,
+          9.906970097533988e-08
+        ],
+        [
+          4.326516420675758e-09,
+          4.344488779681925e-09,
+          1.0267088186589928e-09,
+          6.580059845035944e-09
+        ],
+        [
+          4.00312464133428e-07,
+          4.2233832321472625e-07,
+          -7.372726828191233e-09,
+          2.3101438752439376e-07
+        ]
+      ]
+    }
+  ],
+  "owner_results": {
+    "10": {
+      "area_after_m2": 8.079479221085206e-12,
+      "area_before_m2": 8.118108725465077e-12,
+      "growth_inside_band_enrichment": 0.0,
+      "mean_orientation_change_rad": -2.9907749022620407e-23,
+      "net_area_change_m2": -3.862950437987078e-14,
+      "positive_front_growth_inside_active_band_m2": 0.0,
+      "positive_front_growth_outside_active_band_m2": 2.2840473686836396e-16,
+      "positive_growth_inside_band_fraction": 0.0,
+      "relative_area_change": -0.0047584364395979115
+    },
+    "20": {
+      "area_after_m2": 7.562093586524447e-12,
+      "area_before_m2": 7.461159507661831e-12,
+      "growth_inside_band_enrichment": 0.0,
+      "mean_orientation_change_rad": 0.0012121799113902765,
+      "net_area_change_m2": 1.0093407886261558e-13,
+      "positive_front_growth_inside_active_band_m2": 0.0,
+      "positive_front_growth_outside_active_band_m2": 1.0093407886261447e-13,
+      "positive_growth_inside_band_fraction": 0.0,
+      "relative_area_change": 0.01352793473440245
+    },
+    "30": {
+      "area_after_m2": 7.398427192390347e-12,
+      "area_before_m2": 7.460731766873089e-12,
+      "growth_inside_band_enrichment": 0.0,
+      "mean_orientation_change_rad": 0.003146522775023586,
+      "net_area_change_m2": -6.230457448274157e-14,
+      "positive_front_growth_inside_active_band_m2": 0.0,
+      "positive_front_growth_outside_active_band_m2": 0.0,
+      "positive_growth_inside_band_fraction": 0.0,
+      "relative_area_change": -0.00835100046879911
+    }
+  },
+  "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_clean_polycrystal_anchor_n32/checkpoint_latest.npz",
+  "parent_checkpoint_sha256": "358a4b89f63bd54c5ccf7965e2a3d517fca04c18d383398101dbb6334d5c4cad",
+  "parent_provenance": {
+    "campaign": "V67",
+    "scientific_scope": "fresh zero-load polycrystal anchor",
+    "source_commit": "c039873516d2064469d8712b160ffaf8212bbf78",
+    "source_dirty": false
+  },
+  "response_history": [
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 719742350754792.4,
+      "interval": 0,
+      "load": 0.0,
+      "mean_shear_stress_Pa": 0.0,
+      "mobile_density_m2": 319885489224352.2,
+      "plastic_power_maximum_W_m3": 0.0,
+      "plastic_power_maximum_to_mean": 0.0,
+      "plastic_power_mean_W_m3": 0.0,
+      "plastic_to_imposed_power_fraction": 0.0,
+      "temperature_mean_K": 1000.0000068016242,
+      "temperature_range_K": 1.4948790408197965e-05,
+      "wall_density_m2": 479828233836528.2
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 720056614137162.9,
+      "interval": 1,
+      "load": 7.999999999999999e-05,
+      "mean_shear_stress_Pa": 7127999.949607169,
+      "mobile_density_m2": 319917257522423.5,
+      "plastic_power_maximum_W_m3": 3.1002129688032936,
+      "plastic_power_maximum_to_mean": 2.0463947101151168,
+      "plastic_power_mean_W_m3": 1.5149633418613049,
+      "plastic_to_imposed_power_fraction": 1.0626847310407149e-08,
+      "temperature_mean_K": 1000.0137378014401,
+      "temperature_range_K": 0.19493278718016427,
+      "wall_density_m2": 479198834970224.8
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 720299516347108.4,
+      "interval": 2,
+      "load": 0.00015999999999999999,
+      "mean_shear_stress_Pa": 14255999.802486971,
+      "mobile_density_m2": 319951124057895.1,
+      "plastic_power_maximum_W_m3": 14.34318715268608,
+      "plastic_power_maximum_to_mean": 2.0980619789247426,
+      "plastic_power_mean_W_m3": 6.836398207853215,
+      "plastic_to_imposed_power_fraction": 2.397726677388351e-08,
+      "temperature_mean_K": 1000.0323364532713,
+      "temperature_range_K": 0.1267107920854187,
+      "wall_density_m2": 478646926028125.9
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 720511382269034.0,
+      "interval": 3,
+      "load": 0.00023999999999999998,
+      "mean_shear_stress_Pa": 21383999.515603192,
+      "mobile_density_m2": 319985538133757.4,
+      "plastic_power_maximum_W_m3": 39.65180035505443,
+      "plastic_power_maximum_to_mean": 2.172706105676429,
+      "plastic_power_mean_W_m3": 18.24996038417705,
+      "plastic_to_imposed_power_fraction": 4.267199962023162e-08,
+      "temperature_mean_K": 1000.0331069535617,
+      "temperature_range_K": 0.08247615270465758,
+      "wall_density_m2": 478128063915162.56
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 720722169115961.6,
+      "interval": 4,
+      "load": 0.00031999999999999997,
+      "mean_shear_stress_Pa": 28511999.035073437,
+      "mobile_density_m2": 320020722049881.9,
+      "plastic_power_maximum_W_m3": 88.85612043538694,
+      "plastic_power_maximum_to_mean": 2.2492638227792696,
+      "plastic_power_mean_W_m3": 39.5045345661556,
+      "plastic_to_imposed_power_fraction": 6.927703406127351e-08,
+      "temperature_mean_K": 1000.0338554017687,
+      "temperature_range_K": 0.05767671679814157,
+      "wall_density_m2": 477613209704641.75
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 720931936672218.8,
+      "interval": 5,
+      "load": 0.00039999999999999996,
+      "mean_shear_stress_Pa": 35639998.28213519,
+      "mobile_density_m2": 320055930554231.2,
+      "plastic_power_maximum_W_m3": 175.5177807123271,
+      "plastic_power_maximum_to_mean": 2.3171634875127967,
+      "plastic_power_mean_W_m3": 75.7468265222515,
+      "plastic_to_imposed_power_fraction": 1.0626659676386706e-07,
+      "temperature_mean_K": 1000.0346116870169,
+      "temperature_range_K": 0.04233106986760049,
+      "wall_density_m2": 477102259860603.3
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 721139953927822.0,
+      "interval": 6,
+      "load": 0.00047999999999999996,
+      "mean_shear_stress_Pa": 42767997.16664919,
+      "mobile_density_m2": 319675177969595.8,
+      "plastic_power_maximum_W_m3": 316.8533285808573,
+      "plastic_power_maximum_to_mean": 2.4852705937223623,
+      "plastic_power_mean_W_m3": 127.49248688702508,
+      "plastic_to_imposed_power_fraction": 1.4905127119963043e-07,
+      "temperature_mean_K": 1000.0353833859417,
+      "temperature_range_K": 0.03231041112087496,
+      "wall_density_m2": 477011279438042.5
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 721346048753140.4,
+      "interval": 7,
+      "load": 0.00056,
+      "mean_shear_stress_Pa": 49895995.618300036,
+      "mobile_density_m2": 319705796930320.56,
+      "plastic_power_maximum_W_m3": 533.5391720509674,
+      "plastic_power_maximum_to_mean": 2.5193789953783736,
+      "plastic_power_mean_W_m3": 211.77408124371448,
+      "plastic_to_imposed_power_fraction": 2.122155080978517e-07,
+      "temperature_mean_K": 1000.0360868307673,
+      "temperature_range_K": 0.025692591459460346,
+      "wall_density_m2": 476512730168094.44
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 721550674951544.5,
+      "interval": 8,
+      "load": 0.0006399999999999999,
+      "mean_shear_stress_Pa": 57023993.450501576,
+      "mobile_density_m2": 319737989427739.6,
+      "plastic_power_maximum_W_m3": 849.504497623433,
+      "plastic_power_maximum_to_mean": 2.5460231367045556,
+      "plastic_power_mean_W_m3": 333.659378572258,
+      "plastic_to_imposed_power_fraction": 2.925605156554703e-07,
+      "temperature_mean_K": 1000.0367756362264,
+      "temperature_range_K": 0.020948536079686164,
+      "wall_density_m2": 476015613987870.9
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 721753730811791.1,
+      "interval": 9,
+      "load": 0.0007199999999999999,
+      "mean_shear_stress_Pa": 64151990.51024817,
+      "mobile_density_m2": 319770472513459.8,
+      "plastic_power_maximum_W_m3": 1291.696855825581,
+      "plastic_power_maximum_to_mean": 2.5670685897156744,
+      "plastic_power_mean_W_m3": 503.17972063560944,
+      "plastic_to_imposed_power_fraction": 3.921777926401421e-07,
+      "temperature_mean_K": 1000.0374511057914,
+      "temperature_range_K": 0.017474659684694416,
+      "wall_density_m2": 475521010012245.75
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 721955133525235.8,
+      "interval": 10,
+      "load": 0.0007999999999999999,
+      "mean_shear_stress_Pa": 71279986.62281275,
+      "mobile_density_m2": 319803186367133.06,
+      "plastic_power_maximum_W_m3": 1889.8229580805528,
+      "plastic_power_maximum_to_mean": 2.583775399596955,
+      "plastic_power_mean_W_m3": 731.4192086414894,
+      "plastic_to_imposed_power_fraction": 5.130607084088613e-07,
+      "temperature_mean_K": 1000.0381132396427,
+      "temperature_range_K": 0.01488798981790751,
+      "wall_density_m2": 475028820658875.1
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 722154842616984.0,
+      "interval": 11,
+      "load": 0.0008799999999999999,
+      "mean_shear_stress_Pa": 78407981.59550217,
+      "mobile_density_m2": 319836096213811.7,
+      "plastic_power_maximum_W_m3": 2676.063177920312,
+      "plastic_power_maximum_to_mean": 2.5971077950284407,
+      "plastic_power_mean_W_m3": 1030.4012729248332,
+      "plastic_to_imposed_power_fraction": 6.570767745562919e-07,
+      "temperature_mean_K": 1000.0387632737252,
+      "temperature_range_K": 0.01293896824154217,
+      "wall_density_m2": 474538973450549.94
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 722352815677609.9,
+      "interval": 12,
+      "load": 0.0009599999999999999,
+      "mean_shear_stress_Pa": 85535975.21750991,
+      "mobile_density_m2": 319869169329007.5,
+      "plastic_power_maximum_W_m3": 3684.777562204589,
+      "plastic_power_maximum_to_mean": 2.607794206523241,
+      "plastic_power_mean_W_m3": 1412.986328824314,
+      "plastic_to_imposed_power_fraction": 8.259602613001272e-07,
+      "temperature_mean_K": 1000.0394016798116,
+      "temperature_range_K": 0.011446474491549452,
+      "wall_density_m2": 474051399155729.2
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 722549027571256.2,
+      "interval": 13,
+      "load": 0.00104,
+      "mean_shear_stress_Pa": 92663967.25893533,
+      "mobile_density_m2": 319902381785681.56,
+      "plastic_power_maximum_W_m3": 4952.20136214282,
+      "plastic_power_maximum_to_mean": 2.6163830578422718,
+      "plastic_power_mean_W_m3": 1892.7661785988228,
+      "plastic_to_imposed_power_fraction": 1.021306466034298e-06,
+      "temperature_mean_K": 1000.0400285582591,
+      "temperature_range_K": 0.01029016756854162,
+      "wall_density_m2": 473566044294824.4
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 722743457102215.1,
+      "interval": 14,
+      "load": 0.00112,
+      "mean_shear_stress_Pa": 99791957.46832025,
+      "mobile_density_m2": 319935713490159.3,
+      "plastic_power_maximum_W_m3": 6516.146181594877,
+      "plastic_power_maximum_to_mean": 2.6232907924335533,
+      "plastic_power_mean_W_m3": 2483.958774372105,
+      "plastic_to_imposed_power_fraction": 1.244568619250032e-06,
+      "temperature_mean_K": 1000.0406438022886,
+      "temperature_range_K": 0.009388539596670853,
+      "wall_density_m2": 473082862251037.2
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 722936090151930.2,
+      "interval": 15,
+      "load": 0.0012,
+      "mean_shear_stress_Pa": 106919945.56757754,
+      "mobile_density_m2": 319969150522495.06,
+      "plastic_power_maximum_W_m3": 8415.697988937836,
+      "plastic_power_maximum_to_mean": 2.6288357723172253,
+      "plastic_power_mean_W_m3": 3201.302294178574,
+      "plastic_to_imposed_power_fraction": 1.4970557070454302e-06,
+      "temperature_mean_K": 1000.0412484654423,
+      "temperature_range_K": 0.00867386848631213,
+      "wall_density_m2": 472601822893643.56
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 723126891479028.1,
+      "interval": 16,
+      "load": 0.0012799999999999999,
+      "mean_shear_stress_Pa": 114047931.24241215,
+      "mobile_density_m2": 320002681588986.06,
+      "plastic_power_maximum_W_m3": 10690.92408851439,
+      "plastic_power_maximum_to_mean": 2.633263479761152,
+      "plastic_power_mean_W_m3": 4059.952287601733,
+      "plastic_to_imposed_power_fraction": 1.7799324561934353e-06,
+      "temperature_mean_K": 1000.0418431269998,
+      "temperature_range_K": 0.008099129468973842,
+      "wall_density_m2": 472122922379181.56
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 723327356193493.6,
+      "interval": 17,
+      "load": 0.0013599999999999999,
+      "mean_shear_stress_Pa": 121175914.59728512,
+      "mobile_density_m2": 273991741937966.16,
+      "plastic_power_maximum_W_m3": 13380.482887867145,
+      "plastic_power_maximum_to_mean": 3.0342283697933947,
+      "plastic_power_mean_W_m3": 4409.8470046202365,
+      "plastic_to_imposed_power_fraction": 1.819605413862928e-06,
+      "temperature_mean_K": 1000.0617170586314,
+      "temperature_range_K": 0.10780131947160498,
+      "wall_density_m2": 517702869503338.94
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 723558825044453.6,
+      "interval": 18,
+      "load": 0.0014399999999999999,
+      "mean_shear_stress_Pa": 128303896.90006684,
+      "mobile_density_m2": 273948852368314.22,
+      "plastic_power_maximum_W_m3": 16535.79381851373,
+      "plastic_power_maximum_to_mean": 3.0385738827512623,
+      "plastic_power_mean_W_m3": 5441.958779538207,
+      "plastic_to_imposed_power_fraction": 2.1207301223971522e-06,
+      "temperature_mean_K": 1000.0627560996243,
+      "temperature_range_K": 0.04531828242465963,
+      "wall_density_m2": 517283968116877.75
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 723787695879122.5,
+      "interval": 19,
+      "load": 0.0015199999999999999,
+      "mean_shear_stress_Pa": 135431875.7926054,
+      "mobile_density_m2": 273904898526286.0,
+      "plastic_power_maximum_W_m3": 20188.385479238776,
+      "plastic_power_maximum_to_mean": 3.041608657558921,
+      "plastic_power_mean_W_m3": 6637.404002999256,
+      "plastic_to_imposed_power_fraction": 2.4504585660334103e-06,
+      "temperature_mean_K": 1000.0637767196324,
+      "temperature_range_K": 0.031444525059669104,
+      "wall_density_m2": 516868755672724.8
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 724013962744738.5,
+      "interval": 20,
+      "load": 0.0015999999999999999,
+      "mean_shear_stress_Pa": 142559850.49118328,
+      "mobile_density_m2": 273854924968803.7,
+      "plastic_power_maximum_W_m3": 24380.209907103323,
+      "plastic_power_maximum_to_mean": 3.0436488965293886,
+      "plastic_power_mean_W_m3": 8010.1912986427515,
+      "plastic_to_imposed_power_fraction": 2.8094134747770893e-06,
+      "temperature_mean_K": 1000.0647813913195,
+      "temperature_range_K": 0.024952587248890268,
+      "wall_density_m2": 516462267395685.7
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 724237412422782.8,
+      "interval": 21,
+      "load": 0.0016799999999999999,
+      "mean_shear_stress_Pa": 149687819.81591547,
+      "mobile_density_m2": 273801299407062.28,
+      "plastic_power_maximum_W_m3": 29153.60834559758,
+      "plastic_power_maximum_to_mean": 3.045011740530232,
+      "plastic_power_mean_W_m3": 9574.218699242527,
+      "plastic_to_imposed_power_fraction": 3.1980620437310136e-06,
+      "temperature_mean_K": 1000.0657720565212,
+      "temperature_range_K": 0.020950744811784716,
+      "wall_density_m2": 516062418477916.94
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 724457359348068.2,
+      "interval": 22,
+      "load": 0.0017599999999999998,
+      "mean_shear_stress_Pa": 156815781.9079879,
+      "mobile_density_m2": 273630481290712.6,
+      "plastic_power_maximum_W_m3": 34549.77008914342,
+      "plastic_power_maximum_to_mean": 3.045965319440607,
+      "plastic_power_mean_W_m3": 11342.798248106286,
+      "plastic_to_imposed_power_fraction": 3.616599716590294e-06,
+      "temperature_mean_K": 1000.0667535212039,
+      "temperature_range_K": 0.01803215662914681,
+      "wall_density_m2": 515783505735679.94
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 724672406429453.4,
+      "interval": 23,
+      "load": 0.0018399999999999998,
+      "mean_shear_stress_Pa": 163943733.73961025,
+      "mobile_density_m2": 273565532193643.12,
+      "plastic_power_maximum_W_m3": 40609.14837654532,
+      "plastic_power_maximum_to_mean": 3.0465565859226826,
+      "plastic_power_mean_W_m3": 13329.523752878662,
+      "plastic_to_imposed_power_fraction": 4.065273935400842e-06,
+      "temperature_mean_K": 1000.0677341223552,
+      "temperature_range_K": 0.015739598016807577,
+      "wall_density_m2": 515403889147856.6
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 724879500694146.6,
+      "interval": 24,
+      "load": 0.0019199999999999998,
+      "mean_shear_stress_Pa": 171071670.2634161,
+      "mobile_density_m2": 273507285123518.1,
+      "plastic_power_maximum_W_m3": 47371.51880633112,
+      "plastic_power_maximum_to_mean": 3.0467897738524985,
+      "plastic_power_mean_W_m3": 15548.010306740802,
+      "plastic_to_imposed_power_fraction": 4.54429721846989e-06,
+      "temperature_mean_K": 1000.0687299695412,
+      "temperature_range_K": 0.013995682131167086,
+      "wall_density_m2": 515025816712259.2
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725075684454515.5,
+      "interval": 25,
+      "load": 0.002,
+      "mean_shear_stress_Pa": 178199582.94142145,
+      "mobile_density_m2": 273438800453406.12,
+      "plastic_power_maximum_W_m3": 54875.943483199604,
+      "plastic_power_maximum_to_mean": 3.0468069237002635,
+      "plastic_power_mean_W_m3": 18010.968485181947,
+      "plastic_to_imposed_power_fraction": 5.053594455129166e-06,
+      "temperature_mean_K": 1000.0697691690791,
+      "temperature_range_K": 0.01260366035160132,
+      "wall_density_m2": 514669237489088.8
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725259121676953.2,
+      "interval": 26,
+      "load": 0.0020800000000000003,
+      "mean_shear_stress_Pa": 185327457.20094275,
+      "mobile_density_m2": 273100262982808.5,
+      "plastic_power_maximum_W_m3": 63160.74649031148,
+      "plastic_power_maximum_to_mean": 3.0475924281001094,
+      "plastic_power_mean_W_m3": 20724.800963521993,
+      "plastic_to_imposed_power_fraction": 5.591400561075784e-06,
+      "temperature_mean_K": 1000.0708874045528,
+      "temperature_range_K": 0.01146962816096675,
+      "wall_density_m2": 514595830351500.5
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725429729293697.0,
+      "interval": 27,
+      "load": 0.0021600000000000005,
+      "mean_shear_stress_Pa": 192455268.06877428,
+      "mobile_density_m2": 272649372649806.72,
+      "plastic_power_maximum_W_m3": 72263.42309677324,
+      "plastic_power_maximum_to_mean": 3.0581460482580876,
+      "plastic_power_mean_W_m3": 23629.81425884951,
+      "plastic_to_imposed_power_fraction": 6.139040644604581e-06,
+      "temperature_mean_K": 1000.0721140055914,
+      "temperature_range_K": 0.011846655356976044,
+      "wall_density_m2": 514648116182805.5
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725587937266125.4,
+      "interval": 28,
+      "load": 0.0022400000000000007,
+      "mean_shear_stress_Pa": 199582972.55957228,
+      "mobile_density_m2": 272454192333097.94,
+      "plastic_power_maximum_W_m3": 82220.26616185266,
+      "plastic_power_maximum_to_mean": 3.0609758580814685,
+      "plastic_power_mean_W_m3": 26860.801905633438,
+      "plastic_to_imposed_power_fraction": 6.7292318480766e-06,
+      "temperature_mean_K": 1000.0734415338725,
+      "temperature_range_K": 0.009761394051452044,
+      "wall_density_m2": 514457640394349.2
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725734241293167.2,
+      "interval": 29,
+      "load": 0.002320000000000001,
+      "mean_shear_stress_Pa": 206710496.1124655,
+      "mobile_density_m2": 272376815294888.9,
+      "plastic_power_maximum_W_m3": 93066.08315303091,
+      "plastic_power_maximum_to_mean": 3.060402343769627,
+      "plastic_power_mean_W_m3": 30409.754241135983,
+      "plastic_to_imposed_power_fraction": 7.355638637863573e-06,
+      "temperature_mean_K": 1000.074879857435,
+      "temperature_range_K": 0.00914470126872402,
+      "wall_density_m2": 514161825286575.3
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725869259547584.1,
+      "interval": 30,
+      "load": 0.002400000000000001,
+      "mean_shear_stress_Pa": 213837709.93898392,
+      "mobile_density_m2": 272199516669572.94,
+      "plastic_power_maximum_W_m3": 104836.53370720342,
+      "plastic_power_maximum_to_mean": 3.0595222553347288,
+      "plastic_power_mean_W_m3": 34265.65488268812,
+      "plastic_to_imposed_power_fraction": 8.012070203254941e-06,
+      "temperature_mean_K": 1000.0764245641053,
+      "temperature_range_K": 0.008670537866123595,
+      "wall_density_m2": 513977883499844.1
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 725994166436271.4,
+      "interval": 31,
+      "load": 0.0024800000000000013,
+      "mean_shear_stress_Pa": 220964391.23626834,
+      "mobile_density_m2": 272128458146024.66,
+      "plastic_power_maximum_W_m3": 117566.23547350791,
+      "plastic_power_maximum_to_mean": 3.0582454212047128,
+      "plastic_power_mean_W_m3": 38442.38093461966,
+      "plastic_to_imposed_power_fraction": 8.698772847412044e-06,
+      "temperature_mean_K": 1000.0780608143301,
+      "temperature_range_K": 0.00831727281217809,
+      "wall_density_m2": 513698606766067.44
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 726110210707971.8,
+      "interval": 32,
+      "load": 0.0025600000000000015,
+      "mean_shear_stress_Pa": 228090154.2299767,
+      "mobile_density_m2": 272054784016449.38,
+      "plastic_power_maximum_W_m3": 131288.55931380595,
+      "plastic_power_maximum_to_mean": 3.0570438586458133,
+      "plastic_power_mean_W_m3": 42946.24656512556,
+      "plastic_to_imposed_power_fraction": 9.414313982580788e-06,
+      "temperature_mean_K": 1000.0797722629766,
+      "temperature_range_K": 0.008113201753076282,
+      "wall_density_m2": 513431776763881.56
+    },
+    {
+      "connected_physical_band": false,
+      "forest_density_m2": 726218974684089.8,
+      "interval": 33,
+      "load": 0.0026400000000000017,
+      "mean_shear_stress_Pa": 235214330.84622914,
+      "mobile_density_m2": 271966270689531.16,
+      "plastic_power_maximum_W_m3": 146035.1420869624,
+      "plastic_power_maximum_to_mean": 3.056077803851125,
+      "plastic_power_mean_W_m3": 47785.151903834325,
+      "plastic_to_imposed_power_fraction": 1.0157789223963944e-05,
+      "temperature_mean_K": 1000.0815384145772,
+      "temperature_range_K": 0.0080269473592125,
+      "wall_density_m2": 513188248588892.9
+    }
+  ],
+  "response_summary": {
+    "endpoint_post_peak_softening_fraction": 0.0,
+    "maximum_temperature_range_K": 0.19493278718016427,
+    "peak_absolute_mean_shear_stress_Pa": 235214330.84622914,
+    "peak_stress_interval": 33,
+    "terminal_band_persistence_intervals": 0
+  },
+  "sampled_interval_records": [
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.0,
+        "band_like": false,
+        "component_span_fraction": [
+          0.0,
+          0.0
+        ],
+        "largest_component_cells": 0,
+        "largest_component_fraction": 0.0,
+        "maximum_to_mean": 0.0,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 0.0,
+        "positive_mean_W_m3": 0.0,
+        "signed_min_W_m3": 0.0,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 0.0,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 1,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 7.999999999999999e-05,
+      "physical_band_before": false,
+      "structural_classification": "INACTIVE_NO_COMPATIBLE_INTERFACE_BURGERS",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 0.011793514836217286,
+        "20": 0.011793473732383847,
+        "30": 0.011805855724295326
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1298828125,
+        "band_like": false,
+        "component_span_fraction": [
+          0.46875,
+          0.34375
+        ],
+        "largest_component_cells": 133,
+        "largest_component_fraction": 0.1298828125,
+        "maximum_to_mean": 2.5670685897156744,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 1291.696855825581,
+        "positive_mean_W_m3": 503.17972063560944,
+        "signed_min_W_m3": 34.55848048606913,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 3.921777926401421e-07,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 10,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.0007999999999999999,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 0.011800387460672641,
+        "20": 0.0,
+        "30": 0.01179817921267446
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1181640625,
+        "band_like": false,
+        "component_span_fraction": [
+          0.40625,
+          0.34375
+        ],
+        "largest_component_cells": 117,
+        "largest_component_fraction": 0.1142578125,
+        "maximum_to_mean": 3.041608657558921,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 20188.385479238776,
+        "positive_mean_W_m3": 6637.404002999256,
+        "signed_min_W_m3": 537.8205987425313,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 2.4504585660334103e-06,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 20,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.0015999999999999999,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 0.011842679331317189,
+        "20": 0.0,
+        "30": 0.011815278885162208
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1181640625,
+        "band_like": false,
+        "component_span_fraction": [
+          0.40625,
+          0.34375
+        ],
+        "largest_component_cells": 117,
+        "largest_component_fraction": 0.1142578125,
+        "maximum_to_mean": 3.060402343769627,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 93066.08315303091,
+        "positive_mean_W_m3": 30409.754241135983,
+        "signed_min_W_m3": 2253.607863697658,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 7.355638637863573e-06,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 30,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.002400000000000001,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 0.011817060257858223,
+        "20": 0.0,
+        "30": 0.011806045161029963
+      }
+    },
+    {
+      "band_before": {
+        "above_threshold_fraction": 0.1171875,
+        "band_like": false,
+        "component_span_fraction": [
+          0.40625,
+          0.34375
+        ],
+        "largest_component_cells": 116,
+        "largest_component_fraction": 0.11328125,
+        "maximum_to_mean": 3.0570438586458133,
+        "periodic_winding": [
+          false,
+          false
+        ],
+        "positive_max_W_m3": 131288.55931380595,
+        "positive_mean_W_m3": 42946.24656512556,
+        "signed_min_W_m3": 3147.822141045979,
+        "threshold_multiple": 2.0
+      },
+      "flow_exposure_fraction_before": 9.414313982580788e-06,
+      "front_directions": {
+        "edge-10-20": "a_to_b",
+        "edge-10-30": "b_to_a",
+        "edge-20-30": "b_to_a"
+      },
+      "interval": 33,
+      "lattice_classification": "ACCEPTED_ONE_FLUX_LATTICE_INTERFACE_ABSORPTION",
+      "load": 0.0026400000000000017,
+      "physical_band_before": false,
+      "structural_classification": "ACCEPTED_COMMON_AXIS_INTERFACE_ABSORPTION",
+      "wall_orientation_classification": "ACCEPTED_ORDERED_WALL_ORIENTATION_RELAXATION",
+      "wall_orientation_fractions": {
+        "10": 0.01181022783941915,
+        "20": 0.0,
+        "30": 0.011805972234928045
+      }
+    }
+  ],
+  "schema": "v67-drx-asb-overlap-v1",
+  "source_commit": "e69b84d87fe6f8e916977cf245ce046180f84e73",
+  "source_tree_clean": true
+}
