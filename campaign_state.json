@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-20T07:38:16Z",
+  "last_updated_utc": "2026-10-20T08:09:16Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-19T17:16:00Z",
@@ -94,14 +94,14 @@
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": null,
+      "pid": 61549,
       "child_pid": null,
-      "case": "v67_multiplication_v34_fresh_highrate_seed20_200",
-      "status": "ready_to_run_qualified_seed_polycrystal_combined_response",
-      "last_case": "v67_single_crystal_asb_n32_seed20_bath_v34mult_dt1_2400",
-      "last_start_local": null,
-      "last_source_commit": "06d9c4e",
-      "last_output": "full_model/verification/v67_multiplication_v34_fresh_highrate_seed20_200/checkpoint_latest.npz",
+      "case": "v67_multiplication_v34_fresh_highrate_seed20_400",
+      "status": "running_qualified_seed_polycrystal_combined_response_second_chunk",
+      "last_case": "v67_multiplication_v34_fresh_highrate_seed20_200",
+      "last_start_local": "2026-10-20T00:59:20-07:00",
+      "last_source_commit": "7f53380",
+      "last_output": "full_model/verification/v67_multiplication_v34_fresh_highrate_seed20_400/checkpoint_latest.npz",
       "queued_after_manager": "run_the_same_qualified_20_K_seed_in_the_fresh_polycrystal_then_continue_only_valid_restartable_segments_toward_the_single_crystal_band_onset_and_test_RX_overlap",
       "geography_watcher_pid": null,
       "conditional_interface_emission_watcher_pid": null
