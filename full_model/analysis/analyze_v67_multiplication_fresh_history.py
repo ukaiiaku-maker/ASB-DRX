@@ -78,7 +78,7 @@ def main() -> None:
     multiplication = [row for item in data
                       for row in item.get("multiplication_history", [])]
 
-    load = np.asarray([row["load"] for row in response])
+    applied_load = np.asarray([row["load"] for row in response])
     stress = np.asarray([row["mean_shear_stress_Pa"] for row in response])
     flow = np.asarray([row["plastic_to_imposed_power_fraction"]
                        for row in response])
@@ -87,7 +87,7 @@ def main() -> None:
     peak_index = int(np.argmax(np.abs(stress)))
     peak = float(abs(stress[peak_index]))
     softening = float(max(0.0, (peak-abs(stress[-1]))/max(peak, 1e-300)))
-    active_loads = load[bands]
+    active_loads = applied_load[bands]
     terminal_persistence = 0
     for value in bands[::-1]:
         if not value:
@@ -146,8 +146,8 @@ def main() -> None:
         "multiplication_law": next(iter(laws)),
         "multiplication_coefficient_m1": next(iter(coefficients)),
         "segment_chain": chain,
-        "initial_load": float(load[0]),
-        "final_load": float(load[-1]),
+        "initial_load": float(applied_load[0]),
+        "final_load": float(applied_load[-1]),
         "production_intervals": len(multiplication),
         "cumulative_raw_multiplication_line_m": raw_line,
         "cumulative_accepted_multiplication_line_m": accepted_line,
@@ -158,7 +158,7 @@ def main() -> None:
         "endpoint_flow_exposure": float(flow[-1]),
         "maximum_flow_exposure": float(np.max(flow)),
         "peak_absolute_mean_shear_stress_Pa": peak,
-        "peak_stress_load": float(load[peak_index]),
+        "peak_stress_load": float(applied_load[peak_index]),
         "endpoint_post_peak_softening_fraction": softening,
         "first_physical_band_load": (
             float(active_loads[0]) if active_loads.size else None),
@@ -178,15 +178,16 @@ def main() -> None:
         json.dumps(payload, indent=2, sort_keys=True)+"\n")
 
     fig, axes = plt.subplots(3, 2, figsize=(10.2, 10.2), sharex=True)
-    axes[0, 0].plot(load, stress/1e9)
-    axes[0, 1].plot(load, flow)
+    axes[0, 0].plot(applied_load, stress/1e9)
+    axes[0, 1].plot(applied_load, flow)
     for axis, key, scale, label in (
             (axes[1, 0], "mobile_density_m2", 1e12, "Mobile density"),
             (axes[1, 1], "forest_density_m2", 1e12, "Forest density"),
             (axes[2, 0], "wall_density_m2", 1e12, "Wall density")):
-        axis.plot(load, np.asarray([row[key] for row in response])/scale)
+        axis.plot(applied_load, np.asarray([row[key] for row in response])/scale)
         axis.set_ylabel(label+r" ($10^{12}$ m$^{-2}$)")
-    axes[2, 1].plot(load, [row["temperature_range_K"] for row in response])
+    axes[2, 1].plot(applied_load,
+                    [row["temperature_range_K"] for row in response])
     axes[0, 0].set_ylabel("Mean shear stress (GPa)")
     axes[0, 1].set_ylabel("Accepted flow / imposed power")
     axes[2, 1].set_ylabel("Temperature range (K)")
