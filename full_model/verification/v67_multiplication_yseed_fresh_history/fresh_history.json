@@ -1,0 +1,142 @@
+{
+  "accepted_to_raw_fraction": 0.9819070675312133,
+  "accumulated_domain_mean_absolute_family_slip": 0.09136258416995427,
+  "accumulated_domain_mean_signed_family_slip": 0.09136080694118971,
+  "all_hard_balances_passed": true,
+  "checkpoint_chain_valid": true,
+  "claim_boundary": "Fresh-origin, checkpoint-linked production history under one repaired v34 multiplication parameterization. Classification does not by itself qualify grid convergence or DRX inside ASB.",
+  "classification": "FRESH_REPAIRED_STORAGE_MULTIPLICATION_REMAINS_FLOWING_WITHOUT_QUALIFIED_TERMINAL_ASB",
+  "created_utc": "2026-10-20T07:10:25.728851+00:00",
+  "cumulative_accepted_multiplication_line_m": 2.8106631287331693e-05,
+  "cumulative_raw_multiplication_line_m": 2.86245330304013e-05,
+  "endpoint": {
+    "connected_physical_band": false,
+    "forest_density_m2": 3148460782892290.0,
+    "interval": 200,
+    "load": 0.09863999999999869,
+    "mean_shear_stress_Pa": 3428720602.905504,
+    "mobile_density_m2": 198920082228184.25,
+    "plastic_power_maximum_W_m3": 429648818820323.56,
+    "plastic_power_maximum_to_mean": 2.307612869210958,
+    "plastic_power_mean_W_m3": 186187564020317.38,
+    "plastic_to_imposed_power_fraction": 0.6787792940263989,
+    "temperature_mean_K": 1042.1548963227974,
+    "temperature_range_K": 54.800773985206774,
+    "wall_density_m2": 569974127499979.4
+  },
+  "endpoint_flow_exposure": 0.6787792940263989,
+  "endpoint_post_peak_softening_fraction": 0.0,
+  "endpoint_spatial_localization": {
+    "checkpoint_sha256": "999f5b566870b884ef04a0ee275e8dbf21f52d029079ca95be8706b0a97300aa",
+    "continuous_power": {
+      "inverse_participation_fraction": 0.7775171326658622,
+      "largest_periodic_component_area_fraction": 0.154296875,
+      "maximum": 429648818820323.4,
+      "mean": 186187564020317.34,
+      "minimum": 27324483682177.516,
+      "negative_cell_fraction": 0.0,
+      "negative_integral_cell_sum": 0.0,
+      "periodic_component_count": 2,
+      "second_moment_widths": {
+        "major_gaussian_fwhm_m": 3.2202364678091066e-06,
+        "major_rms_width_m": 1.3675085171143542e-06,
+        "minor_gaussian_fwhm_m": 2.4441769467439684e-06,
+        "minor_rms_width_m": 1.0379463823291722e-06
+      },
+      "signed_integral_cell_sum": 1.9065606555680496e+17,
+      "standard_deviation": 99596476113020.14,
+      "threshold": 285784040133337.5,
+      "undefined_localized_width": false
+    },
+    "fixed_threshold_topology": {
+      "above_threshold_fraction": 0.0224609375,
+      "band_like": false,
+      "component_span_fraction": [
+        0.34375,
+        0.09375
+      ],
+      "largest_component_cells": 17,
+      "largest_component_fraction": 0.0166015625,
+      "maximum_to_mean": 2.3076128692109577,
+      "periodic_winding": [
+        false,
+        false
+      ],
+      "positive_max_W_m3": 429648818820323.4,
+      "positive_mean_W_m3": 186187564020317.34,
+      "signed_min_W_m3": 27324483682177.516,
+      "threshold_multiple": 2.0
+    },
+    "power_field_semantics": "instantaneous accepted work-conjugate plastic power reconstructed from the terminal common state; native grid, no resampling",
+    "power_temperature_pearson_correlation": 0.059865364850143245,
+    "x_profile_participation_fraction": 0.9695675970196784,
+    "y_profile_participation_fraction": 0.8185292772011104
+  },
+  "final_load": 0.09863999999999869,
+  "first_physical_band_load": null,
+  "fresh_origin": true,
+  "hard_balance_failed_trials_safely_rolled_back": 3,
+  "initial_flow_exposure": 2.5144331392373654e-09,
+  "initial_load": 0.0026400000000000017,
+  "last_physical_band_load": null,
+  "maximum_accepted_subinterval_count": 2,
+  "maximum_flow_exposure": 0.7866300215513702,
+  "multiplication_coefficient_m1": 500000000.0,
+  "multiplication_law": "v34_km_forest_storage_v1",
+  "owner_area_changes": {
+    "10": {
+      "area_after_m2": 8.079795153384895e-12,
+      "area_before_m2": 8.079479221085206e-12,
+      "relative_area_change": 3.9103052442301364e-05
+    },
+    "20": {
+      "area_after_m2": 7.563907430899504e-12,
+      "area_before_m2": 7.562093586524447e-12,
+      "relative_area_change": 0.00023986008032081846
+    },
+    "30": {
+      "area_after_m2": 7.396297415715596e-12,
+      "area_before_m2": 7.398427192390347e-12,
+      "relative_area_change": -0.00028786884284558585
+    }
+  },
+  "peak_absolute_mean_shear_stress_Pa": 3428720602.905504,
+  "peak_stress_load": 0.09863999999999869,
+  "physics_configuration_matched_across_segments": true,
+  "production_intervals": 600,
+  "schema": "v67-multiplication-fresh-history-v1",
+  "segment_chain": [
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_200/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "95ff43109357e110220a1ddad226e874db61f47d025cf79fd01e1817252ae6ed",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_rate20_prestrain33_adaptive/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "535190aae5d62119c1eeb9b2ae8faa199449225b572504fbf0eb223e6a2ceed3",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_200/result.json",
+      "result_sha256": "7b0d3a36f2f03c688063b1f36c7275ccd1658bf79ddf49e8253ac13889ce4f42",
+      "source_commit": "dce0d7d08d57f86835787c1687a7fa6a6b4b19c2",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_400/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "213c0d7170c18ddf3cd1faa0df80c0b0ddaf6d1ca22b39261fca57351e3a5503",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_200/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "95ff43109357e110220a1ddad226e874db61f47d025cf79fd01e1817252ae6ed",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_400/result.json",
+      "result_sha256": "1f8a44556febba4389408932d871b979ca297517a6bba1a726c8afeb18c7bc34",
+      "source_commit": "be0e5178aafa81ee9ae9ca231a5d5bff41322f32",
+      "source_tree_clean": true
+    },
+    {
+      "endpoint_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_600/checkpoint_latest.npz",
+      "endpoint_checkpoint_sha256": "999f5b566870b884ef04a0ee275e8dbf21f52d029079ca95be8706b0a97300aa",
+      "parent_checkpoint": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_400/checkpoint_latest.npz",
+      "parent_checkpoint_sha256": "213c0d7170c18ddf3cd1faa0df80c0b0ddaf6d1ca22b39261fca57351e3a5503",
+      "result": "/Users/sdillon/HPC3/worktrees/asb-drx-full-v67-20261014/full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_600/result.json",
+      "result_sha256": "684df80ba2c6ac96cbd180b7fe84000f399392e6e4119f0fcc8552e32a50a4ca",
+      "source_commit": "cc234b96f17d61ca419b0e2559ec2d56cc9f07c2",
+      "source_tree_clean": true
+    }
+  ],
+  "terminal_band_persistence_intervals": 0,
+  "terminal_physical_band": false
+}
