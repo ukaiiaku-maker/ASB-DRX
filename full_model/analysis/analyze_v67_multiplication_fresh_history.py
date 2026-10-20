@@ -38,6 +38,7 @@ def physics_configuration(configuration: dict) -> dict:
         "parent_checkpoint",
         "target_steps",
         "temperature_seed_peak_K",
+        "temperature_seed_normal",
     }
     return {
         key: value for key, value in configuration.items()

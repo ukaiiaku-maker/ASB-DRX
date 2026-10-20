@@ -273,7 +273,9 @@ def test_fresh_history_segment_length_is_not_a_physics_change():
         "target_steps": 34,
         "parent_checkpoint": "parent-b.npz",
         "temperature_seed_peak_K": 0.0,
+        "temperature_seed_normal": "x",
     }
+    first["temperature_seed_normal"] = "y"
     assert physics_configuration(first) == physics_configuration(terminal)
 
     terminal["multiplication_coefficient_m1"] = 10.0
