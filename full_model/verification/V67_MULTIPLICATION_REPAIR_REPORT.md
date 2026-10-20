@@ -156,33 +156,42 @@ stored-energy/front kinetics rather than by deformation-enhanced dynamic RX.
 
 The high-rate branch applies the single mean-zero 19.375 K, 0.6-micrometre
 thermal strip once, then advances at 80000 s^-1 with 2 ns accepted intervals.
-Four checkpoint-linked 200-interval segments reach shear 0.13064. Their
-checkpoint hashes and all physics-bearing configuration values match at the
-seams; only the parent path and one-time seed metadata differ. Across this
-fresh high-rate history:
+Six checkpoint-linked 200-interval segments and one 34-interval terminal
+segment reach the preregistered shear 0.20008. Their checkpoint hashes and all
+physics-bearing configuration values match at the seams; only the parent path,
+segment length, and one-time seed metadata differ. Across this fresh high-rate
+history:
 
-- accepted multiplication is 4.87925e-5 m, 90.3392% of the raw proposal;
-- accumulated domain-mean absolute family slip is 0.127903;
-- endpoint plastic/imposed power is 0.638252, rather than the 0.0018127 of the
+- accepted multiplication is 8.42362e-5 m, 83.5617% of the raw proposal;
+- accumulated domain-mean absolute family slip is 0.191611;
+- endpoint plastic/imposed power is 0.226051, rather than the 0.0018127 of the
   evolved-state intervention;
-- endpoint mean stress is 4.10687 GPa, mean temperature is 1064.47 K, and the
-  temperature range is 59.927 K;
-- endpoint mean mobile and forest densities are 1.66657e14 and 4.94664e15
+- endpoint mean stress is 7.31180 GPa, mean temperature is 1106.69 K, and the
+  temperature range is 78.042 K;
+- endpoint mean mobile and forest densities are 1.06426e14 and 8.02520e15
   m^-2, respectively; and
-- owner 20 grows 0.06090% during the high-rate portion, but none of its growth
+- owner 20 grows 0.22258% during the high-rate portion, but none of its growth
   lies inside a qualified band because no connected physical band occurs.
 
 The production path develops first a compact hot spot and then a broad
 horizontal high-power layer. At its closest approach to the fixed topology
 criterion, the largest above-2x-mean component spans half the domain but
 contains only 30 cells, below the preregistered 32-cell minimum. It later
-fragments. The endpoint is monotonic-hardening with no softening. Thus the
-fresh result is classified
+fragments. By shear 0.20008 the reconstructed continuous power field has
+inverse participation 0.89448, 3.29 and 2.99 micrometre Gaussian FWHM axes in
+the 4.8 micrometre domain, and power--temperature correlation -0.0270. The
+fixed 2x-mean topology contains only a four-cell component. This is a broad
+response, not a thresholded band hidden by the 32-cell cutoff. The endpoint is
+monotonic-hardening with no softening. Thus the complete fresh result is
+classified
 `FRESH_REPAIRED_STORAGE_MULTIPLICATION_REMAINS_FLOWING_WITHOUT_QUALIFIED_TERMINAL_ASB`.
-It is a successful carrier-throughput repair and an ASB negative at the old
-horizon, not a combined DRX-inside-ASB result.
+It is a successful carrier-throughput repair and an ASB negative through the
+registered 0.20 horizon, not a combined DRX-inside-ASB result.
 
-Unlike the evolved-state fork, the fresh state remains within an active-flow
-regime at 0.13064. The same parameterization is therefore being extended
-toward shear 0.20; that continuation is a physical-horizon test, not a change
-to the multiplication, source, boundary, or localization laws.
+The significant accepted flow rules out a persistent pinned-source extension
+as the immediate next repair: storage-only multiplication no longer starves on
+this trajectory. The next discriminator changes only the orientation of the
+same mean-zero thermal strip. The y-normal strip intersects the inherited
+horizontal grain-boundary geometry, whereas the completed x-normal strip did
+not. This matched test probes localization/front geometry without fitting
+multiplication, transmission, source density, or any rate-dependent switch.

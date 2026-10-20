@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-20T03:04:51Z",
+  "last_updated_utc": "2026-10-20T06:05:23Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-19T17:16:00Z",
@@ -87,19 +87,20 @@
     "H29": "the_archived_executable_v34_storage_law_is_k1_sqrt_rho_eff_abs_gammadot_with_k1_5e8_per_m_and_routes_sign_balanced_line_to_forest_under_a_0p1_plastic_work_cap;_the_v21_coefficient10_mobile_pair_default_is_not_the_saved_production_normalization",
     "H30": "the_recovered_v34_law_accepts_5p009e_6_m_stored_line_through_0p13064_shear_and_delays_band_extinction_from_0p10376_to_0p12120_with_5p051_times_endpoint_flow_while_preserving_all_hard_ledgers_but_the_endpoint_is_unbanded_and_has_zero_softening",
     "H31": "rollback_safe_complete_interval_bisection_repairs_state_dependent_structural_absorption_hard_rejections_without_committing_failed_state_load_heat_source_opportunity_or_clock;_the_fresh_132_microsecond_prefix_passes_with_one_rejected_macro_trial",
-    "H32": "the_same_fresh_recovered_candidate_grows_grain20_by_0p08512_percent_during_a_2_per_s_dynamic_segment_and_0p08262_percent_during_a_no_reset_10_microsecond_static_hold_with_all_hard_ledgers_passed"
+    "H32": "the_same_fresh_recovered_candidate_grows_grain20_by_0p08512_percent_during_a_2_per_s_dynamic_segment_and_0p08262_percent_during_a_no_reset_10_microsecond_static_hold_with_all_hard_ledgers_passed",
+    "H33": "the_fresh_recovered_v34_storage_law_reaches_shear_0p20008_with_8p42362e_5_m_accepted_line_0p226051_endpoint_flow_and_0p22258_percent_grain20_growth_but_zero_terminal_band_and_zero_softening;_carrier_starvation_is_repaired_while_spatial_localization_is_not"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": 50963,
+      "pid": 58058,
       "child_pid": null,
-      "case": "v67_multiplication_v34_fresh_highrate_seed19p375_200",
-      "status": "running_fresh_origin_corrected_high_rate_replay_first_chunk",
-      "last_case": "v67_multiplication_v34_fresh_rate2_static40",
-      "last_start_local": "2026-10-19T20:02:00-07:00",
-      "last_source_commit": "e69b84d",
-      "last_output": "full_model/verification/v67_multiplication_v34_fresh_highrate_seed19p375_200/checkpoint_latest.npz",
-      "queued_after_manager": "continue_fresh_corrected_high_rate_in_200_interval_chunks_to_0p13064_then_classify_persistent_source_need",
+      "case": "v67_multiplication_v34_fresh_highrate_yseed19p375_200",
+      "status": "running_matched_y_normal_seed_geometry_discriminator",
+      "last_case": "v67_multiplication_v34_fresh_highrate_seed19p375_1234",
+      "last_start_local": "2026-10-19T23:04:00-07:00",
+      "last_source_commit": "dce0d7d",
+      "last_output": "full_model/verification/v67_multiplication_v34_fresh_highrate_yseed19p375_200/checkpoint_latest.npz",
+      "queued_after_manager": "continue_matched_y_normal_seed_in_restartable_chunks_while_it_remains_valid_then_compare_band_and_RX_overlap_against_the_completed_x_normal_history",
       "geography_watcher_pid": null,
       "conditional_interface_emission_watcher_pid": null
     },
@@ -112,13 +113,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28", "H29", "H30", "H31", "H32"],
-    "physical_uncertainty": "whether_the_recovered_storage_only_law_started_from_the_fresh_zero_load_anchor_sustains_high_rate_flow_longer_than_the_ad400_intervention_or_still_selects_an_explicit_persistent_source_state",
-    "next_executable_experiment": "complete_the_fresh_high_rate_replay_in_restartable_200_interval_chunks_to_the_registered_0p13064_endpoint_then_execute_the_low_mobile_persistent_source_discriminator_if_storage_only_still_arrests",
-    "source_identity": "production_repair_at_b37db33_from_archived_v34_KM_k1_5e8_per_m_forest_storage_law;_rollback_safe_subdivision_at_e69b84d;_fresh_response_anchors_at_7903485;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
-    "expected_discriminatory_observation": "fresh_history_retains_storage_and_pinning_history_without_invented_checkpoint_source_state;_terminal_arrest_with_zero_mobile_self_start_would_select_a_separate_operable_pinned_source_state",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28", "H29", "H30", "H31", "H32", "H33"],
+    "physical_uncertainty": "whether_intersection_of_the_same_subcritical_thermal_strip_with_the_existing_horizontal_GB_geometry_converts_the_repaired_active_flow_into_a_persistent_localized_band_with_RX_overlap",
+    "next_executable_experiment": "complete_the_matched_y_normal_seed_geometry_discriminator_then_continue_its_valid_history_and_compare_continuous_localization_softening_and_owner_growth_with_the_completed_x_normal_0p20_history",
+    "source_identity": "production_repair_at_b37db33_from_archived_v34_KM_k1_5e8_per_m_forest_storage_law;_rollback_safe_subdivision_at_e69b84d;_complete_x_normal_history_at_dce0d7d;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
+    "expected_discriminatory_observation": "same_carrier_law_same_seed_amplitude_width_loading_and_thermal_boundary_with_only_seed_normal_changed;_persistent_band_and_RX_intersection_would_identify_geometry_coupling_while_another_broad_response_would_select_a_single_crystal_or_spatial_mechanics_hypothesis",
     "resource_need": "current_user_directed_local_only_continuation_with_at_most_one_heavy_solver_and_no_HPC_or_paid_compute",
-    "result_status": "MATCHED_MULTIPLICATION_COMPARISON_CLASSIFIED_AND_FRESH_DYNAMIC_STATIC_RX_ANCHORS_PASSED;_FRESH_HIGH_RATE_REPLAY_RUNNING"
+    "result_status": "FRESH_REPAIRED_STORAGE_MULTIPLICATION_REACHES_0P20_WITH_ACTIVE_FLOW_BUT_NO_ASB;_MATCHED_Y_NORMAL_GEOMETRY_DISCRIMINATOR_RUNNING"
   },
   "continuation_rule": {
     "active": true,

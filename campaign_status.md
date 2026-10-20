@@ -3358,3 +3358,32 @@ The generic campaign may proceed without selecting Fe, Cr, or another materials 
 - The matched strong-bath continuation from bath400 is the active next
   experiment. It uses the identical candidate and parameterization to test
   whether recovered flow closes a heat-specific localization loop.
+
+## V67 multiplication normalization and fresh-origin horizon (2026-10-20)
+
+- The archived executable v34 law is now the explicit production schema
+  `v34_km_forest_storage_v1`: `5e8 /m * sqrt(rho_eff) * abs(gammadot)`, split
+  equally by sign into forest content and limited by the archived 0.1 stored
+  work fraction. No extra `1/b`, ASB fit, mobile relabeling, or rate switch was
+  introduced. Legacy coefficient 10 and multiplication-disabled behavior are
+  preserved as separate compatibility/comparator modes.
+- Manufactured, sign, routing, restart, full-step/two-half-step, energy, and
+  rollback tests pass. The matched ad400 fork proves causality: repaired
+  multiplication accepts `5.00898e-6 m` line and gives 5.051 times the legacy
+  endpoint flow, but still arrests without softening by shear 0.13064.
+- The corrected fresh-origin path includes the same 20/s prestrain, 2/s
+  dynamic RX, no-reset static RX, and 80000/s high-rate branch. It reaches the
+  preregistered shear 0.20008 with `8.42362e-5 m` accepted multiplication,
+  0.835617 accepted/raw source throughput, 0.226051 endpoint
+  plastic/imposed power, and 0.22258% grain-20 growth during the high-rate
+  portion. All checkpoint seams and hard ledgers pass.
+- The endpoint remains monotonic-hardening, unbanded, and broad by continuous
+  field measures; softening is zero. The decision is
+  `FRESH_REPAIRED_STORAGE_MULTIPLICATION_REMAINS_FLOWING_WITHOUT_QUALIFIED_TERMINAL_ASB`.
+  This repairs accepted carrier throughput but not the spatial-localization
+  part of the combined DRX--ASB objective.
+- Because the corrected path does not starve, a persistent pinned-source model
+  is not the immediate next repair. A matched y-normal 19.375 K strip is now
+  running from the same fresh prefix with every constitutive parameter fixed;
+  it tests intersection of the thermal imperfection with the inherited
+  horizontal grain-boundary geometry.
