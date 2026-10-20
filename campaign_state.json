@@ -1,6 +1,6 @@
 {
   "schema": "asb-drx-standing-campaign-state-v1",
-  "last_updated_utc": "2026-10-19T19:18:00Z",
+  "last_updated_utc": "2026-10-20T01:08:00Z",
   "active_allocation": {
     "campaign": "V67",
     "start_utc": "2026-10-19T17:16:00Z",
@@ -83,19 +83,21 @@
     "H25": "the_immutable_four_family_Hall_Petch_nucleation_EXP_floor_ceiling_is_2p52383_per_s_at_the_hottest_ad700_cell_so_it_can_carry_the_qualified_2_per_s_RX_branch_but_only_3p15479e_5_of_the_80000_per_s_high_rate_demand;_retained_or_transmitted_carriers_are_required",
     "H26": "the_matched_0p11464_pair_has_zero_terminal_band_intervals,_zero_softening,_flow_6p64767e_5_adiabatic_and_7p70634e_5_bath,_continued_existing_boundary_growth,_and_is_classified_SUSTAINED_SOURCE_LIMITED_ARREST_AFTER_PRIOR_RX_BAND",
     "H27": "accepted_ad400_ad500_ad600_mechanics_consumes_the_full_2_ns_interval_and_does_not_suppress_raw_flow;_high_power_families_are_selectively_depleted_and_legacy_diffuse_interface_capture_accounts_for_slightly_more_than_net_mobile_loss;_a_default_off_signed_normal_arrival_limited_serial_capture_clock_is_hard_audited",
-    "H28": "the_same_arrival_limited_candidate_prevents_high_rate_carrier_collapse_at_ad600_with_709p0_times_baseline_flow_and_preserves_lower_rate_dynamic_and_no_reset_static_existing_boundary_RX;_all_hard_audits_pass_but_two_interval_terminal_localization_and_zero_softening_do_not_qualify_ASB"
+    "H28": "the_same_arrival_limited_candidate_prevents_high_rate_carrier_collapse_at_ad600_with_709p0_times_baseline_flow_and_preserves_lower_rate_dynamic_and_no_reset_static_existing_boundary_RX;_all_hard_audits_pass_but_two_interval_terminal_localization_and_zero_softening_do_not_qualify_ASB",
+    "H29": "the_archived_executable_v34_storage_law_is_k1_sqrt_rho_eff_abs_gammadot_with_k1_5e8_per_m_and_routes_sign_balanced_line_to_forest_under_a_0p1_plastic_work_cap;_the_v21_coefficient10_mobile_pair_default_is_not_the_saved_production_normalization",
+    "H30": "the_recovered_v34_law_accepts_5p009e_6_m_stored_line_through_0p13064_shear_and_delays_band_extinction_while_preserving_all_hard_ledgers_but_the_endpoint_is_unbanded_and_has_zero_softening;_the_exact_disabled_comparator_is_active"
   },
   "resource_ownership": {
     "heavy_campaign_solver": {
-      "pid": null,
+      "pid": 45100,
       "child_pid": null,
-      "case": null,
-      "status": "idle_before_matched_bath_candidate_continuation",
-      "last_case": "v67_poly_rx_asb_seed19p375_ad_600_arrival_limited",
-      "last_start_local": "2026-10-19T11:58:00-07:00",
-      "last_source_commit": "5bdf45e",
-      "last_output": "full_model/verification/v67_arrival_exchange_candidate_ad400_ad600.json",
-      "queued_after_manager": null,
+      "case": "v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_no_multiplication_tx0p25",
+      "status": "running_exact_disabled_comparator_through_matched_arrest_interval",
+      "last_case": "v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_legacy_v21_tx0p25",
+      "last_start_local": "2026-10-19T17:23:30-07:00",
+      "last_source_commit": "b37db33",
+      "last_output": "full_model/verification/v67_poly_rx_asb_seed19p375_ad_833_arrival_limited_no_multiplication_tx0p25/checkpoint_latest.npz",
+      "queued_after_manager": "matched_comparison_then_recovered_v34_lower_rate_dynamic_and_no_reset_static",
       "geography_watcher_pid": null,
       "conditional_interface_emission_watcher_pid": null
     },
@@ -108,13 +110,13 @@
   },
   "current_task": {
     "goal_ids": ["G01", "G02", "G03", "G04", "G05", "G06"],
-    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28"],
-    "physical_uncertainty": "whether_recovered_high_rate_carrier_flow_generates_heat_specific_persistent_localization_and_postpeak_softening_or_only_recurrent_mechanical_bands",
-    "next_executable_experiment": "continue_the_exact_matched_bath400_parent_to_bath600_with_the_identical_arrival_limited_candidate_and_compare_persistence_softening_temperature_and_RX_against_the_completed_adiabatic_branch",
-    "source_identity": "arrival_limited_candidate_at_5bdf45e_plus_zero_rate_diagnostic_fix_b7129f1;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
-    "expected_discriminatory_observation": "adiabatic_specific_persistent_band_and_softening_relative_to_the_strong_bath_control_if_recovered_flow_closes_the_ASB_feedback_loop",
+    "hypothesis_ids": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12", "H13", "H14", "H15", "H16", "H17", "H18", "H19", "H20", "H21", "H22", "H23", "H24", "H25", "H26", "H27", "H28", "H29", "H30"],
+    "physical_uncertainty": "whether_the_recovered_storage_only_multiplication_law_materially_extends_mobile_carrier_throughput_or_only_delays_arrest_by_adding_forest_resistance",
+    "next_executable_experiment": "finish_the_exact_disabled_high_rate_comparator_then_run_the_same_recovered_v34_candidate_in_lower_rate_dynamic_RX_and_a_no_reset_static_continuation",
+    "source_identity": "production_repair_at_b37db33_from_archived_v34_KM_k1_5e8_per_m_forest_storage_law;_comparison_analysis_at_f171ffd;_immutable_Arrhenius_EXP_floor_Peierls_Taylor_Hall_Petch_mechanics_and_source_event_measure_unchanged",
+    "expected_discriminatory_observation": "repaired_storage_should_separate_from_both_the_inert_legacy_and_exact_zero_paths_before_arrest_but_cannot_be_called_a_mobile_source_if_terminal_flow_and_ASB_still_fail",
     "resource_need": "current_user_directed_local_only_continuation_with_at_most_one_heavy_solver_and_no_HPC_or_paid_compute",
-    "result_status": "CARRIER_COLLAPSE_PREVENTED_RX_PRESERVED_ASB_NOT_YET_QUALIFIED;_matched_bath_candidate_branch_is_next"
+    "result_status": "RECOVERED_MULTIPLICATION_NORMALIZATION_AND_FOREST_ROUTING_IMPLEMENTED_AND_HARD_AUDITED;_MATCHED_DISABLED_PRODUCTION_COMPARATOR_RUNNING"
   },
   "continuation_rule": {
     "active": true,
