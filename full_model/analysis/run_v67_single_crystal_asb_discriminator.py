@@ -24,6 +24,9 @@ from full_model.analysis.run_v58_three_grain_production import (
     _save_checkpoint, initialize_network_state,
 )
 from full_model.analysis.run_v66_coupled_rx_asb import _physics
+from full_model.analysis.run_v67_drx_asb_overlap import (
+    _multiplication_parameters,
+)
 from full_model.analysis.spatial_localization import spatial_localization_metrics
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
@@ -84,6 +87,11 @@ def main():
     parser.add_argument("--bath-rate", type=float, default=5e9)
     parser.add_argument("--checkpoint-every", type=int, default=25)
     parser.add_argument("--maximum-mechanical-subdivisions", type=int, default=10)
+    parser.add_argument(
+        "--multiplication-law",
+        choices=("legacy_v21_mobile", "v34_km_forest", "disabled"),
+        default="legacy_v21_mobile",
+        help="explicit common-wall multiplication schema")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
@@ -97,10 +105,13 @@ def main():
     spacing = args.length/args.n
     thickness = 2.0*2.48e-10
     _, _, _, _, _, _, context = _physics(args)
+    wall_parameters = _multiplication_parameters(
+        context.wall_parameters, args.multiplication_law, {})
     # There is one owner and therefore no front, source boundary, or label
     # transaction.  All spatial response comes from the common mechanics and
     # physical heat equation.
-    context = replace(context, front_enabled=False)
+    context = replace(
+        context, front_enabled=False, wall_parameters=wall_parameters)
     runtime = MultiGrainProductionRuntime(())
     endpoint = make_endpoint(state, runtime, args.initial_shear_strain, context)
     initial_volume = np.asarray([args.length**2*thickness])
@@ -124,6 +135,15 @@ def main():
             "EXP-floor Arrhenius Peierls-Taylor common mechanics"),
         "spatial_seed": "mean-zero temperature Gaussian only",
         "front_enabled": False,
+        "multiplication_law": wall_parameters.multiplication_law,
+        "multiplication_coefficient_m1": (
+            wall_parameters.multiplication_coefficient_m1),
+        "multiplication_storage_work_fraction": (
+            wall_parameters.multiplication_storage_work_fraction),
+        "multiplication_destination": (
+            "forest_plus_minus"
+            if wall_parameters.multiplication_law == "v34_km_forest_storage_v1"
+            else "mobile_plus_minus"),
     }
     initial_temperature = np.asarray(
         endpoint.observables["common_temperature_K"])
@@ -133,6 +153,10 @@ def main():
     for index in range(1, args.steps+1):
         interval = advance_complete_multigrain_interval(endpoint, args.dt, context)
         endpoint = interval.endpoint
+        raw_mult = np.asarray(interval.integrals[
+            "multiplication_raw_line_increment_m2"])
+        accepted_mult = np.asarray(interval.integrals[
+            "multiplication_accepted_line_increment_m2"])
         power, metrics = _power_metrics(endpoint)
         temperature = np.asarray(endpoint.observables["common_temperature_K"])
         stress = np.asarray(endpoint.observables["common_stress_tensor_Pa"])
@@ -162,6 +186,14 @@ def main():
             "thermal_conduction_exchange_J": float(np.sum(
                 interval.integrals["thermal_conduction_J_m3"])
                 * spacing**2*thickness),
+            "multiplication_raw_physical_line_increment_m": float(np.sum(
+                raw_mult, dtype=np.longdouble)*spacing**2*thickness),
+            "multiplication_accepted_physical_line_increment_m": float(
+                np.sum(accepted_mult, dtype=np.longdouble)
+                *spacing**2*thickness),
+            "multiplication_budget_active_cell_time_fraction": float(
+                interval.audit[
+                    "multiplication_budget_active_cell_time_fraction"]),
         })
         if index == 1 or index % args.checkpoint_every == 0 or index == args.steps:
             temporary = args.out/"checkpoint_latest.tmp.npz"
@@ -217,6 +249,16 @@ def main():
             "maximum_mechanical_relative_first_law_residual": (
                 maximum_mechanical_residual),
             "grain_ids_unchanged": endpoint.state.grain_ids == (10,),
+            "multiplication_raw_physical_line_m": float(sum(
+                row["multiplication_raw_physical_line_increment_m"]
+                for row in history)),
+            "multiplication_accepted_physical_line_m": float(sum(
+                row["multiplication_accepted_physical_line_increment_m"]
+                for row in history)),
+            "multiplication_maximum_budget_active_cell_time_fraction": float(
+                max(row[
+                    "multiplication_budget_active_cell_time_fraction"]
+                    for row in history)),
         },
         "ledger": asdict(endpoint.runtime.ledger),
         "artifacts": {"checkpoint_latest.npz": _sha(checkpoint)},
