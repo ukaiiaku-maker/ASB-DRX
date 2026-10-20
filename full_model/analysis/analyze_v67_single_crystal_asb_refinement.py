@@ -67,11 +67,15 @@ def classify(coarse_ad, coarse_bath, fine_ad, fine_bath, half_ad, half_bath):
         for case in cases.values())
     convergence = (max(grid_errors.values()) < .05
                    and max(timestep_errors.values()) < .05)
-    same_physical_horizon = all(abs(
-        case["configuration"]["initial_shear_strain"]
-        + case["configuration"]["shear_rate_s"]
-        * case["configuration"]["dt_s"]
-        * case["configuration"]["target_steps"] - .124) < 1e-12
+    def terminal_strain(case):
+        configuration = case["configuration"]
+        return (configuration["initial_shear_strain"]
+                + configuration["shear_rate_s"]*configuration["dt_s"]
+                * configuration["target_steps"])
+
+    reference_terminal_strain = terminal_strain(coarse_ad)
+    same_physical_horizon = all(
+        abs(terminal_strain(case)-reference_terminal_strain) < 1e-12
         for case in cases.values())
     passed = all((all_sources_clean, all_adiabatic_band, no_bath_band,
                   residuals_pass, convergence, same_physical_horizon))
@@ -90,7 +94,8 @@ def classify(coarse_ad, coarse_bath, fine_ad, fine_bath, half_ad, half_bath):
             "no_strong_bath_band_at_any_resolution": no_bath_band,
             "mechanical_first_law_residuals_below_1e-3": residuals_pass,
             "grid_and_timestep_errors_below_5_percent": convergence,
-            "same_terminal_strain_0p124": same_physical_horizon,
+            "same_terminal_physical_horizon": same_physical_horizon,
+            "terminal_engineering_shear": reference_terminal_strain,
         },
         "decision": {
             "strict_prepared_asb_qualified": passed,
