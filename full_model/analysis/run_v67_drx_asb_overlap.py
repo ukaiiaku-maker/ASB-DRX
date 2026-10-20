@@ -611,6 +611,10 @@ def main():
                 *context.represented_thickness_m),
             "budget_active_cell_time_fraction": float(interval.audit[
                 "multiplication_budget_active_cell_time_fraction"]),
+            "hard_balance_subinterval_count": int(interval.audit.get(
+                "hard_balance_subinterval_count", 1)),
+            "hard_balance_failed_trial_count": int(interval.audit.get(
+                "hard_balance_failed_trial_count", 0)),
             "signed_slip_increment_by_owner_family": np.sum(
                 signed_slip, axis=(1, 2), dtype=np.longdouble
             ).astype(float).tolist(),
