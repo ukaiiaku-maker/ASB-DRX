@@ -10,7 +10,11 @@ from full_model.production.common_tensorial_wall import (
 )
 from full_model.production.tensorial_nye import bcc_four_family_systems
 from full_model.analysis.run_v67_drx_asb_overlap import (
-    _front_transmission_fraction, _multiplication_parameters,
+    _advance_with_hard_balance_subdivision, _front_transmission_fraction,
+    _multiplication_parameters,
+)
+from full_model.production.coupled_interval_control import (
+    CoupledEndpoint, CoupledInterval,
 )
 
 
@@ -250,3 +254,38 @@ def test_front_transmission_restart_inherits_parent_unless_overridden():
     assert _front_transmission_fraction(
         .40, {"front_transmission_fraction": .25}, .55) == .40
     assert _front_transmission_fraction(None, {}, .55) == .55
+
+
+def test_hard_balance_subdivision_fills_clock_and_discards_failed_trials():
+    parent = CoupledEndpoint(None, None, 0.0, {})
+
+    def interval_map(endpoint, duration, unused_context):
+        if duration > .25:
+            raise RuntimeError("synthetic failed a hard balance audit")
+        return CoupledInterval(
+            CoupledEndpoint(None, None, endpoint.load+duration, {}), duration,
+            {"extent": np.asarray(duration)},
+            {"multiplication_budget_active_cell_time_fraction": .5,
+             "mechanical_relative_first_law_residual": duration})
+
+    accepted = _advance_with_hard_balance_subdivision(
+        parent, 1.0, None, 2, interval_map)
+    assert accepted.duration_s == 1.0
+    assert accepted.endpoint.load == 1.0
+    assert accepted.integrals["extent"] == 1.0
+    assert accepted.audit["hard_balance_subinterval_count"] == 4
+    assert accepted.audit["hard_balance_failed_trial_count"] == 3
+    assert accepted.audit[
+        "multiplication_budget_active_cell_time_fraction"] == .5
+    assert accepted.audit["mechanical_relative_first_law_residual"] == .25
+
+
+def test_hard_balance_subdivision_does_not_swallow_unrelated_failure():
+    def interval_map(endpoint, duration, unused_context):
+        raise RuntimeError("unrelated constitutive defect")
+
+    with np.testing.assert_raises_regex(
+            RuntimeError, "unrelated constitutive defect"):
+        _advance_with_hard_balance_subdivision(
+            CoupledEndpoint(None, None, 0.0, {}), 1.0, None, 4,
+            interval_map)

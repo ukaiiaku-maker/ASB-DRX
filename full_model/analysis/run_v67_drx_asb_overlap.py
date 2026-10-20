@@ -25,6 +25,7 @@ from full_model.analysis.spatial_localization import spatial_localization_metric
 from full_model.production.coupled_multigrain_interval import (
     advance_complete_multigrain_interval, make_endpoint,
 )
+from full_model.production.coupled_interval_control import CoupledInterval
 from full_model.production.interface_structural_absorption import (
     InterfaceStructuralAbsorptionParameters,
 )
@@ -245,6 +246,69 @@ def _front_transmission_fraction(requested, configuration, fallback):
     return value
 
 
+def _combine_hard_balance_subintervals(first, second, failed_trials=1):
+    """Combine two accepted complete intervals without hiding hard retries."""
+    if set(first.integrals) != set(second.integrals):
+        raise RuntimeError("hard-balance subinterval integral schemas differ")
+    integrals = {
+        key: np.asarray(first.integrals[key])+np.asarray(second.integrals[key])
+        for key in first.integrals
+    }
+    audit = dict(second.audit)
+    maximum_keys = {
+        key for key in set(first.audit) | set(second.audit)
+        if (key.endswith("relative_first_law_residual")
+            or key == "lattice_absorption_mura_relative_residual")
+    }
+    for key in maximum_keys:
+        audit[key] = max(
+            abs(float(first.audit.get(key, 0.0))),
+            abs(float(second.audit.get(key, 0.0))))
+    total = float(first.duration_s+second.duration_s)
+    budget_key = "multiplication_budget_active_cell_time_fraction"
+    audit[budget_key] = (
+        float(first.duration_s)*float(first.audit[budget_key])
+        +float(second.duration_s)*float(second.audit[budget_key]))/total
+    audit["hard_balance_subinterval_count"] = int(
+        first.audit.get("hard_balance_subinterval_count", 1)
+        +second.audit.get("hard_balance_subinterval_count", 1))
+    audit["hard_balance_failed_trial_count"] = int(
+        failed_trials
+        +first.audit.get("hard_balance_failed_trial_count", 0)
+        +second.audit.get("hard_balance_failed_trial_count", 0))
+    return CoupledInterval(second.endpoint, total, integrals, audit)
+
+
+def _advance_with_hard_balance_subdivision(
+        parent, duration_s, context, maximum_subdivisions,
+        interval_map=advance_complete_multigrain_interval):
+    """Fill one macro clock by rollback-safe bisection after hard rejection.
+
+    Every rejected call operates on an immutable parent and is discarded.
+    Only two complete accepted half paths are combined and published.
+    """
+    try:
+        accepted = interval_map(parent, duration_s, context)
+        audit = dict(accepted.audit)
+        audit.setdefault("hard_balance_subinterval_count", 1)
+        audit.setdefault("hard_balance_failed_trial_count", 0)
+        return CoupledInterval(
+            accepted.endpoint, accepted.duration_s,
+            accepted.integrals, audit)
+    except RuntimeError as error:
+        if "hard balance audit" not in str(error):
+            raise
+        if maximum_subdivisions <= 0:
+            raise
+        half = .5*float(duration_s)
+        first = _advance_with_hard_balance_subdivision(
+            parent, half, context, maximum_subdivisions-1, interval_map)
+        second = _advance_with_hard_balance_subdivision(
+            first.endpoint, half, context, maximum_subdivisions-1,
+            interval_map)
+        return _combine_hard_balance_subintervals(first, second)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("checkpoint", type=Path)
@@ -291,6 +355,10 @@ def main():
     parser.add_argument("--override-dt", type=float)
     parser.add_argument("--override-shear-rate", type=float)
     parser.add_argument(
+        "--hard-balance-subdivisions", type=int, default=0,
+        help=("rollback-safe maximum bisections used only when a complete "
+              "macro interval rejects a hard balance audit"))
+    parser.add_argument(
         "--thermal-control", choices=("inherited", "adiabatic", "strong_bath"),
         default="inherited")
     parser.add_argument("--bath-rate", type=float, default=5e9)
@@ -300,6 +368,8 @@ def main():
         "--temperature-seed-normal", choices=("x", "y", "diagonal"),
         default="x")
     args = parser.parse_args()
+    if args.hard_balance_subdivisions < 0:
+        parser.error("--hard-balance-subdivisions must be nonnegative")
     source_status = subprocess.check_output(
         ("git", "status", "--porcelain", "--untracked-files=no"),
         cwd=ROOT, text=True)
@@ -470,6 +540,8 @@ def main():
             "disabled" if wall_parameters.multiplication_law == "disabled"
             else "mobile_plus_minus"),
         structural_absorption_mode=("common_axis" if rx_enabled else "disabled"))
+    output_configuration["hard_balance_subdivisions"] = int(
+        args.hard_balance_subdivisions)
     output_configuration.update(
         wall_orientation_relaxation_mode=(
             "ordered_nye" if orientation_enabled else "disabled"),
@@ -513,7 +585,8 @@ def main():
         active_mask = (band_before if physical_band_before
                        else np.zeros_like(band_before))
         before_supports = np.asarray(endpoint.state.supports)
-        interval = advance_complete_multigrain_interval(endpoint, dt, context)
+        interval = _advance_with_hard_balance_subdivision(
+            endpoint, dt, context, args.hard_balance_subdivisions)
         endpoint = interval.endpoint
         raw_mult = np.asarray(interval.integrals[
             "multiplication_raw_line_increment_m2"])
