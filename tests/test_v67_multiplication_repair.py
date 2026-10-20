@@ -4,6 +4,7 @@ import numpy as np
 
 from full_model.production.common_tensorial_wall import (
     CommonWallDriving, CommonWallParameters, CommonWallState,
+    accepted_euler_step,
     multiplication_density_argument_m2, raw_multiplication_pair_rate_m2_s,
     wall_residual,
 )
@@ -171,6 +172,35 @@ def test_production_kernel_converges_to_pure_storage_scalar_solution():
     exact = (np.sqrt(rho0)+0.5*coefficient*accumulated_slip)**2
     assert abs(rho-exact) < abs(coarse-exact)
     np.testing.assert_allclose(rho, exact, rtol=6e-7)
+
+
+def test_accepted_production_step_agrees_with_two_half_steps():
+    state = _state()
+    systems = bcc_four_family_systems()
+    parameters = _parameters(
+        enforce_multiplication_energy_budget=False,
+        attempt_frequency_s=1e-30,
+        thermal_diffusivity_m2_s=0.0,
+        mobile_correlation_diffusivity_m2_s=0.0)
+    driving = CommonWallDriving(
+        glide_speed_m_s=np.full(state.mobile_plus_m2.shape, 1e-3),
+        resolved_stress_Pa=np.full(state.mobile_plus_m2.shape, 1e9))
+    dt = 1e-8
+    full, _, _ = accepted_euler_step(
+        state, driving, systems, (), parameters, dt)
+    half, _, _ = accepted_euler_step(
+        state, driving, systems, (), parameters, .5*dt)
+    halves, _, _ = accepted_euler_step(
+        half, driving, systems, (), parameters, .5*dt)
+    full_increment = np.sum(
+        full.forest_plus_m2+full.forest_minus_m2
+        -state.forest_plus_m2-state.forest_minus_m2)
+    half_increment = np.sum(
+        halves.forest_plus_m2+halves.forest_minus_m2
+        -state.forest_plus_m2-state.forest_minus_m2)
+    assert full_increment > 0.0
+    assert half_increment > 0.0
+    np.testing.assert_allclose(half_increment, full_increment, rtol=2e-6)
 
 
 def test_multiplication_schema_restart_is_explicit_and_backward_compatible():
